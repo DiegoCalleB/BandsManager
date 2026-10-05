@@ -25,11 +25,11 @@ const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
     riderTecnico:
       "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
     enlacesRedes: {
-      spotify: "https://open.spotify.com/artist/bakandeya",
+      spotify: "",
       youtube: "https://youtube.com/@bakandeya_oficial",
       instagram: "https://instagram.com/bakandeya_oficial",
       tiktok: "https://tiktok.com/@bakandeya_oficial",
-      appleMusic: "https://music.apple.com/artist/bakandeya",
+      appleMusic: "",
       bandcamp: "https://bakandeya.bandcamp.com",
       website: "https://bandmanager.io",
       whatsapp: "+34612345678",
@@ -50,11 +50,11 @@ const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
       incluirIconosRedes: true,
       adjuntarDossierPorDefecto: true,
       redesSociales: {
-        spotify: "https://open.spotify.com/artist/bakandeya",
+        spotify: "",
         youtube: "https://youtube.com/@bakandeya_oficial",
         instagram: "https://instagram.com/bakandeya_oficial",
         tiktok: "https://tiktok.com/@bakandeya_oficial",
-        appleMusic: "https://music.apple.com/artist/bakandeya",
+        appleMusic: "",
         bandcamp: "https://bakandeya.bandcamp.com",
         website: "https://bandmanager.io",
         whatsapp: "+34612345678",

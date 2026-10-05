@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Song, Setlist, SetlistItem } from "../../types";
 import { getAuthHeaders } from "../../services/api";
+import { apiFetch, apiFetchRaw } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input, Select } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
@@ -96,13 +97,10 @@ export function ImportSetlistModal({
     setAnalyzing(true);
     setError(null);
     try {
-      const authHeaders = getAuthHeaders() as Record<string, string>;
-      const { "Content-Type": _ct, ...uploadHeaders } = authHeaders;
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("/api/setlists/import-from-image", {
+      const res = await apiFetchRaw("/api/setlists/import-from-image", {
         method: "POST",
-        headers: uploadHeaders,
         body: formData,
       });
       const data = await res.json();
@@ -200,9 +198,8 @@ export function ImportSetlistModal({
             bpm: 120,
           };
           // Secuencial (no Promise.all): así cada id generado con Date.now() es único de verdad.
-          await fetch("/api/songs", {
+          await apiFetch("/api/songs", {
             method: "POST",
-            headers: authHeaders,
             body: JSON.stringify(newSong),
           });
           newSongs.push(newSong);
@@ -228,9 +225,8 @@ export function ImportSetlistModal({
         items,
       };
 
-      await fetch("/api/setlists", {
+      await apiFetch("/api/setlists", {
         method: "POST",
-        headers: authHeaders,
         body: JSON.stringify(newSetlist),
       });
 

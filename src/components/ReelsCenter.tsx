@@ -359,12 +359,10 @@ export default function ReelsCenter({
     setSyncSuccessMessage("");
     setSyncErrorMessage("");
     try {
-      const res = await fetch("/api/posts/sync", {
+      const data = await apiFetch<any>("/api/posts/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setSyncSuccessMessage(
           data.message || "Publicaciones y Reels sincronizados con éxito.",
         );
@@ -372,12 +370,12 @@ export default function ReelsCenter({
         setTimeout(() => setSyncSuccessMessage(""), 6000);
       } else {
         setSyncErrorMessage(
-          data.error || "Error al intentar sincronizar los Reels.",
+          data?.error || "Error al intentar sincronizar los Reels.",
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error synchronizing reels:", error);
-      setSyncErrorMessage("Error de conexión con el servidor.");
+      setSyncErrorMessage(error?.message || "Error de conexión con el servidor.");
     } finally {
       setIsSyncingReels(false);
     }
@@ -1367,20 +1365,18 @@ export default function ReelsCenter({
     setIsSyncingMetrics(true);
     setMetricSuccess("");
     try {
-      const res = await fetch("/api/metrics/sync", {
+      const data = await apiFetch<any>("/api/metrics/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setMetricSuccess("✓ Sincronizado con éxito.");
         setTimeout(() => setMetricSuccess(""), 4000);
       } else {
-        alert(data.error || "Error al sincronizar seguidores.");
+        alert(data?.error || "Error al sincronizar seguidores.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert("Error de conexión.");
+      alert(err?.message || "Error de conexión.");
     } finally {
       setIsSyncingMetrics(false);
     }

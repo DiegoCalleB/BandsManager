@@ -72,11 +72,11 @@ const DEFAULT_EPK_CONFIG = {
   ],
   riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
   enlacesRedes: {
-    spotify: "https://open.spotify.com/artist/bakandeya",
+    spotify: "",
     youtube: "https://youtube.com/@bakandeya_oficial",
     instagram: "https://instagram.com/bakandeya_oficial",
     tiktok: "https://tiktok.com/@bakandeya_oficial",
-    appleMusic: "https://music.apple.com/artist/bakandeya",
+    appleMusic: "",
     bandcamp: "https://bakandeya.bandcamp.com",
     website: "https://bandmanager.io",
     whatsapp: "+34612345678",
@@ -111,11 +111,11 @@ const DEFAULT_EPK_CONFIG = {
     incluirIconosRedes: true,
     adjuntarDossierPorDefecto: true,
     redesSociales: {
-      spotify: "https://open.spotify.com/artist/bakandeya",
+      spotify: "",
       youtube: "https://youtube.com/@bakandeya_oficial",
       instagram: "https://instagram.com/bakandeya_oficial",
       tiktok: "https://tiktok.com/@bakandeya_oficial",
-      appleMusic: "https://music.apple.com/artist/bakandeya",
+      appleMusic: "",
       bandcamp: "https://bakandeya.bandcamp.com",
       website: "https://bandmanager.io",
       whatsapp: "+34612345678"
@@ -301,7 +301,7 @@ export function ensureBakandeyaBandId(state: any): boolean {
     const existingHerdeiros = state.registeredBands.find(
       (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'os-herdeiros-do-codigo'
     );
-    if (!existingHerdeiros) {
+    if (!existingHerdeiros && !process.env.SUPABASE_URL) {
       state.registeredBands.push(HERDEIROS_REGISTERED_BAND);
       changed = true;
     }
@@ -309,29 +309,10 @@ export function ensureBakandeyaBandId(state: any): boolean {
     const existingMop = state.registeredBands.find(
       (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'master-of-prompts'
     );
-    if (!existingMop) {
+    if (!existingMop && !process.env.SUPABASE_URL) {
       state.registeredBands.push(MASTER_OF_PROMPTS_REGISTERED_BAND);
       changed = true;
     }
-  }
-
-  // Pre-cargar EPK de Master of Prompts y Os Herdeiros do Código
-  if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
-  if (!state.epkConfigsByBand['band-master-of-prompts']) {
-    state.epkConfigsByBand['band-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
-    state.epkConfigsByBand['master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
-    state.epkConfigsByBand['reg-master-of-prompts'] = MASTER_OF_PROMPTS_EPK_CONFIG;
-    changed = true;
-  }
-  if (!state.epkConfigsByBand['band-os-herdeiros-do-codigo']) {
-    state.epkConfigsByBand['band-os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
-    state.epkConfigsByBand['os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
-    state.epkConfigsByBand['reg-os-herdeiros-do-codigo'] = HERDEIROS_EPK_CONFIG;
-    changed = true;
-  }
-
-  if (ensureMouredevBandsData(state)) {
-    changed = true;
   }
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
@@ -508,6 +489,39 @@ export function ensureBakandeyaBandId(state: any): boolean {
     });
   }
 
+  if (state.leads && Array.isArray(state.leads)) {
+    const hasTestLead = state.leads.some((l: any) => l.id === "lead-test-telemetry-diego" || (l.email_contacto === "diego.delacalleb@gmail.com" && l.nombre_sala?.includes("Mon")));
+    if (!hasTestLead) {
+      const testLeadObj = {
+        id: "lead-test-telemetry-diego",
+        nombre_sala: "Sala Mon Live (Test Telemetría)",
+        ciudad: "Madrid",
+        region: "Comunidad de Madrid",
+        aforo: 800,
+        genero: "Indie / Rock / Fusión",
+        email_contacto: "diego.delacalleb@gmail.com",
+        telefono: "+34 914 455 678",
+        instagram: "@monlivemadrid",
+        fuente: "Test Telemetría",
+        estado: "pendiente_aprobacion",
+        band_id: BAKANDEYA_BAND_ID,
+        pitch_generado: `Hola Diego,
+
+Nos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Sala Mon es uno de los espacios con mejor acústica y ambiente de conciertos en directo en Madrid.
+
+Estamos preparando el tramo de otoño de nuestra gira y nos encantaría presentar el directo en vuestra sala. Tenéis el dossier oficial interactivo en el enlace adjunto.
+
+¿Tendríais alguna fecha disponible para valorar en noviembre?
+
+Un saludo cordial,
+Bakandeya Booking`,
+        notas: "*** Sala de prueba creada para verificar la telemetría, apertura de emails y clics en el dossier en tiempo real ***"
+      };
+      state.leads.unshift(testLeadObj);
+      changed = true;
+    }
+  }
+
   const collections = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
   for (const colKey of collections) {
     if (state[colKey] && Array.isArray(state[colKey])) {
@@ -579,148 +593,11 @@ export function ensureBakandeyaBandId(state: any): boolean {
   return changed;
 }
 
-export function ensureMouredevBandsData(state: any): boolean {
-  let changed = false;
-
-  if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
-  const epkHerdeirosKeys = [HERDEIROS_BAND_ID, 'os-herdeiros-do-codigo', 'reg-os-herdeiros-do-codigo'];
-  for (const k of epkHerdeirosKeys) {
-    if (!state.epkConfigsByBand[k]) {
-      state.epkConfigsByBand[k] = HERDEIROS_EPK_CONFIG;
-      changed = true;
-    }
-  }
-
-  const epkMopKeys = [MASTER_OF_PROMPTS_BAND_ID, 'master-of-prompts', 'reg-master-of-prompts'];
-  for (const k of epkMopKeys) {
-    if (!state.epkConfigsByBand[k]) {
-      state.epkConfigsByBand[k] = MASTER_OF_PROMPTS_EPK_CONFIG;
-      changed = true;
-    }
-  }
-
-  // Leads (Escenarios, Medios, Productoras)
-  if (!state.leads) state.leads = [];
-  const allMoureLeads = [...HERDEIROS_LEADS, ...MOP_LEADS];
-  for (const l of allMoureLeads) {
-    const existingIdx = state.leads.findIndex((el: any) => el.id === l.id);
-    if (existingIdx === -1) {
-      state.leads.push(l);
-      changed = true;
-    }
-  }
-
-  // Bands (Bandas amigas / Directorio Grupos)
-  if (!state.bands) state.bands = [];
-  const allMoureBands = [...HERDEIROS_BANDS, ...MOP_BANDS];
-  for (const b of allMoureBands) {
-    const existingIdx = state.bands.findIndex((eb: any) => eb.id === b.id);
-    if (existingIdx === -1) {
-      state.bands.push(b);
-      changed = true;
-    }
-  }
-
-  // Songs
-  if (!state.songs) state.songs = [];
-  const allMoureSongs = [...HERDEIROS_SONGS, ...MOP_SONGS];
-  for (const s of allMoureSongs) {
-    const existingIdx = state.songs.findIndex((es: any) => es.id === s.id);
-    if (existingIdx === -1) {
-      state.songs.push(s);
-      changed = true;
-    }
-  }
-
-  // Setlists
-  if (!state.setlists) state.setlists = [];
-  const allMoureSetlists = [...HERDEIROS_SETLISTS, ...MOP_SETLISTS];
-  for (const sl of allMoureSetlists) {
-    const existingIdx = state.setlists.findIndex((esl: any) => esl.id === sl.id);
-    if (existingIdx === -1) {
-      state.setlists.push(sl);
-      changed = true;
-    }
-  }
-
-  // Concerts
-  if (!state.concerts) state.concerts = [];
-  const allMoureConcerts = [...HERDEIROS_CONCERTS, ...MOP_CONCERTS];
-  for (const c of allMoureConcerts) {
-    const existingIdx = state.concerts.findIndex((ec: any) => ec.id === c.id);
-    if (existingIdx === -1) {
-      state.concerts.push(c);
-      changed = true;
-    }
-  }
-
-  // Rehearsals
-  if (!state.rehearsals) state.rehearsals = [];
-  const allMoureRehearsals = [...HERDEIROS_REHEARSALS, ...MOP_REHEARSALS];
-  for (const r of allMoureRehearsals) {
-    const existingIdx = state.rehearsals.findIndex((er: any) => er.id === r.id);
-    if (existingIdx === -1) {
-      state.rehearsals.push(r);
-      changed = true;
-    }
-  }
-
-  // Tours
-  if (!state.tours) state.tours = [];
-  const allMoureTours = [...HERDEIROS_TOURS, ...MOP_TOURS];
-  for (const t of allMoureTours) {
-    const existingIdx = state.tours.findIndex((et: any) => et.id === t.id);
-    if (existingIdx === -1) {
-      state.tours.push(t);
-      changed = true;
-    }
-  }
-
-  // Payments
-  if (!state.payments) state.payments = [];
-  const allMourePayments = [...HERDEIROS_PAYMENTS, ...MOP_PAYMENTS];
-  for (const p of allMourePayments) {
-    const existingIdx = state.payments.findIndex((ep: any) => ep.id === p.id);
-    if (existingIdx === -1) {
-      state.payments.push(p);
-      changed = true;
-    }
-  }
-
-  // Fans
-  if (!state.fans) state.fans = [];
-  const allMoureFans = [...HERDEIROS_FANS, ...MOP_FANS];
-  for (const f of allMoureFans) {
-    const existingIdx = state.fans.findIndex((ef: any) => ef.id === f.id);
-    if (existingIdx === -1) {
-      state.fans.push(f);
-      changed = true;
-    }
-  }
-
-  // Posts
-  if (!state.posts) state.posts = [];
-  const allMourePosts = [...HERDEIROS_POSTS, ...MOP_POSTS];
-  for (const po of allMourePosts) {
-    const existingIdx = state.posts.findIndex((epo: any) => epo.id === po.id);
-    if (existingIdx === -1) {
-      state.posts.push(po);
-      changed = true;
-    }
-  }
-
-  // Metrics
-  if (!state.metrics) state.metrics = [];
-  const allMoureMetrics = [...HERDEIROS_METRICS, ...MOP_METRICS];
-  for (const me of allMoureMetrics) {
-    const existingIdx = state.metrics.findIndex((eme: any) => eme.id === me.id);
-    if (existingIdx === -1) {
-      state.metrics.push(me);
-      changed = true;
-    }
-  }
-
-  return changed;
+export function ensureMouredevBandsData(_state: any): boolean {
+  // Los datos de MoureDev (Os Herdeiros do Código y Master of Prompts)
+  // ya están 100% migrados y persisten directamente en Supabase PostgreSQL.
+  // Desconectado para permitir edición completa desde la UI sin sobreescrituras estáticas.
+  return false;
 }
 
 export function ensureValidUserEmails(state: any): boolean {

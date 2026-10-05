@@ -175,7 +175,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
   const isDraftCreated = rawStatus === 'borrador_creado';
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto no-scrollbar p-4 sm:p-6 space-y-4">
+    <div className="flex flex-col h-full min-h-0 overflow-y-auto custom-scrollbar p-4 sm:p-6 space-y-4">
       {/* 1. AGENT WORKFLOW STATUS BANNER (HUMAN-IN-THE-LOOP) */}
       <div className="p-3.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--surface)] border border-[var(--hair)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -358,14 +358,14 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       </div>
 
       {/* 3. PITCH CANVAS (THE CORE VIEW) */}
-      <div className="flex-1 min-h-[260px] flex flex-col p-4 sm:p-5 bg-[var(--surface)] rounded-[var(--r-l)] border border-[var(--hair)] shadow-xs relative group">
+      <div className="w-full shrink-0 min-h-[200px] flex flex-col p-4 sm:p-5 bg-[var(--surface)] rounded-[var(--r-l)] border border-[var(--hair)] shadow-xs relative group">
         {isEditingText ? (
           <div className="flex-1 flex flex-col space-y-2">
             <Textarea
               rows={12}
               value={editedPitch}
               onChange={(e) => setEditedPitch(e.target.value)}
-              className="flex-1 w-full text-sm font-sans leading-relaxed p-3 rounded-[var(--r-m)] bg-[var(--bg)] border border-[var(--hair)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)] resize-y"
+              className="w-full text-sm font-sans leading-relaxed p-3 rounded-[var(--r-m)] bg-[var(--bg)] border border-[var(--hair)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)] resize-y"
               placeholder="Escribe o retoca la propuesta de concierto..."
             />
             <div className="flex justify-end gap-2 pt-1">
@@ -381,7 +381,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
         ) : (
           <div
             onClick={() => setIsEditingText(true)}
-            className="flex-1 text-sm font-sans text-[var(--ink)] whitespace-pre-wrap leading-relaxed cursor-text selection:bg-[var(--acc-soft)]"
+            className="w-full text-sm font-sans text-[var(--ink)] whitespace-pre-wrap leading-relaxed cursor-text selection:bg-[var(--acc-soft)] pb-4"
             title="Haz clic para editar el texto directamente"
           >
             {editedPitch || (
@@ -406,7 +406,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       </div>
 
       {/* 4. DYNAMIC FEW-SHOT & TONE LEARNING (AI TRAINING) */}
-      <div className="p-3.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--sunken)]/60 border border-[var(--hair)] space-y-3">
+      <div className="w-full shrink-0 p-3.5 sm:p-4 rounded-[var(--r-l)] bg-[var(--sunken)]/60 border border-[var(--hair)] space-y-3 pb-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold font-sans text-[var(--ink)]">
@@ -469,30 +469,42 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
           </div>
         </div>
 
-        {/* Feedback comment input */}
-        {(toneRating > 0 || contentRating > 0) && (
-          <div className="space-y-2 pt-1 animate-in fade-in duration-100">
+        {/* Instructions & Prompt feedback input (Always available) */}
+        <div className="space-y-2 pt-2 border-t border-[var(--hair)]/30">
+          <div className="flex items-center justify-between">
+            <span className="text-micro font-medium text-[var(--ink-2)]">
+              Instrucción para afinar la redacción:
+            </span>
+            {feedbackComment && (
+              <button
+                type="button"
+                onClick={() => setFeedbackComment('')}
+                className="text-micro text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer"
+              >
+                Limpiar
+              </button>
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
-              placeholder="Comentario para afinar (ej: hacerlo más cercano, destacar el directo...)"
+              placeholder="Instrucción (ej: hazlo más directo, cita que tocamos en Revenidas, pide tocar en viernes...)"
               value={feedbackComment}
               onChange={(e) => setFeedbackComment(e.target.value)}
-              className="w-full text-xs p-2 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]"
+              className="flex-1 text-xs p-2.5 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] text-[var(--ink)] focus:outline-none focus:ring-1 focus:ring-[var(--acc)]"
             />
-            <div className="flex justify-end">
-              <Button
-                variant="primary"
-                size="xs"
-                onClick={() => handleRegenerate()}
-                disabled={isRegenerating}
-                className="items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Guardar feedback y regenerar</span>
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              size="xs"
+              onClick={() => handleRegenerate()}
+              disabled={isRegenerating}
+              className="items-center gap-1.5 shrink-0"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isRegenerating ? 'Redactando...' : 'Reajustar y Regenerar'}</span>
+            </Button>
           </div>
-        )}
+        </div>
       </div>
 
       {/* MultiModel Comparator Modal */}

@@ -550,7 +550,12 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             Array.isArray(data.epkConfig.miembros) &&
             data.epkConfig.miembros.length > 0
           ) {
-            setMiembros(data.epkConfig.miembros);
+            setMiembros(
+              data.epkConfig.miembros.map((m: any) => ({
+                ...m,
+                fotoUrl: m.fotoUrl || m.foto_url || '',
+              }))
+            );
           } else {
             setMiembros([]);
           }

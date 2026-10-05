@@ -39,6 +39,7 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
+import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
 dotenv.config(); // No sobreescribir variables de entorno inyectadas por Railway / producción
@@ -124,6 +125,7 @@ app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
 app.use("/api", trackingRouter);
+app.use("/api", dealsRouter);
 app.use(transposeRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún

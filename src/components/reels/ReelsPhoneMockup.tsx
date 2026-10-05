@@ -100,11 +100,11 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
   handleSimulateUpload
 }) => {
   // Framing mode for widescreen YouTube / video files:
-  // 'fit' = 100% video visible centered with dark ambient backdrop (no crop, no split seam)
+  // 'center' = zoom 50% vertical 9:16 (standard vertical Reel/TikTok)
   // 'left' = zoom left 1/3 (singer/stage)
-  // 'center' = zoom 50%
   // 'right' = zoom right 1/3 (artwork/instruments)
-  const [previewFraming, setPreviewFraming] = useState<'fit' | 'left' | 'center' | 'right'>('fit');
+  // 'fit' = 100% video visible centered with letterbox
+  const [previewFraming, setPreviewFraming] = useState<'fit' | 'left' | 'center' | 'right'>('center');
 
   // Beat drop flash effect
   const isBeatDropActive = Boolean(beatDropFx && (simulatedTime % 4 < 0.25 || simulatedTime % 7 < 0.3));
@@ -173,13 +173,13 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
           <span className="text-[var(--ink-2)] pl-1">Encuadre:</span>
           <div className="flex items-center gap-1">
             <Button
-              variant={previewFraming === 'fit' ? "selected" : "ghost"}
+              variant={previewFraming === 'center' ? "selected" : "ghost"}
               size="xs"
               type="button"
-              onClick={() => setPreviewFraming('fit')}
-              title="Muestra el vídeo 16:9 completo sin recortar nada"
+              onClick={() => setPreviewFraming('center')}
+              title="Enfoca verticalmente al centro (Reels 9:16)"
             >
-              <ShowIcon inline emoji="📺" />16:9 Completo
+              <ShowIcon inline emoji="🎯" />Vertical
             </Button>
             <Button
               variant={previewFraming === 'left' ? "selected" : "ghost"}
@@ -191,15 +191,6 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               <ShowIcon inline emoji="👤" />Izq
             </Button>
             <Button
-              variant={previewFraming === 'center' ? "selected" : "ghost"}
-              size="xs"
-              type="button"
-              onClick={() => setPreviewFraming('center')}
-              title="Enfoca el centro del plano"
-            >
-              <ShowIcon inline emoji="🎯" />Centro
-            </Button>
-            <Button
               variant={previewFraming === 'right' ? "selected" : "ghost"}
               size="xs"
               type="button"
@@ -207,6 +198,15 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
               title="Enfoca el tercio derecho"
             >
               <ShowIcon inline emoji="🎨" />Der
+            </Button>
+            <Button
+              variant={previewFraming === 'fit' ? "selected" : "ghost"}
+              size="xs"
+              type="button"
+              onClick={() => setPreviewFraming('fit')}
+              title="Muestra el vídeo 16:9 completo sin recortar nada"
+            >
+              <ShowIcon inline emoji="📺" />16:9
             </Button>
           </div>
         </div>

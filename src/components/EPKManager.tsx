@@ -503,19 +503,47 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const miembros: BandMember[] = (config.miembros || []).map((m, idx) => ({
     ...m,
     id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+    fotoUrl: m.fotoUrl || (m as any).foto_url || '',
   }));
 
-  const actualizarMiembros = (nuevos: BandMember[]) => setConfig({ ...config, miembros: nuevos });
+  const actualizarMiembros = (updater: (prevList: BandMember[]) => BandMember[]) => {
+    setConfig((prev) => {
+      const currentList: BandMember[] = (prev.miembros || []).map((m, idx) => ({
+        ...m,
+        id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+        fotoUrl: m.fotoUrl || (m as any).foto_url || '',
+      }));
+      const nuevos = updater(currentList);
+      return {
+        ...prev,
+        miembros: nuevos,
+      };
+    });
+  };
 
   const anadirMiembro = () => {
-    actualizarMiembros([...miembros, { id: `m-${Date.now()}`, nombre: '', rol: '' }]);
+    actualizarMiembros((list) => [
+      ...list,
+      {
+        id: `m-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        nombre: '',
+        rol: '',
+        fotoUrl: '',
+        bio: '',
+        instagram: '',
+      },
+    ]);
   };
 
   const editarMiembro = (id: string, campos: Partial<BandMember>) => {
-    actualizarMiembros(miembros.map((m) => (m.id === id ? { ...m, ...campos } : m)));
+    actualizarMiembros((list) =>
+      list.map((m) => (m.id === id ? { ...m, ...campos } : m))
+    );
   };
 
-  const quitarMiembro = (id: string) => actualizarMiembros(miembros.filter((m) => m.id !== id));
+  const quitarMiembro = (id: string) => {
+    actualizarMiembros((list) => list.filter((m) => m.id !== id));
+  };
 
   const subirFotoMiembro = async (id: string, file: File) => {
     setSubiendoFotoMiembro(id);
@@ -528,6 +556,14 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       editarMiembro(id, { fotoUrl: url });
     } catch (err: any) {
       console.error('Error subiendo foto de miembro:', err);
+      // Fallback base64 para no perder la vista si falla la red
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (ev.target?.result) {
+          editarMiembro(id, { fotoUrl: ev.target.result as string });
+        }
+      };
+      reader.readAsDataURL(file);
       setSaveError(err?.message || 'No se pudo subir la foto. Inténtalo de nuevo.');
     } finally {
       setSubiendoFotoMiembro(null);
@@ -540,40 +576,60 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     id: v.id || `v-${idx + 1}-${(v.titulo || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
   }));
 
-  const actualizarVideos = (nuevos: EPKVideo[]) => setConfig({ ...config, videos: nuevos });
+  const actualizarVideos = (updater: (prevVideos: EPKVideo[]) => EPKVideo[]) => {
+    setConfig((prev) => {
+      const currentList: EPKVideo[] = (prev.videos || []).map((v, idx) => ({
+        ...v,
+        id: v.id || `v-${idx + 1}-${(v.titulo || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
+      }));
+      const nuevos = updater(currentList);
+      return {
+        ...prev,
+        videos: nuevos,
+      };
+    });
+  };
 
   const anadirVideo = () => {
-    // El primero que se añade queda destacado por defecto: es el que se ve grande arriba.
-    actualizarVideos([
-      ...videos,
+    actualizarVideos((list) => [
+      ...list,
       {
-        id: `v-${Date.now()}`,
+        id: `v-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         titulo: '',
         url: '',
-        destacado: videos.length === 0,
+        destacado: list.length === 0,
       },
     ]);
   };
 
   const editarVideo = (id: string, campos: Partial<EPKVideo>) => {
-    actualizarVideos(videos.map((v) => (v.id === id ? { ...v, ...campos } : v)));
+    actualizarVideos((list) =>
+      list.map((v) => (v.id === id ? { ...v, ...campos } : v))
+    );
   };
 
   const quitarVideo = (id: string) => {
-    const restantes = videos.filter((v) => v.id !== id);
-    // Si se borra el destacado, asciende el primero que quede para no dejar el EPK sin vídeo principal.
-    if (restantes.length > 0 && !restantes.some((v) => v.destacado)) restantes[0].destacado = true;
-    actualizarVideos(restantes);
+    actualizarVideos((list) => {
+      const restantes = list.filter((v) => v.id !== id);
+      if (restantes.length > 0 && !restantes.some((v) => v.destacado)) {
+        restantes[0].destacado = true;
+      }
+      return restantes;
+    });
   };
 
   const destacarVideo = (id: string) => {
-    actualizarVideos(videos.map((v) => ({ ...v, destacado: v.id === id })));
+    actualizarVideos((list) =>
+      list.map((v) => ({ ...v, destacado: v.id === id }))
+    );
   };
 
   const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string) => {
-    const datos = { ...(config.datosContratacion || {}) } as any;
-    datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
-    setConfig({ ...config, datosContratacion: datos });
+    setConfig((prev) => {
+      const datos = { ...(prev.datosContratacion || {}) } as any;
+      datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
+      return { ...prev, datosContratacion: datos };
+    });
   };
 
   // --- EPK multiidioma -------------------------------------------------------------------

@@ -378,7 +378,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
             estado: 'pendiente_aprobacion',
             ...(notaPlantilla ? { notas: notaPlantilla } : {}),
           })
-          .eq('id', lead.id);
+          .eq('id', lead.id)
+          .eq('band_id', targetBandId);
 
         results.push({
           id: lead.id,

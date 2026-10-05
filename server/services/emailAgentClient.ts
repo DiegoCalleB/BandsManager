@@ -204,17 +204,21 @@ export interface RespuestaEntrante {
   uid: number | string;
   messageId: string;
   from: string;
+  fromName?: string;
+  to?: string;
   subject: string;
   text: string;
   date: Date | null;
   inReplyTo?: string; // Header In-Reply-To para emparejar respuestas con emails originales
+  references?: string[]; // Header References con Message-IDs de la cadena
+  threadId?: string; // Gmail Thread ID si está disponible
 }
 
 // Igual que leerNoLeidos, pero trae el CUERPO real del mensaje (parseado con mailparser a
 // partir del RFC822 crudo) en vez de solo remitente/asunto - es lo que necesita el Agente
 // Lector para emparejar la respuesta con un lead real y dejarla registrada en su hilo, en vez
 // de solo contar cuántos mensajes hay sin leer.
-export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): Promise<RespuestaEntrante[]> {
+export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): Promise<RespuestaEntrante[]> {
   const account = await getAccount(bandId);
 
   const isPortSecure = Number(account.imap_port) === 993 || (account as any).imap_secure === true;
@@ -232,23 +236,43 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 20): 
     await client.connect();
     const lock = await client.getMailboxLock("INBOX");
     try {
+      // Buscar mensajes sin leer o los últimos recientes (máximo 25)
       const uids = await client.search({ seen: false });
-      const toFetch = (uids || []).slice(-maxResults);
+      let toFetch = (uids || []).slice(-maxResults);
+
+      // Si no hay mensajes sin leer, buscar los últimos mensajes recientes en la bandeja
+      if (toFetch.length === 0) {
+        const allUids = await client.search({ all: true });
+        toFetch = (allUids || []).slice(-Math.min(maxResults, 15));
+      }
 
       for (const uid of toFetch) {
         const msg = await client.fetchOne(uid, { envelope: true, source: true }, { uid: true });
         if (!msg || !msg.source) continue;
 
         const parsed = await simpleParser(msg.source);
-        const fromAddress = parsed.from?.value?.[0]?.address || "";
+        const fromItem = parsed.from?.value?.[0];
+        const fromAddress = (fromItem?.address || "").toLowerCase().trim();
+        const fromName = fromItem?.name || "";
+        const toAddress = (parsed.to && !Array.isArray(parsed.to) ? parsed.to.value?.[0]?.address : "") || "";
+
+        let refArray: string[] = [];
+        if (parsed.references) {
+          if (Array.isArray(parsed.references)) refArray = parsed.references;
+          else if (typeof parsed.references === "string") refArray = [parsed.references];
+        }
+
         results.push({
           uid: Number(uid),
           messageId: parsed.messageId || `imap-uid-${uid}`,
           from: fromAddress,
+          fromName: fromName || undefined,
+          to: toAddress || undefined,
           subject: parsed.subject || "",
-          text: (parsed.text || "").trim(),
+          text: (parsed.text || "").trim() || (parsed.html ? parsed.html.replace(/<[^>]+>/g, " ").trim() : ""),
           date: parsed.date || null,
-          inReplyTo: parsed.inReplyTo || undefined
+          inReplyTo: parsed.inReplyTo || undefined,
+          references: refArray.length > 0 ? refArray : undefined
         });
       }
     } finally {

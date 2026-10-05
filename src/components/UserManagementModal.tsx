@@ -24,6 +24,7 @@ import {
 } from "../config/stemInstruments";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { textOnColor } from '../utils/contrastText';
+import { apiFetch } from "../utils/api";
 import { Button, IconButton, Input, Select } from './ui';
 import { Tabs } from "./ui/Tabs";
 
@@ -72,24 +73,13 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
         bandId: targetBandId,
         category: "logo",
       });
-      const authHeaders = getHeaders();
-      const res = await fetch("/api/users/upload-logo", {
+      await apiFetch("/api/users/upload-logo", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-          "x-band-id": targetBandId,
-        },
         body: JSON.stringify({
           bandId: targetBandId,
           logoUrl: uploadedUrl,
         }),
       });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Error al guardar el logotipo");
-      }
 
       setLocalLogo(uploadedUrl);
       if (onUpdateLogo) {
@@ -121,15 +111,6 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
   const [assocRole, setAssocRole] = useState<UserRole>("member");
   const [assocInstrument, setAssocInstrument] = useState("");
 
-  // Helper for Authorization Headers
-  const getHeaders = () => {
-    const token = localStorage.getItem("bakandeya_token");
-    return {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-  };
-
   // Change password state
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
   const [changePasswordValue, setChangePasswordValue] = useState("");
@@ -160,9 +141,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const response = await fetch("/api/users", {
+      const data = await apiFetch<any>("/api/users", {
         method: "POST",
-        headers: getHeaders(),
         body: JSON.stringify({
           username: newUsername.trim(),
           email: newEmail.trim(),
@@ -171,17 +151,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
           role: newRole,
           instrument: newInstrument.trim(),
           avatarColor: newAvatarColor,
-          band_id: currentUser.band_id,
+          band_id: targetBandId,
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Error al crear usuario");
-      }
-
-      setSuccessMsg(`¡Usuario @${data.username} creado con éxito!`);
+      setSuccessMsg(`¡Usuario @${data?.username || newUsername} creado con éxito!`);
       setNewUsername("");
       setNewEmail("");
       setNewName("");
@@ -208,9 +182,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const response = await fetch("/api/users/associate", {
+      const data = await apiFetch<any>("/api/users/associate", {
         method: "POST",
-        headers: getHeaders(),
         body: JSON.stringify({
           email: assocEmail.trim(),
           role: assocRole,
@@ -218,23 +191,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
         }),
       });
 
-      let data: any = {};
-      const contentType = response.headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        const text = await response.text();
-        throw new Error(
-          `Error en el servidor (${response.status}): ${text.slice(0, 100)}`,
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || "Error al asociar músico");
-      }
-
       setSuccessMsg(
-        `¡Músico ${data.name} (@${data.username}) asociado con éxito!`,
+        `¡Músico ${data?.name || "invitado"} (@${data?.username || ""}) asociado con éxito!`,
       );
       setAssocEmail("");
       setAssocInstrument("");
@@ -257,17 +215,10 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      await apiFetch(`/api/users/${userId}`, {
         method: "PUT",
-        headers: getHeaders(),
         body: JSON.stringify({ role: newRole }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Error al actualizar el rol");
-      }
 
       setSuccessMsg(
         `Rol cambiado a ${newRole === "leader" ? "Admin / Mánager" : "Miembro (Músico)"} para @${username}`,
@@ -291,19 +242,12 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      const data = await apiFetch<any>(`/api/users/${userId}`, {
         method: "PUT",
-        headers: getHeaders(),
         body: JSON.stringify({ newPassword: changePasswordValue.trim() }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Error al actualizar contraseña");
-      }
-
-      setSuccessMsg(`Contraseña actualizada para @${data.username}`);
+      setSuccessMsg(`Contraseña actualizada para @${data?.username || "usuario"}`);
       setEditingUserId(null);
       setChangePasswordValue("");
       onRefreshUsers();
@@ -326,16 +270,9 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
+      await apiFetch(`/api/users/${userId}`, {
         method: "DELETE",
-        headers: getHeaders(),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Error al eliminar usuario");
-      }
 
       setSuccessMsg(`Usuario @${username} eliminado correctamente.`);
       onRefreshUsers();

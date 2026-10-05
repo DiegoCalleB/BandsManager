@@ -9,6 +9,7 @@ import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllT
 import { sanitizeExternalText } from "../../utils/promptSafety.js";
 import { findCorridorForCity } from "../../../src/utils/tourRouting.js";
 import { PitchEngine } from "../../services/pitchEngine.js";
+import { getTargetBandId } from "../../utils/bandAccess.js";
 
 const router = express.Router();
 
@@ -36,10 +37,7 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
     const { id } = req.params;
     const { comentario, tono_rating, contenido_rating, providers, activeCampaign } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    const userBandId = getTargetBandId(req);
 
     const result = await PitchEngine.generateMultiPitch({
       leadId: id,
@@ -69,10 +67,7 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
     const { id } = req.params;
     const { tono_rating, contenido_rating, comentario, alcance, provider, modelName, activeCampaign } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    const userBandId = getTargetBandId(req);
 
     const result = await PitchEngine.regeneratePitch({
       leadId: id,
@@ -106,10 +101,7 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
     const { id } = req.params;
     const { logId } = req.body;
 
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
-    }
+    const userBandId = getTargetBandId(req);
     const state = loadState();
     let lead = state.leads.find((l: any) => String(l.id) === String(id));
     if (!lead) {
@@ -146,8 +138,7 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
 
     saveState(state);
 
-    const targetBandId = (req as any).user?.band_id || lead.band_id || userBandId;
-    dbUpsertLead(lead, targetBandId).catch(err => {
+    dbUpsertLead(lead, userBandId).catch(err => {
       console.warn("Async Supabase update for reverted pitch failed:", err);
     });
 
@@ -167,10 +158,7 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
 // para todas las categorías de lead que tengan ya suficiente señal acumulada.
 router.post("/leads/train-tone-dna", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id || (req as any).user?.bandId;
-    if (!userBandId) {
-      return res.status(401).json({ error: "Acceso no autorizado." });
-    }
+    const userBandId = getTargetBandId(req);
     const refinedCategories = await refineAllToneDnaCategoriesForBand(userBandId);
     res.json({
       success: true,

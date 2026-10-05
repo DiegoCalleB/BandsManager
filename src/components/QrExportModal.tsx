@@ -18,6 +18,8 @@ import {
   printHighQualityFlyer,
 } from "../utils/qrExport";
 import { IconButton, Input } from './ui';
+import { QrCustomConfig, DEFAULT_QR_CUSTOM_CONFIG } from "./fans/qr/qrCustomizationConfig";
+import { CustomizableBandQr } from "./fans/qr/CustomizableBandQr";
 
 interface QrExportModalProps {
   isOpen: boolean;
@@ -29,6 +31,7 @@ interface QrExportModalProps {
   url: string;
   logoUrl?: string;
   defaultCta?: string;
+  config?: QrCustomConfig;
 }
 
 export const QrExportModal: React.FC<QrExportModalProps> = ({
@@ -41,6 +44,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
   url,
   logoUrl,
   defaultCta = "¡ESCANEA CON LA CÁMARA DE TU MÓVIL!",
+  config = DEFAULT_QR_CUSTOM_CONFIG,
 }) => {
   const [selectedFormat, setSelectedFormat] = useState<
     "svg" | "png-4k" | "poster-a4" | "badge"
@@ -146,6 +150,32 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           >
             <X className="w-5 h-5" />
           </IconButton>
+        </div>
+
+        {/* Preview del QR estilizado */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 bg-[var(--sunken)]/60 rounded-[var(--r-l)] p-4 border border-[var(--acc)]/20">
+          <div className="shrink-0 bg-[var(--surface)] p-2 rounded-[var(--r-m)] shadow-sm">
+            <CustomizableBandQr
+              id="qr-export-preview-svg"
+              value={url}
+              size={140}
+              config={config}
+              bandName={bandName}
+              bandLogoUrl={includeLogo ? logoUrl : undefined}
+              concertTitle={concertTitle}
+              dateCity={dateCity}
+              showFrame={false}
+            />
+          </div>
+          <div className="space-y-1 text-center sm:text-left">
+            <span className="text-xs font-bold text-[var(--ink)] font-display flex items-center justify-center sm:justify-start gap-1.5">
+              <span>{config.mascot === 'dino' ? '🦖' : config.mascot === 'pacman' ? '🕹️' : config.mascot === 'rock_skull' ? '💀' : '✨'}</span>
+              <span>Diseño Artístico Aplicado</span>
+            </span>
+            <p className="text-[11px] text-[var(--ink-2)] font-sans max-w-xs">
+              Tu QR incluye la mascota ({config.mascot}), puntos ({config.dotStyle}), ojos ({config.eyeStyle}) y paleta personalizada.
+            </p>
+          </div>
         </div>
 
         {/* Selector de Formato de Exportación */}

@@ -26,3 +26,4 @@ export * from "./db/categoryTemplates.js";
 export * from "./db/exampleThreads.js";
 export * from "./db/leadMessages.js";
 export * from "./db/aiLedger.js";
+export * from "./db/deals.js";

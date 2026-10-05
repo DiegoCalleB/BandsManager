@@ -26,6 +26,7 @@ import { MultiModelPitchComparatorModal } from "./MultiModelPitchComparatorModal
 import { BoloConfirmadoSetlistModal } from "./BoloConfirmadoSetlistModal";
 import { DealAndLogisticsCopilot } from "./DealAndLogisticsCopilot";
 import { QuickDealSimulator } from "./QuickDealSimulator";
+import { FastDealModal } from "./FastDealModal";
 import {
   isLeadNeedsFollowup,
   getDaysSinceContact,
@@ -40,6 +41,7 @@ import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import {
   Edit3,
   X,
+  Zap,
   Sparkles,
   MessageCircle,
   PhoneCall,
@@ -221,6 +223,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // WhatsApp Modal & External Intelligence Tools (Jina, Wegow Radar, Instagram)
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [showFastDealModal, setShowFastDealModal] = useState(false);
   const [isScanningJina, setIsScanningJina] = useState(false);
   const [isDetectingDates, setIsDetectingDates] = useState(false);
   const [isEnrichingInstagram, setIsEnrichingInstagram] = useState(false);
@@ -1592,6 +1595,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
         {/* Quick Action Bar for Booking Manager */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 pt-1">
+          {/* Botón 1-Click Deal */}
+          <button
+            type="button"
+            onClick={() => setShowFastDealModal(true)}
+            className="py-2.5 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-500 border border-emerald-500/30 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer group shadow-2xs"
+            title="Generar Hoja de Acuerdo y Enlace 1-Click para la Sala"
+          >
+            <Zap className="w-4 h-4 fill-current shrink-0 text-emerald-500" />
+            <span>Cerrar Bolo 1-Click</span>
+          </button>
+
           {/* Botón WhatsApp — Abre el visual preview drawer con mensaje adaptado y wa.me */}
           <button
             type="button"
@@ -5546,6 +5560,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           onUpdateLeadPhone={(leadId, updates) => {
             onUpdateLead(leadId, updates);
             setEditedLeadInfo((prev) => ({ ...prev, ...updates }));
+          }}
+        />
+      )}
+
+      {/* Modal Hoja de Acuerdo 1-Click */}
+      {selectedLead && (
+        <FastDealModal
+          isOpen={showFastDealModal}
+          onClose={() => setShowFastDealModal(false)}
+          lead={selectedLead}
+          bandName={bandName || 'Nuestra Banda'}
+          onDealConfirmed={() => {
+            onUpdateLead(selectedLead.id, { estado: 'confirmado' });
           }}
         />
       )}

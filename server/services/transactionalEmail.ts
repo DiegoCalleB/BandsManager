@@ -842,3 +842,238 @@ export async function sendMemberInvitationEmail(options: {
     html,
   });
 }
+
+export interface DealVenueEmailOptions {
+  toEmail: string;
+  signerName: string;
+  signerRole?: string;
+  venueName: string;
+  bandName: string;
+  eventDate: string;
+  arrivalTime?: string;
+  showTime?: string;
+  totalAgreed: number;
+  paymentMethod: string;
+  token: string;
+  sha256?: string;
+}
+
+/**
+ * Envía la copia notarial y confirmación oficial de la Hoja de Acuerdo firmada a la sala.
+ */
+export async function sendDealSignedToVenueEmail(options: DealVenueEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+  const dealUrl = `https://bandmanager.io/deal/${options.token}`;
+  const formattedPayment = options.paymentMethod === 'efectivo'
+    ? 'Efectivo al finalizar (sobre)'
+    : options.paymentMethod === 'transferencia'
+    ? 'Transferencia bancaria / Bizum'
+    : 'Pago diferido (Ayuntamiento)';
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Concierto Confirmado - BandManager.io</title>
+</head>
+<body style="margin:0; padding:0; background-color:#09090c; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#f4f4f5;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#09090c; padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:580px; background-color:#111116; border:1px solid #22222c; border-radius:18px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+          <tr>
+            <td style="background:linear-gradient(135deg, #162038 0%, #111116 100%); padding:28px 28px 22px 28px; border-bottom:1px solid #22222c;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <span style="font-size:18px; font-weight:900; color:#ffffff; letter-spacing:-0.5px;">BandManager<span style="color:#2158DC;">.io</span></span>
+                    <div style="font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:1px; margin-top:3px;">Acuerdo Oficial de Directo</div>
+                  </td>
+                  <td align="right">
+                    <span style="background:rgba(11, 113, 103, 0.25); color:#4FC7B8; border:1px solid rgba(79, 199, 184, 0.4); font-size:11px; font-weight:800; padding:5px 12px; border-radius:999px; text-transform:uppercase;">
+                      ✓ eIDAS Validado
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 28px 32px 28px;">
+              <h1 style="margin:0 0 10px 0; font-size:22px; font-weight:800; color:#ffffff; letter-spacing:-0.3px;">
+                ¡Concierto Confirmado y Fecha Bloqueada! 🤘
+              </h1>
+              <p style="margin:0 0 20px 0; font-size:14px; line-height:1.6; color:#d4d4d8;">
+                Hola <strong>${options.signerName}</strong>, confirmamos la recepción de tu firma para el concierto de <strong>${options.bandName}</strong> en <strong>${options.venueName}</strong>.
+              </p>
+
+              <!-- RESUMEN DEL ACUERDO -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background:#16161f; border:1px solid #262633; border-radius:12px; padding:16px; margin-bottom:22px;">
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Fecha del Concierto:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:800; color:#ffffff; text-align:right;">${options.eventDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Llegada y Prueba de Sonido:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:700; color:#60A5FA; text-align:right;">${options.arrivalTime || '18:30'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Inicio del Concierto:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:700; color:#60A5FA; text-align:right;">${options.showTime || '21:30'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Compensación Económica:</td>
+                  <td style="padding:6px 0; font-size:15px; font-weight:900; color:#4FC7B8; text-align:right;">${options.totalAgreed ? `${options.totalAgreed} €` : 'Según taquilla'}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Forma de Pago Acordada:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:700; color:#ffffff; text-align:right;">${formattedPayment}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Rider Técnico de Sonido:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:700; color:#4FC7B8; text-align:right;">✓ Aceptado</td>
+                </tr>
+              </table>
+
+              ${options.sha256 ? `
+              <div style="background:#0e0e13; border:1px solid #1f1f2a; border-radius:8px; padding:10px 14px; margin-bottom:24px; font-family:monospace; font-size:11px; color:#a1a1aa; word-break:break-all;">
+                <span style="color:#60A5FA; font-weight:bold;">Sello Criptográfico SHA-256:</span><br/>${options.sha256}
+              </div>
+              ` : ''}
+
+              <div style="text-align:center; margin:28px 0 16px 0;">
+                <a href="${dealUrl}" style="display:inline-block; background:#2158DC; color:#ffffff; font-weight:800; font-size:14px; text-decoration:none; padding:14px 32px; border-radius:10px; box-shadow:0 8px 20px rgba(33, 88, 220, 0.35);">
+                  Abrir Hoja de Acuerdo y Certificado eIDAS →
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#0b0b0f; padding:18px 28px; text-align:center; font-size:11px; color:#71717a; border-top:1px solid #1c1c24;">
+              BandManager.io • Firma Electrónica conforme al Reglamento eIDAS (UE Nº 910/2014) • Documento legalmente vinculante
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return sendTransactionalEmail({
+    to: options.toEmail,
+    subject: `✅ Concierto Confirmado: ${options.bandName} en ${options.venueName} - Hoja de Acuerdo Oficial`,
+    html,
+  });
+}
+
+export interface DealBandEmailOptions {
+  toEmail: string;
+  bandName: string;
+  venueName: string;
+  eventDate: string;
+  city?: string;
+  signerName: string;
+  signerRole?: string;
+  totalAgreed: number;
+  feeAmount: number;
+  netAmount: number;
+  token: string;
+  sha256?: string;
+}
+
+/**
+ * Notifica a la banda de que la sala ha firmado formalmente el acuerdo y se ha bloqueado la fecha.
+ */
+export async function sendDealSignedToBandEmail(options: DealBandEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+  const dealUrl = `https://bandmanager.io/deal/${options.token}`;
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>¡Bolo Cerrado! - BandManager.io</title>
+</head>
+<body style="margin:0; padding:0; background-color:#09090c; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#f4f4f5;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#09090c; padding:30px 15px;">
+    <tr>
+      <td align="center">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width:580px; background-color:#111116; border:1px solid #22222c; border-radius:18px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+          <tr>
+            <td style="background:linear-gradient(135deg, #10261f 0%, #111116 100%); padding:28px 28px 22px 28px; border-bottom:1px solid #22222c;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <span style="font-size:18px; font-weight:900; color:#ffffff; letter-spacing:-0.5px;">BandManager<span style="color:#2158DC;">.io</span></span>
+                    <div style="font-size:11px; font-weight:700; color:#4FC7B8; text-transform:uppercase; letter-spacing:1px; margin-top:3px;">🎉 ¡Nuevo Bolo Confirmado!</div>
+                  </td>
+                  <td align="right">
+                    <span style="background:rgba(11, 113, 103, 0.25); color:#4FC7B8; border:1px solid rgba(79, 199, 184, 0.4); font-size:11px; font-weight:800; padding:5px 12px; border-radius:999px;">
+                      Agenda Actualizada
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 28px 32px 28px;">
+              <h1 style="margin:0 0 10px 0; font-size:22px; font-weight:800; color:#ffffff; letter-spacing:-0.3px;">
+                ¡${options.venueName} ha firmado el acuerdo! 🤘
+              </h1>
+              <p style="margin:0 0 20px 0; font-size:14px; line-height:1.6; color:#d4d4d8;">
+                Hola <strong>${options.bandName}</strong>, el programador <strong>${options.signerName}</strong> (${options.signerRole || 'Programación'}) acaba de firmar la Hoja de Acuerdo digital. La fecha ya está bloqueada automáticamente en vuestra agenda de gira.
+              </p>
+
+              <!-- DESGLOSE ECONÓMICO Y DE LOGÍSTICA -->
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background:#16161f; border:1px solid #262633; border-radius:12px; padding:16px; margin-bottom:20px;">
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Sala y Ciudad:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:800; color:#ffffff; text-align:right;">${options.venueName} ${options.city ? `(${options.city})` : ''}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Fecha del Show:</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:800; color:#ffffff; text-align:right;">${options.eventDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Caché Pactado con la Sala:</td>
+                  <td style="padding:6px 0; font-size:14px; font-weight:800; color:#ffffff; text-align:right;">${options.totalAgreed} €</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Fee BandManager (5%):</td>
+                  <td style="padding:6px 0; font-size:13px; font-weight:700; color:#E27A70; text-align:right;">-${options.feeAmount} €</td>
+                </tr>
+                <tr style="border-top:1px solid #22222e;">
+                  <td style="padding:8px 0 4px 0; font-size:14px; font-weight:800; color:#ffffff;">Neto para la Banda:</td>
+                  <td style="padding:8px 0 4px 0; font-size:16px; font-weight:900; color:#4FC7B8; text-align:right;">${options.netAmount} €</td>
+                </tr>
+              </table>
+
+              <div style="background:rgba(33, 88, 220, 0.12); border:1px solid rgba(33, 88, 220, 0.3); border-radius:10px; padding:12px 16px; margin-bottom:24px; font-size:12px; color:#93c5fd; line-height:1.5;">
+                ✨ <strong>Recompensa de Estudio:</strong> Tus <strong>${options.feeAmount} €</strong> de fee te han generado <strong>+${options.feeAmount} Créditos IA</strong> automáticos en tu cuenta de BandManager para separación de stems y creación de reels.
+              </div>
+
+              <div style="text-align:center; margin:24px 0 16px 0;">
+                <a href="${dealUrl}" style="display:inline-block; background:#2158DC; color:#ffffff; font-weight:800; font-size:14px; text-decoration:none; padding:14px 32px; border-radius:10px; box-shadow:0 8px 20px rgba(33, 88, 220, 0.35);">
+                  Ver Acuerdo y Certificado Notarial →
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#0b0b0f; padding:18px 28px; text-align:center; font-size:11px; color:#71717a; border-top:1px solid #1c1c24;">
+              BandManager.io • Tu oficina digital de booking y gestión de directos
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  return sendTransactionalEmail({
+    to: options.toEmail,
+    subject: `🎉 ¡Bolo Cerrado! ${options.venueName} ha firmado el acuerdo para el ${options.eventDate}`,
+    html,
+  });
+}

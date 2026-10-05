@@ -8,7 +8,7 @@
 // una respuesta por su cuenta (eso es server/routes/leads/reply.ts, y sigue requiriendo que un
 // humano lo revise y lo mande).
 
-import { leerRespuestasEntrantes, marcarComoLeido } from "./emailAgentClient.js";
+import { leerRespuestasEntrantes, marcarComoLeido, type RespuestaEntrante } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
@@ -99,6 +99,166 @@ export interface LectorAgentResult {
   borradorIaBloqueadosPorLimite: number;
 }
 
+function cleanMessageId(id?: string): string {
+  if (!id) return "";
+  return id.replace(/^imap-/, "").replace(/^<+/, "").replace(/>+$/, "").trim().toLowerCase();
+}
+
+function cleanEmailAddress(addr?: string): string {
+  if (!addr) return "";
+  const match = addr.match(/<([^>]+)>/);
+  const raw = match ? match[1] : addr;
+  return raw.replace(/["']/g, "").trim().toLowerCase();
+}
+
+function extractEmailDomain(addr?: string): string {
+  const clean = cleanEmailAddress(addr);
+  const parts = clean.split("@");
+  return parts.length === 2 ? parts[1].trim().toLowerCase() : "";
+}
+
+const GENERIC_EMAIL_DOMAINS = new Set([
+  "gmail.com", "googlemail.com", "hotmail.com", "outlook.com", "live.com",
+  "yahoo.com", "yahoo.es", "icloud.com", "me.com", "proton.me", "protonmail.com"
+]);
+
+/**
+ * Motor de Emparejamiento Multi-Vector de Precisión ("Nivel Dios"):
+ * Resuelve a qué lead pertenece un email entrante a través de 5 vectores jerárquicos:
+ * 1. Gmail Thread ID (100% determinista si se envió por Gmail)
+ * 2. In-Reply-To & References RFC 5322 (cadena de Message-IDs)
+ * 3. Email principal / secundario / normalizado
+ * 4. Dominio corporativo de la sala/festival (ej: @baobaoclub.com -> Sala BaoBao)
+ * 5. Asunto y mención del nombre del recinto con estado activo
+ */
+export async function findMatchingLeadForIncomingMessage(
+  msg: RespuestaEntrante,
+  leads: any[],
+  bandId: string
+): Promise<{ lead: any; matchReason: string; shouldAutoEnrichEmail?: string } | null> {
+  const sb = getSupabase();
+  const fromClean = cleanEmailAddress(msg.from);
+  const fromDomain = extractEmailDomain(msg.from);
+
+  // --- VECTOR 1: Gmail Thread ID ---
+  if (msg.threadId) {
+    const leadByThread = leads.find((l: any) => l.gmail_thread_id && String(l.gmail_thread_id).trim() === String(msg.threadId).trim());
+    if (leadByThread) {
+      return { lead: leadByThread, matchReason: `Gmail Thread ID (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
+    }
+
+    try {
+      const { data: msgByThread } = await sb
+        .from("lead_messages")
+        .select("lead_id")
+        .eq("band_id", bandId)
+        .eq("asunto", msg.subject || "")
+        .maybeSingle();
+      if (msgByThread) {
+        const matched = leads.find((l: any) => String(l.id) === String(msgByThread.lead_id));
+        if (matched) return { lead: matched, matchReason: `Lead Message Thread/Subject (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
+      }
+    } catch (_) {}
+  }
+
+  // --- VECTOR 2: In-Reply-To & References RFC 5322 ---
+  const allReferences: string[] = [];
+  if (msg.inReplyTo) allReferences.push(cleanMessageId(msg.inReplyTo));
+  if (msg.references && Array.isArray(msg.references)) {
+    msg.references.forEach((r) => {
+      const c = cleanMessageId(r);
+      if (c && !allReferences.includes(c)) allReferences.push(c);
+    });
+  }
+
+  for (const ref of allReferences) {
+    if (!ref) continue;
+    // Comprobar con leads.gmail_message_id
+    const leadByMsgId = leads.find((l: any) => {
+      const gId = cleanMessageId(l.gmail_message_id);
+      return gId && (gId === ref || ref.includes(gId) || gId.includes(ref));
+    });
+    if (leadByMsgId) {
+      return { lead: leadByMsgId, matchReason: `RFC References Match (${ref})`, shouldAutoEnrichEmail: fromClean };
+    }
+
+    // Comprobar en lead_messages
+    try {
+      const { data: origMsg } = await sb
+        .from("lead_messages")
+        .select("lead_id")
+        .eq("band_id", bandId)
+        .or(`id.eq.imap-${ref},id.eq.imap-<${ref}>,id.ilike.%${ref}%`)
+        .limit(1)
+        .maybeSingle();
+
+      if (origMsg) {
+        const matched = leads.find((l: any) => String(l.id) === String(origMsg.lead_id));
+        if (matched) {
+          return { lead: matched, matchReason: `RFC In-Reply-To (${ref})`, shouldAutoEnrichEmail: fromClean };
+        }
+      }
+    } catch (_) {}
+  }
+
+  // --- VECTOR 3: Email Principal, Secundario o Alias ---
+  if (fromClean) {
+    const leadByEmail = leads.find((l: any) => {
+      const main = cleanEmailAddress(l.email_contacto);
+      const sec = cleanEmailAddress(l.email_secundario);
+      if (main && (main === fromClean || fromClean.includes(main) || main.includes(fromClean))) return true;
+      if (sec && (sec === fromClean || fromClean.includes(sec) || sec.includes(fromClean))) return true;
+      return false;
+    });
+
+    if (leadByEmail) {
+      return { lead: leadByEmail, matchReason: `Email Address Match (${fromClean})` };
+    }
+  }
+
+  // --- VECTOR 4: Dominio Corporativo del Recinto ---
+  if (fromDomain && !GENERIC_EMAIL_DOMAINS.has(fromDomain)) {
+    const leadByDomain = leads.find((l: any) => {
+      const mainDom = extractEmailDomain(l.email_contacto);
+      const secDom = extractEmailDomain(l.email_secundario);
+      let webDom = "";
+      if (l.website) {
+        try {
+          webDom = new URL(l.website.startsWith("http") ? l.website : `https://${l.website}`).hostname.replace(/^www\./, "").toLowerCase();
+        } catch (_) {}
+      }
+      return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.includes(webDom) || webDom.includes(fromDomain)));
+    });
+
+    if (leadByDomain) {
+      return { lead: leadByDomain, matchReason: `Domain Match (@${fromDomain})`, shouldAutoEnrichEmail: fromClean };
+    }
+  }
+
+  // --- VECTOR 5: Asunto & Nombre de la Sala (Fuzzy Matching Inteligente) ---
+  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(re|fwd|rv|aw|respuesta|sv):\s*/gi, "").trim();
+  if (subjectClean.length >= 3) {
+    const candidateLeads = leads.filter((l: any) => {
+      const nombre = (l.nombre_sala || "").toLowerCase().trim();
+      return nombre.length >= 3 && subjectClean.includes(nombre);
+    });
+
+    if (candidateLeads.length === 1) {
+      return { lead: candidateLeads[0], matchReason: `Subject Name Match ("${candidateLeads[0].nombre_sala}")`, shouldAutoEnrichEmail: fromClean };
+    }
+
+    if (candidateLeads.length > 1) {
+      // Priorizar el que esté en un estado de conversación activa
+      const active = candidateLeads.find((l: any) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
+      if (active) {
+        return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")`, shouldAutoEnrichEmail: fromClean };
+      }
+    }
+  }
+
+  return null;
+}
+
 export async function runLectorAgent(bandId: string): Promise<LectorAgentResult> {
   // Gmail por OAuth (sin contraseña) se prefiere sobre IMAP, igual que ya hace el Agente
   // Enviador (server/services/agentEngine.ts) - hasta ahora este agente era 100% IMAP, así que
@@ -109,10 +269,6 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
 
   // Comprueba, solo si la banda usa OAuth, si algún borrador que el Agente Enviador dejó en
   // Gmail se envió a mano desde ahí sin pasar por la app (ver comprobarBorradoresGmailEnviados).
-  // A PROPÓSITO antes de leerRespuestasGmailApi: solo necesita el scope gmail.compose (el que ya
-  // tenía cualquier banda conectada antes de añadir gmail.modify), así que si leer la bandeja
-  // falla por falta de ese scope nuevo, la detección de borradores enviados no debe quedarse sin
-  // ejecutarse por eso - son dos permisos y dos llamadas independientes.
   let borradoresEnviadosDetectados = 0;
   let borradoresTodaviaSinEnviar: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }> = [];
   let erroresComprobandoBorradores: Array<{ leadId: string; draftId: string; error: string }> = [];
@@ -149,10 +305,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   let borradorIaBloqueadosPorLimite = 0;
 
   for (const msg of mensajes) {
-    // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado (Gmail acepta
-    // el mensaje al enviarlo y solo el servidor destino lo rechaza más tarde), y su remitente es
-    // mailer-daemon, no el lead - así que nunca empareja por "from" como una respuesta normal.
-    // Hay que detectarlo aparte y sacar la dirección fallida del cuerpo del propio bounce.
+    // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado
     if (isBounceMessage(msg.subject || "", msg.from || "")) {
       const emailFallido = extractFailedRecipientEmail(msg.text || "");
       const leadBounce = emailFallido
@@ -169,46 +322,30 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       continue;
     }
 
-    // Intenta emparejar de 2 formas:
-    // 1. Por email exacto (método original)
-    // 2. Por In-Reply-To header → busca en lead_messages quién envió ese message-id (más robusto)
-    const fromLower = (msg.from || "").toLowerCase().trim();
-    let lead = fromLower
-      ? leads.find((l: any) => {
-          const mainEmail = (l.email_contacto || "").toLowerCase().trim();
-          const secEmail = (l.email_secundario || "").toLowerCase().trim();
-          return (mainEmail && (mainEmail === fromLower || mainEmail.includes(fromLower))) ||
-                 (secEmail && (secEmail === fromLower || secEmail.includes(fromLower)));
-        })
-      : null;
+    // Emparejamiento Multi-Vector inteligente
+    const matchResult = await findMatchingLeadForIncomingMessage(msg, leads, bandId);
+    let lead = matchResult?.lead || null;
 
-    // Si no empareja por email, intenta por In-Reply-To (respuesta a un email que enviamos)
-    if (!lead && msg.inReplyTo) {
-      console.log(`[Lector] Email no emparejó por email, buscando por In-Reply-To: ${msg.inReplyTo}`);
-      try {
-        const sb = getSupabase();
-        const { data: originalMsg } = await sb
-          .from("lead_messages")
-          .select("lead_id")
-          .eq("band_id", bandId)
-          .eq("id", `imap-${msg.inReplyTo}`)
-          .maybeSingle();
+    if (lead && matchResult) {
+      console.log(`[Lector] ✨ Emparejamiento exitoso: ${msg.from} -> Lead ${lead.id} (${lead.nombre_sala}) vía [${matchResult.matchReason}]`);
 
-        if (originalMsg) {
-          lead = leads.find((l: any) => l.id === originalMsg.lead_id);
-          console.log(`[Lector] Emparejado por In-Reply-To: Lead ${lead?.id}`);
+      // Auto-enriquecimiento de email secundario si respondió desde una dirección alternativa
+      if (matchResult.shouldAutoEnrichEmail) {
+        const newEmail = matchResult.shouldAutoEnrichEmail;
+        const mainEmail = cleanEmailAddress(lead.email_contacto);
+        const secEmail = cleanEmailAddress(lead.email_secundario);
+
+        if (!mainEmail) {
+          lead.email_contacto = newEmail;
+          await dbUpsertLead(lead, bandId);
+        } else if (!secEmail && mainEmail !== newEmail) {
+          lead.email_secundario = newEmail;
+          await dbUpsertLead(lead, bandId);
+          console.log(`[Lector] 📧 Email secundario auto-enriquecido para Lead ${lead.id}: ${newEmail}`);
         }
-      } catch (e) {
-        console.warn(`[Lector] Error buscando por In-Reply-To:`, e);
       }
-    }
-
-    console.log(`[Lector] Procesando: ${msg.from} -> ${lead ? `Lead ${lead.id}` : "SIN EMPAREJAR"}`);
-
-    if (!lead) {
-      // No se marca como leído a propósito: puede ser una respuesta de un contacto todavía sin
-      // enriquecer con email_contacto, o de fuera de la CRM. Se reintenta en el siguiente tick
-      // por si mientras tanto se completa la ficha del lead.
+    } else {
+      console.log(`[Lector] Procesando: ${msg.from} -> SIN EMPAREJAR (Subject: "${msg.subject?.substring(0, 30)}")`);
       sinEmparejar++;
       continue;
     }
@@ -218,14 +355,10 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       continue;
     }
 
-    // El Message-ID de IMAP es único por RFC 5322: sirve tal cual como id de la fila para
-    // deduplicar sin necesidad de una columna extra ni de comparar texto.
+    // El Message-ID de IMAP/Gmail es único por RFC 5322
     const messageRowId = `imap-${msg.messageId}`;
     const yaRegistrado = await dbLeadMessageExists(messageRowId);
     if (!yaRegistrado) {
-      // El hilo previo (antes de registrar este mensaje) es lo que el Contestador necesita
-      // como contexto de conversación - se pide ANTES de dbCreateLeadMessage para no tener que
-      // filtrar luego el mensaje que acabamos de insertar.
       const hiloPrevio = await dbGetLeadMessages(String(lead.id), bandId);
       const threadSoFar = hiloPrevio.map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
@@ -244,7 +377,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         lead_id: lead.id,
         band_id: bandId,
         remitente: "sala",
-        remitente_nombre: lead.nombre_sala || "Sala",
+        remitente_nombre: lead.nombre_sala || msg.fromName || "Sala",
         asunto: msg.subject || "",
         mensaje: msg.text,
         fecha: (msg.date || new Date()).toISOString(),
@@ -266,13 +399,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         analisis_ia: sentimentAnalysis
       });
 
-      // Auto-Contestador: en vez de dejar el lead solo clasificado (negociando/respondido) sin
-      // nada más que hacer, se intenta redactar ya mismo la respuesta con IA (mismo motor que
-      // server/routes/leads/reply.ts) y se deja en 'pendiente_aprobacion' - el mismo estado que
-      // ya usa el pitch inicial para el botón "Aprobar" en VenueDetailPanel.tsx. Nunca se envía
-      // sola: sigue haciendo falta la aprobación humana (aprobado_respuesta) antes del Enviador.
-      // Si la IA falla, se cae al comportamiento de antes (solo clasificar) para no dejar el
-      // lead sin estado por un fallo de la IA.
+      // Auto-Contestador: Redactar respuesta de alta precisión en 'pendiente_aprobacion'
       let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, leadLang.code);
       let borradorGenerado: string | null = null;
       if (puedeGenerarBorradorIA(bandId)) {
@@ -301,6 +428,10 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       await dbUpsertLead({
         ...lead,
         estado: nuevoEstado,
+        email_abierto: true,
+        veces_abierto: Math.max(Number(lead.veces_abierto) || 0, 1),
+        primer_abierto_at: lead.primer_abierto_at || (msg.date || new Date()).toISOString(),
+        ultimo_abierto_at: (msg.date || new Date()).toISOString(),
         ...(borradorGenerado ? { pitch_generado: borradorGenerado } : {}),
         fecha_ultima_respuesta: (msg.date || new Date()).toISOString(),
         ultimo_sentimiento: sentimentAnalysis.sentimiento,
@@ -318,13 +449,9 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         estrategia_playbook: sentimentAnalysis.estrategia_playbook
       }, bandId);
 
-      // RFC 5322: la próxima respuesta nuestra debe citar el Message-ID de ESTE mensaje entrante
-      // (no el de nuestro propio envío anterior) para que Gmail/el cliente de la sala lo agrupe
-      // bien en el hilo. dbUpsertLead no toca esta columna (ver server/db/leads.ts), así que se
-      // actualiza aparte, igual que ya hace agentEngine.ts con gmail_message_id/gmail_thread_id.
       if (msg.messageId) {
         try {
-          await getSupabase().from("leads").update({ gmail_message_id: msg.messageId }).eq("id", lead.id);
+          await getSupabase().from("leads").update({ gmail_message_id: msg.messageId }).eq("id", lead.id).eq("band_id", bandId);
         } catch (idErr) {
           console.warn(`[Lector] No se pudo actualizar gmail_message_id para el lead ${lead.id}:`, idErr);
         }

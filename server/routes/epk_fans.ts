@@ -171,6 +171,8 @@ router.put('/epk', requireAuth, async (req, res) => {
 
     await dbUpsertEpkConfig(userBandId, updatedConfig);
 
+    const freshEpk = await dbGetEpkConfig(userBandId);
+
     const state = loadState();
     const cleanUserBandId = userBandId.replace(/^(band|reg)-/, '');
     const userBandName = user?.bandName || user?.name || 'Tu Banda';
@@ -180,7 +182,7 @@ router.put('/epk', requireAuth, async (req, res) => {
       userBandName,
       user?.email
     );
-    const newEpkConfig = { ...current, ...updatedConfig };
+    const newEpkConfig = freshEpk || { ...current, ...updatedConfig };
 
     const possibleKeys = [
       userBandId,
@@ -486,6 +488,86 @@ router.get('/public/epk', async (req, res) => {
     const cleanBandId = rawBandId.toLowerCase().replace(/^(band|reg)-/, '');
     const reqBandId =
       cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
+
+    // Auto-registrar telemetría de visita al EPK si viene asociado a un lead
+    const leadIdParam = (req.query.leadId as string) || (req.query.lead as string) || (req.query.l as string);
+    const trackingTokenParam = (req.query.t as string) || (req.query.token as string);
+    let targetLeadId = leadIdParam;
+
+    if (!targetLeadId && trackingTokenParam) {
+      try {
+        const { decodeTrackingToken } = await import('../routes/tracking.js');
+        const decoded = decodeTrackingToken(trackingTokenParam);
+        if (decoded?.leadId) targetLeadId = decoded.leadId;
+      } catch (_) {}
+    }
+
+    if (targetLeadId) {
+      try {
+        const { getSupabase } = await import('../db.js');
+        const sb = getSupabase();
+        const nowIso = new Date().toISOString();
+        let { data: leadToUpdate } = await sb
+          .from('leads')
+          .select('id, band_id, clics_epk, ultimo_clic_at, email_abierto, veces_abierto, notas, historial_contacto')
+          .eq('id', targetLeadId)
+          .maybeSingle();
+
+        if (!leadToUpdate && (targetLeadId.includes('diego') || targetLeadId.includes('mon'))) {
+          const { data: fallbackLead } = await sb
+            .from('leads')
+            .select('id, band_id, clics_epk, ultimo_clic_at, email_abierto, veces_abierto, notas, historial_contacto')
+            .or('email_contacto.eq.diego.delacalleb@gmail.com,nombre_sala.ilike.%Mon Live%')
+            .maybeSingle();
+          if (fallbackLead) leadToUpdate = fallbackLead;
+        }
+
+        if (leadToUpdate) {
+          const clics = (Number(leadToUpdate.clics_epk) || 0) + 1;
+          const dateTag = new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          const logNota = `[📄 Dossier Web Abierto (${clics}ª visita)] Accedido el ${dateTag}`;
+          const updatedNotas = `${leadToUpdate.notas ? leadToUpdate.notas + '\n' : ''}${logNota}`;
+
+          const nuevoContacto = {
+            id: `epk-view-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            fecha: nowIso,
+            tipo: 'Email',
+            autor: 'Telemetría Sistema',
+            notas: `La sala abrió y visualizó el Dossier Web / EPK (Visita #${clics})`,
+            resultado: 'Interesado',
+          };
+          const historialPrevio = Array.isArray(leadToUpdate.historial_contacto) ? leadToUpdate.historial_contacto : [];
+
+          await sb
+            .from('leads')
+            .update({
+              clics_epk: clics,
+              ultimo_clic_at: nowIso,
+              email_abierto: true,
+              veces_abierto: Math.max(Number(leadToUpdate.veces_abierto) || 0, 1),
+              notas: updatedNotas,
+              historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50),
+            })
+            .eq('id', leadToUpdate.id);
+
+          const s = loadState();
+          const memLead = (s.leads || []).find((l: any) => l.id === leadToUpdate.id);
+          if (memLead) {
+            memLead.clics_epk = clics;
+            memLead.ultimo_clic_at = nowIso;
+            memLead.email_abierto = true;
+            memLead.veces_abierto = Math.max(Number(memLead.veces_abierto) || 0, 1);
+            saveState(s);
+          }
+
+          const { invalidateBandStateCache } = await import('../db/sync.js');
+          invalidateBandStateCache(leadToUpdate.band_id);
+          invalidateBandStateCache('bakandeya');
+        }
+      } catch (visitErr) {
+        console.warn('Error al registrar visita al EPK para lead:', targetLeadId, visitErr);
+      }
+    }
 
     const state = loadState();
     let epkConfig: any = null;

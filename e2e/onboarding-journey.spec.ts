@@ -14,7 +14,7 @@ test.use({ viewport: { width: 390, height: 844 } });
 test('una banda nueva se registra, ve el asistente de bienvenida y llega al panel', async ({ page }) => {
   const sufijo = `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-  await page.goto('/login');
+  await page.goto('/');
   await page.getByRole('button', { name: 'Crea tu cuenta gratis' }).click();
 
   await page.getByPlaceholder('Nombre de tu banda').fill(`E2E Test Band ${sufijo}`);

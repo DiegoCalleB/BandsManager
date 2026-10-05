@@ -29,6 +29,7 @@ import {
 import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
+import { api } from "../services/api";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
 
@@ -221,30 +222,65 @@ export default function Merchan({
   });
 
   useEffect(() => {
-    try {
-      const key = `band_songs_${cleanBand || "default"}`;
-      const saved = localStorage.getItem(key);
-      if (saved) {
-        const songs = JSON.parse(saved);
+    let isSubscribed = true;
+    const fetchAlbums = async () => {
+      try {
+        const res = await api.getSongs();
+        const songs = res?.songs || [];
         const albumsMap = new Map<string, string>();
         songs.forEach((s: any) => {
-          if (s.albumDisco && s.portadaUrl && s.portadaUrl !== "") {
-            if (!albumsMap.has(s.albumDisco)) {
-              albumsMap.set(s.albumDisco, s.portadaUrl);
+          const album = s.albumDisco || s.album;
+          const cover = s.portadaUrl || s.portada_url;
+          if (album && cover && String(cover).trim() !== "") {
+            if (!albumsMap.has(album)) {
+              albumsMap.set(album, cover);
             }
           }
         });
 
-        if (albumsMap.size > 0) {
+        if (albumsMap.size > 0 && isSubscribed) {
           const loadedAlbums = Array.from(albumsMap.entries()).map(
             ([name, url]) => ({ name, url }),
           );
           setAlbums(loadedAlbums);
+          return;
         }
+      } catch (_) {
+        // Fallback local
       }
-    } catch (e) {
-      console.error(e);
-    }
+
+      try {
+        const key = `band_songs_${cleanBand || "default"}`;
+        const saved = localStorage.getItem(key);
+        if (saved && isSubscribed) {
+          const songs = JSON.parse(saved);
+          const albumsMap = new Map<string, string>();
+          songs.forEach((s: any) => {
+            const album = s.albumDisco || s.album;
+            const cover = s.portadaUrl || s.portada_url;
+            if (album && cover && cover !== "") {
+              if (!albumsMap.has(album)) {
+                albumsMap.set(album, cover);
+              }
+            }
+          });
+
+          if (albumsMap.size > 0) {
+            const loadedAlbums = Array.from(albumsMap.entries()).map(
+              ([name, url]) => ({ name, url }),
+            );
+            setAlbums(loadedAlbums);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchAlbums();
+    return () => {
+      isSubscribed = false;
+    };
   }, [cleanBand, isBakandeya]);
 
   // Galería de diseños generados, cacheada por banda (misma convención que el resto del módulo

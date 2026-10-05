@@ -36,15 +36,15 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       title={isFavorite ? "Quitar de favoritos" : "Marcar como favorito"}
       className={`p-1.5 rounded-[var(--r-pill)] transition-ui duration-200 flex items-center justify-center shrink-0 ${
         isFavorite
-          ? "bg-[var(--acc)]/20 text-[var(--ink)] hover:bg-[var(--acc)]/30"
-          : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--acc)]/70  hover:bg-[var(--acc)]/10"
+          ? "bg-amber-500/15 text-amber-400 hover:bg-amber-500/25"
+          : "bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-amber-400 hover:bg-amber-500/10"
       } ${className}`}
     >
       <Star
         className={`${iconSizes[size]} transition-ui duration-200 ${
           isFavorite || hovered
-            ? "fill-[var(--acc)] text-[var(--acc)] scale-105"
-            : "text-[var(--ink-2)]"
+            ? "fill-amber-400 text-amber-400 scale-105"
+            : "text-[var(--ink-3)]"
         }`}
       />
     </button>

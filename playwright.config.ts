@@ -1,21 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
-/** Sesión reutilizable que crea e2e/auth.setup.ts (ver allí el porqué).
- *  Ruta relativa a la raíz del repo: el proyecto es ESM y no hay __dirname. */
-const FICHERO_SESION = 'e2e/.auth/user.json';
 
 // Smoke suite mínimo (no cobertura completa) - ver e2e/README.md para qué cubre y por qué no
 // hay más. Corre contra el servidor de dev (Express + Vite en un solo proceso, ver server.ts)
 // arrancado sin credenciales de Supabase/Stripe/Gemini: la app arranca igual y el login
 // funciona contra los usuarios semilla de src/db_seed.ts (la sincronización con Supabase en
 // /auth/login está en try/catch y sigue con el estado en memoria si falla).
-import fs from 'node:fs';
-
-/** El entorno trae Chromium preinstalado y sin descarga: se apunta al binario. */
-const DEFAULT_CHROME_WIN = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const LAUNCH_OPTIONS = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
-  ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
-  : (fs.existsSync(DEFAULT_CHROME_WIN) ? { executablePath: DEFAULT_CHROME_WIN } : undefined);
-
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -30,38 +19,16 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    // El smoke original: sin sesión previa, porque auth.spec.ts comprueba justo
-    // que sin sesión se ve el login. Ignora la suite visual, que tiene su propio
-    // proyecto con sesión reutilizada.
     {
       name: 'chromium',
-      testIgnore: [/visual\.spec\.ts/, /superficies\.spec\.ts/, /energia\.spec\.ts/, /responsive\.spec\.ts/, /dashboard\.spec\.ts/, /auth\.setup\.ts/, /visual-theme-review\.spec\.ts/, /modal-uniones\.spec\.ts/, /landing-capturas\.spec\.ts/],
       use: {
         ...devices['Desktop Chrome'],
         // El Chromium completo que trae preinstalado el entorno no coincide en revisión con
         // el chrome-headless-shell que @playwright/test intentaría descargar por su cuenta
         // (y aquí no hay descarga de navegadores) - se apunta directo al binario ya presente.
-        launchOptions: LAUNCH_OPTIONS,
-      },
-    },
-    // Login único para la suite visual: el backend limita a 10 logins/minuto y
-    // un login por test se auto-bloqueaba a mitad de corrida.
-    {
-      name: 'setup-visual',
-      testMatch: /auth\.setup\.ts/,
-      use: { ...devices['Desktop Chrome'], launchOptions: LAUNCH_OPTIONS },
-    },
-    {
-      name: 'visual',
-      testMatch: /(visual|superficies|energia|responsive|dashboard|modal-uniones|landing-capturas)\.spec\.ts/,
-      dependencies: ['setup-visual'],
-      use: {
-        ...devices['Desktop Chrome'],
-        launchOptions: LAUNCH_OPTIONS,
-        storageState: FICHERO_SESION,
-        // La app se usa en español: con el locale por defecto (en-US) el menú salía mitad en
-        // inglés y las capturas no eran lo que ve un usuario real.
-        locale: 'es-ES',
+        launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
+          ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
+          : undefined,
       },
     },
   ],
@@ -69,7 +36,7 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:3000/api/health',
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 60_000,
     env: {
       NODE_ENV: 'development',
       AGENT_EMAIL_MODE: 'draft',

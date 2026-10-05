@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
+import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../ui';
 
@@ -48,9 +49,8 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
     setGeneratedLyrics("");
 
     try {
-      const res = await fetch("/api/ai-music/generate", {
+      const data = await apiFetch<any>("/api/ai-music/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt,
           style,
@@ -61,9 +61,8 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || "Error al generar la música con IA");
+      if (!data?.success || !data.audioBase64) {
+        throw new Error(data?.error || "Error al generar la música con IA");
       }
 
       // Convert base64 audio to Blob URL

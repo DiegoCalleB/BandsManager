@@ -20,6 +20,7 @@ import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
+import { apiFetch } from "../../utils/api";
 import { IconButton, Input, Select } from '../ui';
 
 interface BulkAlbumAudioUploaderModalProps {
@@ -451,62 +452,54 @@ export function BulkAlbumAudioUploaderModal({
             ],
           };
 
-          const postRes = await fetch("/api/songs", {
+          const savedData = await apiFetch<any>("/api/songs", {
             method: "POST",
-            headers,
             body: JSON.stringify(newSong),
           });
 
-          if (postRes.ok) {
-            const savedData = await postRes.json();
-            const savedSong = savedData?.song || newSong;
-            newlyCreatedSongs.push(savedSong);
-            successCount++;
+          const savedSong = savedData?.song || newSong;
+          newlyCreatedSongs.push(savedSong);
+          successCount++;
+          setItems((prev) =>
+            prev.map((it, idx) =>
+              idx === i ? { ...it, status: "transcribing", uploadedUrl } : it,
+            ),
+          );
+          try {
+            const chordData = await apiFetch<any>("/api/generate-song-chords", {
+              method: "POST",
+              body: JSON.stringify({
+                songId: savedSong.id,
+                titulo: savedSong.titulo,
+                tonalidad: savedSong.tonalidad,
+                bpm: savedSong.bpm,
+                audioUrl: uploadedUrl,
+              }),
+            });
             setItems((prev) =>
               prev.map((it, idx) =>
-                idx === i ? { ...it, status: "transcribing", uploadedUrl } : it,
+                idx === i
+                  ? {
+                      ...it,
+                      status: "success",
+                      uploadedUrl,
+                      chordsSource: chordData?.chordsSource,
+                      esAproximado: chordData?.esAproximado,
+                    }
+                  : it,
               ),
             );
-            try {
-              const chordRes = await fetch("/api/generate-song-chords", {
-                method: "POST",
-                headers,
-                body: JSON.stringify({
-                  songId: savedSong.id,
-                  titulo: savedSong.titulo,
-                  tonalidad: savedSong.tonalidad,
-                  bpm: savedSong.bpm,
-                  audioUrl: uploadedUrl,
-                }),
-              });
-              const chordData = await chordRes.json();
-              setItems((prev) =>
-                prev.map((it, idx) =>
-                  idx === i
-                    ? {
-                        ...it,
-                        status: "success",
-                        uploadedUrl,
-                        chordsSource: chordData?.chordsSource,
-                        esAproximado: chordData?.esAproximado,
-                      }
-                    : it,
-                ),
-              );
-            } catch (chordErr) {
-              console.warn(
-                "No se pudieron analizar los acordes de",
-                savedSong.titulo,
-                chordErr,
-              );
-              setItems((prev) =>
-                prev.map((it, idx) =>
-                  idx === i ? { ...it, status: "success", uploadedUrl } : it,
-                ),
-              );
-            }
-          } else {
-            throw new Error(`HTTP ${postRes.status}`);
+          } catch (chordErr) {
+            console.warn(
+              "No se pudieron analizar los acordes de",
+              savedSong.titulo,
+              chordErr,
+            );
+            setItems((prev) =>
+              prev.map((it, idx) =>
+                idx === i ? { ...it, status: "success", uploadedUrl } : it,
+              ),
+            );
           }
         } else {
           // UPDATE EXISTING SONG
@@ -534,67 +527,59 @@ export function BulkAlbumAudioUploaderModal({
               ],
             };
 
-            const putRes = await fetch(
+            const savedData = await apiFetch<any>(
               `/api/songs/${encodeURIComponent(updatedSong.id)}`,
               {
                 method: "PUT",
-                headers,
                 body: JSON.stringify(updatedSong),
               },
             );
 
-            if (putRes.ok) {
-              const savedData = await putRes.json();
-              const finalSaved = savedData?.song || updatedSong;
-              updatedSongsMap.set(finalSaved.id, finalSaved);
-              successCount++;
+            const finalSaved = savedData?.song || updatedSong;
+            updatedSongsMap.set(finalSaved.id, finalSaved);
+            successCount++;
+            setItems((prev) =>
+              prev.map((it, idx) =>
+                idx === i
+                  ? { ...it, status: "transcribing", uploadedUrl }
+                  : it,
+              ),
+            );
+            try {
+              const chordData = await apiFetch<any>("/api/generate-song-chords", {
+                method: "POST",
+                body: JSON.stringify({
+                  songId: finalSaved.id,
+                  titulo: finalSaved.titulo,
+                  tonalidad: finalSaved.tonalidad,
+                  bpm: finalSaved.bpm,
+                  audioUrl: uploadedUrl,
+                }),
+              });
               setItems((prev) =>
                 prev.map((it, idx) =>
                   idx === i
-                    ? { ...it, status: "transcribing", uploadedUrl }
+                    ? {
+                        ...it,
+                        status: "success",
+                        uploadedUrl,
+                        chordsSource: chordData?.chordsSource,
+                        esAproximado: chordData?.esAproximado,
+                      }
                     : it,
                 ),
               );
-              try {
-                const chordRes = await fetch("/api/generate-song-chords", {
-                  method: "POST",
-                  headers,
-                  body: JSON.stringify({
-                    songId: finalSaved.id,
-                    titulo: finalSaved.titulo,
-                    tonalidad: finalSaved.tonalidad,
-                    bpm: finalSaved.bpm,
-                    audioUrl: uploadedUrl,
-                  }),
-                });
-                const chordData = await chordRes.json();
-                setItems((prev) =>
-                  prev.map((it, idx) =>
-                    idx === i
-                      ? {
-                          ...it,
-                          status: "success",
-                          uploadedUrl,
-                          chordsSource: chordData?.chordsSource,
-                          esAproximado: chordData?.esAproximado,
-                        }
-                      : it,
-                  ),
-                );
-              } catch (chordErr) {
-                console.warn(
-                  "No se pudieron analizar los acordes de",
-                  finalSaved.titulo,
-                  chordErr,
-                );
-                setItems((prev) =>
-                  prev.map((it, idx) =>
-                    idx === i ? { ...it, status: "success", uploadedUrl } : it,
-                  ),
-                );
-              }
-            } else {
-              throw new Error(`HTTP ${putRes.status}`);
+            } catch (chordErr) {
+              console.warn(
+                "No se pudieron analizar los acordes de",
+                finalSaved.titulo,
+                chordErr,
+              );
+              setItems((prev) =>
+                prev.map((it, idx) =>
+                  idx === i ? { ...it, status: "success", uploadedUrl } : it,
+                ),
+              );
             }
           }
         }

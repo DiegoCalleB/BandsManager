@@ -169,15 +169,80 @@ const KNOWN_VENUES_GEO: Record<string, [number, number]> = {
   "escenario santander": [43.4471, -3.8052],
   "sala acapulco": [43.5385, -5.6644],
 
-  // Murcia, Zaragoza, Galicia...
+  // Galicia & Iconic Galician Venues & Festivals
+  "a arca da noe": [42.1264, -7.7947], // Vilar de Santos, Ourense
+  "arca da noe": [42.1264, -7.7947],
+  "cafe cultural auriense": [42.3358, -7.8639], // Ourense
+  "café cultural auriense": [42.3358, -7.8639],
+  "auriense": [42.3358, -7.8639],
+  "castañazo rock": [42.6083, -7.7681], // Chantada, Lugo
+  "castanazo rock": [42.6083, -7.7681],
+  "castañazo": [42.6083, -7.7681],
+  "clavicembalo": [43.0099, -7.5560], // Lugo
+  "club clavicembalo": [43.0099, -7.5560],
+  "club clavicémbalo": [43.0099, -7.5560],
+  "el nautico de san vicente": [42.4632, -8.9038], // San Vicente do Mar, O Grove
+  "el náutico de san vicente": [42.4632, -8.9038],
+  "nautico de san vicente": [42.4632, -8.9038],
+  "el nautico": [42.4632, -8.9038],
+  "el náutico": [42.4632, -8.9038],
+  "festigal": [42.8782, -8.5448], // Campus Sur, Santiago de Compostela
+  "festival internacional do mundo celta": [43.6833, -7.8500], // Ortigueira
+  "mundo celta": [43.6833, -7.8500],
+  "festival revenidas": [42.5802, -8.7712], // Vilaxoán de Arousa
+  "revenidas": [42.5802, -8.7712],
+  "garufa club": [43.3695, -8.4065], // A Coruña
+  "garufa": [43.3695, -8.4065],
+  "morriña fest": [43.3623, -8.4115], // A Coruña
+  "morrina fest": [43.3623, -8.4115],
+  "o son do camiño": [42.8872, -8.4975], // Monte do Gozo, Santiago
+  "son do camiño": [42.8872, -8.4975],
+  "son do camino": [42.8872, -8.4975],
+  "portamerica": [42.6027, -8.6427], // Caldas de Reis / Portas
+  "portamérica": [42.6027, -8.6427],
+  "sala malatesta": [42.8805, -8.5430], // Santiago de Compostela
+  "malatesta": [42.8805, -8.5430],
+  "sala capitol": [42.8797, -8.5441], // Santiago de Compostela
+  "capitol": [42.8797, -8.5441],
+  "sala ruido": [43.4832, -8.2369], // Ferrol
+  "ruido ferrol": [43.4832, -8.2369],
+  "playa club": [43.3687, -8.4116], // A Coruña
+  "sala playa club": [43.3687, -8.4116],
+  "pelicano": [43.3704, -8.4035], // A Coruña
+  "sala pelicano": [43.3704, -8.4035],
+  "mardi gras": [43.3712, -8.4011], // A Coruña
+  "sala mardi gras": [43.3712, -8.4011],
+  "master club vigo": [42.2384, -8.7231],
+  "master club": [42.2384, -8.7231],
+  "masterclub": [42.2384, -8.7231],
+  "sala rebullon": [42.1950, -8.6450], // Mos / Vigo
+  "sala rebullón": [42.1950, -8.6450],
+  "rebullon": [42.1950, -8.6450],
+  "sala karma": [42.4330, -8.6450], // Pontevedra
+  "karma": [42.4330, -8.6450],
+  "sala rouge": [42.2365, -8.7210], // Vigo
+  "la fabrica de chocolate": [42.2370, -8.7260], // Vigo
+  "la fábrica de chocolate": [42.2370, -8.7260],
+  "kominsky": [42.2395, -8.7215], // Vigo
+  "resurrection fest": [43.6625, -7.5950], // Viveiro
+  "caudal fest": [43.0050, -7.5620], // Lugo
+  "atlantic fest": [42.5970, -8.7650], // Vilagarcía de Arousa
+  "festival de la luz": [43.0070, -8.1270], // Boimorto
+  "17º festival ribeira sacra": [42.5220, -7.5140],
+  "ribeira sacra": [42.5220, -7.5140],
+  "noites do porto": [43.3680, -8.4050],
+  "barbeira season fest": [42.1200, -8.8500], // Baiona
+  "pub gatos": [42.9150, -8.0160], // Melide
+  "sala aturuxo": [42.3245, -8.7850], // Bueu
+  "aturuxo": [42.3245, -8.7850],
+  "sala sonar": [42.8790, -8.5430], // Santiago
+  "sala sónar": [42.8790, -8.5430],
+
+  // Murcia, Zaragoza, etc.
   "garaje beat club": [37.9947, -1.1398],
   "sala rem": [37.9863, -1.1348],
   "sala oasi": [41.6558, -0.8872],
   "la casa del loco": [41.6508, -0.8845],
-  "sala capitol": [42.8797, -8.5441],
-  pelicano: [43.3704, -8.4035],
-  "sala playa club": [43.3687, -8.4116],
-  "master club vigo": [42.2384, -8.7231],
 };
 
 // Madrid & City Districts coordinates for accurate regional placement
@@ -221,10 +286,227 @@ const DISTRICTS_GEO: Record<string, [number, number]> = {
 
 // Pre-loaded coordinates dictionary for Spanish cities, towns, festivals, and provinces
 const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
-  // Major Capitals & Cities'Ávila': [40.6565, -4.6818],'Avila': [40.6565, -4.6818],'Madrid': [40.4168, -3.7038],'Barcelona': [41.3851, 2.1734],'Valencia': [39.4699, -0.3763],'Sevilla': [37.3891, -5.9845],'Zaragoza': [41.6488, -0.8896],'Málaga': [36.7213, -4.4214],'Malaga': [36.7213, -4.4214],'Murcia': [37.9922, -1.1307],'Palma': [39.5696, 2.6502],'Las Palmas': [28.1235, -15.4363],'Bilbao': [43.2630, -2.9350],'Alicante': [38.3452, -0.4810],'Córdoba': [37.8882, -4.7794],'Cordoba': [37.8882, -4.7794],'Valladolid': [41.6523, -4.7245],'Vigo': [42.2406, -8.7207],'Gijón': [43.5357, -5.6615],'Gijon': [43.5357, -5.6615],'Granada': [37.1773, -3.5986],'A Coruña': [43.3623, -8.4115],'Coruña': [43.3623, -8.4115],'Vitoria': [42.8467, -2.6716],'Vitoria-Gasteiz': [42.8467, -2.6716],'Badajoz': [38.8794, -6.9706],'Oviedo': [43.3614, -5.8593],'San Sebastián': [43.3183, -1.9812],'San Sebastian': [43.3183, -1.9812],'Donostia': [43.3183, -1.9812],'Pamplona': [42.8125, -1.6458],'Santander': [43.4623, -3.8099],'Burgos': [42.3440, -3.6969],'Salamanca': [40.9701, -5.6635],'Albacete': [38.9942, -1.8585],'Logroño': [42.4650, -2.4456],'Logrono': [42.4650, -2.4456],'Cáceres': [39.4753, -6.3723],'Caceres': [39.4753, -6.3723],'León': [42.5987, -5.5671],'Leon': [42.5987, -5.5671],'Cádiz': [36.5271, -6.2886],'Cadiz': [36.5271, -6.2886],'Jaén': [37.7796, -3.7849],'Jaen': [37.7796, -3.7849],'Ourense': [42.3358, -7.8639],'Lugo': [43.0099, -7.5560],'Girona': [41.9794, 2.8214],'Toledo': [39.8628, -4.0273],'Huelva': [37.2614, -6.9447],'Guadalajara': [40.6327, -3.1682],'Ciudad Real': [38.9863, -3.9273],'Zamora': [41.5063, -5.7446],'Segovia': [40.9429, -4.1088],'Cuenca': [40.0704, -2.1374],'Huesca': [42.1361, -0.4087],'Teruel': [40.3456, -1.1072],'Soria': [41.7640, -2.4688],'Almería': [36.8340, -2.4637],'Almeria': [36.8340, -2.4637],'Pontevedra': [42.4310, -8.6444],'Castellón': [39.9864, -0.0513],'Castellon': [39.9864, -0.0513],
-  // Key Music & Festival Towns'Villarrobledo': [39.2699, -2.6033], // Viña Rock'Barbate': [36.1923, -5.9220], // Cabo de Plata'Santiago de Compostela': [42.8782, -8.5448],'Santiago': [42.8782, -8.5448],'Lanuza': [42.7561, -0.3150], // Pirineos Sur'Caldas de Reis': [42.6027, -8.6427], // PortAmérica'Aranda de Duero': [41.6704, -3.6892], // Sonorama'Ponferrada': [42.5466, -6.5962],'Ferrara': [44.8381, 11.6198],'Ferrera': [44.8381, 11.6198],'Gandía': [38.9678, -0.1818],'Gandia': [38.9678, -0.1818],'Benicàssim': [40.0558, 0.0637], // FIB'Benicassim': [40.0558, 0.0637],'Ortigueira': [43.6833, -7.8500],'Algeciras': [36.1308, -5.4488],'Jerez': [36.6850, -6.1261],'Jerez de la Frontera': [36.6850, -6.1261],'Mérida': [38.9161, -6.3437],'Merida': [38.9161, -6.3437],'Plasencia': [40.0294, -6.0886],'Béjar': [40.3861, -5.7661],'Arévalo': [41.0631, -4.7205],'Las Navas del Marqués': [40.6053, -4.3314],'El Tiemblo': [40.4144, -4.5008],'Ávila - Arévalo': [41.0631, -4.7205],'Ávila - Las Navas': [40.6053, -4.3314],'Ávila - El Tiemblo': [40.4144, -4.5008],'Alcalá de Henares': [40.4819, -3.3643],'Getafe': [40.3083, -3.7327],'Leganés': [40.3281, -3.7635],'Móstoles': [40.3228, -3.8649],'Alcorcón': [40.3458, -3.8249],'Reus': [41.1561, 1.1069],'Mataró': [41.5421, 2.4445],'Figueres': [42.2665, 2.9610],'Vic': [41.9304, 2.2542],'Sitges': [41.2372, 1.8059],'Lorca': [37.6712, -1.7017],'Cartagena': [37.6257, -0.9966],'Talavera de la Reina': [39.9631, -4.8308],'Torrelavega': [43.3494, -4.0478],'Irún': [43.3378, -1.7888],'Eibar': [43.1842, -2.4714],'Barakaldo': [43.2974, -2.9877],'Getxo': [43.3578, -3.0131],'Ronda': [36.7423, -5.1671],'Antequera': [37.0184, -4.5587],'Motril': [36.7464, -3.5186],'Marbella': [36.5101, -4.8824],'Fuengirola': [36.5398, -4.6247],'Torremolinos': [36.6208, -4.4998],
-  // Autonomous Communities & Regions fallback'Andalucía': [37.5443, -4.7278],'Andalucia': [37.5443, -4.7278],'Cataluña': [41.8205, 1.8401],'Catalunya': [41.8205, 1.8401],'Galicia': [42.5751, -8.1339],'Comunidad de Madrid': [40.4168, -3.7038],'Castilla y León': [41.6523, -4.7245],'Castilla-La Mancha': [39.8628, -4.0273],'País Vasco': [43.0000, -2.6000],'Euskadi': [43.0000, -2.6000],'Comunidad Valenciana': [39.4699, -0.3763],'Aragón': [41.6488, -0.8896],'Asturias': [43.3614, -5.8593],'Extremadura': [39.4753, -6.3723],'Navarra': [42.8125, -1.6458],'Cantabria': [43.4623, -3.8099],'Región de Murcia': [37.9922, -1.1307],'La Rioja': [42.4650, -2.4456]
+  // Major Capitals & Cities
+  Ávila: [40.6565, -4.6818],
+  Avila: [40.6565, -4.6818],
+  Madrid: [40.4168, -3.7038],
+  Barcelona: [41.3851, 2.1734],
+  Valencia: [39.4699, -0.3763],
+  Sevilla: [37.3891, -5.9845],
+  Zaragoza: [41.6488, -0.8896],
+  Málaga: [36.7213, -4.4214],
+  Malaga: [36.7213, -4.4214],
+  Murcia: [37.9922, -1.1307],
+  Palma: [39.5696, 2.6502],
+  "Las Palmas": [28.1235, -15.4363],
+  Bilbao: [43.263, -2.935],
+  Alicante: [38.3452, -0.481],
+  Córdoba: [37.8882, -4.7794],
+  Cordoba: [37.8882, -4.7794],
+  Valladolid: [41.6523, -4.7245],
+  Vigo: [42.2406, -8.7207],
+  Gijón: [43.5357, -5.6615],
+  Gijon: [43.5357, -5.6615],
+  Granada: [37.1773, -3.5986],
+  "A Coruña": [43.3623, -8.4115],
+  Coruña: [43.3623, -8.4115],
+  "La Coruña": [43.3623, -8.4115],
+  Vitoria: [42.8467, -2.6716],
+  "Vitoria-Gasteiz": [42.8467, -2.6716],
+  Badajoz: [38.8794, -6.9706],
+  Oviedo: [43.3614, -5.8593],
+  "San Sebastián": [43.3183, -1.9812],
+  "San Sebastian": [43.3183, -1.9812],
+  Donostia: [43.3183, -1.9812],
+  Pamplona: [42.8125, -1.6458],
+  Santander: [43.4623, -3.8099],
+  Burgos: [42.344, -3.6969],
+  Salamanca: [40.9701, -5.6635],
+  Albacete: [38.9942, -1.8585],
+  Logroño: [42.465, -2.4456],
+  Logrono: [42.465, -2.4456],
+  Cáceres: [39.4753, -6.3723],
+  Caceres: [39.4753, -6.3723],
+  León: [42.5987, -5.5671],
+  Leon: [42.5987, -5.5671],
+  Cádiz: [36.5271, -6.2886],
+  Cadiz: [36.5271, -6.2886],
+  Jaén: [37.7796, -3.7849],
+  Jaen: [37.7796, -3.7849],
+  Ourense: [42.3358, -7.8639],
+  Orense: [42.3358, -7.8639],
+  Lugo: [43.0099, -7.556],
+  Girona: [41.9794, 2.8214],
+  Toledo: [39.8628, -4.0273],
+  Huelva: [37.2614, -6.9447],
+  Guadalajara: [40.6327, -3.1682],
+  "Ciudad Real": [38.9863, -3.9273],
+  Zamora: [41.5063, -5.7446],
+  Segovia: [40.9429, -4.1088],
+  Cuenca: [40.0704, -2.1374],
+  Huesca: [42.1361, -0.4087],
+  Teruel: [40.3456, -1.1072],
+  Soria: [41.764, -2.4688],
+  Almería: [36.834, -2.4637],
+  Almeria: [36.834, -2.4637],
+  Pontevedra: [42.431, -8.6444],
+  Castellón: [39.9864, -0.0513],
+  Castellon: [39.9864, -0.0513],
+
+  // Galicia Towns, Concellos & Festival Locations
+  "Vilar de Santos": [42.1264, -7.7947],
+  "Vilar de santos": [42.1264, -7.7947],
+  Chantada: [42.6083, -7.7681],
+  "O Grove": [42.4961, -8.8653],
+  "San Vicente do Mar": [42.4632, -8.9038],
+  "San Vicente": [42.4632, -8.9038],
+  "Vilaxoán de Arousa": [42.5802, -8.7712],
+  Vilaxoán: [42.5802, -8.7712],
+  Vilaxoan: [42.5802, -8.7712],
+  "Vilagarcía de Arousa": [42.597, -8.765],
+  "Vilagarcia de Arousa": [42.597, -8.765],
+  Vilagarcía: [42.597, -8.765],
+  Vilagarcia: [42.597, -8.765],
+  Ortigueira: [43.6833, -7.85],
+  Ferrol: [43.4832, -8.2369],
+  "Santiago de Compostela": [42.8782, -8.5448],
+  Santiago: [42.8782, -8.5448],
+  Compostela: [42.8782, -8.5448],
+  "Caldas de Reis": [42.6027, -8.6427],
+  "Caldas de reis": [42.6027, -8.6427],
+  Portas: [42.5861, -8.6558],
+  Viveiro: [43.6625, -7.595],
+  Bueu: [42.3245, -8.785],
+  Cangas: [42.2644, -8.7816],
+  "Cangas do Morrazo": [42.2644, -8.7816],
+  Marín: [42.3908, -8.7011],
+  Marin: [42.3908, -8.7011],
+  Moaña: [42.2858, -8.7478],
+  Moana: [42.2858, -8.7478],
+  Redondela: [42.2817, -8.6089],
+  "O Porriño": [42.1611, -8.6189],
+  Porriño: [42.1611, -8.6189],
+  Porrino: [42.1611, -8.6189],
+  Mos: [42.195, -8.645],
+  Ponteareas: [42.1764, -8.5033],
+  Tui: [42.0467, -8.6433],
+  Baiona: [42.12, -8.85],
+  Nigrán: [42.1417, -8.8083],
+  Nigran: [42.1417, -8.8083],
+  Melide: [42.915, -8.016],
+  Lalín: [42.6611, -8.1133],
+  Lalin: [42.6611, -8.1133],
+  "Monforte de Lemos": [42.522, -7.514],
+  Monforte: [42.522, -7.514],
+  Sober: [42.4611, -7.5861],
+  Boimorto: [43.007, -8.127],
+  Carballo: [43.213, -8.691],
+  Ribeira: [42.5539, -8.9931],
+  Noia: [42.7844, -8.8878],
+  Boiro: [42.6467, -8.8822],
+  Rianxo: [42.6508, -8.8183],
+  "A Pobra do Caramiñal": [42.6039, -8.9389],
+  "Pobra do Caramiñal": [42.6039, -8.9389],
+  Betanzos: [43.2808, -8.2114],
+  Pontedeume: [43.4067, -8.1708],
+  "As Pontes": [43.4497, -7.8531],
+  Burela: [43.6597, -7.3578],
+  Foz: [43.5686, -7.2589],
+  Ribadeo: [43.5361, -7.0408],
+  Sarria: [42.7806, -7.4147],
+  Allariz: [42.1906, -7.8019],
+  Celanova: [42.1528, -7.9567],
+  "Xinzo de Limia": [42.0633, -7.7247],
+  Ribadavia: [42.2875, -8.1431],
+  "O Barco de Valdeorras": [42.4167, -6.9833],
+  "O Barco": [42.4167, -6.9833],
+  Verín: [41.9406, -7.4358],
+  Verin: [41.9406, -7.4358],
+  "A Rúa": [42.3944, -7.1189],
+  Cee: [42.9561, -9.19],
+  Fisterra: [42.9089, -9.2628],
+  Finisterre: [42.9089, -9.2628],
+  Muros: [42.7758, -9.0578],
+
+  // Key Music & Festival Towns
+  Villarrobledo: [39.2699, -2.6033], // Viña Rock
+  Barbate: [36.1923, -5.922], // Cabo de Plata
+  Lanuza: [42.7561, -0.315], // Pirineos Sur
+  "Aranda de Duero": [41.6704, -3.6892], // Sonorama
+  Ponferrada: [42.5466, -6.5962],
+  Gandía: [38.9678, -0.1818],
+  Gandia: [38.9678, -0.1818],
+  Benicàssim: [40.0558, 0.0637], // FIB
+  Benicassim: [40.0558, 0.0637],
+  Algeciras: [36.1308, -5.4488],
+  Jerez: [36.685, -6.1261],
+  "Jerez de la Frontera": [36.685, -6.1261],
+  Mérida: [38.9161, -6.3437],
+  Merida: [38.9161, -6.3437],
+  Plasencia: [40.0294, -6.0886],
+  Béjar: [40.3861, -5.7661],
+  Arévalo: [41.0631, -4.7205],
+  "Las Navas del Marqués": [40.6053, -4.3314],
+  "El Tiemblo": [40.4144, -4.5008],
+  "Alcalá de Henares": [40.4819, -3.3643],
+  Getafe: [40.3083, -3.7327],
+  Leganés: [40.3281, -3.7635],
+  Móstoles: [40.3228, -3.8649],
+  Alcorcón: [40.3458, -3.8249],
+  Reus: [41.1561, 1.1069],
+  Mataró: [41.5421, 2.4445],
+  Figueres: [42.2665, 2.961],
+  Vic: [41.9304, 2.2542],
+  Sitges: [41.2372, 1.8059],
+  Lorca: [37.6712, -1.7017],
+  Cartagena: [37.6257, -0.9966],
+  "Talavera de la Reina": [39.9631, -4.8308],
+  Torrelavega: [43.3494, -4.0478],
+  Irún: [43.3378, -1.7888],
+  Eibar: [43.1842, -2.4714],
+  Barakaldo: [43.2974, -2.9877],
+  Getxo: [43.3578, -3.0131],
+  Ronda: [36.7423, -5.1671],
+  Antequera: [37.0184, -4.5587],
+  Motril: [36.7464, -3.5186],
+  Marbella: [36.5101, -4.8824],
+  Fuengirola: [36.5398, -4.6247],
+  Torremolinos: [36.6208, -4.4998],
+
+  // Autonomous Communities & Regions fallback
+  Andalucía: [37.5443, -4.7278],
+  Andalucia: [37.5443, -4.7278],
+  Cataluña: [41.8205, 1.8401],
+  Catalunya: [41.8205, 1.8401],
+  Galicia: [42.5751, -8.1339],
+  "Comunidad de Madrid": [40.4168, -3.7038],
+  "Castilla y León": [41.6523, -4.7245],
+  "Castilla-La Mancha": [39.8628, -4.0273],
+  "País Vasco": [43.0, -2.6],
+  Euskadi: [43.0, -2.6],
+  "Comunidad Valenciana": [39.4699, -0.3763],
+  Aragón: [41.6488, -0.8896],
+  Asturias: [43.3614, -5.8593],
+  Extremadura: [39.4753, -6.3723],
+  Navarra: [42.8125, -1.6458],
+  Cantabria: [43.4623, -3.8099],
+  "Región de Murcia": [37.9922, -1.1307],
+  "La Rioja": [42.465, -2.4456],
 };
+
+function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 // Smart normalizer & lookup function to ensure every lead gets realistic coords in its actual city & venue
 function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
@@ -248,8 +530,9 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
     if (
+      rawVenue === normKey ||
       rawVenue.includes(normKey) ||
-      normKey.includes(rawVenue) ||
+      (normKey.length > 5 && rawVenue.includes(normKey)) ||
       rawAddress.includes(normKey)
     ) {
       return coords;
@@ -267,7 +550,7 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
       rawVenue.includes(normDist) ||
       rawCity.toLowerCase().includes(normDist)
     ) {
-      return offsetCoords(coords, index, 0.003); // very subtle jitter so nearby venues don't overlap exactly
+      return offsetCoords(coords, index, 0.003);
     }
   }
 
@@ -277,14 +560,14 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
     return offsetCoords(base, index);
   }
 
-  // 2. Clean city name (e.g."Barbate (Cádiz)" ->"Barbate","Lanuza (Huesca)" ->"Lanuza")
+  // 4. Clean city name (e.g. "Barbate (Cádiz)" -> "Barbate", "Vilaxoán de Arousa" -> "Vilaxoán")
   const mainPart = rawCity.split(/[\(\-\/\,]/)[0].trim();
   if (SPANISH_CITIES_GEO[mainPart]) {
     const base = SPANISH_CITIES_GEO[mainPart];
     return offsetCoords(base, index);
   }
 
-  // 3. Extract parenthetical part (e.g."Barbate (Cádiz)" ->"Cádiz")
+  // 5. Extract parenthetical part (e.g. "Barbate (Cádiz)" -> "Cádiz")
   const matchParen = rawCity.match(/\(([^)]+)\)/);
   if (matchParen && matchParen[1]) {
     const inside = matchParen[1].trim();
@@ -294,7 +577,7 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
     }
   }
 
-  // 4. Fuzzy match normalized tokens
+  // 6. Normalized city match
   const normCity = rawCity
     .toLowerCase()
     .normalize("NFD")
@@ -304,44 +587,40 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-    if (normCity.includes(normKey) || normKey.includes(normCity)) {
+    if (normCity === normKey || (normKey.length > 4 && normCity.includes(normKey))) {
       return offsetCoords(coords, index);
     }
   }
 
-  // 5. Region match
+  // 7. Check if venue/city/address/region contains Galician hints
+  const combinedContext = `${rawVenue} ${rawAddress} ${rawCity} ${rawRegion}`.toLowerCase();
+  const isGalician =
+    combinedContext.includes("galicia") ||
+    combinedContext.includes("ourense") ||
+    combinedContext.includes("lugo") ||
+    combinedContext.includes("pontevedra") ||
+    combinedContext.includes("coruna") ||
+    combinedContext.includes("coruña") ||
+    combinedContext.includes("santiago") ||
+    combinedContext.includes("vigo") ||
+    combinedContext.includes("arousa") ||
+    combinedContext.includes("ferrol");
+
+  if (isGalician) {
+    // Center of Galicia (Lalín / Melide area)
+    const galiciaCenter: [number, number] = [42.6611, -8.1133];
+    return offsetCoords(galiciaCenter, index, 0.04);
+  }
+
+  // 8. Region match fallback
   if (rawRegion && SPANISH_CITIES_GEO[rawRegion]) {
     const base = SPANISH_CITIES_GEO[rawRegion];
     return offsetCoords(base, index);
   }
 
-  // 6. Region fuzzy match
-  if (rawRegion) {
-    const normRegion = rawRegion
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    for (const [key, coords] of Object.entries(SPANISH_CITIES_GEO)) {
-      const normKey = key
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
-      if (normRegion.includes(normKey) || normKey.includes(normRegion)) {
-        return offsetCoords(coords, index);
-      }
-    }
-  }
-
-  // 7. Deterministic Spain-wide spread (no hardcoded Madrid dump)
-  let hash = 0;
-  const seedStr = lead.id + lead.nombre_sala + rawCity;
-  for (let i = 0; i < seedStr.length; i++) {
-    hash = (hash << 5) - hash + seedStr.charCodeAt(i);
-    hash |= 0;
-  }
-  const lat = 37.2 + (Math.abs(hash) % 55) / 10; // Spread 37.2N to 42.7N across Spain
-  const lng = -6.5 + (Math.abs(hash >> 3) % 85) / 10; // Spread -6.5W to 2.0E across Spain
-  return [lat, lng];
+  // 9. Spain center fallback (around Madrid / Toledo)
+  const spainCenter: [number, number] = [40.4168, -3.7038];
+  return offsetCoords(spainCenter, index, 0.05);
 }
 
 function offsetCoords(
@@ -577,13 +856,14 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         setIsGeocoding(false);
       }
 
-      // Background fine-tuning for unknown towns & specific addresses via Nominatim (non-blocking)
+      // Background fine-tuning for specific street addresses via Nominatim (non-blocking)
       for (const item of pendingToGeocode) {
         if (!isSubscribed) break;
-        const { lead } = item;
-        const query = lead.direccion
-          ? `${lead.direccion}, ${lead.ciudad}, España`
-          : `${lead.nombre_sala || ""}, ${lead.ciudad}, ${lead.region || "España"}`;
+        const { lead, index } = item;
+        if (!lead.direccion) continue; // Only geocode if a physical street address is provided
+
+        const expectedCoords = newCoords[lead.id] || resolveLeadCoordinates(lead, index);
+        const query = `${lead.direccion}, ${lead.ciudad}, España`;
         try {
           const res = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
@@ -595,17 +875,23 @@ export const VenueMap: React.FC<VenueMapProps> = ({
           if (data && data[0]) {
             const lat = parseFloat(data[0].lat);
             const lon = parseFloat(data[0].lon);
-            const coords: [number, number] = [lat, lon];
-            const fullKey = `${lead.nombre_sala}-${lead.ciudad}`.toLowerCase();
-            GEO_CACHE[fullKey] = coords;
-            if (isSubscribed) {
-              setGeoPositions((prev) => ({ ...prev, [lead.id]: coords }));
+
+            // Validate that returned coords are in Spain AND within 45km of the expected city (prevents misplaced homonymous streets)
+            const isInSpain = lat >= 35.8 && lat <= 43.9 && lon >= -9.5 && lon <= 4.5;
+            const distKm = getDistanceKm(lat, lon, expectedCoords[0], expectedCoords[1]);
+            if (isInSpain && distKm <= 45) {
+              const coords: [number, number] = [lat, lon];
+              const fullKey = `${lead.nombre_sala}-${lead.ciudad}`.toLowerCase();
+              GEO_CACHE[fullKey] = coords;
+              if (isSubscribed) {
+                setGeoPositions((prev) => ({ ...prev, [lead.id]: coords }));
+              }
             }
           }
-        } catch (e) {
-          // If network blocked, keep the smart resolveLeadCoordinates result (no Madrid fallback!)
+        } catch {
+          // If network blocked or error, keep the exact resolveLeadCoordinates result
         }
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 400));
       }
     };
 

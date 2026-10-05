@@ -136,6 +136,30 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+## 🎨 Mejoras de Diseño y Consistencia de Tokens (Sistema Espectro)
+
+### 1. Limpieza Integral de Tokens Semánticos en Componentes Heredados (Prioridad Alta)
+* **Qué:** Auditar y sustituir clases fijas/hardcodeadas de Tailwind (`bg-zinc-800/900`, `text-slate-400`, `border-zinc-800`) por los tokens CSS semánticos de Espectro (`var(--surface)`, `var(--sunken)`, `var(--ink-2)`, `var(--line)`).
+* **Por qué importa:** Garantiza que el 100% de la aplicación responda de manera idéntica y con contraste WCAG AA tanto en modo oscuro (*dark*) como en modo claro (*light*) y clásico (*classic*), evitando tarjetas o menús descolocados visualmente.
+* **Estado:** Pendiente.
+
+### 2. Modales Densos y Contenedores Responsivos (Prioridad Media)
+* **Qué:** Refactorizar modales complejos (ej. `RoomEditorModal`, configuración de agentes y formularios de banda) con arquitectura de 3 capas estrictas: Cabecera fija + Cuerpo con `max-h-[80vh]` y `overflow-y-auto` + Pie sticky de acciones (*Guardar / Cancelar*).
+* **Por qué importa:** Evita que en portátiles de 13" o zooms de pantalla del 125% los botones de confirmación y últimos campos queden ocultos o fuera de la pantalla.
+* **Estado:** Pendiente.
+
+### 3. Densidad de Información en Vistas de Trabajo Diario (Prioridad Media)
+* **Qué:** Optimizar el espaciado vertical en tablas de Leads CRM, Setlists y Repertorio con opción de espaciado compacto (`py-2.5` en filas en lugar de tarjetas gigantes con `--r-xl`).
+* **Por qué importa:** Permite a los managers y líderes de banda visualizar 15-20 filas de un vistazo sin scroll continuo innecesario.
+* **Estado:** Pendiente.
+
+### 4. Transiciones Suaves y Skeletons de Carga (Prioridad Baja)
+* **Qué:** Sustituir spinners planos o estados en blanco por marcadores de posición (*skeleton loaders*) con luminancia `--surface` pulsante mientras se resuelven las llamadas a Supabase.
+* **Por qué importa:** Elimina el parpadeo (*layout shift*) al cargar salas, eventos de calendario y métricas.
+* **Estado:** Pendiente.
+
+---
+
 ### Deuda: dependencias vulnerables (Snyk, octubre 2026) — tras traer la rama `main` de AI Studio
 * **Qué:** Snyk (`DiegoCalleB/BandsManager`) escanea solo `package.json` y `app/applet/Dockerfile`. Hacerlo DESPUÉS de traer la rama de AI Studio, para no pelear con conflictos de `package.json` / `package-lock.json`.
   1. **`nodemailer` 9.1.1 → 10.0.6+** (H, 5 issues, todos con fix; salto de versión mayor). Lo usan `server/services/emailAgentClient.ts` (SMTP) y `MailComposer` en `gmailApiClient.ts`. Probar enviar un correo y crear un borrador, y pasar `server/services/__tests__/emailAgentClient.test.ts`.
@@ -147,9 +171,11 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Estado:** pendiente, sin tocar.
 
 ### Deuda: Agente Lector ciego y lento (octubre 2026)
-* **Qué:** (1) El Lector con Gmail OAuth busca `in:inbox is:unread newer_than:2d` (`gmailApiClient.ts`). Si algo marca el correo como leído antes, nunca lo ve. En `diegolimado@gmail.com` lo hacía POP: Gmail > Ajustes > Reenvío y POP/IMAP > «When messages are accessed with POP» a «keep Gmail's copy in the Inbox» (o desactivar POP). **Pendiente de cambiar.** (2) El scheduler corre cada 24h (`AGENT_SCHEDULER_INTERVAL_MS`), no cada 60s como dice AGENTS.md §3. (3) Los entornos de preview de Railway (`BandsManager-pr-84`) comparten Supabase y Gmail con producción: uno con código viejo marcaba todo como leído cada minuto (ya eliminado). Desactivar PR Environments o darles su propio proyecto Supabase.
+* **Qué:** (1) Hasta la rama de AI Studio, el Lector con Gmail OAuth buscaba `in:inbox is:unread newer_than:2d` (`gmailApiClient.ts`) y, si algo marcaba el correo como leído antes, nunca lo veía; ahora busca `in:inbox newer_than:7d` (sin `is:unread`), así que ya no depende de ese flag, pero vigilar duplicados y falsos emparejamientos del matching multi-vector. En `diegolimado@gmail.com` lo hacía POP: Gmail > Ajustes > Reenvío y POP/IMAP > «When messages are accessed with POP» a «keep Gmail's copy in the Inbox» (o desactivar POP). **Pendiente de cambiar.** (2) El scheduler corre cada 24h (`AGENT_SCHEDULER_INTERVAL_MS`), no cada 60s como dice AGENTS.md §3. (3) Los entornos de preview de Railway (`BandsManager-pr-84`) comparten Supabase y Gmail con producción: uno con código viejo marcaba todo como leído cada minuto (ya eliminado). Desactivar PR Environments o darles su propio proyecto Supabase.
 * **Siguiente paso:** guardar el último `historyId` de Gmail y leer solo lo nuevo, en vez de depender de `UNREAD`; decidir un intervalo razonable (o un webhook de Gmail) para que las respuestas de las salas no esperen 24h; corregir AGENTS.md §3.
 * **Estado:** causa localizada; POP y AGENTS.md pendientes.
+
+---
 
 ---
 

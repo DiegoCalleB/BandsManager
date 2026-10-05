@@ -134,12 +134,52 @@ const SPANISH_CITIES_GEO: Record<string, [number, number]> = {
   Mérida: [38.9161, -6.3437],
   Santiago: [42.8782, -8.5448],
   "Santiago de Compostela": [42.8782, -8.5448],
+  "Vilar de Santos": [42.1264, -7.7947],
+  Chantada: [42.6083, -7.7681],
+  "O Grove": [42.4961, -8.8653],
+  "Vilaxoán de Arousa": [42.5802, -8.7712],
+  "Vilagarcía de Arousa": [42.597, -8.765],
+  Ortigueira: [43.6833, -7.85],
+  Ferrol: [43.4832, -8.2369],
+  "Caldas de Reis": [42.6027, -8.6427],
+  Portas: [42.5861, -8.6558],
+  Viveiro: [43.6625, -7.595],
+  Bueu: [42.3245, -8.785],
+  Cangas: [42.2644, -8.7816],
+  Marín: [42.3908, -8.7011],
+  Redondela: [42.2817, -8.6089],
+  "O Porriño": [42.1611, -8.6189],
+  Ponteareas: [42.1764, -8.5033],
+  Tui: [42.0467, -8.6433],
+  Baiona: [42.12, -8.85],
+  Carballo: [43.213, -8.691],
+  Ribeira: [42.5539, -8.9931],
+  Noia: [42.7844, -8.8878],
+  Betanzos: [43.2808, -8.2114],
+  "Monforte de Lemos": [42.522, -7.514],
+  "Xinzo de Limia": [42.0633, -7.7247],
+  "O Barco": [42.4167, -6.9833],
+  Verín: [41.9406, -7.4358],
   Andalucía: [37.5443, -4.7278],
   Cataluña: [41.8205, 1.8401],
   Galicia: [42.5751, -8.1339],
   "Comunidad de Madrid": [40.4168, -3.7038],
   "País Vasco": [43.0, -2.6],
 };
+
+function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
 function resolveBandCoordinates(
   band: BandContact,
@@ -168,20 +208,17 @@ function resolveBandCoordinates(
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
-    if (normLoc.includes(normKey) || normKey.includes(normLoc)) {
+    if (normLoc === normKey || (normKey.length > 4 && normLoc.includes(normKey))) {
       return offsetCoords(coords, index);
     }
   }
 
-  let hash = 0;
-  const seedStr = band.id + band.nombre_banda + rawLoc;
-  for (let i = 0; i < seedStr.length; i++) {
-    hash = (hash << 5) - hash + seedStr.charCodeAt(i);
-    hash |= 0;
+  if (normLoc.includes("galicia") || normLoc.includes("ourense") || normLoc.includes("lugo") || normLoc.includes("pontevedra") || normLoc.includes("coruna")) {
+    return offsetCoords([42.6611, -8.1133], index);
   }
-  const lat = 37.5 + (Math.abs(hash) % 50) / 10;
-  const lng = -6.0 + (Math.abs(hash >> 3) % 80) / 10;
-  return [lat, lng];
+
+  const spainCenter: [number, number] = [40.4168, -3.7038];
+  return offsetCoords(spainCenter, index);
 }
 
 function offsetCoords(base: [number, number], index: number): [number, number] {
@@ -381,7 +418,8 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       for (const item of pending) {
         if (!isSubscribed) break;
-        const { band } = item;
+        const { band, index } = item;
+        const expectedCoords = newCoords[band.id] || resolveBandCoordinates(band, index);
         const query = `${band.nombre_banda}, ${band.localizacion}, España`;
         try {
           const res = await fetch(
@@ -392,15 +430,18 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
           );
           const data = await res.json();
           if (data && data[0]) {
-            const coords: [number, number] = [
-              parseFloat(data[0].lat),
-              parseFloat(data[0].lon),
-            ];
-            const fullKey =
-              `${band.nombre_banda}-${band.localizacion}`.toLowerCase();
-            GEO_CACHE[fullKey] = coords;
-            if (isSubscribed) {
-              setGeoPositions((prev) => ({ ...prev, [band.id]: coords }));
+            const lat = parseFloat(data[0].lat);
+            const lon = parseFloat(data[0].lon);
+            const isInSpain = lat >= 35.8 && lat <= 43.9 && lon >= -9.5 && lon <= 4.5;
+            const distKm = getDistanceKm(lat, lon, expectedCoords[0], expectedCoords[1]);
+            if (isInSpain && distKm <= 45) {
+              const coords: [number, number] = [lat, lon];
+              const fullKey =
+                `${band.nombre_banda}-${band.localizacion}`.toLowerCase();
+              GEO_CACHE[fullKey] = coords;
+              if (isSubscribed) {
+                setGeoPositions((prev) => ({ ...prev, [band.id]: coords }));
+              }
             }
           }
         } catch (err) {

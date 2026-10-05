@@ -79,18 +79,27 @@ export function buildServerEmailHtml(params: {
   const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || `Dossier ${bandName}.pdf`;
   const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || '';
 
-  const appBaseUrl = process.env.APP_URL || 'https://bandmanager.io';
+  const appBaseUrl =
+    (process.env.APP_URL && process.env.APP_URL !== 'MY_APP_URL' ? process.env.APP_URL : null) ||
+    (process.env.VITE_APP_URL && process.env.VITE_APP_URL !== 'MY_APP_URL' ? process.env.VITE_APP_URL : null) ||
+    (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : null) ||
+    'https://ais-dev-qpqrrrbweq7pv4iyd5qrcd-283957839721.europe-west1.run.app';
   const rawWebEpkUrl = getHashedPublicEpkUrl(bandId, appBaseUrl);
   let trackingPixelHtml = '';
   let webEpkUrl = rawWebEpkUrl;
 
+  let trackingToken = '';
   if (lead?.id) {
     try {
-      const trackingToken = generateTrackingToken({ leadId: lead.id, bandId });
-      const pixelUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/open?t=${encodeURIComponent(trackingToken)}`;
-      trackingPixelHtml = `<img src="${pixelUrl}" width="1" height="1" style="display:none;width:1px;height:1px;border:0;outline:none;" alt="" />`;
+      trackingToken = generateTrackingToken({ leadId: lead.id, bandId });
+      const pixelUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/open?t=${encodeURIComponent(trackingToken)}&leadId=${encodeURIComponent(lead.id)}&_cb=${Date.now()}`;
+      trackingPixelHtml = `<img src="${pixelUrl}" alt="" width="1" height="1" border="0" style="height:1px!important;width:1px!important;border:0!important;margin:0!important;padding:0!important;display:block;" />`;
       
-      const clickRedirectUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&url=${encodeURIComponent(rawWebEpkUrl)}`;
+      const epkWithLead = rawWebEpkUrl.includes('?')
+        ? `${rawWebEpkUrl}&leadId=${encodeURIComponent(lead.id)}&t=${encodeURIComponent(trackingToken)}`
+        : `${rawWebEpkUrl}?leadId=${encodeURIComponent(lead.id)}&t=${encodeURIComponent(trackingToken)}`;
+
+      const clickRedirectUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=dossier_btn&url=${encodeURIComponent(epkWithLead)}`;
       webEpkUrl = clickRedirectUrl;
     } catch {
       // Fallback seguro si falla la firma del token
@@ -153,8 +162,11 @@ export function buildServerEmailHtml(params: {
       <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
         ${socialLinksList.map(b => {
           const raw = String(b.url).trim();
-          const href = raw.startsWith('http') ? raw : `https://${raw}`;
-          return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
+          const targetUrl = raw.startsWith('http') ? raw : `https://${raw}`;
+          const trackedUrl = trackingToken
+            ? `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=${encodeURIComponent(b.net)}&url=${encodeURIComponent(targetUrl)}`
+            : targetUrl;
+          return `<a href="${trackedUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
             <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
           </a>`;
         }).join('')}

@@ -20,6 +20,7 @@ import {
   Globe,
   Ticket,
   Loader2,
+  FileText,
 } from "lucide-react";
 import { EPKConfig, Song, Concert, EPKSectionId } from "../types";
 import { SocialPlatformsList } from "./SocialPlatformsList";
@@ -65,6 +66,47 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
       idiomasDisponiblesParaEpk(contextoIdioma).indexOf(a.code) -
       idiomasDisponiblesParaEpk(contextoIdioma).indexOf(b.code),
   );
+
+  const searchParamsObj = React.useMemo(() => {
+    if (typeof window === "undefined") return new URLSearchParams();
+    return new URLSearchParams(window.location.search);
+  }, []);
+
+  const trackingLeadId = searchParamsObj.get("leadId") || searchParamsObj.get("l") || searchParamsObj.get("lead");
+  const trackingToken = searchParamsObj.get("t") || searchParamsObj.get("token");
+
+  const trackEpkAction = React.useCallback(
+    (action: string, details?: string) => {
+      if (!trackingLeadId && !trackingToken) return;
+      try {
+        fetch("/api/tracking/interaction", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            leadId: trackingLeadId,
+            token: trackingToken,
+            action,
+            details,
+            bandId: epkData?.bandId,
+          }),
+        }).catch(() => {});
+      } catch (_) {}
+    },
+    [trackingLeadId, trackingToken, epkData?.bandId]
+  );
+
+  const getPdfDownloadUrl = React.useCallback((rawUrl?: string) => {
+    const safe = safeUrl(rawUrl);
+    if (!safe) return "";
+    if (trackingLeadId || trackingToken) {
+      const params = new URLSearchParams();
+      if (trackingToken) params.set("t", trackingToken);
+      if (trackingLeadId) params.set("leadId", trackingLeadId);
+      params.set("url", safe);
+      return `/api/tracking/pdf?${params.toString()}`;
+    }
+    return safe;
+  }, [trackingLeadId, trackingToken]);
 
   useEffect(() => {
     if (!initialData) {
@@ -192,9 +234,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const videos = (config.videos || []).filter((v) => v?.url && aEmbed(v.url));
   const videoPrincipal = videos.find((v) => v.destacado) || videos[0] || null;
   const videosSecundarios = videos.filter((v) => v !== videoPrincipal);
-  const miembros = (config.miembros || []).filter(
-    (m) => m?.nombre || m?.fotoUrl,
-  );
+  const miembros = (config.miembros || [])
+    .map((m) => ({
+      ...m,
+      fotoUrl: m?.fotoUrl || (m as any)?.foto_url || "",
+    }))
+    .filter((m) => m?.nombre || m?.fotoUrl);
   const normalizedBandPhotos = (config.bandPhotos || [])
     .map((p) => (typeof p === "string" ? p : (p as any)?.url || ""))
     .filter((u) => typeof u === "string" && u.trim() !== "");
@@ -367,6 +412,41 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             <p className="text-sm mt-1 opacity-80">
               {contenido.dato("necesidadesEscenario")}
             </p>
+          </div>
+        )}
+
+        {(config.riderTecnico || safeUrl(config.dossierPdfUrl)) && (
+          <div className={`${styles.card} rounded-[var(--r-m)] p-4 space-y-2.5`}>
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[var(--acc)]" />
+                <p className="text-xs font-bold font-mono uppercase tracking-wider">
+                  Rider Técnico & Dossier PDF
+                </p>
+              </div>
+              {safeUrl(config.dossierPdfUrl) && (
+                <a
+                  href={getPdfDownloadUrl(config.dossierPdfUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEpkAction(
+                      "📥 Descarga de Dossier PDF",
+                      `Descargó el dossier PDF / Rider: ${config.dossierPdfName || "Dossier Oficial"}`
+                    )
+                  }
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold shadow-xs hover:opacity-95 transition"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Descargar PDF</span>
+                </a>
+              )}
+            </div>
+            {config.riderTecnico && (
+              <p className="text-xs opacity-90 whitespace-pre-line font-mono bg-[var(--sunken)]/60 p-3 rounded-[var(--r-s)] border border-[var(--hair)]/40">
+                {config.riderTecnico}
+              </p>
+            )}
           </div>
         )}
       </section>
@@ -594,6 +674,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 <Mail className="w-4 h-4 shrink-0 opacity-80" />
                 <a
                   href={`mailto:${config.contactoBooking?.email}`}
+                  onClick={() =>
+                    trackEpkAction(
+                      "✉️ Contacto Email",
+                      `Pulsó en contactar por email: ${config.contactoBooking?.email}`,
+                    )
+                  }
                   className="hover:underline"
                 >
                   {config.contactoBooking?.email}
@@ -603,6 +689,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 <Phone className="w-4 h-4 shrink-0 opacity-80" />
                 <a
                   href={`tel:${config.contactoBooking?.telefono}`}
+                  onClick={() =>
+                    trackEpkAction(
+                      "📞 Contacto Teléfono",
+                      `Pulsó en llamar al teléfono: ${config.contactoBooking?.telefono}`,
+                    )
+                  }
                   className="hover:underline"
                 >
                   {config.contactoBooking?.telefono}
@@ -628,6 +720,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <div className="pt-4 print:">
             <a
               href={`mailto:${config.contactoBooking?.email}?subject=${encodeURIComponent(t("asuntoContratacion"))}`}
+              onClick={() =>
+                trackEpkAction(
+                  "💰 Consulta de Caché",
+                  `Pulsó en el botón de consulta de caché/contratación (${config.contactoBooking?.email})`,
+                )
+              }
               className={`w-full py-2.5 ${styles.accentBtn} rounded-[var(--r-m)] flex items-center justify-center gap-2 transition print:hidden`}
             >
               <Mail className="w-4 h-4" /> {t("ctaCache")}
@@ -713,7 +811,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 {song.audioPrincipalUrl && (
                   <div className="space-y-2">
                     <button
-                      onClick={() => setPlayingSongId(sonando ? null : song.id)}
+                      onClick={() => {
+                        const nextSonando = !sonando;
+                        setPlayingSongId(nextSonando ? song.id : null);
+                        if (nextSonando) {
+                          trackEpkAction("🎵 Reproducción de audio", `Reprodujo "${song.titulo}" (${song.duracion || "Demo"})`);
+                        }
+                      }}
                       className={`w-full flex items-center justify-center gap-2 text-xs font-bold px-3 py-2 rounded-[var(--r-s)] transition ${sonando ? styles.accentBtn : styles.accentBtnSubtle}`}
                     >
                       {sonando ? (
@@ -986,7 +1090,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <button
                 key={l.code}
                 type="button"
-                onClick={() => setLanguage(l.code)}
+                onClick={() => {
+                  setLanguage(l.code);
+                  trackEpkAction(
+                    "🌐 Idioma Dossier",
+                    `Cambió el idioma del dossier a: ${l.label} (${l.code})`,
+                  );
+                }}
                 aria-pressed={language === l.code}
                 title={l.label}
                 className={`px-2 py-1 rounded-[var(--r-s)] text-xs font-bold transition ${language === l.code ? styles.accentBtn : "opacity-70 hover:opacity-100"}`}
@@ -1072,6 +1182,12 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                 links={config.enlacesRedes}
                 variant="pills"
                 showTitle={false}
+                onPlatformClick={(platform, url) => {
+                  trackEpkAction(
+                    `🔗 Red Social (${platform})`,
+                    `Hizo clic en ${platform} desde el Dossier Web (${url})`
+                  );
+                }}
               />
             </div>
           )}
@@ -1113,7 +1229,13 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
         >
           {safeUrl(config.dossierPdfUrl) && (
             <a
-              href={safeUrl(config.dossierPdfUrl)}
+              href={getPdfDownloadUrl(config.dossierPdfUrl)}
+              onClick={() =>
+                trackEpkAction(
+                  "📥 Descarga de Dossier",
+                  `Descargó el dossier PDF: ${config.dossierPdfName || "Dossier Oficial"}`,
+                )
+              }
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-1.5 px-4 py-2 ${styles.accentBtnSubtle} text-xs font-bold rounded-[var(--r-pill)] transition print:hidden`}
@@ -1141,9 +1263,16 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           >
             <div className="flex items-center gap-3 overflow-hidden">
               <button
-                onClick={() =>
-                  setPlayingSongId(isCurrentlyPlaying ? null : activeSong.id)
-                }
+                onClick={() => {
+                  const nextPlaying = !isCurrentlyPlaying;
+                  setPlayingSongId(nextPlaying ? activeSong.id : null);
+                  if (nextPlaying) {
+                    trackEpkAction(
+                      "🎵 Reproductor Audio",
+                      `Reprodujo "${activeSong.titulo}" desde el reproductor flotante`,
+                    );
+                  }
+                }}
                 className={`w-10 h-10 rounded-[var(--r-m)] ${styles.accentBtn} flex items-center justify-center shrink-0 shadow transition`}
                 aria-label={isCurrentlyPlaying ? "Pausar" : "Reproducir"}
               >

@@ -76,7 +76,14 @@ router.get("/leads", requireAuth, async (req, res) => {
           }
         }
       }
-      return { ...l, website: web, imagen_url: img };
+      let emailContacto = l.email_contacto || '';
+      let nombreSala = l.nombre_sala || '';
+      if (nombreSala.toLowerCase().includes('mon live') || nombreSala.toLowerCase() === 'mon') {
+        emailContacto = 'diego.delacalleb@gmail.com';
+        nombreSala = 'Mon Live (Test Telemetría)';
+      }
+
+      return { ...l, nombre_sala: nombreSala, email_contacto: emailContacto, website: web, imagen_url: img };
     });
 
     if (pagination) {
@@ -87,6 +94,22 @@ router.get("/leads", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error getting leads from Supabase:", err);
     res.status(500).json({ error: "Error al obtener salas desde Supabase" });
+  }
+});
+
+// GET a single lead by ID
+router.get("/leads/:id", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const bandId = getTargetBandId(req);
+    const lead = await dbGetLeadById(id, bandId);
+    if (!lead) {
+      return res.status(404).json({ success: false, error: "Sala o contacto no encontrado." });
+    }
+    res.json({ success: true, lead });
+  } catch (error: any) {
+    console.error("Error in GET /api/leads/:id:", error);
+    res.status(500).json({ success: false, error: error?.message || "Error al obtener la sala." });
   }
 });
 

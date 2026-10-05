@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AlertSettingsConfig, CustomAlertRule } from '../../types';
 import { hasModuleAccess } from '../../utils/planPermissions';
+import { apiFetch } from '../../utils/api';
 import {
   X,
   Bell,
@@ -137,25 +138,18 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     // Attempt to load remote alert settings from Supabase backend API
     const loadRemoteSettings = async () => {
       try {
-        const res = await fetch('/api/bands/alert-settings', {
-          headers: {
-            'x-band-id': bandId,
-          },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data?.settings) {
-            const s = data.settings;
-            setConfig((prev) => ({
-              ...prev,
-              emailNotificationsEnabled: s.email_notifications_enabled ?? prev.emailNotificationsEnabled,
-              inAppNotificationsEnabled: s.in_app_notifications_enabled ?? prev.inAppNotificationsEnabled,
-              digestFrequency: s.digest_frequency || prev.digestFrequency,
-              recipientEmail: s.recipient_email || prev.recipientEmail,
-              recipientRole: s.recipient_role || prev.recipientRole,
-              rules: s.rules && s.rules.length > 0 ? s.rules : prev.rules,
-            }));
-          }
+        const data = await apiFetch<any>('/api/bands/alert-settings');
+        if (data?.settings) {
+          const s = data.settings;
+          setConfig((prev) => ({
+            ...prev,
+            emailNotificationsEnabled: s.email_notifications_enabled ?? prev.emailNotificationsEnabled,
+            inAppNotificationsEnabled: s.in_app_notifications_enabled ?? prev.inAppNotificationsEnabled,
+            digestFrequency: s.digest_frequency || prev.digestFrequency,
+            recipientEmail: s.recipient_email || prev.recipientEmail,
+            recipientRole: s.recipient_role || prev.recipientRole,
+            rules: s.rules && s.rules.length > 0 ? s.rules : prev.rules,
+          }));
         }
       } catch (e) {
         // Fallback silently to localStorage
@@ -202,21 +196,16 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     setSendingTestDigest(true);
     setTestDigestResult(null);
     try {
-      const res = await fetch('/api/bands/trigger-alert-digest', {
+      const data = await apiFetch<any>('/api/bands/trigger-alert-digest', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-band-id': bandId,
-        },
       });
-      const data = await res.json();
-      if (data.success) {
+      if (data?.success) {
         setTestDigestResult(`¡Resumen enviado a ${data.recipient}!`);
       } else {
-        setTestDigestResult(`Error: ${data.error || 'No se pudo enviar'}`);
+        setTestDigestResult(`Error: ${data?.error || 'No se pudo enviar'}`);
       }
-    } catch (err) {
-      setTestDigestResult('Error de conexión.');
+    } catch (err: any) {
+      setTestDigestResult(err?.message || 'Error de conexión.');
     } finally {
       setSendingTestDigest(false);
       setTimeout(() => setTestDigestResult(null), 4000);
@@ -232,12 +221,8 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
 
     // Save to Supabase DB via backend API
     try {
-      await fetch('/api/bands/alert-settings', {
+      await apiFetch('/api/bands/alert-settings', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-band-id': bandId,
-        },
         body: JSON.stringify({
           email_notifications_enabled: config.emailNotificationsEnabled,
           in_app_notifications_enabled: config.inAppNotificationsEnabled,

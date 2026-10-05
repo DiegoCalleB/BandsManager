@@ -1351,7 +1351,7 @@ export default function BookingCRM({
   return (
     <div
       data-modulo="booking"
-      className="space-y-4 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
+      className="space-y-4 text-[var(--ink)] bg-[var(--bg)] w-full font-sans"
     >
       {/* 2. LEADS CRM WORKSPACE */}
       <div className="w-full items-start transition-ui duration-300">

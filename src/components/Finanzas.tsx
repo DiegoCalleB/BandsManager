@@ -30,6 +30,7 @@ import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
+import { apiFetch } from "../utils/api";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, Input, Select, Textarea } from './ui';
 
@@ -112,22 +113,20 @@ export default function Finanzas({
     setSyncSuccess("");
     setSyncError("");
     try {
-      const res = await fetch("/api/payments/sync", {
+      const data = await apiFetch<any>("/api/payments/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setSyncSuccess(data.message || "Finanzas sincronizadas con éxito.");
         setTimeout(() => setSyncSuccess(""), 6000);
       } else {
         setSyncError(
-          data.error || "Error al intentar sincronizar las finanzas.",
+          data?.error || "Error al intentar sincronizar las finanzas.",
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error synchronizing finances:", error);
-      setSyncError("Error de conexión con el servidor.");
+      setSyncError(error?.message || "Error de conexión con el servidor.");
     } finally {
       setIsSyncing(false);
     }

@@ -217,13 +217,13 @@ export const getDetailedDateInfo = (dateInput: string | Date | undefined | null)
   } else if (diffDays > 30) {
     const months = Math.round(diffDays / 30);
     relativeLabel = `En ${diffDays} días (~${months} mes${months > 1 ? 'es' : ''})`;
-    relativeBadgeClass = 'bg-neutral-800 text-neutral-300 border border-neutral-700';
+    relativeBadgeClass = 'bg-[var(--sunken)] text-[var(--ink-2)] border border-[var(--hair)]';
   } else if (diffDays === -1) {
     relativeLabel = 'Ayer';
-    relativeBadgeClass = 'bg-neutral-800 text-neutral-400 border border-neutral-700';
+    relativeBadgeClass = 'bg-[var(--sunken)] text-[var(--ink-2)] border border-[var(--hair)]';
   } else {
     relativeLabel = `Celebrado (hace ${Math.abs(diffDays)} d)`;
-    relativeBadgeClass = 'bg-neutral-900 text-neutral-500 border border-neutral-800';
+    relativeBadgeClass = 'bg-[var(--sunken)]/60 text-[var(--ink-2)]/80 border border-[var(--hair)]';
   }
 
   return {

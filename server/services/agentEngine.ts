@@ -246,6 +246,16 @@ export async function runEnviadorAgent(opts: {
 
       const nextState = isRespuesta ? "negociando" : "contactado";
       const newNote = `*** [${dateTag}] Correo ENVIADO a ${emailContacto} por el Agente Enviador (email real) ***\n` + (lead.notas || "");
+      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+      const nuevoEnvioContacto = {
+        id: `sent-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        fecha: nowIso,
+        tipo: "Email",
+        autor: "Agente Enviador",
+        notas: `Correo oficial despachado a la sala (${emailContacto})`,
+        resultado: "📧 Correo Enviado",
+        email_id: messageId
+      };
 
       await sb.from("leads").update({
         estado: nextState,
@@ -253,7 +263,11 @@ export async function runEnviadorAgent(opts: {
         notas: newNote,
         gmail_draft_id: null,
         gmail_message_id: messageId,
-        gmail_thread_id: threadId
+        gmail_thread_id: threadId,
+        email_abierto: false,
+        clics_epk: 0,
+        ultimo_clic_at: null,
+        historial_contacto: [nuevoEnvioContacto, ...historialPrevio].slice(0, 50)
       }).eq("id", lead.id);
 
       await sb.from("lead_messages").insert({
@@ -341,7 +355,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
   const cuentaGmailReal = await obtenerEmailDeLaCuentaConectada(bandId);
   const { data: leads, error } = await sb
     .from("leads")
-    .select("id, nombre_sala, notas, gmail_draft_id")
+    .select("id, nombre_sala, notas, gmail_draft_id, pitch_generado")
     .eq("band_id", bandId)
     .eq("estado", "borrador_creado")
     .not("gmail_draft_id", "is", null);
@@ -378,16 +392,20 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
       fecha_envio: nowIso,
       notas: newNote,
       gmail_draft_id: null,
-      gmail_message_id: resultado.messageId
+      gmail_message_id: resultado.messageId,
+      email_abierto: false,
+      clics_epk: 0,
+      ultimo_clic_at: null
     }).eq("id", lead.id);
+    const cuerpoReal = resultado.cuerpo || lead.pitch_generado || lead.notas || "Propuesta de concierto enviada";
     await sb.from("lead_messages").insert({
       id: resultado.messageId ? `imap-${resultado.messageId}` : `msg-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       lead_id: lead.id,
       band_id: bandId,
       remitente: "banda",
-      remitente_nombre: "Enviado manualmente desde Gmail",
+      remitente_nombre: "Enviado desde Gmail",
       asunto: `Concierto en ${lead.nombre_sala}`,
-      mensaje: "(Correo enviado a mano desde el borrador que había creado el Agente Enviador en Gmail)",
+      mensaje: cuerpoReal,
       fecha: nowIso
     });
     confirmadosEnviados.push(String(lead.id));

@@ -73,6 +73,9 @@ const PublicMusiciansLanding = safeLazy(() =>
 const PublicEPK = safeLazy(() =>
   import("./components/PublicEPK").then((m) => ({ default: m.PublicEPK })),
 );
+const PublicDealView = safeLazy(() =>
+  import("./pages/PublicDealView").then((m) => ({ default: m.PublicDealView })),
+);
 const Planes = safeLazy(() => import("./components/Planes"));
 import { AiSupportWidget } from "./components/dashboard/AiUsageSupportWidget";
 import { ThemeToggle } from "./components/common/ThemeToggle";
@@ -1104,6 +1107,15 @@ export default function App() {
     );
   }, [rutaActual]);
 
+  const isDealRoute = React.useMemo(() => {
+    const p = rutaActual;
+    return (
+      p.startsWith("/deal") ||
+      p.startsWith("/acuerdo") ||
+      p.startsWith("/contrato")
+    );
+  }, [rutaActual]);
+
   const isTfmRoute = React.useMemo(() => {
     const p = rutaActual;
     const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
@@ -1241,6 +1253,20 @@ export default function App() {
         }
       >
         <PublicEPK />
+      </Suspense>
+    );
+  }
+
+  if (isDealRoute) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+            <RefreshCw className="w-8 h-8 animate-spin text-emerald-400" />
+          </div>
+        }
+      >
+        <PublicDealView />
       </Suspense>
     );
   }
@@ -2633,12 +2659,12 @@ export default function App() {
             <button
               id="floating-chat-trigger-btn"
               onClick={() => setIsFloatingChatOpen(!isFloatingChatOpen)}
-              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 p-3.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group ${
+              className={`fixed bottom-20 lg:bottom-5 right-5 z-40 px-3.5 py-2.5 rounded-full flex items-center gap-2.5 transition-ui duration-300 cursor-pointer active:scale-[0.97] group shadow-lg ${
                 isFloatingChatOpen
-                  ? "bg-[var(--alert)] text-[var(--on-alert)] hover:bg-[var(--alert)]"
+                  ? "bg-[var(--alert-soft)] text-[var(--alert)] border border-[var(--alert)]/30 hover:bg-[var(--alert)]/20"
                   : isChatLoading
-                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
-                    : "bg-[var(--acc)] hover:brightness-95 text-[var(--on-acc)] "
+                    ? "bg-[var(--surface)] text-[var(--acc-ink)] border border-[var(--acc)]/30 animate-pulse"
+                    : "bg-[var(--surface)] text-[var(--ink)] border border-[var(--hair)] hover:border-[var(--acc)]/40 hover:bg-[var(--sunken)]"
               }`}
               title={
                 isChatLoading
@@ -2647,23 +2673,20 @@ export default function App() {
               }
             >
               {isFloatingChatOpen ? (
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5 text-[var(--alert)]" />
               ) : (
                 <>
                   <div className="relative">
                     {isChatLoading ? (
-                      <RefreshCw className="w-5 h-5 animate-spin text-[var(--acc)]/80" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-[var(--acc)]" />
                     ) : (
-                      <Guitar className="w-5 h-5" />
+                      <Guitar className="w-4 h-4 text-[var(--acc)]" />
                     )}
                     <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--acc)] " : "bg-[var(--ok)] "}`}
-                    />
-                    <span
-                      className={`absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full ${isChatLoading ? "bg-[var(--tentative)]" : "bg-[var(--ok)]"}`}
+                      className={`absolute -top-1 -right-1 w-2 h-2 rounded-full ${isChatLoading ? "bg-amber-400" : "bg-emerald-400"}`}
                     />
                   </div>
-                  <span className="text-xs font-sans font-bold hidden sm:inline-block pr-1">
+                  <span className="text-xs font-sans font-bold hidden sm:inline-block pr-1 text-[var(--ink)]">
                     {isChatLoading ? "Ejecutando..." : "Agente IA"}
                   </span>
                 </>

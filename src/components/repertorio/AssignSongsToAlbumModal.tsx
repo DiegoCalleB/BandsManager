@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
+import { uploadFileToServer } from '../../utils/audioStorage';
 import { ModalPortal } from '../common/ModalPortal';
 import { PublicoSilhouette } from '../ui/PublicoSilhouette';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -33,9 +34,20 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
   const [albumType, setAlbumType] = useState('Álbum Estudio');
   const [coverUrl, setCoverUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
-  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
-  // guard vivía antes de ellos, así que abrir/cerrar el modal cambiaba cuántos hooks corrían.
+  useEffect(() => {
+    if (isOpen) {
+      setCustomAlbumName(albumName);
+      const matching = songs.filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
+      setSelectedIds(new Set(matching.map((s) => s.id)));
+      const existingCover = matching.find((s) => s.portadaUrl)?.portadaUrl || '';
+      setCoverUrl(existingCover);
+      const existingYear = (matching.find((s) => (s as any).albumYear || (s as any).album_year) as any)?.albumYear || (matching.find((s) => (s as any).album_year) as any)?.album_year;
+      if (existingYear) setAlbumYear(existingYear);
+    }
+  }, [isOpen, albumName, songs]);
+
   if (!isOpen) return null;
 
   const filteredSongs = songs.filter(
@@ -57,16 +69,27 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          setCoverUrl(reader.result);
+      try {
+        setIsUploading(true);
+        const uploadedUrl = await uploadFileToServer(file);
+        if (uploadedUrl) {
+          setCoverUrl(uploadedUrl);
         }
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error('Error subiendo imagen de portada:', err);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === 'string') {
+            setCoverUrl(reader.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
@@ -155,8 +178,20 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
                       className="flex-1"
                     />
                     <label className="px-3 py-2 bg-[var(--sunken)] hover:bg-[var(--ink-3)]/60 text-[var(--ink)] rounded-[var(--r-m)] cursor-pointer shrink-0 flex items-center gap-1 text-xs">
-                      <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
-                      <input aria-label="Imagen de portada (Upload o URL)" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                      {isUploading ? (
+                        <Loader2 className="w-3.5 h-3.5 text-[var(--acc)] animate-spin" />
+                      ) : (
+                        <Upload className="w-3.5 h-3.5 text-[var(--ok)]" />
+                      )}
+                      <span>{isUploading ? 'Subiendo...' : 'Subir'}</span>
+                      <input
+                        aria-label="Imagen de portada (Upload o URL)"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                        className="hidden"
+                      />
                     </label>
                   </div>
                 </div>

@@ -222,9 +222,8 @@ export const LiveConcertToAlbumModal: React.FC<
 
   const checkYoutubeCookies = async () => {
     try {
-      const res = await fetch("/api/concert-to-album/cookies-status");
-      if (res.ok) {
-        const data = await res.json();
+      const data = await apiFetch<any>("/api/concert-to-album/cookies-status");
+      if (data) {
         setHasYoutubeCookies(Boolean(data.hasCookies));
       }
     } catch {}
@@ -240,13 +239,11 @@ export const LiveConcertToAlbumModal: React.FC<
     if (!cookiesInputText.trim()) return;
     setIsSavingCookies(true);
     try {
-      const res = await fetch("/api/concert-to-album/save-cookies", {
+      const data = await apiFetch<any>("/api/concert-to-album/save-cookies", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cookiesText: cookiesInputText.trim() }),
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setHasYoutubeCookies(true);
         setCookieSuccessMsg(
           "¡Acceso verificado! Ahora el servidor puede descargar vídeos del canal directamente sin bloqueos.",
@@ -257,7 +254,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }, 2200);
       } else {
         setErrorMessage(
-          data.error || "Error al guardar las cookies de YouTube.",
+          data?.error || "Error al guardar las cookies de YouTube.",
         );
       }
     } catch (err: any) {
@@ -269,7 +266,7 @@ export const LiveConcertToAlbumModal: React.FC<
 
   const handleDeleteCookies = async () => {
     try {
-      await fetch("/api/concert-to-album/delete-cookies", { method: "POST" });
+      await apiFetch("/api/concert-to-album/delete-cookies", { method: "POST" });
       setHasYoutubeCookies(false);
       setCookiesInputText("");
       setCookieSuccessMsg("Cookies eliminadas del servidor.");
@@ -519,9 +516,8 @@ export const LiveConcertToAlbumModal: React.FC<
           : "Detectando silencios, pausas y capítulos del concierto...",
       );
 
-      const response = await fetch("/api/concert-to-album/analyze", {
+      const data = await apiFetch<any>("/api/concert-to-album/analyze", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: youtubeUrl.trim(),
           sourceFilePath,
@@ -531,12 +527,6 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Error al analizar el concierto.");
-      }
-
-      const data = await response.json();
       setAlbumTitle(data.albumTitle || `Directo - ${artistName}`);
       setArtistName(data.artist || artistName);
       setTracks(data.tracks || []);
@@ -566,9 +556,8 @@ export const LiveConcertToAlbumModal: React.FC<
     setProcessingStatus("Troceando archivos de audio de alta fidelidad...");
 
     try {
-      const response = await fetch("/api/concert-to-album/process", {
+      const data = await apiFetch<any>("/api/concert-to-album/process", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: youtubeUrl.trim(),
           sourceFilePath: analyzedSourcePath,
@@ -578,12 +567,6 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Error al trocear el concierto.");
-      }
-
-      const data = await response.json();
       setGeneratedResult({
         albumId: data.albumId,
         deliverablePath: data.deliverablePath,
@@ -836,9 +819,8 @@ export const LiveConcertToAlbumModal: React.FC<
 
     setLoadingSnippetIndex(track.index);
     try {
-      const response = await fetch("/api/concert-to-album/preview-snippet", {
+      const data = await apiFetch<any>("/api/concert-to-album/preview-snippet", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url: youtubeUrl.trim(),
           sourceFilePath: analyzedSourcePath,
@@ -848,15 +830,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(
-          errData.error || "Error al obtener previsualización del trozo.",
-        );
-      }
-
-      const data = await response.json();
-      if (data.audioUrl) {
+      if (data?.audioUrl) {
         handleUpdateTrack(track.index, "audioUrl", data.audioUrl);
         setActiveSnippet({
           trackIndex: track.index,
@@ -886,9 +860,8 @@ export const LiveConcertToAlbumModal: React.FC<
     if (!tracks || tracks.length === 0) return;
     setIsClassifying(true);
     try {
-      const response = await fetch("/api/concert-to-album/classify-tracks", {
+      const data = await apiFetch<any>("/api/concert-to-album/classify-tracks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tracks,
           bandName: artistName || bandName,
@@ -897,13 +870,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Error al auto-clasificar.");
-      }
-
-      const data = await response.json();
-      if (data.tracks) {
+      if (data?.tracks) {
         setTracks(data.tracks);
       }
     } catch (err: any) {
@@ -919,9 +886,8 @@ export const LiveConcertToAlbumModal: React.FC<
     if (!tracks || tracks.length === 0) return;
     setIsDetectingCues(true);
     try {
-      const response = await fetch("/api/concert-to-album/detect-cues", {
+      const data = await apiFetch<any>("/api/concert-to-album/detect-cues", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tracks,
           sourceFilePath: analyzedSourcePath,
@@ -929,15 +895,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(
-          errData.error || "Error al autodetectar CUEs de inicio.",
-        );
-      }
-
-      const data = await response.json();
-      if (data.tracks) {
+      if (data?.tracks) {
         pushHistorySnapshot();
         setTracks(data.tracks);
       }
@@ -1152,9 +1110,8 @@ export const LiveConcertToAlbumModal: React.FC<
   const handleTranscribeSpeech = async (track: TrackCutItem) => {
     setTranscribingIndex(track.index);
     try {
-      const response = await fetch("/api/concert-to-album/transcribe-speech", {
+      const data = await apiFetch<any>("/api/concert-to-album/transcribe-speech", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           trackTitle: track.title,
           url: youtubeUrl.trim(),
@@ -1167,13 +1124,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Error al transcribir discurso.");
-      }
-
-      const data = await response.json();
-      if (data.transcription) {
+      if (data?.transcription) {
         handleUpdateTrack(
           track.index,
           "speechTranscription",
@@ -1192,9 +1143,8 @@ export const LiveConcertToAlbumModal: React.FC<
   const handleTranscribeSongChordsAndLyrics = async (track: TrackCutItem) => {
     setTranscribingChordsIndex(track.index);
     try {
-      const response = await fetch("/api/concert-to-album/transcribe-song", {
+      const data = await apiFetch<any>("/api/concert-to-album/transcribe-song", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: track.title,
           artist: artistName || bandName,
@@ -1209,15 +1159,7 @@ export const LiveConcertToAlbumModal: React.FC<
         }),
       });
 
-      if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(
-          errData.error || "Error al transcribir letra y acordes.",
-        );
-      }
-
-      const data = await response.json();
-      if (data.lyricsWithChords) {
+      if (data?.lyricsWithChords) {
         handleUpdateTrack(
           track.index,
           "lyricsWithChords",
@@ -1378,24 +1320,17 @@ export const LiveConcertToAlbumModal: React.FC<
 
     try {
       // Persist to Supabase Backend via API (band_id validated server-side)
-      const token =
-        localStorage.getItem("bakandeya_token") ||
-        localStorage.getItem("token");
-      const res = await fetch("/api/setlists", {
+      await apiFetch("/api/setlists", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
         body: JSON.stringify(newSetlist),
       });
 
-      if (res.ok && onSaveSetlist) {
+      if (onSaveSetlist) {
         onSaveSetlist(newSetlist);
       }
 
       alert(
-        `¡Setlist"${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`,
+        `¡Setlist "${setlistTitle}" creado con éxito en tu Gestor de Repertorio/Setlists!`,
       );
     } catch (err) {
       console.warn("Error saving setlist:", err);

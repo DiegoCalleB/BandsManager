@@ -28,6 +28,7 @@ import { Song, SongSubstituteGuide } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
 import { ModalPortal } from "./common/ModalPortal";
+import { apiFetch } from "../utils/api";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -198,21 +199,8 @@ export function SongChordsViewerModal({
       setIsGeneratingAi(true);
       setAiSuccessMsg(null);
 
-      const token =
-        localStorage.getItem("bakandeya_token") ||
-        localStorage.getItem("token") ||
-        "";
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-        headers["x-auth-token"] = token;
-      }
-
-      const response = await fetch("/api/generate-song-chords", {
+      const data = await apiFetch<any>("/api/generate-song-chords", {
         method: "POST",
-        headers,
         body: JSON.stringify({
           songId: song.id,
           titulo: song.titulo,
@@ -226,9 +214,8 @@ export function SongChordsViewerModal({
         }),
       });
 
-      const data = await response.json();
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || "Error al generar acordes con IA");
+      if (!data?.success) {
+        throw new Error(data?.error || "Error al generar acordes con IA");
       }
 
       setCifradoTexto(data.cifradoTexto);

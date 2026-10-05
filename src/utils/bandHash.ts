@@ -112,3 +112,16 @@ export function getPublicFansUrl(bandId: string, origin?: string): string {
 
   return `${base}?b=${encodeURIComponent(token)}`;
 }
+
+/**
+ * Generates the official public Deal URL with the deal token.
+ */
+export function getPublicDealUrl(dealToken: string, origin?: string): string {
+  if (!dealToken) return '';
+  const base =
+    origin && !origin.includes('run.app') && !origin.includes('localhost')
+      ? `${origin.replace(/\/+$/, '')}/deal`
+      : 'https://bandmanager.io/deal';
+
+  return `${base}/${encodeURIComponent(dealToken)}`;
+}

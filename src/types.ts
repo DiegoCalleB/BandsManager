@@ -397,6 +397,38 @@ export interface Lead {
   };
 }
 
+export interface ConcertDeal {
+  id: string;
+  band_id: string;
+  lead_id?: string | null;
+  concert_id?: string | null;
+  token: string;
+  nombre_evento: string;
+  lugar_sala: string;
+  ciudad?: string;
+  fecha_evento: string;
+  hora_llegada?: string;
+  hora_concierto?: string;
+  tipo_remuneracion?: 'cache_fijo' | 'taquilla' | 'hibrido';
+  cache_base?: number;
+  total_acordado?: number;
+  forma_pago?: 'efectivo' | 'transferencia' | 'pago_diferido_ayto';
+  rider_incluido?: boolean;
+  rider_texto?: string;
+  rider_validado_por_sala?: boolean;
+  hospitalidad_notas?: string;
+  estado?: 'pendiente' | 'confirmado' | 'cancelado';
+  nombre_firmante?: string;
+  cargo_firmante?: string;
+  firma_imagen?: string;
+  firma_ip?: string;
+  firma_user_agent?: string;
+  firma_timestamp?: string;
+  contrato_sha256?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface RehearsalAgendaItem {
   id: string;
   tipo:

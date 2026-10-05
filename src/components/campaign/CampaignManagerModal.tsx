@@ -25,6 +25,7 @@ import {
   Landmark,
 } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
+import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Textarea } from '../ui';
 
@@ -102,18 +103,8 @@ export function CampaignManagerModal({
     setIsGeneratingAllTemplates(true);
     setTemplateGenerationFeedback(null);
     try {
-      const res = await fetch("/api/templates/generate-all", {
+      const data = await apiFetch<any>("/api/templates/generate-all", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(localStorage.getItem("bakandeya_token") ||
-          localStorage.getItem("token")
-            ? {
-                "x-auth-token": (localStorage.getItem("bakandeya_token") ||
-                  localStorage.getItem("token"))!,
-              }
-            : {}),
-        },
         body: JSON.stringify({
           baseProposal,
           saveToDatabase: false,
@@ -127,8 +118,7 @@ export function CampaignManagerModal({
           },
         }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success && data.generatedResults) {
+      if (data?.success && data?.generatedResults) {
         const newTemplates: Record<PitchTemplateCategory, string> = {
           ...(formData.customPitchTemplates || {}),
           salas: data.generatedResults.salas?.body || "",

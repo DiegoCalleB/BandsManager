@@ -201,29 +201,23 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
 }
 
 // Comprueba si un borrador creado por crearBorradorGmailApi sigue existiendo como borrador.
-// Un 404 significa que ya no está en Borradores - lo más probable es que la banda le haya dado
-// a "Enviar" a mano en Gmail (también podría haberlo borrado sin más, caso raro que como mucho
-// deja el lead marcado como enviado por error, corregible a mano). true = sigue como borrador,
-// false = desapareció (se interpreta como enviado).
+// Un 404 significa que ya no está en Borradores - lo que confirma que el usuario le dio a "Enviar"
+// en Gmail (o lo eliminó). true = sigue como borrador, false = desapareció (se interpreta como enviado).
 export async function comprobarBorradorEnviado(bandId: string, draftId: string): Promise<boolean> {
   return (await comprobarBorradorEnviadoConDetalle(bandId, draftId)).existe;
 }
 
-// Misma comprobación, pero devolviendo también el status HTTP crudo que respondió Google - lo
-// que necesita comprobarBorradoresGmailEnviados (agentEngine.ts) para poder registrar, cuando el
-// borrador "sigue existiendo", si de verdad se comprobó (200) o si el chequeo en sí falló de un
-// modo que terminó interpretándose como "sigue existiendo" sin serlo.
-//
-// Detalle importante de Gmail API: cuando envías un borrador manualmente desde Gmail, el endpoint
-// /drafts/{id} sigue devolviendo 200 durante un tiempo, pero con un messageId diferente del draftId.
-// Esto significa que el borrador ha sido enviado (convertido en un message) - interpretamos eso como
-// "no existe" (fue enviado).
+// Misma comprobación, pero devolviendo también el status HTTP crudo que respondió Google y el messageId
+// para enlazarlo en la bitácora e hilo de conversación.
 export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId: string): Promise<{ existe: boolean; status: number; messageId?: string; cuerpo?: string }> {
   const accessToken = await getValidAccessToken(bandId);
   const res = await fetchConTimeout(`${DRAFTS_ENDPOINT}/${encodeURIComponent(draftId)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
-  if (res.status === 404) return { existe: false, status: 404 };
+  if (res.status === 404) {
+    // 404 Not Found: El borrador ya no está en la carpeta de borradores (fue despachado/enviado)
+    return { existe: false, status: 404 };
+  }
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
     throw new EmailAgentError(`No se pudo comprobar el borrador '${draftId}' de '${bandId}': ${errBody || res.status}`, "api_error");
@@ -242,9 +236,8 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
     cuerpo = "no se pudo parsear el cuerpo de la respuesta";
   }
 
-  // Si tiene messageId diferente del draftId, significa que fue enviado (se convirtió en message)
-  const fueEnviado = messageId && messageId !== draftId;
-  return { existe: !fueEnviado, status: res.status, messageId, cuerpo };
+  // Si Google responde 200 OK en /drafts/{draftId}, el borrador TODAVÍA reside en Borradores
+  return { existe: true, status: res.status, messageId, cuerpo };
 }
 
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene
@@ -293,10 +286,10 @@ function headerValue(headers: Array<{ name: string; value: string }> | undefined
 
 // Igual que leerRespuestasEntrantes (emailAgentClient.ts) pero vía la API de Gmail en vez de
 // IMAP - lo que usa el Agente Lector cuando la banda conectó Gmail por OAuth sin contraseña de
-// aplicación, camino que hasta ahora no tenía forma de leer respuestas entrantes en absoluto.
-// Busca emails sin leer O ya leídos (últimas 24h) en la bandeja para no perder respuestas que
-// se marcan como leídas automáticamente o por sincronización.
-export async function leerRespuestasGmailApi(bandId: string, maxResults = 10): Promise<RespuestaEntrante[]> {
+// aplicación.
+// Busca emails recibidos recientemente en la bandeja (tanto no leídos como leídos recientes)
+// para no perder respuestas que hayan sido abiertas en un cliente móvil o web.
+export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): Promise<RespuestaEntrante[]> {
   if (isGmailRateLimited(bandId)) {
     const until = gmailRateLimitCooldownMap.get(bandId);
     console.warn(`[Gmail API] Sondeo omitido para banda '${bandId}': enfriamiento activo por límite 429 de Google (hasta ${new Date(until || 0).toLocaleTimeString()}).`);
@@ -305,10 +298,10 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 10): P
 
   const accessToken = await getValidAccessToken(bandId);
 
-  // Busca emails sin leer en la bandeja recibidos recientemente
-  // Esto reduce las llamadas a la API de Gmail en un 90%, evitando rate limits (429)
-  const query = encodeURIComponent("in:inbox is:unread newer_than:2d");
-  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${Math.min(maxResults, 10)}`, {
+  // Busca emails recibidos recientemente en la bandeja de entrada (últimos 7 días)
+  // No limitamos únicamente a is:unread para no ignorar emails que el usuario haya abierto previamente en su móvil.
+  const query = encodeURIComponent("in:inbox newer_than:7d");
+  const listRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${query}&maxResults=${Math.min(maxResults, 25)}`, {
     headers: { Authorization: `Bearer ${accessToken}` }
   });
   if (!listRes.ok) {
@@ -341,7 +334,7 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 10): P
   const ids: string[] = (listData.messages || []).map((m: any) => m.id);
 
   const resultados: RespuestaEntrante[] = [];
-  console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes en Gmail`);
+  console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes recientes en Gmail`);
 
   for (const id of ids) {
     const msgRes = await fetchConTimeout(`${MESSAGES_ENDPOINT}/${id}?format=full`, {
@@ -356,22 +349,33 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 10): P
     const fromRaw = headerValue(headers, "From");
     const fromMatch = fromRaw.match(/<([^>]+)>/);
     const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
+    const fromName = fromRaw.replace(/<.*?>/, "").replace(/"/g, "").trim();
+    const toAddress = headerValue(headers, "To");
     const dateHeader = headerValue(headers, "Date");
     const subject = headerValue(headers, "Subject");
     const messageId = headerValue(headers, "Message-ID") || `gmail-${id}`;
     const inReplyTo = headerValue(headers, "In-Reply-To");
+    const referencesRaw = headerValue(headers, "References");
+    const references = referencesRaw
+      ? referencesRaw.split(/\s+/).map((r) => r.trim()).filter(Boolean)
+      : undefined;
+    const threadId = msg.threadId || undefined;
     const text = extraerTextoPlano(msg.payload).trim();
 
-    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, InReplyTo=${inReplyTo?.substring(0, 20)}, Text length=${text.length}`);
+    console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, ThreadId=${threadId}, Text length=${text.length}`);
 
     resultados.push({
       uid: id,
       messageId,
       from: fromAddress,
+      fromName: fromName || undefined,
+      to: toAddress || undefined,
       subject,
       text,
       date: dateHeader ? new Date(dateHeader) : null,
-      inReplyTo: inReplyTo || undefined
+      inReplyTo: inReplyTo || undefined,
+      references,
+      threadId
     });
   }
 

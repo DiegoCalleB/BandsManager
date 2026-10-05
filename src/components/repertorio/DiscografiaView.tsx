@@ -804,7 +804,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1 w-full">
                     <div
                       className="shrink-0 relative group"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (onEditAlbum && album !== "Singles / Sin Disco") {
+                          onEditAlbum(album);
+                        }
+                      }}
+                      title={onEditAlbum && album !== "Singles / Sin Disco" ? "Haz clic para cambiar la portada o editar el disco" : undefined}
                     >
                       <AlbumCover
                         url={coverUrl}
@@ -885,7 +891,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       label={`Más acciones de ${album}`}
                       items={[
                         {
-                          label: "Gestionar canciones",
+                          label: "Editar disco y portada",
                           icon: Edit3,
                           hidden: !onEditAlbum,
                           onSelect: () => onEditAlbum?.(album),

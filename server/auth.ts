@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import { normalizePlan } from "./db.js";
+import { normalizePlan } from "./db/core.js";
 
 // Active sessions stored in memory and persisted
 export const ACTIVE_SESSIONS: Record<string, { userId: string; createdAt: number }> = {};

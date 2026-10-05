@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input } from '../ui';
+import { apiFetch } from "../../utils/api";
 
 interface BoloConfirmadoSetlistModalProps {
   isOpen: boolean;
@@ -73,21 +74,9 @@ export const BoloConfirmadoSetlistModal: React.FC<
 
     async function loadData() {
       try {
-        const token =
-          localStorage.getItem("bakandeya_token") ||
-          localStorage.getItem("token");
-        const headers = {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
-
         const [setlistsRes, songsRes] = await Promise.all([
-          fetch("/api/repertorio/setlists", { headers })
-            .then((r) => r.json())
-            .catch(() => null),
-          fetch("/api/repertorio/songs", { headers })
-            .then((r) => r.json())
-            .catch(() => null),
+          apiFetch<{ setlists: Setlist[] }>("/api/repertorio/setlists").catch(() => null),
+          apiFetch<{ songs: Song[] }>("/api/repertorio/songs").catch(() => null),
         ]);
 
         let loadedSetlists: Setlist[] = [];

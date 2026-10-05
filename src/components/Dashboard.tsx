@@ -18,6 +18,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { usePlayer } from "../context/PlayerContext";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
+import { apiFetch } from "../utils/api";
 import DirectionsCard from "./DirectionsCard";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { AddLeadModal } from "./dashboard/AddLeadModal";
@@ -317,9 +318,8 @@ export default function Dashboard({
     }, 1000);
 
     try {
-      const response = await fetch("/api/scrape-contact", {
+      const resData = await apiFetch<any>("/api/scrape-contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           leadId: lead.id,
           nombre_sala: lead.nombre_sala,
@@ -330,16 +330,11 @@ export default function Dashboard({
 
       clearInterval(interval);
 
-      if (!response.ok) {
-        throw new Error("Error al conectar con el servidor.");
-      }
-
-      const resData = await response.json();
-      if (resData.success && resData.data) {
+      if (resData?.success && resData?.data) {
         setScrapedData(resData.data);
       } else {
         throw new Error(
-          resData.error || "No se pudieron extraer datos de contacto.",
+          resData?.error || "No se pudieron extraer datos de contacto.",
         );
       }
     } catch (err: any) {

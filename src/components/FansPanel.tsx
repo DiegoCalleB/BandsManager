@@ -56,12 +56,20 @@ import {
 } from "../i18n/fansTranslations";
 import { QrExportModal } from "./QrExportModal";
 import { FansLandingPreviewModal } from "./FansLandingPreviewModal";
+import { apiFetch } from "../utils/api";
 import {
   downloadQrAsSvg,
   downloadQrAsHighResPng,
   printHighQualityFlyer,
 } from "../utils/qrExport";
 import { useModuleTutorial } from "../hooks/useModuleTutorial";
+import { CustomizableBandQr } from "./fans/qr/CustomizableBandQr";
+import { QrCustomizerControls } from "./fans/qr/QrCustomizerControls";
+import {
+  QrCustomConfig,
+  getStoredQrConfig,
+  saveStoredQrConfig,
+} from "./fans/qr/qrCustomizationConfig";
 import { ModuleTutorialModal } from "./common/ModuleTutorialModal";
 import { ModuleTutorialTrigger } from "./common/ModuleTutorialTrigger";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
@@ -171,19 +179,36 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [savedToConcertFeedback, setSavedToConcertFeedback] = useState(false);
   const [clickStats, setClickStats] = useState<Record<string, number>>({});
 
+  // Configuración de Personalización Artística del QR (Dino, Pac-Man, Rock Skull, Colores...)
+  const [qrCustomConfig, setQrCustomConfig] = useState<QrCustomConfig>(() =>
+    getStoredQrConfig(currentBandId)
+  );
+
   useEffect(() => {
-    fetch("/api/epk/clicks")
-      .then((res) =>
-        res.ok && res.headers.get("content-type")?.includes("application/json")
-          ? res.json()
-          : null,
-      )
+    if (currentBandId) {
+      setQrCustomConfig(getStoredQrConfig(currentBandId));
+    }
+  }, [currentBandId]);
+
+  const handleQrConfigChange = (newConfig: QrCustomConfig) => {
+    setQrCustomConfig(newConfig);
+    if (currentBandId) {
+      saveStoredQrConfig(currentBandId, newConfig);
+    }
+  };
+
+  useEffect(() => {
+    let isSubscribed = true;
+    apiFetch<any>("/api/epk/clicks")
       .then((data) => {
-        if (data && data.clicks) {
+        if (isSubscribed && data && data.clicks) {
           setClickStats(data.clicks);
         }
       })
       .catch(() => {});
+    return () => {
+      isSubscribed = false;
+    };
   }, [currentBandId]);
 
   useEffect(() => {
@@ -1313,28 +1338,24 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             </Select>
           </div>
 
-          {/* Contenido principal: el QR, grande y arriba del todo */}
+          {/* Contenido principal: el QR personalizado, grande y visual */}
           <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-6 flex flex-col items-center text-center space-y-4">
-            <div
-              id="qr-code-svg-container"
-              className="p-4 bg-[var(--surface)] rounded-[var(--r-l)] inline-block relative"
-            >
-              <QRCode value={qrConcertUrl} size={210} level="H" />
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                {effectiveBandLogo ? (
-                  <div className="w-14 h-14 bg-[var(--sunken)] rounded-[var(--r-m)] flex items-center justify-center overflow-hidden p-0.5">
-                    <img
-                      src={effectiveBandLogo}
-                      alt={`Logo ${effectiveBandName}`}
-                      className="w-full h-full object-contain rounded-[var(--r-s)]"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-12 h-12 bg-[var(--acc)] text-[var(--on-acc)] rounded-[var(--r-m)] flex items-center justify-center">
-                    <Users className="w-6 h-6" />
-                  </div>
-                )}
-              </div>
+            <div id="qr-code-svg-container" className="inline-block relative">
+              <CustomizableBandQr
+                id="custom-band-qr-rendered"
+                value={qrConcertUrl}
+                size={240}
+                config={qrCustomConfig}
+                bandName={effectiveBandName}
+                bandLogoUrl={effectiveBandLogo}
+                concertTitle={selectedConcert ? selectedConcert.sala : undefined}
+                dateCity={
+                  selectedConcert
+                    ? `${selectedConcert.ciudad} • ${selectedConcert.fecha}`
+                    : undefined
+                }
+                showFrame={false}
+              />
             </div>
 
             <div className="space-y-1">
@@ -1473,6 +1494,15 @@ export const FansPanel: React.FC<FansPanelProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Panel de Personalización Visual y Temática del QR (Dino, Pac-Man, Rock...) */}
+          <QrCustomizerControls
+            config={qrCustomConfig}
+            onChange={handleQrConfigChange}
+            bandLogoUrl={effectiveBandLogo}
+            bandName={effectiveBandName}
+            onUploadLogoClick={onNavigate ? () => onNavigate("epk") : undefined}
+          />
 
           {/* Personalización avanzada: recompensa, dominio/slug e idioma — plegada porque no se toca en cada visita */}
           <div className=" pt-4">
@@ -1792,6 +1822,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
             }
             url={qrConcertUrl}
             logoUrl={effectiveBandLogo}
+            config={qrCustomConfig}
           />
         </div>
       )}

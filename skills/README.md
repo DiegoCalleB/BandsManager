@@ -39,49 +39,20 @@ Cada skill es independiente y proporciona checklist, patrones detallados, anti-p
 
 ---
 
-### 3. **visual-identity** ⭐ AUTORIDAD ESTÉTICA
-**Cuándo usar:** SIEMPRE antes de escribir o tocar cualquier `className`, color, fuente, sombra o componente de UI
-
-- Sistema «Sala»: la ley del oro (*ilumina, no rellena*)
-- La Onda como lenguaje único de visualización de datos
-- El Público: estados vacíos y celebración
-- Tokens de color, tipografía y los tres temas (Carga / Directo / Escenario)
-- Checklist anti-plantilla de IA (9 delatores)
-
-Tiene **precedencia** sobre cualquier otra guía estética del repo, incluido un brand book externo.
-
-**Archivos clave:** `src/styles/tokens.css`, `src/components/ui/`, `src/index.css`
-
----
-
-### 3b. **craft-interfaces** — cómo se *siente* la interfaz
-**Cuándo usar:** al escribir o revisar componentes, animaciones, transiciones, estados hover/active/focus, tamaños de letra y zonas táctiles
-
-- Escala tipográfica única (mínimo 11 px), campos a 16 px en móvil, Onest
-- Movimiento con criterio (Emil Kowalski): tabla de frecuencia, curvas y duraciones como tokens, nunca `transition-all`/`ease-in`
-- Detalle (Make Interfaces Feel Better): radios concéntricos, zonas táctiles ≥ 40 px, cifras tabulares, alineación óptica
-- Método de revisión (Impeccable) y diales de BandManager (Taste): 3 / 3 / 6·4
-- Sin emojis en la interfaz; iconos Lucide
-
-Complementa a `visual-identity` (que decide el *qué*); en conflicto, manda `visual-identity`.
-
----
-
-### 4. **fullstack-ux-design**
+### 3. **fullstack-ux-design**
 **Cuándo usar:** Crear/refinar componentes UI o handlers de backend
 
-- Ingeniería frontend (React 19, Motion, Tailwind v4, `cva`)
+- Estándares de diseño frontend (React 19, Motion, Tailwind v4)
+- Glassmorphism, micro-animaciones, paleta de colores
 - Estándares de backend (Express async/await patterns)
-- Vitest y regresión visual con Playwright
-- Checklist de ingeniería
-
-⚠️ **No decide estética** — para eso, `visual-identity`.
+- Vitest testing conventions
+- Checklist UX & backend
 
 **Archivos clave:** `src/App.tsx`, `src/components/`, `server.ts`, `server/routes/`
 
 ---
 
-### 5. **supabase-architect**
+### 4. **supabase-architect**
 **Cuándo usar:** Modificar esquema de BD, crear migraciones, handlers de DB o tipos TypeScript
 
 - Arquitectura de datos en 3 capas (Types TS → Handlers DB → State en memoria)
@@ -146,7 +117,6 @@ Complementa a `visual-identity` (que decide el *qué*); en conflicto, manda `vis
 ```
 /skill agentic-harness
 /skill security-multitenancy
-/skill visual-identity
 /skill fullstack-ux-design
 /skill supabase-architect
 /skill graphify
@@ -168,8 +138,7 @@ Referencia directa: `/skills/NOMBRE_SKILL/SKILL.md`
 ## 📖 Flujo Típico de Desarrollo
 
 1. **Lee** `AGENTS.md` (raíz del repo) — es la fuente de verdad de instrucciones del proyecto, no este directorio
-2. **Identifica** qué área tocas (agentes, seguridad, UI, DB)
-   - ¿Tocas UI? → **`visual-identity` es obligatoria**, antes que cualquier otra cosa
+2. **Identifica** qué área tocas (agentes, seguridad, UX, DB)
 3. **Carga el Skill correspondiente** desde aquí
 4. **Sigue el checklist** del skill antes de hacer PR
 5. **Referencia la sección de ejemplos** del skill para patrones

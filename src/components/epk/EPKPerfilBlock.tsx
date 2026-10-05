@@ -449,9 +449,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
                       {subiendoFotoMiembro === m.id ? (
                         <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
-                      ) : m.fotoUrl && m.fotoUrl.trim() !== "" ? (
+                      ) : (m.fotoUrl && m.fotoUrl.trim() !== "") || ((m as any).foto_url && (m as any).foto_url.trim() !== "") ? (
                         <img
-                          src={m.fotoUrl}
+                          src={m.fotoUrl || (m as any).foto_url}
                           alt={m.nombre || "Miembro"}
                           className="w-full h-full object-cover"
                         />

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getAuthHeaders } from '../services/api';
+import { apiFetch } from '../utils/api';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
@@ -203,20 +204,11 @@ Oficina de Producción — {bandName}`);
     setIsGeneratingAllTemplates(true);
     setOptimizationFeedbackMsg(null);
     try {
-      const authHeaders = getAuthHeaders() as Record<string, string>;
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...(token ? { 'x-auth-token': token } : {}),
-      };
-      const res = await fetch('/api/templates/generate-all', {
+      const data = await apiFetch<any>('/api/templates/generate-all', {
         method: 'POST',
-        headers,
         body: JSON.stringify({ baseProposal }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success && data.templates) {
+      if (data?.success && data?.templates) {
         applyTemplatesMap(data.templates);
         setOptimizationFeedbackMsg(
           `✨ ¡Éxito! Se han generado y adaptado automáticamente las 7 plantillas maestras y sus 7 pautas de IA para cada escenario.`
@@ -243,16 +235,8 @@ Oficina de Producción — {bandName}`);
       typeof overrideInstruction === 'string' && overrideInstruction.trim() !== '' ? overrideInstruction.trim() : templateCustomInstruction;
     try {
       const activeData = getActiveTemplateData();
-      const authHeaders = getAuthHeaders() as Record<string, string>;
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...(token ? { 'x-auth-token': token } : {}),
-      };
-      const res = await fetch('/api/templates/optimize', {
+      const data = await apiFetch<any>('/api/templates/optimize', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
           category: templateTab,
           currentSubject: activeData.subject,
@@ -263,8 +247,7 @@ Oficina de Producción — {bandName}`);
           contentRating: templateContentRating,
         }),
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success && data.optimized) {
+      if (data?.success && data?.optimized) {
         activeData.setSubject(data.optimized.subject);
         activeData.setBody(data.optimized.body);
         activeData.setGuidelines(data.optimized.guidelines);
@@ -386,17 +369,8 @@ Oficina de Producción — {bandName}`);
     const activeData = getActiveTemplateData();
 
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
-      }
-      const res = await fetch('/api/templates/preview', {
+      const data = await apiFetch<any>('/api/templates/preview', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
           category: templateTab,
           subject: activeData.subject,
@@ -404,15 +378,14 @@ Oficina de Producción — {bandName}`);
           guidelines: activeData.guidelines,
         }),
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setTestPromptResult(`Asunto: ${data.subject}\n\n${data.body}`);
       } else {
-        setTestPromptResult(`⚠️ ${data.error || 'No se pudo simular la plantilla.'}`);
+        setTestPromptResult(`⚠️ ${data?.error || 'No se pudo simular la plantilla.'}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error testing prompt:', err);
-      setTestPromptResult('⚠️ Error de conexión al simular la plantilla.');
+      setTestPromptResult(`⚠️ ${err?.message || 'Error de conexión al simular la plantilla.'}`);
     } finally {
       setIsTestingPrompt(false);
     }
@@ -421,15 +394,8 @@ Oficina de Producción — {bandName}`);
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-        const headers: Record<string, string> = {};
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-          headers['x-auth-token'] = token;
-        }
-        const res = await fetch('/api/templates', { headers });
-        const data = await res.json();
-        if (res.ok && data.success && data.templates) {
+        const data = await apiFetch<any>('/api/templates');
+        if (data?.success && data?.templates) {
           const t = data.templates;
           if (t.salas) {
             setSubjectTemplateSala(t.salas.subject);
@@ -473,15 +439,8 @@ Oficina de Producción — {bandName}`);
     };
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-        const headers: Record<string, string> = {};
-        if (token) {
-          headers['Authorization'] = `Bearer ${token}`;
-          headers['x-auth-token'] = token;
-        }
-        const res = await fetch('/api/templates/stats', { headers });
-        const data = await res.json();
-        if (res.ok && data.success && data.stats) {
+        const data = await apiFetch<any>('/api/templates/stats');
+        if (data?.success && data?.stats) {
           setTemplateStats(data.stats);
         }
       } catch (err) {
@@ -495,17 +454,8 @@ Oficina de Producción — {bandName}`);
   const handleSaveTemplates = async () => {
     const activeData = getActiveTemplateData();
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
-      }
-      const res = await fetch('/api/templates/save', {
+      const data = await apiFetch<any>('/api/templates/save', {
         method: 'POST',
-        headers,
         body: JSON.stringify({
           category: templateTab,
           subject: activeData.subject,
@@ -516,8 +466,7 @@ Oficina de Producción — {bandName}`);
           contentRating: templateContentRating,
         }),
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success) {
         setOptimizationFeedbackMsg(
           `✅ Plantilla y Pautas para [${activeData.title}] guardadas y ya se usarán al generar pitches para esta categoría.`
         );
@@ -527,9 +476,9 @@ Oficina de Producción — {bandName}`);
       } else {
         alert('⚠️ Error al guardar en el servidor.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error saving template:', err);
-      alert('⚠️ Error de conexión al guardar la plantilla.');
+      alert(err?.message || '⚠️ Error de conexión al guardar la plantilla.');
     }
   };
 
@@ -537,21 +486,11 @@ Oficina de Producción — {bandName}`);
     if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
 
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-        headers['x-auth-token'] = token;
-      }
-      const res = await fetch('/api/templates/reset', {
+      const data = await apiFetch<any>('/api/templates/reset', {
         method: 'POST',
-        headers,
         body: JSON.stringify({ category: templateTab }),
       });
-      const data = await res.json();
-      if (res.ok && data.success) {
+      if (data?.success && data?.template) {
         const activeData = getActiveTemplateData();
         activeData.setSubject(data.template.subject);
         activeData.setBody(data.template.body);
@@ -563,7 +502,7 @@ Oficina de Producción — {bandName}`);
       } else {
         setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error resetting template:', err);
       setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
     }

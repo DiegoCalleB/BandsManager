@@ -1756,11 +1756,13 @@ export default function RepertorioSetlists({
 
   // Save changes to localStorage and Backend API
   const getHeaders = () => {
-    const token = localStorage.getItem("bakandeya_token");
+    const token =
+      localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+    const effectiveBandId = bandId || cleanBand;
     return {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(bandId ? { "x-band-id": bandId } : {}),
+      ...(effectiveBandId ? { "x-band-id": effectiveBandId } : {}),
     };
   };
 
@@ -2528,16 +2530,19 @@ export default function RepertorioSetlists({
     },
   ) => {
     const selectedSet = new Set(selectedSongIds);
-    let isFirst = true;
     const updatedSongs = songs.map((s) => {
       const isCurrentlyInAlbum =
         (s.albumDisco || "Singles / Sin Disco") === albumName ||
         s.albumDisco === albumName;
       if (selectedSet.has(s.id)) {
         const updated = { ...s, albumDisco: albumName };
-        if (albumExtraInfo?.portadaUrl && isFirst) {
+        if (albumExtraInfo?.portadaUrl !== undefined && albumExtraInfo.portadaUrl !== "") {
           updated.portadaUrl = albumExtraInfo.portadaUrl;
-          isFirst = false;
+          (updated as any).portada_url = albumExtraInfo.portadaUrl;
+        }
+        if (albumExtraInfo?.año) {
+          (updated as any).albumYear = albumExtraInfo.año;
+          (updated as any).album_year = albumExtraInfo.año;
         }
         return updated;
       } else if (isCurrentlyInAlbum) {
@@ -2549,15 +2554,27 @@ export default function RepertorioSetlists({
     setSongs(updatedSongs);
     saveSongsToLocalStorageSafely(updatedSongs);
 
+    // Persist all affected songs to the backend
     updatedSongs.forEach((s) => {
-      fetch(`/api/songs/${s.id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(s),
-      }).catch((err) =>
-        console.error("Error updating song album on server:", err),
-      );
+      const original = songs.find((o) => o.id === s.id);
+      const isModified =
+        !original ||
+        original.albumDisco !== s.albumDisco ||
+        original.portadaUrl !== s.portadaUrl ||
+        (original as any).albumYear !== (s as any).albumYear;
+
+      if (isModified || selectedSet.has(s.id)) {
+        fetch(`/api/songs/${s.id}`, {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify(s),
+        }).catch((err) =>
+          console.error("Error updating song album on server:", err),
+        );
+      }
     });
+
+    window.dispatchEvent(new CustomEvent("app-data-updated"));
   };
 
   const handleReorderAlbumTrack = (

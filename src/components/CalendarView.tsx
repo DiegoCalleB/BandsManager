@@ -814,19 +814,9 @@ export default function CalendarView({
     let isMounted = true;
     const loadData = async () => {
       try {
-        const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
-        const headers = {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
-
         const [setlistsRes, songsRes] = await Promise.all([
-          fetch('/api/repertorio/setlists', { headers })
-            .then((r) => r.json())
-            .catch(() => null),
-          fetch('/api/repertorio/songs', { headers })
-            .then((r) => r.json())
-            .catch(() => null),
+          apiFetch<{ setlists: any[] }>('/api/repertorio/setlists').catch(() => null),
+          apiFetch<{ songs: any[] }>('/api/repertorio/songs').catch(() => null),
         ]);
 
         if (isMounted) {
@@ -848,7 +838,7 @@ export default function CalendarView({
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [activeBandId]);
 
   // Estado para la vista de directo / modo escenario desde el calendario
   const [activeStageSetlist, setActiveStageSetlist] = useState<any | null>(null);
@@ -992,37 +982,6 @@ export default function CalendarView({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showEventFichaModal, goToAdjacentEvent]);
-
-  useEffect(() => {
-    let isMounted = true;
-    fetch('/api/setlists')
-      .then((res) => res.json())
-      .then((data) => {
-        if (!isMounted) return;
-        const list = Array.isArray(data) ? data : data?.setlists || [];
-        if (list && list.length > 0) {
-          setAvailableSetlists(list);
-          // NOTE: Removed localStorage setItem for band data (setlists). React state is source of truth.
-        }
-      })
-      .catch(() => {});
-
-    api
-      .getSongs()
-      .then((res) => {
-        if (!isMounted) return;
-        const songsList = Array.isArray(res) ? res : res?.songs || [];
-        if (songsList && songsList.length > 0) {
-          setAvailableSongs(songsList);
-          // NOTE: Removed localStorage setItem for band data (songs). React state is source of truth.
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeBandId]);
 
   // Ficha del concierto: ver / editar un concierto ya creado
   const [viewingConcert, setViewingConcert] = useState<Concert | null>(null);
@@ -1576,21 +1535,19 @@ export default function CalendarView({
     setSyncSuccessMessage('');
     setSyncErrorMessage('');
     try {
-      const res = await fetch('/api/concerts/sync', {
+      const data = await apiFetch<any>('/api/concerts/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success) {
+      if (data?.success) {
         setSyncSuccessMessage(data.message || 'Conciertos sincronizados con éxito.');
         // clear after 6 seconds
         setTimeout(() => setSyncSuccessMessage(''), 6000);
       } else {
-        setSyncErrorMessage(data.error || 'Error al intentar sincronizar los conciertos.');
+        setSyncErrorMessage(data?.error || 'Error al intentar sincronizar los conciertos.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error synchronizing concerts:', error);
-      setSyncErrorMessage('Error de conexión con el servidor.');
+      setSyncErrorMessage(error?.message || 'Error de conexión con el servidor.');
     } finally {
       setIsSyncingConcerts(false);
     }
@@ -1622,14 +1579,7 @@ export default function CalendarView({
   // Fetch server logistics state on mount
   useEffect(() => {
     if (!currentBandId) return;
-    const token = localStorage.getItem('auth_token') || '';
-    const headers: Record<string, string> = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-
-    fetch(`/api/logistics?band_id=${encodeURIComponent(currentBandId)}`, {
-      headers,
-    })
-      .then((res) => (res.ok && res.headers.get('content-type')?.includes('application/json') ? res.json().catch(() => null) : null))
+    apiFetch<any>(`/api/logistics?band_id=${encodeURIComponent(currentBandId)}`)
       .then((data) => {
         if (data) {
           if (data.runOfShow && Object.keys(data.runOfShow).length > 0) {
@@ -1645,17 +1595,15 @@ export default function CalendarView({
 
   // Sync helpers to post server state
   const saveRunOfShowToServer = (dateKey: string, items: RunOfShowItem[]) => {
-    fetch('/api/logistics/runofshow', {
+    apiFetch('/api/logistics/runofshow', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dateKey, items }),
     }).catch((err) => console.error('Error saving run of show:', err));
   };
 
   const saveGearToServer = (dateKey: string, items: GearItem[]) => {
-    fetch('/api/logistics/gear', {
+    apiFetch('/api/logistics/gear', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ dateKey, items }),
     }).catch((err) => console.error('Error saving gear checklist:', err));
   };
@@ -2757,19 +2705,19 @@ export default function CalendarView({
         {/* SELECTED DAY AGENDA CARD - Inmediatamente visible bajo el calendario */}
         <div
           id="calendar-selected-day-banner"
-          className={`mt-5 p-4 rounded-[var(--r-l)] transition-ui duration-200 ${'bg-[var(--sunken)]'}`}
+          className="mt-3.5 p-3 sm:p-4 rounded-[var(--r-l)] transition-ui duration-200 bg-[var(--sunken)]/60 border border-[var(--hair)]/40"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-310">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 ${'bg-[var(--acc)]/15 /40 text-[var(--ink)]'}`}
+                className="w-9 h-9 rounded-[var(--r-m)] flex flex-col items-center justify-center font-sans font-bold shrink-0 bg-[var(--acc)]/15 text-[var(--ink)] border border-[var(--acc)]/30"
               >
                 <span className="text-sm leading-none">{selectedDate.getDate()}</span>
                 <span className="text-micro mt-0.5 opacity-80">{monthNames[selectedDate.getMonth()]?.slice(0, 3)}</span>
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className={`text-sm sm:text-base font-bold font-display capitalize ${textTitle}`}>
+                  <h4 className={`text-xs sm:text-sm font-bold font-display capitalize ${textTitle}`}>
                     {selectedDate.toLocaleDateString('es-ES', {
                       weekday: 'long',
                       day: 'numeric',
@@ -2778,12 +2726,12 @@ export default function CalendarView({
                     })}
                   </h4>
                   {dayEventsList.length > 0 && (
-                    <span className="px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
+                    <span className="px-2 py-0.2 rounded-[var(--r-pill)] text-micro font-sans font-bold bg-[var(--acc)]/20 text-[var(--ink)]">
                       {dayEventsList.length} {dayEventsList.length === 1 ? 'evento' : 'eventos'}
                     </span>
                   )}
                 </div>
-                <p className={`text-xs font-sans ${textSub}`}>
+                <p className={`text-micro sm:text-xs font-sans ${textSub}`}>
                   {dayEventsList.length === 0
                     ? 'Día libre · Sin actividad programada'
                     : selectedConcert
@@ -2799,6 +2747,18 @@ export default function CalendarView({
 
             {/* Botones de acción rápida para la fecha seleccionada */}
             <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
+              {dayEventsList.length > 0 && (
+                <Button
+                  variant="primary"
+                  size="xs"
+                  type="button"
+                  onClick={() => setShowEventFichaModal(true)}
+                  className="items-center gap-1 font-bold"
+                >
+                  <Maximize2 className="w-3 h-3" />
+                  <span>Ver evento en modal</span>
+                </Button>
+              )}
               <Button
                 variant="raised"
                 size="xs"
@@ -2821,16 +2781,7 @@ export default function CalendarView({
           </div>
 
           {/* Contenido de eventos del día */}
-          {dayEventsList.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8">
-              <PublicoSilhouette opacity={0.12} size="small" />
-              <p className={`text-xs font-medium ${textSub} mt-4`}>Ningún evento programado</p>
-              <p className={`text-micro ${textMuted} mt-2 max-w-xs`}>
-                Pulsa <span className="text-[var(--acc)] font-bold">+ Concierto</span> o{' '}
-                <span className="text-[var(--ok)] font-bold">+ Ensayo</span> para agendar.
-              </p>
-            </div>
-          ) : (
+          {dayEventsList.length > 0 && (
             <div className="mt-3 space-y-2.5">
               {/* Selector de eventos si el día tiene más de uno */}
               {hasMultipleDayEvents && (

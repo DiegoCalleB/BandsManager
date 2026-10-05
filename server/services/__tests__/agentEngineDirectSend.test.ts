@@ -64,20 +64,26 @@ function mockSupabase() {
 
   vi.mocked(getSupabase).mockReturnValue({
     from: (tabla: string) => ({
-      select: () => ({
-        in: () => ({
-          eq: () => Promise.resolve({ data: tabla === 'leads' ? [lead] : [], error: null })
-        }),
-        eq: () => ({
-          maybeSingle: () => Promise.resolve({ data: { nombre_banda: 'Banda Test' } })
-        })
-      }),
-      update: (fila: any) => ({
-        eq: () => {
-          updates.push(fila);
-          return Promise.resolve({ error: null });
-        }
-      }),
+      select: () => {
+        const queryChain: any = {
+          in: () => queryChain,
+          eq: () => queryChain,
+          not: () => queryChain,
+          maybeSingle: () => Promise.resolve({ data: { nombre_banda: 'Banda Test' } }),
+          then: (resolve: any) => Promise.resolve({ data: tabla === 'leads' ? [lead] : [], error: null }).then(resolve)
+        };
+        return queryChain;
+      },
+      update: (fila: any) => {
+        const updateChain: any = {
+          eq: () => {
+            if (!updates.includes(fila)) updates.push(fila);
+            return updateChain;
+          },
+          then: (resolve: any) => Promise.resolve({ error: null }).then(resolve)
+        };
+        return updateChain;
+      },
       insert: (fila: any) => {
         inserts.push({ tabla, fila });
         return Promise.resolve({ error: null });

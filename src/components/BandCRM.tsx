@@ -6,6 +6,7 @@ import {
   Lead,
 } from "../types";
 import { api, getAuthHeaders } from "../services/api";
+import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
@@ -116,22 +117,7 @@ export default function BandCRM({
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchBands = () => {
-    const token =
-      localStorage.getItem("bakandeya_token") || localStorage.getItem("token");
-    fetch("/api/bands", {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Respuesta no es JSON válido");
-        }
-        return res.json();
-      })
+    apiFetch<{ bands: BandContact[] }>("/api/bands")
       .then((data) => {
         if (data && data.bands) {
           setBands(data.bands);
@@ -244,24 +230,7 @@ export default function BandCRM({
 
   const fetchRegisteredBands = () => {
     setIsLoadingRegBands(true);
-    const token =
-      localStorage.getItem("bakandeya_token") || localStorage.getItem("token");
-    fetch("/api/registered-bands", {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error ${res.status}`);
-        }
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new Error("Respuesta no es JSON válido");
-        }
-        return res.json();
-      })
+    apiFetch<{ registeredBands: any[] }>("/api/registered-bands")
       .then((data) => {
         if (data && data.registeredBands) {
           setRegisteredBands(data.registeredBands);
@@ -320,9 +289,8 @@ export default function BandCRM({
     setToneData(null);
 
     try {
-      const res = await fetch("/api/bands/analyze-tone", {
+      const resData = await apiFetch<any>("/api/bands/analyze-tone", {
         method: "POST",
-        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           nombre_entidad: band.nombre_banda,
           instagram: band.instagram,
@@ -333,17 +301,13 @@ export default function BandCRM({
         }),
       });
 
-      const resData = await res.json();
-      if (resData.success && resData.data) {
+      if (resData?.success && resData?.data) {
         let finalData = resData.data;
 
         // Also load learned rules from tone-dna endpoint to ensure we have the latest reglas_por_categoria
         try {
-          const toneDnaRes = await fetch("/api/bands/tone-dna", {
-            headers: getAuthHeaders(),
-          });
-          const toneDnaData = await toneDnaRes.json();
-          if (toneDnaRes.ok && toneDnaData.data?.reglas_por_categoria) {
+          const toneDnaData = await apiFetch<any>("/api/bands/tone-dna");
+          if (toneDnaData?.data?.reglas_por_categoria) {
             finalData = {
               ...finalData,
               reglas_por_categoria: toneDnaData.data.reglas_por_categoria,
@@ -446,19 +410,17 @@ export default function BandCRM({
     setAiError(null);
     setAiProposal(null);
     try {
-      const res = await fetch("/api/bands/ai-lookup", {
+      const data = await apiFetch<any>("/api/bands/ai-lookup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre_banda: formName.trim(),
           localizacion: formLocation.trim(),
         }),
       });
-      const data = await res.json();
-      if (data.success && data.data) {
+      if (data?.success && data?.data) {
         setAiProposal(data.data);
       } else {
-        setAiError(data.error || "No se encontraron datos para esta banda.");
+        setAiError(data?.error || "No se encontraron datos para esta banda.");
       }
     } catch (err: any) {
       console.error("Error en búsqueda de IA:", err);
@@ -578,9 +540,8 @@ export default function BandCRM({
       );
 
       try {
-        await fetch(`/api/bands/${editingBand.id}`, {
+        await apiFetch(`/api/bands/${editingBand.id}`, {
           method: "PUT",
-          headers,
           body: JSON.stringify(updated),
         });
       } catch (err) {
@@ -627,9 +588,8 @@ export default function BandCRM({
       setBands((prev) => [newBand, ...prev]);
 
       try {
-        await fetch("/api/bands", {
+        await apiFetch("/api/bands", {
           method: "POST",
-          headers,
           body: JSON.stringify(newBand),
         });
       } catch (err) {
@@ -690,9 +650,8 @@ export default function BandCRM({
       };
       newBands.push(newBand);
       try {
-        await fetch("/api/bands", {
+        await apiFetch("/api/bands", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newBand),
         });
       } catch (err) {
@@ -708,12 +667,12 @@ export default function BandCRM({
   const handleDeleteBand = async (id: string, name: string) => {
     if (
       window.confirm(
-        `¿Estás seguro de eliminar el contacto de la banda"${name}"?`,
+        `¿Estás seguro de eliminar el contacto de la banda "${name}"?`,
       )
     ) {
       setBands((prev) => prev.filter((b) => b.id !== id));
       try {
-        await fetch(`/api/bands/${id}`, { method: "DELETE" });
+        await apiFetch(`/api/bands/${id}`, { method: "DELETE" });
       } catch (err) {
         console.error("Error deleting band", err);
       }
@@ -726,9 +685,8 @@ export default function BandCRM({
       prev.map((b) => (b.id === id ? { ...b, es_favorito: isFav } : b)),
     );
     try {
-      await fetch(`/api/bands/${id}`, {
+      await apiFetch(`/api/bands/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ es_favorito: isFav }),
       });
     } catch (err) {
@@ -915,9 +873,8 @@ export default function BandCRM({
       }));
 
       try {
-        const res = await fetch("/api/bands/generate-date-swap-pitch", {
+        const data = await apiFetch<any>("/api/bands/generate-date-swap-pitch", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             bandName: band.nombre_banda,
             bandLocation: band.localizacion,
@@ -926,10 +883,9 @@ export default function BandCRM({
           }),
         });
 
-        const data = await res.json();
         const pitchText =
-          data.pitch ||
-          data.data?.pitch ||
+          data?.pitch ||
+          data?.data?.pitch ||
           `Hola compas de ${band.nombre_banda},\n\nOs escribimos desde ${myBandName}. Nos encanta vuestro estilo ${band.estilo_musical} y estamos planeando fechas por vuestra zona (${band.localizacion}). ¿Os cuadraría plantear un intercambio de fechas (Date Swap)? Nosotros os montamos fecha en nuestra ciudad y vosotros nos abrís en la vuestra.\n\n¡Un abrazo grande!`;
 
         const updatedBand = {
@@ -941,9 +897,8 @@ export default function BandCRM({
         setBands((prev) =>
           prev.map((b) => (b.id === band.id ? updatedBand : b)),
         );
-        await fetch(`/api/bands/${band.id}`, {
+        await apiFetch(`/api/bands/${band.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedBand),
         });
 

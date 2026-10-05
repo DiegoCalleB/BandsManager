@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
+import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
@@ -34,10 +35,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
     setIsGenerating(true);
     setGeneratedIdea(null);
     try {
-      const token = localStorage.getItem('token') || '';
-      const res = await fetch('/api/ai-composer-arrangement', {
+      const data = await apiFetch<any>('/api/ai-composer-arrangement', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
         body: JSON.stringify({
           titulo: song.titulo,
           tonalidad: song.tonalidad,
@@ -51,15 +50,14 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
         }),
       });
 
-      const data = await res.json();
-      if (data.success && data.idea) {
+      if (data?.success && data?.idea) {
         setGeneratedIdea(data.idea);
       } else {
-        alert(data.error || 'Error al generar idea con IA.');
+        alert(data?.error || 'Error al generar idea con IA.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error generating AI arrangement:', err);
-      alert('Error de conexión al generar arreglo con IA.');
+      alert(err?.message || 'Error de conexión al generar arreglo con IA.');
     } finally {
       setIsGenerating(false);
     }

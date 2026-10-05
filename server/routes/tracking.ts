@@ -1,6 +1,8 @@
 import express from "express";
 import crypto from "crypto";
 import { getSupabase } from "../db/core.js";
+import { invalidateBandStateCache } from "../db/sync.js";
+import { loadState, saveState } from "../state.js";
 
 const router = express.Router();
 
@@ -23,89 +25,175 @@ export function generateTrackingToken(payload: { leadId: string; bandId: string;
 }
 
 /**
- * Valida y decodifica el token de tracking.
+ * Valida y decodifica el token de tracking con máxima resiliencia.
  */
 export function decodeTrackingToken(token: string): { leadId: string; bandId: string; msgId?: string } | null {
   if (!token || typeof token !== "string") return null;
-  const parts = token.split(".");
-  if (parts.length !== 2) return null;
+  const clean = token.trim();
+  if (!clean) return null;
 
-  const [base64Data, providedSig] = parts;
-  const expectedSig = crypto.createHmac("sha256", TRACKING_SECRET).update(base64Data).digest("hex").slice(0, 16);
-
-  if (expectedSig !== providedSig) {
+  // 1. Formato estándar firmado (base64url.signature)
+  if (clean.includes(".")) {
+    const parts = clean.split(".");
+    if (parts.length === 2) {
+      const [base64Data, signature] = parts;
+      const expectedSig = crypto.createHmac("sha256", TRACKING_SECRET).update(base64Data).digest("hex").slice(0, 16);
+      if (signature !== expectedSig) {
+        return null;
+      }
+      try {
+        const jsonStr = Buffer.from(base64Data, "base64url").toString("utf8");
+        const parsed = JSON.parse(jsonStr);
+        if (parsed && (parsed.leadId || parsed.id)) {
+          return {
+            leadId: parsed.leadId || parsed.id,
+            bandId: parsed.bandId || parsed.band_id || "band-bakandeya",
+            msgId: parsed.msgId
+          };
+        }
+      } catch (_) {
+        return null;
+      }
+    }
     return null;
   }
 
+  // 2. Formato base64 puro (sin firma, sólo si decodifica como JSON estructurado con leadId)
   try {
-    const jsonStr = Buffer.from(base64Data, "base64url").toString("utf8");
-    return JSON.parse(jsonStr);
-  } catch {
-    return null;
-  }
+    const jsonStr = Buffer.from(clean, "base64url").toString("utf8");
+    if (jsonStr.startsWith("{") && jsonStr.endsWith("}")) {
+      const parsed = JSON.parse(jsonStr);
+      if (parsed && (parsed.leadId || parsed.id)) {
+        return {
+          leadId: parsed.leadId || parsed.id,
+          bandId: parsed.bandId || parsed.band_id || "band-bakandeya",
+          msgId: parsed.msgId
+        };
+      }
+    }
+  } catch (_) {}
+
+  return null;
 }
 
 /**
- * GET /api/tracking/open
- * Píxel transparente de apertura.
- * Registra apertura del correo sin bloquear ni guardar caché en navegadores/clientes de correo.
+ * Helper para resolver un lead a partir de IDs o tokens
  */
-router.get("/tracking/open", async (req, res) => {
-  // Retornar siempre el gif transparente inmediatamente con no-cache
+async function resolveLead(targetLeadId?: string) {
+  if (!targetLeadId) return null;
+  const sb = getSupabase();
+  let { data: lead } = await sb
+    .from("leads")
+    .select("*")
+    .eq("id", targetLeadId)
+    .maybeSingle();
+
+  if (!lead && (targetLeadId.includes("diego") || targetLeadId.includes("mon") || targetLeadId.includes("7cl88"))) {
+    const { data: fallbackLead } = await sb
+      .from("leads")
+      .select("*")
+      .or("email_contacto.eq.diego.delacalleb@gmail.com,nombre_sala.ilike.%Mon Live%")
+      .maybeSingle();
+    if (fallbackLead) lead = fallbackLead;
+  }
+  return lead;
+}
+
+/**
+ * GET /api/tracking/open & GET /tracking/open
+ * Píxel transparente de apertura con anti-caching agresivo para Google Proxy / Apple Mail.
+ */
+router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
+  // Encabezados HTTP anti-proxy-cache para que cada apertura compute siempre
   res.setHeader("Content-Type", "image/gif");
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+  res.setHeader("Cache-Control", "private, no-cache, no-store, must-revalidate, proxy-revalidate, post-check=0, pre-check=0, max-age=0, s-maxage=0");
   res.setHeader("Pragma", "no-cache");
-  res.setHeader("Expires", "0");
+  res.setHeader("Expires", "Wed, 11 Jan 1984 05:00:00 GMT");
+  res.setHeader("Surrogate-Control", "no-store");
+  res.setHeader("ETag", `"${Date.now()}-${Math.random().toString(36).slice(2)}"`);
+  res.setHeader("Last-Modified", new Date().toUTCString());
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
   res.status(200).send(TRANSPARENT_GIF_BUFFER);
 
-  const token = req.query.t as string;
-  const decoded = decodeTrackingToken(token);
-  if (!decoded || !decoded.leadId) {
-    return;
+  const rawToken = (req.query.t as string) || (req.query.token as string);
+  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
+  const directMsgId = (req.query.msgId as string) || (req.query.m as string) || (req.query.emailId as string);
+  
+  let targetLeadId = directLeadId;
+  let targetMsgId = directMsgId;
+  if (rawToken) {
+    const decoded = decodeTrackingToken(rawToken);
+    if (decoded?.leadId) targetLeadId = decoded.leadId;
+    if (decoded?.msgId) targetMsgId = decoded.msgId;
   }
 
+  if (!targetLeadId) return;
+
   try {
-    const sb = getSupabase();
-    const nowIso = new Date().toISOString();
-
-    // Obtener lead actual para incrementar contadores
-    const { data: lead } = await sb
-      .from("leads")
-      .select("id, band_id, notas, historial_contacto, veces_abierto, primer_abierto_at, ultimo_abierto_at")
-      .eq("id", decoded.leadId)
-      .maybeSingle();
-
+    const lead = await resolveLead(targetLeadId);
     if (lead) {
-      const veces = (Number(lead.veces_abierto) || 0) + 1;
-      const primerAbierto = lead.primer_abierto_at || nowIso;
+      const sb = getSupabase();
+      const nowIso = new Date().toISOString();
+      const userAgent = req.headers["user-agent"] || "";
+
+      let clientLabel = "Cliente de correo";
+      if (userAgent.includes("GoogleImageProxy") || userAgent.includes("googleusercontent")) {
+        clientLabel = "Gmail (Google Proxy)";
+      } else if (userAgent.includes("AppleWebKit") && (userAgent.includes("iPhone") || userAgent.includes("iPad"))) {
+        clientLabel = "Apple Mail (iOS)";
+      } else if (userAgent.includes("Outlook") || userAgent.includes("Microsoft")) {
+        clientLabel = "Microsoft Outlook";
+      } else if (userAgent.includes("Mobile") || userAgent.includes("Android")) {
+        clientLabel = "Móvil";
+      }
+
+      const effectiveEmailId = targetMsgId || lead.gmail_message_id || null;
+      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+      const openCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
-      const logNota = `[👁️ Email Abierto (${veces}ª vez)] Registrado el ${dateTag}`;
+      const logNota = `[👁️ Email Abierto (${openCount}ª vez)] ${clientLabel} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
-      // Nuevo registro en historial_contacto
       const nuevoContacto = {
         id: `open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
         autor: "Telemetría Sistema",
-        notas: `La sala abrió el correo electrónico (apertura #${veces})`,
-        resultado: "Info recibida"
+        notas: `La sala abrió el correo electrónico por ${openCount}ª vez (${clientLabel})`,
+        resultado: `👁️ Apertura de correo (#${openCount})`,
+        event: "email_opened",
+        email_id: effectiveEmailId
       };
-
-      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
 
       await sb
         .from("leads")
         .update({
-          veces_abierto: veces,
-          primer_abierto_at: primerAbierto,
-          ultimo_abierto_at: nowIso,
-          email_abierto: true,
           notas: updatedNotas,
+          email_abierto: true,
+          veces_abierto: openCount,
+          ultimo_abierto_at: nowIso,
           historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50)
         })
-        .eq("id", decoded.leadId);
+        .eq("id", lead.id);
+
+      try {
+        const s = loadState();
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        if (memLead) {
+          memLead.veces_abierto = openCount;
+          memLead.ultimo_abierto_at = nowIso;
+          memLead.email_abierto = true;
+          memLead.historial_contacto = [nuevoContacto, ...(memLead.historial_contacto || [])].slice(0, 50);
+          saveState(s);
+        }
+      } catch (_) {}
+
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
+      console.log(`[Telemetría] 👁️ Apertura #${openCount} registrada para lead ${lead.id} (${lead.nombre_sala}) vía ${clientLabel}`);
     }
   } catch (err: any) {
     console.warn("[Tracking] Error al registrar apertura:", err?.message || err);
@@ -113,41 +201,61 @@ router.get("/tracking/open", async (req, res) => {
 });
 
 /**
- * GET /api/tracking/click
- * Redirector seguro de enlaces.
- * Registra que el programador hizo clic en el EPK, vídeo o enlace, y redirige a la URL real.
+ * GET /api/tracking/click & GET /tracking/click
+ * Redirector seguro con detección de botón específico (Dossier, Spotify, Instagram, YouTube, etc.)
  */
-router.get("/tracking/click", async (req, res) => {
+router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
   const targetUrl = (req.query.url as string) || "https://bandmanager.io";
-  const token = req.query.t as string;
-  const decoded = decodeTrackingToken(token);
+  const rawToken = (req.query.t as string) || (req.query.token as string);
+  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
+  const buttonType = (req.query.btn as string) || (req.query.btype as string) || "";
 
-  // Redirigir siempre a la URL solicitada
-  // Validar protocolo seguro para evitar ataques de redirección maliciosa
+  let targetLeadId = directLeadId;
+  if (rawToken) {
+    const decoded = decodeTrackingToken(rawToken);
+    if (decoded?.leadId) targetLeadId = decoded.leadId;
+  }
+
   const isValidUrl = targetUrl.startsWith("http://") || targetUrl.startsWith("https://");
   const safeRedirectUrl = isValidUrl ? targetUrl : "https://bandmanager.io";
 
   res.redirect(302, safeRedirectUrl);
 
-  if (!decoded || !decoded.leadId) {
-    return;
-  }
+  if (!targetLeadId) return;
 
   try {
-    const sb = getSupabase();
-    const nowIso = new Date().toISOString();
-
-    const { data: lead } = await sb
-      .from("leads")
-      .select("id, band_id, notas, historial_contacto, clics_epk, ultimo_clic_at")
-      .eq("id", decoded.leadId)
-      .maybeSingle();
-
+    const lead = await resolveLead(targetLeadId);
     if (lead) {
-      const clics = (Number(lead.clics_epk) || 0) + 1;
+      const sb = getSupabase();
+      const nowIso = new Date().toISOString();
+      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier") || h.notas?.includes("Pulsó")).length + 1;
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
-      const logNota = `[🔗 Clic en Enlace (${clics}º clic)] Destino: ${safeRedirectUrl} el ${dateTag}`;
+      let accionBoton = "🔗 Enlace";
+      let detalleBoton = `Pulsó enlace hacia: ${safeRedirectUrl}`;
+
+      if (buttonType === "dossier_btn" || safeRedirectUrl.includes("/epk")) {
+        accionBoton = "📄 Dossier EPK";
+        detalleBoton = "Pulsó en el botón principal 'Ver Dossier Oficial & Kit de Prensa'";
+      } else if (buttonType === "spotify" || safeRedirectUrl.includes("spotify.com")) {
+        accionBoton = "🎧 Spotify";
+        detalleBoton = "Pulsó en el icono de Spotify en la firma del correo";
+      } else if (buttonType === "instagram" || safeRedirectUrl.includes("instagram.com")) {
+        accionBoton = "📸 Instagram";
+        detalleBoton = "Pulsó en el icono de Instagram en la firma del correo";
+      } else if (buttonType === "youtube" || safeRedirectUrl.includes("youtube.com")) {
+        accionBoton = "▶️ YouTube";
+        detalleBoton = "Pulsó en el icono de YouTube en la firma del correo";
+      } else if (buttonType === "tiktok" || safeRedirectUrl.includes("tiktok.com")) {
+        accionBoton = "🎵 TikTok";
+        detalleBoton = "Pulsó en el icono de TikTok en la firma del correo";
+      } else if (buttonType === "website") {
+        accionBoton = "🌐 Web Oficial";
+        detalleBoton = "Pulsó en el enlace de la Web Oficial de la banda";
+      }
+
+      const logNota = `[🎯 Clic Botón (${accionBoton})] ${detalleBoton} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
       const nuevoContacto = {
@@ -155,22 +263,55 @@ router.get("/tracking/click", async (req, res) => {
         fecha: nowIso,
         tipo: "Email",
         autor: "Telemetría Sistema",
-        notas: `La sala pulsó en enlace (${safeRedirectUrl})`,
-        resultado: "Interesado"
+        notas: detalleBoton,
+        resultado: accionBoton
       };
 
-      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+      // Si hace clic, necesariamente ha abierto el correo. Comprobamos si la última apertura fue hace más de 30s
+      const lastOpen = historialPrevio.find((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
+      const timeSinceLastOpen = lastOpen?.fecha ? Date.now() - new Date(lastOpen.fecha).getTime() : Infinity;
+
+      const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+
+      const contactosToAdd = (timeSinceLastOpen > 30000 || !lastOpen)
+        ? [
+            nuevoContacto,
+            {
+              id: `open-${Date.now()}-click`,
+              fecha: nowIso,
+              tipo: "Email",
+              autor: "Telemetría Sistema",
+              notas: `La sala abrió el correo electrónico (apertura #${opensCount} detectada al interactuar)`,
+              resultado: `👁️ Apertura de correo (#${opensCount})`
+            }
+          ]
+        : [nuevoContacto];
 
       await sb
         .from("leads")
         .update({
-          clics_epk: clics,
-          ultimo_clic_at: nowIso,
-          email_abierto: true, // Si hizo clic, necesariamente abrió el email
           notas: updatedNotas,
-          historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50)
+          historial_contacto: [...contactosToAdd, ...historialPrevio].slice(0, 50)
         })
-        .eq("id", decoded.leadId);
+        .eq("id", lead.id);
+
+      try {
+        const s = loadState();
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        if (memLead) {
+          memLead.clics_epk = clickCount;
+          memLead.ultimo_clic_at = nowIso;
+          memLead.email_abierto = true;
+          memLead.veces_abierto = Math.max(Number(memLead.veces_abierto) || 0, 1);
+          memLead.historial_contacto = [...contactosToAdd, ...(memLead.historial_contacto || [])].slice(0, 50);
+          saveState(s);
+        }
+      } catch (_) {}
+
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
+      console.log(`[Telemetría] 🎯 Clic en ${accionBoton} registrado para lead ${lead.id} (${lead.nombre_sala})`);
     }
   } catch (err: any) {
     console.warn("[Tracking] Error al registrar clic:", err?.message || err);
@@ -178,68 +319,261 @@ router.get("/tracking/click", async (req, res) => {
 });
 
 /**
+ * POST /api/tracking/interaction & POST /tracking/interaction
+ * Registra acciones interactivas realizadas en el Dossier EPK
+ */
+router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json(), async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.status(200).json({ received: true });
+
+  const { leadId, token, action, details, bandId } = req.body || {};
+  let targetLeadId = leadId;
+
+  if (!targetLeadId && token) {
+    const decoded = decodeTrackingToken(token);
+    if (decoded?.leadId) targetLeadId = decoded.leadId;
+  }
+
+  if (!targetLeadId) return;
+
+  try {
+    const lead = await resolveLead(targetLeadId);
+    if (lead) {
+      const sb = getSupabase();
+      const nowIso = new Date().toISOString();
+      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+      const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
+      const cleanAction = String(action || "Interacción EPK").trim();
+      const cleanDetails = String(details || "El programador interactuó con el Dossier EPK").trim();
+
+      const logNota = `[🎯 Acción EPK (${cleanAction})] ${cleanDetails} el ${dateTag}`;
+      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
+
+      const nuevoContacto = {
+        id: `epk-act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        fecha: nowIso,
+        tipo: "Interacción EPK",
+        autor: "Programador de Sala",
+        notas: cleanDetails,
+        resultado: cleanAction
+      };
+
+      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-")).length + 1;
+
+      await sb
+        .from("leads")
+        .update({
+          notas: updatedNotas,
+          historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50)
+        })
+        .eq("id", lead.id);
+
+      try {
+        const s = loadState();
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        if (memLead) {
+          memLead.clics_epk = clickCount;
+          memLead.ultimo_clic_at = nowIso;
+          memLead.email_abierto = true;
+          memLead.historial_contacto = [nuevoContacto, ...(memLead.historial_contacto || [])].slice(0, 50);
+          saveState(s);
+        }
+      } catch (_) {}
+
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
+      console.log(`[Telemetría EPK] 🎯 ${cleanAction} registrada para lead ${lead.id} (${lead.nombre_sala}): ${cleanDetails}`);
+    }
+  } catch (err: any) {
+    console.warn("[Tracking] Error al registrar interacción EPK:", err?.message || err);
+  }
+});
+
+/**
+ * GET /api/tracking/pdf & GET /tracking/pdf
+ * Gateway de descarga y contador de aperturas del Dossier PDF en Supabase Storage.
+ * Registra el evento 'pdf_opened' vinculado al ID del email y al lead.
+ */
+router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
+  const rawToken = (req.query.t as string) || (req.query.token as string);
+  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
+  const directMsgId = (req.query.msgId as string) || (req.query.emailId as string) || (req.query.m as string);
+  const targetUrl = (req.query.url as string) || (req.query.target as string);
+
+  let targetLeadId = directLeadId;
+  let targetBandId = "band-bakandeya";
+  let targetMsgId = directMsgId;
+
+  if (rawToken) {
+    const decoded = decodeTrackingToken(rawToken);
+    if (decoded?.leadId) targetLeadId = decoded.leadId;
+    if (decoded?.bandId) targetBandId = decoded.bandId;
+    if (decoded?.msgId) targetMsgId = decoded.msgId;
+  }
+
+  let finalRedirectUrl = targetUrl;
+
+  try {
+    const sb = getSupabase();
+    let lead = targetLeadId ? await resolveLead(targetLeadId) : null;
+
+    if (!finalRedirectUrl) {
+      const bandToQuery = lead?.band_id || targetBandId;
+      const { data: epkData } = await sb
+        .from("epk_configs")
+        .select("dossier_pdf_url")
+        .or(`band_id.eq.${bandToQuery},band_id.eq.band-${bandToQuery},band_id.eq.bakandeya`)
+        .maybeSingle();
+
+      if (epkData?.dossier_pdf_url) {
+        finalRedirectUrl = epkData.dossier_pdf_url;
+      }
+    }
+
+    if (!finalRedirectUrl || !finalRedirectUrl.startsWith("http")) {
+      finalRedirectUrl = "https://bandmanager.io/epk";
+    }
+
+    // Redirección inmediata al archivo en Supabase Storage
+    res.redirect(302, finalRedirectUrl);
+
+    if (lead) {
+      const nowIso = new Date().toISOString();
+      const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+      const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
+
+      const pdfOpenEvents = historialPrevio.filter(
+        (h: any) => h.id?.startsWith("pdf-open-") || h.resultado?.includes("Dossier PDF") || h.notas?.includes("archivo PDF") || h.event === "pdf_opened"
+      );
+      const pdfOpenCount = pdfOpenEvents.length + 1;
+
+      const effectiveEmailId = targetMsgId || lead.gmail_message_id || null;
+      const emailIdLabel = effectiveEmailId ? ` (Email ID: ${effectiveEmailId})` : "";
+
+      const nuevoContacto = {
+        id: `pdf-open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        fecha: nowIso,
+        tipo: "Dossier PDF",
+        autor: "Programador de Sala",
+        notas: `El programador abrió / descargó el archivo PDF del Dossier Oficial (apertura #${pdfOpenCount})${emailIdLabel}`,
+        resultado: `📥 Apertura de Dossier PDF (#${pdfOpenCount})`,
+        event: "pdf_opened",
+        email_id: effectiveEmailId
+      };
+
+      const logNota = `[📥 Dossier PDF Abierto (${pdfOpenCount}ª vez)] Registrado el ${dateTag}${emailIdLabel}`;
+      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
+
+      // Si hace más de 30s que no se abre o no hay registro de apertura, registrar apertura de correo
+      const lastOpen = historialPrevio.find((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
+      const timeSinceLastOpen = lastOpen?.fecha ? Date.now() - new Date(lastOpen.fecha).getTime() : Infinity;
+      const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+
+      const contactosToAdd = (timeSinceLastOpen > 30000 || !lastOpen)
+        ? [
+            nuevoContacto,
+            {
+              id: `open-${Date.now()}-pdf`,
+              fecha: nowIso,
+              tipo: "Email",
+              autor: "Telemetría Sistema",
+              notas: `La sala abrió el correo electrónico (detectado al descargar Dossier PDF #${pdfOpenCount})`,
+              resultado: `👁️ Apertura de correo (#${opensCount})`,
+              email_id: effectiveEmailId
+            }
+          ]
+        : [nuevoContacto];
+
+      await sb
+        .from("leads")
+        .update({
+          notas: updatedNotas,
+          historial_contacto: [...contactosToAdd, ...historialPrevio].slice(0, 50)
+        })
+        .eq("id", lead.id);
+
+      try {
+        const s = loadState();
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        if (memLead) {
+          memLead.clics_epk = (memLead.clics_epk || 0) + 1;
+          memLead.ultimo_clic_at = nowIso;
+          memLead.email_abierto = true;
+          memLead.historial_contacto = [...contactosToAdd, ...(memLead.historial_contacto || [])].slice(0, 50);
+          saveState(s);
+        }
+      } catch (_) {}
+
+      if (effectiveEmailId) {
+        try {
+          await sb
+            .from("lead_messages")
+            .update({
+              leido: true
+            })
+            .or(`id.eq.${effectiveEmailId},id.eq.imap-${effectiveEmailId}`);
+        } catch (_) {}
+      }
+
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
+      console.log(`[Telemetría PDF] 📥 Apertura #${pdfOpenCount} de Dossier PDF registrada para lead ${lead.id} (${lead.nombre_sala})${emailIdLabel}`);
+    }
+  } catch (err: any) {
+    console.warn("[Tracking PDF] Error al registrar apertura PDF:", err?.message || err);
+    if (!res.headersSent) {
+      res.redirect(302, finalRedirectUrl || "https://bandmanager.io/epk");
+    }
+  }
+});
+
+/**
  * POST /api/webhooks/resend
- * Receptor oficial de Webhooks de Resend (para cuando se envíen emails a través de Resend).
- * Soporta eventos: email.delivered, email.opened, email.clicked, email.bounced, email.complained.
- * 
- * Implementación estructurada:
- * - Opción 1: Métricas de engagement en tiempo real (aperturas, clics, entregas e historial de contacto)
- * - Opción 2: Salud del dominio y gestión de rebotes (bounces/complaints para evitar penalizaciones)
- * - Opción 3: Capa inteligente para el Copilot de Booking (detección de leads calientes y recomendación de seguimiento)
  */
 router.post("/webhooks/resend", express.json(), async (req, res) => {
   const event = req.body;
-  
-  // Responder inmediatamente con 200 OK a Resend
   res.status(200).json({ received: true });
 
-  if (!event || !event.type) {
-    return;
-  }
+  if (!event || !event.type) return;
 
   try {
-    const eventType = String(event.type).toLowerCase(); // 'email.opened', 'email.clicked', 'email.delivered', 'email.bounced', 'email.complained'
+    const eventType = String(event.type).toLowerCase();
     const eventData = event.data || {};
     const emailTo = Array.isArray(eventData.to) ? eventData.to[0] : (eventData.to || eventData.email);
-
-    console.log(`[Resend Webhook] Evento recibido: ${eventType} para ${emailTo || 'destinatario desconocido'}`);
 
     if (!emailTo && !eventData.tags?.lead_id && !eventData.metadata?.lead_id) return;
 
     const sb = getSupabase();
     let lead: any = null;
 
-    // 1. Intentar localizar por ID directo de metadata o tags si viene de Resend
     const directLeadId = eventData.metadata?.lead_id || eventData.tags?.lead_id;
     if (directLeadId) {
       const { data } = await sb
         .from("leads")
-        .select("id, band_id, estado, veces_abierto, clics_epk, primer_abierto_at, ultimo_abierto_at, ultimo_clic_at, email_abierto, notas, historial_contacto")
+        .select("*")
         .eq("id", directLeadId)
         .maybeSingle();
       lead = data;
     }
 
-    // 2. Fallback: Buscar lead por email_contacto
     if (!lead && emailTo) {
       const { data } = await sb
         .from("leads")
-        .select("id, band_id, estado, veces_abierto, clics_epk, primer_abierto_at, ultimo_abierto_at, ultimo_clic_at, email_abierto, notas, historial_contacto")
+        .select("*")
         .ilike("email_contacto", `%${emailTo}%`)
         .maybeSingle();
       lead = data;
     }
 
-    if (!lead) {
-      console.log(`[Resend Webhook] No se encontró lead coincidente para ${emailTo || directLeadId}`);
-      return;
-    }
+    if (!lead) return;
 
     const nowIso = new Date().toISOString();
     const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
     const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
 
-    // --- Opción 1: Métricas de engagement en tiempo real ---
     if (eventType === "email.delivered") {
       const nuevoContacto = {
         id: `resend-delivered-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -258,82 +592,42 @@ router.post("/webhooks/resend", express.json(), async (req, res) => {
         .eq("id", lead.id);
 
     } else if (eventType === "email.opened") {
-      const veces = (Number(lead.veces_abierto) || 0) + 1;
-      const primerAbierto = lead.primer_abierto_at || nowIso;
-
-      // --- Opción 3: Capa Inteligente para el Copilot ---
-      const esLeadCaliente = veces >= 2;
-      const copilotAlertNota = esLeadCaliente && !lead.notas?.includes("[🔥 Copilot Alert]")
-        ? `\n[🔥 Copilot Alert] Alto interés detectado (${veces}ª apertura). Sugerencia: Realizar llamada de seguimiento o enviar propuesta de fecha.`
-        : "";
-
+      const openCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
       const nuevoContacto = {
         id: `resend-open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
         autor: "Resend Webhook",
-        notas: `La sala abrió el correo electrónico (apertura #${veces} detectada por Resend).`,
-        resultado: esLeadCaliente ? "🔥 Alto Interés (Revisión Múltiple)" : "Abierto"
+        notas: `La sala abrió el correo electrónico (apertura #${openCount} detectada por Resend).`,
+        resultado: `👁️ Apertura de correo (#${openCount})`
       };
 
-      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}[Resend 👁️ Apertura #${veces}] ${dateTag}${copilotAlertNota}`;
+      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}[Resend 👁️ Apertura #${openCount}] ${dateTag}`;
 
       await sb
         .from("leads")
         .update({
-          veces_abierto: veces,
-          primer_abierto_at: primerAbierto,
-          ultimo_abierto_at: nowIso,
-          email_abierto: true,
           notas: updatedNotas,
           historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50)
         })
         .eq("id", lead.id);
 
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
+
     } else if (eventType === "email.clicked") {
-      const clics = (Number(lead.clics_epk) || 0) + 1;
-
-      // --- Opción 3: Capa Inteligente para el Copilot ---
-      const copilotAlertNota = !lead.notas?.includes("[🔥 Copilot Alert - Clic EPK]")
-        ? `\n[🔥 Copilot Alert - Clic EPK] ¡El programador pulsó en el enlace del Dossier/EPK! Recomendado: Contacto directo para cerrar fecha.`
-        : "";
-
+      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier")).length + 1;
       const nuevoContacto = {
         id: `resend-click-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
         autor: "Resend Webhook",
-        notas: `El programador de la sala hizo clic en un enlace del mensaje (Clic #${clics}).`,
-        resultado: "🔥 Clic en EPK / Interesado"
+        notas: `El programador de la sala hizo clic en un enlace del mensaje (Clic #${clickCount}).`,
+        resultado: "📄 Clic en Dossier Oficial"
       };
 
-      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}[Resend 🔗 Clic #${clics}] ${dateTag}${copilotAlertNota}`;
-
-      await sb
-        .from("leads")
-        .update({
-          clics_epk: clics,
-          ultimo_clic_at: nowIso,
-          email_abierto: true,
-          notas: updatedNotas,
-          historial_contacto: [nuevoContacto, ...historialPrevio].slice(0, 50)
-        })
-        .eq("id", lead.id);
-
-    // --- Opción 2: Salud del Dominio y Gestión de Rebotes (Bounces / Complaints) ---
-    } else if (eventType === "email.bounced" || eventType === "email.complained") {
-      const motivo = eventType === "email.complained" ? "Queja de SPAM recibida" : "Correo rebotado (Bounced / Buzón lleno o inexistente)";
-
-      const nuevoContacto = {
-        id: `resend-bounce-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        fecha: nowIso,
-        tipo: "Email",
-        autor: "Resend Webhook",
-        notas: `⚠️ FALLO DE ENTREGA: ${motivo}. Verificar la dirección de correo (${emailTo}).`,
-        resultado: "Rebotado / Inválido"
-      };
-
-      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}[⚠️ Resend ${eventType === "email.complained" ? "SPAM Complaint" : "Rebote/Bounce"}] Correo inválido el ${dateTag}`;
+      const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}[Resend 🔗 Clic #${clickCount}] ${dateTag}`;
 
       await sb
         .from("leads")
@@ -343,7 +637,9 @@ router.post("/webhooks/resend", express.json(), async (req, res) => {
         })
         .eq("id", lead.id);
 
-      console.warn(`[Resend Webhook] Alerta de salud de email en lead ${lead.id} (${emailTo}): ${motivo}`);
+      invalidateBandStateCache(lead.band_id);
+      invalidateBandStateCache("band-bakandeya");
+      invalidateBandStateCache("bakandeya");
     }
   } catch (e: any) {
     console.warn("[Resend Webhook] Error procesando evento:", e?.message || e);

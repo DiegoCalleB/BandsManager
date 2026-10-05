@@ -60,7 +60,19 @@ export async function dbGetEpkConfig(bandId: string) {
     bandPhotos: (Array.isArray(data.band_photos) ? data.band_photos : [])
       .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
       .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
-    miembros: data.miembros || [],
+    miembros: (Array.isArray(data.miembros) ? data.miembros : []).map((m: any) => {
+      const foto = m?.fotoUrl || m?.foto_url || '';
+      return {
+        ...m,
+        id: m?.id || `m-${Math.random().toString(36).slice(2, 7)}`,
+        nombre: m?.nombre || '',
+        rol: m?.rol || '',
+        fotoUrl: foto,
+        foto_url: foto,
+        bio: m?.bio || '',
+        instagram: m?.instagram || '',
+      };
+    }),
     videos: data.videos || [],
     datosContratacion: data.datos_contratacion || {},
     riderTecnico: data.rider_tecnico || '',
@@ -252,7 +264,24 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
         const prev = m?.id
           ? existingMiembros.find((e: any) => e?.id === m.id)
           : null;
-        return prev ? { ...prev, ...m } : m;
+        const foto =
+          m?.fotoUrl !== undefined
+            ? m.fotoUrl
+            : m?.foto_url !== undefined
+              ? m.foto_url
+              : (prev?.fotoUrl || prev?.foto_url || '');
+        const normalizedM: any = {
+          ...(prev || {}),
+          ...m,
+          id: m?.id || prev?.id || `m-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+          nombre: m?.nombre !== undefined ? m.nombre : (prev?.nombre || ''),
+          rol: m?.rol !== undefined ? m.rol : (prev?.rol || ''),
+          fotoUrl: foto,
+          foto_url: foto,
+          bio: m?.bio !== undefined ? m.bio : (prev?.bio || ''),
+          instagram: m?.instagram !== undefined ? m.instagram : (prev?.instagram || ''),
+        };
+        return normalizedM;
       })
     : existingMiembros;
 

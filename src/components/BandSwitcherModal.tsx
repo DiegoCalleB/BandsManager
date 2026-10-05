@@ -33,6 +33,7 @@ import { User } from "../types";
 import { cleanBandId, isSameBandId } from "../utils/bandUtils";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { api, getAuthHeaders } from "../services/api";
+import { apiFetch } from "../utils/api";
 import {
   getPlanDefinition,
   getPlanChangeType,
@@ -412,26 +413,13 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       const clean = cleanBandId(bandId);
 
       // Persist to EPK and upload-logo endpoints
-      const authHeaders = getAuthHeaders() as Record<string, string>;
-      const res = await fetch("/api/users/upload-logo", {
+      await apiFetch("/api/users/upload-logo", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-          "x-band-id": bandId,
-        },
         body: JSON.stringify({
           bandId,
           logoUrl: uploadedUrl,
         }),
       });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(
-          data.error || "Error al guardar el logotipo en el servidor",
-        );
-      }
 
       setCustomLogos((prev) => ({ ...prev, [clean]: uploadedUrl }));
 

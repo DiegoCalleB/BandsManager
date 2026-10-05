@@ -20,10 +20,22 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
     lead.fecha_envio || ['contactado', 'esperando_respuesta', 'respondido', 'negociando', 'confirmado', 'enviado'].includes(lead.estado)
   );
 
-  const wasOpened = Boolean(lead.email_abierto || (lead.veces_abierto && lead.veces_abierto > 0));
+  const hasReceivedReply = Boolean(
+    lead.fecha_ultima_respuesta ||
+    ['respondido', 'negociando', 'confirmado'].includes(lead.estado) ||
+    (Array.isArray((lead as any).hilo_emails) && (lead as any).hilo_emails.some((m: any) => m.remitente === 'sala')) ||
+    (Array.isArray((lead as any).mensajes) && (lead as any).mensajes.some((m: any) => m.remitente === 'sala'))
+  );
 
   const hasClicked = Boolean(lead.clics_epk && lead.clics_epk > 0);
-  const openCount = lead.veces_abierto || 1;
+  const wasOpened = Boolean(
+    lead.email_abierto ||
+    (lead.veces_abierto && lead.veces_abierto > 0) ||
+    hasReceivedReply ||
+    hasClicked
+  );
+
+  const openCount = lead.veces_abierto || (wasOpened ? 1 : 0);
 
   if (!isSent) {
     if (lead.estado === 'pendiente_aprobacion' || lead.estado === 'aprobado_propuesta') {
@@ -44,13 +56,13 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (hasClicked) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] px-2 py-0.5 rounded-[var(--r-pill)] shadow-xs"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-sky-600 px-2.5 py-1 rounded-[var(--r-pill)] shadow-xs"
         title={`¡Leído y clic en EPK! (${lead.clics_epk} clics, ${openCount} aperturas)`}
       >
-        <CheckCheck className={size === 'sm' ? 'w-3 h-3 text-[var(--acc)]' : 'w-3.5 h-3.5 text-[var(--acc)]'} />
-        <MousePointerClick className="w-2.5 h-2.5 text-[var(--acc)]" />
+        <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-sky-200' : 'w-4 h-4 text-sky-200'} />
+        <MousePointerClick className="w-3 h-3 text-sky-200" />
         {showLabel && (
-          <span className="text-micro text-[var(--acc)]">EPK visto {lead.clics_epk && lead.clics_epk > 1 ? `(${lead.clics_epk})` : ''}</span>
+          <span className="text-micro text-white font-medium">EPK visto {lead.clics_epk && lead.clics_epk > 1 ? `(${lead.clics_epk})` : ''}</span>
         )}
       </span>
     );
@@ -60,11 +72,11 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   if (wasOpened) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-xs font-bold text-[var(--on-acc)] bg-[var(--acc)] px-2 py-0.5 rounded-[var(--r-pill)] shadow-xs"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-600 px-2.5 py-1 rounded-[var(--r-pill)] shadow-xs"
         title={`Email abierto por la sala (${openCount} ${openCount === 1 ? 'vez' : 'veces'})`}
       >
-        <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-[var(--acc)]' : 'w-4 h-4 text-[var(--acc)]'} />
-        {showLabel && <span className="text-micro text-[var(--acc)]">Leído {openCount > 1 ? `(${openCount})` : ''}</span>}
+        <CheckCheck className={size === 'sm' ? 'w-3.5 h-3.5 text-emerald-200' : 'w-4 h-4 text-emerald-200'} />
+        {showLabel && <span className="text-micro text-white font-medium">Leído {openCount > 1 ? `(${openCount})` : ''}</span>}
       </span>
     );
   }
@@ -72,11 +84,11 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   // 3. Enviado pero todavía no abierto (Tick simple gris de WhatsApp)
   return (
     <span
-      className="inline-flex items-center gap-1 text-xs text-[var(--ink-2)] bg-[var(--sunken)]/90 px-2 py-0.5 rounded-[var(--r-pill)]"
+      className="inline-flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 border border-slate-700 px-2.5 py-1 rounded-[var(--r-pill)]"
       title={lead.fecha_envio ? `Enviado el ${lead.fecha_envio}` : 'Enviado a la sala'}
     >
-      <Check className={size === 'sm' ? 'w-3 h-3 text-[var(--ink-2)]' : 'w-3.5 h-3.5 text-[var(--ink-2)]'} />
-      {showLabel && <span className="text-micro text-[var(--ink-2)]">Entregado</span>}
+      <Check className={size === 'sm' ? 'w-3.5 h-3.5 text-slate-400' : 'w-4 h-4 text-slate-400'} />
+      {showLabel && <span className="text-micro text-slate-300 font-medium">Entregado</span>}
     </span>
   );
 };

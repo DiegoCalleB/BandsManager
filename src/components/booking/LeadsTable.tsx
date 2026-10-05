@@ -49,6 +49,7 @@ import {
   openWhatsAppChat,
   WHATSAPP_WINDOW_NAME,
 } from "../../utils/whatsapp";
+import { apiFetch } from "../../utils/api";
 import {
   isLeadNeedsFollowup,
   getDaysSinceContact,
@@ -593,14 +594,12 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
           ? selectedLeadIds
           : filteredLeads.map((l) => l.id);
 
-      const res = await fetch("/api/leads/detect-all-dates", {
+      const data = await apiFetch<any>("/api/leads/detect-all-dates", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ leadIds: targetIds }),
       });
 
-      const data = await res.json();
-      if (data.success && Array.isArray(data.updatedLeads)) {
+      if (data?.success && Array.isArray(data.updatedLeads)) {
         data.updatedLeads.forEach((updated: Lead) => {
           onUpdateLead(updated.id, updated);
         });
@@ -633,28 +632,28 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
     const t = (tipoRaw || "sala").toLowerCase().trim();
     if (t === "festival") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20 shrink-0">
           <ShowIcon inline emoji="🎪" />Festival
         </span>
       );
     }
     if (t === "discoteca" || t === "club") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/20 shrink-0">
           <ShowIcon inline emoji="🪩" />Club
         </span>
       );
     }
     if (t === "teatro" || t === "auditorio") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-teal-500/10 text-teal-600 dark:text-teal-300 border border-teal-500/20 shrink-0">
           <ShowIcon inline emoji="🎭" />Teatro
         </span>
       );
     }
     if (t === "ayuntamiento") {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-slate-500/10 text-slate-600 dark:text-slate-300 border border-slate-500/20 shrink-0">
           <ShowIcon inline emoji="🏛️" />Ayto
         </span>
       );
@@ -666,7 +665,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "televisión"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 shrink-0">
           <ShowIcon inline emoji="📻" />Medio
         </span>
       );
@@ -678,13 +677,13 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
       t === "sello"
     ) {
       return (
-        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--ok)] text-[var(--on-ok)] shrink-0">
+        <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/20 shrink-0">
           <ShowIcon inline emoji="💼" />Agencia
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold bg-[var(--sunken)] text-[var(--ink-2)] shrink-0">
+      <span className="inline-flex items-center gap-1 text-micro px-2 py-0.5 rounded-[var(--r-s)] font-sans font-medium bg-[var(--sunken)] text-[var(--ink-2)] border border-[var(--hair)] shrink-0">
         <ShowIcon inline emoji="🏛️" />Sala
       </span>
     );
@@ -1400,38 +1399,38 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                   </th>
                 )}
 
-                <th className="py-2.5 px-2 w-8 text-center whitespace-nowrap">
+                <th className="py-2 px-2 w-8 text-center whitespace-nowrap">
                   Fav
                 </th>
-                <th className="py-2.5 px-3 min-w-[190px] whitespace-nowrap">
+                <th className="py-2 px-2.5 min-w-[155px] whitespace-nowrap">
                   {sectionTab === "medios"
                     ? "Medio / Contacto"
                     : sectionTab === "grupos"
                       ? "Banda / Management"
                       : "Espacio / Nombre"}
                 </th>
-                <th className="py-2.5 px-2.5 min-w-[80px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[70px] whitespace-nowrap">
                   Tipo
                 </th>
-                <th className="py-2.5 px-2.5 min-w-[100px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[80px] whitespace-nowrap">
                   Fiabilidad
                 </th>
-                <th className="py-2.5 px-2.5 min-w-[110px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[95px] whitespace-nowrap">
                   Salud / Temp
                 </th>
-                <th className="py-2.5 px-3 min-w-[100px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[90px] whitespace-nowrap">
                   Ciudad
                 </th>
-                <th className="py-2.5 px-2.5 min-w-[70px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[65px] whitespace-nowrap">
                   {sectionTab === "grupos" ? "Róster / Aforo" : "Aforo"}
                 </th>
-                <th className="py-2.5 px-3 min-w-[110px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[95px] whitespace-nowrap">
                   Estado
                 </th>
-                <th className="py-2.5 px-3 min-w-[150px] whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[130px] whitespace-nowrap">
                   Contacto / directo
                 </th>
-                <th className="py-2.5 px-3 min-w-[130px] text-right whitespace-nowrap">
+                <th className="py-2 px-2 min-w-[105px] text-right whitespace-nowrap">
                   Acciones rápidas
                 </th>
               </tr>
@@ -1513,8 +1512,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       />
                     </td>
 
-                    <td className="py-1.5 px-3 min-w-[190px] align-middle">
-                      <div className="flex items-center gap-2 min-w-0">
+                    <td className="py-1.5 px-2.5 min-w-[155px] align-middle">
+                      <div className="flex items-center gap-1.5 min-w-0">
                         {/* Interactive Avatar Container Table View */}
                         <LeadAvatar
                           lead={lead}
@@ -1525,9 +1524,9 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           }}
                         />
                         <div className="min-w-0 flex-1 leading-tight">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1">
                             <span
-                              className="truncate font-bold text-xs sm:text-sm text-[var(--ink)] block max-w-[160px] notranslate"
+                              className="truncate font-bold text-xs sm:text-sm text-[var(--ink)] block max-w-[140px] notranslate"
                               translate="no"
                               title={lead.nombre_sala}
                             >
@@ -1545,15 +1544,15 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </div>
                     </td>
 
-                    <td className="py-1.5 px-2.5 min-w-[80px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2 min-w-[70px] whitespace-nowrap align-middle">
                       {renderTipoBadge(lead.tipo)}
                     </td>
 
-                    <td className="py-1.5 px-2.5 min-w-[100px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2 min-w-[80px] whitespace-nowrap align-middle">
                       <ReliabilityBadge item={lead} size="sm" />
                     </td>
 
-                    <td className="py-1.5 px-2.5 min-w-[110px] whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2 min-w-[95px] whitespace-nowrap align-middle">
                       <div className="flex items-center gap-1 flex-wrap">
                         <LeadHealthBadge
                           lead={lead}
@@ -1565,7 +1564,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </div>
                     </td>
 
-                    <td className="py-1.5 px-3 min-w-[100px] text-[var(--ink-2)] align-middle">
+                    <td className="py-1.5 px-2 min-w-[90px] text-[var(--ink-2)] align-middle">
                       <div className="flex items-center gap-1 leading-snug">
                         <span className="font-semibold text-xs text-[var(--ink-2)] block truncate">
                           {lead.ciudad || "España"}
@@ -1587,7 +1586,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       {renderLeadDatesInfo(lead, true)}
                     </td>
 
-                    <td className="py-3.5 px-4 min-w-[90px] text-[var(--ink-2)] align-middle">
+                    <td className="py-1.5 px-2 min-w-[65px] text-[var(--ink-2)] align-middle">
                       <span
                         className={
                           lead.roster
@@ -1603,8 +1602,8 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                       </span>
                     </td>
 
-                    <td className="py-1.5 px-3 min-w-[110px] whitespace-nowrap align-middle">
-                      <div className="flex items-center gap-1.5">
+                    <td className="py-1.5 px-2 min-w-[95px] whitespace-nowrap align-middle">
+                      <div className="flex items-center gap-1">
                         <span
                           className={`inline-flex items-center text-micro px-2 py-0.5 rounded-[var(--r-pill)] font-sans font-medium ${getStatusBadgeClass(
                             lead.estado,
@@ -1621,7 +1620,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     {/* Direct Contact Column */}
-                    <td className="py-1.5 px-3 min-w-[150px] align-middle">
+                    <td className="py-1.5 px-2 min-w-[130px] align-middle">
                       <div className="flex flex-col justify-center leading-tight">
                         {lead.email_contacto ? (
                           <div className="flex items-center gap-1">
@@ -1639,10 +1638,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                   <a
                                     href={`mailto:${lead.email_contacto}`}
                                     onClick={(e) => e.stopPropagation()}
-                                    className={`font-normal truncate max-w-[130px] text-xs inline-block ${
+                                    className={`font-normal truncate max-w-[115px] text-xs inline-block ${
                                       broken
                                         ? "text-[var(--alert)] hover:text-[var(--alert)] line-through"
-                                        : "text-[var(--acc)] hover:text-[var(--acc)]"
+                                        : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:underline"
                                     }`}
                                     title={lead.email_contacto}
                                   >
@@ -1664,7 +1663,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             })()}
                           </div>
                         ) : (
-                          <span className="text-[var(--ink-2)] italic text-micro">
+                          <span className="text-[var(--ink-3)] italic text-micro">
                             Sin email
                           </span>
                         )}
@@ -1672,7 +1671,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <div className="flex items-center gap-1.5 mt-0.5 text-micro">
                             {hasMovil ? (
                               <span
-                                className="inline-flex items-center gap-0.5 text-[var(--ok)]"
+                                className="inline-flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400"
                                 title={`Móvil: ${rawMovil}`}
                               >
                                 <Smartphone className="w-2.5 h-2.5 shrink-0" />
@@ -1682,7 +1681,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               </span>
                             ) : hasFijo ? (
                               <span
-                                className="inline-flex items-center gap-0.5 text-[var(--acc)]"
+                                className="inline-flex items-center gap-0.5 text-[var(--ink-2)]"
                                 title={`Fijo: ${rawFijo}`}
                               >
                                 <Phone className="w-2.5 h-2.5 shrink-0" />
@@ -1716,7 +1715,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                     </td>
 
                     {/* Direct Quick Action Buttons in Table View */}
-                    <td className="py-1.5 px-3 min-w-[130px] text-right whitespace-nowrap align-middle">
+                    <td className="py-1.5 px-2 min-w-[105px] text-right whitespace-nowrap align-middle">
                       <div className="flex items-center justify-end gap-1">
                         {/* WhatsApp: SOLO si tiene teléfono móvil */}
                         {hasMovil && phoneForWhatsApp ? (
@@ -1728,10 +1727,10 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                               e.stopPropagation();
                               openWhatsAppChat(rawMovil);
                             }}
-                            className="p-1 bg-[var(--ok)] hover:bg-[var(--ok)] text-[var(--on-ok)] rounded transition-colors inline-flex items-center"
+                            className="p-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-[var(--r-s)] transition-colors inline-flex items-center"
                             title={`WhatsApp directo al móvil (${rawMovil})`}
                           >
-                            <MessageCircle className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                            <MessageCircle className="w-3.5 h-3.5" />
                           </a>
                         ) : null}
 
@@ -1746,7 +1745,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/20 rounded transition-colors inline-flex items-center"
+                            className="p-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-600 dark:text-pink-400 border border-pink-500/20 rounded-[var(--r-s)] transition-colors inline-flex items-center"
                             title={`Abrir perfil de Instagram (${lead.instagram})`}
                           >
                             <Instagram className="w-3.5 h-3.5 text-pink-500" />
@@ -1757,7 +1756,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                           <a
                             href={`tel:${phoneForCall}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1 bg-[var(--acc)] hover:bg-[var(--acc)] text-[var(--on-acc)] rounded transition-colors inline-flex items-center"
+                            className="p-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-400 border border-sky-500/20 rounded-[var(--r-s)] transition-colors inline-flex items-center"
                             title={
                               hasMovil && hasFijo
                                 ? `Llamar (Móvil: ${rawMovil} / Fijo: ${rawFijo})`
@@ -1766,7 +1765,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
                                   : `Llamar al fijo (${rawFijo})`
                             }
                           >
-                            <PhoneCall className="w-3.5 h-3.5 text-[var(--ink-2)]" />
+                            <PhoneCall className="w-3.5 h-3.5" />
                           </a>
                         ) : null}
 

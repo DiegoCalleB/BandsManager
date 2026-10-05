@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Sparkles, Mail, Compass, History, Building2 } from 'lucide-react';
+import { Sparkles, Mail, Compass, History, Building2, Zap } from 'lucide-react';
 import { Lead, LeadStatus, Concert } from '../../../types';
 import { ModalPortal } from '../../common/ModalPortal';
 import { VenueModalHeader } from './VenueModalHeader';
@@ -9,6 +9,7 @@ import { VenueEmailThread } from './VenueEmailThread';
 import { VenueIntelligenceTab } from './VenueIntelligenceTab';
 import { VenueBitacoraTab } from './VenueBitacoraTab';
 import { WhatsAppPreviewModal } from '../WhatsAppPreviewModal';
+import { FastDealModal } from '../FastDealModal';
 import { VenueModalTab, VenueModalProps } from './types';
 
 export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
@@ -36,6 +37,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<VenueModalTab>(initialTab);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [mobileViewSection, setMobileViewSection] = useState<'profile' | 'action'>('action');
 
   // Sync initial tab when selectedLead changes
@@ -237,6 +239,18 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                     </span>
                   )}
                 </button>
+
+                <div className="ml-auto pl-2 flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => setIsDealModalOpen(true)}
+                    className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-m)] bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-500 border border-emerald-500/30 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
+                    title="Generar Hoja de Acuerdo y Enlace 1-Click para la Sala"
+                  >
+                    <Zap className="w-3.5 h-3.5 fill-current" />
+                    <span>Cerrar Bolo 1-Click</span>
+                  </button>
+                </div>
               </div>
 
               {/* Tab Content Canvas */}
@@ -287,6 +301,19 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
           onClose={() => setIsWhatsAppModalOpen(false)}
           lead={selectedLead}
           bandName={bandName}
+        />
+      )}
+
+      {/* FAST DEAL 1-CLICK MODAL */}
+      {isDealModalOpen && (
+        <FastDealModal
+          isOpen={isDealModalOpen}
+          onClose={() => setIsDealModalOpen(false)}
+          lead={selectedLead}
+          bandName={bandName}
+          onDealConfirmed={() => {
+            onUpdateLead(selectedLead.id, { estado: 'confirmado' });
+          }}
         />
       )}
     </ModalPortal>

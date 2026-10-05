@@ -145,10 +145,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
     const isThisRealMonth = realToday.getFullYear() === year && realToday.getMonth() === month;
 
     return (
-      <div key={`month-grid-${year}-${month}`} className="flex-1 min-w-[280px]">
+      <div key={`month-grid-${year}-${month}`} className="flex-1 min-w-[280px] bg-[var(--sunken)]/40 p-2 sm:p-3 rounded-[var(--r-l)] border border-[var(--hair)]/40">
         {showMonthHeader && (
           <div
-            className={`text-center font-bold font-display text-micro mb-3 pb-1 ${
+            className={`text-center font-bold font-display text-micro mb-2 pb-1 ${
               'text-[var(--acc)]'
             }`}
           >
@@ -158,7 +158,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
         {/* Weekday Labels */}
         <div
-          className={`grid grid-cols-7 gap-1.5 text-center text-micro font-mono mb-2.5 font-bold ${textSub} bg-[var(--sunken)]/60 p-2 rounded-[var(--r-m)] `}
+          className={`grid grid-cols-7 gap-1 sm:gap-1.5 text-center text-micro font-mono mb-1.5 sm:mb-2.5 font-bold ${textSub} bg-[var(--sunken)]/70 p-1.5 sm:p-2 rounded-[var(--r-m)] border border-[var(--hair)]/30`}
         >
           {weekdays.map((day) => (
             <div key={day} className="py-0.5">
@@ -168,10 +168,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
         </div>
 
         {/* Grid Cells */}
-        <div className="grid grid-cols-7 gap-1.5">
+        <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
           {cells.map((cell, index) => {
             if (cell.empty) {
-              return <div key={`empty-${year}-${month}-${index}`} className="aspect-square bg-transparent rounded-[var(--r-m)]" />;
+              return <div key={`empty-${year}-${month}-${index}`} className="aspect-auto min-h-[48px] sm:min-h-[72px] bg-transparent rounded-[var(--r-s)]" />;
             }
 
             const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(cell.day).padStart(2, '0')}`;
@@ -190,19 +190,17 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             const isToday = isThisRealMonth && cell.day === realToday.getDate();
 
-            // Celda de día: lienzo limpio. Sin relleno gris en cada día (30 bloques iguales eran ruido);
-            // el día de hoy lleva el círculo de acento en el número, el seleccionado un velo suave.
             let borderAndBgClass = '';
             if (isSelected) {
-              borderAndBgClass = 'bg-[var(--acc-soft)] text-[var(--ink)] z-10';
+              borderAndBgClass = 'bg-[var(--acc-soft)] text-[var(--ink)] ring-2 ring-[var(--acc)] z-10 border border-[var(--acc)]';
             } else if (hasConcert && hasRehearsal) {
-              borderAndBgClass = 'bg-[var(--acc-soft)]/60 text-[var(--ink)] hover:bg-[var(--acc-soft)]';
+              borderAndBgClass = 'bg-[var(--acc-soft)]/60 text-[var(--ink)] border border-[var(--acc)]/40 hover:bg-[var(--acc-soft)]';
             } else if (hasConcert || hasCampaign) {
-              borderAndBgClass = 'bg-[var(--acc-soft)]/40 text-[var(--ink)] hover:bg-[var(--acc-soft)]/70';
+              borderAndBgClass = 'bg-[var(--acc-soft)]/40 text-[var(--ink)] border border-[var(--acc)]/30 hover:bg-[var(--acc-soft)]/70';
             } else if (hasRehearsal) {
-              borderAndBgClass = 'bg-[var(--ok-soft)]/60 text-[var(--ink)] hover:bg-[var(--ok-soft)]';
+              borderAndBgClass = 'bg-[var(--ok-soft)]/50 text-[var(--ink)] border border-[var(--ok)]/30 hover:bg-[var(--ok-soft)]';
             } else {
-              borderAndBgClass = 'bg-transparent text-[var(--ink)] hover:bg-[var(--sunken)]';
+              borderAndBgClass = 'bg-[var(--surface)]/30 text-[var(--ink)] border border-[var(--hair)]/30 hover:bg-[var(--sunken)]';
             }
 
             return (
@@ -212,9 +210,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                   setSelectedDate(new Date(year, month, cell.day));
                   if (dayEvents.length > 0) {
                     setSelectedEventId(dayEvents[0].id);
+                    setShowEventFichaModal(true);
                   }
                 }}
-                className={`relative min-w-0 w-full min-h-[62px] sm:min-h-[76px] lg:min-h-[82px] aspect-auto sm:aspect-square p-1 sm:p-1.5 rounded-[var(--r-s)] flex flex-col justify-between transition-ui duration-150 cursor-pointer overflow-hidden ${borderAndBgClass}`}
+                className={`relative min-w-0 w-full min-h-[48px] sm:min-h-[72px] lg:min-h-[80px] p-1 sm:p-1.5 rounded-[var(--r-s)] flex flex-col justify-between transition-ui duration-150 cursor-pointer overflow-hidden ${borderAndBgClass}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <span

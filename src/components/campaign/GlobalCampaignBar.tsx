@@ -48,17 +48,15 @@ export function GlobalCampaignBar({
   const firstTargetDate = campaign.targetDates?.[0];
 
   return (
-    <div className="w-full mb-2 sm:mb-3 rounded-[var(--r-m)] bg-[var(--sunken)]  p-1.5 sm:p-2.5 animate-fade-in relative overflow-hidden">
-
+    <div className="w-full mt-1 mb-3 rounded-[var(--r-m)] bg-[var(--surface)] border border-[var(--hair)] p-2 sm:p-2.5 animate-fade-in relative shadow-2xs">
       {/* Main Bar Content */}
-      <div className="flex items-center justify-between gap-2 relative z-10">
+      <div className="flex items-center justify-between gap-2 relative z-10 flex-wrap sm:flex-nowrap">
         {/* Left Side: Campaign Badge, Name & Toggle */}
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
           <div
             className="w-6 h-6 sm:w-7 sm:h-7 rounded-[var(--r-s)] flex items-center justify-center shrink-0"
             style={{
-              backgroundColor: `${campaign.color || "var(--acc)"}25`,
-              borderColor: `${campaign.color || "var(--acc)"}50`,
+              backgroundColor: `${campaign.color || "var(--acc)"}20`,
               color: campaign.color || "var(--acc)",
             }}
           >
@@ -67,8 +65,8 @@ export function GlobalCampaignBar({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-micro font-sans font-extrabold px-1 py-0.2 rounded bg-[var(--hair)]/25 text-[var(--acc-ink)] shrink-0">
-                <ShowIcon inline emoji="🎯" />CAMPAÑA
+              <span className="text-micro font-sans font-extrabold px-1.5 py-0.5 rounded bg-[var(--acc)]/10 text-[var(--acc-ink)] shrink-0">
+                <ShowIcon inline emoji="🎯" /> CAMPAÑA
               </span>
               <h2
                 className="text-xs sm:text-sm font-bold font-display text-[var(--ink)] truncate"
@@ -85,13 +83,13 @@ export function GlobalCampaignBar({
                 {campaign.targetCities?.join(",") || "Todas las ciudades"}
               </span>
               <span className="text-[var(--ink-2)]">•</span>
-              <span className="inline-flex items-center gap-1 text-[var(--acc)]/70 font-sans">
+              <span className="inline-flex items-center gap-1 text-[var(--ink-2)] font-sans">
                 <Users className="w-2.5 h-2.5 text-[var(--acc)] shrink-0" />
                 {campaign.minCapacity}-{campaign.maxCapacity} pax
               </span>
               <span className="text-[var(--ink-2)]">•</span>
-              <span className="inline-flex items-center gap-1 text-[var(--alert)] font-sans font-semibold truncate max-w-[180px]">
-                <Calendar className="w-2.5 h-2.5 text-[var(--alert)] shrink-0" />
+              <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400 font-sans font-semibold truncate max-w-[180px]">
+                <Calendar className="w-2.5 h-2.5 text-amber-500 shrink-0" />
                 {campaign.targetDatesText ||
                   `${campaign.targetDates?.length || 0} fechas`}
               </span>
@@ -102,7 +100,7 @@ export function GlobalCampaignBar({
           <button
             type="button"
             onClick={() => setIsMobileExpanded((prev) => !prev)}
-            className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--ink-2)] transition-colors shrink-0"
+            className="sm:hidden p-1 text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
             title={
               isMobileExpanded ? "Ocultar detalles" : "Ver ciudades y fechas"
             }
@@ -123,14 +121,14 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("booking", { campaignFilter: campaign.id })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "booking"
-                ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
+                ? "bg-[var(--sunken)] text-[var(--ink)] border border-[var(--hair)]"
+                : "bg-[var(--surface)] text-[var(--ink-2)] hover:text-[var(--ink)] border border-[var(--hair)] hover:bg-[var(--sunken)]"
             }`}
             title="Ver salas objetivo de esta campaña en Booking CRM"
           >
-            <Building2 className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
+            <Building2 className="w-3 h-3 text-[var(--acc)] shrink-0" />
             <span>Salas ({matchingLeads.length})</span>
           </button>
 
@@ -140,14 +138,14 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("calendario", { selectedDate: firstTargetDate })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "calendario"
-                ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
+                ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40 font-extrabold"
+                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/25 hover:bg-amber-500/20"
             }`}
             title="Ver fechas de la campaña en el Calendario"
           >
-            <Calendar className="w-3 h-3 text-[var(--alert)] shrink-0" />
+            <Calendar className="w-3 h-3 text-amber-500 shrink-0" />
             <span>Calendario</span>
           </button>
 
@@ -157,14 +155,14 @@ export function GlobalCampaignBar({
             onClick={() =>
               onNavigate("bandas", { campaignCities: campaign.targetCities })
             }
-            className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-[var(--r-pill)] text-micro sm:text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
+            className={`px-2 sm:px-2.5 py-1 rounded-[var(--r-pill)] text-micro font-sans font-bold transition-ui flex items-center gap-1 cursor-pointer whitespace-nowrap ${
               currentView === "bandas"
-                ? "bg-[var(--hair)] text-[var(--ink)]"
-                : "bg-[var(--acc)] hover:bg-[var(--acc)]/80 text-[var(--on-acc)]"
+                ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40 font-extrabold"
+                : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 hover:bg-emerald-500/20"
             }`}
             title="Ver grupos en las ciudades objetivo para Co-booking"
           >
-            <Users className="w-3 h-3 text-[var(--ink-2)] shrink-0" />
+            <Users className="w-3 h-3 text-emerald-500 shrink-0" />
             <span className="hidden sm:inline">Co-booking</span>
             <span className="sm:hidden">Bandas</span>
           </button>

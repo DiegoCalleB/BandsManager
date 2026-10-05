@@ -43,6 +43,7 @@ import {
 } from "../utils/temaEspectro";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { api, getAuthHeaders } from "../services/api";
+import { apiFetch } from "../utils/api";
 import {
   getPlanDefinition,
   getPlanChangeType,
@@ -199,23 +200,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
       setBandLogoUrl(url);
 
       const updatedEpk = { ...epkConfig, logoUrl: url, bandId: userBandId };
-      const authHeaders = getAuthHeaders() as Record<string, string>;
-      const res = await fetch("/api/users/upload-logo", {
+      await apiFetch("/api/users/upload-logo", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders,
-          "x-band-id": userBandId,
-        },
         body: JSON.stringify({ logoUrl: url, bandId: userBandId }),
       });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(
-          data.error || "Error al actualizar el logotipo en el servidor",
-        );
-      }
 
       if (onUpdateEpkConfig) {
         await onUpdateEpkConfig(updatedEpk);
