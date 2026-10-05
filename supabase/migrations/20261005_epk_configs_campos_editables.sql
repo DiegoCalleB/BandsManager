@@ -13,4 +13,8 @@ ALTER TABLE public.epk_configs
   ADD COLUMN IF NOT EXISTS rider_config JSONB DEFAULT '{}'::jsonb,
   ADD COLUMN IF NOT EXISTS idioma TEXT,
   ADD COLUMN IF NOT EXISTS font_style TEXT,
-  ADD COLUMN IF NOT EXISTS tipografia TEXT;
+  ADD COLUMN IF NOT EXISTS tipografia TEXT,
+  -- Sin migración previa en el repo: audioPreview, cifrasClave y resenasPrensa también se descartaban
+  ADD COLUMN IF NOT EXISTS audio_preview JSONB DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS cifras_clave JSONB DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS resenas_prensa JSONB DEFAULT '{}'::jsonb;
