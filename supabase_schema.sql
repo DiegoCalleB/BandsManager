@@ -1379,6 +1379,10 @@ SELECT band_id,
        COUNT(*)                                        AS aportaciones,
        SUM(amount_cents)                               AS bruto_cents,
        SUM(reembolsado_cents)                          AS reembolsado_cents,
-       SUM(amount_cents - reembolsado_cents)           AS neto_cents
+       SUM(amount_cents - reembolsado_cents)           AS neto_cents,
+       -- Solo lectura: los importes se guardan en céntimos, aquí se ven en euros
+       ROUND(SUM(amount_cents) / 100.0, 2)                      AS bruto_eur,
+       ROUND(SUM(reembolsado_cents) / 100.0, 2)                 AS reembolsado_eur,
+       ROUND(SUM(amount_cents - reembolsado_cents) / 100.0, 2)  AS neto_eur
 FROM deal_support_contributions
 GROUP BY band_id;
