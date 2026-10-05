@@ -249,8 +249,17 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     };
   }, [songsProp, activeBandId]);
 
+  // Último contenido del servidor ya volcado en `config`. fetchState() (useAppData) devuelve un
+  // objeto NUEVO en cada refresco aunque el contenido sea idéntico; sin esta comparación, ese
+  // refresco pisaba lo que el usuario estaba escribiendo (p. ej. nombres de miembros) con la
+  // copia vieja del servidor, y el cambio "se quitaba" antes de poder guardarlo.
+  const ultimoEpkServidorRef = React.useRef<string>(JSON.stringify(epkConfig ?? null));
+
   React.useEffect(() => {
     if (epkConfig) {
+      const incoming = JSON.stringify(epkConfig);
+      if (incoming === ultimoEpkServidorRef.current) return;
+      ultimoEpkServidorRef.current = incoming;
       const mergedRedes = {
         ...baseDefaults.enlacesRedes,
         ...(config.enlacesRedes || {}),
