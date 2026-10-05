@@ -136,6 +136,23 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+### Deuda: dependencias vulnerables (Snyk, octubre 2026) — tras traer la rama `main` de AI Studio
+* **Qué:** Snyk (`DiegoCalleB/BandsManager`) escanea solo `package.json` y `app/applet/Dockerfile`. Hacerlo DESPUÉS de traer la rama de AI Studio, para no pelear con conflictos de `package.json` / `package-lock.json`.
+  1. **`nodemailer` 9.1.1 → 10.0.6+** (H, 5 issues, todos con fix; salto de versión mayor). Lo usan `server/services/emailAgentClient.ts` (SMTP) y `MailComposer` en `gmailApiClient.ts`. Probar enviar un correo y crear un borrador, y pasar `server/services/__tests__/emailAgentClient.test.ts`.
+  2. **`firebase` 12.19.0** (C, transitiva `@grpc/grpc-js@1.9.16`, sin fix soportado). Solo se usa en `src/utils/gmail.ts` (login de Google en el navegador). Decidir: ignorar en Snyk como no alcanzable (con caducidad) o sustituir por Supabase Auth con Google y quitar `firebase`.
+  3. **`leaflet` 1.9.4** (M, XSS 5.3, sin fix). Revisar que los popups de `VenueMap.tsx` y `BandMap.tsx` pinten texto y no `innerHTML` con datos de terceros.
+  4. **`app/applet/Dockerfile`** (10 L): si `app/applet` es una copia vieja que Railway ya no usa, borrar la carpeta.
+  5. **Snyk Code (SAST)**: activarlo en Settings; hoy no analiza el código propio (Express, `fetch` de URLs de usuario).
+* **Por qué importa:** la C es casi inalcanzable en la práctica, pero nodemailer sí está en la ruta de envío de emails de los agentes.
+* **Estado:** pendiente, sin tocar.
+
+### Deuda: Agente Lector ciego y lento (octubre 2026)
+* **Qué:** (1) El Lector con Gmail OAuth busca `in:inbox is:unread newer_than:2d` (`gmailApiClient.ts`). Si algo marca el correo como leído antes, nunca lo ve. En `diegolimado@gmail.com` lo hacía POP: Gmail > Ajustes > Reenvío y POP/IMAP > «When messages are accessed with POP» a «keep Gmail's copy in the Inbox» (o desactivar POP). **Pendiente de cambiar.** (2) El scheduler corre cada 24h (`AGENT_SCHEDULER_INTERVAL_MS`), no cada 60s como dice AGENTS.md §3. (3) Los entornos de preview de Railway (`BandsManager-pr-84`) comparten Supabase y Gmail con producción: uno con código viejo marcaba todo como leído cada minuto (ya eliminado). Desactivar PR Environments o darles su propio proyecto Supabase.
+* **Siguiente paso:** guardar el último `historyId` de Gmail y leer solo lo nuevo, en vez de depender de `UNREAD`; decidir un intervalo razonable (o un webhook de Gmail) para que las respuestas de las salas no esperen 24h; corregir AGENTS.md §3.
+* **Estado:** causa localizada; POP y AGENTS.md pendientes.
+
+---
+
 ## 🔨 En curso
 
 _(vacío)_
