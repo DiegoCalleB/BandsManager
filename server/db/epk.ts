@@ -477,7 +477,6 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
     config.bandName ||
     config.nombre_banda ||
     config.localBandName ||
-    config.contactoBooking?.nombre ||
     ''
   ).trim();
   if (
