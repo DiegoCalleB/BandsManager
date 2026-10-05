@@ -349,7 +349,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
           }
         } catch (_) {}
 
-        const feeImporte = deal.comision_importe ?? Math.round(((deal.total_acordado || deal.cache_base || 0) * 5) / 100);
+        const feeImporte = deal.comision_importe ?? 0;
         const netoBanda = deal.neto_banda ?? Math.max(0, (deal.total_acordado || deal.cache_base || 0) - feeImporte);
 
         // 1. Notificación a la Sala con copia oficial del contrato

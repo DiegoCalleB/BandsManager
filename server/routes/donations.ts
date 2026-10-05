@@ -5,6 +5,13 @@ import { requireAuth } from "../state.js";
 import { donationRateLimiter } from "../middleware/rateLimiter.js";
 import { getOriginHost } from "./billing.js";
 import { bandaFacturableDelUsuario } from "../utils/bandAccess.js";
+import { dbGetDealById } from "../db/deals.js";
+import { dbListSupportableDeals, dbDealHasSupport } from "../db/dealSupport.js";
+import {
+  sugerenciaApoyoCents,
+  APOYO_MIN_CENTS,
+  APOYO_MAX_CENTS
+} from "../utils/dealSupport.js";
 
 const router = express.Router();
 
@@ -122,6 +129,103 @@ router.post("/donations/create-checkout-session", requireAuth, donationRateLimit
     return res.json({ success: true, url: session.url });
   } catch (err: any) {
     console.error("[Donations] Error creando la sesión de Checkout:", err);
+    return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Aportación VOLUNTARIA al cerrar un bolo (sustituye, de momento, a la comisión).
+//
+// La banda sale siempre de la sesión y el acuerdo se lee de la BD acotado a esa banda: ni el
+// importe ni la banda vienen del cliente. El importe sugerido es solo eso, una sugerencia: en el
+// checkout (pay what you want) la banda puede poner lo que quiera dentro del rango, o cerrarlo.
+// ---------------------------------------------------------------------------
+
+// GET /api/donations/deal-support - bolos firmados y recientes que aún no tienen aportación.
+router.get("/donations/deal-support", requireAuth, async (req, res) => {
+  try {
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
+    }
+    const deals = await dbListSupportableDeals(banda.bandId);
+    return res.json({
+      success: true,
+      min_cents: APOYO_MIN_CENTS,
+      max_cents: APOYO_MAX_CENTS,
+      deals: deals.map((d) => ({
+        deal_id: d.id,
+        lugar_sala: d.lugar_sala,
+        ciudad: d.ciudad || "",
+        fecha_evento: d.fecha_evento,
+        total_acordado: Number(d.total_acordado ?? d.cache_base ?? 0),
+        suggested_cents: sugerenciaApoyoCents(Number(d.total_acordado ?? d.cache_base ?? 0))
+      }))
+    });
+  } catch (err: any) {
+    // Función opcional: ante cualquier fallo, simplemente no se ofrece nada.
+    console.warn("[Donations] No se pudo listar bolos apoyables:", err?.message);
+    return res.json({ success: true, min_cents: APOYO_MIN_CENTS, max_cents: APOYO_MAX_CENTS, deals: [] });
+  }
+});
+
+// POST /api/donations/deal-support/create-checkout-session  { dealId }
+router.post("/donations/deal-support/create-checkout-session", requireAuth, donationRateLimiter, async (req, res) => {
+  try {
+    const banda = bandaFacturableDelUsuario(req);
+    if (!banda) {
+      return res.status(403).json({ success: false, error: "No tienes acceso a la facturación de esta banda." });
+    }
+    const dealId = typeof req.body?.dealId === "string" ? req.body.dealId.trim() : "";
+    if (!dealId) {
+      return res.status(400).json({ success: false, error: "Falta el bolo al que quieres dedicar la aportación." });
+    }
+
+    const deal = await dbGetDealById(dealId, banda.bandId);
+    if (!deal || deal.estado !== "confirmado") {
+      return res.status(404).json({ success: false, error: "Ese bolo no existe o todavía no está firmado por la sala." });
+    }
+    if (await dbDealHasSupport(dealId, banda.bandId)) {
+      return res.status(409).json({ success: false, error: "Ya has apoyado BandManager con este bolo. ¡Gracias!" });
+    }
+
+    const total = Number(deal.total_acordado ?? deal.cache_base ?? 0);
+    const suggestedCents = sugerenciaApoyoCents(total);
+    const host = getOriginHost(req);
+    const stripe = getStripe();
+
+    const price = await stripe.prices.create({
+      currency: "eur",
+      custom_unit_amount: {
+        enabled: true,
+        minimum: APOYO_MIN_CENTS,
+        maximum: APOYO_MAX_CENTS,
+        preset: suggestedCents
+      },
+      product_data: {
+        name: `Apoyo a BandManager.io — bolo en ${String(deal.lugar_sala).slice(0, 60)}`,
+        metadata: { kind: "deal_support" }
+      }
+    });
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: banda.email || undefined,
+      line_items: [{ price: price.id, quantity: 1 }],
+      custom_text: {
+        submit: {
+          message: "Aportación voluntaria: BandManager es gratis en tus bolos. Pon la cifra que te parezca justa."
+        }
+      },
+      metadata: { kind: "deal_support", bandId: banda.bandId, dealId },
+      success_url: `${host}/?apoyo=success`,
+      cancel_url: `${host}/?apoyo=cancelled`
+    });
+
+    return res.json({ success: true, url: session.url });
+  } catch (err: any) {
+    console.error("[Donations] Error creando la sesión de apoyo al bolo:", err);
     return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
   }
 });

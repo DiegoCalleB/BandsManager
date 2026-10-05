@@ -52,11 +52,13 @@ export class DealError extends Error {
 }
 
 /**
- * Porcentaje de comisión de BandManager sobre el bolo. Lo fija SIEMPRE el servidor: antes se
- * aceptaba el valor que mandara el cliente (una petición directa podía poner 0). Cuando la
- * comisión se cobre con Stripe Connect, este es el único punto a sustituir.
+ * Porcentaje de comisión de BandManager sobre el bolo. De momento es 0: la comisión obligatoria
+ * está en pausa y BandManager pide una aportación VOLUNTARIA al cerrar el bolo (ver
+ * server/utils/dealSupport.ts y docs/design/stripe-connect-comision-bolos.md). Lo fija SIEMPRE el
+ * servidor: antes se aceptaba el valor que mandara el cliente. Si más adelante se cobra con
+ * Stripe Connect, este es el único punto a cambiar (las columnas comision_* ya existen).
  */
-export const COMISION_PORCENTAJE_DEFAULT = 5;
+export const COMISION_PORCENTAJE_DEFAULT = 0;
 
 export function calcularComision(total: number, porcentaje = COMISION_PORCENTAJE_DEFAULT) {
   const importe = Math.round(((Number(total) || 0) * porcentaje) / 100 * 100) / 100;

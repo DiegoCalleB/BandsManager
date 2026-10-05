@@ -975,8 +975,9 @@ export interface DealBandEmailOptions {
   signerName: string;
   signerRole?: string;
   totalAgreed: number;
-  feeAmount: number;
-  netAmount: number;
+  /** Comisión de BandManager; 0 u omitida = no se cobra comisión (aportación voluntaria). */
+  feeAmount?: number;
+  netAmount?: number;
   token: string;
   sha256?: string;
 }
@@ -1038,18 +1039,18 @@ export async function sendDealSignedToBandEmail(options: DealBandEmailOptions): 
                   <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Caché Pactado con la Sala:</td>
                   <td style="padding:6px 0; font-size:14px; font-weight:800; color:#ffffff; text-align:right;">${options.totalAgreed} €</td>
                 </tr>
-                <tr>
-                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Fee BandManager (5%):</td>
+                ${options.feeAmount && options.feeAmount > 0 ? `<tr>
+                  <td style="padding:6px 0; font-size:13px; color:#9ca3af;">Comisión BandManager:</td>
                   <td style="padding:6px 0; font-size:13px; font-weight:700; color:#E27A70; text-align:right;">-${options.feeAmount} €</td>
                 </tr>
                 <tr style="border-top:1px solid #22222e;">
                   <td style="padding:8px 0 4px 0; font-size:14px; font-weight:800; color:#ffffff;">Neto para la Banda:</td>
-                  <td style="padding:8px 0 4px 0; font-size:16px; font-weight:900; color:#4FC7B8; text-align:right;">${options.netAmount} €</td>
-                </tr>
+                  <td style="padding:8px 0 4px 0; font-size:16px; font-weight:900; color:#4FC7B8; text-align:right;">${options.netAmount ?? options.totalAgreed} €</td>
+                </tr>` : ''}
               </table>
 
-              <div style="background:rgba(33, 88, 220, 0.12); border:1px solid rgba(33, 88, 220, 0.3); border-radius:10px; padding:12px 16px; margin-bottom:24px; font-size:12px; color:#93c5fd; line-height:1.5;">
-                ✨ <strong>Recompensa de Estudio:</strong> Tus <strong>${options.feeAmount} €</strong> de fee te han generado <strong>+${options.feeAmount} Créditos IA</strong> automáticos en tu cuenta de BandManager para separación de stems y creación de reels.
+              <div style="background:rgba(33, 88, 220, 0.12); border-radius:10px; padding:12px 16px; margin-bottom:24px; font-size:12px; color:#93c5fd; line-height:1.5;">
+                BandManager no te cobra comisión por este bolo: el caché es íntegro para la banda. Si la herramienta te ha ayudado a cerrarlo, al entrar en la app verás cómo apoyar el proyecto con la cifra que quieras. Es totalmente opcional.
               </div>
 
               <div style="text-align:center; margin:24px 0 16px 0;">

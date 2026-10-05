@@ -1,5 +1,6 @@
 import express from "express";
 import Stripe from "stripe";
+import { dbRecordDealSupportFromSession, dbRecordDealSupportRefund } from "../db/dealSupport.js";
 import { getSupabase, dbUpsertRegisteredBand, normalizePlan, dbIsWebhookEventProcessed, dbRecordWebhookEvent, dbSettleAiDonation } from "../db.js";
 import { loadState, saveState, requireAuth } from "../state.js";
 
@@ -737,6 +738,12 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           break;
         }
 
+        // Aportación voluntaria al cerrar un bolo: se registra y NO toca ni el plan ni la deuda de IA.
+        if (session.metadata?.kind === "deal_support") {
+          await dbRecordDealSupportFromSession(session);
+          break;
+        }
+
         const bandId = session.metadata?.bandId || (session as any).subscription_data?.metadata?.bandId;
         const planId = session.metadata?.planId || (session as any).subscription_data?.metadata?.planId;
         const customerEmail = session.customer_email || session.metadata?.userEmail;
@@ -748,6 +755,18 @@ async function handleWebhook(req: express.Request, res: express.Response) {
             stripeCustomerId: customerId,
             stripeSubscriptionId: subscriptionId
           });
+        }
+        break;
+      }
+
+      // Reembolso de un cobro: solo afecta a las aportaciones de bolo (si el cobro es de otra cosa,
+      // no hay ninguna fila que coincida y no pasa nada).
+      case "charge.refunded": {
+        const charge = event.data.object as Stripe.Charge;
+        const paymentIntentId = typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
+        if (paymentIntentId) {
+          const n = await dbRecordDealSupportRefund(paymentIntentId, charge.amount_refunded ?? 0);
+          if (n > 0) console.log(`[Stripe Webhook] Reembolso anotado en ${n} aportación(es) de bolo (${paymentIntentId}).`);
         }
         break;
       }

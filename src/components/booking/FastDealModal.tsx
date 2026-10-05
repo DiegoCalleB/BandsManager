@@ -20,6 +20,8 @@ import {
   Info
 } from 'lucide-react';
 import { Button, Input } from '../ui';
+import { useApoyableDeals } from '../../hooks/useApoyableDeals';
+import { DealSupportCard } from './DealSupportCard';
 
 interface FastDealModalProps {
   isOpen: boolean;
@@ -51,6 +53,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [dealGenerated, setDealGenerated] = useState<{
+    id?: string;
     token: string;
     officialUrl: string;
     aiStudioUrl: string;
@@ -87,6 +90,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
           const data = await res.json();
           if (data?.deal) {
             setDealGenerated({
+              id: data.deal.id,
               token: data.deal.token,
               officialUrl: `https://bandmanager.io/deal/${data.deal.token}`,
               aiStudioUrl: `${window.location.origin}/deal/${data.deal.token}`,
@@ -108,6 +112,10 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
 
     fetchExistingDeal();
   }, [isOpen, lead]);
+
+  // Aportación voluntaria: solo si el acuerdo está firmado y aún no se ha apoyado este bolo.
+  const { deals: apoyables } = useApoyableDeals(isOpen && dealGenerated?.estado === 'confirmado', lead?.band_id);
+  const apoyoDelBolo = dealGenerated?.id ? apoyables.find((d) => d.deal_id === dealGenerated.id) : undefined;
 
   if (!isOpen || !lead) return null;
 
@@ -134,9 +142,6 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
           tipo_remuneracion: tipoRemuneracion,
           cache_base: Number(cacheBase) || 0,
           total_acordado: Number(cacheBase) || 0,
-          comision_porcentaje: 5,
-          comision_importe: Math.round(((Number(cacheBase) || 0) * 5) / 100),
-          neto_banda: Math.max(0, (Number(cacheBase) || 0) - Math.round(((Number(cacheBase) || 0) * 5) / 100)),
           forma_pago: formaPago,
           rider_incluido: incluirRider,
           hospitalidad_notas: hospitalidadNotas
@@ -149,6 +154,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
       }
 
       setDealGenerated({
+        id: data.deal.id,
         token: data.deal.token,
         officialUrl: `https://bandmanager.io/deal/${data.deal.token}`,
         aiStudioUrl: `${window.location.origin}/deal/${data.deal.token}`,
@@ -328,32 +334,19 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 </div>
               </div>
 
-              {/* DESGLOSE DE LIQUIDACIÓN Y FEE BANDA */}
-              <div className="bg-[var(--card)] p-3 rounded-[var(--r-s)] border border-[var(--hair)] space-y-2">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-[var(--ink-2)]">Caché acordado que abona la Sala:</span>
+              {/* LIQUIDACIÓN: sin comisión; la aportación a BandManager es voluntaria y llega al firmar la sala */}
+              <div className="rounded-[var(--r-s)] bg-[var(--sunken)] p-3 space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--ink-2)]">Caché que abona la sala</span>
                   <span className="font-bold text-[var(--ink)] font-mono">{cacheBase || 0} €</span>
                 </div>
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="text-[var(--ink-2)]">
-                    Fee BandManager (5% asumido por la banda):
-                  </span>
-                  <span className="font-bold text-[var(--alert)] font-mono">
-                    -{Math.round(((Number(cacheBase) || 0) * 5) / 100)} €
-                  </span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--ink-2)]">Comisión de BandManager</span>
+                  <span className="font-bold text-[var(--ink)] font-mono">0 €</span>
                 </div>
-                <div className="border-t border-[var(--hair)] pt-1.5 flex items-center justify-between text-xs">
-                  <span className="font-bold text-[var(--ink)]">Neto estimado para tu Banda:</span>
-                  <span className="font-black text-emerald-600 dark:text-emerald-400 font-mono text-sm">
-                    {Math.max(0, (Number(cacheBase) || 0) - Math.round(((Number(cacheBase) || 0) * 5) / 100))} €
-                  </span>
-                </div>
-                <div className="flex items-start gap-1.5 p-2 rounded-[var(--r-xs)] bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-[10px] font-medium leading-tight">
-                  <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                  <span>
-                    La sala solo ve <strong>{cacheBase || 0} €</strong> limpios (fricción cero). El fee de <strong>{Math.round(((Number(cacheBase) || 0) * 5) / 100)} €</strong> se te devuelve en <strong>+{Math.round(((Number(cacheBase) || 0) * 5) / 100)} Créditos IA</strong>.
-                  </span>
-                </div>
+                <p className="pt-1 text-[11px] leading-snug text-[var(--ink-3)]">
+                  El caché es íntegro para la banda. Cuando la sala firme, podrás apoyar BandManager con la cifra que quieras (opcional).
+                </p>
               </div>
             </div>
 
@@ -526,6 +519,9 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 </div>
               </div>
             )}
+
+            {/* Aportación voluntaria: solo con el acuerdo firmado y el bolo aún sin apoyar */}
+            {apoyoDelBolo && <DealSupportCard deal={apoyoDelBolo} />}
           </div>
 
           {/* FOOTER */}
