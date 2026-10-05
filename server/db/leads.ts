@@ -251,32 +251,10 @@ export async function dbGetLeads(bandId: string): Promise<any[]> {
 
   if (error) throw new Error(`Supabase Error (leads): ${error.message}`);
   // Validation layer: guarantee strict band_id isolation
-  let validated = (data || []).filter(
+  const validated = (data || []).filter(
     (l) => cleanBandId(l.band_id) === cleanId
   );
 
-  for (const l of validated) {
-    if (
-      l.nombre_sala?.toLowerCase().includes('mon live') ||
-      l.nombre_sala?.toLowerCase() === 'mon' ||
-      l.email_contacto === 'info@salamonlive.com' ||
-      l.id === 'lead-test-telemetry-diego'
-    ) {
-      l.email_contacto = 'diego.delacalleb@gmail.com';
-      l.nombre_sala = 'Mon Live (Test Telemetría)';
-      if (!l.pitch_generado || l.pitch_generado === 'Sin pitch generado.') {
-        l.pitch_generado = `Hola Diego,\n\nNos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Sala Mon es uno de los espacios con mejor acústica y ambiente de conciertos en directo en Madrid.\n\nEstamos preparando el tramo de otoño de nuestra gira y nos encantaría presentar el directo en vuestra sala. Tenéis el dossier oficial interactivo en el enlace adjunto.\n\n¿Tendríais alguna fecha disponible para valorar en noviembre?\n\nUn saludo cordial,\nBakandeya Booking`;
-      }
-      void sb
-        .from('leads')
-        .update({
-          email_contacto: 'diego.delacalleb@gmail.com',
-          nombre_sala: 'Mon Live (Test Telemetría)',
-          pitch_generado: l.pitch_generado,
-        })
-        .eq('id', l.id);
-    }
-  }
 
   return validated.map((l) => enrichLeadWithTelemetry(l));
 }
@@ -324,24 +302,10 @@ export async function dbGetLeadsPaginated(
     throw new Error(`Supabase Error (leads paginated): ${error.message}`);
 
   // Validation layer: guarantee strict band_id isolation
-  let validated = (data || []).filter(
+  const validated = (data || []).filter(
     (l) => cleanBandId(l.band_id) === cleanId
   );
 
-  for (const l of validated) {
-    if (
-      l.nombre_sala?.toLowerCase().includes('mon live') ||
-      l.nombre_sala?.toLowerCase() === 'mon' ||
-      l.email_contacto === 'info@salamonlive.com' ||
-      l.id === 'lead-test-telemetry-diego'
-    ) {
-      l.email_contacto = 'diego.delacalleb@gmail.com';
-      l.nombre_sala = 'Mon Live (Test Telemetría)';
-      if (!l.pitch_generado || l.pitch_generado === 'Sin pitch generado.') {
-        l.pitch_generado = `Hola Diego,\n\nNos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Sala Mon es uno de los espacios con mejor acústica y ambiente de conciertos en directo en Madrid.\n\nEstamos preparando el tramo de otoño de nuestra gira y nos encantaría presentar el directo en vuestra sala. Tenéis el dossier oficial interactivo en el enlace adjunto.\n\n¿Tendríais alguna fecha disponible para valorar en noviembre?\n\nUn saludo cordial,\nBakandeya Booking`;
-      }
-    }
-  }
 
   const leads = validated.map((l) => enrichLeadWithTelemetry(l));
 
@@ -374,10 +338,6 @@ export async function dbGetLeadById(id: string, bandId?: string) {
     cleanBandId(data.band_id) !== cleanBandId(bandId)
   ) {
     return null;
-  }
-  if (data.nombre_sala?.toLowerCase().includes('mon live') || data.nombre_sala?.toLowerCase() === 'mon' || data.email_contacto === 'info@salamonlive.com' || data.id === 'lead-test-telemetry-diego') {
-    data.email_contacto = 'diego.delacalleb@gmail.com';
-    data.nombre_sala = 'Mon Live (Test Telemetría)';
   }
   return enrichLeadWithTelemetry(data);
 }

@@ -76,14 +76,7 @@ router.get("/leads", requireAuth, async (req, res) => {
           }
         }
       }
-      let emailContacto = l.email_contacto || '';
-      let nombreSala = l.nombre_sala || '';
-      if (nombreSala.toLowerCase().includes('mon live') || nombreSala.toLowerCase() === 'mon') {
-        emailContacto = 'diego.delacalleb@gmail.com';
-        nombreSala = 'Mon Live (Test Telemetría)';
-      }
-
-      return { ...l, nombre_sala: nombreSala, email_contacto: emailContacto, website: web, imagen_url: img };
+      return { ...l, nombre_sala: l.nombre_sala || '', email_contacto: l.email_contacto || '', website: web, imagen_url: img };
     });
 
     if (pagination) {
