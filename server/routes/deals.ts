@@ -149,7 +149,8 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
       forma_pago,
       rider_incluido,
       rider_texto,
-      hospitalidad_notas
+      hospitalidad_notas,
+      apoyo_porcentaje
     } = req.body;
 
     if (!lugar_sala || !fecha_evento) {
@@ -170,6 +171,8 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
       cache_base: Number(cache_base ?? 0),
       total_acordado: Number(total_acordado ?? cache_base ?? 0),
       forma_pago: forma_pago || 'efectivo',
+      // Se normaliza en dbUpsertDeal (0-20 %, pasos de 0,5; lo no numérico = no eligió).
+      ...(apoyo_porcentaje !== undefined ? { apoyo_porcentaje } : {}),
       rider_incluido: rider_incluido ?? true,
       rider_texto: rider_texto ? sanitizeExternalText(rider_texto) : '',
       hospitalidad_notas: hospitalidad_notas ? sanitizeExternalText(hospitalidad_notas) : ''

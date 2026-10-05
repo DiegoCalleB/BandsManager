@@ -47,6 +47,17 @@ describe('aportaciones voluntarias (capa de datos)', () => {
     expect(r.map((d) => d.id)).toEqual(['ok']);
   });
 
+  it('no vuelve a pedir apoyo a quien eligió 0 %; sí a quien eligió otro % o no eligió', async () => {
+    fake.tablas.concert_deals.push(
+      acuerdo('no-apoyar', { apoyo_porcentaje: 0 }),
+      acuerdo('cinco', { apoyo_porcentaje: 5 }),
+      acuerdo('sin-elegir', { apoyo_porcentaje: null }),
+      acuerdo('antiguo') // acuerdo anterior a la columna: undefined
+    );
+    const ids = (await dbListSupportableDeals(banda)).map((d) => d.id).sort();
+    expect(ids).toEqual(['antiguo', 'cinco', 'sin-elegir']);
+  });
+
   it('no ofrece de nuevo un bolo que ya tiene aportación', async () => {
     fake.tablas.concert_deals.push(acuerdo('a'), acuerdo('b'));
     await dbRecordDealSupport({ sessionId: 'cs_1', dealId: 'a', bandId: banda, amountCents: 1800 });

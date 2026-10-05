@@ -22,3 +22,37 @@ export function sugerenciaApoyoCents(totalAcordado: number): number {
   const acotado = Math.min(APOYO_SUGERIDO_MAX_EUR, Math.max(APOYO_SUGERIDO_MIN_EUR, euros));
   return acotado * 100;
 }
+
+/** Porcentaje máximo que se puede elegir al crear el acuerdo. */
+export const APOYO_PORCENTAJE_MAX = 20;
+
+/**
+ * Normaliza el porcentaje de apoyo que llega del cliente. `null` = la banda no ha elegido (se usa
+ * la sugerencia por defecto); `0` = ha elegido no apoyar (no se le vuelve a pedir); 0.5-20 = su
+ * elección. Cualquier cosa que no sea un número finito se trata como "no elegido".
+ */
+export function normalizarApoyoPorcentaje(valor: unknown): number | null {
+  if (valor === null || valor === undefined || valor === '') return null;
+  const n = Number(valor);
+  if (!Number.isFinite(n)) return null;
+  const acotado = Math.min(APOYO_PORCENTAJE_MAX, Math.max(0, n));
+  return Math.round(acotado * 2) / 2; // pasos de 0,5
+}
+
+/**
+ * Importe propuesto cuando la banda ha elegido un porcentaje: ese % del caché redondeado al euro,
+ * dentro del rango del checkout. 0 % (o un caché sin valor) = 0: no se propone nada.
+ */
+export function apoyoCentsDePorcentaje(totalAcordado: number, porcentaje: number): number {
+  const total = Number(totalAcordado);
+  if (!Number.isFinite(total) || total <= 0 || !(porcentaje > 0)) return 0;
+  const euros = Math.round((total * porcentaje) / 100);
+  return Math.min(APOYO_MAX_CENTS, Math.max(APOYO_MIN_CENTS, euros * 100));
+}
+
+/** Importe a proponer para un acuerdo: su porcentaje elegido, o la sugerencia por defecto. */
+export function apoyoPropuestoCents(totalAcordado: number, apoyoPorcentaje: number | null | undefined): number {
+  return apoyoPorcentaje === null || apoyoPorcentaje === undefined
+    ? sugerenciaApoyoCents(totalAcordado)
+    : apoyoCentsDePorcentaje(totalAcordado, apoyoPorcentaje);
+}

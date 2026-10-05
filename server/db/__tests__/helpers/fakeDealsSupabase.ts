@@ -11,7 +11,9 @@ export function crearFakeDealsSupabase() {
   const estado: {
     fallo: null | { code?: string; message: string };
     fallosPorTabla: Record<string, { code?: string; message: string } | undefined>;
-  } = { fallo: null, fallosPorTabla: {} };
+    /** Simula una columna que aún no existe: un upsert cuyo payload la incluya falla como en PostgREST. */
+    rechazarColumna: string | null;
+  } = { fallo: null, fallosPorTabla: {}, rechazarColumna: null };
 
   function from(nombre: string) {
     const datos = (tablas[nombre] ??= []);
@@ -39,6 +41,12 @@ export function crearFakeDealsSupabase() {
       if (modo === 'update') {
         sel.forEach((f) => Object.assign(f, parche));
         return { data: devuelve ? sel.map((f) => ({ ...f })) : null, error: null };
+      }
+      if (estado.rechazarColumna && estado.rechazarColumna in carga) {
+        return {
+          data: null,
+          error: { code: 'PGRST204', message: `Could not find the '${estado.rechazarColumna}' column of '${nombre}' in the schema cache` }
+        };
       }
       const i = datos.findIndex((f) => f[conflicto] === carga[conflicto]);
       if (i >= 0 && ignorarDuplicados) return { data: devuelve ? [] : null, error: null };

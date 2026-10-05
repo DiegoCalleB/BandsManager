@@ -8,7 +8,7 @@ import { bandaFacturableDelUsuario } from "../utils/bandAccess.js";
 import { dbGetDealById } from "../db/deals.js";
 import { dbListSupportableDeals, dbDealHasSupport } from "../db/dealSupport.js";
 import {
-  sugerenciaApoyoCents,
+  apoyoPropuestoCents,
   APOYO_MIN_CENTS,
   APOYO_MAX_CENTS
 } from "../utils/dealSupport.js";
@@ -159,7 +159,9 @@ router.get("/donations/deal-support", requireAuth, async (req, res) => {
         ciudad: d.ciudad || "",
         fecha_evento: d.fecha_evento,
         total_acordado: Number(d.total_acordado ?? d.cache_base ?? 0),
-        suggested_cents: sugerenciaApoyoCents(Number(d.total_acordado ?? d.cache_base ?? 0))
+        // Lo que eligió la banda al crear el acuerdo (o la sugerencia por defecto si no eligió)
+        suggested_cents: apoyoPropuestoCents(Number(d.total_acordado ?? d.cache_base ?? 0), d.apoyo_porcentaje ?? null),
+        apoyo_porcentaje: d.apoyo_porcentaje ?? null
       }))
     });
   } catch (err: any) {
@@ -190,7 +192,7 @@ router.post("/donations/deal-support/create-checkout-session", requireAuth, dona
     }
 
     const total = Number(deal.total_acordado ?? deal.cache_base ?? 0);
-    const suggestedCents = sugerenciaApoyoCents(total);
+    const suggestedCents = Math.max(APOYO_MIN_CENTS, apoyoPropuestoCents(total, deal.apoyo_porcentaje ?? null));
     const host = getOriginHost(req);
     const stripe = getStripe();
 

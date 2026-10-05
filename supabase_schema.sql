@@ -1271,6 +1271,7 @@ CREATE TABLE IF NOT EXISTS concert_deals (
     comision_porcentaje NUMERIC(5,2) DEFAULT 5.00,
     comision_importe NUMERIC(10,2) DEFAULT 0.00,
     neto_banda NUMERIC(10,2) DEFAULT 0.00,
+    apoyo_porcentaje NUMERIC(4,1) CHECK (apoyo_porcentaje IS NULL OR (apoyo_porcentaje >= 0 AND apoyo_porcentaje <= 20)),
     forma_pago TEXT DEFAULT 'efectivo',
     
     rider_incluido BOOLEAN DEFAULT true,

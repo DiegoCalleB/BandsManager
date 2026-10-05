@@ -137,6 +137,21 @@ describe('dealsRouter', () => {
     expect(fake.filas.find((f) => f.id === id)?.cache_base).toBe(600);
   });
 
+  it('POST /deals guarda el apoyo elegido (normalizado) y lo ignora si es basura', async () => {
+    const post = manejador('/deals', 'post');
+    const crear = async (extra: any) => {
+      const r = resFalso();
+      await post({ body: { lugar_sala: `Sala ${Math.random()}`, fecha_evento: '2026-12-10', cache_base: 600, ...extra }, headers: { 'x-band-id': banda }, user: { band_id: banda } }, r);
+      expect(r.code).toBe(200);
+      return r.body.deal;
+    };
+    expect((await crear({ apoyo_porcentaje: 5 })).apoyo_porcentaje).toBe(5);
+    expect((await crear({ apoyo_porcentaje: 0 })).apoyo_porcentaje).toBe(0);
+    expect((await crear({ apoyo_porcentaje: 500 })).apoyo_porcentaje).toBe(20);
+    expect((await crear({ apoyo_porcentaje: 'x' })).apoyo_porcentaje).toBeNull();
+    expect((await crear({})).apoyo_porcentaje).toBeNull();
+  });
+
   describe('ipFirmante', () => {
     it('toma la última entrada de X-Forwarded-For (la que añade el proxy)', () => {
       expect(ipFirmante({ headers: { 'x-forwarded-for': '1.1.1.1, 2.2.2.2, 3.3.3.3' }, socket: {} } as any)).toBe('3.3.3.3');

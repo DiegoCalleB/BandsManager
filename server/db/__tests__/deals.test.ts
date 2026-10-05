@@ -43,6 +43,7 @@ describe('deals: capa de datos', () => {
   beforeEach(() => {
     fake.filas.length = 0;
     fake.estado.fallo = null;
+    fake.estado.rechazarColumna = null;
     upsertConcert.mockClear();
     upsertLead.mockClear();
   });
@@ -138,6 +139,45 @@ describe('deals: capa de datos', () => {
       expect(mio.id).not.toBe(ajeno.id);
       expect(mio.token).not.toBe(ajeno.token);
       expect(fake.filas.find((f) => f.id === ajeno.id)?.cache_base).toBe(100);
+    });
+  });
+
+  describe('apoyo voluntario elegido por la banda', () => {
+    const base = { band_id: banda, lugar_sala: 'Sala A', fecha_evento: '2026-12-01', cache_base: 600 };
+
+    it('se guarda normalizado y NO entra en el sello del contrato', async () => {
+      const a = await dbUpsertDeal({ ...base, apoyo_porcentaje: 5 }, banda);
+      expect(a.apoyo_porcentaje).toBe(5);
+      const hashCon = computeDealSha256({ ...base, nombre_evento: 'x', apoyo_porcentaje: 5 } as any);
+      const hashSin = computeDealSha256({ ...base, nombre_evento: 'x', apoyo_porcentaje: 0 } as any);
+      expect(hashCon).toBe(hashSin);
+    });
+
+    it('valores raros: 999 se acota a 20, basura = no eligió (null), 0 se respeta', async () => {
+      expect((await dbUpsertDeal({ ...base, lugar_sala: 'A1', apoyo_porcentaje: 999 as any }, banda)).apoyo_porcentaje).toBe(20);
+      expect((await dbUpsertDeal({ ...base, lugar_sala: 'A2', apoyo_porcentaje: 'hola' as any }, banda)).apoyo_porcentaje).toBeNull();
+      expect((await dbUpsertDeal({ ...base, lugar_sala: 'A3', apoyo_porcentaje: 0 }, banda)).apoyo_porcentaje).toBe(0);
+      expect((await dbUpsertDeal({ ...base, lugar_sala: 'A4' }, banda)).apoyo_porcentaje).toBeNull();
+    });
+
+    it('al editar sin mandar el porcentaje se conserva el que ya había elegido', async () => {
+      const a = await dbUpsertDeal({ ...base, apoyo_porcentaje: 5 }, banda);
+      const b = await dbUpsertDeal({ ...base, id: a.id, cache_base: 700 }, banda);
+      expect(b.apoyo_porcentaje).toBe(5);
+      const c = await dbUpsertDeal({ ...base, id: a.id, apoyo_porcentaje: 0 }, banda);
+      expect(c.apoyo_porcentaje).toBe(0);
+    });
+
+    it('si la migración 20261007 aún no está aplicada, el acuerdo se guarda igualmente (sin la preferencia)', async () => {
+      fake.estado.rechazarColumna = 'apoyo_porcentaje';
+      try {
+        const d = await dbUpsertDeal({ ...base, apoyo_porcentaje: 5 }, banda);
+        expect(d.token).toMatch(/^dl_/);
+        expect(fake.filas).toHaveLength(1);
+        expect('apoyo_porcentaje' in fake.filas[0]).toBe(false);
+      } finally {
+        fake.estado.rechazarColumna = null;
+      }
     });
   });
 
