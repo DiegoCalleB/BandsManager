@@ -13,8 +13,6 @@ interface Props {
   acordesPorFuncion?: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>>;
   /** Tonalidad tal como se ve («Mi mayor»), para decir respecto a qué se colorea. */
   nombreTonalidad?: string;
-  /** La tonalidad es menor: solo entonces tiene sentido elegir III o bIII. */
-  esMenor?: boolean;
 }
 
 const Opcion = <T extends string>({ valor, actual, etiqueta, onElegir, titulo }: { valor: T; actual: T; etiqueta: string; onElegir: (v: T) => void; titulo?: string }) => (
@@ -35,7 +33,7 @@ const Opcion = <T extends string>({ valor, actual, etiqueta, onElegir, titulo }:
  * Selector de cómo se ven los acordes (nombre, grado romano o ambos; con o sin color por función) y
  * leyenda de las funciones presentes en la canción. El color nunca va solo: cada función lleva su letra.
  */
-export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, presentes, acordesPorFuncion, nombreTonalidad, esMenor }) => {
+export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, presentes, acordesPorFuncion, nombreTonalidad }) => {
   const [explicar, setExplicar] = useState(false);
   return (
   <div className="space-y-2" translate="no">
@@ -46,10 +44,10 @@ export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, pr
       <Opcion valor="grado" actual={estilo.mostrar} etiqueta="Grado" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} titulo="Números romanos: I, IV, V, bVII…" />
       <Opcion valor="ambos" actual={estilo.mostrar} etiqueta="Ambos" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} />
     </span>
-    {esMenor && estilo.mostrar !== 'nombre' && (
-      <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Grados en tonalidad menor">
-        <Opcion valor="natural" actual={estilo.gradosMenor} etiqueta="III VI VII" onElegir={(gradosMenor) => onCambio({ ...estilo, gradosMenor })} titulo="Respecto al menor natural: i, III, iv, v, VI, VII" />
-        <Opcion valor="mayor" actual={estilo.gradosMenor} etiqueta="bIII bVI bVII" onElegir={(gradosMenor) => onCambio({ ...estilo, gradosMenor })} titulo="Respecto al mayor, como en rock y jazz: bIII, bVI, bVII" />
+    {estilo.mostrar !== 'nombre' && (
+      <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Grados con o sin alteraciones">
+        <Opcion valor="simple" actual={estilo.grados} etiqueta="III" onElegir={(grados) => onCambio({ ...estilo, grados })} titulo="Solo el número del grado" />
+        <Opcion valor="completo" actual={estilo.grados} etiqueta="bIII" onElegir={(grados) => onCambio({ ...estilo, grados })} titulo="Con b y #: más exacto si la canción toma acordes de otra escala" />
       </span>
     )}
     <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Colorear acordes">

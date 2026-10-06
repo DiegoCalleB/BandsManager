@@ -31,7 +31,7 @@ const ritmoArmonico = (cpm: number) => (cpm < 12 ? 'lento' : cpm < 30 ? 'tranqui
  */
 export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor }) => {
   const { tonalidad, modo } = armonia;
-  const grado = (g: string) => gradoVisible(g, tonalidad.menor, estilo);
+  const grado = (g: string) => gradoVisible(g, estilo);
   const bemoles = usaBemoles(tonalidad, modo.id);
   const nota = (pc: number) => nombreDeNota(pc + transpose, bemoles, notation);
   const acorde = (a: string) => processChordText(`[${a}]`, transpose, notation).replace(/[[\]]/g, '');

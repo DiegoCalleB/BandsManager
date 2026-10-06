@@ -436,7 +436,7 @@ export function SongChordsViewerModal({
   const acordesPorFuncion = useMemo(() => {
     const salida: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>> = {};
     for (const r of armonia?.acordes ?? []) {
-      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: gradoVisible(r.grado, armonia!.tonalidad.menor, estiloArmonia) });
+      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: gradoVisible(r.grado, estiloArmonia) });
     }
     return salida;
   }, [armonia, transpose, notation, estiloArmonia]);
@@ -1017,7 +1017,6 @@ export function SongChordsViewerModal({
                       presentes={funcionesPresentes}
                       acordesPorFuncion={acordesPorFuncion}
                       nombreTonalidad={nombreTonalidadVista}
-                      esMenor={armonia.tonalidad.menor}
                     />
                   )}
                   <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
@@ -1452,7 +1451,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
         const info = armonia && k >= 0 ? infoDeAcordeVisible(chordName, armonia.tonalidad, armonia.transpose) : null;
         const colorear = armonia?.estilo.colorear === "funcion" && info;
         const clasePasiva = colorear ? CLASE_FUNCION[info.funcion] : "text-[var(--acc)] bg-[var(--acc-soft)]";
-        const texto = textoDeAcorde(chordName, info && armonia ? gradoVisible(info.grado, armonia.tonalidad.menor, armonia.estilo) : undefined, armonia?.estilo.mostrar ?? "nombre");
+        const texto = textoDeAcorde(chordName, info && armonia ? gradoVisible(info.grado, armonia.estilo) : undefined, armonia?.estilo.mostrar ?? "nombre");
         const contenido = (
           <>
             {texto.principal}

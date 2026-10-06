@@ -4,11 +4,11 @@ import type { Funcion } from './teoriaArmonica';
 export interface EstiloArmonia {
   mostrar: 'nombre' | 'grado' | 'ambos';
   colorear: 'funcion' | 'nada';
-  /** En tonalidad menor: «natural» escribe III, VI, VII (respecto al menor); «mayor» escribe bIII, bVI, bVII (respecto al mayor, como el rock y el jazz). */
-  gradosMenor: 'natural' | 'mayor';
+  /** «simple» escribe el número del grado sin b ni # (III, VII); «completo» lo escribe con ellas (bIII, bVII, #IV). */
+  grados: 'simple' | 'completo';
 }
 
-export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion', gradosMenor: 'natural' };
+export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion', grados: 'simple' };
 const CLAVE = 'bm_estilo_armonia';
 
 export function leerEstiloArmonia(): EstiloArmonia {
@@ -19,7 +19,7 @@ export function leerEstiloArmonia(): EstiloArmonia {
     return {
       mostrar: ['nombre', 'grado', 'ambos'].includes(v?.mostrar) ? v.mostrar : ESTILO_POR_DEFECTO.mostrar,
       colorear: ['funcion', 'nada'].includes(v?.colorear) ? v.colorear : ESTILO_POR_DEFECTO.colorear,
-      gradosMenor: ['natural', 'mayor'].includes(v?.gradosMenor) ? v.gradosMenor : ESTILO_POR_DEFECTO.gradosMenor,
+      grados: ['simple', 'completo'].includes(v?.grados) ? v.grados : ESTILO_POR_DEFECTO.grados,
     };
   } catch {
     return ESTILO_POR_DEFECTO;
@@ -52,11 +52,10 @@ export function textoDeAcorde(nombre: string, grado: string | null | undefined, 
 }
 
 /**
- * Grado tal como se muestra. Solo cambia en tonalidad menor y con «natural»: bIII, bVI y bVII se
- * escriben III, VI y VII (en el menor natural esos acordes SON los de la escala). En mayor la «b» es
- * necesaria: un III sin «b» sería otro acorde.
+ * Grado tal como se muestra. En modo «simple» se quitan la b y el # (bIII → III, bVII → VII): es el número
+ * del grado, sin más. La mayúscula/minúscula y el ° siguen distinguiendo el acorde (III ≠ iii).
  */
-export function gradoVisible(grado: string, menor: boolean, estilo?: Pick<EstiloArmonia, 'gradosMenor'>): string {
-  if (!menor || (estilo?.gradosMenor ?? ESTILO_POR_DEFECTO.gradosMenor) !== 'natural') return grado;
-  return grado.replace(/\bb(?=(?:III|VII|VI|iii|vii|vi))/g, '');
+export function gradoVisible(grado: string, estilo?: Pick<EstiloArmonia, 'grados'>): string {
+  if ((estilo?.grados ?? ESTILO_POR_DEFECTO.grados) !== 'simple') return grado;
+  return grado.replace(/(^|\/)[b#](?=[ivIV])/g, '$1');
 }
