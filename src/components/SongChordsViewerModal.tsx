@@ -1056,7 +1056,7 @@ export function SongChordsViewerModal({
                   />
                 ) : (
                   <div className="max-w-xl mx-auto text-center space-y-2 py-10 font-sans">
-                    <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-3)]" />
+                    <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-2)]" />
                     <p className="font-bold text-[var(--ink)]">Aún no hay armonía que contar.</p>
                     <p className="text-sm text-[var(--ink-2)]">
                       Escribe el cifrado de la canción o pulsa «Acordes del audio» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
