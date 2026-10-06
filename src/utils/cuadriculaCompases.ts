@@ -100,8 +100,12 @@ const similitud = (a: string[], b: string[]): number => {
 export function construirCuadricula(
   segmentos: SegmentoAcordeAnalizado[],
   bpm: number | undefined,
-  duracion: number
+  duracion: number,
+  pulso?: { bpm: number; fase: number; confianza: number } | null
 ): Cuadricula | null {
+  // Con el pulso medido en el audio se usa su tempo y su fase tal cual; el BPM de la ficha solo es el plan B.
+  const medido = pulso && pulso.confianza >= 0.35 && pulso.bpm >= 40 && pulso.bpm <= 240 ? pulso : null;
+  if (medido) bpm = medido.bpm;
   if (!bpm || !Number.isFinite(bpm) || bpm < 40 || bpm > 240 || duracion < 8) return null;
   const cambios = cambiosDeAcorde(segmentos);
   if (cambios.length < 4) return null;
@@ -112,7 +116,9 @@ export function construirCuadricula(
   //    porque a la mitad del tempo real solo la mitad de los cambios cae en un inicio de compás.
   const evaluar = (candidato: number) => {
     const T = 60 / candidato;
-    const { fase, calidad: calidadPulso } = mejorFase(cambios, T);
+    const { fase, calidad: calidadPulso } = medido
+      ? { fase: medido.fase, calidad: cambios.reduce((a, t) => a + cercania(t, medido.fase, T), 0) / cambios.length }
+      : mejorFase(cambios, T);
     let tiempos: 3 | 4 = 4;
     let pulsoInicial = 0;
     let calidadCompas = -1;
@@ -134,7 +140,7 @@ export function construirCuadricula(
   };
 
   let mejor: ReturnType<typeof evaluar> | null = null;
-  for (const factor of [1, 0.5, 2]) {
+  for (const factor of medido ? [1] : [1, 0.5, 2]) {
     const candidato = bpm * factor;
     if (candidato < 40 || candidato > 240) continue;
     const e = evaluar(candidato);
@@ -142,7 +148,7 @@ export function construirCuadricula(
     // cada 2 compases, el doble de tempo también encaja y no hay forma de distinguirlos.
     if (!mejor || e.total > mejor.total + 0.15) mejor = e;
   }
-  if (!mejor || mejor.calidadPulso < CALIDAD_MINIMA) return null;
+  if (!mejor || mejor.calidadPulso < (medido ? 0.35 : CALIDAD_MINIMA)) return null;
 
   const T = mejor.T;
   const tiempos = mejor.tiempos;

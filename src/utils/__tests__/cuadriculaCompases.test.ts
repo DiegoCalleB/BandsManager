@@ -96,3 +96,26 @@ describe('progresoDeTramo', () => {
     expect(progresoDeTramo(10, 14, 20)).toEqual({ progreso: 1, restante: 0 });
   });
 });
+
+describe('construirCuadricula con el pulso medido en el audio', () => {
+  const segs = cancion(120, ciclo(['Am', 'F', 'C', 'G'], 4), 0.8);
+
+  it('manda sobre un BPM de ficha equivocado', () => {
+    const c = construirCuadricula(segs, 97, 33, { bpm: 120, fase: 0.8, confianza: 0.8 })!;
+    expect(c.bpm).toBe(120);
+    expect(c.tiemposPorCompas).toBe(4);
+    expect(c.compases.length).toBeGreaterThanOrEqual(15);
+    const resto = ((c.inicioRejilla - 0.8) % 2 + 2) % 2;
+    expect(Math.min(resto, 2 - resto)).toBeLessThan(0.05);
+  });
+
+  it('resuelve el doble de tempo que la ficha no podía distinguir (ficha 60 con el pulso en 120)', () => {
+    const c = construirCuadricula(segs, 60, 33, { bpm: 120, fase: 0.8, confianza: 0.8 })!;
+    expect(c.bpm).toBe(120);
+  });
+
+  it('con poca confianza en el pulso se vuelve al BPM de la ficha', () => {
+    const c = construirCuadricula(segs, 120, 33, { bpm: 97, fase: 0, confianza: 0.2 })!;
+    expect(c.bpm).toBe(120);
+  });
+});

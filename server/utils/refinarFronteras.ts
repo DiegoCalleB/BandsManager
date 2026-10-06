@@ -18,6 +18,18 @@ const FREQ_MAX = 3000;
 const RADIO = 0.4; // s a cada lado de la frontera original
 const SEPARACION_MIN = 0.25; // un segmento no baja de esto tras mover fronteras
 
+const cacheFlujo = new WeakMap<Float32Array, Float32Array>();
+
+/** Igual que `calcularFlujoEspectral` pero memoizado por buffer: lo usan el afinado de fronteras y el pulso. */
+export function flujoDe(pcm: Float32Array, sampleRate: number): Float32Array {
+  let f = cacheFlujo.get(pcm);
+  if (!f) {
+    f = calcularFlujoEspectral(pcm, sampleRate);
+    cacheFlujo.set(pcm, f);
+  }
+  return f;
+}
+
 /** Flujo espectral positivo (log-comprimido) por frame de ~23 ms. */
 export function calcularFlujoEspectral(pcm: Float32Array, sampleRate: number): Float32Array {
   const total = Math.max(0, Math.floor((pcm.length - VENTANA) / HOP) + 1);
@@ -56,7 +68,7 @@ export function refinarFronterasConAtaques(
   sampleRate: number
 ): SegmentoAcorde[] {
   if (segmentos.length < 2) return segmentos;
-  const flujo = calcularFlujoEspectral(pcm, sampleRate);
+  const flujo = flujoDe(pcm, sampleRate);
   if (flujo.length < 8) return segmentos;
   const dt = HOP / sampleRate;
   const resultado = segmentos.map((s) => ({ ...s }));

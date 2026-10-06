@@ -1188,6 +1188,8 @@ export interface AnalisisAcordes {
   duracionSegundos: number;
   tonalidad?: string | null; // la que se usó como pista, si la había
   segmentos: SegmentoAcordeAnalizado[];
+  /** Pulso detectado en el audio (tempo real y fase de los tiempos); si falta, la rejilla de compases usa el BPM de la ficha. */
+  pulso?: { bpm: number; fase: number; confianza: number; pulsos: number[] };
   /** Letra transcrita del audio con tiempos (Whisper sobre la voz), si se ha pedido. */
   letra?: {
     fuente: 'voz' | 'mezcla'; // sobre qué audio se transcribió

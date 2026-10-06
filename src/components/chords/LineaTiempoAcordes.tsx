@@ -74,7 +74,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     return () => cancelAnimationFrame(raf);
   }, [isPlaying, audioRef]);
 
-  const cuadricula = useMemo(() => construirCuadricula(segmentos, bpm, analisis.duracionSegundos), [segmentos, bpm, analisis.duracionSegundos]);
+  const cuadricula = useMemo(() => construirCuadricula(segmentos, bpm, analisis.duracionSegundos, analisis.pulso), [segmentos, bpm, analisis.duracionSegundos, analisis.pulso]);
   const posicion = cuadricula ? posicionEnCuadricula(cuadricula, tiempo) : null;
   const actual = indiceSegmentoEn(segmentos, tiempo);
   const siguiente = siguienteAcordeReal(segmentos, actual);
