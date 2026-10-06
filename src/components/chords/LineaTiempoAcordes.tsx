@@ -4,6 +4,8 @@ import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
 import { RegletaCompases } from './RegletaCompases';
+import { explicarAcorde, type AnalisisArmonico } from '../../utils/teoriaArmonica';
+import { CLASE_FUNCION, textoDeAcorde, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../../utils/cuadriculaCompases';
 import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
 
@@ -26,6 +28,11 @@ interface Props {
   /** Vibrar al cambiar de acorde (solo si el dispositivo puede). */
   vibrar?: boolean;
   onVibrar?: (valor: boolean) => void;
+  /** Grados y funciones de cada tramo (mismo orden que `analisis.segmentos`) y cómo mostrarlos. */
+  armonia?: AnalisisArmonico | null;
+  estilo?: EstiloArmonia;
+  /** Tonalidad tal como se ve («Mi mayor»): para explicar por qué un acorde tiene su color. */
+  nombreTonalidad?: string;
   onClose: () => void;
 }
 
@@ -42,7 +49,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, vibrar, onVibrar, onClose,
+  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, vibrar, onVibrar, armonia, estilo, nombreTonalidad, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -92,6 +99,12 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
 
   const nombre = (acorde: string) =>
     acorde === 'N' ? '—' : processChordText(`[${acorde}]`, transpose, notation).replace(/[[\]]/g, '');
+
+  // Color de un tramo en reposo: por función armónica si se pide y hay análisis; si no, el acento neutro.
+  const claseReposo = (i: number) => {
+    const f = armonia?.porTramo[i]?.funcion;
+    return estilo?.colorear === 'funcion' && f ? CLASE_FUNCION[f] : 'bg-[var(--acc-soft)] text-[var(--ink)]';
+  };
 
   const ir = (segundos: number) => {
     onSeek(segundos);
@@ -368,21 +381,26 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             ref={(el) => { chipsRef.current[i] = el; }}
             type="button"
             onClick={() => alTocar(i)}
-            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %`}
+            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %${armonia?.porTramo[i] ? ` · ${explicarAcorde(armonia.porTramo[i]!, nombre(seg.acorde), nombreTonalidad ?? '')}` : ''}`}
             className={`shrink-0 px-2 py-1 rounded-[var(--r-s)] text-left cursor-pointer transition-ui ${
               i === actual
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]'
                 : seg.acorde === 'N'
                   ? 'bg-transparent text-[var(--ink-2)] border border-dashed border-[var(--hair)]'
                   : i === siguiente
-                    ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-[var(--acc)]'
+                    ? `${claseReposo(i)} ring-1 ring-[var(--acc)]`
                     : seg.confianza < 0.4
-                      ? 'bg-[var(--acc-soft)]/60 text-[var(--ink)]'
-                      : 'bg-[var(--acc-soft)] text-[var(--ink)]'
+                      ? `${claseReposo(i)} opacity-60`
+                      : claseReposo(i)
             } ${enBucle(i) || editando === i ? 'outline outline-2 outline-[var(--ok)]' : ''} ${inicioBucle === i && modoBucle === 'elegirFin' ? 'outline outline-2 outline-[var(--ok)]' : ''}`}
           >
             <span className="block text-micro opacity-70">{formatearTiempo(seg.t0)}</span>
-            <span className="block font-bold font-mono">{nombre(seg.acorde)}{seg.editado ? '*' : ''}</span>
+            <span className="block font-bold font-mono">
+              {(() => {
+                const t = textoDeAcorde(nombre(seg.acorde), armonia?.porTramo[i]?.grado, estilo?.mostrar ?? 'nombre');
+                return <>{t.principal}{t.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{t.secundario}</sup>}{seg.editado ? '*' : ''}</>;
+              })()}
+            </span>
           </button>
         ))}
       </div>

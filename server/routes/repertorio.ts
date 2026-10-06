@@ -16,6 +16,8 @@ import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from 
 import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
+import { analizarArmonia } from "../../src/utils/teoriaArmonica.js";
+import { construirHechos, huellaDeHechos, construirPrompt, validarExplicacion, NIVELES, INSTRUMENTOS, type Nivel, type Instrumento } from "../services/profesorArmonia.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -380,6 +382,62 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error guardando la corrección de acordes:", err);
     res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
+  }
+});
+
+// POST explicación del «profesor de armonía». La armonía (tonalidad, modo, grados, bucle) la calcula
+// código determinista; la IA solo la redacta a partir de esos HECHOS y su salida se valida contra
+// ellos (ver services/profesorArmonia.ts). Bajo demanda: una llamada pequeña por canción, con caché
+// por huella de los hechos (no se vuelve a llamar a la IA si no ha cambiado nada).
+router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    const nivel: Nivel = NIVELES.includes(req.body?.nivel) ? req.body.nivel : "intermedio";
+    const instrumento: Instrumento = INSTRUMENTOS.includes(req.body?.instrumento) ? req.body.instrumento : "guitarra";
+
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+    const analisis = song.analisisAcordes;
+    if (!analisis?.segmentos?.length) {
+      return res.status(409).json({ error: "Primero analiza los acordes del audio: el profesor explica la armonía calculada, no la inventa." });
+    }
+
+    const armonia = analizarArmonia(analisis.segmentos.map((s: any) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde })), song.tonalidad);
+    if (!armonia) return res.status(422).json({ error: "Hay muy pocos acordes para explicar la armonía de esta canción." });
+    const hechos = construirHechos(armonia, {
+      bpm: analisis.pulso?.bpm ?? song.bpm,
+      cambiosDeTono: Array.isArray(analisis.tonalidades) && analisis.tonalidades.length > 1
+        ? analisis.tonalidades.slice(1).map((t: any) => ({ desde: Math.round(t.t0), tonalidad: t.tonalidad }))
+        : undefined,
+    });
+    const huella = huellaDeHechos(hechos, nivel, instrumento);
+
+    if (analisis.profesor?.huella === huella && req.body?.forzar !== true) {
+      return res.json({ success: true, profesor: analisis.profesor, deCache: true });
+    }
+
+    const aiClient = getAiClient();
+    if (!aiClient) return res.status(503).json({ error: "La IA no está configurada en el servidor (falta la clave)." });
+    const { sistema, usuario } = construirPrompt(hechos, nivel, instrumento);
+    const aiRes = await generateContentWithFallback(aiClient, {
+      contents: [{ role: "user", parts: [{ text: `${sistema}\n\n${usuario}` }] }],
+      config: { responseMimeType: "application/json", temperature: 0.4 },
+      bandId: userBandId,
+      timeoutMs: TIMEOUT_IA_LARGO_MS,
+    });
+    const texto = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const validada = validarExplicacion(safeParseJson(texto), hechos);
+    if (!validada) {
+      return res.status(502).json({ error: "La IA no devolvió una explicación utilizable. No se ha guardado nada: inténtalo de nuevo." });
+    }
+    const profesor = { huella, nivel, instrumento, generadoEn: new Date().toISOString(), descartadas: validada.descartadas, explicacion: validada.explicacion };
+    await dbGuardarAnalisisAcordes(id, userBandId, { ...analisis, profesor });
+    res.json({ success: true, profesor, deCache: false });
+  } catch (err: any) {
+    console.error("Error en el profesor de armonía:", err);
+    res.status(500).json({ error: err?.message || "No se pudo generar la explicación." });
   }
 });
 

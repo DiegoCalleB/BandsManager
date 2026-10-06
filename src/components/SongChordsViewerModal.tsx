@@ -25,13 +25,20 @@ import {
   Share2,
   MessageSquare,
   Upload,
+  GraduationCap,
 } from "lucide-react";
 import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
 import { LineaTiempoAcordes } from "./chords/LineaTiempoAcordes";
 import { RelojEnAcorde } from "./chords/RelojEnAcorde";
-import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
+import { SelectorArmonia } from "./chords/SelectorArmonia";
+import { PanelArmonia } from "./chords/PanelArmonia";
+import { ProfesorIA } from "./chords/ProfesorIA";
+import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
+import { infoDeAcordeVisible } from "../utils/armoniaVisor";
+import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, type EstiloArmonia } from "../utils/estiloArmonia";
+import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
@@ -59,7 +66,7 @@ export function SongChordsViewerModal({
   onClose,
   onUpdateSong,
 }: SongChordsViewerModalProps) {
-  const [activeTab, setActiveTab] = useState<"chords" | "substitute" | "edit">(
+  const [activeTab, setActiveTab] = useState<"chords" | "substitute" | "armonia" | "edit">(
     "chords",
   );
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
@@ -249,6 +256,17 @@ export function SongChordsViewerModal({
 
   // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
   // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
+  // Pide la explicación del profesor al servidor (que valida y guarda) y la refleja en la canción.
+  const pedirProfesor = async (opciones: { nivel: string; instrumento: string; forzar: boolean }) => {
+    const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/profesor-armonia`, {
+      method: "POST",
+      body: JSON.stringify(opciones),
+    });
+    if (!data?.profesor) throw new Error("El servidor no devolvió ninguna explicación.");
+    if (analisisAcordes) onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, profesor: data.profesor } });
+    return data.profesor;
+  };
+
   const handleCorregirAcordes = (segmentos: AnalisisAcordes["segmentos"]) => {
     if (!analisisAcordes) return;
     const anterior = song;
@@ -396,6 +414,36 @@ export function SongChordsViewerModal({
     return tiemposDeAcordes(alineacion, analisisAcordes.segmentos, porLinea);
   }, [alineacion, analisisAcordes, cifradoTexto, lineasConLetra, letraTranscrita]);
   const acordeActivo = sincronizado ? acordeActivoPorTiempo(tiemposAcordes, audioCurrentTime) : -1;
+
+  // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
+  useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
+
+  // Armonía (grados romanos y funciones): del audio si está analizado (con las correcciones de la banda)
+  // y, si no, de los acordes escritos en el cifrado.
+  const [estiloArmonia, setEstiloArmonia] = useState<EstiloArmonia>(() => leerEstiloArmonia());
+  const cambiarEstiloArmonia = (e: EstiloArmonia) => { setEstiloArmonia(e); guardarEstiloArmonia(e); };
+  const armonia = useMemo<AnalisisArmonico | null>(() => {
+    const tramos = analisisAcordes
+      ? analisisAcordes.segmentos.map((x) => ({ t0: x.t0, t1: x.t1, acorde: x.acorde }))
+      : acordesDelCifrado(cifradoTexto).map((a, i) => ({ t0: i, t1: i + 1, acorde: a }));
+    return analizarArmonia(tramos, song.tonalidad);
+  }, [analisisAcordes, cifradoTexto, song.tonalidad]);
+  // Tonalidad tal como se ve (transpuesta y en el idioma elegido) y acordes de la canción por función, para
+  // explicar los colores con ejemplos reales.
+  const nombreTonalidadVista = armonia
+    ? `${nombreDeNota(armonia.tonalidad.tonica + transpose, usaBemoles(armonia.tonalidad, armonia.modo.id), notation)}${armonia.tonalidad.menor ? " menor" : " mayor"}`
+    : "";
+  const acordesPorFuncion = useMemo(() => {
+    const salida: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>> = {};
+    for (const r of armonia?.acordes ?? []) {
+      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: r.grado });
+    }
+    return salida;
+  }, [armonia, transpose, notation]);
+  const funcionesPresentes = useMemo<Funcion[]>(
+    () => (armonia ? (Object.keys(armonia.funciones) as Funcion[]).filter((f) => armonia.funciones[f] > 0.005) : []),
+    [armonia],
+  );
 
   // Vibración al cambiar de acorde (móvil): se «siente» el cambio sin mirar la pantalla. Opcional y por dispositivo.
   const [vibrarAlCambiar, setVibrarAlCambiar] = useState<boolean>(() => {
@@ -615,6 +663,18 @@ export function SongChordsViewerModal({
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span>Letra y acordes</span>
+              </Button>
+
+              <Button
+                variant={activeTab === "armonia" ? "selected" : "ghost"}
+                size="xs"
+                type="button"
+                onClick={() => setActiveTab("armonia")}
+                className="items-center gap-1.5"
+                title="Tonalidad, modo, grados y qué tocar sobre cada acorde"
+              >
+                <GraduationCap className="w-3.5 h-3.5" />
+                <span>Armonía</span>
               </Button>
 
               <Button
@@ -887,7 +947,7 @@ export function SongChordsViewerModal({
           )}
 
           {/* ACORDES DETECTADOS DEL AUDIO */}
-          {analisisAcordes && showAnalisisAcordes && (
+          {analisisAcordes && showAnalisisAcordes && activeTab === "chords" && (
             <LineaTiempoAcordes
               analisis={analisisAcordes}
               bpm={song.bpm}
@@ -904,6 +964,9 @@ export function SongChordsViewerModal({
               sincronizacion={alineacion ? { calidad: alineacion.calidad, desplazamiento: alineacion.desplazamiento, usable: alineacion.usable } : null}
               seguir={seguirEnCifrado}
               onSeguir={setSeguirEnCifrado}
+              armonia={armonia}
+              estilo={estiloArmonia}
+              nombreTonalidad={nombreTonalidadVista}
               vibrar={vibrarAlCambiar}
               onVibrar={alternarVibracion}
               onCorregir={handleCorregirAcordes}
@@ -946,6 +1009,16 @@ export function SongChordsViewerModal({
                   )}
 
                   {/* THE CHORD SHEET DISPLAY */}
+                  {armonia && (
+                    <SelectorArmonia
+                      estilo={estiloArmonia}
+                      onCambio={cambiarEstiloArmonia}
+                      resumen={`${armonia.tonalidad.nombre.replace("m", " menor").replace(/^([A-G]#?)$/, "$1 mayor")} · ${armonia.modo.nombre}${armonia.tonalidadEstimada ? " (estimado)" : ""}`}
+                      presentes={funcionesPresentes}
+                      acordesPorFuncion={acordesPorFuncion}
+                      nombreTonalidad={nombreTonalidadVista}
+                    />
+                  )}
                   <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
                     {renderFormattedChordSheet(
                       processedText,
@@ -973,9 +1046,38 @@ export function SongChordsViewerModal({
                             },
                           }
                         : undefined,
+                      armonia ? { tonalidad: armonia.tonalidad, transpose, estilo: estiloArmonia, nombreTonalidad: nombreTonalidadVista } : undefined,
                     )}
                   </div>
                 </div>
+              )}
+
+              {/* TAB: ARMONÍA (profesor determinista) */}
+              {activeTab === "armonia" && (
+                armonia ? (
+                  <PanelArmonia
+                    armonia={armonia}
+                    analisis={analisisAcordes}
+                    bpm={song.bpm}
+                    notation={notation}
+                    transpose={transpose}
+                    profesor={
+                      analisisAcordes ? (
+                        <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
+                      ) : (
+                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Acordes del audio»).</p>
+                      )
+                    }
+                  />
+                ) : (
+                  <div className="max-w-xl mx-auto text-center space-y-2 py-10 font-sans">
+                    <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-2)]" />
+                    <p className="font-bold text-[var(--ink)]">Aún no hay armonía que contar.</p>
+                    <p className="text-sm text-[var(--ink-2)]">
+                      Escribe el cifrado de la canción o pulsa «Acordes del audio» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
+                    </p>
+                  </div>
+                )
               )}
 
               {/* TAB 2: SUBSTITUTE QUICK GUIDE (FICHA PARA MÚSICO SUSTITUTO) */}
@@ -1282,6 +1384,14 @@ interface SincronizacionCifrado {
   onSeek: (segundos: number) => void;
 }
 
+interface ArmoniaVisible {
+  tonalidad: AnalisisArmonico["tonalidad"];
+  transpose: number;
+  estilo: EstiloArmonia;
+  /** Tonalidad tal como se ve («Mi mayor»), para explicar los acordes. */
+  nombreTonalidad: string;
+}
+
 interface SincronizacionLetra {
   porLinea: Array<number | null>; // por cada línea del cifrado, la línea de letra transcrita (o null)
   lineas: Array<{ t0: number; t1: number }>;
@@ -1289,7 +1399,7 @@ interface SincronizacionLetra {
   onSeek: (segundos: number) => void;
 }
 
-export function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sync?: SincronizacionCifrado) {
+export function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sync?: SincronizacionCifrado, armonia?: ArmoniaVisible) {
   if (!text)
     return (
       <span className="text-[var(--ink-2)] italic">
@@ -1336,6 +1446,18 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
       const nodoAcorde = (chordName: string, key: string) => {
         const k = esTokenAcorde(chordName) ? ordinal++ : -1;
         const par = sync && k >= 0 ? sync.pares[k] : undefined;
+        // Armonía: grado y función de este acorde, y cómo se pinta según el estilo elegido.
+        const info = armonia && k >= 0 ? infoDeAcordeVisible(chordName, armonia.tonalidad, armonia.transpose) : null;
+        const colorear = armonia?.estilo.colorear === "funcion" && info;
+        const clasePasiva = colorear ? CLASE_FUNCION[info.funcion] : "text-[var(--acc)] bg-[var(--acc-soft)]";
+        const texto = textoDeAcorde(chordName, info?.grado, armonia?.estilo.mostrar ?? "nombre");
+        const contenido = (
+          <>
+            {texto.principal}
+            {texto.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{texto.secundario}</sup>}
+          </>
+        );
+        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad)}` : "";
         if (sync && par && sync.tiempos[k] !== undefined) {
           const instante = sync.tiempos[k];
           return (
@@ -1347,21 +1469,21 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
                 e.stopPropagation();
                 sync.onSeek(instante);
               }}
-              title={`Saltar a ${Math.floor(instante / 60)}:${String(Math.floor(instante % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
+              title={`Saltar a ${Math.floor(instante / 60)}:${String(Math.floor(instante % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}${funcionTitulo}`}
               className={`font-bold px-1 rounded text-xs leading-5 cursor-pointer transition-ui ${
                 k === sync.activo
                   ? "bg-[var(--surface)] text-[var(--ink)]"
-                  : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
+                  : `${clasePasiva} hover:brightness-95`
               } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
             >
-              {chordName}
+              {contenido}
             </button>
             </RelojEnAcorde>
           );
         }
         return (
-          <span key={key} className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 rounded mr-0.5 text-xs leading-5">
-            {chordName}
+          <span key={key} title={funcionTitulo ? funcionTitulo.slice(3) : undefined} className={`font-bold ${clasePasiva} px-1 rounded mr-0.5 text-xs leading-5`}>
+            {contenido}
           </span>
         );
       };
