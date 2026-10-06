@@ -41,7 +41,9 @@ export function elegirFuenteAudio(song: Partial<Song> | null | undefined): Fuent
     const pista = (idea.pistas ?? []).find((p) => /instrumental/i.test(p.nombre || "") && p.audioUrl);
     if (pista) return { url: pista.audioUrl, fuente: "instrumental" };
   }
-  const principal = song.audioPrincipalUrl || song.audioUrl;
+  // Mismo orden que el visor de acordes (audio principal, y si no la primera idea con audio), para
+  // que el botón no aparezca con un audio y el servidor busque otro.
+  const principal = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i) => i.audioUrl)?.audioUrl;
   return principal ? { url: principal, fuente: "mezcla" } : null;
 }
 

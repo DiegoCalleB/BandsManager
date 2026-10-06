@@ -28,6 +28,11 @@ describe('elegirFuenteAudio', () => {
     expect(elegirFuenteAudio({ audioPrincipalUrl: 'https://x/mezcla.mp3' } as any)).toEqual({ url: 'https://x/mezcla.mp3', fuente: 'mezcla' });
   });
 
+  it('sin audio principal usa la primera idea con audio, como el visor', () => {
+    const f = elegirFuenteAudio({ audioIdeas: [{ id: 'a', audioUrl: '' }, { id: 'b', audioUrl: 'https://x/idea.mp3' }] } as any);
+    expect(f).toEqual({ url: 'https://x/idea.mp3', fuente: 'mezcla' });
+  });
+
   it('devuelve null sin audio', () => {
     expect(elegirFuenteAudio({} as any)).toBeNull();
     expect(elegirFuenteAudio(null)).toBeNull();

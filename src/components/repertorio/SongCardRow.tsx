@@ -364,6 +364,23 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </Button>
           ) : null}
 
+          {/* 1b. Acordes siempre a un clic: antes solo estaba dentro del menú ⋯, y la detección de
+              acordes del audio (línea de tiempo) quedaba a cuatro clics y nadie la encontraba. */}
+          {onOpenStudio && onOpenChords && (
+            <button
+              type="button"
+              onClick={onOpenChords}
+              className="relative p-1.5 sm:px-2.5 sm:py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition-ui cursor-pointer bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+              title={song.analisisAcordes ? 'Acordes: cifrado, letra y acordes detectados del audio' : 'Acordes: cifrado, letra y detección de acordes del audio'}
+            >
+              <Music className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
+              <span className="hidden xs:inline text-xs">Acordes</span>
+              {song.analisisAcordes && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)] shrink-0" aria-label="Acordes del audio analizados" />
+              )}
+            </button>
+          )}
+
           {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">

@@ -218,7 +218,7 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     if (!fuente) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
 
     const pcm = await extraerPcmMono(fuente.url, { timeoutMs: 90_000, maxDuracionSeg: 360 });
-    if (!pcm) return res.status(422).json({ error: "No se pudo leer el audio de la canción." });
+    if (!pcm) return res.status(422).json({ error: "No se pudo descargar o decodificar el audio de la canción (la URL puede haber caducado o el formato no es compatible). Prueba a subirlo de nuevo." });
 
     const tonalidad = normalizarTonalidad(song.tonalidad);
     const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad });
