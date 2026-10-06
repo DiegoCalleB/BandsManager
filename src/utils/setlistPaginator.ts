@@ -1,5 +1,5 @@
-// Motor de maquetación del repertorio imprimible (PdfExportModal.tsx). Sustituye a
-// setlistAutoFit.ts, que repartía solo CANCIONES y dejaba fuera los bloques ("Bloque 2",
+// Motor de maquetación del repertorio imprimible (PdfExportModal.tsx). Sustituyó a un
+// auto-ajuste anterior que repartía solo CANCIONES y dejaba fuera los bloques ("Bloque 2",
 // "Bis"): el encabezado que caía justo en un corte de página desaparecía de la hoja.
 //
 // Aquí el reparto es por ITEMS (canciones, bloques, interludios), con alturas medidas una a una
@@ -45,17 +45,34 @@ export interface PaginateInput {
    * exactamente esas hojas, aunque baje del mínimo legible (hasta `FORCED_FLOOR_FONT_PT`).
    */
   forcedPages?: number;
+  /**
+   * Columnas por hoja (1 o 2). Cada columna es un tramo contiguo: se llena de arriba abajo y
+   * luego la siguiente (orden de lectura). Se reparte como si cada columna fuera una hoja de
+   * `availableHeightPx`; `heightsAt` debe medir ya al ancho de columna.
+   */
+  columns?: 1 | 2;
 }
 
-export interface PlannedPage {
-  /** Rango de items [from, to) de la hoja. */
+export interface PlannedColumn {
+  /** Rango de items [from, to) de la columna. */
   from: number;
   to: number;
   usedPx: number;
-  /** Hueco libre de la hoja tras sumar sus alturas. */
+  /** Hueco libre de la columna tras sumar sus alturas. */
   freePx: number;
-  /** Aire extra por hueco entre filas (px) para llenar la hoja sin estirarla. */
+  /** Aire extra por hueco entre filas (px) para llenar la columna sin estirarla. */
   rowGapPx: number;
+}
+
+export interface PlannedPage {
+  /** Rango de items [from, to) de toda la hoja (todas sus columnas). */
+  from: number;
+  to: number;
+  /** Agregados de la hoja: la columna más llena y el menor hueco/aire de sus columnas. */
+  usedPx: number;
+  freePx: number;
+  rowGapPx: number;
+  columns: PlannedColumn[];
 }
 
 export interface PaginatedPlan {
@@ -168,7 +185,9 @@ function planPagesAt(
   } = input;
   const availableHeightPx = fullHeightPx * fill;
   const n = kinds.length;
-  const maxPages = Math.max(1, Math.min(input.maxPages ?? 8, Math.max(1, n)));
+  // Con menos items que columnas no hay nada que repartir en la segunda.
+  const cols = Math.max(1, Math.min(input.columns ?? 1, n));
+  const maxPages = Math.max(1, Math.min(input.maxPages ?? 8, Math.max(1, Math.floor(n / cols))));
   const cache = new Map<number, number[]>();
   const heights = (pt: number) => {
     let h = cache.get(pt);
@@ -179,7 +198,7 @@ function planPagesAt(
     return h;
   };
   const split = (pt: number, pages: number) =>
-    partitionItems(kinds, heights(pt), pages, availableHeightPx, tolerancePx);
+    partitionItems(kinds, heights(pt), pages * cols, availableHeightPx, tolerancePx);
 
   // Mayor letra entera de [lo, hi] con la que cabe en `pages` hojas (la altura crece con la
   // letra, así que la factibilidad es monótona y basta una bisección).
@@ -202,13 +221,13 @@ function planPagesAt(
     const h = heights(chosen.fontPt);
     const ranges =
       split(chosen.fontPt, chosen.pages) ??
-      // Último recurso defensivo: una hoja por cada reparto posible, sin garantía de que quepa.
-      partitionItems(kinds, h, chosen.pages, Number.POSITIVE_INFINITY) ??
+      // Último recurso defensivo: un reparto posible sin garantía de que quepa.
+      partitionItems(kinds, h, chosen.pages * cols, Number.POSITIVE_INFINITY) ??
       [{ from: 0, to: n }];
 
     // El aire entre filas se reparte solo dentro del `fillTarget`; el resto de la hoja queda como
     // margen simétrico arriba y abajo (centrado vertical), así el pie nunca queda pegado.
-    const pages: PlannedPage[] = ranges.map(({ from, to }) => {
+    const columnsPlanned: PlannedColumn[] = ranges.map(({ from, to }) => {
       let used = 0;
       for (let i = from; i < to; i++) used += h[i];
       const free = Math.max(0, availableHeightPx - used);
@@ -217,12 +236,27 @@ function planPagesAt(
       const rowGapPx = Math.min(free / gaps, ptToPx(chosen.fontPt) * MAX_GAP_FRACTION_OF_FONT);
       return { from, to, usedPx: used, freePx: free, rowGapPx: rows > 1 ? rowGapPx : 0 };
     });
+    // Mismo aire en las columnas de una hoja: si no, una columna se vería más estirada que la otra.
+    const pages: PlannedPage[] = [];
+    for (let i = 0; i < columnsPlanned.length; i += cols) {
+      const group = columnsPlanned.slice(i, i + cols);
+      const gap = Math.min(...group.map((c) => c.rowGapPx));
+      const evened = group.map((c) => ({ ...c, rowGapPx: c.to - c.from > 1 ? gap : 0 }));
+      pages.push({
+        from: evened[0].from,
+        to: evened[evened.length - 1].to,
+        usedPx: Math.max(...evened.map((c) => c.usedPx)),
+        freePx: Math.min(...evened.map((c) => c.freePx)),
+        rowGapPx: gap,
+        columns: evened,
+      });
+    }
     return { plan: { fontPt: chosen.fontPt, pages }, legible };
   };
 
   const top = Math.max(minFontPt, Math.floor(maxFontPt));
   if (input.forcedPages) {
-    const pages = Math.min(Math.max(1, Math.floor(input.forcedPages)), Math.max(1, n));
+    const pages = Math.min(Math.max(1, Math.floor(input.forcedPages)), Math.max(1, Math.floor(n / cols)));
     const lo = Math.min(FORCED_FLOOR_FONT_PT, minFontPt);
     const f = bestFontFor(pages, lo, top);
     const forced = { pages, fontPt: f ?? lo };

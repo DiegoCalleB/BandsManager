@@ -22,6 +22,7 @@ import {
   Zap,
   AlignLeft,
   AlignCenter,
+  Columns2,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
 import {
@@ -45,6 +46,7 @@ import {
   maxFontPtForWidth,
   planPages,
 } from "../../utils/setlistPaginator";
+import { escapeHtml } from "../../utils/escapeHtml";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Select } from '../ui';
 
@@ -63,6 +65,10 @@ const PAGE_SHEET_HEIGHT_MM = 297 - 2 * PAGE_MARGIN_Y_MM - 1;
 // al lado del título o si esa fila concreta necesita caer a una línea propia debajo (ver
 // textFit.ts).
 const PAGE_CONTENT_WIDTH_PX = mmToPx(210 - 2 * PAGE_MARGIN_X_MM) - 4;
+// Dos columnas: ancho de cada una = (ancho útil - separador) / 2. El separador son 29px: un filete
+// de 1px con 14px de aire a cada lado.
+const COLUMN_GUTTER_PX = 29;
+const COLUMN_WIDTH_PX = (PAGE_CONTENT_WIDTH_PX - COLUMN_GUTTER_PX) / 2;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
@@ -71,10 +77,8 @@ const ROW_GAP_PX = 5;
 // Letra del título (pt) que usa el motor de maquetación (setlistPaginator.ts). MIN es el mínimo
 // legible a ~2m de distancia de escenario; COMFORT, la letra a partir de la cual ya no merece la
 // pena partir en más hojas; FLOOR, el último recurso si ni con el máximo de hojas cabe a MIN.
-// "De pie" sube el umbral de comodidad: acepta más hojas a cambio de letra mucho mayor.
 const MIN_TITLE_FONT_PT = 17;
 const COMFORT_TITLE_FONT_PT = 19;
-const STANDING_COMFORT_FONT_PT = 32;
 const FLOOR_TITLE_FONT_PT = 13;
 // Techo de diseño: más grande que esto, un título corto deja de parecer un setlist.
 const MAX_DESIGN_TITLE_FONT_PT = 40;
@@ -164,10 +168,8 @@ interface NoteLayoutInput {
     fontFamily: string,
     fontWeight?: string | number,
   ) => number;
-  // Modo"de pie" (ver viewDensity en el componente): sin restricción de espacio real (letra
-  // grande, más hojas aceptadas a cambio), así que la nota va SIEMPRE debajo del título en su
-  // propia línea — nunca compitiendo por ancho al lado, que es justo la limitación que ese modo
-  // existe para evitar. Salta directamente a'below' sin intentar'inline' primero.
+  // Modo centrado: la nota va SIEMPRE debajo del título, en su propia línea (al lado no tendría
+  // eje al que alinearse). Salta directamente a'below' sin intentar'inline' primero.
   forceBelowMode?: boolean;
 }
 
@@ -443,19 +445,15 @@ function PdfExportModalBody({
   // en pantallas grandes) — en pantallas pequeñas todo junto agobiaba, tapando la vista previa.
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
-  // Densidad de vista: 'sentado' (por defecto) prioriza el menor nº de hojas con letra cómoda
-  // (atril, mesa de sonido). 'de_pie' acepta más hojas a cambio de letra mucho mayor (ver
-  // STANDING_COMFORT_FONT_PT) y manda siempre las notas debajo del título (forceBelowMode en
-  // computeNoteLayout) — para leer desde lejos, de pie en el escenario.
-  const [viewDensity, setViewDensity] = useState<"sentado" | "de_pie">(
-    "sentado",
-  );
+  // Columnas por hoja: con sets largos en pocas hojas, dos columnas permiten una letra bastante
+  // mayor que una sola columna apretada (cada columna se llena de arriba abajo, en orden).
+  const [columns, setColumns] = useState<1 | 2>(1);
 
   // Design & Preset State
   const [stylePreset, setStylePreset] =
     useState<SetlistStylePreset>("rock_stage");
   // El tamaño real de impresión ya no se elige a mano: se auto-ajusta por hoja (ver
-  // computeAutoFitPlan / setlistAutoFit.ts, usado en handlePrint). La vista previa en pantalla no
+  // setlistPaginator.ts, usado en buildPrintDocument). La vista previa en pantalla no
   // reproduce esa paginación 1:1 (no hay salto de página visible aquí, solo scroll), así que usa
   // un tamaño de referencia fijo — PREVIEW_TITLE_FONT_PT, más abajo.
   const [handwritingFont, setHandwritingFont] = useState<
@@ -532,7 +530,7 @@ function PdfExportModalBody({
     selectedMemberId,
     previewPageIndex,
     textAlign,
-    viewDensity,
+    columns,
     pagesChoice,
     handwritingFont,
     handwritingColor,
@@ -647,6 +645,8 @@ function PdfExportModalBody({
     }
 
     const measure = makeCanvasMeasurer();
+    // Ancho real de una fila: toda la hoja o una columna.
+    const rowWidthPx = columns === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX;
     const noteMinFontSizePx = 11;
     const inkColor = getInkColorHex();
     const handFont = getHandwritingFontFamily();
@@ -713,9 +713,9 @@ function PdfExportModalBody({
           noteFontFamily: handFont,
           noteMaxFontSizePx,
           noteMinFontSizePx,
-          rowWidthPx: PAGE_CONTENT_WIDTH_PX,
+          rowWidthPx,
           measure,
-          forceBelowMode: viewDensity === "de_pie" || isCentered,
+          forceBelowMode: isCentered || columns === 2,
         });
 
         // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
@@ -771,7 +771,7 @@ function PdfExportModalBody({
                     deterministicOffsetPx(`${seed}-y`, 2),
                   );
                   const lineTransform = `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`;
-                  return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${line.text}</div>`;
+                  return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${escapeHtml(line.text)}</div>`;
                 })
                 .join("")}</div>`
             : "";
@@ -791,7 +791,7 @@ function PdfExportModalBody({
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
-                  <span class="song-title" style="${titleStyle}">${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
+                  <span class="song-title" style="${titleStyle}">${escapeHtml(layout?.truncatedTitle ?? s.titulo.toUpperCase())}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ""}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ""}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ""}
@@ -808,7 +808,7 @@ function PdfExportModalBody({
         return `
             <div class="block-divider-item">
               <div class="divider-line"></div>
-              <div class="block-title" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
+              <div class="block-title" style="font-size:${auxFontPt}pt;">${escapeHtml((item.tituloCustom || "BLOQUE").toUpperCase())}</div>
               <div class="divider-line"></div>
             </div>
           `;
@@ -816,18 +816,18 @@ function PdfExportModalBody({
         return `
             <div class="bis-divider-item">
               <div class="divider-line"></div>
-              <div class="bis-text" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
+              <div class="bis-text" style="font-size:${auxFontPt}pt;">${escapeHtml((item.tituloCustom || "BIS / ENCORE").toUpperCase())}</div>
               <div class="divider-line"></div>
             </div>
           `;
       } else {
         return `
             <div class="interlude-item" style="font-size:${auxFontPt + 1}pt;">
-              <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
+              <span class="interlude-title">${escapeHtml((item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase())}</span>
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
-                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${item.notas || (item as any).notaTema}</span>
+                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${escapeHtml(item.notas || (item as any).notaTema)}</span>
               `
      : ""
  }
@@ -1044,7 +1044,7 @@ function PdfExportModalBody({
  .setlist-song-item {
  padding: 3px 0;
  /* Red de seguridad de impresión: nuestro propio reparto por páginas (ver
- setlistAutoFit.ts) es quien decide qué canción va en qué hoja, así que en el caso
+ setlistPaginator.ts) es quien decide qué canción va en qué hoja, así que en el caso
  normal el navegador nunca tiene que partir nada por su cuenta. Pero si, por lo
  que sea (una fuente que tarda un pelín más en cargar, redondeo de subpíxel), el
  contenido real se pasa unos px del físico de la hoja, esto evita que sea una fila
@@ -1077,7 +1077,7 @@ function PdfExportModalBody({
  }
  .song-num {
  /* font-size inline por fila (no aquí): titleFontPt puede variar por miembro/página
- según el auto-ajuste (ver computeAutoFitPlan / setlistAutoFit.ts). */
+ según el motor de maquetación (ver setlistPaginator.ts). */
  font-family:'Oswald', sans-serif;
  font-weight: 800;
  color: #444;
@@ -1334,6 +1334,41 @@ function PdfExportModalBody({
  padding-left: 0;
  text-align: center;
  }
+ /* Dos columnas: el bloque entero se centra en vertical y las columnas arrancan alineadas
+ arriba; un filete fino las separa. */
+ .setlist-columns {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ }
+ .setlist-columns-row {
+ display: flex;
+ align-items: flex-start;
+ justify-content: center;
+ }
+ .setlist-columns-row .setlist-items-container {
+ flex: none;
+ justify-content: flex-start;
+ }
+ /* En columna, una nota que ni encogida al mínimo cabe en una línea baja a una segunda en vez de
+ salirse hacia el filete o el margen (la fila se mide ya con ese alto). */
+ .in-columns .song-notes-below {
+ margin-top: -2px;
+ }
+ .in-columns .note-seg {
+ white-space: normal;
+ line-height: 1.05;
+ }
+ .is-centered .note-seg {
+ text-align: center;
+ }
+ .col-divider {
+ align-self: stretch;
+ width: 1px;
+ margin: 0 14px;
+ background: #bdbdbd;
+ }
  .page-footer.is-centered {
  justify-content: center;
  gap: 14px;
@@ -1351,21 +1386,21 @@ function PdfExportModalBody({
             ${
    showBandLogo && customLogoUrl
      ? `
-              <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
+              <img src="${escapeHtml(customLogoUrl)}" alt="${escapeHtml(bandName)}" class="band-logo-img" onerror="this.style.display='none'" />
             `
      : ""
  }
  <div class="band-text-block">
- <h1 class="band-heading">${bandName.toUpperCase()}</h1>
-              <div class="setlist-meta">${activeSetlist.nombre.toUpperCase()}</div>
+ <h1 class="band-heading">${escapeHtml(bandName.toUpperCase())}</h1>
+              <div class="setlist-meta">${escapeHtml(activeSetlist.nombre.toUpperCase())}</div>
             </div>
           </div>
 
           <div class="header-right">
             <div class="member-stage-tag">
               <div class="tag-title">${!isMaster ? "COPIA PARA MÚSICO" : "COPIA CONTROL"}</div>
-              <div class="tag-name">${member.name.toUpperCase()}</div>
-              <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
+              <div class="tag-name">${escapeHtml(member.name.toUpperCase())}</div>
+              <div class="tag-instrument">${escapeHtml(member.instrument.toUpperCase())}</div>
             </div>
           </div>
         </div>
@@ -1385,7 +1420,7 @@ function PdfExportModalBody({
             <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
           </div>
           <div class="footer-right">
-            <span>Hoja ${pageNum} de ${totalPages} (${member.name})</span>
+            <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
             <span class="footer-sep">•</span>
             <span>${new Date().toLocaleDateString("es-ES")}</span>
           </div>
@@ -1393,7 +1428,7 @@ function PdfExportModalBody({
       `
         : "";
 
-    // Auto-ajuste (ver setlistAutoFit.ts): mide la altura REAL del contenido en un iframe
+    // Maquetación (ver setlistPaginator.ts): mide la altura REAL del contenido en un iframe
     // oculto (aislado del resto de la app — un <div> con <style> inyectado contaminaría los
     // estilos globales) para decidir, por cada hoja de miembro, el mayor tamaño de título que
     // hace que el repertorio quepa en una sola página — y si ni el mínimo cabe, en cuántas
@@ -1490,9 +1525,11 @@ function PdfExportModalBody({
       : 0;
     const maxFontPt = Math.min(
       MAX_DESIGN_TITLE_FONT_PT,
-      maxFontPtForWidth(widestTitleAt100 + numberAt100, PAGE_CONTENT_WIDTH_PX * 0.96),
+      maxFontPtForWidth(widestTitleAt100 + numberAt100, rowWidthPx * 0.96),
     );
-    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""}`;
+    // `in-columns` va en la propia fila medida: las reglas que cambian la altura no pueden colgar
+    // de un ancestro que el iframe de medición no tiene.
+    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""} ${columns === 2 ? "in-columns" : ""}`;
 
     const memberPlans = opts.members.map((member) => {
       const isMaster = member.id === "master";
@@ -1512,7 +1549,7 @@ function PdfExportModalBody({
       const heightsAt = (titleFontPt: number) =>
         items.map((item, i) =>
           measureHtmlHeightPx(
-            `<div class="${rowsContainerClass}" style="width:${PAGE_CONTENT_WIDTH_PX}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
+            `<div class="${rowsContainerClass}" style="width:${rowWidthPx}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
           ),
         );
 
@@ -1521,9 +1558,8 @@ function PdfExportModalBody({
         heightsAt,
         availableHeightPx: pageAvailableHeightPx,
         minFontPt: MIN_TITLE_FONT_PT,
-        // "De pie" exige letra mayor aunque cueste hojas; "sentado" prioriza menos hojas.
-        comfortFontPt:
-          viewDensity === "de_pie" ? STANDING_COMFORT_FONT_PT : COMFORT_TITLE_FONT_PT,
+        comfortFontPt: COMFORT_TITLE_FONT_PT,
+        columns,
         maxFontPt,
         floorFontPt: FLOOR_TITLE_FONT_PT,
       };
@@ -1560,13 +1596,10 @@ function PdfExportModalBody({
     // HTML embebido en el onerror deben ir como entidad &quot;, y cualquier apóstrofe del
     // nombre del grupo debe escaparse para no romper el string JS (delimitado por comillas
     // simples) del propio onerror.
-    const safeBandNameForOnerror = bandName
-      .toUpperCase()
-      .replace(/'/g, "&#39;");
     const watermarkInnerHtml =
       showBandLogo && absoluteLogoUrl
-        ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=&quot;page-watermark-text&quot;>${safeBandNameForOnerror}</div>'" />`
-        : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
+        ? `<img src="${escapeHtml(absoluteLogoUrl)}" alt="" class="page-watermark-logo" data-fallback="${escapeHtml(bandName.toUpperCase())}" onerror="var d=document.createElement('div');d.className='page-watermark-text';d.textContent=this.dataset.fallback;this.parentElement.replaceChildren(d)" />`
+        : `<div class="page-watermark-text">${escapeHtml(bandName.toUpperCase())}</div>`;
 
     let sheetIdx = 0;
     const pagesHtml = memberPlans
@@ -1574,19 +1607,26 @@ function PdfExportModalBody({
         plan.pages
           .map((page, pageIdx) => {
             sheetIdx++;
-            const rowsHtml = items
-              .slice(page.from, page.to)
-              .map((item, k) =>
-                buildRowHtml(item, songNumberByItem[page.from + k], plan.fontPt, member, isMaster),
-              )
-              .join("");
+            const columnHtml = (col: { from: number; to: number; rowGapPx: number }, widthPx?: number) => `
+                  <div class="${rowsContainerClass}" style="${widthPx ? `width:${widthPx}px;` : ""}gap:${col.rowGapPx.toFixed(1)}px">
+                    ${items
+                      .slice(col.from, col.to)
+                      .map((item, k) =>
+                        buildRowHtml(item, songNumberByItem[col.from + k], plan.fontPt, member, isMaster),
+                      )
+                      .join("")}
+                  </div>`;
+            const bodyHtml =
+              page.columns.length > 1
+                ? `<div class="setlist-columns"><div class="setlist-columns-row">${page.columns
+                    .map((col) => columnHtml(col, COLUMN_WIDTH_PX))
+                    .join('<div class="col-divider"></div>')}</div></div>`
+                : columnHtml(page.columns[0]);
             return `
                 <div class="sheet-page ${sheetIdx !== totalSheets ? "page-break" : ""}">
                   ${showWatermark ? `<div class="page-watermark">${watermarkInnerHtml}</div>` : ""}
                   ${buildHeaderHtml(member, isMaster)}
-                  <div class="${rowsContainerClass}" style="gap:${page.rowGapPx.toFixed(1)}px">
-                    ${rowsHtml}
-                  </div>
+                  ${bodyHtml}
                   ${buildFooterHtml(member, pageIdx + 1, plan.pages.length)}
                 </div>
               `;
@@ -1656,7 +1696,7 @@ function PdfExportModalBody({
       <html>
         <head>
           <meta charset="utf-8">
-          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
+          <title>${escapeHtml(bandName)} - Setlist ${escapeHtml(activeSetlist.nombre)}</title>
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
@@ -1873,27 +1913,25 @@ function PdfExportModalBody({
                 </div>
               )}
 
-              {/* Densidad de vista:"sentado" busca el mínimo nº de hojas posible (para leer de
- cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
- aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
+              {/* Columnas: 1 (clásico) o 2 — para sets largos en pocas hojas. */}
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <Button
-                  variant={viewDensity === "sentado" ? "neutral" : "ghost"}
+                  variant={columns === 1 ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setViewDensity("sentado")}
+                  onClick={() => setColumns(1)}
                   className="items-center gap-1.5"
-                  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
+                  title="Una columna de temas"
                 >
-                  <ShowIcon inline emoji="🪑" />Sentado
+                  1 columna
                 </Button>
                 <Button
-                  variant={viewDensity === "de_pie" ? "neutral" : "ghost"}
+                  variant={columns === 2 ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setViewDensity("de_pie")}
+                  onClick={() => setColumns(2)}
                   className="items-center gap-1.5"
-                  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
+                  title="Dos columnas: cabe más repertorio por hoja con letra mayor (las notas pasan debajo del título si no caben al lado)"
                 >
-                  <ShowIcon inline emoji="🧍" />De pie
+                  <Columns2 className="w-3.5 h-3.5" />2 columnas
                 </Button>
               </div>
 

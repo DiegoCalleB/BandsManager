@@ -243,6 +243,69 @@ describe("planPages con hojas impuestas", () => {
   });
 });
 
+describe("planPages con columnas", () => {
+  const base = {
+    availableHeightPx: 600,
+    minFontPt: 17,
+    comfortFontPt: 19,
+    maxFontPt: 40,
+    kinds: songs(30),
+    heightsAt: linear(30),
+  };
+
+  it("2 columnas dejan la letra mayor que 1 columna en la misma hoja", () => {
+    const one = planPages({ ...base, forcedPages: 1, columns: 1 });
+    const two = planPages({ ...base, forcedPages: 1, columns: 2 });
+    expect(two.pages).toHaveLength(1);
+    expect(two.pages[0].columns).toHaveLength(2);
+    expect(two.fontPt).toBeGreaterThan(one.fontPt);
+  });
+
+  it("las columnas son tramos contiguos en orden de lectura y cubren todos los temas", () => {
+    const plan = planPages({ ...base, forcedPages: 1, columns: 2 });
+    const [a, b] = plan.pages[0].columns;
+    expect(a.from).toBe(0);
+    expect(a.to).toBe(b.from);
+    expect(b.to).toBe(30);
+    expect(Math.abs(a.to - a.from - (b.to - b.from))).toBeLessThanOrEqual(2);
+  });
+
+  it("ninguna columna se pasa del alto útil", () => {
+    const plan = planPages({ ...base, forcedPages: 1, columns: 2 });
+    for (const c of plan.pages[0].columns) {
+      expect(c.usedPx).toBeLessThanOrEqual(600);
+    }
+  });
+
+  it("las dos columnas de una hoja comparten el mismo aire entre filas", () => {
+    const plan = planPages({ ...base, kinds: songs(11), heightsAt: linear(11), availableHeightPx: 1000, forcedPages: 1, columns: 2 });
+    const [a, b] = plan.pages[0].columns;
+    expect(a.rowGapPx).toBeCloseTo(b.rowGapPx, 5);
+  });
+
+  it("con 2 columnas y 2 hojas hay 2 columnas por hoja", () => {
+    const plan = planPages({ ...base, forcedPages: 2, columns: 2 });
+    expect(plan.pages).toHaveLength(2);
+    for (const p of plan.pages) expect(p.columns).toHaveLength(2);
+  });
+
+  it("no corta una columna dejando un encabezado de bloque colgando", () => {
+    const kinds: ItemKind[] = [
+      "header", "song", "song", "song", "header", "song", "song", "song", "header", "song", "song", "song",
+    ];
+    const plan = planPages({ ...base, kinds, heightsAt: linear(kinds.length), forcedPages: 1, columns: 2 });
+    for (const c of plan.pages[0].columns) {
+      expect(kinds[c.to - 1]).not.toBe("header");
+    }
+  });
+
+  it("un repertorio de un solo tema no rompe con 2 columnas", () => {
+    const plan = planPages({ ...base, kinds: songs(1), heightsAt: linear(1), columns: 2 });
+    expect(plan.pages).toHaveLength(1);
+    expect(plan.pages[0].columns).toHaveLength(1);
+  });
+});
+
 describe("partitionItems", () => {
   it("devuelve null si un solo item no cabe en una hoja", () => {
     expect(partitionItems(["song"], [500], 1, 100)).toBeNull();
