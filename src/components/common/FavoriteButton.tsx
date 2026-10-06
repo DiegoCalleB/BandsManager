@@ -37,7 +37,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
       className={`p-1.5 rounded-[var(--r-pill)] transition-ui duration-200 flex items-center justify-center shrink-0 ${
         isFavorite
           ? "bg-amber-500/15 text-amber-400 hover:bg-amber-500/25"
-          : "bg-[var(--surface)]/80 text-[var(--ink-3)] hover:text-amber-400 hover:bg-amber-500/10"
+          : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-amber-400 hover:bg-amber-500/10"
       } ${className}`}
     >
       <Star

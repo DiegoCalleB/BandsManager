@@ -20,6 +20,7 @@ import {
   Info
 } from 'lucide-react';
 import { Button, Input } from '../ui';
+import { ShowIcon } from '../ui/ShowIcon';
 
 /** % que viene marcado por defecto y opciones rápidas. El importe real lo calcula el servidor. */
 const APOYO_PORCENTAJE_DEFECTO = 3;
@@ -346,15 +347,15 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                     onChange={(e: any) => setFormaPago(e.target.value)}
                     className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--hair)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
                   >
-                    <option value="efectivo">💵 Efectivo al terminar (sobre)</option>
-                    <option value="transferencia">🏦 Transferencia / Bizum</option>
-                    <option value="pago_diferido_ayto">🏛️ Pago Diferido (Ayuntamiento / 60d)</option>
+                    <option value="efectivo"><ShowIcon inline emoji="💵" />Efectivo al terminar (sobre)</option>
+                    <option value="transferencia"><ShowIcon inline emoji="🏦" />Transferencia / Bizum</option>
+                    <option value="pago_diferido_ayto"><ShowIcon inline emoji="🏛️" />Pago Diferido (Ayuntamiento / 60d)</option>
                   </select>
                 </div>
               </div>
 
               {/* LIQUIDACIÓN: sin comisión. El apoyo a BandManager es voluntario y se pide al firmar la sala. */}
-              <div className="rounded-[var(--r-s)] bg-[var(--sunken)] p-3 space-y-3">
+              <div className="rounded-[var(--r-s)] bg-[var(--surface)] p-3 space-y-3">
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-[var(--ink-2)]">Caché que abona la sala</span>
@@ -419,7 +420,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                             setApoyoPorcentaje(Number.isFinite(n) ? Math.min(APOYO_PORCENTAJE_MAX, Math.max(0, n)) : 0);
                           }}
                           aria-label="Porcentaje de apoyo"
-                          className="w-16 rounded-[var(--r-s)] bg-[var(--surface)] px-2 py-1.5 text-xs text-[var(--ink)] focus:outline-none"
+                          className="w-16 rounded-[var(--r-s)] bg-[var(--sunken)] px-2 py-1.5 text-xs text-[var(--ink)] focus:outline-none"
                         />
                         <span>%</span>
                       </label>
