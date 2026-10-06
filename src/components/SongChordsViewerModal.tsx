@@ -85,6 +85,22 @@ export function SongChordsViewerModal({
   const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
   const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
   const [seguirEnCifrado, setSeguirEnCifrado] = useState<boolean>(true);
+  // Aviso de una sola vez: la detección de acordes del audio no se descubría sola.
+  const [avisoAcordesVisto, setAvisoAcordesVisto] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("bm_aviso_acordes_audio") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const cerrarAvisoAcordes = () => {
+    setAvisoAcordesVisto(true);
+    try {
+      localStorage.setItem("bm_aviso_acordes_audio", "1");
+    } catch {
+      /* sin almacenamiento: el aviso volverá a salir, no pasa nada */
+    }
+  };
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
@@ -814,6 +830,33 @@ export function SongChordsViewerModal({
               >
                 ✕
               </button>
+            </div>
+          )}
+
+          {/* AVISO DE UNA SOLA VEZ: detección de acordes del audio */}
+          {audioUrl && !analisisAcordes && !avisoAcordesVisto && !isAnalyzingChords && (
+            <div className="px-4 py-2 text-xs font-sans flex items-center justify-between gap-3 bg-[var(--acc-soft)] text-[var(--ink)]">
+              <span className="flex items-center gap-2 min-w-0">
+                <Music className="w-4 h-4 shrink-0 text-[var(--acc)]" />
+                <span>
+                  <strong>Nuevo:</strong> detecta los acordes de tu audio con sus tiempos y síguelos mientras suena la canción.
+                </span>
+              </span>
+              <span className="flex items-center gap-3 shrink-0">
+                <button
+                  type="button"
+                  className="font-bold text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
+                  onClick={() => {
+                    cerrarAvisoAcordes();
+                    handleAnalyzeChordsFromAudio();
+                  }}
+                >
+                  Analizar ahora
+                </button>
+                <button type="button" onClick={cerrarAvisoAcordes} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar aviso">
+                  ✕
+                </button>
+              </span>
             </div>
           )}
 
