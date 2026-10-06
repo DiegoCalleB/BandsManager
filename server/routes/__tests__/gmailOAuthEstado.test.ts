@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { firmarEstadoOAuth, verificarEstadoOAuth } from '../gmailOAuth';
+import { firmarEstadoOAuth, verificarEstadoOAuth, validarYConsumirEstadoOAuth } from '../gmailOAuth';
 
 const CRON_ORIGINAL = process.env.CRON_SECRET;
 
@@ -21,8 +21,8 @@ describe('firmarEstadoOAuth / verificarEstadoOAuth', () => {
 
   it('un estado manipulado (band_id distinto) no verifica', () => {
     const state = firmarEstadoOAuth('band-bakandeya');
-    const [, ts, firma] = state.split('.');
-    const falsificado = `band-otra-banda.${ts}.${firma}`;
+    const [, ts, nonce, firma] = state.split('.');
+    const falsificado = `band-otra-banda.${ts}.${nonce}.${firma}`;
     expect(verificarEstadoOAuth(falsificado)).toBeNull();
   });
 
@@ -49,6 +49,31 @@ describe('firmarEstadoOAuth / verificarEstadoOAuth', () => {
   it('sin CRON_SECRET configurado, firmar lanza y verificar devuelve null', () => {
     delete process.env.CRON_SECRET;
     expect(() => firmarEstadoOAuth('band-bakandeya')).toThrow();
-    expect(verificarEstadoOAuth('band-bakandeya.123.abc')).toBeNull();
+    expect(verificarEstadoOAuth('band-bakandeya.123.n.abc')).toBeNull();
+  });
+});
+
+describe('validarYConsumirEstadoOAuth (nonce + cookie + un solo uso)', () => {
+  it('acepta el estado con la cookie del mismo navegador y devuelve la banda', () => {
+    const state = firmarEstadoOAuth('band-a', 'nonce-aaa');
+    expect(validarYConsumirEstadoOAuth(state, 'nonce-aaa')).toBe('band-a');
+  });
+
+  it('rechaza el segundo uso del mismo estado (reenvío)', () => {
+    const state = firmarEstadoOAuth('band-a', 'nonce-bbb');
+    expect(validarYConsumirEstadoOAuth(state, 'nonce-bbb')).toBe('band-a');
+    expect(validarYConsumirEstadoOAuth(state, 'nonce-bbb')).toBeNull();
+  });
+
+  it('rechaza sin cookie o con la cookie de otro navegador', () => {
+    const state = firmarEstadoOAuth('band-a', 'nonce-ccc');
+    expect(validarYConsumirEstadoOAuth(state, '')).toBeNull();
+    expect(validarYConsumirEstadoOAuth(state, 'nonce-otro')).toBeNull();
+    // un intento fallido no quema el estado legítimo
+    expect(validarYConsumirEstadoOAuth(state, 'nonce-ccc')).toBe('band-a');
+  });
+
+  it('rechaza el formato antiguo de tres partes (sin nonce)', () => {
+    expect(validarYConsumirEstadoOAuth('band-a.123.abc', 'x')).toBeNull();
   });
 });

@@ -724,7 +724,10 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 
   res.cookie('bakandeya_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+    // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
     httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });
@@ -950,7 +953,10 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
 
   res.cookie('bakandeya_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+    // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
     httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });
@@ -1228,7 +1234,10 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
 
   res.cookie('bakandeya_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+    // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
     httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });
@@ -1495,7 +1504,10 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
 
   res.cookie('bakandeya_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+    // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
     httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });
@@ -1955,7 +1967,10 @@ router.get('/auth/me', async (req, res) => {
   if (token) {
     res.cookie('bakandeya_token', token, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
+      // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+      // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
       httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
     });
@@ -2203,7 +2218,10 @@ router.post('/auth/switch-band', async (req, res) => {
 
   res.cookie('bakandeya_token', effectiveToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
+    // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
     httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
   });

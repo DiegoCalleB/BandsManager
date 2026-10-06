@@ -203,3 +203,7 @@ _(vacío)_
      - **Convocatoria 1-Click para WhatsApp**: Generación y apertura directa de ficha de convocatoria optimizada con emoticón meteorológico y detalles del bolo.
      - **Copia al portapapeles**: Copia formateada de la ficha de convocatoria.
      - **Eliminación segura in-modal**: Confirmación inline para eliminar conciertos o ensayos directamente desde el modal sin perder contexto.
+
+## Sesión solo por cookie `httpOnly` (diferido, auditoría B)
+- Hoy el token vive en `localStorage` Y en la cookie `bakandeya_token` (`httpOnly:false`); el cliente lo lee en ~20 sitios para la cabecera `Authorization`. Marcar la cookie `httpOnly` sin migrar esos sitios rompería la sesión y no protegería de XSS (el token sigue en `localStorage`).
+- Hecho: la cookie del servidor lleva `Secure` en producción. Pendiente: migrar el cliente a sesión por cookie (`credentials:'include'` + protección CSRF) y entonces `httpOnly:true`.
