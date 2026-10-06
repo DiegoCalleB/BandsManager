@@ -8,10 +8,10 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
-import { detectarAcordesDesdePcm } from "../utils/chordDetection.js";
+import { detectarAcordesDesdePcm, sumarPcm } from "../utils/chordDetection.js";
 import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
-import { elegirFuenteAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
+import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -214,10 +214,22 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
       return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
     }
 
-    const fuente = elegirFuenteAudio(song);
-    if (!fuente) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
+    const niveles = elegirFuentesAudio(song);
+    if (niveles.length === 0) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
 
-    const pcm = await extraerPcmMono(fuente.url, { timeoutMs: 90_000, maxDuracionSeg: 360 });
+    // Se prueba de mejor a peor fuente; si una no se puede decodificar se baja a la siguiente.
+    let pcm: Float32Array | null = null;
+    let fuente = niveles[0].fuente;
+    for (const nivel of niveles) {
+      const decodificados = (
+        await Promise.all(nivel.urls.map((u) => extraerPcmMono(u, { timeoutMs: 90_000, maxDuracionSeg: 360 })))
+      ).filter((p): p is Float32Array => p !== null);
+      if (decodificados.length > 0) {
+        pcm = sumarPcm(decodificados);
+        fuente = nivel.fuente;
+        break;
+      }
+    }
     if (!pcm) return res.status(422).json({ error: "No se pudo descargar o decodificar el audio de la canción (la URL puede haber caducado o el formato no es compatible). Prueba a subirlo de nuevo." });
 
     const tonalidad = normalizarTonalidad(song.tonalidad);
@@ -226,7 +238,7 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
       return res.status(422).json({ error: "No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?)." });
     }
 
-    const analisis = construirAnalisis({ segmentos, fuente: fuente.fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
+    const analisis = construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
   } catch (err: any) {
