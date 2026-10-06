@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import { createHash } from "crypto";
 import fs from "fs";
 import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
@@ -1067,6 +1068,26 @@ router.post("/detect-cues", requireAuth, async (req, res) => {
 });
 
 
+const CACHE_AUDIO_REMOTO_MS = 60 * 60 * 1000;
+
+/** Hash estable de la URL completa para nombrar ficheros de caché sin colisiones. */
+export function hashDeUrl(valor: string): string {
+  return createHash("sha256").update(valor).digest("hex").slice(0, 24);
+}
+
+/** Transcodifica a MP3 mono y recorta; reutiliza el resultado si ya existe y es reciente. */
+async function recortarAMp3(origen: string, destino: string, segundos: number): Promise<string | null> {
+  try {
+    if (fs.existsSync(destino) && fs.statSync(destino).size > 0
+      && fs.statSync(destino).mtimeMs >= fs.statSync(origen).mtimeMs) return destino;
+    await ejecutar(ffmpegStatic!, ["-y", "-i", origen, "-t", String(Math.max(1, segundos)), "-vn", "-ac", "1", "-c:a", "libmp3lame", "-b:a", "96k", destino]);
+    return fs.existsSync(destino) && fs.statSync(destino).size > 0 ? destino : null;
+  } catch (err: any) {
+    console.warn("[Snippet Helper] No se pudo transcodificar el audio:", String(err?.message || err).substring(0, 160));
+    return null;
+  }
+}
+
 // Helper to extract audio snippet buffer or file path for direct preview and Gemini multimodal listening
 // Exported for reuse by other routes (e.g. repertorio.ts) that need to feed real audio to Gemini.
 export async function getAudioSnippetPath(params: {
@@ -1080,8 +1101,12 @@ export async function getAudioSnippetPath(params: {
   // funcione, aunque sea un tono de prueba. Para transcribir con IA eso es contraproducente
   // (la IA "oiría" un pitido y se inventaría los acordes), así que ahí se desactiva.
   allowSyntheticFallback?: boolean;
+  // Si se indica, el audio de `audioUrl` se transcodifica a MP3 y se recorta a estos segundos.
+  // Sin esto el fichero entero se devolvía tal cual, con la extensión .mp3 aunque fuera wav/m4a,
+  // y el llamador lo mandaba a la IA con mime audio/mp3.
+  maxSeconds?: number;
 }): Promise<string | null> {
-  const { audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true } = params;
+  const { audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true, maxSeconds } = params;
   // Las tres entradas que vienen del cliente se normalizan aquí, que es por donde pasan las
   // cuatro rutas que usan este helper: así no hay que acordarse de validarlas en cada una.
   const urlVideo = await urlDeVideoSegura(params.url);
@@ -1093,26 +1118,36 @@ export async function getAudioSnippetPath(params: {
   if (audioUrl && typeof audioUrl === "string") {
     const audioRemoto = await urlDeVideoSegura(audioUrl);
     if (audioRemoto) {
-      const tempHash = Buffer.from(audioRemoto).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
+      // Hash de la URL ENTERA. Antes eran los 16 primeros caracteres del base64, o sea los 12
+      // primeros de la URL ("https://xxxx"): todas las canciones del mismo host compartían
+      // fichero en caché y la segunda recibía el audio de la primera.
+      const tempHash = hashDeUrl(audioRemoto);
       const remoteTemp = path.join(tempDir, `remote_${tempHash}.mp3`);
-      if (fs.existsSync(remoteTemp) && fs.statSync(remoteTemp).size > 0) {
-        return remoteTemp;
-      }
-      try {
-        const resp = await descargarBufferSeguro(audioRemoto);
-        if (resp) {
-          fs.writeFileSync(remoteTemp, resp.buffer);
-          return remoteTemp;
+      // La subida usa upsert, así que el contenido tras una URL puede cambiar: la caché caduca.
+      const cacheVigente = fs.existsSync(remoteTemp)
+        && fs.statSync(remoteTemp).size > 0
+        && Date.now() - fs.statSync(remoteTemp).mtimeMs < CACHE_AUDIO_REMOTO_MS;
+      if (!cacheVigente) {
+        try {
+          const resp = await descargarBufferSeguro(audioRemoto);
+          if (resp) fs.writeFileSync(remoteTemp, resp.buffer);
+        } catch (err: any) {
+          console.warn("[Snippet Helper] Failed to fetch remote audioUrl:", err.message);
         }
-      } catch (err: any) {
-        console.warn("[Snippet Helper] Failed to fetch remote audioUrl:", err.message);
+      }
+      if (fs.existsSync(remoteTemp) && fs.statSync(remoteTemp).size > 0) {
+        if (!maxSeconds) return remoteTemp;
+        const recortado = await recortarAMp3(remoteTemp, path.join(tempDir, `remote_${tempHash}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
+        if (recortado) return recortado;
       }
     } else {
       // Ruta local: se resuelve contra public/ y se comprueba que no se sale de ahí, que con un
       // audioUrl del tipo ../../ era justo lo que pasaba.
       const localPath = rutaFuenteSegura(audioUrl.startsWith("/") ? audioUrl.slice(1) : audioUrl);
       if (localPath && fs.existsSync(localPath) && fs.statSync(localPath).size > 0) {
-        return localPath;
+        if (!maxSeconds) return localPath;
+        const recortado = await recortarAMp3(localPath, path.join(tempDir, `local_${hashDeUrl(localPath)}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
+        if (recortado) return recortado;
       }
     }
   }
@@ -1165,7 +1200,7 @@ export async function getAudioSnippetPath(params: {
     }
 
     // Try B: Cached master or yt-dlp audio download with --ffmpeg-location
-    const urlHash = Buffer.from(urlVideo).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
+    const urlHash = hashDeUrl(urlVideo);
     const cachedMaster = path.join(tempDir, `master_${urlHash}.mp3`);
 
     if (!fs.existsSync(cachedMaster)) {
