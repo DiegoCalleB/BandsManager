@@ -1101,7 +1101,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 -- 2. Tabla de almacenamiento vectorial multi-tenant
 CREATE TABLE IF NOT EXISTS pitch_vector_store (
     id TEXT PRIMARY KEY,
-    band_id TEXT NOT NULL REFERENCES bands(id) ON DELETE CASCADE,
+    band_id TEXT NOT NULL REFERENCES registered_bands(id) ON DELETE CASCADE,
     lead_id TEXT REFERENCES leads(id) ON DELETE SET NULL,
     nombre_sala TEXT NOT NULL,
     tipo_entidad TEXT NOT NULL DEFAULT 'sala',

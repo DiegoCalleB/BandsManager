@@ -1,3 +1,4 @@
+import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { invalidateBandStateCache } from './sync.js';
@@ -440,42 +441,14 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   let error: any = null;
 
   const currentPayload: Record<string, any> = { ...payload };
-  const res = await sb
-    .from('epk_configs')
-    .upsert(currentPayload)
-    .select()
-    .single();
+  // Si a la BD le falta alguna columna nueva (migración sin aplicar) se guarda sin ella, pero
+  // queda registrado y el cliente lo ve como aviso (ver server/db/tolerantWrite.ts).
+  const res = await escrituraTolerante('epk_configs', currentPayload, (p) =>
+    sb.from('epk_configs').upsert(p).select().single()
+  );
+  for (const col of res.omitidas) delete currentPayload[col];
   data = res.data;
   error = res.error;
-
-  // Si la base de datos de Supabase aún no tiene alguna columna nueva (p. ej. 'donacion_revolut', 'traducciones' o 'miembros'),
-  // reintentamos quitando las columnas no existentes en bucle para evitar que falle el guardado general.
-  while (
-    error &&
-    error.message &&
-    error.message.includes("Could not find the '") &&
-    error.message.includes("' column of 'epk_configs'")
-  ) {
-    const match = error.message.match(
-      /Could not find the '([^']+)' column of 'epk_configs'/
-    );
-    if (match && match[1] && currentPayload[match[1]] !== undefined) {
-      const missingCol = match[1];
-      console.warn(
-        `[EPK] Columna '${missingCol}' no encontrada en Supabase epk_configs. Reintentando sin ella. Ejecuta la migración SQL.`
-      );
-      delete currentPayload[missingCol];
-      const retryRes = await sb
-        .from('epk_configs')
-        .upsert(currentPayload)
-        .select()
-        .single();
-      data = retryRes.data;
-      error = retryRes.error;
-    } else {
-      break;
-    }
-  }
 
   if (error)
     throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);

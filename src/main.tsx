@@ -1,5 +1,6 @@
 import './utils/domTranslatePatch';
 import { initFrontendErrorTracking } from './utils/errorTracking';
+import { instalarAvisoDeGuardados } from './utils/saveErrors';
 import { StrictMode, Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
@@ -11,6 +12,9 @@ import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './u
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
+
+// Cualquier guardado (POST/PUT/PATCH/DELETE a /api) que falle muestra un aviso en pantalla.
+instalarAvisoDeGuardados();
 
 // Tema «Espectro»: el atributo data-theme ya se estampó antes de este punto (script
 // inline en index.html, para no parpadear en la primera carga). Esto solo mantiene el

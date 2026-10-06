@@ -1,3 +1,4 @@
+import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { mergeWithExisting } from './mergeWithExisting.js';
@@ -156,46 +157,13 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
   let error: any = null;
 
   const currentPayload: Record<string, any> = { ...payload };
-  const res = await sb
-    .from('concerts')
-    .upsert(currentPayload)
-    .select()
-    .single();
+  // Solo se quita la columna exacta que la BD dice no tener (antes caían gira_id, gira_nombre e
+  // idioma juntos) y el aviso de guardado parcial deja constancia (ver server/db/tolerantWrite.ts).
+  const res = await escrituraTolerante('concerts', currentPayload, (p) =>
+    sb.from('concerts').upsert(p).select().single()
+  );
   data = res.data;
   error = res.error;
-
-  // Antes esto borraba gira_id, gira_nombre E idioma juntos ante CUALQUIER error que mencionara
-  // a alguno de los tres, aunque solo faltara uno: si a Supabase le faltaba la columna gira_id,
-  // idioma se descartaba también con ella y esa banda se quedaba sin poder guardar nunca su
-  // idioma, aunque su columna sí existiera. Ahora se quita solo la columna exacta que Supabase
-  // dice que no encuentra, y se reintenta; así un campo con columna real nunca paga por otro que
-  // aún no la tiene.
-  while (
-    error &&
-    error.message &&
-    error.message.includes("Could not find the '") &&
-    error.message.includes("' column of 'concerts'")
-  ) {
-    const match = error.message.match(
-      /Could not find the '([^']+)' column of 'concerts'/
-    );
-    if (match && match[1] && currentPayload[match[1]] !== undefined) {
-      const missingCol = match[1];
-      console.warn(
-        `[Concerts] Columna '${missingCol}' no encontrada en Supabase concerts. Reintentando sin ella. Ejecuta la migración SQL.`
-      );
-      delete currentPayload[missingCol];
-      const retryRes = await sb
-        .from('concerts')
-        .upsert(currentPayload)
-        .select()
-        .single();
-      data = retryRes.data;
-      error = retryRes.error;
-    } else {
-      break;
-    }
-  }
 
   if (error)
     throw new Error(`Supabase Error (upsert concert): ${error.message}`);

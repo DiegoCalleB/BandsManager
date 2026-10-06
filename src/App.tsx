@@ -11,6 +11,7 @@ import { THEMES, getEspectroColors } from "./utils/theme";
 import { useAuth } from "./hooks/useAuth";
 import { useAppData } from "./hooks/useAppData";
 import { DealSupportPrompt } from "./components/booking/DealSupportPrompt";
+import { SaveErrorBanner } from "./components/SaveErrorBanner";
 import { api } from "./services/api";
 import { PlayerProvider } from "./context/PlayerContext";
 import { GlobalPlayer } from "./components/GlobalPlayer";
@@ -2778,6 +2779,8 @@ export default function App() {
             onSelectMission={(targetView) => handleNavigate(targetView)}
             bandName={currentActiveBandName}
           />
+
+          <SaveErrorBanner />
 
           {/* Aviso tras la firma de la sala: aportación voluntaria a BandManager (opcional) */}
           <DealSupportPrompt

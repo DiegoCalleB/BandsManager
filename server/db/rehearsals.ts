@@ -1,3 +1,4 @@
+import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { mergeWithExisting } from './mergeWithExisting.js';
@@ -152,40 +153,11 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
   };
 
   const currentPayload: Record<string, any> = { ...payload };
-  let res = await sb
-    .from('rehearsals')
-    .upsert(currentPayload)
-    .select()
-    .single();
-  let data = res.data;
-  let error = res.error;
-
-  while (
-    error &&
-    error.message &&
-    error.message.includes("Could not find the '") &&
-    error.message.includes("' column of 'rehearsals'")
-  ) {
-    const match = error.message.match(
-      /Could not find the '([^']+)' column of 'rehearsals'/
-    );
-    if (match && match[1] && currentPayload[match[1]] !== undefined) {
-      const missingCol = match[1];
-      console.warn(
-        `[Rehearsals] Columna '${missingCol}' no encontrada en Supabase rehearsals. Reintentando sin ella. Ejecuta la migración SQL.`
-      );
-      delete currentPayload[missingCol];
-      const retryRes = await sb
-        .from('rehearsals')
-        .upsert(currentPayload)
-        .select()
-        .single();
-      data = retryRes.data;
-      error = retryRes.error;
-    } else {
-      break;
-    }
-  }
+  const res = await escrituraTolerante('rehearsals', currentPayload, (p) =>
+    sb.from('rehearsals').upsert(p).select().single()
+  );
+  const data = res.data;
+  const error = res.error;
 
   if (error)
     throw new Error(`Supabase Error (upsert rehearsal): ${error.message}`);
