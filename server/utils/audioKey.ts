@@ -20,7 +20,7 @@ import { spawn } from "child_process";
 import ffmpegStatic from "ffmpeg-static";
 import { resolverFuenteAudioLocal } from "./audioEnergy.js";
 
-const SAMPLE_RATE = 11025;
+export const SAMPLE_RATE = 11025;
 const VENTANA = 8192; // ~743ms a 11025Hz → resolución de ~1.35Hz, suficiente para separar semitonos incluso en graves
 const FREQ_MIN = 60;   // por debajo: rumble/subsónico, sin información tonal
 const FREQ_MAX = 5000; // por encima: armónicos altos que aportan más ruido que pista tonal
@@ -121,7 +121,7 @@ export async function extraerPcmMono(
 }
 
 /** FFT iterativa radix-2 de Cooley-Tukey, in-place. `re`/`im` deben tener longitud potencia de 2. */
-function fft(re: Float64Array, im: Float64Array): void {
+export function fft(re: Float64Array, im: Float64Array): void {
   const n = re.length;
   for (let i = 1, j = 0; i < n; i++) {
     let bit = n >> 1;
@@ -154,7 +154,7 @@ function fft(re: Float64Array, im: Float64Array): void {
   }
 }
 
-function ventanaHann(n: number): Float64Array {
+export function ventanaHann(n: number): Float64Array {
   const w = new Float64Array(n);
   for (let i = 0; i < n; i++) w[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (n - 1));
   return w;
