@@ -26,7 +26,11 @@ export function getSupabase(): SupabaseClient {
     process.env.VITE_SUPABASE_ANON_KEY
   ].filter(Boolean) as string[];
 
-  const jwtKey = keys.find(k => k.startsWith("eyJ")) || keys[0] || "";
+  // La service_role manda siempre, sea cual sea su formato. Antes se elegía «la primera que empiece
+  // por eyJ»: si la service_role está en el formato nuevo (sb_secret_...), ganaba la anon (JWT) en
+  // silencio y el backend pasaba a depender de políticas RLS permisivas.
+  const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const jwtKey = serviceRole || keys.find(k => k.startsWith("eyJ")) || keys[0] || "";
 
   if (!url || !jwtKey) {
     throw new Error("Supabase URL or Key is missing in environment variables.");
