@@ -135,9 +135,9 @@ export async function dbUpsertMusicianWaitlist(item: any) {
     const leadPayload = {
       id: payload.id,
       band_id: payload.banda_origen || "platform",
-      nombre: payload.nombre_banda || payload.nombre_contacto,
-      contacto: payload.nombre_contacto,
-      email: payload.email,
+      nombre_sala: payload.nombre_banda || payload.nombre_contacto,
+      contacto_nombre: payload.nombre_contacto,
+      email_contacto: payload.email,
       telefono: payload.telefono,
       ciudad: payload.ciudad,
       tipo: "musico_waitlist",
