@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import {
-  agruparPalabras, normalizarSalidaWhisper, limpiarLineas, construirEntrada, transcribirLetra, modelosWhisper,
+  agruparPalabras, normalizarSalidaWhisper, limpiarLineas, repararTiempos, construirEntrada, transcribirLetra, modelosWhisper,
 } from '../transcripcionLetra';
 
 describe('normalizarSalidaWhisper', () => {
@@ -275,5 +275,35 @@ describe('transcribirConOpenAI y prioridad de proveedores', () => {
     expect(String(err.message)).toContain('openai:');
     expect(String(err.message)).toContain('openai/whisper');
     fs.unlinkSync(ruta);
+  });
+});
+
+describe('repararTiempos: líneas con el fin roto en el corte de ventana (visto en «Born to be wild»)', () => {
+  const l = (t0: number, t1: number, texto: string) => ({ t0, t1, texto });
+
+  it('una línea de 0 s o con el fin antes del inicio se acota a la siguiente o a ~0,45 s por palabra', () => {
+    const r = repararTiempos([l(90, 90, 'Fire all your guns at once'), l(94, 96, 'next'), l(170, 163.5, 'like a true')]);
+    expect(r[0].t1).toBeCloseTo(92.7, 1); // 6 palabras × 0,45 s, sin pasar de la siguiente (94)
+    expect(r[1]).toEqual(l(94, 96, 'next'));
+    expect(r[2].t1).toBeGreaterThan(170);
+  });
+
+  it('ordena por inicio y no deja que una línea pise a la siguiente', () => {
+    const r = repararTiempos([l(10, 20, 'tarde'), l(5, 12, 'pronto')]);
+    expect(r.map((x) => x.texto)).toEqual(['pronto', 'tarde']);
+    expect(r[0].t1).toBe(10);
+  });
+
+  it('limpiarLineas ya no pierde letra real por tener el fin roto', () => {
+    const r = limpiarLineas([l(90, 90, 'Born to be wild'), l(150, 150, 'Take the world in a loving embrace')]);
+    expect(r).toHaveLength(2);
+    expect(r.every((x) => x.t1 > x.t0 + 0.5)).toBe(true);
+  });
+});
+
+describe('construirEntrada: Whisper no arrastra el texto anterior', () => {
+  it('desactiva condition_on_previous_text si el modelo lo declara', () => {
+    expect(construirEntrada(new Set(['audio', 'condition_on_previous_text', 'language']), 'https://x/a.mp3')).toMatchObject({ condition_on_previous_text: false });
+    expect(construirEntrada(new Set(['audio']), 'https://x/a.mp3')).not.toHaveProperty('condition_on_previous_text');
   });
 });

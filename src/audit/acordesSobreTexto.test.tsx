@@ -31,8 +31,8 @@ describe('cifrado con los acordes ENCIMA de la letra', () => {
   it('el orden de los acordes sigue siendo el del texto (resaltado sincronizado)', () => {
     const sync = {
       pares: [{ texto: 0, segmento: 0, coincide: true }, { texto: 1, segmento: 1, coincide: true }],
+      tiempos: [0, 2],
       activo: 1,
-      segmentos: [{ t0: 0, t1: 2, acorde: 'Am', confianza: 1 }, { t0: 2, t1: 4, acorde: 'F', confianza: 1 }],
       onSeek: () => {},
     };
     const h = html('[Am]uno [F]dos', sync);
