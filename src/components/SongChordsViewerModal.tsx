@@ -1458,7 +1458,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
             {texto.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{texto.secundario}</sup>}
           </>
         );
-        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad)}` : "";
+        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad, armonia.estilo.grados)}` : "";
         if (sync && par && sync.tiempos[k] !== undefined) {
           const instante = sync.tiempos[k];
           return (

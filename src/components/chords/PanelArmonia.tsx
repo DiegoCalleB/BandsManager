@@ -48,7 +48,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
     : corregidos > 0
       ? `los acordes detectados en el audio, con ${corregidos} corregido${corregidos === 1 ? '' : 's'} por la banda`
       : 'los acordes detectados automáticamente en el audio (aún sin revisar)';
-  const guias = useMemo(() => guiasDelProfesor(armonia, { yaModula: (analisis?.tonalidades?.length ?? 0) > 1 }), [armonia, analisis]);
+  const guias = useMemo(() => guiasDelProfesor(armonia, { yaModula: (analisis?.tonalidades?.length ?? 0) > 1, grados: estilo?.grados }), [armonia, analisis, estilo?.grados]);
 
   // Bloques: la progresión (en grados) de cada letra distinta de la cuadrícula.
   const bloques = useMemo(() => {
@@ -117,7 +117,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
               const r = armonia.acordes.find((a) => a.grado === g);
               return r ? acorde(r.acorde) : g;
             }).join(' – ')}</span>)
-            {armonia.bucle.nombre ? <> — es {armonia.bucle.nombre}</> : null}. Se repite {armonia.bucle.veces} veces
+            {armonia.bucle.nombre ? <> — es {estilo?.grados === 'completo' ? armonia.bucle.nombre : armonia.bucle.nombre.replace(/(?<![A-Za-z])[b#](?=[ivIV])/g, '')}</> : null}. Se repite {armonia.bucle.veces} veces
             {armonia.bucle.cobertura < 0.95 ? ` y encaja en el ${Math.round(armonia.bucle.cobertura * 100)} % de los cambios` : ''}.
           </p>
         )}
@@ -155,11 +155,11 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
               <div key={r.acorde} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 space-y-1.5">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold ${CLASE_FUNCION[r.funcion]}`}>{acorde(r.acorde)}</span>
-                  <span className="font-bold text-[var(--ink)]">{grado(r.grado)}{r.secundario ? ` (${r.secundario})` : ''}</span>
+                  <span className="font-bold text-[var(--ink)]">{grado(r.grado)}{r.secundario ? ` (${grado(r.secundario)})` : ''}</span>
                   <span className="text-[var(--ink-2)]">{NOMBRE_FUNCION[r.funcion]} · {Math.round((r.segundos / total) * 100)} % del tiempo · entra {r.veces} {r.veces === 1 ? 'vez' : 'veces'}</span>
                 </div>
                 <div className="text-[var(--ink-2)]">
-                  {explicarAcorde(r, acorde(r.acorde), `${tonicaNombre}${tonalidad.menor ? ' menor' : ' mayor'}`)}
+                  {explicarAcorde(r, acorde(r.acorde), `${tonicaNombre}${tonalidad.menor ? ' menor' : ' mayor'}`, estilo?.grados ?? 'simple')}
                 </div>
                 {notas && (
                   <div className="text-[var(--ink)]">

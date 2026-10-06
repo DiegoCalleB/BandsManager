@@ -1,4 +1,4 @@
-import { escalasSugeridas, notasDelAcorde, type AnalisisArmonico, type ModoId, type Funcion } from './teoriaArmonica';
+import { escalasSugeridas, notasDelAcorde, simplificarGrado, type AnalisisArmonico, type ModoId, type Funcion } from './teoriaArmonica';
 
 /**
  * Consejos del «profesor» generados SIN IA, a partir de los hechos del análisis. Cada guía es un
@@ -25,7 +25,8 @@ const ESCALA_BASE: Record<ModoId, (t: number) => string> = {
   frigio: (t) => `Es frigio de ${N(t)}: menor con la 2.ª menor (${N(t + 1)}), el sonido flamenco y de metal. Apóyate en esa 2.ª para sonar «a propósito».`,
 };
 
-export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boolean } = {}): GuiaProfesor[] {
+export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boolean; grados?: 'simple' | 'completo' } = {}): GuiaProfesor[] {
+  const G = (g: string) => (opciones.grados === 'completo' ? g : simplificarGrado(g));
   const guias: GuiaProfesor[] = [];
   const t = a.tonalidad.tonica;
 
@@ -60,7 +61,7 @@ export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boo
     const esc = escalasSugeridas(r.acorde, a.tonalidad, a.modo.id)[0];
     guias.push({
       id: `prestado-${r.acorde}`,
-      titulo: `${r.acorde} (${r.grado}) es un acorde de color`,
+      titulo: `${r.acorde} (${G(r.grado)}) es un acorde de color`,
       texto: `No es de la escala mayor de la tonalidad: viene de otro modo y por eso suena «distinto». Sobre él, toca ${esc ? esc.nombre.replace('{R}', N(esc.raiz)) : 'su propia escala'}; si dudas, la pentatónica de ${N(esc?.raiz ?? t)} es seguro.`,
       tipo: 'dato',
     });
@@ -72,7 +73,7 @@ export function guiasDelProfesor(a: AnalisisArmonico, opciones: { yaModula?: boo
     guias.push({
       id: 'dominante',
       titulo: `La tensión está en ${dominante.acorde}`,
-      texto: `Es el acorde dominante (${dominante.grado}${dominante.secundario ? `, ${dominante.secundario}` : ''}): pide volver a casa. Es el mejor sitio para notas de tensión (su 7.ª) y para resolver después en la tónica.`,
+      texto: `Es el acorde dominante (${G(dominante.grado)}${dominante.secundario ? `, ${G(dominante.secundario)}` : ''}): pide volver a casa. Es el mejor sitio para notas de tensión (su 7.ª) y para resolver después en la tónica.`,
       tipo: 'dato',
     });
   }
