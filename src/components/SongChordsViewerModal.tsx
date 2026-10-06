@@ -30,6 +30,7 @@ import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
 import { LineaTiempoAcordes } from "./chords/LineaTiempoAcordes";
+import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
@@ -395,6 +396,22 @@ export function SongChordsViewerModal({
     return tiemposDeAcordes(alineacion, analisisAcordes.segmentos, porLinea);
   }, [alineacion, analisisAcordes, cifradoTexto, lineasConLetra, letraTranscrita]);
   const acordeActivo = sincronizado ? acordeActivoPorTiempo(tiemposAcordes, audioCurrentTime) : -1;
+
+  // Vibración al cambiar de acorde (móvil): se «siente» el cambio sin mirar la pantalla. Opcional y por dispositivo.
+  const [vibrarAlCambiar, setVibrarAlCambiar] = useState<boolean>(() => {
+    try { return localStorage.getItem("bm_vibrar_acorde") === "1"; } catch { return false; }
+  });
+  const alternarVibracion = (v: boolean) => {
+    setVibrarAlCambiar(v);
+    try { localStorage.setItem("bm_vibrar_acorde", v ? "1" : "0"); } catch { /* sin almacenamiento: vale solo esta sesión */ }
+    if (v) navigator.vibrate?.(40); // prueba inmediata
+  };
+  const ultimoAcordeVibrado = useRef(-1);
+  useEffect(() => {
+    if (acordeActivo === ultimoAcordeVibrado.current) return;
+    ultimoAcordeVibrado.current = acordeActivo;
+    if (vibrarAlCambiar && isPlayingAudio && acordeActivo >= 0) navigator.vibrate?.(35);
+  }, [acordeActivo, vibrarAlCambiar, isPlayingAudio]);
   const letraActiva =
     lineasConLetra && letraTranscrita && seguirEnCifrado && (isPlayingAudio || audioCurrentTime > 0)
       ? indiceSegmentoEn(letraTranscrita, audioCurrentTime)
@@ -887,6 +904,8 @@ export function SongChordsViewerModal({
               sincronizacion={alineacion ? { calidad: alineacion.calidad, desplazamiento: alineacion.desplazamiento, usable: alineacion.usable } : null}
               seguir={seguirEnCifrado}
               onSeguir={setSeguirEnCifrado}
+              vibrar={vibrarAlCambiar}
+              onVibrar={alternarVibracion}
               onCorregir={handleCorregirAcordes}
               onClose={() => setShowAnalisisAcordes(false)}
             />
@@ -946,6 +965,8 @@ export function SongChordsViewerModal({
                             pares: alineacion.pares,
                             tiempos: tiemposAcordes,
                             activo: acordeActivo,
+                            audioRef,
+                            duracion: analisisAcordes.duracionSegundos,
                             onSeek: (t: number) => {
                               if (audioRef.current) audioRef.current.currentTime = t;
                               setAudioCurrentTime(t);
@@ -1255,6 +1276,9 @@ interface SincronizacionCifrado {
   /** Instante (s) de cada acorde del cifrado, en orden de aparición. */
   tiempos: number[];
   activo: number;
+  /** Para el reloj de cada acorde: el audio que suena y la duración total. */
+  audioRef: React.RefObject<HTMLAudioElement | null>;
+  duracion: number;
   onSeek: (segundos: number) => void;
 }
 
@@ -1315,8 +1339,8 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
         if (sync && par && sync.tiempos[k] !== undefined) {
           const instante = sync.tiempos[k];
           return (
+            <RelojEnAcorde key={key} activo={k === sync.activo} indice={k} tiempos={sync.tiempos} duracionTotal={sync.duracion} audioRef={sync.audioRef}>
             <button
-              key={key}
               id={`cifrado-acorde-${k}`}
               type="button"
               onClick={(e) => {
@@ -1324,14 +1348,15 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
                 sync.onSeek(instante);
               }}
               title={`Saltar a ${Math.floor(instante / 60)}:${String(Math.floor(instante % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
-              className={`font-bold px-1 rounded mr-0.5 text-xs leading-5 cursor-pointer transition-ui ${
+              className={`font-bold px-1 rounded text-xs leading-5 cursor-pointer transition-ui ${
                 k === sync.activo
-                  ? "bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]"
+                  ? "bg-[var(--surface)] text-[var(--ink)]"
                   : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
               } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
             >
               {chordName}
             </button>
+            </RelojEnAcorde>
           );
         }
         return (
@@ -1364,7 +1389,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
               <span key={tIdx} className="inline-block whitespace-nowrap align-bottom">
                 {piezas.map((pz, i) => (
                   <span key={i} className="inline-flex flex-col align-bottom">
-                    <span className="h-5 leading-5">{pz.acorde ?? "\u00A0"}</span>
+                    <span className="h-7 leading-7 mr-0.5">{pz.acorde ?? "\u00A0"}</span>
                     <span className="whitespace-pre text-[var(--ink-2)]">{pz.texto || "\u00A0"}</span>
                   </span>
                 ))}
