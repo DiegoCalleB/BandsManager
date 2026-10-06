@@ -43,11 +43,10 @@ import {
   StackedFitResult,
 } from "../../utils/textFit";
 import {
-  computeAutoFitPlan,
-  computeExpandedPlan,
-  tryFitInPageCount,
-  MeasureRangeFn,
-} from "../../utils/setlistAutoFit";
+  ItemKind,
+  maxFontPtForWidth,
+  planPages,
+} from "../../utils/setlistPaginator";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Select } from '../ui';
 
@@ -71,35 +70,64 @@ const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
 const ROW_GAP_PX = 5;
 
-// Auto-ajuste de tamaño e impresión (ver setlistAutoFit.ts): candidatos de tamaño de título en
-// pt, de mayor a menor. 17pt es el mínimo IDEAL, legible a distancia de escenario (~2 metros) —
-// el reparto en VARIAS páginas nunca baja de ahí; se prefiere repartir el repertorio en más
-// páginas antes que una letra más pequeña. noteFontPt/songNumFontPt se derivan proporcionalmente
-// del título, manteniendo las mismas proporciones que tenían los 3 niveles fijos anteriores
-// (28/19/22 en"gigante").
-const TITLE_FONT_CANDIDATES_PT = [28, 25, 22, 19, 17];
-// Tamaño de ÚLTIMO RECURSO (más pequeño que el mínimo ideal), aceptado explícitamente por Diego
-// como trade-off: se prueba SOLO para intentar que el repertorio quepa en una sola página cuando
-// ni siquiera 17pt lo consigue por poco margen — nunca se usa para repartir en varias páginas
-// (ver EMERGENCY_TITLE_FONT_PT en computeAutoFitPlan/setlistAutoFit.ts).
-const EMERGENCY_TITLE_FONT_PT = 15;
-// Modo "sentado": candidatos por ENCIMA de los de siempre. Con un set corto (6-10 temas) 28pt
-// dejaba media hoja en blanco; un cartel hecho a mano llenaría la hoja. El auto-ajuste prueba de
-// mayor a menor, así que los repertorios largos siguen cayendo en los tamaños de siempre.
-const SENTADO_CANDIDATES_PT = [44, 40, 36, 32, ...TITLE_FONT_CANDIDATES_PT];
-// Techo de letra para el modo"de pie" (ver viewDensity): ese modo sube cada página tanto como
-// quepa MÁS ALLÁ del mayor candidato de arriba (28pt), ya que ahí no hay una letra"estándar" que
-// respetar entre páginas — cuantas menos canciones tenga una página, más grande puede verse. 44pt
-// es un techo generoso (evita que una página con muy pocos temas acabe con una letra desmedida)
-// sin dejar de sentirse"mucho más grande" que el máximo de sentado.
-const MAX_EXPANDED_TITLE_FONT_PT = 44;
+// Letra del título (pt) que usa el motor de maquetación (setlistPaginator.ts). MIN es el mínimo
+// legible a ~2m de distancia de escenario; COMFORT, la letra a partir de la cual ya no merece la
+// pena partir en más hojas; FLOOR, el último recurso si ni con el máximo de hojas cabe a MIN.
+// "De pie" sube el umbral de comodidad: acepta más hojas a cambio de letra mucho mayor.
+const MIN_TITLE_FONT_PT = 17;
+const COMFORT_TITLE_FONT_PT = 19;
+const STANDING_COMFORT_FONT_PT = 32;
+const FLOOR_TITLE_FONT_PT = 13;
+// Techo de diseño: más grande que esto, un título corto deja de parecer un setlist.
+const MAX_DESIGN_TITLE_FONT_PT = 40;
+// Tamaño de referencia de la vista previa en pantalla (scroll continuo, no pagina de verdad).
+const PREVIEW_STANDING_FONT_PT = 28;
+// La nota manuscrita crece con el título, pero con tope: a 44pt de título una nota de 30pt
+// competiría con él en vez de acompañarlo.
 const deriveNoteFontPt = (titlePt: number) =>
-  Math.round(titlePt * (19 / 28) * 10) / 10;
+  Math.min(20, Math.round(titlePt * (19 / 28) * 10) / 10);
 const deriveSongNumFontPt = (titlePt: number) =>
   Math.round(titlePt * (22 / 28) * 10) / 10;
 // Tamaño de referencia para la vista previa en pantalla (no imprime, no pagina de verdad — es
 // solo scroll continuo), un punto intermedio entre los antiguos"gigante" y"compacto".
 const PREVIEW_TITLE_FONT_PT = 22;
+
+// Tipografías de la hoja impresa (Google Fonts). OJO: una web font no se descarga hasta que algo
+// la usa, y `document.fonts.ready` resuelve ya si no hay nada pendiente — así que esperar solo a
+// `ready` medía con la fuente de reserva (alturas ~10 % menores que las impresas, hojas que se
+// desbordaban). Hay que pedir cada cara explícitamente con `fonts.load`.
+const PRINT_FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap";
+const PRINT_FONT_FACES = [
+  "900 40px Anton",
+  "700 40px Oswald",
+  "800 40px Oswald",
+  "600 40px Caveat",
+  "700 40px Caveat",
+  "40px 'Permanent Marker'",
+  "700 40px 'Courier Prime'",
+];
+
+async function ensurePrintFonts(doc: Document): Promise<void> {
+  if (!doc.fonts) return;
+  if (!doc.getElementById("bm-print-fonts") && !doc.getElementById("measure-fonts-link")) {
+    const link = doc.createElement("link");
+    link.id = "bm-print-fonts";
+    link.rel = "stylesheet";
+    link.href = PRINT_FONTS_URL;
+    doc.head.appendChild(link);
+    await new Promise<void>((resolve) => {
+      link.addEventListener("load", () => resolve(), { once: true });
+      link.addEventListener("error", () => resolve(), { once: true });
+      setTimeout(resolve, 2500);
+    });
+  }
+  await Promise.race([
+    Promise.all(PRINT_FONT_FACES.map((f) => doc.fonts.load(f).catch(() => []))),
+    new Promise((resolve) => setTimeout(resolve, 4000)),
+  ]);
+  await doc.fonts.ready;
+}
 
 interface NoteLayoutBadge {
   text: string;
@@ -296,16 +324,27 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   // Intenta modo inline con un ancho de título dado; null si no deja hueco útil o si obligaría
   // a encoger la nota DEMASIADO por debajo del mínimo compartido. Se permite un pequeño margen
   // (hasta 20% menos del mínimo) para mantener notas inline cuando hay badges que reducen espacio.
-  const EXTREME_SHRINK_TOLERANCE = 0.8; // 80% del mínimo es el piso antes de rechazar inline
+  // Una nota al lado del título solo se acepta si se lee con comodidad: nunca por debajo del 75 %
+  // de su tamaño natural (ni del mínimo absoluto). Si no, va debajo, a tamaño completo.
+  const INLINE_MIN_NOTE_FRACTION = 0.75;
+  const INLINE_SAFETY_PX = 24;
   const tryInline = (titleWidthPx: number) => {
+    // Colchón: el canvas no mide el letter-spacing del título (0.5px por letra) ni el hueco
+    // real entre número y título; sin él la nota se salía del margen derecho.
     const rightSpaceAvailable =
-      input.rowWidthPx - fixedLeftWidthPx - titleWidthPx - ROW_GAP_PX;
+      input.rowWidthPx -
+      fixedLeftWidthPx -
+      titleWidthPx -
+      ROW_GAP_PX -
+      INLINE_SAFETY_PX -
+      input.titleText.length * 0.5;
     if (rightSpaceAvailable < MIN_USEFUL_RIGHT_LANE_PX) return null;
     const inlineFit = fitAt(rightSpaceAvailable);
-    // Permitir que notas se encogan hasta 20% por debajo del mínimo, manteniendo inline
-    const extremeThreshold = input.noteMinFontSizePx * EXTREME_SHRINK_TOLERANCE;
-    if (inlineFit.lines.some((l) => l.fontSizePx < extremeThreshold))
-      return null;
+    const inlineFloorPx = Math.max(
+      input.noteMinFontSizePx,
+      input.noteMaxFontSizePx * INLINE_MIN_NOTE_FRACTION,
+    );
+    if (inlineFit.lines.some((l) => l.fontSizePx < inlineFloorPx)) return null;
     return { rightSpaceAvailable, inlineFit };
   };
 
@@ -324,39 +363,9 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
     };
   }
 
-  // El título completo no deja hueco útil: probar a truncarlo hasta el mínimo legible antes de
-  // rendirse y mandar la nota a su propia línea debajo.
-  const maxTitleWidthForNote =
-    input.rowWidthPx - fixedLeftWidthPx - ROW_GAP_PX - MIN_USEFUL_RIGHT_LANE_PX;
-  if (maxTitleWidthForNote > 0) {
-    const truncatedTitle = truncateTitleToWidth(
-      input.titleText,
-      maxTitleWidthForNote,
-      input.titleFontSizePx,
-      input.titleFontFamily,
-      input.measure,
-    );
-    if (truncatedTitle !== input.titleText) {
-      const truncatedTitleWidth = input.measure(
-        truncatedTitle,
-        input.titleFontSizePx,
-        input.titleFontFamily,
-        900,
-      );
-      const truncatedAttempt = tryInline(truncatedTitleWidth);
-      if (truncatedAttempt) {
-        return {
-          mode: "inline",
-          maxWidthPx: truncatedAttempt.rightSpaceAvailable,
-          fit: truncatedAttempt.inlineFit,
-          truncatedTitle,
-        };
-      }
-    }
-  }
-
-  // Ni truncando el título al mínimo legible cupo la nota al lado: excepción rara y controlada,
-  // la nota cae a su propia línea debajo con flecha hacia el título (ver render).
+  // El título completo no deja hueco útil al lado: la nota cae a su propia línea debajo. Nunca se
+  // trunca un título con "…" para hacerle sitio a una nota: un setlist con el nombre de un tema
+  // cortado no lo imprimiría nadie a mano.
   return {
     mode: "below",
     maxWidthPx: belowMaxWidthPx,
@@ -408,28 +417,15 @@ export function PdfExportModal({
     resolvedMembers[0]?.id || "member-1",
   );
 
-  // Cuando el auto-ajuste (ver computeAutoFitPlan/EMERGENCY_TITLE_FONT_PT) detecta el caso
-  // AMBIGUO — el repertorio cabe en 1 sola hoja solo apretando la letra por debajo del mínimo
-  // ideal — se pausa el flujo de impresión y se guarda aquí cuántas páginas tendría cada opción,
-  // para que el usuario elija con info real en vez de decidir en su nombre.
-  const [sizeChoiceDialog, setSizeChoiceDialog] = useState<{
-    singleTotalPages: number;
-    multiTotalPages: number;
-  } | null>(null);
-
   // Ajustes avanzados (letra manuscrita, tinta, badges de tonalidad/BPM/duración) van ocultos
   // detrás de este toggle SOLO en móvil (ver"sm:flex" más abajo, que los fuerza siempre visibles
   // en pantallas grandes) — en pantallas pequeñas todo junto agobiaba, tapando la vista previa.
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
-  // Densidad de vista:'sentado' (por defecto) usa el auto-ajuste normal — el mínimo nº de hojas
-  // posible, pensado para leerse de cerca (atril, mesa de sonido).'de_pie' fuerza el tamaño de
-  // título MÁS GRANDE de TITLE_FONT_CANDIDATES_PT como base y luego sube CADA página tanto como
-  // quepa por su cuenta (sin techo fijo — ver MAX_EXPANDED_TITLE_FONT_PT/computeExpandedPlan en
-  // setlistAutoFit.ts), repartiendo en tantas hojas como haga falta. Al no competir ya por espacio
-  // horizontal contra el título, las notas van siempre en su propia línea debajo (forceBelowMode
-  // en computeNoteLayout) — pensado para leerse desde lejos, de pie en el escenario, aceptando más
-  // páginas a cambio de letra mucho mayor.
+  // Densidad de vista: 'sentado' (por defecto) prioriza el menor nº de hojas con letra cómoda
+  // (atril, mesa de sonido). 'de_pie' acepta más hojas a cambio de letra mucho mayor (ver
+  // STANDING_COMFORT_FONT_PT) y manda siempre las notas debajo del título (forceBelowMode en
+  // computeNoteLayout) — para leer desde lejos, de pie en el escenario.
   const [viewDensity, setViewDensity] = useState<"sentado" | "de_pie">(
     "sentado",
   );
@@ -577,18 +573,16 @@ export function PdfExportModal({
     }
   };
 
-  // Generate HTML for printing. `forcedSizeChoice` llega definido solo en el reintento tras el
-  // diálogo de"1 hoja vs varias" (ver sizeChoiceDialog más abajo) — en la llamada normal (botón
-  // Imprimir) va indefinido, y si se detecta el caso ambiguo el flujo se pausa antes de abrir
-  // ninguna ventana de impresión.
-  const handlePrint = async (forcedSizeChoice?: "single" | "multi") => {
+  // Genera el HTML de impresión: mide cada fila en un iframe oculto, deja que setlistPaginator.ts
+  // decida hojas, letra y cortes, y abre la ventana de impresión.
+  const handlePrint = async () => {
     // Si el usuario imprime justo tras abrir el modal, las fuentes web (Anton/Oswald/Caveat) del
     // documento de la app podrían no haber terminado de cargar todavía — el canvas measurer de
     // abajo mediría con la fuente de reserva del sistema (más ancha), haciendo que el título
     //"parezca" ocupar más sitio del real y forzando el modo'below' o el truncado con más
     // frecuencia de la necesaria, lo que infla la altura calculada de cada fila.
-    if (typeof document !== "undefined" && document.fonts) {
-      await document.fonts.ready;
+    if (typeof document !== "undefined") {
+      await ensurePrintFonts(document);
     }
 
     const measure = makeCanvasMeasurer();
@@ -1131,7 +1125,6 @@ export function PdfExportModal({
  }
  .note-general {
  font-family: ${handFont};
- font-style: italic;
  font-weight: 600;
  color: #555;
  letter-spacing: 0.2px;
@@ -1369,7 +1362,7 @@ export function PdfExportModal({
           <head>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link id="measure-fonts-link" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+            <link id="measure-fonts-link" href="${PRINT_FONTS_URL}" rel="stylesheet">
             <style>${printCss}</style>
           </head>
           <body><div id="measure-target"></div></body>
@@ -1390,9 +1383,7 @@ export function PdfExportModal({
         setTimeout(done, 2000);
       });
     }
-    if (measureDoc.fonts) {
-      await measureDoc.fonts.ready;
-    }
+    await ensurePrintFonts(measureDoc);
     const measureTarget = measureDoc.getElementById("measure-target");
 
     const measureHtmlHeightPx = (bodyHtml: string): number => {
@@ -1402,158 +1393,85 @@ export function PdfExportModal({
       return el ? el.getBoundingClientRect().height : 0;
     };
 
-    // .sheet-page min-height (286mm, con @page a 5mm de margen vertical: 297-10=287mm reales,
-    // 1mm de colchón de seguridad) menos su padding (2px arriba + 2px abajo): alto total
-    // disponible en la hoja, antes de descontar el header/footer real de cada miembro. Margen
-    // y padding recortados al mínimo razonable (de 6mm/4px a 5mm/2px) para ganar cada mm/px
-    // real posible — esto se"Guarda como PDF", no hay tolerancia física de impresora que
-    // respetar, y cada pixel ganado aquí es uno menos de riesgo de necesitar una hoja extra.
+    // Alto total de la hoja menos su padding (2px arriba + 2px abajo): el alto útil real de cada
+    // miembro sale de restarle su cabecera y su pie medidos.
     const PAGE_TOTAL_HEIGHT_PX = mmToPx(PAGE_SHEET_HEIGHT_MM) - 4;
+
+    // Motor de maquetación (setlistPaginator.ts): reparte TODOS los items (canciones, bloques e
+    // interludios), no solo canciones, así que un encabezado nunca se pierde en un corte.
+    const items = activeSetlist.items;
+    const itemKinds: ItemKind[] = items.map((it) =>
+      it.tipoItem === "cancion"
+        ? "song"
+        : it.tipoItem === "bloque" && it.bloqueSubtipo === "header"
+          ? "header"
+          : it.tipoItem === "bloque" && it.bloqueSubtipo === "bis"
+            ? "bis"
+            : "other",
+    );
+    let songCounter = 0;
+    const songNumberByItem = items.map((it) =>
+      it.tipoItem === "cancion" ? songCounter++ : -1,
+    );
+    // Techo de letra por anchura: el título más largo (con su número) debe caber en una línea.
+    const widestTitleAt100 = Math.max(
+      0,
+      ...items.map((it) => {
+        const s = it.tipoItem === "cancion" ? songs.find((x) => x.id === it.songId) : undefined;
+        return s ? measure(s.titulo.toUpperCase(), 100, titleFontFamily, 900) : 0;
+      }),
+    );
+    const numberAt100 = showSongNumbers
+      ? measure(`${songCounter}.`, 100 * (22 / 28), "Oswald, sans-serif", 800)
+      : 0;
+    const maxFontPt = Math.min(
+      MAX_DESIGN_TITLE_FONT_PT,
+      maxFontPtForWidth(widestTitleAt100 + numberAt100, PAGE_CONTENT_WIDTH_PX * 0.96),
+    );
+    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""}`;
 
     const memberPlans = membersToExport.map((member) => {
       const isMaster = member.id === "master";
-      const headerHtml = buildHeaderHtml(member, isMaster);
-      // Placeholder de footer solo para medir: el texto exacto ("Hoja X de Y") no cambia su
-      // alto, solo su ancho, así que basta con valores de relleno para la medición.
-      const footerHtmlForMeasure = buildFooterHtml(member, 1, 1);
       const headerHeightPx = measureHtmlHeightPx(
-        `<div style="width:${PAGE_CONTENT_WIDTH_PX}px">${headerHtml}</div>`,
+        `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildHeaderHtml(member, isMaster)}</div>`,
       );
+      // El texto exacto del pie ("Hoja X de Y") no cambia su alto, basta con relleno.
       const footerHeightPx = showAppBranding
         ? measureHtmlHeightPx(
-            `<div style="width:${PAGE_CONTENT_WIDTH_PX}px">${footerHtmlForMeasure}</div>`,
+            `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildFooterHtml(member, 1, 1)}</div>`,
           )
         : 0;
+      // 6px de colchón: el redondeo de subpíxel de la impresión no debe empujar una fila fuera.
       const pageAvailableHeightPx =
-        PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx;
+        PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx - 6;
 
-      // Filtrar solo canciones (tipoItem ==='cancion') — el conteo para paginación debe
-      // ser de canciones, no del total de items (bloques no cuentan para numeración)
-      const songsOnly = activeSetlist.items.filter(
-        (item) => item.tipoItem === "cancion",
-      );
-
-      const measureFn: MeasureRangeFn = (
-        titleFontPt,
-        fromIndex,
-        toIndexExclusive,
-      ) => {
-        const rowsHtml = songsOnly
-          .slice(fromIndex, toIndexExclusive)
-          .map((item, i) =>
-            buildRowHtml(item, fromIndex + i, titleFontPt, member, isMaster),
-          )
-          .join("");
-        return measureHtmlHeightPx(
-          `<div class="setlist-items-container ${isCentered ? "is-centered" : ""}" style="width:${PAGE_CONTENT_WIDTH_PX}px">${rowsHtml}</div>`,
+      const heightsAt = (titleFontPt: number) =>
+        items.map((item, i) =>
+          measureHtmlHeightPx(
+            `<div class="${rowsContainerClass}" style="width:${PAGE_CONTENT_WIDTH_PX}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
+          ),
         );
-      };
 
-      //"De pie": fuerza el tamaño de título más grande y reparte en tantas hojas como haga
-      // falta a ese tamaño — nunca hay ambigüedad que preguntar aquí (a diferencia del modo
-      //"sentado", no se busca el mínimo nº de páginas, así que el diálogo de 1-hoja-vs-varias
-      // no aplica en este modo).
-      const plan =
-        viewDensity === "de_pie"
-          ? computeExpandedPlan(songsOnly.length, measureFn, {
-              titleFontPt: TITLE_FONT_CANDIDATES_PT[0],
-              pageAvailableHeightPx,
-              maxTitleFontPt: MAX_EXPANDED_TITLE_FONT_PT,
-            })
-          : computeAutoFitPlan(songsOnly.length, measureFn, {
-              candidateTitleFontPt: SENTADO_CANDIDATES_PT,
-              pageAvailableHeightPx,
-              emergencyFontPt: EMERGENCY_TITLE_FONT_PT,
-            });
-
-      return { member, isMaster, plan, measureFn, pageAvailableHeightPx };
+      const plan = planPages({
+        kinds: itemKinds,
+        heightsAt,
+        availableHeightPx: pageAvailableHeightPx,
+        minFontPt: MIN_TITLE_FONT_PT,
+        // "De pie" exige letra mayor aunque cueste hojas; "sentado" prioriza menos hojas.
+        comfortFontPt:
+          viewDensity === "de_pie" ? STANDING_COMFORT_FONT_PT : COMFORT_TITLE_FONT_PT,
+        maxFontPt,
+        floorFontPt: FLOOR_TITLE_FONT_PT,
+      });
+      return { member, isMaster, plan };
     });
-
-    // Igualar nº de hojas entre miembros: si el repertorio de ALGUNO cabe en menos páginas
-    // (normalmente porque sus notas personales son más cortas), lo lógico es intentar apretar
-    // también las de los demás para que todos usen ese mismo nº de hojas — como haría un músico
-    // montando cada set a mano, no dejar a unos en 1 hoja y a otros en 2 por el mismo repertorio
-    // si de verdad se puede evitar. Cada miembro sigue calculándose de forma independiente (esto
-    // solo intenta un reparto MÁS APRETADO para quien lo necesite, nunca al revés) y nunca se
-    // acepta un desborde real de página — si ni con tolerancia extra encaja, ese miembro se
-    // queda con su plan original de más páginas.
-    // En modo"de pie" esta igualación NO se aplica: su única promesa es"letra siempre al
-    // tamaño más grande posible", y apretar a un miembro a menos páginas implicaría buscar
-    // entre TODOS los candidatos de fuente (incluyendo tamaños más pequeños que el forzado),
-    // rompiendo esa promesa. Que cada miembro use un nº de páginas distinto en este modo es
-    // esperado (unos tienen más notas que otros) y no un desequilibrio a corregir.
-    const EQUALIZE_MAX_OVERFLOW_TOLERANCE = 0.12;
-    const bestPageCount = Math.min(
-      ...memberPlans.map((mp) => mp.plan.pageItemCounts.length),
-    );
-    const songsOnlyCount = activeSetlist.items.filter(
-      (item) => item.tipoItem === "cancion",
-    ).length;
-    const equalizedMemberPlans =
-      viewDensity === "de_pie"
-        ? memberPlans
-        : memberPlans.map((mp) => {
-            if (mp.plan.pageItemCounts.length <= bestPageCount) return mp;
-            const forced = tryFitInPageCount(songsOnlyCount, mp.measureFn, {
-              candidateTitleFontPt: SENTADO_CANDIDATES_PT,
-              pageAvailableHeightPx: mp.pageAvailableHeightPx,
-              forcedPageCount: bestPageCount,
-              maxOverflowTolerance: EQUALIZE_MAX_OVERFLOW_TOLERANCE,
-            });
-            return forced ? { ...mp, plan: forced } : mp;
-          });
-
-    // Detectar el caso AMBIGUO: algún miembro cabe en 1 sola hoja solo gracias al tamaño de
-    // emergencia (ver EMERGENCY_TITLE_FONT_PT), pero también existe la alternativa real de
-    // repartir en varias hojas al tamaño ideal, más grande. Si el usuario no ha decidido
-    // todavía (primera pasada, forcedSizeChoice indefinido), se pausa el flujo ANTES de abrir
-    // ninguna ventana de impresión y se le muestra el nº real de páginas de cada opción — la
-    // decisión nunca se toma en su nombre. Al elegir, se vuelve a llamar a handlePrint con la
-    // decisión ya resuelta (ver el diálogo en el JSX del modal).
-    const hasAmbiguousChoice = equalizedMemberPlans.some(
-      (mp) => mp.plan.alternativePlan,
-    );
-    if (hasAmbiguousChoice && forcedSizeChoice === undefined) {
-      const singleTotalPages = equalizedMemberPlans.reduce(
-        (sum, mp) => sum + mp.plan.pageItemCounts.filter((c) => c > 0).length,
-        0,
-      );
-      const multiTotalPages = equalizedMemberPlans.reduce(
-        (sum, mp) =>
-          sum +
-          (mp.plan.alternativePlan ?? mp.plan).pageItemCounts.filter(
-            (c) => c > 0,
-          ).length,
-        0,
-      );
-      document.body.removeChild(measureFrame);
-      setSizeChoiceDialog({ singleTotalPages, multiTotalPages });
-      return;
-    }
-
-    // Resolver la decisión: si el usuario eligió"varias hojas", cambiar cada plan ambiguo por
-    // su alternativa — el plan principal ya ES la opción"1 sola hoja" por defecto, así que
-    //"single" (o ninguna decisión, cuando no hubo ambigüedad) no necesita ningún cambio.
-    const resolvedMemberPlans =
-      forcedSizeChoice === "multi"
-        ? equalizedMemberPlans.map((mp) =>
-            mp.plan.alternativePlan
-              ? { ...mp, plan: mp.plan.alternativePlan }
-              : mp,
-          )
-        : equalizedMemberPlans;
 
     document.body.removeChild(measureFrame);
 
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
-    // Contar solo páginas con contenido (excluir páginas vacías con count === 0)
-    const totalPagesCount = resolvedMemberPlans.reduce(
-      (sum, mp) =>
-        sum + mp.plan.pageItemCounts.filter((count) => count > 0).length,
-      0,
-    );
+    const totalSheets = memberPlans.reduce((sum, mp) => sum + mp.plan.pages.length, 0);
 
     // Resolver URLs relativas a absolutas para que funcionen en la ventana de impresión
     // Usar window.location.origin + ruta si es relativa, sino usar URL tal cual
@@ -1582,74 +1500,31 @@ export function PdfExportModal({
         ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=&quot;page-watermark-text&quot;>${safeBandNameForOnerror}</div>'" />`
         : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
 
-    let globalPageIdx = 0;
-    const pagesHtml = resolvedMemberPlans
-      .map(({ member, isMaster, plan }) => {
-        let cursor = 0;
-        return plan.pageItemCounts
-          .map((count, pageIdx) => {
-            const startIdx = cursor;
-            cursor += count;
-            // Saltar páginas vacías (sin canciones)
-            if (count === 0) return "";
-
-            globalPageIdx++;
-            // Cada página usa su propio tamaño de fuente (ver pageFontSizes en
-            // computeAutoFitPlan/setlistAutoFit.ts): con menos canciones que el repertorio
-            // completo, una página concreta suele tener margen para una letra MAYOR que la
-            // elegida para el conjunto total — se aprovecha en vez de dejarla al mínimo.
-            const pageFontPt = plan.pageFontSizes[pageIdx] ?? plan.titleFontPt;
-
-            // Mapear índices de canciones [startIdx, startIdx+count) a índices reales en
-            // activeSetlist.items (que incluye bloques intercalados). Encontrar dónde comienza
-            // la canción startIdx y dónde termina la canción startIdx+count-1.
-            const songIndicesByRealIdx = activeSetlist.items
-              .map((item, idx) => (item.tipoItem === "cancion" ? idx : -1))
-              .filter((idx) => idx !== -1);
-
-            const firstSongRealIdx = songIndicesByRealIdx[startIdx] ?? 0;
-            const lastSongRealIdx =
-              songIndicesByRealIdx[startIdx + count - 1] ??
-              activeSetlist.items.length - 1;
-            const pageItems = activeSetlist.items.slice(
-              firstSongRealIdx,
-              lastSongRealIdx + 1,
-            );
-
-            let songIndex = startIdx;
-            const rowsHtml = pageItems
-              .map((item) => {
-                if (item.tipoItem === "cancion") {
-                  const html = buildRowHtml(
-                    item,
-                    songIndex,
-                    pageFontPt,
-                    member,
-                    isMaster,
-                  );
-                  songIndex++;
-                  return html;
-                } else {
-                  return buildRowHtml(item, -1, pageFontPt, member, isMaster);
-                }
-              })
+    let sheetIdx = 0;
+    const pagesHtml = memberPlans
+      .map(({ member, isMaster, plan }) =>
+        plan.pages
+          .map((page, pageIdx) => {
+            sheetIdx++;
+            const rowsHtml = items
+              .slice(page.from, page.to)
+              .map((item, k) =>
+                buildRowHtml(item, songNumberByItem[page.from + k], plan.fontPt, member, isMaster),
+              )
               .join("");
-            const isLastPageOverall = globalPageIdx === totalPagesCount;
-
             return `
-                <div class="sheet-page ${!isLastPageOverall ? "page-break" : ""}">
+                <div class="sheet-page ${sheetIdx !== totalSheets ? "page-break" : ""}">
                   ${showWatermark ? `<div class="page-watermark">${watermarkInnerHtml}</div>` : ""}
                   ${buildHeaderHtml(member, isMaster)}
- <div class="setlist-items-container ${isCentered ? "is-centered" : ""}">
- ${rowsHtml}
+                  <div class="${rowsContainerClass}" style="gap:${page.rowGapPx.toFixed(1)}px">
+                    ${rowsHtml}
                   </div>
-                  ${buildFooterHtml(member, globalPageIdx, totalPagesCount)}
+                  ${buildFooterHtml(member, pageIdx + 1, plan.pages.length)}
                 </div>
               `;
           })
-          .filter((html) => html !== "")
-          .join("");
-      })
+          .join(""),
+      )
       .join("");
 
     printWindow.document.write(`
@@ -1940,7 +1815,7 @@ export function PdfExportModal({
                 </span>
                 <span
                   className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)]"
-                  title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio (mínimo ideal 17pt; solo baja a 15pt como último recurso si eso evita saltar a una hoja extra)."
+                  title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio El motor decide cuántas hojas usar, la letra (de 17pt en adelante), dónde cortar sin dejar bloques colgando y reparte el espacio sobrante entre las filas."
                 >
                   <ShowIcon inline emoji="⚡" />Automático
                 </span>
@@ -2260,7 +2135,7 @@ export function PdfExportModal({
                         // mayor en modo"de pie" para dar una idea de que la letra sale más grande.
                         const titleFontPt =
                           viewDensity === "de_pie"
-                            ? TITLE_FONT_CANDIDATES_PT[0]
+                            ? PREVIEW_STANDING_FONT_PT
                             : PREVIEW_TITLE_FONT_PT;
                         const noteFontPt = deriveNoteFontPt(titleFontPt);
                         const numberText = showSongNumbers
@@ -2613,72 +2488,6 @@ export function PdfExportModal({
             </div>
           </div>
         </div>
-
-        {/* Diálogo de decisión ambigua"1 hoja apretada vs varias hojas con letra ideal" (ver
- sizeChoiceDialog / EMERGENCY_TITLE_FONT_PT en handlePrint). Solo aparece cuando el
- auto-ajuste detecta ese caso límite real — nunca decide en nombre del usuario. */}
-        {sizeChoiceDialog && (
-          <div className="fixed inset-0 bg-[var(--scrim)]/80 flex items-center justify-center z-[10000] p-4">
-            <div
-              className={`rounded-[var(--r-l)] max-w-lg w-full p-6 ${"bg-[var(--surface)]"}`}
-            >
-              <h3
-                className={`text-lg font-bold mb-2 flex items-center gap-2 ${"text-[var(--ink)]"}`}
-              >
-                <Zap className="w-5 h-5 text-[var(--acc)]" />
-                ¿Cómo prefieres el repertorio?
-              </h3>
-              <p className={`text-sm mb-5 ${"text-[var(--ink-2)]"}`}>
-                El repertorio casi cabe en una sola hoja, pero necesitaría una
-                letra algo más pequeña de lo recomendado para leerse cómodo en
-                escena (~2m). Elige qué prefieres:
-              </p>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => {
-                    setSizeChoiceDialog(null);
-                    handlePrint("single");
-                  }}
-                  className="p-4 rounded-[var(--r-m)]  bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
-                >
-                  <div
-                    className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
-                  >
-                    <ShowIcon inline emoji="📄" />1 sola hoja (letra más pequeña)
-                  </div>
-                  <div className={`text-xs ${"text-[var(--ink-2)]"}`}>
-                    {sizeChoiceDialog.singleTotalPages} hoja
-                    {sizeChoiceDialog.singleTotalPages !== 1 ? "s" : ""} en
-                    total — todo el repertorio de un vistazo
-                  </div>
-                </button>
-                <button
-                  onClick={() => {
-                    setSizeChoiceDialog(null);
-                    handlePrint("multi");
-                  }}
-                  className="p-4 rounded-[var(--r-m)]/40 bg-[var(--acc)]/10 hover:bg-[var(--acc)]/20 text-left transition-colors cursor-pointer"
-                >
-                  <div
-                    className={`font-bold text-sm mb-1 ${"text-[var(--ink)]"}`}
-                  >
-                    <ShowIcon inline emoji="📄" /><ShowIcon inline emoji="📄" />Varias hojas (letra más grande)
-                  </div>
-                  <div className={`text-xs ${"text-[var(--ink-2)]"}`}>
-                    {sizeChoiceDialog.multiTotalPages} hojas en total — letra al
-                    tamaño ideal para leer desde ~2m
-                  </div>
-                </button>
-              </div>
-              <button
-                onClick={() => setSizeChoiceDialog(null)}
-                className={`mt-4 text-xs font-sans cursor-pointer ${"text-[var(--ink-2)] hover:text-[var(--ink-2)]"}`}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Edit Member Notes Modal if clicked from preview */}
         {editingSongForNotes && (
