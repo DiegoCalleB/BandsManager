@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import {
   Copy,
@@ -164,7 +165,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setShowMobileMenu(false)}
                   />
-                  <div className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--sunken)] rounded-[var(--r-m)] z-50 p-1.5 space-y-1 text-xs">
+                  <PopoverAncla className="absolute right-0 top-full mt-1.5 w-56 bg-[var(--sunken)] rounded-[var(--r-m)] z-50 p-1.5 space-y-1 text-xs">
                     <a
                       href={publicEpkUrl}
                       target="_blank"
@@ -220,7 +221,7 @@ export const EPKHeader: React.FC<EPKHeaderProps> = ({
                         <span>Conexión con agentes IA</span>
                       </MenuItem>
                     )}
-                  </div>
+                  </PopoverAncla>
                 </>
               )}
             </div>

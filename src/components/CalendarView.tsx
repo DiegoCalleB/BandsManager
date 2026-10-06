@@ -1,3 +1,4 @@
+import { PopoverAncla } from './ui/PopoverAncla';
 import { CalendarViewsContainer } from './calendar/CalendarViewsContainer';
 import { CalendarSidebarLogistics } from './calendar/CalendarSidebarLogistics';
 import React, { useState, useEffect, useRef } from 'react';
@@ -2383,10 +2384,10 @@ export default function CalendarView({
 
                 {/* Popover desplegable de configuración de vista por defecto por dispositivo */}
                 {showViewConfigPopover && (
-                  <div
+                  <PopoverAncla izquierda="sm"
                     className={`absolute top-full right-0 sm:left-0 sm:right-auto mt-2 z-50 w-80 sm:w-96 rounded-[var(--r-l)] p-4 ${'bg-[var(--surface)] text-[var(--ink)]'} animate-in fade-in zoom-in-95 duration-150`}
                   >
-                    <div className="flex items-center justify-between pb-2.5 mb-310">
+                    <div className="flex items-center justify-between pb-2.5 mb-3">
                       <div className="flex items-center gap-2">
                         <div className="p-1.5 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)]">
                           <Settings className="w-3.5 h-3.5" />
@@ -2516,7 +2517,7 @@ export default function CalendarView({
                       </div>
                     )}
 
-                    <div className={`mt-3 pt-2.510 flex items-center justify-between text-micro font-sans ${'text-[var(--ink-2)]'}`}>
+                    <div className={`mt-3 pt-2.5 flex items-center justify-between text-micro font-sans ${'text-[var(--ink-2)]'}`}>
                       <span className="flex items-center gap-1.5">
                         <Cloud className="w-3.5 h-3.5 text-[var(--acc)]" />
                         <span>Sincronizado con tu cuenta</span>
@@ -2525,7 +2526,7 @@ export default function CalendarView({
                         {selectedConfigDevice === 'mobile' ? 'Móvil' : 'Ordenador'}: {devicePrefs[selectedConfigDevice]}M
                       </span>
                     </div>
-                  </div>
+                  </PopoverAncla>
                 )}
               </div>
             </div>
@@ -3057,7 +3058,7 @@ export default function CalendarView({
                         }
                         if (list.length === 0) return null;
                         return (
-                          <div className="flex items-center gap-2 text-micro font-sans text-[var(--ink)] flex-wrap pt-110">
+                          <div className="flex items-center gap-2 text-micro font-sans text-[var(--ink)] flex-wrap pt-1">
                             <span className="text-[var(--ink-2)]">Convocados:</span>
                             {list.map((a, i) => (
                               <span key={i} className="px-1.5 py-0.5 rounded bg-[var(--surface)]/80 text-[var(--ink-2)]">

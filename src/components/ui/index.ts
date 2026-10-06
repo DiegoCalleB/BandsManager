@@ -48,5 +48,6 @@ export { ChannelChip } from './ChannelChip';
 export type { ChannelChipProps } from './ChannelChip';
 export { Tabs } from './Tabs';
 export type { TabsProps, TabItem } from './Tabs';
+export { PopoverAncla } from './PopoverAncla';
 export { ActionMenu } from './ActionMenu';
 export type { ActionMenuProps, ActionMenuItem } from './ActionMenu';

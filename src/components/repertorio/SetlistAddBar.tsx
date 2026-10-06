@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import {
   Plus,
@@ -184,7 +185,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                 className="fixed inset-0 z-40"
                 onClick={() => setShowEventMenu(false)}
               />
-              <div className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 p-2 space-y-2 text-xs">
+              <PopoverAncla className="absolute right-0 top-full mt-1.5 z-50 w-72 max-h-[80vh] overflow-y-auto rounded-[var(--r-m)] bg-[var(--surface)]/95 p-2 space-y-2 text-xs">
                 {/* Standard Preset Events */}
                 <div>
                   <div className="text-micro text-[var(--ink-2)] px-2 py-1 font-semibold">
@@ -354,7 +355,7 @@ export const SetlistAddBar: React.FC<SetlistAddBarProps> = ({
                     )
                   )}
                 </div>
-              </div>
+              </PopoverAncla>
             </>
           )}
         </div>

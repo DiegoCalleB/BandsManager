@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { BandRelationshipStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
@@ -188,7 +189,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setIsStatusDropdownOpen(false)}
                   />
-                  <div
+                  <PopoverAncla
                     className={`absolute top-full mt-2 right-0 z-50 w-60 rounded-[var(--r-l)] p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${"bg-[var(--surface)]"}`}
                   >
                     <div
@@ -213,7 +214,7 @@ export const BulkBandActionBar: React.FC<BulkBandActionBarProps> = ({
                         </button>
                       );
                     })}
-                  </div>
+                  </PopoverAncla>
                 </>
               )}
             </div>

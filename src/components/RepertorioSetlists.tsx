@@ -6,6 +6,7 @@
  react-hooks/purity,
  react-hooks/immutability
 */
+import { PopoverAncla } from './ui/PopoverAncla';
 import { guardarOReverter } from "../utils/guardarConReversion";
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, {
@@ -3777,7 +3778,7 @@ export default function RepertorioSetlists({
                 {showAssistantChooser && (
                   <>
                     <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
-                    <div className="absolute right-0 top-full mt-1.5 z-40 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs text-[var(--ink)]">
+                    <PopoverAncla className="absolute right-0 top-full mt-1.5 z-40 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs text-[var(--ink)]">
                       <MenuItem
                         id="btn-ai-perfect-header"
                         type="button"
@@ -3805,7 +3806,7 @@ export default function RepertorioSetlists({
                         </span>
                         <span className="block mt-0.5 pl-6 text-xs text-[var(--ink-2)]">Reordena y optimiza canciones sobre una copia.</span>
                       </MenuItem>
-                    </div>
+                    </PopoverAncla>
                   </>
                 )}
               </div>
@@ -3839,7 +3840,7 @@ export default function RepertorioSetlists({
                       className="fixed inset-0 z-30"
                       onClick={() => setShowSetlistActionsMenu(false)}
                     />
-                    <div
+                    <PopoverAncla
                       className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
                     >
                       {/* En móvil el asistente IA vive aquí: menos botones a la vista */}
@@ -3935,7 +3936,7 @@ export default function RepertorioSetlists({
                         <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar
                         setlist
                       </button>
-                    </div>
+                    </PopoverAncla>
                   </>
                 )}
               </div>
@@ -4055,7 +4056,7 @@ export default function RepertorioSetlists({
                                     setShowChartSettingsMenu(false)
                                   }
                                 />
-                                <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--sunken)] p-2.5 space-y-2.5">
+                                <PopoverAncla className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--sunken)] p-2.5 space-y-2.5">
                                   <button
                                     type="button"
                                     onClick={() => setShowIdealCurve((v) => !v)}
@@ -4155,7 +4156,7 @@ export default function RepertorioSetlists({
                                       <ShowIcon inline emoji="💣" />Explosiva
                                     </span>
                                   </div>
-                                </div>
+                                </PopoverAncla>
                               </>
                             )}
                           </div>
@@ -5971,7 +5972,7 @@ export default function RepertorioSetlists({
                 </IconButton>
 
                 {showCatalogActionsMenu && (
-                  <div className="absolute right-0 top-full mt-2 bg-[var(--surface)] rounded-[var(--r-m)] py-2 z-50 min-w-[200px]">
+                  <PopoverAncla className="absolute right-0 top-full mt-2 bg-[var(--surface)] rounded-[var(--r-m)] py-2 z-50 min-w-[200px]">
                     <button
                       onClick={() => {
                         setGroupByAlbum(!groupByAlbum);
@@ -5994,7 +5995,7 @@ export default function RepertorioSetlists({
                       <Sparkles className="w-4 h-4 text-[var(--acc)]" />
                       <span>Nombres propios</span>
                     </button>
-                  </div>
+                  </PopoverAncla>
                 )}
               </div>
 

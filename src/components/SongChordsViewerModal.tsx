@@ -780,7 +780,7 @@ export function SongChordsViewerModal({
 
                     {/* GUIDES GRID */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
-                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
+                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-1.5">
                         <span className="text-[var(--acc)] font-bold block text-xs">
                           1. Estructura Exacta del Tema
                         </span>
@@ -790,7 +790,7 @@ export function SongChordsViewerModal({
                         </p>
                       </div>
 
-                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
+                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-1.5">
                         <span className="text-[var(--ok)] font-bold block text-xs">
                           2. Progresión Armónica Clave
                         </span>
@@ -800,7 +800,7 @@ export function SongChordsViewerModal({
                         </p>
                       </div>
 
-                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
+                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-1.5">
                         <span className="text-[var(--alert)] font-bold block text-xs">
                           3. Cortes, Entradas y Claves
                         </span>
@@ -810,7 +810,7 @@ export function SongChordsViewerModal({
                         </p>
                       </div>
 
-                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
+                      <div className="bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-1.5">
                         <span className="text-[var(--tentative)]/80 font-bold block text-xs">
                           4. Capo / afinación
                         </span>
@@ -819,7 +819,7 @@ export function SongChordsViewerModal({
                         </p>
                       </div>
 
-                      <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)]10 space-y-1.5">
+                      <div className="sm:col-span-2 bg-[var(--sunken)] p-4 rounded-[var(--r-m)] space-y-1.5">
                         <span className="text-[var(--acc)] font-bold block text-xs">
                           5. Protagonismo de instrumentos / arreglos
                         </span>

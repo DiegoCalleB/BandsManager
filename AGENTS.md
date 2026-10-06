@@ -454,3 +454,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 ### Invitaciones de miembros (auditoría B)
 - `/auth/check-invitation` y `/auth/activate-member` exigen el token de un solo uso del correo (`server/utils/invitacion.ts`); solo se guarda su hash en `ui_preferences._invitacion` (persiste en Supabase, sobrevive a reinicios; `getSafeUsers` lo oculta). Reenviar = `POST /users` con el mismo usuario/correo (genera token nuevo e invalida el anterior).
 - La pantalla activa en producción es `SimplePromoLoginModal` (sin paso de activación); el enlace `?invitacion=…&email=…` lo entiende el `LoginModal` completo. El invitado que entre por la pantalla simple usa «recuperar contraseña» (código por correo).
+
+### Popovers y menús (revisión visual)
+- Un desplegable bajo un botón NO se escribe como `absolute top-full …`: dentro de una tarjeta con `overflow-hidden`, o con la ventana baja, se recorta o se sale de pantalla. Usa `ActionMenu` (lista de acciones) o `PopoverAncla` (`src/components/ui/PopoverAncla.tsx`, contenido libre): portal + posición fija calculada con `posicionMenu` y scroll interno.
+- No ocultes con `sm:hidden` una acción que en escritorio no tenga otro acceso (pasó con «Editar canción»).
+- Un `mb-310`/`p-410`/`…]10` en un `className` es un resto de un restyle automático (un `10` pegado): el margen real es de 1.240 px o la clase deja de aplicarse. Búscalos con `grep -rnE "(rounded|bg|border)-\[[^]]*\]\)?[0-9]{2}\b"`.

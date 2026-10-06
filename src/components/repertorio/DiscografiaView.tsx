@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { Song, ThemeColors } from "../../types";
 import {
@@ -542,7 +543,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                 className="fixed inset-0 z-30"
                 onClick={() => setShowCreateAlbumMenu(false)}
               />
-              <div
+              <PopoverAncla
                 className={`menu-pop [--menu-origin:top_left] sm:[--menu-origin:top_right] absolute left-0 sm:left-auto sm:right-0 top-full mt-1.5 z-40 w-[min(18rem,calc(100vw-2.5rem))] max-h-[70vh] overflow-y-auto rounded-[var(--r-l)] p-1.5 space-y-1 text-xs border border-[var(--line)] ${"bg-[var(--surface)] text-[var(--ink)]"}`}
               >
                 {onCreateAlbum && (
@@ -622,7 +623,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                     </span>
                   </span>
                 </button>
-              </div>
+              </PopoverAncla>
             </>
           )}
         </div>

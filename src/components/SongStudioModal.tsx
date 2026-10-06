@@ -1,3 +1,4 @@
+import { PopoverAncla } from './ui/PopoverAncla';
 import { SongStudioCubaseHelpModal } from './song_studio/SongStudioCubaseHelpModal';
 import { SongStudioDeleteConfirmModal } from './song_studio/SongStudioDeleteConfirmModal';
 import { SongStudioAiGeneratorModal } from './song_studio/SongStudioAiGeneratorModal';
@@ -3885,7 +3886,7 @@ export default function SongStudioModal({
                     </button>
 
                     {showToolsMenu && (
-                      <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
+                      <PopoverAncla className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
                         <MenuItem
                           tone="acc"
                           dense
@@ -3999,7 +4000,7 @@ export default function SongStudioModal({
                         >
                           <MessageSquare className="w-4 h-4 text-[var(--ok)]" /> Compartir tema por WhatsApp
                         </MenuItem>
-                      </div>
+                      </PopoverAncla>
                     )}
                   </div>
                 </div>
@@ -4631,7 +4632,7 @@ export default function SongStudioModal({
                               </IconButton>
 
                               {openIdeaActionsMenuId === idea.id && (
-                                <div className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
+                                <PopoverAncla className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
                                   <MenuItem
                                     tone="muted"
                                     dense
@@ -4703,7 +4704,7 @@ export default function SongStudioModal({
                                   >
                                     <Trash2 className="w-4 h-4 text-[var(--alert)]" /> Eliminar idea
                                   </MenuItem>
-                                </div>
+                                </PopoverAncla>
                               )}
                             </div>
                           </div>
