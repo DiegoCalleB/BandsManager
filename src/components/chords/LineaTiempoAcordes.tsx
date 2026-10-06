@@ -258,7 +258,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {/* Carril de acordes */}
-      <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1">
+      <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
         {segmentos.map((seg, i) => (
           <button
             key={`${seg.t0}-${i}`}

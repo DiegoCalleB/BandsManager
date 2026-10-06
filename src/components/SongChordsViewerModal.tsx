@@ -528,7 +528,7 @@ export function SongChordsViewerModal({
                       : "Detectar los acordes del audio con sus tiempos (automático, sin IA generativa)"
                   }
                 >
-                  <Music className={`w-4 h-4 ${isAnalyzingChords ? "animate-pulse" : ""}`} />
+                  <Music className="w-4 h-4" />
                   <span>{isAnalyzingChords ? "Analizando..." : analisisAcordes ? "Acordes del audio" : "Analizar acordes"}</span>
                 </Button>
               )}
@@ -1240,7 +1240,7 @@ function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
                       k === sync.activo
                         ? "bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]"
                         : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
-                    } ${par.coincide ? "" : "border-b-2 border-dashed border-[var(--tentative)]"}`}
+                    } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
                   >
                     {chordName}
                   </button>
