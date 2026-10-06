@@ -13,6 +13,7 @@ import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
 import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from "../services/transcripcionLetra.js";
 import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
+import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -194,38 +195,54 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
 // tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
 // Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
 const analisisAcordesEnCurso = new Set<string>();
+// Peticiones idénticas a la vez (subida masiva + apertura del visor, dos pestañas, un reintento del
+// móvil…): la segunda NO falla con un 409 que el usuario ve como «no se pudo guardar»; espera al
+// análisis en marcha y recibe el mismo resultado.
+const analisisAcordesPromesas = new Map<string, Promise<{ status: number; body: any }>>();
+
+async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir: boolean): Promise<{ status: number; body: any }> {
+  // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
+  // un fichero ajeno a la banda ni pasar una ruta arbitraria.
+  const songs = await dbGetSongs(userBandId);
+  const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+  if (!song) return { status: 404, body: { error: "Canción no encontrada." } };
+
+  // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
+  const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
+  if (corregidos > 0 && !sobrescribir) {
+    return { status: 409, body: { error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos } };
+  }
+
+  const resultado = await analizarAcordesDeCancion(song);
+  if (resultado.ok === false) return { status: resultado.status, body: { error: resultado.error } };
+  // Las correcciones manuales se pierden al reanalizar, pero su «verdad» no: así el análisis nuevo
+  // se puede medir contra lo que la banda corrigió (ver scripts/evaluar-acordes.ts).
+  const referencia = song.analisisAcordes?.referenciaManual;
+  const analisis = referencia ? { ...resultado.analisis, referenciaManual: referencia } : resultado.analisis;
+  const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+  return { status: 200, body: { success: true, analisis, song: guardada } };
+}
+
 router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
   const { id } = req.params;
   const userBandId = getTargetBandId(req);
   const clave = `${userBandId}:${id}`;
-  if (analisisAcordesEnCurso.has(clave)) {
-    return res.status(409).json({ error: "Ya se están analizando los acordes de esta canción." });
+  let promesa = analisisAcordesPromesas.get(clave);
+  if (!promesa) {
+    analisisAcordesEnCurso.add(clave);
+    promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true)
+      .catch((err: any) => {
+        console.error("Error analizando acordes del audio:", err);
+        return { status: 500, body: { error: err?.message || "No se pudieron analizar los acordes del audio." } };
+      })
+      .finally(() => {
+        analisisAcordesEnCurso.delete(clave);
+        analisisAcordesPromesas.delete(clave);
+      });
+    analisisAcordesPromesas.set(clave, promesa);
   }
-  analisisAcordesEnCurso.add(clave);
-  try {
-    // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
-    // un fichero ajeno a la banda ni pasar una ruta arbitraria.
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
-    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
-
-    // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
-    const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
-    if (corregidos > 0 && req.body?.sobrescribir !== true) {
-      return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
-    }
-
-    const resultado = await analizarAcordesDeCancion(song);
-    if (resultado.ok === false) return res.status(resultado.status).json({ error: resultado.error });
-    const analisis = resultado.analisis;
-    const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
-    res.json({ success: true, analisis, song: guardada });
-  } catch (err: any) {
-    console.error("Error analizando acordes del audio:", err);
-    res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
-  } finally {
-    analisisAcordesEnCurso.delete(clave);
-  }
+  const { status, body } = await promesa;
+  res.status(status).json(body);
 });
 
 // POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
@@ -354,7 +371,8 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
 
-    const analisis = { ...song.analisisAcordes, segmentos: (validacion as { segmentos: any[] }).segmentos, editadoEn: new Date().toISOString() };
+    const segmentos = (validacion as { segmentos: any[] }).segmentos;
+    const analisis = construirAnalisisCorregido(song.analisisAcordes, segmentos, new Date().toISOString());
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
   } catch (err: any) {

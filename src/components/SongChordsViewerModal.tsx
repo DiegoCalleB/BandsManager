@@ -70,7 +70,7 @@ export function SongChordsViewerModal({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Show Chord Diagrams drawer/panel
-  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(true);
+  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(() => typeof window === "undefined" || window.innerWidth >= 768);
 
   // Edit form state
   const [cifradoTexto, setCifradoTexto] = useState<string>(
@@ -409,7 +409,7 @@ export function SongChordsViewerModal({
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden text-[var(--ink)] my-auto">
+        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto">
           {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
           <Button
             variant="neutral"
@@ -863,6 +863,7 @@ export function SongChordsViewerModal({
           {analisisAcordes && showAnalisisAcordes && (
             <LineaTiempoAcordes
               analisis={analisisAcordes}
+              bpm={song.bpm}
               audioRef={audioRef}
               isPlaying={isPlayingAudio}
               transpose={transpose}
@@ -882,7 +883,10 @@ export function SongChordsViewerModal({
           )}
 
           {/* MODAL BODY */}
-          <div className="flex-1 overflow-hidden flex flex-col md:flex-row relative">
+          {/* En móvil la cabecera y los paneles de acordes ocupan casi toda la pantalla: el cuerpo tiene
+              altura propia (75vh, con su scroll interno) y es el modal entero el que se desplaza hasta
+              él. Con flex-1 el cuerpo se quedaba con una rendija y no se podía bajar a la letra. */}
+          <div className="shrink-0 h-[75vh] md:h-auto md:flex-1 md:shrink overflow-hidden flex flex-col md:flex-row relative">
             {/* MAIN CONTENT AREA */}
             <div
               ref={scrollContainerRef}
@@ -1250,7 +1254,7 @@ interface SincronizacionLetra {
   onSeek: (segundos: number) => void;
 }
 
-function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sync?: SincronizacionCifrado) {
+export function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sync?: SincronizacionCifrado) {
   if (!text)
     return (
       <span className="text-[var(--ink-2)] italic">
@@ -1291,49 +1295,68 @@ function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sy
 
     // Check if inline bracket chord format: [Do] Que tiene tu [Sol] veneno
     if (line.includes("[")) {
-      const parts = line.split(/(\[[A-Za-z0-9#\/]+\])/g);
       const letraProps = propsDeLetra(idx);
+
+      // Un acorde de la línea, listo para pintar (botón si está sincronizado con el audio).
+      const nodoAcorde = (chordName: string, key: string) => {
+        const k = esTokenAcorde(chordName) ? ordinal++ : -1;
+        const par = sync && k >= 0 ? sync.pares[k] : undefined;
+        if (sync && par && par.segmento !== null) {
+          const seg = sync.segmentos[par.segmento];
+          return (
+            <button
+              key={key}
+              id={`cifrado-acorde-${k}`}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                sync.onSeek(seg.t0);
+              }}
+              title={`Saltar a ${Math.floor(seg.t0 / 60)}:${String(Math.floor(seg.t0 % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
+              className={`font-bold px-1 rounded mr-0.5 text-xs leading-5 cursor-pointer transition-ui ${
+                k === sync.activo
+                  ? "bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]"
+                  : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
+              } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
+            >
+              {chordName}
+            </button>
+          );
+        }
+        return (
+          <span key={key} className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 rounded mr-0.5 text-xs leading-5">
+            {chordName}
+          </span>
+        );
+      };
+
+      // Estilo cifrado clásico: el acorde va ENCIMA del texto, sobre la sílaba en la que cambia.
+      // Cada palabra es una unidad que no se parte (puede llevar un acorde a mitad: «imagi|nación»);
+      // entre palabras hay espacios normales, así que la línea se ajusta sola al ancho.
       return (
         <div key={idx} className="py-0.5" {...letraProps}>
-          {parts.map((part, pIdx) => {
-            if (part.startsWith("[") && part.endsWith("]")) {
-              const chordName = part.slice(1, -1);
-              const k = esTokenAcorde(chordName) ? ordinal++ : -1;
-              const par = sync && k >= 0 ? sync.pares[k] : undefined;
-              if (sync && par && par.segmento !== null) {
-                const seg = sync.segmentos[par.segmento];
-                return (
-                  <button
-                    key={pIdx}
-                    id={`cifrado-acorde-${k}`}
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      sync.onSeek(seg.t0);
-                    }}
-                    title={`Saltar a ${Math.floor(seg.t0 / 60)}:${String(Math.floor(seg.t0 % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
-                    className={`font-bold px-1 py-0.5 rounded mx-0.5 text-xs cursor-pointer transition-ui ${
-                      k === sync.activo
-                        ? "bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]"
-                        : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
-                    } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
-                  >
-                    {chordName}
-                  </button>
-                );
+          {line.split(/(\s+)/).map((token, tIdx) => {
+            if (token === "" || /^\s+$/.test(token)) return token;
+            const piezas: { acorde: React.ReactNode; texto: string }[] = [];
+            let pendiente: React.ReactNode = null;
+            token.split(/(\[[A-Za-z0-9#\/]+\])/g).forEach((parte, pIdx) => {
+              if (parte.startsWith("[") && parte.endsWith("]")) {
+                if (pendiente) piezas.push({ acorde: pendiente, texto: "" });
+                pendiente = nodoAcorde(parte.slice(1, -1), `${tIdx}-${pIdx}`);
+              } else if (parte) {
+                piezas.push({ acorde: pendiente, texto: parte });
+                pendiente = null;
               }
-              return (
-                <span
-                  key={pIdx}
-                  className="font-bold text-[var(--acc)] bg-[var(--acc-soft)] px-1 py-0.5 rounded mx-0.5 text-xs"
-                >
-                  {chordName}
-                </span>
-              );
-            }
+            });
+            if (pendiente) piezas.push({ acorde: pendiente, texto: "" });
             return (
-              <span key={pIdx} className="text-[var(--ink-2)]">
-                {part}
+              <span key={tIdx} className="inline-block whitespace-nowrap align-bottom">
+                {piezas.map((pz, i) => (
+                  <span key={i} className="inline-flex flex-col align-bottom">
+                    <span className="h-5 leading-5">{pz.acorde ?? "\u00A0"}</span>
+                    <span className="whitespace-pre text-[var(--ink-2)]">{pz.texto || "\u00A0"}</span>
+                  </span>
+                ))}
               </span>
             );
           })}

@@ -90,3 +90,70 @@ describe('el cifrado que construimos y el visor de karaoke se entienden', () => 
     });
   });
 });
+
+describe('ningún acorde del audio se pierde en el cifrado (el resaltado no se salta ninguno)', () => {
+  const verso = (t0: number, t1: number, texto: string) => ({ t0, t1, texto });
+  const acordesDe = (cifrado: string) => acordesDelCifrado(cifrado);
+
+  it('tres acordes en una misma línea corta salen los tres, aunque caigan sobre la misma palabra', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 3, 'solo dos palabras')],
+      [ac('Em', 0, 1), ac('C', 1, 1.1), ac('G', 1.1, 3)],
+    );
+    expect(acordesDe(t)).toEqual(['Em', 'C', 'G']);
+  });
+
+  it('los cambios que ocurren en la pausa entre dos frases se escriben al principio de la siguiente', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 2, 'primera frase'), verso(3.5, 5.5, 'segunda frase')],
+      [ac('Am', 0, 2.2), ac('F', 2.2, 3), ac('C', 3, 5.5)],
+    );
+    expect(acordesDe(t)).toEqual(['Am', 'F', 'C']);
+    expect(t.split('\n').pop()).toMatch(/^\[F\]\[C\]segunda frase$|^\[F\]\[C\]/);
+  });
+
+  it('un cambio en el último instante de una frase no se pierde', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 4, 'una frase larga'), verso(4.5, 8, 'otra frase')],
+      [ac('D', 0, 3.95), ac('A', 3.95, 8)],
+    );
+    expect(acordesDe(t)).toEqual(['D', 'A']);
+  });
+
+  it('el cifrado resultante casa al 100 % con el audio y cada acorde del texto tiene su tramo', () => {
+    const segs = [ac('F#m', 0, 2), ac('Bm', 2, 3), ac('E', 3, 3.4), ac('F#m', 3.4, 6), ac('Bm', 6, 8)];
+    const t = construirCifradoSincronizado([verso(0.2, 3.2, 'hijos trabajo casa'), verso(3.6, 7.5, 'ropa bonita coche')], segs);
+    const al = alinearCifradoConAudio(t, segs)!;
+    expect(al.calidad).toBe(1);
+    expect(al.pares.every((p) => p.segmento !== null)).toBe(true);
+  });
+});
+
+describe('el acorde cae en la sílaba en la que cambia', () => {
+  const palabras = (...p: [string, number, number][]) => p.map(([texto, t0, t1]) => ({ texto, t0, t1 }));
+
+  it('un cambio a mitad de una palabra larga se coloca en su frontera de sílaba', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'la imaginación vuela', palabras: palabras(['la', 0, 0.4], ['imaginación', 0.5, 2.5], ['vuela', 3, 4]) }],
+      [ac('Am', 0, 1.5), ac('F', 1.5, 4)],
+    );
+    // 1,5 s es el 50 % de «imaginación»: la frontera de sílaba más cercana (i-ma-gi-|na-ción)
+    expect(t.split('\n')[0]).toBe('[Am]la imagi[F]nación vuela');
+  });
+
+  it('un cambio al comienzo de una palabra la deja entera', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'uno dos tres', palabras: palabras(['uno', 0, 1], ['dos', 1.5, 2.5], ['tres', 3, 4]) }],
+      [ac('G', 0, 1.45), ac('D', 1.45, 4)],
+    );
+    expect(t.split('\n')[0]).toBe('[G]uno [D]dos tres');
+  });
+
+  it('quitar los acordes devuelve exactamente la letra transcrita', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'la imaginación vuela', palabras: palabras(['la', 0, 0.4], ['imaginación', 0.5, 2.5], ['vuela', 3, 4]) }],
+      [ac('Am', 0, 1.1), ac('F', 1.1, 2.1), ac('C', 2.1, 4)],
+    );
+    expect(t.replace(/\[[^\]]+\]/g, '')).toBe('la imaginación vuela');
+  });
+});

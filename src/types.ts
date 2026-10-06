@@ -1176,6 +1176,7 @@ export interface SegmentoAcordeAnalizado {
   acorde: string; // notación internacional («Am», «G7») o «N» si no hay acorde claro
   confianza: number; // 0-1
   editado?: boolean; // corregido a mano: manda sobre el análisis
+  detectado?: string; // acorde que había puesto el detector antes de corregirlo a mano (sirve para medir su acierto real)
 }
 
 /** Resultado de analizar los acordes del audio (columna songs.analisis_acordes). */
@@ -1187,6 +1188,18 @@ export interface AnalisisAcordes {
   duracionSegundos: number;
   tonalidad?: string | null; // la que se usó como pista, si la había
   segmentos: SegmentoAcordeAnalizado[];
+  /** Lo que dijo el detector antes de la primera corrección manual (para medir su acierto real). */
+  segmentosOriginales?: SegmentoAcordeAnalizado[];
+  /**
+   * La «verdad» de la banda: los acordes tal como quedaron tras corregirlos a mano. Sobrevive a los
+   * reanálisis, así cada versión nueva del detector se mide contra ella. `hasta` = fin del último
+   * tramo corregido (se asume que la banda revisa desde el principio).
+   */
+  referenciaManual?: { segmentos: SegmentoAcordeAnalizado[]; guardadaEn: string; hasta: number };
+  /** Tramos de tonalidad cuando la canción cambia de tono (solo si hay más de uno). */
+  tonalidades?: Array<{ t0: number; t1: number; tonalidad: string }>;
+  /** Pulso detectado en el audio (tempo real y fase de los tiempos); si falta, la rejilla de compases usa el BPM de la ficha. */
+  pulso?: { bpm: number; fase: number; confianza: number; pulsos: number[] };
   /** Letra transcrita del audio con tiempos (Whisper sobre la voz), si se ha pedido. */
   letra?: {
     fuente: 'voz' | 'mezcla'; // sobre qué audio se transcribió

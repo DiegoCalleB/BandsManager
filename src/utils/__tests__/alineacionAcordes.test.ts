@@ -124,3 +124,26 @@ describe('asociarLineasConLetra (karaoke: cada línea del cifrado sabe cuándo s
     expect(asociarLineasConLetra('[A]hola\n[E]mundo', [])).toEqual([null, null]);
   });
 });
+
+describe('acordes repetidos y sin pareja: el resaltado no se salta ninguno', () => {
+  const s = (acorde: string, t0: number, t1: number) => ({ t0, t1, acorde, confianza: 1 });
+
+  it('el mismo acorde dos veces seguidas (separado por un silencio) conserva sus dos tramos', () => {
+    const cifrado = '[Am] uno [F] dos [C] tres [C] cuatro [G] cinco';
+    const segs = [s('Am', 0, 2), s('F', 2, 4), s('C', 4, 6), s('N', 6, 7), s('C', 7, 9), s('G', 9, 11)];
+    const al = alinearCifradoConAudio(cifrado, segs)!;
+    expect(al.pares.map((p) => p.segmento)).toEqual([0, 1, 2, 4, 5]);
+    // Recorriendo el audio, el cursor pasa por los cinco acordes del texto, ninguno se salta.
+    const activos = [1, 3, 5, 8, 10].map((t) => acordeActivoDelCifrado(al, segs.findIndex((x) => t >= x.t0 && t < x.t1)));
+    expect(activos).toEqual([0, 1, 2, 3, 4]);
+  });
+
+  it('un acorde del texto que el audio detectó distinto recibe el tramo que cae entre sus vecinos', () => {
+    const cifrado = '[Am] a [F] b [Dm] c [G] d';
+    const segs = [s('Am', 0, 2), s('F', 2, 4), s('A#', 4, 6), s('G', 6, 8)];
+    const al = alinearCifradoConAudio(cifrado, segs)!;
+    expect(al.pares[2].segmento).toBe(2);
+    expect(al.pares[2].coincide).toBe(false);
+    expect([1, 3, 5, 7].map((t) => acordeActivoDelCifrado(al, Math.floor(t / 2)))).toEqual([0, 1, 2, 3]);
+  });
+});

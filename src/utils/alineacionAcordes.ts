@@ -127,6 +127,32 @@ function alinearConDesplazamiento(texto: string[], audio: string[], desplazamien
 }
 
 /**
+ * Un acorde del texto sin pareja exacta (el audio lo detectó distinto o no lo detectó) no puede
+ * quedarse sin tiempo: nunca se resaltaría y el cursor «saltaría» de uno a otro. Se le da el tramo
+ * que cae entre las parejas vecinas, repartiendo por orden. `coincide` sigue en false: es una
+ * estimación para el resaltado, no una coincidencia que cuente para la calidad.
+ */
+function rellenarSinPareja(pares: ParAlineado[], origen: number[]): void {
+  let i = 0;
+  while (i < pares.length) {
+    if (pares[i].segmento !== null) { i++; continue; }
+    let fin = i;
+    while (fin < pares.length && pares[fin].segmento === null) fin++;
+    const antes = i > 0 ? (pares[i - 1].segmento as number) : -1;
+    const despues = fin < pares.length ? (pares[fin].segmento as number) : Infinity;
+    const hueco = origen.filter((o) => o > antes && o < despues);
+    const n = fin - i;
+    if (hueco.length > 0) {
+      for (let k = 0; k < n; k++) {
+        const idx = Math.min(hueco.length - 1, Math.floor(((k + 0.5) * hueco.length) / n));
+        pares[i + k] = { ...pares[i + k], segmento: hueco[idx] };
+      }
+    }
+    i = fin;
+  }
+}
+
+/**
  * Alinea los acordes del cifrado con los segmentos detectados. Devuelve null si no hay material
  * suficiente (menos de 2 acordes en alguno de los lados).
  */
@@ -136,12 +162,15 @@ export function alinearCifradoConAudio(
 ): Alineacion | null {
   const texto = acordesDelCifrado(cifrado);
 
-  // Audio: sin los «N» y fundiendo repeticiones consecutivas; se recuerda el segmento original.
+  // Audio: sin los «N»; se recuerda el segmento original. NO se funden las repeticiones: un cifrado
+  // que escribe el mismo acorde dos veces seguidas (porque entre ellas hubo un silencio, o porque
+  // se repite en dos versos) necesita dos tramos con los que casar; si fundiéramos, el segundo
+  // acorde del texto se quedaba sin pareja y el resaltado «se lo saltaba». Si el audio trae un
+  // acorde partido en dos tramos que el texto escribe una sola vez, el alineamiento descarta uno.
   const audio: string[] = [];
   const origen: number[] = [];
   segmentos.forEach((s, idx) => {
     if (s.acorde === 'N') return;
-    if (audio[audio.length - 1] === s.acorde) return;
     audio.push(s.acorde);
     origen.push(idx);
   });
@@ -161,6 +190,7 @@ export function alinearCifradoConAudio(
   // Se mide contra el lado más corto: un cifrado de 30 acordes frente a un audio de 10 (o al
   // revés, un estribillo escrito una vez frente a un audio que lo repite) no debe parecer peor
   // alineado por tener más material de un lado que del otro.
+  rellenarSinPareja(pares, origen);
   const calidad = pares.filter((p) => p.coincide).length / Math.min(texto.length, audio.length);
   return { desplazamiento: d, calidad, usable: calidad >= CALIDAD_MINIMA, pares };
 }

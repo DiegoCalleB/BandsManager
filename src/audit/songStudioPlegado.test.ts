@@ -42,7 +42,11 @@ describe('Visor de acordes: el traductor automático no toca los acordes', () =>
     expect((visor.match(/translate="no"/g) || []).length).toBeGreaterThanOrEqual(2);
   });
 
-  it('la línea de tiempo marca acorde actual, siguiente y carril como no traducibles', () => {
-    expect((linea.match(/translate="no"/g) || []).length).toBeGreaterThanOrEqual(3);
+  it('la línea de tiempo, el aro de cada acorde y la regleta de compases son no traducibles', () => {
+    const aro = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'AroAcorde.tsx'), 'utf-8');
+    const regleta = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'RegletaCompases.tsx'), 'utf-8');
+    expect((linea.match(/translate="no"/g) || []).length).toBeGreaterThanOrEqual(1); // carril de acordes
+    expect(aro).toContain('translate="no"');
+    expect(regleta).toContain('translate="no"');
   });
 });

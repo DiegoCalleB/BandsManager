@@ -114,6 +114,8 @@ export function construirAnalisis(params: {
   fuente: AnalisisAcordes["fuente"];
   tonalidad: string | null;
   duracionSegundos: number;
+  pulso?: AnalisisAcordes["pulso"] | null;
+  tonalidades?: AnalisisAcordes["tonalidades"];
 }): AnalisisAcordes {
   return {
     version: VERSION_ANALISIS_ACORDES,
@@ -122,5 +124,29 @@ export function construirAnalisis(params: {
     duracionSegundos: Math.round(params.duracionSegundos * 10) / 10,
     tonalidad: params.tonalidad,
     segmentos: params.segmentos.map((s) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde, confianza: s.confianza })),
+    ...(params.pulso ? { pulso: params.pulso } : {}),
+    ...(params.tonalidades && params.tonalidades.length > 1 ? { tonalidades: params.tonalidades } : {}),
+  };
+}
+
+/**
+ * Análisis tras una corrección manual: guarda los tramos corregidos y, además, (1) lo que dijo el
+ * detector antes de la PRIMERA corrección y (2) la «verdad» de la banda hasta el último tramo
+ * corregido. Con ambos se mide el acierto real del detector, y la verdad sobrevive a reanálisis.
+ */
+export function construirAnalisisCorregido(
+  previo: AnalisisAcordes,
+  segmentos: SegmentoAcordeAnalizado[],
+  ahora: string,
+): AnalisisAcordes {
+  const editados = segmentos.filter((s) => s.editado);
+  const hasta = editados.length ? Math.max(...editados.map((s) => s.t1)) : 0;
+  const yaCorregido = (previo.segmentos ?? []).some((s) => s.editado);
+  return {
+    ...previo,
+    segmentos,
+    editadoEn: ahora,
+    ...(previo.segmentosOriginales || yaCorregido ? {} : { segmentosOriginales: previo.segmentos }),
+    ...(editados.length ? { referenciaManual: { segmentos, guardadaEn: ahora, hasta } } : {}),
   };
 }

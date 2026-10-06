@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { detectarAcordesDesdePcm, detectarAcordesConDiagnostico, estimarTonalidadDesdeAcordes } from '../chordDetection';
+import { detectarAcordesDesdePcm, detectarAcordesConDiagnostico, estimarTonalidadDesdeAcordes, estimarTonalidadesPorTramos } from '../chordDetection';
 import { motivoAnalisisPocoFiable } from '../analisisAcordes';
+import { calcularPulso, ajustarAPulso } from '../pulso';
 
 /**
  * Audio sintético que se parece a una canción de rock real, no a un tono limpio: power chords
@@ -160,5 +161,60 @@ describe('estimarTonalidadDesdeAcordes', () => {
   });
   it('con menos de 3 acordes no se atreve', () => {
     expect(estimarTonalidadDesdeAcordes([seg('E', 0), seg('A', 4)])).toBeNull();
+  });
+});
+
+
+describe('pulso sobre rock denso (batería + guitarras + voz)', () => {
+  it('con la ficha aproximada encuentra el tempo y la fase reales (los compases empiezan en 0)', () => {
+    const { pcm } = rock(BTBW, 146, 4, { distorsion: 12, pedal: true });
+    const p = calcularPulso(pcm, SR, { bpmFicha: 142 })!;
+    expect(p).not.toBeNull();
+    expect(Math.abs(p.bpm - 146) / 146).toBeLessThan(0.02);
+    const T = 60 / p.bpm;
+    const d = ((p.fase % T) + T) % T;
+    expect(Math.min(d, T - d)).toBeLessThan(0.08);
+    expect(p.confianza).toBeGreaterThan(0.4);
+  });
+
+  it('llevar los cambios al pulso no empeora el acierto y deja los cambios EN el compás', () => {
+    const { pcm, verdad } = rock(BTBW, 146, 4, { distorsion: 12, pedal: true });
+    const det = detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'E' });
+    const p = calcularPulso(pcm, SR, { bpmFicha: 146 })!;
+    const ajustado = ajustarAPulso(det, p);
+    expect(acierto(ajustado, verdad)).toBeGreaterThanOrEqual(acierto(det, verdad) - 0.01);
+    const errorMedio = (segs: { t0: number }[]) => {
+      const barra = (60 / 146) * 4;
+      const cambios = segs.slice(1).map((s) => s.t0);
+      return cambios.reduce((a, t) => a + Math.min(t % barra, barra - (t % barra)), 0) / cambios.length;
+    };
+    expect(errorMedio(ajustado)).toBeLessThanOrEqual(errorMedio(det) + 0.005);
+  });
+});
+
+
+describe('cambios de tono (modulaciones)', () => {
+  const C: [number, 'maj' | 'min'][] = [[0, 'maj'], [5, 'maj'], [7, 'maj'], [9, 'min']];
+  const D: [number, 'maj' | 'min'][] = [[2, 'maj'], [7, 'maj'], [9, 'maj'], [11, 'min']];
+  const prog = [...C, ...C, ...C, ...C, ...C, ...D, ...D, ...D, ...D, ...D];
+
+  it('detecta que la canción sube de Do a Re y sitúa el cambio donde ocurre', { timeout: 30000 }, () => {
+    const { pcm } = rock(prog, 120, 1, { ruido: 2, voz: 1 });
+    const { diagnostico } = detectarAcordesConDiagnostico(pcm, SR, { tonalidad: 'C' });
+    expect(diagnostico.tonalidades.map((t) => t.tonalidad)).toEqual(['C', 'D']);
+    expect(Math.abs(diagnostico.tonalidades[1].t0 - 40)).toBeLessThan(1);
+  });
+
+  it('con la ficha en Do, el tramo en Re ya no confunde La con Lam (power chords con mucho ruido)', { timeout: 30000 }, () => {
+    const { pcm, verdad } = rock(prog, 120, 1, { ruido: 2, voz: 1 });
+    const det = detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'C' });
+    expect(acierto(det, verdad.slice(verdad.length / 2))).toBeGreaterThan(0.95); // era 75 % con una sola tonalidad
+  });
+
+  it('un acorde prestado o una canción sin modular no inventan cambios de tono', () => {
+    const s = (acorde: string, t0: number) => ({ t0, t1: t0 + 2, acorde, confianza: 1 });
+    const segs = Array.from({ length: 50 }, (_, i) => s(['C', 'F', 'G', 'Am'][i % 4], i * 2));
+    segs[22] = s('A#', 44); // un Sib prestado en mitad de la canción
+    expect(estimarTonalidadesPorTramos(segs).length).toBe(1);
   });
 });

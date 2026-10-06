@@ -50,7 +50,67 @@ export function corregirAcorde(
   indice: number,
   acorde: string
 ): SegmentoAcordeAnalizado[] {
-  return segmentos.map((s, i) => (i === indice ? { ...s, acorde, confianza: 1, editado: true } : s));
+  return segmentos.map((s, i) => {
+    if (i !== indice) return s;
+    // Se recuerda lo que detectó el algoritmo: las correcciones son la única verdad medida de la que disponemos.
+    const detectado = s.editado ? s.detectado : s.acorde;
+    return { ...s, acorde, confianza: 1, editado: true, ...(detectado ? { detectado } : {}) };
+  });
+}
+
+/** Separación mínima entre dos fronteras al editar a mano (s). */
+export const TRAMO_MINIMO = 0.2;
+
+const redondear = (t: number) => Math.round(t * 100) / 100;
+
+/** Parte el tramo que contiene `t` en dos (mismo acorde): es el primer paso para meter un cambio que el detector no vio. */
+export function partirTramo(segmentos: SegmentoAcordeAnalizado[], t: number): SegmentoAcordeAnalizado[] {
+  const i = indiceSegmentoEn(segmentos, t);
+  if (i < 0) return segmentos;
+  const s = segmentos[i];
+  const corte = redondear(t);
+  if (corte - s.t0 < TRAMO_MINIMO || s.t1 - corte < TRAMO_MINIMO) return segmentos;
+  const detectado = s.detectado ?? (s.editado ? undefined : s.acorde);
+  const marcado = { editado: true as const, ...(detectado ? { detectado } : {}) };
+  return [...segmentos.slice(0, i), { ...s, t1: corte, ...marcado }, { ...s, t0: corte, ...marcado }, ...segmentos.slice(i + 1)];
+}
+
+/** Mueve la frontera entre el tramo `i-1` y el `i` a `t`, sin dejar ninguno por debajo de TRAMO_MINIMO. */
+export function moverFrontera(segmentos: SegmentoAcordeAnalizado[], i: number, t: number): SegmentoAcordeAnalizado[] {
+  if (i <= 0 || i >= segmentos.length) return segmentos;
+  const previo = segmentos[i - 1];
+  const actual = segmentos[i];
+  const nuevo = redondear(Math.min(actual.t1 - TRAMO_MINIMO, Math.max(previo.t0 + TRAMO_MINIMO, t)));
+  if (nuevo === actual.t0) return segmentos;
+  return segmentos.map((s, k) => (k === i - 1 ? { ...s, t1: nuevo, editado: true } : k === i ? { ...s, t0: nuevo, editado: true } : s));
+}
+
+/** Elimina un cambio inventado: el tramo `i` se funde con el anterior. */
+export function unirConAnterior(segmentos: SegmentoAcordeAnalizado[], i: number): SegmentoAcordeAnalizado[] {
+  if (i <= 0 || i >= segmentos.length) return segmentos;
+  const previo = segmentos[i - 1];
+  const fundido: SegmentoAcordeAnalizado = { ...previo, t1: segmentos[i].t1, editado: true };
+  if (!fundido.detectado && !previo.editado) fundido.detectado = previo.acorde;
+  return [...segmentos.slice(0, i - 1), fundido, ...segmentos.slice(i + 1)];
+}
+
+/**
+ * Desplaza todo el análisis `delta` segundos (positivo = los acordes llegan más tarde). Corrige un
+ * desfase constante entre el audio analizado y el que suena. Los tramos que se salen por la izquierda
+ * se recortan o se descartan.
+ */
+export function desplazarSegmentos(segmentos: SegmentoAcordeAnalizado[], delta: number): SegmentoAcordeAnalizado[] {
+  const fuera: SegmentoAcordeAnalizado[] = [];
+  for (const s of segmentos) {
+    const t1 = redondear(s.t1 + delta);
+    if (t1 <= TRAMO_MINIMO / 2) continue;
+    fuera.push({ ...s, t0: Math.max(0, redondear(s.t0 + delta)), t1 });
+  }
+  if (fuera.length > 0 && delta > 0 && fuera[0].t0 > 0) {
+    // Hueco al principio: el primer acorde se estira hasta el inicio para no dejar un tramo sin cubrir.
+    fuera[0] = { ...fuera[0], t0: 0 };
+  }
+  return fuera;
 }
 
 // ── Normalización y validación de acordes escritos a mano ──────────────────────────────────────
@@ -123,6 +183,8 @@ export function validarSegmentos(entrada: unknown): ResultadoValidacion {
       t0, t1, acorde, confianza: Number.isFinite(conf) ? Math.min(1, Math.max(0, conf)) : 0,
     };
     if (s?.editado === true) seg.editado = true;
+    const det = typeof s?.detectado === 'string' ? normalizarAcorde(s.detectado) : null;
+    if (det) seg.detectado = det;
     limpios.push(seg);
   }
   return { ok: true, segmentos: limpios };
