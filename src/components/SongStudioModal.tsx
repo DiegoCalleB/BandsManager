@@ -6121,7 +6121,7 @@ export default function SongStudioModal({
           moisesTab={moisesTab}
           setMoisesTab={setMoisesTab}
           moisesPreset={moisesPreset}
-          setMoisesPreset={setMoisesPreset}
+          setMoisesPreset={handleSelectMoisesPreset}
           handlePerformAiStemSeparation={handlePerformAiStemSeparation}
           song={song}
           onUpdateSong={onUpdateSong}
