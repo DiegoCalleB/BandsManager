@@ -132,7 +132,27 @@ const normaliza = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ''
  * Quita lo que Whisper suele inventar sobre música: créditos de subtítulos, marcas de música,
  * bucles de la misma frase y tramos larguísimos con casi nada de texto.
  */
-export function limpiarLineas(lineas: LineaLetra[]): LineaLetra[] {
+/**
+ * Arregla los tiempos que algunos modelos devuelven rotos en los cortes de ventana de 30 s: fin
+ * ausente (línea de 0 s: «90.0-90.0») o anterior al inicio («170.0-163.5»). El texto es real, solo
+ * falla el fin: se acota al inicio de la línea siguiente o a ~0,45 s por palabra. Devuelve las líneas
+ * ordenadas por inicio y sin solaparse con la siguiente.
+ */
+export function repararTiempos(lineas: LineaLetra[]): LineaLetra[] {
+  const ord = [...lineas].sort((a, b) => a.t0 - b.t0);
+  return ord.map((l, i) => {
+    const sig = ord[i + 1];
+    const palabras = l.texto.split(/\s+/).filter(Boolean).length;
+    const rota = !(l.t1 > l.t0 + 0.15);
+    let t1 = rota ? l.t0 + Math.max(0.6, palabras * 0.45) : l.t1;
+    if (sig && t1 > sig.t0 && sig.t0 > l.t0 + 0.2) t1 = sig.t0;
+    if (!rota && t1 === l.t1) return l;
+    return { ...l, t1: Math.round(t1 * 100) / 100 };
+  });
+}
+
+export function limpiarLineas(lineasEntrada: LineaLetra[]): LineaLetra[] {
+  const lineas = repararTiempos(lineasEntrada);
   const sinBasura = lineas.filter((l) => {
     if (FRASES_ALUCINADAS.some((r) => r.test(l.texto))) return false;
     // Criterios del propio Whisper: probablemente silencio/música con baja confianza, o un bucle.
@@ -198,6 +218,9 @@ export function construirEntrada(propiedades: Set<string>, audioUrl: string, idi
   if (propiedades.has('word_timestamps')) entrada.word_timestamps = true;
   if (propiedades.has('task')) entrada.task = 'transcribe';
   if (idioma && propiedades.has('language')) entrada.language = idioma;
+  // Whisper arrastra el texto anterior como contexto: tras una alucinación o un tramo instrumental se
+  // «pierde» y deja minutos sin letra. Cada ventana se decodifica por separado.
+  if (propiedades.has('condition_on_previous_text')) entrada.condition_on_previous_text = false;
   return entrada;
 }
 

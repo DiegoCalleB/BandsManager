@@ -23,6 +23,9 @@ interface Props {
   sincronizacion: { calidad: number; desplazamiento: number; usable: boolean } | null;
   seguir: boolean;
   onSeguir: (valor: boolean) => void;
+  /** Vibrar al cambiar de acorde (solo si el dispositivo puede). */
+  vibrar?: boolean;
+  onVibrar?: (valor: boolean) => void;
   onClose: () => void;
 }
 
@@ -39,7 +42,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, onClose,
+  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, vibrar, onVibrar, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -280,6 +283,11 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             <label className="flex items-center gap-1 cursor-pointer text-[var(--ink)]">
               <input type="checkbox" checked={seguir} onChange={(e) => onSeguir(e.target.checked)} /> Seguir en el cifrado
             </label>
+            {onVibrar && typeof navigator !== 'undefined' && 'vibrate' in navigator && (
+              <label className="flex items-center gap-1 cursor-pointer text-[var(--ink)]" title="El móvil vibra en cada cambio de acorde">
+                <input type="checkbox" checked={Boolean(vibrar)} onChange={(e) => onVibrar(e.target.checked)} /> Vibrar al cambiar
+              </label>
+            )}
           </>
         ) : (
           <span>

@@ -79,6 +79,8 @@ export interface ParAlineado {
   segmento: number | null;
   /** true si coinciden (misma familia); false si casaron por posición pero difieren. */
   coincide: boolean;
+  /** true si el tramo no es una pareja real sino una estimación (el acorde no tenía pareja en el audio). */
+  estimado?: boolean;
 }
 
 export interface Alineacion {
@@ -145,7 +147,7 @@ function rellenarSinPareja(pares: ParAlineado[], origen: number[]): void {
     if (hueco.length > 0) {
       for (let k = 0; k < n; k++) {
         const idx = Math.min(hueco.length - 1, Math.floor(((k + 0.5) * hueco.length) / n));
-        pares[i + k] = { ...pares[i + k], segmento: hueco[idx] };
+        pares[i + k] = { ...pares[i + k], segmento: hueco[idx], estimado: true };
       }
     }
     i = fin;
@@ -196,8 +198,70 @@ export function alinearCifradoConAudio(
 }
 
 /**
- * Qué acorde del cifrado está sonando: el último cuyo tramo ya ha empezado (los pares están en
- * orden, así que basta recorrer hasta pasarse). -1 si todavía no ha empezado ninguno.
+ * Línea (índice en el texto) en la que está cada acorde del cifrado, en el mismo orden que
+ * `acordesDelCifrado`. Sirve para dar tiempo a los acordes sin pareja en el audio a partir del
+ * momento en que empieza su frase.
+ */
+export function lineaDeCadaAcorde(texto: string): number[] {
+  const salida: number[] = [];
+  (texto || '').split('\n').forEach((linea, i) => {
+    if (esLineaCabecera(linea)) return;
+    for (const m of linea.matchAll(/\[([A-Za-z0-9#\/]+)\]/g)) if (esTokenAcorde(m[1])) salida.push(i);
+  });
+  return salida;
+}
+
+/**
+ * Instante (s) en el que suena CADA acorde del cifrado. Los que casan con un tramo del audio toman su
+ * inicio; los que no (típicamente el acorde que se repite al empezar una frase aunque en el audio
+ * no cambie, o uno que el detector no vio) toman el inicio de su frase si cae entre sus vecinos y,
+ * si no, un reparto uniforme entre ellos. Los tiempos son ESTRICTAMENTE crecientes dentro de cada
+ * hueco, así el resaltado pasa por todos los acordes y nunca «se salta» uno.
+ */
+export function tiemposDeAcordes(
+  alineacion: Alineacion | null,
+  segmentos: SegmentoAcordeAnalizado[],
+  tiemposLinea: Array<number | null> = [],
+): number[] {
+  if (!alineacion?.usable) return [];
+  const n = alineacion.pares.length;
+  const t: Array<number | null> = alineacion.pares.map((p) => (p.segmento === null || p.estimado ? null : segmentos[p.segmento]?.t0 ?? null));
+  let i = 0;
+  while (i < n) {
+    if (t[i] !== null) { i++; continue; }
+    let fin = i;
+    while (fin < n && t[fin] === null) fin++;
+    const a = i > 0 ? (t[i - 1] as number) : 0;
+    const b = fin < n ? (t[fin] as number) : null;
+    const huecos = fin - i;
+    // 1) el inicio de la frase de cada acorde, si es creciente y cae entre los vecinos
+    const porLinea = Array.from({ length: huecos }, (_, k) => tiemposLinea[i + k] ?? null);
+    const valido = porLinea.every((x, k) => x !== null && x > (k === 0 ? a : (porLinea[k - 1] as number)) + 1e-6 && (b === null || x < b - 1e-6));
+    for (let k = 0; k < huecos; k++) {
+      t[i + k] = valido
+        ? (porLinea[k] as number)
+        : b === null
+          ? a + 0.4 * (k + 1)
+          : a + ((k + 1) / (huecos + 1)) * (b - a);
+    }
+    i = fin;
+  }
+  return t.map((x) => Math.round((x as number) * 1000) / 1000);
+}
+
+/** Qué acorde del cifrado suena en el instante `t`: el último cuyo tiempo ya ha llegado (−1 si ninguno). */
+export function acordeActivoPorTiempo(tiempos: number[], t: number): number {
+  let lo = 0, hi = tiempos.length - 1, mejor = -1;
+  while (lo <= hi) {
+    const m = (lo + hi) >> 1;
+    if (tiempos[m] <= t + 1e-6) { mejor = m; lo = m + 1; } else hi = m - 1;
+  }
+  return mejor;
+}
+
+/**
+ * Qué acorde del cifrado está sonando según el SEGMENTO actual (versión sin tiempos propios por
+ * acorde; el visor usa `tiemposDeAcordes` + `acordeActivoPorTiempo`).
  */
 export function acordeActivoDelCifrado(
   alineacion: Alineacion | null,
