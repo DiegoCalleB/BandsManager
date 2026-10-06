@@ -3,23 +3,57 @@
   "bootstrap-sha": "b08e8a464cd339cf047f0184a839f80027824675",
   "release-type": "node",
   "include-v-in-tag": true,
-  "bump-minor-pre-major": true,
-  "bump-patch-for-minor-pre-major": false,
   "packages": {
     ".": {
       "package-name": "bandmanager",
       "changelog-path": "CHANGELOG.md",
       "changelog-sections": [
-        { "type": "feat", "section": "Novedades" },
-        { "type": "fix", "section": "Correcciones" },
-        { "type": "perf", "section": "Rendimiento" },
-        { "type": "refactor", "section": "Refactorización" },
-        { "type": "docs", "section": "Documentación", "hidden": false },
-        { "type": "test", "section": "Tests", "hidden": true },
-        { "type": "chore", "section": "Mantenimiento", "hidden": true },
-        { "type": "ci", "section": "CI", "hidden": true },
-        { "type": "build", "section": "Build", "hidden": true },
-        { "type": "style", "section": "Estilo", "hidden": true }
+        {
+          "type": "feat",
+          "section": "Novedades"
+        },
+        {
+          "type": "fix",
+          "section": "Correcciones"
+        },
+        {
+          "type": "perf",
+          "section": "Rendimiento"
+        },
+        {
+          "type": "refactor",
+          "section": "Refactorización"
+        },
+        {
+          "type": "docs",
+          "section": "Documentación",
+          "hidden": false
+        },
+        {
+          "type": "test",
+          "section": "Tests",
+          "hidden": true
+        },
+        {
+          "type": "chore",
+          "section": "Mantenimiento",
+          "hidden": true
+        },
+        {
+          "type": "ci",
+          "section": "CI",
+          "hidden": true
+        },
+        {
+          "type": "build",
+          "section": "Build",
+          "hidden": true
+        },
+        {
+          "type": "style",
+          "section": "Estilo",
+          "hidden": true
+        }
       ]
     }
   }
