@@ -276,61 +276,47 @@ export function SongChordsViewerModal({
 
       // Un cifrado que ya existe (escrito por la banda) no se sustituye sin preguntar.
       const sobrescribir = Boolean(song.cifradoTexto && song.cifradoTexto.trim());
-      if (sobrescribir && !window.confirm("Esta canción ya tiene un cifrado guardado. Si lo generas desde el audio, el actual se sustituirá. ¿Continuar?")) {
+      if (sobrescribir && !window.confirm("Esta canción ya tiene un cifrado guardado. Si lo transcribes desde el audio, el actual se sustituirá. ¿Continuar?")) {
         setIsGeneratingAi(false);
         return;
       }
 
-      const data = await apiFetch<any>("/api/generate-song-chords", {
+      // Letra con un modelo de reconocimiento de voz (con tiempos) y acordes detectados del audio,
+      // fusionados por tiempo. Nada se genera a partir del título.
+      const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/letra-sincronizada`, {
         method: "POST",
-        body: JSON.stringify({
-          sobrescribir,
-          songId: song.id,
-          titulo: song.titulo,
-          tonalidad: song.tonalidad,
-          bpm: song.bpm,
-          afinacion: song.afinacion,
-          notasInternas: song.notasInternas,
-          esVersionCovers: song.esVersionCovers,
-          artista: song.albumDisco,
-          audioUrl: song.audioPrincipalUrl || undefined,
-        }),
+        body: JSON.stringify({ sobrescribir }),
       });
 
-      if (!data?.success) {
-        throw new Error(data?.error || "Error al generar acordes con IA");
+      if (!data?.success || !data.cifradoTexto) {
+        throw new Error(data?.error || "No se pudo transcribir la letra del audio");
       }
 
       setCifradoTexto(data.cifradoTexto);
-      if (data.guiaSustituto) {
-        setGuiaSustituto(data.guiaSustituto);
-      }
-
-      const updatedSong: Song = {
+      onUpdateSong({
         ...song,
         cifradoTexto: data.cifradoTexto,
-        guiaSustituto: data.guiaSustituto,
-      };
-      onUpdateSong(updatedSong);
+        guiaSustituto: data.song?.guiaSustituto ?? song.guiaSustituto,
+        ...(data.analisis ? { analisisAcordes: data.analisis } : {}),
+      });
+      if (data.analisis) setShowAnalisisAcordes(true);
 
-      // La letra solo sale del audio. El mensaje dice cuánto se fía el transcriptor, para que nadie
-      // dé por buena una letra con huecos o dudas sin revisarla de oído.
-      if (data.letraConfianza === "sin_letra") {
-        setAiSuccessMsg("✓ Acordes transcritos del audio. No se oye una letra inteligible, así que no se ha escrito ninguna.");
-      } else if (data.letraConfianza === "alta") {
-        setAiSuccessMsg("✓ Letra y acordes transcritos del audio. Es una transcripción automática: revísala de oído.");
-      } else {
+      // El mensaje dice de dónde sale la letra y cuánto fiarse: nadie debe dar por buena una
+      // transcripción automática sin revisarla de oído.
+      const partes: string[] = [`${data.lineas} líneas transcritas${data.idioma ? ` (idioma detectado: ${data.idioma})` : ""}`];
+      partes.push(data.conAcordes ? "acordes sincronizados por tiempo" : "sin acordes (no se pudieron detectar)");
+      if (data.fuenteLetra === "mezcla") {
         setAiSuccessMsg(
-          `⚠️ Letra transcrita con confianza ${data.letraConfianza === "media" ? "media" : "baja"}: los [?] son palabras que no se entendieron. Revísala de oído antes de usarla.`,
+          `⚠️ ${partes.join(", ")}. No hay pista de voz aislada: se transcribió la mezcla completa y habrá errores. Separa la voz con Iris para mejorarlo. Revísala de oído.`,
         );
+      } else {
+        setAiSuccessMsg(`✓ Letra transcrita de la voz: ${partes.join(", ")}. Es automática: revísala de oído.`);
       }
       setTimeout(() => setAiSuccessMsg(null), 9000);
     } catch (err: any) {
       console.error("Error generating with AI:", err);
-      setAiSuccessMsg(
-        `⚠️ ${err.message || "No se pudieron generar los acordes"}`,
-      );
-      setTimeout(() => setAiSuccessMsg(null), 5000);
+      setAiSuccessMsg(`⚠️ ${err.message || "No se pudo transcribir la letra"}`);
+      setTimeout(() => setAiSuccessMsg(null), 12000);
     } finally {
       setIsGeneratingAi(false);
     }
@@ -520,14 +506,14 @@ export function SongChordsViewerModal({
                 className="items-center gap-1.5"
                 title={
                   song.audioPrincipalUrl
-                    ? "Transcribir letra y acordes escuchando el audio real de la canción (nunca inventa: lo que no se entiende queda como [?])"
+                    ? "Transcribir la letra de la voz con tiempos y sincronizarla con los acordes (reconocimiento de voz; nunca se inventa a partir del título)"
                     : "Necesita el audio de la canción: sin audio no se puede transcribir nada"
                 }
               >
                 <Wand2
                   className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
-                <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
+                <span>{isGeneratingAi ? "Transcribiendo…" : "Letra del audio"}</span>
               </Button>
 
               {/* Detección propia de acordes con tiempos, sin IA generativa */}

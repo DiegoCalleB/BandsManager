@@ -63,3 +63,57 @@ describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
     expect(viewer).toMatch(/window\.confirm\([^)]*sustituir/);
   });
 });
+
+describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunca generativo', () => {
+  const ini = rutas.indexOf('router.post("/songs/:id/letra-sincronizada"');
+  const ruta = rutas.slice(ini, rutas.indexOf('// PATCH corrección manual de los acordes detectados.'));
+
+  it('existe y transcribe con el servicio de voz, sin pasar por un modelo generativo', () => {
+    expect(ini).toBeGreaterThan(-1);
+    expect(ruta).toContain('transcribirLetra(');
+    expect(ruta).not.toContain('generateContentWithFallback');
+    expect(ruta).not.toContain('getAiClient');
+  });
+
+  it('si la transcripción falla responde 502 y NO guarda nada (el guardado va después)', () => {
+    expect(ruta.indexOf('status(502)')).toBeGreaterThan(-1);
+    expect(ruta.indexOf('status(502)')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
+  });
+
+  it('una letra con menos de 8 palabras se rechaza como «sin letra», no se guarda', () => {
+    expect(ruta).toContain('totalPalabras(lineas) < 8');
+    expect(ruta.indexOf('sin_letra')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
+  });
+
+  it('no sustituye un cifrado existente sin sobrescribir: true y lo comprueba antes de transcribir', () => {
+    expect(ruta.indexOf('req.body?.sobrescribir !== true')).toBeLessThan(ruta.indexOf('transcribirLetra('));
+  });
+
+  it('prefiere la pista de voz aislada de Iris y avisa de que la mezcla es peor', () => {
+    expect(ruta).toMatch(/voz\|vocals/);
+    expect(ruta).toContain('letraConfianza = fuenteLetra === "voz" ? "media" : "baja"');
+  });
+
+  it('sin audio no se transcribe nada (400) y el mensaje dice que no se inventa', () => {
+    expect(ruta).toMatch(/no voy a inventarla/);
+  });
+});
+
+describe('Cliente: la letra solo se pide a propósito', () => {
+  const viewer = leer('src', 'components', 'SongChordsViewerModal.tsx');
+  const bulk = leer('src', 'components', 'repertorio', 'BulkAlbumAudioUploaderModal.tsx');
+  const repertorio = leer('src', 'components', 'RepertorioSetlists.tsx');
+
+  it('«Letra del audio» llama a la transcripción por voz, no al generador antiguo', () => {
+    expect(viewer).toContain('/letra-sincronizada');
+    expect(viewer).not.toContain('/api/generate-song-chords');
+  });
+
+  it('la subida de audio (suelta o en lote) solo detecta acordes, nunca genera letra', () => {
+    for (const f of [bulk, repertorio]) {
+      expect(f).not.toContain('generate-song-chords');
+      expect(f).not.toContain('letra-sincronizada');
+      expect(f).toContain('analizar-acordes');
+    }
+  });
+});

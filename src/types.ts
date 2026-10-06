@@ -1187,6 +1187,14 @@ export interface AnalisisAcordes {
   duracionSegundos: number;
   tonalidad?: string | null; // la que se usó como pista, si la había
   segmentos: SegmentoAcordeAnalizado[];
+  /** Letra transcrita del audio con tiempos (Whisper sobre la voz), si se ha pedido. */
+  letra?: {
+    fuente: 'voz' | 'mezcla'; // sobre qué audio se transcribió
+    modelo: string;
+    idioma?: string;
+    transcritaEn: string; // ISO
+    lineas: Array<{ t0: number; t1: number; texto: string }>;
+  };
 }
 
 export interface SongSubstituteGuide {

@@ -70,7 +70,7 @@ describe('Rutas de acordes: garantías', () => {
     const i = rutas.indexOf('router.post("/songs/:id/analizar-acordes"');
     const cuerpo = rutas.slice(i, rutas.indexOf('router.patch("/songs/:id/acordes"'));
     expect(cuerpo).toContain('req.body?.sobrescribir !== true');
-    expect(cuerpo.indexOf('sobrescribir')).toBeLessThan(cuerpo.indexOf('extraerPcmMono('));
+    expect(cuerpo.indexOf('sobrescribir')).toBeLessThan(cuerpo.indexOf('analizarAcordesDeCancion('));
   });
 });
 

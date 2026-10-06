@@ -9,10 +9,10 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
-import { detectarAcordesDesdePcm, sumarPcm } from "../utils/chordDetection.js";
-import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
+import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
+import { transcribirLetra, limpiarLineas, totalPalabras } from "../services/transcripcionLetra.js";
+import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
-import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis, motivoAnalisisPocoFiable } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -215,35 +215,121 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
       return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
     }
 
-    const niveles = elegirFuentesAudio(song);
-    if (niveles.length === 0) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
-
-    // Se prueba de mejor a peor fuente; si una no se puede decodificar se baja a la siguiente.
-    let pcm: Float32Array | null = null;
-    let fuente = niveles[0].fuente;
-    for (const nivel of niveles) {
-      const decodificados = (
-        await Promise.all(nivel.urls.map((u) => extraerPcmMono(u, { timeoutMs: 90_000, maxDuracionSeg: 360 })))
-      ).filter((p): p is Float32Array => p !== null);
-      if (decodificados.length > 0) {
-        pcm = sumarPcm(decodificados);
-        fuente = nivel.fuente;
-        break;
-      }
-    }
-    if (!pcm) return res.status(422).json({ error: "No se pudo descargar o decodificar el audio de la canción (la URL puede haber caducado o el formato no es compatible). Prueba a subirlo de nuevo." });
-
-    const tonalidad = normalizarTonalidad(song.tonalidad);
-    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad: tonalidad ?? undefined });
-    const motivo = motivoAnalisisPocoFiable(segmentos, pcm.length / SAMPLE_RATE);
-    if (motivo) return res.status(422).json({ error: motivo });
-
-    const analisis = construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
+    const resultado = await analizarAcordesDeCancion(song);
+    if (resultado.ok === false) return res.status(resultado.status).json({ error: resultado.error });
+    const analisis = resultado.analisis;
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
   } catch (err: any) {
     console.error("Error analizando acordes del audio:", err);
     res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
+  } finally {
+    analisisAcordesEnCurso.delete(clave);
+  }
+});
+
+// POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
+// VOZ (Whisper) sobre la pista de voz aislada de Iris (o, si no hay, la mezcla), con marcas de
+// tiempo; los acordes, de la detección propia. Se fusionan por tiempo en un cifrado de texto.
+// Nunca se genera letra a partir del título ni con un modelo generativo: si no se puede
+// transcribir, se devuelve el error y no se escribe nada.
+router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userBandId = getTargetBandId(req);
+  const clave = `${userBandId}:${id}`;
+  if (analisisAcordesEnCurso.has(clave)) {
+    return res.status(409).json({ error: "Ya se está procesando el audio de esta canción." });
+  }
+  analisisAcordesEnCurso.add(clave);
+  try {
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+
+    // Un cifrado escrito por la banda no se sustituye sin confirmación (y no se gasta transcripción).
+    if (song.cifradoTexto && String(song.cifradoTexto).trim() && req.body?.sobrescribir !== true) {
+      return res.status(409).json({
+        yaTieneCifrado: true,
+        error: "Esta canción ya tiene un cifrado guardado. Transcribir desde el audio lo sustituiría.",
+      });
+    }
+
+    const urlVoz = (song.audioIdeas ?? [])
+      .flatMap((i: any) => i.pistas ?? [])
+      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+    const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
+    const urlLetra: string | undefined = urlVoz || urlMezcla;
+    if (!urlLetra) {
+      return res.status(400).json({ error: "Sin audio no se puede transcribir la letra, y no voy a inventarla. Sube el audio de la canción, o escribe/pega el cifrado." });
+    }
+    const fuenteLetra: "voz" | "mezcla" = urlVoz ? "voz" : "mezcla";
+
+    // Acordes: los ya detectados (con correcciones) o un análisis nuevo. Si fallan, la letra sigue.
+    let analisis = song.analisisAcordes as any;
+    let avisoAcordes: string | undefined;
+    if (!analisis) {
+      const r = await analizarAcordesDeCancion(song);
+      if (r.ok === true) analisis = r.analisis;
+      else avisoAcordes = (r as { error: string }).error;
+    }
+
+    let transcripcion;
+    try {
+      transcripcion = await transcribirLetra(urlLetra, { idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined });
+    } catch (err: any) {
+      console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
+      return res.status(502).json({ error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` });
+    }
+
+    const lineas = limpiarLineas(transcripcion.lineas);
+    if (totalPalabras(lineas) < 8) {
+      return res.status(422).json({
+        letraConfianza: "sin_letra",
+        error: "No se oye una letra inteligible en este audio (¿instrumental, o voz muy tapada?). No se ha escrito ninguna letra.",
+      });
+    }
+
+    const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
+    const letraConfianza = fuenteLetra === "voz" ? "media" : "baja";
+    const analisisFinal = analisis
+      ? {
+          ...analisis,
+          letra: {
+            fuente: fuenteLetra,
+            modelo: transcripcion.modelo,
+            idioma: transcripcion.idioma,
+            transcritaEn: new Date().toISOString(),
+            lineas: lineas.slice(0, 400).map((l) => ({ t0: l.t0, t1: l.t1, texto: l.texto })),
+          },
+        }
+      : undefined;
+
+    const guardada = await dbUpsertSong(
+      {
+        ...song,
+        cifradoTexto,
+        guiaSustituto: { ...(song.guiaSustituto || {}), origenCifrado: "audio_real", cifradoAproximado: true, letraConfianza },
+        ...(analisisFinal ? { analisisAcordes: analisisFinal } : {}),
+      },
+      userBandId
+    );
+
+    res.json({
+      success: true,
+      cifradoTexto,
+      letraConfianza,
+      fuenteLetra,
+      idioma: transcripcion.idioma,
+      modelo: transcripcion.modelo,
+      lineas: lineas.length,
+      conAcordes: Boolean(analisis),
+      avisoAcordes,
+      analisis: analisisFinal ?? analisis ?? null,
+      song: guardada,
+    });
+  } catch (err: any) {
+    console.error("Error en letra-sincronizada:", err);
+    res.status(500).json({ error: err?.message || "No se pudo procesar la letra." });
   } finally {
     analisisAcordesEnCurso.delete(clave);
   }
