@@ -47,6 +47,7 @@ import {
   planPages,
 } from "../../utils/setlistPaginator";
 import { escapeHtml } from "../../utils/escapeHtml";
+import { cleanPrintedNote, cleanSetlistName, isAutoVersionNote } from "../../utils/setlistNoteText";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Select } from '../ui';
 
@@ -80,8 +81,10 @@ const ROW_GAP_PX = 5;
 // legible a ~2m de distancia de escenario; COMFORT, la letra a partir de la cual ya no merece la
 // pena partir en más hojas; FLOOR, el último recurso si ni con el máximo de hojas cabe a MIN.
 const MIN_TITLE_FONT_PT = 17;
-const COMFORT_TITLE_FONT_PT = 19;
+const COMFORT_TITLE_FONT_PT = 17;
 const FLOOR_TITLE_FONT_PT = 13;
+// Con columnas en automático, solo a partir de aquí (un set corto no gana nada con dos columnas).
+const AUTO_COLUMNS_MIN_SONGS = 14;
 // Techo de diseño: más grande que esto, un título corto deja de parecer un setlist.
 const MAX_DESIGN_TITLE_FONT_PT = 40;
 // La nota manuscrita crece con el título, pero con tope: a 44pt de título una nota de 30pt
@@ -179,48 +182,14 @@ interface NoteLayoutResult {
   mode: "inline" | "below";
   maxWidthPx: number;
   fit: StackedFitResult;
-  /** Presente solo si el título se truncó para dejar hueco a la nota al lado (modo'inline') —
-   * nunca por debajo de MIN_TITLE_CHARS, para que la canción siga siendo reconocible. */
-  truncatedTitle?: string;
-}
-
-// Mínimo de caracteres visibles del título cuando se trunca para hacer hueco a una nota al
-// lado — un músico debe poder reconocer la canción en escena aunque el título se acorte.
-const MIN_TITLE_CHARS = 16;
-
-function truncateTitleToWidth(
-  titleText: string,
-  maxWidthPx: number,
-  titleFontSizePx: number,
-  titleFontFamily: string,
-  measure: NoteLayoutInput["measure"],
-): string {
-  const minLen = Math.min(MIN_TITLE_CHARS, titleText.length);
-  for (let len = titleText.length; len >= minLen; len--) {
-    const candidate =
-      len === titleText.length
-        ? titleText
-        : `${titleText.slice(0, len).trimEnd()}…`;
-    if (
-      measure(candidate, titleFontSizePx, titleFontFamily, 900) <= maxWidthPx
-    ) {
-      return candidate;
-    }
-  }
-  return `${titleText.slice(0, minLen).trimEnd()}…`;
 }
 
 /**
- * Decide, para una fila de canción concreta, si la nota (miembro, nota del bolo, nota general)
- * cabe en una columna a la derecha del título o si esa fila necesita caer a una línea propia
- * debajo — y calcula, con fitStackedNoteSegments, el tamaño de cada nota y las líneas ya
- * apiladas (una por nota, cada una en su propia línea; el texto de una nota nunca se pierde: no
- * se parte en dos líneas ni se trunca). Si el título completo no deja hueco útil al lado, se
- * intenta truncarlo (nunca por debajo de MIN_TITLE_CHARS) antes de rendirse: la mayoría de las
- * canciones así consigue quedarse en modo'inline' con el título ligeramente acortado, en vez de
- * caer a'below'. Solo si ni truncando el título al mínimo cabe la nota, esta cae a su propia
- * línea debajo (con flecha hacia el título, ver render) — excepción rara y controlada. Devuelve
- * null si no hay ninguna nota que mostrar.
+ * Decide, para una fila de canción concreta, si las notas (músico, bolo, general) caben en una
+ * columna a la derecha del título o si esa fila necesita caer a una línea propia debajo — y
+ * calcula, con fitStackedNoteSegments, el tamaño de cada nota y las líneas ya apiladas. El título
+ * nunca se trunca: si no deja hueco útil al lado, la nota va debajo. Devuelve null si no hay
+ * ninguna nota que mostrar (ni badges que compitan por sitio).
  */
 function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   const segments: NoteSegment[] = [];
@@ -289,23 +258,10 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
     if (fixedLeftWidthPx + fullTitleWidth + ROW_GAP_PX <= input.rowWidthPx) {
       return { mode: "inline", maxWidthPx: 0, fit: emptyFit };
     }
-    // El título completo no deja hueco para los badges: truncarlo (nunca por debajo del mínimo
-    // legible) para que sigan cabiendo en la misma fila en vez de quedar empujados aparte.
-    const maxTitleWidthForBadges =
-      input.rowWidthPx - fixedLeftWidthPx - ROW_GAP_PX;
-    const truncatedTitle =
-      maxTitleWidthForBadges > 0
-        ? truncateTitleToWidth(
-            input.titleText,
-            maxTitleWidthForBadges,
-            input.titleFontSizePx,
-            input.titleFontFamily,
-            input.measure,
-          )
-        : undefined;
-    return truncatedTitle && truncatedTitle !== input.titleText
-      ? { mode: "inline", maxWidthPx: 0, fit: emptyFit, truncatedTitle }
-      : { mode: "inline", maxWidthPx: 0, fit: emptyFit };
+    // El título completo no deja hueco junto a los badges: null = nada compite por sitio y el
+    // título baja a dos líneas (white-space normal). Nunca se corta con "…": un setlist con el
+    // nombre de un tema cortado no lo imprimiría nadie a mano.
+    return null;
   }
 
   const fitAt = (maxWidthPx: number) =>
@@ -458,7 +414,7 @@ function PdfExportModalBody({
 
   // Columnas por hoja: con sets largos en pocas hojas, dos columnas permiten una letra bastante
   // mayor que una sola columna apretada (cada columna se llena de arriba abajo, en orden).
-  const [columns, setColumns] = useState<1 | 2>(1);
+  const [columnsChoice, setColumnsChoice] = useState<"auto" | 1 | 2>("auto");
 
   // Design & Preset State
   const [stylePreset, setStylePreset] =
@@ -489,6 +445,8 @@ function PdfExportModalBody({
   const [showBpm, setShowBpm] = useState<boolean>(false);
   const [showDuration, setShowDuration] = useState<boolean>(false);
   const [showSetlistNotes, setShowSetlistNotes] = useState<boolean>(true);
+  // Notas generales de la canción (las del repertorio, no las del bolo ni las de cada músico).
+  const [showGeneralNotes, setShowGeneralNotes] = useState<boolean>(true);
   const [showAppBranding, setShowAppBranding] = useState<boolean>(true);
   // Alineación del repertorio: "left" (clásico) o "center" (título, número y notas centrados en
   // la hoja, como muchos grupos montan el setlist del escenario). En centrado las notas van
@@ -542,7 +500,7 @@ function PdfExportModalBody({
     selectedMemberId,
     previewPageIndex,
     textAlign,
-    columns,
+    columnsChoice,
     pagesChoice,
     handwritingFont,
     handwritingColor,
@@ -552,6 +510,7 @@ function PdfExportModalBody({
     showBpm,
     showDuration,
     showSetlistNotes,
+    showGeneralNotes,
     showAppBranding,
     showWatermark,
     stylePreset,
@@ -657,8 +616,6 @@ function PdfExportModalBody({
     }
 
     const measure = makeCanvasMeasurer();
-    // Ancho real de una fila: toda la hoja o una columna.
-    const rowWidthPx = columns === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX;
     const noteMinFontSizePx = 11;
     const inkColor = getInkColorHex();
     const handFont = getHandwritingFontFamily();
@@ -679,7 +636,10 @@ function PdfExportModalBody({
       titleFontPt: number,
       member: (typeof membersToExport)[number],
       isMaster: boolean,
+      cols: 1 | 2,
     ): string => {
+      // Ancho real de una fila: toda la hoja o una columna.
+      const rowWidthPx = cols === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX;
       const titleFontSizePx = ptToPx(titleFontPt);
       const noteFontPt = deriveNoteFontPt(titleFontPt);
       const noteMaxFontSizePx = ptToPx(noteFontPt);
@@ -693,23 +653,42 @@ function PdfExportModalBody({
         if (!s) return "";
 
         const memberNote = !isMaster
-          ? getSongMemberNote(s, member.id, member.name)
+          ? cleanPrintedNote(getSongMemberNote(s, member.id, member.name))
           : "";
+        const rawGeneralNote = s.notasRepertorio || s.notasInternas || "";
+        // La nota general autogenerada al importar ("Versión Original: ...") repite el tono y los
+        // BPM y no dice nada de cómo toca la banda el tema: no se imprime.
         const generalRepertorioNote =
-          s.notasRepertorio || s.notasInternas || "";
-        const setlistNote = (item as any).notaTema || item.notas || "";
+          showGeneralNotes && !isAutoVersionNote(rawGeneralNote)
+            ? cleanPrintedNote(rawGeneralNote)
+            : "";
+        const setlistNote = cleanPrintedNote((item as any).notaTema || item.notas || "");
         const numberText = showSongNumbers ? `${idx + 1}.` : "";
+        // Tono/BPM/duración escalan con el título: a 14pt de título, unos badges de 11pt fijos
+        // parecían casi tan grandes como la propia canción.
+        const badgePt = Math.max(7.5, Math.min(12, titleFontPt * 0.5));
         const badges: NoteLayoutBadge[] = [
           ...(showTonality && s.tonalidad
-            ? [{ text: s.tonalidad, fontSizePx: ptToPx(11), extraWidthPx: 14 }]
+            ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 1), extraWidthPx: 22 }]
             : []),
           ...(showBpm && s.bpm
-            ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(10) }]
+            ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(badgePt), extraWidthPx: 12 }]
             : []),
           ...(showDuration && s.duracion
-            ? [{ text: s.duracion, fontSizePx: ptToPx(10) }]
+            ? [{ text: s.duracion, fontSizePx: ptToPx(badgePt), extraWidthPx: 8 }]
             : []),
         ];
+        const badgesHtml = [
+          showTonality && s.tonalidad
+            ? `<span class="tag-tonality" style="font-size:${badgePt + 1}pt;">${escapeHtml(s.tonalidad)}</span>`
+            : "",
+          showBpm && s.bpm
+            ? `<span class="tag-bpm" style="font-size:${badgePt}pt;">${escapeHtml(s.bpm)} BPM</span>`
+            : "",
+          showDuration && s.duracion
+            ? `<span class="tag-dur" style="font-size:${badgePt}pt;">${escapeHtml(s.duracion)}</span>`
+            : "",
+        ].join("");
 
         const layout = computeNoteLayout({
           memberNote,
@@ -727,7 +706,7 @@ function PdfExportModalBody({
           noteMinFontSizePx,
           rowWidthPx,
           measure,
-          forceBelowMode: isCentered || columns === 2,
+          forceBelowMode: isCentered || cols === 2,
         });
 
         // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
@@ -803,12 +782,11 @@ function PdfExportModalBody({
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
-                  <span class="song-title" style="${titleStyle}">${escapeHtml(layout?.truncatedTitle ?? s.titulo.toUpperCase())}</span>
-                  ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ""}
-                  ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ""}
-                  ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ""}
+                  <span class="song-title" style="${titleStyle}">${escapeHtml(s.titulo.toUpperCase())}</span>
+                  ${isCentered && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
                 </div>
                 ${layout && layout.mode === "inline" ? notesHtml : ""}
+                ${!isCentered && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
               </div>
               ${layout && layout.mode === "below" ? notesHtml : ""}
             </div>
@@ -839,7 +817,7 @@ function PdfExportModalBody({
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
-                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${escapeHtml(item.notas || (item as any).notaTema)}</span>
+                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${escapeHtml(cleanPrintedNote(item.notas || (item as any).notaTema))}</span>
               `
      : ""
  }
@@ -1116,6 +1094,19 @@ function PdfExportModalBody({
  }
 
  /* Badges: nunca se encogen ni desaparecen — el título es el único que cede espacio */
+ /* Tono y BPM en columna a la derecha (modo izquierda): alineados fila a fila como una tabla,
+ no pegados al final de cada título a una distancia distinta. */
+ .song-badges {
+ margin-left: auto;
+ display: flex;
+ align-items: baseline;
+ justify-content: flex-end;
+ gap: 12px;
+ padding-left: 12px;
+ flex-shrink: 0;
+ }
+ .song-badges .tag-tonality { min-width: 2.2em; text-align: right; }
+ .song-badges .tag-bpm { min-width: 4.4em; text-align: right; }
  .tag-tonality {
  font-family: monospace;
  font-size: 11pt;
@@ -1313,15 +1304,32 @@ function PdfExportModalBody({
  .is-centered .song-line {
  justify-content: center;
  }
+ /* Centrado: número + título como un solo texto en línea. Si el título baja a dos líneas,
+ el número se queda pegado a la primera en vez de quedar suelto en el margen. */
  .is-centered .song-left {
- justify-content: center;
+ display: block;
+ text-align: center;
  overflow: visible;
  }
  .is-centered .song-num {
+ display: inline-block;
  min-width: 0;
+ margin-right: 8px;
  }
  .is-centered .song-title {
- text-align: center;
+ display: inline;
+ white-space: normal;
+ overflow: visible;
+ text-overflow: clip;
+ }
+ /* Tono/BPM juntos y sin partirse: si no caben tras el título, bajan como un solo bloque. */
+ .badges-inline {
+ display: inline-block;
+ white-space: nowrap;
+ margin-left: 10px;
+ }
+ .badges-inline > span + span {
+ margin-left: 8px;
  }
  .is-centered .song-notes-below {
  padding-left: 0;
@@ -1411,7 +1419,7 @@ function PdfExportModalBody({
  }
  <div class="band-text-block">
  <h1 class="band-heading">${escapeHtml(bandName.toUpperCase())}</h1>
-              <div class="setlist-meta">${escapeHtml(activeSetlist.nombre.toUpperCase())}</div>
+              <div class="setlist-meta">${escapeHtml(cleanSetlistName(activeSetlist.nombre).toUpperCase())}</div>
             </div>
           </div>
 
@@ -1531,24 +1539,40 @@ function PdfExportModalBody({
     const songNumberByItem = items.map((it) =>
       it.tipoItem === "cancion" ? songCounter++ : -1,
     );
-    // Techo de letra por anchura: el título más largo (con su número) debe caber en una línea.
-    const widestTitleAt100 = Math.max(
-      0,
-      ...items.map((it) => {
+    // Techo de letra por anchura: los títulos (con su número) deben caber en una línea... salvo los
+    // más largos. Un solo "THE HOUSE OF THE RISING SON // A WHITER SHADE OF PALE" no puede hundir
+    // la letra de las otras 24 canciones: se ignora el ~10 % más ancho (y un atípico claro), que
+    // baja a dos líneas; esa altura extra la mide el motor como cualquier otra fila.
+    const titleWidthsAt100 = items
+      .map((it) => {
         const s = it.tipoItem === "cancion" ? songs.find((x) => x.id === it.songId) : undefined;
         return s ? measure(s.titulo.toUpperCase(), 100, titleFontFamily, 900) : 0;
-      }),
+      })
+      .sort((a, b) => b - a);
+    const outliersToSkip = Math.min(
+      Math.max(0, titleWidthsAt100.length - 1),
+      Math.floor(titleWidthsAt100.length * 0.1) +
+        (titleWidthsAt100.length > 1 && titleWidthsAt100[0] > 1.3 * titleWidthsAt100[1] ? 1 : 0),
     );
+    const widestTitleAt100 = titleWidthsAt100[outliersToSkip] ?? 0;
     const numberAt100 = showSongNumbers
       ? measure(`${songCounter}.`, 100 * (22 / 28), "Oswald, sans-serif", 800)
       : 0;
-    const maxFontPt = Math.min(
-      MAX_DESIGN_TITLE_FONT_PT,
-      maxFontPtForWidth(widestTitleAt100 + numberAt100, rowWidthPx * 0.96),
-    );
+    // Ancho que se llevan tono/BPM/duración en su columna de la derecha (modo izquierda).
+    const badgesReservePx =
+      (showTonality ? 34 : 0) + (showBpm ? 74 : 0) + (showDuration ? 46 : 0) + (showTonality || showBpm || showDuration ? 14 : 0);
+    const maxFontFor = (cols: 1 | 2) =>
+      Math.min(
+        MAX_DESIGN_TITLE_FONT_PT,
+        maxFontPtForWidth(
+          widestTitleAt100 + numberAt100,
+          (cols === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX) * 0.96 - badgesReservePx,
+        ),
+      );
     // `in-columns` va en la propia fila medida: las reglas que cambian la altura no pueden colgar
     // de un ancestro que el iframe de medición no tiene.
-    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""} ${columns === 2 ? "in-columns" : ""}`;
+    const containerClassFor = (cols: 1 | 2) =>
+      `setlist-items-container ${isCentered ? "is-centered" : ""} ${cols === 2 ? "in-columns" : ""}`;
 
     const memberPlans = opts.members.map((member) => {
       const isMaster = member.id === "master";
@@ -1565,31 +1589,46 @@ function PdfExportModalBody({
       const pageAvailableHeightPx =
         PAGE_TOTAL_HEIGHT_PX - headerHeightPx - footerHeightPx - 6;
 
-      const heightsAt = (titleFontPt: number) =>
+      const heightsAtFor = (cols: 1 | 2) => (titleFontPt: number) =>
         items.map((item, i) =>
           measureHtmlHeightPx(
-            `<div class="${rowsContainerClass}" style="width:${rowWidthPx}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
+            `<div class="${containerClassFor(cols)}" style="width:${cols === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster, cols)}</div>`,
           ),
         );
-
-      const planInput = {
-        kinds: itemKinds,
-        heightsAt,
-        availableHeightPx: pageAvailableHeightPx,
-        minFontPt: MIN_TITLE_FONT_PT,
-        comfortFontPt: COMFORT_TITLE_FONT_PT,
-        columns,
-        maxFontPt,
-        floorFontPt: FLOOR_TITLE_FONT_PT,
+      const planFor = (cols: 1 | 2, forcedPages?: number) =>
+        planPages({
+          kinds: itemKinds,
+          heightsAt: heightsAtFor(cols),
+          availableHeightPx: pageAvailableHeightPx,
+          minFontPt: MIN_TITLE_FONT_PT,
+          comfortFontPt: COMFORT_TITLE_FONT_PT,
+          columns: cols,
+          maxFontPt: maxFontFor(cols),
+          floorFontPt: FLOOR_TITLE_FONT_PT,
+          forcedPages,
+        });
+      // 1 o 2 columnas. En automático, 2 columnas solo si el set es largo y aportan algo claro:
+      // menos hojas con letra legible, o las mismas hojas con letra bastante mayor.
+      const resolveLayout = (forcedPages?: number): { cols: 1 | 2; plan: ReturnType<typeof planFor> } => {
+        if (columnsChoice === 1 || columnsChoice === 2) {
+          return { cols: columnsChoice, plan: planFor(columnsChoice, forcedPages) };
+        }
+        const one = planFor(1, forcedPages);
+        if (songCounter < AUTO_COLUMNS_MIN_SONGS) return { cols: 1, plan: one };
+        const two = planFor(2, forcedPages);
+        const better =
+          (two.pages.length < one.pages.length && two.fontPt >= MIN_TITLE_FONT_PT + 2) ||
+          (two.pages.length === one.pages.length && two.fontPt >= one.fontPt + 3);
+        return better ? { cols: 2, plan: two } : { cols: 1, plan: one };
       };
       const forcedPages = pagesChoice === "auto" ? undefined : pagesChoice;
-      const plan = planPages({ ...planInput, forcedPages });
+      const { cols, plan } = resolveLayout(forcedPages);
       // Para la etiqueta "Auto (N páginas)" del selector: cuántas hojas elegiría el motor solo.
       const autoPages =
         opts.mode === "preview" && forcedPages
-          ? planPages(planInput).pages.length
+          ? resolveLayout().plan.pages.length
           : plan.pages.length;
-      return { member, isMaster, plan, autoPages };
+      return { member, isMaster, plan, cols, autoPages };
     });
 
     document.body.removeChild(measureFrame);
@@ -1622,16 +1661,16 @@ function PdfExportModalBody({
 
     let sheetIdx = 0;
     const pagesHtml = memberPlans
-      .map(({ member, isMaster, plan }) =>
+      .map(({ member, isMaster, plan, cols }) =>
         plan.pages
           .map((page, pageIdx) => {
             sheetIdx++;
             const columnHtml = (col: { from: number; to: number; rowGapPx: number }, widthPx?: number) => `
-                  <div class="${rowsContainerClass}" style="${widthPx ? `width:${widthPx}px;` : ""}gap:${col.rowGapPx.toFixed(1)}px">
+                  <div class="${containerClassFor(cols)}" style="${widthPx ? `width:${widthPx}px;` : ""}gap:${col.rowGapPx.toFixed(1)}px">
                     ${items
                       .slice(col.from, col.to)
                       .map((item, k) =>
-                        buildRowHtml(item, songNumberByItem[col.from + k], plan.fontPt, member, isMaster),
+                        buildRowHtml(item, songNumberByItem[col.from + k], plan.fontPt, member, isMaster, cols),
                       )
                       .join("")}
                   </div>`;
@@ -1715,7 +1754,7 @@ function PdfExportModalBody({
       <html>
         <head>
           <meta charset="utf-8">
-          <title>${escapeHtml(bandName)} - Setlist ${escapeHtml(activeSetlist.nombre)}</title>
+          <title>${escapeHtml(bandName)} - Setlist ${escapeHtml(cleanSetlistName(activeSetlist.nombre))}</title>
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
@@ -1949,25 +1988,34 @@ function PdfExportModalBody({
                 </div>
               )}
 
-              {/* Columnas: 1 (clásico) o 2 — para sets largos en pocas hojas. */}
+              {/* Columnas: automático (2 solo en sets largos si aportan), 1 o 2. */}
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <Button
-                  variant={columns === 1 ? "neutral" : "ghost"}
+                  variant={columnsChoice === "auto" ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setColumns(1)}
+                  onClick={() => setColumnsChoice("auto")}
+                  className="items-center gap-1.5"
+                  title="El motor usa 2 columnas solo cuando el set es largo y así gana letra o ahorra hojas"
+                >
+                  Columnas auto
+                </Button>
+                <Button
+                  variant={columnsChoice === 1 ? "neutral" : "ghost"}
+                  size="xs"
+                  onClick={() => setColumnsChoice(1)}
                   className="items-center gap-1.5"
                   title="Una columna de temas"
                 >
-                  1 columna
+                  1
                 </Button>
                 <Button
-                  variant={columns === 2 ? "neutral" : "ghost"}
+                  variant={columnsChoice === 2 ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setColumns(2)}
+                  onClick={() => setColumnsChoice(2)}
                   className="items-center gap-1.5"
-                  title="Dos columnas: cabe más repertorio por hoja con letra mayor (las notas pasan debajo del título si no caben al lado)"
+                  title="Dos columnas: cabe más repertorio por hoja con letra mayor (las notas pasan debajo del título)"
                 >
-                  <Columns2 className="w-3.5 h-3.5" />2 columnas
+                  <Columns2 className="w-3.5 h-3.5" />2
                 </Button>
               </div>
 
@@ -2186,6 +2234,16 @@ function PdfExportModalBody({
                     className="rounded accent-[var(--ok)] cursor-pointer"
                   />
                   <span>Duración</span>
+                </label>
+
+                <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={showGeneralNotes}
+                    onChange={(e) => setShowGeneralNotes(e.target.checked)}
+                    className="rounded accent-[var(--ok)] cursor-pointer"
+                  />
+                  <span>Notas generales</span>
                 </label>
 
                 <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
