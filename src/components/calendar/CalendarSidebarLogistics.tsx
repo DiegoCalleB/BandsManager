@@ -640,7 +640,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   className="items-center gap-1"
                   title="Editar ficha completa del concierto"
                 >
-                  ✎ Editar ficha
+                  <ShowIcon inline emoji="✎" />Editar ficha
                 </Button>
               )}
               {selectedRehearsal && (
@@ -652,7 +652,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                   className="items-center gap-1"
                   title="Editar ficha completa del ensayo"
                 >
-                  ✎ Editar ficha
+                  <ShowIcon inline emoji="✎" />Editar ficha
                 </Button>
               )}
               {selectedConcert && onDeleteConcert && (

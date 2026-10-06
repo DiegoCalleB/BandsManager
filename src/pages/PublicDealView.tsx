@@ -13,6 +13,7 @@ import {
   ChevronUp,
   Mail
 } from 'lucide-react';
+import { ShowIcon } from '../components/ui/ShowIcon';
 
 interface DealData {
   token: string;
@@ -583,7 +584,7 @@ export const PublicDealView: React.FC = () => {
                     />
                     {!hasSignature && (
                       <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-xs text-[var(--ink-3)] font-medium select-none">
-                        Firme aquí con el dedo o ratón ✍️
+                        Firme aquí con el dedo o ratón <ShowIcon inline emoji="✍️" />
                       </div>
                     )}
                   </div>
@@ -637,7 +638,7 @@ export const PublicDealView: React.FC = () => {
                     </div>
                   )}
                   <p className="text-[11px] text-[var(--ok)] font-medium pt-1">
-                    ✉️ Copia oficial del acuerdo y certificado eIDAS enviada por email a la sala y a la dirección de la banda.
+                    <ShowIcon inline emoji="✉️" />Copia oficial del acuerdo y certificado eIDAS enviada por email a la sala y a la dirección de la banda.
                   </p>
                 </div>
 

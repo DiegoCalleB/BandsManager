@@ -20,10 +20,16 @@ const files = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
   return e.isDirectory() ? (e.name === '__tests__' ? [] : files(p)) : p.endsWith('.tsx') ? [p] : [];
 });
 
+// Arte exportable, no interfaz: los marcos del QR descargable (p. ej. «Parque Jurásico») usan
+// emojis y colores propios a propósito y no tienen un icono Lucide equivalente. Es contenido que
+// la banda elige y se exporta como imagen, igual que los emojis en textos o datos de arriba.
+const ARTE_EXPORTABLE = ['src/components/fans/qr/CustomizableBandQr.tsx'];
+
 let total = 0;
 const porFichero = {};
 for (const f of files('src')) {
   if (f.endsWith('ShowIcon.tsx')) continue;
+  if (ARTE_EXPORTABLE.some((a) => f.replace(/\\/g, '/').endsWith(a))) continue;
   const src = fs.readFileSync(f, 'utf8');
   const sf = ts.createSourceFile(f, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const cambios = [];

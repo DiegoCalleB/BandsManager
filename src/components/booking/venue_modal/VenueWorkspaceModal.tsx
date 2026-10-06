@@ -177,7 +177,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
               }`}
             >
               {/* Navigation Tabs Bar */}
-              <div className="flex items-center gap-1 px-4 sm:px-6 pt-2.5 pb-2 border-b border-[var(--hair)] bg-[var(--surface)] shrink-0 overflow-x-auto no-scrollbar">
+              <div className="flex items-center gap-1 px-4 sm:px-6 pt-2.5 pb-2 border-b border-[var(--hair)] bg-[var(--sunken)] shrink-0 overflow-x-auto no-scrollbar">
                 <button
                   type="button"
                   onClick={() => setActiveTab('pitch')}

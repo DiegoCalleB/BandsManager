@@ -248,7 +248,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       </div>
 
       {draftError && (
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/15 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-center gap-2 animate-in fade-in">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/10 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-center gap-2 animate-in fade-in">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{draftError}</span>
         </div>

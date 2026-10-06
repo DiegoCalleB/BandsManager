@@ -313,7 +313,7 @@ export const EPKMusicaBlock: React.FC<EPKMusicaBlockProps> = ({
                         : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
                     }`}
                   >
-                    ★
+                    <ShowIcon inline emoji="★" />
                   </button>
                   <Input
                     size="sm"

@@ -44,6 +44,7 @@ const ICONOS: Record<string, LucideIcon> = {
   '🤖': Bot, '🚛': Truck, '📧': Mail, '📜': ScrollText, '☕': Coffee, '📘': BookOpen, '📖': BookOpen,
   '🎨': Palette, '⬅': ArrowLeft, '🔐': KeyRound, '🌱': Sprout, '🪑': Armchair, '🧍': User, '🪄': Wand2,
   '🆕': Sparkles, '🔶': Circle, '⚪': Circle,
+  '✎': Pencil, '✍': PenLine, '★': Star, '🏦': Landmark,
 };
 const PUNTOS: Record<string, string> = { '🔴': 'bg-[var(--alert)]', '🟢': 'bg-[var(--ok)]', '🟡': 'bg-[var(--acc)]', '🔵': 'bg-[var(--acc)]', '🟠': 'bg-[var(--acc)]' };
 

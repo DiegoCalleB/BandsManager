@@ -153,7 +153,7 @@ export const VenueModalHeader: React.FC<VenueModalHeaderProps> = ({
           </button>
 
           {isSearchOpen && (
-            <PopoverAncla izquierda className="absolute left-0 top-full mt-1.5 w-72 bg-[var(--surface)] rounded-[var(--r-l)] shadow-xl border border-[var(--hair)] z-50 p-2 space-y-1.5 animate-in fade-in zoom-in-95 duration-100">
+            <PopoverAncla izquierda className="absolute left-0 top-full mt-1.5 w-72 bg-[var(--sunken)] rounded-[var(--r-l)] shadow-xl border border-[var(--hair)] z-50 p-2 space-y-1.5 animate-in fade-in zoom-in-95 duration-100">
               <div className="relative">
                 <Search className="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-[var(--ink-2)]" />
                 <Input

@@ -385,7 +385,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     className="items-center gap-1"
                     title="Editar todos los campos de este evento"
                   >
-                    ✎ Editar
+                    <ShowIcon inline emoji="✎" />Editar
                   </Button>
 
                   <div className="hidden sm:flex flex-wrap items-center gap-1.5">
