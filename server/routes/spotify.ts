@@ -27,7 +27,7 @@ router.get("/status", (req, res) => {
  * GET /api/spotify/preview?artist=Bakandeya&track=Clandestino
  * Resolves high-quality 30-second audio stream URL for any track.
  */
-router.get("/preview", async (req, res) => {
+router.get("/preview", requireAuth, async (req, res) => {
   try {
     const artist = String(req.query.artist || "").trim();
     const track = String(req.query.track || "").trim();
@@ -45,7 +45,7 @@ router.get("/preview", async (req, res) => {
  * GET /api/spotify/search?q=Bakandeya
  * Searches artists or resolves artist URL on Spotify.
  */
-router.get("/search", async (req, res) => {
+router.get("/search", requireAuth, async (req, res) => {
   try {
     const query = String(req.query.q || "").trim();
     if (!query) {
@@ -64,7 +64,7 @@ router.get("/search", async (req, res) => {
  * GET /api/spotify/artist-discography?query=Bakandeya
  * Fetches the entire discography (all albums, singles, tracks, preview audio) of an artist.
  */
-router.get("/artist-discography", async (req, res) => {
+router.get("/artist-discography", requireAuth, async (req, res) => {
   try {
     const query = String(req.query.query || req.query.artistId || "").trim();
     if (!query) {

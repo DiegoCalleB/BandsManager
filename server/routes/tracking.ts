@@ -1,8 +1,9 @@
 import express from "express";
-import crypto from "crypto";
 import { getSupabase } from "../db/core.js";
 import { invalidateBandStateCache } from "../db/sync.js";
 import { loadState, saveState } from "../state.js";
+import { generarToken, decodificarToken, destinoSeguro, idSeguro, textoLibreSeguro, verificarFirmaSvix } from "../utils/trackingSeguro.js";
+import { publicoRateLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 
@@ -12,90 +13,31 @@ const TRANSPARENT_GIF_BUFFER = Buffer.from(
   "base64"
 );
 
-const TRACKING_SECRET = process.env.JWT_SECRET || process.env.CRON_SECRET || "bandmanager-telemetry-key-2025";
-
 /**
- * Genera un token firmado con HMAC para evitar manipulaciones.
+ * Tokens de seguimiento FIRMADOS (ver server/utils/trackingSeguro.ts). Se reexportan con los
+ * nombres de siempre porque los usa la plantilla de los correos.
  */
 export function generateTrackingToken(payload: { leadId: string; bandId: string; msgId?: string }): string {
-  const jsonStr = JSON.stringify(payload);
-  const base64Data = Buffer.from(jsonStr).toString("base64url");
-  const signature = crypto.createHmac("sha256", TRACKING_SECRET).update(base64Data).digest("hex").slice(0, 16);
-  return `${base64Data}.${signature}`;
+  return generarToken(payload);
 }
 
-/**
- * Valida y decodifica el token de tracking con máxima resiliencia.
- */
+/** Solo devuelve algo si el token está firmado por nosotros; el base64 sin firma ya no vale. */
 export function decodeTrackingToken(token: string): { leadId: string; bandId: string; msgId?: string } | null {
-  if (!token || typeof token !== "string") return null;
-  const clean = token.trim();
-  if (!clean) return null;
-
-  // 1. Formato estándar firmado (base64url.signature)
-  if (clean.includes(".")) {
-    const parts = clean.split(".");
-    if (parts.length === 2) {
-      const [base64Data, signature] = parts;
-      const expectedSig = crypto.createHmac("sha256", TRACKING_SECRET).update(base64Data).digest("hex").slice(0, 16);
-      if (signature !== expectedSig) {
-        return null;
-      }
-      try {
-        const jsonStr = Buffer.from(base64Data, "base64url").toString("utf8");
-        const parsed = JSON.parse(jsonStr);
-        if (parsed && (parsed.leadId || parsed.id)) {
-          return {
-            leadId: parsed.leadId || parsed.id,
-            bandId: parsed.bandId || parsed.band_id || "band-bakandeya",
-            msgId: parsed.msgId
-          };
-        }
-      } catch (_) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  // 2. Formato base64 puro (sin firma, sólo si decodifica como JSON estructurado con leadId)
-  try {
-    const jsonStr = Buffer.from(clean, "base64url").toString("utf8");
-    if (jsonStr.startsWith("{") && jsonStr.endsWith("}")) {
-      const parsed = JSON.parse(jsonStr);
-      if (parsed && (parsed.leadId || parsed.id)) {
-        return {
-          leadId: parsed.leadId || parsed.id,
-          bandId: parsed.bandId || parsed.band_id || "band-bakandeya",
-          msgId: parsed.msgId
-        };
-      }
-    }
-  } catch (_) {}
-
-  return null;
+  return decodificarToken(token);
 }
 
 /**
  * Helper para resolver un lead a partir de IDs o tokens
  */
 async function resolveLead(targetLeadId?: string) {
-  if (!targetLeadId) return null;
+  // El id sale de un token firmado, pero se valida igualmente: nunca se consulta con texto libre.
+  if (!targetLeadId || !idSeguro(targetLeadId)) return null;
   const sb = getSupabase();
-  let { data: lead } = await sb
+  const { data: lead } = await sb
     .from("leads")
     .select("*")
     .eq("id", targetLeadId)
     .maybeSingle();
-
-  if (!lead && (targetLeadId.includes("diego") || targetLeadId.includes("mon") || targetLeadId.includes("7cl88"))) {
-    const { data: fallbackLead } = await sb
-      .from("leads")
-      .select("*")
-      .or("email_contacto.eq.diego.delacalleb@gmail.com,nombre_sala.ilike.%Mon Live%")
-      .maybeSingle();
-    if (fallbackLead) lead = fallbackLead;
-  }
   return lead;
 }
 
@@ -116,17 +58,11 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
   res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
   res.status(200).send(TRANSPARENT_GIF_BUFFER);
 
+  // SOLO con token firmado: antes bastaba un `?leadId=` cualquiera para falsear aperturas.
   const rawToken = (req.query.t as string) || (req.query.token as string);
-  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
-  const directMsgId = (req.query.msgId as string) || (req.query.m as string) || (req.query.emailId as string);
-  
-  let targetLeadId = directLeadId;
-  let targetMsgId = directMsgId;
-  if (rawToken) {
-    const decoded = decodeTrackingToken(rawToken);
-    if (decoded?.leadId) targetLeadId = decoded.leadId;
-    if (decoded?.msgId) targetMsgId = decoded.msgId;
-  }
+  const decoded = decodeTrackingToken(rawToken);
+  const targetLeadId = decoded?.leadId;
+  const targetMsgId = decoded?.msgId && idSeguro(decoded.msgId) ? decoded.msgId : undefined;
 
   if (!targetLeadId) return;
 
@@ -180,7 +116,7 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
         if (memLead) {
           memLead.veces_abierto = openCount;
           memLead.ultimo_abierto_at = nowIso;
@@ -205,19 +141,14 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
  * Redirector seguro con detección de botón específico (Dossier, Spotify, Instagram, YouTube, etc.)
  */
 router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
-  const targetUrl = (req.query.url as string) || "https://bandmanager.io";
   const rawToken = (req.query.t as string) || (req.query.token as string);
-  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
-  const buttonType = (req.query.btn as string) || (req.query.btype as string) || "";
+  const buttonType = textoLibreSeguro(req.query.btn || req.query.btype, 30);
 
-  let targetLeadId = directLeadId;
-  if (rawToken) {
-    const decoded = decodeTrackingToken(rawToken);
-    if (decoded?.leadId) targetLeadId = decoded.leadId;
-  }
+  const targetLeadId = decodeTrackingToken(rawToken)?.leadId;
 
-  const isValidUrl = targetUrl.startsWith("http://") || targetUrl.startsWith("https://");
-  const safeRedirectUrl = isValidUrl ? targetUrl : "https://bandmanager.io";
+  // Redirección abierta: solo a destinos firmados por nosotros (los enlaces nuevos) o a dominios
+  // conocidos (redes, la propia plataforma). Cualquier otro va a la web de la marca.
+  const safeRedirectUrl = destinoSeguro(req.query.url, req.query.s);
 
   res.redirect(302, safeRedirectUrl);
 
@@ -297,7 +228,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = clickCount;
           memLead.ultimo_clic_at = nowIso;
@@ -326,13 +257,8 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.status(200).json({ received: true });
 
-  const { leadId, token, action, details, bandId } = req.body || {};
-  let targetLeadId = leadId;
-
-  if (!targetLeadId && token) {
-    const decoded = decodeTrackingToken(token);
-    if (decoded?.leadId) targetLeadId = decoded.leadId;
-  }
+  const { token, action, details } = req.body || {};
+  const targetLeadId = decodeTrackingToken(token)?.leadId;
 
   if (!targetLeadId) return;
 
@@ -344,8 +270,9 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
       const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
-      const cleanAction = String(action || "Interacción EPK").trim();
-      const cleanDetails = String(details || "El programador interactuó con el Dossier EPK").trim();
+      // Texto que llega de un visitante anónimo y acaba en las notas del lead: corto y sin saltos de línea.
+      const cleanAction = textoLibreSeguro(action, 40) || "Interacción EPK";
+      const cleanDetails = textoLibreSeguro(details, 160) || "El programador interactuó con el Dossier EPK";
 
       const logNota = `[🎯 Acción EPK (${cleanAction})] ${cleanDetails} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
@@ -371,7 +298,7 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = clickCount;
           memLead.ultimo_clic_at = nowIso;
@@ -398,37 +325,35 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
  */
 router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
   const rawToken = (req.query.t as string) || (req.query.token as string);
-  const directLeadId = (req.query.leadId as string) || (req.query.l as string) || (req.query.id as string);
-  const directMsgId = (req.query.msgId as string) || (req.query.emailId as string) || (req.query.m as string);
-  const targetUrl = (req.query.url as string) || (req.query.target as string);
+  const decoded = decodeTrackingToken(rawToken);
+  const targetLeadId = decoded?.leadId;
+  const targetBandId = decoded?.bandId && idSeguro(decoded.bandId) ? decoded.bandId : "";
+  const targetMsgId = decoded?.msgId && idSeguro(decoded.msgId) ? decoded.msgId : undefined;
 
-  let targetLeadId = directLeadId;
-  let targetBandId = "band-bakandeya";
-  let targetMsgId = directMsgId;
-
-  if (rawToken) {
-    const decoded = decodeTrackingToken(rawToken);
-    if (decoded?.leadId) targetLeadId = decoded.leadId;
-    if (decoded?.bandId) targetBandId = decoded.bandId;
-    if (decoded?.msgId) targetMsgId = decoded.msgId;
-  }
-
-  let finalRedirectUrl = targetUrl;
+  // La URL pedida solo se respeta si es de un dominio de confianza (Storage, la plataforma...) o
+  // viene firmada; si no, se usa el Dossier configurado de la banda.
+  const urlPedida = (req.query.url as string) || (req.query.target as string);
+  let finalRedirectUrl: string | undefined = destinoSeguro(urlPedida, req.query.s, "") || undefined;
 
   try {
     const sb = getSupabase();
     let lead = targetLeadId ? await resolveLead(targetLeadId) : null;
 
     if (!finalRedirectUrl) {
-      const bandToQuery = lead?.band_id || targetBandId;
-      const { data: epkData } = await sb
-        .from("epk_configs")
-        .select("dossier_pdf_url")
-        .or(`band_id.eq.${bandToQuery},band_id.eq.band-${bandToQuery},band_id.eq.bakandeya`)
-        .maybeSingle();
+      const bandToQuery = String(lead?.band_id || targetBandId || "");
+      if (idSeguro(bandToQuery)) {
+        const sinPrefijo = bandToQuery.replace(/^(band|reg)-/, "");
+        // Sin alternativa a la banda de Bakandeya: antes una banda sin Dossier redirigía al ajeno.
+        const { data: epkData } = await sb
+          .from("epk_configs")
+          .select("dossier_pdf_url")
+          .in("band_id", [bandToQuery, sinPrefijo, `band-${sinPrefijo}`])
+          .limit(1)
+          .maybeSingle();
 
-      if (epkData?.dossier_pdf_url) {
-        finalRedirectUrl = epkData.dossier_pdf_url;
+        if (epkData?.dossier_pdf_url) {
+          finalRedirectUrl = epkData.dossier_pdf_url;
+        }
       }
     }
 
@@ -496,7 +421,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id || l.email_contacto === lead.email_contacto);
+        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = (memLead.clics_epk || 0) + 1;
           memLead.ultimo_clic_at = nowIso;
@@ -506,14 +431,16 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
         }
       } catch (_) {}
 
-      if (effectiveEmailId) {
+      if (effectiveEmailId && idSeguro(effectiveEmailId)) {
         try {
+          // Acotado a la banda del lead (antes marcaba como leído un mensaje de cualquier banda).
           await sb
             .from("lead_messages")
             .update({
               leido: true
             })
-            .or(`id.eq.${effectiveEmailId},id.eq.imap-${effectiveEmailId}`);
+            .in("id", [effectiveEmailId, `imap-${effectiveEmailId}`])
+            .eq("band_id", lead.band_id);
         } catch (_) {}
       }
 
@@ -533,7 +460,24 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
 /**
  * POST /api/webhooks/resend
  */
-router.post("/webhooks/resend", express.json(), async (req, res) => {
+router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, res) => {
+  // Sin firma Svix válida no se acepta nada: antes cualquiera podía falsear aperturas, clics o
+  // entregas de cualquier lead. Requiere RESEND_WEBHOOK_SECRET (el `whsec_...` del webhook).
+  const cuerpoCrudo: Buffer | string = (req as any).rawBody || JSON.stringify(req.body ?? {});
+  const firmado = verificarFirmaSvix({
+    secreto: process.env.RESEND_WEBHOOK_SECRET,
+    id: req.headers["svix-id"] as string | undefined,
+    timestamp: req.headers["svix-timestamp"] as string | undefined,
+    firma: req.headers["svix-signature"] as string | undefined,
+    cuerpo: cuerpoCrudo,
+  });
+  if (!firmado) {
+    if (!process.env.RESEND_WEBHOOK_SECRET) {
+      console.warn("[Resend Webhook] RESEND_WEBHOOK_SECRET no está configurado: evento rechazado.");
+    }
+    return res.status(401).json({ error: "Firma no válida" });
+  }
+
   const event = req.body;
   res.status(200).json({ received: true });
 
@@ -550,7 +494,7 @@ router.post("/webhooks/resend", express.json(), async (req, res) => {
     let lead: any = null;
 
     const directLeadId = eventData.metadata?.lead_id || eventData.tags?.lead_id;
-    if (directLeadId) {
+    if (directLeadId && idSeguro(directLeadId)) {
       const { data } = await sb
         .from("leads")
         .select("*")
@@ -563,7 +507,8 @@ router.post("/webhooks/resend", express.json(), async (req, res) => {
       const { data } = await sb
         .from("leads")
         .select("*")
-        .ilike("email_contacto", `%${emailTo}%`)
+        .eq("email_contacto", String(emailTo).trim().toLowerCase())
+        .limit(1)
         .maybeSingle();
       lead = data;
     }

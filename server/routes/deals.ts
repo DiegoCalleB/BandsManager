@@ -305,6 +305,12 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
       return res.status(400).json({ error: 'Por favor, realiza la firma en el recuadro táctil' });
     }
 
+    // La firma es una imagen PNG/JPEG en base64 de un recuadro táctil: se acepta solo eso y con
+    // tope de tamaño (antes cualquier texto de hasta 50 MB acababa en la base de datos).
+    if (firma_imagen.length > 400_000 || !/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(firma_imagen)) {
+      return res.status(400).json({ error: 'La firma no es válida. Vuelve a firmar en el recuadro.' });
+    }
+
     if (!rider_validado_por_sala) {
       return res.status(400).json({ error: 'Debes confirmar la revisión de las condiciones técnicas' });
     }
@@ -411,7 +417,10 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
     });
   } catch (error: any) {
     console.error('[dealsRouter] Error al firmar acuerdo:', error);
-    return res.status(estadoHttp(error, 400)).json({ error: error.message || 'Error al procesar la firma del acuerdo' });
+    // Los DealError llevan mensajes pensados para el usuario; cualquier otro error (BD, red) no
+    // se muestra tal cual a un visitante anónimo.
+    const mensaje = error instanceof DealError && error.status < 500 ? error.message : 'No se pudo procesar la firma del acuerdo. Inténtalo de nuevo.';
+    return res.status(estadoHttp(error, 400)).json({ error: mensaje });
   }
 });
 

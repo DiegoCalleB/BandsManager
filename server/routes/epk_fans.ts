@@ -490,16 +490,16 @@ router.get('/public/epk', async (req, res) => {
     const reqBandId =
       cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
 
-    // Auto-registrar telemetría de visita al EPK si viene asociado a un lead
-    const leadIdParam = (req.query.leadId as string) || (req.query.lead as string) || (req.query.l as string);
+    // Auto-registrar telemetría de visita al EPK si viene asociado a un lead. SOLO con token
+    // firmado (el de los enlaces de los correos): antes bastaba un `?leadId=` cualquiera para
+    // escribir en las notas del lead de cualquier banda desde un GET anónimo.
     const trackingTokenParam = (req.query.t as string) || (req.query.token as string);
-    let targetLeadId = leadIdParam;
+    let targetLeadId: string | undefined;
 
-    if (!targetLeadId && trackingTokenParam) {
+    if (trackingTokenParam) {
       try {
         const { decodeTrackingToken } = await import('../routes/tracking.js');
-        const decoded = decodeTrackingToken(trackingTokenParam);
-        if (decoded?.leadId) targetLeadId = decoded.leadId;
+        targetLeadId = decodeTrackingToken(trackingTokenParam)?.leadId;
       } catch (_) {}
     }
 
@@ -508,20 +508,11 @@ router.get('/public/epk', async (req, res) => {
         const { getSupabase } = await import('../db.js');
         const sb = getSupabase();
         const nowIso = new Date().toISOString();
-        let { data: leadToUpdate } = await sb
+        const { data: leadToUpdate } = await sb
           .from('leads')
           .select('id, band_id, clics_epk, ultimo_clic_at, email_abierto, veces_abierto, notas, historial_contacto')
           .eq('id', targetLeadId)
           .maybeSingle();
-
-        if (!leadToUpdate && (targetLeadId.includes('diego') || targetLeadId.includes('mon'))) {
-          const { data: fallbackLead } = await sb
-            .from('leads')
-            .select('id, band_id, clics_epk, ultimo_clic_at, email_abierto, veces_abierto, notas, historial_contacto')
-            .or('email_contacto.eq.diego.delacalleb@gmail.com,nombre_sala.ilike.%Mon Live%')
-            .maybeSingle();
-          if (fallbackLead) leadToUpdate = fallbackLead;
-        }
 
         if (leadToUpdate) {
           const clics = (Number(leadToUpdate.clics_epk) || 0) + 1;

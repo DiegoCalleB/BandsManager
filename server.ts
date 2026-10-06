@@ -153,21 +153,13 @@ app.use("/transposed", (req, res, next) => {
 
 // Healthcheck endpoints for Railway, Cloud Run and deployment monitoring
 app.get(["/health", "/api/health"], (req, res) => {
-  const resolvedKey = resolveResendApiKey();
-  const detectedKey = resolvedKey ? resolvedKey.key : null;
-  const keyDetectedAs = resolvedKey ? resolvedKey.name : null;
-
+  // Endpoint público (lo consulta Railway): solo lo imprescindible. Antes devolvía el nombre de la
+  // variable de la clave, su longitud y los nombres de todas las variables con «RESEND».
   res.status(200).json({
     status: "ok",
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime()),
-    emailService: {
-      configured: Boolean(detectedKey),
-      keyDetectedAs,
-      keyLength: detectedKey ? detectedKey.trim().length : 0,
-      sender: process.env.SENDER_EMAIL || process.env.VITE_SENDER_EMAIL || "BandManager <no-reply@bandmanager.io>",
-      resendEnvVarsFound: Object.keys(process.env).filter(k => k.toUpperCase().includes('RESEND'))
-    }
+    emailService: { configured: Boolean(resolveResendApiKey()) }
   });
 });
 

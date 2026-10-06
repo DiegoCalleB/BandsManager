@@ -1,3 +1,4 @@
+import { escapeHtml, escaparTextos } from "../utils/html.js";
 import { Resend } from "resend";
 
 /**
@@ -178,8 +179,10 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
  * separación de pistas con IA y guía rápida del repertorio y calendario.
  */
 export async function sendWelcomeEmail(toEmail: string, userName: string, bandName?: string): Promise<{ success: boolean; id?: string; error?: string }> {
-  const displayName = userName || "Músico";
-  const displayBand = bandName ? ` para tu proyecto <strong style="color:#f2ca50;">${bandName}</strong>` : "";
+  // `nombreRaw` (texto plano) para el asunto; `displayName`/`displayBand` (escapados) para el HTML.
+  const nombreRaw = userName || "Músico";
+  const displayName = escapeHtml(nombreRaw);
+  const displayBand = bandName ? ` para tu proyecto <strong style="color:#f2ca50;">${escapeHtml(bandName)}</strong>` : "";
   const appUrl = getProductionAppUrl(process.env.APP_URL);
 
   const html = `<!DOCTYPE html>
@@ -495,7 +498,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
                   <!-- Mock EPK Hero Preview -->
                   <div style="background: linear-gradient(135deg, #1f1b2e 0%, #111118 100%); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 10px; padding: 16px; text-align: center;">
                     <div style="font-size: 18px; font-weight: 900; color: #ffffff; margin-bottom: 4px;">
-                      ${bandName || 'TU BANDA'}
+                      ${escapeHtml(bandName) || 'TU BANDA'}
                     </div>
                     <div style="font-size: 11px; color: #c084fc; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 14px;">
                       Indie Rock / Fusión • Dossier Oficial 2026
@@ -701,7 +704,7 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
 
   return sendTransactionalEmail({
     to: toEmail,
-    subject: `¡Bienvenido a BandManager.io, ${displayName}! 🎸 Tu centro de control musical está listo`,
+    subject: `¡Bienvenido a BandManager.io, ${nombreRaw}! 🎸 Tu centro de control musical está listo`,
     html,
   });
 }
@@ -771,13 +774,15 @@ export async function sendPasswordResetEmail(toEmail: string, code: string): Pro
   });
 }
 
-export async function sendMemberInvitationEmail(options: {
+export async function sendMemberInvitationEmail(optionsRaw: {
   toEmail: string;
   memberName: string;
   bandName: string;
   instrument?: string;
   username: string;
 }): Promise<{ success: boolean; id?: string; error?: string }> {
+  // `options` = copia con los textos escapados (para el HTML); `optionsRaw` = valores reales (destinatario, asunto).
+  const options = escaparTextos(optionsRaw);
   const appUrl = getProductionAppUrl(process.env.APP_URL);
   const inst = options.instrument ? options.instrument.trim() : "Músico";
 
@@ -837,8 +842,8 @@ export async function sendMemberInvitationEmail(options: {
 </html>`;
 
   return sendTransactionalEmail({
-    to: options.toEmail,
-    subject: `🎸 ¡Has sido invitado a unirte a ${options.bandName} en BandManager.io!`,
+    to: optionsRaw.toEmail,
+    subject: `🎸 ¡Has sido invitado a unirte a ${optionsRaw.bandName} en BandManager.io!`,
     html,
   });
 }
@@ -861,7 +866,8 @@ export interface DealVenueEmailOptions {
 /**
  * Envía la copia notarial y confirmación oficial de la Hoja de Acuerdo firmada a la sala.
  */
-export async function sendDealSignedToVenueEmail(options: DealVenueEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+export async function sendDealSignedToVenueEmail(optionsRaw: DealVenueEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+  const options = escaparTextos(optionsRaw); // HTML con textos escapados; destinatario y asunto con los reales
   const dealUrl = `https://bandmanager.io/deal/${options.token}`;
   const formattedPayment = options.paymentMethod === 'efectivo'
     ? 'Efectivo al finalizar (sobre)'
@@ -960,8 +966,8 @@ export async function sendDealSignedToVenueEmail(options: DealVenueEmailOptions)
 </html>`;
 
   return sendTransactionalEmail({
-    to: options.toEmail,
-    subject: `✅ Concierto Confirmado: ${options.bandName} en ${options.venueName} - Hoja de Acuerdo Oficial`,
+    to: optionsRaw.toEmail,
+    subject: `✅ Concierto Confirmado: ${optionsRaw.bandName} en ${optionsRaw.venueName} - Hoja de Acuerdo Oficial`,
     html,
   });
 }
@@ -985,7 +991,8 @@ export interface DealBandEmailOptions {
 /**
  * Notifica a la banda de que la sala ha firmado formalmente el acuerdo y se ha bloqueado la fecha.
  */
-export async function sendDealSignedToBandEmail(options: DealBandEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+export async function sendDealSignedToBandEmail(optionsRaw: DealBandEmailOptions): Promise<{ success: boolean; id?: string; error?: string }> {
+  const options = escaparTextos(optionsRaw);
   const dealUrl = `https://bandmanager.io/deal/${options.token}`;
 
   const html = `<!DOCTYPE html>
@@ -1073,8 +1080,8 @@ export async function sendDealSignedToBandEmail(options: DealBandEmailOptions): 
 </html>`;
 
   return sendTransactionalEmail({
-    to: options.toEmail,
-    subject: `🎉 ¡Bolo Cerrado! ${options.venueName} ha firmado el acuerdo para el ${options.eventDate}`,
+    to: optionsRaw.toEmail,
+    subject: `🎉 ¡Bolo Cerrado! ${optionsRaw.venueName} ha firmado el acuerdo para el ${optionsRaw.eventDate}`,
     html,
   });
 }
