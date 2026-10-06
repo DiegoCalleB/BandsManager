@@ -90,3 +90,6 @@ CREATE TABLE IF NOT EXISTS fan_link_clicks (
     referer TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Solo el servidor (clave de servicio, que se salta RLS) escribe y lee los clics: RLS sin políticas.
+ALTER TABLE fan_link_clicks ENABLE ROW LEVEL SECURITY;
