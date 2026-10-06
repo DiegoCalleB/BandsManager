@@ -118,7 +118,33 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   * Librería a evaluar antes de escribir DSP a mano: **`essentia.js`** (WASM, MIT, ya trae detección de acordes integrada) — correría en el backend Node sin reinventar chroma/CQT desde cero.
   * La parte de "explícame por qué funciona" es la fácil: una vez hay secuencia de acordes, es texto generado por Gemini sobre datos estructurados, mismo patrón que el análisis IA del setlist ya existente.
   * **Riesgo de alcance:** acordes complejos (7maj9, sus4, inversiones, jazz) son mucho más difíciles de acertar que triadas simples. MVP recomendado: tónica + mayor/menor por compás (cubre la mayoría de rock/pop/indie), dejar acordes extendidos para una v2.
-* **Estado:** idea capturada, sin prototipar. Siguiente paso si se retoma: probar `essentia.js` contra un stem de guitarra ya separado por Iris y medir precisión real antes de comprometer tiempo de desarrollo en la UI.
+* **Estado (2026-10-06): HECHO en gran parte con detector propio** (`server/utils/chordDetection.ts`, `pulso.ts`, `refinarFronteras.ts`; ver `docs/chordify-propio.md`): acordes con tiempos, tonalidad y cambios de tono, pulso, compases y bloques, edición manual y evaluación contra las correcciones de la banda. **Corrección importante a lo de arriba: `essentia.js`/Essentia es AGPL, no MIT** (obligaría a abrir el código) y **madmom tiene modelos no comerciales**: ambos descartados para producción. Lo que sigue pendiente de este item es la parte de «explícame por qué funciona»: ver «Profesor de armonía» más abajo.
+
+### Profesor de armonía: colores por función, números romanos, ficha tonal y sugerencias
+* **Qué:** que cada canción explique su armonía como un profesor: grado romano de cada acorde (`I, bVII, V7, ii°`), color por función (tónica / subdominante / dominante / modal), modo y cambios de tono, progresiones con nombre, escalas y notas guía por acorde, qué tocar para improvisar o componer riffs y líneas que encajen, e ideas para dar dinamismo al tema.
+* **Principio:** los hechos los calcula código determinista (testeable); la IA solo los redacta, con validación posterior y sugerencias etiquetadas como «idea». Sin SQL (caché en `analisis_acordes`).
+* **Plan completo y decisiones pendientes:** `docs/plan-armonia-didactica.md` (fases 1-5: motor de teoría y colores → pestaña «Armonía» → profesor con IA → mástil/teclado interactivo y práctica por bloque → calidad con golden tests).
+* **Aviso:** el recuadro «Estructura Rápida para el Músico» del visor sale de la ficha del sustituto generada por IA y puede ser inventado; la estructura calculada (bloques A/B) debe sustituirlo.
+* **Estado:** plan escrito, sin implementar. Decisiones que esperan respuesta: colorear por función o por grado, notación romana estándar o simple, Gemini o Claude para el texto, nivel por defecto, alcance de la práctica (guitarra/bajo/teclado).
+
+### Saber cuándo cambiar de acorde, sin mirar arriba (ideas tras el reloj por acorde)
+* **Hecho:** reloj que se llena en cada acorde de la letra con aviso en el último 0,8 s y el siguiente acorde iluminado; vibración opcional al cambiar (`RelojEnAcorde.tsx`, `relojAcorde.ts`).
+* **Por hacer (de más fácil a más ambicioso):**
+  * **Modo escenario:** pantalla gigante con solo el acorde actual y el siguiente, alto contraste, pensada para directo y ensayo.
+  * **Cuenta atrás de compás** sobre el acorde («3·2·1·¡cambio!») para entrar en el «1» (ya tenemos pulso y compases).
+  * **Bola que rebota** por la letra sílaba a sílaba al pulso (tenemos pulso y tiempos por palabra).
+  * **Click o tono suave** antes de cada cambio, solo en auriculares (Web Audio).
+  * **Pasar de página con pedal** Bluetooth.
+  * **Reloj / gafas:** el cambio de acorde se nota en la muñeca o aparece en unas gafas.
+* **Visión 2050 (especulación, no datos):** letra que respira con la voz sílaba a sílaba; **acordes que se adaptan al nivel de cada músico** (simplificados o con extensiones de jazz); **seguimiento del tempo de la banda en vivo** con el micro, para que el cifrado vaya al ritmo de ese ensayo y no del disco (la idea con más futuro y con la que BandManager se diferenciaría de Chordify, que va con la grabación fija); un profesor que te escucha y te corrige.
+
+### Detección de acordes: mejoras pendientes y modelos a comparar
+* **Medir antes de cambiar:** `npm run eval:acordes` compara el detector con las correcciones de la banda (verdad persistente en `analisis_acordes.referenciaManual`). Falta corregir 20-30 tramos de 2 canciones reales para tener la primera tabla.
+* **Comparar gratis:** `tools/colab/acordes_btc.py` (BTC, ISMIR 2019, MIT) en Google Colab; sin probar (el entorno de desarrollo no puede descargar pesos). Los pesos están entrenados con datasets académicos: revisar licencia antes de producción.
+* **Si un modelo gana por números:** worker de GPU bajo demanda (Modal/RunPod) con el modelo ganador + **Beat This!** (MIT) para directos sin claqueta y **All-In-One Music Structure Analyzer** para secciones (verso/estribillo). Coste realista 0,01-0,05 $ por canción contando arranques en frío, no 0,005.
+* **Mejoras propias pendientes:** decodificar los acordes **por pulso** en vez de por ventanas fijas de 186 ms; detectar «sin acorde» en intros sin armonía.
+* **Letra:** reintentar por tramos los huecos con voz y sin letra (con la voz de Iris y detección de actividad vocal); alineación forzada tipo WhisperX/`lyric-align` para el karaoke (sin medidas fiables sobre voz cantada: probar con canciones reales); botón «reintentar este tramo».
+* **Evitar:** madmom (modelos no comerciales), Essentia (AGPL), APIs de pago por minuto. Descartada la promesa de «precisión absoluta»: un detector ronda el 75-85 % en triadas y la corrección manual es parte del producto.
 
 ### Deuda de diseño: lo que queda tras las fases F3–F9
 * **Qué:** las primitivas (`Input`, `Textarea`, `Select`, `Field`, `Switch`, `Card`, `EmptyState`, `Button`) ya cubren los campos (≈650 migrados; los que quedan llevan `data-raw` con motivo), unas 400 píldoras/alternancias y ≈240 botones de solo icono (`IconButton`, con nombre accesible obligatorio). Los arquetipos de control (botón, icono, enlace, fila de menú, campo, interruptor, chip, tarjeta) ya tienen primitiva y `design-audit` impide escribir otro a mano. Los ~1.100 `<button>` restantes son superficies compuestas (tarjetas pulsables, celdas, pestañas con contenido propio) sin arquetipo repetido.
