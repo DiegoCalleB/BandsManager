@@ -1,3 +1,4 @@
+import { esCuentaDeBrais } from './utils/cuentaBrais.js';
 import express from "express";
 import crypto from "crypto";
 import { normalizePlan } from "./db/core.js";
@@ -91,10 +92,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
-  const isBraisMoureUser =
-    foundUser.id === 'user-mouredev' ||
-    userEmail.includes('mouredev') ||
-    userEmail.includes('brais');
+  const isBraisMoureUser = esCuentaDeBrais({ id: foundUser.id, email: userEmail });
 
   if (isBraisMoureUser) {
     // Valores por defecto, no forzados: si Brais edita su banda/instrumento, se respeta.
