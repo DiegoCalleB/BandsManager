@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { posicionMenu, type PosicionMenu } from '../../utils/posicionMenu';
+import { posicionMenu, ajusteHorizontal, type PosicionMenu } from '../../utils/posicionMenu';
 
 // Clases de posicionamiento «a la antigua» (panel absoluto bajo el botón) que este componente
 // sustituye por una posición calculada con el espacio real de la ventana.
@@ -40,6 +40,14 @@ export function PopoverAncla({ className = '', izquierda, style, children, ...re
     setPos(alIzquierda ? { ...base, left: Math.max(8, r.left) } : base);
   }, [alIzquierda]);
 
+  // Con el ancho real del panel ya pintado: si se sale por un lado de la pantalla, se corrige.
+  useLayoutEffect(() => {
+    if (!pos || !panel.current) return;
+    const r = panel.current.getBoundingClientRect();
+    const left = ajusteHorizontal(r, window.innerWidth);
+    if (left !== null && left !== pos.left) setPos({ ...pos, left });
+  }, [pos]);
+
   useEffect(() => {
     const alScroll = (e: Event) => {
       if (panel.current?.contains(e.target as Node)) return;
@@ -73,7 +81,7 @@ export function PopoverAncla({ className = '', izquierda, style, children, ...re
               position: 'fixed',
               top: pos.top,
               bottom: pos.bottom,
-              ...(alIzquierda ? { left: pos.left } : { right: pos.right }),
+              ...(alIzquierda || pos.left !== undefined ? { left: pos.left } : { right: pos.right }),
               maxHeight: pos.maxHeight,
               ...style,
             }}

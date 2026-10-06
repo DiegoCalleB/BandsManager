@@ -814,7 +814,7 @@ export default function Dashboard({
             </Button>
 
             {isDashboardSettingsOpen && (
-              <div className="absolute right-0 mt-2 w-64 p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] z-50 animate-fade-in space-y-0.5">
+              <PopoverAncla className="absolute right-0 mt-2 w-64 p-1.5 rounded-[var(--r-m)] bg-[var(--surface)] text-[var(--ink)] z-50 animate-fade-in space-y-0.5">
                 <div className="px-2.5 py-1.5 mb-1 flex items-center justify-between">
                   <span className="text-xs font-semibold text-[var(--ink-2)] block">
                     Ajustes del Dashboard
@@ -878,7 +878,7 @@ export default function Dashboard({
                   <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                   <span>Alertas del mánager</span>
                 </button>
-              </div>
+              </PopoverAncla>
             )}
           </div>
         </div>

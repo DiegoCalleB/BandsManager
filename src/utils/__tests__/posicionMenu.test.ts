@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { posicionMenu } from '../posicionMenu';
+import { posicionMenu, ajusteHorizontal } from '../posicionMenu';
 
 const ventana = { ancho: 1608, alto: 536 }; // la ventana baja de la captura del bug
 
@@ -28,5 +28,20 @@ describe('posicionMenu', () => {
 
   it('respeta un margen mínimo a la derecha', () => {
     expect(posicionMenu({ top: 100, bottom: 120, right: 1605 }, ventana).right).toBe(8);
+  });
+});
+
+describe('ajusteHorizontal (móvil de 390 px)', () => {
+  it('panel de 224 px alineado a un botón cerca del borde izquierdo: se sale por la izquierda → left 8', () => {
+    expect(ajusteHorizontal({ left: -37, right: 187, width: 224 }, 390)).toBe(8);
+  });
+  it('panel que se sale por la derecha → se pega al borde derecho con margen', () => {
+    expect(ajusteHorizontal({ left: 250, right: 474, width: 224 }, 390)).toBe(390 - 8 - 224);
+  });
+  it('panel que ya cabe → null (no se toca)', () => {
+    expect(ajusteHorizontal({ left: 100, right: 324, width: 224 }, 390)).toBeNull();
+  });
+  it('panel más ancho que la pantalla → left mínimo, nunca negativo', () => {
+    expect(ajusteHorizontal({ left: -20, right: 420, width: 440 }, 390)).toBe(8);
   });
 });

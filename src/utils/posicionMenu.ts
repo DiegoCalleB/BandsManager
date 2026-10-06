@@ -23,3 +23,18 @@ export function posicionMenu(
     maxHeight: Math.max(140, haciaAbajo ? abajo : arriba),
   };
 }
+
+/**
+ * Ajuste horizontal una vez conocido el ancho real del panel: si, alineado al borde derecho del
+ * botón, se sale por la izquierda de la pantalla (botón cerca del borde izquierdo en un móvil), o si
+ * alineado a la izquierda se sale por la derecha, devuelve el `left` corregido. null = no hace falta.
+ */
+export function ajusteHorizontal(
+  panel: { left: number; right: number; width: number },
+  ventanaAncho: number,
+  margen = 8,
+): number | null {
+  if (panel.left < margen) return margen;
+  if (panel.right > ventanaAncho - margen) return Math.max(margen, ventanaAncho - margen - panel.width);
+  return null;
+}

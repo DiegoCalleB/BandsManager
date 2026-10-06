@@ -5,7 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 import { IconButton } from './Button';
 import { MenuItem } from './MenuItem';
 import { cn } from '../../utils/cn';
-import { posicionMenu, type PosicionMenu } from '../../utils/posicionMenu';
+import { posicionMenu, ajusteHorizontal, type PosicionMenu } from '../../utils/posicionMenu';
 
 export interface ActionMenuItem {
   label: string;
@@ -30,7 +30,8 @@ export interface ActionMenuProps {
  */
 export function ActionMenu({ label, items, className }: ActionMenuProps) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState<PosicionMenu | null>(null);
+  const [pos, setPos] = useState<(PosicionMenu & { left?: number }) | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const anclaRef = useRef<HTMLDivElement>(null);
   const visibles = items.filter((i) => !i.hidden);
 
@@ -42,6 +43,14 @@ export function ActionMenu({ label, items, className }: ActionMenuProps) {
     const r = anclaRef.current.getBoundingClientRect();
     setPos(posicionMenu(r, { ancho: window.innerWidth, alto: window.innerHeight }));
   }, [open]);
+
+  // Con el ancho real del panel ya pintado: si se sale por un lado de la pantalla, se corrige.
+  useLayoutEffect(() => {
+    if (!open || !pos || pos.left !== undefined || !panelRef.current) return;
+    const r = panelRef.current.getBoundingClientRect();
+    const left = ajusteHorizontal(r, window.innerWidth);
+    if (left !== null) setPos({ ...pos, left });
+  }, [open, pos]);
 
   useEffect(() => {
     if (!open) return;
@@ -73,7 +82,8 @@ export function ActionMenu({ label, items, className }: ActionMenuProps) {
           <div className="fixed inset-0 z-[10000]" onClick={(e) => { e.stopPropagation(); setOpen(false); }} />
           <div
             role="menu"
-            style={{ position: 'fixed', top: pos.top, bottom: pos.bottom, right: pos.right, maxHeight: pos.maxHeight }}
+            ref={panelRef}
+            style={{ position: 'fixed', top: pos.top, bottom: pos.bottom, ...(pos.left !== undefined ? { left: pos.left } : { right: pos.right }), maxHeight: pos.maxHeight }}
             onClick={(e) => e.stopPropagation()}
             className="menu-pop z-[10001] w-56 max-w-[calc(100vw-2rem)] space-y-0.5 overflow-y-auto rounded-[var(--r-l)] bg-[var(--surface)] p-1.5 shadow-none ring-1 ring-[var(--hair)]"
           >
