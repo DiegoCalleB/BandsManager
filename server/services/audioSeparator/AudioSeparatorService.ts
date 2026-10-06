@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
-import { esUrlExternaSegura } from '../../utils/ssrfGuard.js';
+import { descargarBufferSeguro } from '../../utils/ssrfGuard.js';
 import { stemStorageRetryManager } from '../stemStorageRetryQueue.js';
 import { transcodeBufferToMp3 } from '../../routes/ai_music.js';
 
@@ -90,24 +90,17 @@ export abstract class AudioSeparatorService {
 
         if (tempUrl && (tempUrl.startsWith('http://') || tempUrl.startsWith('https://'))) {
           try {
-            const isSafe =
-              tempUrl.includes('lalal.ai') ||
-              tempUrl.includes('replicate.delivery') ||
-              tempUrl.includes('supabase.co') ||
-              (await esUrlExternaSegura(tempUrl));
+            const fileRes = await descargarBufferSeguro(tempUrl, {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': '*/*'
+              },
+              timeoutMs: 60000
+            });
 
-            if (isSafe) {
-              const fileRes = await fetch(tempUrl, {
-                headers: {
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                  'Accept': '*/*'
-                },
-                signal: AbortSignal.timeout(60000)
-              });
-
-              if (fileRes.ok) {
-                const arrayBuf = await fileRes.arrayBuffer();
-                const rawBuffer = Buffer.from(arrayBuf);
+            {
+              if (fileRes) {
+                const rawBuffer = fileRes.buffer;
 
                 // Transcodificar a MP3 de alta fidelidad de 320kbps
                 const buffer = await transcodeBufferToMp3(rawBuffer);

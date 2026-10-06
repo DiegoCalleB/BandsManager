@@ -9,31 +9,25 @@ import fs from "fs";
 // DNS rebinding cambiando el registro DNS en el intervalo entre la validación y la conexión real (TOCTOU).
 // Esta utilidad valida las IPs y ancla la conexión a nivel de socket a la IP resuelta y validada.
 
+// Lista de rangos NO enrutables públicamente. `net.BlockList` normaliza por sí sola las formas
+// IPv4-mapped (::ffff:127.0.0.1 y ::ffff:7f00:1) y las abreviaturas IPv6, que la comprobación
+// anterior por prefijo de texto no cubría (p. ej. «::ffff:7f00:1» llegaba a la red interna).
+const RANGOS_RESERVADOS = new net.BlockList();
+for (const [red, bits] of [
+  ["0.0.0.0", 8], ["10.0.0.0", 8], ["100.64.0.0", 10], ["127.0.0.0", 8], ["169.254.0.0", 16],
+  ["172.16.0.0", 12], ["192.0.0.0", 24], ["192.0.2.0", 24], ["192.168.0.0", 16], ["198.18.0.0", 15],
+  ["198.51.100.0", 24], ["203.0.113.0", 24], ["224.0.0.0", 4], ["240.0.0.0", 4]
+] as Array<[string, number]>) RANGOS_RESERVADOS.addSubnet(red, bits, "ipv4");
+for (const [red, bits] of [
+  ["::", 128], ["::1", 128], ["64:ff9b::", 96], ["100::", 64], ["2001::", 32], ["2001:db8::", 32],
+  ["2002::", 16], ["fc00::", 7], ["fe80::", 10], ["fec0::", 10], ["ff00::", 8]
+] as Array<[string, number]>) RANGOS_RESERVADOS.addSubnet(red, bits, "ipv6");
+
 export function esIpPrivadaOReservada(ip: string): boolean {
-  if (net.isIPv4(ip)) {
-    const partes = ip.split(".").map(Number);
-    const [a, b] = partes;
-    if (a === 10) return true; // 10.0.0.0/8
-    if (a === 127) return true; // loopback
-    if (a === 169 && b === 254) return true; // link-local / metadata cloud
-    if (a === 172 && b >= 16 && b <= 31) return true; // 172.16.0.0/12
-    if (a === 192 && b === 168) return true; // 192.168.0.0/16
-    if (a === 0) return true; // 0.0.0.0/8
-    if (a === 100 && b >= 64 && b <= 127) return true; // 100.64.0.0/10 (CGNAT)
-    return false;
-  }
-  if (net.isIPv6(ip)) {
-    const lower = ip.toLowerCase();
-    if (lower === "::1") return true; // loopback
-    if (lower.startsWith("fe80:") || lower.startsWith("fe8") || lower.startsWith("fe9") || lower.startsWith("fea") || lower.startsWith("feb")) return true; // link-local
-    if (lower.startsWith("fc") || lower.startsWith("fd")) return true; // unique local (fc00::/7)
-    if (lower.startsWith("::ffff:")) {
-      // IPv4-mapped: revalida la parte IPv4
-      const v4 = lower.split(":").pop() || "";
-      if (net.isIPv4(v4)) return esIpPrivadaOReservada(v4);
-    }
-    return false;
-  }
+  // Los corchetes de una IPv6 literal en una URL («[::1]») no forman parte de la dirección.
+  const limpia = ip.replace(/^\[|\]$/g, "").split("%")[0];
+  if (net.isIPv4(limpia)) return RANGOS_RESERVADOS.check(limpia, "ipv4");
+  if (net.isIPv6(limpia)) return RANGOS_RESERVADOS.check(limpia, "ipv6");
   return true; // no es una IP reconocible: por seguridad, no se confía
 }
 
@@ -58,7 +52,8 @@ export async function validarYResolverUrlSegura(rawUrl: string): Promise<Validat
     return { segura: false, error: "Protocolo no permitido (solo http/https)" };
   }
 
-  const hostname = parsed.hostname.toLowerCase();
+  // Una IPv6 literal llega como «[::1]»: se quitan los corchetes para validarla como IP.
+  const hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "");
   if (hostname === "localhost" || hostname.endsWith(".localhost") || hostname.endsWith(".local") || hostname.endsWith(".internal")) {
     return { segura: false, error: "Host local o reservado" };
   }
@@ -116,8 +111,27 @@ export async function fetchUrlExternaSegura(
     headers?: Record<string, string>;
     timeoutMs?: number;
     maxBytes?: number;
+    /** Redirecciones a seguir (0 = ninguna). Cada salto se revalida entero (DNS + rangos privados). */
+    maxRedirects?: number;
   } = {}
 ): Promise<{ statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any }> {
+  const respuesta = await peticionUnica(rawUrl, options);
+  const ubicacion = respuesta.headers.location;
+  const saltos = options.maxRedirects ?? 0;
+  if (saltos > 0 && respuesta.statusCode >= 300 && respuesta.statusCode < 400 && ubicacion) {
+    // La URL del salto se resuelve contra la actual y se vuelve a validar desde cero.
+    const siguiente = new URL(ubicacion, rawUrl).toString();
+    return fetchUrlExternaSegura(siguiente, { ...options, maxRedirects: saltos - 1 });
+  }
+  return respuesta;
+}
+
+type RespuestaSegura = { statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any };
+
+async function peticionUnica(
+  rawUrl: string,
+  options: { method?: string; headers?: Record<string, string>; timeoutMs?: number; maxBytes?: number }
+): Promise<RespuestaSegura> {
   const validated = await validarYResolverUrlSegura(rawUrl);
   if (!validated.segura || !validated.ipPin || !validated.parsedUrl) {
     throw new Error(`SSRF_BLOCKED: ${validated.error || "URL no segura o no verificada"}`);
@@ -189,10 +203,29 @@ export async function fetchUrlExternaSegura(
 }
 
 /**
+ * Descarga un recurso externo a memoria con la guardia completa (IP anclada, rangos privados,
+ * redirecciones revalidadas). Devuelve null si la URL no es segura, falla o responde con error:
+ * los llamadores existentes ya tratan «no se pudo descargar» como un caso normal.
+ */
+export async function descargarBufferSeguro(
+  rawUrl: string,
+  opciones: { headers?: Record<string, string>; timeoutMs?: number; maxBytes?: number; method?: string } = {}
+): Promise<{ buffer: Buffer; headers: http.IncomingHttpHeaders; statusCode: number } | null> {
+  try {
+    const res = await fetchUrlExternaSegura(rawUrl, { maxRedirects: 3, timeoutMs: 45000, maxBytes: 150 * 1024 * 1024, ...opciones });
+    if (res.statusCode >= 400) return null;
+    return { buffer: res.buffer, headers: res.headers, statusCode: res.statusCode };
+  } catch (err: any) {
+    console.warn("[ssrfGuard] descarga rechazada o fallida:", String(err?.message || err).substring(0, 160));
+    return null;
+  }
+}
+
+/**
  * Descarga de forma segura un archivo multimedia hacia un destino local anclando la IP de conexión.
  */
 export async function descargarArchivoSeguro(rawUrl: string, destinoPath: string, maxBytes = 150 * 1024 * 1024): Promise<void> {
-  const res = await fetchUrlExternaSegura(rawUrl, { maxBytes, timeoutMs: 60000 });
+  const res = await fetchUrlExternaSegura(rawUrl, { maxBytes, timeoutMs: 60000, maxRedirects: 3 });
   if (res.statusCode >= 400) {
     throw new Error(`Error HTTP ${res.statusCode} descargando archivo`);
   }

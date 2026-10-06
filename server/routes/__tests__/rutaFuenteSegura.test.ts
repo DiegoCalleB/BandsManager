@@ -60,3 +60,12 @@ describe('urlDeVideoValida', () => {
     expect(urlDeVideoValida(42)).toBeNull();
   });
 });
+
+describe('urlDeVideoSegura', () => {
+  it('rechaza URLs que apuntan a la red interna', async () => {
+    const { urlDeVideoSegura } = await import('../concert_to_album');
+    expect(await urlDeVideoSegura('http://169.254.169.254/latest/meta-data')).toBeNull();
+    expect(await urlDeVideoSegura('http://[::ffff:7f00:1]/video.mp4')).toBeNull();
+    expect(await urlDeVideoSegura('http://localhost:3000/x')).toBeNull();
+  });
+});

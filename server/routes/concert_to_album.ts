@@ -13,6 +13,7 @@ import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../u
 // para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
 import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
 import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO, PuntoEnergia } from "../utils/audioEnergy.js";
+import { esUrlExternaSegura, descargarBufferSeguro } from "../utils/ssrfGuard.js";
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
@@ -37,6 +38,16 @@ export function urlDeVideoValida(url: unknown): string | null {
     return null;
   }
   return limpia;
+}
+
+/**
+ * Como `urlDeVideoValida`, pero además rechaza hosts que resuelven a la red interna (metadatos de
+ * la nube, localhost, rangos privados): yt-dlp y los scrapers descargan lo que se les indique.
+ */
+export async function urlDeVideoSegura(url: unknown): Promise<string | null> {
+  const valida = urlDeVideoValida(url);
+  if (!valida) return null;
+  return (await esUrlExternaSegura(valida)) ? valida : null;
 }
 
 /**
@@ -268,13 +279,16 @@ router.post("/delete-cookies", requireAuth, (req, res) => {
 // Helper: Direct HTML scraper fallback for YouTube metadata when yt-dlp is blocked by bot checks
 async function scrapeYoutubeMetadata(url: string) {
   try {
-    const res = await fetch(url, {
+    const res = await descargarBufferSeguro(url, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
         "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
       },
+      timeoutMs: 15000,
+      maxBytes: 5 * 1024 * 1024,
     });
-    const html = await res.text();
+    if (!res) return { title: "Concierto en Directo", duration: 3600, description: "", chapters: [] };
+    const html = res.buffer.toString("utf-8");
     let title = "Concierto en Directo";
     let description = "";
 
@@ -440,7 +454,7 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
 router.post("/analyze", requireAuth, async (req, res) => {
   try {
     const { url, useAi, transcribeFirst, bandName } = req.body;
-    const urlVideo = urlDeVideoValida(url);
+    const urlVideo = await urlDeVideoSegura(url);
     const ficheroFuente = rutaFuenteSegura(req.body.sourceFilePath);
     if (req.body.sourceFilePath && !ficheroFuente) {
       return res.status(400).json({ error: "La ruta del fichero fuente no es válida." });
@@ -741,7 +755,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
 router.post("/process", requireAuth, async (req, res) => {
   try {
     const { tracks, albumTitle, artist, normalizeAudio = true } = req.body;
-    const urlVideo = urlDeVideoValida(req.body.url);
+    const urlVideo = await urlDeVideoSegura(req.body.url);
     const ficheroFuente = rutaFuenteSegura(req.body.sourceFilePath);
     if (req.body.sourceFilePath && !ficheroFuente) {
       return res.status(400).json({ error: "La ruta del fichero fuente no es válida." });
@@ -1070,14 +1084,14 @@ export async function getAudioSnippetPath(params: {
   const { audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true } = params;
   // Las tres entradas que vienen del cliente se normalizan aquí, que es por donde pasan las
   // cuatro rutas que usan este helper: así no hay que acordarse de validarlas en cada una.
-  const urlVideo = urlDeVideoValida(params.url);
+  const urlVideo = await urlDeVideoSegura(params.url);
   const ficheroFuente = rutaFuenteSegura(params.sourceFilePath);
   const tempDir = path.join(process.cwd(), "public", "uploads", "temp");
   if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
   // 1. If audioUrl is already a local file or remote URL
   if (audioUrl && typeof audioUrl === "string") {
-    const audioRemoto = urlDeVideoValida(audioUrl);
+    const audioRemoto = await urlDeVideoSegura(audioUrl);
     if (audioRemoto) {
       const tempHash = Buffer.from(audioRemoto).toString("base64").replace(/[/\\?%*:|"<>]/g, "_").slice(0, 16);
       const remoteTemp = path.join(tempDir, `remote_${tempHash}.mp3`);
@@ -1085,10 +1099,9 @@ export async function getAudioSnippetPath(params: {
         return remoteTemp;
       }
       try {
-        const resp = await fetch(audioRemoto);
-        if (resp.ok) {
-          const arrayBuffer = await resp.arrayBuffer();
-          fs.writeFileSync(remoteTemp, Buffer.from(arrayBuffer));
+        const resp = await descargarBufferSeguro(audioRemoto);
+        if (resp) {
+          fs.writeFileSync(remoteTemp, resp.buffer);
           return remoteTemp;
         }
       } catch (err: any) {

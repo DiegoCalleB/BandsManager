@@ -14,6 +14,7 @@ import path from "path";
 import os from "os";
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
+import { descargarBufferSeguro } from "./ssrfGuard.js";
 
 /** Suelo en dB. astats devuelve `-inf` en el silencio absoluto y eso rompe cualquier media. */
 export const DB_SILENCIO = -90;
@@ -315,12 +316,13 @@ export async function resolverFuenteAudioLocal(
   }
 
   try {
-    const resp = await fetch(fuente);
-    if (!resp.ok) {
-      console.error(`[Audio] No se pudo descargar el audio (HTTP ${resp.status}): ${fuente}`);
+    // La fuente puede venir de datos editables por usuarios (URL de audio de una canción): descarga con guardia SSRF.
+    const resp = await descargarBufferSeguro(fuente);
+    if (!resp) {
+      console.error(`[Audio] No se pudo descargar el audio (URL no segura o error HTTP): ${fuente}`);
       return null;
     }
-    const buffer = Buffer.from(await resp.arrayBuffer());
+    const buffer = resp.buffer;
     const ficheroTemporal = path.join(os.tmpdir(), `audio_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.audio`);
     fs.writeFileSync(ficheroTemporal, buffer);
     return { ruta: ficheroTemporal, limpiar: () => fs.unlink(ficheroTemporal, () => {}) };

@@ -11,7 +11,7 @@ import fs from 'fs';
 import os from 'os';
 import crypto from 'crypto';
 import { getTargetBandId } from '../utils/bandAccess.js';
-import { esUrlExternaSegura } from '../utils/ssrfGuard.js';
+import { descargarBufferSeguro, fetchUrlExternaSegura } from '../utils/ssrfGuard.js';
 import {
   getStemsFromPersistentCache,
   saveStemsToPersistentCache,
@@ -149,6 +149,30 @@ function buildFormattedStems(stemsMap: Record<string, any>) {
   );
 }
 
+// Hosts de almacenamiento/CDN de confianza. Se compara el HOSTNAME real (sufijo de dominio):
+// con `includes()` bastaba poner «supabase.co» en la query de cualquier URL para saltarse el filtro.
+const DOMINIOS_ALMACENAMIENTO_CONFIABLES = [
+  'supabase.co',
+  'storage.googleapis.com',
+  'cloudinary.com',
+  'replicate.delivery',
+  'amazonaws.com',
+  'blob.core.windows.net',
+];
+function esHostDeAlmacenamientoConfiable(rawUrl: string): boolean {
+  try {
+    const u = new URL(rawUrl);
+    if (u.protocol !== 'https:') return false;
+    const host = u.hostname.toLowerCase();
+    return DOMINIOS_ALMACENAMIENTO_CONFIABLES.some(
+      (d) => host === d || host.endsWith('.' + d)
+    );
+  } catch {
+    return false;
+  }
+}
+
+
 /** Registra el fallo de un job de separación en la caché persistente con el mismo formato de
  *  diagnóstico que antes viajaba en la respuesta HTTP directa, para que el polling de estado
  *  pueda reconstruir la misma tarjeta de error enriquecida en el cliente. */
@@ -184,15 +208,7 @@ export async function ensurePublicAudioUrl(
   requestHost?: string
 ): Promise<string> {
   // Fast-path: Si audioUrl ya es una URL pública HTTPS directa en un CDN o Storage público
-  if (
-    audioUrl.startsWith('https://') &&
-    (audioUrl.includes('supabase.co') ||
-      audioUrl.includes('storage.googleapis.com') ||
-      audioUrl.includes('cloudinary.com') ||
-      audioUrl.includes('replicate.delivery') ||
-      audioUrl.includes('amazonaws.com') ||
-      audioUrl.includes('blob.core.windows.net'))
-  ) {
+  if (esHostDeAlmacenamientoConfiable(audioUrl)) {
     console.log(
       `[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN: ${audioUrl.substring(0, 60)}...`
     );
@@ -265,20 +281,12 @@ export async function ensurePublicAudioUrl(
       audioUrl.startsWith('https://')
     ) {
       try {
-        const isSafe = await esUrlExternaSegura(audioUrl);
-        if (isSafe) {
-          const res = await fetch(audioUrl, {
-            headers: {
-              'User-Agent':
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              Accept: '*/*',
-            },
-          });
-          if (res.ok) {
-            const ab = await res.arrayBuffer();
-            buffer = Buffer.from(ab);
-            ext = path.extname(urlWithoutQuery).replace('.', '') || 'mp3';
-          }
+        const res = await descargarBufferSeguro(audioUrl, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', Accept: '*/*' },
+        });
+        if (res) {
+          buffer = res.buffer;
+          ext = path.extname(urlWithoutQuery).replace('.', '') || 'mp3';
         }
       } catch (e) {
         console.warn(
@@ -376,16 +384,17 @@ async function ensureCompressedAudioForReplicate(
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       Accept: '*/*',
     };
-    const headRes = await fetch(url, {
+    const headRes = await fetchUrlExternaSegura(url, {
       method: 'HEAD',
       headers: fetchHeaders,
-      signal: AbortSignal.timeout(8000),
+      timeoutMs: 8000,
+      maxRedirects: 3,
     });
-    const contentType = (
-      headRes.headers.get('content-type') || ''
+    const contentType = String(
+      headRes.headers['content-type'] || ''
     ).toLowerCase();
     const contentLength = parseInt(
-      headRes.headers.get('content-length') || '0',
+      String(headRes.headers['content-length'] || '0'),
       10
     );
     const urlLooksLikeMp3 = url.toLowerCase().split('?')[0].endsWith('.mp3');
@@ -402,16 +411,12 @@ async function ensureCompressedAudioForReplicate(
   }
 
   try {
-    const res = await fetch(url, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        Accept: '*/*',
-      },
-      signal: AbortSignal.timeout(45000),
+    const res = await descargarBufferSeguro(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', Accept: '*/*' },
+      timeoutMs: 45000,
     });
-    if (!res.ok) return url;
-    const original = Buffer.from(await res.arrayBuffer());
+    if (!res) return url;
+    const original = res.buffer;
     if (original.length === 0) return url;
 
     const compressed = await transcodeBufferToMp3(original);
@@ -1095,17 +1100,12 @@ async function persistRawStemsMap(
         (tempUrl.startsWith('http://') || tempUrl.startsWith('https://'))
       ) {
         try {
-          const isSafe =
-            tempUrl.includes('replicate.delivery') ||
-            tempUrl.includes('supabase.co') ||
-            (await esUrlExternaSegura(tempUrl));
-          if (isSafe) {
-            const fileRes = await fetch(tempUrl, {
-              signal: AbortSignal.timeout(45000),
-            });
-            if (fileRes.ok) {
-              const arrayBuf = await fileRes.arrayBuffer();
-              const rawBuffer = Buffer.from(arrayBuf);
+          const fileRes = await descargarBufferSeguro(tempUrl, {
+            timeoutMs: 45000,
+          });
+          {
+            if (fileRes) {
+              const rawBuffer = fileRes.buffer;
               // Replicate devuelve WAV sin comprimir con extensi\u00f3n .mp3 en el nombre: un stem
               // aislado de una canci\u00f3n entera puede superar los 50MB del l\u00edmite gratuito de
               // Supabase Storage. Recomprimimos a MP3 real antes de subir.
@@ -2066,13 +2066,11 @@ async function processNeuralStemsFal(
           (tempUrl.startsWith('http://') || tempUrl.startsWith('https://'))
         ) {
           try {
-            const isSafe = await esUrlExternaSegura(tempUrl);
-            if (isSafe) {
-              const fileRes = await fetch(tempUrl);
-              if (fileRes.ok) {
-                const arrayBuf = await fileRes.arrayBuffer();
-                sizeBytes = arrayBuf.byteLength;
-                const buffer = Buffer.from(arrayBuf);
+            const fileRes = await descargarBufferSeguro(tempUrl);
+            {
+              if (fileRes) {
+                const buffer = fileRes.buffer;
+                sizeBytes = buffer.length;
                 const instrumentClean = instrumentKey
                   .toLowerCase()
                   .normalize('NFD')
@@ -2156,19 +2154,15 @@ export async function processServerStemsFfmpeg(
           fs.writeFileSync(tempLocalFile, Buffer.from(base64Data, 'base64'));
         }
       } else {
-        const isSafe = await esUrlExternaSegura(audioUrl);
-        if (isSafe) {
-          const res = await fetch(audioUrl, {
-            headers: {
-              'User-Agent':
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-              Accept: '*/*',
-            },
-          });
-          if (res.ok) {
-            const arrayBuf = await res.arrayBuffer();
-            fs.writeFileSync(tempLocalFile, Buffer.from(arrayBuf));
-          }
+        const res = await descargarBufferSeguro(audioUrl, {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            Accept: '*/*',
+          },
+        });
+        if (res) {
+          fs.writeFileSync(tempLocalFile, res.buffer);
         }
       }
       if (

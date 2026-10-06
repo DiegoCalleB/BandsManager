@@ -64,6 +64,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * **No existe un rate limiter general para el resto de la API** — solo estas cuatro superficies específicas (login, IA, render, donaciones) están cubiertas. Es un gap real, no una simplificación de esta documentación: cualquier otro endpoint mutante sin uno de estos cuatro limitadores solo tiene `requireAuth` conteniendo el abuso, nada de rate limiting.
 3. **Protección SSRF (Server-Side Request Forgery):**
    * Cualquier petición `fetch()` saliente realizada por el servidor a URLs provistas por usuarios (ej. scraping de webs de salas) DEBE pasar obligatoriamente por `esUrlExternaSegura` (`server/utils/ssrfGuard.ts`), que bloquea IP privadas/reservadas y re-valida DNS.
+   * Para DESCARGAR el recurso usa `descargarBufferSeguro` / `fetchUrlExternaSegura` (misma utilidad): validan, anclan la IP y revalidan cada redirección. Validar con `esUrlExternaSegura` y luego llamar a `fetch()` nativo NO es suficiente (TOCTOU de DNS + `fetch` sigue redirecciones hacia la red interna). Prohibido decidir «es de confianza» con `url.includes('supabase.co')`: se compara el hostname (ver `esHostDeAlmacenamientoConfiable` en `ai_music.ts`). `esIpPrivadaOReservada` usa `net.BlockList` (cubre IPv4-mapped IPv6 en hex).
 4. **Almacenamiento de Archivos (Supabase Storage):**
    * Los archivos estáticos y clips multimedia procesados deben subirse a **Supabase Storage**, nunca al disco efímero de Railway.
    * Servir uploads estáticos con cabeceras `X-Content-Type-Options: nosniff`.
