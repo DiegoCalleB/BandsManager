@@ -771,7 +771,7 @@ export function PdfExportModal({
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
-                <span class="interlude-note">(${item.notas || (item as any).notaTema})</span>
+                <span class="interlude-note">${item.notas || (item as any).notaTema}</span>
               `
      : ""
  }
@@ -1172,7 +1172,7 @@ export function PdfExportModal({
  }
 
  .interlude-item {
- font-family:'Oswald', monospace, sans-serif;
+ font-family:'Oswald', sans-serif;
  font-size: 10pt;
  font-weight: 700;
  color: #222;
@@ -1187,12 +1187,18 @@ export function PdfExportModal({
  .interlude-title {
  font-weight: 800;
  }
+ /* La nota del interludio va en su propia línea, a mano como el resto de notas, y nunca pasa
+ de una línea (elipsis): antes salía en monoespaciada y partida en dos. */
  .interlude-note {
- font-size: 10.5pt;
- font-family: monospace;
+ display: block;
+ font-size: 11pt;
+ font-family: ${handFont};
+ font-weight: 600;
  color: #555;
- font-style: italic;
- margin-left: 6px;
+ letter-spacing: 0.2px;
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
  }
 
  /* Footer */
