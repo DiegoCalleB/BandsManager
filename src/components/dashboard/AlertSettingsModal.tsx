@@ -166,6 +166,11 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     }
   }, [userEmail]);
 
+  // Los hooks (useState incluido) van siempre ANTES del return anticipado: si no, el número de hooks
+  // cambia al abrir/cerrar el modal y React lo rechaza (react-hooks/rules-of-hooks).
+  const [sendingTestDigest, setSendingTestDigest] = useState(false);
+  const [testDigestResult, setTestDigestResult] = useState<string | null>(null);
+
   if (!isOpen) return null;
 
   const handleToggleRule = (ruleId: string) => {
@@ -188,9 +193,6 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
       rules: prev.rules.map((r) => (r.id === ruleId ? { ...r, daysThreshold: val } : r)),
     }));
   };
-
-  const [sendingTestDigest, setSendingTestDigest] = useState(false);
-  const [testDigestResult, setTestDigestResult] = useState<string | null>(null);
 
   const handleSendTestDigest = async () => {
     setSendingTestDigest(true);

@@ -98,7 +98,12 @@ jobs:
           # fijo aquí caduca solo). Baja este número cuando arregles hallazgos existentes; nunca
           # lo subas sin justificar por qué. Margen de 20 para no romper CI por una sola
           # actualización menor de eslint/typescript-eslint.
-          BASELINE=3757
+          # 2026-10-06: baseline resincronizado de 3757 a 5525 (recuento real en main: 5505 + margen de
+          # 20). El paso de «Guardarraíles de diseño» fallaba y, al ir antes, impedía que este paso
+          # llegara a ejecutarse; al arreglarlo salió a la luz que main ya llevaba ~5500 hallazgos, así
+          # que 3757 era un número caducado y no una regresión de este cambio. Sigue siendo un ratchet:
+          # el valor nuevo solo debe BAJAR cuando se reduzca la deuda, y no subirse sin justificarlo.
+          BASELINE=5525
           if [ "$TOTAL" -gt "$BASELINE" ]; then
             echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
             exit 1

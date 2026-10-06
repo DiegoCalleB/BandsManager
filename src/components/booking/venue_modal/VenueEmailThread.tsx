@@ -575,7 +575,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
           <div className="pt-2.5 border-t border-[var(--hair)] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-micro font-bold uppercase tracking-wider text-slate-400">
-                🎯 Botones & Acciones Detectadas ({interaccionesBotones.length})
+                <ShowIcon inline emoji="🎯" />Botones & Acciones Detectadas ({interaccionesBotones.length})
               </span>
               <span className="text-[10px] text-emerald-400 font-mono font-medium">
                 En vivo

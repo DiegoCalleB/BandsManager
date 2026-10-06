@@ -211,7 +211,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
 
       {/* 3. TOUR ROUTE CONFLICT OR OPPORTUNITY ALERT */}
       {conflictCheck.status === 'conflicto_directo' && (
-        <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/15 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-start gap-2.5">
+        <div className="p-3 rounded-[var(--r-m)] bg-[var(--alert)]/10 border border-[var(--alert)]/30 text-[var(--alert)] text-xs flex items-start gap-2.5">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <div className="min-w-0">
             <p className="font-bold">Conflicto en agenda de {bandName || 'la banda'}</p>
