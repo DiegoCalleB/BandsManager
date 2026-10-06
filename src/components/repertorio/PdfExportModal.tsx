@@ -83,6 +83,10 @@ const TITLE_FONT_CANDIDATES_PT = [28, 25, 22, 19, 17];
 // ni siquiera 17pt lo consigue por poco margen — nunca se usa para repartir en varias páginas
 // (ver EMERGENCY_TITLE_FONT_PT en computeAutoFitPlan/setlistAutoFit.ts).
 const EMERGENCY_TITLE_FONT_PT = 15;
+// Modo "sentado": candidatos por ENCIMA de los de siempre. Con un set corto (6-10 temas) 28pt
+// dejaba media hoja en blanco; un cartel hecho a mano llenaría la hoja. El auto-ajuste prueba de
+// mayor a menor, así que los repertorios largos siguen cayendo en los tamaños de siempre.
+const SENTADO_CANDIDATES_PT = [44, 40, 36, 32, ...TITLE_FONT_CANDIDATES_PT];
 // Techo de letra para el modo"de pie" (ver viewDensity): ese modo sube cada página tanto como
 // quepa MÁS ALLÁ del mayor candidato de arriba (28pt), ya que ahí no hay una letra"estándar" que
 // respetar entre páginas — cuantas menos canciones tenga una página, más grande puede verse. 44pt
@@ -982,7 +986,7 @@ export function PdfExportModal({
  }
 
  .setlist-song-item {
- padding: 0;
+ padding: 3px 0;
  /* Red de seguridad de impresión: nuestro propio reparto por páginas (ver
  setlistAutoFit.ts) es quien decide qué canción va en qué hoja, así que en el caso
  normal el navegador nunca tiene que partir nada por su cuenta. Pero si, por lo
@@ -1141,7 +1145,7 @@ export function PdfExportModal({
  display: flex;
  align-items: center;
  gap: 8px;
- margin: 1px 0;
+ margin: 6px 0;
  break-inside: avoid;
  page-break-inside: avoid;
  }
@@ -1247,7 +1251,24 @@ export function PdfExportModal({
  .is-centered .song-notes-below {
  padding-left: 0;
  align-items: center;
- margin-top: -6px;
+ margin-top: -2px;
+ }
+ .is-centered .song-notes-below .note-seg {
+ /* sin la inclinación manuscrita no se montan sobre el título ni sobre la fila siguiente */
+ transform: none !important;
+ }
+ .is-centered .interlude-item {
+ padding-top: 2px;
+ padding-bottom: 2px;
+ }
+ .page-header.is-centered .band-heading {
+ font-size: 24pt;
+ letter-spacing: 1px;
+ }
+ .page-header.is-centered .setlist-meta {
+ font-size: 10pt;
+ letter-spacing: 1px;
+ margin-top: 2px;
  }
  .is-centered .interlude-item {
  padding-left: 0;
@@ -1437,7 +1458,7 @@ export function PdfExportModal({
               maxTitleFontPt: MAX_EXPANDED_TITLE_FONT_PT,
             })
           : computeAutoFitPlan(songsOnly.length, measureFn, {
-              candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
+              candidateTitleFontPt: SENTADO_CANDIDATES_PT,
               pageAvailableHeightPx,
               emergencyFontPt: EMERGENCY_TITLE_FONT_PT,
             });
@@ -1471,7 +1492,7 @@ export function PdfExportModal({
         : memberPlans.map((mp) => {
             if (mp.plan.pageItemCounts.length <= bestPageCount) return mp;
             const forced = tryFitInPageCount(songsOnlyCount, mp.measureFn, {
-              candidateTitleFontPt: TITLE_FONT_CANDIDATES_PT,
+              candidateTitleFontPt: SENTADO_CANDIDATES_PT,
               pageAvailableHeightPx: mp.pageAvailableHeightPx,
               forcedPageCount: bestPageCount,
               maxOverflowTolerance: EQUALIZE_MAX_OVERFLOW_TOLERANCE,
