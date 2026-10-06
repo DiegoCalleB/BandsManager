@@ -141,6 +141,8 @@ interface PrintDocument {
     fontPt: number;
     /** Hojas que elegiría el motor en automático (para la etiqueta "Auto (N páginas)"). */
     autoPages: number;
+    /** Si las columnas están fijadas, cómo saldría con el otro nº de columnas (para sugerirlo). */
+    alt?: { cols: 1 | 2; fontPt: number; pages: number };
   }[];
 }
 
@@ -973,24 +975,29 @@ function PdfExportModalBody({
  padding-bottom: 8px;
  margin-bottom: 10px;
  }
- /* Cabecera centrada: logo, grupo y repertorio apilados en el eje, y la copia del músico
- en una sola línea fina debajo. */
+ /* Cabecera centrada y COMPACTA: el logo a un lado del nombre del grupo y del repertorio
+ (como una sola pieza centrada) y la copia del músico en una línea fina debajo. Apilar logo,
+ nombre, repertorio y músico ocupaba ~115px, un 11 % de la hoja. */
  .page-header.is-centered {
  flex-direction: column;
  justify-content: center;
- gap: 6px;
+ gap: 3px;
+ padding-bottom: 6px;
+ margin-bottom: 8px;
  text-align: center;
  }
  .is-centered .header-left {
- flex-direction: column;
- gap: 4px;
+ flex-direction: row;
+ justify-content: center;
+ gap: 10px;
  }
  .is-centered .band-text-block {
  align-items: center;
+ text-align: center;
  }
  .is-centered .band-logo-img {
- max-height: 52px;
- max-width: 140px;
+ height: 32px;
+ max-width: 100px;
  }
  .is-centered .header-right {
  text-align: center;
@@ -1010,8 +1017,11 @@ function PdfExportModalBody({
  align-items: center;
  gap: 8px;
  }
+ /* Alto fijo (height), NO max-height: un logo remoto aún sin cargar al MEDIR la hoja contaba como
+ 0px de alto y luego, ya cargado, empujaba la última canción a una hoja extra. */
  .band-logo-img {
- max-height: 30px;
+ height: 30px;
+ width: auto;
  max-width: 85px;
  object-fit: contain;
  filter: grayscale(100%) contrast(150%);
@@ -1406,13 +1416,13 @@ function PdfExportModalBody({
  padding-bottom: 2px;
  }
  .page-header.is-centered .band-heading {
- font-size: 24pt;
+ font-size: 17pt;
  letter-spacing: 1px;
  }
  .page-header.is-centered .setlist-meta {
- font-size: 10pt;
- letter-spacing: 1px;
- margin-top: 2px;
+ font-size: 8pt;
+ letter-spacing: 0.5px;
+ margin-top: 1px;
  }
  .is-centered .interlude-item {
  padding-left: 0;
@@ -1685,7 +1695,15 @@ function PdfExportModalBody({
         opts.mode === "preview" && forcedPages
           ? resolveLayout().plan.pages.length
           : plan.pages.length;
-      return { member, isMaster, plan, cols, autoPages };
+      // Con las columnas fijadas por el usuario y letra pequeña, se calcula la otra opción para
+      // poder sugerirla en el modal ("con 2 columnas: 18 pt"). Solo en la vista previa.
+      let alt: { cols: 1 | 2; fontPt: number; pages: number } | undefined;
+      if (opts.mode === "preview" && (columnsChoice === 1 || columnsChoice === 2) && plan.fontPt < MIN_TITLE_FONT_PT) {
+        const otherCols: 1 | 2 = columnsChoice === 1 ? 2 : 1;
+        const other = planFor(otherCols, forcedPages);
+        alt = { cols: otherCols, fontPt: other.fontPt, pages: other.pages.length };
+      }
+      return { member, isMaster, plan, cols, autoPages, alt };
     });
 
     document.body.removeChild(measureFrame);
@@ -1824,11 +1842,12 @@ function PdfExportModalBody({
 </html>`;
     return {
       html,
-      layouts: memberPlans.map(({ member, plan, autoPages }) => ({
+      layouts: memberPlans.map(({ member, plan, autoPages, alt }) => ({
         memberId: member.id,
         pages: plan.pages.length,
         fontPt: plan.fontPt,
         autoPages,
+        alt,
       })),
     };
   };
@@ -2134,6 +2153,19 @@ function PdfExportModalBody({
                     {previewDoc.layout.fontPt < MIN_TITLE_FONT_PT && " · letra pequeña"}
                   </span>
                 )}
+                {previewDoc?.layout?.alt &&
+                  previewDoc.layout.alt.fontPt >= previewDoc.layout.fontPt + 3 &&
+                  previewDoc.layout.alt.pages <= previewDoc.layout.pages && (
+                    <Button
+                      variant="soft"
+                      size="xs"
+                      onClick={() => setColumnsChoice(previewDoc.layout!.alt!.cols)}
+                      title="Cambia el número de columnas para que la letra salga más grande en las mismas hojas"
+                    >
+                      Con {previewDoc.layout.alt.cols} {previewDoc.layout.alt.cols === 1 ? "columna" : "columnas"}:{" "}
+                      {previewDoc.layout.alt.fontPt} pt
+                    </Button>
+                  )}
               </div>
             </div>
 
