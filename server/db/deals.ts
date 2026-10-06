@@ -1,3 +1,4 @@
+import { escrituraTolerante } from './tolerantWrite.js';
 import crypto from 'crypto';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
@@ -249,18 +250,11 @@ export async function dbUpsertDeal(
     updated_at: new Date().toISOString()
   };
 
-  let { data, error } = await tablaDeals()
-    .upsert(payload, { onConflict: 'id' })
-    .select('*')
-    .maybeSingle();
-
-  // La columna apoyo_porcentaje es posterior al resto del esquema: si la migración aún no está
-  // aplicada, el acuerdo se guarda igualmente (sin esa preferencia) en vez de dejar de funcionar.
-  if (error && /apoyo_porcentaje/.test(String(error.message || ''))) {
-    console.warn('[deals] Falta la columna apoyo_porcentaje (migración 20261007): se guarda sin ella.');
-    const { apoyo_porcentaje: _omitida, ...sinApoyo } = payload;
-    ({ data, error } = await tablaDeals().upsert(sinApoyo, { onConflict: 'id' }).select('*').maybeSingle());
-  }
+  // Si a la BD le falta alguna columna (p. ej. apoyo_porcentaje sin su migración) el acuerdo se
+  // guarda igualmente sin ella, y queda avisado como guardado parcial (tolerantWrite.ts).
+  const { data, error } = await escrituraTolerante<DealData>('concert_deals', payload, (p) =>
+    tablaDeals().upsert(p, { onConflict: 'id' }).select('*').maybeSingle()
+  );
   if (error) fallo(error, 'guardar el');
 
   return (data as DealData) || payload;

@@ -18,6 +18,8 @@ export interface SaveErrorDetail {
   /** Código HTTP; 0 si ni siquiera hubo respuesta (sin red). */
   status: number;
   mensaje: string;
+  /** true: el servidor guardó, pero sin algunos campos (columnas que faltan en la BD). */
+  parcial?: boolean;
 }
 
 const METODOS_LECTURA = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -79,6 +81,25 @@ export function instalarAvisoDeGuardados(
     } catch (error: any) {
       if (error?.name !== 'AbortError') avisar(0);
       throw error;
+    }
+    const omitidas = respuesta.headers?.get?.('x-guardado-parcial');
+    if (respuesta.ok && omitidas && debeAvisar(metodo, url, respuesta.status)) {
+      const columnas = omitidas.split(',').map((c) => c.trim()).filter(Boolean);
+      try {
+        ventana.dispatchEvent(
+          new CustomEvent(SAVE_ERROR_EVENT, {
+            detail: {
+              ruta: rutaDe(url) || url,
+              metodo,
+              status: respuesta.status,
+              parcial: true,
+              mensaje: `Se guardó el resto, pero estos campos no: ${columnas.join(', ')}. Falta aplicar una actualización de la base de datos.`,
+            } satisfies SaveErrorDetail,
+          })
+        );
+      } catch {
+        /* sin DOM */
+      }
     }
     if (!respuesta.ok) {
       let cuerpo: any;

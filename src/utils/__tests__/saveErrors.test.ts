@@ -51,6 +51,17 @@ describe('aviso de guardados fallidos', () => {
     expect(debeAvisar('DELETE', '/api/leads/lead-1?band=1', 500)).toBe(true);
   });
 
+  it('avisa de un guardado parcial aunque la respuesta sea 200', async () => {
+    const { ventana, eventos } = crearVentana(() =>
+      Promise.resolve(new Response('{}', { status: 200, headers: { 'content-type': 'application/json', 'x-guardado-parcial': 'epk_configs.traducciones,epk_configs.miembros' } }))
+    );
+    const r = await ventana.fetch('/api/epk', { method: 'PUT' });
+    expect(r.status).toBe(200);
+    expect(eventos).toHaveLength(1);
+    expect(eventos[0].detail.parcial).toBe(true);
+    expect(eventos[0].detail.mensaje).toContain('epk_configs.traducciones, epk_configs.miembros');
+  });
+
   it('se instala una sola vez', () => {
     const { ventana } = crearVentana(() => json(200, {}));
     const primera = ventana.fetch;

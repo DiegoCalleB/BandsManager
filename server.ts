@@ -11,6 +11,7 @@ import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
 import { mismaBanda } from "./server/utils/bandAccess.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.js";
+import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
@@ -103,6 +104,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Tras cualquier escritura correcta en /api se invalida la caché de estado de la banda: sin esto,
 // /api/state devolvía la versión anterior de lo que acababas de guardar (ver server/db/sync.ts).
+app.use("/api", avisarGuardadoParcial());
 app.use("/api", invalidarCachePorEscritura());
 
 // Mount modular Express routers

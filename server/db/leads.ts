@@ -1,3 +1,4 @@
+import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 
@@ -562,11 +563,10 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
       '',
   };
 
-  const { data, error } = await sb
-    .from('leads')
-    .upsert(payload)
-    .select()
-    .maybeSingle();
+  // Primer intento tolerante: si falta una columna se guarda sin ella y se avisa (tolerantWrite.ts).
+  const { data, error } = await escrituraTolerante('leads', payload, (p) =>
+    sb.from('leads').upsert(p).select().maybeSingle()
+  );
   if (error) {
     console.warn(
       'Primary Supabase upsert failed, retrying with smart column fallback:',

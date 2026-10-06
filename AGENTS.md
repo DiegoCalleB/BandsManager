@@ -20,6 +20,11 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Prohibición Estricta:** Google Sheets está **totalmente descartado y en desuso**. No se debe mencionar ni utilizar. Toda la persistencia (`leads`, `bands`, `users`, `tours`, `songs`, `finances`, `fans`, `social`, `autonomy_configs`, etc.) se gestiona exclusivamente a través de **Supabase**.
 * **Estado en Memoria & Sincronización:** El backend Express mantiene un estado sincronizado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
 * **Migraciones de Esquema:** Cualquier modificación en la base de datos debe documentarse en SQL idempotente (`supabase/migrations/` o `supabase_schema.sql`).
+  * **Se aplican solas al arrancar** (`npm start` ejecuta `scripts/migrate.ts` antes del servidor; registro en la tabla `schema_migrations`). Necesita `DATABASE_URL` en Railway (cadena de conexión de Supabase, *Session pooler*). Sin ella avisa y arranca igual: entonces hay que lanzarlas a mano en el SQL Editor. `npm run migrate:check` lista las pendientes.
+  * **Una migración aplicada no se edita**: crea otra nueva (el runner avisa si cambia el checksum). Cada una va en su transacción: si falla, se revierte y el despliegue no se promociona.
+  * **Los BEFORE UPDATE/INSERT triggers terminan en `RETURN NEW`**; el test `server/audit/__tests__/dbRoundTrip.test.ts` lo comprueba para todas las tablas.
+  * **Toda columna que escribe el servidor debe existir en el esquema**: lo vigila `server/audit/__tests__/schemaContract.test.ts` (`npm run audit:guardado`).
+  * **Escrituras con columnas nuevas:** usa `escrituraTolerante` (`server/db/tolerantWrite.ts`). Si falta la columna guarda el resto y devuelve la cabecera `X-Guardado-Parcial`, que el cliente muestra como aviso. Nunca reintentes quitando columnas en silencio.
 * **Despliegue y Runtimes:** 
   - **Servidor Backend:** Express (TypeScript) corriendo en Node 22 (`server.ts`), desplegado principalmente en **Railway** (`railway.json`, `nixpacks.toml`, healthcheck `/api/health`).
   - **Frontend:** React 19 + Vite + Tailwind CSS v4 (`src/main.tsx` → `src/App.tsx`).

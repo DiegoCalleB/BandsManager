@@ -42,7 +42,7 @@ export const SaveErrorBanner: React.FC = () => {
         <div key={a.id} className="pointer-events-auto flex items-start gap-3 p-3.5 rounded-[var(--r-l)] bg-[var(--alert-soft)] text-[var(--ink)]">
           <AlertCircle className="w-5 h-5 text-[var(--alert)] shrink-0" />
           <div className="flex-1 min-w-0">
-            <h4 className="text-xs font-semibold leading-tight">No se pudo guardar el cambio</h4>
+            <h4 className="text-xs font-semibold leading-tight">{a.parcial ? 'Guardado incompleto' : 'No se pudo guardar el cambio'}</h4>
             <p className="text-xs opacity-80 mt-0.5">{a.mensaje}</p>
             <p className="text-[11px] opacity-60 mt-1 break-all">{a.metodo} {a.ruta}</p>
           </div>
