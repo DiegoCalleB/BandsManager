@@ -51,10 +51,10 @@ export async function analizarAcordesDeCancion(song: any): Promise<ResultadoAnal
   // plano, afinación rara, un solo acorde dominante…) sin tener el audio delante.
   console.log(
     `[acordes] «${song.titulo}» fuente=${fuente} dur=${duracion.toFixed(0)}s tramos=${segmentos.length} distintos=${diagnostico.acordesDistintos} ` +
-      `dominante=${Math.round(diagnostico.cuotaAcordeDominante * 100)}% contraste=${diagnostico.contraste.toFixed(2)} afinacion=${diagnostico.afinacionCents}c tonalidad=${diagnostico.tonalidadUsada ?? "-"} pulso=${pulso ? `${pulso.bpm}bpm/conf${pulso.confianza}` : "-"} ficha=${song.bpm ?? "-"}`
+      `dominante=${Math.round(diagnostico.cuotaAcordeDominante * 100)}% contraste=${diagnostico.contraste.toFixed(2)} afinacion=${diagnostico.afinacionCents}c tonalidad=${diagnostico.tonalidadUsada ?? "-"} pulso=${pulso ? `${pulso.bpm}bpm/conf${pulso.confianza}` : "-"} ficha=${song.bpm ?? "-"} tonos=${diagnostico.tonalidades.length > 1 ? diagnostico.tonalidades.map((t) => `${t.tonalidad}@${Math.round(t.t0)}s`).join(">") : "-"}`
   );
   const motivo = motivoAnalisisPocoFiable(segmentos, duracion);
   if (motivo) return { ok: false, status: 422, error: motivo };
 
-  return { ok: true, analisis: construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: duracion, pulso: pulsoUtil }) };
+  return { ok: true, analisis: construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: duracion, pulso: pulsoUtil, tonalidades: diagnostico.tonalidades }) };
 }

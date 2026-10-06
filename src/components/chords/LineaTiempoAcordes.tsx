@@ -164,7 +164,14 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           Acordes del audio
           <span className="font-normal text-[var(--ink-2)]">
             {' '}· {analisis.fuente === 'instrumental' ? 'pista instrumental' : analisis.fuente === 'armonia' ? 'stems de armonía (Iris)' : 'mezcla completa'}
-            {analisis.tonalidad ? ` · ${analisis.tonalidad}` : ''}
+            {(() => {
+              // Con cambios de tono se muestra la tonalidad del tramo que suena y cuándo cambia.
+              const tramos = analisis.tonalidades;
+              if (!tramos || tramos.length < 2) return analisis.tonalidad ? ` · ${analisis.tonalidad}` : '';
+              const actualTono = tramos.find((x) => tiempo >= x.t0 && tiempo < x.t1) ?? tramos[0];
+              const proximo = tramos.find((x) => x.t0 > tiempo);
+              return ` · tono ${nombre(actualTono.tonalidad)}${proximo ? ` → ${nombre(proximo.tonalidad)} en ${formatearTiempo(proximo.t0)}` : ''}`;
+            })()}
           </span>
         </span>
         <span className="flex items-center gap-3 shrink-0">

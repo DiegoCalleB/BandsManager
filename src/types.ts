@@ -1196,6 +1196,8 @@ export interface AnalisisAcordes {
    * tramo corregido (se asume que la banda revisa desde el principio).
    */
   referenciaManual?: { segmentos: SegmentoAcordeAnalizado[]; guardadaEn: string; hasta: number };
+  /** Tramos de tonalidad cuando la canción cambia de tono (solo si hay más de uno). */
+  tonalidades?: Array<{ t0: number; t1: number; tonalidad: string }>;
   /** Pulso detectado en el audio (tempo real y fase de los tiempos); si falta, la rejilla de compases usa el BPM de la ficha. */
   pulso?: { bpm: number; fase: number; confianza: number; pulsos: number[] };
   /** Letra transcrita del audio con tiempos (Whisper sobre la voz), si se ha pedido. */

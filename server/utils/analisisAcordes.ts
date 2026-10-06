@@ -115,6 +115,7 @@ export function construirAnalisis(params: {
   tonalidad: string | null;
   duracionSegundos: number;
   pulso?: AnalisisAcordes["pulso"] | null;
+  tonalidades?: AnalisisAcordes["tonalidades"];
 }): AnalisisAcordes {
   return {
     version: VERSION_ANALISIS_ACORDES,
@@ -124,6 +125,7 @@ export function construirAnalisis(params: {
     tonalidad: params.tonalidad,
     segmentos: params.segmentos.map((s) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde, confianza: s.confianza })),
     ...(params.pulso ? { pulso: params.pulso } : {}),
+    ...(params.tonalidades && params.tonalidades.length > 1 ? { tonalidades: params.tonalidades } : {}),
   };
 }
 

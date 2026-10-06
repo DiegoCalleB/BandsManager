@@ -40,6 +40,8 @@ export interface SegmentoAcorde {
 }
 
 export interface OpcionesAcordes {
+  /** Buscar cambios de tono y usar la tonalidad de cada tramo como pista. Por defecto sí. */
+  detectarModulaciones?: boolean;
   /**
    * Tonalidad conocida («Am», «C», «F#m»); favorece acordes diatónicos y desempata mayor/menor
    * cuando el acorde no tiene tercera (power chords). `null` = ninguna; sin indicar (undefined) =
@@ -364,6 +366,82 @@ export function estimarTonalidadDesdeAcordes(segmentos: SegmentoAcorde[]): strin
   return candidatas[0].nombre;
 }
 
+export interface TramoTonalidad {
+  t0: number;
+  t1: number;
+  tonalidad: string;
+}
+
+/** Armadura de una tonalidad: la tónica de su mayor relativa (C y Am → «C»). */
+const firmaDiatonica = (t: string): string => {
+  const m = /^([A-G][#b]?)(m|min)?$/.exec(t.trim());
+  if (!m) return t;
+  const bemol: Record<string, string> = { Db: "C#", Eb: "D#", Gb: "F#", Ab: "G#", Bb: "A#" };
+  const raiz = NOTAS.indexOf(bemol[m[1]] ?? m[1]);
+  return NOTAS[(raiz + (m[2] ? 3 : 0)) % 12];
+};
+
+/**
+ * Cambios de tono (modulaciones): la tonalidad de cada ventana de `ventana` s (cada `paso` s) a
+ * partir de los acordes. Una tonalidad nueva solo cuenta si se mantiene en dos ventanas seguidas
+ * (un acorde prestado no es una modulación). Relativas (C/Am) se consideran la misma tonalidad.
+ * El cambio se sitúa en el primer acorde que NO es diatónico de la tonalidad anterior.
+ */
+export function estimarTonalidadesPorTramos(segmentos: SegmentoAcorde[], ventana = 30, paso = 10): TramoTonalidad[] {
+  const reales = segmentos.filter((s) => s.acorde !== "N");
+  if (reales.length < 3) return [];
+  const fin = segmentos[segmentos.length - 1].t1;
+  const global = estimarTonalidadDesdeAcordes(reales);
+  if (fin < ventana * 1.5 || !global) return global ? [{ t0: 0, t1: fin, tonalidad: global }] : [];
+
+  const recorte = (a: number, b: number) =>
+    reales.filter((s) => s.t1 > a && s.t0 < b).map((s) => ({ ...s, t0: Math.max(a, s.t0), t1: Math.min(b, s.t1) }));
+  const porVentana: { t0: number; tonalidad: string | null }[] = [];
+  for (let a = 0; a < fin; a += paso) {
+    const b = Math.min(fin, a + ventana);
+    porVentana.push({ t0: a, tonalidad: estimarTonalidadDesdeAcordes(recorte(a, b)) });
+    if (b >= fin) break;
+  }
+
+  const tramos: TramoTonalidad[] = [{ t0: 0, t1: fin, tonalidad: global }];
+  // La primera tonalidad estable manda al principio (la global puede ser la de la parte más larga).
+  const primera = porVentana.find((v, i) => v.tonalidad && porVentana[i + 1]?.tonalidad && firmaDiatonica(v.tonalidad) === firmaDiatonica(porVentana[i + 1].tonalidad!));
+  if (primera?.tonalidad && firmaDiatonica(primera.tonalidad) !== firmaDiatonica(global)) tramos[0].tonalidad = primera.tonalidad;
+
+  for (let i = 1; i < porVentana.length; i++) {
+    const v = porVentana[i];
+    const sig = porVentana[i + 1];
+    const actual = tramos[tramos.length - 1];
+    if (!v.tonalidad || !sig?.tonalidad) continue;
+    const firma = firmaDiatonica(v.tonalidad);
+    if (firma === firmaDiatonica(actual.tonalidad) || firma !== firmaDiatonica(sig.tonalidad)) continue;
+    // Modulación: el cambio cae en el primer acorde de la ventana ajeno a la tonalidad anterior.
+    const diatAnterior = acordesDiatonicos(actual.tonalidad);
+    const corte = reales.find((s) => s.t0 >= v.t0 - 1e-6 && s.t0 > actual.t0 && !diatAnterior.has(s.acorde))?.t0 ?? v.t0 + paso;
+    if (corte <= actual.t0 + 2) continue;
+    actual.t1 = corte;
+    tramos.push({ t0: corte, t1: fin, tonalidad: firma === firmaDiatonica(global) ? global : v.tonalidad });
+  }
+  // Una ventana a caballo entre dos tonalidades produce un tramo fugaz con una tonalidad «mezcla»
+  // (C→D pasa por G): si dura menos de un paso y medio, se lo queda la tonalidad siguiente.
+  for (let i = 1; i < tramos.length - 1; i++) {
+    if (tramos[i].t1 - tramos[i].t0 < paso * 1.5) {
+      tramos[i + 1].t0 = tramos[i].t0;
+      tramos.splice(i, 1);
+      i--;
+    }
+  }
+  // Y dos tramos seguidos con la misma armadura son uno.
+  for (let i = 1; i < tramos.length; i++) {
+    if (firmaDiatonica(tramos[i].tonalidad) === firmaDiatonica(tramos[i - 1].tonalidad)) {
+      tramos[i - 1].t1 = tramos[i].t1;
+      tramos.splice(i, 1);
+      i--;
+    }
+  }
+  return tramos.map((t) => ({ ...t, t0: Math.round(t.t0 * 100) / 100, t1: Math.round(t.t1 * 100) / 100 }));
+}
+
 /**
  * Convierte audio PCM mono en segmentos de acordes con tiempos.
  * Devuelve [] si no hay audio utilizable.
@@ -378,6 +456,8 @@ export interface DiagnosticoAcordes {
   /** Fracción del tiempo que ocupa el acorde más frecuente (≈1 = el detector no ve cambios). */
   cuotaAcordeDominante: number;
   acordesDistintos: number;
+  /** Tramos de tonalidad si la canción modula (vacío si no). */
+  tonalidades: TramoTonalidad[];
 }
 
 export function detectarAcordesDesdePcm(
@@ -399,7 +479,7 @@ export function detectarAcordesConDiagnostico(
   opciones: OpcionesAcordes = {}
 ): { segmentos: SegmentoAcorde[]; diagnostico: DiagnosticoAcordes } {
   const { frames, afinacion, contraste } = calcularCromaConAfinacion(pcm, sampleRate);
-  const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0 };
+  const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0, tonalidades: [] };
   if (frames.length < 4) return { segmentos: [], diagnostico: vacio };
   const detectados = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
   const segmentos = refinarFronterasConAtaques(detectados.segmentos, pcm, sampleRate);
@@ -410,7 +490,7 @@ export function detectarAcordesConDiagnostico(
   const dominante = Math.max(0, ...porAcorde.values());
   return {
     segmentos,
-    diagnostico: { ...vacio, tonalidadUsada, cuotaAcordeDominante: dominante / duracion, acordesDistintos: porAcorde.size },
+    diagnostico: { ...vacio, tonalidadUsada, cuotaAcordeDominante: dominante / duracion, acordesDistintos: porAcorde.size, tonalidades: detectados.tonalidades },
   };
 }
 
@@ -420,11 +500,27 @@ function detectarSegmentos(
   opciones: OpcionesAcordes,
   frames: (number[] | null)[],
   afinacion: number
-): { segmentos: SegmentoAcorde[]; tonalidadUsada: string | null } {
+): { segmentos: SegmentoAcorde[]; tonalidadUsada: string | null; tonalidades: TramoTonalidad[] } {
 
   const duracionMinima = opciones.duracionMinima ?? 0.4;
   const confianzaMinima = opciones.confianzaMinima ?? 0.15;
   let tonalidad = opciones.tonalidad;
+  let tramosTono: TramoTonalidad[] = [];
+  if (tonalidad !== null && opciones.detectarModulaciones !== false) {
+    // Pasada sin prior para ver si la canción cambia de tono. Si lo hace, cada tramo usa su propia
+    // tonalidad como pista (con la de la ficha, un estribillo modulado medio tono arriba se leería mal).
+    const libre = detectarSegmentos(pcm, sampleRate, { ...opciones, tonalidad: null }, frames, afinacion).segmentos;
+    tramosTono = estimarTonalidadesPorTramos(libre);
+    if (tonalidad === undefined) {
+      tonalidad = estimarTonalidadDesdeAcordes(libre);
+      if (!tonalidad) {
+        const croma = calcularCromaDesdePcm(pcm, sampleRate);
+        tonalidad = croma ? (detectarTonalidadDesdeCroma(croma)?.tonalidad ?? null) : null;
+      }
+    }
+    // La tonalidad conocida (ficha) da nombre al tramo con su misma armadura.
+    if (tonalidad) for (const t of tramosTono) if (firmaDiatonica(t.tonalidad) === firmaDiatonica(tonalidad)) t.tonalidad = tonalidad;
+  }
   if (tonalidad === undefined) {
     // Sin tonalidad indicada: primera pasada SIN prior diatónico y, con los acordes que salen, se
     // busca la tonalidad que mejor los explica. Es más fiable que el croma global (Krumhansl), que
@@ -436,7 +532,16 @@ function detectarSegmentos(
       tonalidad = croma ? (detectarTonalidadDesdeCroma(croma)?.tonalidad ?? null) : null;
     }
   }
-  const diatonicos = tonalidad ? acordesDiatonicos(tonalidad) : new Set<string>();
+  const diatonicosGlobal = tonalidad ? acordesDiatonicos(tonalidad) : new Set<string>();
+  const modula = tramosTono.length > 1;
+  const diatonicosTramo = tramosTono.map((t) => acordesDiatonicos(t.tonalidad));
+  const dtFrame = HOP / sampleRate;
+  const diatonicosEn = (frame: number): Set<string> => {
+    if (!modula) return diatonicosGlobal;
+    const t = frame * dtFrame + VENTANA / 2 / sampleRate;
+    const i = tramosTono.findIndex((x) => t >= x.t0 && t < x.t1);
+    return i >= 0 ? diatonicosTramo[i] : diatonicosGlobal;
+  };
   const plantillas = opciones.incluirSeptimas ? PLANTILLAS : PLANTILLAS.filter((p) => p.calidad !== "7");
   const nEst = plantillas.length;
 
@@ -445,6 +550,7 @@ function detectarSegmentos(
   const emision: number[][] = frames.map((fr, t) => {
     if (!fr) return new Array(nEst).fill(0);
     const bajo = bajos[t];
+    const diatonicos = diatonicosEn(t);
     return plantillas.map((p) => {
       let s = similitud(fr, p.vector);
       // El bajo toca la raíz: premio proporcional a la energía de graves que cae en ella.
@@ -556,7 +662,7 @@ function detectarSegmentos(
     confianza: Math.round(Math.min(1, s.confianza * 25) * 100) / 100,
     acorde: s.acorde !== "N" && Math.min(1, s.confianza * 25) < confianzaMinima ? "N" : s.acorde,
   }));
-  return { segmentos: resultado, tonalidadUsada: tonalidad ?? null };
+  return { segmentos: resultado, tonalidadUsada: tonalidad ?? null, tonalidades: modula ? tramosTono : [] };
 }
 
 /**
