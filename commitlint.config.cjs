@@ -1,5 +1,6 @@
 // Conventional Commits: de aquí sale la versión (fix -> parche, feat -> menor, feat! -> mayor).
 // Ver AGENTS.md §7.6. Los mensajes van en español, así que no se fuerza el estilo del asunto.
+/* global module */
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
