@@ -446,3 +446,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 ### Enviador y cola de agentes (auditoría B)
 - Un borrador de Gmail que desaparece (404) NO equivale a «enviado»: se confirma con `buscarMensajeEnviadoA` (Enviados, 30 días). Si no hay envío, el lead no pasa a `contactado`.
 - `agent_jobs_queue`: los trabajos `processing` con `locked_until` vencido más de 10 min se recuperan (`recuperarTrabajosColgados`); antes quedaban bloqueados para siempre y además impedían encolar otro igual (deduplicación).
+
+### Guardado optimista en cliente (auditoría B)
+- Un handler que actualiza la UI al instante y luego hace `fetch` NO puede ignorar la respuesta (`.catch(log)`): usa `guardarOReverter(peticion, revertir)` (`src/utils/guardarConReversion.ts`) para dejar la pantalla como estaba si el servidor rechaza o no hay red. Nunca muestres «guardado con éxito» antes de la respuesta.
+- Un `useEffect` que copia props del servidor a estado local debe comparar CONTENIDO (JSON), no identidad: `fetchState()` devuelve objetos nuevos en cada refresco y pisaría lo que la persona está editando.

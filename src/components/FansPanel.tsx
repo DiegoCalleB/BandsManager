@@ -256,7 +256,17 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const [isAddingCity, setIsAddingCity] = useState(false);
   const [newCityInput, setNewCityInput] = useState("");
 
+  // fetchState() devuelve objetos NUEVOS en cada refresco aunque el contenido no cambie; si el
+  // efecto dependiera de la identidad del objeto, cada refresco pisaba con la copia del servidor
+  // lo que la persona estaba editando (una ciudad recién añadida, el texto del incentivo...).
+  // Solo se vuelca al estado local cuando el CONTENIDO del servidor cambia de verdad.
+  const ultimasCiudadesServidorRef = React.useRef<string>(
+    JSON.stringify(epkConfig?.ciudadesConfig ?? null),
+  );
   useEffect(() => {
+    const entrante = JSON.stringify(epkConfig?.ciudadesConfig ?? null);
+    if (entrante === ultimasCiudadesServidorRef.current) return;
+    ultimasCiudadesServidorRef.current = entrante;
     if (
       epkConfig?.ciudadesConfig &&
       Array.isArray(epkConfig.ciudadesConfig) &&
@@ -317,7 +327,13 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   );
   const [savedIncentive, setSavedIncentive] = useState(false);
 
+  const ultimoIncentivoServidorRef = React.useRef<string>(
+    JSON.stringify(epkConfig?.incentivoFans ?? null),
+  );
   useEffect(() => {
+    const entrante = JSON.stringify(epkConfig?.incentivoFans ?? null);
+    if (entrante === ultimoIncentivoServidorRef.current) return;
+    ultimoIncentivoServidorRef.current = entrante;
     if (epkConfig?.incentivoFans) {
       setIncentivo(epkConfig.incentivoFans);
     }

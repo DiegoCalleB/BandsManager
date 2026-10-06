@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { guardarOReverter } from "../utils/guardarConReversion";
 import {
   X,
   Play,
@@ -281,16 +282,26 @@ export function SongChordsViewerModal({
       headers["x-auth-token"] = token;
     }
 
-    fetch(`/api/songs/${song.id}`, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify(updatedSong),
-    }).catch((err) => console.error("Error saving song chords:", err));
-
+    // El aviso de éxito solo sale si el servidor aceptó el cambio; si no, se deja la canción como
+    // estaba (antes decía «guardados con éxito» aunque el PUT hubiera fallado y se perdía al refrescar).
     onUpdateSong(updatedSong);
     setActiveTab("chords");
-    setAiSuccessMsg("¡Cambios guardados con éxito!");
-    setTimeout(() => setAiSuccessMsg(null), 3000);
+    guardarOReverter(
+      fetch(`/api/songs/${song.id}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify(updatedSong),
+      }),
+      () => {
+        onUpdateSong(song);
+        setAiSuccessMsg("⚠️ No se pudieron guardar los cambios de los acordes. Se ha restaurado la versión anterior.");
+        setTimeout(() => setAiSuccessMsg(null), 6000);
+      },
+    ).then((guardado) => {
+      if (!guardado) return;
+      setAiSuccessMsg("¡Cambios guardados con éxito!");
+      setTimeout(() => setAiSuccessMsg(null), 3000);
+    });
   };
 
   // Process text according to current transpose and notation
