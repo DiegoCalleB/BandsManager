@@ -16,6 +16,7 @@
  * acordes con extensiones (9, 13, sus) y pasajes con mucha distorsión o sin armonía.
  */
 
+import { refinarFronterasConAtaques } from "./refinarFronteras.js";
 import { fft, ventanaHann, SAMPLE_RATE, extraerPcmMono, calcularCromaDesdePcm, detectarTonalidadDesdeCroma } from "./audioKey.js";
 
 const VENTANA = 4096; // ~372 ms a 11025 Hz
@@ -400,7 +401,9 @@ export function detectarAcordesConDiagnostico(
   const { frames, afinacion, contraste } = calcularCromaConAfinacion(pcm, sampleRate);
   const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0 };
   if (frames.length < 4) return { segmentos: [], diagnostico: vacio };
-  const { segmentos, tonalidadUsada } = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
+  const detectados = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
+  const segmentos = refinarFronterasConAtaques(detectados.segmentos, pcm, sampleRate);
+  const tonalidadUsada = detectados.tonalidadUsada;
   const duracion = segmentos.reduce((a, s) => a + (s.t1 - s.t0), 0) || 1;
   const porAcorde = new Map<string, number>();
   for (const s of segmentos) if (s.acorde !== "N") porAcorde.set(s.acorde, (porAcorde.get(s.acorde) ?? 0) + (s.t1 - s.t0));
