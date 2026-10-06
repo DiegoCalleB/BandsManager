@@ -549,7 +549,7 @@ export default function SongStudioModal({
     const initialSet = new Set<string>();
     if (song.audioIdeas) {
       song.audioIdeas.forEach((idea) => {
-        if ((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) {
+        if ((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed || song.audioIdeas!.length === 1) {
           initialSet.add(idea.id);
         }
       });
@@ -557,21 +557,21 @@ export default function SongStudioModal({
     return initialSet;
   });
 
-  // Mantener expandidas las ideas con stems en cuanto cambie song.audioIdeas
+  // Auto-expandir UNA sola vez cada idea nueva que traiga stems de Iris (o que sea la única).
+  // Antes el efecto reañadía al Set toda idea con stems en cada cambio de song.audioIdeas (voto,
+  // comentario, guardado...), así que al plegarla se reabría sola; y `filteredIdeas.length === 1`
+  // la forzaba abierta aunque se pulsara el chevron. Ahora el usuario manda: lo que plegó queda plegado.
+  const ideasYaVistasRef = useRef<Set<string>>(new Set(song.audioIdeas?.map((i) => i.id) ?? []));
   useEffect(() => {
-    if (song.audioIdeas) {
-      setExpandedIdeaIds((prev) => {
-        const next = new Set(prev);
-        let changed = false;
-        song.audioIdeas?.forEach((idea) => {
-          if (((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed) && !next.has(idea.id)) {
-            next.add(idea.id);
-            changed = true;
-          }
-        });
-        return changed ? next : prev;
-      });
-    }
+    const ideas = song.audioIdeas ?? [];
+    const nuevas = ideas.filter((idea) => !ideasYaVistasRef.current.has(idea.id));
+    if (nuevas.length === 0) return;
+    nuevas.forEach((idea) => ideasYaVistasRef.current.add(idea.id));
+    const aAbrir = nuevas.filter(
+      (idea) => (idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed || ideas.length === 1
+    );
+    if (aAbrir.length === 0) return;
+    setExpandedIdeaIds((prev) => new Set([...prev, ...aAbrir.map((i) => i.id)]));
   }, [song.audioIdeas]);
 
   const toggleIdeaExpanded = (ideaId: string) => {
@@ -683,8 +683,11 @@ export default function SongStudioModal({
   };
 
   // Auto-abrir modal de separación de pistas con Iris al pulsar el acceso directo "Procesar con Iris"
+  const atajoIrisAtendidoRef = useRef(false);
   useEffect(() => {
-    if (initialOpenIrisModal) {
+    // Solo la primera vez: con `song` en las dependencias, cada guardado reabría la idea.
+    if (initialOpenIrisModal && !atajoIrisAtendidoRef.current) {
+      atajoIrisAtendidoRef.current = true;
       const existingIrisIdea = getSongIrisStemIdea(song);
       if (existingIrisIdea) {
         // La canción YA tiene pistas separadas: asegurar que quede expandida en el mezclador multipista
@@ -4128,7 +4131,7 @@ export default function SongStudioModal({
                         >
                           {SECCIONES_TEMA.map((sec) => (
                             <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
-                              <ShowIcon inline emoji={sec.icon} /> {sec.label}
+                              {sec.icon} {sec.label}
                             </option>
                           ))}
                         </Select>
@@ -4165,7 +4168,7 @@ export default function SongStudioModal({
                         Fuente de Audio Principal / Base Rítmica:
                       </span>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+                      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 [&>*]:min-w-0">
                         {/* Option 1: Tema Base Original */}
                         <button
                           type="button"
@@ -4176,10 +4179,10 @@ export default function SongStudioModal({
                               setSelectedSongBaseUrl(song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || '');
                             }
                           }}
-                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-left ${
+                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
                             useSongBaseTrack
                               ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-[var(--acc)]/60'
-                              : '/30 hover: bg-[var(--acc-soft)] text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]'
+                              : 'bg-[var(--acc-soft)]/50 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]'
                           }`}
                         >
                           <Disc className={`w-5 h-5 text-[var(--acc)] ${useSongBaseTrack ? 'animate-spin-slow' : ''}`} />
@@ -4192,7 +4195,7 @@ export default function SongStudioModal({
                         {/* Option 2: File Upload */}
                         <label className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui">
                           <Upload className="w-5 h-5 text-[var(--ok)]" />
-                          <span className="text-xs font-semibold text-[var(--ink)] text-center">
+                          <span className="text-xs font-semibold text-[var(--ink)] text-center w-full truncate" title={selectedAudioFile?.name}>
                             {selectedAudioFile ? selectedAudioFile.name : 'Subir Archivo'}
                           </span>
                           <span className="text-micro text-[var(--ink-2)]">MP3, WAV, M4A</span>
@@ -4218,18 +4221,18 @@ export default function SongStudioModal({
                               size="xs"
                               type="button"
                               onClick={startRecording}
-                              className="items-center gap-1.5"
+                              className="items-center gap-1.5 w-full justify-center whitespace-nowrap"
                             >
-                              <Mic className="w-3.5 h-3.5" /> Grabar micrófono
+                              <Mic className="w-3.5 h-3.5 shrink-0" /> Grabar micro
                             </Button>
                           ) : (
                             <div className="w-full space-y-2">
                               <button
                                 type="button"
                                 onClick={stopRecording}
-                                className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center justify-center gap-1 cursor-pointer"
+                                className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap"
                               >
-                                <ShowIcon inline emoji="⏹️" />Detener Grabación ({formatTime(recordingTime)})
+                                <ShowIcon inline emoji="⏹️" />Detener ({formatTime(recordingTime)})
                               </button>
                               <div className="w-full h-11 relative rounded overflow-hidden">
                                 <LiveMicWaveformCanvas
@@ -4250,8 +4253,8 @@ export default function SongStudioModal({
 
                         {/* Drive Link */}
                         <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col justify-center gap-1">
-                          <span className="text-micro font-sans font-bold text-[var(--acc)]/70 flex items-center gap-1">
-                            <Music className="w-3 h-3 text-[var(--acc)]" /> Enlace Google Drive:
+                          <span className="text-micro font-sans font-bold text-[var(--acc)]/70 flex items-center gap-1 min-w-0">
+                            <Music className="w-3 h-3 text-[var(--acc)] shrink-0" /> <span className="truncate">Enlace Google Drive:</span>
                           </span>
                           <Input
                             size="sm"
@@ -4271,11 +4274,11 @@ export default function SongStudioModal({
                         <button
                           type="button"
                           onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
-                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-left ${
+                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
                             genAiOnNewIdea
-                              ? 'bg-[var(--tentative)]/10 text-[var(--tentative)]'
-                              : 'bg-[var(--tentative)]/5 text-[var(--ink)] hover:bg-[var(--tentative)]/5'
-                          } bg-[var(--acc)]/10`}
+                              ? 'bg-[var(--tentative)]/15 text-[var(--tentative)] ring-1 ring-[var(--tentative)]/50'
+                              : 'bg-[var(--tentative)]/5 text-[var(--ink)] hover:bg-[var(--tentative)]/10'
+                          }`}
                         >
                           <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
                           <span className="text-xs font-bold text-center">Base IA (Batería + bajo)</span>
@@ -4287,24 +4290,24 @@ export default function SongStudioModal({
 
                       {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
                       {useSongBaseTrack && (
-                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc)]  flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--on-acc)] animate-in fade-in duration-150">
+                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--ink)] animate-in fade-in duration-150">
                           <div className="flex items-center gap-2.5">
                             <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
                               <Disc className="w-5 h-5 animate-spin-slow" />
                             </div>
                             <div>
-                              <span className="font-bold text-[var(--ink)] block text-sm">Pista Base Creada sobre:"{song.titulo}"</span>
+                              <span className="font-bold text-[var(--ink)] block text-sm">Pista base creada sobre: "{song.titulo}"</span>
                               <span className="text-micro text-[var(--acc)]/70 block mt-0.5 font-sans">
                                 {selectedAudioFile || recordedAudioUrl || driveAudioUrl
                                   ? 'Se cargará el tema original como Pista Base de fondo para sonar sincronizado junto a tu idea/grabación.'
-                                  : 'Se cargará la pista original en la idea para que puedas usar el botón"+ Pista" o"Grabar encima (Mic)" e improvisar sobre el tema.'}
+                                  : 'Se cargará la pista original en la idea para que puedas usar el botón "+ Pista" o "Grabar encima (Mic)" e improvisar sobre el tema.'}
                               </span>
                             </div>
                           </div>
 
                           {((song.audioIdeas && song.audioIdeas.length > 0) || song.audioPrincipalUrl) && (
-                            <div className="flex items-center gap-2 shrink-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto">
-                              <span className="text-micro text-[var(--acc)] font-bold">Seleccionar Maqueta:</span>
+                            <div className="flex items-center gap-2 min-w-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto sm:max-w-[60%]">
+                              <span className="text-micro text-[var(--acc)] font-bold shrink-0 whitespace-nowrap">Seleccionar Maqueta:</span>
                               <Select
                                 size="sm"
                                 value={selectedSongBaseUrl}
@@ -4325,7 +4328,7 @@ export default function SongStudioModal({
 
                       {/* AI ACCOMPANIMENT GENERATION CONTROLS ON NEW IDEA */}
                       {genAiOnNewIdea && (
-                        <div className="mt-3 pt-3/30 bg-[var(--tentative)]/5 p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-150">
+                        <div className="mt-3 bg-[var(--tentative)]/5 p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-150">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
                               Ajustes de la base IA (Batería + bajo)
@@ -4377,7 +4380,7 @@ export default function SongStudioModal({
                               />
                             </div>
 
-                            <div className="sm:col-span-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-[var(--ink-2)] pt-1/20">
+                            <div className="sm:col-span-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-[var(--ink-2)] pt-1">
                               <div className="flex flex-wrap items-center gap-4">
                                 <label className="flex items-center gap-1.5 cursor-pointer">
                                   <input
@@ -4459,13 +4462,14 @@ export default function SongStudioModal({
                     </div>
 
                     <div className="flex justify-end gap-2 pt-2">
-                      <button
+                      <Button
+                        variant="neutral"
+                        size="sm"
                         type="button"
                         onClick={() => setShowAddIdea(false)}
-                        className="px-3 py-2 rounded-[var(--r-m)] text-xs text-[var(--ink-2)] hover:text-[var(--ink)]"
                       >
                         Cancelar
-                      </button>
+                      </Button>
                       <Button
                         variant="primary"
                         size="sm"
@@ -4514,9 +4518,7 @@ export default function SongStudioModal({
                     const hasVoted = votes.includes(currentUsername);
                     const tracks = getIdeaTracks(idea);
                     const isAddingTrack = addingTrackIdeaId === idea.id;
-                    // Con una sola idea en el catálogo no hay nada que"priorizar" plegando —
-                    // se abre directa, sin necesidad de tocar el chevron para empezar a trabajar.
-                    const isIdeaExpanded = filteredIdeas.length === 1 || expandedIdeaIds.has(idea.id);
+                    const isIdeaExpanded = expandedIdeaIds.has(idea.id);
 
                     return (
                       <motion.div
