@@ -8,6 +8,7 @@
 // una respuesta por su cuenta (eso es server/routes/leads/reply.ts, y sigue requiriendo que un
 // humano lo revise y lo mande).
 
+import { esEmailValido } from "../utils/email.js";
 import { leerRespuestasEntrantes, marcarComoLeido, type RespuestaEntrante } from "./emailAgentClient.js";
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
@@ -231,7 +232,7 @@ export async function findMatchingLeadForIncomingMessage(
     });
 
     if (leadByDomain) {
-      return { lead: leadByDomain, matchReason: `Domain Match (@${fromDomain})`, shouldAutoEnrichEmail: fromClean };
+      return { lead: leadByDomain, matchReason: `Domain Match (@${fromDomain})` };
     }
   }
 
@@ -244,14 +245,14 @@ export async function findMatchingLeadForIncomingMessage(
     });
 
     if (candidateLeads.length === 1) {
-      return { lead: candidateLeads[0], matchReason: `Subject Name Match ("${candidateLeads[0].nombre_sala}")`, shouldAutoEnrichEmail: fromClean };
+      return { lead: candidateLeads[0], matchReason: `Subject Name Match ("${candidateLeads[0].nombre_sala}")` };
     }
 
     if (candidateLeads.length > 1) {
       // Priorizar el que esté en un estado de conversación activa
       const active = candidateLeads.find((l: any) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
       if (active) {
-        return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")`, shouldAutoEnrichEmail: fromClean };
+        return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")` };
       }
     }
   }
@@ -329,8 +330,12 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     if (lead && matchResult) {
       console.log(`[Lector] ✨ Emparejamiento exitoso: ${msg.from} -> Lead ${lead.id} (${lead.nombre_sala}) vía [${matchResult.matchReason}]`);
 
-      // Auto-enriquecimiento de email secundario si respondió desde una dirección alternativa
-      if (matchResult.shouldAutoEnrichEmail) {
+      // Auto-enriquecimiento de email secundario si respondió desde una dirección alternativa.
+      // SOLO cuando el emparejamiento es por el hilo del correo (thread / References /
+      // In-Reply-To): esa respuesta es de verdad de la sala. Antes también se hacía al emparejar
+      // por dominio o por el nombre en el asunto, y un compañero, un reenvío o un auto-reply
+      // acababan como destinatario de los siguientes envíos.
+      if (matchResult.shouldAutoEnrichEmail && esEmailValido(matchResult.shouldAutoEnrichEmail)) {
         const newEmail = matchResult.shouldAutoEnrichEmail;
         const mainEmail = cleanEmailAddress(lead.email_contacto);
         const secEmail = cleanEmailAddress(lead.email_secundario);
@@ -414,7 +419,11 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
             sentimentAnalysis
           );
           borradorGenerado = draftReply;
-          nuevoEstado = "pendiente_aprobacion";
+          // Un lead descartado o confirmado no vuelve a la cola de aprobación solo porque el
+          // contrario haya escrito: el borrador se guarda, pero el estado lo decide una persona.
+          if (lead.estado !== "descartado" && lead.estado !== "confirmado") {
+            nuevoEstado = "pendiente_aprobacion";
+          }
           borradorIaGenerados++;
         } catch (draftErr) {
           console.warn(`[Lector] No se pudo autogenerar la respuesta para el lead ${lead.id}:`, draftErr);

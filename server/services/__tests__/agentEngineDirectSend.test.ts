@@ -118,7 +118,7 @@ describe('runEnviadorAgent con AGENT_EMAIL_MODE=send (interruptor global habilit
   it('con dispatch_mode=direct_send y sin Gmail OAuth, despacha de verdad por SMTP', async () => {
     const { updates, inserts } = mockSupabase();
     tieneGmailOAuthConectadoMock.mockResolvedValue(false);
-    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send' });
+    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send', dispatchLevel: 'first_contact_autonomous' });
     enviarEmailMock.mockResolvedValue({ messageId: 'smtp-1' });
 
     const result = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
@@ -139,7 +139,7 @@ describe('runEnviadorAgent con AGENT_EMAIL_MODE=send (interruptor global habilit
   it('con dispatch_mode=direct_send y Gmail OAuth conectado, despacha de verdad por la API de Gmail en vez de SMTP', async () => {
     const { updates } = mockSupabase();
     tieneGmailOAuthConectadoMock.mockResolvedValue(true);
-    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send' });
+    dbGetAutonomyConfigMock.mockResolvedValue({ dispatchMode: 'direct_send', dispatchLevel: 'first_contact_autonomous' });
     enviarEmailGmailApiMock.mockResolvedValue({ messageId: 'gmail-msg-1' });
 
     await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
