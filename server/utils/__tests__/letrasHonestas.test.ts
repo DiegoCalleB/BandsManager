@@ -91,7 +91,7 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
 
   it('prefiere la pista de voz aislada de Iris y avisa de que la mezcla es peor', () => {
     expect(ruta).toMatch(/voz\|vocals/);
-    expect(ruta).toContain('letraConfianza = fuenteLetra === "voz" ? "media" : "baja"');
+    expect(ruta).toContain('confianzaGlobal(lineas, fuenteLetra)');
   });
 
   it('sin audio no se transcribe nada (400) y el mensaje dice que no se inventa', () => {

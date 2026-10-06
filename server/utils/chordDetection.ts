@@ -89,22 +89,67 @@ function construirPlantillas(): Plantilla[] {
 
 const PLANTILLAS = construirPlantillas();
 
-/** Croma por frames, cada uno normalizado en L2. `null` en frames silenciosos. */
-export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (number[] | null)[] {
-  const frames: (number[] | null)[] = [];
-  if (!pcm || pcm.length < VENTANA) return frames;
+/** Mediana de los primeros n valores de v SIN reservar memoria (n pequeño: inserción en tmp). */
+function medianaPequena(v: Float32Array, n: number, tmp: Float32Array): number {
+  for (let i = 0; i < n; i++) {
+    const x = v[i];
+    let j = i - 1;
+    while (j >= 0 && tmp[j] > x) {
+      tmp[j + 1] = tmp[j];
+      j--;
+    }
+    tmp[j + 1] = x;
+  }
+  return tmp[n >> 1];
+}
+
+/**
+ * Mediana deslizante en frecuencia con una ventana ordenada que se actualiza con cada paso
+ * (quitar el valor que sale, insertar el que entra): O(ventana) por bin en vez de reordenar.
+ */
+function medianaDeslizante(datos: Float32Array, radio: number): Float32Array {
+  const n = datos.length;
+  const salida = new Float32Array(n);
+  const ventana = new Float32Array(2 * radio + 2);
+  let tam = 0;
+  const insertar = (x: number) => {
+    let j = tam - 1;
+    while (j >= 0 && ventana[j] > x) {
+      ventana[j + 1] = ventana[j];
+      j--;
+    }
+    ventana[j + 1] = x;
+    tam++;
+  };
+  const quitar = (x: number) => {
+    let j = 0;
+    while (j < tam && ventana[j] !== x) j++;
+    for (; j < tam - 1; j++) ventana[j] = ventana[j + 1];
+    tam--;
+  };
+  for (let k = 0; k <= Math.min(radio, n - 1); k++) insertar(datos[k]);
+  for (let b = 0; b < n; b++) {
+    salida[b] = ventana[tam >> 1];
+    const sale = b - radio;
+    const entra = b + radio + 1;
+    if (sale >= 0) quitar(datos[sale]);
+    if (entra < n) insertar(datos[entra]);
+  }
+  return salida;
+}
+
+/**
+ * Espectros de magnitud por frame (solo los bins de interés). `null` en frames silenciosos.
+ * Devuelve también la tabla bin → clase de altura, ajustada por la afinación estimada.
+ */
+function espectrosPorFrames(pcm: Float32Array, sampleRate: number) {
   const ventana = ventanaHann(VENTANA);
   const binHz = sampleRate / VENTANA;
   const binMin = Math.max(1, Math.floor(FREQ_MIN / binHz));
   const binMax = Math.min(VENTANA / 2 - 1, Math.ceil(FREQ_MAX / binHz));
-  // Clase de altura de cada bin, calculada una vez.
-  const claseDeBin = new Int8Array(VENTANA / 2);
-  for (let b = binMin; b <= binMax; b++) {
-    const midi = 69 + 12 * Math.log2((b * binHz) / 440);
-    claseDeBin[b] = ((Math.round(midi) % 12) + 12) % 12;
-  }
-
+  const nBins = binMax - binMin + 1;
   const total = Math.floor((pcm.length - VENTANA) / HOP) + 1;
+  const mags: (Float32Array | null)[] = [];
   for (let f = 0; f < total; f++) {
     const inicio = f * HOP;
     const re = new Float64Array(VENTANA);
@@ -116,18 +161,107 @@ export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (
       energia += m * m;
     }
     if (energia / VENTANA < 1e-8) {
-      frames.push(null);
+      mags.push(null);
       continue;
     }
     fft(re, im);
-    const croma = new Array(12).fill(0);
-    for (let b = binMin; b <= binMax; b++) {
-      const mag = Math.sqrt(re[b] * re[b] + im[b] * im[b]);
-      croma[claseDeBin[b]] += Math.log1p(mag * 20);
-    }
-    frames.push(normalizar(croma));
+    const m = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) m[b] = Math.sqrt(re[binMin + b] ** 2 + im[binMin + b] ** 2);
+    mags.push(m);
   }
-  return frames;
+  return { mags, binHz, binMin, nBins };
+}
+
+/**
+ * Quita lo que no es armonía: (1) mediana en el TIEMPO por bin (lo tonal persiste varios frames,
+ * un golpe de batería o un platillo no), y (2) resta del suelo de ruido de banda ancha (mediana en
+ * FRECUENCIA en torno a cada bin), de modo que solo queden los picos de las notas. Es el
+ * «separador armónico/percusivo» clásico en versión ligera.
+ */
+function limpiarEspectros(mags: (Float32Array | null)[], nBins: number): (Float32Array | null)[] {
+  const R_TIEMPO = 3; // ±3 frames (~1,3 s): más largo que un golpe, más corto que un acorde
+  const R_FREQ = 20; // ±20 bins
+  const salida: (Float32Array | null)[] = new Array(mags.length).fill(null);
+  const ventanaT = new Float32Array(2 * R_TIEMPO + 1);
+  const tmp = new Float32Array(2 * R_TIEMPO + 1);
+  for (let f = 0; f < mags.length; f++) {
+    if (!mags[f]) continue;
+    const armonico = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) {
+      let n = 0;
+      for (let d = -R_TIEMPO; d <= R_TIEMPO; d++) {
+        const m = mags[f + d];
+        if (m) ventanaT[n++] = m[b];
+      }
+      armonico[b] = n > 0 ? medianaPequena(ventanaT, n, tmp) : 0;
+    }
+    const suelo = medianaDeslizante(armonico, R_FREQ);
+    const limpio = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) limpio[b] = Math.max(0, armonico[b] - suelo[b]);
+    salida[f] = limpio;
+  }
+  return salida;
+}
+
+/**
+ * Desviación de afinación de la grabación respecto a La=440 Hz, en semitonos (−0,5…+0,5).
+ * Discos antiguos, cintas y bandas con la guitarra medio tono... medio semitono floja reparten cada
+ * nota entre dos clases de altura y emborronan el croma. Se estima con la media circular de la
+ * parte fraccionaria del tono de los picos espectrales (solo por encima de 200 Hz, donde un
+ * semitono ocupa varios bins), ponderada por su energía.
+ */
+function estimarAfinacion(mags: (Float32Array | null)[], binHz: number, binMin: number, nBins: number): number {
+  let c = 0;
+  let sn = 0;
+  const paso = Math.max(1, Math.floor(mags.length / 200)); // ~200 frames bastan
+  for (let f = 0; f < mags.length; f += paso) {
+    const m = mags[f];
+    if (!m) continue;
+    for (let b = 0; b < nBins; b++) {
+      const hz = (binMin + b) * binHz;
+      if (hz < 200 || m[b] <= 0) continue;
+      const tono = 69 + 12 * Math.log2(hz / 440);
+      const ang = 2 * Math.PI * (tono - Math.round(tono));
+      const peso = m[b] * m[b];
+      c += peso * Math.cos(ang);
+      sn += peso * Math.sin(ang);
+    }
+  }
+  if (c === 0 && sn === 0) return 0;
+  return Math.atan2(sn, c) / (2 * Math.PI);
+}
+
+const claseDeTono = (tono: number, afinacion: number) => ((Math.round(tono - afinacion) % 12) + 12) % 12;
+
+/** Croma por frames (L2) con la limpieza armónica y la afinación estimada. `null` en frames silenciosos. */
+export function calcularCromaConAfinacion(pcm: Float32Array, sampleRate: number): { frames: (number[] | null)[]; afinacion: number; contraste: number } {
+  if (!pcm || pcm.length < VENTANA) return { frames: [], afinacion: 0, contraste: 0 };
+  const { mags, binHz, binMin, nBins } = espectrosPorFrames(pcm, sampleRate);
+  const limpios = limpiarEspectros(mags, nBins);
+  const afinacion = estimarAfinacion(limpios, binHz, binMin, nBins);
+  const claseDeBin = new Int8Array(nBins);
+  for (let b = 0; b < nBins; b++) claseDeBin[b] = claseDeTono(69 + 12 * Math.log2(((binMin + b) * binHz) / 440), afinacion);
+  let sumaContraste = 0;
+  let contados = 0;
+  const frames = limpios.map((m) => {
+    if (!m) return null;
+    const croma = new Array(12).fill(0);
+    for (let b = 0; b < nBins; b++) croma[claseDeBin[b]] += Math.sqrt(m[b]);
+    const total = croma.reduce((x, y) => x + y, 0);
+    if (total <= 0) return null;
+    const n = normalizar(croma);
+    // contraste: cuánto sobresale la nota más fuerte de la mediana (croma plano ≈ 0 = batería/ruido)
+    const orden = [...n].sort((x, y) => y - x);
+    sumaContraste += orden[0] - orden[6];
+    contados++;
+    return n;
+  });
+  return { frames, afinacion, contraste: contados ? sumaContraste / contados : 0 };
+}
+
+/** Croma por frames, cada uno normalizado en L2. `null` en frames silenciosos. */
+export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (number[] | null)[] {
+  return calcularCromaConAfinacion(pcm, sampleRate).frames;
 }
 
 const VENTANA_BAJO = 8192; // ~743 ms: los graves necesitan más resolución en frecuencia
@@ -140,15 +274,14 @@ const BAJO_MAX = 300;
  * quinta y el tercer armónico de la raíz suenan igual y el croma completo confunde La con Mi;
  * los graves desempatan.
  */
-export function calcularCromaBajoPorFrames(pcm: Float32Array, sampleRate: number, nFrames: number): (number[] | null)[] {
+export function calcularCromaBajoPorFrames(pcm: Float32Array, sampleRate: number, nFrames: number, afinacion = 0): (number[] | null)[] {
   const ventana = ventanaHann(VENTANA_BAJO);
   const binHz = sampleRate / VENTANA_BAJO;
   const binMin = Math.max(1, Math.floor(BAJO_MIN / binHz));
   const binMax = Math.ceil(BAJO_MAX / binHz);
   const claseDeBin = new Int8Array(binMax + 1);
   for (let b = binMin; b <= binMax; b++) {
-    const midi = 69 + 12 * Math.log2((b * binHz) / 440);
-    claseDeBin[b] = ((Math.round(midi) % 12) + 12) % 12;
+    claseDeBin[b] = claseDeTono(69 + 12 * Math.log2((b * binHz) / 440), afinacion);
   }
   const salida: (number[] | null)[] = [];
   for (let f = 0; f < nFrames; f++) {
@@ -202,30 +335,110 @@ function acordesDiatonicos(tonalidad: string): Set<string> {
 }
 
 /**
+ * Tonalidad que mejor explica los acordes detectados: cada candidata (12 mayores + 12 menores)
+ * puntúa el tiempo que suenan acordes diatónicos suyos, con premio a su acorde de tónica.
+ * Devuelve null si ninguna destaca claramente (mejor sin prior que con uno malo).
+ */
+export function estimarTonalidadDesdeAcordes(segmentos: SegmentoAcorde[]): string | null {
+  const reales = segmentos.filter((s) => s.acorde !== "N");
+  if (reales.length < 3) return null;
+  const candidatas: { nombre: string; puntos: number }[] = [];
+  for (let raiz = 0; raiz < 12; raiz++) {
+    for (const menor of [false, true]) {
+      const nombre = `${NOTAS[raiz]}${menor ? "m" : ""}`;
+      const diat = acordesDiatonicos(nombre);
+      let puntos = 0;
+      for (const s of reales) {
+        const dur = s.t1 - s.t0;
+        if (diat.has(s.acorde)) puntos += dur;
+        if (s.acorde === nombre) puntos += 0.5 * dur; // la tónica pesa más
+      }
+      candidatas.push({ nombre, puntos });
+    }
+  }
+  candidatas.sort((a, b) => b.puntos - a.puntos);
+  // Empate técnico entre relativos (C / Am comparten acordes): gana la que tiene más tónica;
+  // si aun así están pegadas, no se fuerza ninguna.
+  if (candidatas[0].puntos - candidatas[1].puntos < 1e-6) return null;
+  return candidatas[0].nombre;
+}
+
+/**
  * Convierte audio PCM mono en segmentos de acordes con tiempos.
  * Devuelve [] si no hay audio utilizable.
  */
+export interface DiagnosticoAcordes {
+  /** Desviación de afinación estimada, en centésimas de semitono (−50…+50). */
+  afinacionCents: number;
+  /** Contraste medio del croma (0 = plano: batería/ruido tapan la armonía; >0,15 = armonía clara). */
+  contraste: number;
+  tonalidadUsada: string | null;
+  frames: number;
+  /** Fracción del tiempo que ocupa el acorde más frecuente (≈1 = el detector no ve cambios). */
+  cuotaAcordeDominante: number;
+  acordesDistintos: number;
+}
+
 export function detectarAcordesDesdePcm(
   pcm: Float32Array,
   sampleRate: number = SAMPLE_RATE,
   opciones: OpcionesAcordes = {}
 ): SegmentoAcorde[] {
-  const frames = calcularCromaPorFrames(pcm, sampleRate);
-  if (frames.length < 4) return [];
+  return detectarAcordesConDiagnostico(pcm, sampleRate, opciones).segmentos;
+}
+
+/**
+ * Igual que `detectarAcordesDesdePcm` pero devuelve además qué ha visto el detector (afinación,
+ * contraste del croma, cuota del acorde dominante). Permite diagnosticar en producción por qué un
+ * audio concreto sale mal sin tener el audio delante.
+ */
+export function detectarAcordesConDiagnostico(
+  pcm: Float32Array,
+  sampleRate: number = SAMPLE_RATE,
+  opciones: OpcionesAcordes = {}
+): { segmentos: SegmentoAcorde[]; diagnostico: DiagnosticoAcordes } {
+  const { frames, afinacion, contraste } = calcularCromaConAfinacion(pcm, sampleRate);
+  const vacio: DiagnosticoAcordes = { afinacionCents: Math.round(afinacion * 100), contraste, tonalidadUsada: null, frames: frames.length, cuotaAcordeDominante: 0, acordesDistintos: 0 };
+  if (frames.length < 4) return { segmentos: [], diagnostico: vacio };
+  const { segmentos, tonalidadUsada } = detectarSegmentos(pcm, sampleRate, opciones, frames, afinacion);
+  const duracion = segmentos.reduce((a, s) => a + (s.t1 - s.t0), 0) || 1;
+  const porAcorde = new Map<string, number>();
+  for (const s of segmentos) if (s.acorde !== "N") porAcorde.set(s.acorde, (porAcorde.get(s.acorde) ?? 0) + (s.t1 - s.t0));
+  const dominante = Math.max(0, ...porAcorde.values());
+  return {
+    segmentos,
+    diagnostico: { ...vacio, tonalidadUsada, cuotaAcordeDominante: dominante / duracion, acordesDistintos: porAcorde.size },
+  };
+}
+
+function detectarSegmentos(
+  pcm: Float32Array,
+  sampleRate: number,
+  opciones: OpcionesAcordes,
+  frames: (number[] | null)[],
+  afinacion: number
+): { segmentos: SegmentoAcorde[]; tonalidadUsada: string | null } {
 
   const duracionMinima = opciones.duracionMinima ?? 0.4;
   const confianzaMinima = opciones.confianzaMinima ?? 0.15;
   let tonalidad = opciones.tonalidad;
   if (tonalidad === undefined) {
-    const croma = calcularCromaDesdePcm(pcm, sampleRate);
-    tonalidad = croma ? (detectarTonalidadDesdeCroma(croma)?.tonalidad ?? null) : null;
+    // Sin tonalidad indicada: primera pasada SIN prior diatónico y, con los acordes que salen, se
+    // busca la tonalidad que mejor los explica. Es más fiable que el croma global (Krumhansl), que
+    // con un bajo fijo o una guitarra distorsionada elige mal entre mayor y menor.
+    const primera = detectarSegmentos(pcm, sampleRate, { ...opciones, tonalidad: null }, frames, afinacion).segmentos;
+    tonalidad = estimarTonalidadDesdeAcordes(primera);
+    if (!tonalidad) {
+      const croma = calcularCromaDesdePcm(pcm, sampleRate);
+      tonalidad = croma ? (detectarTonalidadDesdeCroma(croma)?.tonalidad ?? null) : null;
+    }
   }
   const diatonicos = tonalidad ? acordesDiatonicos(tonalidad) : new Set<string>();
   const plantillas = opciones.incluirSeptimas ? PLANTILLAS : PLANTILLAS.filter((p) => p.calidad !== "7");
   const nEst = plantillas.length;
 
   // Emisión: similitud con cada plantilla (+ pequeño bonus diatónico, - penalización a séptimas).
-  const bajos = calcularCromaBajoPorFrames(pcm, sampleRate, frames.length);
+  const bajos = calcularCromaBajoPorFrames(pcm, sampleRate, frames.length, afinacion);
   const emision: number[][] = frames.map((fr, t) => {
     if (!fr) return new Array(nEst).fill(0);
     const bajo = bajos[t];
@@ -333,13 +546,14 @@ export function detectarAcordesDesdePcm(
       ult.t1 = s.t1;
     } else fusionados.push({ ...s });
   }
-  return fusionados.map((s) => ({
+  const resultado = fusionados.map((s) => ({
     ...s,
     t0: Math.round(s.t0 * 100) / 100,
     t1: Math.round(s.t1 * 100) / 100,
     confianza: Math.round(Math.min(1, s.confianza * 25) * 100) / 100,
     acorde: s.acorde !== "N" && Math.min(1, s.confianza * 25) < confianzaMinima ? "N" : s.acorde,
   }));
+  return { segmentos: resultado, tonalidadUsada: tonalidad ?? null };
 }
 
 /**
