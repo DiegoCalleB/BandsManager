@@ -202,13 +202,13 @@ export function SongChordsViewerModal({
   }, [isAutoScrolling, scrollSpeed]);
 
   // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
-  const handleAnalyzeChordsFromAudio = async () => {
+  const handleAnalyzeChordsFromAudio = async (sobrescribir = false) => {
     try {
       setIsAnalyzingChords(true);
       setAiSuccessMsg(null);
       const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({ sobrescribir }),
       });
       if (!data?.analisis) throw new Error(data?.error || "No se pudieron analizar los acordes");
       onUpdateSong({ ...song, analisisAcordes: data.analisis });
@@ -225,6 +225,28 @@ export function SongChordsViewerModal({
       setIsAnalyzingChords(false);
       setTimeout(() => setAiSuccessMsg(null), 7000);
     }
+  };
+
+  // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
+  // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
+  const handleCorregirAcordes = (segmentos: AnalisisAcordes["segmentos"]) => {
+    if (!analisisAcordes) return;
+    const anterior = song;
+    onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, segmentos } });
+    const token = localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["x-auth-token"] = token;
+    }
+    guardarOReverter(
+      fetch(`/api/songs/${encodeURIComponent(song.id)}/acordes`, { method: "PATCH", headers, body: JSON.stringify({ segmentos }) }),
+      () => {
+        onUpdateSong(anterior);
+        setAiSuccessMsg("⚠️ No se pudo guardar la corrección del acorde. Se ha restaurado el anterior.");
+        setTimeout(() => setAiSuccessMsg(null), 6000);
+      },
+    );
   };
 
   // Handle AI chord generation
@@ -476,7 +498,7 @@ export function SongChordsViewerModal({
                   variant="neutral"
                   size="xs"
                   type="button"
-                  onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : handleAnalyzeChordsFromAudio}
+                  onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio()}
                   disabled={isAnalyzingChords}
                   className="items-center gap-1.5"
                   title={
@@ -787,7 +809,8 @@ export function SongChordsViewerModal({
                 if (audioRef.current) audioRef.current.currentTime = t;
                 setAudioCurrentTime(t);
               }}
-              onReanalizar={handleAnalyzeChordsFromAudio}
+              onReanalizar={() => handleAnalyzeChordsFromAudio(true)}
+              onCorregir={handleCorregirAcordes}
               onClose={() => setShowAnalisisAcordes(false)}
             />
           )}

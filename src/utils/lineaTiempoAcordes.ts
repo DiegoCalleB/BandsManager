@@ -52,3 +52,78 @@ export function corregirAcorde(
 ): SegmentoAcordeAnalizado[] {
   return segmentos.map((s, i) => (i === indice ? { ...s, acorde, confianza: 1, editado: true } : s));
 }
+
+// ── Normalización y validación de acordes escritos a mano ──────────────────────────────────────
+
+const ESPANOL: Record<string, string> = { do: 'C', re: 'D', mi: 'E', fa: 'F', sol: 'G', la: 'A', si: 'B' };
+const SOSTENIDO: Record<string, string> = { Cb: 'B', Db: 'C#', Eb: 'D#', Fb: 'E', Gb: 'F#', Ab: 'G#', Bb: 'A#' };
+// Sufijos admitidos: calidad, extensión, alteraciones y bajo (inversión). No pretende cubrir todo
+// el jazz, sí lo que un músico de banda escribe de verdad.
+const SUFIJO = /^(m|min|maj|M|dim|aug|\+|°)?(\d{1,2})?(sus[24]?|add\d{1,2}|b5|#5|b9|#9|b13)?(\/[A-G][#b]?)?$/;
+
+function raizASostenido(raiz: string): string {
+  return SOSTENIDO[raiz] ?? raiz;
+}
+
+/**
+ * Convierte lo que escribe el usuario («Lam», «Do#m7», «Bb», «F/A», «sin acorde») a notación
+ * internacional con sostenidos («Am», «C#m7», «A#», «F/A», «N»). Devuelve null si no es un acorde
+ * reconocible: mejor rechazarlo que guardar basura que el visor intentaría transponer.
+ */
+export function normalizarAcorde(entrada: string | null | undefined): string | null {
+  const t = (entrada ?? '').trim();
+  if (!t) return null;
+  if (/^(n|—|-|sin acorde|ninguno)$/i.test(t)) return 'N';
+
+  const aSufijo = (resto: string): string | null => {
+    const r = resto.replace(/^min(?!\d)/i, 'm');
+    return SUFIJO.test(r) ? r : null;
+  };
+  const bajo = (r: string) => r.replace(/\/([A-G][#b]?)$/, (_m, n) => `/${raizASostenido(n)}`);
+
+  // 1) Notación internacional («Am», «Bb», «Fadd9»)
+  const ingles = /^([A-G])([#b]?)(.*)$/.exec(t);
+  if (ingles) {
+    const suf = aSufijo(ingles[3]);
+    if (suf !== null) return `${raizASostenido(ingles[1] + ingles[2])}${bajo(suf)}`;
+  }
+  // 2) Notación española («Lam», «Sib», «Do#m7»)
+  const es = /^(do|re|mi|fa|sol|la|si)([#b♯♭]?)(.*)$/i.exec(t);
+  if (es) {
+    const alt = es[2] === '♯' ? '#' : es[2] === '♭' ? 'b' : es[2];
+    const suf = aSufijo(es[3]);
+    if (suf !== null) return `${raizASostenido(ESPANOL[es[1].toLowerCase()] + alt)}${bajo(suf)}`;
+  }
+  return null;
+}
+
+export type ResultadoValidacion =
+  | { ok: true; segmentos: SegmentoAcordeAnalizado[] }
+  | { ok: false; error: string };
+
+const MAX_SEGMENTOS = 2000;
+
+/** Valida y limpia los segmentos que llegan del cliente: nunca se guarda lo que no se ha comprobado. */
+export function validarSegmentos(entrada: unknown): ResultadoValidacion {
+  if (!Array.isArray(entrada) || entrada.length === 0) return { ok: false, error: 'Faltan los acordes.' };
+  if (entrada.length > MAX_SEGMENTOS) return { ok: false, error: `Demasiados tramos (máximo ${MAX_SEGMENTOS}).` };
+  const limpios: SegmentoAcordeAnalizado[] = [];
+  for (let i = 0; i < entrada.length; i++) {
+    const s = entrada[i] as Record<string, unknown> | null;
+    const t0 = Number(s?.t0);
+    const t1 = Number(s?.t1);
+    if (!Number.isFinite(t0) || !Number.isFinite(t1) || t0 < 0 || t1 <= t0 || t1 > 86_400) {
+      return { ok: false, error: `Tiempos inválidos en el tramo ${i + 1}.` };
+    }
+    if (i > 0 && t0 < limpios[i - 1].t1 - 0.05) return { ok: false, error: `El tramo ${i + 1} se solapa con el anterior.` };
+    const acorde = normalizarAcorde(typeof s?.acorde === 'string' ? s.acorde : '');
+    if (!acorde) return { ok: false, error: `Acorde no reconocido en el tramo ${i + 1}.` };
+    const conf = Number(s?.confianza);
+    const seg: SegmentoAcordeAnalizado = {
+      t0, t1, acorde, confianza: Number.isFinite(conf) ? Math.min(1, Math.max(0, conf)) : 0,
+    };
+    if (s?.editado === true) seg.editado = true;
+    limpios.push(seg);
+  }
+  return { ok: true, segmentos: limpios };
+}

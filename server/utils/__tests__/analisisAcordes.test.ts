@@ -46,3 +46,25 @@ describe('construirAnalisis', () => {
     expect(new Date(a.analizadoEn).getTime()).toBeGreaterThan(0);
   });
 });
+
+import fs from 'fs';
+import path from 'path';
+
+describe('Rutas de acordes: garantías', () => {
+  const rutas = fs.readFileSync(path.join(__dirname, '..', '..', 'routes', 'repertorio.ts'), 'utf-8');
+
+  it('la corrección manual valida los tramos antes de guardar y no acepta una canción sin análisis', () => {
+    const i = rutas.indexOf('router.patch("/songs/:id/acordes"');
+    expect(i).toBeGreaterThan(-1);
+    const cuerpo = rutas.slice(i, rutas.indexOf('router.patch("/songs/:id/energia"'));
+    expect(cuerpo.indexOf('validarSegmentos')).toBeLessThan(cuerpo.indexOf('dbGuardarAnalisisAcordes'));
+    expect(cuerpo).toContain('409');
+  });
+
+  it('reanalizar no pisa correcciones manuales sin confirmación explícita', () => {
+    const i = rutas.indexOf('router.post("/songs/:id/analizar-acordes"');
+    const cuerpo = rutas.slice(i, rutas.indexOf('router.patch("/songs/:id/acordes"'));
+    expect(cuerpo).toContain('req.body?.sobrescribir !== true');
+    expect(cuerpo.indexOf('sobrescribir')).toBeLessThan(cuerpo.indexOf('extraerPcmMono('));
+  });
+});

@@ -10,6 +10,7 @@ import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import { detectarAcordesDesdePcm } from "../utils/chordDetection.js";
 import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
+import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import { elegirFuenteAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
@@ -207,6 +208,12 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
 
+    // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
+    const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
+    if (corregidos > 0 && req.body?.sobrescribir !== true) {
+      return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
+    }
+
     const fuente = elegirFuenteAudio(song);
     if (!fuente) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
 
@@ -227,6 +234,30 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
   } finally {
     analisisAcordesEnCurso.delete(clave);
+  }
+});
+
+// PATCH corrección manual de los acordes detectados. El cliente envía la lista completa de
+// tramos; el servidor la valida (tiempos, solapes, acordes reconocibles) y conserva el resto
+// del análisis (fuente, versión, tonalidad). Los tramos corregidos llevan editado: true.
+router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    const validacion = validarSegmentos(req.body?.segmentos);
+    if ("error" in validacion) return res.status(400).json({ error: validacion.error });
+
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+    if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
+
+    const analisis = { ...song.analisisAcordes, segmentos: (validacion as { segmentos: any[] }).segmentos, editadoEn: new Date().toISOString() };
+    const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+    res.json({ success: true, analisis, song: guardada });
+  } catch (err: any) {
+    console.error("Error guardando la corrección de acordes:", err);
+    res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
   }
 });
 

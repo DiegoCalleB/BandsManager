@@ -1182,6 +1182,7 @@ export interface SegmentoAcordeAnalizado {
 export interface AnalisisAcordes {
   version: number; // versión del algoritmo; sirve para saber qué canciones reanalizar
   analizadoEn: string; // ISO
+  editadoEn?: string; // ISO de la última corrección manual
   fuente: 'mezcla' | 'instrumental'; // sobre qué audio se calculó
   duracionSegundos: number;
   tonalidad?: string | null; // la que se usó como pista, si la había
