@@ -2066,7 +2066,7 @@ export default function CalendarView({
                   {showAddEventDropdown && (
                     <>
                       <div className="fixed inset-0 z-40" onClick={() => setShowAddEventDropdown(false)} />
-                      <div
+                      <PopoverAncla
                         className={`absolute right-0 mt-1.5 w-48 rounded-[var(--r-m)] z-50 py-1.5 overflow-hidden animate-in fade-in duration-150 ${'bg-[var(--surface)]/95 text-[var(--ink)]'}`}
                       >
                         <div className="px-3 py-1 text-micro font-sans text-[var(--ink-2)] /40 mb-1">
@@ -2118,7 +2118,7 @@ export default function CalendarView({
                           <span><ShowIcon inline emoji="🤝" /></span>
                           <span>+ Reunión</span>
                         </button>
-                      </div>
+                      </PopoverAncla>
                     </>
                   )}
                 </div>
@@ -2161,7 +2161,7 @@ export default function CalendarView({
                   {showCalMoreMenu && (
                     <>
                       <div className="fixed inset-0 z-[9998]" onClick={() => setShowCalMoreMenu(false)} />
-                      <div className="menu-pop absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] border border-[var(--line)]">
+                      <PopoverAncla className="menu-pop absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] border border-[var(--line)]">
                         <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowCalMoreMenu(false); openTutorial(); }}>
                           <HelpCircle className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
                         </button>
@@ -2170,7 +2170,7 @@ export default function CalendarView({
                             <Radio className="w-4 h-4 text-[var(--ink-2)] shrink-0" /> <span className="whitespace-nowrap">Sincronizar con mi móvil</span>
                           </button>
                         )}
-                      </div>
+                      </PopoverAncla>
                     </>
                   )}
                 </div>
