@@ -30,6 +30,7 @@
     "audit:contraste": "node scripts/contraste-clases.mjs",
     "audit:diseno": "node scripts/design-audit.js && node scripts/superficies-check.mjs && node scripts/emojis-ui.mjs && node scripts/contraste-clases.mjs && python3 scripts/paleta-audit.py",
     "audit:guardado": "vitest run server/audit",
+    "audit:clases": "vitest run src/audit",
     "migrate": "tsx scripts/migrate.ts",
     "migrate:check": "tsx scripts/migrate.ts --check"
   },
