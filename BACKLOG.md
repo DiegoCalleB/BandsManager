@@ -214,7 +214,7 @@ _(vacío)_
 - `band_campaigns` (migración 20260919) no se usa en el código (la tabla real es `campaigns`/`booking_campaigns`): migración histórica, no se edita.
 
 ## Iris: pendientes de la auditoría de Estudio (diferido)
-- **«Iris Pro» (LALAL.AI) no se ejecuta**: `AudioSeparatorFactory` solo se invoca con `fal` y `dsp-server`; `lalalai` cae en el modo auto de `ai_music.ts` y se etiqueta «Pro». Hay que enrutarlo por la Factory con un único orquestador de fallback, y antes añadir timeouts a los `fetch` de `LalalAiService` y revisar `stem=all` contra la API real.
+- **«Iris Pro» (LALAL.AI) retirado de la UI**: nunca hubo selector de motor visible y la ruta de `ai_music.ts` no tenía rama `lalalai` (caía en auto). `LalalAiService` sigue en el repo como código sin usar. Para reactivarlo: enrutarlo por `AudioSeparatorFactory` con un único orquestador de fallback, añadir timeouts a sus `fetch`, corregir `stem=all` contra la API real y comprobar que la clave tiene plan API comercial.
 - **URLs temporales**: si falla la subida a Supabase, `AudioSeparatorService` guarda la URL del proveedor (caduca) o una ruta en disco efímero de Railway. Reintentar y no persistirlas como válidas.
 - **Auto-balance** (`audioLatency.ts`): un stem casi vacío arrastra al resto al volumen mínimo; ignorar pistas bajo un umbral de RMS.
 - **Deriva** en `PracticeModePanel` (sin re-sync periódico, a diferencia del mezclador de `SongStudioModal`).

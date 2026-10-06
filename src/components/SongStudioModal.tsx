@@ -251,9 +251,8 @@ interface SongStudioModalProps {
 
 // Coste aproximado por canción de cada motor de Iris, solo para orientar al usuario (no viene de
 // una factura real reconciliada) — ajustar aquí si Diego consigue cifras reales del proveedor cloud.
-const IRIS_ENGINE_COST_EUR: Record<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
+const IRIS_ENGINE_COST_EUR: Record<'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', number> = {
   fal: 0.01,
-  lalalai: 0.05,
   'mvsep-mdx23': 0.08,
   demucs: 0.03,
   'dsp-server': 0,
@@ -642,7 +641,7 @@ export default function SongStudioModal({
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
-  const [selectedStemEngine, setSelectedStemEngine] = useState<'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('fal');
+  const [selectedStemEngine, setSelectedStemEngine] = useState<'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server'>('fal');
   const [showMoisesStemsModal, setShowMoisesStemsModal] = useState<SongAudioIdea | null>(null);
   const [moisesTab, setMoisesTab] = useState<'stems' | 'how_it_works' | 'upload'>('stems');
   const [moisesPreset, setMoisesPreset] = useState<MoisesSeparationPreset>('6_stems');
@@ -755,7 +754,7 @@ export default function SongStudioModal({
     degraded?: boolean;
     degradedReason?: string;
     separationEngine?: string;
-    engineChoice?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
+    engineChoice?: 'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server';
     stemsAdded?: number;
     stemsInfo?: Array<{
       instrument: string;
@@ -832,7 +831,7 @@ export default function SongStudioModal({
   // Separación de pistas con IA (motor propio "Iris", con dos niveles de calidad + fallback local)
   const handlePerformAiStemSeparation = async (
     targetIdea: SongAudioIdea,
-    overrideEngine?: 'fal' | 'lalalai' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
+    overrideEngine?: 'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server',
     stemsToInclude?: string[]
   ) => {
     if (stemSeparationAbortRef.current) {
@@ -849,9 +848,7 @@ export default function SongStudioModal({
     const stepInitText =
       engineToUse === 'fal'
         ? 'Iniciando Iris Ultra (Fal.ai GPU A100 ~10s)...'
-        : engineToUse === 'lalalai'
-          ? 'Iniciando Iris Pro (LALAL.AI Commercial Engine ~15s)...'
-          : engineToUse === 'mvsep-mdx23'
+        : engineToUse === 'mvsep-mdx23'
             ? 'Iniciando Iris Studio (MDX-Net / Demucs v4 GPU)...'
             : engineToUse === 'demucs'
               ? 'Iniciando Iris Cloud (HT-Demucs v4 Neural)...'
@@ -929,9 +926,7 @@ export default function SongStudioModal({
       const stepProcessingText =
         engineToUse === 'fal'
           ? 'Iris Ultra aislando pistas en GPU A100 (~10-15s)...'
-          : engineToUse === 'lalalai'
-            ? 'Iris Pro aislando pistas con LALAL.AI (~15s)...'
-            : engineToUse === 'mvsep-mdx23'
+          : engineToUse === 'mvsep-mdx23'
               ? 'Iris Studio aislando pistas vocales e instrumentales...'
               : engineToUse === 'demucs'
                 ? 'Iris Cloud aislando Voz, Batería, Bajo, Guitarras...'
@@ -1001,9 +996,7 @@ export default function SongStudioModal({
         const engineLabel =
           engineToUse === 'fal'
             ? 'Iris Ultra (Fal.ai GPU)'
-            : engineToUse === 'lalalai'
-              ? 'Iris Pro (LALAL.AI)'
-              : engineToUse === 'mvsep-mdx23'
+            : engineToUse === 'mvsep-mdx23'
                 ? 'Iris Studio (MDX-Net)'
                 : engineToUse === 'demucs'
                   ? 'Iris Cloud (HT-Demucs)'
@@ -1276,9 +1269,7 @@ export default function SongStudioModal({
         ? 'Iris Básico (modo degradado)'
         : engineToUse === 'fal'
           ? 'Iris Ultra'
-          : engineToUse === 'lalalai'
-            ? 'Iris Pro'
-            : engineToUse === 'mvsep-mdx23'
+          : engineToUse === 'mvsep-mdx23'
               ? 'Iris Studio'
               : engineToUse === 'demucs'
                 ? 'Iris Cloud'

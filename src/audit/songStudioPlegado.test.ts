@@ -24,3 +24,10 @@ describe('Estudio: restos de clases rotas del formulario de ideas', () => {
     expect(studio).not.toContain(resto);
   });
 });
+
+describe('Estudio: motores de Iris', () => {
+  it('no ofrece «Iris Pro» (LALAL.AI), que el servidor nunca ejecutó', () => {
+    expect(studio).not.toContain('lalalai');
+    expect(studio).not.toContain('Iris Pro');
+  });
+});
