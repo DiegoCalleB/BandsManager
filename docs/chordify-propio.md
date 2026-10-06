@@ -88,6 +88,12 @@ BTC (ISMIR 2019, MIT) en Google Colab: sube los audios con el título de la canc
 
 ## Plan por coste
 1. **Gratis, ya hecho:** detector propio + afinado de fronteras por ataques + pulso propio + edición manual + evaluación.
-2. **Gratis, siguiente:** con 20-30 tramos corregidos por canción, medir; comparar con BTC en Colab. Mejoras propias pendientes: acordes por pulso (decodificar por tiempo de compás en vez de ventanas fijas) y tonalidad por tramos (modulaciones).
+2. **Gratis, siguiente:** con 20-30 tramos corregidos por canción, medir; comparar con BTC en Colab. Mejora propia pendiente: acordes por pulso (decodificar por tiempo de compás en vez de ventanas fijas). Hecho: tonalidad por tramos (ver abajo).
 3. **Barato, solo si gana por números:** worker GPU bajo demanda (Modal/RunPod) con el modelo ganador + Beat This! (MIT) para directos sin claqueta. Coste realista 0,01-0,05 $ por canción contando arranques en frío.
 4. **Evitar:** madmom (modelos con licencia no comercial), Essentia (AGPL), APIs de pago por minuto.
+
+## Cambios de tono (`estimarTonalidadesPorTramos`)
+- Pasada sin prior → tonalidad por ventanas de 30 s cada 10 s (a partir de los acordes) → una tonalidad nueva solo cuenta si dura dos ventanas; relativas (C/Am) son la misma; el cambio se sitúa en el primer acorde ajeno a la tonalidad anterior; los tramos «mezcla» de <15 s se absorben.
+- Cada tramo usa su tonalidad como pista diatónica: en sintético con mucho ruido, el tramo modulado pasa de 75 % a 100 % (La ya no se lee como Lam). Un acorde prestado no crea una modulación.
+- Se guarda en `analisis.tonalidades` (solo si hay más de un tramo); el visor muestra «tono D → E en 2:31». Log: `tonos=C@0s>D@40s`.
+- Coste: una pasada más del detector (~1 s por canción).
