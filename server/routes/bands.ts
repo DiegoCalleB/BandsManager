@@ -10,7 +10,7 @@ import { buildServerEmailHtml, buildBandNotificationEmailHtml } from "../utils/e
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
-import { getTargetBandId } from "../utils/bandAccess.js";
+import { getTargetBandId, puedeEscribirEnBanda } from "../utils/bandAccess.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import responseStrategiesRouter from "./bands/responseStrategies.js";
 
@@ -657,6 +657,11 @@ router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
 router.get("/bands/schedules/:bandId", requireAuth, async (req, res) => {
   try {
     const { bandId } = req.params;
+    // El horario dice cuándo corren el Lector y el Enviador de CADA banda: leerlo (o cambiarlo,
+    // más abajo) de otra banda se podía hacer con solo conocer su id.
+    if (!puedeEscribirEnBanda(req, bandId)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
     const schedule = await dbGetBandSchedule(bandId);
     res.json(schedule);
   } catch (err: any) {
@@ -670,6 +675,9 @@ router.post("/bands/schedules", requireAuth, async (req, res) => {
     const { band_id, timezone, horas_lector, horas_enviador, dias_enviador, dias_lector } = req.body;
     if (!band_id) {
       return res.status(400).json({ error: "band_id es requerido" });
+    }
+    if (!puedeEscribirEnBanda(req, band_id)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
     }
     const updated = await dbUpsertBandSchedule({
       band_id,
@@ -692,6 +700,11 @@ router.post("/bands/schedules", requireAuth, async (req, res) => {
 router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
   try {
     const { bandId } = req.params;
+    // Devuelve la configuración SMTP/IMAP del buzón de la banda (sin la contraseña): no es para
+    // cualquier usuario con sesión.
+    if (!puedeEscribirEnBanda(req, bandId)) {
+      return res.status(403).json({ error: "No tienes acceso a esta banda." });
+    }
     const account = await dbGetBandEmailAccount(bandId);
     res.json(toSafeEmailAccountResponse(account));
   } catch (err: any) {

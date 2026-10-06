@@ -1,3 +1,4 @@
+import { reenvioEmailRateLimiter } from '../middleware/rateLimiter.js';
 import { Router, Request, Response } from 'express';
 import { requireAuth, loadState, saveState } from '../state.js';
 import { getTargetBandId } from '../utils/bandAccess.js';
@@ -418,7 +419,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
  * POST /api/public/deals/:token/resend-email
  * Reenvía la copia oficial del acuerdo firmado a la dirección solicitada.
  */
-dealsRouter.post('/public/deals/:token/resend-email', async (req: Request, res: Response) => {
+dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
     const { email } = req.body;

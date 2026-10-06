@@ -1,3 +1,4 @@
+import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
 import {
   loadState,
@@ -884,7 +885,7 @@ router.delete('/fans/:id', requireAuth, async (req, res) => {
 });
 
 // Public Fan Capture Endpoint (No Auth required - QR Code Submission)
-router.post('/public/fans', async (req, res) => {
+router.post('/public/fans', publicoRateLimiter, async (req, res) => {
   try {
     const {
       nombre,
@@ -995,7 +996,7 @@ router.post('/public/fans', async (req, res) => {
 });
 
 // Click Tracking Endpoint for Fan Landing and EPK buttons (Socials, Revolut, PayPal, Bizum, Dossier, etc.)
-router.post('/public/track-click', async (req, res) => {
+router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
   try {
     const {
       band_id,
@@ -1134,7 +1135,7 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
 });
 
 // Public Musician Waitlist Signup Endpoint (No Auth required)
-router.post('/public/musicians-waitlist', async (req, res) => {
+router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) => {
   try {
     const {
       nombreBanda,
@@ -1202,6 +1203,11 @@ router.post('/public/musicians-waitlist', async (req, res) => {
 
 // Get Musician Waitlist submissions (Authenticated)
 router.get('/musicians-waitlist', requireAuth, async (req, res) => {
+  // Emails, teléfonos e Instagram de los músicos de la lista de espera de la PLATAFORMA: no son
+  // datos de ninguna banda, solo los ve el admin.
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado.' });
+  }
   try {
     const list = await dbGetMusiciansWaitlist();
     const state = loadState();

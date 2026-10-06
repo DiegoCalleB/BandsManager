@@ -33,8 +33,24 @@ let contadorLimitadores = 0;
  * contador: gastar el cupo analizando dejaba sin cupo a los renderizados, porque el mismo
  * número se comparaba contra dos máximos distintos.
  */
+/**
+ * IP del cliente que NO se puede falsear desde fuera.
+ *
+ * Antes se usaba la PRIMERA entrada de X-Forwarded-For, que es la que escribe el propio cliente:
+ * mandando `X-Forwarded-For: 1.2.3.N` con una N distinta en cada petición se saltaba cualquier
+ * límite (login incluido). El proxy de Railway AÑADE la IP real al final de la cabecera, así que
+ * la fiable es la ÚLTIMA entrada (igual que `ipFirmante` en routes/deals.ts).
+ */
+export function ipDelCliente(req: Request): string {
+  const xff = String(req.headers["x-forwarded-for"] || "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  return xff[xff.length - 1] || req.ip || "127.0.0.1";
+}
+
 function claveDePeticion(req: Request, porUsuario: boolean, ambito: string): string {
-  const ip = (req.headers["x-forwarded-for"] as string)?.split(",")[0].trim() || req.ip || "127.0.0.1";
+  const ip = ipDelCliente(req);
   if (!porUsuario) return `${ambito}|${ip}`;
   // Detrás de un NAT o de una red de móvil, muchos usuarios comparten IP: contar por usuario
   // evita que uno agote el cupo de toda su sala de ensayo.
@@ -78,6 +94,30 @@ export function createRateLimiter(
 }
 
 export const loginRateLimiter = createRateLimiter({ nombre: "login", windowMs: 60 * 1000, maxRequests: 10 });
+
+/** Altas de cuenta: sin tope servía para probar contraseñas ajenas y para llenar la BD de bandas. */
+export const registroRateLimiter = createRateLimiter({
+  nombre: "registro",
+  windowMs: 10 * 60 * 1000,
+  maxRequests: 10,
+  mensaje: "Demasiados intentos de registro desde esta conexión. Espera unos minutos."
+});
+
+/** Formularios públicos sin sesión (fans, lista de espera, clics): evita el spam y el relleno de la BD. */
+export const publicoRateLimiter = createRateLimiter({
+  nombre: "publico",
+  windowMs: 60 * 1000,
+  maxRequests: 30,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
+/** Reenviar el acuerdo por email desde el enlace público: es envío de correo con la marca de la plataforma. */
+export const reenvioEmailRateLimiter = createRateLimiter({
+  nombre: "reenvio-email",
+  windowMs: 10 * 60 * 1000,
+  maxRequests: 5,
+  mensaje: "Has pedido varios reenvíos seguidos. Espera unos minutos."
+});
 
 /**
  * Límite para el análisis con IA: cada llamada cuesta dinero en tokens y además puede lanzar
