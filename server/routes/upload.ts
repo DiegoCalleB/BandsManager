@@ -401,6 +401,10 @@ const PERMITTED_CLEANUP_KEYWORDS = [
 
 // Endpoint de diagnóstico de almacenamiento en Supabase Storage
 router.get("/storage-stats", requireAuth, async (req, res) => {
+  // El estado de TODO el bucket es de la plataforma, no de una banda: solo admin.
+  if ((req as any).user?.role !== "admin") {
+    return res.status(403).json({ error: "Acceso denegado." });
+  }
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.status(500).json({ error: "No Supabase client available" });
@@ -425,6 +429,12 @@ router.get("/storage-stats", requireAuth, async (req, res) => {
 
 // Endpoint para ejecutar la limpieza de multimedia no perteneciente a las 4 bandas permitidas
 router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
+  // Borra del bucket de TODAS las bandas lo que no case con una lista fija de palabras: antes
+  // bastaba estar registrado para vaciar el Storage de los demás clientes. Ahora solo el admin
+  // de la plataforma, y sin `confirmar: true` únicamente enseña qué borraría (simulacro).
+  if ((req as any).user?.role !== "admin") {
+    return res.status(403).json({ error: "Acceso denegado." });
+  }
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.status(500).json({ error: "No Supabase client available" });
@@ -450,6 +460,17 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
         success: true,
         message: "No hay multimedia no utilizada para eliminar.",
         freedMB: 0
+      });
+    }
+
+    if (req.body?.confirmar !== true) {
+      return res.json({
+        success: true,
+        simulacro: true,
+        message: "Simulacro: no se ha borrado nada. Repite con { \"confirmar\": true } para eliminar.",
+        archivosAEliminar: toDelete.length,
+        liberariaMB: Number((deleteBytes / (1024 * 1024)).toFixed(2)),
+        ejemplo: toDelete.slice(0, 20)
       });
     }
 

@@ -1017,7 +1017,22 @@ router.post('/public/track-click', async (req, res) => {
     const cleanButton = String(button_type || platform || 'unknown')
       .toLowerCase()
       .trim();
-    const finalConcertId = concert_id || concertId || null;
+
+    // SEGURIDAD: estos valores se usan como CLAVES de un objeto en memoria. Con `__proto__` o
+    // `constructor` un anónimo escribía en Object.prototype de todo el proceso. Solo se aceptan
+    // identificadores simples y se rechazan los nombres reservados.
+    const CLAVE_SEGURA = /^[a-z0-9][a-z0-9_-]{0,79}$/i;
+    const RESERVADAS = new Set(['__proto__', 'constructor', 'prototype']);
+    const esClaveSegura = (v: string) => CLAVE_SEGURA.test(v) && !RESERVADAS.has(v.toLowerCase());
+    const concertIdCrudo = concert_id || concertId || null;
+    if (
+      !esClaveSegura(targetBandId) ||
+      !esClaveSegura(cleanButton) ||
+      (concertIdCrudo !== null && !esClaveSegura(String(concertIdCrudo)))
+    ) {
+      return res.status(400).json({ success: false, message: 'Parámetros no válidos' });
+    }
+    const finalConcertId = concertIdCrudo;
     const finalConcertDate = concert_date || concertDate || null;
     const userAgent = (req.headers['user-agent'] || '').slice(0, 200);
     const referer = (req.headers['referer'] || '').slice(0, 200);

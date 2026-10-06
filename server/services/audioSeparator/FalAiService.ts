@@ -10,7 +10,12 @@ import { ensurePublicAudioUrl } from '../../routes/ai_music.js';
  * Adaptador para Fal.ai (fal-ai/demucs) en GPU A100.
  * Inferencia ultrarrápida (~10-15s) con $10 de saldo de prueba gratuito sin suscripción ni pagos mínimos.
  */
-export const ACTIVE_FAL_KEY = 'd117df99-605f-4ce8-8d6d-9ac80f7366ca:bebc418c6f4d7659ddff0d4d6cc4c570';
+/**
+ * Antes aquí había una clave real escrita (y un endpoint público que la gastaba). Ya no hay
+ * clave por defecto: se configura SOLO con FAL_KEY / FAL_API_KEY en el entorno. Se mantiene
+ * la constante vacía para que los usos antiguos (`rawFal || ACTIVE_FAL_KEY`) queden en «sin clave».
+ */
+export const ACTIVE_FAL_KEY = '';
 
 export class FalAiService extends AudioSeparatorService {
   readonly providerName = 'fal' as const;
@@ -24,7 +29,7 @@ export class FalAiService extends AudioSeparatorService {
       .replace(/^Bearer\s+/i, '')
       .trim();
     
-    // Si no hay clave en el entorno o es la clave antigua revocada (58e0800a...), usar la activa verificada
+    // Sin clave en el entorno (o la antigua revocada, 58e0800a...) no hay clave: devuelve ''.
     if (!rawKey || rawKey.startsWith('58e0800a')) {
       return ACTIVE_FAL_KEY;
     }

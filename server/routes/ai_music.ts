@@ -3603,7 +3603,11 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
  * Endpoint de Diagnóstico en Vivo para Fal.ai
  * Permite verificar qué clave está leyendo el backend y si responde 200 OK con Fal.ai Demucs.
  */
-router.get('/ai-stem-separation/fal-diagnostic', async (_req, res) => {
+router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) => {
+  // Cada llamada lanza una petición de pago a fal.ai: solo el admin de la plataforma.
+  if ((req as any).user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado.' });
+  }
   try {
     let rawKey = (process.env.FAL_KEY || process.env.FAL_API_KEY || '').trim();
     rawKey = rawKey
@@ -3626,7 +3630,6 @@ router.get('/ai-stem-separation/fal-diagnostic', async (_req, res) => {
       });
     }
 
-    const keyPrefix = cleanKey.substring(0, 10);
     const authHeader = `Key ${cleanKey}`;
 
     const t0 = Date.now();
@@ -3658,7 +3661,6 @@ router.get('/ai-stem-separation/fal-diagnostic', async (_req, res) => {
 
     res.json({
       configured: true,
-      keyPrefix: `${keyPrefix}...`,
       keyLength: cleanKey.length,
       hasSecret: cleanKey.includes(':'),
       falHttpStatus: falStatus,

@@ -19,6 +19,12 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Única Fuente de Verdad (Single Source of Truth):** **Supabase (PostgreSQL)**.
 * **Prohibición Estricta:** Google Sheets está **totalmente descartado y en desuso**. No se debe mencionar ni utilizar. Toda la persistencia (`leads`, `bands`, `users`, `tours`, `songs`, `finances`, `fans`, `social`, `autonomy_configs`, etc.) se gestiona exclusivamente a través de **Supabase**.
 * **Estado en Memoria & Sincronización:** El backend Express mantiene un estado sincronizado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
+* **Autenticación y cuentas (auditoría 2026-10):**
+  * `/auth/google` NO se fía del `email`/`uid` del cuerpo: verifica el access token con Google (`server/utils/googleVerify.ts`) y exige que sea de nuestro client id (`GOOGLE_CLIENT_ID`, o `VITE_GOOGLE_CLIENT_ID`, o `oAuthClientId` de `firebase-applet-config.json`).
+  * La contraseña del admin global sale SOLO de `ADMIN_PASSWORD` (≥ 12 caracteres). Sin ella no se crea admin ni se tocan sus credenciales. Nunca escribas contraseñas en el código.
+  * Las cuentas especiales (Brais) se reconocen por id o email EXACTO (`server/utils/cuentaBrais.ts`, ampliable con `BRAIS_EMAILS`), nunca por `includes()`.
+  * El plan de pago solo cambia por Stripe (webhook/`confirm-success`); `PUT /users/:id` con `plan` es solo para el admin de la plataforma.
+  * Un líder solo restablece la contraseña de cuentas que son únicamente de su banda (`puedeRestablecerContrasenaDe`); vincular una cuenta existente a tu banda siempre es como `member`.
 * **Migraciones de Esquema:** Cualquier modificación en la base de datos debe documentarse en SQL idempotente (`supabase/migrations/` o `supabase_schema.sql`).
   * **Se aplican solas al arrancar** (`npm start` ejecuta `scripts/migrate.ts` antes del servidor; registro en la tabla `schema_migrations`). Necesita `DATABASE_URL` en Railway (cadena de conexión de Supabase, *Session pooler*). Sin ella avisa y arranca igual: entonces hay que lanzarlas a mano en el SQL Editor. `npm run migrate:check` lista las pendientes.
   * **Una migración aplicada no se edita**: crea otra nueva (el runner avisa si cambia el checksum). Cada una va en su transacción: si falla, se revierte y el despliegue no se promociona.

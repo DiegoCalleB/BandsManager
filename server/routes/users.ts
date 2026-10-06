@@ -375,10 +375,7 @@ export async function buildAvailableBandsForUser(
     return 0;
   });
 
-  const isBraisMoure =
-    targetUser.id === 'user-mouredev' ||
-    userEmail.includes('mouredev') ||
-    userEmail.includes('brais');
+  const isBraisMoure = esCuentaDeBrais({ id: targetUser.id, email: userEmail });
 
   if (isBraisMoure) {
     targetUser.instrument = targetUser.instrument || 'Batería';
@@ -444,6 +441,8 @@ export async function buildAvailableBandsForUser(
   return availableBands;
 }
 import { loginRateLimiter } from '../middleware/rateLimiter.js';
+import { verificarAccessTokenDeGoogle } from '../utils/googleVerify.js';
+import { esCuentaDeBrais } from '../utils/cuentaBrais.js';
 import {
   getTargetBandId,
   puedeEscribirEnBanda,
@@ -469,6 +468,35 @@ function compartenBanda(
     if (ub.user_id === usuarioObjetivo.id && ub.band_id) bandas.add(ub.band_id);
   });
   return Array.from(bandas).some((b) => puedeEscribirEnBanda(req, b));
+}
+/**
+ * ¿Puede quien hace la petición fijar la contraseña de OTRO usuario?
+ *
+ * Antes bastaba compartir banda con él, y compartir banda se conseguía a voluntad: un líder
+ * (todo el mundo lo es en su banda) añadía a la víctima a la suya con POST /users y le cambiaba
+ * la contraseña. Ahora solo se puede si la cuenta es de la banda y de nadie más: una invitación
+ * aún sin activar, o un miembro cuya ÚNICA banda es esta. Una cuenta con banda propia (o admin)
+ * nunca se resetea desde fuera.
+ */
+function puedeRestablecerContrasenaDe(state: any, usuarioObjetivo: any, req: express.Request): boolean {
+  if (!usuarioObjetivo || usuarioObjetivo.role === 'admin') return false;
+  const bandas = new Set<string>();
+  const anotar = (id?: string) => {
+    if (id) bandas.add(cleanBandId(id));
+  };
+  anotar(usuarioObjetivo.band_id);
+  anotar(usuarioObjetivo.main_band_id);
+  (Array.isArray(usuarioObjetivo.band_order) ? usuarioObjetivo.band_order : []).forEach(anotar);
+  (state.userBands || []).forEach((ub: any) => {
+    if (ub.user_id === usuarioObjetivo.id) anotar(ub.band_id);
+  });
+  if (bandas.size === 0) return false;
+  // Todas sus bandas tienen que ser bandas donde quien pide puede escribir.
+  return Array.from(bandas).every((b) => puedeEscribirEnBanda(req, b)) &&
+    // ...y no puede ser dueño de una banda registrada aparte.
+    !(state.registeredBands || []).some(
+      (rb: any) => rb.user_id === usuarioObjetivo.id && !puedeEscribirEnBanda(req, rb.band_id || rb.id)
+    );
 }
 import { generateUniqueSlugId, slugify } from '../utils/slug.js';
 
@@ -936,7 +964,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
   const {
     email,
     name,
-    uid,
+    uid: uidDelCliente,
     accessToken,
     bandName: inputBandName,
     leaderName,
@@ -945,8 +973,23 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
     return res.status(400).json({ error: 'Email de Google es requerido' });
   }
 
+  // SEGURIDAD: el email y el uid del cuerpo no valen nada por sí solos (cualquiera puede escribir
+  // el email de otra cuenta). Solo se acepta lo que Google confirma sobre el access token.
+  let uid: string;
+  let cleanEmail: string;
+  try {
+    const identidad = await verificarAccessTokenDeGoogle(accessToken, {
+      emailDeclarado: email,
+      subDeclarado: uidDelCliente,
+    });
+    uid = identidad.sub;
+    cleanEmail = identidad.email;
+  } catch (e: any) {
+    console.warn('[auth/google] Verificación rechazada:', e?.message || e);
+    return res.status(401).json({ error: 'No se pudo verificar tu cuenta de Google. Inténtalo de nuevo.' });
+  }
+
   const state = loadState();
-  const cleanEmail = email.trim().toLowerCase();
 
   // Sync users from Supabase
   try {
@@ -1193,10 +1236,23 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
   res.json({ token, user: safeUser, availableBands });
 });
 
+/**
+ * Garantiza la cuenta de administración global.
+ *
+ * La contraseña sale SOLO de `ADMIN_PASSWORD` (variable de entorno). Antes estaba escrita en el
+ * código y se reimponía en cada arranque y en cada login «admin»: quien la leyera en el repositorio
+ * entraba como admin y ningún cambio de contraseña duraba. Ahora:
+ *  - con `ADMIN_PASSWORD` (≥ 12 caracteres): crea el admin si falta, o actualiza su contraseña
+ *    únicamente si ha cambiado la variable (así se rota la clave);
+ *  - sin ella: NO crea ningún admin y NO toca las credenciales del existente.
+ */
 export async function ensureAdminUserExists(state: any) {
   try {
-    const adminPass = 'Hamlet$3131';
-    const { hash, salt } = hashPassword(adminPass);
+    const adminPass = process.env.ADMIN_PASSWORD || '';
+    const hayClaveValida = adminPass.length >= 12;
+    if (adminPass && !hayClaveValida) {
+      console.warn('[admin] ADMIN_PASSWORD es demasiado corta (mínimo 12 caracteres): se ignora.');
+    }
 
     let adminUser = (state.users || []).find(
       (u: any) =>
@@ -1204,17 +1260,27 @@ export async function ensureAdminUserExists(state: any) {
         (u.email && u.email.toLowerCase() === 'admin@bandmanager.ai')
     );
 
+    if (!adminUser && !hayClaveValida) {
+      console.warn('[admin] No hay cuenta admin y ADMIN_PASSWORD no está definida: no se crea ninguna.');
+      return null;
+    }
+
+    let cambiado = false;
     if (adminUser) {
-      adminUser.username = 'Admin';
-      adminUser.passwordHash = hash;
-      adminUser.salt = salt;
-      adminUser.role = 'admin';
-      adminUser.email = adminUser.email || 'admin@bandmanager.ai';
-      adminUser.name = adminUser.name || 'Administrador Global';
-      adminUser.plan = 'cabeza_de_cartel';
-      adminUser.bandName = adminUser.bandName || 'BAKANDEYA';
-      adminUser.band_id = adminUser.band_id || 'band-bakandeya';
+      if (hayClaveValida && !(adminUser.passwordHash && adminUser.salt && verifyPassword(adminPass, adminUser.passwordHash, adminUser.salt))) {
+        const { hash, salt } = hashPassword(adminPass);
+        adminUser.passwordHash = hash;
+        adminUser.salt = salt;
+        cambiado = true;
+      } else if (!hayClaveValida) {
+        console.warn('[admin] ADMIN_PASSWORD no está definida: las credenciales del admin no se modifican.');
+      }
+      if (adminUser.role !== 'admin') {
+        adminUser.role = 'admin';
+        cambiado = true;
+      }
     } else {
+      const { hash, salt } = hashPassword(adminPass);
       adminUser = {
         id: 'user-admin-global',
         username: 'Admin',
@@ -1233,27 +1299,30 @@ export async function ensureAdminUserExists(state: any) {
       };
       if (!state.users) state.users = [];
       state.users.push(adminUser);
+      cambiado = true;
     }
 
-    try {
-      const { getSupabase } = await import('../db/core.js');
-      const sb = getSupabase();
-      const { data: dbAdmin } = await sb
-        .from('users')
-        .select('id')
-        .or('username.ilike.admin,email.ilike.admin@bandmanager.ai')
-        .maybeSingle();
-      if (dbAdmin?.id) {
-        adminUser.id = dbAdmin.id;
+    if (cambiado) {
+      try {
+        const { getSupabase } = await import('../db/core.js');
+        const sb = getSupabase();
+        const { data: dbAdmin } = await sb
+          .from('users')
+          .select('id')
+          .or('username.ilike.admin,email.ilike.admin@bandmanager.ai')
+          .maybeSingle();
+        if (dbAdmin?.id) {
+          adminUser.id = dbAdmin.id;
+        }
+      } catch {
+        // Ignorar si Supabase no está disponible en este momento
       }
-    } catch {
-      // Ignorar si Supabase no está disponible en este momento
-    }
 
-    saveState(state);
-    await dbUpsertUser(adminUser).catch((err: any) =>
-      console.warn('Supabase admin upsert notice:', err)
-    );
+      saveState(state);
+      await dbUpsertUser(adminUser).catch((err: any) =>
+        console.warn('Supabase admin upsert notice:', err)
+      );
+    }
     return adminUser;
   } catch (err) {
     console.warn('Could not ensure admin user:', err);
@@ -1272,10 +1341,6 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
 
   const state = loadState();
   const cleanInput = username.trim().toLowerCase();
-
-  if (cleanInput === 'admin') {
-    await ensureAdminUserExists(state);
-  }
 
   // Sync users from Supabase to support persistent logins across serverless restarts
   try {
@@ -1346,7 +1411,29 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       : null) ||
     validUsers[0]?.band_id;
 
-  const preferredBandId = band_id || userMainBand;
+  // SEGURIDAD: `band_id` viene del cuerpo. Solo se respeta si es una banda DE ESE USUARIO; antes
+  // cualquiera con una cuenta propia podía iniciar sesión «dentro» de la banda de otro (y como su
+  // líder) mandando su band_id en el login.
+  const bandasDelUsuario = new Set<string>();
+  const anotarBanda = (id?: string) => {
+    if (id) bandasDelUsuario.add(cleanBandId(id));
+  };
+  validUsers.forEach((u: any) => {
+    anotarBanda(u.band_id);
+    anotarBanda(u.main_band_id);
+    (Array.isArray(u.band_order) ? u.band_order : []).forEach(anotarBanda);
+  });
+  (state.userBands || []).forEach((ub: any) => {
+    if (validUsers.some((u: any) => u.id === ub.user_id)) anotarBanda(ub.band_id);
+  });
+  const esAdminGlobal = validUsers.some((u: any) => u.role === 'admin');
+  const puedeElegirBanda = (id?: string) =>
+    !!id && (esAdminGlobal || bandasDelUsuario.has(cleanBandId(id)));
+  if (band_id && !puedeElegirBanda(band_id)) {
+    console.warn('[auth/login] band_id ajeno ignorado en el login.');
+  }
+
+  const preferredBandId = band_id && puedeElegirBanda(band_id) ? band_id : userMainBand;
   const preferredClean = preferredBandId
     ? cleanBandId(preferredBandId)
     : undefined;
@@ -1831,8 +1918,7 @@ router.get('/auth/me', async (req, res) => {
     user.id === 'user-mouredev' ||
     user.username?.toLowerCase() === 'mouredev' ||
     user.username?.toLowerCase() === 'braismouredev' ||
-    user.email?.toLowerCase().includes('mouredev') ||
-    user.email?.toLowerCase().includes('brais');
+    esCuentaDeBrais(user);
 
   if (isBraisUser) {
     user.instrument = user.instrument || 'Batería';
@@ -3147,12 +3233,17 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
         .json({ error: 'Este usuario ya está registrado en esta banda.' });
     }
 
-    // Just create the relationship in state.userBands
+    // Un admin de la plataforma no se añade a bandas desde fuera.
+    if (existingUser.role === 'admin') {
+      return res.status(403).json({ error: 'No se puede añadir esa cuenta.' });
+    }
+
+    // Se vincula SIEMPRE como miembro: el rol de líder no se concede a una cuenta ajena.
     const newUB = {
       id: `ub-${existingUser.id}-${targetBandId}`,
       user_id: existingUser.id,
       band_id: targetBandId,
-      role: role === 'leader' ? 'leader' : 'member',
+      role: 'member',
       createdAt: new Date().toISOString(),
     };
     state.userBands.push(newUB);
@@ -3162,11 +3253,16 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
       console.warn('Failed to append userBand to Supabase', e);
     }
 
-    if (instrument) existingUser.instrument = instrument.trim();
     saveState(state);
 
-    const { passwordHash, salt: _, ...safeUser } = existingUser;
-    return res.status(201).json(safeUser);
+    // No se devuelve la ficha de una cuenta ajena (email, banda...): solo lo mínimo para la lista.
+    return res.status(201).json({
+      id: existingUser.id,
+      username: existingUser.username,
+      name: existingUser.name,
+      role: 'member',
+      instrument: existingUser.instrument,
+    });
   }
 
   // Create new user record
@@ -3282,6 +3378,19 @@ router.put('/users/:id', requireAuth, async (req, res) => {
       .json({ error: 'Acceso denegado. Ese usuario no pertenece a tu banda.' });
   }
 
+  // Un admin de la plataforma no se edita desde una banda.
+  if (loggedUser.id !== id && user.role === 'admin') {
+    return res.status(403).json({ error: 'Acceso denegado.' });
+  }
+
+  // Fijar la contraseña de otra persona solo se permite sobre cuentas que son SOLO de esta banda
+  // (ver puedeRestablecerContrasenaDe). Se comprueba antes de aplicar ningún cambio.
+  if (newPassword && newPassword.trim().length > 0 && loggedUser.id !== id && !puedeRestablecerContrasenaDe(state, user, req)) {
+    return res.status(403).json({
+      error: 'No puedes cambiar la contraseña de una cuenta que pertenece a otras bandas.',
+    });
+  }
+
   if (name) user.name = name.trim();
   if (googleOAuth !== undefined) user.googleOAuth = googleOAuth;
 
@@ -3318,10 +3427,13 @@ router.put('/users/:id', requireAuth, async (req, res) => {
           (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTargetCheck))
     );
 
-    if (!isPlatformAdmin && !isBandLeaderInUserBands && !isBandOwner) {
+    // El plan de pago solo cambia por el flujo de Stripe (webhook / confirm-success). Que el
+    // líder pudiera escribir `plan` aquí le daba un plan de pago sin pagar.
+    void isBandLeaderInUserBands;
+    void isBandOwner;
+    if (!isPlatformAdmin) {
       return res.status(403).json({
-        error:
-          'Sólo el propietario o un líder de esa banda pueden cambiar su plan de suscripción.',
+        error: 'El plan de suscripción solo se cambia desde la facturación.',
       });
     }
 
