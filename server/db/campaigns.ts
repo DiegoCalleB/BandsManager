@@ -193,6 +193,17 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
     color: campaign.color || "#8b5cf6"
   };
 
+  // El upsert es por `id`, y los ids por defecto son marcas de tiempo (adivinables): sin esta
+  // comprobación, mandar el id de una campaña AJENA la reasignaba a esta banda con el contenido
+  // que se enviara. Si el id ya existe en otra banda, se genera uno nuevo.
+  try {
+    const { data: existente } = await sb.from("campaigns").select("band_id").eq("id", payload.id).maybeSingle();
+    if (existente && cleanBandId(existente.band_id) !== targetBandId) {
+      payload.id = `${payload.id}-${targetBandId}-${Date.now()}`;
+    }
+  } catch {
+    // Tabla ausente: se seguirá con el fallback de abajo.
+  }
 
   try {
     // Try inserting into 'campaigns' table first
@@ -214,13 +225,14 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
       .single();
 
     if (fbError) {
-      console.warn("Supabase upsert campaigns warning:", error?.message || fbError.message);
-      return normalizeCampaignFromDb(payload);
+      // Fallaron las dos tablas: NO se devuelve el payload como si estuviera guardado (la UI lo
+      // mostraba y al recargar la campaña no existía). Se lanza para que la ruta responda con error.
+      throw new Error(`Supabase Error (upsert campaign): ${error?.message || fbError.message}`);
     }
     return normalizeCampaignFromDb(fbData || payload);
   } catch (err: any) {
     console.warn("Failed to persist campaign to Supabase:", err?.message || err);
-    return normalizeCampaignFromDb(payload);
+    throw err instanceof Error ? err : new Error(String(err));
   }
 }
 
@@ -228,22 +240,25 @@ export async function dbDeleteCampaign(id: string, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   try {
-    await sb
+    const { error: e1 } = await sb
       .from("campaigns")
       .delete()
       .eq("id", String(id))
       .eq("band_id", targetBandId);
 
-    await sb
+    const { error: e2 } = await sb
       .from("booking_campaigns")
       .delete()
       .eq("id", String(id))
       .eq("band_id", targetBandId);
 
+    // Una de las dos tablas puede no existir (hay fallback): solo es fallo si fallan las dos.
+    if (e1 && e2) throw new Error(e1.message || e2.message);
     return true;
   } catch (err: any) {
     console.warn("Failed to delete campaign from Supabase:", err?.message || err);
-    return true;
+    // Antes devolvía true: la campaña «borrada» reaparecía al recargar.
+    throw err instanceof Error ? err : new Error(String(err));
   }
 }
 
