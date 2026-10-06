@@ -235,9 +235,11 @@ Se inicializa en `src/main.tsx` (`src/utils/errorTracking.ts`):
 - **Muestreo de trazas del 10 %** para rendimiento.
 - **Filtros anti-ruido:** descarta el ruido de HMR de Vite, de `ResizeObserver`, de bloqueadores de anuncios y todo error cuya pila venga de una extensión del navegador (`chrome-extension://`, `moz-extension://`).
 
-### Pasivo por diseño
+### Estado: activo en producción
 
-Sentry es un **no-op total sin DSN**: sin `SENTRY_DSN` (servidor) ni `VITE_SENTRY_DSN` (cliente) no se carga ni el SDK. En local, en los tests y en el E2E no cambia nada; se activa añadiendo las variables en Railway o Vercel.
+Sentry **está activado** en producción, en servidor y navegador, con `SENTRY_DSN` y `VITE_SENTRY_DSN` definidos en el entorno de despliegue.
+
+El código es **pasivo por diseño**: sin esas variables Sentry es un no-op total y ni siquiera se carga el SDK. Por eso en local, en los tests y en el E2E no cambia nada y nadie envía ruido a la consola de Sentry desde su máquina.
 
 ### Otras señales de salud
 
@@ -245,13 +247,13 @@ Sentry es un **no-op total sin DSN**: sin `SENTRY_DSN` (servidor) ni `VITE_SENTR
 - **Cola de agentes:** estadísticas, métricas y recuperación de trabajos colgados (los `processing` con bloqueo vencido más de 10 minutos se recuperan solos).
 - **Auditoría de ejecuciones** de los agentes con su propio panel (`/agent-runs`).
 
-### Lo que aún falta
+### Lo que mejoraría el rendimiento de Sentry ahora que está activo
 
-- **Sin source maps ni `release`.** El build de producción genera `sourcemap: false` y no se etiqueta la versión, así que las pilas de Sentry salen minificadas y no se agrupan por despliegue. Es lo primero que conviene arreglar al activar Sentry.
+- **Sin source maps ni `release`.** El build de producción genera `sourcemap: false` y no se etiqueta la versión, así que las pilas de Sentry salen minificadas y no se agrupan por despliegue. Es lo primero que conviene arreglar, porque cada error que llega ya está llegando sin símbolos legibles.
 - **Cobertura parcial en el servidor:** hay unas 280 llamadas a `console.error` y solo 9 a `captureError`. Un fallo capturado por un `try/catch` que solo escribe en consola no llega a Sentry.
 - **Sin trazas de rendimiento en el servidor** (`tracesSampleRate: 0`): solo se reportan errores.
 - **Las alertas** (correo, Slack, umbrales) se configuran en la consola de Sentry, no están versionadas en el repositorio.
-- **Replay y datos de terceros:** la app maneja contactos de salas y contenido de bandas; antes de activarlo en producción hay que revisar qué se enmascara en las grabaciones.
+- **Replay y datos de terceros:** la app maneja contactos de salas y contenido de bandas; Replay está activo, así que conviene revisar qué se enmascara en las grabaciones.
 
 ## Stack
 
@@ -259,7 +261,7 @@ Sentry es un **no-op total sin DSN**: sin `SENTRY_DSN` (servidor) ni `VITE_SENTR
 - **Backend:** Express 4 + TypeScript en Node 22 (`server.ts`), estado en memoria sincronizado con Supabase.
 - **Datos:** Supabase (PostgreSQL) como única fuente de verdad, Supabase Storage para multimedia.
 - **IA:** Gemini (`@google/genai`), con DeepSeek/OpenAI opcionales; Replicate/fal para stems.
-- **Servicios:** Stripe (planes), Resend (emails transaccionales), Sentry (opcional).
+- **Servicios:** Stripe (planes), Resend (emails transaccionales), Sentry (errores en producción).
 - **Despliegue:** Railway (`railway.json`, healthcheck en `/api/health`); las migraciones SQL se aplican solas en `npm start`.
 
 ## Puesta en marcha
