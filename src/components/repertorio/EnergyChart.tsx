@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ResponsiveContainer, ComposedChart, Area, Line, XAxis, YAxis, Tooltip as RechartsTooltip, CartesianGrid, ReferenceArea, ReferenceLine } from 'recharts';
 import { titlesMatch } from '../../utils/songTitleMatch';

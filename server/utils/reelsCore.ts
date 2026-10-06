@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 /**
  * Núcleo puro del generador de Reels: parseo de tiempos, saneado de lo que devuelve la IA
  * y construcción de pistas de subtítulos. Todo aquí es determinista y testeable, para que

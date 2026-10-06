@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Codificador PCM16 WAV compartido por los sintetizadores locales del chatbot y Song Studio
 // (accompanimentSynth.ts para batería/bajo, instrumentSynth.ts para instrumentos melódicos con Tone.js).
 

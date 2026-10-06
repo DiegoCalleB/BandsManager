@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useRef } from 'react';
 import { Guitar, Upload, Camera, Loader2, Sparkles, Globe, Type, Check } from 'lucide-react';
 import { BAND_FONT_OPTIONS, getFontFamilyById } from '../../../config/bandFonts';

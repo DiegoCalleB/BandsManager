@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Idiomas del EPK público (/epk?band=...&lang=...). Ese enlace es la carta de presentación
 // de la banda ante salas y festivales, y los agentes ya escriben el pitch en el idioma del
 // lead (server/utils/leadLanguage.ts) — así que la página que abre el destinatario tiene que

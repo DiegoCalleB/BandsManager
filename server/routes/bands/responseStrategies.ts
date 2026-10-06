@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Endpoints para configurar estrategias de respuesta condicionales por banda
 // Las bandas pueden definir cómo quieren que el Contestador responda automáticamente
 // basado en el tipo de mensaje detectado (negociación, confirmación, rechazo, etc.)

@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 export function formatFestivalDateRange(startDate?: string, endDate?: string): string {
   if (!startDate || !endDate) return "";
 

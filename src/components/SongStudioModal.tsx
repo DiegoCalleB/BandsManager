@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import { SongStudioCubaseHelpModal } from "./song_studio/SongStudioCubaseHelpModal";
 import { SongStudioDeleteConfirmModal } from "./song_studio/SongStudioDeleteConfirmModal";
 import { SongStudioAiGeneratorModal } from "./song_studio/SongStudioAiGeneratorModal";

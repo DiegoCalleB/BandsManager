@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Motor consolidado de agentes de booking (Enviador ya migrado; Scout/Redactor/Lector siguen
 // el mismo patrón en una fase posterior - ver server/routes/agent.ts). Se llama tanto desde el
 // endpoint HTTP manual (/api/trigger-agent, disparado por el chatbot o un usuario) como desde

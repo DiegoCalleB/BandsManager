@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, X, Music, Maximize, Minimize, Type, StickyNote, Info, FileText, Image as ImageIcon, Sun, Battery, BatteryCharging, BatteryWarning, Moon, Plane, MoreVertical, Headphones, Sliders, ListMusic, Sparkles, Play, Pause, RotateCcw, ArrowUpDown, SlidersHorizontal } from 'lucide-react';
 import { Setlist, SetlistItem, Song, SongAudioIdea, User } from '../types';

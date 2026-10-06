@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Tabla única de colores/etiqueta por estado de lead - antes vivía duplicada (y con valores
 // distintos entre sí) en BookingCRM.tsx y Dashboard.tsx. La versión de Dashboard.tsx no cubría
 // 'confirmado', 'aplazado', 'respondido', 'borrador_creado' ni 'aprobado_propuesta/respuesta',

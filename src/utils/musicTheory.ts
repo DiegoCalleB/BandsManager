@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 /**
  * Conversión entre nombres de nota y números MIDI, en la convención de Tone.js: Do central =
  * C4 = MIDI 60.

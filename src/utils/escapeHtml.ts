@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Los popups de los mapas (Leaflet) se construyen concatenando datos de banda/sala directamente
 // en una plantilla HTML asignada a innerHTML. Sin escapar, un nombre de banda o sala con
 // "<img src=x onerror=...>" ejecuta JS en el navegador de quien abra el mapa.

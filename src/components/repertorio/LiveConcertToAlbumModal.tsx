@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState } from 'react';
 import { Disc3, Sparkles, Scissors, Play, Pause, Plus, Trash2, ArrowUp, ArrowDown, Download, Check, RefreshCw, Layers, Radio, Volume2, VolumeX, HelpCircle, FileText, ExternalLink, X, Combine, GitMerge, CheckSquare, Square, Wand2, Music2, FileCode, ListPlus, Sliders, ChevronDown, ChevronUp, RotateCcw, RotateCw, Clock, Zap, AlertTriangle, Upload, CheckCircle2, Undo2, Redo2, Lock, Key, ShieldCheck, Tag, Target } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';

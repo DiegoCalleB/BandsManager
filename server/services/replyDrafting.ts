@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Lógica compartida de redacción de respuestas (el "Contestador"), extraída de
 // server/routes/leads/reply.ts para poder llamarla también desde el Agente Lector
 // (server/services/lectorAgent.ts) cuando detecta una respuesta real de una sala - así el

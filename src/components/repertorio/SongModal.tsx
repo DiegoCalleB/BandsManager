@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';

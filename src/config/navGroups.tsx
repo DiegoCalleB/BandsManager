@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import type { LucideIcon } from 'lucide-react';
 import { Table, Building2, Radio, Users, CalendarRange, Truck, BookOpen, QrCode, Video, Disc3, Guitar, Coins, Sparkles, Clock, Music, Disc2, Briefcase, Mic2 } from 'lucide-react';
 

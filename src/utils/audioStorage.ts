@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 /**
  * Audio Storage & Utility Helpers for BandManager
  * Handles IndexedDB persistence for large audio files (MP3/WAV/M4A),

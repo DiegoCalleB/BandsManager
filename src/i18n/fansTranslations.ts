@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Traducciones del formulario público "Únete" (FansLanding.tsx).
 // Idiomas soportados hoy: español, inglés, italiano, checo. Añadir uno nuevo es
 // solo añadir una entrada más aquí y en FAN_FORM_LANGUAGES.

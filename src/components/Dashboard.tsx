@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState, useRef } from 'react';
 import { Lead, LeadType, LeadStatus, ThemeColors, SocialMetric, Concert, Rehearsal, EPKConfig, Tour, Fan, SocialPost } from '../types';
 import { useLanguage } from '../context/LanguageContext';

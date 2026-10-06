@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Agente Lector real: hasta ahora server/routes/agent.ts y agentScheduler.ts solo contaban
 // cuántos correos sin leer había en la bandeja ("Agente Lector ejecutado... No se han detectado
 // nuevas respuestas"), sin llegar a emparejar esos correos con un lead real ni actualizar nada.

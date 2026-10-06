@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState, useEffect } from 'react';
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, ArrowRight, Zap, Star, Shield, Chrome, KeyRound, ArrowLeft, CheckCircle2, Sparkles } from 'lucide-react';
 import { User as UserType } from '../types';

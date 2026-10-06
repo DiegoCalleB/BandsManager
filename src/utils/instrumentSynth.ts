@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // SINTETIZADOR TONE.JS PARA IDEAS MELÓDICAS DE IA POR INSTRUMENTO (GUITARRA, VIOLÍN, HANDPAN,
 // PERCUSIÓN). A diferencia de accompanimentSynth.ts (patrón rítmico fijo de batería/bajo), aquí
 // se reproduce una secuencia de notas concreta generada por Gemini a partir del ADN musical y/o

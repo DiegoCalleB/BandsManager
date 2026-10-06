@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 // Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lectura
 // desatendidos por el Agente Enviador/Lector - distinto de src/utils/gmail.ts, que es de
 // navegador y está atado a la sesión de quien esté logueado en la SPA (no sirve para

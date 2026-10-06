@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import { Song } from '../types';
 
 /** Valor con el que la app rellena `tonalidad` cuando nadie la ha tocado nunca (ver

@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 /**
  * Cuando un modal ofrece varias sugerencias/acciones para aplicar de una en una (Análisis IA,
  * Setlist Perfecto), cada una lleva posiciones calculadas contra el setlist tal como estaba

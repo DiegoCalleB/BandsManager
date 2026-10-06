@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React from 'react';
 import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
 import { PressQuoteItem } from '../types';

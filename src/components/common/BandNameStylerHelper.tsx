@@ -1,6 +1,3 @@
-// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
-// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
-
 import React, { useState } from 'react';
 import { Sparkles, X, RotateCcw, Check, Zap } from 'lucide-react';
 import { BAND_STYLE_PRESETS, ROCK_SYMBOLS, cleanToNormalText } from '../../utils/bandNameStyler';
