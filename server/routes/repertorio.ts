@@ -8,8 +8,12 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
+import { detectarAcordesDesdePcm } from "../utils/chordDetection.js";
+import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
+import { elegirFuenteAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
+  dbGuardarAnalisisAcordes,
   dbUpsertSong,
   dbDeleteSong,
   dbGetSetlists,
@@ -181,6 +185,48 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
   } catch (err: any) {
     console.error("Error analizando dinámica interna de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
+  }
+});
+
+// POST analizar los acordes del audio de una canción (Chordify propio): detecta acordes con
+// tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
+// Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
+const analisisAcordesEnCurso = new Set<string>();
+router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userBandId = getTargetBandId(req);
+  const clave = `${userBandId}:${id}`;
+  if (analisisAcordesEnCurso.has(clave)) {
+    return res.status(409).json({ error: "Ya se están analizando los acordes de esta canción." });
+  }
+  analisisAcordesEnCurso.add(clave);
+  try {
+    // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
+    // un fichero ajeno a la banda ni pasar una ruta arbitraria.
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+
+    const fuente = elegirFuenteAudio(song);
+    if (!fuente) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
+
+    const pcm = await extraerPcmMono(fuente.url, { timeoutMs: 90_000, maxDuracionSeg: 360 });
+    if (!pcm) return res.status(422).json({ error: "No se pudo leer el audio de la canción." });
+
+    const tonalidad = normalizarTonalidad(song.tonalidad);
+    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad });
+    if (segmentos.length === 0 || segmentos.every((s) => s.acorde === "N")) {
+      return res.status(422).json({ error: "No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?)." });
+    }
+
+    const analisis = construirAnalisis({ segmentos, fuente: fuente.fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
+    const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+    res.json({ success: true, analisis, song: guardada });
+  } catch (err: any) {
+    console.error("Error analizando acordes del audio:", err);
+    res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
+  } finally {
+    analisisAcordesEnCurso.delete(clave);
   }
 });
 
