@@ -69,3 +69,24 @@ describe('cambiosDeAcorde / acordeEnInstante', () => {
     expect(acordeEnInstante(c, -1)).toBeNull();
   });
 });
+
+import { asociarLineasConLetra } from '../../../src/utils/alineacionAcordes';
+
+describe('el cifrado que construimos y el visor de karaoke se entienden', () => {
+  it('cada línea de letra del cifrado generado se asocia con su línea transcrita, en orden', () => {
+    const lineas = [
+      { t0: 8, t1: 11, texto: 'primera frase de la canción' },
+      { t0: 12, t1: 15, texto: 'segunda frase, con coma' },
+      { t0: 30, t1: 33, texto: 'frase tras el instrumental' },
+    ];
+    const acs = [ac('A', 0, 12), ac('E', 12, 20), ac('F#m', 20, 40)];
+    const cifrado = construirCifradoSincronizado(lineas, acs);
+    const mapa = asociarLineasConLetra(cifrado, lineas);
+    expect(mapa.filter((k) => k !== null)).toEqual([0, 1, 2]);
+    // y la línea asociada es realmente esa
+    const filas = cifrado.split('\n');
+    mapa.forEach((k, i) => {
+      if (k !== null) expect(filas[i].replace(/\[[^\]]+\]/g, '')).toBe(lineas[k].texto);
+    });
+  });
+});
