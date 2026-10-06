@@ -49,6 +49,41 @@ export async function logAgentExecution(logData: {
   }
 }
 
+// Leads que ESTA instancia está procesando ahora mismo (ver la guarda en runEnviadorAgent).
+const leadsEnCurso = new Set<string>();
+
+const MARCA_EMAIL_RECHAZADO = "[Email Rechazado]";
+
+/** Tope de envíos reales por banda y día (AGENT_DAILY_SEND_CAP, 30 por defecto). */
+export function limiteDiarioDeEnvios(): number {
+  const n = Number(process.env.AGENT_DAILY_SEND_CAP);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 30;
+}
+
+/** Correos que la banda ha enviado hoy (UTC): cuenta los mensajes salientes registrados. */
+async function contarEnviosDeHoy(sb: any, bandId: string): Promise<number> {
+  const inicioDelDia = new Date();
+  inicioDelDia.setUTCHours(0, 0, 0, 0);
+  try {
+    const { count, error } = await sb
+      .from("lead_messages")
+      .select("id", { count: "exact", head: true })
+      .eq("band_id", bandId)
+      .eq("remitente", "banda")
+      .gte("fecha", inicioDelDia.toISOString());
+    if (error) return 0;
+    return count ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** UPDATE de un lead que NO se traga el error: devuelve el mensaje si falla. */
+async function actualizarLeadComprobando(sb: any, leadId: string, bandId: string, cambios: Record<string, any>): Promise<string | null> {
+  const { error } = await sb.from("leads").update(cambios).eq("id", leadId).eq("band_id", bandId);
+  return error ? String(error.message || error) : null;
+}
+
 export interface EnviadorResult {
   success: boolean;
   dispatchedCount: number;
@@ -77,11 +112,12 @@ export async function runEnviadorAgent(opts: {
   const startTime = Date.now();
   const sb = getSupabase();
 
-  let query = sb.from("leads").select("*").in("estado", ESTADOS_DE_ENVIO);
+  // SIEMPRE acotado a la banda y a los estados de envío, también cuando se pide un lead concreto:
+  // antes `leadId` reemplazaba la consulta entera y bastaba pasar el id de un lead de OTRA banda
+  // (o de uno aún sin aprobar) para despacharlo con las credenciales de esta.
+  let query = sb.from("leads").select("*").in("estado", ESTADOS_DE_ENVIO).eq("band_id", opts.bandId);
   if (opts.leadId) {
-    query = sb.from("leads").select("*").eq("id", opts.leadId);
-  } else {
-    query = query.eq("band_id", opts.bandId);
+    query = query.eq("id", opts.leadId);
   }
 
   const { data: approvedLeads, error: fetchErr } = await query;
@@ -124,13 +160,17 @@ export async function runEnviadorAgent(opts: {
   // el borrador para un último vistazo, 'direct_send' lo despacha ya sin ese segundo paso manual
   // - pero solo si además la plataforma entera tiene el envío real habilitado.
   let dispatchMode = "draft_gmail";
+  let dispatchLevel = "draft_only";
   try {
     const autonomyConfig: any = await dbGetAutonomyConfig(opts.bandId);
     if (autonomyConfig?.dispatchMode === "direct_send") dispatchMode = "direct_send";
+    if (autonomyConfig?.dispatchLevel) dispatchLevel = String(autonomyConfig.dispatchLevel);
   } catch (e) {
     // Sin configuración de autonomía guardada todavía: se queda en el modo seguro por defecto.
   }
-  const ENVIO_REAL = ENVIO_REAL_HABILITADO_GLOBALMENTE && dispatchMode === "direct_send";
+  // Envío real solo si las TRES cosas lo permiten: la plataforma, el modo y el nivel de autonomía.
+  // Antes `dispatchLevel` (draft_only) no se leía en ningún sitio y direct_send enviaba igualmente.
+  const ENVIO_REAL = ENVIO_REAL_HABILITADO_GLOBALMENTE && dispatchMode === "direct_send" && dispatchLevel !== "draft_only";
 
   // Si la banda conectó Gmail por OAuth (server/routes/gmailOAuth.ts), se prefiere sobre
   // SMTP/IMAP tanto para el borrador como para el envío directo - sin contraseña de aplicación,
@@ -141,12 +181,39 @@ export async function runEnviadorAgent(opts: {
   const results: any[] = [];
   const nowIso = new Date().toISOString();
 
+  // Tope diario de envíos REALES por banda (los borradores no cuentan: los envía una persona).
+  let enviadosHoy = 0;
+  if (ENVIO_REAL) {
+    enviadosHoy = await contarEnviosDeHoy(sb, opts.bandId);
+  }
+  const TOPE_DIARIO = limiteDiarioDeEnvios();
+
   for (const lead of approvedLeads) {
+    // Si otra ejecución (el planificador y un disparo manual a la vez, un doble clic) ya está
+    // con este lead, se salta: sin esto salían dos correos o dos borradores idénticos.
+    if (leadsEnCurso.has(lead.id)) {
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: "Otra ejecución ya está procesando este lead." });
+      continue;
+    }
+    // Un email que rebotó no se vuelve a intentar hasta que alguien lo corrija.
+    if (String(lead.notas || "").includes(MARCA_EMAIL_RECHAZADO)) {
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: "El email de contacto rebotó antes. Corrígelo antes de volver a enviar." });
+      continue;
+    }
+    if (ENVIO_REAL && enviadosHoy >= TOPE_DIARIO) {
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: `Se alcanzó el tope diario de ${TOPE_DIARIO} envíos. Continúa mañana.` });
+      continue;
+    }
+    leadsEnCurso.add(lead.id);
+    try {
+    // El correo sale al contacto principal y, si lo hay, al secundario (es una función: salas con
+    // dos buzones). Los destinatarios exactos quedan en la nota del lead y en el borrador.
     const rawEmails = [lead.email_contacto || lead.email, lead.email_secundario || lead.emailSecundario]
       .filter(Boolean)
       .flatMap(e => String(e).split(/[,;]/))
       .map(e => e.trim())
-      .filter(esEmailValido);
+      .filter(esEmailValido)
+      .filter((e, i, todos) => todos.findIndex((x) => x.toLowerCase() === e.toLowerCase()) === i);
 
     const emailContacto = rawEmails.length > 0 ? rawEmails.join(", ") : (lead.email_contacto || lead.email);
     const rawPitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
@@ -215,7 +282,12 @@ export async function runEnviadorAgent(opts: {
         }
 
         const draftNote = `*** [${dateTag}] BORRADOR creado en '${draftPath}' para ${emailContacto} por el Agente Enviador - NO se ha enviado, revísalo y envíalo a mano ***\n` + (lead.notas || "");
-        await sb.from("leads").update({ estado: "borrador_creado", notas: draftNote, gmail_draft_id: draftId }).eq("id", lead.id);
+        const errGuardar = await actualizarLeadComprobando(sb, lead.id, opts.bandId, { estado: "borrador_creado", notas: draftNote, gmail_draft_id: draftId });
+        if (errGuardar) {
+          // El borrador YA está en Gmail pero el lead sigue "aprobado": se avisa para no crear otro.
+          results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: `Borrador creado en Gmail, pero no se pudo guardar el estado del lead (${errGuardar}). No lo vuelvas a lanzar: revisa los borradores.` });
+          continue;
+        }
 
         results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: "borrador_creado", carpeta_borradores: draftPath, status: "borrador" });
         continue;
@@ -257,20 +329,33 @@ export async function runEnviadorAgent(opts: {
         email_id: messageId
       };
 
-      await sb.from("leads").update({
-        estado: nextState,
-        fecha_envio: nowIso,
-        notas: newNote,
-        gmail_draft_id: null,
-        gmail_message_id: messageId,
-        gmail_thread_id: threadId,
-        email_abierto: false,
-        clics_epk: 0,
-        ultimo_clic_at: null,
-        historial_contacto: [nuevoEnvioContacto, ...historialPrevio].slice(0, 50)
-      }).eq("id", lead.id);
+      // El correo YA ha salido. Si guardar el estado falla, el siguiente ciclo volvería a
+      // enviarlo (el lead seguiría "aprobado"): se reintenta y, si no hay manera, se avisa fuerte.
+      let errGuardar: string | null = null;
+      for (let intento = 0; intento < 3; intento++) {
+        errGuardar = await actualizarLeadComprobando(sb, lead.id, opts.bandId, {
+          estado: nextState,
+          fecha_envio: nowIso,
+          notas: newNote,
+          gmail_draft_id: null,
+          gmail_message_id: messageId,
+          gmail_thread_id: threadId,
+          email_abierto: false,
+          clics_epk: 0,
+          ultimo_clic_at: null,
+          historial_contacto: [nuevoEnvioContacto, ...historialPrevio].slice(0, 50)
+        });
+        if (!errGuardar) break;
+        await new Promise((r) => setTimeout(r, 200 * (intento + 1)));
+      }
+      enviadosHoy++;
+      if (errGuardar) {
+        console.error(`[Enviador] Correo ENVIADO a ${emailContacto} pero no se pudo guardar el estado del lead ${lead.id}: ${errGuardar}`);
+        results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, status: "error", error: `El correo SÍ se envió a ${emailContacto}, pero no se pudo guardar el estado (${errGuardar}). Cámbialo a mano a "contactado" para que no se reenvíe.` });
+        continue;
+      }
 
-      await sb.from("lead_messages").insert({
+      const { error: errMensaje } = await sb.from("lead_messages").insert({
         id: `imap-${messageId}`,
         lead_id: lead.id,
         band_id: lead.band_id || opts.bandId,
@@ -280,6 +365,7 @@ export async function runEnviadorAgent(opts: {
         mensaje: cleanPitch,
         fecha: nowIso
       });
+      if (errMensaje) console.warn(`[Enviador] Correo enviado, pero no se registró en lead_messages (${errMensaje.message}).`);
 
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: nextState, fecha_envio: nowIso, status: "enviado" });
     } catch (err: any) {
@@ -288,19 +374,20 @@ export async function runEnviadorAgent(opts: {
       // Registrar si el fallo fue por "usuario no existe" (invalid_recipient)
       const failureReason = (err as any).deliveryFailureReason;
       if (failureReason === 'invalid_recipient') {
-        const sb = getSupabase();
-        const leadNote = `[Email Rechazado] Usuario no existe en ${emailContacto} - no reintentar`;
-        try {
-          await sb.from("leads").update({ notas: leadNote }).eq("id", lead.id);
-        } catch (updateErr) {
-          // Ignorar error al actualizar notas
-        }
+        // Se ANTEPONE a las notas existentes (antes se sustituían todas) y el lead sale de la cola
+        // de envío para que no se reintente en cada ciclo.
+        const leadNote = `${MARCA_EMAIL_RECHAZADO} Usuario no existe en ${emailContacto} - no reintentar\n` + (lead.notas || "");
+        const errNota = await actualizarLeadComprobando(getSupabase(), lead.id, opts.bandId, { notas: leadNote, estado: "nuevo" });
+        if (errNota) console.warn(`[Enviador] No se pudo registrar el rebote de ${emailContacto}: ${errNota}`);
       }
 
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: err.message || String(err) });
       // Si el problema es de identidad/token, es el mismo para toda la banda: no tiene
       // sentido reintentar con el resto de leads de este lote.
       if (isIdentityIssue) break;
+    }
+    } finally {
+      leadsEnCurso.delete(lead.id);
     }
   }
 

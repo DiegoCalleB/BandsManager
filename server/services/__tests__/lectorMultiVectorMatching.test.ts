@@ -112,7 +112,9 @@ describe('findMatchingLeadForIncomingMessage (Multi-Vector Matching Engine)', ()
     expect(res).not.toBeNull();
     expect(res?.lead.id).toBe('lead-siroco-456');
     expect(res?.matchReason).toContain('Domain Match');
-    expect(res?.shouldAutoEnrichEmail).toBe('direccion.artistica@siroco.es');
+    // El emparejamiento por dominio es débil: NO enriquece el email del lead (un compañero o un
+    // auto-reply acababan como destinatario de los siguientes envíos).
+    expect(res?.shouldAutoEnrichEmail).toBeUndefined();
   });
 
   it('Vector 5: empareja por Asunto con nombre de sala (BaoBao)', async () => {
