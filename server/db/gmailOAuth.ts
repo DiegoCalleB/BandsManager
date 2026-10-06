@@ -2,6 +2,7 @@
 // los tokens a la respuesta HTTP.
 
 import { getSupabase, cleanBandId } from "./core.js";
+import { encryptSecret, decryptSecret } from "../utils/secretCrypto.js";
 
 export interface BandGmailOAuthAccount {
   band_id: string;
@@ -31,7 +32,7 @@ export async function dbGetBandGmailOAuth(bandId: string): Promise<BandGmailOAut
       return null;
     }
 
-    return data || null;
+    return data ? { ...data, refresh_token: decryptSecret(data.refresh_token) } : null;
   } catch (e) {
     console.warn(`Fallo leyendo OAuth de Gmail para '${cleanId}':`, e);
     return null;
@@ -48,7 +49,7 @@ export async function dbUpsertBandGmailOAuth(account: {
   const payload = {
     band_id: cleanId,
     gmail_email: account.gmail_email,
-    refresh_token: account.refresh_token,
+    refresh_token: encryptSecret(account.refresh_token),
     scope: account.scope,
     updated_at: new Date().toISOString()
   };
@@ -64,7 +65,7 @@ export async function dbUpsertBandGmailOAuth(account: {
     throw error;
   }
 
-  return data || payload;
+  return { ...(data || payload), refresh_token: account.refresh_token };
 }
 
 export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {
