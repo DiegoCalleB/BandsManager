@@ -89,8 +89,9 @@ export async function dbRecordDealSupport(input: {
       { onConflict: 'id', ignoreDuplicates: true }
     );
   if (error) {
-    console.warn('[dealSupport] No se pudo registrar la aportación (el pago en Stripe sí se hizo):', error.message);
-    return false;
+    // El cobro YA está hecho en Stripe: si no se anota, se pierde. Se lanza para que el webhook
+    // responda 500 y Stripe reintente (antes se devolvía false y el webhook respondía 200).
+    throw new Error(`No se pudo registrar la aportación ${input.sessionId}: ${error.message}`);
   }
   return true;
 }
@@ -134,8 +135,8 @@ export async function dbRecordDealSupportRefund(paymentIntentId: string, amountR
     .eq('stripe_payment_intent_id', paymentIntentId)
     .select('id');
   if (error) {
-    if (!tablaAusente(error)) console.warn('[dealSupport] No se pudo anotar el reembolso:', error.message);
-    return 0;
+    // Un reembolso que no se anota deja la aportación como pagada: que Stripe reintente.
+    throw new Error(`No se pudo anotar el reembolso de ${paymentIntentId}: ${error.message}`);
   }
   return Array.isArray(data) ? data.length : 0;
 }

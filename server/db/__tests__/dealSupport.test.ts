@@ -130,17 +130,17 @@ describe('aportaciones voluntarias (capa de datos)', () => {
       expect(fake.tablas.deal_support_contributions[0]).toEqual(antes);
     });
 
-    it('si la tabla no existe, anotar un reembolso no lanza', async () => {
+    it('si la BD falla, anotar un reembolso LANZA (para que el webhook responda 500 y Stripe reintente)', async () => {
       fake.estado.fallosPorTabla.deal_support_contributions = { code: '42P01', message: 'relation does not exist' };
-      expect(await dbRecordDealSupportRefund('pi_111', 600)).toBe(0);
+      await expect(dbRecordDealSupportRefund('pi_111', 600)).rejects.toThrow(/No se pudo anotar el reembolso/);
     });
   });
 
-  it('si la tabla de aportaciones no existe todavía NO rompe nada: no se ofrece y registrar solo avisa', async () => {
+  it('si la tabla de aportaciones no existe: no se ofrece nada, pero REGISTRAR un cobro lanza (que Stripe reintente)', async () => {
     fake.tablas.concert_deals.push(acuerdo('a'));
     fake.estado.fallosPorTabla.deal_support_contributions = { code: '42P01', message: 'relation does not exist' };
     expect(await dbListSupportableDeals(banda)).toEqual([]);
     expect(await dbDealHasSupport('a', banda)).toBe(false);
-    expect(await dbRecordDealSupport({ sessionId: 'cs_1', dealId: 'a', bandId: banda, amountCents: 100 })).toBe(false);
+    await expect(dbRecordDealSupport({ sessionId: 'cs_1', dealId: 'a', bandId: banda, amountCents: 100 })).rejects.toThrow(/No se pudo registrar la aportación cs_1/);
   });
 });

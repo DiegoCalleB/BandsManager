@@ -22,13 +22,22 @@ const PLAN_CREDITS: Record<string, number> = {
   cabeza_de_cartel: 2500
 };
 
-// In-memory idempotency cache for webhooks (prevents duplicate execution)
+// Idempotencia del webhook, en memoria (la persistente está en stripe_webhook_events).
+//  - `processedEvents`: eventos ya procesados CON ÉXITO.
+//  - `eventosEnCurso`: eventos que se están procesando ahora mismo (reserva).
+// Antes el evento se marcaba como procesado ANTES de procesarlo: si el proceso fallaba, Stripe
+// reintentaba y el reintento se descartaba como duplicado, perdiendo el cobro para siempre.
 const processedEvents = new Map<string, number>();
+const eventosEnCurso = new Set<string>();
 const CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
+/**
+ * ¿Hay que ignorar este evento? true si ya se procesó con éxito o ya lo está procesando otra
+ * petición. Si devuelve false, el evento queda RESERVADO para quien llama, que debe cerrar con
+ * `marcarEventoProcesado` (éxito) o `liberarEvento` (fallo, para que Stripe pueda reintentar).
+ */
 export async function isEventProcessed(eventId: string): Promise<boolean> {
   const now = Date.now();
-  // Periodic cleanup of old events
   if (processedEvents.size > 1000) {
     for (const [id, time] of processedEvents.entries()) {
       if (now - time > CLEANUP_INTERVAL_MS) {
@@ -37,14 +46,28 @@ export async function isEventProcessed(eventId: string): Promise<boolean> {
     }
   }
 
-  if (processedEvents.has(eventId)) {
+  if (processedEvents.has(eventId) || eventosEnCurso.has(eventId)) {
     return true;
   }
-  processedEvents.set(eventId, now);
+  // Se reserva ANTES de esperar a la base de datos: dos entregas simultáneas del mismo evento no
+  // pueden pasar las dos.
+  eventosEnCurso.add(eventId);
 
-  // Persistent check in DB
   const dbChecked = await dbIsWebhookEventProcessed(eventId);
+  if (dbChecked) {
+    eventosEnCurso.delete(eventId);
+    processedEvents.set(eventId, now);
+  }
   return dbChecked;
+}
+
+export function marcarEventoProcesado(eventId: string): void {
+  eventosEnCurso.delete(eventId);
+  processedEvents.set(eventId, Date.now());
+}
+
+export function liberarEvento(eventId: string): void {
+  eventosEnCurso.delete(eventId);
 }
 
 // La implementación vive en server/utils/email.ts para que no haya dos criterios distintos
@@ -832,9 +855,14 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     // Persist event in DB for permanent idempotency
     if (event.id) {
       await dbRecordWebhookEvent(event.id, event.type, event.data?.object);
+      marcarEventoProcesado(event.id);
     }
   } catch (procErr: any) {
-    console.error(`[Stripe Webhook] Error processing event ${event.type}:`, procErr);
+    console.error(`[Stripe Webhook] Error processing event ${event.type} (${event.id}):`, procErr);
+    // Stripe solo reintenta si no recibe un 2xx. Antes se respondía 200 siempre, así que un cobro
+    // cuyo registro fallaba (BD caída, columna que falta...) se perdía sin dejar rastro.
+    if (event.id) liberarEvento(event.id);
+    return res.status(500).json({ received: false, error: "processing_failed" });
   }
 
   res.json({ received: true });

@@ -8,6 +8,20 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+## ⏸️ Aplazado: billing de planes (auditoría B, 2026-10-06)
+
+* **Qué:** arreglos de `server/routes/billing.ts` que NO se han hecho porque los planes están desactivados (todos los usuarios nuevos entran en modo promo y no pueden cambiar de plan):
+  1. Los `UPDATE` a `registered_bands` / `users` (plan, créditos, estado) no comprueban `{ error }`: un cobro puede quedarse sin plan.
+  2. Idempotencia de planes: repetir un `confirm-success` o `customer.subscription.updated` resetea créditos o reactiva un plan cancelado.
+  3. Pasar a «Ensayo» no cancela la suscripción en Stripe; se puede abrir una segunda suscripción sin cancelar la anterior.
+  4. El plan se deriva de `subscription.metadata.planId` (no cambia si se cambia de precio en el portal) y las bajadas entre planes de pago no se programan.
+  5. Los créditos de IA solo se descuentan desde el cliente (`/billing/consume-credits`); las rutas de IA no los comprueban en el servidor. Decisión pendiente: ¿todas las rutas o solo las caras (stems, reels, análisis)?
+* **Por qué importa:** son dinero real en cuanto se reactiven los planes; hoy el riesgo es bajo porque nadie los usa.
+* **Hecho ya:** `plan` en `PUT /users/:id` solo para admin (PR 98); webhook fiable para el apoyo voluntario (500 si falla, reintento de Stripe no descartado).
+* **Estado:** pendiente, a retomar ANTES de reactivar los planes.
+
+---
+
 ## 🏛️ Planes Maestros de Arquitectura, IA y Negocio (Listos para Implementación)
 
 ### 1. Sistema Operativo de Management Digital 360° & Definición de Buyer Personas
