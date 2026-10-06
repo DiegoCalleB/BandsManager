@@ -440,7 +440,7 @@ export async function buildAvailableBandsForUser(
 
   return availableBands;
 }
-import { loginRateLimiter } from '../middleware/rateLimiter.js';
+import { loginRateLimiter, registroRateLimiter } from '../middleware/rateLimiter.js';
 import { verificarAccessTokenDeGoogle } from '../utils/googleVerify.js';
 import { esCuentaDeBrais } from '../utils/cuentaBrais.js';
 import {
@@ -503,7 +503,7 @@ import { generateUniqueSlugId, slugify } from '../utils/slug.js';
 const router = express.Router();
 
 // Register new band & user
-router.post('/auth/register', async (req, res) => {
+router.post('/auth/register', registroRateLimiter, async (req, res) => {
   const { bandName, email, password, plan, leaderName } = req.body;
 
   if (!bandName || !email || !password) {
@@ -1643,6 +1643,7 @@ router.post(
     matchingUsers.forEach((u: any) => {
       u.resetCode = code;
       u.resetCodeExpires = expiresAt;
+      u.resetIntentos = 0;
       if (!u.email || !u.email.includes('@')) {
         u.email = targetEmail;
       }
@@ -1672,9 +1673,7 @@ router.post(
       maskedEmail = `${maskedName}@${domain}`;
     }
 
-    console.log(
-      `[Password Reset] Enviando código de reseteo (${code}) a ${targetEmail}...`
-    );
+    console.log(`[Password Reset] Enviando código de reseteo a ${targetEmail}...`);
     const emailRes = await sendPasswordResetEmail(targetEmail, code);
 
     if (!emailRes.success) {
@@ -1687,9 +1686,7 @@ router.post(
       });
     }
 
-    console.log(
-      `[Password Reset] Código ${code} enviado exitosamente a ${targetEmail} (ID: ${emailRes.id})`
-    );
+    console.log(`[Password Reset] Código enviado a ${targetEmail} (ID: ${emailRes.id})`);
 
     return res.json({
       success: true,
@@ -1756,32 +1753,42 @@ router.post(
         (u.email && u.email.toLowerCase().trim() === cleanInput)
     );
 
-    // Fallback: if user typed username in step 1 and email in step 2 (or vice versa),
-    // match any user having this exact active code
+    // SEGURIDAD: ya NO hay «alternativa» que acepte solo el código sin saber a qué cuenta
+    // pertenece: con un código de 6 dígitos eso permitía probar códigos hasta acertar el de
+    // cualquier usuario con uno activo. Hay que dar el identificador exacto de la cuenta.
     if (matchingUsers.length === 0) {
-      matchingUsers = (state.users || []).filter(
-        (u: any) =>
-          u.resetCode &&
-          String(u.resetCode) === cleanCode &&
-          u.resetCodeExpires > Date.now()
-      );
+      return res.status(400).json({
+        error: 'El código de verificación es incorrecto o ha caducado. Solicita un nuevo código.',
+      });
     }
 
-    if (matchingUsers.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado.' });
-    }
-
-    const validUser = matchingUsers.find(
-      (u: any) =>
-        u.resetCode &&
-        String(u.resetCode) === cleanCode &&
-        u.resetCodeExpires > Date.now()
-    );
+    const codigoCoincide = (u: any) => {
+      if (!u.resetCode || !(u.resetCodeExpires > Date.now())) return false;
+      const a = Buffer.from(String(u.resetCode));
+      const b = Buffer.from(cleanCode);
+      return a.length === b.length && crypto.timingSafeEqual(a, b);
+    };
+    const validUser = matchingUsers.find(codigoCoincide);
 
     if (!validUser) {
-      return res.status(400).json({
-        error:
-          'El código de verificación es incorrecto o ha caducado. Solicita un nuevo código.',
+      // Máximo 5 intentos fallidos por código: después se invalida y hay que pedir otro. Sin
+      // esto, 10^6 combinaciones se podían probar en un rato.
+      let invalidado = false;
+      for (const u of matchingUsers) {
+        if (!u.resetCode) continue;
+        u.resetIntentos = (Number(u.resetIntentos) || 0) + 1;
+        if (u.resetIntentos >= 5) {
+          delete u.resetCode;
+          delete u.resetCodeExpires;
+          delete u.resetIntentos;
+          invalidado = true;
+        }
+      }
+      saveState(state);
+      return res.status(invalidado ? 429 : 400).json({
+        error: invalidado
+          ? 'Demasiados intentos con un código incorrecto. Solicita un código nuevo.'
+          : 'El código de verificación es incorrecto o ha caducado. Solicita un nuevo código.',
       });
     }
 
@@ -1794,6 +1801,7 @@ router.post(
       u.salt = salt;
       delete u.resetCode;
       delete u.resetCodeExpires;
+      delete u.resetIntentos;
       try {
         await dbUpsertUser(u);
       } catch (e) {
@@ -1815,7 +1823,14 @@ router.post(
 router.post('/auth/test-email', requireAuth, async (req, res) => {
   const { to } = req.body;
   const user = (req as any).user;
-  const targetEmail = to ? String(to).trim() : user.email;
+  // Solo se puede mandar la prueba al propio correo (el admin, a cualquiera): con un destino libre
+  // esto era un relé para enviar correo con la marca de la plataforma a quien se quisiera.
+  const pedido = to ? String(to).trim().toLowerCase() : '';
+  const propio = String(user?.email || '').trim().toLowerCase();
+  if (pedido && pedido !== propio && user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Solo puedes enviarte la prueba a tu propio correo.' });
+  }
+  const targetEmail = pedido || user.email;
 
   if (!targetEmail || !targetEmail.includes('@')) {
     return res

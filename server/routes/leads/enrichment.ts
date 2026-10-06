@@ -8,7 +8,7 @@ import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
 import { esUrlExternaSegura } from "../../utils/ssrfGuard.js";
-import { getTargetBandId } from "../../utils/bandAccess.js";
+import { getTargetBandId, mismaBanda } from "../../utils/bandAccess.js";
 import { scrapeVenueWithJina } from "../../services/jinaReaderService.js";
 import { detectVenueEventsAndFreeDates } from "../../services/venueEventsRadarService.js";
 import { scrapeInstagramVenueProfile } from "../../services/apifyInstagramService.js";
@@ -393,11 +393,15 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
     let lead: Lead | undefined;
     const state = loadState();
 
+    // `state.leads` es una caché global con leads de VARIAS bandas: filtrar siempre por la banda
+    // de la sesión. Antes, un id (o un nombre de sala) de otra banda presente en la caché se
+    // enriquecía y se devolvía entero.
+    const delaBanda = (l: any) => mismaBanda(l?.band_id, userBandId);
     if (leadId) {
-      lead = state.leads?.find((l: any) => l.id === leadId) || (await dbGetLeadById(leadId, userBandId));
+      lead = state.leads?.find((l: any) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
     } else if (name) {
       const cleanName = name.toLowerCase().trim();
-      lead = state.leads?.find((l: any) => l.nombre_sala?.toLowerCase().trim() === cleanName);
+      lead = state.leads?.find((l: any) => delaBanda(l) && l.nombre_sala?.toLowerCase().trim() === cleanName);
     }
 
     if (!lead) {
