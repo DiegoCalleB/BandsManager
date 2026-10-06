@@ -14,6 +14,10 @@ interface Props {
   onSeek: (segundos: number) => void;
   onReanalizar: () => void;
   onCorregir: (segmentos: SegmentoAcordeAnalizado[]) => void;
+  /** Resultado de alinear el cifrado escrito con el audio; null si no hay acordes en el texto. */
+  sincronizacion: { calidad: number; desplazamiento: number; usable: boolean } | null;
+  seguir: boolean;
+  onSeguir: (valor: boolean) => void;
   onClose: () => void;
 }
 
@@ -30,7 +34,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, onClose,
+  analisis, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -197,6 +201,28 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         </p>
       )}
 
+      {/* Estado de la fusión con el cifrado escrito */}
+      <div className="flex flex-wrap items-center gap-2 text-micro text-[var(--ink-2)]">
+        {sincronizacion === null ? (
+          <span>El cifrado no tiene acordes entre corchetes [Am] que sincronizar con el audio.</span>
+        ) : sincronizacion.usable ? (
+          <>
+            <span>
+              Cifrado sincronizado: {Math.round(sincronizacion.calidad * 100)} % de los acordes coincide
+              {sincronizacion.desplazamiento !== 0 ? ` · el cifrado está ${sincronizacion.desplazamiento} semitonos por debajo del audio` : ''}.
+            </span>
+            <label className="flex items-center gap-1 cursor-pointer text-[var(--ink)]">
+              <input type="checkbox" checked={seguir} onChange={(e) => onSeguir(e.target.checked)} /> Seguir en el cifrado
+            </label>
+          </>
+        ) : (
+          <span>
+            El cifrado se parece poco al audio ({Math.round(sincronizacion.calidad * 100)} % de coincidencia): no se sincroniza.
+            Corrige los acordes detectados o revisa el cifrado.
+          </span>
+        )}
+      </div>
+
       {confirmarReanalisis && (
         <div className="flex flex-wrap items-center gap-2 p-2 rounded-[var(--r-s)] bg-[var(--acc-soft)] text-[var(--ink)]">
           <span>Reanalizar sustituye todo y perderás {corregidos} {corregidos === 1 ? 'corrección' : 'correcciones'} manual{corregidos === 1 ? '' : 'es'}.</span>
@@ -232,7 +258,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {/* Carril de acordes */}
-      <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1">
+      <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
         {segmentos.map((seg, i) => (
           <button
             key={`${seg.t0}-${i}`}
