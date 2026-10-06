@@ -1,8 +1,25 @@
 # BandManager.io
 
-Plataforma para bandas y artistas independientes que quieren dejar de perder horas buscando salas: **booking CRM con agentes de IA**, repertorio y setlists, EPK público, fans, finanzas de gira y generación de Reels. Es también el núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica (Máster de Desarrollo con IA, The Big School).
+El sistema operativo de una banda independiente: **encontrar salas, cerrar fechas, ensayar, tocar y cobrar desde un solo sitio**, con agentes de IA que hacen el trabajo repetitivo y una persona que aprueba lo importante. Pensado para grupos, solistas, monologuistas y cualquiera que tenga que buscar escenarios donde actuar. Es también el núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica (Máster de Desarrollo con IA, The Big School).
 
 > Las reglas de desarrollo (seguridad, multi-tenancy, agentes, estilo) viven en **[AGENTS.md](./AGENTS.md)**. Este README es la puerta de entrada; no las duplica.
+
+## Para qué existe
+
+Una banda DIY hace, sin cobrar por ello, el trabajo de cinco profesionales: **booker** (buscar y convencer a las salas), **tour manager** (logística y rutas), **director musical** (ensayos y setlists), **contable** (quién cobra y quién paga) y **community manager** (redes y fans). La mayoría de la gente que toca pierde más horas en Excel, correos sin respuesta y WhatsApps que ensayando. BandManager.io convierte esas cinco figuras en una única plataforma asistida por IA.
+
+Tiene tres finalidades reales, en este orden:
+
+1. **Producto: quitarle trabajo de despacho a quien hace música.** El caso de uso central es el booking. La IA descubre salas, redacta un pitch breve y sin clichés con el tono de la banda, lee las respuestas y propone la réplica. La persona solo revisa y aprueba. Alrededor se construye lo que una banda necesita el día de la gira: calendario, repertorio, EPK, fans y finanzas.
+2. **Negocio: un SaaS B2C para el músico independiente.** Escalonado por planes (de gratis a 79 €/mes) y con un camino de ingresos extra, la comisión por acuerdos de concierto, ya especificado en [`docs/planes/`](./docs/planes/). Hoy los planes de pago están desactivados a propósito: toda banda nueva entra en modo *promo* mientras se valida el producto.
+3. **Académica: demostrar cómo se construye software serio con IA agéntica.** Es el TFM. El repositorio documenta cómo se trabaja con agentes de código (Claude Code, Gemini, Cursor, Open Code) con reglas compartidas, skills, hooks y tests que impiden que un agente rompa lo que no debe. La parte de IA *dentro* del producto y la parte de IA *que construye* el producto son dos caras del mismo experimento.
+
+### Qué lo diferencia
+
+- **Human-in-the-loop de verdad.** Un agente nunca envía un email por su cuenta. El código lo impide: sin aprobación humana, interruptor global `AGENT_EMAIL_MODE=send` y modo de despacho explícito, solo se crean borradores.
+- **Multi-tenancy estricta.** Ninguna banda ve datos de otra. La banda se resuelve siempre en el servidor desde la sesión, nunca desde lo que envía el cliente, y un test estático rompe el build si alguien reintroduce el patrón inseguro.
+- **Cada banda manda su propio correo.** Los pitches salen del buzón de la banda (Gmail OAuth2 o IMAP/SMTP), no de un dominio genérico de la plataforma: el correo llega firmado por la propia banda.
+- **Todo en uno, pero simple.** Mucha funcionalidad con una interfaz que no satura: la complejidad vive en el backend y la IA, y la pantalla sigue las reglas de [AGENTS.md §6](./AGENTS.md).
 
 ## Qué hace
 
@@ -86,6 +103,26 @@ Chatbot con herramientas (`server/services/chatTools.ts`) para consultar y actua
 - Asistente de configuración inicial de 12 pasos tras el primer login y tutoriales por módulo.
 - Idioma, tema, tipografía y notificaciones (toasts y push del navegador) configurables por usuario.
 
+### Práctica, directo y estudio personal
+
+- **Modo práctica** (`PracticeModePanel`): reproduce varias pistas de una canción a la vez, con transposición en tiempo real, bucle de compases, metrónomo y balance de volumen. **Modo Escenario** para tocar en directo siguiendo el setlist.
+- **Afinador y metrónomo** integrados, y un visor de **acordes** por canción.
+- **Audio por canción:** forma de onda, pistas por instrumento, ideas con comentarios, y ayudas para llevar los stems a un DAW (guía para Cubase incluida).
+
+### Landing pública, PWA y demo
+
+- **Landing en `/`** para quien no tiene sesión, con capturas y una banda de demo ficticia (`e2e/fixtures/demoBand.ts`) generadas por script, más una landing específica para el TFM (`/tfm`).
+- **PWA instalable** (manifest, iconos, service worker) y **notificaciones push** del navegador.
+- **Página pública de acuerdo** (`/deal/:token`), **EPK público** (`/epk`) y **captación de fans**: las únicas rutas que se abren sin cuenta, por eso llevan limitador de ritmo y tokens firmados.
+
+### Seguridad y fiabilidad (parte del producto, no un añadido)
+
+- **Aislamiento por banda** en capa de aplicación (`getTargetBandId`) con un test estático en CI. Las políticas RLS de Supabase hoy no restringen por banda, así que no son una red de seguridad (ver [AGENTS.md §2.1](./AGENTS.md)).
+- **Defensa contra SSRF** en todo `fetch` a URLs de usuario, **protección frente a inyección de prompt** en lo que el Scout scrapea y el Lector lee, y escape de HTML en los correos.
+- **Autenticación:** Google verificado en servidor, contraseñas de admin solo por variable de entorno, invitaciones de un solo uso y limitadores de ritmo en login, IA, render y donaciones.
+- **Observabilidad en dos capas:** los fallos de negocio esperables de los agentes van a un panel propio (`agent_execution_logs`) y el resto a Sentry (opcional).
+- **Migraciones SQL idempotentes** que se aplican solas al arrancar, y tests que vigilan que el servidor no escriba columnas que no existen.
+
 ### Planes
 
 | Plan | Precio | Créditos IA/mes | Para qué |
@@ -160,9 +197,52 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 - [docs/planes/](./docs/planes/): anti-fraude y acuerdos de gira, gestión de tokens IA, BandSplit.
 - [docs/knowledge_graph/](./docs/knowledge_graph/index.md): grafo de arquitectura navegable en Obsidian.
 
-## Estado
+## Hasta dónde hemos llegado
 
-Proyecto en desarrollo activo. Antes de abrirlo a usuarios reales hay riesgos legales y de seguridad documentados en [AGENTS.md §8](./AGENTS.md) (descarga de YouTube, credenciales de email sin cifrar, baja en emails comerciales, RGPD).
+*Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
+
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 283 endpoints, 47 tablas, 31 migraciones, más de 230 componentes React y más de 1.400 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual.
+
+### Construido y funcionando
+
+| Área | Estado |
+|---|---|
+| Booking CRM, descubrimiento y enriquecimiento de salas | Funcional, con importación y exportación. |
+| Agentes Scout, Redactor, Enviador y Lector | Funcionales, con cola de trabajos, tope diario y revisión humana. |
+| Acuerdos de concierto con enlace público y firma por nombre, cargo y marca de tiempo, con hash SHA-256 | Funcional. |
+| Repertorio, setlists, análisis de audio, estudio y stems | Funcional. |
+| Calendario, ensayos y Tour Manager | Funcional. |
+| EPK público, fans con consentimiento RGPD y QR | Funcional. |
+| Reels, redes y publicación programada | Funcional. |
+| Multi-banda, invitaciones, onboarding de 12 pasos y PWA | Funcional. |
+| Landing pública con banda de demo | Funcional, con salvedades (ver deuda). |
+| Seguridad: multi-tenancy, SSRF, inyección de prompt, auditorías de octubre | Hecho y cubierto por tests. |
+
+### Construido pero a medias
+
+- **Facturación con Stripe:** el flujo existe y tiene tests, pero está desactivado a propósito y hay arreglos pendientes (idempotencia, cancelación al cambiar de plan, descuento de créditos en servidor) que hay que cerrar **antes** de reactivarlo. Detalle en [BACKLOG.md](./BACKLOG.md).
+- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = Bakandeya»): limpiado en parte; queda una migración de datos antes de poder borrar el resto.
+- **Diseño:** el sistema Espectro está aplicado en bloque; faltan primitivas (`Tabs`, `IconButton`) y envolver en portal unos 35 modales que se recortan en móvil.
+
+### Solo especificado (aún no se ha escrito código)
+
+- **Custodia de pagos tipo escrow** y los distintos modelos de liquidación del bolo ([`plan_anti_fraude`](./docs/planes/plan_anti_fraude.md)).
+- **BandSplit / TourCount:** reparto de gastos de gira y de local, con OCR y voz ([`splitband`](./docs/planes/splitband.md)).
+- **Modelo económico de IA** con texto en uso razonable y cupos de estudio ([`plan_gestion_tokens_ia`](./docs/planes/plan_gestion_tokens_ia.md)).
+- **Crecimiento:** automatización de redes con ManyChat, directorio SEO de salas por ciudad y herramientas gancho públicas.
+- **Modo escenario sin conexión**, subida de vídeos de fans por QR y análisis de acordes a partir del audio real.
+
+### Riesgos antes de abrirlo a usuarios reales
+
+Hay dos bloqueantes y varios importantes documentados en [AGENTS.md §8](./AGENTS.md): descarga de YouTube sin verificar titularidad, contraseñas de aplicación de correo guardadas sin cifrar, ausencia de baja en los emails comerciales, base de legitimación RGPD sin documentar y falta de borrado/exportación de cuenta. El README no los relativiza: con usuarios de prueba el producto se puede usar hoy, con clientes de pago aún no.
+
+### Siguientes pasos razonables
+
+1. Cifrar `app_password` y exigir titularidad en las descargas de vídeo.
+2. Añadir el mecanismo de baja a los emails de los agentes.
+3. Probar con una banda real el flujo completo lead → aprobación → borrador → respuesta.
+4. Cerrar los arreglos de billing y reactivar los planes.
+5. Decidir la licencia (ver abajo) y publicar las páginas legales.
 
 ## Licencia
 
