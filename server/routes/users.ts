@@ -1,4 +1,5 @@
 import express from 'express';
+import { asignarInvitacion, invitacionPendiente, limpiarInvitacion, tokenInvitacionValido } from '../utils/invitacion.js';
 import crypto from 'crypto';
 import {
   ACTIVE_SESSIONS,
@@ -806,7 +807,7 @@ router.get('/users/registered-bands', requireAuth, handleGetRegisteredBands);
 // loginRateLimiter: es una ruta abierta que responde por email, o sea un comprobador de si un
 // correo está registrado. Con el límite, al menos no se puede repasar una lista entera.
 router.post('/auth/check-invitation', loginRateLimiter, async (req, res) => {
-  const { email } = req.body;
+  const { email, token } = req.body;
   if (!email) {
     return res
       .status(400)
@@ -825,10 +826,12 @@ router.post('/auth/check-invitation', loginRateLimiter, async (req, res) => {
   // Solo se contesta por invitaciones sin estrenar. Antes contestaba por cualquier usuario
   // registrado y devolvía su nombre, su usuario y las bandas a las que pertenece, que es más de
   // lo que hace falta para activar una cuenta y bastante de lo que hace falta para suplantarla.
-  if (!user || !user.activacion_pendiente) {
+  // Además del correo hace falta el token que solo viaja en el enlace de la invitación: saber el
+  // correo de alguien ya no basta para activar (ni para ver) su cuenta.
+  if (!user || !invitacionPendiente(user) || !tokenInvitacionValido(user, token)) {
     return res.status(404).json({
       error:
-        'No se ha encontrado ninguna invitación pendiente para este correo. Pide al director de tu banda que te agregue primero en el apartado de Miembros.',
+        'No se ha encontrado ninguna invitación válida para este correo. Usa el enlace de tu correo de invitación, o pide al director de tu banda que te la reenvíe desde el apartado de Miembros.',
     });
   }
 
@@ -860,7 +863,7 @@ router.post('/auth/check-invitation', loginRateLimiter, async (req, res) => {
 
 // Activate added member (set password & username)
 router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
-  const { email, username, name, password } = req.body;
+  const { email, username, name, password, token: tokenInvitacion } = req.body;
 
   if (!email || !username || !name || !password) {
     return res.status(400).json({
@@ -887,10 +890,17 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   // Solo se activa lo que está sin activar. Esta ruta sobrescribe la contraseña de la cuenta y
   // devuelve una sesión abierta, y no comprobaba nada más que el email: bastaba con saber el de
   // cualquiera (el del director de la banda, por ejemplo) para quedarse con su cuenta.
-  if (!user.activacion_pendiente) {
+  if (!invitacionPendiente(user)) {
     return res.status(409).json({
       error:
         'Esta cuenta ya está activada. Si has olvidado tu contraseña, usa la opción de recuperarla en la pantalla de acceso.',
+    });
+  }
+  // El token del enlace de invitación es lo que prueba que quien activa es la persona invitada.
+  if (!tokenInvitacionValido(user, tokenInvitacion)) {
+    return res.status(403).json({
+      error:
+        'El enlace de invitación no es válido o ha caducado. Pide al director de tu banda que te la reenvíe.',
     });
   }
 
@@ -913,7 +923,7 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   user.email = cleanEmail;
   user.passwordHash = hash;
   user.salt = salt;
-  delete user.activacion_pendiente;
+  limpiarInvitacion(user);
 
   // Generate session token
   const token = crypto.randomBytes(32).toString('hex');
@@ -3261,6 +3271,38 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
     );
 
     if (relationExists) {
+      // Invitación aún sin estrenar (o perdida): se genera un token nuevo y se reenvía el correo,
+      // que invalida el anterior.
+      if (invitacionPendiente(existingUser) && existingUser.email?.includes('@')) {
+        const tokenNuevo = asignarInvitacion(existingUser);
+        saveState(state);
+        try {
+          await dbUpsertUser(existingUser);
+        } catch (e) {
+          console.warn('No se pudo persistir la invitación reenviada:', e);
+        }
+        const bandInfo = (state.registeredBands || []).find(
+          (b: any) => b.band_id === targetBandId || b.id === targetBandId
+        );
+        sendMemberInvitationEmail({
+          toEmail: existingUser.email,
+          memberName: existingUser.name,
+          bandName: bandInfo?.nombre_banda || 'tu banda',
+          instrument: existingUser.instrument,
+          username: existingUser.username,
+          activationToken: tokenNuevo,
+        }).catch((err) =>
+          console.error('[Miembros] Error reenviando invitación:', err?.message || err)
+        );
+        return res.status(200).json({
+          id: existingUser.id,
+          username: existingUser.username,
+          name: existingUser.name,
+          role: 'member',
+          instrument: existingUser.instrument,
+          reinvitado: true,
+        });
+      }
       return res
         .status(400)
         .json({ error: 'Este usuario ya está registrado en esta banda.' });
@@ -3320,9 +3362,11 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
     // activar poniendo la suya en /auth/activate-member. Esta marca es lo que distingue "cuenta
     // recién invitada" de "cuenta ya en uso": sin ella, esa ruta valía para cambiarle la
     // contraseña a cualquiera con solo saber su email.
-    activacion_pendiente: true,
     createdAt: new Date().toISOString(),
   };
+  // La invitación pendiente (con su token de un solo uso) se guarda en ui_preferences para que
+  // sobreviva a un reinicio del servidor; el token en claro solo viaja en el correo.
+  const tokenInvitacion = asignarInvitacion(newUser);
 
   state.users.push(newUser);
 
@@ -3361,6 +3405,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
       bandName: bName,
       instrument: instrument ? instrument.trim() : undefined,
       username: cleanUsername,
+      activationToken: tokenInvitacion,
     }).catch((err) => {
       console.error(
         `[Miembros] Error enviando email de invitación a ${cleanEmail}:`,
@@ -3369,8 +3414,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
     });
   }
 
-  const { passwordHash, salt: _, ...safeUser } = newUser;
-  res.status(201).json(safeUser);
+  res.status(201).json(getSafeUsers([newUser])[0]);
 });
 
 // Update user (Leader or self)

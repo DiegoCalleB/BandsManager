@@ -450,3 +450,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 ### Guardado optimista en cliente (auditoría B)
 - Un handler que actualiza la UI al instante y luego hace `fetch` NO puede ignorar la respuesta (`.catch(log)`): usa `guardarOReverter(peticion, revertir)` (`src/utils/guardarConReversion.ts`) para dejar la pantalla como estaba si el servidor rechaza o no hay red. Nunca muestres «guardado con éxito» antes de la respuesta.
 - Un `useEffect` que copia props del servidor a estado local debe comparar CONTENIDO (JSON), no identidad: `fetchState()` devuelve objetos nuevos en cada refresco y pisaría lo que la persona está editando.
+
+### Invitaciones de miembros (auditoría B)
+- `/auth/check-invitation` y `/auth/activate-member` exigen el token de un solo uso del correo (`server/utils/invitacion.ts`); solo se guarda su hash en `ui_preferences._invitacion` (persiste en Supabase, sobrevive a reinicios; `getSafeUsers` lo oculta). Reenviar = `POST /users` con el mismo usuario/correo (genera token nuevo e invalida el anterior).
+- La pantalla activa en producción es `SimplePromoLoginModal` (sin paso de activación); el enlace `?invitacion=…&email=…` lo entiende el `LoginModal` completo. El invitado que entre por la pantalla simple usa «recuperar contraseña» (código por correo).

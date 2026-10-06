@@ -780,10 +780,16 @@ export async function sendMemberInvitationEmail(optionsRaw: {
   bandName: string;
   instrument?: string;
   username: string;
+  /** Token de un solo uso del enlace de activación (hex; ver server/utils/invitacion.ts). */
+  activationToken?: string;
 }): Promise<{ success: boolean; id?: string; error?: string }> {
   // `options` = copia con los textos escapados (para el HTML); `optionsRaw` = valores reales (destinatario, asunto).
   const options = escaparTextos(optionsRaw);
   const appUrl = getProductionAppUrl(process.env.APP_URL);
+  const tokenSeguro = /^[a-f0-9]{16,128}$/.test(optionsRaw.activationToken || "") ? optionsRaw.activationToken : "";
+  const enlaceActivacion = tokenSeguro
+    ? `${appUrl}/?invitacion=${tokenSeguro}&email=${encodeURIComponent(optionsRaw.toEmail)}`
+    : appUrl;
   const inst = options.instrument ? options.instrument.trim() : "Músico";
 
   const html = `<!DOCTYPE html>
@@ -823,7 +829,7 @@ export async function sendMemberInvitationEmail(optionsRaw: {
               </p>
 
               <div style="text-align:center; margin:28px 0 20px 0;">
-                <a href="${appUrl}" style="display:inline-block; background:linear-gradient(135deg, #f2ca50 0%, #eab308 100%); color:#09090b; font-weight:900; font-size:15px; text-decoration:none; padding:15px 36px; border-radius:12px; box-shadow:0 10px 25px rgba(242, 202, 80, 0.35);">
+                <a href="${enlaceActivacion}" style="display:inline-block; background:linear-gradient(135deg, #f2ca50 0%, #eab308 100%); color:#09090b; font-weight:900; font-size:15px; text-decoration:none; padding:15px 36px; border-radius:12px; box-shadow:0 10px 25px rgba(242, 202, 80, 0.35);">
                   Activar Mi Cuenta Musical →
                 </a>
               </div>
