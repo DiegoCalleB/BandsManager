@@ -113,7 +113,7 @@
   "lint-staged": {
     "**/*.{ts,tsx}": "eslint --fix",
     "src/**/*.{ts,tsx,css}": "node scripts/design-audit.js",
-    "{AGENTS,CLAUDE,TOOL_COMPATIBILITY,AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
+    "{AGENTS,CLAUDE,docs/referencia/TOOL_COMPATIBILITY,docs/referencia/AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
     "skills/**/*.md": "node scripts/verify-docs-refs.cjs"
   }
 }

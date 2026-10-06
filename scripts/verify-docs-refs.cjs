@@ -13,8 +13,8 @@ const ROOT = path.resolve(__dirname, "..");
 const DOCS = [
   "AGENTS.md",
   "CLAUDE.md",
-  "TOOL_COMPATIBILITY.md",
-  "AI_STUDIO_SUPABASE_GUIDE.md",
+  "docs/referencia/TOOL_COMPATIBILITY.md",
+  "docs/referencia/AI_STUDIO_SUPABASE_GUIDE.md",
   "skills/README.md",
   "skills/agentic-harness/SKILL.md",
   "skills/security-multitenancy/SKILL.md",

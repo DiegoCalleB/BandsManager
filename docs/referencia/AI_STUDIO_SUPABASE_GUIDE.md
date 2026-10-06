@@ -34,7 +34,7 @@ SUPABASE_STORAGE_BUCKET="band-media"
 ## 2. Esquema Relacional de Tablas (DDL)
 
 **Referencia no exhaustiva** — para el esquema completo y actual, la fuente real es
-[`supabase_schema.sql`](./supabase_schema.sql) (en la raíz del repo). La tabla de abajo cubre las
+[`supabase_schema.sql`](../../supabase_schema.sql) (en la raíz del repo). La tabla de abajo cubre las
 entidades principales del dominio para orientarse rápido; `supabase_schema.sql` tiene más tablas
 de subsistemas específicos (ledger de IA, campañas de booking, aprendizaje de pitches, etc.) que
 no se listan aquí para no duplicar y desincronizar dos copias del mismo esquema.
@@ -110,4 +110,4 @@ Esta sección tenía antes un "Prompt Máster" para pedirle a AI Studio que migr
 
 ## 5. DDL Completo (Esquema SQL)
 
-Para el DDL completo y actualizado, usa directamente [`supabase_schema.sql`](./supabase_schema.sql) — no se duplica aquí. La sección 1 de este documento (variables de entorno) y la 3 (patrones de lectura/JSONB) siguen siendo la referencia rápida para AI Studio; el esquema en sí tiene una sola fuente.
+Para el DDL completo y actualizado, usa directamente [`supabase_schema.sql`](../../supabase_schema.sql) — no se duplica aquí. La sección 1 de este documento (variables de entorno) y la 3 (patrones de lectura/JSONB) siguen siendo la referencia rápida para AI Studio; el esquema en sí tiene una sola fuente.

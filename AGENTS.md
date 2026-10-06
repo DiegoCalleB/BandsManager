@@ -386,6 +386,10 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    .gemini/          Skills nativas para Google AI Studio y Gemini (`.gemini/skills/`)
    docs/
      knowledge_graph/ Vault de Obsidian nativo (.obsidian/app.json y graph.json) sincronizable vía `npm run graph:sync`
+     planes/          Especificaciones de producto aún no implementadas del todo (anti-fraude/acuerdos, tokens IA, BandSplit) — enlazadas desde BACKLOG.md
+     referencia/      Documentación técnica de apoyo (arquitectura de audio/stems, DESIGN_SYSTEM, manual de negociación del Redactor, guías para AI Studio y multi-herramienta)
+     design/          Notas de diseño puntuales (p. ej. comisión de Stripe Connect en bolos)
+   README.md          Presentación del proyecto y quickstart (reglas operativas: este archivo)
    CLAUDE.md          Pointer corto a este archivo — Claude Code lo lee al arrancar
    ```
    Todas las carpetas de skills (`skills/`, `.claude/skills/`, `.opencode/skills/`, `.gemini/skills/`) comparten la misma definición estandarizada y están 100% sincronizadas para operar con cualquier agente (Claude Code, Open Code, Cursor, Gemini). Si editas un `SKILL.md`, cópialo a todas las ubicaciones en el mismo commit.
