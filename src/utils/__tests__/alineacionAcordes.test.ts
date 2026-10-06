@@ -155,3 +155,20 @@ describe('acordeActivoPorTiempo con tiempos repetidos', () => {
     expect(acordeActivoPorTiempo([0, 0, 0, 0, 2.5, 5], 3)).toBe(4);
   });
 });
+
+describe('tanda de acordes iguales frente a un solo tramo del audio', () => {
+  it('el tramo se ancla al primero de la tanda y los repetidos usan el inicio de su frase', async () => {
+    const { tiemposDeAcordes } = await import('../alineacionAcordes');
+    const cifrado = '[Em] uno\n[Em] dos\n[Em] tres\n[A] cuatro';
+    const segs = [
+      { t0: 10, t1: 16, acorde: 'Em', confianza: 0.8 },
+      { t0: 16, t1: 20, acorde: 'A', confianza: 0.8 },
+    ];
+    const al = alinearCifradoConAudio(cifrado, segs)!;
+    expect(al.pares[0].segmento).toBe(0);
+    expect(al.pares[1].segmento).not.toBe(0);
+    const t = tiemposDeAcordes(al, segs, [0, 12, 14, 16].map((x, i) => (i === 0 ? 10 : x)));
+    expect(t.slice(0, 3)).toEqual([10, 12, 14]);
+    expect(t[3]).toBe(16);
+  });
+});
