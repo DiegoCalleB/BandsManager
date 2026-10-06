@@ -30,7 +30,7 @@ async function comprobarInvariantes(page: Page, html: string, etiqueta: string) 
   await visor.setContent(html.replace(/<script>[\s\S]*<\/script>/, ''), { waitUntil: 'load' });
   await visor.evaluate(() => document.fonts.ready);
   const r = await visor.evaluate(() => {
-    const A4_SHEET_PX = (272 * 96) / 25.4; // alto útil de .sheet-page (ver PAGE_SHEET_HEIGHT_MM)
+    const A4_SHEET_PX = (278 * 96) / 25.4; // alto útil de .sheet-page (ver PAGE_SHEET_HEIGHT_MM)
     const hojas = [...document.querySelectorAll<HTMLElement>('.sheet-page')];
     const titulos = [...document.querySelectorAll('.song-title')].map((e) => e.textContent ?? '');
     const colgando: string[] = [];

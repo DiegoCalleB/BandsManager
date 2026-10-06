@@ -59,7 +59,7 @@ const ptToPx = (pt: number) => (pt * 96) / 72;
 // captura de pantalla); ahora los de una hoja maquetada a mano. Todo lo que depende de ellos
 // (ancho de fila, alto útil, min-height de la hoja) sale de estas dos constantes.
 const PAGE_MARGIN_X_MM = 14;
-const PAGE_MARGIN_Y_MM = 12;
+const PAGE_MARGIN_Y_MM = 9;
 // 1mm de colchón de seguridad contra el redondeo del navegador (A4 = 210x297mm).
 const PAGE_SHEET_HEIGHT_MM = 297 - 2 * PAGE_MARGIN_Y_MM - 1;
 // Ancho de la hoja A4 disponible para contenido: 210mm - 2x margen horizontal del @page - el
@@ -972,18 +972,19 @@ function PdfExportModalBody({
  justify-content: space-between;
  align-items: center;
  border-bottom: 1px solid #000;
- padding-bottom: 8px;
- margin-bottom: 10px;
+ padding-bottom: 3px;
+ margin-bottom: 5px;
+ gap: 12px;
  }
  /* Cabecera centrada y COMPACTA: el logo a un lado del nombre del grupo y del repertorio
  (como una sola pieza centrada) y la copia del músico en una línea fina debajo. Apilar logo,
  nombre, repertorio y músico ocupaba ~115px, un 11 % de la hoja. */
  .page-header.is-centered {
- flex-direction: column;
+ flex-flow: row wrap;
  justify-content: center;
- gap: 3px;
- padding-bottom: 6px;
- margin-bottom: 8px;
+ gap: 2px 14px;
+ padding-bottom: 3px;
+ margin-bottom: 5px;
  text-align: center;
  }
  .is-centered .header-left {
@@ -996,18 +997,11 @@ function PdfExportModalBody({
  text-align: center;
  }
  .is-centered .band-logo-img {
- height: 32px;
- max-width: 100px;
+ height: 24px;
+ max-width: 80px;
  }
  .is-centered .header-right {
  text-align: center;
- }
- .is-centered .member-stage-tag {
- display: flex;
- align-items: baseline;
- justify-content: center;
- gap: 8px;
- padding: 0;
  }
  .is-centered .tag-name {
  font-size: 9pt;
@@ -1020,29 +1014,33 @@ function PdfExportModalBody({
  /* Alto fijo (height), NO max-height: un logo remoto aún sin cargar al MEDIR la hoja contaba como
  0px de alto y luego, ya cargado, empujaba la última canción a una hoja extra. */
  .band-logo-img {
- height: 30px;
+ height: 24px;
  width: auto;
- max-width: 85px;
+ max-width: 80px;
  object-fit: contain;
  filter: grayscale(100%) contrast(150%);
  }
  .band-text-block {
  display: flex;
- flex-direction: column;
+ flex-direction: row;
+ align-items: baseline;
+ gap: 10px;
+ min-width: 0;
  }
  .band-heading {
  font-family:'Anton','Oswald', sans-serif;
- font-size: 16pt;
- line-height: 1;
+ font-size: 14pt;
+ line-height: 1.1;
  margin: 0;
  letter-spacing: 0.5px;
+ white-space: nowrap;
  color: #000;
  }
  /* Solo el nombre del repertorio, en una línea simple — sin badge ni duración/nº de
  temas, que era ruido que no aportaba nada al músico leyendo desde el escenario. */
  .setlist-meta {
  font-family:'Oswald', sans-serif;
- font-size: 7.5pt;
+ font-size: 9pt;
  font-weight: 700;
  color: #333;
  margin-top: 0px;
@@ -1056,22 +1054,24 @@ function PdfExportModalBody({
  text-align: right;
  }
  .member-stage-tag {
- padding: 1px 6px;
+ display: flex;
+ align-items: baseline;
+ justify-content: flex-end;
+ gap: 6px;
+ padding: 0;
  background: #fff;
- border-radius: 3px;
- text-align: right;
  white-space: nowrap;
  }
  .tag-title {
  font-family:'Oswald', sans-serif;
- font-size: 6pt;
+ font-size: 5.5pt;
  font-weight: 700;
  color: #555;
- letter-spacing: 1px;
+ letter-spacing: 0.8px;
  }
  .tag-name {
  font-family:'Anton','Oswald', sans-serif;
- font-size: 11pt;
+ font-size: 10pt;
  line-height: 1.1;
  color: #000;
  margin-top: 0;
@@ -1336,10 +1336,11 @@ function PdfExportModalBody({
  justify-content: space-between;
  align-items: center;
  border-top: 1px solid #000;
- padding-top: 1px;
- margin-top: 2px;
+ padding-top: 0;
+ margin-top: 1px;
+ line-height: 1.1;
  font-family: monospace;
- font-size: 6.5pt;
+ font-size: 6pt;
  color: #444;
  }
  .footer-left {
@@ -1416,13 +1417,13 @@ function PdfExportModalBody({
  padding-bottom: 2px;
  }
  .page-header.is-centered .band-heading {
- font-size: 17pt;
+ font-size: 15pt;
  letter-spacing: 1px;
  }
  .page-header.is-centered .setlist-meta {
- font-size: 8pt;
+ font-size: 9pt;
  letter-spacing: 0.5px;
- margin-top: 1px;
+ margin-top: 0;
  }
  .is-centered .interlude-item {
  padding-left: 0;
