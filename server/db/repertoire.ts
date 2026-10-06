@@ -179,6 +179,38 @@ export async function dbSetSongEnergiaManual(
   return mapSongRecord(data);
 }
 
+/** Guarda (o sustituye) el análisis de acordes de una canción de la banda. */
+export async function dbGuardarAnalisisAcordes(
+  songId: string,
+  bandId: string,
+  analisis: any,
+) {
+  const sb = getSupabase();
+  const rawClean = (bandId || "").trim();
+  const noPrefix = rawClean.replace(/^(band|reg)-/, "");
+  const candidateIds = Array.from(
+    new Set([rawClean, noPrefix, `band-${noPrefix}`, `reg-${noPrefix}`]),
+  ).filter(Boolean);
+
+  const { data, error } = await sb
+    .from("songs")
+    .update({ analisis_acordes: analisis })
+    .eq("id", songId)
+    .in("band_id", candidateIds)
+    .select()
+    .maybeSingle();
+  if (error) {
+    const faltaColumna = /analisis_acordes/.test(error.message || "");
+    throw new Error(
+      faltaColumna
+        ? "Falta ejecutar la migración 20261010_analisis_acordes.sql en Supabase."
+        : `Supabase Error (guardar análisis de acordes): ${error.message}`,
+    );
+  }
+  if (!data) throw new Error(`No se encontró la canción ${songId} para esta banda`);
+  return mapSongRecord(data);
+}
+
 /**
  * Normaliza las energías (1-20) de todas las canciones de una banda
  * usando combinación híbrida de BPM detectado + volumen promedio crudo.
@@ -544,6 +576,10 @@ export function mapSongRecord(s: any) {
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
     guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
+    // Solo si existe: la columna se crea con una migración y antes de ella no debe aparecer.
+    ...((s.analisis_acordes || s.analisisAcordes)
+      ? { analisisAcordes: s.analisis_acordes || s.analisisAcordes, analisis_acordes: s.analisis_acordes || s.analisisAcordes }
+      : {}),
     estructuraDocumentoUrl:
       s.estructura_documento_url || s.estructuraDocumentoUrl || "",
     estructura_documento_url:
@@ -717,6 +753,24 @@ export async function dbUpsertSong(
   }
 
   const nowIso = new Date().toISOString();
+  // El guardado de una canción es DELETE + INSERT: una columna que no esté en el payload se
+  // pierde. Si el cliente no trae el análisis de acordes, se rescata el que ya tenía la fila.
+  // La lectura es aparte y tolerante: si la migración aún no se ha ejecutado la columna no
+  // existe, la consulta falla y simplemente no hay nada que preservar.
+  let analisisAcordesFinal: any = song.analisisAcordes ?? song.analisis_acordes;
+  if (analisisAcordesFinal === undefined && existing) {
+    try {
+      const { data: previo, error: previoErr } = await sb
+        .from("songs")
+        .select("analisis_acordes")
+        .eq("id", existing.id)
+        .maybeSingle();
+      if (!previoErr && previo?.analisis_acordes) analisisAcordesFinal = previo.analisis_acordes;
+    } catch {
+      /* sin columna todavía: nada que preservar */
+    }
+  }
+
   const payload: any = {
     id:
       finalSongId ||
@@ -801,6 +855,9 @@ export async function dbUpsertSong(
       (song.guiaSustituto ?? song.guia_sustituto) !== undefined
         ? song.guiaSustituto || song.guia_sustituto
         : (existing?.guia_sustituto ?? {}),
+    // Solo se envía si hay valor (del payload o rescatado): sin migración ejecutada no hay
+    // valor y la columna no aparece, así que un guardado cualquiera no falla.
+    ...(analisisAcordesFinal !== undefined ? { analisis_acordes: analisisAcordesFinal } : {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
       song.enlace_acordes,

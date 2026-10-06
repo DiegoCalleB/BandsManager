@@ -2,11 +2,19 @@ import express from "express";
 import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
+
+// Más de ~3 minutos de audio no mejora la transcripción y sí el coste, el tamaño y el timeout.
+const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
+import { detectarAcordesDesdePcm } from "../utils/chordDetection.js";
+import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
+import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
+import { elegirFuenteAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
+  dbGuardarAnalisisAcordes,
   dbUpsertSong,
   dbDeleteSong,
   dbGetSetlists,
@@ -181,6 +189,78 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
   }
 });
 
+// POST analizar los acordes del audio de una canción (Chordify propio): detecta acordes con
+// tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
+// Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
+const analisisAcordesEnCurso = new Set<string>();
+router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userBandId = getTargetBandId(req);
+  const clave = `${userBandId}:${id}`;
+  if (analisisAcordesEnCurso.has(clave)) {
+    return res.status(409).json({ error: "Ya se están analizando los acordes de esta canción." });
+  }
+  analisisAcordesEnCurso.add(clave);
+  try {
+    // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
+    // un fichero ajeno a la banda ni pasar una ruta arbitraria.
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+
+    // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
+    const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
+    if (corregidos > 0 && req.body?.sobrescribir !== true) {
+      return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
+    }
+
+    const fuente = elegirFuenteAudio(song);
+    if (!fuente) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
+
+    const pcm = await extraerPcmMono(fuente.url, { timeoutMs: 90_000, maxDuracionSeg: 360 });
+    if (!pcm) return res.status(422).json({ error: "No se pudo leer el audio de la canción." });
+
+    const tonalidad = normalizarTonalidad(song.tonalidad);
+    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad });
+    if (segmentos.length === 0 || segmentos.every((s) => s.acorde === "N")) {
+      return res.status(422).json({ error: "No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?)." });
+    }
+
+    const analisis = construirAnalisis({ segmentos, fuente: fuente.fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
+    const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+    res.json({ success: true, analisis, song: guardada });
+  } catch (err: any) {
+    console.error("Error analizando acordes del audio:", err);
+    res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
+  } finally {
+    analisisAcordesEnCurso.delete(clave);
+  }
+});
+
+// PATCH corrección manual de los acordes detectados. El cliente envía la lista completa de
+// tramos; el servidor la valida (tiempos, solapes, acordes reconocibles) y conserva el resto
+// del análisis (fuente, versión, tonalidad). Los tramos corregidos llevan editado: true.
+router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userBandId = getTargetBandId(req);
+    const validacion = validarSegmentos(req.body?.segmentos);
+    if ("error" in validacion) return res.status(400).json({ error: validacion.error });
+
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+    if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
+
+    const analisis = { ...song.analisisAcordes, segmentos: (validacion as { segmentos: any[] }).segmentos, editadoEn: new Date().toISOString() };
+    const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
+    res.json({ success: true, analisis, song: guardada });
+  } catch (err: any) {
+    console.error("Error guardando la corrección de acordes:", err);
+    res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
+  }
+});
+
 // PATCH fijar a mano la energía (1-20) de una canción. El frontend expone una escala 1-10 (más
 // fácil de puntuar), duplicada a 1-20 antes de llegar aquí. Marca energia_manual: true para que
 // el recalibrado automático desde audio (recalibrarEnergiasDelRepertorio) deje de tocar esta
@@ -351,7 +431,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
         // "tienes el audio adjunto" aunque no se le mande nada, invitándole a inventar.
         // allowSyntheticFallback:false evita que nos devuelva un tono de prueba.
         const snippetPath = audioUrl
-          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false })
+          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES })
           : null;
         const tieneAudioReal = Boolean(snippetPath);
 
@@ -413,12 +493,14 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
           config: {
             responseMimeType: "application/json"
           },
-          bandId: getTargetBandId(req)
+          bandId: getTargetBandId(req),
+          // Con audio adjunto, 60 s se quedaba corto y caía en silencio al relleno.
+          timeoutMs: tieneAudioReal ? TIMEOUT_IA_LARGO_MS : undefined
         });
 
         const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const parsed = safeParseJson(responseText);
-        if (parsed && parsed.cifradoTexto) {
+        if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
           generatedChords = parsed.cifradoTexto;
           generatedGuide = parsed.guiaSustituto;
           esAproximado = Boolean(parsed.esAproximado);
@@ -429,55 +511,22 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
       }
     }
 
-    // High quality harmonic engine fallback if Gemini is offline or not configured
+    // Sin respuesta útil de la IA NO se inventa nada. Antes se rellenaba con una plantilla I-IV-V
+    // y una letra de relleno que se guardaba como si fuera el cifrado real y pisaba el que el
+    // usuario ya tuviera. Mejor un error claro que un dato falso con aspecto de verdadero.
     if (!generatedChords) {
-      const key = tonalidad || 'Mim';
-      const cleanKey = key.replace(/[^a-zA-Z#b]/g, '').trim() || 'Mim';
-      const isMinor = cleanKey.toLowerCase().includes('m') || cleanKey.toLowerCase().includes('min');
-      
-      const rootChord = cleanKey;
-      const subChord = isMinor ? 'Do' : 'Fa';
-      const domChord = isMinor ? 'Re' : 'Sol';
-      const relChord = isMinor ? 'Sol' : 'Lam';
-
-      generatedChords = `[Intro]
-[${rootChord}]   [${subChord}]   [${domChord}]   [${rootChord}]
-[${rootChord}]   [${subChord}]   [${domChord}]   [${rootChord}]
-
-[Verso 1]
-[${rootChord}] Arrancamos la noche en la [${subChord}] ciudad
-[${domChord}] Buscando el sonido de la [${rootChord}] libertad
-[${rootChord}] Guitarras encendidas y el [${subChord}] viento a favor
-[${domChord}] Marcando el ritmo con el [${rootChord}] corazón.
-
-[Estribillo]
-[${relChord}] Siente la fuerza del [${domChord}] directo en las venas
-[${rootChord}] Rompiendo juntos todas las [${subChord}] cadenas
-[${relChord}] Noche de escenario, [${domChord}] fuego y pasión
-[${rootChord}] Cantando juntos la [${subChord}] misma canción.
-
-[Verso 2]
-[${rootChord}] El público despierta al [${subChord}] compás
-[${domChord}] No miramos el reloj ni [${rootChord}] marcha atrás
-[${rootChord}] Cada nota suena con [${subChord}] intensidad
-[${domChord}] Esta es nuestra única [${rootChord}] verdad.
-
-[Solo]
-[${subChord}]   [${domChord}]   [${rootChord}]   [${rootChord}]
-[${subChord}]   [${domChord}]   [${rootChord}]   [${rootChord}]
-
-[Outro]
-[${subChord}]   [${domChord}]   [${rootChord}]
-Final con parada seca al compás 4 en [${rootChord}].`;
-
-      generatedGuide = {
-        estructura: `Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo (${rootChord}) -> Outro`,
-        progresionClave: `Verso: ${rootChord} - ${subChord} - ${domChord} - ${rootChord} | Estribillo: ${relChord} - ${domChord} - ${rootChord} - ${subChord}`,
-        cortesYClaves: `Corte seco al final del Solo en el compás 8. Bajar dinámica en Verso 2.`,
-        capoTraste: afinacion || 'Sin Capo / Afinación Estándar E',
-        instrumentosClave: `Batería marca entrada en compás 4 de la Intro. Arreglos de vientos/lead en estribillo.`
-      };
+      return res.status(503).json({
+        success: false,
+        chordsSource: "sin_resultado",
+        error: aiClient
+          ? "La IA no pudo transcribir esta canción ahora mismo. No se ha modificado nada: inténtalo de nuevo en unos minutos."
+          : "La IA no está configurada en el servidor, así que no se pueden generar acordes."
+      });
     }
+
+    // El origen viaja DENTRO de guiaSustituto (ya es JSON en BD) para que al reabrir la canción
+    // se sepa si el cifrado es transcripción real, propuesta de la IA o aproximado de memoria.
+    generatedGuide = { ...(generatedGuide && typeof generatedGuide === "object" ? generatedGuide : {}), origenCifrado: chordsSource, cifradoAproximado: esAproximado };
 
     // Persistimos el cifrado en la canción. Las canciones nuevas se crean directamente en
     // Supabase (POST /songs no pasa por loadState), así que buscarlas solo en el estado en

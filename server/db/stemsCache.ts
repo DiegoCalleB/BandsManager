@@ -216,6 +216,36 @@ export async function acquireStemsSeparationLock(
       }
     }
 
+    // 2b. Fila fallida (o 'completed' sin stems): hay que poder reintentar. Antes caía al INSERT,
+    // chocaba con la fila vieja (23505) y el usuario veía el error antiguo para siempre.
+    // El UPDATE es condicional al estado leído, así que solo una instancia gana la reclamación.
+    if (!selectErr && existing && (existing.status === 'failed' || existing.status === 'completed')) {
+      const { data: reclamadas, error: reclaimErr } = await sb
+        .from("song_stems_cache")
+        .update({
+          status: 'pending',
+          locked_at: nowIso,
+          locked_by: instanceId,
+          degraded_reason: null,
+          stems_map: {}
+        })
+        .eq("band_id", bandId)
+        .eq("song_hash", songHash)
+        .eq("engine", engine)
+        .eq("status", existing.status)
+        .select("song_hash");
+
+      if (!reclaimErr && Array.isArray(reclamadas) && reclamadas.length > 0) {
+        console.log(`[Stems Lock] 🔁 Reintento sobre trabajo ${existing.status} para ${cacheKey}`);
+        stemsMemoryCache.set(cacheKey, {
+          bandId, songHash, engine, status: 'pending',
+          locked_at: nowIso, locked_by: instanceId, stemsMap: {}, createdAt: nowIso
+        } as any);
+        return { acquired: true };
+      }
+      return { acquired: false, reason: 'in_progress_by_other_instance' };
+    }
+
     // 3. Intentar INSERT en estado pending
     const { error: insertErr } = await sb
       .from("song_stems_cache")
@@ -399,8 +429,13 @@ export async function getStemsJobStatus(
     return { state: 'completed', record: completed };
   }
 
+  const mensajeCaducado = 'La separación se interrumpió (el servidor se reinició o tardó demasiado). Puedes reintentarla.';
   const memExisting = stemsMemoryCache.get(cacheKey) as any;
   if (memExisting?.status === 'pending') {
+    const lockedAt = memExisting.locked_at ? new Date(memExisting.locked_at).getTime() : 0;
+    if (lockedAt && Date.now() - lockedAt > LOCK_TIMEOUT_MS) {
+      return { state: 'failed', errorMessage: mensajeCaducado };
+    }
     return { state: 'pending' };
   }
 
@@ -408,7 +443,7 @@ export async function getStemsJobStatus(
     const sb = getSupabase();
     const { data, error } = await sb
       .from("song_stems_cache")
-      .select("status, degraded_reason")
+      .select("status, degraded_reason, locked_at")
       .eq("band_id", bandId)
       .eq("song_hash", songHash)
       .eq("engine", engine)
@@ -419,6 +454,10 @@ export async function getStemsJobStatus(
         return { state: 'failed', errorMessage: data.degraded_reason || 'La separación de stems falló sin detalle adicional.' };
       }
       if (data.status === 'pending') {
+        const lockedAt = data.locked_at ? new Date(data.locked_at).getTime() : 0;
+        if (lockedAt && Date.now() - lockedAt > LOCK_TIMEOUT_MS) {
+          return { state: 'failed', errorMessage: mensajeCaducado };
+        }
         return { state: 'pending' };
       }
     }

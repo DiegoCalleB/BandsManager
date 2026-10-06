@@ -1169,12 +1169,35 @@ export interface SongAudioIdea {
   stemProcessedAt?: string;
 }
 
+/** Un tramo de la canción con su acorde detectado en el audio. */
+export interface SegmentoAcordeAnalizado {
+  t0: number; // segundos
+  t1: number;
+  acorde: string; // notación internacional («Am», «G7») o «N» si no hay acorde claro
+  confianza: number; // 0-1
+  editado?: boolean; // corregido a mano: manda sobre el análisis
+}
+
+/** Resultado de analizar los acordes del audio (columna songs.analisis_acordes). */
+export interface AnalisisAcordes {
+  version: number; // versión del algoritmo; sirve para saber qué canciones reanalizar
+  analizadoEn: string; // ISO
+  editadoEn?: string; // ISO de la última corrección manual
+  fuente: 'mezcla' | 'instrumental'; // sobre qué audio se calculó
+  duracionSegundos: number;
+  tonalidad?: string | null; // la que se usó como pista, si la había
+  segmentos: SegmentoAcordeAnalizado[];
+}
+
 export interface SongSubstituteGuide {
   estructura?: string;
   progresionClave?: string;
   cortesYClaves?: string;
   capoTraste?: string;
   instrumentosClave?: string;
+  /** De dónde sale el cifrado de la canción: transcripción del audio, propuesta de la IA o escrito a mano. */
+  origenCifrado?: 'audio_real' | 'ia_sin_audio';
+  cifradoAproximado?: boolean;
 }
 
 export interface MemberSongNote {
@@ -1229,6 +1252,7 @@ export interface Song {
   audioUrl?: string; // Alias for audioPrincipalUrl for legacy/sample playback
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
+  analisisAcordes?: AnalisisAcordes; // Acordes con tiempos detectados del audio (Chordify propio)
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
   estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
   estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
