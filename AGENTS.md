@@ -442,3 +442,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 - El `state` de Gmail OAuth lleva nonce firmado + cookie HttpOnly del navegador y se consume una sola vez (`validarYConsumirEstadoOAuth`). Al desconectar se revoca el token en Google y se invalida `accessTokenCache` (`invalidarAccessTokenGmail`). No sincronizar `registered_bands.email` si ya es de otra banda.
 - JSON: 1 MB para anónimos, 50 MB solo con sesión válida (`server/middleware/limiteCuerpo.ts`). Una ruta pública que necesite más debe justificarlo y validar su propio límite.
 - Cookie de sesión `httpOnly:false` es deliberado hasta migrar el cliente (BACKLOG.md); lleva `Secure` en producción.
+
+### Enviador y cola de agentes (auditoría B)
+- Un borrador de Gmail que desaparece (404) NO equivale a «enviado»: se confirma con `buscarMensajeEnviadoA` (Enviados, 30 días). Si no hay envío, el lead no pasa a `contactado`.
+- `agent_jobs_queue`: los trabajos `processing` con `locked_until` vencido más de 10 min se recuperan (`recuperarTrabajosColgados`); antes quedaban bloqueados para siempre y además impedían encolar otro igual (deduplicación).

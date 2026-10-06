@@ -28,6 +28,7 @@ vi.mock('../gmailApiClient.js', () => ({
   enviarEmailGmailApi: vi.fn(),
   comprobarBorradorEnviado: vi.fn(),
   comprobarBorradorEnviadoConDetalle: vi.fn(),
+  buscarMensajeEnviadoA: vi.fn(),
   obtenerEmailDeLaCuentaConectada: vi.fn()
 }));
 

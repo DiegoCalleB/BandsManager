@@ -245,6 +245,26 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
   return { existe: true, status: res.status, messageId, cuerpo };
 }
 
+// Cuando un borrador desaparece de Borradores hay dos posibilidades: se envió, o se borró sin
+// enviar. Un 404 no distingue entre ambas, así que se confirma buscando en Enviados un mensaje
+// para ese destinatario en los últimos 30 días. null = no hay ninguno (borrador eliminado).
+export async function buscarMensajeEnviadoA(bandId: string, email: string): Promise<{ messageId: string } | null> {
+  const destinatario = String(email || "").trim().replace(/["\s]/g, "");
+  if (!destinatario) return null;
+  const accessToken = await getValidAccessToken(bandId);
+  const q = encodeURIComponent(`in:sent to:${destinatario} newer_than:30d`);
+  const res = await fetchConTimeout(`${MESSAGES_ENDPOINT}?q=${q}&maxResults=1`, {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  });
+  if (!res.ok) {
+    const errBody = await res.text().catch(() => "");
+    throw new EmailAgentError(`No se pudo buscar en Enviados de '${bandId}': ${errBody || res.status}`, "api_error");
+  }
+  const data = await res.json();
+  const id = data?.messages?.[0]?.id;
+  return id ? { messageId: String(id) } : null;
+}
+
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene
 // directo en payload.body, o hay que bajar por payload.parts buscando 'text/plain' (los mensajes
 // multipart/alternative traen html y texto plano como partes hermanas).
