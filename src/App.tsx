@@ -2209,7 +2209,7 @@ export default function App() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 lg:p-8 pb-24 lg:pb-8 overflow-y-auto custom-scrollbar">
+        <main className="flex-1 flex flex-col min-w-0 bg-[var(--bg)] p-3 sm:p-5 lg:p-8 pb-32 lg:pb-8 overflow-y-auto custom-scrollbar">
           {/* Global Active Campaign Banner (solo en módulos de Booking: salas, medios, management, grupos) */}
           {activeCampaign &&
             ["booking", "medios", "management", "bandas"].includes(
@@ -2247,7 +2247,7 @@ export default function App() {
           {/* Dynamic Views */}
           <div
             key={currentView}
-            className="flex-1 h-full min-h-[500px] flex flex-col animate-fade-in"
+            className="flex-auto shrink-0 min-h-[500px] flex flex-col animate-fade-in"
           >
             {isLoading ? (
               <SkeletonDashboard />

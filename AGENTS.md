@@ -459,3 +459,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 - Un desplegable bajo un botón NO se escribe como `absolute top-full …`: dentro de una tarjeta con `overflow-hidden`, o con la ventana baja, se recorta o se sale de pantalla. Usa `ActionMenu` (lista de acciones) o `PopoverAncla` (`src/components/ui/PopoverAncla.tsx`, contenido libre): portal + posición fija calculada con `posicionMenu` y scroll interno.
 - No ocultes con `sm:hidden` una acción que en escritorio no tenga otro acceso (pasó con «Editar canción»).
 - Un `mb-310`/`p-410`/`…]10` en un `className` es un resto de un restyle automático (un `10` pegado): el margen real es de 1.240 px o la clase deja de aplicarse. Búscalos con `grep -rnE "(rounded|bg|border)-\[[^]]*\]\)?[0-9]{2}\b"`.
+
+### Botones flotantes y final del scroll (móvil)
+- El contenedor de cada vista (`App.tsx`, «Dynamic Views») es `flex-auto shrink-0 min-h-[500px]`: crece con su contenido. Con `h-full` el contenido desbordaba el contenedor y el `padding-bottom` de `<main>` no contaba: en móvil el final de cualquier lista quedaba tapado por la barra inferior y los botones flotantes. No volver a `h-full` ahí.
+- Pila de flotantes en móvil (de abajo arriba): barra de navegación (64 px) → «Agent IA» (`bottom-20`) → FAB de la vista (`bottom-36`). Un FAB nuevo se coloca encima de esa pila, nunca en las mismas coordenadas.
