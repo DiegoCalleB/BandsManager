@@ -1197,6 +1197,7 @@ export interface SongSubstituteGuide {
   instrumentosClave?: string;
   /** De dónde sale el cifrado de la canción: transcripción del audio, propuesta de la IA o escrito a mano. */
   origenCifrado?: 'audio_real' | 'ia_sin_audio';
+  letraConfianza?: 'alta' | 'media' | 'baja' | 'sin_letra';
   cifradoAproximado?: boolean;
 }
 

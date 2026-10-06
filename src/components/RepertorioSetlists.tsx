@@ -2185,34 +2185,30 @@ export default function RepertorioSetlists({
           );
         }
 
-        // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
-        // haga pasar una plantilla genérica de relleno (cuando la IA falla del todo) por
-        // una transcripción real o una propuesta honesta de la IA.
-        if (data.chordsSource === "audio_real") {
+        // La letra solo sale del audio y el aviso dice cuánto se fía el transcriptor.
+        if (data.letraConfianza === "sin_letra") {
           setStatusBanner({
-            text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
+            text: `✓ Acordes de "${song.titulo}" transcritos del audio. No se oye una letra inteligible, así que no se ha escrito ninguna`,
             type: "success",
           });
-        } else if (data.chordsSource === "ia_sin_audio" && !data.esAproximado) {
+        } else if (data.letraConfianza === "alta") {
           setStatusBanner({
-            text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
+            text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio. Revísalos de oído`,
             type: "success",
-          });
-        } else if (data.chordsSource === "ia_sin_audio" && data.esAproximado) {
-          setStatusBanner({
-            text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
-            type: "warning",
           });
         } else {
           setStatusBanner({
-            text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
+            text: `⚠️ Letra de "${song.titulo}" transcrita con confianza ${data.letraConfianza === "media" ? "media" : "baja"}: los [?] son palabras que no se entendieron. Revísala de oído`,
             type: "warning",
           });
         }
       } else {
+        // El servidor explica el motivo (ya tiene cifrado, sin audio, IA no disponible…).
         setStatusBanner({
-          text: `No se pudieron analizar los acordes de "${song.titulo}"`,
-          type: "error",
+          text: data?.yaTieneCifrado
+            ? `"${song.titulo}" ya tiene un cifrado guardado; no se ha sustituido`
+            : data?.error || `No se pudieron analizar los acordes de "${song.titulo}"`,
+          type: data?.yaTieneCifrado ? "warning" : "error",
         });
       }
     } catch (err) {
