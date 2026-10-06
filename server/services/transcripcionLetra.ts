@@ -20,6 +20,12 @@ export interface LineaLetra {
   t1: number;
   texto: string;
   palabras?: PalabraLetra[];
+  /** 0-1 si el proveedor la da (OpenAI: exp(avg_logprob)). Sin ella se asume desconocida. */
+  confianza?: number;
+  /** Probabilidad de que NO haya habla (Whisper). Alta = probablemente ruido o música. */
+  sinHabla?: number;
+  /** Ratio de compresión del texto: >2,4 delata un bucle repetitivo alucinado. */
+  compresion?: number;
 }
 
 export interface Transcripcion {
@@ -129,6 +135,9 @@ const normaliza = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ''
 export function limpiarLineas(lineas: LineaLetra[]): LineaLetra[] {
   const sinBasura = lineas.filter((l) => {
     if (FRASES_ALUCINADAS.some((r) => r.test(l.texto))) return false;
+    // Criterios del propio Whisper: probablemente silencio/música con baja confianza, o un bucle.
+    if (l.sinHabla !== undefined && l.sinHabla > 0.6 && (l.confianza ?? 1) < 0.37) return false; // exp(-1)
+    if (l.compresion !== undefined && l.compresion > 2.4) return false;
     const palabras = l.texto.split(/\s+/).length;
     if (l.t1 - l.t0 > 15 && palabras < 4) return false; // 15 s «cantando» 3 palabras: relleno
     return true;
@@ -143,6 +152,23 @@ export function limpiarLineas(lineas: LineaLetra[]): LineaLetra[] {
     salida.push(l);
   }
   return salida;
+}
+
+/**
+ * Confianza global de la letra a partir de la de cada frase (media ponderada por palabras).
+ * Sin métricas del proveedor, la fuente decide: voz aislada «media», mezcla «baja»: nunca «alta»
+ * a ciegas, porque una transcripción automática siempre hay que revisarla de oído.
+ */
+export function confianzaGlobal(lineas: LineaLetra[], fuente: 'voz' | 'mezcla'): 'alta' | 'media' | 'baja' {
+  const conMetrica = lineas.filter((l) => l.confianza !== undefined);
+  let nivel: 'alta' | 'media' | 'baja' = fuente === 'voz' ? 'media' : 'baja';
+  if (conMetrica.length > 0) {
+    const pesos = conMetrica.reduce((a, l) => a + l.texto.split(/\s+/).length, 0);
+    const media = conMetrica.reduce((a, l) => a + (l.confianza as number) * l.texto.split(/\s+/).length, 0) / Math.max(pesos, 1);
+    nivel = media >= 0.8 ? 'alta' : media >= 0.6 ? 'media' : 'baja';
+  }
+  if (fuente === 'mezcla' && nivel === 'alta') nivel = 'media'; // la mezcla nunca es «alta»
+  return nivel;
 }
 
 export function totalPalabras(lineas: LineaLetra[]): number {
@@ -217,17 +243,106 @@ async function intentarModelo(modelo: string, token: string, audioUrl: string, i
   return { lineas: norm.lineas, idioma: norm.idioma, modelo };
 }
 
+// ── OpenAI Whisper (API estable y documentada: tiempos por palabra y métricas por frase) ───────
+
+/** Convierte la respuesta verbose_json de OpenAI en líneas con palabras y confianza. */
+export function normalizarSalidaOpenAI(salida: any): { lineas: LineaLetra[]; idioma?: string } | null {
+  if (!salida || !Array.isArray(salida.segments) || salida.segments.length === 0) return null;
+  const palabras: PalabraLetra[] = Array.isArray(salida.words)
+    ? salida.words.flatMap((w: any) => {
+        const a = num(w?.start);
+        const b = num(w?.end);
+        const tx = limpiarTexto(w?.word);
+        return a !== null && b !== null && tx ? [{ t0: a, t1: b, texto: tx }] : [];
+      })
+    : [];
+  const lineas: LineaLetra[] = [];
+  for (const sg of salida.segments) {
+    const t0 = num(sg?.start);
+    const t1 = num(sg?.end);
+    const texto = limpiarTexto(sg?.text);
+    if (t0 === null || t1 === null || !texto) continue;
+    const suyas = palabras.filter((p) => p.t0 >= t0 - 0.05 && p.t0 < t1 + 0.05);
+    const logprob = num(sg?.avg_logprob);
+    lineas.push({
+      t0,
+      t1: Math.max(t1, t0 + 0.2),
+      texto,
+      ...(suyas.length ? { palabras: suyas } : {}),
+      ...(logprob !== null ? { confianza: Math.min(1, Math.exp(logprob)) } : {}),
+      ...(num(sg?.no_speech_prob) !== null ? { sinHabla: num(sg.no_speech_prob) as number } : {}),
+      ...(num(sg?.compression_ratio) !== null ? { compresion: num(sg.compression_ratio) as number } : {}),
+    });
+  }
+  return lineas.length ? { lineas, idioma: typeof salida.language === 'string' ? salida.language : undefined } : null;
+}
+
+/**
+ * Transcribe un fichero de audio local con la API de OpenAI (whisper-1). Los tiempos por palabra
+ * y por frase y las métricas de confianza vienen en `verbose_json`.
+ */
+export async function transcribirConOpenAI(rutaAudio: string, apiKey: string, idioma?: string): Promise<Transcripcion> {
+  const fs = await import('fs');
+  const datos = fs.readFileSync(rutaAudio);
+  if (datos.length > 24 * 1024 * 1024) throw new Error('El audio supera los 25 MB que admite la API de OpenAI');
+  const form = new FormData();
+  form.append('file', new Blob([datos], { type: 'audio/mpeg' }), 'voz.mp3');
+  form.append('model', 'whisper-1');
+  form.append('response_format', 'verbose_json');
+  form.append('temperature', '0');
+  form.append('timestamp_granularities[]', 'word');
+  form.append('timestamp_granularities[]', 'segment');
+  if (idioma) form.append('language', idioma);
+  const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}` },
+    body: form,
+    signal: AbortSignal.timeout(5 * 60_000),
+  });
+  const cuerpo = await json(res);
+  if (!res.ok) throw new Error(`OpenAI respondió ${res.status}: ${String(cuerpo?.error?.message || '').slice(0, 200)}`);
+  const norm = normalizarSalidaOpenAI(cuerpo);
+  if (!norm) throw new Error('OpenAI no devolvió frases con tiempos (¿audio sin voz?)');
+  return { lineas: norm.lineas, idioma: norm.idioma, modelo: 'openai/whisper-1' };
+}
+
 /**
  * Transcribe la voz de `audioUrl` (URL pública https que Replicate pueda descargar). Prueba los
  * modelos en orden; si todos fallan lanza un error con el motivo de cada uno. NUNCA devuelve
  * texto sin tiempos ni texto inventado.
  */
-export async function transcribirLetra(audioUrl: string, opciones: { idioma?: string } = {}): Promise<Transcripcion> {
-  const token = (process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || '').trim();
-  if (!token) throw new Error('Falta REPLICATE_API_TOKEN en el servidor: no se puede transcribir la letra.');
-  if (!/^https:\/\//i.test(audioUrl)) throw new Error('El audio no está en una URL pública (https): el servicio de transcripción no puede descargarlo.');
-
+export async function transcribirLetra(
+  audioUrl: string,
+  opciones: { idioma?: string; archivoLocal?: () => Promise<string | null> } = {}
+): Promise<Transcripcion> {
   const fallos: string[] = [];
+
+  // 1) OpenAI Whisper si hay clave: API estable, tiempos por palabra y confianza por frase.
+  const claveOpenAI = (process.env.OPENAI_API_KEY || '').trim();
+  if (claveOpenAI && opciones.archivoLocal) {
+    try {
+      const ruta = await opciones.archivoLocal();
+      if (!ruta) throw new Error('no se pudo preparar el audio para subirlo');
+      return await transcribirConOpenAI(ruta, claveOpenAI, opciones.idioma);
+    } catch (err: any) {
+      fallos.push(`openai: ${String(err?.message || err).slice(0, 220)}`);
+      console.warn('[Transcripción] OpenAI falló:', String(err?.message || err).slice(0, 300));
+    }
+  }
+
+  // 2) Whisper en Replicate.
+  const token = (process.env.REPLICATE_API_TOKEN || process.env.REPLICATE_API_KEY || '').trim();
+  if (!token) {
+    throw new Error(
+      fallos.length
+        ? `No se pudo transcribir la letra. ${fallos.join(' | ')}`
+        : 'Falta REPLICATE_API_TOKEN (o OPENAI_API_KEY) en el servidor: no se puede transcribir la letra.'
+    );
+  }
+  if (!/^https:\/\//i.test(audioUrl)) {
+    throw new Error('El audio no está en una URL pública (https): el servicio de transcripción no puede descargarlo.');
+  }
+
   for (const modelo of modelosWhisper()) {
     try {
       return await intentarModelo(modelo, token, audioUrl, opciones.idioma);

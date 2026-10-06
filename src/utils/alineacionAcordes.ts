@@ -182,3 +182,32 @@ export function acordeActivoDelCifrado(
   }
   return activo;
 }
+
+const quitaAcordes = (linea: string) => linea.replace(/\[[^\]]*\]/g, '');
+const normalizaLetra = (t: string) =>
+  t.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, ' ').trim();
+
+/**
+ * Asocia cada línea del cifrado con la línea de letra transcrita (con tiempos) de la que salió,
+ * comparando el texto sin acordes. Devuelve, para cada línea del cifrado, el índice de la línea
+ * de letra o null. Tolera que la banda haya editado o borrado alguna línea (mira unas cuantas
+ * líneas por delante) y que haya cabeceras y líneas de solo acordes.
+ */
+export function asociarLineasConLetra(cifrado: string, letra: Array<{ texto: string }>): Array<number | null> {
+  const lineas = (cifrado || '').split('\n');
+  const salida: Array<number | null> = new Array(lineas.length).fill(null);
+  let k = 0;
+  lineas.forEach((linea, i) => {
+    if (esLineaCabecera(linea)) return;
+    const plano = normalizaLetra(quitaAcordes(linea));
+    if (!plano) return;
+    for (let salto = 0; salto <= 3 && k + salto < letra.length; salto++) {
+      if (normalizaLetra(letra[k + salto].texto) === plano) {
+        salida[i] = k + salto;
+        k = k + salto + 1;
+        return;
+      }
+    }
+  });
+  return salida;
+}

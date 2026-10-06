@@ -101,3 +101,26 @@ describe('acordeActivoDelCifrado', () => {
     expect(acordeActivoDelCifrado(null, 2)).toBe(-1);
   });
 });
+
+import { asociarLineasConLetra } from '../alineacionAcordes';
+
+describe('asociarLineasConLetra (karaoke: cada línea del cifrado sabe cuándo suena)', () => {
+  const letra = [{ texto: 'A miña máquina funcionou' }, { texto: 'Non me culpes' }, { texto: 'Erros por todas partes' }];
+
+  it('asocia por texto sin acordes, ignorando cabeceras, líneas de solo acordes y puntuación', () => {
+    const cifrado = ['[Intro]', '[A] [E]', '', '[A]A miña máquina funcionou', '[E]Non me, culpes!', '', '[Verso 2]', '[F#m]Erros por todas partes'].join('\n');
+    expect(asociarLineasConLetra(cifrado, letra)).toEqual([null, null, null, 0, 1, null, null, 2]);
+  });
+
+  it('tolera una línea borrada por la banda (salta hasta 3 por delante)', () => {
+    expect(asociarLineasConLetra('A miña máquina funcionou\nErros por todas partes', letra)).toEqual([0, 2]);
+  });
+
+  it('una línea que la banda reescribió no se asocia, y no desalinea las siguientes', () => {
+    expect(asociarLineasConLetra('A miña máquina funcionou\nOtra cosa distinta\nNon me culpes', letra)).toEqual([0, null, 1]);
+  });
+
+  it('sin letra transcrita todo es null', () => {
+    expect(asociarLineasConLetra('[A]hola\n[E]mundo', [])).toEqual([null, null]);
+  });
+});

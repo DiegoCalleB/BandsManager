@@ -1,7 +1,7 @@
 import type { SegmentoAcordeAnalizado } from '../types';
 
 /** Índice del segmento que contiene el instante `t` (s), o -1 si no hay ninguno. Búsqueda binaria. */
-export function indiceSegmentoEn(segmentos: SegmentoAcordeAnalizado[], t: number): number {
+export function indiceSegmentoEn<T extends { t0: number; t1: number }>(segmentos: T[], t: number): number {
   let lo = 0;
   let hi = segmentos.length - 1;
   while (lo <= hi) {

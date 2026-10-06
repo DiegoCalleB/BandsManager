@@ -134,3 +134,146 @@ describe('transcribirLetra (Replicate simulado)', () => {
     await expect(transcribirLetra('https://x/voz.mp3')).rejects.toThrow(/sin tiempos reconocibles/);
   });
 });
+
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { normalizarSalidaOpenAI, transcribirConOpenAI, confianzaGlobal } from '../transcripcionLetra';
+
+describe('normalizarSalidaOpenAI (verbose_json de whisper-1)', () => {
+  const salida = {
+    language: 'galician',
+    words: [
+      { word: 'A', start: 0.5, end: 0.7 }, { word: 'miña', start: 0.8, end: 1.2 }, { word: 'máquina', start: 1.3, end: 2 },
+      { word: 'Non', start: 6, end: 6.4 }, { word: 'me', start: 6.5, end: 6.7 },
+    ],
+    segments: [
+      { start: 0.4, end: 2.1, text: ' A miña máquina', avg_logprob: -0.2, no_speech_prob: 0.01, compression_ratio: 1.1 },
+      { start: 5.9, end: 7, text: ' Non me', avg_logprob: -0.9, no_speech_prob: 0.3, compression_ratio: 1.0 },
+    ],
+  };
+
+  it('une frases, palabras con tiempos y métricas de confianza', () => {
+    const r = normalizarSalidaOpenAI(salida)!;
+    expect(r.lineas).toHaveLength(2);
+    expect(r.lineas[0].palabras?.map((p) => p.texto)).toEqual(['A', 'miña', 'máquina']);
+    expect(r.lineas[1].palabras?.map((p) => p.texto)).toEqual(['Non', 'me']);
+    expect(r.lineas[0].confianza).toBeCloseTo(Math.exp(-0.2), 3);
+    expect(r.lineas[1].sinHabla).toBe(0.3);
+    expect(r.idioma).toBe('galician');
+  });
+
+  it('sin frases → null', () => {
+    expect(normalizarSalidaOpenAI({ text: 'x' })).toBeNull();
+    expect(normalizarSalidaOpenAI({ segments: [] })).toBeNull();
+  });
+});
+
+describe('limpiarLineas con las métricas de Whisper', () => {
+  const l = (texto: string, extra: object) => ({ t0: 0, t1: 3, texto, ...extra });
+  it('descarta lo que Whisper marca como probable ruido (no-habla alta + baja confianza)', () => {
+    expect(limpiarLineas([l('algo que suena a letra', { sinHabla: 0.9, confianza: 0.2 })])).toHaveLength(0);
+  });
+  it('conserva una frase con no-habla alta pero buena confianza (voz entre ruido)', () => {
+    expect(limpiarLineas([l('frase clara cantada', { sinHabla: 0.8, confianza: 0.9 })])).toHaveLength(1);
+  });
+  it('descarta un bucle por compression_ratio > 2,4', () => {
+    expect(limpiarLineas([l('la la la la la la la la', { compresion: 3.1 })])).toHaveLength(0);
+  });
+});
+
+describe('confianzaGlobal', () => {
+  const l = (conf: number | undefined, n = 5) => ({ t0: 0, t1: 1, texto: Array(n).fill('p').join(' '), ...(conf !== undefined ? { confianza: conf } : {}) });
+  it('con métricas: >=0,8 alta, >=0,6 media, el resto baja', () => {
+    expect(confianzaGlobal([l(0.9)], 'voz')).toBe('alta');
+    expect(confianzaGlobal([l(0.7)], 'voz')).toBe('media');
+    expect(confianzaGlobal([l(0.4)], 'voz')).toBe('baja');
+  });
+  it('pondera por palabras: una frase larga mala pesa más que una corta buena', () => {
+    expect(confianzaGlobal([l(0.95, 2), l(0.3, 20)], 'voz')).toBe('baja');
+  });
+  it('la mezcla nunca es «alta»', () => {
+    expect(confianzaGlobal([l(0.99)], 'mezcla')).toBe('media');
+  });
+  it('sin métricas: voz «media», mezcla «baja», jamás «alta» a ciegas', () => {
+    expect(confianzaGlobal([l(undefined)], 'voz')).toBe('media');
+    expect(confianzaGlobal([l(undefined)], 'mezcla')).toBe('baja');
+  });
+});
+
+describe('transcribirConOpenAI y prioridad de proveedores', () => {
+  const entorno = { ...process.env };
+  afterEach(() => { vi.unstubAllGlobals(); process.env = { ...entorno }; });
+  const respuesta = (cuerpo: unknown, status = 200) => ({ ok: status < 400, status, text: async () => JSON.stringify(cuerpo) }) as any;
+  const verbose = { language: 'es', words: [{ word: 'hola', start: 0, end: 0.5 }], segments: [{ start: 0, end: 1, text: ' hola mundo cruel', avg_logprob: -0.1 }] };
+
+  function mp3Temporal() {
+    const ruta = path.join(os.tmpdir(), `voz_test_${Date.now()}.mp3`);
+    fs.writeFileSync(ruta, Buffer.from('ID3fake'));
+    return ruta;
+  }
+
+  it('envía multipart con verbose_json, palabras y frases, temperatura 0 y la clave', async () => {
+    const f = vi.fn(async () => respuesta(verbose));
+    vi.stubGlobal('fetch', f);
+    const ruta = mp3Temporal();
+    const r = await transcribirConOpenAI(ruta, 'sk-test', 'es');
+    expect(r.modelo).toBe('openai/whisper-1');
+    const [url, init] = f.mock.calls[0] as any;
+    expect(url).toBe('https://api.openai.com/v1/audio/transcriptions');
+    expect(init.headers.Authorization).toBe('Bearer sk-test');
+    const form: FormData = init.body;
+    expect(form.get('model')).toBe('whisper-1');
+    expect(form.get('response_format')).toBe('verbose_json');
+    expect(form.get('temperature')).toBe('0');
+    expect(form.getAll('timestamp_granularities[]')).toEqual(['word', 'segment']);
+    expect(form.get('language')).toBe('es');
+    fs.unlinkSync(ruta);
+  });
+
+  it('error de OpenAI → mensaje con el motivo', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => respuesta({ error: { message: 'Incorrect API key' } }, 401)));
+    const ruta = mp3Temporal();
+    await expect(transcribirConOpenAI(ruta, 'mala')).rejects.toThrow(/401.*Incorrect API key/);
+    fs.unlinkSync(ruta);
+  });
+
+  it('con OPENAI_API_KEY usa OpenAI primero y NO llama a Replicate', async () => {
+    process.env.OPENAI_API_KEY = 'sk-test';
+    process.env.REPLICATE_API_TOKEN = 't';
+    const f = vi.fn(async () => respuesta(verbose));
+    vi.stubGlobal('fetch', f);
+    const ruta = mp3Temporal();
+    const r = await transcribirLetra('https://x/voz.mp3', { archivoLocal: async () => ruta });
+    expect(r.modelo).toBe('openai/whisper-1');
+    expect((f.mock.calls as any[]).every(([u]) => String(u).includes('openai.com'))).toBe(true);
+    fs.unlinkSync(ruta);
+  });
+
+  it('si OpenAI falla, cae a Replicate', async () => {
+    process.env.OPENAI_API_KEY = 'sk-test';
+    process.env.REPLICATE_API_TOKEN = 't';
+    delete process.env.WHISPER_REPLICATE_MODEL;
+    const info = { latest_version: { id: 'v', openapi_schema: { components: { schemas: { Input: { properties: { audio: {}, timestamp: {} } } } } } } };
+    vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+      if (String(url).includes('openai.com')) return respuesta({ error: { message: 'cuota agotada' } }, 429);
+      if (String(url).includes('/models/')) return respuesta(info);
+      return respuesta({ id: 'p', status: 'succeeded', output: { chunks: [{ timestamp: [0, 2], text: ' una frase con varias palabras ' }] } });
+    }));
+    const ruta = mp3Temporal();
+    const r = await transcribirLetra('https://x/voz.mp3', { archivoLocal: async () => ruta });
+    expect(r.modelo).toBe(modelosWhisper()[0]);
+    fs.unlinkSync(ruta);
+  });
+
+  it('si fallan todos, el error recoge el de OpenAI y el de Replicate', async () => {
+    process.env.OPENAI_API_KEY = 'sk-test';
+    process.env.REPLICATE_API_TOKEN = 't';
+    vi.stubGlobal('fetch', vi.fn(async () => respuesta({ error: { message: 'caído' }, detail: 'caído' }, 500)));
+    const ruta = mp3Temporal();
+    const err = await transcribirLetra('https://x/voz.mp3', { archivoLocal: async () => ruta }).catch((e) => e);
+    expect(String(err.message)).toContain('openai:');
+    expect(String(err.message)).toContain('openai/whisper');
+    fs.unlinkSync(ruta);
+  });
+});
