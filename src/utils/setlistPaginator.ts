@@ -1,5 +1,5 @@
-// Motor de maquetación del repertorio imprimible (PdfExportModal.tsx). Sustituye a
-// setlistAutoFit.ts, que repartía solo CANCIONES y dejaba fuera los bloques ("Bloque 2",
+// Motor de maquetación del repertorio imprimible (PdfExportModal.tsx). Sustituyó a un
+// auto-ajuste anterior que repartía solo CANCIONES y dejaba fuera los bloques ("Bloque 2",
 // "Bis"): el encabezado que caía justo en un corte de página desaparecía de la hoja.
 //
 // Aquí el reparto es por ITEMS (canciones, bloques, interludios), con alturas medidas una a una

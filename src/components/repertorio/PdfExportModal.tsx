@@ -45,6 +45,7 @@ import {
   maxFontPtForWidth,
   planPages,
 } from "../../utils/setlistPaginator";
+import { escapeHtml } from "../../utils/escapeHtml";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Select } from '../ui';
 
@@ -455,7 +456,7 @@ function PdfExportModalBody({
   const [stylePreset, setStylePreset] =
     useState<SetlistStylePreset>("rock_stage");
   // El tamaño real de impresión ya no se elige a mano: se auto-ajusta por hoja (ver
-  // computeAutoFitPlan / setlistAutoFit.ts, usado en handlePrint). La vista previa en pantalla no
+  // setlistPaginator.ts, usado en buildPrintDocument). La vista previa en pantalla no
   // reproduce esa paginación 1:1 (no hay salto de página visible aquí, solo scroll), así que usa
   // un tamaño de referencia fijo — PREVIEW_TITLE_FONT_PT, más abajo.
   const [handwritingFont, setHandwritingFont] = useState<
@@ -771,7 +772,7 @@ function PdfExportModalBody({
                     deterministicOffsetPx(`${seed}-y`, 2),
                   );
                   const lineTransform = `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`;
-                  return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${line.text}</div>`;
+                  return `<div class="note-seg ${line.className}" style="font-size:${line.fontSizePx}px;display:flex;align-items:center;transform:${lineTransform};">${arrow}${escapeHtml(line.text)}</div>`;
                 })
                 .join("")}</div>`
             : "";
@@ -791,7 +792,7 @@ function PdfExportModalBody({
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
-                  <span class="song-title" style="${titleStyle}">${layout?.truncatedTitle ?? s.titulo.toUpperCase()}</span>
+                  <span class="song-title" style="${titleStyle}">${escapeHtml(layout?.truncatedTitle ?? s.titulo.toUpperCase())}</span>
                   ${showTonality && s.tonalidad ? `<span class="tag-tonality">${s.tonalidad}</span>` : ""}
                   ${showBpm && s.bpm ? `<span class="tag-bpm">${s.bpm} BPM</span>` : ""}
                   ${showDuration && s.duracion ? `<span class="tag-dur">${s.duracion}</span>` : ""}
@@ -808,7 +809,7 @@ function PdfExportModalBody({
         return `
             <div class="block-divider-item">
               <div class="divider-line"></div>
-              <div class="block-title" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
+              <div class="block-title" style="font-size:${auxFontPt}pt;">${escapeHtml((item.tituloCustom || "BLOQUE").toUpperCase())}</div>
               <div class="divider-line"></div>
             </div>
           `;
@@ -816,18 +817,18 @@ function PdfExportModalBody({
         return `
             <div class="bis-divider-item">
               <div class="divider-line"></div>
-              <div class="bis-text" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
+              <div class="bis-text" style="font-size:${auxFontPt}pt;">${escapeHtml((item.tituloCustom || "BIS / ENCORE").toUpperCase())}</div>
               <div class="divider-line"></div>
             </div>
           `;
       } else {
         return `
             <div class="interlude-item" style="font-size:${auxFontPt + 1}pt;">
-              <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
+              <span class="interlude-title">${escapeHtml((item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase())}</span>
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
-                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${item.notas || (item as any).notaTema}</span>
+                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${escapeHtml(item.notas || (item as any).notaTema)}</span>
               `
      : ""
  }
@@ -1044,7 +1045,7 @@ function PdfExportModalBody({
  .setlist-song-item {
  padding: 3px 0;
  /* Red de seguridad de impresión: nuestro propio reparto por páginas (ver
- setlistAutoFit.ts) es quien decide qué canción va en qué hoja, así que en el caso
+ setlistPaginator.ts) es quien decide qué canción va en qué hoja, así que en el caso
  normal el navegador nunca tiene que partir nada por su cuenta. Pero si, por lo
  que sea (una fuente que tarda un pelín más en cargar, redondeo de subpíxel), el
  contenido real se pasa unos px del físico de la hoja, esto evita que sea una fila
@@ -1077,7 +1078,7 @@ function PdfExportModalBody({
  }
  .song-num {
  /* font-size inline por fila (no aquí): titleFontPt puede variar por miembro/página
- según el auto-ajuste (ver computeAutoFitPlan / setlistAutoFit.ts). */
+ según el motor de maquetación (ver setlistPaginator.ts). */
  font-family:'Oswald', sans-serif;
  font-weight: 800;
  color: #444;
@@ -1351,21 +1352,21 @@ function PdfExportModalBody({
             ${
    showBandLogo && customLogoUrl
      ? `
-              <img src="${customLogoUrl}" alt="${bandName}" class="band-logo-img" onerror="this.style.display='none'" />
+              <img src="${escapeHtml(customLogoUrl)}" alt="${escapeHtml(bandName)}" class="band-logo-img" onerror="this.style.display='none'" />
             `
      : ""
  }
  <div class="band-text-block">
- <h1 class="band-heading">${bandName.toUpperCase()}</h1>
-              <div class="setlist-meta">${activeSetlist.nombre.toUpperCase()}</div>
+ <h1 class="band-heading">${escapeHtml(bandName.toUpperCase())}</h1>
+              <div class="setlist-meta">${escapeHtml(activeSetlist.nombre.toUpperCase())}</div>
             </div>
           </div>
 
           <div class="header-right">
             <div class="member-stage-tag">
               <div class="tag-title">${!isMaster ? "COPIA PARA MÚSICO" : "COPIA CONTROL"}</div>
-              <div class="tag-name">${member.name.toUpperCase()}</div>
-              <div class="tag-instrument">${member.instrument.toUpperCase()}</div>
+              <div class="tag-name">${escapeHtml(member.name.toUpperCase())}</div>
+              <div class="tag-instrument">${escapeHtml(member.instrument.toUpperCase())}</div>
             </div>
           </div>
         </div>
@@ -1385,7 +1386,7 @@ function PdfExportModalBody({
             <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
           </div>
           <div class="footer-right">
-            <span>Hoja ${pageNum} de ${totalPages} (${member.name})</span>
+            <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
             <span class="footer-sep">•</span>
             <span>${new Date().toLocaleDateString("es-ES")}</span>
           </div>
@@ -1393,7 +1394,7 @@ function PdfExportModalBody({
       `
         : "";
 
-    // Auto-ajuste (ver setlistAutoFit.ts): mide la altura REAL del contenido en un iframe
+    // Maquetación (ver setlistPaginator.ts): mide la altura REAL del contenido en un iframe
     // oculto (aislado del resto de la app — un <div> con <style> inyectado contaminaría los
     // estilos globales) para decidir, por cada hoja de miembro, el mayor tamaño de título que
     // hace que el repertorio quepa en una sola página — y si ni el mínimo cabe, en cuántas
@@ -1560,13 +1561,10 @@ function PdfExportModalBody({
     // HTML embebido en el onerror deben ir como entidad &quot;, y cualquier apóstrofe del
     // nombre del grupo debe escaparse para no romper el string JS (delimitado por comillas
     // simples) del propio onerror.
-    const safeBandNameForOnerror = bandName
-      .toUpperCase()
-      .replace(/'/g, "&#39;");
     const watermarkInnerHtml =
       showBandLogo && absoluteLogoUrl
-        ? `<img src="${absoluteLogoUrl}" alt="" class="page-watermark-logo" onerror="this.parentElement.innerHTML='<div class=&quot;page-watermark-text&quot;>${safeBandNameForOnerror}</div>'" />`
-        : `<div class="page-watermark-text">${bandName.toUpperCase()}</div>`;
+        ? `<img src="${escapeHtml(absoluteLogoUrl)}" alt="" class="page-watermark-logo" data-fallback="${escapeHtml(bandName.toUpperCase())}" onerror="var d=document.createElement('div');d.className='page-watermark-text';d.textContent=this.dataset.fallback;this.parentElement.replaceChildren(d)" />`
+        : `<div class="page-watermark-text">${escapeHtml(bandName.toUpperCase())}</div>`;
 
     let sheetIdx = 0;
     const pagesHtml = memberPlans
@@ -1656,7 +1654,7 @@ function PdfExportModalBody({
       <html>
         <head>
           <meta charset="utf-8">
-          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
+          <title>${escapeHtml(bandName)} - Setlist ${escapeHtml(activeSetlist.nombre)}</title>
           <link rel="preconnect" href="https://fonts.googleapis.com">
           <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
           <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
