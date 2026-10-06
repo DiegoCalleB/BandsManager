@@ -381,6 +381,19 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             </button>
           )}
 
+          {/* 1c. Editar a mano cuando hay sitio (pantallas anchas); en pantallas estrechas sigue en el menú ⋯ */}
+          {onEditSong && (
+            <button
+              type="button"
+              onClick={onEditSong}
+              className="hidden lg:flex p-1.5 xl:px-2.5 xl:py-1 rounded-[var(--r-pill)] text-xs font-medium items-center gap-1.5 transition-ui cursor-pointer bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
+              title="Editar los datos de la canción"
+            >
+              <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)] shrink-0" />
+              <span className="hidden xl:inline text-xs">Editar</span>
+            </button>
+          )}
+
           {/* Reorder Buttons (alternative to drag & drop) */}
           {showReorder && (
             <div className="hidden sm:flex flex-col">
