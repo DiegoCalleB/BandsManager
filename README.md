@@ -115,13 +115,9 @@ Chatbot con herramientas (`server/services/chatTools.ts`) para consultar y actua
 - **PWA instalable** (manifest, iconos, service worker) y **notificaciones push** del navegador.
 - **Página pública de acuerdo** (`/deal/:token`), **EPK público** (`/epk`) y **captación de fans**: las únicas rutas que se abren sin cuenta, por eso llevan limitador de ritmo y tokens firmados.
 
-### Seguridad y fiabilidad (parte del producto, no un añadido)
+### Seguridad y fiabilidad
 
-- **Aislamiento por banda** en capa de aplicación (`getTargetBandId`) con un test estático en CI. Las políticas RLS de Supabase hoy no restringen por banda, así que no son una red de seguridad (ver [AGENTS.md §2.1](./AGENTS.md)).
-- **Defensa contra SSRF** en todo `fetch` a URLs de usuario, **protección frente a inyección de prompt** en lo que el Scout scrapea y el Lector lee, y escape de HTML en los correos.
-- **Autenticación:** Google verificado en servidor, contraseñas de admin solo por variable de entorno, invitaciones de un solo uso y limitadores de ritmo en login, IA, render y donaciones.
-- **Observabilidad en dos capas:** los fallos de negocio esperables de los agentes van a un panel propio (`agent_execution_logs`) y el resto a Sentry (opcional).
-- **Migraciones SQL idempotentes** que se aplican solas al arrancar, y tests que vigilan que el servidor no escriba columnas que no existen.
+Se trata como parte del producto, no como un añadido. Las medidas están en [Seguridad](#seguridad) y la detección de errores en [Errores en tiempo real](#detección-de-errores-en-tiempo-real).
 
 ### Planes
 
@@ -136,6 +132,126 @@ Chatbot con herramientas (`server/services/chatTools.ts`) para consultar y actua
 Los límites exactos y el módulo de cada plan salen del código (`src/utils/planPermissions.ts`, `server/utils/planLimits.ts`); la tabla de [AGENTS.md §2.3](./AGENTS.md) es la referencia. Los créditos IA se descuentan por banda y no tienen relación con el ledger de deuda de IA.
 
 **Principio central: human-in-the-loop.** Ningún agente envía un email sin aprobación humana explícita (detalle en [AGENTS.md §3](./AGENTS.md)).
+
+## Seguridad
+
+Una banda guarda en la plataforma maquetas inéditas, contactos privados de programadores y el acceso a su correo. Por eso la seguridad se diseñó en capas: ninguna es la única barrera, y la última (una persona que aprueba) sigue ahí aunque falle otra. Las reglas completas, con su porqué, están en [AGENTS.md §2](./AGENTS.md).
+
+### Defensa por capas
+
+| Capa | Qué se hace | Dónde |
+|---|---|---|
+| **Aislamiento por banda** | La banda se resuelve siempre en el servidor desde la sesión (`getTargetBandId`); está prohibido leer `band_id` del cuerpo o de `x-band-id` para autorizar. Toda ruta con `:bandId` comprueba `puedeEscribirEnBanda` (403) y las cachés se filtran por banda. Un test estático rompe el build si reaparece `cleanBandId(objeto.band_id \|\| bandId)`. | `server/utils/bandAccess.ts`, `server/db/__tests__/bandIdTrustBoundary.test.ts` |
+| **Autenticación** | Login con Google verificado contra Google en el servidor, sin fiarse del email del cliente. Contraseñas con PBKDF2-SHA512 (100.000 iteraciones, sal propia) y comparación en tiempo constante. Sesión con caducidad de 30 días. | `server/auth.ts`, `server/utils/googleVerify.ts` |
+| **Cuentas y privilegios** | La contraseña del admin solo sale de `ADMIN_PASSWORD` (mínimo 12 caracteres), nunca del código. Las cuentas especiales se reconocen por id o email exacto. El plan solo cambia por Stripe. Un líder solo restablece cuentas que son únicamente de su banda. | `server/utils/cuentaBrais.ts`, `server/routes/users.ts` |
+| **Recuperación e invitaciones** | El reseteo exige el identificador exacto, admite 5 intentos por código y no lo escribe en logs. Las invitaciones usan un token de un solo uso del que solo se guarda el hash. | `server/utils/invitacion.ts` |
+| **Limitación de ritmo** | Límites por IP o por usuario según la superficie (tabla abajo). La IP se toma de la **última** entrada de `X-Forwarded-For`, porque la primera la escribe el cliente. | `server/middleware/rateLimiter.ts` |
+| **Tamaño de cuerpo** | 1 MB para anónimos y 50 MB solo con sesión válida, para que nadie sin cuenta fuerce al servidor a bufferizar archivos enormes. | `server/middleware/limiteCuerpo.ts` |
+| **Cabeceras HTTP** | `helmet` con HSTS de un año con preload, `X-Frame-Options: sameorigin`, `nosniff` y `Referrer-Policy` ajustada. | `server.ts` |
+| **SSRF** | Todo `fetch` del servidor a una URL de usuario valida con `esUrlExternaSegura`, ancla la IP resuelta, revalida cada redirección y bloquea rangos privados y reservados (incluido IPv4 mapeado en IPv6). | `server/utils/ssrfGuard.ts` |
+| **Inyección** | Consultas parametrizadas con el cliente tipado de Supabase. Todo texto de usuario que va a un correo pasa por `escapeHtml`. Validadores contra *path traversal* en rutas de archivos. | `server/utils/html.ts` |
+| **Inyección de prompt** | Los datos scrapeados de webs y los emails recibidos de salas pasan por `sanitizeExternalText` y van marcados en el prompt como dato, no como orden. Es defensa en profundidad: la barrera real sigue siendo la aprobación humana. | `server/utils/promptSafety.ts` |
+| **Seguimiento y webhooks** | Aperturas, clics y telemetría del EPK solo se registran con un token **firmado**; los clics redirigen solo a destinos firmados o dominios conocidos. El webhook de Resend exige firma Svix. | `server/utils/trackingSeguro.ts`, `server/routes/tracking.ts` |
+| **Gmail OAuth** | El `state` lleva un nonce firmado más una cookie HttpOnly y se consume una sola vez. Al desconectar se revoca el token en Google. | `server/routes/gmailOAuth.ts` |
+| **Propiedad de las obras** | Maquetas y stems en Supabase Storage con ruta `stems/{bandId}/…`, sin URLs predecibles ni accesibles sin pertenecer a la banda. Las subidas a Storage, no al disco efímero. | `server/utils/storage.ts` |
+
+Límites de ritmo vigentes:
+
+| Superficie | Límite |
+|---|---|
+| Login | 10 por minuto |
+| Registro | 10 cada 10 min |
+| Endpoints públicos que escriben | 30 por minuto |
+| Reenvío de email | 5 cada 10 min |
+| IA (por usuario) | 20 cada 5 min |
+| Render de clips (por usuario) | 10 cada 5 min y 2 a la vez |
+| Donaciones (por usuario) | 10 cada 5 min |
+
+### Agentes: el riesgo más específico de este proyecto
+
+Un agente que escribe a terceros en nombre de la banda es el vector más delicado, así que tiene sus propios candados:
+
+- **Sin aprobación humana no sale nada.** El Enviador exige estado aprobado, `AGENT_EMAIL_MODE=send` y un modo de despacho directo explícito.
+- **Tope diario** (`AGENT_DAILY_SEND_CAP`, 30), guarda contra ejecuciones simultáneas y los rebotes no se reintentan.
+- La consulta del Enviador va siempre acotada a la banda y a los estados de envío.
+- El Lector solo enriquece el email de un lead cuando el emparejamiento es por hilo, nunca por dominio o asunto, para que un tercero no pueda inyectarse en un lead ajeno.
+- Un borrador de Gmail que desaparece no cuenta como enviado: se confirma contra la carpeta de Enviados.
+
+### Integridad de los datos
+
+- **Migraciones SQL idempotentes**, cada una en su transacción: si falla, se revierte y el despliegue no se promociona. Una migración aplicada no se edita.
+- **Tests de contrato con el esquema** (`schemaContract`, `dbRoundTrip`) que detectan si el servidor escribe una columna que no existe o si un trigger no termina en `RETURN NEW`.
+- **Escritura tolerante:** si falta una columna, se guarda el resto y se avisa con una cabecera en lugar de perder datos en silencio.
+- **Guardado optimista con reversión** en el cliente, para no mostrar «guardado» antes de que el servidor lo confirme.
+- Migraciones de **historial de cambios** y de **logs de auditoría solo-añadir**.
+
+### Cómo se comprueba
+
+- Los tests de seguridad corren en cada CI (`npm test`): frontera de confianza de `band_id`, SSRF, tracking firmado, autorización de rutas, contraseña de admin, invitaciones y webhook de Stripe.
+- Todo lo que toca `band_id` o dinero se escribe **test primero** (excepción de TDD de [AGENTS.md §5.3.1](./AGENTS.md)). Los tests verifican invariantes, no la implementación de hoy.
+- La CI ejecuta el typecheck, las guardas de diseño, el *ratchet* de ESLint, la verificación de la documentación, los tests unitarios y los E2E.
+- Los agentes de código deben pasar `/security-review` cuando tocan `band_id`, autenticación, `fetch` de URLs de usuario, subidas o el envío de emails.
+
+### Límites conocidos (honestidad antes que marketing)
+
+No todo está blindado y conviene tenerlo presente:
+
+- **Row Level Security de Supabase no restringe nada.** Las políticas de `supabase_schema.sql` son todas `USING (true)`. El aislamiento entre bandas es 100 % de aplicación, sin una red de seguridad por debajo.
+- **No hay `Content-Security-Policy`.** Está desactivada porque la app embebe Stripe, YouTube, Spotify y Google Translate. Un fallo de XSS tendría menos contención.
+- **La cookie de sesión no es `HttpOnly`** a propósito, porque el cliente también usa el token desde `localStorage`. Migrar a sesión solo por cookie está en el backlog.
+- **El limitador de ritmo vive en memoria del proceso.** Se reinicia al desplegar y no se comparte si se escalara a varias instancias. Además solo cubre las superficies de la tabla: el resto de endpoints mutantes confía solo en `requireAuth`.
+- **Las contraseñas de aplicación de correo se guardan sin cifrar** en Supabase (se ocultan en las respuestas, no en reposo). Es uno de los dos bloqueantes antes de abrir a usuarios reales.
+- **La CI no ejecuta escaneo de dependencias ni de secretos** (`npm audit`, Dependabot, CodeQL o similares).
+- Se aceptan todavía hashes de contraseña antiguos de 1.000 iteraciones por compatibilidad.
+
+Los riesgos legales (YouTube, RGPD, baja en emails comerciales) están en [AGENTS.md §8](./AGENTS.md).
+
+## Detección de errores en tiempo real
+
+Antes, un fallo que nadie esperaba terminaba en un `console.error` y nada más: nadie se enteraba hasta que una banda avisaba. Hay **dos capas con responsabilidades distintas**, para que un error de negocio esperable no ahogue a un bug de verdad.
+
+| Capa | Para qué | Dónde se ve |
+|---|---|---|
+| **`agent_execution_logs`** (Supabase) | Fallos de **negocio esperables** de los agentes: banda sin cuenta de email conectada, sala con email inválido, rebote. | Panel propio de la app (historial de ejecuciones y monitor de la cola de trabajos). |
+| **Sentry** | Bugs que **nadie anticipó**: excepciones sin capturar en el servidor y errores de React en el navegador. | Consola de Sentry. |
+
+Regla de oro: si el fallo es «de negocio, esperable», va al panel de agentes; si es «nadie lo vio venir», a Sentry.
+
+### Sentry en el servidor (`@sentry/node`)
+
+Se inicializa al arrancar (`server/utils/errorTracking.ts`) y reporta:
+
+- **Promesas rechazadas sin capturar** (`unhandledRejection`). El handler mantiene vivo el proceso, para que un fallo puntual no tumbe a todas las bandas, y además lo notifica.
+- **Cualquier error que llega al manejador final de `/api/*`**, con el método y la URL de la petición como contexto.
+- **El worker de la cola de agentes**, con `jobId`, tipo de agente y banda, para saber qué trabajo y de quién falló.
+- **El planificador de agentes y el radar de campañas**, indicando en qué fase falló.
+
+### Sentry en el navegador (`@sentry/react`)
+
+Se inicializa en `src/main.tsx` (`src/utils/errorTracking.ts`):
+
+- El **`ErrorBoundary`** de React captura los errores de render con su contexto, así que una pantalla rota no deja la app en blanco.
+- **Session Replay:** graba el 10 % de las sesiones y el **100 % de las que terminan en error**, para ver qué hizo la persona antes del fallo.
+- **Muestreo de trazas del 10 %** para rendimiento.
+- **Filtros anti-ruido:** descarta el ruido de HMR de Vite, de `ResizeObserver`, de bloqueadores de anuncios y todo error cuya pila venga de una extensión del navegador (`chrome-extension://`, `moz-extension://`).
+
+### Pasivo por diseño
+
+Sentry es un **no-op total sin DSN**: sin `SENTRY_DSN` (servidor) ni `VITE_SENTRY_DSN` (cliente) no se carga ni el SDK. En local, en los tests y en el E2E no cambia nada; se activa añadiendo las variables en Railway o Vercel.
+
+### Otras señales de salud
+
+- **Healthcheck** en `/api/health`, que Railway usa para decidir si un despliegue está vivo, con reinicio automático ante fallo. Un E2E (`health.spec.ts`) lo vigila.
+- **Cola de agentes:** estadísticas, métricas y recuperación de trabajos colgados (los `processing` con bloqueo vencido más de 10 minutos se recuperan solos).
+- **Auditoría de ejecuciones** de los agentes con su propio panel (`/agent-runs`).
+
+### Lo que aún falta
+
+- **Sin source maps ni `release`.** El build de producción genera `sourcemap: false` y no se etiqueta la versión, así que las pilas de Sentry salen minificadas y no se agrupan por despliegue. Es lo primero que conviene arreglar al activar Sentry.
+- **Cobertura parcial en el servidor:** hay unas 280 llamadas a `console.error` y solo 9 a `captureError`. Un fallo capturado por un `try/catch` que solo escribe en consola no llega a Sentry.
+- **Sin trazas de rendimiento en el servidor** (`tracesSampleRate: 0`): solo se reportan errores.
+- **Las alertas** (correo, Slack, umbrales) se configuran en la consola de Sentry, no están versionadas en el repositorio.
+- **Replay y datos de terceros:** la app maneja contactos de salas y contenido de bandas; antes de activarlo en producción hay que revisar qué se enmascara en las grabaciones.
 
 ## Stack
 
