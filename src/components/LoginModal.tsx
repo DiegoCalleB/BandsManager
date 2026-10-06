@@ -132,6 +132,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   const [activatePassword, setActivatePassword] = useState("");
   const [showActivatePassword, setShowActivatePassword] = useState(false);
   const [activateStep, setActivateStep] = useState<1 | 2>(1);
+  // Token de un solo uso que viaja en el enlace del correo de invitación (?invitacion=...&email=...).
+  const [activateToken, setActivateToken] = useState("");
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("invitacion");
+      if (!token) return;
+      const correo = params.get("email") || "";
+      setActivateToken(token);
+      if (correo) setActivateEmail(correo);
+      setView("activate");
+      // El token no debe quedarse en la barra de direcciones ni en el historial.
+      params.delete("invitacion");
+      params.delete("email");
+      const resto = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (resto ? `?${resto}` : "") + window.location.hash);
+    } catch {}
+  }, []);
   const [activateBandsFound, setActivateBandsFound] = useState<
     { band_id: string; bandName: string; role: string }[]
   >([]);
@@ -151,7 +170,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       const response = await fetch("/api/auth/check-invitation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: activateEmail.trim() }),
+        body: JSON.stringify({ email: activateEmail.trim(), token: activateToken }),
       });
 
       const data = await response.json().catch(() => ({}));
@@ -191,6 +210,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
           username: activateUsername.trim().toLowerCase(),
           name: activateName.trim(),
           password: activatePassword,
+          token: activateToken,
         }),
       });
 

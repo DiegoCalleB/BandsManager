@@ -40,6 +40,11 @@ export function getSafeUsers(users: any[]) {
   if (!Array.isArray(users)) return [];
   return users.map(u => {
     const { passwordHash, salt, ...safeUser } = u;
+    if (safeUser.ui_preferences?._invitacion) {
+      // El registro de invitación (hash + caducidad) no sale del servidor.
+      const { _invitacion, ...prefs } = safeUser.ui_preferences;
+      safeUser.ui_preferences = prefs;
+    }
     return safeUser;
   });
 }
