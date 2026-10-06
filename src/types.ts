@@ -1176,6 +1176,7 @@ export interface SegmentoAcordeAnalizado {
   acorde: string; // notación internacional («Am», «G7») o «N» si no hay acorde claro
   confianza: number; // 0-1
   editado?: boolean; // corregido a mano: manda sobre el análisis
+  detectado?: string; // acorde que había puesto el detector antes de corregirlo a mano (sirve para medir su acierto real)
 }
 
 /** Resultado de analizar los acordes del audio (columna songs.analisis_acordes). */

@@ -5,7 +5,7 @@ import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
 import { RegletaCompases } from './RegletaCompases';
 import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../../utils/cuadriculaCompases';
-import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
+import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
 
 interface Props {
   analisis: AnalisisAcordes;
@@ -117,6 +117,18 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     onCorregir(corregirAcorde(segmentos, editando, acorde));
     cerrarEditor();
   };
+
+  // Edición de tiempos: el detector se equivoca a veces por varios segundos, así que se puede arreglar a mano.
+  const cambioAqui = () => {
+    const nuevos = partirTramo(segmentos, tiempo);
+    if (nuevos === segmentos) return;
+    onCorregir(nuevos);
+    const i = indiceSegmentoEn(nuevos, tiempo);
+    if (i >= 0) { setEditando(i); setBorrador(nuevos[i].acorde === 'N' ? '' : nuevos[i].acorde); setErrorBorrador(null); }
+  };
+  const moverInicio = (i: number, delta: number) => onCorregir(moverFrontera(segmentos, i, segmentos[i].t0 + delta));
+  const unirAnterior = (i: number) => { onCorregir(unirConAnterior(segmentos, i)); cerrarEditor(); };
+  const desplazarTodo = (delta: number) => onCorregir(desplazarSegmentos(segmentos, delta));
 
   const alTocar = (i: number) => {
     if (corrigiendo && modoBucle === 'off') {
@@ -279,7 +291,20 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {corrigiendo && editando === null && (
-        <p className="text-micro text-[var(--acc)]">Toca un acorde para corregirlo{corregidos > 0 ? ` · ${corregidos} corregido${corregidos === 1 ? '' : 's'} (*)` : ''}.</p>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-micro text-[var(--acc)]">
+          <span>Toca un acorde para corregirlo{corregidos > 0 ? ` · ${corregidos} corregido${corregidos === 1 ? '' : 's'} (*)` : ''}.</span>
+          <button type="button" onClick={cambioAqui} className="font-bold cursor-pointer hover:text-[var(--ink)]" title="Pausa justo donde cambia el acorde y pulsa: parte el tramo en ese instante">
+            + Cambio aquí ({formatearTiempo(tiempo)})
+          </button>
+          <span className="flex items-center gap-1 text-[var(--ink-2)]" title="Si TODOS los acordes llegan antes o después de lo que oyes, desplázalos">
+            Desfase de todo:
+            {[-0.5, -0.1, 0.1, 0.5].map((d) => (
+              <button key={d} type="button" onClick={() => desplazarTodo(d)} className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--surface)] text-[var(--ink)] cursor-pointer font-mono">
+                {d > 0 ? '+' : '−'}{Math.abs(d).toString().replace('.', ',')}
+              </button>
+            ))}
+          </span>
+        </div>
       )}
 
       {editando !== null && segmentos[editando] && (
@@ -300,6 +325,22 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           <button type="button" className="font-bold text-[var(--acc)] cursor-pointer" onClick={() => guardarBorrador(borrador)}>Guardar</button>
           <button type="button" className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" onClick={() => guardarBorrador('N')}>Sin acorde</button>
           <button type="button" className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" onClick={cerrarEditor}>Cancelar</button>
+          {/* Tiempos del tramo: mover el inicio o eliminar un cambio inventado. */}
+          <span className="w-full flex flex-wrap items-center gap-1.5 text-[var(--ink-2)]">
+            {editando > 0 && (
+              <>
+                Inicio:
+                {[-0.5, -0.1, 0.1, 0.5].map((d) => (
+                  <button key={d} type="button" onClick={() => moverInicio(editando, d)} className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] cursor-pointer font-mono">
+                    {d > 0 ? '+' : '−'}{Math.abs(d).toString().replace('.', ',')} s
+                  </button>
+                ))}
+                <button type="button" onClick={() => unirAnterior(editando)} className="px-1.5 py-0.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] cursor-pointer" title="Este cambio no existe: el acorde anterior continúa">
+                  Unir con el anterior
+                </button>
+              </>
+            )}
+          </span>
           {errorBorrador && <span className="w-full text-[var(--alert)]" role="alert">{errorBorrador}</span>}
         </div>
       )}
