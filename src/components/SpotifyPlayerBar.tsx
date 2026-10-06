@@ -86,7 +86,8 @@ export default function SpotifyPlayerBar({
   const [isMuted, setIsMuted] = useState(false);
   const [isLooping, setIsLooping] = useState(false);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
-  const [isMinimized, setIsMinimized] = useState(true);
+  // Por defecto el reproductor completo; la versión reducida es opcional (botón ⌄ / ⌃).
+  const [isMinimized, setIsMinimized] = useState(false);
 
   // Historial de reproducción: rastrear canciones reproducidas para que atrás vuelva a la anterior
   const playbackHistoryRef = useRef<string[]>(song?.id ? [song.id] : []);
@@ -611,41 +612,37 @@ export default function SpotifyPlayerBar({
         }}
       />
 
-      <div className="bg-[var(--surface)]/98 text-[var(--ink)] px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3 rounded-[var(--r-m)]">
+      <div
+        className={`bg-[var(--surface)]/98 text-[var(--ink)] rounded-[var(--r-m)] ${
+          isMinimized ? 'px-2.5 py-1 sm:px-3 sm:py-1' : 'px-2.5 py-2 sm:px-3 sm:py-2.5 md:px-4 md:py-3'
+        }`}
+      >
         {isMinimized ? (
-          /* Minimized Compact Strip: una sola fila en escritorio (info a la izquierda, controles
- a la derecha) — apilarla en dos filas en pantallas anchas la hacía más alta que el
- reproductor completo, justo lo contrario de "minimizado". En móvil sigue apilada
- porque ahí sí falta ancho para una sola fila. */
-          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-2 md:gap-4">
-            {/* Info de la canción (compacta en móvil) */}
+          /* Reproductor reducido: UNA fila baja en tres zonas (info | controles principales
+ centrados | expandir y cerrar). Los controles quedan en el centro de la barra en cualquier
+ ancho; en móvil se oculta la línea secundaria de la canción para que quepa todo en la misma fila. */
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-4">
+            {/* Izquierda: portada pequeña + título (clic = expandir) */}
             <div
               onClick={() => setIsMinimized(false)}
-              className="flex items-center gap-2 w-full md:w-auto md:flex-1 min-w-0 cursor-pointer group"
+              className="flex items-center gap-2 min-w-0 cursor-pointer group"
               title="Haz clic para expandir el reproductor"
             >
-              <div className="relative shrink-0 w-8 h-8 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden md:w-10 md:h-10">
+              <div className="relative shrink-0 w-7 h-7 rounded-[var(--r-s)] bg-[var(--surface)] overflow-hidden">
                 {song.portadaUrl ? (
                   <img src={song.portadaUrl} alt={song.titulo} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-[var(--sunken)] flex items-center justify-center">
-                    <Disc className={`w-4 h-4 md:w-5 md:h-5 ${isPlaying ? 'animate-spin text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
-                  </div>
-                )}
-                {isPlaying && (
-                  <div className="absolute inset-0 bg-[var(--scrim)]/40 flex items-center justify-center gap-0.5">
-                    <span className="w-0.5 h-2 md:h-3 bg-[var(--surface)] rounded-[var(--r-pill)]" />
-                    <span className="w-0.5 h-3 md:h-4 bg-[var(--surface)] rounded-[var(--r-pill)] delay-75" />
-                    <span className="w-0.5 h-2 bg-[var(--surface)] rounded-[var(--r-pill)] delay-150" />
+                    <Disc className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin text-[var(--ok)]' : 'text-[var(--ink-2)]'}`} />
                   </div>
                 )}
               </div>
 
-              <div className="min-w-0 flex-1 text-center md:text-left">
-                <h4 className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition md:text-sm">
+              <div className="min-w-0 leading-tight">
+                <h4 className="text-xs font-bold text-[var(--ink)] truncate group-hover:text-[var(--ok)] transition">
                   {song.titulo}
                 </h4>
-                <div className="text-micro text-[var(--ink-2)] font-sans truncate md:text-micro">
+                <div className="hidden sm:block text-micro text-[var(--ink-2)] font-sans truncate">
                   <span>{song.artista || 'Banda'}</span>
                   <span className="mx-1">•</span>
                   <span className="text-[var(--ok)] font-semibold">{song.tonalidad || 'Am'}</span>
@@ -664,8 +661,8 @@ export default function SpotifyPlayerBar({
               </div>
             </div>
 
-            {/* Center: Centered Controls (focal point) */}
-            <div className="flex items-center gap-2 justify-center shrink-0 md:gap-3">
+            {/* Centro: controles principales */}
+            <div className="flex items-center gap-1.5 justify-center md:gap-2">
               <IconButton
                 label="Canción anterior"
                 type="button"
@@ -677,13 +674,13 @@ export default function SpotifyPlayerBar({
               <button data-raw
                 type="button"
                 onClick={togglePlayPause}
-                className="w-9 h-9 md:w-10 md:h-10 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition active:scale-[0.97]"
+                className="w-8 h-8 rounded-[var(--r-pill)] bg-[var(--acc)] hover:brightness-95 text-[var(--surface)] font-bold flex items-center justify-center cursor-pointer transition active:scale-[0.97]"
                 title={isPlaying ? 'Pausar' : 'Reproducir'}
               >
                 {isPlaying ? (
-                  <Pause className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                  <Pause className="w-4 h-4 fill-current" />
                 ) : (
-                  <Play className="w-4 h-4 md:w-5 md:h-5 fill-current ml-0.5" />
+                  <Play className="w-4 h-4 fill-current ml-0.5" />
                 )}
               </button>
 
@@ -694,12 +691,14 @@ export default function SpotifyPlayerBar({
               >
                 <SkipForward className="w-4 h-4 fill-current" />
               </IconButton>
+            </div>
 
+            {/* Derecha: expandir y cerrar */}
+            <div className="flex items-center gap-1 justify-end">
               <IconButton
                 label="Expandir reproductor"
                 type="button"
                 onClick={() => setIsMinimized(false)}
-                className="ml-2"
               >
                 <ChevronUp className="w-5 h-5 text-[var(--ok)]" />
               </IconButton>
