@@ -145,7 +145,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         <span className="font-bold text-[var(--ink)] min-w-0 truncate">
           Acordes del audio
           <span className="font-normal text-[var(--ink-2)]">
-            {' '}· {analisis.fuente === 'instrumental' ? 'pista instrumental' : 'mezcla completa'}
+            {' '}· {analisis.fuente === 'instrumental' ? 'pista instrumental' : analisis.fuente === 'armonia' ? 'stems de armonía (Iris)' : 'mezcla completa'}
             {analisis.tonalidad ? ` · ${analisis.tonalidad}` : ''}
           </span>
         </span>
