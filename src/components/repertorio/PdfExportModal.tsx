@@ -22,6 +22,7 @@ import {
   Zap,
   AlignLeft,
   AlignCenter,
+  Columns2,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
 import {
@@ -64,6 +65,10 @@ const PAGE_SHEET_HEIGHT_MM = 297 - 2 * PAGE_MARGIN_Y_MM - 1;
 // al lado del título o si esa fila concreta necesita caer a una línea propia debajo (ver
 // textFit.ts).
 const PAGE_CONTENT_WIDTH_PX = mmToPx(210 - 2 * PAGE_MARGIN_X_MM) - 4;
+// Dos columnas: ancho de cada una = (ancho útil - separador) / 2. El separador son 29px: un filete
+// de 1px con 14px de aire a cada lado.
+const COLUMN_GUTTER_PX = 29;
+const COLUMN_WIDTH_PX = (PAGE_CONTENT_WIDTH_PX - COLUMN_GUTTER_PX) / 2;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
@@ -72,10 +77,8 @@ const ROW_GAP_PX = 5;
 // Letra del título (pt) que usa el motor de maquetación (setlistPaginator.ts). MIN es el mínimo
 // legible a ~2m de distancia de escenario; COMFORT, la letra a partir de la cual ya no merece la
 // pena partir en más hojas; FLOOR, el último recurso si ni con el máximo de hojas cabe a MIN.
-// "De pie" sube el umbral de comodidad: acepta más hojas a cambio de letra mucho mayor.
 const MIN_TITLE_FONT_PT = 17;
 const COMFORT_TITLE_FONT_PT = 19;
-const STANDING_COMFORT_FONT_PT = 32;
 const FLOOR_TITLE_FONT_PT = 13;
 // Techo de diseño: más grande que esto, un título corto deja de parecer un setlist.
 const MAX_DESIGN_TITLE_FONT_PT = 40;
@@ -165,10 +168,8 @@ interface NoteLayoutInput {
     fontFamily: string,
     fontWeight?: string | number,
   ) => number;
-  // Modo"de pie" (ver viewDensity en el componente): sin restricción de espacio real (letra
-  // grande, más hojas aceptadas a cambio), así que la nota va SIEMPRE debajo del título en su
-  // propia línea — nunca compitiendo por ancho al lado, que es justo la limitación que ese modo
-  // existe para evitar. Salta directamente a'below' sin intentar'inline' primero.
+  // Modo centrado: la nota va SIEMPRE debajo del título, en su propia línea (al lado no tendría
+  // eje al que alinearse). Salta directamente a'below' sin intentar'inline' primero.
   forceBelowMode?: boolean;
 }
 
@@ -444,13 +445,9 @@ function PdfExportModalBody({
   // en pantallas grandes) — en pantallas pequeñas todo junto agobiaba, tapando la vista previa.
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
 
-  // Densidad de vista: 'sentado' (por defecto) prioriza el menor nº de hojas con letra cómoda
-  // (atril, mesa de sonido). 'de_pie' acepta más hojas a cambio de letra mucho mayor (ver
-  // STANDING_COMFORT_FONT_PT) y manda siempre las notas debajo del título (forceBelowMode en
-  // computeNoteLayout) — para leer desde lejos, de pie en el escenario.
-  const [viewDensity, setViewDensity] = useState<"sentado" | "de_pie">(
-    "sentado",
-  );
+  // Columnas por hoja: con sets largos en pocas hojas, dos columnas permiten una letra bastante
+  // mayor que una sola columna apretada (cada columna se llena de arriba abajo, en orden).
+  const [columns, setColumns] = useState<1 | 2>(1);
 
   // Design & Preset State
   const [stylePreset, setStylePreset] =
@@ -533,7 +530,7 @@ function PdfExportModalBody({
     selectedMemberId,
     previewPageIndex,
     textAlign,
-    viewDensity,
+    columns,
     pagesChoice,
     handwritingFont,
     handwritingColor,
@@ -648,6 +645,8 @@ function PdfExportModalBody({
     }
 
     const measure = makeCanvasMeasurer();
+    // Ancho real de una fila: toda la hoja o una columna.
+    const rowWidthPx = columns === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX;
     const noteMinFontSizePx = 11;
     const inkColor = getInkColorHex();
     const handFont = getHandwritingFontFamily();
@@ -714,9 +713,9 @@ function PdfExportModalBody({
           noteFontFamily: handFont,
           noteMaxFontSizePx,
           noteMinFontSizePx,
-          rowWidthPx: PAGE_CONTENT_WIDTH_PX,
+          rowWidthPx,
           measure,
-          forceBelowMode: viewDensity === "de_pie" || isCentered,
+          forceBelowMode: isCentered || columns === 2,
         });
 
         // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
@@ -1335,6 +1334,41 @@ function PdfExportModalBody({
  padding-left: 0;
  text-align: center;
  }
+ /* Dos columnas: el bloque entero se centra en vertical y las columnas arrancan alineadas
+ arriba; un filete fino las separa. */
+ .setlist-columns {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ }
+ .setlist-columns-row {
+ display: flex;
+ align-items: flex-start;
+ justify-content: center;
+ }
+ .setlist-columns-row .setlist-items-container {
+ flex: none;
+ justify-content: flex-start;
+ }
+ /* En columna, una nota que ni encogida al mínimo cabe en una línea baja a una segunda en vez de
+ salirse hacia el filete o el margen (la fila se mide ya con ese alto). */
+ .in-columns .song-notes-below {
+ margin-top: -2px;
+ }
+ .in-columns .note-seg {
+ white-space: normal;
+ line-height: 1.05;
+ }
+ .is-centered .note-seg {
+ text-align: center;
+ }
+ .col-divider {
+ align-self: stretch;
+ width: 1px;
+ margin: 0 14px;
+ background: #bdbdbd;
+ }
  .page-footer.is-centered {
  justify-content: center;
  gap: 14px;
@@ -1491,9 +1525,11 @@ function PdfExportModalBody({
       : 0;
     const maxFontPt = Math.min(
       MAX_DESIGN_TITLE_FONT_PT,
-      maxFontPtForWidth(widestTitleAt100 + numberAt100, PAGE_CONTENT_WIDTH_PX * 0.96),
+      maxFontPtForWidth(widestTitleAt100 + numberAt100, rowWidthPx * 0.96),
     );
-    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""}`;
+    // `in-columns` va en la propia fila medida: las reglas que cambian la altura no pueden colgar
+    // de un ancestro que el iframe de medición no tiene.
+    const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""} ${columns === 2 ? "in-columns" : ""}`;
 
     const memberPlans = opts.members.map((member) => {
       const isMaster = member.id === "master";
@@ -1513,7 +1549,7 @@ function PdfExportModalBody({
       const heightsAt = (titleFontPt: number) =>
         items.map((item, i) =>
           measureHtmlHeightPx(
-            `<div class="${rowsContainerClass}" style="width:${PAGE_CONTENT_WIDTH_PX}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
+            `<div class="${rowsContainerClass}" style="width:${rowWidthPx}px">${buildRowHtml(item, songNumberByItem[i], titleFontPt, member, isMaster)}</div>`,
           ),
         );
 
@@ -1522,9 +1558,8 @@ function PdfExportModalBody({
         heightsAt,
         availableHeightPx: pageAvailableHeightPx,
         minFontPt: MIN_TITLE_FONT_PT,
-        // "De pie" exige letra mayor aunque cueste hojas; "sentado" prioriza menos hojas.
-        comfortFontPt:
-          viewDensity === "de_pie" ? STANDING_COMFORT_FONT_PT : COMFORT_TITLE_FONT_PT,
+        comfortFontPt: COMFORT_TITLE_FONT_PT,
+        columns,
         maxFontPt,
         floorFontPt: FLOOR_TITLE_FONT_PT,
       };
@@ -1572,19 +1607,26 @@ function PdfExportModalBody({
         plan.pages
           .map((page, pageIdx) => {
             sheetIdx++;
-            const rowsHtml = items
-              .slice(page.from, page.to)
-              .map((item, k) =>
-                buildRowHtml(item, songNumberByItem[page.from + k], plan.fontPt, member, isMaster),
-              )
-              .join("");
+            const columnHtml = (col: { from: number; to: number; rowGapPx: number }, widthPx?: number) => `
+                  <div class="${rowsContainerClass}" style="${widthPx ? `width:${widthPx}px;` : ""}gap:${col.rowGapPx.toFixed(1)}px">
+                    ${items
+                      .slice(col.from, col.to)
+                      .map((item, k) =>
+                        buildRowHtml(item, songNumberByItem[col.from + k], plan.fontPt, member, isMaster),
+                      )
+                      .join("")}
+                  </div>`;
+            const bodyHtml =
+              page.columns.length > 1
+                ? `<div class="setlist-columns"><div class="setlist-columns-row">${page.columns
+                    .map((col) => columnHtml(col, COLUMN_WIDTH_PX))
+                    .join('<div class="col-divider"></div>')}</div></div>`
+                : columnHtml(page.columns[0]);
             return `
                 <div class="sheet-page ${sheetIdx !== totalSheets ? "page-break" : ""}">
                   ${showWatermark ? `<div class="page-watermark">${watermarkInnerHtml}</div>` : ""}
                   ${buildHeaderHtml(member, isMaster)}
-                  <div class="${rowsContainerClass}" style="gap:${page.rowGapPx.toFixed(1)}px">
-                    ${rowsHtml}
-                  </div>
+                  ${bodyHtml}
                   ${buildFooterHtml(member, pageIdx + 1, plan.pages.length)}
                 </div>
               `;
@@ -1871,27 +1913,25 @@ function PdfExportModalBody({
                 </div>
               )}
 
-              {/* Densidad de vista:"sentado" busca el mínimo nº de hojas posible (para leer de
- cerca — atril, mesa de sonido);"de pie" fuerza la letra más grande de todas,
- aceptando más hojas a cambio — para leerlo desde lejos, de pie en el escenario. */}
+              {/* Columnas: 1 (clásico) o 2 — para sets largos en pocas hojas. */}
               <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
                 <Button
-                  variant={viewDensity === "sentado" ? "neutral" : "ghost"}
+                  variant={columns === 1 ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setViewDensity("sentado")}
+                  onClick={() => setColumns(1)}
                   className="items-center gap-1.5"
-                  title="Menos hojas posible, letra automática — para leer de cerca (atril, mesa de sonido)"
+                  title="Una columna de temas"
                 >
-                  <ShowIcon inline emoji="🪑" />Sentado
+                  1 columna
                 </Button>
                 <Button
-                  variant={viewDensity === "de_pie" ? "neutral" : "ghost"}
+                  variant={columns === 2 ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setViewDensity("de_pie")}
+                  onClick={() => setColumns(2)}
                   className="items-center gap-1.5"
-                  title="Letra lo más grande posible (sube por página, sin techo fijo) y notas siempre debajo del título, aceptando más hojas — para leer desde lejos, de pie en el escenario"
+                  title="Dos columnas: cabe más repertorio por hoja con letra mayor (las notas pasan debajo del título si no caben al lado)"
                 >
-                  <ShowIcon inline emoji="🧍" />De pie
+                  <Columns2 className="w-3.5 h-3.5" />2 columnas
                 </Button>
               </div>
 
