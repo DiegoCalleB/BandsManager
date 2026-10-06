@@ -1,9 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { aplicarMigraciones, BASELINE_HASTA, MigracionFallida, type Ejecutor } from '../runner';
+
+// PGlite arranca un Postgres entero por test: bajo carga (suite completa en paralelo) 5 s se quedan cortos.
+vi.setConfig({ testTimeout: 60_000, hookTimeout: 60_000 });
 
 let db: PGlite;
 let dir: string;
