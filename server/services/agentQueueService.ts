@@ -130,12 +130,81 @@ export async function enqueueAgentJob(params: {
   return jobId;
 }
 
+// Un trabajo bloqueado (`processing`) cuyo worker murió (deploy, OOM, reinicio de Railway) se
+// quedaba así para siempre: `locked_until` se escribía pero nunca se leía. Se recupera pasado un
+// margen holgado sobre el bloqueo de 5 min (un agente legítimo largo no debe duplicarse).
+const MARGEN_RECUPERACION_MS = 10 * 60 * 1000;
+
+let ultimaRecuperacion = 0;
+
+export async function recuperarTrabajosColgados(forzar = false): Promise<number> {
+  if (!forzar && Date.now() - ultimaRecuperacion < 60_000) return 0; // el worker consulta cada pocos segundos
+  ultimaRecuperacion = Date.now();
+  const limite = new Date(Date.now() - MARGEN_RECUPERACION_MS).toISOString();
+  const nowIso = new Date().toISOString();
+  let recuperados = 0;
+
+  try {
+    const sb = getSupabase();
+    if (sb) {
+      const { data: colgados, error } = await sb
+        .from("agent_jobs_queue")
+        .select("id, attempts, max_attempts, locked_until")
+        .eq("status", "processing")
+        .lt("locked_until", limite)
+        .limit(20);
+      if (!error && colgados) {
+        for (const job of colgados as AgentJob[]) {
+          const intentos = (job.attempts || 0) + 1;
+          const agotado = intentos >= (job.max_attempts || 3);
+          // Condicionado al mismo estado y bloqueo: si otro worker lo recuperó antes, no hace nada.
+          const { data: tocado } = await sb
+            .from("agent_jobs_queue")
+            .update({
+              status: agotado ? "failed" : "pending",
+              attempts: intentos,
+              error_message: "Worker interrumpido: bloqueo caducado sin completar el trabajo",
+              scheduled_at: nowIso,
+              completed_at: agotado ? nowIso : null,
+              locked_by: null,
+              locked_until: null,
+              updated_at: nowIso
+            })
+            .eq("id", job.id)
+            .eq("status", "processing")
+            .eq("locked_until", job.locked_until as string)
+            .select("id");
+          if (tocado && tocado.length > 0) recuperados++;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("[AgentQueueService] Error recuperando trabajos colgados en Supabase:", err);
+  }
+
+  for (const job of memoryQueue.values()) {
+    if (job.status === "processing" && job.locked_until && job.locked_until < limite) {
+      job.attempts = (job.attempts || 0) + 1;
+      job.status = job.attempts >= (job.max_attempts || 3) ? "failed" : "pending";
+      job.locked_by = undefined;
+      job.locked_until = undefined;
+      job.updated_at = nowIso;
+      recuperados++;
+    }
+  }
+
+  if (recuperados > 0) console.warn(`[AgentQueueService] ${recuperados} trabajo(s) colgado(s) recuperado(s).`);
+  return recuperados;
+}
+
 /**
  * Obtiene y bloquea atómicamente el siguiente trabajo pendiente cuya fecha scheduled_at sea <= NOW().
  */
 export async function fetchNextPendingJob(workerId: string): Promise<AgentJob | null> {
   const nowIso = new Date().toISOString();
   const lockUntilIso = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // Bloqueo por 5 min
+
+  await recuperarTrabajosColgados();
 
   try {
     const sb = getSupabase();

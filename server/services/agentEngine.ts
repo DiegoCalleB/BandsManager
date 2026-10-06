@@ -8,7 +8,7 @@ import { getSupabase, dbGetAutonomyConfig } from "../db.js";
 import { esEmailValido, ESTADOS_DE_ENVIO } from "../utils/email.js";
 import { loadState } from "../state.js";
 import { enviarEmail, crearBorrador, EmailAgentError } from "./emailAgentClient.js";
-import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
+import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnviadoConDetalle, buscarMensajeEnviadoA, enviarEmailGmailApi, obtenerEmailDeLaCuentaConectada } from "./gmailApiClient.js";
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 import { getBandDnaProfile, buildIndexableSubjectLine } from "../utils/bandDna.js";
@@ -426,6 +426,9 @@ export interface ComprobarBorradoresResult {
   // todavía ahí es indistinguible en los logs de un chequeo que nunca llegó a hacerse.
   todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }>;
   errores: Array<{ leadId: string; draftId: string; error: string }>;
+  // Borradores que desaparecieron de Gmail SIN que exista un envío a ese destinatario en Enviados:
+  // se borraron a mano. No se marcan como enviados.
+  eliminadosSinEnviar?: string[];
   // A qué cuenta de Gmail pertenece de verdad el access token usado en esta comprobación (ver
   // obtenerEmailDeLaCuentaConectada) - para descartar que se esté consultando una cuenta distinta
   // a la que la banda cree tener conectada.
@@ -442,7 +445,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
   const cuentaGmailReal = await obtenerEmailDeLaCuentaConectada(bandId);
   const { data: leads, error } = await sb
     .from("leads")
-    .select("id, nombre_sala, notas, gmail_draft_id, pitch_generado")
+    .select("id, nombre_sala, notas, gmail_draft_id, pitch_generado, email_contacto")
     .eq("band_id", bandId)
     .eq("estado", "borrador_creado")
     .not("gmail_draft_id", "is", null);
@@ -453,6 +456,7 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
   const confirmadosEnviados: string[] = [];
   const todaviaComoBorrador: Array<{ leadId: string; draftId: string; status: number; cuerpo?: string }> = [];
   const errores: Array<{ leadId: string; draftId: string; error: string }> = [];
+  const eliminadosSinEnviar: string[] = [];
   const nowIso = new Date().toISOString();
 
   for (const lead of leads) {
@@ -472,6 +476,26 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     }
 
     const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+
+    // Un 404 también ocurre si el borrador se BORRÓ sin enviar: se confirma en Enviados antes de
+    // dar el lead por contactado (si no, la app mentía diciendo que se había contactado a la sala).
+    let enviado: { messageId: string } | null;
+    try {
+      enviado = await buscarMensajeEnviadoA(bandId, lead.email_contacto || "");
+    } catch (e: any) {
+      errores.push({ leadId: lead.id, draftId: lead.gmail_draft_id, error: e?.message || String(e) });
+      continue;
+    }
+    if (!enviado) {
+      await sb.from("leads").update({
+        notas: `*** [${dateTag}] El borrador de Gmail desapareció y NO hay ningún envío a ${lead.email_contacto || "ese destinatario"} en Enviados: se borró sin enviar. ***\n` + (lead.notas || ""),
+        gmail_draft_id: null
+      }).eq("id", lead.id);
+      eliminadosSinEnviar.push(String(lead.id));
+      continue;
+    }
+    resultado = { ...resultado, messageId: resultado.messageId || enviado.messageId };
+
     const newNote = `*** [${dateTag}] Borrador de Gmail detectado como ENVIADO (ya no está en Borradores de Gmail) ***\n` + (lead.notas || "");
 
     await sb.from("leads").update({
@@ -498,5 +522,5 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     confirmadosEnviados.push(String(lead.id));
   }
 
-  return { revisados: leads.length, confirmadosEnviados, todaviaComoBorrador, errores, cuentaGmailReal };
+  return { revisados: leads.length, confirmadosEnviados, todaviaComoBorrador, errores, eliminadosSinEnviar, cuentaGmailReal };
 }

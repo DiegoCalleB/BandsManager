@@ -26,11 +26,13 @@ const crearBorradorGmailApiMock = vi.fn();
 const tieneGmailOAuthConectadoMock = vi.fn();
 const enviarEmailGmailApiMock = vi.fn();
 const comprobarBorradorEnviadoConDetalleMock = vi.fn();
+const buscarMensajeEnviadoAMock = vi.fn();
 vi.mock('../gmailApiClient.js', () => ({
   crearBorradorGmailApi: (...args: any[]) => crearBorradorGmailApiMock(...args),
   tieneGmailOAuthConectado: (...args: any[]) => tieneGmailOAuthConectadoMock(...args),
   enviarEmailGmailApi: (...args: any[]) => enviarEmailGmailApiMock(...args),
   comprobarBorradorEnviadoConDetalle: (...args: any[]) => comprobarBorradorEnviadoConDetalleMock(...args),
+  buscarMensajeEnviadoA: (...args: any[]) => buscarMensajeEnviadoAMock(...args),
   obtenerEmailDeLaCuentaConectada: vi.fn().mockResolvedValue(null)
 }));
 
@@ -213,6 +215,7 @@ describe('comprobarBorradoresGmailEnviados', () => {
       Promise.resolve(draftId === 'draft-1' ? { existe: false, status: 404 } : { existe: true, status: 200 })
     );
 
+    buscarMensajeEnviadoAMock.mockResolvedValue({ messageId: 'sent-1' });
     const resultado = await comprobarBorradoresGmailEnviados('band-test');
 
     expect(resultado.revisados).toBe(2);
@@ -221,5 +224,31 @@ describe('comprobarBorradoresGmailEnviados', () => {
     expect(updates[0].estado).toBe('contactado');
     expect(updates[0].gmail_draft_id).toBeNull();
     expect(inserts).toHaveLength(1);
+  });
+
+  it('un borrador que desaparece SIN envío en Enviados NO se marca como contactado (se borró a mano)', async () => {
+    const l = { id: 'lead-9', nombre_sala: 'Sala Nueve', notas: '', gmail_draft_id: 'draft-9', email_contacto: 'sala9@example.com' };
+    const updates: any[] = [];
+    vi.mocked(getSupabase).mockReturnValue({
+      from: () => ({
+        select: () => ({ eq: () => ({ eq: () => ({ not: () => Promise.resolve({ data: [l], error: null }) }) }) }),
+        update: (fila: any) => {
+          updates.push(fila);
+          const c: any = { eq: () => c, then: (r: any) => Promise.resolve({ error: null }).then(r) };
+          return c;
+        },
+        insert: () => Promise.resolve({ error: null })
+      })
+    } as any);
+    comprobarBorradorEnviadoConDetalleMock.mockResolvedValue({ existe: false, status: 404 });
+    buscarMensajeEnviadoAMock.mockResolvedValue(null);
+
+    const resultado = await comprobarBorradoresGmailEnviados('band-test');
+
+    expect(resultado.confirmadosEnviados).toEqual([]);
+    expect(resultado.eliminadosSinEnviar).toEqual(['lead-9']);
+    expect(updates).toHaveLength(1);
+    expect(updates[0].estado).toBeUndefined();
+    expect(updates[0].gmail_draft_id).toBeNull();
   });
 });
