@@ -184,13 +184,13 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       <div className="flex items-end gap-4">
         <div>
           <span className="block text-micro text-[var(--ink-2)]">Ahora</span>
-          <span className="block text-2xl font-bold font-mono text-[var(--ink)] leading-none min-w-[3ch]" data-testid="acorde-actual">
+          <span translate="no" className="notranslate block text-2xl font-bold font-mono text-[var(--ink)] leading-none min-w-[3ch]" data-testid="acorde-actual">
             {actual >= 0 ? nombre(segmentos[actual].acorde) : '·'}
           </span>
         </div>
         <div className="text-[var(--ink-2)]">
           <span className="block text-micro">Siguiente{segundosHastaSiguiente !== null && isPlaying ? ` · ${segundosHastaSiguiente.toFixed(1)} s` : ''}</span>
-          <span className="block text-lg font-mono leading-none">{siguiente >= 0 ? nombre(segmentos[siguiente].acorde) : '·'}</span>
+          <span translate="no" className="notranslate block text-lg font-mono leading-none">{siguiente >= 0 ? nombre(segmentos[siguiente].acorde) : '·'}</span>
         </div>
         <span className="ml-auto text-micro text-[var(--ink-2)] pb-0.5">{formatearTiempo(tiempo)} / {formatearTiempo(analisis.duracionSegundos)}</span>
       </div>
@@ -258,7 +258,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {/* Carril de acordes */}
-      <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1 shrink-0">
+      <div ref={carrilRef} translate="no" className="notranslate flex gap-1.5 overflow-x-auto pb-1 shrink-0">
         {segmentos.map((seg, i) => (
           <button
             key={`${seg.t0}-${i}`}

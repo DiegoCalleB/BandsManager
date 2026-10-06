@@ -871,7 +871,7 @@ export function SongChordsViewerModal({
                   )}
 
                   {/* THE CHORD SHEET DISPLAY */}
-                  <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
+                  <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
                     {renderFormattedChordSheet(
                       processedText,
                       sincronizado && alineacion && analisisAcordes
@@ -1299,7 +1299,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
   return (
-    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
+    <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
       <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
         <span>{chord}</span>
       </div>
