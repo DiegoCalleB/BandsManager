@@ -185,3 +185,21 @@ describe('analizarArmonia: «Born to be wild»', () => {
     expect(analizarArmonia([], null)).toBeNull();
   });
 });
+
+import { explicarAcorde, intervaloDeGrado } from '../teoriaArmonica';
+
+describe('explicarAcorde: por qué un acorde tiene su color', () => {
+  it('grados romanos a semitonos', () => {
+    expect([intervaloDeGrado('I'), intervaloDeGrado('bVII'), intervaloDeGrado('vi'), intervaloDeGrado('V7'), intervaloDeGrado('#IV'), intervaloDeGrado('ii°')]).toEqual([0, 10, 9, 7, 6, 2]);
+    expect(intervaloDeGrado('?')).toBeNull();
+  });
+  it('cuenta la posición respecto a la tónica y qué hace esa posición', () => {
+    expect(explicarAcorde({ grado: 'I', funcion: 'T' }, 'Mi', 'Mi mayor')).toBe('Mi (I) es la tónica (el «1») de Mi mayor: es un acorde de reposo: aquí la música se siente «en casa».');
+    expect(explicarAcorde({ grado: 'IV', funcion: 'S' }, 'La', 'Mi mayor')).toMatch(/La \(IV\) es el 4\.º grado de Mi mayor: te aleja de casa/);
+    expect(explicarAcorde({ grado: 'V', funcion: 'D' }, 'Si', 'Mi mayor')).toMatch(/crea tensión/);
+    expect(explicarAcorde({ grado: 'bVII', funcion: 'M' }, 'Re', 'Mi mayor')).toMatch(/7\.º grado bajado de Mi mayor: no pertenece a la escala.*prestado/);
+  });
+  it('un dominante secundario explica a quién tira', () => {
+    expect(explicarAcorde({ grado: 'II', funcion: 'D', secundario: 'V/V' }, 'D', 'C mayor')).toMatch(/quinta por encima de V y tira hacia él \(dominante secundario V\/V\)/);
+  });
+});

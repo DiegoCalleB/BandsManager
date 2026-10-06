@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import type { AnalisisAcordes } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import {
-  NOMBRE_FUNCION, SENSACION_FUNCION, escalasSugeridas, notasDelAcorde, nombreDeNota, usaBemoles,
+  NOMBRE_FUNCION, SENSACION_FUNCION, escalasSugeridas, explicarAcorde, notasDelAcorde, nombreDeNota, usaBemoles,
   type AnalisisArmonico, type Funcion, type ResumenAcorde,
 } from '../../utils/teoriaArmonica';
 import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
@@ -155,6 +155,9 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
                   <span className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold ${CLASE_FUNCION[r.funcion]}`}>{acorde(r.acorde)}</span>
                   <span className="font-bold text-[var(--ink)]">{r.grado}{r.secundario ? ` (${r.secundario})` : ''}</span>
                   <span className="text-[var(--ink-2)]">{NOMBRE_FUNCION[r.funcion]} · {Math.round((r.segundos / total) * 100)} % del tiempo · entra {r.veces} {r.veces === 1 ? 'vez' : 'veces'}</span>
+                </div>
+                <div className="text-[var(--ink-2)]">
+                  {explicarAcorde(r, acorde(r.acorde), `${tonicaNombre}${tonalidad.menor ? ' menor' : ' mayor'}`)}
                 </div>
                 {notas && (
                   <div className="text-[var(--ink)]">

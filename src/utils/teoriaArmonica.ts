@@ -185,6 +185,50 @@ export function analizarAcorde(acorde: string, tonalidad: Tonalidad, siguiente?:
   return { acorde, grado, funcion, ...(secundario ? { secundario } : {}) };
 }
 
+// ── Explicar un acorde ─────────────────────────────────────────────────────────────────────────
+
+const PREFIJO_GRADO = /^([#b]?)([IViv]+)/;
+const SEMITONOS_GRADO: Record<string, number> = { I: 0, II: 2, III: 4, IV: 5, V: 7, VI: 9, VII: 11 };
+
+/** Semitonos sobre la tónica de un grado romano («bVII» → 10, «vi» → 9); null si no se entiende. */
+export function intervaloDeGrado(grado: string): number | null {
+  const m = PREFIJO_GRADO.exec(grado);
+  if (!m) return null;
+  const base = SEMITONOS_GRADO[m[2].toUpperCase()];
+  if (base === undefined) return null;
+  return (base + (m[1] === '#' ? 1 : m[1] === 'b' ? -1 : 0) + 12) % 12;
+}
+
+const NOMBRE_POSICION: Record<number, string> = {
+  0: 'la tónica (el «1»)', 1: 'el 2.º grado bajado', 2: 'el 2.º grado', 3: 'el 3.er grado bajado', 4: 'el 3.er grado',
+  5: 'el 4.º grado', 6: 'el 4.º grado subido', 7: 'el 5.º grado', 8: 'el 6.º grado bajado', 9: 'el 6.º grado',
+  10: 'el 7.º grado bajado', 11: 'el 7.º grado (la sensible)',
+};
+
+const MOTIVO_FUNCION: Record<Funcion, string> = {
+  T: 'es un acorde de reposo: aquí la música se siente «en casa».',
+  S: 'te aleja de casa sin tensión: prepara el camino hacia el dominante o vuelve a la tónica.',
+  D: 'crea tensión y «pide» volver a la tónica.',
+  M: 'no pertenece a la escala de la tonalidad: está prestado de otro modo y por eso da color.',
+  X: 'queda fuera de la tonalidad: es un cambio de tono, un acorde de paso o una sorpresa.',
+};
+
+/**
+ * Por qué un acorde tiene el color y el grado que tiene: su posición respecto a la tónica y qué
+ * hace esa posición. `nombreAcorde` y `nombreTonalidad` son los que se ven en pantalla (ya
+ * transpuestos y en el idioma elegido).
+ */
+export function explicarAcorde(a: { grado: string; funcion: Funcion; secundario?: string }, nombreAcorde: string, nombreTonalidad: string): string {
+  const intervalo = intervaloDeGrado(a.grado);
+  const posicion = intervalo === null ? 'un grado' : NOMBRE_POSICION[intervalo];
+  const base = `${nombreAcorde} (${a.grado}) es ${posicion} de ${nombreTonalidad}: `;
+  if (a.secundario) {
+    const destino = a.secundario.replace(/^V\//, '');
+    return `${base}está a una quinta por encima de ${destino} y tira hacia él (dominante secundario ${a.secundario}), por eso cuenta como dominante.`;
+  }
+  return `${base}${MOTIVO_FUNCION[a.funcion]}`;
+}
+
 // ── Tonalidad estimada y modo ──────────────────────────────────────────────────────────────────
 
 export interface TramoAcorde {

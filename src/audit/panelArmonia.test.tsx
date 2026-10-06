@@ -88,3 +88,18 @@ describe('ProfesorIA', () => {
     expect(h).not.toMatch(/\bborder/);
   });
 });
+
+describe('explicar los colores', () => {
+  it('el panel de Armonía explica por qué cada acorde tiene su función, con su posición en la tonalidad', () => {
+    const h = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} />);
+    expect(h).toContain('Mi (I) es la tónica (el «1») de Mi mayor');
+    expect(h).toMatch(/La \(IV\) es el 4\.º grado de Mi mayor: te aleja de casa/);
+    expect(h).toMatch(/Re \(bVII\) es el 7\.º grado bajado de Mi mayor: no pertenece a la escala/);
+  });
+
+  it('la leyenda ofrece «¿Por qué estos colores?» y, desplegada, dice que el color depende del lugar en la tonalidad y da ejemplos', () => {
+    const cerrada = renderToStaticMarkup(<SelectorArmonia estilo={ESTILO_POR_DEFECTO} onCambio={() => {}} presentes={['T', 'S']} />);
+    expect(cerrada).toContain('¿Por qué estos colores?');
+    expect(cerrada).not.toContain('no depende del nombre del acorde');
+  });
+});

@@ -4,7 +4,7 @@ import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
 import { RegletaCompases } from './RegletaCompases';
-import { NOMBRE_FUNCION, type AnalisisArmonico } from '../../utils/teoriaArmonica';
+import { explicarAcorde, type AnalisisArmonico } from '../../utils/teoriaArmonica';
 import { CLASE_FUNCION, textoDeAcorde, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../../utils/cuadriculaCompases';
 import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
@@ -31,6 +31,8 @@ interface Props {
   /** Grados y funciones de cada tramo (mismo orden que `analisis.segmentos`) y cómo mostrarlos. */
   armonia?: AnalisisArmonico | null;
   estilo?: EstiloArmonia;
+  /** Tonalidad tal como se ve («Mi mayor»): para explicar por qué un acorde tiene su color. */
+  nombreTonalidad?: string;
   onClose: () => void;
 }
 
@@ -47,7 +49,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, vibrar, onVibrar, armonia, estilo, onClose,
+  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, vibrar, onVibrar, armonia, estilo, nombreTonalidad, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -379,7 +381,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             ref={(el) => { chipsRef.current[i] = el; }}
             type="button"
             onClick={() => alTocar(i)}
-            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %${armonia?.porTramo[i] ? ` · ${armonia.porTramo[i]!.grado}: ${NOMBRE_FUNCION[armonia.porTramo[i]!.funcion]}` : ''}`}
+            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %${armonia?.porTramo[i] ? ` · ${explicarAcorde(armonia.porTramo[i]!, nombre(seg.acorde), nombreTonalidad ?? '')}` : ''}`}
             className={`shrink-0 px-2 py-1 rounded-[var(--r-s)] text-left cursor-pointer transition-ui ${
               i === actual
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]'

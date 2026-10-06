@@ -35,7 +35,7 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
-import { analizarArmonia, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
+import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, type EstiloArmonia } from "../utils/estiloArmonia";
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
@@ -428,6 +428,18 @@ export function SongChordsViewerModal({
       : acordesDelCifrado(cifradoTexto).map((a, i) => ({ t0: i, t1: i + 1, acorde: a }));
     return analizarArmonia(tramos, song.tonalidad);
   }, [analisisAcordes, cifradoTexto, song.tonalidad]);
+  // Tonalidad tal como se ve (transpuesta y en el idioma elegido) y acordes de la canción por función, para
+  // explicar los colores con ejemplos reales.
+  const nombreTonalidadVista = armonia
+    ? `${nombreDeNota(armonia.tonalidad.tonica + transpose, usaBemoles(armonia.tonalidad, armonia.modo.id), notation)}${armonia.tonalidad.menor ? " menor" : " mayor"}`
+    : "";
+  const acordesPorFuncion = useMemo(() => {
+    const salida: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>> = {};
+    for (const r of armonia?.acordes ?? []) {
+      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: r.grado });
+    }
+    return salida;
+  }, [armonia, transpose, notation]);
   const funcionesPresentes = useMemo<Funcion[]>(
     () => (armonia ? (Object.keys(armonia.funciones) as Funcion[]).filter((f) => armonia.funciones[f] > 0.005) : []),
     [armonia],
@@ -954,6 +966,7 @@ export function SongChordsViewerModal({
               onSeguir={setSeguirEnCifrado}
               armonia={armonia}
               estilo={estiloArmonia}
+              nombreTonalidad={nombreTonalidadVista}
               vibrar={vibrarAlCambiar}
               onVibrar={alternarVibracion}
               onCorregir={handleCorregirAcordes}
@@ -1002,6 +1015,8 @@ export function SongChordsViewerModal({
                       onCambio={cambiarEstiloArmonia}
                       resumen={`${armonia.tonalidad.nombre.replace("m", " menor").replace(/^([A-G]#?)$/, "$1 mayor")} · ${armonia.modo.nombre}${armonia.tonalidadEstimada ? " (estimado)" : ""}`}
                       presentes={funcionesPresentes}
+                      acordesPorFuncion={acordesPorFuncion}
+                      nombreTonalidad={nombreTonalidadVista}
                     />
                   )}
                   <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
@@ -1031,7 +1046,7 @@ export function SongChordsViewerModal({
                             },
                           }
                         : undefined,
-                      armonia ? { tonalidad: armonia.tonalidad, transpose, estilo: estiloArmonia } : undefined,
+                      armonia ? { tonalidad: armonia.tonalidad, transpose, estilo: estiloArmonia, nombreTonalidad: nombreTonalidadVista } : undefined,
                     )}
                   </div>
                 </div>
@@ -1373,6 +1388,8 @@ interface ArmoniaVisible {
   tonalidad: AnalisisArmonico["tonalidad"];
   transpose: number;
   estilo: EstiloArmonia;
+  /** Tonalidad tal como se ve («Mi mayor»), para explicar los acordes. */
+  nombreTonalidad: string;
 }
 
 interface SincronizacionLetra {
@@ -1440,7 +1457,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
             {texto.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{texto.secundario}</sup>}
           </>
         );
-        const funcionTitulo = info ? ` · ${info.grado}: ${NOMBRE_FUNCION[info.funcion]}${info.secundario ? ` (${info.secundario})` : ""}` : "";
+        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad)}` : "";
         if (sync && par && sync.tiempos[k] !== undefined) {
           const instante = sync.tiempos[k];
           return (
