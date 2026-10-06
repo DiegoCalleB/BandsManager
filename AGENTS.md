@@ -250,6 +250,13 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * Junto con el aislamiento por `band_id` (§2.1), es la única área con excepción obligatoria de TDD (test del caso límite antes que el código) — ver §5.3.1.
    * **Cambio reciente:** `dbGetAiDebtCents` ahora hace fallback silencioso a tabla directa si la RPC falla, en lugar de rechazar — invariante: nunca rechaza, nunca devuelve NaN/undefined.
 
+11. **Impresión de repertorios (`src/components/repertorio/PdfExportModal.tsx`, `src/utils/setlistPaginator.ts`):**
+   * `buildPrintDocument` genera UN solo HTML por músico y lo consumen la ventana de impresión y la vista previa (iframe A4 con `sandbox="allow-scripts"`). No reintroduzcas una maqueta de preview aparte: ya hubo una y divergía de lo impreso.
+   * `setlistPaginator.ts` (función pura, con tests) decide nº de hojas, letra, columnas (1 o 2) y cortes: reparto equilibrado por ITEMS (canciones, bloques e interludios), nunca un encabezado de bloque colgando al final de una hoja, misma letra en todas las hojas y un 10 % de aire repartido entre filas. El usuario puede imponer 1-3 hojas (`forcedPages`); entonces la letra baja hasta donde haga falta y el modal avisa si queda por debajo de 17 pt.
+   * **Medir con las fuentes ya cargadas:** una web font no se descarga hasta que algo la usa y `document.fonts.ready` resuelve antes. `ensurePrintFonts` pide cada cara con `fonts.load`; sin eso las alturas salían ~10 % menores que las impresas y las hojas se desbordaban.
+   * **Toda regla CSS que cambie la altura de una fila debe colgar de la clase de su propio contenedor** (`is-centered`, `in-columns`), no de un ancestro: el iframe de medición solo contiene el contenedor y la regla no se aplicaría al medir.
+   * **Todo texto de banda interpolado en el HTML pasa por `escapeHtml`** (la ventana de impresión es del mismo origen que la app); lo vigila `src/components/repertorio/__tests__/pdfExportHtmlEscaping.test.ts`. Nunca metas texto de usuario dentro de un atributo `onerror`/JS.
+
 ---
 
 ## 🛠️ 5. Estándares de Código y Calidad (Fullstack)

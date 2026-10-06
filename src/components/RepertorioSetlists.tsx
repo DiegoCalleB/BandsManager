@@ -3811,17 +3811,18 @@ export default function RepertorioSetlists({
                 )}
               </div>
 
-              {/* IMPRIMIR: icono, el detalle vive en el menú ⋯ */}
+              {/* IMPRIMIR: el setlist de papel es lo que se pega en el escenario; con etiqueta y color
+                  de firma (único `soft` de la vista) para que se vea, también en móvil. */}
               <Button
                 id="btn-print-setlist-header"
-                variant="ghost"
-                size="icon-sm"
-                className="hidden sm:inline-flex"
+                variant="soft"
+                size="sm"
                 onClick={() => setShowPdfPreview(true)}
-                title="Imprimir repertorio o exportar a PDF / atril en papel"
-                aria-label="Imprimir repertorio"
+                title="Imprimir el setlist en papel (A4): una hoja por músico, maquetado automático"
               >
                 <Printer className="size-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Imprimir setlist</span>
+                <span className="sm:hidden">Imprimir</span>
               </Button>
 
               <div className="relative shrink-0">

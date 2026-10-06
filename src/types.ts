@@ -1182,7 +1182,8 @@ export interface SegmentoAcordeAnalizado {
 export interface AnalisisAcordes {
   version: number; // versión del algoritmo; sirve para saber qué canciones reanalizar
   analizadoEn: string; // ISO
-  fuente: 'mezcla' | 'instrumental'; // sobre qué audio se calculó
+  editadoEn?: string; // ISO de la última corrección manual
+  fuente: 'mezcla' | 'instrumental' | 'armonia'; // sobre qué audio se calculó (armonia = suma de los stems de bajo/guitarras/teclados de Iris)
   duracionSegundos: number;
   tonalidad?: string | null; // la que se usó como pista, si la había
   segmentos: SegmentoAcordeAnalizado[];

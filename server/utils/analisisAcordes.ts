@@ -41,8 +41,48 @@ export function elegirFuenteAudio(song: Partial<Song> | null | undefined): Fuent
     const pista = (idea.pistas ?? []).find((p) => /instrumental/i.test(p.nombre || "") && p.audioUrl);
     if (pista) return { url: pista.audioUrl, fuente: "instrumental" };
   }
-  const principal = song.audioPrincipalUrl || song.audioUrl;
+  // Mismo orden que el visor de acordes (audio principal, y si no la primera idea con audio), para
+  // que el botón no aparezca con un audio y el servidor busque otro.
+  const principal = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i) => i.audioUrl)?.audioUrl;
   return principal ? { url: principal, fuente: "mezcla" } : null;
+}
+
+const STEM_ARMONICO = /(bajo|guitarr|teclad|arreglo|piano|sintet)/i;
+
+export interface FuentesAudioAcordes {
+  urls: string[];
+  fuente: AnalisisAcordes["fuente"];
+}
+
+/**
+ * Qué audio analizar, de mejor a peor para detectar armonía:
+ *  1. pista «Instrumental» de Iris (sin voz);
+ *  2. suma de los stems armónicos de Iris (bajo, guitarras, teclados, arreglos): sin voz ni
+ *     batería, el croma queda mucho más limpio y el bajo aporta la raíz del acorde;
+ *  3. la mezcla completa.
+ * Si una fuente mejor falla al decodificar, el llamador baja al siguiente nivel con `alternativas`.
+ */
+export function elegirFuentesAudio(song: Partial<Song> | null | undefined): FuentesAudioAcordes[] {
+  if (!song) return [];
+  const niveles: FuentesAudioAcordes[] = [];
+  for (const idea of song.audioIdeas ?? []) {
+    const instrumental = (idea.pistas ?? []).find((p) => /instrumental/i.test(p.nombre || "") && p.audioUrl);
+    if (instrumental) {
+      niveles.push({ urls: [instrumental.audioUrl], fuente: "instrumental" });
+      break;
+    }
+  }
+  for (const idea of song.audioIdeas ?? []) {
+    const armonicos = (idea.pistas ?? []).filter((p) => STEM_ARMONICO.test(p.nombre || "") && p.audioUrl);
+    if (armonicos.length > 0) {
+      niveles.push({ urls: armonicos.map((p) => p.audioUrl), fuente: "armonia" });
+      break;
+    }
+  }
+  // Mezcla: mismo orden que el visor (principal; si no, la primera idea con audio).
+  const mezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i) => i.audioUrl)?.audioUrl;
+  if (mezcla) niveles.push({ urls: [mezcla], fuente: "mezcla" });
+  return niveles;
 }
 
 export function construirAnalisis(params: {

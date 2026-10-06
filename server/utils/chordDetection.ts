@@ -292,3 +292,18 @@ export async function detectarAcordesDesdeAudio(
   if (!pcm) return null;
   return detectarAcordesDesdePcm(pcm, SAMPLE_RATE, opciones);
 }
+
+/**
+ * Suma varias pistas (stems) en una sola. Las más cortas se rellenan con silencio. No se
+ * normaliza: el detector trabaja con croma normalizado, y sumar mantiene las proporciones entre
+ * instrumentos tal como estaban en la mezcla.
+ */
+export function sumarPcm(pistas: Float32Array[]): Float32Array {
+  const validas = pistas.filter((p) => p && p.length > 0);
+  if (validas.length === 0) return new Float32Array(0);
+  if (validas.length === 1) return validas[0];
+  const largo = Math.max(...validas.map((p) => p.length));
+  const suma = new Float32Array(largo);
+  for (const p of validas) for (let i = 0; i < p.length; i++) suma[i] += p[i];
+  return suma;
+}

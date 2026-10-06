@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { guardarOReverter } from "../utils/guardarConReversion";
 import {
   X,
@@ -29,6 +29,9 @@ import {
 import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
+import { LineaTiempoAcordes } from "./chords/LineaTiempoAcordes";
+import { alinearCifradoConAudio, acordeActivoDelCifrado, esLineaCabecera, esTokenAcorde, Alineacion } from "../utils/alineacionAcordes";
+import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
 import { formatSongShareText } from "../utils/shareUtils";
@@ -81,6 +84,23 @@ export function SongChordsViewerModal({
   const [isAnalyzingChords, setIsAnalyzingChords] = useState<boolean>(false);
   const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
   const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
+  const [seguirEnCifrado, setSeguirEnCifrado] = useState<boolean>(true);
+  // Aviso de una sola vez: la detección de acordes del audio no se descubría sola.
+  const [avisoAcordesVisto, setAvisoAcordesVisto] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem("bm_aviso_acordes_audio") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const cerrarAvisoAcordes = () => {
+    setAvisoAcordesVisto(true);
+    try {
+      localStorage.setItem("bm_aviso_acordes_audio", "1");
+    } catch {
+      /* sin almacenamiento: el aviso volverá a salir, no pasa nada */
+    }
+  };
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
@@ -201,13 +221,13 @@ export function SongChordsViewerModal({
   }, [isAutoScrolling, scrollSpeed]);
 
   // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
-  const handleAnalyzeChordsFromAudio = async () => {
+  const handleAnalyzeChordsFromAudio = async (sobrescribir = false) => {
     try {
       setIsAnalyzingChords(true);
       setAiSuccessMsg(null);
       const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({ sobrescribir }),
       });
       if (!data?.analisis) throw new Error(data?.error || "No se pudieron analizar los acordes");
       onUpdateSong({ ...song, analisisAcordes: data.analisis });
@@ -224,6 +244,28 @@ export function SongChordsViewerModal({
       setIsAnalyzingChords(false);
       setTimeout(() => setAiSuccessMsg(null), 7000);
     }
+  };
+
+  // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
+  // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
+  const handleCorregirAcordes = (segmentos: AnalisisAcordes["segmentos"]) => {
+    if (!analisisAcordes) return;
+    const anterior = song;
+    onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, segmentos } });
+    const token = localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["x-auth-token"] = token;
+    }
+    guardarOReverter(
+      fetch(`/api/songs/${encodeURIComponent(song.id)}/acordes`, { method: "PATCH", headers, body: JSON.stringify({ segmentos }) }),
+      () => {
+        onUpdateSong(anterior);
+        setAiSuccessMsg("⚠️ No se pudo guardar la corrección del acorde. Se ha restaurado el anterior.");
+        setTimeout(() => setAiSuccessMsg(null), 6000);
+      },
+    );
   };
 
   // Handle AI chord generation
@@ -338,6 +380,24 @@ export function SongChordsViewerModal({
 
   // Process text according to current transpose and notation
   const processedText = processChordText(cifradoTexto, transpose, notation);
+
+  // Fusión cifrado ↔ audio: cada acorde del texto hereda el tiempo del tramo detectado con el que
+  // casa. Se calcula sobre el texto SIN transponer (la transposición es solo de pantalla).
+  const alineacion = useMemo<Alineacion | null>(
+    () => (analisisAcordes ? alinearCifradoConAudio(cifradoTexto, analisisAcordes.segmentos) : null),
+    [cifradoTexto, analisisAcordes],
+  );
+  const sincronizado = Boolean(alineacion?.usable && seguirEnCifrado && showAnalisisAcordes);
+  const acordeActivo = sincronizado
+    ? acordeActivoDelCifrado(alineacion, indiceSegmentoEn(analisisAcordes!.segmentos, audioCurrentTime))
+    : -1;
+
+  // Mantiene a la vista el acorde del cifrado que está sonando (si el autoscroll manual está
+  // apagado, para no pelearse con él).
+  useEffect(() => {
+    if (acordeActivo < 0 || !isPlayingAudio || isAutoScrolling) return;
+    document.getElementById(`cifrado-acorde-${acordeActivo}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [acordeActivo, isPlayingAudio, isAutoScrolling]);
   const uniqueChords = extractUniqueChords(processedText);
 
   // Copy chords to clipboard
@@ -475,7 +535,7 @@ export function SongChordsViewerModal({
                   variant="neutral"
                   size="xs"
                   type="button"
-                  onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : handleAnalyzeChordsFromAudio}
+                  onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio()}
                   disabled={isAnalyzingChords}
                   className="items-center gap-1.5"
                   title={
@@ -484,7 +544,7 @@ export function SongChordsViewerModal({
                       : "Detectar los acordes del audio con sus tiempos (automático, sin IA generativa)"
                   }
                 >
-                  <Music className={`w-4 h-4 ${isAnalyzingChords ? "animate-pulse" : ""}`} />
+                  <Music className="w-4 h-4" />
                   <span>{isAnalyzingChords ? "Analizando..." : analisisAcordes ? "Acordes del audio" : "Analizar acordes"}</span>
                 </Button>
               )}
@@ -773,58 +833,53 @@ export function SongChordsViewerModal({
             </div>
           )}
 
+          {/* AVISO DE UNA SOLA VEZ: detección de acordes del audio */}
+          {audioUrl && !analisisAcordes && !avisoAcordesVisto && !isAnalyzingChords && (
+            <div className="px-4 py-2 text-xs font-sans flex items-center justify-between gap-3 bg-[var(--acc-soft)] text-[var(--ink)]">
+              <span className="flex items-center gap-2 min-w-0">
+                <Music className="w-4 h-4 shrink-0 text-[var(--acc)]" />
+                <span>
+                  <strong>Nuevo:</strong> detecta los acordes de tu audio con sus tiempos y síguelos mientras suena la canción.
+                </span>
+              </span>
+              <span className="flex items-center gap-3 shrink-0">
+                <button
+                  type="button"
+                  className="font-bold text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
+                  onClick={() => {
+                    cerrarAvisoAcordes();
+                    handleAnalyzeChordsFromAudio();
+                  }}
+                >
+                  Analizar ahora
+                </button>
+                <button type="button" onClick={cerrarAvisoAcordes} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar aviso">
+                  ✕
+                </button>
+              </span>
+            </div>
+          )}
+
           {/* ACORDES DETECTADOS DEL AUDIO */}
           {analisisAcordes && showAnalisisAcordes && (
-            <div className="px-4 py-2.5 bg-[var(--sunken)] text-xs font-sans space-y-1.5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-bold text-[var(--ink)]">
-                  Acordes detectados del audio
-                  <span className="font-normal text-[var(--ink-2)]">
-                    {" "}· {analisisAcordes.fuente === "instrumental" ? "pista instrumental" : "mezcla completa"}
-                    {analisisAcordes.tonalidad ? ` · tonalidad ${analisisAcordes.tonalidad}` : ""}
-                  </span>
-                </span>
-                <span className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleAnalyzeChordsFromAudio}
-                    disabled={isAnalyzingChords}
-                    className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
-                  >
-                    Reanalizar
-                  </button>
-                  <button type="button" onClick={() => setShowAnalisisAcordes(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">✕</button>
-                </span>
-              </div>
-              <div className="flex gap-1.5 overflow-x-auto pb-1">
-                {analisisAcordes.segmentos.map((seg, i) => (
-                  <button
-                    key={`${seg.t0}-${i}`}
-                    type="button"
-                    onClick={() => {
-                      if (audioRef.current) {
-                        audioRef.current.currentTime = seg.t0;
-                        setAudioCurrentTime(seg.t0);
-                      }
-                    }}
-                    title={`${formatAudioTime(seg.t0)} – ${formatAudioTime(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %`}
-                    className={`shrink-0 px-2 py-1 rounded-[var(--r-s)] text-left cursor-pointer ${
-                      seg.acorde === "N"
-                        ? "bg-transparent text-[var(--ink-2)] border border-dashed border-[var(--hair)]"
-                        : seg.confianza < 0.4
-                          ? "bg-[var(--acc-soft)]/60 text-[var(--ink)]"
-                          : "bg-[var(--acc-soft)] text-[var(--ink)]"
-                    }`}
-                  >
-                    <span className="block text-micro text-[var(--ink-2)]">{formatAudioTime(seg.t0)}</span>
-                    <span className="block font-bold font-mono">{seg.acorde === "N" ? "—" : processChordText(`[${seg.acorde}]`, transpose, notation).replace(/[\[\]]/g, "")}</span>
-                  </button>
-                ))}
-              </div>
-              <p className="text-micro text-[var(--ink-2)]">
-                Detección automática: ronda el 75-85 % en triadas. Los tramos con «—» no tienen acorde claro y los tenues son poco fiables. Toca uno para saltar a ese momento.
-              </p>
-            </div>
+            <LineaTiempoAcordes
+              analisis={analisisAcordes}
+              audioRef={audioRef}
+              isPlaying={isPlayingAudio}
+              transpose={transpose}
+              notation={notation}
+              isAnalyzing={isAnalyzingChords}
+              onSeek={(t) => {
+                if (audioRef.current) audioRef.current.currentTime = t;
+                setAudioCurrentTime(t);
+              }}
+              onReanalizar={() => handleAnalyzeChordsFromAudio(true)}
+              sincronizacion={alineacion ? { calidad: alineacion.calidad, desplazamiento: alineacion.desplazamiento, usable: alineacion.usable } : null}
+              seguir={seguirEnCifrado}
+              onSeguir={setSeguirEnCifrado}
+              onCorregir={handleCorregirAcordes}
+              onClose={() => setShowAnalisisAcordes(false)}
+            />
           )}
 
           {/* MODAL BODY */}
@@ -859,8 +914,21 @@ export function SongChordsViewerModal({
                   )}
 
                   {/* THE CHORD SHEET DISPLAY */}
-                  <div className="bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
-                    {renderFormattedChordSheet(processedText)}
+                  <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
+                    {renderFormattedChordSheet(
+                      processedText,
+                      sincronizado && alineacion && analisisAcordes
+                        ? {
+                            pares: alineacion.pares,
+                            activo: acordeActivo,
+                            segmentos: analisisAcordes.segmentos,
+                            onSeek: (t: number) => {
+                              if (audioRef.current) audioRef.current.currentTime = t;
+                              setAudioCurrentTime(t);
+                            },
+                          }
+                        : undefined,
+                    )}
                   </div>
                 </div>
               )}
@@ -1158,7 +1226,14 @@ export function SongChordsViewerModal({
 }
 
 // RENDER FUNCTION FOR FORMATTED CHORD SHEET WITH HIGHLIGHTED CHORDS
-function renderFormattedChordSheet(text: string) {
+interface SincronizacionCifrado {
+  pares: Alineacion["pares"];
+  activo: number;
+  segmentos: AnalisisAcordes["segmentos"];
+  onSeek: (segundos: number) => void;
+}
+
+function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
   if (!text)
     return (
       <span className="text-[var(--ink-2)] italic">
@@ -1167,14 +1242,12 @@ function renderFormattedChordSheet(text: string) {
     );
 
   const lines = text.split("\n");
+  // Orden de aparición de los acordes entre corchetes: debe coincidir con acordesDelCifrado().
+  let ordinal = 0;
 
   return lines.map((line, idx) => {
     // Check if section header like [Intro], [Estribillo], [Solo], etc.
-    if (
-      /^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(
-        line.trim(),
-      )
-    ) {
+    if (esLineaCabecera(line)) {
       return (
         <div
           key={idx}
@@ -1195,6 +1268,27 @@ function renderFormattedChordSheet(text: string) {
           {parts.map((part, pIdx) => {
             if (part.startsWith("[") && part.endsWith("]")) {
               const chordName = part.slice(1, -1);
+              const k = esTokenAcorde(chordName) ? ordinal++ : -1;
+              const par = sync && k >= 0 ? sync.pares[k] : undefined;
+              if (sync && par && par.segmento !== null) {
+                const seg = sync.segmentos[par.segmento];
+                return (
+                  <button
+                    key={pIdx}
+                    id={`cifrado-acorde-${k}`}
+                    type="button"
+                    onClick={() => sync.onSeek(seg.t0)}
+                    title={`Saltar a ${Math.floor(seg.t0 / 60)}:${String(Math.floor(seg.t0 % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
+                    className={`font-bold px-1 py-0.5 rounded mx-0.5 text-xs cursor-pointer transition-ui ${
+                      k === sync.activo
+                        ? "bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]"
+                        : "text-[var(--acc)] bg-[var(--acc-soft)] hover:brightness-95"
+                    } ${par.coincide ? "" : "underline decoration-dashed decoration-2 underline-offset-4"}`}
+                  >
+                    {chordName}
+                  </button>
+                );
+              }
               return (
                 <span
                   key={pIdx}
@@ -1248,7 +1342,7 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
 
   return (
-    <div className="bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
+    <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
       <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
         <span>{chord}</span>
       </div>
