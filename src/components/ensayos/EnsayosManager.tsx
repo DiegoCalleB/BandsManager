@@ -58,6 +58,7 @@ export function EnsayosManager({
     useState<Setlist[]>(initialSetlists);
 
   const handleUpdateSongInternal = (updatedSong: Song) => {
+    const cancionAntes = loadedSongs.find((s) => s.id === updatedSong.id);
     setLoadedSongs((prev) =>
       prev.map((s) => (s.id === updatedSong.id ? updatedSong : s)),
     );
@@ -65,7 +66,16 @@ export function EnsayosManager({
       onUpdateSong(updatedSong);
     }
     if (updatedSong.id) {
-      api.updateSong(updatedSong.id, updatedSong).catch(() => {});
+      // Antes el error se tragaba sin más (`.catch(() => {})`): la pantalla enseñaba el cambio y
+      // el servidor no lo tenía. Ahora, si falla, se restaura la versión anterior (el aviso global
+      // «No se pudo guardar» lo emite el interceptor de fetch).
+      api.updateSong(updatedSong.id, updatedSong).catch(() => {
+        if (!cancionAntes) return;
+        setLoadedSongs((prev) =>
+          prev.map((s) => (s.id === cancionAntes.id ? cancionAntes : s)),
+        );
+        onUpdateSong?.(cancionAntes);
+      });
     }
   };
 

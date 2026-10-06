@@ -6,6 +6,7 @@
  react-hooks/purity,
  react-hooks/immutability
 */
+import { guardarOReverter } from "../utils/guardarConReversion";
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
 import React, {
   useState,
@@ -1192,17 +1193,26 @@ export default function RepertorioSetlists({
       ...s,
       ordenAlbum: idx + 1,
     }));
+    const songsAntes = songs;
     setSongs(updatedSongs);
     saveSongsToLocalStorageSafely(updatedSongs);
 
-    // Persist song reordering to server
+    // Persist song reordering to server. Si alguna escritura falla, se restaura el orden anterior
+    // (una sola vez aunque fallen varias) para que la pantalla no enseñe un orden sin guardar.
+    let revertido = false;
     updatedSongs.forEach((s) => {
-      fetch("/api/songs/" + s.id, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(s),
-      }).catch((err) =>
-        console.error("Error updating catalog song order on server:", err),
+      void guardarOReverter(
+        fetch("/api/songs/" + s.id, {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify(s),
+        }),
+        () => {
+          if (revertido) return;
+          revertido = true;
+          setSongs(songsAntes);
+          saveSongsToLocalStorageSafely(songsAntes);
+        },
       );
     });
   };
@@ -1731,27 +1741,26 @@ export default function RepertorioSetlists({
   const showItemTimerRef = useRef<any>(null);
 
   const toggleFavoriteSong = (songId: string) => {
-    setSongs((prevSongs) => {
-      const target = prevSongs.find((s) => s.id === songId);
-      const updated = prevSongs.map((s) =>
-        s.id === songId ? { ...s, favoritoGeneral: !s.favoritoGeneral } : s,
-      );
-      saveSongsToLocalStorageSafely(updated);
-      if (target) {
-        const updatedSong = {
-          ...target,
-          favoritoGeneral: !target.favoritoGeneral,
-        };
-        fetch("/api/songs/" + songId, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(updatedSong),
-        }).catch((err) =>
-          console.error("Error updating favorite on server:", err),
+    const target = songs.find((s) => s.id === songId);
+    if (!target) return;
+    const updatedSong = { ...target, favoritoGeneral: !target.favoritoGeneral };
+    const aplicar = (favorito: boolean | undefined) =>
+      setSongs((prev) => {
+        const next = prev.map((s) =>
+          s.id === songId ? { ...s, favoritoGeneral: favorito } : s,
         );
-      }
-      return updated;
-    });
+        saveSongsToLocalStorageSafely(next);
+        return next;
+      });
+    aplicar(updatedSong.favoritoGeneral);
+    void guardarOReverter(
+      fetch("/api/songs/" + songId, {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(updatedSong),
+      }),
+      () => aplicar(target.favoritoGeneral),
+    );
   };
 
   // Save changes to localStorage and Backend API
@@ -2314,11 +2323,22 @@ export default function RepertorioSetlists({
       if (activePlayerSong?.id === editingSong.id) {
         setActivePlayerSong(updatedSong);
       }
-      fetch(`/api/songs/${editingSong.id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updatedSong),
-      }).catch((err) => console.error("Error updating song on server:", err));
+      const cancionAntes = editingSong;
+      void guardarOReverter(
+        fetch(`/api/songs/${editingSong.id}`, {
+          method: "PUT",
+          headers: getHeaders(),
+          body: JSON.stringify(updatedSong),
+        }),
+        () =>
+          setSongs((prev) => {
+            const next = prev.map((s) =>
+              s.id === cancionAntes.id ? cancionAntes : s,
+            );
+            saveSongsToLocalStorageSafely(next);
+            return next;
+          }),
+      );
       if (hasNewAudio) runAutoChordAnalysis(updatedSong);
     } else {
       const newSong: Song = {
@@ -2348,11 +2368,19 @@ export default function RepertorioSetlists({
         saveSongsToLocalStorageSafely(next);
         return next;
       });
-      fetch("/api/songs", {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(newSong),
-      }).catch((err) => console.error("Error creating song on server:", err));
+      void guardarOReverter(
+        fetch("/api/songs", {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(newSong),
+        }),
+        () =>
+          setSongs((prev) => {
+            const next = prev.filter((s) => s.id !== newSong.id);
+            saveSongsToLocalStorageSafely(next);
+            return next;
+          }),
+      );
       if (hasNewAudio) runAutoChordAnalysis(newSong);
     }
 
@@ -2366,6 +2394,7 @@ export default function RepertorioSetlists({
       title: "Eliminar Canción",
       description: `¿Seguro que deseas eliminar "${song?.titulo || "esta canción"}" del catálogo del grupo?`,
       onConfirm: () => {
+        const setlistsAntes = setlists;
         setSongs((prev) => prev.filter((s) => s.id !== songId));
         setSetlists((prev) =>
           prev.map((st) => ({
@@ -2374,10 +2403,20 @@ export default function RepertorioSetlists({
           })),
         );
 
-        fetch(`/api/songs/${songId}`, {
-          method: "DELETE",
-          headers: getHeaders(),
-        }).catch((err) => console.error("Error deleting song on server:", err));
+        void guardarOReverter(
+          fetch(`/api/songs/${songId}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+          }),
+          () => {
+            if (song) {
+              setSongs((prev) =>
+                prev.some((s) => s.id === song.id) ? prev : [song, ...prev],
+              );
+            }
+            setSetlists(setlistsAntes);
+          },
+        );
       },
     });
   };
@@ -2401,6 +2440,8 @@ export default function RepertorioSetlists({
       description: `¿Seguro que deseas eliminar ${songIds.length} canciones del catálogo del grupo? Se quitarán también de los repertorios donde aparezcan.`,
       onConfirm: () => {
         const idsSet = new Set(songIds);
+        const cancionesBorradas = songs.filter((s) => idsSet.has(s.id));
+        const setlistsAntes = setlists;
         setSongs((prev) => prev.filter((s) => !idsSet.has(s.id)));
         setSetlists((prev) =>
           prev.map((st) => ({
@@ -2411,11 +2452,20 @@ export default function RepertorioSetlists({
           })),
         );
         songIds.forEach((songId) => {
-          fetch(`/api/songs/${songId}`, {
-            method: "DELETE",
-            headers: getHeaders(),
-          }).catch((err) =>
-            console.error("Error deleting song on server:", err),
+          void guardarOReverter(
+            fetch(`/api/songs/${songId}`, {
+              method: "DELETE",
+              headers: getHeaders(),
+            }),
+            () => {
+              const cancion = cancionesBorradas.find((c) => c.id === songId);
+              if (cancion) {
+                setSongs((prev) =>
+                  prev.some((s) => s.id === cancion.id) ? prev : [cancion, ...prev],
+                );
+              }
+              setSetlists(setlistsAntes);
+            },
           );
         });
         clearCatalogSelection();
@@ -2443,23 +2493,8 @@ export default function RepertorioSetlists({
   };
 
   const handleToggleFavorite = (songId: string) => {
-    const updated = songs.map((s) => {
-      if (s.id === songId) {
-        const isFav = !s.favoritoGeneral;
-        const updatedSong = { ...s, favoritoGeneral: isFav };
-        fetch(`/api/songs/${s.id}`, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(updatedSong),
-        }).catch((err) =>
-          console.error("Error toggling favorite on server:", err),
-        );
-        return updatedSong;
-      }
-      return s;
-    });
-    setSongs(updated);
-    saveSongsToLocalStorageSafely(updated);
+    // Misma lógica que toggleFavoriteSong (con marcha atrás si el servidor lo rechaza).
+    toggleFavoriteSong(songId);
   };
 
   const handleUnassignAlbumSongs = (albumName: string) => {
@@ -2711,11 +2746,14 @@ export default function RepertorioSetlists({
           descripcion: setlistData.descripcion,
           tipoFormato: setlistData.tipoFormato,
         };
-        fetch(`/api/setlists/${setlistData.id}`, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(payload),
-        }).catch((err) => console.error("Error updating setlist:", err));
+        void guardarOReverter(
+          fetch(`/api/setlists/${setlistData.id}`, {
+            method: "PUT",
+            headers: getHeaders(),
+            body: JSON.stringify(payload),
+          }),
+          () => setSetlists((prev) => prev.map((s) => (s.id === existing.id ? existing : s))),
+        );
       }
     } else {
       const newSetlist: Setlist = {
@@ -2731,12 +2769,16 @@ export default function RepertorioSetlists({
       setSetlists((prev) => [newSetlist, ...prev]);
       setActiveSetlistId(newSetlist.id);
 
-      fetch("/api/setlists", {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(newSetlist),
-      }).catch((err) =>
-        console.error("Error creating setlist on server:", err),
+      void guardarOReverter(
+        fetch("/api/setlists", {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(newSetlist),
+        }),
+        () => {
+          setSetlists((prev) => prev.filter((s) => s.id !== newSetlist.id));
+          setActiveSetlistId((actual) => (actual === newSetlist.id ? "" : actual));
+        },
       );
     }
   };
@@ -2768,11 +2810,17 @@ export default function RepertorioSetlists({
     setSetlists((prev) => [newSetlist, ...prev]);
     setActiveSetlistId(newSetlist.id);
 
-    fetch("/api/setlists", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(newSetlist),
-    }).catch((err) => console.error("Error creating setlist on server:", err));
+    void guardarOReverter(
+      fetch("/api/setlists", {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(newSetlist),
+      }),
+      () => {
+          setSetlists((prev) => prev.filter((s) => s.id !== newSetlist.id));
+          setActiveSetlistId((actual) => (actual === newSetlist.id ? "" : actual));
+        },
+    );
   };
 
   const handleDuplicateSetlist = (
@@ -2793,12 +2841,16 @@ export default function RepertorioSetlists({
     setSetlists((prev) => [duplicated, ...prev]);
     setActiveSetlistId(duplicated.id);
 
-    fetch("/api/setlists", {
-      method: "POST",
-      headers: getHeaders(),
-      body: JSON.stringify(duplicated),
-    }).catch((err) =>
-      console.error("Error duplicating setlist on server:", err),
+    void guardarOReverter(
+      fetch("/api/setlists", {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(duplicated),
+      }),
+      () => {
+          setSetlists((prev) => prev.filter((s) => s.id !== duplicated.id));
+          setActiveSetlistId((actual) => (actual === duplicated.id ? "" : actual));
+        },
     );
 
     return duplicated;
@@ -2825,11 +2877,18 @@ export default function RepertorioSetlists({
           setPerfectSetlistDraft(null);
         }
 
-        fetch(`/api/setlists/${stId}`, {
-          method: "DELETE",
-          headers: getHeaders(),
-        }).catch((err) =>
-          console.error("Error deleting setlist on server:", err),
+        void guardarOReverter(
+          fetch(`/api/setlists/${stId}`, {
+            method: "DELETE",
+            headers: getHeaders(),
+          }),
+          () => {
+            if (st) {
+              setSetlists((prev) =>
+                prev.some((s) => s.id === st.id) ? prev : [st, ...prev],
+              );
+            }
+          },
         );
       },
     });
