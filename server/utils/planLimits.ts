@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Límites de plan por tipo de registro, en espejo de src/utils/planPermissions.ts. Hasta ahora
 // solo se comprobaban en el cliente (App.tsx): un usuario que llamase directamente a la API con
 // el token de sesión podía crear leads/fans/canciones/bandas sin límite, saltándose por completo

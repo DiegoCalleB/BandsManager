@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Validación y normalización de los recintos que devuelve la IA en el Agente Scout.
 //
 // Existe por un fallo concreto: antes, si la IA no respondía o devolvía basura, el Scout

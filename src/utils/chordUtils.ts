@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Utility for chord parsing, transposition, notation conversion, and chord diagrams
 
 const NOTE_NAMES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];

@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningún try/catch
 // específico esperaba) terminaba en un console.error/console.warn y nada más - nadie se entera
 // hasta que una banda avisa de que algo no funciona. Sentry aquí es deliberadamente pasivo:

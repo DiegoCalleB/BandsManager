@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage, SUPPORTED_LANGUAGES, SupportedLanguage } from '../context/LanguageContext';
 import { Globe, ChevronDown, Check } from 'lucide-react';

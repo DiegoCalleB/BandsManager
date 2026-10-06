@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { X, Play, Pause, Headphones, GraduationCap, RotateCcw, Repeat, Download, Volume2, Gauge, Music2, Loader2, CheckCircle2, Scale, ArrowUpDown, Timer, Target, Sliders } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';

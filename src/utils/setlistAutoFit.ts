@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Auto-ajuste de tamaño de fuente + reparto en páginas del repertorio imprimible
 // (PdfExportModal.tsx). Sustituye la elección manual de 3 tamaños fijos ("gigante"/"grande"/
 // "compacto"): el sistema ahora mide la altura real del contenido (inyectada como `measureFn`,

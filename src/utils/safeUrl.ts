@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Enlaces de perfil de banda (dossier, rider, web, redes, Revolut/PayPal...) se guardan como
 // texto libre editable por el admin de la banda y se renderizan como href en páginas públicas
 // (EPK, landing de fans) que ve cualquier visitante sin sesión. Sin filtrar el esquema, un campo

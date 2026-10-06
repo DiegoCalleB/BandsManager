@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /**
  * Utility for ultra-low latency & clean audio capture, WebAudio DSP filtering,
  * and background noise/speaker bleed suppression for multitrack recording.

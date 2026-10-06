@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // El incentivo que ve el fan al terminar el formulario (descarga exclusiva y/o cupón de
 // merchandising) es opcional: cada banda lo rellena en el apartado QR de Fans. Antes, cuando una
 // banda no lo había configurado, la pantalla de éxito prometía un cupón inventado ("FAN-VIP-10")

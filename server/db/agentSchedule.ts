@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import { getSupabase } from "./core.js";
 
 // Fallback en memoria: si Supabase falla o la tabla aún no existe (antes de aplicar la

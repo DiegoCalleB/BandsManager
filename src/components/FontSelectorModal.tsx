@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React from 'react';
 import { Type, Check, X, Sparkles, SlidersHorizontal, Info } from 'lucide-react';
 import { FONT_PRESETS, FontPresetKey, applyFontPreset, getStoredFontPreset } from '../utils/typography';

@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // dna_expresion es una única columna JSONB que se lee entera, se modifica en memoria y se

@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Cliente de la API REST de Gmail para el servidor, con refresh token por banda (OAuth
 // "offline"). Existe para que el Agente Enviador cree borradores en Gmail SIN pedir una
 // contraseña de aplicación y SIN popup - a diferencia de src/utils/gmail.ts (que abre un popup

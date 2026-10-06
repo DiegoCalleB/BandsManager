@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React from 'react';
 import { Sparkles, CheckCircle2, AlertTriangle, X, Loader2 } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';

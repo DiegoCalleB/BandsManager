@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Loader, AlertCircle, Brain, TrendingUp, Zap, Move, Printer, Share2, Download } from 'lucide-react';
 import html2canvas from 'html2canvas';

@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState } from 'react';
 import { ThemeColors, Tour, TourRouteStop, TourVehicle, Concert, Lead, BookingCampaign } from '../types';
 import { calculateVehiclesFuelCost } from '../utils/tourUtils';

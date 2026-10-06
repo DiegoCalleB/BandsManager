@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Detecta en qué idioma debería escribirse el pitch de booking para un lead,
 // a partir de su dirección/ciudad/región (los leads no tienen un campo "país"
 // estructurado, así que se busca el nombre del país como texto libre).

@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Helper to check if URL is a generic directory or social profile instead of official venue site
 export function isBadDirectoryUrl(url: string): boolean {
   if (!url) return true;

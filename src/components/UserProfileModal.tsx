@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect } from 'react';
 import { User as UserIcon, Key, Music, Check, AlertCircle, X, Shield, Palette, Users, Type, Loader2, Guitar, Upload, Camera, Crown, Sparkles, Globe, ChevronDown, Star, ArrowUpDown, ArrowUpCircle, ArrowDownCircle, Plus, Trash2, CreditCard, ExternalLink, Calendar, Bot, Heart } from 'lucide-react';
 import { User, ThemeName } from '../types';

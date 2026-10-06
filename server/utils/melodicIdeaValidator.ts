@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /**
  * Validador y reparador de las secuencias de notas que compone Gemini para 'propose_melodic_idea'
  * (server/routes/chat.ts).

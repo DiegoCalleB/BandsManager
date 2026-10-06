@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Base de datos local de festivales españoles con fechas históricas
 // Se actualiza anualmente. Formato: nombre normalizado → {nombre oficial, fechas}
 

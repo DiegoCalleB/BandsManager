@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el backend guarda
 // un refresh_token (server/db/gmailOAuth.ts) que usa para crear borradores sin contraseña de
 // aplicación ni popup (server/services/gmailApiClient.ts) - incluido desde el Agente Enviador

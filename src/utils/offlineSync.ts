@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Cola mínima de reintento para ediciones de setlist hechas sin conexión (típico: cambiar el
 // tono de un tema en Modo Concierto durante un bolo sin wifi). syncSetlistToBackend ya
 // actualiza el estado local al instante (optimista), pero si el PUT al servidor falla y luego

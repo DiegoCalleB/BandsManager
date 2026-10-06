@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Normaliza un band_id para comparar (quita el prefijo band-/reg-). Antes, un bandId vacío
 // devolvía 'bakandeya' en silencio: cualquier comprobación tipo `cleanBandId(x) === 'bakandeya'`
 // hecha sobre un usuario o registro SIN banda pasaba como si fuese la banda insignia. Usamos un

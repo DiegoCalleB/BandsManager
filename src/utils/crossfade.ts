@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /**
  * Fundido cruzado real entre dos pistas de audio (fin de una canción + principio de la
  * siguiente) — usado por la reproducción continua de la barra Spotify persistente

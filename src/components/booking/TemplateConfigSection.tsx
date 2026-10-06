@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState } from 'react';
 import { Settings, Sparkles, RefreshCw, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Star, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';

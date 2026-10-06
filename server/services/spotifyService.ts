@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import { dbGetSongs, dbUpsertSong, dbGetEpkConfig, dbUpsertEpkConfig } from "../db.js";
 import { Song } from "../../src/types.js";
 import { cleanBandId } from "../utils.js";

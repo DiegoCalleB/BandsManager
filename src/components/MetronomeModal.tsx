@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Play, Pause, Disc, Zap, Volume2, VolumeX, Music, Clock } from 'lucide-react';
 import { Song, ThemeColors } from '../types';

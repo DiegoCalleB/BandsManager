@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /**
  * Utilidades para exportación, descarga e impresión en máxima calidad (Vectorial SVG, PNG 4K 300 DPI y Flyer A4)
  * de Códigos QR para BandManager (Captura de Fans en Concierto, Dossier EPK, Merchandising).

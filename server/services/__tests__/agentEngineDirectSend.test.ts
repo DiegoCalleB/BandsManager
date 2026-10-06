@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Archivo separado de agentEngine.test.ts a propósito: el interruptor global
 // (ENVIO_REAL_HABILITADO_GLOBALMENTE en agentEngine.ts) se calcula UNA vez, al cargar el módulo,
 // a partir de process.env.AGENT_EMAIL_MODE. Los `import` estáticos se izan (hoisting) por encima

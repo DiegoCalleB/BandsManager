@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 function crearQueryBuilderMock(resultadoTerminal: any = { data: { id: 'thread-1', band_id: 'la-banda-real', category: 'salas', titulo: '', mensajes: [], resultado: 'positiva', notas: '', created_at: '2026-01-01' }, error: null }) {

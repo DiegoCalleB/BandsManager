@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState } from 'react';
 import { BandContact } from '../../types';
 import { Sparkles, X, Check, Copy, MessageSquare, Radio, Flame, MessageCircle, HeartHandshake, Pencil, Save, XCircle, RefreshCw, Brain, GraduationCap } from 'lucide-react';

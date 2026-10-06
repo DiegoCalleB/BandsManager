@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /**
  * ADN musical de la banda: perfil derivado del repertorio real (tempo, tonalidad y género
  * dominantes) más la instrumentación real de sus miembros, para que el chatbot pueda proponer

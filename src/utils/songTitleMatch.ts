@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 /** Minúsculas, sin tildes/diacríticos, sin espacios extra — para que "Traca Final" case con "traca final" o "Traca Fínal" sin fallar por acentuación. */
 export function normalizeSongTitle(title?: string | null): string {
   return (title || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();

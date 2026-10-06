@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Ajuste de texto a un ancho disponible para las notas manuscritas del repertorio imprimible
 // (PdfExportModal.tsx): cada nota (miembro, nota del bolo, nota general) se pinta en su propia
 // línea, apiladas una encima de otra — no todas seguidas en una sola línea, y CADA nota se queda

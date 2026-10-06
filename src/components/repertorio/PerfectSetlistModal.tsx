@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect } from 'react';
 import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';

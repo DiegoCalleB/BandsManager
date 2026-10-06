@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 // Scheduler interno de agentes de booking. Sustituye al patrón setInterval con bug de
 // doble-disparo de socialRadarService.ts (estado solo en memoria -> se dispara otra vez en
 // cada redeploy de Railway): aquí el "ya se ejecutó" se persiste en Supabase

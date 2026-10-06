@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React from 'react';
 import { Users, Plus, Trash2, Mail, Instagram, ShieldCheck, UserCheck } from 'lucide-react';
 import { WizardMemberItem } from '../types';

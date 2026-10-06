@@ -1,3 +1,6 @@
+// © 2026 Diego de la Calle Berzal (DiegoCalleB) — BandManager.io. All rights reserved.
+// Source-Available License v1.0 (see LICENSE): non-commercial use only; no copying, derivatives or AI training.
+
 import React, { useState, useEffect } from 'react';
 import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Edit2, Sparkles, RefreshCw, Link2 } from 'lucide-react';
 import { User, UserRole } from '../types';
