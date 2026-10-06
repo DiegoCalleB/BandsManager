@@ -758,14 +758,16 @@ export async function dbUpsertSong(
   // La lectura es aparte y tolerante: si la migración aún no se ha ejecutado la columna no
   // existe, la consulta falla y simplemente no hay nada que preservar.
   let analisisAcordesFinal: any = song.analisisAcordes ?? song.analisis_acordes;
-  if (analisisAcordesFinal === undefined && existing) {
+  if (existing && (analisisAcordesFinal === undefined || (analisisAcordesFinal && typeof analisisAcordesFinal === "object"))) {
     try {
       const { data: previo, error: previoErr } = await sb
         .from("songs")
         .select("analisis_acordes")
         .eq("id", existing.id)
         .maybeSingle();
-      if (!previoErr && previo?.analisis_acordes) analisisAcordesFinal = previo.analisis_acordes;
+      if (!previoErr && previo?.analisis_acordes) {
+        analisisAcordesFinal = fusionarAnalisisGuardado(analisisAcordesFinal, previo.analisis_acordes);
+      }
     } catch {
       /* sin columna todavía: nada que preservar */
     }
@@ -1213,3 +1215,19 @@ export async function dbDeleteSetlistShortcut(id: string, bandId: string) {
 }
 
 // --- EPK CONFIGS ---
+
+/**
+ * Lo que manda el cliente al guardar la canción puede ser una copia antigua del análisis de acordes
+ * (la pantalla no siempre tiene la última). Los campos que solo escribe el servidor —la verdad de
+ * las correcciones y lo que dijo el detector antes de corregir— no se pierden por eso.
+ */
+export function fusionarAnalisisGuardado(entrante: any, guardado: any): any {
+  if (entrante === undefined) return guardado;
+  if (!entrante || typeof entrante !== "object" || !guardado || typeof guardado !== "object") return entrante;
+  const salida = { ...entrante };
+  if (!salida.referenciaManual && guardado.referenciaManual) salida.referenciaManual = guardado.referenciaManual;
+  if (!salida.segmentosOriginales && guardado.segmentosOriginales && salida.analizadoEn === guardado.analizadoEn) {
+    salida.segmentosOriginales = guardado.segmentosOriginales;
+  }
+  return salida;
+}

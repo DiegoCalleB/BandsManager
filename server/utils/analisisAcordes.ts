@@ -126,3 +126,25 @@ export function construirAnalisis(params: {
     ...(params.pulso ? { pulso: params.pulso } : {}),
   };
 }
+
+/**
+ * Análisis tras una corrección manual: guarda los tramos corregidos y, además, (1) lo que dijo el
+ * detector antes de la PRIMERA corrección y (2) la «verdad» de la banda hasta el último tramo
+ * corregido. Con ambos se mide el acierto real del detector, y la verdad sobrevive a reanálisis.
+ */
+export function construirAnalisisCorregido(
+  previo: AnalisisAcordes,
+  segmentos: SegmentoAcordeAnalizado[],
+  ahora: string,
+): AnalisisAcordes {
+  const editados = segmentos.filter((s) => s.editado);
+  const hasta = editados.length ? Math.max(...editados.map((s) => s.t1)) : 0;
+  const yaCorregido = (previo.segmentos ?? []).some((s) => s.editado);
+  return {
+    ...previo,
+    segmentos,
+    editadoEn: ahora,
+    ...(previo.segmentosOriginales || yaCorregido ? {} : { segmentosOriginales: previo.segmentos }),
+    ...(editados.length ? { referenciaManual: { segmentos, guardadaEn: ahora, hasta } } : {}),
+  };
+}

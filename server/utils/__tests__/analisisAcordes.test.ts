@@ -144,3 +144,48 @@ describe('sumarPcm', () => {
     expect(det[0].acorde).toBe('A');
   });
 });
+
+import { construirAnalisisCorregido } from '../analisisAcordes';
+import { fusionarAnalisisGuardado } from '../../db/repertoire';
+
+describe('la verdad de las correcciones manuales no se pierde', () => {
+  const base = {
+    version: 1, analizadoEn: '2026-10-06T10:00:00Z', fuente: 'mezcla' as const, duracionSegundos: 12,
+    segmentos: [
+      { t0: 0, t1: 4, acorde: 'A', confianza: 1 },
+      { t0: 4, t1: 8, acorde: 'E', confianza: 1 },
+      { t0: 8, t1: 12, acorde: 'A', confianza: 1 },
+    ],
+  };
+
+  it('la primera corrección guarda lo que dijo el detector y la referencia hasta el último tramo corregido', () => {
+    const corregidos = [base.segmentos[0], { ...base.segmentos[1], acorde: 'D', editado: true, detectado: 'E' }, base.segmentos[2]];
+    const a = construirAnalisisCorregido(base, corregidos, 'ahora');
+    expect(a.segmentosOriginales).toEqual(base.segmentos);
+    expect(a.referenciaManual).toMatchObject({ hasta: 8, guardadaEn: 'ahora' });
+    // una segunda corrección NO pisa lo que dijo el detector
+    const b = construirAnalisisCorregido(a, corregidos.map((s, i) => (i === 2 ? { ...s, acorde: 'E', editado: true } : s)), 'luego');
+    expect(b.segmentosOriginales).toEqual(base.segmentos);
+    expect(b.referenciaManual!.hasta).toBe(12);
+  });
+
+  it('un guardado de la canción con una copia vieja del análisis conserva la verdad y los originales', () => {
+    const guardado = { ...base, referenciaManual: { segmentos: base.segmentos, guardadaEn: 'x', hasta: 8 }, segmentosOriginales: base.segmentos };
+    const entrante = { ...base };
+    const f = fusionarAnalisisGuardado(entrante, guardado);
+    expect(f.referenciaManual).toEqual(guardado.referenciaManual);
+    expect(f.segmentosOriginales).toEqual(base.segmentos);
+    // un análisis NUEVO (otra fecha) no hereda los originales del anterior, pero sí la verdad
+    const nuevo = fusionarAnalisisGuardado({ ...base, analizadoEn: '2026-10-07T00:00:00Z' }, guardado);
+    expect(nuevo.segmentosOriginales).toBeUndefined();
+    expect(nuevo.referenciaManual).toBeDefined();
+    expect(fusionarAnalisisGuardado(undefined, guardado)).toBe(guardado);
+    expect(fusionarAnalisisGuardado(null, guardado)).toBeNull();
+  });
+
+  it('reanalizar conserva la referencia manual de la banda', () => {
+    const rutas = fs.readFileSync(path.join(__dirname, '..', '..', 'routes', 'repertorio.ts'), 'utf-8');
+    const cuerpo = rutas.slice(rutas.indexOf('async function ejecutarAnalisisAcordes'), rutas.indexOf('router.post("/songs/:id/analizar-acordes"'));
+    expect(cuerpo).toContain('referenciaManual: referencia');
+  });
+});

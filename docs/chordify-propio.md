@@ -71,3 +71,23 @@ Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
 - **Compases y bloques** (`cuadriculaCompases.ts`, `RegletaCompases`): no se detecta el pulso del audio; con el BPM de la ficha se busca el desfase de pulso y el compás (4/4 o 3/4, y en qué tiempo empieza) con los que más cambios de acorde caen sobre un pulso. Se prueban también la mitad del tempo (a 60 solo la mitad de los cambios cae en inicio de compás). Si no encaja (<55 %), no se dibujan compases en vez de inventarlos. Bloques de 4 u 8 compases con letra por progresión (A A B A).
 - Limitación: con la ficha al **doble** del tempo real no hay forma de distinguirlo solo con acordes; se respeta la ficha.
 - Móvil: el modal se desplaza entero y el cuerpo de la letra tiene altura propia (antes se quedaba en 2 px bajo la cabecera y el panel de acordes).
+
+## Pulso real del audio (`server/utils/pulso.ts`)
+- Envolvente de ataques (flujo espectral, 23 ms) → autocorrelación para el tempo → programación dinámica (Ellis) para colocar los pulsos. El BPM de la ficha es la **pista** para escoger entre tempo, mitad y doble (la mitad/doble solo gana si es ≥1,4× mejor).
+- Los cambios de acorde a ≤0,1 s de un pulso se llevan a él (`ajustarAPulso`). La rejilla de compases del visor usa el tempo y la fase medidos (`analisis.pulso`); el BPM de la ficha queda de plan B.
+- Medido en sintético (batería, rock denso): error de tempo <2 %, fase <0,08 s. Sin ficha puede confundir el tempo con un múltiplo (138 → 92); con ficha no. Rubato fuerte → confianza baja → no se usa.
+- Log de Railway: `pulso=…bpm/conf… ficha=…`.
+
+## Medir antes de cambiar (`scripts/evaluar-acordes.ts`)
+- **Verdad = correcciones de la banda.** Al corregir en el visor se guardan `segmentosOriginales` (lo que dijo el detector antes de la primera corrección) y `referenciaManual` (los acordes corregidos hasta el último tramo tocado). La referencia **sobrevive a los reanálisis** y a los guardados de la canción con una copia vieja del análisis.
+- `npm run eval:acordes` (o `--archivo volcado.json`) da por canción: acierto mayor/menor y de raíz por tiempo (métricas MIREX), cambios encontrados a ≤0,3 s y ≤1 s, error medio y cambios que sobran.
+- `--prediccion carpeta/` compara además otro detector (.lab de MIREX o .json), emparejando ficheros por título.
+
+## Comparar con modelos entrenados, gratis (`tools/colab/acordes_btc.py`)
+BTC (ISMIR 2019, MIT) en Google Colab: sube los audios con el título de la canción como nombre, ejecuta el script y evalúa los `.lab` con el comando anterior. No se ha podido ejecutar desde el entorno de desarrollo (sin acceso a los pesos): puede necesitar ajustes de versiones. Los pesos están entrenados con datasets académicos: sirve para **medir**; para producción hay que revisar la licencia.
+
+## Plan por coste
+1. **Gratis, ya hecho:** detector propio + afinado de fronteras por ataques + pulso propio + edición manual + evaluación.
+2. **Gratis, siguiente:** con 20-30 tramos corregidos por canción, medir; comparar con BTC en Colab. Mejoras propias pendientes: acordes por pulso (decodificar por tiempo de compás en vez de ventanas fijas) y tonalidad por tramos (modulaciones).
+3. **Barato, solo si gana por números:** worker GPU bajo demanda (Modal/RunPod) con el modelo ganador + Beat This! (MIT) para directos sin claqueta. Coste realista 0,01-0,05 $ por canción contando arranques en frío.
+4. **Evitar:** madmom (modelos con licencia no comercial), Essentia (AGPL), APIs de pago por minuto.

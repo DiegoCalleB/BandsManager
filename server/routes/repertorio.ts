@@ -13,6 +13,7 @@ import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
 import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from "../services/transcripcionLetra.js";
 import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
+import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -214,7 +215,10 @@ async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir
 
   const resultado = await analizarAcordesDeCancion(song);
   if (resultado.ok === false) return { status: resultado.status, body: { error: resultado.error } };
-  const analisis = resultado.analisis;
+  // Las correcciones manuales se pierden al reanalizar, pero su «verdad» no: así el análisis nuevo
+  // se puede medir contra lo que la banda corrigió (ver scripts/evaluar-acordes.ts).
+  const referencia = song.analisisAcordes?.referenciaManual;
+  const analisis = referencia ? { ...resultado.analisis, referenciaManual: referencia } : resultado.analisis;
   const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
   return { status: 200, body: { success: true, analisis, song: guardada } };
 }
@@ -367,7 +371,8 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
 
-    const analisis = { ...song.analisisAcordes, segmentos: (validacion as { segmentos: any[] }).segmentos, editadoEn: new Date().toISOString() };
+    const segmentos = (validacion as { segmentos: any[] }).segmentos;
+    const analisis = construirAnalisisCorregido(song.analisisAcordes, segmentos, new Date().toISOString());
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
   } catch (err: any) {
