@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Repeat, X } from 'lucide-react';
-import type { AnalisisAcordes } from '../../types';
+import { Repeat, X, Pencil } from 'lucide-react';
+import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
-import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, RangoBucle } from '../../utils/lineaTiempoAcordes';
+import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
 
 interface Props {
   analisis: AnalisisAcordes;
@@ -13,6 +13,7 @@ interface Props {
   isAnalyzing: boolean;
   onSeek: (segundos: number) => void;
   onReanalizar: () => void;
+  onCorregir: (segmentos: SegmentoAcordeAnalizado[]) => void;
   onClose: () => void;
 }
 
@@ -29,7 +30,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onClose,
+  analisis, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -38,6 +39,13 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
   const [bucle, setBucle] = useState<RangoBucle | null>(null);
   const bucleRef = useRef<RangoBucle | null>(null);
   bucleRef.current = bucle;
+  // Corrección manual
+  const [corrigiendo, setCorrigiendo] = useState(false);
+  const [editando, setEditando] = useState<number | null>(null);
+  const [borrador, setBorrador] = useState('');
+  const [errorBorrador, setErrorBorrador] = useState<string | null>(null);
+  const [confirmarReanalisis, setConfirmarReanalisis] = useState(false);
+  const corregidos = segmentos.filter((s) => s.editado).length;
   const carrilRef = useRef<HTMLDivElement>(null);
   const chipsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -76,7 +84,34 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     setTiempo(segundos); // en pausa no hay bucle de animación que lo refleje
   };
 
+  const abrirEditor = (i: number) => {
+    setEditando(i);
+    setBorrador(segmentos[i].acorde === 'N' ? '' : segmentos[i].acorde);
+    setErrorBorrador(null);
+    ir(segmentos[i].t0);
+  };
+
+  const cerrarEditor = () => {
+    setEditando(null);
+    setErrorBorrador(null);
+  };
+
+  const guardarBorrador = (texto: string) => {
+    if (editando === null) return;
+    const acorde = normalizarAcorde(texto);
+    if (!acorde) {
+      setErrorBorrador('No reconozco ese acorde. Prueba con Am, Do, F#m7, Sib…');
+      return;
+    }
+    onCorregir(corregirAcorde(segmentos, editando, acorde));
+    cerrarEditor();
+  };
+
   const alTocar = (i: number) => {
+    if (corrigiendo && modoBucle === 'off') {
+      abrirEditor(i);
+      return;
+    }
     if (modoBucle === 'elegirInicio') {
       setInicioBucle(i);
       setModoBucle('elegirFin');
@@ -119,7 +154,20 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           >
             <Repeat className="w-3.5 h-3.5" /> {bucle ? 'Quitar bucle' : modoBucle === 'off' ? 'Bucle' : 'Cancelar'}
           </button>
-          <button type="button" onClick={onReanalizar} disabled={isAnalyzing} className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer">
+          <button
+            type="button"
+            onClick={() => { setCorrigiendo((v) => !v); cerrarEditor(); }}
+            className={`flex items-center gap-1 cursor-pointer ${corrigiendo ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+            title="Corregir acordes mal detectados"
+          >
+            <Pencil className="w-3.5 h-3.5" /> {corrigiendo ? 'Terminar' : 'Corregir'}
+          </button>
+          <button
+            type="button"
+            onClick={() => (corregidos > 0 ? setConfirmarReanalisis(true) : onReanalizar())}
+            disabled={isAnalyzing}
+            className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
+          >
             {isAnalyzing ? 'Analizando…' : 'Reanalizar'}
           </button>
           <button type="button" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">
@@ -149,6 +197,40 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         </p>
       )}
 
+      {confirmarReanalisis && (
+        <div className="flex flex-wrap items-center gap-2 p-2 rounded-[var(--r-s)] bg-[var(--acc-soft)] text-[var(--ink)]">
+          <span>Reanalizar sustituye todo y perderás {corregidos} {corregidos === 1 ? 'corrección' : 'correcciones'} manual{corregidos === 1 ? '' : 'es'}.</span>
+          <button type="button" className="font-bold text-[var(--acc)] cursor-pointer" onClick={() => { setConfirmarReanalisis(false); onReanalizar(); }}>Sí, reanalizar</button>
+          <button type="button" className="text-[var(--ink-2)] cursor-pointer" onClick={() => setConfirmarReanalisis(false)}>No</button>
+        </div>
+      )}
+
+      {corrigiendo && editando === null && (
+        <p className="text-micro text-[var(--acc)]">Toca un acorde para corregirlo{corregidos > 0 ? ` · ${corregidos} corregido${corregidos === 1 ? '' : 's'} (*)` : ''}.</p>
+      )}
+
+      {editando !== null && segmentos[editando] && (
+        <div className="flex flex-wrap items-center gap-2 p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
+          <span className="text-[var(--ink-2)]">Tramo {formatearTiempo(segmentos[editando].t0)}–{formatearTiempo(segmentos[editando].t1)}</span>
+          <input
+            autoFocus
+            value={borrador}
+            onChange={(e) => { setBorrador(e.target.value); setErrorBorrador(null); }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') guardarBorrador(borrador);
+              if (e.key === 'Escape') cerrarEditor();
+            }}
+            placeholder="Am, Do, F#m7…"
+            aria-label="Acorde correcto"
+            className="w-28 px-2 py-1 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] font-mono"
+          />
+          <button type="button" className="font-bold text-[var(--acc)] cursor-pointer" onClick={() => guardarBorrador(borrador)}>Guardar</button>
+          <button type="button" className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" onClick={() => guardarBorrador('N')}>Sin acorde</button>
+          <button type="button" className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" onClick={cerrarEditor}>Cancelar</button>
+          {errorBorrador && <span className="w-full text-[var(--alert)]" role="alert">{errorBorrador}</span>}
+        </div>
+      )}
+
       {/* Carril de acordes */}
       <div ref={carrilRef} className="flex gap-1.5 overflow-x-auto pb-1">
         {segmentos.map((seg, i) => (
@@ -168,7 +250,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
                     : seg.confianza < 0.4
                       ? 'bg-[var(--acc-soft)]/60 text-[var(--ink)]'
                       : 'bg-[var(--acc-soft)] text-[var(--ink)]'
-            } ${enBucle(i) ? 'outline outline-2 outline-[var(--ok)]' : ''} ${inicioBucle === i && modoBucle === 'elegirFin' ? 'outline outline-2 outline-[var(--ok)]' : ''}`}
+            } ${enBucle(i) || editando === i ? 'outline outline-2 outline-[var(--ok)]' : ''} ${inicioBucle === i && modoBucle === 'elegirFin' ? 'outline outline-2 outline-[var(--ok)]' : ''}`}
           >
             <span className="block text-micro opacity-70">{formatearTiempo(seg.t0)}</span>
             <span className="block font-bold font-mono">{nombre(seg.acorde)}{seg.editado ? '*' : ''}</span>

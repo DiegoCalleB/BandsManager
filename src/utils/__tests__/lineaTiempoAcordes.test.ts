@@ -53,3 +53,59 @@ describe('corregirAcorde', () => {
     expect(segs[1].acorde).toBe('N');
   });
 });
+
+import { normalizarAcorde, validarSegmentos } from '../lineaTiempoAcordes';
+
+describe('normalizarAcorde', () => {
+  it.each([
+    ['Am', 'Am'], ['Lam', 'Am'], ['Do', 'C'], ['Do#m7', 'C#m7'], ['Sib', 'A#'], ['Bb', 'A#'], ['Bbm', 'A#m'],
+    ['Mim', 'Em'], ['Sol7', 'G7'], ['F/A', 'F/A'], ['Fadd9', 'Fadd9'], ['Dsus4', 'Dsus4'], ['Dom', 'Cm'],
+    ['Cmaj7', 'Cmaj7'], ['Amin', 'Am'], ['Fa#m', 'F#m'], ['Reb', 'C#'], ['G/Bb', 'G/A#'],
+  ])('%s → %s', (entrada, esperado) => {
+    expect(normalizarAcorde(entrada)).toBe(esperado);
+  });
+
+  it.each(['n', 'N', '—', 'sin acorde'])('«%s» es sin acorde', (e) => {
+    expect(normalizarAcorde(e)).toBe('N');
+  });
+
+  it.each(['', '  ', 'H', 'Xm', 'Hola', 'C#x9', 'Amm', '123'])('rechaza «%s»', (e) => {
+    expect(normalizarAcorde(e)).toBeNull();
+  });
+});
+
+describe('validarSegmentos', () => {
+  const ok = [{ t0: 0, t1: 2, acorde: 'Lam', confianza: 0.8, editado: true }, { t0: 2, t1: 4, acorde: 'C', confianza: 2 }];
+
+  it('normaliza acordes, acota la confianza y conserva «editado»', () => {
+    const r = validarSegmentos(ok);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.segmentos[0]).toEqual({ t0: 0, t1: 2, acorde: 'Am', confianza: 0.8, editado: true });
+      expect(r.segmentos[1]).toEqual({ t0: 2, t1: 4, acorde: 'C', confianza: 1 });
+    }
+  });
+
+  it('descarta campos desconocidos', () => {
+    const r = validarSegmentos([{ t0: 0, t1: 1, acorde: 'C', confianza: 1, malicioso: '<script>' }]);
+    expect(r.ok && Object.keys(r.segmentos[0])).toEqual(['t0', 't1', 'acorde', 'confianza']);
+  });
+
+  it.each([
+    [[], 'vacío'],
+    ['texto', 'no es array'],
+    [[{ t0: 2, t1: 1, acorde: 'C' }], 't1 <= t0'],
+    [[{ t0: -1, t1: 1, acorde: 'C' }], 'tiempo negativo'],
+    [[{ t0: 0, t1: NaN, acorde: 'C' }], 'NaN'],
+    [[{ t0: 0, t1: 2, acorde: 'C' }, { t0: 1, t1: 3, acorde: 'G' }], 'solapados'],
+    [[{ t0: 0, t1: 2, acorde: 'Hola' }], 'acorde inválido'],
+    [[null], 'nulo'],
+  ])('rechaza %j (%s)', (entrada) => {
+    expect(validarSegmentos(entrada).ok).toBe(false);
+  });
+
+  it('rechaza listas desmesuradas', () => {
+    const muchos = Array.from({ length: 2001 }, (_, i) => ({ t0: i, t1: i + 1, acorde: 'C' }));
+    expect(validarSegmentos(muchos).ok).toBe(false);
+  });
+});
