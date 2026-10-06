@@ -226,8 +226,11 @@ router.post("/posts/sync", requireAuth, async (req, res) => {
 
 // Trigger direct external publishing webhook (Make.com, Zapier, Ayrshare, or Python agent)
 router.post("/posts/trigger-webhook", requireAuth, async (req, res) => {
-  const { post, webhookUrl } = req.body;
-  const targetWebhook = webhookUrl || process.env.PUBLISH_WEBHOOK_URL;
+  const { post } = req.body;
+  // SEGURIDAD: la URL del webhook SOLO sale de la configuración del servidor. Antes se aceptaba
+  // la del cuerpo y el servidor hacía un POST a donde pidiera cualquier usuario (red interna,
+  // metadatos de la nube...) y le devolvía la respuesta: un SSRF con eco.
+  const targetWebhook = process.env.PUBLISH_WEBHOOK_URL;
 
   if (!targetWebhook) {
     return res.status(400).json({
@@ -253,10 +256,9 @@ router.post("/posts/trigger-webhook", requireAuth, async (req, res) => {
         message: "Webhook de publicación disparado con éxito."
       });
     } else {
-      const text = await response.text();
       return res.status(400).json({
         success: false,
-        error: `El webhook respondió con error ${response.status}: ${text}`
+        error: `El webhook respondió con error ${response.status}.`
       });
     }
   } catch (err: any) {
