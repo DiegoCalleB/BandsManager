@@ -420,9 +420,9 @@ export function ModoLocalEnVivoTab({
       ];
 
   // Current chord text
-  const rawChordText =
-    currentSong?.cifradoTexto ||
-    getSampleCifrado(currentSong?.titulo || currentItem?.titulo || "Tema");
+  // Sin cifrado guardado se muestra vacío: antes caía en una letra
+  // de ejemplo escrita en el código que parecía la letra de la canción.
+  const rawChordText = currentSong?.cifradoTexto || "";
   const uniqueChords = extractUniqueChords(rawChordText);
 
   return (
@@ -1030,7 +1030,14 @@ export function ModoLocalEnVivoTab({
               ref={atrilScrollRef}
               className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
             >
-              {renderFormattedChords(rawChordText, transpose, notation)}
+              {rawChordText ? (
+                renderFormattedChords(rawChordText, transpose, notation)
+              ) : (
+                <p className="text-sm text-[var(--ink-2)] italic py-6">
+                  Esta canción aún no tiene cifrado. Ábrela en Repertorio → Acordes para escribirlo, subir un PDF o
+                  transcribirlo del audio.
+                </p>
+              )}
             </div>
 
             {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
@@ -1206,37 +1213,3 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   );
 };
 
-// SAMPLE DEFAULT CHORD SHEETS FOR SONGS WITHOUT CUSTOM CHORD TEXT
-function getSampleCifrado(title: string): string {
-  return `[Intro]
-Lam   Fa   Sol   Lam
-Lam   Fa   Sol   Lam
-
-[Verso 1]
-Lam                Fa
-Arrancamos la noche en la ciudad
-Sol                 Lam
-Buscando el sonido de la libertad
-Lam                Fa
-Guitarras encendidas y el viento a favor
-Sol                 Lam
-Marcando el ritmo con el corazón.
-
-[Estribillo]
-Do                 Sol
-Siente la fuerza del rock en las venas
-Rem                Lam
-Rompiendo juntos todas las cadenas
-Do                 Sol
-Noche de ensayo, fuego y pasión
-Fa                 Sol        Lam
-Cantando juntos la misma canción.
-
-[Solo de Guitarra]
-Fa   Sol   Lam   Lam
-Fa   Sol   Lam   Lam
-
-[Outro]
-Fa        Sol        Lam
-Cierre con final seco en Lam!`;
-}

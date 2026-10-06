@@ -1,6 +1,7 @@
 // Repertorio: canciones, análisis de dinámica/acordes/energía, setlists y utilidades relacionadas.
 
 import express from "express";
+import fs from "fs";
 import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
@@ -10,10 +11,10 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
-import { detectarAcordesDesdePcm, sumarPcm } from "../utils/chordDetection.js";
-import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
+import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
+import { transcribirLetra, limpiarLineas, totalPalabras } from "../services/transcripcionLetra.js";
+import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
-import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -216,36 +217,121 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
       return res.status(409).json({ error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos });
     }
 
-    const niveles = elegirFuentesAudio(song);
-    if (niveles.length === 0) return res.status(400).json({ error: "La canción no tiene audio principal para analizar." });
-
-    // Se prueba de mejor a peor fuente; si una no se puede decodificar se baja a la siguiente.
-    let pcm: Float32Array | null = null;
-    let fuente = niveles[0].fuente;
-    for (const nivel of niveles) {
-      const decodificados = (
-        await Promise.all(nivel.urls.map((u) => extraerPcmMono(u, { timeoutMs: 90_000, maxDuracionSeg: 360 })))
-      ).filter((p): p is Float32Array => p !== null);
-      if (decodificados.length > 0) {
-        pcm = sumarPcm(decodificados);
-        fuente = nivel.fuente;
-        break;
-      }
-    }
-    if (!pcm) return res.status(422).json({ error: "No se pudo descargar o decodificar el audio de la canción (la URL puede haber caducado o el formato no es compatible). Prueba a subirlo de nuevo." });
-
-    const tonalidad = normalizarTonalidad(song.tonalidad);
-    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad });
-    if (segmentos.length === 0 || segmentos.every((s) => s.acorde === "N")) {
-      return res.status(422).json({ error: "No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?)." });
-    }
-
-    const analisis = construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
+    const resultado = await analizarAcordesDeCancion(song);
+    if (resultado.ok === false) return res.status(resultado.status).json({ error: resultado.error });
+    const analisis = resultado.analisis;
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
   } catch (err: any) {
     console.error("Error analizando acordes del audio:", err);
     res.status(500).json({ error: err?.message || "No se pudieron analizar los acordes del audio." });
+  } finally {
+    analisisAcordesEnCurso.delete(clave);
+  }
+});
+
+// POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
+// VOZ (Whisper) sobre la pista de voz aislada de Iris (o, si no hay, la mezcla), con marcas de
+// tiempo; los acordes, de la detección propia. Se fusionan por tiempo en un cifrado de texto.
+// Nunca se genera letra a partir del título ni con un modelo generativo: si no se puede
+// transcribir, se devuelve el error y no se escribe nada.
+router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
+  const { id } = req.params;
+  const userBandId = getTargetBandId(req);
+  const clave = `${userBandId}:${id}`;
+  if (analisisAcordesEnCurso.has(clave)) {
+    return res.status(409).json({ error: "Ya se está procesando el audio de esta canción." });
+  }
+  analisisAcordesEnCurso.add(clave);
+  try {
+    const songs = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+
+    // Un cifrado escrito por la banda no se sustituye sin confirmación (y no se gasta transcripción).
+    if (song.cifradoTexto && String(song.cifradoTexto).trim() && req.body?.sobrescribir !== true) {
+      return res.status(409).json({
+        yaTieneCifrado: true,
+        error: "Esta canción ya tiene un cifrado guardado. Transcribir desde el audio lo sustituiría.",
+      });
+    }
+
+    const urlVoz = (song.audioIdeas ?? [])
+      .flatMap((i: any) => i.pistas ?? [])
+      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+    const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
+    const urlLetra: string | undefined = urlVoz || urlMezcla;
+    if (!urlLetra) {
+      return res.status(400).json({ error: "Sin audio no se puede transcribir la letra, y no voy a inventarla. Sube el audio de la canción, o escribe/pega el cifrado." });
+    }
+    const fuenteLetra: "voz" | "mezcla" = urlVoz ? "voz" : "mezcla";
+
+    // Acordes: los ya detectados (con correcciones) o un análisis nuevo. Si fallan, la letra sigue.
+    let analisis = song.analisisAcordes as any;
+    let avisoAcordes: string | undefined;
+    if (!analisis) {
+      const r = await analizarAcordesDeCancion(song);
+      if (r.ok === true) analisis = r.analisis;
+      else avisoAcordes = (r as { error: string }).error;
+    }
+
+    let transcripcion;
+    try {
+      transcripcion = await transcribirLetra(urlLetra, { idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined });
+    } catch (err: any) {
+      console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
+      return res.status(502).json({ error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` });
+    }
+
+    const lineas = limpiarLineas(transcripcion.lineas);
+    if (totalPalabras(lineas) < 8) {
+      return res.status(422).json({
+        letraConfianza: "sin_letra",
+        error: "No se oye una letra inteligible en este audio (¿instrumental, o voz muy tapada?). No se ha escrito ninguna letra.",
+      });
+    }
+
+    const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
+    const letraConfianza = fuenteLetra === "voz" ? "media" : "baja";
+    const analisisFinal = analisis
+      ? {
+          ...analisis,
+          letra: {
+            fuente: fuenteLetra,
+            modelo: transcripcion.modelo,
+            idioma: transcripcion.idioma,
+            transcritaEn: new Date().toISOString(),
+            lineas: lineas.slice(0, 400).map((l) => ({ t0: l.t0, t1: l.t1, texto: l.texto })),
+          },
+        }
+      : undefined;
+
+    const guardada = await dbUpsertSong(
+      {
+        ...song,
+        cifradoTexto,
+        guiaSustituto: { ...(song.guiaSustituto || {}), origenCifrado: "audio_real", cifradoAproximado: true, letraConfianza },
+        ...(analisisFinal ? { analisisAcordes: analisisFinal } : {}),
+      },
+      userBandId
+    );
+
+    res.json({
+      success: true,
+      cifradoTexto,
+      letraConfianza,
+      fuenteLetra,
+      idioma: transcripcion.idioma,
+      modelo: transcripcion.modelo,
+      lineas: lineas.length,
+      conAcordes: Boolean(analisis),
+      avisoAcordes,
+      analisis: analisisFinal ?? analisis ?? null,
+      song: guardada,
+    });
+  } catch (err: any) {
+    console.error("Error en letra-sincronizada:", err);
+    res.status(500).json({ error: err?.message || "No se pudo procesar la letra." });
   } finally {
     analisisAcordesEnCurso.delete(clave);
   }
@@ -424,123 +510,136 @@ router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
 // POST generate AI chord sheet and substitute guide
 router.post("/generate-song-chords", requireAuth, async (req, res) => {
   try {
-    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista, audioUrl } = req.body;
+    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista, audioUrl, sobrescribir } = req.body;
 
     if (!titulo) {
       return res.status(400).json({ error: "El título de la canción es requerido." });
+    }
+
+    // La canción guardada manda: su cifrado actual, su pista de voz y los acordes ya detectados.
+    let cancion: any = null;
+    if (songId) {
+      try {
+        const songs = await dbGetSongs(getTargetBandId(req));
+        cancion = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+      } catch {
+        cancion = null;
+      }
+    }
+
+    // No se pisa un cifrado que ya existe sin que el usuario lo confirme (y así ni se gasta IA).
+    if (cancion?.cifradoTexto && String(cancion.cifradoTexto).trim() && sobrescribir !== true) {
+      return res.status(409).json({
+        success: false,
+        yaTieneCifrado: true,
+        error: "Esta canción ya tiene un cifrado guardado. Generar otro lo sustituiría."
+      });
     }
 
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
     let generatedGuide: any = null;
     let esAproximado = false;
-    // De dónde sale de verdad el cifrado, para que el cliente nunca confunda una transcripción
-    // real, una propuesta honesta de la IA y la plantilla de relleno cuando todo lo demás falla.
-    let chordsSource: 'audio_real' | 'ia_sin_audio' | 'plantilla_generica' = 'plantilla_generica';
+    let letraConfianza: "alta" | "media" | "baja" | "sin_letra" = "baja";
+    // La única fuente válida es el audio real. Sin audio no hay nada que transcribir, y pedirle a
+    // una IA «una letra para esta canción» solo produce una letra inventada con aspecto de verdadera.
+    const chordsSource = "audio_real" as const;
 
-    if (aiClient) {
-      try {
-        // Resolvemos el audio ANTES de escribir el prompt: solo si hay una pista real
-        // podemos pedirle a la IA que transcriba lo que suena. Sin esto el prompt le diría
-        // "tienes el audio adjunto" aunque no se le mande nada, invitándole a inventar.
-        // allowSyntheticFallback:false evita que nos devuelva un tono de prueba.
-        const snippetPath = audioUrl
-          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES })
-          : null;
-        const tieneAudioReal = Boolean(snippetPath);
-
-        const audioInstructions = tieneAudioReal
-          ? `Tienes adjunto el audio REAL de la canción. Escúchalo con máxima atención y transcribe la LETRA EXACTA cantada y los ACORDES REALES que suenan (no los inventes). Si el audio no permite distinguir alguna parte con certeza, indícalo con [?] en vez de inventar.`
-          : esVersionCovers
-          ? `No se dispone del audio de esta versión/cover: dependes solo de lo que sepas de la canción original. Transcribe acordes como "acordes reales" ÚNICAMENTE si estás genuinamente seguro de ellos. Si no los recuerdas con confianza, NO te los inventes presentándolos como transcripción fiable: pon "esAproximado": true en el JSON de respuesta y antepón a cifradoTexto la línea "[⚠️ Progresión aproximada de memoria, no confirmada — verifica de oído antes de usarla en directo]".`
-          : `No se dispone del audio de la canción; es una composición original, así que genera la mejor propuesta posible a partir del contexto (título, tonalidad, tipo).`;
-
-        const prompt = `Eres un músico profesional, transcriptor y arreglista. Genera el cifrado de acordes con letra completo al estilo LaCuerda.net / Ultimate Guitar para la siguiente canción:
-Título: "${titulo}"
-${artista ? `Artista/Banda: "${artista}"` : ''}
-${tonalidad ? `Tonalidad Base: "${tonalidad}"` : ''}
-${bpm ? `Tempo (BPM): ${bpm}` : ''}
-${afinacion ? `Afinación: "${afinacion}"` : ''}
-${notasInternas ? `Notas internas del grupo: "${notasInternas}"` : ''}
-${esVersionCovers ? `Tipo: Versión / Cover` : `Tipo: Canción Original`}
-
-${audioInstructions}
-
-Requisitos estrictos del formato cifradoTexto:
-1. Utiliza acordes estándar en notación española o internacional (ej. Do, Re, Mim, Sol, Lam, Fa#m o C, D, Em, G, Am, F#m).
-2. Pon los acordes usando la notación inline [Acorde] justo delante de las palabras o sílabas donde cambian de armonía, o bien en la línea superior alineados con espacios.
-3. Estructura con secciones claras: [Intro], [Verso 1], [Estribillo], [Verso 2], [Puente], [Solo], [Outro].
-4. Si la canción es un tema conocido o cover, transcribe sus acordes reales solo cuando estés seguro de ellos (ver instrucción anterior sobre "esAproximado"). Si es un tema original, crea una progresión armónica profesional y letra acorde a la tonalidad ${tonalidad || 'Mim'}.
-
-Genera también la Guia de Sustitución Rápida (guiaSustituto) para un músico de apoyo o sustituto de última hora.
-
-Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
-{
-  "cifradoTexto": "[Intro]\\n[Mim]  [Do]  [Re]  [Mim]...",
-  "esAproximado": false,
-  "guiaSustituto": {
-    "estructura": "Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo -> Outro",
-    "progresionClave": "Verso: Mim - Do | Estribillo: Sol - Re - Mim - Do",
-    "cortesYClaves": "Corte seco en compás 8 del puente. Bajar dinámica en verso 2.",
-    "capoTraste": "Sin Capo (o Capo 2 si aplica)",
-    "instrumentosClave": "Batería entra en compás 5, guitarra arpegia en verso"
-  }
-}`;
-
-        let contents: any = [{ role: 'user', parts: [{ text: prompt }] }];
-
-        if (tieneAudioReal) {
-          const audioContents = buildAudioOrTextContents(
-            snippetPath,
-            prompt,
-            "Audio no disponible en el servidor, genera la mejor propuesta posible a partir del título y contexto."
-          );
-          // buildAudioOrTextContents returns either a multimodal array or a plain string fallback;
-          // normalize both into the { role, parts } shape generateContentWithFallback expects.
-          contents = Array.isArray(audioContents)
-            ? [{ role: 'user', parts: audioContents }]
-            : [{ role: 'user', parts: [{ text: audioContents }] }];
-        }
-
-        const aiRes = await generateContentWithFallback(aiClient, {
-          contents,
-          config: {
-            responseMimeType: "application/json"
-          },
-          bandId: getTargetBandId(req),
-          // Con audio adjunto, 60 s se quedaba corto y caía en silencio al relleno.
-          timeoutMs: tieneAudioReal ? TIMEOUT_IA_LARGO_MS : undefined
-        });
-
-        const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-        const parsed = safeParseJson(responseText);
-        if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
-          generatedChords = parsed.cifradoTexto;
-          generatedGuide = parsed.guiaSustituto;
-          esAproximado = Boolean(parsed.esAproximado);
-          chordsSource = tieneAudioReal ? 'audio_real' : 'ia_sin_audio';
-        }
-      } catch (aiErr: any) {
-        console.warn("[Gemini API] Could not generate chords via AI, using harmonic engine fallback:", aiErr?.message || aiErr);
-      }
+    // Audio de la mezcla (acordes y estructura) y, si Iris separó la voz, pista de voz aislada
+    // (la letra se oye mucho mejor sin guitarras ni batería).
+    const urlVoz = (cancion?.audioIdeas ?? [])
+      .flatMap((i: any) => i.pistas ?? [])
+      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+    const [snippetMezcla, snippetVoz] = await Promise.all([
+      audioUrl ? getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
+      urlVoz ? getAudioSnippetPath({ audioUrl: urlVoz, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
+    ]);
+    if (!snippetMezcla && !snippetVoz) {
+      return res.status(422).json({
+        success: false,
+        chordsSource: "sin_audio",
+        error: "Sin audio no se puede transcribir la letra ni los acordes, y no voy a inventarlos. Sube el audio de la canción (o pega el cifrado, o sube un PDF/imagen) y vuelve a intentarlo."
+      });
+    }
+    if (!aiClient) {
+      return res.status(503).json({ success: false, chordsSource: "sin_resultado", error: "La IA no está configurada en el servidor, así que no se puede transcribir." });
     }
 
-    // Sin respuesta útil de la IA NO se inventa nada. Antes se rellenaba con una plantilla I-IV-V
-    // y una letra de relleno que se guardaba como si fuera el cifrado real y pisaba el que el
-    // usuario ya tuviera. Mejor un error claro que un dato falso con aspecto de verdadero.
+    try {
+      const acordesDetectados = (cancion?.analisisAcordes?.segmentos ?? [])
+        .filter((sg: any) => sg.acorde !== "N")
+        .slice(0, 160)
+        .map((sg: any) => `${Math.floor(sg.t0 / 60)}:${String(Math.floor(sg.t0 % 60)).padStart(2, "0")} ${sg.acorde}`)
+        .join(", ");
+
+      const prompt = `Eres un transcriptor musical. Tu trabajo es TRANSCRIBIR lo que suena en el audio adjunto, no componer ni recordar.
+${snippetVoz ? "Recibes DOS audios: el primero contiene SOLO LA VOZ aislada; el segundo es la mezcla completa. Saca la letra del primero y los acordes del segundo." : "Recibes la mezcla completa de la canción."}
+
+Datos de la canción (solo contexto, no son parte de la transcripción):
+Título: "${titulo}"
+${artista ? `Artista/Banda: "${artista}"` : ""}
+${tonalidad ? `Tonalidad: "${tonalidad}"` : ""}
+${bpm ? `Tempo: ${bpm} BPM` : ""}
+${esVersionCovers ? "Es una versión/cover." : "Es una composición original de la banda."}
+${acordesDetectados ? `\nAcordes detectados por análisis de señal (referencia fiable de qué acordes y cuándo; no los contradigas salvo que el audio lo muestre con claridad): ${acordesDetectados}` : ""}
+
+REGLAS ESTRICTAS PARA LA LETRA (lo más importante):
+1. Escribe SOLO las palabras que se oyen cantadas, en el idioma en que se cantan. No traduzcas, no corrijas, no completes versos ni rimas, no uses lo que sepas de la canción aunque la reconozcas.
+2. Donde no entiendas una palabra o un tramo, escribe [?] en su lugar. Mejor un hueco honesto que una palabra inventada.
+3. Si no hay voz inteligible, o es un instrumental, NO escribas letra: deja solo las líneas de acordes por sección.
+4. No repitas un estribillo por inercia: escribe cada vez lo que suena en esa parte, y si es igual puedes copiarlo, pero solo si lo has oído.
+
+FORMATO de cifradoTexto (estilo LaCuerda): acordes inline [Am] delante de la sílaba donde cambian, secciones [Intro], [Verso 1], [Estribillo], [Puente], [Solo], [Outro]. Notación española (Do, Re, Mim, Sol, Lam) o internacional, pero coherente.
+
+Responde ÚNICAMENTE con JSON válido:
+{
+  "cifradoTexto": "...",
+  "letraConfianza": "alta" | "media" | "baja" | "sin_letra",
+  "idioma": "es" | "gl" | "en" | "...",
+  "guiaSustituto": { "estructura": "...", "progresionClave": "...", "cortesYClaves": "...", "capoTraste": "...", "instrumentosClave": "..." }
+}
+"letraConfianza": "alta" solo si entiendes casi todo; "media" si hay huecos [?]; "baja" si dudas de buena parte; "sin_letra" si no hay voz inteligible.`;
+
+      const partes: any[] = [];
+      for (const ruta of [snippetVoz, snippetMezcla]) {
+        if (ruta && fs.existsSync(ruta)) {
+          partes.push({ inlineData: { mimeType: "audio/mp3", data: fs.readFileSync(ruta).toString("base64") } });
+        }
+      }
+      partes.push({ text: prompt });
+
+      const aiRes = await generateContentWithFallback(aiClient, {
+        contents: [{ role: "user", parts: partes }],
+        // temperatura 0: transcribir, no crear.
+        config: { responseMimeType: "application/json", temperature: 0 },
+        bandId: getTargetBandId(req),
+        timeoutMs: TIMEOUT_IA_LARGO_MS
+      });
+
+      const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const parsed = safeParseJson(responseText);
+      if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
+        generatedChords = parsed.cifradoTexto;
+        generatedGuide = parsed.guiaSustituto;
+        letraConfianza = ["alta", "media", "baja", "sin_letra"].includes(parsed.letraConfianza) ? parsed.letraConfianza : "baja";
+        esAproximado = letraConfianza !== "alta" && letraConfianza !== "sin_letra";
+      }
+    } catch (aiErr: any) {
+      console.warn("[Gemini API] No se pudo transcribir la canción:", aiErr?.message || aiErr);
+    }
+
+    // Sin respuesta útil de la IA NO se inventa nada.
     if (!generatedChords) {
       return res.status(503).json({
         success: false,
         chordsSource: "sin_resultado",
-        error: aiClient
-          ? "La IA no pudo transcribir esta canción ahora mismo. No se ha modificado nada: inténtalo de nuevo en unos minutos."
-          : "La IA no está configurada en el servidor, así que no se pueden generar acordes."
+        error: "La IA no pudo transcribir esta canción ahora mismo. No se ha modificado nada: inténtalo de nuevo en unos minutos."
       });
     }
 
     // El origen viaja DENTRO de guiaSustituto (ya es JSON en BD) para que al reabrir la canción
     // se sepa si el cifrado es transcripción real, propuesta de la IA o aproximado de memoria.
-    generatedGuide = { ...(generatedGuide && typeof generatedGuide === "object" ? generatedGuide : {}), origenCifrado: chordsSource, cifradoAproximado: esAproximado };
+    generatedGuide = { ...(generatedGuide && typeof generatedGuide === "object" ? generatedGuide : {}), origenCifrado: chordsSource, cifradoAproximado: esAproximado, letraConfianza };
 
     // Persistimos el cifrado en la canción. Las canciones nuevas se crean directamente en
     // Supabase (POST /songs no pasa por loadState), así que buscarlas solo en el estado en
@@ -593,7 +692,9 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
       chordsSource,
       // Mantenido por compatibilidad con clientes existentes.
       fromRealAudio: chordsSource === 'audio_real',
-      // Si la propia IA ha marcado el cifrado como no confirmado (cover sin audio, de memoria).
+      // Qué tan seguro está el transcriptor de la letra (alta / media / baja / sin_letra).
+      letraConfianza,
+      // true si hay huecos [?] o dudas: la letra hay que revisarla de oído.
       esAproximado
     });
   } catch (err: any) {
