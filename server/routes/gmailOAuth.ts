@@ -19,6 +19,7 @@ import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
+import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
 
 const router = express.Router();
 
@@ -31,38 +32,82 @@ const router = express.Router();
 const GMAIL_OAUTH_SCOPE = "https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/gmail.modify email";
 const AUTHORIZE_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
+const REVOKE_ENDPOINT = "https://oauth2.googleapis.com/revoke";
 const PROFILE_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/profile";
 const ESTADO_VALIDEZ_MS = 10 * 60 * 1000; // 10 minutos: tiempo de sobra para completar el consentimiento en Google
 
-export function firmarEstadoOAuth(bandId: string): string {
+// `state` = bandId.ts.nonce.firma. El nonce se guarda también en una cookie HttpOnly del navegador
+// que inició el flujo: así el callback solo vale en ESE navegador (un `state` filtrado por un
+// historial, un log o un enlace compartido ya no permite a otro conectar su Gmail a la banda), y
+// además cada nonce se consume una sola vez (anti-reenvío).
+const NOMBRE_COOKIE_NONCE = "gmail_oauth_nonce";
+const noncesConsumidos = new Map<string, number>();
+
+function firmaEstado(secreto: string, bandId: string, ts: string, nonce: string): string {
+  return crypto.createHmac("sha256", secreto).update(`gmail-oauth:${bandId}:${ts}:${nonce}`).digest("hex").slice(0, 32);
+}
+
+export function firmarEstadoOAuth(bandId: string, nonce: string = crypto.randomBytes(16).toString("hex")): string {
   const secreto = process.env.CRON_SECRET;
   if (!secreto) {
     throw new Error("Falta CRON_SECRET en el servidor: no se puede firmar el estado de OAuth de Gmail.");
   }
   const ts = Date.now().toString();
-  const firma = crypto.createHmac("sha256", secreto).update(`gmail-oauth:${bandId}:${ts}`).digest("hex").slice(0, 32);
-  return `${bandId}.${ts}.${firma}`;
+  return `${bandId}.${ts}.${nonce}.${firmaEstado(secreto, bandId, ts, nonce)}`;
+}
+
+function partesEstadoVerificado(state: unknown): { bandId: string; nonce: string } | null {
+  const secreto = process.env.CRON_SECRET;
+  if (!secreto || typeof state !== "string") return null;
+
+  const partes = state.split(".");
+  if (partes.length !== 4) return null;
+  const [bandId, ts, nonce, firmaRecibida] = partes;
+  if (!bandId || !ts || !nonce || !firmaRecibida) return null;
+
+  const edadMs = Date.now() - Number(ts);
+  if (!Number.isFinite(edadMs) || edadMs < 0 || edadMs > ESTADO_VALIDEZ_MS) return null;
+
+  const firmaEsperada = firmaEstado(secreto, bandId, ts, nonce);
+  if (firmaEsperada.length !== firmaRecibida.length) return null;
+  if (!crypto.timingSafeEqual(Buffer.from(firmaEsperada), Buffer.from(firmaRecibida))) return null;
+
+  return { bandId, nonce };
 }
 
 // Devuelve el band_id si la firma es válida y no ha caducado, o null. Nunca lanza: un estado
 // inválido es un caso esperado (link caducado, manipulado) y se trata como tal, no como un 500.
 export function verificarEstadoOAuth(state: unknown): string | null {
-  const secreto = process.env.CRON_SECRET;
-  if (!secreto || typeof state !== "string") return null;
+  return partesEstadoVerificado(state)?.bandId ?? null;
+}
 
-  const partes = state.split(".");
-  if (partes.length !== 3) return null;
-  const [bandId, ts, firmaRecibida] = partes;
-  if (!bandId || !ts || !firmaRecibida) return null;
+function leerCookie(req: express.Request, nombre: string): string {
+  const cabecera = String(req.headers.cookie || "");
+  for (const trozo of cabecera.split(";")) {
+    const [k, ...v] = trozo.trim().split("=");
+    if (k === nombre) return v.join("=");
+  }
+  return "";
+}
 
-  const edadMs = Date.now() - Number(ts);
-  if (!Number.isFinite(edadMs) || edadMs < 0 || edadMs > ESTADO_VALIDEZ_MS) return null;
+/**
+ * Valida el `state` del callback contra la cookie del navegador y lo consume (un solo uso).
+ * Devuelve el band_id o null.
+ */
+export function validarYConsumirEstadoOAuth(state: unknown, nonceCookie: string): string | null {
+  const verificado = partesEstadoVerificado(state);
+  if (!verificado) return null;
 
-  const firmaEsperada = crypto.createHmac("sha256", secreto).update(`gmail-oauth:${bandId}:${ts}`).digest("hex").slice(0, 32);
-  if (firmaEsperada.length !== firmaRecibida.length) return null;
-  if (!crypto.timingSafeEqual(Buffer.from(firmaEsperada), Buffer.from(firmaRecibida))) return null;
+  const a = Buffer.from(verificado.nonce);
+  const b = Buffer.from(nonceCookie || "");
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
 
-  return bandId;
+  const ahora = Date.now();
+  for (const [n, caduca] of noncesConsumidos) if (caduca < ahora) noncesConsumidos.delete(n);
+  if (noncesConsumidos.has(verificado.nonce)) return null;
+  noncesConsumidos.set(verificado.nonce, ahora + ESTADO_VALIDEZ_MS);
+
+  return verificado.bandId;
 }
 
 function oauthConfigured(): boolean {
@@ -76,7 +121,15 @@ router.get("/authorize-url", requireAuth, (req, res) => {
   }
   try {
     const bandId = getTargetBandId(req);
-    const state = firmarEstadoOAuth(bandId);
+    const nonce = crypto.randomBytes(16).toString("hex");
+    const state = firmarEstadoOAuth(bandId, nonce);
+    res.cookie(NOMBRE_COOKIE_NONCE, nonce, {
+      httpOnly: true,
+      sameSite: "lax", // el callback es una navegación de nivel superior desde Google: Lax la envía
+      secure: process.env.NODE_ENV === "production",
+      path: "/api/gmail-oauth",
+      maxAge: ESTADO_VALIDEZ_MS
+    });
     const url = new URL(AUTHORIZE_ENDPOINT);
     url.searchParams.set("client_id", process.env.GOOGLE_OAUTH_CLIENT_ID!);
     url.searchParams.set("redirect_uri", process.env.GOOGLE_OAUTH_REDIRECT_URI!);
@@ -96,7 +149,8 @@ router.get("/authorize-url", requireAuth, (req, res) => {
 router.get("/callback", async (req, res) => {
   const redirigirConError = (motivo: string) => res.redirect(`/?gmail_oauth=error&motivo=${encodeURIComponent(motivo)}`);
 
-  const bandId = verificarEstadoOAuth(req.query.state);
+  const bandId = validarYConsumirEstadoOAuth(req.query.state, leerCookie(req, NOMBRE_COOKIE_NONCE));
+  res.clearCookie(NOMBRE_COOKIE_NONCE, { path: "/api/gmail-oauth" });
   if (!bandId) {
     return redirigirConError("estado_invalido_o_caducado");
   }
@@ -182,7 +236,15 @@ router.get("/callback", async (req, res) => {
     if (gmailEmail && gmailEmail.trim()) {
       try {
         const sb = getSupabase();
-        await sb.from("registered_bands").update({ email: gmailEmail.trim().toLowerCase() }).eq("band_id", bandId);
+        const emailNuevo = gmailEmail.trim().toLowerCase();
+        // Ese email es la identidad de inicio de sesión: si ya pertenece a OTRA banda no se pisa
+        // (dejaría dos cuentas con el mismo login y una podría entrar en la otra).
+        const { data: otra } = await sb.from("registered_bands").select("band_id").ilike("email", emailNuevo).neq("band_id", bandId).limit(1);
+        if (!otra || otra.length === 0) {
+          await sb.from("registered_bands").update({ email: emailNuevo }).eq("band_id", bandId);
+        } else {
+          console.warn("[gmailOAuth] El Gmail conectado ya es el email de otra banda: no se sincroniza registered_bands.email.");
+        }
       } catch (syncErr) {
         console.warn("[gmailOAuth] No se pudo sincronizar registered_bands.email:", syncErr);
       }
@@ -211,7 +273,23 @@ router.get("/status", requireAuth, async (req, res) => {
 router.post("/disconnect", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
+    const cuenta = await dbGetBandGmailOAuth(bandId);
     await dbDeleteBandGmailOAuth(bandId);
+    // Sin esto el access token cacheado seguía valiendo (hasta ~1 h) para enviar correos tras
+    // «Desconectar», y el refresh_token seguía vivo en Google.
+    invalidarAccessTokenGmail(bandId);
+    if (cuenta?.refresh_token) {
+      try {
+        await fetch(REVOKE_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ token: cuenta.refresh_token }),
+          signal: AbortSignal.timeout(8000)
+        });
+      } catch (revokeErr) {
+        console.warn("[gmailOAuth] No se pudo revocar el token en Google (la cuenta ya está desconectada aquí):", revokeErr);
+      }
+    }
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error desconectando Gmail OAuth:", err);

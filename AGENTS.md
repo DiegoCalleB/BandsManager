@@ -437,3 +437,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * **Aplicabilidad sin confirmar** — depende de si las pantallas públicas cuentan como "servicio de comercio electrónico"/"acceso a medios audiovisuales" a efectos de la norma; no asumir que aplica ni que no aplica sin revisarlo. **Mitigación mínima:** auditoría con Lighthouse/axe de `EPKManager`/`PublicFanCapture`/`FansLanding` antes de producción, y confirmar aplicabilidad real con la normativa vigente en el momento del lanzamiento.
 
 **Ya resuelto correctamente, no tocar sin razón:** `PublicFanCapture.tsx` sí implementa checkbox de consentimiento RGPD explícito (`consentimientoRGPD`) antes de capturar el email de un fan — usar ese componente como referencia de patrón cuando se añadan otros formularios de captación de datos de terceros.
+
+### Gmail OAuth, cookies y tamaño de cuerpo (auditoría B)
+- El `state` de Gmail OAuth lleva nonce firmado + cookie HttpOnly del navegador y se consume una sola vez (`validarYConsumirEstadoOAuth`). Al desconectar se revoca el token en Google y se invalida `accessTokenCache` (`invalidarAccessTokenGmail`). No sincronizar `registered_bands.email` si ya es de otra banda.
+- JSON: 1 MB para anónimos, 50 MB solo con sesión válida (`server/middleware/limiteCuerpo.ts`). Una ruta pública que necesite más debe justificarlo y validar su propio límite.
+- Cookie de sesión `httpOnly:false` es deliberado hasta migrar el cliente (BACKLOG.md); lleva `Secure` en producción.

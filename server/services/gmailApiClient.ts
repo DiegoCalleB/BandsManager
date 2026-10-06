@@ -40,6 +40,11 @@ interface CachedToken {
 
 const accessTokenCache = new Map<string, CachedToken>();
 
+/** Olvida el access token cacheado de una banda (al desconectar su Gmail o si Google lo rechaza). */
+export function invalidarAccessTokenGmail(bandId: string): void {
+  accessTokenCache.delete(bandId);
+}
+
 function base64UrlEncode(buffer: Buffer): string {
   return buffer.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }

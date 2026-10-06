@@ -8,6 +8,7 @@ import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
 import { getSafeUsers, getUserFromRequest } from "./server/auth.js";
+import { jsonSegunSesion } from "./server/middleware/limiteCuerpo.js";
 import { mismaBanda } from "./server/utils/bandAccess.js";
 import { loadState, saveState, getEpkConfigForBand, ensureUniqueIdsInState } from "./server/state.js";
 import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.js";
@@ -92,15 +93,8 @@ app.use(helmet({
 
 app.use(compression());
 
-app.use(
-  express.json({
-    limit: "50mb",
-    verify: (req: any, _res, buf) => {
-      req.rawBody = buf;
-    }
-  })
-);
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(jsonSegunSesion((req) => !!getUserFromRequest(req, loadState)));
+app.use(express.urlencoded({ limit: "1mb", extended: true }));
 
 // Tras cualquier escritura correcta en /api se invalida la caché de estado de la banda: sin esto,
 // /api/state devolvía la versión anterior de lo que acababas de guardar (ver server/db/sync.ts).
