@@ -74,3 +74,34 @@ describe('dbUpsertRehearsal: no resetea agenda/objetivos/acta/grabaciones/cronó
     expect(payload.agenda).toEqual([{ id: 'a2', titulo: 'Nuevo' }]);
   });
 });
+
+describe('dbUpsertRehearsal: vaciar un campo opcional SÍ se guarda', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    fromMock.mockImplementation(() => {
+      const qb = crearQueryBuilderMock(selectResult);
+      qb.upsert = upsertMock.mockReturnValue(qb);
+      return qb;
+    });
+  });
+
+  it("con '' (lo que manda ahora la UI al vaciar el campo) se borra el valor anterior", async () => {
+    selectResult = {
+      data: { id: 'reh-1', band_id: 'test', asunto: 'Reunión', enlace_reunion: 'https://meet/x', setlist_id: 'set-1' },
+      error: null
+    };
+    await dbUpsertRehearsal({ id: 'reh-1', asunto: '', enlace_reunion: '', setlistId: '' }, 'band-test');
+    const payload = upsertMock.mock.calls[0][0];
+    expect(payload.asunto).toBe('');
+    expect(payload.enlace_reunion).toBe('');
+    expect(payload.setlist_id).toBeNull();
+  });
+
+  it('con undefined (campo no enviado) se conserva el valor anterior', async () => {
+    selectResult = { data: { id: 'reh-1', band_id: 'test', asunto: 'Reunión', setlist_id: 'set-1' }, error: null };
+    await dbUpsertRehearsal({ id: 'reh-1', asunto: undefined, setlistId: undefined }, 'band-test');
+    const payload = upsertMock.mock.calls[0][0];
+    expect(payload.asunto).toBe('Reunión');
+    expect(payload.setlist_id).toBe('set-1');
+  });
+});

@@ -75,6 +75,11 @@ export function crearFakeDealsSupabase() {
         const r: any = ejecutar();
         return { data: Array.isArray(r.data) ? r.data[0] ?? null : r.data, error: r.error };
       },
+      single: async () => {
+        const r: any = ejecutar();
+        const fila = Array.isArray(r.data) ? r.data[0] ?? null : r.data;
+        return { data: fila, error: r.error || (fila ? null : { code: 'PGRST116', message: 'No rows' }) };
+      },
       then: (resolve: any, reject: any) => Promise.resolve(ejecutar()).then(resolve, reject)
     };
     return q;

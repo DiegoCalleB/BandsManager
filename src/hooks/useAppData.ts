@@ -228,10 +228,13 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     }
   };
 
-  const handleUpdateLead = async (id: string, updatedFields: Partial<Lead>, expectedStatus?: string) => {
+  // Devuelve true si se guardó y false si no: quien encadena pasos (aprobar y lanzar el Enviador)
+  // necesita saberlo, porque antes el error se tragaba y el siguiente paso corría igualmente.
+  const handleUpdateLead = async (id: string, updatedFields: Partial<Lead>, expectedStatus?: string): Promise<boolean> => {
     setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, ...updatedFields } : l)));
     try {
       await api.updateLead(id, updatedFields, expectedStatus);
+      return true;
     } catch (e: any) {
       if (e instanceof ApiError && e.status === 409) {
         alert(e.message);
@@ -239,11 +242,19 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
         console.error('Error saving lead updates, reverting:', e);
       }
       fetchState();
+      return false;
     }
   };
 
   const handleUpdateRehearsal = async (id: string, updatedFields: Partial<Rehearsal>) => {
-    setRehearsals((prev) => prev.map((r) => (r.id === id ? normalizeRehearsal({ ...r, ...updatedFields }) : r)));
+    // Si el ensayo aún no está en la lista (la pantalla «Convocar» manda siempre un id nuevo por
+    // esta vía), se AÑADE en vez de ignorarlo: el servidor ya lo crea (upsert) y antes la UI
+    // seguía diciendo «no hay ensayos» hasta recargar, con lo que el usuario lo repetía y duplicaba.
+    setRehearsals((prev) =>
+      prev.some((r) => r.id === id)
+        ? prev.map((r) => (r.id === id ? normalizeRehearsal({ ...r, ...updatedFields }) : r))
+        : dedupeById([...prev, normalizeRehearsal({ ...updatedFields, id } as Rehearsal)])
+    );
     try {
       await api.updateRehearsal(id, updatedFields);
     } catch (e) {
@@ -253,7 +264,11 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   };
 
   const handleUpdateConcert = async (id: string, updatedFields: Partial<Concert>) => {
-    setConcerts((prev) => prev.map((c) => (c.id === id ? normalizeConcert({ ...c, ...updatedFields }) : c)));
+    setConcerts((prev) =>
+      prev.some((c) => c.id === id)
+        ? prev.map((c) => (c.id === id ? normalizeConcert({ ...c, ...updatedFields }) : c))
+        : dedupeById([...prev, normalizeConcert({ ...updatedFields, id } as Concert)])
+    );
     try {
       await api.updateConcert(id, updatedFields);
     } catch (e) {

@@ -128,9 +128,23 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
-    const updatedFields = req.body;
-    
+    // `expectedStatus` es una condición de la petición, no un campo del lead: no debe guardarse.
+    const { expectedStatus, ...updatedFields } = req.body || {};
+
     const existing = await dbGetLeadById(id, userBandId);
+
+    // Control de concurrencia: el cliente dice «estaba en tal estado cuando decidí esto» (aprobar,
+    // rechazar, corregir). Si entre medias un agente o la propia persona desde otra pestaña lo
+    // cambió, se rechaza en vez de pisar el estado nuevo con una decisión basada en datos viejos.
+    // Antes el servidor ignoraba el campo y la protección del cliente era código muerto.
+    if (expectedStatus && existing && existing.estado !== expectedStatus) {
+      return res.status(409).json({
+        error: `Esta sala cambió mientras trabajabas (ahora está en «${existing.estado}»). Se ha recargado: revísala y vuelve a intentarlo.`,
+        codigo: "estado_cambiado",
+        estado_actual: existing.estado
+      });
+    }
+
     const merged = { ...(existing || {}), ...updatedFields, id };
 
     // Regla del proyecto que hasta ahora no estaba en el código: un lead no puede entrar en la

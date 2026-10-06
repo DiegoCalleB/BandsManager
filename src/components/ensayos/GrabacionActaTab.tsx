@@ -29,6 +29,7 @@ import { formatTime } from "./EnsayoCronometro";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
+import { uploadFileToServer } from '../../utils/audioStorage';
 
 interface GrabacionActaTabProps {
   rehearsal: Rehearsal;
@@ -50,6 +51,10 @@ export function GrabacionActaTab({
   const [isRecording, setIsRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
   const [recordingBlobUrl, setRecordingBlobUrl] = useState<string | null>(null);
+  // El audio en sí: la URL `blob:` solo existe en esta pestaña, así que para guardarlo de verdad
+  // hay que subir el archivo y guardar la URL del servidor.
+  const recordingBlobRef = useRef<Blob | null>(null);
+  const [subiendoAudio, setSubiendoAudio] = useState(false);
   const [recordingTag, setRecordingTag] = useState<
     "toma_completa" | "idea_riff" | "nota_voz_debate" | "fragmento"
   >("toma_completa");
@@ -98,6 +103,7 @@ export function GrabacionActaTab({
         const audioBlob = new Blob(audioChunksRef.current, {
           type: "audio/webm",
         });
+        recordingBlobRef.current = audioBlob;
         const audioUrl = URL.createObjectURL(audioBlob);
         setRecordingBlobUrl(audioUrl);
         // Stop audio tracks
@@ -137,15 +143,36 @@ export function GrabacionActaTab({
     setAudioLevel(0);
   };
 
+  // Sube el audio al servidor y devuelve su URL permanente. Antes se guardaba la URL `blob:` del
+  // navegador: la toma se veía en la lista y, al recargar o abrir en otro móvil, el audio estaba
+  // muerto. Si la subida falla NO se guarda nada y se avisa (mejor que un audio que no suena).
+  const subirAudio = async (blob: Blob, nombre: string): Promise<string | null> => {
+    setSubiendoAudio(true);
+    try {
+      const archivo = new File([blob], nombre, { type: blob.type || "audio/webm" });
+      const url = await uploadFileToServer(archivo, { bandId: (rehearsal as any).band_id, category: "ensayos" });
+      if (!url || url.startsWith("blob:")) throw new Error("El servidor no devolvió una URL");
+      return url;
+    } catch (err) {
+      console.error("Error subiendo el audio del ensayo:", err);
+      alert("No se pudo subir la grabación. Comprueba la conexión e inténtalo de nuevo: no se ha guardado.");
+      return null;
+    } finally {
+      setSubiendoAudio(false);
+    }
+  };
+
   // Save Recording
-  const handleSaveRecording = () => {
-    if (!recordingBlobUrl) return;
+  const handleSaveRecording = async () => {
+    if (!recordingBlobUrl || !recordingBlobRef.current || subiendoAudio) return;
+    const audioUrl = await subirAudio(recordingBlobRef.current, `toma-ensayo-${Date.now()}.webm`);
+    if (!audioUrl) return;
     const newRecording: RehearsalRecording = {
       id: `rec-${Date.now()}`,
       titulo:
         recordingTitle.trim() ||
         `Toma Ensayo ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`,
-      audioUrl: recordingBlobUrl,
+      audioUrl,
       duracionSeg: recordDuration || 30,
       duracionSegundos: recordDuration || 30,
       tipo: recordingTag,
@@ -153,17 +180,22 @@ export function GrabacionActaTab({
     };
 
     onUpdateRehearsal({ grabaciones: [newRecording, ...recordings] });
+    URL.revokeObjectURL(recordingBlobUrl);
+    recordingBlobRef.current = null;
     setRecordingBlobUrl(null);
     setRecordingTitle("");
     setRecordDuration(0);
   };
 
   // Handle File Upload from disk
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    const input = e.target;
+    if (!file || subiendoAudio) return;
 
-    const audioUrl = URL.createObjectURL(file);
+    const audioUrl = await subirAudio(file, file.name);
+    input.value = "";
+    if (!audioUrl) return;
     const newRecording: RehearsalRecording = {
       id: `rec-${Date.now()}`,
       titulo: file.name.replace(/\.[^/.]+$/, ""),
@@ -175,7 +207,6 @@ export function GrabacionActaTab({
     };
 
     onUpdateRehearsal({ grabaciones: [newRecording, ...recordings] });
-    e.target.value = "";
   };
 
   // Delete Recording
@@ -377,8 +408,9 @@ _Generado automáticamente desde BandManager.io_ 🤘`;
                     size="xs"
                     type="button"
                     onClick={handleSaveRecording}
+                    disabled={subiendoAudio}
                   >
-                    Guardar grabación
+                    {subiendoAudio ? "Subiendo…" : "Guardar grabación"}
                   </Button>
                 </div>
               </div>

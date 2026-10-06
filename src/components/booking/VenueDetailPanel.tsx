@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { camposCambiados } from "../../utils/camposCambiados";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Lead,
   LeadStatus,
@@ -169,6 +170,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Edit Lead State
   const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
+  // Foto del lead en el momento de pulsar «Editar»: sirve para mandar al guardar SOLO lo que
+  // el usuario ha cambiado (ver src/utils/camposCambiados.ts).
+  const leadAlEditarRef = useRef<Partial<Lead> | null>(null);
+
   const [editedLeadInfo, setEditedLeadInfo] = useState<Partial<Lead>>({
     ...selectedLead,
   });
@@ -1058,12 +1063,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Sync edits when lead changes
   const handleStartEdit = () => {
-    setEditedLeadInfo({
+    const alEditar = {
       ...selectedLead,
       telefono: cleanVal(selectedLead.telefono),
       telefono_movil: cleanVal(selectedLead.telefono_movil),
       telefono_fijo: cleanVal(selectedLead.telefono_fijo),
-    });
+    };
+    leadAlEditarRef.current = alEditar;
+    setEditedLeadInfo(alEditar);
     setActiveTab("info");
     setIsEditingLeadInfo(true);
   };
@@ -1078,7 +1085,13 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         editedLeadInfo.telefono_fijo ||
         "",
     };
-    onUpdateLead(selectedLead.id, finalInfo);
+    // Solo lo cambiado: antes se mandaba el lead entero de cuando se pulsó «Editar» y se pisaban
+    // el estado o el hilo de correos cambiados mientras tanto.
+    const cambios = leadAlEditarRef.current ? camposCambiados(leadAlEditarRef.current as any, finalInfo as any) : finalInfo;
+    if (Object.keys(cambios).length > 0) {
+      onUpdateLead(selectedLead.id, cambios as Partial<Lead>);
+    }
+    leadAlEditarRef.current = null;
     setIsEditingLeadInfo(false);
   };
 
@@ -1127,13 +1140,17 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setlistId: data.setlistId,
       };
 
+      // Si el concierto no se crea, el lead NO se confirma: antes el fallo se tragaba, el lead
+      // quedaba «confirmado» sin bolo en el calendario y la pantalla decía que todo había ido bien.
       await apiFetch("/api/concerts", {
         method: "POST",
         body: JSON.stringify(newConcert),
-      }).catch((err) => console.warn("Error creando concierto:", err));
+      });
 
       // 3. Actualizar estado del lead en Supabase
       onUpdateLead(selectedLead.id, { estado: "confirmado" });
+      // El calendario se alimenta del estado global: se pide recargarlo para que el bolo aparezca.
+      window.dispatchEvent(new CustomEvent("app-data-updated"));
       setShowBoloConfirmadoModal(false);
       setFeedbackBoloMsg(
         "🎉 ¡Bolo confirmado y repertorio asignado en el calendario!",
@@ -1141,8 +1158,10 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       setTimeout(() => setFeedbackBoloMsg(null), 5000);
     } catch (err) {
       console.error("Error al confirmar bolo con setlist:", err);
-      onUpdateLead(selectedLead.id, { estado: "confirmado" });
-      setShowBoloConfirmadoModal(false);
+      setFeedbackBoloMsg(
+        "No se pudo crear el bolo en el calendario, así que la sala NO se ha marcado como confirmada. Inténtalo de nuevo.",
+      );
+      setTimeout(() => setFeedbackBoloMsg(null), 8000);
     }
   };
 
@@ -1194,7 +1213,14 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     // (y esperar a que el PATCH llegue a Supabase) ANTES de disparar el agente.
     const updates: Partial<Lead> = { estado: approvalState };
     if (alsoSavePitch) updates.pitch_generado = pitchText;
-    await onUpdateLead(selectedLead.id, updates);
+    // onUpdateLead devuelve false si el servidor no guardó la aprobación: en ese caso NO se lanza
+    // el Enviador (leería el estado viejo y trataría la respuesta como un pitch nuevo).
+    const aprobacionGuardada = ((await onUpdateLead(selectedLead.id, updates)) as unknown) !== false;
+    if (!aprobacionGuardada) {
+      setDraftError("No se pudo guardar la aprobación. No se ha creado ningún borrador: inténtalo de nuevo.");
+      setIsCreatingDraft(false);
+      return;
+    }
 
     let draftError = "";
     try {
