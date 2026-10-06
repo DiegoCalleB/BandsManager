@@ -1,0 +1,184 @@
+import type { SegmentoAcordeAnalizado } from '../types';
+import { normalizarAcorde } from './lineaTiempoAcordes';
+
+/**
+ * Alineación entre los acordes escritos en el cifrado (en orden de aparición) y los detectados
+ * en el audio. No hay marcas de tiempo por palabra, así que se alinean las SECUENCIAS de acordes
+ * (Needleman-Wunsch) y cada acorde del texto hereda el tiempo del tramo con el que casa.
+ *
+ * Tres decisiones para que sea robusta con cifrados reales:
+ *  - Los acordes se comparan por familia (Am7 ≈ Am) y por raíz, con costes graduales.
+ *  - Los huecos son baratos: el audio repite estribillos que el cifrado suele escribir una vez, y
+ *    el detector se salta o inventa algún cambio.
+ *  - Se prueban las 12 transposiciones del cifrado: si está escrito en otra tonalidad que la
+ *    grabación (capo, versión transportada) sigue alineando, y se avisa de la diferencia.
+ */
+
+const SECCIONES = /^(intro|verso|estribillo|coro|puente|solo|outro|coda|final|pre[- ]?estribillo|interludio|instrumental|bis)\b/i;
+const NOTAS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+/** ¿Lo que hay entre corchetes es un acorde (y no una cabecera de sección como [Solo] o [Verso 1])? */
+export function esTokenAcorde(contenido: string): boolean {
+  const t = contenido.trim();
+  if (!t || SECCIONES.test(t)) return false;
+  const n = normalizarAcorde(t);
+  return n !== null && n !== 'N';
+}
+
+/**
+ * Línea que el visor pinta como cabecera de sección ([Intro], [Verso 1], [Solo]…). Es la MISMA
+ * regla que usa el visor para dibujar, y debe seguir siéndolo: la alineación cuenta los acordes
+ * en el mismo orden en que el visor los dibuja.
+ */
+export function esLineaCabecera(linea: string): boolean {
+  return /^\[(Intro|Verso|Estribillo|Coro|Puente|Solo|Outro|Coda|Final|Intro\s\d+|Verso\s\d+)\]/i.test(linea.trim());
+}
+
+/** Acordes entre corchetes de un cifrado, en el orden en que el visor los dibuja, normalizados. */
+export function acordesDelCifrado(texto: string): string[] {
+  const salida: string[] = [];
+  for (const linea of (texto || '').split('\n')) {
+    if (esLineaCabecera(linea)) continue;
+    for (const m of linea.matchAll(/\[([A-Za-z0-9#\/]+)\]/g)) {
+      if (esTokenAcorde(m[1])) salida.push(normalizarAcorde(m[1]) as string);
+    }
+  }
+  return salida;
+}
+
+interface Partes { raiz: number; calidadMenor: boolean; resto: string }
+
+function partes(acorde: string): Partes | null {
+  const m = /^([A-G]#?)(.*?)(\/[A-G]#?)?$/.exec(acorde);
+  if (!m) return null;
+  const sufijo = m[2];
+  return { raiz: NOTAS.indexOf(m[1]), calidadMenor: /^m(?!aj)/.test(sufijo) || /^min/.test(sufijo) || /^dim/.test(sufijo), resto: sufijo };
+}
+
+/** Sube o baja un acorde normalizado `semitonos` (manteniendo sufijo y bajo). */
+export function transponerAcorde(acorde: string, semitonos: number): string {
+  const cambia = (n: string) => NOTAS[(NOTAS.indexOf(n) + semitonos + 1200) % 12];
+  return acorde.replace(/([A-G]#?)/g, (_m, n) => cambia(n));
+}
+
+function coste(a: string, b: string): number {
+  if (a === b) return 0;
+  const pa = partes(a);
+  const pb = partes(b);
+  if (!pa || !pb || pa.raiz !== pb.raiz) return 1;
+  return pa.calidadMenor === pb.calidadMenor ? 0.15 : 0.6;
+}
+
+const GAP_TEXTO = 0.8; // acorde del cifrado sin pareja en el audio
+const GAP_AUDIO = 0.6; // acorde del audio sin pareja en el cifrado (repeticiones, cambios espurios)
+
+export interface ParAlineado {
+  /** Índice del acorde en el cifrado (orden de aparición). */
+  texto: number;
+  /** Índice del segmento del audio con el que casa, o null. */
+  segmento: number | null;
+  /** true si coinciden (misma familia); false si casaron por posición pero difieren. */
+  coincide: boolean;
+}
+
+export interface Alineacion {
+  desplazamiento: number; // semitonos que hubo que subir el cifrado para que case con el audio
+  calidad: number; // 0-1: acordes que coinciden, sobre el lado más corto (cifrado o audio)
+  usable: boolean;
+  pares: ParAlineado[];
+}
+
+const CALIDAD_MINIMA = 0.5;
+
+function alinearConDesplazamiento(texto: string[], audio: string[], desplazamiento: number) {
+  const n = texto.length;
+  const m = audio.length;
+  const t = texto.map((a) => transponerAcorde(a, desplazamiento));
+  const D = Array.from({ length: n + 1 }, () => new Float64Array(m + 1));
+  for (let i = 1; i <= n; i++) D[i][0] = i * GAP_TEXTO;
+  for (let j = 1; j <= m; j++) D[0][j] = j * GAP_AUDIO;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      D[i][j] = Math.min(
+        D[i - 1][j - 1] + coste(t[i - 1], audio[j - 1]),
+        D[i - 1][j] + GAP_TEXTO,
+        D[i][j - 1] + GAP_AUDIO,
+      );
+    }
+  }
+  // Traza hacia atrás: a cada acorde del cifrado, su pareja en el audio (o ninguna).
+  const pareja: (number | null)[] = new Array(n).fill(null);
+  let i = n;
+  let j = m;
+  while (i > 0 && j > 0) {
+    const c = coste(t[i - 1], audio[j - 1]);
+    // En un empate se prefiere saltar acordes del final del audio: así, si el cifrado cubre una
+    // sola vez lo que el audio repite, casa con la PRIMERA vez y no con la última.
+    if (Math.abs(D[i][j] - (D[i][j - 1] + GAP_AUDIO)) < 1e-9) {
+      j--;
+    } else if (Math.abs(D[i][j] - (D[i - 1][j - 1] + c)) < 1e-9) {
+      pareja[i - 1] = j - 1;
+      i--; j--;
+    } else {
+      i--;
+    }
+  }
+  return { coste: D[n][m], pareja, t };
+}
+
+/**
+ * Alinea los acordes del cifrado con los segmentos detectados. Devuelve null si no hay material
+ * suficiente (menos de 2 acordes en alguno de los lados).
+ */
+export function alinearCifradoConAudio(
+  cifrado: string,
+  segmentos: SegmentoAcordeAnalizado[],
+): Alineacion | null {
+  const texto = acordesDelCifrado(cifrado);
+
+  // Audio: sin los «N» y fundiendo repeticiones consecutivas; se recuerda el segmento original.
+  const audio: string[] = [];
+  const origen: number[] = [];
+  segmentos.forEach((s, idx) => {
+    if (s.acorde === 'N') return;
+    if (audio[audio.length - 1] === s.acorde) return;
+    audio.push(s.acorde);
+    origen.push(idx);
+  });
+  if (texto.length < 2 || audio.length < 2) return null;
+
+  let mejor: { d: number; r: ReturnType<typeof alinearConDesplazamiento> } | null = null;
+  for (let d = 0; d < 12; d++) {
+    const r = alinearConDesplazamiento(texto, audio, d);
+    if (!mejor || r.coste < mejor.r.coste - 1e-9) mejor = { d, r };
+  }
+  const { d, r } = mejor!;
+  const pares: ParAlineado[] = r.pareja.map((j, i) => ({
+    texto: i,
+    segmento: j === null ? null : origen[j],
+    coincide: j !== null && coste(r.t[i], audio[j]) <= 0.15,
+  }));
+  // Se mide contra el lado más corto: un cifrado de 30 acordes frente a un audio de 10 (o al
+  // revés, un estribillo escrito una vez frente a un audio que lo repite) no debe parecer peor
+  // alineado por tener más material de un lado que del otro.
+  const calidad = pares.filter((p) => p.coincide).length / Math.min(texto.length, audio.length);
+  return { desplazamiento: d, calidad, usable: calidad >= CALIDAD_MINIMA, pares };
+}
+
+/**
+ * Qué acorde del cifrado está sonando: el último cuyo tramo ya ha empezado (los pares están en
+ * orden, así que basta recorrer hasta pasarse). -1 si todavía no ha empezado ninguno.
+ */
+export function acordeActivoDelCifrado(
+  alineacion: Alineacion | null,
+  segmentoActual: number,
+): number {
+  if (!alineacion?.usable || segmentoActual < 0) return -1;
+  let activo = -1;
+  for (const p of alineacion.pares) {
+    if (p.segmento === null) continue;
+    if (p.segmento <= segmentoActual) activo = p.texto;
+    else break;
+  }
+  return activo;
+}
