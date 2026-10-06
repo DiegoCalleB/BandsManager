@@ -129,3 +129,20 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  # La versión se calcula a partir de los commits (AGENTS.md §7.6): un mensaje sin prefijo
+  # (feat:, fix:, docs:...) no cuenta para el siguiente release. Solo se revisan los commits del PR.
+  commits:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Conventional Commits
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}

@@ -362,6 +362,21 @@ Hay dos bloqueantes y varios importantes documentados en [AGENTS.md §8](./AGENT
 4. Cerrar los arreglos de billing y reactivar los planes.
 5. Decidir la licencia (ver abajo) y publicar las páginas legales.
 
+## Versiones y releases
+
+La versión sigue [SemVer](https://semver.org/lang/es/) (`MAYOR.MENOR.PARCHE`) y la versión actual está en `package.json`. **Nadie la sube a mano**: se calcula a partir de los commits.
+
+| Commit | Sube | Ejemplo |
+|---|---|---|
+| `fix: ...` | Parche | `0.1.0 → 0.1.1` |
+| `feat: ...` | Menor | `0.1.1 → 0.2.0` |
+| `feat!: ...` o `BREAKING CHANGE:` | Mayor (antes de 1.0.0, menor) | `0.2.0 → 0.3.0` |
+| `docs:`, `test:`, `chore:`, `ci:` | Nada | |
+
+Al llegar commits a `main`, release-please abre un PR «release X.Y.Z» con el `CHANGELOG.md` y la versión nuevas. Al fusionarlo se crean el tag y la Release de GitHub. Los commits sin prefijo se rechazan en local (Husky) y en los PR (CI), porque no podrían contar para la versión.
+
+La versión se muestra en `/api/health` y se envía a Sentry como `release`, así que cada error se asocia a la versión que lo produjo. `1.0.0` se publicará cuando la app se abra a usuarios reales. Detalle de las reglas: [AGENTS.md §7.6](./AGENTS.md) y [CHANGELOG.md](./CHANGELOG.md).
+
 ## Licencia
 
 El repositorio incluye [`LICENSE`](./LICENSE) (AGPL-3.0) y [`TERMS_OF_SERVICE.md`](./TERMS_OF_SERVICE.md) (todos los derechos reservados). **Ambos se contradicen**; está pendiente decidir cuál aplica.

@@ -1,0 +1,22 @@
+name: Release
+
+# Calcula la siguiente versión (SemVer) a partir de los Conventional Commits que llegan a main y
+# mantiene abierto un PR "chore(main): release X.Y.Z" con package.json y CHANGELOG.md actualizados.
+# Al fusionar ese PR se crean el tag vX.Y.Z y la Release de GitHub. Ver AGENTS.md §7.6.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

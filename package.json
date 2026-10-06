@@ -1,7 +1,7 @@
 {
   "name": "bandmanager-ai",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -82,6 +82,8 @@
     "youtube-transcript": "^1.3.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",

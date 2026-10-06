@@ -405,7 +405,14 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.
 3. **Cero salida redundante:** respuestas directas, concisas y orientadas a la acción.
 4. **Sin documentos de planificación por defecto:** no crear `.md` de plan/tareas/resumen de cambios (`implementation_plan.md`, `task.md`, `walkthrough.md`...) a menos que se pida explícitamente — ni existen en este repo ni encajan con cómo trabaja Claude Code por defecto; la herramienta de seguimiento de tareas nativa del agente (cuando exista) cumple esa función sin ensuciar el repo con archivos que nadie vuelve a abrir.
-5. **Commits:** mensaje corto en imperativo describiendo el qué (`fix:`/`feat:`/`docs:`/`test:` como prefijo cuando el cambio encaja claramente en una categoría, sin forzarlo si no). Un commit = un cambio coherente; no mezclar refactor y comportamiento (§5.4). No abrir PR salvo que se pida explícitamente — el flujo por defecto en este repo es commit + push directo a la rama de trabajo.
+5. **Commits:** mensaje corto en imperativo describiendo el qué, **con prefijo Conventional Commits obligatorio** (`feat:`, `fix:`, `perf:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, `build:`, `style:`, `revert:`; ver §7.6). Lo comprueba el hook `commit-msg` de Husky (commitlint) y la CI en los PR. Un commit = un cambio coherente; no mezclar refactor y comportamiento (§5.4). No abrir PR salvo que se pida explícitamente — el flujo por defecto en este repo es commit + push directo a la rama de trabajo.
+
+6. **Versionado (SemVer, automático con release-please):** la versión es `MAYOR.MENOR.PARCHE` y **no se sube a mano** ni se edita `CHANGELOG.md`. Se deduce de los commits que llegan a `main`:
+   * `fix:` → parche (`0.1.0 → 0.1.1`). `feat:` → menor (`0.1.1 → 0.2.0`). `feat!:` o un pie `BREAKING CHANGE:` → mayor. `docs:`, `test:`, `chore:`, `ci:`, `build:` y `style:` no suben nada.
+   * **Antes de 1.0.0** (`0.x.y`) un cambio incompatible sube el menor, no el mayor (`bump-minor-pre-major`). `1.0.0` se publica solo cuando la app se abra a usuarios reales con los bloqueantes de §8 cerrados.
+   * **Qué cuenta como incompatible (`!`):** una migración SQL que exige intervención manual, un cambio de contrato en la API pública, quitar una funcionalidad o cambiar el límite de un plan.
+   * El workflow `.github/workflows/release-please.yml` mantiene abierto un PR «release X.Y.Z» con `package.json`, `.release-please-manifest.json` y `CHANGELOG.md`. **Fusionarlo crea el tag `vX.Y.Z` y la Release de GitHub.** Ese PR es lo único que cambia la versión.
+   * La versión se expone en `/api/health` (`version`, `commit`), se imprime al arrancar el servidor, se inyecta en el cliente como `__APP_VERSION__` y se usa como `release` de Sentry (`bandmanager@X.Y.Z`). La lee `server/utils/version.ts`; el test `server/utils/__tests__/version.test.ts` vigila que `package.json` y el manifiesto no diverjan.
 
 ---
 

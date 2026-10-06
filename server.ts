@@ -16,6 +16,7 @@ import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
+import { getAppInfo } from "./server/utils/version.js";
 
 import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
 import postsRouter from "./server/routes/posts.js";
@@ -151,6 +152,8 @@ app.get(["/health", "/api/health"], (req, res) => {
   // variable de la clave, su longitud y los nombres de todas las variables con «RESEND».
   res.status(200).json({
     status: "ok",
+    version: getAppInfo().version,
+    commit: getAppInfo().commit,
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime()),
     emailService: { configured: Boolean(resolveResendApiKey()) }
@@ -565,7 +568,7 @@ async function startServer() {
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`BandManager.io server running on http://localhost:${PORT}`);
+    console.log(`BandManager.io v${getAppInfo().version} server running on http://localhost:${PORT}`);
     // Ampliación de socket timeout para procesos de inferencia pesados (GPU neural)
     server.timeout = 420000;
     server.keepAliveTimeout = 430000;

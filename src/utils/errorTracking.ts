@@ -4,6 +4,9 @@
 // Se activa únicamente al definir VITE_SENTRY_DSN en el entorno del cliente.
 import * as Sentry from '@sentry/react';
 
+// Inyectada por Vite desde package.json (ver vite.config.ts); en tests sin Vite no existe.
+const APP_VERSION = typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : 'desconocida';
+
 let habilitado = false;
 
 export function initFrontendErrorTracking(): void {
@@ -13,6 +16,7 @@ export function initFrontendErrorTracking(): void {
   Sentry.init({
     dsn,
     environment: import.meta.env.MODE || 'production',
+    release: `bandmanager@${APP_VERSION}`,
     tracesSampleRate: 0.1,
     integrations: [Sentry.replayIntegration()],
     replaysSessionSampleRate: 0.1,
