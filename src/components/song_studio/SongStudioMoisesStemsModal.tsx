@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sliders, X, Sparkles, Upload, Info } from 'lucide-react';
+import { Sliders, X, Sparkles, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
 import { Button, IconButton } from '../ui';
@@ -68,15 +68,6 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           >
             <Info className="w-3.5 h-3.5" /> ¿Cómo funciona?
           </Button>
-          <Button
-            variant={moisesTab === 'upload' ? "inverse" : "neutral"}
-            size="xs"
-            type="button"
-            onClick={() => setMoisesTab('upload')}
-            className="items-center gap-1.5"
-          >
-            <Upload className="w-3.5 h-3.5" /> Subir pistas
-          </Button>
         </div>
 
         {moisesTab === 'stems' && (
@@ -129,7 +120,9 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
                 type="button"
                 onClick={() => {
                   if (handlePerformAiStemSeparation && targetIdea) {
-                    handlePerformAiStemSeparation(targetIdea, moisesPreset);
+                    // Sin motor forzado: el segundo parámetro es el MOTOR, no el preset. Los stems del preset
+                    // viajan en selectedStemsToExtract, que handleSelectMoisesPreset mantiene sincronizado.
+                    handlePerformAiStemSeparation(targetIdea);
                     setShowMoisesStemsModal(null);
                   }
                 }}
@@ -151,20 +144,6 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
               Iris utiliza modelos de inteligencia artificial alojados en GPU dedicadas para analizar el espectro frecuencial de tus
               maquetas y separar cada instrumento en pistas independientes.
             </p>
-          </div>
-        )}
-
-        {moisesTab === 'upload' && (
-          <div className="space-y-3 text-xs text-[var(--ink-2)] leading-relaxed font-sans">
-            <p className="font-bold text-[var(--acc)]">Subir stems generados externamente</p>
-            <p className="text-xs text-[var(--ink-2)]">
-              Si ya separaste las pistas en otro software, sube los archivos de audio aquí para integrarlos directamente en la mezcla.
-            </p>
-            <input
-              type="file"
-              accept="audio/*"
-              className="w-full bg-[var(--sunken)] rounded-[var(--r-m)] p-2.5 text-[var(--ink-2)] text-xs cursor-pointer file:mr-3 file:py-1 file:px-3 file:rounded-[var(--r-m)] file:border-0 file:text-xs file:font-bold file:bg-[var(--ok)] file:text-[var(--ink)] hover:file:bg-[var(--ok)]"
-            />
           </div>
         )}
       </div>

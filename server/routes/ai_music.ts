@@ -3079,9 +3079,6 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             return;
           }
 
-          if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
-            process.env.REPLICATE_API_TOKEN = replicateToken;
-          }
 
           const demucsRes = await processDemucsStems(
             audioUrl,
@@ -3158,9 +3155,6 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             return;
           }
 
-          if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
-            process.env.REPLICATE_API_TOKEN = replicateToken;
-          }
 
           const repRes = await processNeuralStemsReplicate(
             audioUrl,
@@ -3264,9 +3258,6 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
         else if (audioUrl) {
           // 1. Replicate (MVSEP-MDX23 como principal con fallback automático a Demucs v4)
           if (!isNeural && effectiveReplicateToken) {
-            if (replicateToken && !process.env.REPLICATE_API_TOKEN) {
-              process.env.REPLICATE_API_TOKEN = replicateToken;
-            }
             try {
               const repRes = await processNeuralStemsReplicate(
                 audioUrl,
@@ -3372,6 +3363,22 @@ Devuelve ÚNICAMENTE un objeto JSON válido con la siguiente estructura:
             timingBreakdown: executionTimingBreakdown,
             audioUrl: audioUrl || undefined,
             songTitle: songTitle || undefined,
+          });
+        }
+
+        // Ningún motor devolvió stems y tampoco lanzó excepción: sin esto el lock se quedaba en
+        // 'pending' y el cliente hacía polling hasta 20 min antes de rendirse.
+        if (!finalStemsMap || Object.keys(finalStemsMap).length === 0) {
+          await failStemsJob(bandId, songHash, selectedEngine, {
+            provider: 'system',
+            error: 'Sin resultado',
+            message: 'Ningún motor de separación devolvió pistas para esta canción.',
+            errorType: 'empty_result',
+            errorTitle: 'La separación no produjo pistas',
+            actionAdvice: 'Reintenta, prueba otro motor de Iris o usa el motor DSP local.',
+            details: 'finalStemsMap vacío tras recorrer todos los motores disponibles',
+            httpStatus: 502,
+            engine: selectedEngine,
           });
         }
 
