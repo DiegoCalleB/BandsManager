@@ -1175,6 +1175,9 @@ export interface SongSubstituteGuide {
   cortesYClaves?: string;
   capoTraste?: string;
   instrumentosClave?: string;
+  /** De dónde sale el cifrado de la canción: transcripción del audio, propuesta de la IA o escrito a mano. */
+  origenCifrado?: 'audio_real' | 'ia_sin_audio';
+  cifradoAproximado?: boolean;
 }
 
 export interface MemberSongNote {

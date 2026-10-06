@@ -375,9 +375,6 @@ export function generateSmartGeneralFallback(promptText: string): string {
   if (lower.includes("reels") || lower.includes("tiktok") || lower.includes("instagram") || lower.includes("copy")) {
     return "🔥 ¡Noche épica en el local de ensayo! 🎸💥 Preparando los nuevos directos de la gira 2026. ¡No os lo perdáis!\n\n#Gira2026 #Directo #MusicaEnVivo #Conciertos";
   }
-  if (lower.includes("acorde") || lower.includes("letra") || lower.includes("canción") || lower.includes("song")) {
-    return "🎸 Análisis armónico y sugerencia de acordes completados por BandManager.io Studio Core: Progresión recomendada en Am - F - C - G (Tonalidad de La menor).";
-  }
   return `🤖 **Aviso del Sistema IA BandManager.io**: El servicio de Gemini API ha alcanzado su límite de cuota o spending cap (429). El sistema ha activado automáticamente el motor inteligente de respaldo local para garantizar que tu flujo de trabajo no se detenga. 
 
 Consulta procesada correctamente. Puedes continuar gestionando tu booking, repertorio, finanzas y redes con normalidad.`;

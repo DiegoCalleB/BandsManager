@@ -2,7 +2,10 @@ import express from "express";
 import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from "../ai.js";
+
+// Más de ~3 minutos de audio no mejora la transcripción y sí el coste, el tamaño y el timeout.
+const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import {
@@ -351,7 +354,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
         // "tienes el audio adjunto" aunque no se le mande nada, invitándole a inventar.
         // allowSyntheticFallback:false evita que nos devuelva un tono de prueba.
         const snippetPath = audioUrl
-          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false })
+          ? await getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES })
           : null;
         const tieneAudioReal = Boolean(snippetPath);
 
@@ -413,12 +416,14 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
           config: {
             responseMimeType: "application/json"
           },
-          bandId: getTargetBandId(req)
+          bandId: getTargetBandId(req),
+          // Con audio adjunto, 60 s se quedaba corto y caía en silencio al relleno.
+          timeoutMs: tieneAudioReal ? TIMEOUT_IA_LARGO_MS : undefined
         });
 
         const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
         const parsed = safeParseJson(responseText);
-        if (parsed && parsed.cifradoTexto) {
+        if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
           generatedChords = parsed.cifradoTexto;
           generatedGuide = parsed.guiaSustituto;
           esAproximado = Boolean(parsed.esAproximado);
@@ -429,55 +434,22 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura:
       }
     }
 
-    // High quality harmonic engine fallback if Gemini is offline or not configured
+    // Sin respuesta útil de la IA NO se inventa nada. Antes se rellenaba con una plantilla I-IV-V
+    // y una letra de relleno que se guardaba como si fuera el cifrado real y pisaba el que el
+    // usuario ya tuviera. Mejor un error claro que un dato falso con aspecto de verdadero.
     if (!generatedChords) {
-      const key = tonalidad || 'Mim';
-      const cleanKey = key.replace(/[^a-zA-Z#b]/g, '').trim() || 'Mim';
-      const isMinor = cleanKey.toLowerCase().includes('m') || cleanKey.toLowerCase().includes('min');
-      
-      const rootChord = cleanKey;
-      const subChord = isMinor ? 'Do' : 'Fa';
-      const domChord = isMinor ? 'Re' : 'Sol';
-      const relChord = isMinor ? 'Sol' : 'Lam';
-
-      generatedChords = `[Intro]
-[${rootChord}]   [${subChord}]   [${domChord}]   [${rootChord}]
-[${rootChord}]   [${subChord}]   [${domChord}]   [${rootChord}]
-
-[Verso 1]
-[${rootChord}] Arrancamos la noche en la [${subChord}] ciudad
-[${domChord}] Buscando el sonido de la [${rootChord}] libertad
-[${rootChord}] Guitarras encendidas y el [${subChord}] viento a favor
-[${domChord}] Marcando el ritmo con el [${rootChord}] corazón.
-
-[Estribillo]
-[${relChord}] Siente la fuerza del [${domChord}] directo en las venas
-[${rootChord}] Rompiendo juntos todas las [${subChord}] cadenas
-[${relChord}] Noche de escenario, [${domChord}] fuego y pasión
-[${rootChord}] Cantando juntos la [${subChord}] misma canción.
-
-[Verso 2]
-[${rootChord}] El público despierta al [${subChord}] compás
-[${domChord}] No miramos el reloj ni [${rootChord}] marcha atrás
-[${rootChord}] Cada nota suena con [${subChord}] intensidad
-[${domChord}] Esta es nuestra única [${rootChord}] verdad.
-
-[Solo]
-[${subChord}]   [${domChord}]   [${rootChord}]   [${rootChord}]
-[${subChord}]   [${domChord}]   [${rootChord}]   [${rootChord}]
-
-[Outro]
-[${subChord}]   [${domChord}]   [${rootChord}]
-Final con parada seca al compás 4 en [${rootChord}].`;
-
-      generatedGuide = {
-        estructura: `Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo (${rootChord}) -> Outro`,
-        progresionClave: `Verso: ${rootChord} - ${subChord} - ${domChord} - ${rootChord} | Estribillo: ${relChord} - ${domChord} - ${rootChord} - ${subChord}`,
-        cortesYClaves: `Corte seco al final del Solo en el compás 8. Bajar dinámica en Verso 2.`,
-        capoTraste: afinacion || 'Sin Capo / Afinación Estándar E',
-        instrumentosClave: `Batería marca entrada en compás 4 de la Intro. Arreglos de vientos/lead en estribillo.`
-      };
+      return res.status(503).json({
+        success: false,
+        chordsSource: "sin_resultado",
+        error: aiClient
+          ? "La IA no pudo transcribir esta canción ahora mismo. No se ha modificado nada: inténtalo de nuevo en unos minutos."
+          : "La IA no está configurada en el servidor, así que no se pueden generar acordes."
+      });
     }
+
+    // El origen viaja DENTRO de guiaSustituto (ya es JSON en BD) para que al reabrir la canción
+    // se sepa si el cifrado es transcripción real, propuesta de la IA o aproximado de memoria.
+    generatedGuide = { ...(generatedGuide && typeof generatedGuide === "object" ? generatedGuide : {}), origenCifrado: chordsSource, cifradoAproximado: esAproximado };
 
     // Persistimos el cifrado en la canción. Las canciones nuevas se crean directamente en
     // Supabase (POST /songs no pasa por loadState), así que buscarlas solo en el estado en
