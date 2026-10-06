@@ -1,3 +1,5 @@
+// Router de `/songs`: monta los sub-routers de subida de estructura.
+
 import express from 'express';
 import structureUploadRouter from './structureUpload.js';
 

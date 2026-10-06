@@ -1,3 +1,5 @@
+// Hilos de ejemplo (`pitch_example_threads`) que alimentan el tono del Redactor.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

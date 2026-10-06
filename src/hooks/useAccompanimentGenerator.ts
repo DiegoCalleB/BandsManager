@@ -3,6 +3,9 @@ import { Song, SongAudioIdea, DrumPatternStyle } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 
+/**
+ * Genera pistas de acompañamiento para una canción y las guarda como pista de la idea de audio.
+ */
 export function useAccompanimentGenerator(
   song: Song,
   saveNewTrackToIdea: (

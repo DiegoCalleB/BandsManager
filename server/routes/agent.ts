@@ -1,3 +1,7 @@
+// Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`), historial de
+// ejecuciones (`/agent-runs`) y diagnóstico del Scout. Reglas de envío y aprobación humana:
+// AGENTS.md §3.
+
 import express from 'express';
 import { getRegionForCity } from '../../src/constants/regions.js';
 import {

@@ -1,3 +1,6 @@
+// Reels & Social Content Generator: metadatos de YouTube, análisis de momentos virales, corte de
+// clips (ffmpeg, con `renderRateLimiter`) y hook doctor con IA.
+
 import express, { Request, Response } from "express";
 import fs from "fs";
 import path from "path";

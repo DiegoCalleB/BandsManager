@@ -32,6 +32,7 @@ const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
   },
 ];
 
+/** Filtros guardados del CRM, con presets por defecto. */
 export function useSavedFilters(
   sectionTab: 'salas' | 'medios' | 'grupos',
   setSectionTab: (tab: 'salas' | 'medios' | 'grupos') => void,

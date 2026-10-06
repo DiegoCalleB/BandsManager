@@ -1,3 +1,5 @@
+// Ajustes de alertas por banda (`band_alert_settings`).
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

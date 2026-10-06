@@ -1,3 +1,5 @@
+// Rutas de giras; la lógica vive en `server/controllers/` (capa fina routes → controller).
+
 import express from "express";
 import { requireAuth } from "../state.js";
 import { toursController } from "../controllers/tours.controller.js";

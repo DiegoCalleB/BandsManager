@@ -1,3 +1,6 @@
+// Conciertos y ensayos: CRUD de `/concerts` y `/rehearsals`. Capa de
+// datos en `server/db/rehearsals.ts`.
+
 import express from "express";
 import crypto from "crypto";
 import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";

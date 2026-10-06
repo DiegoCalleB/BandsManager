@@ -4,6 +4,9 @@ import { apiFetch } from '../utils/api';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
+/**
+ * Estado de las plantillas de asunto y cuerpo de email por categoría de lead (`TemplateCategory`).
+ */
 export function useEmailTemplates() {
   // Template states for Salas
   const [subjectTemplateSala, setSubjectTemplateSala] = useState('Propuesta de concierto: {bandName} ({estilo})');

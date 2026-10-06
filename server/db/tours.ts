@@ -1,3 +1,5 @@
+// Giras (`tours`): lectura, upsert y borrado acotados por `bandId`.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

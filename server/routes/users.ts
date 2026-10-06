@@ -1,3 +1,7 @@
+// Usuarios y autenticación: registro, login Google verificado, invitaciones de miembros,
+// recuperación de contraseña y gestión de cuentas. Reglas de cuentas: AGENTS.md §1 «Autenticación y
+// cuentas».
+
 import express from 'express';
 import { asignarInvitacion, invitacionPendiente, limpiarInvitacion, tokenInvitacionValido } from '../utils/invitacion.js';
 import crypto from 'crypto';

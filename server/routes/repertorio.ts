@@ -1,3 +1,5 @@
+// Repertorio: canciones, análisis de dinámica/acordes/energía, setlists y utilidades relacionadas.
+
 import express from "express";
 import multer from "multer";
 import { Song, Setlist, SetlistItem } from "../../src/types.js";

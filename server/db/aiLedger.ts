@@ -1,3 +1,6 @@
+// Ledger de consumo de IA por banda (`ai_token_ledger`): deuda en céntimos y su liquidación por
+// donación. No es la cuota mensual de créditos de `billing.ts` (AGENTS.md §2.3 y §4.10).
+
 import { getSupabase } from "./core.js";
 
 export interface RecordAiUsageParams {

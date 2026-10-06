@@ -1,3 +1,7 @@
+// Enriquecimiento de leads: búsqueda por IA, scraping de contacto/direcciones y Jina. Todo `fetch` a
+// URLs externas pasa por ssrfGuard y todo dato scrapeado por `sanitizeExternalText` (AGENTS.md
+// §2.2).
+
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";

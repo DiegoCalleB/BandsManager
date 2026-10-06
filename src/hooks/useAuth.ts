@@ -4,6 +4,7 @@ import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
 
+/** Sesión del usuario: estado persistido en `localStorage` (`bakandeya_user`), login y logout. */
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {

@@ -1,3 +1,5 @@
+// Importación de leads desde Excel (`/import-excel`).
+
 import express, { Request, Response } from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";

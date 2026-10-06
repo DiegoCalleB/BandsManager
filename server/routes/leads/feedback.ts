@@ -1,3 +1,6 @@
+// Resumen global del feedback de pitches (`getGlobalPitchFeedbackSummary`) para afinar el tono del
+// Redactor. Función pura, sin rutas.
+
 export function getGlobalPitchFeedbackSummary(leads: any[]) {
   if (!Array.isArray(leads)) return [];
   const logs: Array<{

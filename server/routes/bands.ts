@@ -1,3 +1,6 @@
+// CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la banda con
+// `getTargetBandId` / `puedeEscribirEnBanda` (AGENTS.md §2.1).
+
 import express from "express";
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";

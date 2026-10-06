@@ -1,3 +1,6 @@
+// Acuerdos de concierto (`concert_deals`): comisión, hash SHA-256 del acuerdo, token público y
+// persistencia.
+
 import { escrituraTolerante } from './tolerantWrite.js';
 import crypto from 'crypto';
 import { getSupabase, cleanBandId } from './core.js';

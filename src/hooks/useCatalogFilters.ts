@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Song } from '../types';
 
+/** Filtros del catálogo de canciones: agrupar por disco, búsqueda, disco y estado. */
 export function useCatalogFilters(songs: Song[]) {
   const [groupByAlbum, setGroupByAlbum] = useState(false);
   const [catalogSearch, setCatalogSearch] = useState('');

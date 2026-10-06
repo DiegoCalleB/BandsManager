@@ -1,3 +1,5 @@
+// Ensayos (`rehearsals`): lectura, upsert y borrado acotados por `bandId`.
+
 import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';

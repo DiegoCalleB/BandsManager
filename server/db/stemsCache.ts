@@ -1,3 +1,6 @@
+// Caché de separación de stems (`song_stems_cache`) en memoria y persistente, con bloqueo para no
+// lanzar la misma separación dos veces.
+
 import { getSupabase } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

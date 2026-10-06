@@ -1,3 +1,6 @@
+// Repertorio: canciones (`songs`), setlists y atajos; análisis de dinámica, acordes y tonalidad
+// persistidos junto a la canción.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import {

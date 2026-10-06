@@ -1,3 +1,6 @@
+// Acuerdos de concierto (`concert_deals`): CRUD autenticado y vista pública por token
+// (`/public/deals/:token`, firma y reenvío de email con limitador).
+
 import { reenvioEmailRateLimiter } from '../middleware/rateLimiter.js';
 import { Router, Request, Response } from 'express';
 import { requireAuth, loadState, saveState } from '../state.js';

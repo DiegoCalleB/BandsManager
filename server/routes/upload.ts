@@ -1,3 +1,6 @@
+// Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de almacenamiento y
+// limpieza de medios sin uso (estas dos últimas, solo admin).
+
 import express from "express";
 import fs from "fs";
 import path from "path";

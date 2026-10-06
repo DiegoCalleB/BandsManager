@@ -2,6 +2,10 @@ import { useState, useMemo } from 'react';
 import { Lead } from '../types';
 import { calculateBookingMetrics, filterLeads, calculateLeadScore } from '../utils/bookingUtils';
 
+/**
+ * Filtros del CRM de booking (búsqueda, estado, tipo) y métricas calculadas con
+ * `calculateBookingMetrics`.
+ */
 export function useBookingPipeline(leads: Lead[]) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');

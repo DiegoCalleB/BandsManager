@@ -15,6 +15,10 @@ export interface ApoyableDeal {
  * El importe sugerido lo calcula el servidor; aquí solo se pinta. Es una función opcional: ante
  * cualquier fallo la lista queda vacía y no se muestra nada.
  */
+/**
+ * Acuerdos de concierto que se pueden apoyar con una aportación, con el importe sugerido en
+ * céntimos.
+ */
 export function useApoyableDeals(enabled: boolean, bandId?: string) {
   const [deals, setDeals] = useState<ApoyableDeal[]>([]);
   const [loaded, setLoaded] = useState(false);

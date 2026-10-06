@@ -1,3 +1,6 @@
+// Respuestas a salas: generar/regenerar réplica y analizar el sentimiento de un mensaje entrante. La
+// réplica sigue necesitando aprobación humana (AGENTS.md §3).
+
 import express from "express";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbGetLeadMessages, dbUpsertLead } from "../../db.js";

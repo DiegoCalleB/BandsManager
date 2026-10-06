@@ -1,3 +1,6 @@
+// EPK y captación de fans: configuración de autonomía de agentes, EPK editable/traducible, listas de
+// fans y su telemetría.
+
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
 import {

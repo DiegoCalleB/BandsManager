@@ -1,3 +1,6 @@
+// Cola de trabajos de los agentes (`agent_jobs_queue`): estadísticas, métricas, purga y encolado
+// manual.
+
 import express from "express";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";

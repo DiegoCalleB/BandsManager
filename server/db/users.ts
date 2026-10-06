@@ -1,3 +1,5 @@
+// Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
+
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

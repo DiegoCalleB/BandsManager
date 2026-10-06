@@ -1,3 +1,6 @@
+// Leads (`leads`): lectura, upsert, borrado con papelera (`deleted_leads`) y saneado de campos (URL,
+// Instagram, nombre/tipo de sala).
+
 import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';

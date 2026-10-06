@@ -1,3 +1,6 @@
+// Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webhook de Resend. Solo
+// registra con token firmado (`trackingSeguro.ts`); el webhook exige firma Svix (AGENTS.md §1).
+
 import express from "express";
 import { getSupabase } from "../db/core.js";
 import { invalidateBandStateCache } from "../db/sync.js";

@@ -28,6 +28,7 @@ interface UseBrowserPushNotificationsProps {
   isLoggedIn?: boolean;
 }
 
+/** Permiso, configuración e historial de las notificaciones push del navegador. */
 export function useBrowserPushNotifications({
   leads = [],
   messages = [],

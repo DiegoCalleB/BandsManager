@@ -1,3 +1,6 @@
+// Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refinado automático
+// del Tone DNA.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { getBandDnaProfile } from "../utils/bandDna.js";
 import { generateUnifiedAI } from "../ai.js";

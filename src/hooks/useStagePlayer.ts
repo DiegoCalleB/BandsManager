@@ -3,6 +3,7 @@ import { Setlist, Song } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 
+/** Reproductor del Modo Escenario sobre el setlist activo (reproducción, autoplay y progreso). */
 export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], parseMmSsToSeconds: (timeStr: string) => number) {
   // Stage Mode Concert Player State (Modo Escenario)
   const [stagePlayingIndex, setStagePlayingIndex] = useState<number | null>(null);

@@ -1,3 +1,5 @@
+// Subida y procesado de la estructura de una canción (`/songs/...`).
+
 import express from 'express';
 import multer from 'multer';
 import path from 'path';

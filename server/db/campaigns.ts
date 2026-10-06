@@ -1,3 +1,5 @@
+// Campañas de booking (`booking_campaigns`) y su normalización desde BD.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

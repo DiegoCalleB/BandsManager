@@ -1,3 +1,6 @@
+// Cuentas Gmail OAuth2 por banda (`band_gmail_oauth_accounts`). `toSafeGmailOAuthResponse` oculta
+// los tokens a la respuesta HTTP.
+
 import { getSupabase, cleanBandId } from "./core.js";
 
 export interface BandGmailOAuthAccount {
