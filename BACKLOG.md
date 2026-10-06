@@ -207,3 +207,8 @@ _(vacío)_
 ## Sesión solo por cookie `httpOnly` (diferido, auditoría B)
 - Hoy el token vive en `localStorage` Y en la cookie `bakandeya_token` (`httpOnly:false`); el cliente lo lee en ~20 sitios para la cabecera `Authorization`. Marcar la cookie `httpOnly` sin migrar esos sitios rompería la sesión y no protegería de XSS (el token sigue en `localStorage`).
 - Hecho: la cookie del servidor lleva `Secure` en producción. Pendiente: migrar el cliente a sesión por cookie (`credentials:'include'` + protección CSRF) y entonces `httpOnly:true`.
+
+## RLS permisivo `USING (true)` (diferido, auditoría B)
+- `supabase_schema.sql` (44 políticas) y 7 migraciones crean «Permitir acceso total al backend» con `USING (true)` para TODOS los roles: con la clave anon, cualquiera podría leer/escribir esas tablas. El backend cae a la clave anon si falta `SUPABASE_SERVICE_ROLE_KEY` (`server/db/core.ts`), y en ese caso depende de esas políticas.
+- Ahora el servidor avisa en el log si arranca sin `service_role`. **Antes de borrar las políticas** hay que confirmar en Railway que `SUPABASE_SERVICE_ROLE_KEY` está definida y que el log NO muestra el aviso; solo entonces: `DROP POLICY "Permitir acceso total al backend"` en cada tabla (el service_role salta RLS).
+- `band_campaigns` (migración 20260919) no se usa en el código (la tabla real es `campaigns`/`booking_campaigns`): migración histórica, no se edita.

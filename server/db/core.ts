@@ -2,6 +2,16 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let supabaseInstance: SupabaseClient | undefined;
 
+/** Rol que declara una clave JWT de Supabase («service_role», «anon»...), sin verificar la firma. */
+export function rolDeClaveSupabase(jwt: string): string | null {
+  try {
+    const payload = JSON.parse(Buffer.from(jwt.split(".")[1] || "", "base64url").toString("utf8"));
+    return typeof payload?.role === "string" ? payload.role : null;
+  } catch {
+    return null;
+  }
+}
+
 export function getSupabase(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
@@ -20,6 +30,15 @@ export function getSupabase(): SupabaseClient {
 
   if (!url || !jwtKey) {
     throw new Error("Supabase URL or Key is missing in environment variables.");
+  }
+
+  // El backend debe usar la clave service_role (salta RLS). Con la anon, todo depende de políticas
+  // permisivas tipo «USING (true)», que abren las tablas a cualquiera que tenga esa clave pública.
+  const rol = rolDeClaveSupabase(jwtKey);
+  if (rol && rol !== "service_role") {
+    console.warn(
+      `[Supabase] ⚠️ El servidor está usando una clave con rol '${rol}', no 'service_role'. Define SUPABASE_SERVICE_ROLE_KEY en Railway: con la clave anon la seguridad de los datos depende de políticas RLS permisivas.`
+    );
   }
 
   supabaseInstance = createClient(url, jwtKey, {

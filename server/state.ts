@@ -489,39 +489,6 @@ export function ensureBakandeyaBandId(state: any): boolean {
     });
   }
 
-  if (state.leads && Array.isArray(state.leads)) {
-    const hasTestLead = state.leads.some((l: any) => l.id === "lead-test-telemetry-diego" || (l.email_contacto === "diego.delacalleb@gmail.com" && l.nombre_sala?.includes("Mon")));
-    if (!hasTestLead) {
-      const testLeadObj = {
-        id: "lead-test-telemetry-diego",
-        nombre_sala: "Sala Mon Live (Test Telemetría)",
-        ciudad: "Madrid",
-        region: "Comunidad de Madrid",
-        aforo: 800,
-        genero: "Indie / Rock / Fusión",
-        email_contacto: "diego.delacalleb@gmail.com",
-        telefono: "+34 914 455 678",
-        instagram: "@monlivemadrid",
-        fuente: "Test Telemetría",
-        estado: "pendiente_aprobacion",
-        band_id: BAKANDEYA_BAND_ID,
-        pitch_generado: `Hola Diego,
-
-Nos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Sala Mon es uno de los espacios con mejor acústica y ambiente de conciertos en directo en Madrid.
-
-Estamos preparando el tramo de otoño de nuestra gira y nos encantaría presentar el directo en vuestra sala. Tenéis el dossier oficial interactivo en el enlace adjunto.
-
-¿Tendríais alguna fecha disponible para valorar en noviembre?
-
-Un saludo cordial,
-Bakandeya Booking`,
-        notas: "*** Sala de prueba creada para verificar la telemetría, apertura de emails y clics en el dossier en tiempo real ***"
-      };
-      state.leads.unshift(testLeadObj);
-      changed = true;
-    }
-  }
-
   const collections = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
   for (const colKey of collections) {
     if (state[colKey] && Array.isArray(state[colKey])) {
