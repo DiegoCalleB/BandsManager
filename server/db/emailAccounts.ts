@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { encryptSecret, decryptSecret } from "../utils/secretCrypto.js";
 
 export type EmailProvider = "gmail" | "outlook" | "other";
 
@@ -34,7 +35,7 @@ export async function dbGetBandEmailAccount(bandId: string): Promise<BandEmailAc
       return null;
     }
 
-    return data || null;
+    return data ? { ...data, app_password: decryptSecret(data.app_password) } : null;
   } catch (e) {
     console.warn(`Fallo leyendo cuenta de email para '${cleanId}':`, e);
     return null;
@@ -57,7 +58,7 @@ export async function dbUpsertBandEmailAccount(account: {
     band_id: cleanId,
     provider: account.provider,
     email: account.email,
-    app_password: account.app_password,
+    app_password: encryptSecret(account.app_password),
     smtp_host: account.smtp_host,
     smtp_port: account.smtp_port,
     smtp_secure: account.smtp_secure ?? true,
@@ -77,7 +78,7 @@ export async function dbUpsertBandEmailAccount(account: {
     throw error;
   }
 
-  return data || payload;
+  return { ...(data || payload), app_password: account.app_password };
 }
 
 // app_password es una credencial de escritura, no de lectura: ninguna ruta HTTP debe

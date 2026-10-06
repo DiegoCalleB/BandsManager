@@ -55,7 +55,7 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     concierto_origen_id: fan.conciertoOrigenId || fan.concierto_origen_id || null,
     concierto_origen_nombre: fan.conciertoOrigenNombre || fan.concierto_origen_nombre || "",
     fecha_captura: fan.fechaCaptura || fan.fecha_captura || new Date().toISOString().split("T")[0],
-    consentimiento_rgpd: Boolean(fan.consentimientoRGPD ?? fan.consentimiento_rgpd ?? true),
+    consentimiento_rgpd: Boolean(fan.consentimientoRGPD ?? fan.consentimiento_rgpd ?? false),
     mensaje: fan.mensaje || "",
     cancion_favorita: fan.cancionFavorita || fan.cancion_favorita || "",
     instagram: fan.instagram || ""

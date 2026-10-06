@@ -294,7 +294,7 @@ CREATE TABLE IF NOT EXISTS fans (
     concierto_origen_id TEXT REFERENCES concerts(id) ON DELETE SET NULL,
     concierto_origen_nombre TEXT,
     fecha_captura TEXT,
-    consentimiento_rgpd BOOLEAN DEFAULT TRUE,
+    consentimiento_rgpd BOOLEAN DEFAULT FALSE,
     mensaje TEXT DEFAULT '',
     cancion_favorita TEXT DEFAULT '',
     instagram TEXT DEFAULT '',
