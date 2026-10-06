@@ -4,9 +4,11 @@ import type { Funcion } from './teoriaArmonica';
 export interface EstiloArmonia {
   mostrar: 'nombre' | 'grado' | 'ambos';
   colorear: 'funcion' | 'nada';
+  /** En tonalidad menor: «natural» escribe III, VI, VII (respecto al menor); «mayor» escribe bIII, bVI, bVII (respecto al mayor, como el rock y el jazz). */
+  gradosMenor: 'natural' | 'mayor';
 }
 
-export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion' };
+export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion', gradosMenor: 'natural' };
 const CLAVE = 'bm_estilo_armonia';
 
 export function leerEstiloArmonia(): EstiloArmonia {
@@ -17,6 +19,7 @@ export function leerEstiloArmonia(): EstiloArmonia {
     return {
       mostrar: ['nombre', 'grado', 'ambos'].includes(v?.mostrar) ? v.mostrar : ESTILO_POR_DEFECTO.mostrar,
       colorear: ['funcion', 'nada'].includes(v?.colorear) ? v.colorear : ESTILO_POR_DEFECTO.colorear,
+      gradosMenor: ['natural', 'mayor'].includes(v?.gradosMenor) ? v.gradosMenor : ESTILO_POR_DEFECTO.gradosMenor,
     };
   } catch {
     return ESTILO_POR_DEFECTO;
@@ -46,4 +49,14 @@ export function textoDeAcorde(nombre: string, grado: string | null | undefined, 
   if (!grado || mostrar === 'nombre') return { principal: nombre };
   if (mostrar === 'grado') return { principal: grado };
   return { principal: nombre, secundario: grado };
+}
+
+/**
+ * Grado tal como se muestra. Solo cambia en tonalidad menor y con «natural»: bIII, bVI y bVII se
+ * escriben III, VI y VII (en el menor natural esos acordes SON los de la escala). En mayor la «b» es
+ * necesaria: un III sin «b» sería otro acorde.
+ */
+export function gradoVisible(grado: string, menor: boolean, estilo?: Pick<EstiloArmonia, 'gradosMenor'>): string {
+  if (!menor || (estilo?.gradosMenor ?? ESTILO_POR_DEFECTO.gradosMenor) !== 'natural') return grado;
+  return grado.replace(/\bb(?=(?:III|VII|VI|iii|vii|vi))/g, '');
 }

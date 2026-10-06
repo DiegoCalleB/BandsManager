@@ -53,7 +53,7 @@ describe('SelectorArmonia', () => {
     expect(h).not.toContain('Dominante'); // solo las funciones presentes en la canción
   });
   it('sin color no hay leyenda', () => {
-    const h = renderToStaticMarkup(<SelectorArmonia estilo={{ mostrar: 'nombre', colorear: 'nada' }} onCambio={() => {}} presentes={['T']} />);
+    const h = renderToStaticMarkup(<SelectorArmonia estilo={{ mostrar: 'nombre', colorear: 'nada', gradosMenor: 'natural' }} onCambio={() => {}} presentes={['T']} />);
     expect(h).not.toContain('Leyenda');
   });
 });

@@ -5,7 +5,7 @@ import {
   NOMBRE_FUNCION, SENSACION_FUNCION, escalasSugeridas, explicarAcorde, notasDelAcorde, nombreDeNota, usaBemoles,
   type AnalisisArmonico, type Funcion, type ResumenAcorde,
 } from '../../utils/teoriaArmonica';
-import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
+import { CLASE_FUNCION, LETRA_FUNCION, gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula } from '../../utils/cuadriculaCompases';
 import { guiasDelProfesor } from '../../utils/guiasArmonia';
 
@@ -15,6 +15,7 @@ interface Props {
   bpm?: number;
   notation: 'ES' | 'EN';
   transpose: number;
+  estilo?: EstiloArmonia;
   /** Texto del «profesor» (IA) si ya se ha pedido, o null; el padre decide cómo pedirlo. */
   profesor?: React.ReactNode;
 }
@@ -28,8 +29,9 @@ const ritmoArmonico = (cpm: number) => (cpm < 12 ? 'lento' : cpm < 30 ? 'tranqui
  * (todo sale de `analizarArmonia`). Cada afirmación es un dato calculado; la fiabilidad la marca el
  * origen de los acordes (audio corregido por la banda, audio detectado o cifrado escrito).
  */
-export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, profesor }) => {
+export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor }) => {
   const { tonalidad, modo } = armonia;
+  const grado = (g: string) => gradoVisible(g, tonalidad.menor, estilo);
   const bemoles = usaBemoles(tonalidad, modo.id);
   const nota = (pc: number) => nombreDeNota(pc + transpose, bemoles, notation);
   const acorde = (a: string) => processChordText(`[${a}]`, transpose, notation).replace(/[[\]]/g, '');
@@ -61,7 +63,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
       const acordes: string[] = [];
       for (const { s, i } of tramos) {
         const g = armonia.porTramo[i]?.grado;
-        if (g && g !== grados[grados.length - 1]) { grados.push(g); acordes.push(s.acorde); }
+        if (g && g !== grados[grados.length - 1]) { grados.push(grado(g)); acordes.push(s.acorde); }
       }
       porLetra.set(b.letra, { letra: b.letra, compases: `compases ${b.desde}–${b.hasta}`, grados, acordes });
     }
@@ -110,7 +112,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
         </div>
         {armonia.bucle && (
           <p className="text-[var(--ink)]">
-            Bucle de la canción: <b className="font-bold">{armonia.bucle.grados.join(' – ')}</b>
+            Bucle de la canción: <b className="font-bold">{armonia.bucle.grados.map(grado).join(' – ')}</b>
             {' '}(<span className="text-[var(--ink-2)]">{armonia.bucle.grados.map((g) => {
               const r = armonia.acordes.find((a) => a.grado === g);
               return r ? acorde(r.acorde) : g;
@@ -153,7 +155,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
               <div key={r.acorde} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 space-y-1.5">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold ${CLASE_FUNCION[r.funcion]}`}>{acorde(r.acorde)}</span>
-                  <span className="font-bold text-[var(--ink)]">{r.grado}{r.secundario ? ` (${r.secundario})` : ''}</span>
+                  <span className="font-bold text-[var(--ink)]">{grado(r.grado)}{r.secundario ? ` (${r.secundario})` : ''}</span>
                   <span className="text-[var(--ink-2)]">{NOMBRE_FUNCION[r.funcion]} · {Math.round((r.segundos / total) * 100)} % del tiempo · entra {r.veces} {r.veces === 1 ? 'vez' : 'veces'}</span>
                 </div>
                 <div className="text-[var(--ink-2)]">

@@ -10,11 +10,11 @@ beforeEach(() => {
 describe('estiloArmonia', () => {
   it('por defecto: nombre y color por función', () => {
     expect(leerEstiloArmonia()).toEqual(ESTILO_POR_DEFECTO);
-    expect(ESTILO_POR_DEFECTO).toEqual({ mostrar: 'nombre', colorear: 'funcion' });
+    expect(ESTILO_POR_DEFECTO).toEqual({ mostrar: 'nombre', colorear: 'funcion', gradosMenor: 'natural' });
   });
   it('guarda y recupera, y tolera basura', () => {
-    guardarEstiloArmonia({ mostrar: 'ambos', colorear: 'nada' });
-    expect(leerEstiloArmonia()).toEqual({ mostrar: 'ambos', colorear: 'nada' });
+    guardarEstiloArmonia({ mostrar: 'ambos', colorear: 'nada', gradosMenor: 'natural' });
+    expect(leerEstiloArmonia()).toEqual({ mostrar: 'ambos', colorear: 'nada', gradosMenor: 'natural' });
     mem.set('bm_estilo_armonia', '{"mostrar":"raro"}');
     expect(leerEstiloArmonia().mostrar).toBe('nombre');
     mem.set('bm_estilo_armonia', 'no es json');
@@ -37,5 +37,17 @@ describe('estiloArmonia', () => {
       expect(c).not.toMatch(/\b(slate|zinc|stone|gray)-/);
       expect(c).not.toMatch(/\bborder/);
     }
+  });
+});
+
+describe('gradoVisible', () => {
+  it('en menor natural quita la b de III, VI y VII; en mayor no toca nada', async () => {
+    const { gradoVisible } = await import('../estiloArmonia');
+    expect(gradoVisible('bIII', true)).toBe('III');
+    expect(gradoVisible('bVII7', true)).toBe('VII7');
+    expect(gradoVisible('V/bVI', true)).toBe('V/VI');
+    expect(gradoVisible('bII', true)).toBe('bII');
+    expect(gradoVisible('bIII', false)).toBe('bIII');
+    expect(gradoVisible('bIII', true, { gradosMenor: 'mayor' })).toBe('bIII');
   });
 });
