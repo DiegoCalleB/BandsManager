@@ -47,6 +47,8 @@ import {
   planPages,
 } from "../../utils/setlistPaginator";
 import { escapeHtml } from "../../utils/escapeHtml";
+import { apiFetch } from "../../utils/api";
+import { mergePrintSettings, type PrintSettings } from "../../utils/printSettings";
 import { cleanPrintedNote, cleanSetlistName, isAutoVersionNote } from "../../utils/setlistNoteText";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Select } from '../ui';
@@ -369,16 +371,6 @@ export type SetlistStylePreset =
   | "clean_stand"
   | "sound_foh";
 
-// Preferencia de interfaz (no es dato de banda): la alineación elegida se recuerda entre aperturas.
-const ALIGN_STORAGE_KEY = "bakandeya_setlist_align";
-const readSavedAlign = (): "left" | "center" => {
-  try {
-    return localStorage.getItem(ALIGN_STORAGE_KEY) === "center" ? "center" : "left";
-  } catch {
-    return "left";
-  }
-};
-
 // El modal solo existe mientras está abierto: así sus hooks (estado, efectos de la vista previa)
 // no necesitan convivir con un `return null` intermedio.
 export function PdfExportModal(props: PdfExportModalProps) {
@@ -452,20 +444,85 @@ function PdfExportModalBody({
   // la hoja, como muchos grupos montan el setlist del escenario). En centrado las notas van
   // siempre en su línea debajo del título (ver forceBelowMode) y sin flecha, que apuntaría a la
   // izquierda en el vacío.
-  const [textAlign, setTextAlign] = useState<"left" | "center">(readSavedAlign);
+  const [textAlign, setTextAlign] = useState<"left" | "center">("left");
   const isCentered = textAlign === "center";
-  const changeAlign = (value: "left" | "center") => {
-    setTextAlign(value);
-    try {
-      localStorage.setItem(ALIGN_STORAGE_KEY, value);
-    } catch {
-      /* sin almacenamiento: la preferencia vive solo en esta apertura */
-    }
-  };
   // Marca de agua: el logo del grupo, muy suave y detrás del repertorio. Va en gris y con
   // `multiply` para que se funda con el papel; si un logo con fondo oscuro marca su caja, se
   // apaga con el checkbox.
   const [showWatermark, setShowWatermark] = useState<boolean>(true);
+
+  // Ajustes que se recuerdan POR BANDA (tabla band_print_settings, ver printSettings.ts): se cargan
+  // al abrir el modal y se guardan, con debounce, cuando cambian. Las claves van en el mismo orden
+  // que DEFAULT_PRINT_SETTINGS para que la comparación por JSON no dé falsos cambios.
+  const currentPrintSettings: PrintSettings = {
+    textAlign,
+    columnsChoice,
+    showGeneralNotes,
+    showTonality,
+    showBpm,
+    showDuration,
+    showBandLogo,
+    showWatermark,
+    showAppBranding,
+    handwritingFont,
+    handwritingColor,
+  };
+  const printSettingsKey = JSON.stringify(currentPrintSettings);
+  // "off": no hay base de datos (desarrollo local) o falló la carga: se usa sin recordar nada.
+  const [persist, setPersist] = useState<"loading" | "on" | "off">("loading");
+  const [saveFailed, setSaveFailed] = useState(false);
+  const lastSavedRef = useRef<string | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    apiFetch<{ settings: PrintSettings | null }>("/api/bands/print-settings")
+      .then((r) => {
+        if (cancelled) return;
+        if (!r?.settings) {
+          setPersist("off");
+          return;
+        }
+        const s = mergePrintSettings(r.settings);
+        setTextAlign(s.textAlign);
+        setColumnsChoice(s.columnsChoice);
+        setShowGeneralNotes(s.showGeneralNotes);
+        setShowTonality(s.showTonality);
+        setShowBpm(s.showBpm);
+        setShowDuration(s.showDuration);
+        setShowBandLogo(s.showBandLogo);
+        setShowWatermark(s.showWatermark);
+        setShowAppBranding(s.showAppBranding);
+        setHandwritingFont(s.handwritingFont);
+        setHandwritingColor(s.handwritingColor);
+        lastSavedRef.current = JSON.stringify(s);
+        setPersist("on");
+      })
+      .catch(() => {
+        if (!cancelled) setPersist("off");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  useEffect(() => {
+    if (persist !== "on" || printSettingsKey === lastSavedRef.current) return;
+    const timer = setTimeout(async () => {
+      try {
+        const r = await apiFetch<{ success: boolean }>("/api/bands/print-settings", {
+          method: "PUT",
+          body: printSettingsKey,
+        });
+        if (r?.success) {
+          lastSavedRef.current = printSettingsKey;
+          setSaveFailed(false);
+        } else {
+          setSaveFailed(true);
+        }
+      } catch {
+        setSaveFailed(true);
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [persist, printSettingsKey]);
 
   // Preview Pagination
   const [previewPageIndex, setPreviewPageIndex] = useState<number>(0);
@@ -2024,7 +2081,7 @@ function PdfExportModalBody({
                 <Button
                   variant={textAlign === "left" ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => changeAlign("left")}
+                  onClick={() => setTextAlign("left")}
                   className="items-center gap-1.5"
                   title="Títulos alineados a la izquierda, notas a su lado"
                 >
@@ -2033,7 +2090,7 @@ function PdfExportModalBody({
                 <Button
                   variant={textAlign === "center" ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => changeAlign("center")}
+                  onClick={() => setTextAlign("center")}
                   className="items-center gap-1.5"
                   title="Títulos, números y notas centrados en la hoja"
                 >
@@ -2255,6 +2312,11 @@ function PdfExportModalBody({
                   />
                   <span>Pie BandManager</span>
                 </label>
+                {saveFailed && (
+                  <span className="text-xs text-[var(--alert)]" role="status">
+                    No se pudieron guardar estos ajustes para la banda.
+                  </span>
+                )}
               </div>
             </div>
           </div>
