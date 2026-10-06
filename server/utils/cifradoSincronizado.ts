@@ -1,5 +1,6 @@
 import type { LineaLetra } from "../services/transcripcionLetra.js";
 import type { SegmentoAcordeAnalizado } from "../../src/types.js";
+import { limitesDeSilaba } from "../../src/utils/silabas.js";
 
 /**
  * Fusiona la letra transcrita (con tiempos) y los acordes detectados (con tiempos) en un cifrado
@@ -36,12 +37,29 @@ export function acordeEnInstante(cambios: Cambio[], t: number): string | null {
   return actual;
 }
 
-/** Índice de carácter del texto donde debe ir un acorde que cambia en `t`. */
+/**
+ * Índice de carácter del texto donde debe ir un acorde que cambia en `t`. Con tiempos por palabra
+ * cae en la SÍLABA en la que cambia (a mitad de palabra si hace falta: «fun[E]cionó»); sin ellos,
+ * en el inicio de la palabra más cercana.
+ */
 function posicionEnLinea(linea: LineaLetra, t: number): number {
   if (linea.palabras && linea.palabras.length > 0) {
     let indice = 0;
     for (const p of linea.palabras) {
-      if (p.t0 >= t - 0.12) return Math.min(indice, linea.texto.length);
+      if (t <= p.t0 + 0.12) return Math.min(indice, linea.texto.length);
+      if (t < p.t1 - 0.05) {
+        // El cambio ocurre mientras suena la palabra: sílaba proporcional al tiempo transcurrido.
+        const fraccion = (t - p.t0) / Math.max(p.t1 - p.t0, 0.001);
+        const limites = limitesDeSilaba(p.texto);
+        if (limites.length === 0) {
+          // Una sola sílaba: el cambio cae en su primera mitad (antes de la palabra) o en la segunda (tras ella).
+          if (fraccion < 0.5) return Math.min(indice, linea.texto.length);
+        } else {
+          const objetivo = fraccion * p.texto.length;
+          const mejor = limites.reduce((m, l) => (Math.abs(l - objetivo) < Math.abs(m - objetivo) ? l : m), limites[0]);
+          return Math.min(indice + mejor, linea.texto.length);
+        }
+      }
       indice += p.texto.length + 1;
     }
     return linea.texto.length;

@@ -128,3 +128,32 @@ describe('ningún acorde del audio se pierde en el cifrado (el resaltado no se s
     expect(al.pares.every((p) => p.segmento !== null)).toBe(true);
   });
 });
+
+describe('el acorde cae en la sílaba en la que cambia', () => {
+  const palabras = (...p: [string, number, number][]) => p.map(([texto, t0, t1]) => ({ texto, t0, t1 }));
+
+  it('un cambio a mitad de una palabra larga se coloca en su frontera de sílaba', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'la imaginación vuela', palabras: palabras(['la', 0, 0.4], ['imaginación', 0.5, 2.5], ['vuela', 3, 4]) }],
+      [ac('Am', 0, 1.5), ac('F', 1.5, 4)],
+    );
+    // 1,5 s es el 50 % de «imaginación»: la frontera de sílaba más cercana (i-ma-gi-|na-ción)
+    expect(t.split('\n')[0]).toBe('[Am]la imagi[F]nación vuela');
+  });
+
+  it('un cambio al comienzo de una palabra la deja entera', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'uno dos tres', palabras: palabras(['uno', 0, 1], ['dos', 1.5, 2.5], ['tres', 3, 4]) }],
+      [ac('G', 0, 1.45), ac('D', 1.45, 4)],
+    );
+    expect(t.split('\n')[0]).toBe('[G]uno [D]dos tres');
+  });
+
+  it('quitar los acordes devuelve exactamente la letra transcrita', () => {
+    const t = construirCifradoSincronizado(
+      [{ t0: 0, t1: 4, texto: 'la imaginación vuela', palabras: palabras(['la', 0, 0.4], ['imaginación', 0.5, 2.5], ['vuela', 3, 4]) }],
+      [ac('Am', 0, 1.1), ac('F', 1.1, 2.1), ac('C', 2.1, 4)],
+    );
+    expect(t.replace(/\[[^\]]+\]/g, '')).toBe('la imaginación vuela');
+  });
+});
