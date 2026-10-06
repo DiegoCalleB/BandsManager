@@ -37,7 +37,7 @@ import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
-import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, type EstiloArmonia } from "../utils/estiloArmonia";
+import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
@@ -436,10 +436,10 @@ export function SongChordsViewerModal({
   const acordesPorFuncion = useMemo(() => {
     const salida: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>> = {};
     for (const r of armonia?.acordes ?? []) {
-      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: r.grado });
+      (salida[r.funcion] ??= []).push({ nombre: processChordText(`[${r.acorde}]`, transpose, notation).replace(/[[\]]/g, ""), grado: gradoVisible(r.grado, estiloArmonia) });
     }
     return salida;
-  }, [armonia, transpose, notation]);
+  }, [armonia, transpose, notation, estiloArmonia]);
   const funcionesPresentes = useMemo<Funcion[]>(
     () => (armonia ? (Object.keys(armonia.funciones) as Funcion[]).filter((f) => armonia.funciones[f] > 0.005) : []),
     [armonia],
@@ -1061,6 +1061,7 @@ export function SongChordsViewerModal({
                     bpm={song.bpm}
                     notation={notation}
                     transpose={transpose}
+                    estilo={estiloArmonia}
                     profesor={
                       analisisAcordes ? (
                         <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
@@ -1450,7 +1451,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
         const info = armonia && k >= 0 ? infoDeAcordeVisible(chordName, armonia.tonalidad, armonia.transpose) : null;
         const colorear = armonia?.estilo.colorear === "funcion" && info;
         const clasePasiva = colorear ? CLASE_FUNCION[info.funcion] : "text-[var(--acc)] bg-[var(--acc-soft)]";
-        const texto = textoDeAcorde(chordName, info?.grado, armonia?.estilo.mostrar ?? "nombre");
+        const texto = textoDeAcorde(chordName, info && armonia ? gradoVisible(info.grado, armonia.estilo) : undefined, armonia?.estilo.mostrar ?? "nombre");
         const contenido = (
           <>
             {texto.principal}

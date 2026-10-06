@@ -5,7 +5,7 @@ import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
 import { RegletaCompases } from './RegletaCompases';
 import { explicarAcorde, type AnalisisArmonico } from '../../utils/teoriaArmonica';
-import { CLASE_FUNCION, textoDeAcorde, type EstiloArmonia } from '../../utils/estiloArmonia';
+import { CLASE_FUNCION, textoDeAcorde, gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../../utils/cuadriculaCompases';
 import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, partirTramo, moverFrontera, unirConAnterior, desplazarSegmentos, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
 
@@ -397,7 +397,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             <span className="block text-micro opacity-70">{formatearTiempo(seg.t0)}</span>
             <span className="block font-bold font-mono">
               {(() => {
-                const t = textoDeAcorde(nombre(seg.acorde), armonia?.porTramo[i]?.grado, estilo?.mostrar ?? 'nombre');
+                const t = textoDeAcorde(nombre(seg.acorde), (armonia?.porTramo[i]?.grado ? gradoVisible(armonia.porTramo[i].grado, estilo) : undefined), estilo?.mostrar ?? 'nombre');
                 return <>{t.principal}{t.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{t.secundario}</sup>}{seg.editado ? '*' : ''}</>;
               })()}
             </span>

@@ -4,9 +4,11 @@ import type { Funcion } from './teoriaArmonica';
 export interface EstiloArmonia {
   mostrar: 'nombre' | 'grado' | 'ambos';
   colorear: 'funcion' | 'nada';
+  /** «simple» escribe el número del grado sin b ni # (III, VII); «completo» lo escribe con ellas (bIII, bVII, #IV). */
+  grados: 'simple' | 'completo';
 }
 
-export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion' };
+export const ESTILO_POR_DEFECTO: EstiloArmonia = { mostrar: 'nombre', colorear: 'funcion', grados: 'simple' };
 const CLAVE = 'bm_estilo_armonia';
 
 export function leerEstiloArmonia(): EstiloArmonia {
@@ -17,6 +19,7 @@ export function leerEstiloArmonia(): EstiloArmonia {
     return {
       mostrar: ['nombre', 'grado', 'ambos'].includes(v?.mostrar) ? v.mostrar : ESTILO_POR_DEFECTO.mostrar,
       colorear: ['funcion', 'nada'].includes(v?.colorear) ? v.colorear : ESTILO_POR_DEFECTO.colorear,
+      grados: ['simple', 'completo'].includes(v?.grados) ? v.grados : ESTILO_POR_DEFECTO.grados,
     };
   } catch {
     return ESTILO_POR_DEFECTO;
@@ -46,4 +49,13 @@ export function textoDeAcorde(nombre: string, grado: string | null | undefined, 
   if (!grado || mostrar === 'nombre') return { principal: nombre };
   if (mostrar === 'grado') return { principal: grado };
   return { principal: nombre, secundario: grado };
+}
+
+/**
+ * Grado tal como se muestra. En modo «simple» se quitan la b y el # (bIII → III, bVII → VII): es el número
+ * del grado, sin más. La mayúscula/minúscula y el ° siguen distinguiendo el acorde (III ≠ iii).
+ */
+export function gradoVisible(grado: string, estilo?: Pick<EstiloArmonia, 'grados'>): string {
+  if ((estilo?.grados ?? ESTILO_POR_DEFECTO.grados) !== 'simple') return grado;
+  return grado.replace(/(^|\/)[b#](?=[ivIV])/g, '$1');
 }

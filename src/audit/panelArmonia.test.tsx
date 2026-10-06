@@ -14,7 +14,7 @@ describe('PanelArmonia', () => {
 
   it('cuenta la tonalidad, el modo y el bucle con datos calculados', () => {
     expect(html).toContain('Mi mayor · mixolidio');
-    expect(html).toContain('I – IV – bVII');
+    expect(html).toContain('I – IV – VII');
     expect(html).toMatch(/rock mixolidio/);
   });
 
@@ -53,7 +53,7 @@ describe('SelectorArmonia', () => {
     expect(h).not.toContain('Dominante'); // solo las funciones presentes en la canción
   });
   it('sin color no hay leyenda', () => {
-    const h = renderToStaticMarkup(<SelectorArmonia estilo={{ mostrar: 'nombre', colorear: 'nada' }} onCambio={() => {}} presentes={['T']} />);
+    const h = renderToStaticMarkup(<SelectorArmonia estilo={{ mostrar: 'nombre', colorear: 'nada', grados: 'simple' }} onCambio={() => {}} presentes={['T']} />);
     expect(h).not.toContain('Leyenda');
   });
 });

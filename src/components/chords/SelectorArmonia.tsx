@@ -44,6 +44,12 @@ export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, pr
       <Opcion valor="grado" actual={estilo.mostrar} etiqueta="Grado" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} titulo="Números romanos: I, IV, V, bVII…" />
       <Opcion valor="ambos" actual={estilo.mostrar} etiqueta="Ambos" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} />
     </span>
+    {estilo.mostrar !== 'nombre' && (
+      <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Grados con o sin alteraciones">
+        <Opcion valor="simple" actual={estilo.grados} etiqueta="III" onElegir={(grados) => onCambio({ ...estilo, grados })} titulo="Solo el número del grado" />
+        <Opcion valor="completo" actual={estilo.grados} etiqueta="bIII" onElegir={(grados) => onCambio({ ...estilo, grados })} titulo="Con b y #: más exacto si la canción toma acordes de otra escala" />
+      </span>
+    )}
     <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Colorear acordes">
       <Opcion valor="funcion" actual={estilo.colorear} etiqueta="Color por función" onElegir={(colorear) => onCambio({ ...estilo, colorear })} titulo="Tónica, subdominante, dominante y color modal" />
       <Opcion valor="nada" actual={estilo.colorear} etiqueta="Sin color" onElegir={(colorear) => onCambio({ ...estilo, colorear })} />

@@ -192,6 +192,17 @@ export function alinearCifradoConAudio(
   // Se mide contra el lado más corto: un cifrado de 30 acordes frente a un audio de 10 (o al
   // revés, un estribillo escrito una vez frente a un audio que lo repite) no debe parecer peor
   // alineado por tener más material de un lado que del otro.
+  // El alineamiento ancla el tramo del audio al ÚLTIMO acorde de una tanda de iguales (Mi Mi Mi frente
+  // a un solo «Mi» detectado) y el reloj saltaba a él nada más empezar. El tramo empieza donde empieza
+  // la tanda: se pasa la pareja al primero y los repetidos quedan después, con el inicio de su frase.
+  for (let i = 1; i < pares.length; i++) {
+    let k = i;
+    while (k > 0 && pares[k].segmento !== null && pares[k - 1].segmento === null && r.t[k - 1] === r.t[k]) {
+      pares[k - 1] = { ...pares[k - 1], segmento: pares[k].segmento, coincide: pares[k].coincide };
+      pares[k] = { ...pares[k], segmento: null, coincide: false };
+      k--;
+    }
+  }
   rellenarSinPareja(pares, origen);
   const calidad = pares.filter((p) => p.coincide).length / Math.min(texto.length, audio.length);
   return { desplazamiento: d, calidad, usable: calidad >= CALIDAD_MINIMA, pares };
@@ -256,6 +267,9 @@ export function acordeActivoPorTiempo(tiempos: number[], t: number): number {
     const m = (lo + hi) >> 1;
     if (tiempos[m] <= t + 1e-6) { mejor = m; lo = m + 1; } else hi = m - 1;
   }
+  // Con tiempos iguales (acordes repetidos antes del primer cambio detectado, todos en 0 s) manda el
+  // primero: el último hacía que al empezar el reloj saltara a un acorde de mitad de canción.
+  while (mejor > 0 && tiempos[mejor - 1] === tiempos[mejor]) mejor--;
   return mejor;
 }
 
