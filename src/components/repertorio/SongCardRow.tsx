@@ -421,7 +421,6 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                         setShowMenu(false);
                         onOpenChords();
                       }}
-                      className="sm:hidden"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       <span>Ver acordes y letra</span>
@@ -431,14 +430,12 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
                   {/* Editar Canción */}
                   {onEditSong && (
                     <MenuItem
-                      tone="muted"
                       dense
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
                         onEditSong();
                       }}
-                      className="sm:hidden"
                     >
                       <Edit3 className="w-3.5 h-3.5 text-[var(--ink-2)]" />
                       <span>Editar canción</span>

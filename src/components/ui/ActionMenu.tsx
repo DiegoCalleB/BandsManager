@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { MoreHorizontal } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { IconButton } from './Button';
 import { MenuItem } from './MenuItem';
 import { cn } from '../../utils/cn';
+import { posicionMenu, type PosicionMenu } from '../../utils/posicionMenu';
 
 export interface ActionMenuItem {
   label: string;
@@ -17,6 +19,7 @@ export interface ActionMenuProps {
   /** Nombre accesible del disparador (p. ej. «Más acciones del disco»). */
   label: string;
   items: ActionMenuItem[];
+  /** Obsoleto: el panel se coloca solo según el espacio de la ventana. */
   align?: 'left' | 'right';
   className?: string;
 }
@@ -25,9 +28,31 @@ export interface ActionMenuProps {
  * «⋯» con las acciones secundarias de una fila o tarjeta: una sola acción visible (la principal) y el resto aquí.
  * Se cierra al elegir, al pulsar fuera y con Esc. Sin borde: el panel se separa por luminancia.
  */
-export function ActionMenu({ label, items, align = 'right', className }: ActionMenuProps) {
+export function ActionMenu({ label, items, className }: ActionMenuProps) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<PosicionMenu | null>(null);
+  const anclaRef = useRef<HTMLDivElement>(null);
   const visibles = items.filter((i) => !i.hidden);
+
+  // El panel se pinta en un portal con posición fija, calculada con el espacio real de la ventana:
+  // dentro de una tarjeta con `overflow-hidden` (p. ej. un disco plegado) un panel absoluto quedaba
+  // recortado y solo se veía la primera opción.
+  useLayoutEffect(() => {
+    if (!open || !anclaRef.current) return;
+    const r = anclaRef.current.getBoundingClientRect();
+    setPos(posicionMenu(r, { ancho: window.innerWidth, alto: window.innerHeight }));
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const cerrar = () => setOpen(false);
+    window.addEventListener('resize', cerrar);
+    window.addEventListener('scroll', cerrar, true);
+    return () => {
+      window.removeEventListener('resize', cerrar);
+      window.removeEventListener('scroll', cerrar, true);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -39,19 +64,18 @@ export function ActionMenu({ label, items, align = 'right', className }: ActionM
   if (visibles.length === 0) return null;
 
   return (
-    <div className={cn('relative shrink-0', className)} onClick={(e) => e.stopPropagation()}>
+    <div ref={anclaRef} className={cn('relative shrink-0', className)} onClick={(e) => e.stopPropagation()}>
       <IconButton label={label} size="icon-sm" variant="neutral" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
         <MoreHorizontal className="size-4" aria-hidden />
       </IconButton>
-      {open && (
+      {open && pos && createPortal(
         <>
-          <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} />
+          <div className="fixed inset-0 z-[10000]" onClick={(e) => { e.stopPropagation(); setOpen(false); }} />
           <div
             role="menu"
-            className={cn(
-              'menu-pop absolute top-full z-40 mt-1.5 w-56 max-w-[calc(100vw-2rem)] space-y-0.5 rounded-[var(--r-l)] bg-[var(--surface)] p-1.5 shadow-none ring-1 ring-[var(--hair)]',
-              align === 'right' ? 'right-0' : 'left-0',
-            )}
+            style={{ position: 'fixed', top: pos.top, bottom: pos.bottom, right: pos.right, maxHeight: pos.maxHeight }}
+            onClick={(e) => e.stopPropagation()}
+            className="menu-pop z-[10001] w-56 max-w-[calc(100vw-2rem)] space-y-0.5 overflow-y-auto rounded-[var(--r-l)] bg-[var(--surface)] p-1.5 shadow-none ring-1 ring-[var(--hair)]"
           >
             {visibles.map(({ label: l, icon: Icon, onSelect, tone }) => (
               <MenuItem
@@ -67,7 +91,8 @@ export function ActionMenu({ label, items, align = 'right', className }: ActionM
               </MenuItem>
             ))}
           </div>
-        </>
+        </>,
+        document.body,
       )}
     </div>
   );
