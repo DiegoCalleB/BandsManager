@@ -67,10 +67,17 @@ describe('Rutas de acordes: garantías', () => {
   });
 
   it('reanalizar no pisa correcciones manuales sin confirmación explícita', () => {
+    const i = rutas.indexOf('async function ejecutarAnalisisAcordes');
+    const cuerpo = rutas.slice(i, rutas.indexOf('router.post("/songs/:id/analizar-acordes"'));
+    expect(cuerpo).toContain('corregidos > 0 && !sobrescribir');
+    expect(cuerpo.indexOf('!sobrescribir')).toBeLessThan(cuerpo.indexOf('analizarAcordesDeCancion('));
+  });
+
+  it('dos peticiones a la vez de la misma canción comparten el análisis, sin 409 que el usuario ve como fallo al guardar', () => {
     const i = rutas.indexOf('router.post("/songs/:id/analizar-acordes"');
     const cuerpo = rutas.slice(i, rutas.indexOf('router.patch("/songs/:id/acordes"'));
-    expect(cuerpo).toContain('req.body?.sobrescribir !== true');
-    expect(cuerpo.indexOf('sobrescribir')).toBeLessThan(cuerpo.indexOf('analizarAcordesDeCancion('));
+    expect(cuerpo).toContain('analisisAcordesPromesas.get(clave)');
+    expect(cuerpo).not.toContain('Ya se están analizando');
   });
 });
 
