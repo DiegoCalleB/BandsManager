@@ -11,7 +11,7 @@ import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_albu
 import { detectarAcordesDesdePcm, sumarPcm } from "../utils/chordDetection.js";
 import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
-import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis } from "../utils/analisisAcordes.js";
+import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis, motivoAnalisisPocoFiable } from "../utils/analisisAcordes.js";
 import {
   dbGetSongs,
   dbGuardarAnalisisAcordes,
@@ -233,10 +233,9 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     if (!pcm) return res.status(422).json({ error: "No se pudo descargar o decodificar el audio de la canción (la URL puede haber caducado o el formato no es compatible). Prueba a subirlo de nuevo." });
 
     const tonalidad = normalizarTonalidad(song.tonalidad);
-    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad });
-    if (segmentos.length === 0 || segmentos.every((s) => s.acorde === "N")) {
-      return res.status(422).json({ error: "No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?)." });
-    }
+    const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad: tonalidad ?? undefined });
+    const motivo = motivoAnalisisPocoFiable(segmentos, pcm.length / SAMPLE_RATE);
+    if (motivo) return res.status(422).json({ error: motivo });
 
     const analisis = construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE });
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);

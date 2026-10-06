@@ -20,3 +20,13 @@ Objetivo: acordes sincronizados con el audio (cursor que avanza con la música),
 ## Resultados conocidos
 - Sintético (triadas con armónicos): >90 % de acierto por tiempo, invariante a transposición.
 - Audio de ejemplo del repo (`sample_02`, 30 s): progresión coherente Em-C-D-Em-C-G-Am-Em-C-G, sin verdad escrita todavía, sin cifra medible.
+
+## Medidas (sintético «rock denso»: power chords distorsionados + bajo + batería + voz)
+| Detector | Acierto por tiempo |
+|---|---|
+| v1: croma completo + plantillas + Viterbi | 0-38 % (en una canción real de 3 min colapsó en un único acorde) |
+| v2: + croma de graves (el bajo toca la raíz) + tonalidad estimada del audio si no se indica | 91-100 % (75-88 % con ruido o distorsión extremos) |
+
+Por qué fallaba v1: en una guitarra distorsionada la quinta del acorde y el tercer armónico de la raíz suenan igual (La se confunde con Mi). El bajo desempata la raíz, y la tonalidad desempata mayor/menor cuando no hay tercera.
+Red de seguridad: si el resultado no es creíble (un acorde en una canción larga, o casi todo sin acorde) no se guarda y se explica por qué.
+**Sigue sin medirse sobre canciones reales con verdad escrita a mano.**
