@@ -16,12 +16,13 @@
  * acordes con extensiones (9, 13, sus) y pasajes con mucha distorsión o sin armonía.
  */
 
-import { fft, ventanaHann, SAMPLE_RATE, extraerPcmMono } from "./audioKey.js";
+import { fft, ventanaHann, SAMPLE_RATE, extraerPcmMono, calcularCromaDesdePcm, detectarTonalidadDesdeCroma } from "./audioKey.js";
 
 const VENTANA = 4096; // ~372 ms a 11025 Hz
 const HOP = 2048; // ~186 ms
 const FREQ_MIN = 80;
 const FREQ_MAX = 2200;
+const PESO_BAJO = 0.4;
 const NOTAS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 export type CalidadAcorde = "maj" | "min" | "7";
@@ -38,7 +39,11 @@ export interface SegmentoAcorde {
 }
 
 export interface OpcionesAcordes {
-  /** Tonalidad conocida («Am», «C», «F#m»); favorece acordes diatónicos. */
+  /**
+   * Tonalidad conocida («Am», «C», «F#m»); favorece acordes diatónicos y desempata mayor/menor
+   * cuando el acorde no tiene tercera (power chords). `null` = ninguna; sin indicar (undefined) =
+   * se estima del propio audio.
+   */
   tonalidad?: string | null;
   /** Segmentos más cortos que esto se funden con el vecino (s). Por defecto 0,4. */
   duracionMinima?: number;
@@ -125,6 +130,54 @@ export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (
   return frames;
 }
 
+const VENTANA_BAJO = 8192; // ~743 ms: los graves necesitan más resolución en frecuencia
+const BAJO_MIN = 50;
+const BAJO_MAX = 300;
+
+/**
+ * Croma SOLO de graves (50-300 Hz) por frame, normalizado a suma 1 (null si no hay energía).
+ * El bajo casi siempre toca la raíz del acorde: en un rock con guitarras distorsionadas la
+ * quinta y el tercer armónico de la raíz suenan igual y el croma completo confunde La con Mi;
+ * los graves desempatan.
+ */
+export function calcularCromaBajoPorFrames(pcm: Float32Array, sampleRate: number, nFrames: number): (number[] | null)[] {
+  const ventana = ventanaHann(VENTANA_BAJO);
+  const binHz = sampleRate / VENTANA_BAJO;
+  const binMin = Math.max(1, Math.floor(BAJO_MIN / binHz));
+  const binMax = Math.ceil(BAJO_MAX / binHz);
+  const claseDeBin = new Int8Array(binMax + 1);
+  for (let b = binMin; b <= binMax; b++) {
+    const midi = 69 + 12 * Math.log2((b * binHz) / 440);
+    claseDeBin[b] = ((Math.round(midi) % 12) + 12) % 12;
+  }
+  const salida: (number[] | null)[] = [];
+  for (let f = 0; f < nFrames; f++) {
+    // Misma posición central que el frame del croma completo.
+    const inicio = f * HOP + VENTANA / 2 - VENTANA_BAJO / 2;
+    const re = new Float64Array(VENTANA_BAJO);
+    const im = new Float64Array(VENTANA_BAJO);
+    let energia = 0;
+    for (let i = 0; i < VENTANA_BAJO; i++) {
+      const idx = inicio + i;
+      const m = idx >= 0 && idx < pcm.length ? pcm[idx] * ventana[i] : 0;
+      re[i] = m;
+      energia += m * m;
+    }
+    if (energia / VENTANA_BAJO < 1e-8) { salida.push(null); continue; }
+    fft(re, im);
+    const croma = new Array(12).fill(0);
+    let total = 0;
+    for (let b = binMin; b <= binMax; b++) {
+      const mag = Math.sqrt(re[b] * re[b] + im[b] * im[b]);
+      const v = Math.pow(mag, 0.8);
+      croma[claseDeBin[b]] += v;
+      total += v;
+    }
+    salida.push(total > 0 ? croma.map((v) => v / total) : null);
+  }
+  return salida;
+}
+
 function similitud(a: number[], b: number[]): number {
   let s = 0;
   for (let i = 0; i < 12; i++) s += a[i] * b[i];
@@ -162,15 +215,24 @@ export function detectarAcordesDesdePcm(
 
   const duracionMinima = opciones.duracionMinima ?? 0.4;
   const confianzaMinima = opciones.confianzaMinima ?? 0.15;
-  const diatonicos = opciones.tonalidad ? acordesDiatonicos(opciones.tonalidad) : new Set<string>();
+  let tonalidad = opciones.tonalidad;
+  if (tonalidad === undefined) {
+    const croma = calcularCromaDesdePcm(pcm, sampleRate);
+    tonalidad = croma ? (detectarTonalidadDesdeCroma(croma)?.tonalidad ?? null) : null;
+  }
+  const diatonicos = tonalidad ? acordesDiatonicos(tonalidad) : new Set<string>();
   const plantillas = opciones.incluirSeptimas ? PLANTILLAS : PLANTILLAS.filter((p) => p.calidad !== "7");
   const nEst = plantillas.length;
 
   // Emisión: similitud con cada plantilla (+ pequeño bonus diatónico, - penalización a séptimas).
-  const emision: number[][] = frames.map((fr) => {
+  const bajos = calcularCromaBajoPorFrames(pcm, sampleRate, frames.length);
+  const emision: number[][] = frames.map((fr, t) => {
     if (!fr) return new Array(nEst).fill(0);
+    const bajo = bajos[t];
     return plantillas.map((p) => {
       let s = similitud(fr, p.vector);
+      // El bajo toca la raíz: premio proporcional a la energía de graves que cae en ella.
+      if (bajo) s += PESO_BAJO * bajo[p.raiz];
       if (p.calidad === "7") s -= 0.04;
       if (diatonicos.size > 0 && diatonicos.has(p.nombre)) s += 0.05;
       return s;

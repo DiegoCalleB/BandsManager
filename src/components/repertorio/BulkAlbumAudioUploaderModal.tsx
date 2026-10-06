@@ -466,15 +466,9 @@ export function BulkAlbumAudioUploaderModal({
             ),
           );
           try {
-            const chordData = await apiFetch<any>("/api/generate-song-chords", {
+            const chordData = await apiFetch<any>(`/api/songs/${encodeURIComponent(savedSong.id)}/analizar-acordes`, {
               method: "POST",
-              body: JSON.stringify({
-                songId: savedSong.id,
-                titulo: savedSong.titulo,
-                tonalidad: savedSong.tonalidad,
-                bpm: savedSong.bpm,
-                audioUrl: uploadedUrl,
-              }),
+              body: JSON.stringify({}),
             });
             setItems((prev) =>
               prev.map((it, idx) =>
@@ -483,8 +477,8 @@ export function BulkAlbumAudioUploaderModal({
                       ...it,
                       status: "success",
                       uploadedUrl,
-                      chordsSource: chordData?.chordsSource,
-                      esAproximado: chordData?.esAproximado,
+                      chordsSource: chordData?.analisis ? "audio_real" : undefined,
+                      esAproximado: true,
                     }
                   : it,
               ),
@@ -546,15 +540,9 @@ export function BulkAlbumAudioUploaderModal({
               ),
             );
             try {
-              const chordData = await apiFetch<any>("/api/generate-song-chords", {
+              const chordData = await apiFetch<any>(`/api/songs/${encodeURIComponent(finalSaved.id)}/analizar-acordes`, {
                 method: "POST",
-                body: JSON.stringify({
-                  songId: finalSaved.id,
-                  titulo: finalSaved.titulo,
-                  tonalidad: finalSaved.tonalidad,
-                  bpm: finalSaved.bpm,
-                  audioUrl: uploadedUrl,
-                }),
+                body: JSON.stringify({}),
               });
               setItems((prev) =>
                 prev.map((it, idx) =>
@@ -563,8 +551,8 @@ export function BulkAlbumAudioUploaderModal({
                         ...it,
                         status: "success",
                         uploadedUrl,
-                        chordsSource: chordData?.chordsSource,
-                        esAproximado: chordData?.esAproximado,
+                        chordsSource: chordData?.analisis ? "audio_real" : undefined,
+                        esAproximado: true,
                       }
                     : it,
                 ),

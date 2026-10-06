@@ -85,6 +85,30 @@ export function elegirFuentesAudio(song: Partial<Song> | null | undefined): Fuen
   return niveles;
 }
 
+/**
+ * ¿Merece la pena guardar este resultado? Devuelve el motivo si NO (y el texto para el usuario),
+ * o null si es razonable. Una canción de tres minutos con un único acorde («Mi» de 0:00 a 3:07)
+ * no es una canción de un acorde: es un detector que no ha visto los cambios, y guardarlo como
+ * análisis sería engañar al usuario.
+ */
+export function motivoAnalisisPocoFiable(
+  segmentos: Array<{ t0: number; t1: number; acorde: string }>,
+  duracionSegundos: number,
+): string | null {
+  if (segmentos.length === 0 || segmentos.every((s) => s.acorde === 'N')) {
+    return 'No se detectaron acordes claros en este audio (¿es solo percusión, voz o silencio?).';
+  }
+  const sinAcorde = segmentos.filter((s) => s.acorde === 'N').reduce((a, s) => a + (s.t1 - s.t0), 0);
+  if (duracionSegundos > 0 && sinAcorde / duracionSegundos > 0.7) {
+    return 'El detector no pudo distinguir acordes en la mayor parte del audio (demasiado ruido o distorsión). Prueba a analizar la pista Instrumental o los stems de Iris.';
+  }
+  const cambios = segmentos.length - 1;
+  if (duracionSegundos > 40 && cambios < duracionSegundos / 40) {
+    return 'El detector solo encontró un acorde casi todo el tiempo, lo que no es creíble para una canción. No se ha guardado el resultado: prueba a analizar la pista Instrumental o los stems de Iris.';
+  }
+  return null;
+}
+
 export function construirAnalisis(params: {
   segmentos: SegmentoAcordeAnalizado[];
   fuente: AnalisisAcordes["fuente"];

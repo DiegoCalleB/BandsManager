@@ -74,10 +74,10 @@ export function SongChordsViewerModal({
 
   // Edit form state
   const [cifradoTexto, setCifradoTexto] = useState<string>(
-    song.cifradoTexto || getSampleCifrado(song),
+    song.cifradoTexto || "",
   );
   const [guiaSustituto, setGuiaSustituto] = useState<SongSubstituteGuide>(
-    song.guiaSustituto || getSampleSubstituteGuide(song),
+    song.guiaSustituto || {},
   );
 
   // Análisis de acordes del audio (detección propia, sin IA generativa)
@@ -195,8 +195,8 @@ export function SongChordsViewerModal({
   // desde fuera del formulario de edición, había que cerrar y reabrir el modal para verlo:
   // este efecto sincroniza el estado local en cuanto cambian los valores reales de la canción.
   useEffect(() => {
-    setCifradoTexto(song.cifradoTexto || getSampleCifrado(song));
-    setGuiaSustituto(song.guiaSustituto || getSampleSubstituteGuide(song));
+    setCifradoTexto(song.cifradoTexto || "");
+    setGuiaSustituto(song.guiaSustituto || {});
   }, [song.cifradoTexto, song.guiaSustituto]);
 
   // Auto-scroll timer effect
@@ -274,62 +274,49 @@ export function SongChordsViewerModal({
       setIsGeneratingAi(true);
       setAiSuccessMsg(null);
 
-      const data = await apiFetch<any>("/api/generate-song-chords", {
+      // Un cifrado que ya existe (escrito por la banda) no se sustituye sin preguntar.
+      const sobrescribir = Boolean(song.cifradoTexto && song.cifradoTexto.trim());
+      if (sobrescribir && !window.confirm("Esta canción ya tiene un cifrado guardado. Si lo transcribes desde el audio, el actual se sustituirá. ¿Continuar?")) {
+        setIsGeneratingAi(false);
+        return;
+      }
+
+      // Letra con un modelo de reconocimiento de voz (con tiempos) y acordes detectados del audio,
+      // fusionados por tiempo. Nada se genera a partir del título.
+      const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/letra-sincronizada`, {
         method: "POST",
-        body: JSON.stringify({
-          songId: song.id,
-          titulo: song.titulo,
-          tonalidad: song.tonalidad,
-          bpm: song.bpm,
-          afinacion: song.afinacion,
-          notasInternas: song.notasInternas,
-          esVersionCovers: song.esVersionCovers,
-          artista: song.albumDisco,
-          audioUrl: song.audioPrincipalUrl || undefined,
-        }),
+        body: JSON.stringify({ sobrescribir }),
       });
 
-      if (!data?.success) {
-        throw new Error(data?.error || "Error al generar acordes con IA");
+      if (!data?.success || !data.cifradoTexto) {
+        throw new Error(data?.error || "No se pudo transcribir la letra del audio");
       }
 
       setCifradoTexto(data.cifradoTexto);
-      if (data.guiaSustituto) {
-        setGuiaSustituto(data.guiaSustituto);
-      }
-
-      const updatedSong: Song = {
+      onUpdateSong({
         ...song,
         cifradoTexto: data.cifradoTexto,
-        guiaSustituto: data.guiaSustituto,
-      };
-      onUpdateSong(updatedSong);
+        guiaSustituto: data.song?.guiaSustituto ?? song.guiaSustituto,
+        ...(data.analisis ? { analisisAcordes: data.analisis } : {}),
+      });
+      if (data.analisis) setShowAnalisisAcordes(true);
 
-      // Igual que en el análisis automático: el mensaje debe distinguir una transcripción
-      // real, una propuesta honesta de la IA (aproximada o no) y la plantilla de relleno
-      // genérica cuando la IA falla del todo, en vez de llamar"éxito" a las tres por igual.
-      if (data.chordsSource === "audio_real") {
-        setAiSuccessMsg("✓ Letra y acordes transcritos del audio real");
-      } else if (data.chordsSource === "ia_sin_audio" && !data.esAproximado) {
+      // El mensaje dice de dónde sale la letra y cuánto fiarse: nadie debe dar por buena una
+      // transcripción automática sin revisarla de oído.
+      const partes: string[] = [`${data.lineas} líneas transcritas${data.idioma ? ` (idioma detectado: ${data.idioma})` : ""}`];
+      partes.push(data.conAcordes ? "acordes sincronizados por tiempo" : "sin acordes (no se pudieron detectar)");
+      if (data.fuenteLetra === "mezcla") {
         setAiSuccessMsg(
-          "✓ Cifrado propuesto por IA a partir del título y la tonalidad",
-        );
-      } else if (data.chordsSource === "ia_sin_audio" && data.esAproximado) {
-        setAiSuccessMsg(
-          "⚠️ Acordes aproximados de memoria, sin confirmar: verifícalos de oído",
+          `⚠️ ${partes.join(", ")}. No hay pista de voz aislada: se transcribió la mezcla completa y habrá errores. Separa la voz con Iris para mejorarlo. Revísala de oído.`,
         );
       } else {
-        setAiSuccessMsg(
-          "⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico, revísalo",
-        );
+        setAiSuccessMsg(`✓ Letra transcrita de la voz: ${partes.join(", ")}. Es automática: revísala de oído.`);
       }
-      setTimeout(() => setAiSuccessMsg(null), 5000);
+      setTimeout(() => setAiSuccessMsg(null), 9000);
     } catch (err: any) {
       console.error("Error generating with AI:", err);
-      setAiSuccessMsg(
-        `⚠️ ${err.message || "No se pudieron generar los acordes"}`,
-      );
-      setTimeout(() => setAiSuccessMsg(null), 5000);
+      setAiSuccessMsg(`⚠️ ${err.message || "No se pudo transcribir la letra"}`);
+      setTimeout(() => setAiSuccessMsg(null), 12000);
     } finally {
       setIsGeneratingAi(false);
     }
@@ -519,14 +506,14 @@ export function SongChordsViewerModal({
                 className="items-center gap-1.5"
                 title={
                   song.audioPrincipalUrl
-                    ? "Reanalizar escuchando el audio real de la canción"
-                    : "Generar cifrado y guía con IA (sin audio disponible)"
+                    ? "Transcribir la letra de la voz con tiempos y sincronizarla con los acordes (reconocimiento de voz; nunca se inventa a partir del título)"
+                    : "Necesita el audio de la canción: sin audio no se puede transcribir nada"
                 }
               >
                 <Wand2
                   className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
-                <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
+                <span>{isGeneratingAi ? "Transcribiendo…" : "Letra del audio"}</span>
               </Button>
 
               {/* Detección propia de acordes con tiempos, sin IA generativa */}
@@ -1391,79 +1378,3 @@ const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
     </div>
   );
 };
-
-// SAMPLE DEFAULT CHORD SHEETS FOR DEMO SONGS
-function getSampleCifrado(song: Song): string {
-  if (
-    song.titulo.toLowerCase().includes("brisa") ||
-    song.titulo.toLowerCase().includes("rojitas")
-  ) {
-    return `[Intro]
-Lam   Fa   Sol   Lam
-Lam   Fa   Sol   Lam
-
-[Verso 1]
-Lam                Fa
-Que tiene tu veneno
-             Sol                 Lam
-Que me quita la vida, solo con un beso
-            Fa                Sol
-Y me lleva a la luna y me ofrece la droga
-              Lam
-Que todo lo cura.
-
-[Estribillo]
-Lam                Fa
-Dependencia bendita
-            Sol                 Lam
-Invisible cadena que me ata a la vida
-                 Fa               Sol
-Y en momentos oscuros palmadita en la espalda
-              Lam
-Y ya estoy más seguro.
-
-[Solo]
-Fa   Sol   Lam   Lam
-Fa   Sol   Lam   Lam
-
-[Outro]
-Fa        Sol        Lam
-Rojitas las orejas...`;
-  }
-
-  return `[Intro]
-Mim   Do   Re   Mim
-Mim   Do   Re   Mim
-
-[Verso 1]
-[Mim] Arrancamos la noche en la [Do] ciudad
-[Re] Buscando el sonido de la [Mim] libertad
-[Mim] Guitarras encendidas y el [Do] viento a favor
-[Re] Marcando el ritmo con el [Mim] corazón.
-
-[Estribillo]
-[Sol] Siente la fuerza del [Re] rock en las venas
-[Mim] Rompiendo juntos todas las [Do] cadenas
-[Sol] Noche de garaje, [Re] fuego y pasión
-[Mim] Cantando juntos la [Do] misma canción.
-
-[Solo]
-Mim   Do   Re   Mim
-
-[Outro]
-[Mim] Cierre con final seco en [Do] [Re] [Mim]`;
-}
-
-function getSampleSubstituteGuide(song: Song): SongSubstituteGuide {
-  return {
-    estructura:
-      "Intro (4T) -> Verso 1 -> Estribillo -> Verso 2 -> Estribillo -> Solo de Guitarra -> Outro",
-    progresionClave:
-      "Verso: Mim - Do - Re - Mim | Estribillo: Sol - Re - Mim - Do",
-    cortesYClaves:
-      "Corte seco en el compás 8 del solo. Entrada de voz sola en el verso 2.",
-    capoTraste: "Sin Capo / Afinación Standard E",
-    instrumentosClave:
-      "Entrada potente de vientos en el estribillo. Redoble de batería para paso a solo.",
-  };
-}

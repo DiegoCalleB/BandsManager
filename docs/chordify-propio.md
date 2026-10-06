@@ -20,3 +20,26 @@ Objetivo: acordes sincronizados con el audio (cursor que avanza con la música),
 ## Resultados conocidos
 - Sintético (triadas con armónicos): >90 % de acierto por tiempo, invariante a transposición.
 - Audio de ejemplo del repo (`sample_02`, 30 s): progresión coherente Em-C-D-Em-C-G-Am-Em-C-G, sin verdad escrita todavía, sin cifra medible.
+
+## Medidas (sintético «rock denso»: power chords distorsionados + bajo + batería + voz)
+| Detector | Acierto por tiempo |
+|---|---|
+| v1: croma completo + plantillas + Viterbi | 0-38 % (en una canción real de 3 min colapsó en un único acorde) |
+| v2: + croma de graves (el bajo toca la raíz) + tonalidad estimada del audio si no se indica | 91-100 % (75-88 % con ruido o distorsión extremos) |
+
+Por qué fallaba v1: en una guitarra distorsionada la quinta del acorde y el tercer armónico de la raíz suenan igual (La se confunde con Mi). El bajo desempata la raíz, y la tonalidad desempata mayor/menor cuando no hay tercera.
+Red de seguridad: si el resultado no es creíble (un acorde en una canción larga, o casi todo sin acorde) no se guarda y se explica por qué.
+**Sigue sin medirse sobre canciones reales con verdad escrita a mano.**
+
+## Letra con tiempos (reconocimiento de voz, nunca generativo)
+`POST /api/songs/:id/letra-sincronizada` («Letra del audio» en el visor):
+1. Audio: la pista **Voz** aislada de Iris si existe (confianza «media»), si no la mezcla (confianza «baja» y aviso).
+2. `server/services/transcripcionLetra.ts`: Whisper en Replicate. El esquema del modelo se **descubre en tiempo de ejecución** (qué parámetros declara: audio, tiempos por palabra, idioma) y la salida se normaliza de las formas conocidas; una salida **sin tiempos se rechaza**. Modelos por defecto: `vaibhavs10/incredibly-fast-whisper`, `openai/whisper`; se puede forzar otro con `WHISPER_REPLICATE_MODEL`. Usa `REPLICATE_API_TOKEN` (ya configurado en Railway).
+3. `limpiarLineas`: quita lo que Whisper alucina con música (créditos de subtítulos, marcas ♪, bucles de la misma frase, tramos largos con casi nada de texto). Menos de 8 palabras = «sin letra».
+4. `server/utils/cifradoSincronizado.ts`: cada acorde detectado va delante de la palabra que suena cuando cambia; huecos instrumentales como [Instrumental], antes de la primera frase [Intro], después de la última [Outro]. No añade ni una palabra a la transcripción.
+5. Se guarda `cifradoTexto` y `analisisAcordes.letra` (líneas con tiempos). Un cifrado ya existente no se sustituye sin confirmar.
+
+Si algo falla (sin token, modelo no disponible, audio no público, salida sin tiempos) se devuelve el error con el motivo de cada modelo y **no se escribe nada**.
+La subida de audio (suelta o en lote) solo detecta acordes; la letra se pide siempre a propósito, porque cuesta dinero y tiempo.
+
+Pendiente: probar contra Replicate real con una canción (desde el entorno de desarrollo no hay salida a internet); karaoke línea a línea con `analisisAcordes.letra`; análisis por pista en `PracticeModePanel` sigue usando el generador antiguo (sin songId).

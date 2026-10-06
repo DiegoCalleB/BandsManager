@@ -2114,20 +2114,18 @@ export default function RepertorioSetlists({
     };
   }, [activeSetlist, songs]);
 
-  // Ask the backend to listen to a song's real audio and auto-fill its lyrics/chords (cifradoTexto).
-  // Fires in the background after a song is saved with a new audio file, no extra click needed.
+  // Detecta en segundo plano los acordes del audio recién subido (sin generar ninguna letra).
   const runAutoChordAnalysis = async (song: Song) => {
     if (!song.audioPrincipalUrl) return;
 
     // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
-    // el servidor no puede descargar ese audio, así que analizarlo daría un cifrado inventado
-    // a partir del título. Mejor decirlo que fingir que se ha transcrito la grabación.
+    // el servidor no puede descargar ese audio. Mejor decirlo que fingir que se ha analizado.
     if (
       !/^https?:\/\//i.test(song.audioPrincipalUrl) &&
       !song.audioPrincipalUrl.startsWith("/")
     ) {
       setStatusBanner({
-        text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden transcribir los acordes. Vuelve a subirlo.`,
+        text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden detectar los acordes. Vuelve a subirlo.`,
         type: "error",
       });
       setTimeout(() => setStatusBanner(null), 6000);
@@ -2135,94 +2133,43 @@ export default function RepertorioSetlists({
     }
 
     setStatusBanner({
-      text: `🎵 Analizando letra y acordes de "${song.titulo}" con IA…`,
+      text: `🎵 Detectando los acordes de "${song.titulo}" desde el audio…`,
       type: "loading",
     });
     try {
-      const res = await fetch("/api/generate-song-chords", {
+      // Solo se detectan los ACORDES (cálculo propio, sin IA generativa): la letra nunca se genera
+      // en segundo plano; se pide a propósito con «Letra del audio» y se transcribe de la voz.
+      const res = await fetch(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({
-          songId: song.id,
-          titulo: song.titulo,
-          tonalidad: song.tonalidad,
-          bpm: song.bpm,
-          afinacion: song.afinacion,
-          esVersionCovers: song.esVersionCovers,
-          audioUrl: song.audioPrincipalUrl,
-        }),
+        body: JSON.stringify({}),
       });
-      const data = await res.json();
-      if (res.ok && data?.cifradoTexto) {
-        const updatedSong = {
-          ...song,
-          cifradoTexto: data.cifradoTexto,
-          guiaSustituto: data.guiaSustituto,
-        };
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.analisis) {
         setSongs((prev) => {
-          const next = prev.map((s) =>
-            s.id === song.id
-              ? {
-                  ...s,
-                  cifradoTexto: data.cifradoTexto,
-                  guiaSustituto: data.guiaSustituto,
-                }
-              : s,
-          );
+          const next = prev.map((s) => (s.id === song.id ? { ...s, analisisAcordes: data.analisis } : s));
           saveSongsToLocalStorageSafely(next);
           return next;
         });
-
-        // Si el servidor no pudo guardarlo, lo persistimos nosotros por la vía normal para que
-        // el cifrado no se quede solo en esta pestaña y se pierda al recargar.
-        if (!data.persisted) {
-          fetch(`/api/songs/${encodeURIComponent(song.id)}`, {
-            method: "PUT",
-            headers: getHeaders(),
-            body: JSON.stringify(updatedSong),
-          }).catch((err) =>
-            console.error("Error persisting generated chords:", err),
-          );
-        }
-
-        // El backend distingue tres orígenes reales del cifrado para que este aviso nunca
-        // haga pasar una plantilla genérica de relleno (cuando la IA falla del todo) por
-        // una transcripción real o una propuesta honesta de la IA.
-        if (data.chordsSource === "audio_real") {
-          setStatusBanner({
-            text: `✓ Letra y acordes de "${song.titulo}" transcritos del audio`,
-            type: "success",
-          });
-        } else if (data.chordsSource === "ia_sin_audio" && !data.esAproximado) {
-          setStatusBanner({
-            text: `✓ Cifrado propuesto por IA para "${song.titulo}" (no se pudo leer el audio: revísalo)`,
-            type: "success",
-          });
-        } else if (data.chordsSource === "ia_sin_audio" && data.esAproximado) {
-          setStatusBanner({
-            text: `⚠️ Acordes aproximados de "${song.titulo}" (de memoria, sin audio ni certeza): verifícalos de oído antes de tocarlos`,
-            type: "warning",
-          });
-        } else {
-          setStatusBanner({
-            text: `⚠️ La IA no respondió: se ha puesto un cifrado de plantilla genérico en "${song.titulo}", revísalo antes de usarlo`,
-            type: "warning",
-          });
-        }
-      } else {
         setStatusBanner({
-          text: `No se pudieron analizar los acordes de "${song.titulo}"`,
+          text: `✓ Acordes de "${song.titulo}" detectados del audio. Es automático: revísalos de oído. Abre «Acordes» para ver la línea de tiempo`,
+          type: "success",
+        });
+      } else {
+        // El servidor explica el motivo (sin audio, audio ilegible, resultado poco fiable…).
+        setStatusBanner({
+          text: data?.error || `No se pudieron detectar los acordes de "${song.titulo}"`,
           type: "error",
         });
       }
     } catch (err) {
-      console.error("Error auto-generating chords from audio:", err);
+      console.error("Error detecting chords from audio:", err);
       setStatusBanner({
-        text: `No se pudieron analizar los acordes de "${song.titulo}"`,
+        text: `No se pudieron detectar los acordes de "${song.titulo}"`,
         type: "error",
       });
     } finally {
-      setTimeout(() => setStatusBanner(null), 4000);
+      setTimeout(() => setStatusBanner(null), 6000);
     }
   };
 
