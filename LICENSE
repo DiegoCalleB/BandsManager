@@ -1,27 +1,16 @@
-GNU AFFERO GENERAL PUBLIC LICENSE
-Version 3, 19 November 2007
+BandManager.io Source-Available License
+Copyright (c) 2026 Diego de la Calle Berzal
 
-Copyright (c) 2026 DiegoCalleB
+This software and its source code are provided under a custom Source-Available model.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+1. NON-COMMERCIAL USE ONLY
+This software is provided strictly for academic evaluation (TFM), personal research, and non-commercial use. Any commercial use, monetization, distribution as a service (SaaS), or creation of derivative works for commercial exploitation is strictly prohibited without explicit, prior written permission from the copyright holder.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
+2. NON-COMMERCIAL DISTRIBUTION AND MODIFICATION
+For strictly non-commercial purposes, you may view, modify, and redistribute this software. Any such non-commercial redistribution or modification must be shared under these exact same terms, obligating any derivatives to remain open and non-commercial.
 
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+3. NO WARRANTY
+This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-ADDITIONAL TERMS:
-This software is provided for non-commercial use and evaluation purposes.
-Any commercial use, distribution, or derivative works must be approved in writing
-by the copyright holder (DiegoCalleB). For licensing inquiries, contact the author.
-
----
-
-For the full GNU AGPL-3.0 license text, visit:
-https://www.gnu.org/licenses/agpl-3.0.html
+For commercial licensing inquiries, partnerships, or special authorizations, contact:
+diego.delacalleb@gmail.com
