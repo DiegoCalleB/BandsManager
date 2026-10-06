@@ -87,7 +87,7 @@ describe('dealsRouter', () => {
   const cuerpoFirma = (extra: any = {}) => ({
     nombre_firmante: 'Javier Programador',
     cargo_firmante: 'Dirección',
-    firma_imagen: 'data:image/png;base64,iVBORw0...',
+    firma_imagen: 'data:image/png;base64,iVBORw0KGgo=',
     rider_validado_por_sala: true,
     ...extra
   });
@@ -159,5 +159,17 @@ describe('dealsRouter', () => {
     it('sin cabecera usa la IP del socket', () => {
       expect(ipFirmante({ headers: {}, socket: { remoteAddress: '9.9.9.9' } } as any)).toBe('9.9.9.9');
     });
+  });
+});
+
+describe('dealsRouter: firma_imagen se valida', () => {
+  it('rechaza (400) una firma que no es una imagen PNG/JPEG en base64 o es enorme', async () => {
+    const firmar = manejador('/public/deals/:token/sign', 'post');
+    for (const firma_imagen of ['hola', 'data:text/html;base64,PHNjcmlwdD4=', 'data:image/png;base64,' + 'A'.repeat(500_000)]) {
+      const res = resFalso();
+      await firmar({ params: { token: 'dl_x' }, body: { nombre_firmante: 'Ana', firma_imagen, rider_validado_por_sala: true }, headers: {} }, res);
+      expect(res.code).toBe(400);
+      expect(res.body.error).toMatch(/firma no es válida/i);
+    }
   });
 });

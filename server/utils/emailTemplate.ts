@@ -5,6 +5,7 @@
  */
 
 import { generateTrackingToken } from '../routes/tracking.js';
+import { firmarDestino } from './trackingSeguro.js';
 import { getHashedPublicEpkUrl } from './bandHash.js';
 
 export function cleanTrailingPitchSignature(text: string): string {
@@ -99,7 +100,7 @@ export function buildServerEmailHtml(params: {
         ? `${rawWebEpkUrl}&leadId=${encodeURIComponent(lead.id)}&t=${encodeURIComponent(trackingToken)}`
         : `${rawWebEpkUrl}?leadId=${encodeURIComponent(lead.id)}&t=${encodeURIComponent(trackingToken)}`;
 
-      const clickRedirectUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=dossier_btn&url=${encodeURIComponent(epkWithLead)}`;
+      const clickRedirectUrl = `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=dossier_btn&url=${encodeURIComponent(epkWithLead)}&s=${firmarDestino(epkWithLead)}`;
       webEpkUrl = clickRedirectUrl;
     } catch {
       // Fallback seguro si falla la firma del token
@@ -164,7 +165,7 @@ export function buildServerEmailHtml(params: {
           const raw = String(b.url).trim();
           const targetUrl = raw.startsWith('http') ? raw : `https://${raw}`;
           const trackedUrl = trackingToken
-            ? `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=${encodeURIComponent(b.net)}&url=${encodeURIComponent(targetUrl)}`
+            ? `${appBaseUrl.replace(/\/$/, '')}/api/tracking/click?t=${encodeURIComponent(trackingToken)}&btn=${encodeURIComponent(b.net)}&url=${encodeURIComponent(targetUrl)}&s=${firmarDestino(targetUrl)}`
             : targetUrl;
           return `<a href="${trackedUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; text-decoration: none; margin-right: 6px; margin-bottom: 4px;">
             <img src="${b.badgeUrl}" alt="${b.label}" height="20" style="height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;" />
