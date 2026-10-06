@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { posicionMenu } from '../../utils/posicionMenu';
 import { createPortal } from 'react-dom';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
@@ -104,19 +105,18 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
-  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top?: number; bottom?: number; right: number; maxHeight: number } | null>(null);
 
   // El menú se pinta en un portal con posición fija: la fila tiene overflow-x-auto y un menú
   // absoluto dentro quedaba recortado (en móvil solo se veía la primera línea).
   useLayoutEffect(() => {
     if (!showMenu || !menuRef.current) return;
     const r = menuRef.current.getBoundingClientRect();
-    const alto = 320; // alto aproximado del menú
-    const abajo = window.innerHeight - r.bottom;
-    setMenuPos({
-      top: abajo < alto && r.top > alto ? Math.max(8, r.top - alto - 6) : r.bottom + 6,
-      right: Math.max(8, window.innerWidth - r.right),
-    });
+    // Se mide el espacio REAL arriba y abajo del botón (antes se suponía un menú de 320 px: en una
+    // ventana baja el menú salía recortado por arriba y «Editar canción» quedaba fuera de pantalla).
+    // Se abre hacia donde hay más sitio, anclado por el borde pegado al botón, y si aun así no cabe
+    // entero se limita su alto y se hace scroll dentro del menú.
+    setMenuPos(posicionMenu(r, { ancho: window.innerWidth, alto: window.innerHeight }));
   }, [showMenu]);
 
   // Cierra al pulsar fuera, al hacer scroll o al cambiar el tamaño
@@ -408,8 +408,8 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
             {showMenu && menuPos && createPortal(
               <div
                 ref={popRef}
-                style={{ position: 'fixed', top: menuPos?.top ?? 0, right: menuPos?.right ?? 8 }}
-                className={`menu-pop z-[10000] max-h-[70vh] overflow-y-auto w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
+                style={{ position: 'fixed', top: menuPos.top, bottom: menuPos.bottom, right: menuPos.right, maxHeight: menuPos.maxHeight }}
+                className={`menu-pop z-[10000] overflow-y-auto w-52 rounded-[var(--r-m)] p-1.5 text-xs bg-[var(--surface)] text-[var(--ink)] divide-y divide-[var(--sunken)]`}
               >
                 <div className="py-1 space-y-0.5">
                   {/* Acordes */}
