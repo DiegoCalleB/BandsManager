@@ -21,6 +21,8 @@ import {
   Palette,
   ShieldCheck,
   Zap,
+  AlignLeft,
+  AlignCenter,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
 import {
@@ -51,13 +53,19 @@ import { Button, Select } from '../ui';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
-// Ancho de la hoja A4 disponible para contenido: 210mm - 2x7mm de margen del @page (recortado al
-// mínimo razonable para"Guardar como PDF" — no hay limitación física de impresora de por medio,
-// así que cada mm de margen que se quita es un mm real ganado) - el padding de 2px de .sheet-page
-// a cada lado (ver handlePrint). Se usa tanto en el HTML de impresión real como en la vista previa
-// en directo para decidir, fila a fila, si la nota cabe al lado del título o si esa fila concreta
-// necesita caer a una línea propia debajo (ver textFit.ts).
-const PAGE_CONTENT_WIDTH_PX = mmToPx(196) - 4;
+// Márgenes del @page. Antes 5mm/7mm (casi sin margen: el texto pegaba al borde y parecía una
+// captura de pantalla); ahora los de una hoja maquetada a mano. Todo lo que depende de ellos
+// (ancho de fila, alto útil, min-height de la hoja) sale de estas dos constantes.
+const PAGE_MARGIN_X_MM = 14;
+const PAGE_MARGIN_Y_MM = 12;
+// 1mm de colchón de seguridad contra el redondeo del navegador (A4 = 210x297mm).
+const PAGE_SHEET_HEIGHT_MM = 297 - 2 * PAGE_MARGIN_Y_MM - 1;
+// Ancho de la hoja A4 disponible para contenido: 210mm - 2x margen horizontal del @page - el
+// padding de 2px de .sheet-page a cada lado (ver handlePrint). Se usa tanto en el HTML de
+// impresión real como en la vista previa en directo para decidir, fila a fila, si la nota cabe
+// al lado del título o si esa fila concreta necesita caer a una línea propia debajo (ver
+// textFit.ts).
+const PAGE_CONTENT_WIDTH_PX = mmToPx(210 - 2 * PAGE_MARGIN_X_MM) - 4;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
 // Hueco mínimo entre el título y la nota: pequeño a propósito — el efecto buscado es que la nota
 // parezca escrita a mano justo pegada al título ya impreso, no maquetada como una columna aparte.
@@ -452,6 +460,15 @@ export function PdfExportModal({
   const [showDuration, setShowDuration] = useState<boolean>(false);
   const [showSetlistNotes, setShowSetlistNotes] = useState<boolean>(true);
   const [showAppBranding, setShowAppBranding] = useState<boolean>(true);
+  // Alineación del repertorio: "left" (clásico) o "center" (título, número y notas centrados en
+  // la hoja, como muchos grupos montan el setlist del escenario). En centrado las notas van
+  // siempre en su línea debajo del título (ver forceBelowMode) y sin flecha, que apuntaría a la
+  // izquierda en el vacío.
+  const [textAlign, setTextAlign] = useState<"left" | "center">("left");
+  const isCentered = textAlign === "center";
+  // Marca de agua desactivada por defecto: un logo con fondo opaco se imprimía como un rectángulo
+  // gris detrás de las canciones y ensuciaba la hoja.
+  const [showWatermark, setShowWatermark] = useState<boolean>(false);
 
   // Preview Pagination
   const [previewPageIndex, setPreviewPageIndex] = useState<number>(0);
@@ -636,7 +653,7 @@ export function PdfExportModal({
           noteMinFontSizePx,
           rowWidthPx: PAGE_CONTENT_WIDTH_PX,
           measure,
-          forceBelowMode: viewDensity === "de_pie",
+          forceBelowMode: viewDensity === "de_pie" || isCentered,
         });
 
         // Cada nota en su propia línea, apiladas — no todas seguidas en una sola línea. El
@@ -671,10 +688,11 @@ export function PdfExportModal({
                   // ÚLTIMA línea — es la que queda más lejos del título y más cerca de la canción
                   // siguiente, donde puede haber duda de a qué tema pertenece.
                   const showArrow =
-                    (layout.mode === "below" && i === 0) ||
-                    (layout.mode === "inline" &&
-                      layout.fit.lines.length > 1 &&
-                      i === layout.fit.lines.length - 1);
+                    !isCentered &&
+                    ((layout.mode === "below" && i === 0) ||
+                      (layout.mode === "inline" &&
+                        layout.fit.lines.length > 1 &&
+                        i === layout.fit.lines.length - 1));
                   const arrow = showArrow ? arrowSvg(color) : "";
                   const seed = `${s.id}-${line.className}`;
                   // Solo hacia arriba (o recta), nunca hacia abajo: rotate() positivo gira en
@@ -764,10 +782,7 @@ export function PdfExportModal({
     const printCss = `
  @page {
  size: A4 portrait;
- /* Recortado al mínimo razonable: esto se"Guarda como PDF", no hay tolerancia física
- de impresora que respetar, así que cada mm de margen es un mm real que se le quita
- al repertorio sin tocar ni un punto de la tipografía. */
- margin: 5mm 7mm;
+ margin: ${PAGE_MARGIN_Y_MM}mm ${PAGE_MARGIN_X_MM}mm;
  }
  * {
  box-sizing: border-box;
@@ -784,7 +799,7 @@ export function PdfExportModal({
  .sheet-page {
  position: relative;
  width: 100%;
- min-height: 286mm;
+ min-height: ${PAGE_SHEET_HEIGHT_MM}mm;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
@@ -821,7 +836,10 @@ export function PdfExportModal({
  /* 0.09 se veía casi invisible en papel real (la pantalla ilumina el mismo valor de
  opacidad más de lo que refleja la tinta impresa) — subido a 0.16, todavía sutil
  como marca de agua de fondo, pero perceptible sin competir con el texto negro. */
- opacity: 0.16;
+ opacity: 0.1;
+ /* grayscale + multiply: el logo se funde con el papel en vez de pintar su caja. */
+ filter: grayscale(100%);
+ mix-blend-mode: multiply;
  }
  .page-watermark-text {
  font-family:'Anton','Oswald', sans-serif;
@@ -841,9 +859,41 @@ export function PdfExportModal({
  display: flex;
  justify-content: space-between;
  align-items: center;
- border-bottom: 1.5px solid #000;
- padding-bottom: 2px;
- margin-bottom: 2px;
+ border-bottom: 1px solid #000;
+ padding-bottom: 8px;
+ margin-bottom: 10px;
+ }
+ /* Cabecera centrada: logo, grupo y repertorio apilados en el eje, y la copia del músico
+ en una sola línea fina debajo. */
+ .page-header.is-centered {
+ flex-direction: column;
+ justify-content: center;
+ gap: 6px;
+ text-align: center;
+ }
+ .is-centered .header-left {
+ flex-direction: column;
+ gap: 4px;
+ }
+ .is-centered .band-text-block {
+ align-items: center;
+ }
+ .is-centered .band-logo-img {
+ max-height: 52px;
+ max-width: 140px;
+ }
+ .is-centered .header-right {
+ text-align: center;
+ }
+ .is-centered .member-stage-tag {
+ display: flex;
+ align-items: baseline;
+ justify-content: center;
+ gap: 8px;
+ padding: 0;
+ }
+ .is-centered .tag-name {
+ font-size: 9pt;
  }
  .header-left {
  display: flex;
@@ -921,7 +971,10 @@ export function PdfExportModal({
  flex: 1;
  display: flex;
  flex-direction: column;
- justify-content: flex-start;
+ /* Centrado vertical en el hueco entre cabecera y pie: con pocos temas el repertorio queda
+ en medio de la hoja en vez de pegado arriba con un tercio de papel en blanco debajo. Si la
+ hoja va llena no tiene efecto (no hay hueco que repartir). */
+ justify-content: center;
  /* gap:0 a propósito: con 30+ canciones, cada px de gap se multiplica por el nº de
  filas — es lo que más margen aporta para caber en menos hojas (ver ROW_GAP_PX y
  line-height de .song-title, mismo motivo). */
@@ -1175,6 +1228,35 @@ export function PdfExportModal({
  gap: 6px;
  font-weight: 700;
  }
+
+ /* Repertorio centrado: número + título en el eje de la hoja, notas debajo también centradas
+ (siempre en modo "below", ver forceBelowMode), interludios sin sangría. */
+ .is-centered .song-line {
+ justify-content: center;
+ }
+ .is-centered .song-left {
+ justify-content: center;
+ overflow: visible;
+ }
+ .is-centered .song-num {
+ min-width: 0;
+ }
+ .is-centered .song-title {
+ text-align: center;
+ }
+ .is-centered .song-notes-below {
+ padding-left: 0;
+ align-items: center;
+ margin-top: -6px;
+ }
+ .is-centered .interlude-item {
+ padding-left: 0;
+ text-align: center;
+ }
+ .page-footer.is-centered {
+ justify-content: center;
+ gap: 14px;
+ }
  `;
 
     // Header/footer de cada hoja: independientes de cuántas páginas necesite el repertorio en
@@ -1183,7 +1265,7 @@ export function PdfExportModal({
       member: (typeof membersToExport)[number],
       isMaster: boolean,
     ): string => `
-        <div class="page-header">
+        <div class="page-header ${isCentered ? "is-centered" : ""}">
           <div class="header-left">
             ${
    showBandLogo && customLogoUrl
@@ -1215,7 +1297,7 @@ export function PdfExportModal({
     ): string =>
       showAppBranding
         ? `
-        <div class="page-footer">
+        <div class="page-footer ${isCentered ? "is-centered" : ""}">
           <div class="footer-left">
             <span class="app-logo-badge">⚡ BandManager</span>
             <span class="footer-sep">•</span>
@@ -1302,7 +1384,7 @@ export function PdfExportModal({
     // y padding recortados al mínimo razonable (de 6mm/4px a 5mm/2px) para ganar cada mm/px
     // real posible — esto se"Guarda como PDF", no hay tolerancia física de impresora que
     // respetar, y cada pixel ganado aquí es uno menos de riesgo de necesitar una hoja extra.
-    const PAGE_TOTAL_HEIGHT_PX = mmToPx(286) - 4;
+    const PAGE_TOTAL_HEIGHT_PX = mmToPx(PAGE_SHEET_HEIGHT_MM) - 4;
 
     const memberPlans = membersToExport.map((member) => {
       const isMaster = member.id === "master";
@@ -1339,7 +1421,7 @@ export function PdfExportModal({
           )
           .join("");
         return measureHtmlHeightPx(
-          `<div class="setlist-items-container" style="width:${PAGE_CONTENT_WIDTH_PX}px">${rowsHtml}</div>`,
+          `<div class="setlist-items-container ${isCentered ? "is-centered" : ""}" style="width:${PAGE_CONTENT_WIDTH_PX}px">${rowsHtml}</div>`,
         );
       };
 
@@ -1532,9 +1614,9 @@ export function PdfExportModal({
 
             return `
                 <div class="sheet-page ${!isLastPageOverall ? "page-break" : ""}">
-                  <div class="page-watermark">${watermarkInnerHtml}</div>
+                  ${showWatermark ? `<div class="page-watermark">${watermarkInnerHtml}</div>` : ""}
                   ${buildHeaderHtml(member, isMaster)}
- <div class="setlist-items-container">
+ <div class="setlist-items-container ${isCentered ? "is-centered" : ""}">
  ${rowsHtml}
                   </div>
                   ${buildFooterHtml(member, globalPageIdx, totalPagesCount)}
@@ -1772,6 +1854,28 @@ export function PdfExportModal({
                   <ShowIcon inline emoji="🧍" />De pie
                 </Button>
               </div>
+
+              {/* Alineación del texto en la hoja: izquierda (clásico) o centrado. */}
+              <div className="flex items-center gap-1.5 p-1 rounded-[var(--r-m)] bg-[var(--surface)]">
+                <Button
+                  variant={textAlign === "left" ? "neutral" : "ghost"}
+                  size="xs"
+                  onClick={() => setTextAlign("left")}
+                  className="items-center gap-1.5"
+                  title="Títulos alineados a la izquierda, notas a su lado"
+                >
+                  <AlignLeft className="w-3.5 h-3.5" />Izquierda
+                </Button>
+                <Button
+                  variant={textAlign === "center" ? "neutral" : "ghost"}
+                  size="xs"
+                  onClick={() => setTextAlign("center")}
+                  className="items-center gap-1.5"
+                  title="Títulos, números y notas centrados en la hoja"
+                >
+                  <AlignCenter className="w-3.5 h-3.5" />Centrado
+                </Button>
+              </div>
             </div>
 
             {/* Botón"Ajustes" — solo en móvil (sm:hidden): colapsa tipografía/tinta/badges detrás
@@ -1893,6 +1997,16 @@ export function PdfExportModal({
                 <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
                   <input
                     type="checkbox"
+                    checked={showWatermark}
+                    onChange={(e) => setShowWatermark(e.target.checked)}
+                    className="rounded accent-[var(--ok)] cursor-pointer"
+                  />
+                  <span>Marca de agua</span>
+                </label>
+
+                <label className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none">
+                  <input
+                    type="checkbox"
                     checked={showTonality}
                     onChange={(e) => setShowTonality(e.target.checked)}
                     className="rounded accent-[var(--ok)] cursor-pointer"
@@ -2002,6 +2116,7 @@ export function PdfExportModal({
  impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). El
  logo del grupo en alta resolución (misma imagen original que la cabecera) si hay
  uno subido y activo; si no, el nombre como texto de respaldo. */}
+              {showWatermark && (
               <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden">
                 {showBandLogo && customLogoUrl ? (
                   <img
@@ -2011,7 +2126,11 @@ export function PdfExportModal({
                     // 0.09 se veía casi invisible al imprimir en papel real (la pantalla ilumina el
                     // mismo valor más de lo que refleja la tinta) — subido a 0.16, mismo valor que
                     // el HTML de impresión real, para que la vista previa no engañe sobre cómo sale.
-                    style={{ opacity: 0.16 }}
+                    style={{
+                      opacity: 0.1,
+                      filter: "grayscale(100%)",
+                      mixBlendMode: "multiply",
+                    }}
                     onError={(e) => {
                       (e.target as HTMLElement).style.display = "none";
                     }}
@@ -2031,12 +2150,21 @@ export function PdfExportModal({
                   </span>
                 )}
               </div>
+              )}
 
               {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
  menos de riesgo de que el repertorio se desborde a una hoja extra. */}
               <div>
-                <div className="flex items-center justify-between pb-0.5 mb-1">
-                  <div className="flex items-center gap-2">
+                <div
+                  className={`pb-2 mb-3 border-b border-[var(--ink)] ${
+                    isCentered
+                      ? "flex flex-col items-center gap-1.5 text-center"
+                      : "flex items-center justify-between"
+                  }`}
+                >
+                  <div
+                    className={`flex gap-2 ${isCentered ? "flex-col items-center" : "items-center"}`}
+                  >
                     {showBandLogo && customLogoUrl && (
                       <img
                         src={customLogoUrl}
@@ -2047,7 +2175,7 @@ export function PdfExportModal({
                         }}
                       />
                     )}
-                    <div>
+                    <div className={isCentered ? "text-center" : ""}>
                       <h1 className="text-[14pt] font-bold tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
                         {bandName.toUpperCase()}
                       </h1>
@@ -2057,7 +2185,13 @@ export function PdfExportModal({
                     </div>
                   </div>
 
-                  <div className=" bg-[var(--sunken)] p-1 px-2 rounded text-right min-w-[110px] whitespace-nowrap">
+                  <div
+                    className={`bg-[var(--sunken)] p-1 px-2 rounded whitespace-nowrap ${
+                      isCentered
+                        ? "flex items-baseline justify-center gap-2"
+                        : "text-right min-w-[110px]"
+                    }`}
+                  >
                     <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)]">
                       {!isCurrentMaster
                         ? "REPERTORIO PERSONALIZADO"
@@ -2146,7 +2280,8 @@ export function PdfExportModal({
                           noteMinFontSizePx: 11,
                           rowWidthPx: previewContentWidthPx,
                           measure: measureText,
-                          forceBelowMode: viewDensity === "de_pie",
+                          forceBelowMode:
+                            viewDensity === "de_pie" || isCentered,
                         });
                         // Cada nota (miembro / nota del bolo / general) apilada en su propia línea,
                         // una encima de otra, en vez de todas seguidas en una sola línea. El texto
@@ -2240,8 +2375,12 @@ export function PdfExportModal({
  propósito: la nota debe quedar pegada justo detrás del título (como
  un boli escribiendo a continuación), no flotando contra el margen
  derecho con un hueco en blanco en medio (ver noteLayout más abajo). */}
-                            <div className="flex items-baseline gap-1.5 flex-nowrap">
-                              <div className="flex items-baseline gap-2.5 min-w-0 flex-nowrap overflow-hidden">
+                            <div
+                              className={`flex items-baseline gap-1.5 flex-nowrap ${isCentered ? "justify-center" : ""}`}
+                            >
+                              <div
+                                className={`flex items-baseline gap-2.5 min-w-0 flex-nowrap ${isCentered ? "justify-center" : "overflow-hidden"}`}
+                              >
                                 {showSongNumbers && (
                                   <span className="font-sans text-[20pt] text-[var(--ink-2)] font-bold min-w-[32px] shrink-0">
                                     {index + 1}.
@@ -2336,11 +2475,22 @@ export function PdfExportModal({
  pegada a la línea impresa. */}
                             {noteLayout && noteLayout.mode === "below" && (
                               <div
-                                className="pl-9"
-                                style={{ lineHeight: 1, marginTop: "-10px" }}
+                                className={
+                                  isCentered
+                                    ? "flex flex-col items-center"
+                                    : "pl-9"
+                                }
+                                style={{
+                                  lineHeight: 1,
+                                  marginTop: isCentered ? "-6px" : "-10px",
+                                }}
                               >
                                 {noteLayout.fit.lines.map((line, i) =>
-                                  renderNoteLine(line, `l${i}`, i === 0),
+                                  renderNoteLine(
+                                    line,
+                                    `l${i}`,
+                                    !isCentered && i === 0,
+                                  ),
                                 )}
                               </div>
                             )}
@@ -2382,7 +2532,7 @@ export function PdfExportModal({
                         return (
                           <div
                             key={item.id}
-                            className="pl-9 py-0.5 text-[var(--ink)] font-sans text-[11pt] font-bold"
+                            className={`py-0.5 text-[var(--ink)] font-sans text-[11pt] font-bold ${isCentered ? "text-center" : "pl-9"}`}
                           >
                             <span className="text-[var(--ink-2)]">****</span>{" "}
                             {(
@@ -2409,7 +2559,9 @@ export function PdfExportModal({
 
               {/* Bottom Footer with BandManager & link */}
               {showAppBranding && (
-                <div className="flex justify-between items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)]">
+                <div
+                  className={`flex items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)] ${isCentered ? "justify-center gap-4" : "justify-between"}`}
+                >
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-[var(--ink)]">
                       <ShowIcon inline emoji="⚡" />BandManager
