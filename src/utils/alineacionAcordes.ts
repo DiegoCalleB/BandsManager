@@ -256,6 +256,9 @@ export function acordeActivoPorTiempo(tiempos: number[], t: number): number {
     const m = (lo + hi) >> 1;
     if (tiempos[m] <= t + 1e-6) { mejor = m; lo = m + 1; } else hi = m - 1;
   }
+  // Con tiempos iguales (acordes repetidos antes del primer cambio detectado, todos en 0 s) manda el
+  // primero: el último hacía que al empezar el reloj saltara a un acorde de mitad de canción.
+  while (mejor > 0 && tiempos[mejor - 1] === tiempos[mejor]) mejor--;
   return mejor;
 }
 

@@ -147,3 +147,11 @@ describe('acordes repetidos y sin pareja: el resaltado no se salta ninguno', () 
     expect([1, 3, 5, 7].map((t) => acordeActivoDelCifrado(al, Math.floor(t / 2)))).toEqual([0, 1, 2, 3]);
   });
 });
+
+describe('acordeActivoPorTiempo con tiempos repetidos', () => {
+  it('al empezar (todos a 0 s) activa el primer acorde, no el último del empate', async () => {
+    const { acordeActivoPorTiempo } = await import('../alineacionAcordes');
+    expect(acordeActivoPorTiempo([0, 0, 0, 0, 2.5, 5], 0)).toBe(0);
+    expect(acordeActivoPorTiempo([0, 0, 0, 0, 2.5, 5], 3)).toBe(4);
+  });
+});
