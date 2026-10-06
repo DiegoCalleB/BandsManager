@@ -40,6 +40,11 @@ export interface PaginateInput {
    * ese margen no cabe ni a la letra mínima, se reintenta con la hoja entera.
    */
   fillTarget?: number;
+  /**
+   * Nº de hojas impuesto por el usuario. El motor busca la letra más grande que quepa en
+   * exactamente esas hojas, aunque baje del mínimo legible (hasta `FORCED_FLOOR_FONT_PT`).
+   */
+  forcedPages?: number;
 }
 
 export interface PlannedPage {
@@ -62,6 +67,11 @@ const BREAK_MID_SECTION_PENALTY = 0.12;
 const BREAK_BEFORE_OTHER_PENALTY = 0.05;
 /** El aire entre filas nunca pasa de esta fracción de la letra: más se vería estirado. */
 const MAX_GAP_FRACTION_OF_FONT = 0.55;
+
+/** Con hojas impuestas se acepta letra pequeña antes que dejar temas fuera. */
+const FORCED_FLOOR_FONT_PT = 9;
+/** Con hojas impuestas el usuario pide aprovechar la hoja: menos aire reservado que en auto. */
+const FORCED_FILL_TARGET = 0.96;
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -134,6 +144,7 @@ export function partitionItems(
 }
 
 export function planPages(input: PaginateInput): PaginatedPlan {
+  if (input.forcedPages) return planPagesAt(input, FORCED_FILL_TARGET).plan;
   const fill = input.fillTarget ?? 0.9;
   const roomy = planPagesAt(input, fill);
   if (roomy.legible || fill >= 1) return roomy.plan;
@@ -184,7 +195,39 @@ function planPagesAt(
     return a;
   };
 
+  const buildPlan = (
+    chosen: { pages: number; fontPt: number },
+    legible: boolean,
+  ): { plan: PaginatedPlan; legible: boolean } => {
+    const h = heights(chosen.fontPt);
+    const ranges =
+      split(chosen.fontPt, chosen.pages) ??
+      // Último recurso defensivo: una hoja por cada reparto posible, sin garantía de que quepa.
+      partitionItems(kinds, h, chosen.pages, Number.POSITIVE_INFINITY) ??
+      [{ from: 0, to: n }];
+
+    // El aire entre filas se reparte solo dentro del `fillTarget`; el resto de la hoja queda como
+    // margen simétrico arriba y abajo (centrado vertical), así el pie nunca queda pegado.
+    const pages: PlannedPage[] = ranges.map(({ from, to }) => {
+      let used = 0;
+      for (let i = from; i < to; i++) used += h[i];
+      const free = Math.max(0, availableHeightPx - used);
+      const rows = to - from;
+      const gaps = Math.max(1, rows - 1);
+      const rowGapPx = Math.min(free / gaps, ptToPx(chosen.fontPt) * MAX_GAP_FRACTION_OF_FONT);
+      return { from, to, usedPx: used, freePx: free, rowGapPx: rows > 1 ? rowGapPx : 0 };
+    });
+    return { plan: { fontPt: chosen.fontPt, pages }, legible };
+  };
+
   const top = Math.max(minFontPt, Math.floor(maxFontPt));
+  if (input.forcedPages) {
+    const pages = Math.min(Math.max(1, Math.floor(input.forcedPages)), Math.max(1, n));
+    const lo = Math.min(FORCED_FLOOR_FONT_PT, minFontPt);
+    const f = bestFontFor(pages, lo, top);
+    const forced = { pages, fontPt: f ?? lo };
+    return buildPlan(forced, f !== null);
+  }
   let chosen: { pages: number; fontPt: number } | null = null;
   let firstLegible: { pages: number; fontPt: number } | null = null;
   for (let pages = 1; pages <= maxPages; pages++) {
@@ -205,25 +248,7 @@ function planPagesAt(
     chosen = { pages: maxPages, fontPt: f ?? Math.min(floorFontPt, minFontPt) };
   }
 
-  const h = heights(chosen.fontPt);
-  const ranges =
-    split(chosen.fontPt, chosen.pages) ??
-    // Último recurso defensivo: una hoja por cada reparto posible, sin garantía de que quepa.
-    partitionItems(kinds, h, chosen.pages, Number.POSITIVE_INFINITY) ??
-    [{ from: 0, to: n }];
-
-  // El aire entre filas se reparte solo dentro del `fillTarget`; el resto de la hoja queda como
-  // margen simétrico arriba y abajo (centrado vertical), así el pie nunca queda pegado.
-  const pages: PlannedPage[] = ranges.map(({ from, to }) => {
-    let used = 0;
-    for (let i = from; i < to; i++) used += h[i];
-    const free = Math.max(0, availableHeightPx - used);
-    const rows = to - from;
-    const gaps = Math.max(1, rows - 1);
-    const rowGapPx = Math.min(free / gaps, ptToPx(chosen!.fontPt) * MAX_GAP_FRACTION_OF_FONT);
-    return { from, to, usedPx: used, freePx: free, rowGapPx: rows > 1 ? rowGapPx : 0 };
-  });
-  return { plan: { fontPt: chosen.fontPt, pages }, legible };
+  return buildPlan(chosen, legible);
 }
 
 /**

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Printer,
   X,
@@ -12,7 +12,6 @@ import {
   ChevronRight,
   ChevronUp,
   ChevronDown,
-  Edit3,
   Music,
   Sparkles,
   Image as ImageIcon,
@@ -39,7 +38,6 @@ import {
   deterministicRotationDeg,
   deterministicOffsetPx,
   NoteSegment,
-  NoteLine,
   StackedFitResult,
 } from "../../utils/textFit";
 import {
@@ -80,17 +78,12 @@ const STANDING_COMFORT_FONT_PT = 32;
 const FLOOR_TITLE_FONT_PT = 13;
 // Techo de diseño: más grande que esto, un título corto deja de parecer un setlist.
 const MAX_DESIGN_TITLE_FONT_PT = 40;
-// Tamaño de referencia de la vista previa en pantalla (scroll continuo, no pagina de verdad).
-const PREVIEW_STANDING_FONT_PT = 28;
 // La nota manuscrita crece con el título, pero con tope: a 44pt de título una nota de 30pt
 // competiría con él en vez de acompañarlo.
 const deriveNoteFontPt = (titlePt: number) =>
   Math.min(20, Math.round(titlePt * (19 / 28) * 10) / 10);
 const deriveSongNumFontPt = (titlePt: number) =>
   Math.round(titlePt * (22 / 28) * 10) / 10;
-// Tamaño de referencia para la vista previa en pantalla (no imprime, no pagina de verdad — es
-// solo scroll continuo), un punto intermedio entre los antiguos"gigante" y"compacto".
-const PREVIEW_TITLE_FONT_PT = 22;
 
 // Tipografías de la hoja impresa (Google Fonts). OJO: una web font no se descarga hasta que algo
 // la usa, y `document.fonts.ready` resuelve ya si no hay nada pendiente — así que esperar solo a
@@ -127,6 +120,17 @@ async function ensurePrintFonts(doc: Document): Promise<void> {
     new Promise((resolve) => setTimeout(resolve, 4000)),
   ]);
   await doc.fonts.ready;
+}
+
+interface PrintDocument {
+  html: string;
+  layouts: {
+    memberId: string;
+    pages: number;
+    fontPt: number;
+    /** Hojas que elegiría el motor en automático (para la etiqueta "Auto (N páginas)"). */
+    autoPages: number;
+  }[];
 }
 
 interface NoteLayoutBadge {
@@ -396,7 +400,24 @@ export type SetlistStylePreset =
   | "clean_stand"
   | "sound_foh";
 
-export function PdfExportModal({
+// Preferencia de interfaz (no es dato de banda): la alineación elegida se recuerda entre aperturas.
+const ALIGN_STORAGE_KEY = "bakandeya_setlist_align";
+const readSavedAlign = (): "left" | "center" => {
+  try {
+    return localStorage.getItem(ALIGN_STORAGE_KEY) === "center" ? "center" : "left";
+  } catch {
+    return "left";
+  }
+};
+
+// El modal solo existe mientras está abierto: así sus hooks (estado, efectos de la vista previa)
+// no necesitan convivir con un `return null` intermedio.
+export function PdfExportModal(props: PdfExportModalProps) {
+  if (!props.isOpen || !props.activeSetlist) return null;
+  return <PdfExportModalBody {...props} activeSetlist={props.activeSetlist} />;
+}
+
+function PdfExportModalBody({
   isOpen,
   activeSetlist,
   activeSetlistMetrics,
@@ -406,7 +427,7 @@ export function PdfExportModal({
   bandLogoUrl = "",
   onClose,
   onUpdateSong,
-}: PdfExportModalProps) {
+}: PdfExportModalProps & { activeSetlist: Setlist }) {
   const resolvedMembers = resolveBandMembers(bandMembers);
 
   // Print mode:'all_members' |'single_member' |'master'
@@ -464,8 +485,16 @@ export function PdfExportModal({
   // la hoja, como muchos grupos montan el setlist del escenario). En centrado las notas van
   // siempre en su línea debajo del título (ver forceBelowMode) y sin flecha, que apuntaría a la
   // izquierda en el vacío.
-  const [textAlign, setTextAlign] = useState<"left" | "center">("left");
+  const [textAlign, setTextAlign] = useState<"left" | "center">(readSavedAlign);
   const isCentered = textAlign === "center";
+  const changeAlign = (value: "left" | "center") => {
+    setTextAlign(value);
+    try {
+      localStorage.setItem(ALIGN_STORAGE_KEY, value);
+    } catch {
+      /* sin almacenamiento: la preferencia vive solo en esta apertura */
+    }
+  };
   // Marca de agua desactivada por defecto: un logo con fondo opaco se imprimía como un rectángulo
   // gris detrás de las canciones y ensuciaba la hoja.
   const [showWatermark, setShowWatermark] = useState<boolean>(false);
@@ -478,49 +507,78 @@ export function PdfExportModal({
     null,
   );
 
-  // Medidor de texto (canvas) para el ajuste de notas manuscritas de la vista previa — se crea
-  // una sola vez y se reutiliza en cada canción del repertorio (ver computeNoteLayout/textFit.ts).
-  const measureText = useMemo(() => makeCanvasMeasurer(), []);
-  // Las fuentes web (Caveat, Permanent Marker...) tardan en cargar de forma asíncrona; si se mide
-  // antes de que terminen de cargar, el canvas usa la fuente de reserva del sistema y el ajuste
-  // sale descuadrado. Este contador fuerza un recálculo (nuevo `measureText` con las métricas
-  // reales) en cuanto document.fonts confirma que ya están listas.
-  const [, setFontsReadyTick] = useState(0);
-  useEffect(() => {
-    if (typeof document === "undefined" || !document.fonts) return;
-    document.fonts.ready.then(() => setFontsReadyTick((t) => t + 1));
-  }, []);
+  // Hojas por músico: "auto" deja decidir al motor (setlistPaginator.ts); 1-3 las impone el
+  // usuario y el motor busca la letra más grande que quepa en ellas.
+  const [pagesChoice, setPagesChoice] = useState<"auto" | 1 | 2 | 3>("auto");
 
-  // Ancho REAL de contenido de la hoja en la vista previa, medido del DOM en vez de asumido en
-  // mm: a diferencia del HTML de impresión (dimensiones fijas de @page), este contenedor tiene
-  // padding responsive de Tailwind (p-8 sm:p-12), así que una constante fija sobrestimaba el
-  // hueco libre y hacía que el título se aplastara en vez de la nota caer a la línea de abajo
-  // (Ronda 2 del plan). Se mide el ancho de la hoja y se le resta el padding calculado.
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const [previewContentWidthPx, setPreviewContentWidthPx] = useState<number>(
-    PAGE_CONTENT_WIDTH_PX,
+  // Vista previa = el MISMO HTML que se imprime (buildPrintDocument), pintado en un iframe como
+  // papel A4. Antes era una maqueta aparte que solo se parecía; ahora no puede divergir.
+  const [previewDoc, setPreviewDoc] = useState<{
+    html: string;
+    layout: PrintDocument["layouts"][number] | null;
+  } | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewHeightPx, setPreviewHeightPx] = useState<number>(
+    Math.round(mmToPx(297)),
   );
+  const [previewScale, setPreviewScale] = useState(1);
+  const hasPreview = previewDoc !== null;
+  const previewFrameRef = useRef<HTMLIFrameElement>(null);
+  const previewBoxRef = useRef<HTMLDivElement>(null);
+  // Una clave con todo lo que cambia la maquetación (solo primitivos: `bandMembers` y los
+  // arrays por defecto son objetos nuevos en cada render y dispararían el efecto sin parar).
+  const previewKey = JSON.stringify([
+    printMode,
+    selectedMemberId,
+    previewPageIndex,
+    textAlign,
+    viewDensity,
+    pagesChoice,
+    handwritingFont,
+    handwritingColor,
+    showBandLogo,
+    showSongNumbers,
+    showTonality,
+    showBpm,
+    showDuration,
+    showSetlistNotes,
+    showAppBranding,
+    showWatermark,
+    stylePreset,
+    bandName,
+    customLogoUrl,
+    resolvedMembers.map((m) => `${m.id}|${m.name}|${m.instrument}`),
+  ]);
+  // El iframe avisa de su altura real y de los clics en un tema (editar su nota).
   useEffect(() => {
-    const el = sheetRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const measure = () => {
-      const rect = el.getBoundingClientRect();
-      const cs = window.getComputedStyle(el);
-      const paddingX =
-        parseFloat(cs.paddingLeft || "0") + parseFloat(cs.paddingRight || "0");
-      const width = rect.width - paddingX;
-      if (width > 0) setPreviewContentWidthPx(width);
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== previewFrameRef.current?.contentWindow) return;
+      const data = e.data as { type?: string; h?: number; id?: string } | null;
+      if (data?.type === "bm-preview-height" && data.h && data.h > 0) {
+        setPreviewHeightPx(Math.ceil(data.h));
+      } else if (data?.type === "bm-edit-song" && data.id) {
+        const song = songs.find((x) => x.id === data.id);
+        if (song) setEditingSongForNotes(song);
+      }
     };
-    measure();
-    const ro = new ResizeObserver(measure);
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [songs]);
+
+  // Escala el A4 (210mm) al ancho disponible: en móvil se ve la hoja entera, no un trozo.
+  useEffect(() => {
+    const el = previewBoxRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const fit = () => {
+      const free = el.clientWidth - 24;
+      if (free > 0) setPreviewScale(Math.min(1, free / mmToPx(210)));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [isOpen]);
+  }, [isOpen, hasPreview]);
 
-  // Los hooks de arriba tienen que ejecutarse siempre (ver react-hooks/rules-of-hooks): este
-  // guard vivía antes de ellos, así que abrir/cerrar el modal o cambiar de repertorio activo
-  // cambiaba cuántos hooks corrían entre renders.
-  if (!isOpen || !activeSetlist) return null;
 
   const selectedMember = resolvedMembers.find(
     (m) => m.id === selectedMemberId,
@@ -575,7 +633,10 @@ export function PdfExportModal({
 
   // Genera el HTML de impresión: mide cada fila en un iframe oculto, deja que setlistPaginator.ts
   // decida hojas, letra y cortes, y abre la ventana de impresión.
-  const handlePrint = async () => {
+  const buildPrintDocument = async (opts: {
+    members: typeof membersToExport;
+    mode: "print" | "preview";
+  }): Promise<PrintDocument | null> => {
     // Si el usuario imprime justo tras abrir el modal, las fuentes web (Anton/Oswald/Caveat) del
     // documento de la app podrían no haber terminado de cargar todavía — el canvas measurer de
     // abajo mediría con la fuente de reserva del sistema (más ancha), haciendo que el título
@@ -611,6 +672,9 @@ export function PdfExportModal({
       const noteFontPt = deriveNoteFontPt(titleFontPt);
       const noteMaxFontSizePx = ptToPx(noteFontPt);
       const songNumFontSizePx = ptToPx(deriveSongNumFontPt(titleFontPt));
+      // Bloques e interludios escalan con la letra del título: a 11pt de título un divisor de
+      // 9pt fijo parecía más grande que las canciones.
+      const auxFontPt = Math.max(7.5, Math.min(10, titleFontPt * 0.42));
 
       if (item.tipoItem === "cancion") {
         const s = songs.find((x) => x.id === item.songId);
@@ -723,7 +787,7 @@ export function PdfExportModal({
             : `font-size:${titleFontPt}pt;white-space:normal;overflow:visible;text-overflow:clip;`;
 
         return `
-            <div class="setlist-song-item">
+            <div class="setlist-song-item" data-song-id="${s.id}">
               <div class="song-line">
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
@@ -744,7 +808,7 @@ export function PdfExportModal({
         return `
             <div class="block-divider-item">
               <div class="divider-line"></div>
-              <div class="block-title">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
+              <div class="block-title" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BLOQUE").toUpperCase()}</div>
               <div class="divider-line"></div>
             </div>
           `;
@@ -752,18 +816,18 @@ export function PdfExportModal({
         return `
             <div class="bis-divider-item">
               <div class="divider-line"></div>
-              <div class="bis-text">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
+              <div class="bis-text" style="font-size:${auxFontPt}pt;">${(item.tituloCustom || "BIS / ENCORE").toUpperCase()}</div>
               <div class="divider-line"></div>
             </div>
           `;
       } else {
         return `
-            <div class="interlude-item">
+            <div class="interlude-item" style="font-size:${auxFontPt + 1}pt;">
               <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
-                <span class="interlude-note">${item.notas || (item as any).notaTema}</span>
+                <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${item.notas || (item as any).notaTema}</span>
               `
      : ""
  }
@@ -1345,7 +1409,7 @@ export function PdfExportModal({
     const measureDoc = measureFrame.contentDocument;
     if (!measureDoc) {
       document.body.removeChild(measureFrame);
-      return;
+      return null;
     }
     // El documento del iframe se escribe UNA sola vez (con las mismas Google Fonts que la
     // impresión real) y se espera a que carguen antes de medir nada — si no, todas las
@@ -1430,7 +1494,7 @@ export function PdfExportModal({
     );
     const rowsContainerClass = `setlist-items-container ${isCentered ? "is-centered" : ""}`;
 
-    const memberPlans = membersToExport.map((member) => {
+    const memberPlans = opts.members.map((member) => {
       const isMaster = member.id === "master";
       const headerHeightPx = measureHtmlHeightPx(
         `<div style="width:${PAGE_CONTENT_WIDTH_PX}px;display:flow-root">${buildHeaderHtml(member, isMaster)}</div>`,
@@ -1452,7 +1516,7 @@ export function PdfExportModal({
           ),
         );
 
-      const plan = planPages({
+      const planInput = {
         kinds: itemKinds,
         heightsAt,
         availableHeightPx: pageAvailableHeightPx,
@@ -1462,14 +1526,18 @@ export function PdfExportModal({
           viewDensity === "de_pie" ? STANDING_COMFORT_FONT_PT : COMFORT_TITLE_FONT_PT,
         maxFontPt,
         floorFontPt: FLOOR_TITLE_FONT_PT,
-      });
-      return { member, isMaster, plan };
+      };
+      const forcedPages = pagesChoice === "auto" ? undefined : pagesChoice;
+      const plan = planPages({ ...planInput, forcedPages });
+      // Para la etiqueta "Auto (N páginas)" del selector: cuántas hojas elegiría el motor solo.
+      const autoPages =
+        opts.mode === "preview" && forcedPages
+          ? planPages(planInput).pages.length
+          : plan.pages.length;
+      return { member, isMaster, plan, autoPages };
     });
 
     document.body.removeChild(measureFrame);
-
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
 
     const totalSheets = memberPlans.reduce((sum, mp) => sum + mp.plan.pages.length, 0);
 
@@ -1527,29 +1595,11 @@ export function PdfExportModal({
       )
       .join("");
 
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
-          <style>${printCss}</style>
-        </head>
-        <body>
-          ${pagesHtml}
+    // Script de la ventana de impresión: espera a que las fuentes estén cargadas antes de
+    // llamar a window.print() (si no, imprimiría con la fuente de reserva, más ancha).
+    const printScript = `
  <script>
  window.onload = () => {
- //'onload' solo garantiza que el CSS de Google Fonts (el texto de las reglas
- // @font-face) ya se descargó — NO que los archivos de fuente (woff2) referenciados
- // ya estén descargados/parseados. Sin esperar a'fonts.ready', window.print() podía
- // disparar con la fuente de reserva del sistema todavía puesta (más ancha que
- // Anton/Oswald/Caveat), reflowing el texto más alto de lo medido en el iframe oculto
- // y desbordando la última canción a una hoja nueva — el bug real detrás de que tres
- // ajustes distintos de tamaño/espaciado dieran siempre el mismo resultado: ninguno
- // tocaba esta carrera, así que el contenido real seguía siendo más alto de lo medido.
  var go = function () {
  window.print();
  setTimeout(function () { window.close(); }, 800);
@@ -1563,17 +1613,110 @@ export function PdfExportModal({
  go();
  }
  };
- </script>
- </body>
- </html>
- `);
+ </script>`;
+
+    // Vista previa: las MISMAS hojas que se imprimen, pintadas como papel A4 (el margen del
+    // @page se simula con un borde blanco). Al hacer clic en un tema se avisa al modal para
+    // editar su nota, y se informa de la altura para que el marco no necesite scroll interno.
+    const previewCss = `
+ @media screen {
+ html { background: #d4d4d8; }
+ body { margin: 0; padding: 16px 0 1px; }
+ .sheet-page {
+ box-sizing: content-box;
+ width: calc(${210 - 2 * PAGE_MARGIN_X_MM}mm - 4px);
+ min-height: calc(${PAGE_SHEET_HEIGHT_MM}mm - 4px);
+ padding: 2px;
+ border: solid #fff;
+ border-width: ${PAGE_MARGIN_Y_MM}mm ${PAGE_MARGIN_X_MM}mm;
+ background: #fff;
+ margin: 0 auto 18px;
+ box-shadow: 0 1px 3px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.12);
+ }
+ [data-song-id] { cursor: pointer; border-radius: 4px; }
+ [data-song-id]:hover { background: rgba(242, 202, 80, .2); }
+ }`;
+    const previewScript = `
+ <script>
+ (function () {
+ var send = function () {
+ parent.postMessage({ type: "bm-preview-height", h: document.documentElement.scrollHeight }, "*");
+ };
+ window.addEventListener("load", send);
+ if (document.fonts && document.fonts.ready) document.fonts.ready.then(send);
+ document.addEventListener("click", function (e) {
+ var el = e.target && e.target.closest ? e.target.closest("[data-song-id]") : null;
+ if (el) parent.postMessage({ type: "bm-edit-song", id: el.getAttribute("data-song-id") }, "*");
+ });
+ })();
+ </script>`;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>${bandName} - Setlist ${activeSetlist.nombre}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+          <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Permanent+Marker&family=Courier+Prime:wght@700&family=Oswald:wght@600;700;800&display=swap" rel="stylesheet">
+          <style>${printCss}${opts.mode === "preview" ? previewCss : ""}</style>
+        </head>
+        <body>
+          ${pagesHtml}
+          ${opts.mode === "preview" ? previewScript : printScript}
+</body>
+</html>`;
+    return {
+      html,
+      layouts: memberPlans.map(({ member, plan, autoPages }) => ({
+        memberId: member.id,
+        pages: plan.pages.length,
+        fontPt: plan.fontPt,
+        autoPages,
+      })),
+    };
+  };
+
+  const handlePrint = async () => {
+    const doc = await buildPrintDocument({ members: membersToExport, mode: "print" });
+    if (!doc) return;
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+    printWindow.document.write(doc.html);
     printWindow.document.close();
   };
 
   // Preview page member
   const currentPreviewMember =
     membersToExport[previewPageIndex] || membersToExport[0];
-  const isCurrentMaster = currentPreviewMember?.id === "master";
+
+  useEffect(() => {
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const member = currentPreviewMember;
+      if (!member) return;
+      setPreviewLoading(true);
+      try {
+        const doc = await buildPrintDocument({ members: [member], mode: "preview" });
+        if (!cancelled && doc) {
+          setPreviewDoc({ html: doc.html, layout: doc.layouts[0] ?? null });
+        }
+      } catch (err) {
+        console.error("Vista previa del setlist:", err);
+      } finally {
+        if (!cancelled) setPreviewLoading(false);
+      }
+    }, 300);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+    // buildPrintDocument y currentPreviewMember se recrean en cada render: lo que de verdad
+    // cambia la maquetación está en previewKey (y en el repertorio/canciones).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewKey, activeSetlist, songs]);
+
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -1759,7 +1902,7 @@ export function PdfExportModal({
                 <Button
                   variant={textAlign === "left" ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setTextAlign("left")}
+                  onClick={() => changeAlign("left")}
                   className="items-center gap-1.5"
                   title="Títulos alineados a la izquierda, notas a su lado"
                 >
@@ -1768,12 +1911,50 @@ export function PdfExportModal({
                 <Button
                   variant={textAlign === "center" ? "neutral" : "ghost"}
                   size="xs"
-                  onClick={() => setTextAlign("center")}
+                  onClick={() => changeAlign("center")}
                   className="items-center gap-1.5"
                   title="Títulos, números y notas centrados en la hoja"
                 >
                   <AlignCenter className="w-3.5 h-3.5" />Centrado
                 </Button>
+              </div>
+
+              {/* Hojas por músico: automático (con el nº que elige el motor) o impuestas. */}
+              <div className="flex items-center gap-2">
+                <Select
+                  size="sm"
+                  aria-label="Número de hojas"
+                  value={String(pagesChoice)}
+                  onChange={(e) =>
+                    setPagesChoice(
+                      e.target.value === "auto"
+                        ? "auto"
+                        : (Number(e.target.value) as 1 | 2 | 3),
+                    )
+                  }
+                >
+                  <option value="auto">
+                    {previewDoc?.layout
+                      ? `Auto (${previewDoc.layout.autoPages} ${previewDoc.layout.autoPages === 1 ? "página" : "páginas"})`
+                      : "Auto"}
+                  </option>
+                  <option value="1">1 página</option>
+                  <option value="2">2 páginas</option>
+                  <option value="3">3 páginas</option>
+                </Select>
+                {previewDoc?.layout && (
+                  <span
+                    className={`text-xs font-semibold tabular-nums whitespace-nowrap ${
+                      previewDoc.layout.fontPt < MIN_TITLE_FONT_PT
+                        ? "text-[var(--alert)]"
+                        : "text-[var(--ink-2)]"
+                    }`}
+                    title="Letra del título resultante en la hoja impresa"
+                  >
+                    {previewDoc.layout.fontPt} pt
+                    {previewDoc.layout.fontPt < MIN_TITLE_FONT_PT && " · letra pequeña"}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -1994,498 +2175,43 @@ export function PdfExportModal({
             </div>
           )}
 
-          {/* Modal Body: A4 Stage Sheet Real Preview Container */}
+          {/* Vista previa: las hojas reales que se imprimirán (clic en un tema = editar su nota). */}
           <div
-            className={`flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center ${"bg-[var(--sunken)]"}`}
+            ref={previewBoxRef}
+            className="relative flex-1 overflow-y-auto p-3 sm:p-6 flex justify-center bg-[var(--sunken)]"
           >
-            {/* Authentic Real Stage Paper Sheet */}
-            <div
-              ref={sheetRef}
-              className="relative overflow-hidden bg-[var(--surface)] text-[var(--ink)] p-8 sm:p-12 rounded-[var(--r-s)] w-full max-w-[210mm] min-h-[297mm] flex flex-col justify-between border-text-[var(--ink-2)] transition-ui"
-              style={{
-                width: "210mm",
-                minHeight: "297mm",
-                fontFamily:
-                  stylePreset === "rock_stage"
-                    ? "'Anton', 'Oswald', sans-serif"
-                    : "'Oswald', sans-serif",
-              }}
-            >
-              {/* Marca de agua: muy suave, centrada, de fondo — mismo tratamiento que en el HTML de
- impresión (position:absolute, no forma parte del flujo ni del cálculo de alto). El
- logo del grupo en alta resolución (misma imagen original que la cabecera) si hay
- uno subido y activo; si no, el nombre como texto de respaldo. */}
-              {showWatermark && (
-              <div className="absolute inset-0 -z-10 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-                {showBandLogo && customLogoUrl ? (
-                  <img
-                    src={customLogoUrl}
-                    alt=""
-                    className="max-w-[65%] max-h-[65%] object-contain"
-                    // 0.09 se veía casi invisible al imprimir en papel real (la pantalla ilumina el
-                    // mismo valor más de lo que refleja la tinta) — subido a 0.16, mismo valor que
-                    // el HTML de impresión real, para que la vista previa no engañe sobre cómo sale.
-                    style={{
-                      opacity: 0.1,
-                      filter: "grayscale(100%)",
-                      mixBlendMode: "multiply",
-                    }}
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
-                ) : (
-                  <span
-                    className="whitespace-nowrap font-['Anton',sans-serif] font-bold"
-                    style={{
-                      fontSize: "70pt",
-                      letterSpacing: "4px",
-                      color: getInkColorHex(),
-                      opacity: 0.14,
-                      transform: "rotate(-20deg)",
-                    }}
-                  >
-                    {bandName}
-                  </span>
-                )}
+            {previewDoc ? (
+              <div
+                className="shrink-0"
+                style={{
+                  width: mmToPx(210) * previewScale,
+                  height: previewHeightPx * previewScale,
+                }}
+              >
+                <iframe
+                  ref={previewFrameRef}
+                  title="Vista previa del setlist impreso"
+                  sandbox="allow-scripts"
+                  srcDoc={previewDoc.html}
+                  style={{
+                    width: mmToPx(210),
+                    height: previewHeightPx,
+                    border: 0,
+                    transform: `scale(${previewScale})`,
+                    transformOrigin: "top left",
+                    opacity: previewLoading ? 0.55 : 1,
+                    transition: "opacity 150ms",
+                  }}
+                />
               </div>
-              )}
-
-              {/* Top Sheet Header — compacta a propósito: cada mm que se ahorra aquí es un mm
- menos de riesgo de que el repertorio se desborde a una hoja extra. */}
-              <div>
-                <div
-                  className={`pb-2 mb-3 border-b border-[var(--ink)] ${
-                    isCentered
-                      ? "flex flex-col items-center gap-1.5 text-center"
-                      : "flex items-center justify-between"
-                  }`}
-                >
-                  <div
-                    className={`flex gap-2 ${isCentered ? "flex-col items-center" : "items-center"}`}
-                  >
-                    {showBandLogo && customLogoUrl && (
-                      <img
-                        src={customLogoUrl}
-                        alt={bandName}
-                        className="max-h-7 max-w-[80px] object-contain filter grayscale contrast-150"
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = "none";
-                        }}
-                      />
-                    )}
-                    <div className={isCentered ? "text-center" : ""}>
-                      <h1 className="text-[14pt] font-bold tracking-tighter m-0 leading-none text-[var(--ink)] font-['Anton',sans-serif]">
-                        {bandName.toUpperCase()}
-                      </h1>
-                      <div className="text-[9pt] font-bold text-[var(--ink-2)] mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis max-w-full font-['Oswald',sans-serif]">
-                        {activeSetlist.nombre.toUpperCase()}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`bg-[var(--sunken)] p-1 px-2 rounded whitespace-nowrap ${
-                      isCentered
-                        ? "flex items-baseline justify-center gap-2"
-                        : "text-right min-w-[110px]"
-                    }`}
-                  >
-                    <div className="text-[6pt] font-sans font-bold text-[var(--ink-2)]">
-                      {!isCurrentMaster
-                        ? "REPERTORIO PERSONALIZADO"
-                        : "COPIA DE CONTROL"}
-                    </div>
-                    <div className="text-[10pt] font-bold text-[var(--ink)] leading-tight font-['Anton',sans-serif]">
-                      <ShowIcon inline emoji="👤" />{currentPreviewMember.name}
-                    </div>
-                    <div className="text-[7pt] font-sans font-bold text-[var(--ink)]">
-                      <ShowIcon inline emoji="🎵" />{currentPreviewMember.instrument}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Setlist Song List (Large High-Impact Typography). El ritmo vertical"sin nota"
- es el de una lista impresa apretada — no se reserva hueco para notas aquí, se
- aprovecha el que ya deja el interlineado del título (ver modo'below' abajo). */}
-                <div className="space-y-0">
-                  {(() => {
-                    let songIndex = 0; // Contador solo para canciones, no para todos los items
-                    return activeSetlist.items.map((item, index) => {
-                      if (item.tipoItem === "cancion") {
-                        const s = songs.find((x) => x.id === item.songId);
-                        if (!s) return null;
-
-                        songIndex++; // Incrementar solo cuando es una canción
-
-                        const memberNote = !isCurrentMaster
-                          ? getSongMemberNote(
-                              s,
-                              currentPreviewMember.id,
-                              currentPreviewMember.name,
-                            )
-                          : "";
-                        const generalRepertorioNote =
-                          s.notasRepertorio || s.notasInternas || "";
-                        const setlistNote =
-                          (item as any).notaTema || item.notas || "";
-
-                        // La vista previa no pagina de verdad (scroll continuo), así que no puede
-                        // reflejar el nº real de hojas — pero al menos usa un tamaño de referencia
-                        // mayor en modo"de pie" para dar una idea de que la letra sale más grande.
-                        const titleFontPt =
-                          viewDensity === "de_pie"
-                            ? PREVIEW_STANDING_FONT_PT
-                            : PREVIEW_TITLE_FONT_PT;
-                        const noteFontPt = deriveNoteFontPt(titleFontPt);
-                        const numberText = showSongNumbers
-                          ? `${songIndex}.`
-                          : "";
-                        const badges: NoteLayoutBadge[] = [
-                          ...(showTonality && s.tonalidad
-                            ? [
-                                {
-                                  text: s.tonalidad,
-                                  fontSizePx: ptToPx(11),
-                                  extraWidthPx: 14,
-                                },
-                              ]
-                            : []),
-                          ...(showBpm && s.bpm
-                            ? [
-                                {
-                                  text: `${s.bpm} BPM`,
-                                  fontSizePx: ptToPx(10.5),
-                                },
-                              ]
-                            : []),
-                          ...(showDuration && s.duracion
-                            ? [{ text: s.duracion, fontSizePx: ptToPx(10.5) }]
-                            : []),
-                        ];
-                        const noteLayout = computeNoteLayout({
-                          memberNote,
-                          setlistNote,
-                          generalNote: generalRepertorioNote,
-                          showSetlistNotes,
-                          numberText,
-                          numberFontSizePx: ptToPx(20),
-                          titleText: s.titulo,
-                          titleFontSizePx: ptToPx(titleFontPt),
-                          titleFontFamily: "'Anton', 'Oswald', sans-serif",
-                          badges,
-                          noteFontFamily: getHandwritingFontFamily(),
-                          noteMaxFontSizePx: ptToPx(noteFontPt),
-                          noteMinFontSizePx: 11,
-                          rowWidthPx: previewContentWidthPx,
-                          measure: measureText,
-                          forceBelowMode:
-                            viewDensity === "de_pie" || isCentered,
-                        });
-                        // Cada nota (miembro / nota del bolo / general) apilada en su propia línea,
-                        // una encima de otra, en vez de todas seguidas en una sola línea. El texto
-                        // nunca se trunca: sin `truncate`/`overflow-hidden` a propósito, para que una
-                        // nota patológicamente larga (caso raro, ya encogida al suelo mínimo en
-                        // computeNoteLayout) pueda asomar un poco fuera de su carril en vez de
-                        // recortarse sin avisar. whitespace-nowrap sí se mantiene: eso es lo que
-                        // garantiza que nunca salta a una segunda línea.
-                        // Rotación + desplazamiento por LÍNEA (no un único transform para todo el
-                        // bloque): así"nota de fer","*** ... ***" y"[General: ...]" no giran como
-                        // una pieza rígida, sino que cada una parece garabateada por separado, en un
-                        // momento distinto — más orgánico y menos"maquetado". Seed = id de canción +
-                        // tipo de nota, para que sea estable entre repintados pero distinto entre las
-                        // tres notas de la misma fila.
-                        const renderNoteLine = (
-                          line: NoteLine,
-                          key: string,
-                          showArrow: boolean = false,
-                        ) => {
-                          const noteColor =
-                            line.className === "note-member"
-                              ? getInkColorHex()
-                              : line.className === "note-cue"
-                                ? "#b45309"
-                                : "#555";
-                          const seed = `${s.id}-${line.className}`;
-                          // Solo hacia arriba (o recta), nunca hacia abajo: rotate() positivo gira en
-                          // sentido horario, o sea el extremo derecho del texto cae hacia abajo — se veía
-                          // como una nota"torcida hacia abajo" en vez de la escritura ascendente natural.
-                          const lineRotationDeg = -Math.abs(
-                            deterministicRotationDeg(seed, 3),
-                          );
-                          const lineOffsetXPx = deterministicOffsetPx(
-                            `${seed}-x`,
-                            2,
-                          );
-                          // Solo hacia arriba (o recta), nunca hacia abajo: un desplazamiento positivo se
-                          // veía como un salto de línea/desalineación entre notas — justo el efecto que se
-                          // había quitado a propósito (ver line-height:1 más arriba).
-                          const lineOffsetYPx = -Math.abs(
-                            deterministicOffsetPx(`${seed}-y`, 2),
-                          );
-                          return (
-                            <div
-                              key={key}
-                              className={`flex items-center min-w-0 max-w-full font-bold whitespace-nowrap ${
-                                line.className === "note-general"
-                                  ? "italic font-semibold"
-                                  : ""
-                              }`}
-                              style={{
-                                fontFamily: getHandwritingFontFamily(),
-                                fontSize: line.fontSizePx,
-                                color: noteColor,
-                                transform: `rotate(${lineRotationDeg}deg) translate(${lineOffsetXPx}px, ${lineOffsetYPx}px)`,
-                              }}
-                            >
-                              {/* Flecha manuscrita apuntando al título de arriba: en modo'below'
- (nota separada del título) va en la primera línea; en modo'inline'
- con varias notas apiladas va en la ÚLTIMA (la que queda más cerca de
- la canción siguiente, donde puede haber duda de a qué tema
- pertenece) — ver referencia visual de setlist real (flechas"← nota" a mano). Un único trazo doblado, no una V simétrica de
- línea técnica, para no romper el efecto manuscrito. */}
-                              {showArrow && (
-                                <svg
-                                  width={line.fontSizePx * 0.75}
-                                  height={line.fontSizePx * 0.75}
-                                  viewBox="0 0 16 16"
-                                  style={{ flexShrink: 0, marginRight: 3 }}
-                                >
-                                  <path
-                                    d="M13 13 L4 5 M4 5 L4.5 8.5 M4 5 L7.5 4.5"
-                                    stroke={noteColor}
-                                    strokeWidth="1.3"
-                                    fill="none"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              )}
-                              <span>{line.text}</span>
-                            </div>
-                          );
-                        };
-
-                        return (
-                          <div key={item.id} className="group relative">
-                            {/* flex-nowrap en la fila del título: se trunca con"..." (min-w-0 +
- truncate) en vez de saltar de línea, así la fila nunca crece de alto
- ni se monta sobre la canción de arriba. Sin justify-between a
- propósito: la nota debe quedar pegada justo detrás del título (como
- un boli escribiendo a continuación), no flotando contra el margen
- derecho con un hueco en blanco en medio (ver noteLayout más abajo). */}
-                            <div
-                              className={`flex items-baseline gap-1.5 flex-nowrap ${isCentered ? "justify-center" : ""}`}
-                            >
-                              <div
-                                className={`flex items-baseline gap-2.5 min-w-0 flex-nowrap ${isCentered ? "justify-center" : "overflow-hidden"}`}
-                              >
-                                {showSongNumbers && (
-                                  <span className="font-sans text-[20pt] text-[var(--ink-2)] font-bold min-w-[32px] shrink-0">
-                                    {index + 1}.
-                                  </span>
-                                )}
-                                {/* truncate/min-w-0 solo cuando de verdad hay una nota compitiendo
- por sitio en esta fila (noteLayout.mode ==='inline'); si no,
- el título vuelve a poder ocupar toda su anchura natural. */}
-                                <span
-                                  className={`font-bold text-[var(--ink)] leading-none ${
-                                    noteLayout && noteLayout.mode === "inline"
-                                      ? "truncate min-w-0"
-                                      : ""
-                                  }`}
-                                  style={{
-                                    fontFamily: "'Anton', 'Oswald', sans-serif",
-                                    fontSize: `${titleFontPt}pt`,
-                                  }}
-                                >
-                                  {noteLayout?.truncatedTitle ?? s.titulo}
-                                </span>
-
-                                {showTonality && s.tonalidad && (
-                                  <span className="font-sans text-[11pt] font-bold px-1.5 py-0.5 rounded bg-[var(--sunken)] text-[var(--ink)] leading-none ml-1 shrink-0">
-                                    {s.tonalidad}
-                                  </span>
-                                )}
-
-                                {showBpm && s.bpm && (
-                                  <span className="font-sans text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
-                                    {s.bpm} BPM
-                                  </span>
-                                )}
-
-                                {showDuration && s.duracion && (
-                                  <span className="font-sans text-[10.5pt] font-bold text-[var(--ink-2)] ml-1 shrink-0">
-                                    {s.duracion}
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Notas"escritas a mano" a la derecha, cuando cabe con hueco de sobra
- (ver computeNoteLayout) — apiladas, una por línea, tamaño ya
- decidido por textFit, aquí solo se pintan. */}
-                              {/* self-start a propósito: el padre usa items-baseline, y al ser este
- un contenedor flex-column con varias líneas, su"baseline" para el
- padre se toma de la ÚLTIMA línea — empujaba toda la columna hacia
- abajo, dejando hueco entre el título y la primera nota. */}
-                              {/* noteLayout puede venir en modo'inline' con fit.lines vacío (caso"solo badges, sin notas" — ver computeNoteLayout): ahí no hay nada
- que pintar como nota manuscrita, solo se usó el layout para decidir
- cuánto debía ceder el título ante los badges. */}
-                              {noteLayout &&
-                                noteLayout.mode === "inline" &&
-                                noteLayout.fit.lines.length > 0 && (
-                                  <div
-                                    className="flex flex-col items-start self-start shrink-0"
-                                    style={{
-                                      maxWidth: noteLayout.maxWidthPx,
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    {noteLayout.fit.lines.map((line, i) =>
-                                      renderNoteLine(
-                                        line,
-                                        `l${i}`,
-                                        noteLayout.fit.lines.length > 1 &&
-                                          i === noteLayout.fit.lines.length - 1,
-                                      ),
-                                    )}
-                                  </div>
-                                )}
-
-                              {/* Quick note edit trigger on hover — ml-auto lo mantiene pegado al
- margen derecho ahora que el título y la nota ya no usan
- justify-between entre sí (ver arriba). */}
-                              {onUpdateSong && (
-                                <button
-                                  onClick={() => setEditingSongForNotes(s)}
-                                  title="Editar notas manuscritas de esta canción"
-                                  className="ml-auto opacity-0 group-hover:opacity-100 text-xs px-2.5 py-1 bg-[var(--sunken)] hover:bg-[var(--sunken)] border-text-[var(--ink-2)] rounded font-sans text-[var(--ink)] flex items-center gap-1.5 cursor-pointer transition-opacity shrink-0"
-                                >
-                                  <Edit3 className="w-3 h-3 text-[var(--ok)]" />
-                                  <span>Editar nota</span>
-                                </button>
-                              )}
-                            </div>
-
-                            {/* Excepción rara y controlada: el título de esta fila concreta no dejó
- hueco razonable al lado. La nota no abre una fila nueva con su propio
- aire: muerde (margin-top negativo) el hueco que ya deja el
- interlineado del título de arriba, para parecer escrita a mano justo
- pegada a la línea impresa. */}
-                            {noteLayout && noteLayout.mode === "below" && (
-                              <div
-                                className={
-                                  isCentered
-                                    ? "flex flex-col items-center"
-                                    : "pl-9"
-                                }
-                                style={{
-                                  lineHeight: 1,
-                                  marginTop: isCentered ? "-6px" : "-10px",
-                                }}
-                              >
-                                {noteLayout.fit.lines.map((line, i) =>
-                                  renderNoteLine(
-                                    line,
-                                    `l${i}`,
-                                    !isCentered && i === 0,
-                                  ),
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      } else if (
-                        item.tipoItem === "bloque" &&
-                        item.bloqueSubtipo === "header"
-                      ) {
-                        return (
-                          <div
-                            key={item.id}
-                            className="flex items-center gap-2 my-0.5"
-                          >
-                            <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-bold text-[var(--ink)] whitespace-nowrap">
-                              {item.tituloCustom || "BLOQUE"}
-                            </span>
-                            <div className="flex-1 h-px bg-black" />
-                          </div>
-                        );
-                      } else if (
-                        item.tipoItem === "bloque" &&
-                        item.bloqueSubtipo === "bis"
-                      ) {
-                        return (
-                          <div
-                            key={item.id}
-                            className="flex items-center gap-2 my-0.5"
-                          >
-                            <div className="flex-1 h-px bg-black" />
-                            <span className="font-['Oswald',sans-serif] text-[10pt] font-bold text-[var(--ink)] whitespace-nowrap">
-                              {item.tituloCustom || "BIS / ENCORE"}
-                            </span>
-                            <div className="flex-1 h-px bg-black" />
-                          </div>
-                        );
-                      } else {
-                        return (
-                          <div
-                            key={item.id}
-                            className={`py-0.5 text-[var(--ink)] font-sans text-[11pt] font-bold ${isCentered ? "text-center" : "pl-9"}`}
-                          >
-                            <span className="tracking-widest">
-                            {(
-                              item.tituloCustom ||
-                              item.notas ||
-                              (item as any).notaTema ||
-                              item.tipoItem ||
-                              "INTERLUDIO"
-                            ).toUpperCase()}
-                            </span>
-                            {(item.notas || (item as any).notaTema) &&
-                              item.tituloCustom && (
-                                <span className="block text-[10pt] text-[var(--ink-2)] font-normal italic">
-                                  {item.notas || (item as any).notaTema}
-                                </span>
-                              )}
-                          </div>
-                        );
-                      }
-                    }); // end map
-                  })()}
-                </div>
-              </div>
-
-              {/* Bottom Footer with BandManager & link */}
-              {showAppBranding && (
-                <div
-                  className={`flex items-center pt-1 mt-2 font-sans text-[7.5pt] text-[var(--ink-2)] ${isCentered ? "justify-center gap-4" : "justify-between"}`}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-[var(--ink)]">
-                      <ShowIcon inline emoji="⚡" />BandManager
-                    </span>
-                    <span>•</span>
-                    <a
-                      href="https://www.bandmanager.app"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[var(--ink)] font-bold underline"
-                    >
-                      www.bandmanager.app
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span>
-                      Hoja {previewPageIndex + 1} de {membersToExport.length} (
-                      {currentPreviewMember.name})
-                    </span>
-                    <span>•</span>
-                    <span>{new Date().toLocaleDateString("es-ES")}</span>
-                  </div>
-                </div>
-              )}
-            </div>
+            ) : (
+              <p className="m-auto text-sm text-[var(--ink-2)]">Maquetando el setlist…</p>
+            )}
+            {previewLoading && previewDoc && (
+              <span className="absolute top-3 right-4 rounded-[var(--r-pill)] bg-[var(--surface)] px-3 py-1 text-xs font-semibold text-[var(--ink-2)]">
+                Actualizando…
+              </span>
+            )}
           </div>
         </div>
 

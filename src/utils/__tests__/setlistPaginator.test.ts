@@ -197,6 +197,52 @@ describe("planPages", () => {
   });
 });
 
+describe("planPages con hojas impuestas", () => {
+  const base = {
+    availableHeightPx: 1000,
+    minFontPt: 17,
+    comfortFontPt: 19,
+    maxFontPt: 40,
+    heightsAt: linear(30),
+    kinds: songs(30),
+  };
+
+  it("1 hoja con 30 temas baja de la letra mínima antes que dejar temas fuera", () => {
+    const plan = planPages({ ...base, availableHeightPx: 600, forcedPages: 1 });
+    expect(plan.pages).toHaveLength(1);
+    expect(plan.pages[0].to - plan.pages[0].from).toBe(30);
+    expect(plan.fontPt).toBeLessThan(17);
+    expect(plan.pages[0].usedPx).toBeLessThanOrEqual(600);
+  });
+
+  it("más hojas = letra mayor, y todas respetan el reparto equilibrado", () => {
+    const one = planPages({ ...base, forcedPages: 1 });
+    const two = planPages({ ...base, forcedPages: 2 });
+    const three = planPages({ ...base, forcedPages: 3 });
+    expect(two.fontPt).toBeGreaterThan(one.fontPt);
+    expect(three.fontPt).toBeGreaterThanOrEqual(two.fontPt);
+    expect(two.pages).toHaveLength(2);
+    expect(three.pages).toHaveLength(3);
+    expect(Math.abs(two.pages[0].to - two.pages[0].from - 15)).toBeLessThanOrEqual(1);
+  });
+
+  it("pedir más hojas que temas no rompe: se limita al nº de items", () => {
+    const plan = planPages({ ...base, kinds: songs(2), heightsAt: linear(2), forcedPages: 5 });
+    expect(plan.pages).toHaveLength(2);
+  });
+
+  it("con hojas impuestas sigue sin dejar un encabezado colgando", () => {
+    const kinds: ItemKind[] = ["header", "song", "song", "header", "song", "song"];
+    const plan = planPages({
+      ...base,
+      kinds,
+      heightsAt: linear(kinds.length),
+      forcedPages: 2,
+    });
+    for (const p of plan.pages) expect(kinds[p.to - 1]).not.toBe("header");
+  });
+});
+
 describe("partitionItems", () => {
   it("devuelve null si un solo item no cabe en una hoja", () => {
     expect(partitionItems(["song"], [500], 1, 100)).toBeNull();
