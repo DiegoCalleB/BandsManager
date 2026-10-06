@@ -20,9 +20,10 @@ import { fft, ventanaHann, SAMPLE_RATE, extraerPcmMono, calcularCromaDesdePcm, d
 
 const VENTANA = 4096; // ~372 ms a 11025 Hz
 const HOP = 2048; // ~186 ms
-const FREQ_MIN = 80;
+const FREQ_MIN = Number(process.env.X_FMIN || 80);
 const FREQ_MAX = 2200;
-const PESO_BAJO = 0.4;
+const PESO_BAJO = Number(process.env.X_PB || 0.4);
+const MODO_BAJO = process.env.X_MB || 'raiz';
 const NOTAS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 export type CalidadAcorde = "maj" | "min" | "7";
@@ -89,22 +90,67 @@ function construirPlantillas(): Plantilla[] {
 
 const PLANTILLAS = construirPlantillas();
 
-/** Croma por frames, cada uno normalizado en L2. `null` en frames silenciosos. */
-export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (number[] | null)[] {
-  const frames: (number[] | null)[] = [];
-  if (!pcm || pcm.length < VENTANA) return frames;
+/** Mediana de los primeros n valores de v SIN reservar memoria (n pequeño: inserción en tmp). */
+function medianaPequena(v: Float32Array, n: number, tmp: Float32Array): number {
+  for (let i = 0; i < n; i++) {
+    const x = v[i];
+    let j = i - 1;
+    while (j >= 0 && tmp[j] > x) {
+      tmp[j + 1] = tmp[j];
+      j--;
+    }
+    tmp[j + 1] = x;
+  }
+  return tmp[n >> 1];
+}
+
+/**
+ * Mediana deslizante en frecuencia con una ventana ordenada que se actualiza con cada paso
+ * (quitar el valor que sale, insertar el que entra): O(ventana) por bin en vez de reordenar.
+ */
+function medianaDeslizante(datos: Float32Array, radio: number): Float32Array {
+  const n = datos.length;
+  const salida = new Float32Array(n);
+  const ventana = new Float32Array(2 * radio + 2);
+  let tam = 0;
+  const insertar = (x: number) => {
+    let j = tam - 1;
+    while (j >= 0 && ventana[j] > x) {
+      ventana[j + 1] = ventana[j];
+      j--;
+    }
+    ventana[j + 1] = x;
+    tam++;
+  };
+  const quitar = (x: number) => {
+    let j = 0;
+    while (j < tam && ventana[j] !== x) j++;
+    for (; j < tam - 1; j++) ventana[j] = ventana[j + 1];
+    tam--;
+  };
+  for (let k = 0; k <= Math.min(radio, n - 1); k++) insertar(datos[k]);
+  for (let b = 0; b < n; b++) {
+    salida[b] = ventana[tam >> 1];
+    const sale = b - radio;
+    const entra = b + radio + 1;
+    if (sale >= 0) quitar(datos[sale]);
+    if (entra < n) insertar(datos[entra]);
+  }
+  return salida;
+}
+
+/**
+ * Espectros de magnitud por frame (solo los bins de interés). `null` en frames silenciosos.
+ * Devuelve también la tabla bin → clase de altura, ajustada por la afinación estimada.
+ */
+function espectrosPorFrames(pcm: Float32Array, sampleRate: number) {
   const ventana = ventanaHann(VENTANA);
   const binHz = sampleRate / VENTANA;
   const binMin = Math.max(1, Math.floor(FREQ_MIN / binHz));
   const binMax = Math.min(VENTANA / 2 - 1, Math.ceil(FREQ_MAX / binHz));
-  // Clase de altura de cada bin, calculada una vez.
-  const claseDeBin = new Int8Array(VENTANA / 2);
-  for (let b = binMin; b <= binMax; b++) {
-    const midi = 69 + 12 * Math.log2((b * binHz) / 440);
-    claseDeBin[b] = ((Math.round(midi) % 12) + 12) % 12;
-  }
-
+  const nBins = binMax - binMin + 1;
   const total = Math.floor((pcm.length - VENTANA) / HOP) + 1;
+  const mags: (Float32Array | null)[] = [];
   for (let f = 0; f < total; f++) {
     const inicio = f * HOP;
     const re = new Float64Array(VENTANA);
@@ -116,18 +162,66 @@ export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (
       energia += m * m;
     }
     if (energia / VENTANA < 1e-8) {
-      frames.push(null);
+      mags.push(null);
       continue;
     }
     fft(re, im);
-    const croma = new Array(12).fill(0);
-    for (let b = binMin; b <= binMax; b++) {
-      const mag = Math.sqrt(re[b] * re[b] + im[b] * im[b]);
-      croma[claseDeBin[b]] += Math.log1p(mag * 20);
-    }
-    frames.push(normalizar(croma));
+    const m = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) m[b] = Math.sqrt(re[binMin + b] ** 2 + im[binMin + b] ** 2);
+    mags.push(m);
   }
-  return frames;
+  return { mags, binHz, binMin, nBins };
+}
+
+/**
+ * Quita lo que no es armonía: (1) mediana en el TIEMPO por bin (lo tonal persiste varios frames,
+ * un golpe de batería o un platillo no), y (2) resta del suelo de ruido de banda ancha (mediana en
+ * FRECUENCIA en torno a cada bin), de modo que solo queden los picos de las notas. Es el
+ * «separador armónico/percusivo» clásico en versión ligera.
+ */
+function limpiarEspectros(mags: (Float32Array | null)[], nBins: number): (Float32Array | null)[] {
+  const R_TIEMPO = 3; // ±3 frames (~1,3 s): más largo que un golpe, más corto que un acorde
+  const R_FREQ = 20; // ±20 bins
+  const salida: (Float32Array | null)[] = new Array(mags.length).fill(null);
+  const ventanaT = new Float32Array(2 * R_TIEMPO + 1);
+  const tmp = new Float32Array(2 * R_TIEMPO + 1);
+  for (let f = 0; f < mags.length; f++) {
+    if (!mags[f]) continue;
+    const armonico = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) {
+      let n = 0;
+      for (let d = -R_TIEMPO; d <= R_TIEMPO; d++) {
+        const m = mags[f + d];
+        if (m) ventanaT[n++] = m[b];
+      }
+      armonico[b] = n > 0 ? medianaPequena(ventanaT, n, tmp) : 0;
+    }
+    const suelo = medianaDeslizante(armonico, R_FREQ);
+    const limpio = new Float32Array(nBins);
+    for (let b = 0; b < nBins; b++) limpio[b] = Math.max(0, armonico[b] - suelo[b]);
+    salida[f] = limpio;
+  }
+  return salida;
+}
+
+/** Croma por frames, cada uno normalizado en L2. `null` en frames silenciosos. */
+export function calcularCromaPorFrames(pcm: Float32Array, sampleRate: number): (number[] | null)[] {
+  if (!pcm || pcm.length < VENTANA) return [];
+  const { mags, binHz, binMin, nBins } = espectrosPorFrames(pcm, sampleRate);
+  const limpios = process.env.X_HPSS === '0' ? mags : limpiarEspectros(mags, nBins);
+  const claseDeBin = new Int8Array(nBins);
+  for (let b = 0; b < nBins; b++) {
+    const midi = 69 + 12 * Math.log2(((binMin + b) * binHz) / 440);
+    claseDeBin[b] = ((Math.round(midi) % 12) + 12) % 12;
+  }
+  const compresion = process.env.X_COMP || 'sqrt';
+  return limpios.map((m) => {
+    if (!m) return null;
+    const croma = new Array(12).fill(0);
+    for (let b = 0; b < nBins; b++) croma[claseDeBin[b]] += compresion === 'log' ? Math.log1p(m[b] * 20) : Math.sqrt(m[b]);
+    const total = croma.reduce((x, y) => x + y, 0);
+    return total > 0 ? normalizar(croma) : null;
+  });
 }
 
 const VENTANA_BAJO = 8192; // ~743 ms: los graves necesitan más resolución en frecuencia
@@ -232,7 +326,12 @@ export function detectarAcordesDesdePcm(
     return plantillas.map((p) => {
       let s = similitud(fr, p.vector);
       // El bajo toca la raíz: premio proporcional a la energía de graves que cae en ella.
-      if (bajo) s += PESO_BAJO * bajo[p.raiz];
+      if (bajo) {
+        if (MODO_BAJO === 'tonos') {
+          const tercera = p.calidad === 'min' ? 3 : 4;
+          s += PESO_BAJO * (bajo[p.raiz] + 0.5 * bajo[(p.raiz + 7) % 12] + 0.35 * bajo[(p.raiz + tercera) % 12]) / 1.85 * 1.0;
+        } else s += PESO_BAJO * bajo[p.raiz];
+      }
       if (p.calidad === "7") s -= 0.04;
       if (diatonicos.size > 0 && diatonicos.has(p.nombre)) s += 0.05;
       return s;
