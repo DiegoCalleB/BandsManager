@@ -67,6 +67,8 @@ const PAGE_SHEET_HEIGHT_MM = 297 - 2 * PAGE_MARGIN_Y_MM - 1;
 const PAGE_CONTENT_WIDTH_PX = mmToPx(210 - 2 * PAGE_MARGIN_X_MM) - 4;
 // Dos columnas: ancho de cada una = (ancho útil - separador) / 2. El separador son 29px: un filete
 // de 1px con 14px de aire a cada lado.
+// La nota general de la canción es secundaria: nunca más del 80 % del tamaño de las demás.
+const GENERAL_NOTE_MAX_SCALE = 0.8;
 const COLUMN_GUTTER_PX = 29;
 const COLUMN_WIDTH_PX = (PAGE_CONTENT_WIDTH_PX - COLUMN_GUTTER_PX) / 2;
 const MIN_USEFUL_RIGHT_LANE_PX = mmToPx(24);
@@ -211,7 +213,7 @@ function truncateTitleToWidth(
 /**
  * Decide, para una fila de canción concreta, si la nota (miembro, nota del bolo, nota general)
  * cabe en una columna a la derecha del título o si esa fila necesita caer a una línea propia
- * debajo — y calcula, con fitStackedNoteSegments, el tamaño de fuente común y las líneas ya
+ * debajo — y calcula, con fitStackedNoteSegments, el tamaño de cada nota y las líneas ya
  * apiladas (una por nota, cada una en su propia línea; el texto de una nota nunca se pierde: no
  * se parte en dos líneas ni se trunca). Si el título completo no deja hueco útil al lado, se
  * intenta truncarlo (nunca por debajo de MIN_TITLE_CHARS) antes de rendirse: la mayoría de las
@@ -239,6 +241,7 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
     segments.push({
       text: input.generalNote.trim(),
       className: "note-general",
+      maxScale: GENERAL_NOTE_MAX_SCALE,
     });
   }
 
@@ -346,11 +349,19 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
       input.titleText.length * 0.5;
     if (rightSpaceAvailable < MIN_USEFUL_RIGHT_LANE_PX) return null;
     const inlineFit = fitAt(rightSpaceAvailable);
+    // Al lado del título solo vale si TODAS las notas caben en una línea y las principales se
+    // leen con comodidad; si alguna tendría que partirse, mejor debajo, donde hay más ancho.
     const inlineFloorPx = Math.max(
       input.noteMinFontSizePx,
       input.noteMaxFontSizePx * INLINE_MIN_NOTE_FRACTION,
     );
-    if (inlineFit.lines.some((l) => l.fontSizePx < inlineFloorPx)) return null;
+    const unreadable = inlineFit.lines.some((l) => {
+      const floor = l.className === "note-general" ? input.noteMinFontSizePx : inlineFloorPx;
+      const overflows =
+        input.measure(l.text, l.fontSizePx, input.noteFontFamily, 700) > rightSpaceAvailable;
+      return l.fontSizePx < floor || overflows;
+    });
+    if (unreadable) return null;
     return { rightSpaceAvailable, inlineFit };
   };
 
@@ -901,6 +912,9 @@ function PdfExportModalBody({
  /* grayscale + multiply: el logo se funde con el papel en vez de pintar su caja. */
  filter: grayscale(100%);
  mix-blend-mode: multiply;
+ /* Borde difuminado: un logo con fondo opaco no deja un rectángulo duro, se desvanece. */
+ -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+ mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
  }
  .page-watermark-text {
  font-family:'Anton','Oswald', sans-serif;
@@ -1161,16 +1175,16 @@ function PdfExportModalBody({
  .song-notes-below {
  display: flex;
  flex-direction: column;
- gap: 0px;
+ gap: 2px;
  padding-left: ${showSongNumbers ? "40px" : "6px"};
  margin-top: -10px;
  line-height: 1;
  }
  .note-seg {
- /* overflow:visible a propósito: el texto nunca se trunca en JS (ver textFit.ts),
- así que tampoco debe cortarse aquí con elipsis por un posible desajuste de 1px
- entre la medición por canvas y el render real. white-space:nowrap sigue
- garantizando que una nota nunca salta a una segunda línea. */
+ /* overflow:visible a propósito: el texto nunca se trunca (ver textFit.ts). Cada nota
+ lleva su propio tamaño. Al lado del título (modo inline) se acepta solo si cabe en una
+ línea (nowrap); debajo, si ni al tamaño mínimo legible cabe, baja a una segunda línea
+ en vez de encogerse hasta ser ilegible (ver .song-notes-below .note-seg). */
  overflow: visible;
  white-space: nowrap;
  min-width: 0;
@@ -1313,6 +1327,10 @@ function PdfExportModalBody({
  padding-left: 0;
  align-items: center;
  margin-top: -2px;
+ }
+ .song-notes-below .note-seg {
+ white-space: normal;
+ line-height: 1.15;
  }
  .is-centered .song-notes-below .note-seg {
  /* sin la inclinación manuscrita no se montan sobre el título ni sobre la fila siguiente */

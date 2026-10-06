@@ -13,18 +13,24 @@
 export interface NoteSegment {
   text: string;
   className: string;
+  /**
+   * Fracción (0-1) del tamaño máximo que esta nota puede usar. Las notas secundarias (la nota
+   * general de la canción) llevan menos de 1 para no competir con la del músico o la del bolo.
+   */
+  maxScale?: number;
 }
 
 export interface NoteLine {
   text: string;
   className: string;
-  /** Tamaño propio de esta línea: igual al `fontSizePx` común salvo para la nota excepcional
-   * que ni al mínimo compartido cupo, que se encoge más por su cuenta (ver fitStackedNoteSegments). */
+  /** Tamaño propio de esta línea: el mayor (hasta su tope) con el que cabe en una línea, sin
+   * bajar nunca del mínimo legible. Si ni al mínimo cabe, se queda en el mínimo y el texto baja a
+   * una segunda línea (white-space normal en el CSS) en vez de encogerse hasta ser ilegible. */
   fontSizePx: number;
 }
 
 export interface StackedFitResult {
-  /** Tamaño común/compartido elegido para la fila (referencia; cada línea lleva además el suyo). */
+  /** Tamaño de la nota más grande de la fila (referencia; cada línea lleva el suyo). */
   fontSizePx: number;
   lines: NoteLine[];
 }
@@ -40,29 +46,12 @@ export interface FitOptions {
 }
 
 /**
- * Suelo absoluto de tamaño de fuente: por debajo de esto el texto deja de ser legible, así que
- * se acepta (excepción rara y documentada, no un bug silencioso) que una nota patológicamente
- * larga se quede en este tamaño aunque no llegue a caber del todo, en vez de truncarse o
- * partirse en dos líneas.
- */
-export const NOTE_FONT_HARD_FLOOR_PX = 6;
-
-/** Encoge el tamaño de UNA nota concreta (nunca su texto) hasta que quepa, con suelo absoluto. */
-function shrinkFontToFit(text: string, startSizePx: number, maxWidthPx: number, measure: FitOptions['measure'], stepPx: number): number {
-  let size = startSizePx;
-  while (size > NOTE_FONT_HARD_FLOOR_PX && measure(text, size) > maxWidthPx) {
-    size -= stepPx;
-  }
-  return Math.max(size, NOTE_FONT_HARD_FLOOR_PX);
-}
-
-/**
- * Ajusta cada segmento (nota) a su propia línea, apiladas, con un único tamaño de fuente común
- * a todas (el mayor que permite que CADA nota, individualmente, quepa en una sola línea). Cada
- * nota se queda SIEMPRE en una única línea con su texto completo — nunca se parte en dos líneas
- * ni se trunca. Si alguna nota concreta ni al tamaño mínimo compartido cabe entera, esa nota
- * (solo esa) se encoge más por su cuenta (ver shrinkFontToFit) hasta caber, o hasta el suelo
- * absoluto si ni así llega.
+ * Ajusta cada nota a su propia línea, apiladas, con un tamaño de fuente PROPIO para cada una: el
+ * mayor, hasta su tope (`maxFontSizePx` por su `maxScale`), con el que cabe en `maxWidthPx`.
+ * Antes todas compartían un único tamaño, así que una nota general larga arrastraba a la nota
+ * del músico (la que más importa leer) hasta el mínimo y salía diminuta.
+ * Nunca baja de `minFontSizePx`: si una nota ni a ese tamaño cabe en una línea, conserva su
+ * texto íntegro (jamás se trunca con "…") y el CSS la baja a una segunda línea.
  */
 export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions): StackedFitResult {
   const nonEmpty = segments.filter((s) => s.text && s.text.trim().length > 0);
@@ -72,21 +61,19 @@ export function fitStackedNoteSegments(segments: NoteSegment[], opts: FitOptions
 
   const { maxFontSizePx, minFontSizePx, maxWidthPx, measure, fontStepPx = 0.5 } = opts;
 
-  let fontSizePx = minFontSizePx;
-  for (let size = maxFontSizePx; size >= minFontSizePx; size -= fontStepPx) {
-    if (nonEmpty.every((seg) => measure(seg.text, size) <= maxWidthPx)) {
-      fontSizePx = size;
-      break;
+  const lines: NoteLine[] = nonEmpty.map((seg) => {
+    const cap = Math.max(minFontSizePx, maxFontSizePx * (seg.maxScale ?? 1));
+    let size = minFontSizePx;
+    for (let s = cap; s >= minFontSizePx; s -= fontStepPx) {
+      if (measure(seg.text, s) <= maxWidthPx) {
+        size = s;
+        break;
+      }
     }
-  }
+    return { text: seg.text, className: seg.className, fontSizePx: size };
+  });
 
-  const lines: NoteLine[] = nonEmpty.map((seg) =>
-    measure(seg.text, fontSizePx) <= maxWidthPx
-      ? { text: seg.text, className: seg.className, fontSizePx }
-      : { text: seg.text, className: seg.className, fontSizePx: shrinkFontToFit(seg.text, fontSizePx, maxWidthPx, measure, fontStepPx) }
-  );
-
-  return { fontSizePx, lines };
+  return { fontSizePx: Math.max(...lines.map((l) => l.fontSizePx)), lines };
 }
 
 /** Medidor real basado en canvas, para usar en producción (impresión y vista previa). */
