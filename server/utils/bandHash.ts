@@ -1,7 +1,13 @@
 /**
  * Band ID Hashing & Token Utility (Server-side)
- * Obfuscates internal band IDs (e.g. 'band-bakandeya', 'reg-1748291...')
- * into secure, clean URL tokens for public EPK and Fans landing pages.
+ * Ofusca ids internos de banda (p. ej. 'band-bakandeya') en tokens de URL cortos y limpios para
+ * las páginas públicas de EPK y fans.
+ *
+ * ⚠️ NO ES UN SECRETO NI UN CONTROL DE ACCESO. Es un XOR con una constante que está en el código
+ * (y en el bundle del cliente): cualquiera que conozca el id de una banda calcula su token, y
+ * cualquiera que vea un token recupera el id. Sirve solo para que las URLs públicas no enseñen el
+ * id en claro. Prohibido usarlo para autorizar nada: eso va con tokens firmados (HMAC) como los de
+ * `server/utils/trackingSeguro.ts`.
  */
 
 const SALT = 'bandmanager_secure_salt_2025';

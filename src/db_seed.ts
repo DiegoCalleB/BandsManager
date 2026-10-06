@@ -72,30 +72,6 @@ export const INITIAL_LEADS: Lead[] = [
   ...HERDEIROS_LEADS,
   ...MOP_LEADS,
   {
-    id: "lead-test-telemetry-diego",
-    nombre_sala: "Sala Mon Live (Test Telemetría)",
-    ciudad: "Madrid",
-    region: "Comunidad de Madrid",
-    aforo: 800,
-    genero: "Indie / Rock / Fusión",
-    email_contacto: "diego.delacalleb@gmail.com",
-    telefono: "+34 914 455 678",
-    instagram: "@monlivemadrid",
-    fuente: "Test Telemetría",
-    estado: "pendiente_aprobacion",
-    pitch_generado: `Hola Diego,
-
-Nos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Sala Mon es uno de los espacios con mejor acústica y ambiente de conciertos en directo en Madrid.
-
-Estamos preparando el tramo de otoño de nuestra gira y nos encantaría presentar el directo en vuestra sala. Tenéis el dossier oficial interactivo en el enlace adjunto.
-
-¿Tendríais alguna fecha disponible para valorar en noviembre?
-
-Un saludo cordial,
-Bakandeya Booking`,
-    notas: "*** Sala de prueba creada para verificar la telemetría, apertura de emails y clics en el dossier en tiempo real ***",
-  },
-  {
     id: "lead-1",
     nombre_sala: "Apolo",
     ciudad: "Barcelona",

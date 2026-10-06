@@ -2,6 +2,16 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let supabaseInstance: SupabaseClient | undefined;
 
+/** Rol que declara una clave JWT de Supabase («service_role», «anon»...), sin verificar la firma. */
+export function rolDeClaveSupabase(jwt: string): string | null {
+  try {
+    const payload = JSON.parse(Buffer.from(jwt.split(".")[1] || "", "base64url").toString("utf8"));
+    return typeof payload?.role === "string" ? payload.role : null;
+  } catch {
+    return null;
+  }
+}
+
 export function getSupabase(): SupabaseClient {
   if (supabaseInstance) return supabaseInstance;
 
@@ -16,10 +26,23 @@ export function getSupabase(): SupabaseClient {
     process.env.VITE_SUPABASE_ANON_KEY
   ].filter(Boolean) as string[];
 
-  const jwtKey = keys.find(k => k.startsWith("eyJ")) || keys[0] || "";
+  // La service_role manda siempre, sea cual sea su formato. Antes se elegía «la primera que empiece
+  // por eyJ»: si la service_role está en el formato nuevo (sb_secret_...), ganaba la anon (JWT) en
+  // silencio y el backend pasaba a depender de políticas RLS permisivas.
+  const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const jwtKey = serviceRole || keys.find(k => k.startsWith("eyJ")) || keys[0] || "";
 
   if (!url || !jwtKey) {
     throw new Error("Supabase URL or Key is missing in environment variables.");
+  }
+
+  // El backend debe usar la clave service_role (salta RLS). Con la anon, todo depende de políticas
+  // permisivas tipo «USING (true)», que abren las tablas a cualquiera que tenga esa clave pública.
+  const rol = rolDeClaveSupabase(jwtKey);
+  if (rol && rol !== "service_role") {
+    console.warn(
+      `[Supabase] ⚠️ El servidor está usando una clave con rol '${rol}', no 'service_role'. Define SUPABASE_SERVICE_ROLE_KEY en Railway: con la clave anon la seguridad de los datos depende de políticas RLS permisivas.`
+    );
   }
 
   supabaseInstance = createClient(url, jwtKey, {
