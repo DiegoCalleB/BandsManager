@@ -1,3 +1,5 @@
+// Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas de contenido.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

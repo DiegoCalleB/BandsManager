@@ -1,3 +1,6 @@
+// Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
+// `getGlobalPitchFeedbackSummary`.
+
 import express from "express";
 import crudRouter from "./leads/crud.js";
 import enrichmentRouter from "./leads/enrichment.js";

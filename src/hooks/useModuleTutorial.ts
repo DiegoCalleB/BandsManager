@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { ModuleTutorialId } from '../types/tutorial';
 import { isTutorialSeen, markTutorialSeen, isOnboardingCompleted, TUTORIAL_STORAGE_PREFIX } from '../utils/userPreferences';
 
+/**
+ * Abre el tutorial de un módulo la primera vez que se entra y recuerda que ya se vio
+ * (`bm_tutorial_seen_*`).
+ */
 export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime = true) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);

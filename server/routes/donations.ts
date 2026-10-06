@@ -1,3 +1,6 @@
+// Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationRateLimiter`;
+// excepción de TDD por tocar dinero (AGENTS.md §5.3.1).
+
 import express from "express";
 import Stripe from "stripe";
 import { dbGetAiDebtCents } from "../db.js";

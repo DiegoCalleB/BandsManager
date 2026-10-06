@@ -1,3 +1,6 @@
+// AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Replicate/fal, con
+// webhook) y utilidades de audio. Descargas externas siempre vía ssrfGuard (AGENTS.md §2.2).
+
 import express from 'express';
 import { GoogleGenAI } from '@google/genai';
 import { requireAuth } from '../state.js';

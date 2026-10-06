@@ -1,3 +1,6 @@
+// Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (YouTube), detección de
+// cues y gestión de cookies de yt-dlp. Ver riesgo legal en AGENTS.md §8.
+
 import express from "express";
 import path from "path";
 import { createHash } from "crypto";

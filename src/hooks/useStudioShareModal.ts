@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Song, SongAudioIdea } from '../types';
 import { formatSongShareText, formatSongIdeaShareText } from '../utils/shareUtils';
 
+/** Estado del modal de compartir una canción o una idea desde el estudio. */
 export function useStudioShareModal(song: Song) {
   const [shareModalData, setShareModalData] = useState<{
     isOpen: boolean;

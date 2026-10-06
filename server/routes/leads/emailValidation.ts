@@ -1,3 +1,5 @@
+// Validación de emails de leads (`/validate-emails`).
+
 import express from "express";
 import { requireAuth, loadState } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";

@@ -17,7 +17,6 @@ export default tseslint.config(
       'node_modules/**',
       'public/**',
       'coverage/**',
-      'app/applet/**',
       'assets/.aistudio/**',
     ],
   },

@@ -1,3 +1,6 @@
+// CRUD de leads, mensajes del hilo y proveedores de IA disponibles. Límites de plan vía
+// `checkRecordLimit`.
+
 import express from "express";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";

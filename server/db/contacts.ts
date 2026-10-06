@@ -1,3 +1,5 @@
+// Contactos de la banda (`band_contacts`): lectura, upsert y borrado (también en bloque).
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

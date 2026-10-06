@@ -1,3 +1,5 @@
+// Plantillas de email: listar, guardar, previsualizar, optimizar y generar todas con IA.
+
 import express from 'express';
 import {
   requireAuth,

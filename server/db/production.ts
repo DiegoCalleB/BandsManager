@@ -1,3 +1,6 @@
+// Producción de directo: run of show (`run_of_show`) y checklists de equipo (`gear_checklists`) por
+// fecha.
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

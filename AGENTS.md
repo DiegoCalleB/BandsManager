@@ -393,6 +393,10 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    .gemini/          Skills nativas para Google AI Studio y Gemini (`.gemini/skills/`)
    docs/
      knowledge_graph/ Vault de Obsidian nativo (.obsidian/app.json y graph.json) sincronizable vía `npm run graph:sync`
+     planes/          Especificaciones de producto aún no implementadas del todo (anti-fraude/acuerdos, tokens IA, BandSplit) — enlazadas desde BACKLOG.md
+     referencia/      Documentación técnica de apoyo (arquitectura de audio/stems, DESIGN_SYSTEM, manual de negociación del Redactor, guías para AI Studio y multi-herramienta)
+     design/          Notas de diseño puntuales (p. ej. comisión de Stripe Connect en bolos)
+   README.md          Presentación del proyecto y quickstart (reglas operativas: este archivo)
    CLAUDE.md          Pointer corto a este archivo — Claude Code lo lee al arrancar
    ```
    Todas las carpetas de skills (`skills/`, `.claude/skills/`, `.opencode/skills/`, `.gemini/skills/`) comparten la misma definición estandarizada y están 100% sincronizadas para operar con cualquier agente (Claude Code, Open Code, Cursor, Gemini). Si editas un `SKILL.md`, cópialo a todas las ubicaciones en el mismo commit.
@@ -401,7 +405,14 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 2. **Ediciones quirúrgicas:** diffs mínimos y contiguos sobre el archivo existente, no reescrituras completas salvo que el cambio lo justifique.
 3. **Cero salida redundante:** respuestas directas, concisas y orientadas a la acción.
 4. **Sin documentos de planificación por defecto:** no crear `.md` de plan/tareas/resumen de cambios (`implementation_plan.md`, `task.md`, `walkthrough.md`...) a menos que se pida explícitamente — ni existen en este repo ni encajan con cómo trabaja Claude Code por defecto; la herramienta de seguimiento de tareas nativa del agente (cuando exista) cumple esa función sin ensuciar el repo con archivos que nadie vuelve a abrir.
-5. **Commits:** mensaje corto en imperativo describiendo el qué (`fix:`/`feat:`/`docs:`/`test:` como prefijo cuando el cambio encaja claramente en una categoría, sin forzarlo si no). Un commit = un cambio coherente; no mezclar refactor y comportamiento (§5.4). No abrir PR salvo que se pida explícitamente — el flujo por defecto en este repo es commit + push directo a la rama de trabajo.
+5. **Commits:** mensaje corto en imperativo describiendo el qué, **con prefijo Conventional Commits obligatorio** (`feat:`, `fix:`, `perf:`, `refactor:`, `docs:`, `test:`, `chore:`, `ci:`, `build:`, `style:`, `revert:`; ver §7.6). Lo comprueba el hook `commit-msg` de Husky (commitlint) y la CI en los PR. Un commit = un cambio coherente; no mezclar refactor y comportamiento (§5.4). No abrir PR salvo que se pida explícitamente — el flujo por defecto en este repo es commit + push directo a la rama de trabajo.
+
+6. **Versionado (SemVer, automático con release-please):** la versión es `MAYOR.MENOR.PARCHE` y **no se sube a mano** ni se edita `CHANGELOG.md`. Se deduce de los commits que llegan a `main`:
+   * `fix:` → parche (`2.0.0 → 2.0.1`). `feat:` → menor (`2.0.1 → 2.1.0`). `feat!:` o un pie `BREAKING CHANGE:` → mayor. `docs:`, `test:`, `chore:`, `ci:`, `build:` y `style:` no suben nada.
+   * **Versión base `2.0.0`** (decisión del autor, no hay releases anteriores en este repositorio). Desde `1.0.0` rige SemVer estricto: un cambio incompatible sube el mayor (`2.1.0 → 3.0.0`), no el menor.
+   * **Qué cuenta como incompatible (`!`):** una migración SQL que exige intervención manual, un cambio de contrato en la API pública, quitar una funcionalidad o cambiar el límite de un plan.
+   * El workflow `.github/workflows/release-please.yml` mantiene abierto un PR «release X.Y.Z» con `package.json`, `.release-please-manifest.json` y `CHANGELOG.md`. **Fusionarlo crea el tag `vX.Y.Z` y la Release de GitHub.** Ese PR es lo único que cambia la versión.
+   * La versión se expone en `/api/health` (`version`, `commit`), se imprime al arrancar el servidor, se inyecta en el cliente como `__APP_VERSION__` y se usa como `release` de Sentry (`bandmanager@X.Y.Z`). La lee `server/utils/version.ts`; el test `server/utils/__tests__/version.test.ts` vigila que `package.json` y el manifiesto no diverjan.
 
 ---
 

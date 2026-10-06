@@ -1,3 +1,6 @@
+// Cuentas de email SMTP/IMAP por banda (`band_email_accounts`). `toSafeEmailAccountResponse` oculta
+// `app_password` (guardado sin cifrar: ver riesgo en AGENTS.md §8).
+
 import { getSupabase, cleanBandId } from "./core.js";
 
 export type EmailProvider = "gmail" | "outlook" | "other";

@@ -1,3 +1,5 @@
+// Pagos de la banda (`payments`).
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

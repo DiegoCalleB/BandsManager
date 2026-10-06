@@ -9,6 +9,7 @@
 // (una banda sin cuenta de email conectada, una sala con email inválido...) y ya tiene su propio
 // panel. Esto es solo para los bugs que nadie prevé.
 import * as Sentry from "@sentry/node";
+import { sentryRelease } from "./version.js";
 
 let habilitado = false;
 
@@ -18,6 +19,7 @@ export function initErrorTracking(): void {
   Sentry.init({
     dsn,
     environment: process.env.NODE_ENV || "production",
+    release: sentryRelease(),
     tracesSampleRate: 0
   });
   habilitado = true;

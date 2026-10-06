@@ -1,3 +1,5 @@
+// Integración con Spotify: estado, previsualización, búsqueda e importación de discografía.
+
 import express from "express";
 import { requireAuth, loadState, saveState } from "../state.js";
 import {

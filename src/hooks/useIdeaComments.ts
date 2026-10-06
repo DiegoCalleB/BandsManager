@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Song, SongAudioIdea, AudioComment } from '../types';
 
+/** Comentarios con marca de tiempo sobre una idea de audio de una canción. */
 export function useIdeaComments(
   song: Song,
   onUpdateSong: (updatedSong: Song) => void,

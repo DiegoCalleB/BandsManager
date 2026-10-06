@@ -1,3 +1,6 @@
+// Campañas de booking masivas: CRUD, campaña activa y registro de entrenamiento de tono. Scoping por
+// `band_id` de sesión.
+
 import express from "express";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";

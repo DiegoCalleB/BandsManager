@@ -1,3 +1,6 @@
+// Carga del estado en memoria desde Supabase (`loadStateFromSupabase`) e invalidación de caché por
+// banda (AGENTS.md §1).
+
 import { getSupabase, cleanBandId } from "./core.js";
 
 import { dbGetRegisteredBands, ensureRegisteredBandExists } from "./bands.js";

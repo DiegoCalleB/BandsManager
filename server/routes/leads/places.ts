@@ -1,3 +1,6 @@
+// Descubrimiento de salas/festivales: búsqueda en Places, campañas masivas, extracción de emails,
+// importación y artistas similares.
+
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";

@@ -1,3 +1,5 @@
+// Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
+
 import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';

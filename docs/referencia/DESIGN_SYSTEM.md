@@ -1,6 +1,6 @@
 # Espectro — Sistema de Diseño Parametrizado
 
-**Autoridad:** [`skills/visual-identity/SKILL.md`](.claude/skills/visual-identity/SKILL.md)
+**Autoridad:** [`skills/visual-identity/SKILL.md`](../../.claude/skills/visual-identity/SKILL.md)
 
 ## Visión general
 
@@ -124,7 +124,7 @@ const pref = user?.themePreference; // 'light' | 'dark' | 'classic' | 'system'
 
 **Antes:** Buscar 200+ instancias de un color, cambiar cada una.
 
-**Ahora:** Edita [`src/styles/tokens.css`](src/styles/tokens.css) una sola vez.
+**Ahora:** Edita [`src/styles/tokens.css`](../../src/styles/tokens.css) una sola vez.
 
 ```css
 /* Cambiar teal en TODOS lados (Tours/Salas) */
@@ -179,7 +179,7 @@ El script reemplaza:
 - [ ] **Probado en claro, oscuro, clásico.**
 - [ ] **Series de datos usan `<Onda>`.** No Chart.js ni D3.
 - [ ] **Estado vacío tiene voz propia.** No "No hay datos".
-- [ ] Checklist anti-plantilla (§8 en [`skills/visual-identity/SKILL.md`](.claude/skills/visual-identity/SKILL.md)).
+- [ ] Checklist anti-plantilla (§8 en [`skills/visual-identity/SKILL.md`](../../.claude/skills/visual-identity/SKILL.md)).
 - [ ] **Cabe en 3 bloques en móvil (~390 px).**
 
 ### Comandos útiles
@@ -259,9 +259,9 @@ A: El diseño anterior, conservado como tema alternativo. Un usuario que no quie
 
 ## Referencias
 
-- [Espectro Design Skill](.claude/skills/visual-identity/SKILL.md) — Autoridad estética
-- [AGENTS.md](AGENTS.md) — Reglas de desarrollo (§6 — Simplicidad visual)
-- [tokens.css](src/styles/tokens.css) — Fuente de verdad de colores y radios
+- [Espectro Design Skill](../../.claude/skills/visual-identity/SKILL.md) — Autoridad estética
+- [AGENTS.md](../../AGENTS.md) — Reglas de desarrollo (§6 — Simplicidad visual)
+- [tokens.css](../../src/styles/tokens.css) — Fuente de verdad de colores y radios
 - [Scripts]
 
 (scripts/design-audit.js, scripts/design-fixer.js) — Herramientas automatizadas

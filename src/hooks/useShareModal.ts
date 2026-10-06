@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Song, Setlist } from '../types';
 import { formatSongShareText, formatSetlistShareText } from '../utils/shareUtils';
 
+/** Estado del modal de compartir una canción o un setlist. */
 export function useShareModal(songs: Song[], bName: string) {
   const [shareModalData, setShareModalData] = useState<{
     isOpen: boolean;

@@ -1,6 +1,10 @@
 import { useState, FormEvent } from 'react';
 import { Lead, InteractionLog } from '../types';
 
+/**
+ * Registro de interacciones manuales (llamada, WhatsApp, email, reunión) sobre el lead
+ * seleccionado.
+ */
 export function useInteractionLog(
   selectedLead: Lead | null,
   setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,

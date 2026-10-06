@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { apiFetch } from '../utils/api';
 import { Lead } from '../types';
 
+/** Simulación de negociación con el lead seleccionado. */
 export function useNegotiationSimulation(
   selectedLead: Lead | null,
   setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,

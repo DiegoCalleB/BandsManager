@@ -1,3 +1,5 @@
+// CRUD de hilos de ejemplo que alimentan el tono del Redactor.
+
 import express from "express";
 import { requireAuth } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";

@@ -8,6 +8,7 @@ export interface ToastNotification {
   timestamp: number;
 }
 
+/** Cola de toasts (éxito, error, info, aviso). */
 export function useNotificationSystem() {
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
 

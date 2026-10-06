@@ -1,3 +1,6 @@
+// Bandas registradas (`registered_bands`) y migración de planes. Lectura y escritura siempre con el
+// `bandId` resuelto por sesión (AGENTS.md §2.1).
+
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 
 export async function dbMigrateAllPlansToNewTiers() {

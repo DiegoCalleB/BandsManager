@@ -42,6 +42,10 @@ const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
   },
 ];
 
+/**
+ * Carga el estado de la app desde la API (leads, ensayos, conciertos, posts, pagos, mensajes,
+ * métricas...) y expone sus operaciones.
+ */
 export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [rehearsals, setRehearsals] = useState<Rehearsal[]>([]);

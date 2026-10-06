@@ -21,6 +21,7 @@ const pitchShiftMap = new WeakMap<HTMLMediaElement, NodeRecord>();
  * Hook to apply real-time pitch shifting (transposition) to an HTMLAudioElement using Tone.js / Web Audio API.
  * Ensures smooth, uninterrupted playback when semitones change dynamically while audio is playing.
  */
+/** Transposición en semitonos de un `HTMLAudioElement` con Tone.js. */
 export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShiftProps) {
   const currentAudioElRef = useRef<HTMLAudioElement | null>(null);
 

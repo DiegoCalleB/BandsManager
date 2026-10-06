@@ -1,3 +1,6 @@
+// Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-copy`, con
+// `iaRateLimiter`).
+
 import express from "express";
 import { KNOWN_LOCATIONS, CANONICAL_LOCATION_MAP, getRegionForCity } from "../../src/constants/regions.js";
 import { Lead, Rehearsal, Concert } from "../../src/types.js";

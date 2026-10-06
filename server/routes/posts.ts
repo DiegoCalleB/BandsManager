@@ -1,3 +1,5 @@
+// Publicaciones sociales y cuentas conectadas de la banda.
+
 import express from "express";
 import { SocialPost } from "../../src/types.js";
 import { loadState, saveState, requireAuth } from "../state.js";

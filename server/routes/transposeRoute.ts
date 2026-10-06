@@ -1,3 +1,5 @@
+// Transposición de audio (`/transpose-audio`).
+
 import { Router } from 'express';
 import { requireAuth } from '../state.js';
 import { getTargetBandId } from '../utils/bandAccess.js';

@@ -1,3 +1,6 @@
+// Métricas de la banda y de redes: CRUD, sincronización y métricas reales
+// (YouTube/Instagram/TikTok).
+
 import express from "express";
 import { SocialMetric } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth } from "../state.js";

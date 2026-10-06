@@ -1,7 +1,7 @@
 {
   "name": "bandmanager-ai",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -83,6 +83,8 @@
     "youtube-transcript": "^1.3.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
@@ -114,7 +116,7 @@
   "lint-staged": {
     "**/*.{ts,tsx}": "eslint --fix",
     "src/**/*.{ts,tsx,css}": "node scripts/design-audit.js",
-    "{AGENTS,CLAUDE,TOOL_COMPATIBILITY,AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
+    "{AGENTS,CLAUDE,docs/referencia/TOOL_COMPATIBILITY,docs/referencia/AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
     "skills/**/*.md": "node scripts/verify-docs-refs.cjs"
   }
 }

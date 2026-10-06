@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, FormEvent, MouseEvent } from 'react';
 import { Lead, EPKConfig } from '../types';
 import { normalizeType } from '../utils/bookingUtils';
 
+/** Chips de ciudad para filtrar leads según la sección (salas, medios, grupos). */
 export function useCityChips(
   leads: Lead[],
   sectionTab: 'salas' | 'medios' | 'grupos',

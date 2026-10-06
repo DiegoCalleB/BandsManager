@@ -1,3 +1,6 @@
+// Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de plan y créditos IA
+// (`PLAN_CREDITS`). El plan solo cambia por Stripe (AGENTS.md §1 y §2.3).
+
 import express from "express";
 import Stripe from "stripe";
 import { dbRecordDealSupportFromSession, dbRecordDealSupportRefund } from "../db/dealSupport.js";

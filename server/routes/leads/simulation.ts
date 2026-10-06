@@ -1,3 +1,5 @@
+// Generación de emails simulados para la simulación de booking.
+
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, requireAuth } from "../../state.js";

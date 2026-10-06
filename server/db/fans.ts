@@ -1,3 +1,5 @@
+// Fans de la banda (`fans`) y lista de espera de músicos (`musicians_waitlist`).
+
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 

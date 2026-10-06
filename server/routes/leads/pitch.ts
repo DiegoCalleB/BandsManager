@@ -1,3 +1,6 @@
+// Generación y auditoría de pitches: multi-propuesta, regenerar, revertir y entrenar Tone DNA.
+// Directrices de redacción: AGENTS.md §3.
+
 import express from "express";
 import { loadState, saveState, requireAuth, getAutonomyConfigForBand } from "../../state.js";
 import { dbGetLeadById, dbUpsertLead, dbGetCategoryTemplates, dbRecordCampaignPitchTraining } from "../../db.js";

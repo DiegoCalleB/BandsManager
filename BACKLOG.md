@@ -44,7 +44,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   3. *Políticas de Cancelación Claras:* Flexible (hasta 15 días), Moderada (50% con <10 días para gastos de viaje), Estricta (100% con <72h) y Cláusula de Fuerza Mayor.
   4. *Firma Táctil Móvil:* Canvas de firma manuscrita para el programador de la sala sin necesidad de registro ni descargas de apps.
 * **Por qué importa:** Elimina el pánico al plantón y al impago para las bandas, profesionaliza la relación con la sala y abre una vía de monetización masiva mediante Booking Fees y Take-Rate.
-* **Documentos relacionados:** `plan_anti_fraude.md`
+* **Documentos relacionados:** `docs/planes/plan_anti_fraude.md`
 * **Estado:** Especificado. Listo para crear tabla `booking_deals`, endpoints `/api/contracts` bajo `getTargetBandId` y vista pública responsive.
 
 ### 3. Motor de Crecimiento Viral y Automatización de Redes con ManyChat (Doble Nivel)
@@ -64,7 +64,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Por qué importa:** Genera un flujo constante y gratuito de nuevas bandas y salas hacia la plataforma sin necesidad de mantener un blog externo en WordPress ni pagar campañas de publicidad caras.
 * **Estado:** Diseñado. Listo para montar las rutas públicas dinámicas y componentes de captación.
 
-### 5. Plan Maestro Defensivo, Acuerdos 1-Click y Directo (`plan_anti_fraude.md`)
+### 5. Plan Maestro Defensivo, Acuerdos 1-Click y Directo (`docs/planes/plan_anti_fraude.md`)
 * **Qué:** Sistema completo de cierre de conciertos sin fricción con enlace público 1-Click (`/deal/view/:token`), firma electrónica simple válida bajo Reglamento eIDAS (UE 910/2014) con hash SHA-256 inmutable, minimización estricta de datos RGPD, detección de atribución CRM sin espionaje (el *Nudge Elegante* de reactivación) y las 6 innovaciones agénticas de directo:
   1. *WhatsApp Magic Share* para técnico de sonido (ficha de cabina live) y portero (lista de puerta táctil).
   2. *Modo Escenario Offline* con Service Workers e IndexedDB a prueba de sótanos sin cobertura.
@@ -73,18 +73,18 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   5. *Director de Concierto en Vivo* con ajuste dinámico del Setlist por compatibilidad tonal y toque de queda.
   6. *Smart Settlement Post-Show* integrado con BandSplit.
 * **Por qué importa:** Resuelve el problema del "bypass" del CRM mediante incentivos de valor real en vez de sanciones policiales, protege legal y fiscalmente a las bandas y salas, y posiciona a la plataforma como la más avanzada del mundo en tecnología de directo.
-* **Documento maestro:** `plan_anti_fraude.md`
+* **Documento maestro:** `docs/planes/plan_anti_fraude.md`
 * **Estado:** Especificado y validado en arquitectura. Listo para implementar P0 (Esquema SQL + Endpoints `/api/deals` bajo `getTargetBandId` + Vista Web Responsive 1-Click).
 
-### 6. Plan Económico y Técnico de IA (`plan_gestion_tokens_ia.md`)
+### 6. Plan Económico y Técnico de IA (`docs/planes/plan_gestion_tokens_ia.md`)
 * **Qué:** Modelo híbrido de dos niveles para el uso de modelos de lenguaje y generación multimedia:
   1. *Texto Ilimitado con Fair Use* (Scout, Redactor, Lector, Contestador, Chat) protegido por una ventana móvil de 5 horas que resetea cuota cada 15 minutos, sin que el usuario sienta barreras artificiales de recarga.
   2. *Cupos de Estudio Multimedia* para tareas pesadas de GPU/CPU (Separación de Stems con Replicate/Iris y Renderizado de Reels con Remotion/FFmpeg), con pases mensuales + acumulador permanente (*Rollover con tope*) y bonificaciones vitalicias por conciertos confirmados (`studio_bonus_stems`, `studio_bonus_reels`).
 * **Por qué importa:** Garantiza un margen bruto superior al 98% (coste por usuario activo < 0,15 €/mes), elimina la frustración de la "moneda virtual de créditos" en tareas conversacionales y alinea la economía del SaaS con la rentabilidad empresarial.
-* **Documento maestro:** `plan_gestion_tokens_ia.md`
+* **Documento maestro:** `docs/planes/plan_gestion_tokens_ia.md`
 * **Estado:** Especificado y validado económicamente. Listo para aterrizar en `planLimits.ts` y controladores de billing.
 
-### 7. BandSplit / TourCount: El "CFO de Banda con IA" para Gira y Local (`splitband.md`)
+### 7. BandSplit / TourCount: El "CFO de Banda con IA" para Gira y Local (`docs/planes/splitband.md`)
 * **Qué:** Mucho más que un Splitwise tradicional: el primer Director Financiero de Banda con IA (AI Band CFO) para bolos y vida de local:
   1. *Dualidad Gira vs. Día a Día*: Cubre tanto los gastos del viaje (gasoil, furgoneta, peajes) como la rutina del local de ensayo (Dani compró una pantalla 4x12, Javi compró cuerdas/cables, alquiler mensual del local, camisetas de merch).
   2. *Los 4 Caminos de Compensación*:
@@ -96,7 +96,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   4. *Árbitro Imparcial con "Pacto de Banda"*: Mediador neutral que resuelve discrepancias objetivamente según las reglas acordadas por el grupo.
   5. *Tour CFO Predictivo*: Cálculo en vivo del umbral de rentabilidad de la gira durante el trayecto y kilometraje GPS automático.
 * **Por qué importa:** Resuelve la causa número 1 de discusiones y ruptura de bandas (el dinero y las cuentas tanto en gira como en el local), automatiza la contabilidad y protege el patrimonio de los músicos.
-* **Documento maestro:** `splitband.md`
+* **Documento maestro:** `docs/planes/splitband.md`
 * **Estado:** Especificado con arquitectura de IA, modelo de compensación y esquema DDL listos.
 
 ---

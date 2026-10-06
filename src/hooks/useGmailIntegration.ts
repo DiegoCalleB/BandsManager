@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../utils/gmail';
 import { Lead } from '../types';
 
+/** Conexión con Gmail y acciones sobre el hilo del lead seleccionado. */
 export function useGmailIntegration(
   selectedLead: Lead | null,
   setSelectedLead: (updater: (prev: Lead | null) => Lead | null) => void,
