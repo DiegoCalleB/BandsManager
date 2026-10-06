@@ -47,12 +47,9 @@ CREATE TABLE IF NOT EXISTS band_social_accounts (
     account_id TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_band_social_accounts_band ON band_social_accounts (band_id);
+-- RLS activada y SIN políticas: solo la clave de servicio (que se salta RLS) puede leer o escribir.
+-- Las claves públicas (anon) no ven nada. Es lo más estricto y el servidor solo usa la de servicio.
 ALTER TABLE band_social_accounts ENABLE ROW LEVEL SECURITY;
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'band_social_accounts' AND policyname = 'Permitir acceso total al backend') THEN
-    CREATE POLICY "Permitir acceso total al backend" ON band_social_accounts FOR ALL USING (true);
-  END IF;
-END $$;
 
 -- PARTE B — Deriva inversa: existen en producción (se crearon a mano) pero no en el repo.
 -- En producción esto no hace nada; en una base nueva evita que el código falle.
