@@ -34,6 +34,7 @@ import { LineaTiempoAcordes } from "./chords/LineaTiempoAcordes";
 import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
+import { ProfesorIA } from "./chords/ProfesorIA";
 import { analizarArmonia, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, type EstiloArmonia } from "../utils/estiloArmonia";
@@ -255,6 +256,17 @@ export function SongChordsViewerModal({
 
   // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
   // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
+  // Pide la explicación del profesor al servidor (que valida y guarda) y la refleja en la canción.
+  const pedirProfesor = async (opciones: { nivel: string; instrumento: string; forzar: boolean }) => {
+    const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/profesor-armonia`, {
+      method: "POST",
+      body: JSON.stringify(opciones),
+    });
+    if (!data?.profesor) throw new Error("El servidor no devolvió ninguna explicación.");
+    if (analisisAcordes) onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, profesor: data.profesor } });
+    return data.profesor;
+  };
+
   const handleCorregirAcordes = (segmentos: AnalisisAcordes["segmentos"]) => {
     if (!analisisAcordes) return;
     const anterior = song;
@@ -1028,7 +1040,20 @@ export function SongChordsViewerModal({
               {/* TAB: ARMONÍA (profesor determinista) */}
               {activeTab === "armonia" && (
                 armonia ? (
-                  <PanelArmonia armonia={armonia} analisis={analisisAcordes} bpm={song.bpm} notation={notation} transpose={transpose} />
+                  <PanelArmonia
+                    armonia={armonia}
+                    analisis={analisisAcordes}
+                    bpm={song.bpm}
+                    notation={notation}
+                    transpose={transpose}
+                    profesor={
+                      analisisAcordes ? (
+                        <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
+                      ) : (
+                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Acordes del audio»).</p>
+                      )
+                    }
+                  />
                 ) : (
                   <div className="max-w-xl mx-auto text-center space-y-2 py-10 font-sans">
                     <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-3)]" />

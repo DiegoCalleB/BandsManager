@@ -125,7 +125,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Principio:** los hechos los calcula código determinista (testeable); la IA solo los redacta, con validación posterior y sugerencias etiquetadas como «idea». Sin SQL (caché en `analisis_acordes`).
 * **Plan completo y decisiones pendientes:** `docs/plan-armonia-didactica.md` (fases 1-5: motor de teoría y colores → pestaña «Armonía» → profesor con IA → mástil/teclado interactivo y práctica por bloque → calidad con golden tests).
 * **Aviso:** el recuadro «Estructura Rápida para el Músico» del visor sale de la ficha del sustituto generada por IA y puede ser inventado; la estructura calculada (bloques A/B) debe sustituirlo.
-* **Estado:** plan escrito, sin implementar. Decisiones que esperan respuesta: colorear por función o por grado, notación romana estándar o simple, Gemini o Claude para el texto, nivel por defecto, alcance de la práctica (guitarra/bajo/teclado).
+* **Estado (2026-10-07): fases 1-3 implementadas** (motor de teoría, colores por función y grados, pestaña «Armonía», profesor con IA; ver el final de `docs/plan-armonia-didactica.md`). Pendiente: fase 4 (mástil/teclado iluminado mientras suena, práctica por bloque) y fase 5 (golden tests con canciones reales, botón «esto está mal»). Color por *grado* con 7 tonos descartado: choca con el sistema de diseño.
 
 ### Saber cuándo cambiar de acorde, sin mirar arriba (ideas tras el reloj por acorde)
 * **Hecho:** reloj que se llena en cada acorde de la letra con aviso en el último 0,8 s y el siguiente acorde iluminado; vibración opcional al cambiar (`RelojEnAcorde.tsx`, `relojAcorde.ts`).

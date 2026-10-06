@@ -57,3 +57,34 @@ describe('SelectorArmonia', () => {
     expect(h).not.toContain('Leyenda');
   });
 });
+
+import { ProfesorIA } from '../components/chords/ProfesorIA';
+
+describe('ProfesorIA', () => {
+  const profesor = {
+    huella: 'abc', nivel: 'intermedio' as const, instrumento: 'guitarra' as const, generadoEn: 'x', descartadas: 2,
+    explicacion: {
+      resumen: 'Es rock mixolidio.',
+      comoFunciona: [{ texto: 'El D da el color.', hechos: ['a3'] }],
+      paraImprovisar: ['Prueba la pentatónica menor de E.'],
+      paraComponer: ['Empieza con un riff en E.'],
+      dinamismo: [{ idea: 'Sube un tono', ejemplo: 'Pasa a F# en el último estribillo' }],
+    },
+  };
+
+  it('sin explicación: explica qué hará y qué no, y pide bajo demanda (no gasta hasta pulsar)', () => {
+    const h = renderToStaticMarkup(<ProfesorIA onPedir={async () => profesor} />);
+    expect(h).toContain('Pedir la explicación del profesor');
+    expect(h).toMatch(/solo a los datos calculados/);
+  });
+
+  it('con explicación: separa datos de ideas y avisa de lo descartado', () => {
+    const h = renderToStaticMarkup(<ProfesorIA profesor={profesor} onPedir={async () => profesor} />);
+    expect(h).toContain('Es rock mixolidio.');
+    expect(h).toContain('Cómo funciona');
+    expect((h.match(/>Idea</g) ?? []).length).toBe(3); // improvisar, componer y dinamismo
+    expect(h).toMatch(/Se descartaron 2 frases/);
+    expect(h).toContain('Volver a explicar');
+    expect(h).not.toMatch(/\bborder/);
+  });
+});

@@ -1196,6 +1196,24 @@ export interface AnalisisAcordes {
    * tramo corregido (se asume que la banda revisa desde el principio).
    */
   referenciaManual?: { segmentos: SegmentoAcordeAnalizado[]; guardadaEn: string; hasta: number };
+  /**
+   * Explicación del «profesor de armonía» (IA sobre hechos calculados por código). `huella` identifica
+   * los hechos + nivel + instrumento con los que se generó: si cambian, hay que volver a pedirla.
+   */
+  profesor?: {
+    huella: string;
+    nivel: 'principiante' | 'intermedio' | 'avanzado';
+    instrumento: 'guitarra' | 'bajo' | 'teclado' | 'voz' | 'bateria';
+    generadoEn: string;
+    descartadas: number;
+    explicacion: {
+      resumen: string;
+      comoFunciona: Array<{ texto: string; hechos: string[] }>;
+      paraImprovisar: string[];
+      paraComponer: string[];
+      dinamismo: Array<{ idea: string; ejemplo: string }>;
+    };
+  };
   /** Tramos de tonalidad cuando la canción cambia de tono (solo si hay más de uno). */
   tonalidades?: Array<{ t0: number; t1: number; tonalidad: string }>;
   /** Pulso detectado en el audio (tempo real y fase de los tiempos); si falta, la rejilla de compases usa el BPM de la ficha. */

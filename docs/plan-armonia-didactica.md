@@ -1,5 +1,7 @@
 # Plan: «Profesor de armonía» — colores, grados romanos y ficha tonal de cada canción
 
+> **Estado (2026-10-07): fases 1, 2 y 3 IMPLEMENTADAS** (ver «Implementado» al final). Pendientes: fase 4 (mástil/teclado y práctica) y fase 5 (golden tests con canciones reales, botón «esto está mal»).
+
 Objetivo: que al abrir una canción el músico no solo vea QUÉ acordes suenan, sino que entienda **por qué funcionan**: qué función tiene cada acorde, en qué modo está la canción, qué escalas y notas sirven para improvisar o componer líneas y riffs que encajen, y qué se podría hacer para darle más dinamismo.
 
 ## Principio rector: los hechos los calcula código; la IA solo los explica
@@ -94,3 +96,13 @@ Qué cubre «dinamismo» (cada idea con ejemplo concreto en los acordes de ESA c
 
 ## Orden recomendado
 **Fase 1 → 2 → 3 → 4**, con la fase 5 creciendo en paralelo. Las fases 1 y 2 no cuestan nada, no necesitan SQL y ya aportan el 70 % del valor; la 3 es la que da la sensación de «profesor».
+
+---
+
+## Implementado (decisiones tomadas por defecto)
+Decisiones que se tomaron con la recomendación de este plan: función por defecto con opción «sin color» (el color por *grado* con 7 tonos choca con el sistema de diseño —una sola paleta de tokens— y se resuelve mostrando el grado romano en vez de un color), romanos estándar relativos a la escala mayor (`I, bVII, V7, ii°`), el mismo modelo de IA que ya usa el servidor (Gemini), nivel intermedio por defecto, guitarra primero.
+
+- `src/utils/teoriaArmonica.ts`: grado romano, función (T/S/D/M/X), dominantes secundarios, tonalidad estimada, modo (jónico/mixolidio/lidio/eólico/dórico/frigio), bucle y progresiones con nombre, escalas sugeridas (modo del acorde dentro de la tonalidad, pentatónica, blues), notas guía. 53 tests, incluidas las canciones de ejemplo.
+- Colores y grados en el carril de acordes del audio y en el cifrado (`estiloArmonia.ts`, `armoniaVisor.ts`, `SelectorArmonia`): «Acorde / Grado / Ambos» y «Color por función / Sin color», con leyenda (la función lleva letra además de color). Preferencia en `localStorage`. El grado no cambia al transponer.
+- Pestaña «Armonía» (`PanelArmonia`, `guiasArmonia.ts`): tonalidad y modo, reparto de funciones, bucle con su nombre, mapa de bloques A/B de la cuadrícula, cada acorde con notas, notas guía y escalas, y guías «Para improvisar y componer» con ideas de dinamismo etiquetadas «Idea». Todo sin IA.
+- El profesor con IA (`ProfesorIA`, `services/profesorArmonia.ts`, `POST /api/songs/:id/profesor-armonia`): recibe solo hechos calculados con ids; valida la salida (frases que nombran acordes ajenos a la canción o citan hechos inexistentes se descartan); lo opinable va en secciones «Idea»; caché por huella (hechos + nivel + instrumento) dentro de `analisis_acordes.profesor` (sin SQL); bajo demanda. Requiere haber analizado los acordes del audio.

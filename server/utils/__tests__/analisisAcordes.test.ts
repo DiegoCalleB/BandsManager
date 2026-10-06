@@ -189,3 +189,30 @@ describe('la verdad de las correcciones manuales no se pierde', () => {
     expect(cuerpo).toContain('referenciaManual: referencia');
   });
 });
+
+describe('ruta del profesor de armonía: la IA solo redacta lo que el código calculó', () => {
+  const rutas = fs.readFileSync(path.join(__dirname, '..', '..', 'routes', 'repertorio.ts'), 'utf-8');
+  const i = rutas.indexOf('router.post("/songs/:id/profesor-armonia"');
+  const cuerpo = rutas.slice(i, rutas.indexOf('// PATCH fijar a mano la energía'));
+
+  it('exige acordes ya analizados y no se inventa la armonía sin ellos', () => {
+    expect(i).toBeGreaterThan(-1);
+    expect(cuerpo).toContain('409');
+    expect(cuerpo.indexOf('analisis?.segmentos?.length')).toBeLessThan(cuerpo.indexOf('generateContentWithFallback'));
+  });
+
+  it('calcula los hechos con código, valida la salida antes de guardar y reutiliza la caché por huella', () => {
+    expect(cuerpo.indexOf('analizarArmonia(')).toBeLessThan(cuerpo.indexOf('generateContentWithFallback'));
+    expect(cuerpo.indexOf('validarExplicacion(')).toBeLessThan(cuerpo.indexOf('dbGuardarAnalisisAcordes'));
+    expect(cuerpo).toContain('analisis.profesor?.huella === huella');
+    expect(cuerpo).toContain('deCache: true');
+  });
+
+  it('si la IA no devuelve nada utilizable no se guarda nada', () => {
+    expect(cuerpo).toMatch(/if \(!validada\)[\s\S]{0,200}No se ha guardado nada/);
+  });
+
+  it('el prompt no recibe el título de la canción', () => {
+    expect(cuerpo).not.toMatch(/song\.titulo|song\.title/);
+  });
+});
