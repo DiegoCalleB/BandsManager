@@ -92,9 +92,13 @@ export async function esUrlExternaSegura(rawUrl: string): Promise<boolean> {
  * y fuerza la conexión de socket directamente a la IP validada, pasando el Host original para SNI y cabeceras.
  */
 export function crearAgenteIpPinneada(ipPin: string, isHttps: boolean) {
-  const customLookup = (_hostname: string, _options: any, callback: (err: NodeJS.ErrnoException | null, address: string, family: number) => void) => {
-    const family = net.isIPv6(ipPin) ? 6 : 4;
-    callback(null, ipPin, family);
+  // Desde Node 20 los sockets llaman al lookup con { all: true } (autoSelectFamily) y esperan un
+  // ARRAY de direcciones; devolver una sola cadena produce «Invalid IP address: undefined» y
+  // TODA petición anclada fallaba, también las de Supabase. Se atienden las dos formas.
+  const family = net.isIPv6(ipPin) ? 6 : 4;
+  const customLookup = (_hostname: string, options: any, callback: (...args: any[]) => void) => {
+    if (options && options.all) callback(null, [{ address: ipPin, family }]);
+    else callback(null, ipPin, family);
   };
   return isHttps
     ? new https.Agent({ lookup: customLookup, keepAlive: false })
