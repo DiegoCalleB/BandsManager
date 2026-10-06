@@ -1,3 +1,4 @@
+import { PopoverAncla } from './ui/PopoverAncla';
 import React, { useState, useRef } from "react";
 import {
   Lead,
@@ -751,7 +752,7 @@ export default function Dashboard({
                   className="fixed inset-0 z-30"
                   onClick={() => setShowQuickAddMenu(false)}
                 />
-                <div className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
+                <PopoverAncla className="absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
                   <MenuItem
                     type="button"
                     onClick={() => {
@@ -772,7 +773,7 @@ export default function Dashboard({
                     <Disc3 className="w-3.5 h-3.5 shrink-0 text-[var(--ink-2)]" />{" "}
                     Ensayo rápido
                   </MenuItem>
-                </div>
+                </PopoverAncla>
               </>
             )}
           </div>

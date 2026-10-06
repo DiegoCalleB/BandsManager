@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { Lead, LeadStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
@@ -222,7 +223,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setIsStatusDropdownOpen(false)}
                   />
-                  <div
+                  <PopoverAncla
                     className={`absolute top-full mt-2 right-0 z-50 w-64 rounded-[var(--r-l)] p-2 space-y-1 animate-scale-up max-h-72 overflow-y-auto ${"bg-[var(--surface)]"}`}
                   >
                     <div
@@ -247,7 +248,7 @@ export const BulkLeadsActionBar: React.FC<BulkLeadsActionBarProps> = ({
                         </button>
                       );
                     })}
-                  </div>
+                  </PopoverAncla>
                 </>
               )}
             </div>

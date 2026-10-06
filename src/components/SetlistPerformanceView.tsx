@@ -1,3 +1,4 @@
+import { PopoverAncla } from './ui/PopoverAncla';
 import React, {
   useState,
   useEffect,
@@ -748,7 +749,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   className="fixed inset-0 z-30"
                   onClick={() => setShowMoreMenu(false)}
                 />
-                <div
+                <PopoverAncla
                   className={`absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] p-1.5 space-y-0.5 text-sm ${
                     glareMode
                       ? "bg-[var(--surface)] border-text-[var(--ink-2)] text-[var(--ink)]"
@@ -913,7 +914,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   >
                     <Plane className="w-4 h-4 shrink-0" /> Sobre el modo avión
                   </button>
-                </div>
+                </PopoverAncla>
               </>
             )}
           </div>

@@ -1,3 +1,4 @@
+import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from 'react';
 import { Palette, Check } from 'lucide-react';
 import {
@@ -44,7 +45,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div
+          <PopoverAncla
             className={`absolute ${openUpward ? 'bottom-full right-0 mb-1' : 'top-full right-0 mt-1'} bg-[var(--surface)] rounded-[var(--r-m)] z-50 min-w-[180px] overflow-hidden`}
           >
             {PREFERENCIAS_ESPECTRO.map((p) => {
@@ -63,7 +64,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ compact = false, openU
                 </button>
               );
             })}
-          </div>
+          </PopoverAncla>
         </>
       )}
     </div>

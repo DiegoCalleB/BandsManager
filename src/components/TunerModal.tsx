@@ -485,7 +485,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-[var(--scrim)]/85 overflow-y-auto overscroll-contain animate-in fade-in duration-200">
         <div className="bg-[var(--surface)]  rounded-[var(--r-l)] w-full max-w-lg overflow-hidden flex flex-col my-auto max-h-[92vh]">
           {/* Header */}
-          <div className="p-410 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
+          <div className="p-4 flex items-center justify-between bg-[var(--ink)]/5 shrink-0">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/20 text-[var(--ink)]">
                 <Guitar className="w-5 h-5" />
@@ -525,7 +525,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
                 </label>
 
                 {/* Instrument Category Filter Tabs */}
-                <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)]10 text-micro">
+                <div className="flex items-center gap-1 bg-[var(--sunken)] p-0.5 rounded-[var(--r-s)] text-micro">
                   {(["all", "guitar", "ukulele", "bass"] as const).map(
                     (cat) => {
                       const labels = {
@@ -613,7 +613,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
             </div>
 
             {/* Main Visual Tuner Display */}
-            <div className="bg-[var(--sunken)]10 rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden">
+            <div className="bg-[var(--sunken)] rounded-[var(--r-l)] p-5 flex flex-col items-center justify-center relative overflow-hidden">
               {/* Tuning needle meter bar */}
               <div className="w-full space-y-2">
                 <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)]">
@@ -809,7 +809,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
           </div>
 
           {/* Footer */}
-          <div className="p-3.510 bg-[var(--ink)]/5 flex items-center justify-between text-xs text-[var(--ink-2)] shrink-0">
+          <div className="p-3.5 bg-[var(--ink)]/5 flex items-center justify-between text-xs text-[var(--ink-2)] shrink-0">
             <span>
               Soporta afinación de Guitarra eléctrica/acústica, Bajo y Ukelele
               (Soprano, Concierto, Tenor y Barítono).

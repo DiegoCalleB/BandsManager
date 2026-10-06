@@ -1,3 +1,4 @@
+import { PopoverAncla } from './ui/PopoverAncla';
 import React, { useState, useMemo, useEffect } from "react";
 import {
   Users,
@@ -772,7 +773,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   className="fixed inset-0 z-30"
                   onClick={() => setShowFansHeaderMenu(false)}
                 />
-                <div className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--sunken)] p-1.5 space-y-0.5 text-xs font-sans">
+                <PopoverAncla className="absolute right-0 top-full mt-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--sunken)] p-1.5 space-y-0.5 text-xs font-sans">
                   <MenuItem
                     tone="acc"
                     type="button"
@@ -828,7 +829,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                   >
                     <Download className="w-3.5 h-3.5 shrink-0" /> Exportar CSV
                   </MenuItem>
-                </div>
+                </PopoverAncla>
               </>
             )}
           </div>
@@ -1425,7 +1426,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                       className="fixed inset-0 z-30"
                       onClick={() => setShowQrMoreMenu(false)}
                     />
-                    <div className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
+                    <PopoverAncla className="absolute right-0 bottom-full mb-1.5 z-40 w-64 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs font-sans">
                       <MenuItem
                         tone="muted"
                         type="button"
@@ -1504,7 +1505,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
                         <Eye className="w-3.5 h-3.5 shrink-0" /> Previsualizar
                         formulario “Únete”
                       </MenuItem>
-                    </div>
+                    </PopoverAncla>
                   </>
                 )}
               </div>
