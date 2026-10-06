@@ -90,3 +90,41 @@ describe('el cifrado que construimos y el visor de karaoke se entienden', () => 
     });
   });
 });
+
+describe('ningún acorde del audio se pierde en el cifrado (el resaltado no se salta ninguno)', () => {
+  const verso = (t0: number, t1: number, texto: string) => ({ t0, t1, texto });
+  const acordesDe = (cifrado: string) => acordesDelCifrado(cifrado);
+
+  it('tres acordes en una misma línea corta salen los tres, aunque caigan sobre la misma palabra', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 3, 'solo dos palabras')],
+      [ac('Em', 0, 1), ac('C', 1, 1.1), ac('G', 1.1, 3)],
+    );
+    expect(acordesDe(t)).toEqual(['Em', 'C', 'G']);
+  });
+
+  it('los cambios que ocurren en la pausa entre dos frases se escriben al principio de la siguiente', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 2, 'primera frase'), verso(3.5, 5.5, 'segunda frase')],
+      [ac('Am', 0, 2.2), ac('F', 2.2, 3), ac('C', 3, 5.5)],
+    );
+    expect(acordesDe(t)).toEqual(['Am', 'F', 'C']);
+    expect(t.split('\n').pop()).toMatch(/^\[F\]\[C\]segunda frase$|^\[F\]\[C\]/);
+  });
+
+  it('un cambio en el último instante de una frase no se pierde', () => {
+    const t = construirCifradoSincronizado(
+      [verso(0, 4, 'una frase larga'), verso(4.5, 8, 'otra frase')],
+      [ac('D', 0, 3.95), ac('A', 3.95, 8)],
+    );
+    expect(acordesDe(t)).toEqual(['D', 'A']);
+  });
+
+  it('el cifrado resultante casa al 100 % con el audio y cada acorde del texto tiene su tramo', () => {
+    const segs = [ac('F#m', 0, 2), ac('Bm', 2, 3), ac('E', 3, 3.4), ac('F#m', 3.4, 6), ac('Bm', 6, 8)];
+    const t = construirCifradoSincronizado([verso(0.2, 3.2, 'hijos trabajo casa'), verso(3.6, 7.5, 'ropa bonita coche')], segs);
+    const al = alinearCifradoConAudio(t, segs)!;
+    expect(al.calidad).toBe(1);
+    expect(al.pares.every((p) => p.segmento !== null)).toBe(true);
+  });
+});

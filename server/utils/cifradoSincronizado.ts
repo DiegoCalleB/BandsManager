@@ -53,23 +53,38 @@ function posicionEnLinea(linea: LineaLetra, t: number): number {
   return previoEspacio < 0 ? 0 : previoEspacio + 1;
 }
 
-function lineaConAcordes(linea: LineaLetra, cambios: Cambio[]): string {
+/**
+ * Una línea de letra con TODOS los acordes que cambian durante ella y alrededor:
+ *  - `desde`: instante a partir del cual los cambios son de esta línea (lo anterior ya salió en la
+ *    línea previa o en un bloque instrumental). Los cambios en pausas entre frases se anotan al
+ *    principio de la línea siguiente, que es lo que se toca justo antes de cantar.
+ *  - `hasta`: si es la última línea, también cuenta lo que cambia justo al terminar.
+ * Antes los cambios en una pausa o en los últimos 0,1 s de la línea se perdían y, si dos caían sobre
+ * la misma palabra, «mandaba el último»: el cifrado se quedaba sin acordes que el audio sí tenía
+ * y el resaltado «se saltaba» el tercer acorde de un verso.
+ */
+function lineaConAcordes(linea: LineaLetra, cambios: Cambio[], desde: number, hasta: number): string {
   const inserciones: { pos: number; acorde: string }[] = [];
-  const alInicio = acordeEnInstante(cambios, linea.t0 + 0.05);
-  if (alInicio) inserciones.push({ pos: 0, acorde: alInicio });
-  for (const c of cambios) {
-    if (c.t0 <= linea.t0 + 0.05 || c.t0 >= linea.t1 - 0.1) continue;
-    const pos = posicionEnLinea(linea, c.t0);
-    // Dos acordes en el mismo sitio: manda el último; el mismo acorde pegado no se repite.
+  const empuja = (pos: number, acorde: string) => {
     const previo = inserciones[inserciones.length - 1];
-    if (previo && previo.pos === pos) previo.acorde = c.acorde;
-    else if (!previo || previo.acorde !== c.acorde) inserciones.push({ pos, acorde: c.acorde });
+    if (!previo || previo.acorde !== acorde) inserciones.push({ pos, acorde });
+  };
+  const inicio = linea.t0 + 0.05;
+  const alEmpezar = cambios.filter((c) => c.t0 > desde && c.t0 <= inicio);
+  if (alEmpezar.length > 0) for (const c of alEmpezar) empuja(0, c.acorde);
+  else {
+    const vigente = acordeEnInstante(cambios, inicio);
+    if (vigente) empuja(0, vigente);
+  }
+  for (const c of cambios) {
+    if (c.t0 <= inicio || c.t0 >= hasta) continue;
+    empuja(posicionEnLinea(linea, c.t0), c.acorde);
   }
   let texto = "";
   let cursor = 0;
   for (const ins of inserciones) {
     texto += linea.texto.slice(cursor, ins.pos) + `[${ins.acorde}]`;
-    cursor = ins.pos;
+    cursor = Math.max(cursor, ins.pos);
   }
   return texto + linea.texto.slice(cursor);
 }
@@ -94,9 +109,14 @@ export function construirCifradoSincronizado(lineas: LineaLetra[], segmentos: Se
   const intro = cambios.length ? lineaSoloAcordes(cambios, 0, cabeza[0].t0 - 0.5) : null;
   if (intro && cambios.some((c) => c.t0 < cabeza[0].t0 - 1)) salida.push("[Intro]", intro, "");
 
+  let desde = cabeza[0].t0 - 0.5;
   cabeza.forEach((linea, i) => {
-    salida.push(lineaConAcordes(linea, cambios));
     const siguiente = cabeza[i + 1];
+    const hasta = siguiente ? linea.t1 - 0.1 : linea.t1 + 0.15;
+    salida.push(lineaConAcordes(linea, cambios, desde, hasta));
+    // Lo que cambie desde aquí hasta la siguiente frase se escribe al principio de ésta, salvo si
+    // hay un bloque instrumental entre medias: entonces esos cambios van en él.
+    desde = siguiente && siguiente.t0 - linea.t1 >= HUECO_INSTRUMENTAL ? siguiente.t0 - 0.3 : linea.t1 - 0.1;
     if (!siguiente) return;
     const hueco = siguiente.t0 - linea.t1;
     if (hueco >= HUECO_INSTRUMENTAL) {
