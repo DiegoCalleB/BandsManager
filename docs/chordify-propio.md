@@ -43,3 +43,25 @@ Si algo falla (sin token, modelo no disponible, audio no público, salida sin ti
 La subida de audio (suelta o en lote) solo detecta acordes; la letra se pide siempre a propósito, porque cuesta dinero y tiempo.
 
 Pendiente: probar contra Replicate real con una canción (desde el entorno de desarrollo no hay salida a internet); karaoke línea a línea con `analisisAcordes.letra`; análisis por pista en `PracticeModePanel` sigue usando el generador antiguo (sin songId).
+
+## Detector v3 (caso real: «Born To Be Wild», rock duro) — 2026-10
+Fallo visto en producción: un solo acorde en toda la canción. Causa reproducida: batería y guitarra distorsionada dejan el croma **plano** (todas las notas entre 0,2 y 0,4) y con tan poco contraste cualquier penalización por cambiar de acorde lo aplasta todo en uno. Arreglos:
+1. **Limpieza armónica/percusiva ligera** de los espectros: mediana en el tiempo por bin (lo tonal persiste, un golpe no) y resta del suelo de ruido en frecuencia. Compresión por raíz cuadrada en vez de logaritmo (el log aplanaba el croma).
+2. **Afinación estimada** (media circular de la parte fraccionaria del tono de los picos) y aplicada al croma y al de graves: discos antiguos o guitarras medio semitono flojas ya no emborronan.
+3. **Tonalidad estimada de los propios acordes** (primera pasada sin prior) en vez del croma global.
+4. **Diagnóstico por análisis en los logs** (`[acordes] fuente= tramos= distintos= dominante= contraste= afinacion= tonalidad=`): permite saber por qué un audio concreto sale mal sin tener el audio.
+
+| Batería de 30 casos (6 progresiones × 5 variantes) | media |
+|---|---|
+| v2 (bajo + tonalidad) | 96 % (75-94 % en las variantes duras) |
+| v3 | 100 % |
+
+| «BTBW» sintético (E-E-A-D…, 146 BPM) | v2 | v3 |
+|---|---|---|
+| bajo fijo en Mi | 63 % (1 tramo) | 100 % |
+| + batería y voz fuertes | 63 % (1 tramo) | 100 % |
+| desafinado +40 / −45 cent | 75 % / 63 % | 100 % / 100 % |
+| reverb + ruido | 75 % | 100 % |
+| sin tonalidad + todo a la vez | 63 % | 75 % |
+
+Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
