@@ -10,6 +10,7 @@ import {
   Save,
   Printer,
   Music2,
+  Music,
   Sliders,
   ChevronDown,
   ChevronUp,
@@ -25,7 +26,7 @@ import {
   MessageSquare,
   Upload,
 } from "lucide-react";
-import { Song, SongSubstituteGuide } from "../types";
+import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
 import { ModalPortal } from "./common/ModalPortal";
@@ -75,6 +76,11 @@ export function SongChordsViewerModal({
   const [guiaSustituto, setGuiaSustituto] = useState<SongSubstituteGuide>(
     song.guiaSustituto || getSampleSubstituteGuide(song),
   );
+
+  // Análisis de acordes del audio (detección propia, sin IA generativa)
+  const [isAnalyzingChords, setIsAnalyzingChords] = useState<boolean>(false);
+  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
+  const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
@@ -193,6 +199,32 @@ export function SongChordsViewerModal({
     }
     return () => clearInterval(interval);
   }, [isAutoScrolling, scrollSpeed]);
+
+  // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
+  const handleAnalyzeChordsFromAudio = async () => {
+    try {
+      setIsAnalyzingChords(true);
+      setAiSuccessMsg(null);
+      const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+      if (!data?.analisis) throw new Error(data?.error || "No se pudieron analizar los acordes");
+      onUpdateSong({ ...song, analisisAcordes: data.analisis });
+      setShowAnalisisAcordes(true);
+      const dudosos = data.analisis.segmentos.filter((s: any) => s.acorde === "N").length;
+      setAiSuccessMsg(
+        dudosos > 0
+          ? `⚠️ Acordes detectados del audio (${data.analisis.segmentos.length} tramos, ${dudosos} sin acorde claro). Es una detección automática: revísala de oído.`
+          : `✓ Acordes detectados del audio (${data.analisis.segmentos.length} tramos). Es una detección automática: revísala de oído.`,
+      );
+    } catch (err: any) {
+      setAiSuccessMsg(`⚠️ ${err.message || "No se pudieron analizar los acordes del audio"}`);
+    } finally {
+      setIsAnalyzingChords(false);
+      setTimeout(() => setAiSuccessMsg(null), 7000);
+    }
+  };
 
   // Handle AI chord generation
   const handleGenerateWithAi = async () => {
@@ -436,6 +468,26 @@ export function SongChordsViewerModal({
                 />
                 <span>{isGeneratingAi ? "Generando..." : "IA Cifrado"}</span>
               </Button>
+
+              {/* Detección propia de acordes con tiempos, sin IA generativa */}
+              {audioUrl && (
+                <Button
+                  variant="neutral"
+                  size="xs"
+                  type="button"
+                  onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : handleAnalyzeChordsFromAudio}
+                  disabled={isAnalyzingChords}
+                  className="items-center gap-1.5"
+                  title={
+                    analisisAcordes
+                      ? "Ver los acordes detectados en el audio"
+                      : "Detectar los acordes del audio con sus tiempos (automático, sin IA generativa)"
+                  }
+                >
+                  <Music className={`w-4 h-4 ${isAnalyzingChords ? "animate-pulse" : ""}`} />
+                  <span>{isAnalyzingChords ? "Analizando..." : analisisAcordes ? "Acordes del audio" : "Analizar acordes"}</span>
+                </Button>
+              )}
 
               {/* Secondary actions — icon-only to keep the header clean */}
               <IconButton
@@ -718,6 +770,60 @@ export function SongChordsViewerModal({
               >
                 ✕
               </button>
+            </div>
+          )}
+
+          {/* ACORDES DETECTADOS DEL AUDIO */}
+          {analisisAcordes && showAnalisisAcordes && (
+            <div className="px-4 py-2.5 bg-[var(--sunken)] text-xs font-sans space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-bold text-[var(--ink)]">
+                  Acordes detectados del audio
+                  <span className="font-normal text-[var(--ink-2)]">
+                    {" "}· {analisisAcordes.fuente === "instrumental" ? "pista instrumental" : "mezcla completa"}
+                    {analisisAcordes.tonalidad ? ` · tonalidad ${analisisAcordes.tonalidad}` : ""}
+                  </span>
+                </span>
+                <span className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAnalyzeChordsFromAudio}
+                    disabled={isAnalyzingChords}
+                    className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
+                  >
+                    Reanalizar
+                  </button>
+                  <button type="button" onClick={() => setShowAnalisisAcordes(false)} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">✕</button>
+                </span>
+              </div>
+              <div className="flex gap-1.5 overflow-x-auto pb-1">
+                {analisisAcordes.segmentos.map((seg, i) => (
+                  <button
+                    key={`${seg.t0}-${i}`}
+                    type="button"
+                    onClick={() => {
+                      if (audioRef.current) {
+                        audioRef.current.currentTime = seg.t0;
+                        setAudioCurrentTime(seg.t0);
+                      }
+                    }}
+                    title={`${formatAudioTime(seg.t0)} – ${formatAudioTime(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %`}
+                    className={`shrink-0 px-2 py-1 rounded-[var(--r-s)] text-left cursor-pointer ${
+                      seg.acorde === "N"
+                        ? "bg-transparent text-[var(--ink-2)] border border-dashed border-[var(--hair)]"
+                        : seg.confianza < 0.4
+                          ? "bg-[var(--acc-soft)]/60 text-[var(--ink)]"
+                          : "bg-[var(--acc-soft)] text-[var(--ink)]"
+                    }`}
+                  >
+                    <span className="block text-micro text-[var(--ink-2)]">{formatAudioTime(seg.t0)}</span>
+                    <span className="block font-bold font-mono">{seg.acorde === "N" ? "—" : processChordText(`[${seg.acorde}]`, transpose, notation).replace(/[\[\]]/g, "")}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-micro text-[var(--ink-2)]">
+                Detección automática: ronda el 75-85 % en triadas. Los tramos con «—» no tienen acorde claro y los tenues son poco fiables. Toca uno para saltar a ese momento.
+              </p>
             </div>
           )}
 
