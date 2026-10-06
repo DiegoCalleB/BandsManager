@@ -1,3 +1,4 @@
+import { descargarBufferSeguro } from '../../utils/ssrfGuard.js';
 import {
   AudioSeparatorService,
   AudioSeparatorOptions,
@@ -65,19 +66,19 @@ export class LalalAiService extends AudioSeparatorService {
       console.log(`[LALAL.AI Service] 🚀 Iniciando separación con LALAL.AI API (License Key: ${apiKey.substring(0, 6)}...) para ${options.songTitle || 'tema'}`);
 
       // 1. Descargar buffer de audio de la URL o Supabase Storage
-      const audioFetch = await fetch(fileUrl, {
+      const audioFetch = await descargarBufferSeguro(fileUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Accept': '*/*'
         },
-        signal: AbortSignal.timeout(45000)
+        timeoutMs: 45000
       });
 
-      if (!audioFetch.ok) {
-        throw new Error(`No se pudo descargar el audio para LALAL.AI (HTTP ${audioFetch.status})`);
+      if (!audioFetch) {
+        throw new Error('No se pudo descargar el audio para LALAL.AI (URL no segura o error HTTP)');
       }
 
-      const audioBuffer = Buffer.from(await audioFetch.arrayBuffer());
+      const audioBuffer = audioFetch.buffer;
 
       // 2. Subir buffer directo a LALAL.AI API /upload/
       const uploadRes = await fetch('https://www.lalal.ai/api/upload/', {

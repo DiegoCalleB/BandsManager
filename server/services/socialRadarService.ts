@@ -1,5 +1,6 @@
 import { dbGetRegisteredBands, dbGetEpkConfig, dbUpsertSocialMetric, dbGetSocialMetrics, dbUpsertSocialContentItem, dbUpdateBandRadarStatus } from "../db.js";
 import { SocialMetric } from "../../src/types.js";
+import { descargarBufferSeguro } from "../utils/ssrfGuard.js";
 
 // Helper to extract YouTube channel ID or handle
 function parseYouTubeUrl(url: string): { type: "handle" | "id" | "forUsername"; value: string } | null {
@@ -81,9 +82,10 @@ export async function scrapeChannelMetrics(band: {
         ? `https://www.youtube.com/@${parsedYt.value}/videos`
         : (ytUrl.includes("http") ? (ytUrl.endsWith("/videos") ? ytUrl : `${ytUrl.replace(/\/$/, '')}/videos`) : `https://www.youtube.com/${ytUrl}`);
 
-      const res = await fetch(scrapeUrl, { headers, signal: AbortSignal.timeout(7000) });
-      if (res.ok) {
-        const html = await res.text();
+      // Las URLs de redes son editables por la banda: descarga con guardia SSRF.
+      const res = await descargarBufferSeguro(scrapeUrl, { headers: headers as Record<string, string>, timeoutMs: 7000, maxBytes: 5 * 1024 * 1024 });
+      if (res) {
+        const html = res.buffer.toString("utf-8");
         const initialMatch = html.match(/ytInitialData\s*=\s*({.+?});<\/script>/);
         if (initialMatch && initialMatch[1]) {
           try {
@@ -185,9 +187,9 @@ export async function scrapeChannelMetrics(band: {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
       };
 
-      const res = await fetch(cleanSpUrl, { headers: botHeaders, signal: AbortSignal.timeout(6000) });
-      if (res.ok) {
-        const spHtml = await res.text();
+      const res = await descargarBufferSeguro(cleanSpUrl, { headers: botHeaders, timeoutMs: 6000, maxBytes: 5 * 1024 * 1024 });
+      if (res) {
+        const spHtml = res.buffer.toString("utf-8");
         const metaDesc = spHtml.match(/<meta[^>]*property="og:description"[^>]*content="([^"]*)"/i) ||
                          spHtml.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/i) ||
                          spHtml.match(/<meta[^>]*name="twitter:description"[^>]*content="([^"]*)"/i);
