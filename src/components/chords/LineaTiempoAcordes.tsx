@@ -1,11 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Repeat, X, Pencil } from 'lucide-react';
 import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
+import { AroAcorde } from './AroAcorde';
+import { RegletaCompases } from './RegletaCompases';
+import { construirCuadricula, posicionEnCuadricula, progresoDeTramo } from '../../utils/cuadriculaCompases';
 import { indiceSegmentoEn, siguienteAcordeReal, rangoBucle, saltoDeBucle, corregirAcorde, normalizarAcorde, RangoBucle } from '../../utils/lineaTiempoAcordes';
 
 interface Props {
   analisis: AnalisisAcordes;
+  /** BPM de la ficha de la canción; con él se deduce la cuadrícula de compases y bloques. */
+  bpm?: number;
   audioRef: React.RefObject<HTMLAudioElement | null>;
   isPlaying: boolean;
   transpose: number;
@@ -34,7 +39,7 @@ type ModoBucle = 'off' | 'elegirInicio' | 'elegirFin';
  * sigue la reproducción, salta al tocar un tramo y permite repetir un fragmento en bucle.
  */
 export const LineaTiempoAcordes: React.FC<Props> = ({
-  analisis, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, onClose,
+  analisis, bpm, audioRef, isPlaying, transpose, notation, isAnalyzing, onSeek, onReanalizar, onCorregir, sincronizacion, seguir, onSeguir, onClose,
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
@@ -69,6 +74,8 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     return () => cancelAnimationFrame(raf);
   }, [isPlaying, audioRef]);
 
+  const cuadricula = useMemo(() => construirCuadricula(segmentos, bpm, analisis.duracionSegundos), [segmentos, bpm, analisis.duracionSegundos]);
+  const posicion = cuadricula ? posicionEnCuadricula(cuadricula, tiempo) : null;
   const actual = indiceSegmentoEn(segmentos, tiempo);
   const siguiente = siguienteAcordeReal(segmentos, actual);
 
@@ -137,7 +144,6 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
   };
 
   const enBucle = (i: number) => bucle !== null && segmentos[i].t0 >= bucle.desde - 1e-6 && segmentos[i].t1 <= bucle.hasta + 1e-6;
-  const segundosHastaSiguiente = siguiente >= 0 ? Math.max(0, segmentos[siguiente].t0 - tiempo) : null;
 
   return (
     <div className="px-4 py-2.5 bg-[var(--sunken)] text-xs font-sans space-y-2">
@@ -180,20 +186,61 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         </span>
       </div>
 
-      {/* Ahora / siguiente */}
-      <div className="flex items-end gap-4">
-        <div>
-          <span className="block text-micro text-[var(--ink-2)]">Ahora</span>
-          <span translate="no" className="notranslate block text-2xl font-bold font-mono text-[var(--ink)] leading-none min-w-[3ch]" data-testid="acorde-actual">
-            {actual >= 0 ? nombre(segmentos[actual].acorde) : '·'}
-          </span>
-        </div>
-        <div className="text-[var(--ink-2)]">
-          <span className="block text-micro">Siguiente{segundosHastaSiguiente !== null && isPlaying ? ` · ${segundosHastaSiguiente.toFixed(1)} s` : ''}</span>
-          <span translate="no" className="notranslate block text-lg font-mono leading-none">{siguiente >= 0 ? nombre(segmentos[siguiente].acorde) : '·'}</span>
-        </div>
-        <span className="ml-auto text-micro text-[var(--ink-2)] pb-0.5">{formatearTiempo(tiempo)} / {formatearTiempo(analisis.duracionSegundos)}</span>
-      </div>
+      {/* Ahora (aro con cuenta atrás) / siguiente */}
+      {(() => {
+        const tramo = actual >= 0 ? segmentos[actual] : null;
+        const { progreso, restante } = tramo ? progresoDeTramo(tramo.t0, tramo.t1, tiempo) : { progreso: 0, restante: 0 };
+        const sigue = siguiente >= 0 ? segmentos[siguiente] : null;
+        const hastaSiguiente = sigue ? Math.max(0, sigue.t0 - tiempo) : null;
+        return (
+          <div className="flex items-center gap-4 flex-wrap">
+            <AroAcorde
+              etiqueta="Ahora"
+              nombre={tramo ? nombre(tramo.acorde) : '·'}
+              progreso={progreso}
+              restante={tramo && (isPlaying || tiempo > 0) ? restante : null}
+              testId="acorde-actual"
+            />
+            <AroAcorde
+              etiqueta="Siguiente"
+              nombre={sigue ? nombre(sigue.acorde) : '·'}
+              progreso={0}
+              restante={sigue && hastaSiguiente !== null && (isPlaying || tiempo > 0) ? hastaSiguiente : null}
+              tamano={60}
+              tenue
+            />
+            <div className="min-w-0 flex-1 space-y-1">
+              {cuadricula && posicion ? (
+                <>
+                  <div className="text-sm font-bold text-[var(--ink)]">
+                    Compás {posicion.compas}
+                    <span className="font-normal text-[var(--ink-2)]"> de {cuadricula.compases.length} · bloque {cuadricula.bloques[posicion.bloque]?.letra}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5" aria-label={`Tiempo ${posicion.tiempo} de ${cuadricula.tiemposPorCompas}`}>
+                    {Array.from({ length: cuadricula.tiemposPorCompas }, (_, i) => (
+                      <span
+                        key={i}
+                        className={`inline-block rounded-full transition-ui ${i + 1 === posicion.tiempo ? 'bg-[var(--acc)]' : i + 1 < posicion.tiempo ? 'bg-[var(--acc)]/40' : 'bg-[var(--hair)]'}`}
+                        style={{ width: i === 0 ? 12 : 9, height: i === 0 ? 12 : 9 }}
+                      />
+                    ))}
+                    <span className="text-micro text-[var(--ink-2)] ml-1">{Math.round(cuadricula.bpm)} BPM · {cuadricula.tiemposPorCompas}/4</span>
+                  </div>
+                </>
+              ) : (
+                <span className="text-micro text-[var(--ink-2)]">
+                  {bpm ? 'Los cambios de acorde no encajan con un compás regular: no se muestran compases.' : 'Sin BPM en la ficha de la canción no se pueden marcar los compases.'}
+                </span>
+              )}
+              <div className="text-micro text-[var(--ink-2)]">{formatearTiempo(tiempo)} / {formatearTiempo(analisis.duracionSegundos)}</div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {cuadricula && (
+        <RegletaCompases cuadricula={cuadricula} posicion={posicion} nombre={nombre} seguir={isPlaying} onIr={(t) => ir(t)} />
+      )}
 
       {modoBucle !== 'off' && (
         <p className="text-micro text-[var(--acc)]">

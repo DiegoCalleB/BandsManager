@@ -70,7 +70,7 @@ export function SongChordsViewerModal({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Show Chord Diagrams drawer/panel
-  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(true);
+  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(() => typeof window === "undefined" || window.innerWidth >= 768);
 
   // Edit form state
   const [cifradoTexto, setCifradoTexto] = useState<string>(
@@ -409,7 +409,7 @@ export function SongChordsViewerModal({
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
       <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden text-[var(--ink)] my-auto">
+        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto">
           {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
           <Button
             variant="neutral"
@@ -863,6 +863,7 @@ export function SongChordsViewerModal({
           {analisisAcordes && showAnalisisAcordes && (
             <LineaTiempoAcordes
               analisis={analisisAcordes}
+              bpm={song.bpm}
               audioRef={audioRef}
               isPlaying={isPlayingAudio}
               transpose={transpose}
@@ -882,7 +883,10 @@ export function SongChordsViewerModal({
           )}
 
           {/* MODAL BODY */}
-          <div className="flex-1 overflow-hidden flex flex-col md:flex-row relative">
+          {/* En móvil la cabecera y los paneles de acordes ocupan casi toda la pantalla: el cuerpo tiene
+              altura propia (75vh, con su scroll interno) y es el modal entero el que se desplaza hasta
+              él. Con flex-1 el cuerpo se quedaba con una rendija y no se podía bajar a la letra. */}
+          <div className="shrink-0 h-[75vh] md:h-auto md:flex-1 md:shrink overflow-hidden flex flex-col md:flex-row relative">
             {/* MAIN CONTENT AREA */}
             <div
               ref={scrollContainerRef}

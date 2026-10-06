@@ -65,3 +65,9 @@ Fallo visto en producción: un solo acorde en toda la canción. Causa reproducid
 | sin tonalidad + todo a la vez | 63 % | 75 % |
 
 Sigue sin medirse sobre grabaciones reales con verdad escrita a mano.
+
+## Aro de cuenta atrás, compases y bloques
+- **Aro por acorde** (`AroAcorde`): como los loops de GarageBand, el aro del acorde actual se llena mientras suena y el número del centro cuenta los segundos que faltan; en el último 0,8 s cambia de color para anticipar el cambio. El acorde siguiente es un aro tenue con su cuenta atrás.
+- **Compases y bloques** (`cuadriculaCompases.ts`, `RegletaCompases`): no se detecta el pulso del audio; con el BPM de la ficha se busca el desfase de pulso y el compás (4/4 o 3/4, y en qué tiempo empieza) con los que más cambios de acorde caen sobre un pulso. Se prueban también la mitad del tempo (a 60 solo la mitad de los cambios cae en inicio de compás). Si no encaja (<55 %), no se dibujan compases en vez de inventarlos. Bloques de 4 u 8 compases con letra por progresión (A A B A).
+- Limitación: con la ficha al **doble** del tempo real no hay forma de distinguirlo solo con acordes; se respeta la ficha.
+- Móvil: el modal se desplaza entero y el cuerpo de la letra tiene altura propia (antes se quedaba en 2 px bajo la cabecera y el panel de acordes).
