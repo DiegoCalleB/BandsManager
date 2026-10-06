@@ -193,7 +193,7 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   }
   if (input.showSetlistNotes && input.setlistNote && input.setlistNote.trim()) {
     segments.push({
-      text: `*** ${input.setlistNote.trim()} ***`,
+      text: input.setlistNote.trim(),
       className: "note-cue",
     });
   } else if (
@@ -203,7 +203,7 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
   ) {
     // Solo mostrar nota general si NO hay nota/cue de setlist para no saturar con líneas duplicadas
     segments.push({
-      text: `[${input.generalNote.trim()}]`,
+      text: input.generalNote.trim(),
       className: "note-general",
     });
   }
@@ -765,9 +765,7 @@ export function PdfExportModal({
       } else {
         return `
             <div class="interlude-item">
-              <span class="interlude-bracket">****</span>
               <span class="interlude-title">${(item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase()}</span>
-              <span class="interlude-bracket">****</span>
               ${
    (item.notas || (item as any).notaTema) && item.tituloCustom
      ? `
@@ -1133,6 +1131,7 @@ export function PdfExportModal({
  }
  .note-general {
  font-family: ${handFont};
+ font-style: italic;
  font-weight: 600;
  color: #555;
  letter-spacing: 0.2px;
@@ -1181,11 +1180,9 @@ export function PdfExportModal({
  break-inside: avoid;
  page-break-inside: avoid;
  }
- .interlude-bracket {
- color: #666;
- }
  .interlude-title {
  font-weight: 800;
+ letter-spacing: 1.5px;
  }
  /* La nota del interludio va en su propia línea, a mano como el resto de notas, y nunca pasa
  de una línea (elipsis): antes salía en monoespaciada y partida en dos. */
@@ -2561,19 +2558,19 @@ export function PdfExportModal({
                             key={item.id}
                             className={`py-0.5 text-[var(--ink)] font-sans text-[11pt] font-bold ${isCentered ? "text-center" : "pl-9"}`}
                           >
-                            <span className="text-[var(--ink-2)]">****</span>{" "}
+                            <span className="tracking-widest">
                             {(
                               item.tituloCustom ||
                               item.notas ||
                               (item as any).notaTema ||
                               item.tipoItem ||
                               "INTERLUDIO"
-                            ).toUpperCase()}{" "}
-                            <span className="text-[var(--ink-2)]">****</span>
+                            ).toUpperCase()}
+                            </span>
                             {(item.notas || (item as any).notaTema) &&
                               item.tituloCustom && (
-                                <span className="text-[10pt] text-[var(--ink-2)] font-normal italic ml-2">
-                                  ({item.notas || (item as any).notaTema})
+                                <span className="block text-[10pt] text-[var(--ink-2)] font-normal italic">
+                                  {item.notas || (item as any).notaTema}
                                 </span>
                               )}
                           </div>
