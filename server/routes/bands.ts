@@ -865,6 +865,32 @@ router.post("/bands/alert-settings", requireAuth, async (req: any, res: any) => 
   }
 });
 
+import { dbGetPrintSettings, dbUpsertPrintSettings } from "../db/printSettings.js";
+
+// GET /api/bands/print-settings — ajustes de impresión del setlist recordados por banda.
+router.get("/bands/print-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbGetPrintSettings(bandId);
+    return res.json({ success: true, settings });
+  } catch (err: any) {
+    console.error("Error obteniendo ajustes de impresión:", err);
+    return res.status(500).json({ error: err?.message || "Error consultando ajustes de impresión" });
+  }
+});
+
+// PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).
+router.put("/bands/print-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbUpsertPrintSettings(bandId, req.body);
+    return res.json({ success: settings !== null, settings });
+  } catch (err: any) {
+    console.error("Error guardando ajustes de impresión:", err);
+    return res.status(500).json({ error: err?.message || "Error guardando ajustes de impresión" });
+  }
+});
+
 // POST /api/bands/trigger-alert-digest - Enviar email de resumen ejecutivo de alertas
 router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: any) => {
   try {
