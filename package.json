@@ -1,6 +1,8 @@
 {
   "name": "bandmanager-ai",
   "private": true,
+  "license": "AGPL-3.0-only",
+  "author": "Diego de la Calle Berzal",
   "version": "2.0.0",
   "type": "module",
   "scripts": {

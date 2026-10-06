@@ -1,47 +1,62 @@
-# Términos de Servicio — BandsManager.ai
+# Términos de Servicio — BandManager.io
 
-**Última actualización:** Septiembre 2026
+**Última actualización:** Octubre 2026
 
-## 1. Propiedad Intelectual
+## 1. Titularidad y licencia del código
 
-BandsManager.ai, incluido su código fuente, arquitectura, diseño, algoritmos, y toda documentación asociada, es propiedad exclusiva de **DiegoCalleB** y está protegido por las leyes de derechos de autor de España y la Unión Europea.
+**BandManager.io** es obra de **Diego de la Calle Berzal (DiegoCalleB)**.
+El código de este repositorio se publica bajo **GNU AGPL-3.0-only**
+(ver [`LICENSE`](./LICENSE) y [`NOTICE`](./NOTICE)).
 
-**Prohibido sin consentimiento escrito previo:**
-- Reproducir, copiar, o duplicar cualquier parte de este software
-- Crear obras derivadas o modificadas sin autorización
-- Utilizar BandsManager.ai con fines comerciales
-- Distribuir o vender acceso a este software
-- Descompilar, desensamblar, o invertir ingeniería cualquier componente
+- Puedes usar, estudiar, modificar y alojar el código, incluso con fines
+  comerciales, **si cumples la AGPL**: si ofreces el software como servicio en
+  red, debes publicar bajo AGPL todo el código fuente de tu versión modificada.
+- Quien no pueda o no quiera cumplir la AGPL puede solicitar una **licencia
+  comercial** (ver [`COMMERCIAL-LICENSE.md`](./COMMERCIAL-LICENSE.md)).
+- Los módulos privados del producto (agentes avanzados, datos de salas y
+  festivales, lógica de scoring) **no** forman parte del repositorio público y
+  siguen siendo propiedad exclusiva del titular.
 
-## 2. Licencia de Uso Limitado
+## 2. Marca
 
-BandsManager.ai se distribuye bajo la **GNU AGPL-3.0**, con restricciones adicionales de uso comercial. Esto significa:
+«BandManager», «BandManager.io» y «BandsManager», junto con sus logotipos, son
+marcas del titular y **no** están licenciadas bajo la AGPL. Los forks deben
+usar un nombre distinto y no sugerir afiliación.
 
-- ✅ **Permitido:** evaluación académica, investigación personal, desarrollo educativo
-- ❌ **Prohibido:** comercialización, explotación de servicios, redistribución no autorizada
+## 3. Autoría y anterioridad
 
-Cualquier uso comercial requiere licencia explícita del titular de derechos.
+La autoría queda acreditada por el historial de *commits* público e inmutable
+en GitHub (desde agosto de 2026) y por la documentación académica del máster en
+IA (Big School). Este software es el núcleo técnico de un TFM y de una
+plataforma SaaS en desarrollo.
 
-## 3. Disposiciones Especiales
+## 4. Uso del servicio alojado
 
-Este software es el núcleo técnico de un proyecto académico (TFM) y una iniciativa empresarial en desarrollo. La autoría está registrada mediante:
+El acceso a la plataforma alojada en bandmanager.io es personal e
+intransferible. Eres responsable de los contenidos que subes (setlists,
+repertorio, imágenes, datos de contacto) y garantizas tener derechos sobre
+ellos; conservas su titularidad y concedes solo la licencia necesaria para
+operar el servicio. Queda prohibido el acceso automatizado masivo, la
+extracción de datos, la reventa del servicio y cualquier intento de vulnerar
+su seguridad o el aislamiento entre cuentas. Podemos suspender cuentas que
+incumplan estos términos.
 
-- Timestamps de GitHub (agosto 2026 en adelante)
-- Documentación oficial de la Universidad
-- Historial de commits verificable
+## 5. Limitación de responsabilidad
 
-Cualquier reproducción no autorizada será prosecutada conforme a la legislación española.
+El software y la plataforma se proporcionan «TAL CUAL», sin garantías expresas
+o implícitas. En la máxima medida permitida por la ley, el autor no responde
+por daños, pérdida de datos o interrupciones del servicio.
 
-## 4. Limitación de Responsabilidad
+## 6. Ley aplicable
 
-El software se proporciona "TAL CUAL", sin garantías de ningún tipo. El autor no es responsable de daños, pérdidas de datos, o consecuencias de su uso.
+Legislación española; juzgados y tribunales de Madrid, sin perjuicio de los
+derechos irrenunciables de los consumidores.
 
-## 5. Contacto
+## 7. Contacto
 
-Para consultas sobre licencias comerciales, autorizaciones especiales, o resolver conflictos de propiedad intelectual:
-
+Licencias comerciales, alianzas o notificación de infracciones:
 📧 **diego.delacalleb@gmail.com**
 
 ---
 
-*© 2026 DiegoCalleB. Todos los derechos reservados.*
+*© 2026 Diego de la Calle Berzal.*

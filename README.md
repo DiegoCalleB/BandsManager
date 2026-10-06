@@ -356,11 +356,11 @@ Hay dos bloqueantes y varios importantes documentados en [AGENTS.md §8](./AGENT
 
 ### Siguientes pasos razonables
 
-1. Cifrar `app_password` y exigir titularidad en las descargas de vídeo.
+1. ~~Cifrar `app_password`~~ (hecho: `CREDENTIALS_ENCRYPTION_KEY`, ver `server/utils/secretCrypto.ts`) y exigir titularidad en las descargas de vídeo.
 2. Añadir el mecanismo de baja a los emails de los agentes.
 3. Probar con una banda real el flujo completo lead → aprobación → borrador → respuesta.
 4. Cerrar los arreglos de billing y reactivar los planes.
-5. Decidir la licencia (ver abajo) y publicar las páginas legales.
+5. ~~Decidir la licencia~~ (hecho: AGPL-3.0-only + licencia comercial) y publicar las páginas legales.
 
 ## Versiones y releases
 
@@ -379,4 +379,9 @@ La versión se muestra en `/api/health` y se envía a Sentry como `release`, as�
 
 ## Licencia
 
-El repositorio incluye [`LICENSE`](./LICENSE) (AGPL-3.0) y [`TERMS_OF_SERVICE.md`](./TERMS_OF_SERVICE.md) (todos los derechos reservados). **Ambos se contradicen**; está pendiente decidir cuál aplica.
+Doble licencia (*open core*):
+
+- Este repositorio se publica bajo **AGPL-3.0-only** ([`LICENSE`](./LICENSE), [`NOTICE`](./NOTICE)).
+- Quien no pueda cumplir la AGPL puede pedir una **licencia comercial** ([`COMMERCIAL-LICENSE.md`](./COMMERCIAL-LICENSE.md)).
+- Las marcas «BandManager» no están licenciadas. Los términos del servicio alojado están en [`TERMS_OF_SERVICE.md`](./TERMS_OF_SERVICE.md).
+- Qué se queda privado: [`PRIVATE-CORE.md`](./PRIVATE-CORE.md).
