@@ -1,5 +1,5 @@
 import type { AnalisisAcordes } from "../../src/types.js";
-import { detectarAcordesDesdePcm, sumarPcm } from "../utils/chordDetection.js";
+import { detectarAcordesConDiagnostico, sumarPcm } from "../utils/chordDetection.js";
 import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
 import { elegirFuentesAudio, normalizarTonalidad, construirAnalisis, motivoAnalisisPocoFiable } from "../utils/analisisAcordes.js";
 
@@ -38,9 +38,16 @@ export async function analizarAcordesDeCancion(song: any): Promise<ResultadoAnal
   }
 
   const tonalidad = normalizarTonalidad(song.tonalidad);
-  const segmentos = detectarAcordesDesdePcm(pcm, SAMPLE_RATE, { tonalidad: tonalidad ?? undefined });
-  const motivo = motivoAnalisisPocoFiable(segmentos, pcm.length / SAMPLE_RATE);
+  const { segmentos, diagnostico } = detectarAcordesConDiagnostico(pcm, SAMPLE_RATE, { tonalidad: tonalidad ?? undefined });
+  const duracion = pcm.length / SAMPLE_RATE;
+  // Una línea por análisis en los logs: permite saber por qué un audio concreto sale mal (croma
+  // plano, afinación rara, un solo acorde dominante…) sin tener el audio delante.
+  console.log(
+    `[acordes] «${song.titulo}» fuente=${fuente} dur=${duracion.toFixed(0)}s tramos=${segmentos.length} distintos=${diagnostico.acordesDistintos} ` +
+      `dominante=${Math.round(diagnostico.cuotaAcordeDominante * 100)}% contraste=${diagnostico.contraste.toFixed(2)} afinacion=${diagnostico.afinacionCents}c tonalidad=${diagnostico.tonalidadUsada ?? "-"}`
+  );
+  const motivo = motivoAnalisisPocoFiable(segmentos, duracion);
   if (motivo) return { ok: false, status: 422, error: motivo };
 
-  return { ok: true, analisis: construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: pcm.length / SAMPLE_RATE }) };
+  return { ok: true, analisis: construirAnalisis({ segmentos, fuente, tonalidad, duracionSegundos: duracion }) };
 }

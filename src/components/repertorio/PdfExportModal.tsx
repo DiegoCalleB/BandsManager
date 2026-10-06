@@ -493,9 +493,10 @@ function PdfExportModalBody({
       /* sin almacenamiento: la preferencia vive solo en esta apertura */
     }
   };
-  // Marca de agua desactivada por defecto: un logo con fondo opaco se imprimía como un rectángulo
-  // gris detrás de las canciones y ensuciaba la hoja.
-  const [showWatermark, setShowWatermark] = useState<boolean>(false);
+  // Marca de agua: el logo del grupo, muy suave y detrás del repertorio. Va en gris y con
+  // `multiply` para que se funda con el papel; si un logo con fondo oscuro marca su caja, se
+  // apaga con el checkbox.
+  const [showWatermark, setShowWatermark] = useState<boolean>(true);
 
   // Preview Pagination
   const [previewPageIndex, setPreviewPageIndex] = useState<number>(0);
@@ -1719,12 +1720,29 @@ function PdfExportModalBody({
   };
 
   const handlePrint = async () => {
-    const doc = await buildPrintDocument({ members: membersToExport, mode: "print" });
-    if (!doc) return;
+    // La ventana se abre YA, dentro del gesto del usuario: si se abre después de maquetar (varios
+    // `await` más tarde) Chrome móvil la bloquea como ventana emergente.
     const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-    printWindow.document.write(doc.html);
-    printWindow.document.close();
+    if (!printWindow) {
+      alert("Tu navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para bandmanager.io y vuelve a pulsar Imprimir.");
+      return;
+    }
+    printWindow.document.write(
+      '<!DOCTYPE html><meta charset="utf-8"><title>Preparando setlist…</title><body style="font-family:sans-serif;color:#555;display:grid;place-items:center;height:100vh;margin:0">Maquetando el setlist…</body>',
+    );
+    try {
+      const doc = await buildPrintDocument({ members: membersToExport, mode: "print" });
+      if (!doc) {
+        printWindow.close();
+        return;
+      }
+      printWindow.document.open();
+      printWindow.document.write(doc.html);
+      printWindow.document.close();
+    } catch (err) {
+      console.error("Impresión del setlist:", err);
+      printWindow.close();
+    }
   };
 
   // Preview page member

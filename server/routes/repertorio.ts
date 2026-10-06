@@ -12,7 +12,7 @@ const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
-import { transcribirLetra, limpiarLineas, totalPalabras } from "../services/transcripcionLetra.js";
+import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from "../services/transcripcionLetra.js";
 import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import {
@@ -277,7 +277,11 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
 
     let transcripcion;
     try {
-      transcripcion = await transcribirLetra(urlLetra, { idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined });
+      transcripcion = await transcribirLetra(urlLetra, {
+        idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined,
+        // Para APIs que reciben el fichero (OpenAI): mp3 mono recortado, descargado con la guardia SSRF.
+        archivoLocal: () => getAudioSnippetPath({ audioUrl: urlLetra, allowSyntheticFallback: false, maxSeconds: 600 }),
+      });
     } catch (err: any) {
       console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
       return res.status(502).json({ error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` });
@@ -292,7 +296,7 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
     }
 
     const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
-    const letraConfianza = fuenteLetra === "voz" ? "media" : "baja";
+    const letraConfianza = confianzaGlobal(lineas, fuenteLetra);
     const analisisFinal = analisis
       ? {
           ...analisis,

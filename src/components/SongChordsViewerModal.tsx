@@ -30,7 +30,7 @@ import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
 import { ShareModal } from "./ShareModal";
 import { LineaTiempoAcordes } from "./chords/LineaTiempoAcordes";
-import { alinearCifradoConAudio, acordeActivoDelCifrado, esLineaCabecera, esTokenAcorde, Alineacion } from "../utils/alineacionAcordes";
+import { alinearCifradoConAudio, acordeActivoDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
@@ -379,12 +379,24 @@ export function SongChordsViewerModal({
     ? acordeActivoDelCifrado(alineacion, indiceSegmentoEn(analisisAcordes!.segmentos, audioCurrentTime))
     : -1;
 
-  // Mantiene a la vista el acorde del cifrado que está sonando (si el autoscroll manual está
-  // apagado, para no pelearse con él).
+  // Letra con tiempos (Whisper): cada línea del cifrado sabe cuándo suena y la actual se resalta.
+  const letraTranscrita = analisisAcordes?.letra?.lineas;
+  const lineasConLetra = useMemo(
+    () => (letraTranscrita && letraTranscrita.length > 0 ? asociarLineasConLetra(cifradoTexto, letraTranscrita) : null),
+    [cifradoTexto, letraTranscrita],
+  );
+  const letraActiva =
+    lineasConLetra && letraTranscrita && seguirEnCifrado && (isPlayingAudio || audioCurrentTime > 0)
+      ? indiceSegmentoEn(letraTranscrita, audioCurrentTime)
+      : -1;
+
+  // Mantiene a la vista lo que está sonando: la línea de la letra si hay letra con tiempos y, si no,
+  // el acorde (con el autoscroll manual apagado, para no pelearse con él).
   useEffect(() => {
-    if (acordeActivo < 0 || !isPlayingAudio || isAutoScrolling) return;
-    document.getElementById(`cifrado-acorde-${acordeActivo}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [acordeActivo, isPlayingAudio, isAutoScrolling]);
+    if (!isPlayingAudio || isAutoScrolling) return;
+    const objetivo = letraActiva >= 0 ? `letra-linea-${letraActiva}` : acordeActivo >= 0 ? `cifrado-acorde-${acordeActivo}` : null;
+    if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [acordeActivo, letraActiva, isPlayingAudio, isAutoScrolling]);
   const uniqueChords = extractUniqueChords(processedText);
 
   // Copy chords to clipboard
@@ -904,6 +916,17 @@ export function SongChordsViewerModal({
                   <div translate="no" className="notranslate bg-[var(--sunken)] p-6 rounded-[var(--r-l)] font-sans text-sm leading-relaxed whitespace-pre-wrap select-text">
                     {renderFormattedChordSheet(
                       processedText,
+                      lineasConLetra && letraTranscrita && seguirEnCifrado
+                        ? {
+                            porLinea: lineasConLetra,
+                            lineas: letraTranscrita,
+                            activa: letraActiva,
+                            onSeek: (t: number) => {
+                              if (audioRef.current) audioRef.current.currentTime = t;
+                              setAudioCurrentTime(t);
+                            },
+                          }
+                        : undefined,
                       sincronizado && alineacion && analisisAcordes
                         ? {
                             pares: alineacion.pares,
@@ -1220,17 +1243,36 @@ interface SincronizacionCifrado {
   onSeek: (segundos: number) => void;
 }
 
-function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
+interface SincronizacionLetra {
+  porLinea: Array<number | null>; // por cada línea del cifrado, la línea de letra transcrita (o null)
+  lineas: Array<{ t0: number; t1: number }>;
+  activa: number; // línea de letra que suena ahora (-1 ninguna)
+  onSeek: (segundos: number) => void;
+}
+
+function renderFormattedChordSheet(text: string, letra?: SincronizacionLetra, sync?: SincronizacionCifrado) {
   if (!text)
     return (
       <span className="text-[var(--ink-2)] italic">
-        Sin cifrado disponible. Usa el botón de IA para generarlo.
+        Sin cifrado todavía. Escríbelo, sube un PDF o imagen, o pulsa «Letra del audio» para transcribirlo de la voz.
       </span>
     );
 
   const lines = text.split("\n");
   // Orden de aparición de los acordes entre corchetes: debe coincidir con acordesDelCifrado().
   let ordinal = 0;
+
+  // Propiedades de una línea de letra con tiempos: resaltada si suena ahora, y clicable para saltar.
+  const propsDeLetra = (idx: number) => {
+    const k = letra ? letra.porLinea[idx] : null;
+    if (!letra || k === null || k === undefined || !letra.lineas[k]) return {};
+    return {
+      id: `letra-linea-${k}`,
+      onClick: () => letra.onSeek(letra.lineas[k].t0),
+      title: "Saltar a esta frase",
+      className: `${k === letra.activa ? "bg-[var(--acc-soft)] rounded-[var(--r-s)] ring-1 ring-[var(--acc)]" : "hover:bg-[var(--surface)] rounded-[var(--r-s)]"} cursor-pointer transition-ui py-0.5`,
+    };
+  };
 
   return lines.map((line, idx) => {
     // Check if section header like [Intro], [Estribillo], [Solo], etc.
@@ -1250,8 +1292,9 @@ function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
     // Check if inline bracket chord format: [Do] Que tiene tu [Sol] veneno
     if (line.includes("[")) {
       const parts = line.split(/(\[[A-Za-z0-9#\/]+\])/g);
+      const letraProps = propsDeLetra(idx);
       return (
-        <div key={idx} className="py-0.5">
+        <div key={idx} className="py-0.5" {...letraProps}>
           {parts.map((part, pIdx) => {
             if (part.startsWith("[") && part.endsWith("]")) {
               const chordName = part.slice(1, -1);
@@ -1264,7 +1307,10 @@ function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
                     key={pIdx}
                     id={`cifrado-acorde-${k}`}
                     type="button"
-                    onClick={() => sync.onSeek(seg.t0)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      sync.onSeek(seg.t0);
+                    }}
                     title={`Saltar a ${Math.floor(seg.t0 / 60)}:${String(Math.floor(seg.t0 % 60)).padStart(2, "0")}${par.coincide ? "" : " · en el audio suena otro acorde"}`}
                     className={`font-bold px-1 py-0.5 rounded mx-0.5 text-xs cursor-pointer transition-ui ${
                       k === sync.activo
@@ -1316,7 +1362,7 @@ function renderFormattedChordSheet(text: string, sync?: SincronizacionCifrado) {
 
     // Standard lyrics line
     return (
-      <div key={idx} className="text-[var(--ink-2)] py-0.5">
+      <div key={idx} className="text-[var(--ink-2)] py-0.5" {...propsDeLetra(idx)}>
         {line || "\u00A0"}
       </div>
     );

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { detectarAcordesDesdePcm } from '../chordDetection';
+import { detectarAcordesDesdePcm, detectarAcordesConDiagnostico, estimarTonalidadDesdeAcordes } from '../chordDetection';
 import { motivoAnalisisPocoFiable } from '../analisisAcordes';
 
 /**
@@ -10,10 +10,11 @@ import { motivoAnalisisPocoFiable } from '../analisisAcordes';
  */
 const SR = 11025;
 const NOTAS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-const midiAFreq = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
 
-function rock(prog: [number, 'maj' | 'min'][], bpm: number, repeticiones: number, op: { ruido?: number; voz?: number; bajo?: number; distorsion?: number } = {}) {
-  const { ruido = 0.5, voz = 0.35, bajo: ampBajo = 0.5, distorsion = 8 } = op;
+function rock(prog: [number, 'maj' | 'min'][], bpm: number, repeticiones: number, op: { ruido?: number; voz?: number; bajo?: number; distorsion?: number; pedal?: boolean; cents?: number; reverb?: number } = {}) {
+  const { ruido = 0.5, voz = 0.35, bajo: ampBajo = 0.5, distorsion = 8, pedal = false, cents = 0, reverb = 0 } = op;
+  const afin = Math.pow(2, cents / 1200);
+  const midiAFreq = (m: number) => 440 * afin * Math.pow(2, (m - 69) / 12);
   let semilla = 7;
   const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647);
   const beat = 60 / bpm;
@@ -32,7 +33,7 @@ function rock(prog: [number, 'maj' | 'min'][], bpm: number, repeticiones: number
         for (let h = 1; h <= 5; h++) for (let i = 0; i < n; i++) guitarra[i] += (amp / h) * Math.sin((2 * Math.PI * f0 * h * i) / SR);
       }
       for (let i = 0; i < n; i++) guitarra[i] = Math.tanh(distorsion * guitarra[i] * 0.4) * 0.6;
-      const fb = midiAFreq(rootMidi);
+      const fb = midiAFreq(pedal ? 40 : rootMidi);
       for (let i = 0; i < n; i++) {
         const pos = (i / SR) % beat;
         const nb = Math.floor(i / SR / beat) % 4;
@@ -46,6 +47,10 @@ function rock(prog: [number, 'maj' | 'min'][], bpm: number, repeticiones: number
       verdad.push({ acorde: NOTAS[raiz] + (tipo === 'min' ? 'm' : ''), t0: t, t1: t + barra });
       t += barra;
     }
+  }
+  if (reverb > 0) {
+    const d = Math.round(0.09 * SR);
+    for (let i = out.length - 1; i >= d; i--) out[i] += reverb * out[i - d] + reverb * 0.6 * out[Math.max(0, i - 2 * d)];
   }
   return { pcm: out, verdad };
 }
@@ -61,6 +66,42 @@ function acierto(det: { t0: number; t1: number; acorde: string }[], verdad: { ac
   }
   return ok / total;
 }
+
+const BTBW: [number, 'maj' | 'min'][] = [[4, 'maj'], [4, 'maj'], [9, 'maj'], [2, 'maj'], [4, 'maj'], [4, 'maj'], [9, 'maj'], [4, 'maj']];
+
+describe('rock duro tipo «Born To Be Wild» (el caso que falló en producción)', () => {
+  it('bajo fijo en Mi: ya no colapsa en un solo acorde', () => {
+    const { pcm, verdad } = rock(BTBW, 146, 4, { distorsion: 12, pedal: true });
+    const det = detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'E' });
+    expect(det.length).toBeGreaterThan(15); // con el detector anterior salía 1 tramo
+    expect(acierto(det, verdad)).toBeGreaterThan(0.9);
+  });
+
+  it('con mucha batería y voz fuerte', () => {
+    const { pcm, verdad } = rock(BTBW, 146, 4, { distorsion: 12, pedal: true, ruido: 2, voz: 1 });
+    expect(acierto(detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'E' }), verdad)).toBeGreaterThan(0.9);
+  });
+
+  it('grabación desafinada (+40 y −45 centésimas) como un disco antiguo', () => {
+    for (const cents of [40, -45]) {
+      const { pcm, verdad } = rock(BTBW, 146, 4, { distorsion: 12, cents });
+      expect(acierto(detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'E' }), verdad)).toBeGreaterThan(0.9);
+    }
+  });
+
+  it('reverberación y ruido', () => {
+    const { pcm, verdad } = rock(BTBW, 146, 4, { distorsion: 12, reverb: 0.6, ruido: 1.5 });
+    expect(acierto(detectarAcordesDesdePcm(pcm, SR, { tonalidad: 'E' }), verdad)).toBeGreaterThan(0.9);
+  });
+
+  it('el diagnóstico estima la afinación de la grabación', () => {
+    const { pcm } = rock(BTBW, 146, 3, { distorsion: 12, cents: 35 });
+    const { diagnostico } = detectarAcordesConDiagnostico(pcm, SR, { tonalidad: 'E' });
+    expect(Math.abs(diagnostico.afinacionCents - 35)).toBeLessThanOrEqual(8);
+    expect(diagnostico.acordesDistintos).toBeGreaterThanOrEqual(3);
+    expect(diagnostico.cuotaAcordeDominante).toBeLessThan(0.8);
+  });
+});
 
 describe('detección sobre rock denso (guitarras distorsionadas + batería + voz)', () => {
   it('A-E-F#m-D a 138 BPM con la tonalidad conocida: >90 % y sin colapsar en un acorde', () => {
@@ -105,5 +146,19 @@ describe('motivoAnalisisPocoFiable: no se guarda un resultado increíble', () =>
 
   it('un tema corto con pocos acordes no se rechaza por poco cambio', () => {
     expect(motivoAnalisisPocoFiable([seg('Am', 0, 10), seg('G', 10, 20)], 20)).toBeNull();
+  });
+});
+
+describe('estimarTonalidadDesdeAcordes', () => {
+  const seg = (acorde: string, t0: number, dur = 4) => ({ t0, t1: t0 + dur, acorde, confianza: 1 });
+  it('E-A-D-E → La mayor (I-IV-V sobre la tónica que más pesa)', () => {
+    expect(estimarTonalidadDesdeAcordes([seg('E', 0), seg('A', 4), seg('D', 8), seg('A', 12), seg('E', 16), seg('A', 20)])).toBe('A');
+  });
+  it('Am-F-C-G → Do mayor o La menor (relativos): con tónica Am manda Am', () => {
+    const t = estimarTonalidadDesdeAcordes([seg('Am', 0, 8), seg('F', 8), seg('C', 12), seg('G', 16), seg('Am', 20, 8)]);
+    expect(['Am', 'C']).toContain(t);
+  });
+  it('con menos de 3 acordes no se atreve', () => {
+    expect(estimarTonalidadDesdeAcordes([seg('E', 0), seg('A', 4)])).toBeNull();
   });
 });
