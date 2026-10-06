@@ -237,6 +237,9 @@ CREATE TABLE IF NOT EXISTS rehearsals (
     grabaciones JSONB DEFAULT '[]'::jsonb,
     rating_general INTEGER,
     temperatura_local TEXT,
+    tipo_evento TEXT DEFAULT 'ensayo',
+    asunto TEXT DEFAULT '',
+    enlace_reunion TEXT DEFAULT '',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
