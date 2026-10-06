@@ -1,6 +1,8 @@
 {
   "name": "bandmanager-ai",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Diego de la Calle Berzal",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

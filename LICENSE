@@ -1,16 +1,76 @@
-BandManager.io Source-Available License
-Copyright (c) 2026 Diego de la Calle Berzal
+BandManager.io Source-Available License (BMSAL) v1.0
+Copyright (c) 2026 Diego de la Calle Berzal (DiegoCalleB). All rights reserved.
 
-This software and its source code are provided under a custom Source-Available model.
+This is NOT an open-source license. The source code is published for
+transparency, academic evaluation and learning only. No rights are granted
+except those expressly listed below. All other rights are reserved.
 
-1. NON-COMMERCIAL USE ONLY
-This software is provided strictly for academic evaluation (TFM), personal research, and non-commercial use. Any commercial use, monetization, distribution as a service (SaaS), or creation of derivative works for commercial exploitation is strictly prohibited without explicit, prior written permission from the copyright holder.
+"Software" means all source code, architecture, database schemas, prompts,
+agent/workflow designs, algorithms, UI/UX designs, assets, documentation and
+any other material in this repository, including every version and history.
 
-2. NON-COMMERCIAL DISTRIBUTION AND MODIFICATION
-For strictly non-commercial purposes, you may view, modify, and redistribute this software. Any such non-commercial redistribution or modification must be shared under these exact same terms, obligating any derivatives to remain open and non-commercial.
+1. PERMITTED USES (non-commercial only)
+You may, free of charge and strictly for non-commercial purposes:
+  a) read and inspect the Software, and audit it for security or correctness;
+  b) run it locally for academic evaluation (including the author's Master's
+     thesis / TFM review), personal research and private learning;
+  c) fork it on GitHub solely as GitHub's Terms of Service allow, and keep
+     that fork non-commercial and under this same license, unmodified in its
+     notices.
 
-3. NO WARRANTY
-This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+2. PROHIBITED USES
+Without prior, explicit, written permission of the copyright holder you may
+NOT:
+  a) use the Software, or any part of it, commercially or for monetization,
+     including offering it, or functionality derived from it, as a product,
+     SaaS, API, template, plugin or service, free or paid;
+  b) copy, redistribute, sublicense, sell, rent or publish the Software or any
+     substantial part of it (including code snippets, schemas, prompts,
+     agent flows, designs or documentation) outside of the permitted forks in
+     1(c);
+  c) create derivative works, or reproduce the architecture, logic, data
+     model, agent design, UX or "look and feel" of the Software in another
+     product, even if re-written in another language or framework;
+  d) use the Software, its code or its documentation to train, fine-tune,
+     evaluate for training purposes, or build datasets for, any machine
+     learning or AI model, or allow automated scraping of this repository for
+     that purpose;
+  e) remove, alter or obscure copyright, license, authorship or attribution
+     notices;
+  f) present the Software or derivatives as your own work, or use the names
+     "BandManager", "BandManager.io" or "BandsManager", or related logos and
+     branding, in a way that suggests affiliation or endorsement;
+  g) decompile, disassemble or reverse engineer any compiled or hosted
+     component, or circumvent any access control, rate limit or licensing
+     mechanism.
 
-For commercial licensing inquiries, partnerships, or special authorizations, contact:
+3. NO PATENT OR TRADEMARK GRANT
+Nothing in this license grants any patent, trademark or trade-name right.
+
+4. AUTHORSHIP AND EVIDENCE
+Authorship and priority are evidenced by the immutable, public Git commit
+history of this repository (timestamps from August 2026) and by the
+associated academic deposit. Contributions, if ever accepted, are assigned to
+the copyright holder as a condition of acceptance.
+
+5. TERMINATION AND ENFORCEMENT
+Any breach terminates all permissions granted here automatically and
+immediately; you must then delete every copy of the Software. The copyright
+holder may seek injunctive relief, damages, the surrender of profits and
+legal costs, and may file takedown notices (e.g. DMCA / EU Digital Services
+Act) against infringing copies. Spanish law applies; the courts of Madrid
+(Spain) have jurisdiction, without prejudice to mandatory consumer rights.
+
+6. NO WARRANTY AND LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NON-INFRINGEMENT. TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE AUTHOR IS NOT
+LIABLE FOR ANY DAMAGE, DATA LOSS OR SERVICE INTERRUPTION ARISING FROM THE USE
+OF THE SOFTWARE.
+
+7. THIRD-PARTY COMPONENTS
+Third-party dependencies remain under their own licenses, which are not
+modified by this license.
+
+Commercial licensing, partnerships and special authorizations:
 diego.delacalleb@gmail.com
