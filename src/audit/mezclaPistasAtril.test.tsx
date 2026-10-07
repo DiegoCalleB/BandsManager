@@ -12,7 +12,7 @@ const pistas = [
 
 describe('mezcla por pista en el Atril', () => {
   it('el Atril pasa los ajustes al hook y pinta el mezclador', () => {
-    expect(atril).toContain('useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas)');
+    expect(atril).toContain('useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas, semitonosAudio)');
     expect(atril).toContain('<MezclaPistas');
   });
 

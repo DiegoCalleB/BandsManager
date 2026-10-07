@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react';
 import type { AudioTrack } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
+import { aplicarTono, tonoConectado } from './useTonePitchShift';
 import { hayPistaEnSolo, volumenEfectivo, type AjustesPistas } from '../utils/mezclaStems';
 
 const DERIVA_MAX_S = 0.15;
@@ -10,12 +11,15 @@ const DERIVA_MAX_S = 0.15;
  * (acordes, letra y barra de posición no cambian). Cuando hay pistas, el principal se silencia.
  * Con `pistas` vacío no hace nada y el principal suena entero.
  * `ajustes` (silencio/solo/volumen por pista) se aplica en vivo, sin reiniciar la reproducción.
+ * `semitonos` transpone también los stems (el principal va aparte, ver `useTonoAudio`).
  */
-export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pistas: AudioTrack[], audioUrl: string, ajustes: AjustesPistas = {}): void {
+export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pistas: AudioTrack[], audioUrl: string, ajustes: AjustesPistas = {}, semitonos = 0): void {
   const clave = pistas.map((p) => p.id).join('|');
   const ajustesRef = useRef(ajustes);
   const pistasRef = useRef(pistas);
   const mapaRef = useRef(new Map<string, HTMLAudioElement>());
+  const semitonosRef = useRef(semitonos);
+  semitonosRef.current = semitonos;
   ajustesRef.current = ajustes;
   pistasRef.current = pistas;
 
@@ -28,6 +32,13 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
   };
 
   useEffect(aplicarVolumenes, [ajustes]);
+
+  const aplicarTonos = () => {
+    for (const el of mapaRef.current.values()) {
+      if (semitonosRef.current !== 0 || tonoConectado(el)) void aplicarTono(el, semitonosRef.current);
+    }
+  };
+  useEffect(aplicarTonos, [semitonos]);
 
   useEffect(() => {
     const maestro = audioRef.current;
@@ -60,6 +71,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
         mapaRef.current.set(p.id, el);
       }
       aplicarVolumenes();
+      aplicarTonos();
       ritmo();
       if (!maestro.paused) tocar();
     })();

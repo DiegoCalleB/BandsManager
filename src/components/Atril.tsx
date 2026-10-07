@@ -57,10 +57,14 @@ import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
 import { ControlBucle } from "./chords/ControlBucle";
+import { ControlVelocidad } from "./chords/ControlVelocidad";
+import { ControlTonoAudio } from "./chords/ControlTonoAudio";
+import { useTonoAudio } from "../hooks/useTonoAudio";
+import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
 import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
 import { pistasDeCancion } from "../utils/irisTracks";
-import { pistaDelUsuario, pistasParaModo, type AjustesPistas, type ModoEscucha } from "../utils/mezclaStems";
+import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
 import { useGrabarIdea } from "../hooks/useGrabarIdea";
@@ -176,8 +180,12 @@ export function Atril({
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [ajustesPistas, setAjustesPistas] = useState<AjustesPistas>({});
-  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
+  const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
+  useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
+  const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
+  const semitonosAudio = audioSigueTono ? transpose : 0;
+  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas, semitonosAudio);
+  useTonoAudio(audioRef, audioUrl, semitonosAudio);
   const { bucle, marcar: marcarBucle, limpiar: limpiarBucle } = useBucleAB(audioRef, audioUrl);
 
   // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
@@ -856,7 +864,13 @@ export function Atril({
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}
-                {audioUrl && <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />}
+                {audioUrl && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                    <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
+                    <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
+                  </div>
+                )}
                 <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
                 {modo === 'Ensayar' && (
@@ -1384,6 +1398,7 @@ export function Atril({
           <audio
             ref={audioRef}
             src={audioUrl}
+            crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
               if (audioRef.current) {
