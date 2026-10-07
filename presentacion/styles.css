@@ -244,3 +244,19 @@ body.scroll .slide.sunk, body.scroll .slide { border-bottom: 1px solid var(--hai
 }
 @page { size: 1920px 1080px; margin: 0; }
 @media (prefers-reduced-motion: reduce) { .slide, .slide > *, .split .copy > * { transition: none !important; } }
+
+.bul2 { list-style: none; display: grid; gap: 18px; }
+.bul2 li { font-size: 27px; line-height: 1.4; padding-left: 30px; position: relative; color: var(--ink-2); }
+.bul2 li::before { content: ""; position: absolute; left: 0; top: .6em; width: 12px; height: 12px; border-radius: 4px; background: var(--acc); }
+body.scroll .bul2 li { font-size: 18px; }
+.tight { margin-top: 36px; }
+.tight td { font-size: 27px; padding: 17px 24px; }
+.compact .card p { font-size: 25px; }
+.compact .flow { margin-top: 44px; gap: 18px; }
+.compact .flow .step { min-height: 0; padding: 28px 28px 30px; }
+.compact .flow .step h3 { font-size: 38px; margin: 10px 0 12px; }
+.compact .flow .step p { font-size: 23px; }
+.compact .stats { margin-top: 44px; }
+.compact .stat b { font-size: 96px; }
+.compact table { margin-top: 34px; }
+.compact .card { padding: 30px 34px; }

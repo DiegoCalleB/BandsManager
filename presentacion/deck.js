@@ -5,14 +5,14 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const root = document.documentElement;
 
-  // Tema: el del sistema, salvo que se haya elegido uno antes
+  // Tema: oscuro por defecto, salvo que se haya elegido uno antes (tecla T)
   let saved = null;
   try { saved = localStorage.getItem('deck_theme'); } catch (_) { /* sin almacenamiento */ }
   const setTheme = (t) => {
     root.dataset.theme = t;
     try { localStorage.setItem('deck_theme', t); } catch (_) { /* sin almacenamiento */ }
   };
-  setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  setTheme(saved || 'dark');
   const toggleTheme = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
 
   // Diapositiva de vídeo opcional: solo existe si hay video/demo.mp4 o un data-embed (YouTube/Vimeo)
