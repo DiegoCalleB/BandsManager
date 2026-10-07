@@ -690,24 +690,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               </Button>
             )}
 
-            {/* Quick action: Separar con Iris si no tiene pistas */}
-            {!isBlock && currentSong && !irisStemIdea && (
-              <button
-                type="button"
-                onClick={() => handleLaunchStudio()}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
-                  glareMode
-                    ? "bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
-                    : "bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
-                }`}
-                title="Separar pistas de este tema con el motor de IA iris en modo Studio"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                <span className="hidden sm:inline">Separar con Iris</span>
-                <span className="sm:hidden">Iris</span>
-              </button>
-            )}
-
             {/* Quick action: Modo Studio */}
             {!isBlock && currentSong && (
               <button
@@ -1438,7 +1420,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     </div>
 
                     <div className="flex items-center gap-1.5 pt-1">
-                      {songIrisIdea ? (
+                      {songIrisIdea && (
                         <Button
                           variant="neutral"
                           size="xs"
@@ -1453,19 +1435,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
                           <span>Modo ensayo</span>
                         </Button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowSongListDrawer(false);
-                            handleLaunchStudio(song);
-                          }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
-                          title="Separar pistas de este tema con el motor de IA iris en modo Studio"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                          <span>Separar con Iris</span>
-                        </button>
                       )}
 
                       <Button
