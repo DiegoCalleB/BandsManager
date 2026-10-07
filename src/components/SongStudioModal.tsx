@@ -28,7 +28,7 @@ import { apiFetch } from '../utils/api';
 import { separateAudioIntoStems, IsolatedStemResult } from '../utils/stemSeparator';
 import { generateAccompanimentAudioBlob } from '../utils/accompanimentSynth';
 import WaveformTrack from './WaveformTrack';
-import { SongChordsViewerModal } from './SongChordsViewerModal';
+import { Atril } from './Atril';
 import PracticeModePanel from './PracticeModePanel';
 import { ShareModal } from './ShareModal';
 import { ModalPortal } from './common/ModalPortal';
@@ -5874,7 +5874,7 @@ export default function SongStudioModal({
         />
 
         {/* CHORDS & SUBSTITUTE GUIDE VIEWER OVERLAY */}
-        {showChordsModal && <SongChordsViewerModal song={song} onClose={() => setShowChordsModal(false)} onUpdateSong={onUpdateSong} />}
+        {showChordsModal && <Atril cancion={song} modo="Estudiar" onClose={() => setShowChordsModal(false)} onUpdateSong={onUpdateSong} />}
 
         {/* CUBASE KEYBOARD SHORTCUTS CHEAT SHEET MODAL */}
         {showCubaseHelp && (

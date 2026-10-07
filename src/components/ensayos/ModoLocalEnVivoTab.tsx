@@ -46,7 +46,7 @@ import {
   processChordText,
   transposeChordToken,
 } from "../../utils/chordUtils";
-import { SongChordsViewerModal } from "../SongChordsViewerModal";
+import { Atril } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { programarClic } from '../../utils/clicMetronomo';
@@ -1038,8 +1038,9 @@ export function ModoLocalEnVivoTab({
 
       {/* Chords Viewer & Editor Modal */}
       {editingSongModal && (
-        <SongChordsViewerModal
-          song={editingSongModal}
+        <Atril
+          cancion={editingSongModal}
+          modo="Ensayar"
           onClose={() => setEditingSongModal(null)}
           onUpdateSong={(updated) => {
             if (onUpdateSong) {
