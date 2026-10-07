@@ -329,6 +329,38 @@ export function isSongMarkedForMember(
   );
 }
 
+/** Devuelve la canción con la marca "ver tono/BPM en mi hoja" puesta o quitada para ese miembro,
+ * sin tocar nota ni nivel de preparación. No muta; si no hay cambio devuelve la misma canción. */
+export function withSongMarkedForMember<T extends { notasPorMiembro?: any[] }>(
+  song: T,
+  memberKey: string | undefined,
+  memberName: string,
+  marked: boolean,
+): T {
+  if (isSongMarkedForMember(song, memberKey, memberName) === marked) return song;
+  const list: any[] = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
+  const idx = list.findIndex(
+    (n) =>
+      (memberKey && n.userId === memberKey) ||
+      (n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase()),
+  );
+  if (marked) {
+    if (idx >= 0) list[idx] = { ...list[idx], mostrarTono: true };
+    else
+      list.push({
+        userId: memberKey,
+        memberName,
+        nota: "",
+        mostrarTono: true,
+        updatedAt: new Date().toISOString(),
+      });
+  } else if (idx >= 0) {
+    const { mostrarTono: _quitar, ...rest } = list[idx];
+    list[idx] = rest;
+  }
+  return { ...song, notasPorMiembro: list };
+}
+
 /** Devuelve el array notasPorMiembro actualizado con el nuevo nivel de preparación de un miembro,
  * sin tocar la nota de texto libre que ya tuviera. Quien llama debe guardar el resultado (p.ej.
  * onUpdateSong({ ...song, notasPorMiembro: nuevoArray })) — esta función no muta nada. */
