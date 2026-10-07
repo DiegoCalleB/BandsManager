@@ -36,6 +36,7 @@ import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
 import { contextoDeAcordes, ordenarPorTonica } from "../utils/vistaAcordes";
+import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
 import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
@@ -415,6 +416,14 @@ export function SongChordsViewerModal({
     return tiemposDeAcordes(alineacion, analisisAcordes.segmentos, porLinea);
   }, [alineacion, analisisAcordes, cifradoTexto, lineasConLetra, letraTranscrita]);
   const acordeActivo = sincronizado ? acordeActivoPorTiempo(tiemposAcordes, audioCurrentTime) : -1;
+
+  // El acorde que suena ahora, tal como se ve (transpuesto): ilumina su diagrama en el cajón.
+  const acordeSonando = useMemo(() => {
+    if (acordeActivo < 0 || !isPlayingAudio) return null;
+    const visible = acordesDelCifrado(processedText)[acordeActivo];
+    const k = normalizarAcorde(visible);
+    return k ? extractUniqueChords(processedText).find((c) => normalizarAcorde(c) === k) ?? null : null;
+  }, [acordeActivo, isPlayingAudio, processedText]);
 
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
   useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
@@ -1322,7 +1331,7 @@ export function SongChordsViewerModal({
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                     {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord) => (
-                      <CajaAcorde key={chord} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
+                      <CajaAcorde key={chord} sonando={chord === acordeSonando} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
                     ))}
                   </div>
                 )}

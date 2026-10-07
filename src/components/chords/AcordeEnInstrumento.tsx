@@ -117,12 +117,12 @@ export function useVistaAcordes(): [VistaAcorde, (v: VistaAcorde) => void] {
 }
 
 /** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
-export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string }> = ({ chord, vista, contexto, grado }) => {
+export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean }> = ({ chord, vista, contexto, grado, sonando }) => {
   const shape = vista === 'guitarra' ? buscarFormaGuitarra(chord) : undefined;
   const fn = contexto?.info?.funcion;
   const color = fn ? COLOR_FUNCION[fn] : undefined;
   return (
-    <div translate="no" className={`notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}>
+    <div translate="no" data-sonando={sonando ? 'true' : undefined} className={`notranslate p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition-all duration-150 ${sonando ? 'bg-[var(--acc-soft)] ring-2 ring-[var(--acc)] scale-[1.03]' : `bg-[var(--sunken)] ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}`}>
       <div className="flex items-center justify-center gap-1.5 text-xs font-bold font-sans">
         <span
           className={contexto?.tonica ? 'px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)]' : fn ? `px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[fn]}` : 'text-[var(--acc)]'}
