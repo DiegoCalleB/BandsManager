@@ -15,6 +15,7 @@ import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.j
 import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
+import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { getAppInfo } from "./server/utils/version.js";
 
@@ -594,6 +595,12 @@ async function startServer() {
       startAgentScheduler();
     } catch (e) {
       console.error("Error starting Agent Scheduler:", e);
+    }
+    // Barrido diario de choques de calendario (aviso por email, ver server/services/calendarConflictService.ts)
+    try {
+      startCalendarConflictScheduler();
+    } catch (e) {
+      console.error("Error starting Calendar Conflict Scheduler:", e);
     }
   });
 

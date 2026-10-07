@@ -16,6 +16,8 @@ import {
 } from '../types';
 import { CalendarSyncModal } from './calendar/CalendarSyncModal';
 import { CalendarReminderModal } from './calendar/CalendarReminderModal';
+import { CalendarConflictsBanner } from './calendar/CalendarConflictsBanner';
+import { useCalendarConflicts } from './calendar/useCalendarConflicts';
 import { CalendarEventDetailModal } from './calendar/CalendarEventDetailModal';
 import { ShowIcon } from './ui/ShowIcon';
 
@@ -621,6 +623,18 @@ export default function CalendarView({
       })
       .filter(matchesConvocatoria);
   }, [rehearsals, activeBandId, isSameBandId, matchesConvocatoria]);
+
+  // Choques entre eventos (mismo detector que el aviso por email). Se ignoran las convocatorias
+  // parciales que no incluyen al usuario: lo que no ve, no le choca.
+  const eventosParaChoques = React.useMemo(
+    () => ({ concerts: concerts.filter(matchesConvocatoria), rehearsals: rehearsals.filter(matchesConvocatoria) }),
+    [concerts, rehearsals, matchesConvocatoria],
+  );
+  const choquesCalendario = useCalendarConflicts({
+    concerts: eventosParaChoques.concerts,
+    rehearsals: eventosParaChoques.rehearsals,
+    bandId: activeBandId || '',
+  });
 
   const filteredRehearsals = React.useMemo(() => {
     let list = rehearsals;
@@ -2619,6 +2633,14 @@ export default function CalendarView({
             </button>
           </div>
         )}
+
+        <CalendarConflictsBanner
+          choques={choquesCalendario}
+          onSelectDate={(fecha) => {
+            const [y, m, d] = fecha.split('-').map(Number);
+            if (y && m && d) setSelectedDate(new Date(y, m - 1, d));
+          }}
+        />
 
         {/* Month Grids Container (Single or Dual) con soporte para cambiar de mes deslizando (Touch/Mouse/Trackpad) */}
         <div

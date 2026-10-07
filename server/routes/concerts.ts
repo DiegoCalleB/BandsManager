@@ -23,6 +23,7 @@ import {
   dbGetSongs,
   dbGetLeads
 } from "../db.js";
+import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calendarConflictService.js";
 
 const router = express.Router();
 
@@ -50,6 +51,20 @@ function firmaCoincide(esperada: string, recibida: unknown): boolean {
   return crypto.timingSafeEqual(Buffer.from(esperada), Buffer.from(recibida));
 }
 
+// Choques de calendario de la banda (incluye los que vienen de otras bandas de sus músicos).
+// Lo de bandas ajenas al usuario se devuelve ya redactado, ver choquesVisiblesPara.
+router.get("/calendar/conflicts", requireAuth, async (req, res) => {
+  try {
+    const userBandId = getTargetBandId(req);
+    const userId = (req as any).user?.id;
+    const conflicts = await choquesVisiblesPara(userBandId, userId || "");
+    res.json({ success: true, conflicts });
+  } catch (err: any) {
+    console.error("Error calculando choques de calendario:", err);
+    res.status(500).json({ error: err?.message || "Error al calcular choques de calendario." });
+  }
+});
+
 // Update rehearsal
 router.put("/rehearsals/:id", requireAuth, async (req, res) => {
   try {
@@ -66,6 +81,8 @@ router.put("/rehearsals/:id", requireAuth, async (req, res) => {
       state.rehearsals.push(saved as any);
     }
     saveState(state);
+    // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
+    programarRevisionDeBanda(userBandId);
     res.json({ success: true, rehearsal: saved });
   } catch (err: any) {
     console.error("Error updating rehearsal:", err);
@@ -86,6 +103,8 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
       state.rehearsals.push(saved as any);
     }
     saveState(state);
+    // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
+    programarRevisionDeBanda(userBandId);
     res.json({ success: true, rehearsal: saved });
   } catch (err: any) {
     console.error("Error creating rehearsal:", err);
@@ -142,6 +161,8 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
       state.concerts.push(saved as any);
     }
     saveState(state);
+    // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
+    programarRevisionDeBanda(userBandId);
     res.json({ success: true, concert: saved });
   } catch (err: any) {
     console.error("Error updating concert:", err);
@@ -162,6 +183,8 @@ router.post("/concerts", requireAuth, async (req, res) => {
       state.concerts.push(saved as any);
     }
     saveState(state);
+    // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
+    programarRevisionDeBanda(userBandId);
     res.json({ success: true, concert: saved });
   } catch (err: any) {
     console.error("Error creating concert:", err);
