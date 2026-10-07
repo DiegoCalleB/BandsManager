@@ -245,3 +245,8 @@ _(vacío)_
 - **Auto-balance** (`audioLatency.ts`): un stem casi vacío arrastra al resto al volumen mínimo; ignorar pistas bajo un umbral de RMS.
 - **Deriva** en `PracticeModePanel` (sin re-sync periódico, a diferencia del mezclador de `SongStudioModal`).
 - **Progreso simulado** en `handlePerformAiStemSeparation`: porcentajes por tiempo, no del proveedor.
+
+## Ear training integrado en las canciones (idea, 2026-10-07)
+- **Qué:** educar el oído dentro del Atril/El Oído, con las propias canciones del repertorio: adivinar el siguiente acorde, reconocer grado/función (I–IV–V) sobre la canción real, intervalos de la melodía, «¿en qué tonalidad está?».
+- **Por qué importa:** diferencia frente a apps de ear training genéricas (usa SU repertorio) y refuerza el motor armónico que ya existe (`teoriaArmonica`, grados y funciones). Encaja con el modo Estudiar.
+- **Estado:** idea, sin evaluar. Retomar tras el Atril unificado (plan maestro, fases 2-3). Recordárselo a Diego si no lo menciona.
