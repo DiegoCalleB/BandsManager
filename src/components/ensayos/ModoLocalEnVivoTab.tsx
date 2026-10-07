@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
 import { useAutoScroll } from "../../hooks/useAutoScroll";
-import { contextoDeAcordes, ordenarPorTonica, tonalidadDelCifrado } from "../../utils/vistaAcordes";
-import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
+import { contextoDeAcordes, tonalidadDelCifrado } from "../../utils/vistaAcordes";
+import { useVistaAcordes } from "../chords/AcordeEnInstrumento";
+import { DrawerDiagramas } from "../chords/DrawerDiagramas";
 import {
   Play,
   Pause,
@@ -919,25 +920,14 @@ export function ModoLocalEnVivoTab({
 
           {/* Guitar Chord Shapes Drawer (if open) */}
           {showChordDiagrams && uniqueChords.length > 0 && (
-            <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0">
-              <div className="flex items-center justify-between text-xs font-sans font-bold text-[var(--acc)]">
-                <span>
-                  Diagramas de Acordes de este Tema ({uniqueChords.length})
-                </span>
-                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
-                <IconButton
-                  label="Cerrar"
-                  onClick={() => setShowChordDiagrams(false)}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </IconButton>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord, cIdx) => (
-                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} />
-                ))}
-              </div>
-            </div>
+            <DrawerDiagramas
+              disposicion="tira"
+              acordes={uniqueChords}
+              contexto={contextoAcordes}
+              vista={vistaAcordes}
+              onVista={setVistaAcordes}
+              onCerrar={() => setShowChordDiagrams(false)}
+            />
           )}
 
           {/* Teleprompter Chords Sheet Card */}
