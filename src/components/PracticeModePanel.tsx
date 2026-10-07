@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Song, SongAudioIdea, AudioTrack, User, SongSubstituteGuide } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
+import { pistaConAjuste, hayPistaEnSolo, pistaAudible, volumenEfectivo, alternarSilencio, alternarSolo, type AjustePista } from '../utils/mezclaStems';
 import { exportMasterMixAudioBlob, MasterMixTrackInput, computeAutoBalanceVolumes } from '../utils/audioLatency';
 import { matchInstrumentToStemCategory } from '../config/stemInstruments';
 import { apiFetch } from '../utils/api';
@@ -49,11 +50,7 @@ function TrackPitchShiftBridge({ audioElement, semitones }: { audioElement: HTML
  * demás en el mezclador compartido. Se guarda solo en localStorage, por usuario + canción + idea.
  */
 
-interface TrackOverride {
-  volumen?: number;
-  muted?: boolean;
-  solo?: boolean;
-}
+type TrackOverride = AjustePista;
 
 interface TrackChordsResult {
   cifradoTexto: string;
@@ -243,24 +240,21 @@ export default function PracticeModePanel({
 
   const getEffective = useCallback(
     (tr: AudioTrack): AudioTrack => {
-      const ov = overrides[tr.id];
-      return ov ? { ...tr, ...ov } : tr;
+      return pistaConAjuste(tr, overrides);
     },
     [overrides]
   );
 
-  const hasSolo = useMemo(() => tracks.some((t) => getEffective(t).solo), [tracks, getEffective]);
+  const hasSolo = useMemo(() => hayPistaEnSolo(tracks, overrides), [tracks, overrides]);
 
   const applyDsp = useCallback(
     (tr: AudioTrack) => {
       const el = audioRefs.current[tr.id];
       if (!el) return;
-      const eff = getEffective(tr);
-      const audible = (hasSolo ? !!eff.solo : true) && !eff.muted;
-      el.volume = audible ? Math.max(0, Math.min(1, eff.volumen ?? 1)) : 0;
-      el.muted = !audible;
+      el.volume = volumenEfectivo(tr, overrides, hasSolo);
+      el.muted = !pistaAudible(tr, overrides, hasSolo);
     },
-    [getEffective, hasSolo]
+    [overrides, hasSolo]
   );
 
   useEffect(() => {
@@ -274,24 +268,9 @@ export default function PracticeModePanel({
     }));
   };
 
-  const toggleMute = (trackId: string) => {
-    const isMuted = overrides[trackId]?.muted ?? false;
-    setOverride(trackId, { muted: !isMuted });
-  };
+  const toggleMute = (trackId: string) => setOverrides((prev) => alternarSilencio(prev, trackId));
 
-  const toggleSolo = (trackId: string) => {
-    const isSolo = overrides[trackId]?.solo ?? false;
-    if (isSolo) {
-      setOverride(trackId, { solo: false });
-      return;
-    }
-    // Solo exclusivo, estilo Cubase: activar este desactiva el resto.
-    setOverrides((prev) => {
-      const next: Record<string, TrackOverride> = {};
-      for (const t of tracks) next[t.id] = { ...prev[t.id], solo: t.id === trackId };
-      return next;
-    });
-  };
+  const toggleSolo = (trackId: string) => setOverrides((prev) => alternarSolo(prev, tracks, trackId));
 
   const setTrackVolume = (trackId: string, vol: number) => setOverride(trackId, { volumen: vol });
 
