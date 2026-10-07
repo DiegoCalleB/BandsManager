@@ -1,5 +1,5 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Song, ThemeColors } from "../../types";
 import {
   Disc,
@@ -45,11 +45,8 @@ import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from "../ui/ShowIcon";
 import { ActionMenu, Button, IconButton, Input } from "../ui";
-import {
-  ProgresoTranscripcion,
-  resumirTranscripcion,
-  transcribirEnCola,
-} from "../../utils/transcripcionMasiva";
+import { resumirTranscripcion } from "../../utils/transcripcionMasiva";
+import { colaActiva, useColaLetras } from "../../hooks/useColaLetras";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -143,10 +140,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     total: number;
     failedTitles: string[];
   } | null>(null);
-  const [letras, setLetras] = useState<{
-    fase: "confirmar" | "corriendo" | "fin";
-    progreso?: ProgresoTranscripcion;
-  } | null>(null);
+  const [confirmandoLetras, setConfirmandoLetras] = useState(false);
+  const [colaVista, setColaVista] = useState(false);
   // Las 4 formas de crear un disco (vacío / subir MP3-WAV / Spotify / recortar de un concierto)
   // vivían como 4 botones de texto siempre visibles — se usan una vez por disco, no en cada
   // visita. Un solo punto de entrada"+ Nuevo disco" con las 4 opciones explicadas, mismo patrón
@@ -520,36 +515,34 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   };
 
   // «Letras del audio» en lote: una llamada de pago por canción, así que primero se muestra el
-  // coste esperado y solo se tocan canciones con audio y sin cifrado (nunca se sobrescribe).
+  // coste esperado. La cola vive en el servidor (sigue aunque cierres la pestaña) y solo toca
+  // canciones con audio y sin cifrado: nunca se sobrescribe lo que escribió la banda.
   const resumenLetras = resumirTranscripcion(safeSongs);
-  const abortoLetras = useRef<AbortController | null>(null);
+  const recargarCancionesConLetra = async () => {
+    try {
+      const d = await apiFetch<{ songs?: Song[] }>("/api/songs");
+      const nuevas = d?.songs ?? [];
+      setSongs((prev) =>
+        prev.map((s) => {
+          const n = nuevas.find((x) => x.id === s.id);
+          return n?.cifradoTexto && n.cifradoTexto !== s.cifradoTexto ? { ...s, cifradoTexto: n.cifradoTexto } : s;
+        }),
+      );
+    } catch {
+      /* se verá al recargar */
+    }
+  };
+  const cola = useColaLetras(recargarCancionesConLetra);
+  const colaEnMarcha = colaActiva(cola.resumen);
+  useEffect(() => {
+    if (colaEnMarcha) setColaVista(true);
+  }, [colaEnMarcha]);
+  const titulosDe = (ids: string[]) =>
+    ids.map((id) => safeSongs.find((s) => s.id === id)?.titulo || id).join(", ");
 
-  const handleTranscribirTodo = async () => {
-    const pendientes = resumenLetras.pendientes;
-    if (pendientes.length === 0 || letras?.fase === "corriendo") return;
-    const ctl = new AbortController();
-    abortoLetras.current = ctl;
-    setLetras({ fase: "corriendo", progreso: { hechas: 0, total: pendientes.length, fallidas: [], sinLetra: [] } });
-    const final = await transcribirEnCola(pendientes, {
-      signal: ctl.signal,
-      transcribir: async (song) => {
-        const data = await apiFetch<{ success?: boolean; cifradoTexto?: string }>(
-          `/api/songs/${encodeURIComponent(song.id)}/letra-sincronizada`,
-          { method: "POST", body: JSON.stringify({ sobrescribir: false }) },
-        );
-        if (!data?.cifradoTexto) throw new Error("Sin letra");
-        return { cifradoTexto: data.cifradoTexto };
-      },
-      // El servidor ya guardó la canción; aquí solo se refleja en pantalla.
-      alTerminarCancion: (song, resultado, cifradoTexto) => {
-        if (resultado === "hecha" && cifradoTexto) {
-          setSongs((prev) => prev.map((s) => (s.id === song.id ? { ...s, cifradoTexto } : s)));
-        }
-      },
-      alProgresar: (progreso) => setLetras({ fase: "corriendo", progreso }),
-    });
-    abortoLetras.current = null;
-    setLetras({ fase: "fin", progreso: final });
+  const handleEncolarLetras = async () => {
+    setConfirmandoLetras(false);
+    await cola.encolar(resumenLetras.pendientes.map((s) => s.id));
   };
 
   return (
@@ -776,12 +769,12 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   </Button>
                 </div>
               )}
-              {resumenLetras.pendientes.length > 0 && letras === null && (
+              {cola.resumen && resumenLetras.pendientes.length > 0 && !colaEnMarcha && !confirmandoLetras && (
                 <Button
                   variant="neutral"
                   size="xs"
                   type="button"
-                  onClick={() => setLetras({ fase: "confirmar" })}
+                  onClick={() => setConfirmandoLetras(true)}
                   className="items-center gap-1"
                   title="Transcribir la letra de la voz de todas las canciones que tienen audio y aún no tienen cifrado"
                 >
@@ -793,13 +786,13 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
             </div>
           </div>
 
-          {letras && (
+          {(confirmandoLetras || colaVista || cola.error) && cola.resumen && (
             <div
               className="w-full rounded-[var(--r-m)] bg-[var(--sunken)] p-3 flex flex-wrap items-center gap-2 text-xs text-[var(--ink)]"
               role="status"
-              data-letras-masivas={letras.fase}
+              data-letras-masivas={confirmandoLetras ? "confirmar" : colaEnMarcha ? "corriendo" : "fin"}
             >
-              {letras.fase === "confirmar" && (
+              {confirmandoLetras && (
                 <>
                   <span className="flex-1 min-w-[12rem]">
                     Se transcribirán {resumenLetras.pendientes.length} de {resumenLetras.total} canciones
@@ -810,42 +803,54 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                       ]
                         .filter(Boolean)
                         .join(" y ")})`}
-                    . Una a una y sin tocar lo que ya hayas escrito; cada una consume IA.
+                    . Una a una, en el servidor (puedes cerrar la pestaña) y sin tocar lo que ya hayas escrito; cada una consume IA.
+                    Tu plan permite {cola.resumen.limiteMes} al mes y llevas {cola.resumen.hechasMes}.
                   </span>
-                  <Button variant="primary" size="xs" type="button" onClick={handleTranscribirTodo}>
+                  <Button variant="primary" size="xs" type="button" onClick={handleEncolarLetras}>
                     Transcribir
                   </Button>
-                  <Button variant="ghost" size="xs" type="button" onClick={() => setLetras(null)}>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setConfirmandoLetras(false)}>
                     Cancelar
                   </Button>
                 </>
               )}
-              {letras.fase === "corriendo" && letras.progreso && (
+              {!confirmandoLetras && colaEnMarcha && (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--ink-2)]" />
                   <span className="flex-1">
-                    Transcribiendo {letras.progreso.hechas}/{letras.progreso.total}… puedes seguir usando la app, pero no cierres la pestaña.
+                    Transcribiendo en el servidor: {cola.resumen.pendientes + cola.resumen.enCurso} por hacer. Puedes cerrar la pestaña; seguirá.
                   </span>
-                  <Button variant="ghost" size="xs" type="button" onClick={() => abortoLetras.current?.abort()}>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => void cola.parar()}>
                     Parar
                   </Button>
                 </>
               )}
-              {letras.fase === "fin" && letras.progreso && (
+              {!confirmandoLetras && !colaEnMarcha && colaVista && (
                 <>
                   <span className="flex-1">
-                    Listo: {letras.progreso.hechas - letras.progreso.fallidas.length - letras.progreso.sinLetra.length} de{" "}
-                    {letras.progreso.total} con letra
-                    {letras.progreso.sinLetra.length > 0 && ` · sin voz inteligible: ${letras.progreso.sinLetra.join(", ")}`}
-                    {letras.progreso.fallidas.length > 0 && ` · fallaron: ${letras.progreso.fallidas.join(", ")}`}
-                    {letras.progreso.hechas < letras.progreso.total && " · parado antes de terminar"}. Son automáticas: revísalas de oído.
+                    Listo: {cola.resumen.hechas} con letra
+                    {cola.resumen.sinLetra.length > 0 && ` · sin voz inteligible: ${titulosDe(cola.resumen.sinLetra)}`}
+                    {cola.resumen.fallidas.length > 0 && ` · fallaron: ${titulosDe(cola.resumen.fallidas)}`}
+                    {cola.porTope > 0 && ` · ${cola.porTope} fuera por el tope mensual del plan`}. Son automáticas: revísalas de oído.
                   </span>
-                  <Button variant="ghost" size="xs" type="button" onClick={() => setLetras(null)}>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setColaVista(false)}>
                     Cerrar
                   </Button>
                 </>
               )}
+              {cola.error && <span className="w-full text-[var(--ink-2)]">{cola.error}</span>}
             </div>
+          )}
+
+          {cola.resumen && (
+            <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] cursor-pointer" data-letras-auto>
+              <input
+                type="checkbox"
+                checked={cola.resumen.activado}
+                onChange={(e) => void cola.fijarAuto(e.target.checked)}
+              />
+              Transcribir automáticamente lo nuevo (audio nuevo sin cifrado; consume IA y cuenta para el tope del plan)
+            </label>
           )}
         </div>
 

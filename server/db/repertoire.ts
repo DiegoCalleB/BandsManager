@@ -954,6 +954,13 @@ export async function dbUpsertSong(
       audioNuevo,
       targetBandId,
     );
+    // Opt-in de la banda «Transcribir automáticamente lo nuevo»: solo audio nuevo y sin cifrado.
+    // Import dinámico (la cola depende de este módulo) y sin esperar: nunca frena el guardado.
+    if (!String(payload.cifrado_texto || "").trim()) {
+      import("../services/colaLetras.js")
+        .then((m) => m.encolarLetraAutomatica(targetBandId, finalSongId))
+        .catch(() => {});
+    }
   }
 
   // Si este guardado trae una pista recién separada por Iris (bajo, arreglos...), aprovechar

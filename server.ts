@@ -16,6 +16,7 @@ import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
+import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { getAppInfo } from "./server/utils/version.js";
 
@@ -601,6 +602,12 @@ async function startServer() {
       startCalendarConflictScheduler();
     } catch (e) {
       console.error("Error starting Calendar Conflict Scheduler:", e);
+    }
+    // Cola de letras del audio en segundo plano (ver server/services/colaLetras.ts)
+    try {
+      iniciarColaLetras();
+    } catch (e) {
+      console.error("Error starting Letras Queue:", e);
     }
   });
 

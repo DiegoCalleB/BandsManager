@@ -6287,6 +6287,10 @@ export default function RepertorioSetlists({
           modo="Estudiar"
           onClose={() => setActiveChordsSong(null)}
           onUpdateSong={handleUpdateSongFromChords}
+          onAbrirIris={(s) => {
+            setActiveChordsSong(null);
+            handleOpenStudioModal(s, { openIris: true });
+          }}
         />
       )}
 

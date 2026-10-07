@@ -63,7 +63,8 @@ import { useTonoAudio } from "../hooks/useTonoAudio";
 import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
 import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
-import { pistasDeCancion } from "../utils/irisTracks";
+import { getSongIrisStemIdea, pistasDeCancion } from "../utils/irisTracks";
+import { IrisStudio } from "./chords/IrisStudio";
 import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
@@ -89,6 +90,8 @@ export interface AtrilProps {
   modo?: ModoAtril;
   onClose: () => void;
   onUpdateSong: (updated: Song) => void;
+  /** Abre la separación de Iris de esta canción (el estudio). Sin él no se ofrece separar. */
+  onAbrirIris?: (song: Song) => void;
 }
 
 export function Atril({
@@ -96,6 +99,7 @@ export function Atril({
   modo = 'Estudiar',
   onClose,
   onUpdateSong,
+  onAbrirIris,
 }: AtrilProps) {
   const ajustes = useMemo(
     () => ajustesDeModoAtril(modo, typeof window === "undefined" ? 1024 : window.innerWidth),
@@ -861,6 +865,12 @@ export function Atril({
                   )}
                 </div>
 
+                <IrisStudio
+                  pistas={stems.length}
+                  motor={getSongIrisStemIdea(song)?.stemEngineUsed?.split("(")[0].trim()}
+                  tieneAudio={!!audioUrl}
+                  onSeparar={onAbrirIris ? () => onAbrirIris(song) : undefined}
+                />
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}

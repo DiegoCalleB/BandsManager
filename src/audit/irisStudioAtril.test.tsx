@@ -1,0 +1,39 @@
+import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { IrisStudio } from '../components/chords/IrisStudio';
+
+const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+const repertorio = readFileSync(new URL('../components/RepertorioSetlists.tsx', import.meta.url), 'utf8');
+
+describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
+  it('sin audio no pinta nada', () => {
+    expect(renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio={false} onSeparar={() => {}} />)).toBe('');
+  });
+
+  it('con audio y sin pistas invita a separar', () => {
+    const html = renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio onSeparar={() => {}} />);
+    expect(html).toContain('data-iris-studio="vacio"');
+    expect(html).toContain('Separar con Iris');
+  });
+
+  it('sin forma de abrir el estudio no ofrece un botón muerto', () => {
+    expect(renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio />)).toBe('');
+  });
+
+  it('con pistas es la cabecera del mezclador: nº de pistas, motor y cambiar motor', () => {
+    const html = renderToStaticMarkup(<IrisStudio pistas={4} motor="Iris Studio" tieneAudio onSeparar={() => {}} />);
+    expect(html).toContain('data-iris-studio="listo"');
+    expect(html).toContain('4 pistas');
+    expect(html).toContain('Iris Studio');
+    expect(html).toContain('Cambiar motor');
+    expect(html).not.toContain('border');
+  });
+
+  it('el Atril lo pinta y el repertorio abre la separación del estudio', () => {
+    expect(atril).toContain('<IrisStudio');
+    expect(atril).toContain('onAbrirIris');
+    expect(repertorio).toContain('onAbrirIris={');
+    expect(repertorio).toContain('openIris: true');
+  });
+});
