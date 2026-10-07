@@ -1293,7 +1293,7 @@ export function SongChordsViewerModal({
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
             {activeTab === "chords" && showChordDiagrams && (
-              <div className="w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
+              <div translate="no" className="notranslate w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <ShowIcon inline emoji="🎸" />Acordes ({uniqueChords.length})
