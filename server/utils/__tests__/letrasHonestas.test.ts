@@ -45,7 +45,7 @@ describe('/generate-song-chords: la letra solo sale del audio', () => {
 });
 
 describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
-  const viewer = leer('src', 'components', 'SongChordsViewerModal.tsx');
+  const viewer = leer('src', 'components', 'Atril.tsx');
   const enVivo = leer('src', 'components', 'ensayos', 'ModoLocalEnVivoTab.tsx');
 
   it('el visor y el modo en vivo no tienen cifrado de muestra', () => {
@@ -100,7 +100,7 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
 });
 
 describe('Cliente: la letra solo se pide a propósito', () => {
-  const viewer = leer('src', 'components', 'SongChordsViewerModal.tsx');
+  const viewer = leer('src', 'components', 'Atril.tsx');
   const bulk = leer('src', 'components', 'repertorio', 'BulkAlbumAudioUploaderModal.tsx');
   const repertorio = leer('src', 'components', 'RepertorioSetlists.tsx');
 
