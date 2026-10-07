@@ -347,3 +347,11 @@ body.scroll .bandrow { gap: 16px; } body.scroll .bandrow > img { width: 72px; he
 .mosaic .t1 { grid-column: 1 / 3; }
 .mosaic img { object-position: center 30%; }
 body.scroll .shot.mosaic { height: 640px; }
+
+/* Captura larga que se desplaza sola, como si la sala bajara por la página */
+.shot.longshot { cursor: zoom-in; }
+.slide.active .shot.longshot > img { height: auto; animation: pan 24s ease-in-out 1.6s infinite alternate; transform-origin: 0 0; }
+.shot.longshot > img { height: auto; }
+@keyframes pan { from { transform: translateY(0); } to { transform: translateY(-58%); } }
+.calm .shot.longshot > img { animation: none !important; }
+body.scroll .shot.longshot { height: 520px; } body.scroll .shot.longshot > img { height: auto; animation: none; }
