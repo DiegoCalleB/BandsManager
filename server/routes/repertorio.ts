@@ -17,6 +17,7 @@ import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
 import { analizarArmonia } from "../../src/utils/teoriaArmonica.js";
+import { iniciarProgreso, avanzarProgreso, terminarProgreso, leerProgreso } from "../utils/progresoOido.js";
 import { construirHechos, huellaDeHechos, construirPrompt, validarExplicacion, NIVELES, INSTRUMENTOS, type Nivel, type Instrumento } from "../services/profesorArmonia.js";
 import {
   dbGetSongs,
@@ -204,7 +205,7 @@ const analisisAcordesEnCurso = new Set<string>();
 // análisis en marcha y recibe el mismo resultado.
 const analisisAcordesPromesas = new Map<string, Promise<{ status: number; body: any }>>();
 
-async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir: boolean): Promise<{ status: number; body: any }> {
+async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir: boolean, alAvanzar?: (etapa: string, detalle: string) => void): Promise<{ status: number; body: any }> {
   // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
   // un fichero ajeno a la banda ni pasar una ruta arbitraria.
   const songs = await dbGetSongs(userBandId);
@@ -217,7 +218,7 @@ async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir
     return { status: 409, body: { error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos } };
   }
 
-  const resultado = await analizarAcordesDeCancion(song);
+  const resultado = await analizarAcordesDeCancion(song, alAvanzar);
   if (resultado.ok === false) return { status: resultado.status, body: { error: resultado.error } };
   // Las correcciones manuales se pierden al reanalizar, pero su «verdad» no: así el análisis nuevo
   // se puede medir contra lo que la banda corrigió (ver scripts/evaluar-acordes.ts).
@@ -234,8 +235,11 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
   let promesa = analisisAcordesPromesas.get(clave);
   if (!promesa) {
     analisisAcordesEnCurso.add(clave);
-    promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true)
+    iniciarProgreso(clave, "acordes");
+    promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true, (e, d) => avanzarProgreso(clave, e, d))
+      .then((r) => { terminarProgreso(clave, r.status === 200 ? undefined : String(r.body?.error || "No se pudo analizar")); return r; })
       .catch((err: any) => {
+        terminarProgreso(clave, err?.message || "No se pudieron analizar los acordes del audio.");
         console.error("Error analizando acordes del audio:", err);
         return { status: 500, body: { error: err?.message || "No se pudieron analizar los acordes del audio." } };
       })
@@ -247,6 +251,12 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
   }
   const { status, body } = await promesa;
   res.status(status).json(body);
+});
+
+// GET en qué etapa va el análisis del audio de una canción («El Oído»); el cliente lo consulta mientras espera.
+router.get("/songs/:id/progreso-oido", requireAuth, (req, res) => {
+  const userBandId = getTargetBandId(req);
+  res.json({ progreso: leerProgreso(`${userBandId}:${req.params.id}`) });
 });
 
 // POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
@@ -262,6 +272,7 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
     return res.status(409).json({ error: "Ya se está procesando el audio de esta canción." });
   }
   analisisAcordesEnCurso.add(clave);
+  iniciarProgreso(clave, "letra", "Preparando la canción…");
   try {
     const songs = await dbGetSongs(userBandId);
     const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
@@ -275,6 +286,7 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
       });
     }
 
+    avanzarProgreso(clave, "voz", "Buscando la pista de voz aislada (si no hay, se usa la mezcla)…");
     const urlVoz = (song.audioIdeas ?? [])
       .flatMap((i: any) => i.pistas ?? [])
       .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
@@ -289,11 +301,12 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
     let analisis = song.analisisAcordes as any;
     let avisoAcordes: string | undefined;
     if (!analisis) {
-      const r = await analizarAcordesDeCancion(song);
+      const r = await analizarAcordesDeCancion(song, (e, d) => avanzarProgreso(clave, e, d));
       if (r.ok === true) analisis = r.analisis;
       else avisoAcordes = (r as { error: string }).error;
     }
 
+    avanzarProgreso(clave, "transcribir", fuenteLetra === "voz" ? "Escuchando la voz y escribiendo la letra con sus tiempos…" : "Escuchando la mezcla completa y escribiendo la letra (mejor con la voz aislada)…");
     let transcripcion;
     try {
       transcripcion = await transcribirLetra(urlLetra, {
@@ -314,6 +327,7 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
       });
     }
 
+    avanzarProgreso(clave, "unir", "Colocando cada acorde sobre su palabra…");
     const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
     const letraConfianza = confianzaGlobal(lineas, fuenteLetra);
     const analisisFinal = analisis
@@ -356,6 +370,7 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
     console.error("Error en letra-sincronizada:", err);
     res.status(500).json({ error: err?.message || "No se pudo procesar la letra." });
   } finally {
+    terminarProgreso(clave, res.statusCode >= 400 ? "No se pudo completar" : undefined);
     analisisAcordesEnCurso.delete(clave);
   }
 });

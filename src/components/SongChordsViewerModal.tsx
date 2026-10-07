@@ -45,6 +45,7 @@ import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaD
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
+import { ModalOido } from "./chords/ModalOido";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -114,6 +115,7 @@ export function SongChordsViewerModal({
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
+  const [oidoOculto, setOidoOculto] = useState<boolean>(false);
   const [aiSuccessMsg, setAiSuccessMsg] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<boolean>(false);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
@@ -234,6 +236,7 @@ export function SongChordsViewerModal({
   const handleAnalyzeChordsFromAudio = async (sobrescribir = false) => {
     try {
       setIsAnalyzingChords(true);
+      setOidoOculto(false);
       setAiSuccessMsg(null);
       const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
         method: "POST",
@@ -293,6 +296,7 @@ export function SongChordsViewerModal({
   const handleGenerateWithAi = async () => {
     try {
       setIsGeneratingAi(true);
+      setOidoOculto(false);
       setAiSuccessMsg(null);
 
       // Un cifrado que ya existe (escrito por la banda) no se sustituye sin preguntar.
@@ -615,7 +619,7 @@ export function SongChordsViewerModal({
                 <Wand2
                   className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
-                <span>{isGeneratingAi ? "Transcribiendo…" : "Letra del audio"}</span>
+                <span>{isGeneratingAi ? "Escuchando…" : "Letra del audio"}</span>
               </Button>
 
               {/* Detección propia de acordes con tiempos, sin IA generativa */}
@@ -1351,6 +1355,14 @@ export function SongChordsViewerModal({
             includeGuide: true,
           })}
           itemType="song"
+        />
+
+        <ModalOido
+          abierto={(isAnalyzingChords || isGeneratingAi) && !oidoOculto}
+          tarea={isGeneratingAi ? "letra" : "acordes"}
+          songId={song.id}
+          titulo={song.titulo}
+          onOcultar={() => setOidoOculto(true)}
         />
 
         {/* STRUCTURE UPLOAD MODAL */}

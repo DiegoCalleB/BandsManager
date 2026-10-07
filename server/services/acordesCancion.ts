@@ -13,11 +13,14 @@ export type ResultadoAnalisis =
  * (instrumental de Iris → stems armónicos → mezcla) y con la red de seguridad de
  * `motivoAnalisisPocoFiable`. No toca la base de datos: quien llama decide si guarda.
  */
-export async function analizarAcordesDeCancion(song: any): Promise<ResultadoAnalisis> {
+export async function analizarAcordesDeCancion(song: any, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisis> {
+  const avisa = (etapa: string, detalle: string) => alAvanzar?.(etapa, detalle);
+  avisa("audio", "Eligiendo el mejor audio: instrumental, stems o mezcla…");
   const niveles = elegirFuentesAudio(song);
   if (niveles.length === 0) return { ok: false, status: 400, error: "La canción no tiene audio principal para analizar." };
 
   // Se prueba de mejor a peor fuente; si una no se puede decodificar se baja a la siguiente.
+  avisa("audio", "Descargando y decodificando el audio…");
   let pcm: Float32Array | null = null;
   let fuente = niveles[0].fuente;
   for (const nivel of niveles) {
@@ -39,10 +42,12 @@ export async function analizarAcordesDeCancion(song: any): Promise<ResultadoAnal
   }
 
   const tonalidad = normalizarTonalidad(song.tonalidad);
+  avisa("acordes", "Escuchando las notas y buscando los cambios de acorde…");
   const detectado = detectarAcordesConDiagnostico(pcm, SAMPLE_RATE, { tonalidad: tonalidad ?? undefined });
   const { diagnostico } = detectado;
   // Pulso real del audio (con el BPM de la ficha como pista): los cambios de acorde se llevan al pulso
   // más cercano y la rejilla de compases del visor se construye sobre él.
+  avisa("pulso", "Midiendo el pulso y llevando los cambios al compás…");
   const pulso = calcularPulso(pcm, SAMPLE_RATE, { bpmFicha: Number(song.bpm) || undefined });
   const pulsoUtil = pulso && pulso.confianza >= 0.35 ? pulso : null;
   const segmentos = pulsoUtil ? ajustarAPulso(detectado.segmentos, pulsoUtil) : detectado.segmentos;
@@ -53,6 +58,7 @@ export async function analizarAcordesDeCancion(song: any): Promise<ResultadoAnal
     `[acordes] «${song.titulo}» fuente=${fuente} dur=${duracion.toFixed(0)}s tramos=${segmentos.length} distintos=${diagnostico.acordesDistintos} ` +
       `dominante=${Math.round(diagnostico.cuotaAcordeDominante * 100)}% contraste=${diagnostico.contraste.toFixed(2)} afinacion=${diagnostico.afinacionCents}c tonalidad=${diagnostico.tonalidadUsada ?? "-"} pulso=${pulso ? `${pulso.bpm}bpm/conf${pulso.confianza}` : "-"} ficha=${song.bpm ?? "-"} tonos=${diagnostico.tonalidades.length > 1 ? diagnostico.tonalidades.map((t) => `${t.tonalidad}@${Math.round(t.t0)}s`).join(">") : "-"}`
   );
+  avisa("revision", "Comprobando que la detección es fiable…");
   const motivo = motivoAnalisisPocoFiable(segmentos, duracion);
   if (motivo) return { ok: false, status: 422, error: motivo };
 
