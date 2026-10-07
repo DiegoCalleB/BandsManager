@@ -340,3 +340,10 @@ body.scroll #lb img { max-width: none; width: 260%; max-height: none; }
 .bandrow h3 { font-size: 32px; } .bandrow p { font-size: 21px; margin-top: 4px; line-height: 1.35; }
 .bandrow .chips { margin-top: 14px; } .bandrow .chip { font-size: 20px; padding: 6px 14px; }
 body.scroll .bandrow { gap: 16px; } body.scroll .bandrow > img { width: 72px; height: 72px; border-radius: 18px; } body.scroll .bandrow h3 { font-size: 24px; } body.scroll .bandrow p { font-size: 17px; }
+
+/* Mosaico de fotos de directo */
+.shot.mosaic { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1.15fr 1fr; gap: 14px; background: transparent; cursor: zoom-in; }
+.mosaic > div { overflow: hidden; border-radius: var(--r-l); min-height: 0; }
+.mosaic .t1 { grid-column: 1 / 3; }
+.mosaic img { object-position: center 30%; }
+body.scroll .shot.mosaic { height: 640px; }
