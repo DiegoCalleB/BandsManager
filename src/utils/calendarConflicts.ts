@@ -11,10 +11,20 @@
  */
 
 import type { Concert, Rehearsal } from '../types';
+import { estimarViaje, mismaCiudad, resolverCiudad } from './viajeEstimado';
 
 export type TipoEventoCalendario = 'concierto' | 'ensayo' | 'reunion' | 'otro';
 export type SeveridadChoque = 'choque' | 'aviso';
-export type MotivoChoque = 'solape_horario' | 'mismo_dia' | 'margen_corto';
+export type MotivoChoque =
+  | 'solape_horario'
+  | 'mismo_dia'
+  | 'margen_corto'
+  /** No hay tiempo físico de llegar del primer sitio al segundo. */
+  | 'viaje_inviable'
+  /** Se llega, pero sin colchón para descargar y montar. */
+  | 'viaje_justo'
+  /** Mismo día, sin horas, y a muchas horas de distancia. */
+  | 'distancia_dia';
 
 export interface EventoCalendario {
   id: string;
@@ -45,8 +55,11 @@ export interface Choque {
   /** Ids de usuario que están en los dos eventos. Vacío = no se pudo resolver (toda la banda). */
   personas: string[];
   entreBandas: boolean;
-  /** Minutos entre el fin de uno y el inicio del otro (solo `margen_corto`). */
+  /** Minutos entre el fin del primero y el inicio del segundo (motivos con horas, sin solape). */
   margenMin?: number;
+  /** Desplazamiento estimado entre los dos sitios (motivos de viaje). */
+  viajeMin?: number;
+  distanciaKm?: number;
 }
 
 export interface ContextoConflictos {
@@ -54,13 +67,19 @@ export interface ContextoConflictos {
   miembrosDe?: (bandId: string) => string[];
   /** Ignora los eventos anteriores a esta fecha (YYYY-MM-DD). */
   desde?: string;
-  /** Margen mínimo (min) entre dos eventos del mismo día en sitios distintos. */
+  /** Margen mínimo (min) entre dos eventos del mismo día en sitios que no se pueden situar. */
   margenMinimoMin?: number;
+  /** Sustituye la estimación por defecto de desplazamiento (p. ej. con datos de carretera reales). */
+  tiempoViajeMin?: (origen: string, destino: string) => { minutos: number; km: number } | null;
 }
 
 const DURACION_ENSAYO_DEFECTO_MIN = 120;
 const DURACION_BOLO_DEFECTO_MIN = 90;
 const MARGEN_MINIMO_DEFECTO_MIN = 60;
+/** Tras llegar: descargar, montar y cambiarse. Con menos colchón que esto se avisa de "muy justo". */
+const COLCHON_LLEGADA_MIN = 45;
+/** Sin horas, a partir de aquí el mismo día en dos ciudades ya merece un aviso. */
+const DISTANCIA_DIA_AVISO_MIN = 180;
 
 /** Todas las horas de un texto libre: "18:00 - 21:00", "19.30", "20h". */
 export function extraerMinutos(texto?: string | null): number[] {
@@ -125,6 +144,8 @@ export function ensayoAEvento(r: Rehearsal, bandId: string): EventoCalendario | 
     bandId,
     bandName: r.bandName,
     titulo: r.asunto || r.lugar || 'Ensayo',
+    // Los ensayos no tienen ciudad: se deduce del lugar solo si es una ciudad que conocemos
+    ciudad: resolverCiudad(r.lugar) ? r.lugar : undefined,
     fecha: fechaDia(r.fecha),
     inicio,
     fin,
@@ -165,33 +186,49 @@ function interseccion(a: Set<string> | null, b: Set<string> | null): Set<string>
   return new Set([...a].filter((x) => b.has(x)));
 }
 
+const diaNumero = (fecha: string): number => {
+  const [y, m, d] = fecha.split('-').map(Number);
+  return Math.floor(Date.UTC(y, (m || 1) - 1, d || 1) / 86_400_000);
+};
+
+/** Minutos absolutos (desde el día 0), para comparar eventos de días distintos. */
+const absInicio = (e: EventoCalendario) => diaNumero(e.fecha) * 1440 + e.inicio!;
+const absFin = (e: EventoCalendario) => diaNumero(e.fecha) * 1440 + e.fin!;
+
 function haySolape(a: EventoCalendario, b: EventoCalendario): boolean {
-  return a.inicio! < b.fin! && b.inicio! < a.fin!;
+  return absInicio(a) < absFin(b) && absInicio(b) < absFin(a);
+}
+
+function viajeEntre(a: EventoCalendario, b: EventoCalendario, ctx: ContextoConflictos) {
+  if (!a.ciudad || !b.ciudad) return null;
+  // Misma ciudad (o alias de ella): se asume el mismo entorno, no se avisa de viaje
+  if (mismaCiudad(a.ciudad, b.ciudad) === true) return null;
+  const v = ctx.tiempoViajeMin ? ctx.tiempoViajeMin(a.ciudad, b.ciudad) : estimarViaje(a.ciudad, b.ciudad);
+  if (!v) return null;
+  return 'minutos' in v ? { minutos: v.minutos, km: v.km } : null;
 }
 
 function mismoSitio(a: EventoCalendario, b: EventoCalendario): boolean {
-  const ca = (a.ciudad || '').trim().toLowerCase();
-  const cb = (b.ciudad || '').trim().toLowerCase();
-  if (ca && cb) return ca === cb;
-  // Sin ciudad en alguno (los ensayos no la llevan): no se puede asegurar que sea el mismo sitio.
-  return false;
+  if (!a.ciudad || !b.ciudad) return false;
+  const misma = mismaCiudad(a.ciudad, b.ciudad);
+  return misma === null ? a.ciudad.trim().toLowerCase() === b.ciudad.trim().toLowerCase() : misma;
 }
 
 function huellaDe(a: EventoCalendario, b: EventoCalendario, motivo: MotivoChoque): string {
-  const parte = (e: EventoCalendario) => `${e.tipo}:${e.id}@${e.inicio ?? '-'}-${e.fin ?? '-'}`;
+  const parte = (e: EventoCalendario) => `${e.tipo}:${e.id}@${e.fecha}/${e.inicio ?? '-'}-${e.fin ?? '-'}`;
   const [x, y] = [parte(a), parte(b)].sort();
-  return `${a.fecha}|${motivo}|${x}|${y}`;
+  return `${motivo}|${x}|${y}`;
 }
 
-function evaluarPar(a: EventoCalendario, b: EventoCalendario, ctx: ContextoConflictos): Choque | null {
-  if (a.fecha !== b.fecha) return null;
+function evaluarPar(x: EventoCalendario, y: EventoCalendario, ctx: ContextoConflictos): Choque | null {
+  if (Math.abs(diaNumero(x.fecha) - diaNumero(y.fecha)) > 1) return null;
 
-  const entreBandas = a.bandId !== b.bandId;
+  const entreBandas = x.bandId !== y.bandId;
   if (entreBandas && !ctx.miembrosDe) return null;
 
   // Sin personas en común no hay choque, por mucho que coincidan en hora.
-  const pa = participantes(a, ctx);
-  const pb = participantes(b, ctx);
+  const pa = participantes(x, ctx);
+  const pb = participantes(y, ctx);
   // Entre bandas hay que conocer a los dos lados: "toda la banda" sin lista de miembros
   // inventaría choques con cualquiera que aparezca en la otra.
   if (entreBandas && (pa === null || pb === null)) return null;
@@ -199,56 +236,74 @@ function evaluarPar(a: EventoCalendario, b: EventoCalendario, ctx: ContextoConfl
   if (comunes !== null && comunes.size === 0) return null;
 
   const personas = comunes ? [...comunes].sort() : [];
-  const conHora = a.inicio !== undefined && a.fin !== undefined && b.inicio !== undefined && b.fin !== undefined;
-  const provisional = a.provisional || b.provisional;
+  const conHora = [x, y].every((e) => e.inicio !== undefined && e.fin !== undefined);
+  const mismoDia = x.fecha === y.fecha;
+  const provisional = x.provisional || y.provisional;
 
-  let severidad: SeveridadChoque;
-  let motivo: MotivoChoque;
-  let margenMin: number | undefined;
+  // `a` es siempre el que empieza antes (o el primero de la lista si no hay horas)
+  const [a, b] = conHora && absInicio(y) < absInicio(x) ? [y, x] : [x, y];
+  const base = { personas, entreBandas, fecha: a.fecha <= b.fecha ? a.fecha : b.fecha };
+  const choque = (severidad: SeveridadChoque, motivo: MotivoChoque, extra: Partial<Choque> = {}): Choque => ({
+    huella: huellaDe(a, b, motivo),
+    severidad,
+    motivo,
+    a,
+    b,
+    ...base,
+    ...extra,
+  });
 
   if (conHora) {
-    if (haySolape(a, b)) {
-      motivo = 'solape_horario';
-      severidad = provisional ? 'aviso' : 'choque';
-    } else {
-      const margen = a.inicio! >= b.fin! ? a.inicio! - b.fin! : b.inicio! - a.fin!;
-      const minimo = ctx.margenMinimoMin ?? MARGEN_MINIMO_DEFECTO_MIN;
-      if (margen >= minimo || mismoSitio(a, b)) return null;
-      motivo = 'margen_corto';
-      severidad = 'aviso';
-      margenMin = margen;
+    if (haySolape(a, b)) return choque(provisional ? 'aviso' : 'choque', 'solape_horario');
+
+    const margen = absInicio(b) - absFin(a);
+    const viaje = viajeEntre(a, b, ctx);
+
+    if (viaje) {
+      const datos = { margenMin: margen, viajeMin: viaje.minutos, distanciaKm: viaje.km };
+      if (margen < viaje.minutos) return choque(provisional ? 'aviso' : 'choque', 'viaje_inviable', datos);
+      if (margen < viaje.minutos + COLCHON_LLEGADA_MIN) return choque('aviso', 'viaje_justo', datos);
+      return null;
     }
-  } else {
-    motivo = 'mismo_dia';
-    // Dos bolos el mismo día sin horas: casi seguro imposible. Cualquier otra mezcla: solo aviso.
-    severidad = a.tipo === 'concierto' && b.tipo === 'concierto' && !provisional ? 'choque' : 'aviso';
+
+    // Sin poder situar uno de los dos sitios: solo el mismo día, con un margen plano
+    const minimo = ctx.margenMinimoMin ?? MARGEN_MINIMO_DEFECTO_MIN;
+    if (!mismoDia || margen >= minimo || mismoSitio(a, b)) return null;
+    return choque('aviso', 'margen_corto', { margenMin: margen });
   }
 
-  return { huella: huellaDe(a, b, motivo), severidad, motivo, fecha: a.fecha, a, b, personas, entreBandas, margenMin };
+  // Sin horas solo tiene sentido hablar del mismo día
+  if (!mismoDia) return null;
+
+  // Dos bolos el mismo día sin horas: casi seguro imposible. Cualquier otra mezcla: solo aviso.
+  if (a.tipo === 'concierto' && b.tipo === 'concierto' && !provisional) return choque('choque', 'mismo_dia');
+
+  const viaje = viajeEntre(a, b, ctx);
+  if (viaje && viaje.minutos >= DISTANCIA_DIA_AVISO_MIN) {
+    return choque('aviso', 'distancia_dia', { viajeMin: viaje.minutos, distanciaKm: viaje.km });
+  }
+  return choque('aviso', 'mismo_dia');
 }
 
 export function detectarChoques(eventos: EventoCalendario[], ctx: ContextoConflictos = {}): Choque[] {
   const vistos = new Set<string>();
-  const utiles = eventos.filter((e) => e.fecha && (!ctx.desde || e.fecha >= ctx.desde));
-
-  const porDia = new Map<string, EventoCalendario[]>();
-  for (const e of utiles) {
-    const lista = porDia.get(e.fecha);
-    if (lista) lista.push(e);
-    else porDia.set(e.fecha, [e]);
-  }
+  const orden = eventos
+    .filter((e) => e.fecha && (!ctx.desde || e.fecha >= ctx.desde))
+    .map((e) => ({ e, dia: diaNumero(e.fecha) }))
+    .sort((p, q) => p.dia - q.dia);
 
   const out: Choque[] = [];
-  for (const lista of porDia.values()) {
-    for (let i = 0; i < lista.length; i++) {
-      for (let j = i + 1; j < lista.length; j++) {
-        // El mismo evento puede llegar duplicado (vista "Todos" + banda activa)
-        if (lista[i].id === lista[j].id && lista[i].tipo === lista[j].tipo) continue;
-        const c = evaluarPar(lista[i], lista[j], ctx);
-        if (c && !vistos.has(c.huella)) {
-          vistos.add(c.huella);
-          out.push(c);
-        }
+  for (let i = 0; i < orden.length; i++) {
+    for (let j = i + 1; j < orden.length; j++) {
+      // Solo importan el mismo día y el siguiente (un bolo de madrugada, el viaje de vuelta)
+      if (orden[j].dia - orden[i].dia > 1) break;
+      const [p, q] = [orden[i].e, orden[j].e];
+      // El mismo evento puede llegar duplicado (vista "Todos" + banda activa)
+      if (p.id === q.id && p.tipo === q.tipo) continue;
+      const c = evaluarPar(p, q, ctx);
+      if (c && !vistos.has(c.huella)) {
+        vistos.add(c.huella);
+        out.push(c);
       }
     }
   }
@@ -292,14 +347,34 @@ export function describirEvento(ev: EventoCalendario, bandasVisibles?: Set<strin
   return `${ETIQUETA_TIPO[ev.tipo]} «${ev.titulo}»${banda}${hora}`;
 }
 
+function duracion(min?: number): string {
+  if (min === undefined) return '';
+  const h = Math.floor(Math.abs(min) / 60);
+  const m = Math.round(Math.abs(min) % 60);
+  return h === 0 ? `${m} min` : m === 0 ? `${h} h` : `${h} h ${m} min`;
+}
+
 export function describirChoque(c: Choque, bandasVisibles?: Set<string>): string {
   const a = describirEvento(c.a, bandasVisibles);
   const b = describirEvento(c.b, bandasVisibles);
+  const viaje = c.viajeMin !== undefined ? duracion(c.viajeMin) : null;
   switch (c.motivo) {
     case 'solape_horario':
       return `Se pisan: ${a} y ${b}.`;
     case 'margen_corto':
-      return `Solo ${c.margenMin} min entre ${a} y ${b}, en sitios distintos.`;
+      return `Solo ${duracion(c.margenMin)} entre ${a} y ${b}, en sitios distintos.`;
+    case 'viaje_inviable':
+      return viaje
+        ? `No da tiempo: entre ${a} y ${b} hay ${duracion(c.margenMin)} y solo el viaje son unas ${viaje}.`
+        : `No da tiempo a llegar de ${a} a ${b}.`;
+    case 'viaje_justo':
+      return viaje
+        ? `Muy justo: ${duracion(c.margenMin)} entre ${a} y ${b}, con unas ${viaje} de viaje y sin tiempo para montar.`
+        : `Muy justo para llegar de ${a} a ${b}.`;
+    case 'distancia_dia':
+      return viaje
+        ? `Mismo día y a unas ${viaje} de viaje: ${a} y ${b}.`
+        : `Mismo día y en ciudades lejanas: ${a} y ${b}.`;
     default:
       return `Mismo día, sin horas que lo descarten: ${a} y ${b}.`;
   }
@@ -323,5 +398,8 @@ export function redactarChoque(c: Choque, bandasVisibles: Set<string>): Choque {
           provisional: e.provisional,
           convocados: null,
         };
-  return { ...c, a: ocultar(c.a), b: ocultar(c.b) };
+  const hayOculto = !bandasVisibles.has(c.a.bandId) || !bandasVisibles.has(c.b.bandId);
+  // Tiempo y distancia de viaje delatarían dónde toca la otra banda
+  const sinViaje = hayOculto ? { viajeMin: undefined, distanciaKm: undefined, margenMin: undefined } : {};
+  return { ...c, ...sinViaje, a: ocultar(c.a), b: ocultar(c.b) };
 }

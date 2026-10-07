@@ -229,3 +229,94 @@ describe('redactarChoque', () => {
     for (const secreto of ['Sala Secreta', 'Vigo', 'Los Otros', '"c2"']) expect(json).not.toContain(secreto);
   });
 });
+
+describe('viabilidad de desplazamiento', () => {
+  const boloCiudad = (id: string, ciudad: string, llegada: string, cierre: string, extra: Partial<Concert> = {}) =>
+    concierto(id, '2026-11-07', {
+      ciudad,
+      logisticaTecnica: { horaLlegada: llegada, horaCierreToque: cierre },
+      ...extra,
+    });
+
+  it('Madrid 20:00 y Sevilla a las 21:00 aunque no coincidan: no da tiempo → choque', () => {
+    const [c] = choques([boloCiudad('c1', 'Madrid', '17:00', '20:00'), boloCiudad('c2', 'Sevilla', '21:00', '23:30')], []);
+    expect(c).toMatchObject({ severidad: 'choque', motivo: 'viaje_inviable' });
+    expect(c.viajeMin).toBeGreaterThan(300);
+    expect(c.margenMin).toBe(60);
+    expect(describirChoque(c)).toContain('No da tiempo');
+  });
+
+  it('con margen de sobra no avisa', () => {
+    const r = choques([boloCiudad('c1', 'Madrid', '10:00', '12:00'), boloCiudad('c2', 'Sevilla', '21:00', '23:30')], []);
+    expect(r).toEqual([]);
+  });
+
+  it('llegar pero sin colchón para montar → solo aviso "muy justo"', () => {
+    // Madrid–Sevilla ≈ 5 h 50 min. Margen 6 h 10 min: llega, pero sin 45 min para descargar.
+    const [c] = choques([boloCiudad('c1', 'Madrid', '10:00', '12:00'), boloCiudad('c2', 'Sevilla', '18:10', '20:00')], []);
+    expect(c).toMatchObject({ severidad: 'aviso', motivo: 'viaje_justo' });
+  });
+
+  it('un bolo posible nunca da choque duro por viaje', () => {
+    const [c] = choques(
+      [boloCiudad('c1', 'Madrid', '17:00', '20:00'), boloCiudad('c2', 'Sevilla', '21:00', '23:30', { is_posible: true })],
+      [],
+    );
+    expect(c.severidad).toBe('aviso');
+  });
+
+  it('cruza la medianoche: bolo en Madrid hasta las 03:00 y ensayo en Barcelona a las 08:00', () => {
+    const madrid = boloCiudad('c1', 'Madrid', '22:00', '03:00');
+    const bcn = ensayo('r1', '2026-11-08', '08:00 - 10:00', { lugar: 'Local en Barcelona' });
+    const [c] = choques([madrid], [bcn]);
+    expect(c).toMatchObject({ severidad: 'choque', motivo: 'viaje_inviable', fecha: '2026-11-07' });
+    // el más temprano es `a`, aunque se pasen al revés
+    expect(c.a.id).toBe('c1');
+  });
+
+  it('el día siguiente en otra ciudad lejana pero con la noche entera por medio: nada', () => {
+    const madrid = boloCiudad('c1', 'Madrid', '19:00', '22:00');
+    const sevilla = ensayo('r1', '2026-11-08', '12:00 - 14:00', { lugar: 'Sala Sevilla' });
+    expect(choques([madrid], [sevilla])).toEqual([]);
+  });
+
+  it('más de un día de separación nunca se compara', () => {
+    const r = choques([concierto('c1', '2026-11-05'), concierto('c2', '2026-11-07', { ciudad: 'Sevilla' })], []);
+    expect(r).toEqual([]);
+  });
+
+  it('misma ciudad (o satélite) con margen corto no dispara aviso de viaje', () => {
+    const r = choques([boloCiudad('c1', 'Madrid', '17:00', '20:00'), boloCiudad('c2', 'Getafe', '20:30', '23:00')], []);
+    expect(r).toEqual([]);
+  });
+
+  it('sin horas, bolo y ensayo el mismo día a más de 3 h de distancia → aviso de distancia', () => {
+    const [c] = choques([concierto('c1', '2026-11-07', { ciudad: 'Madrid' })], [ensayo('r1', '2026-11-07', '', { lugar: 'Local en Sevilla' })]);
+    expect(c).toMatchObject({ severidad: 'aviso', motivo: 'distancia_dia' });
+  });
+
+  it('el estimador de viaje se puede sustituir por datos reales', () => {
+    const r = choques(
+      [boloCiudad('c1', 'Madrid', '17:00', '20:00'), boloCiudad('c2', 'Sevilla', '21:00', '23:30')],
+      [],
+      { ...ctx, tiempoViajeMin: () => ({ minutos: 10, km: 5 }) },
+    );
+    expect(r).toEqual([]);
+  });
+
+  it('la redacción borra también el tiempo y la distancia de viaje', () => {
+    const [c] = choques(
+      [
+        boloCiudad('c1', 'Madrid', '17:00', '20:00', { band_id: 'A' }),
+        boloCiudad('c2', 'Sevilla', '21:00', '23:30', { band_id: 'B' }),
+      ],
+      [],
+    );
+    expect(c.viajeMin).toBeDefined();
+    const redactado = redactarChoque(c, new Set(['A']));
+    expect(redactado.viajeMin).toBeUndefined();
+    expect(redactado.distanciaKm).toBeUndefined();
+    expect(JSON.stringify(redactado)).not.toContain('Sevilla');
+    expect(describirChoque(redactado, new Set(['A']))).toContain('No da tiempo a llegar');
+  });
+});
