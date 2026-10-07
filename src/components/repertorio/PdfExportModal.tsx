@@ -29,6 +29,7 @@ import {
   BandMemberOption,
   resolveBandMembers,
   getSongMemberNote,
+  isSongMarkedForMember,
 } from "../../utils/repertorioUtils";
 import { MemberNotesModal } from "./MemberNotesModal";
 import { ModalPortal } from "../common/ModalPortal";
@@ -737,7 +738,10 @@ function PdfExportModalBody({
         // parecían casi tan grandes como la propia canción.
         const badgePt = Math.max(7.5, Math.min(12, titleFontPt * 0.5));
         // Con "solo marcados", tono y BPM salen únicamente en los temas que ese músico marcó.
-        const songMarked = badgesScope === "all" || (markedSongs[member.id] ?? []).includes(s.id);
+        const songMarked =
+          badgesScope === "all" ||
+          (markedSongs[member.id] ?? []).includes(s.id) ||
+          isSongMarkedForMember(s, member.id, member.name);
         const keyHere = showTonality && songMarked;
         const bpmHere = showBpm && songMarked;
         const badges: NoteLayoutBadge[] = [
@@ -2443,15 +2447,18 @@ function PdfExportModalBody({
                   .map((it, i) => {
                     const song = songs.find((x) => x.id === it.songId);
                     if (!song) return null;
-                    const marked = (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
+                    const byMusician = isSongMarkedForMember(song, currentPreviewMember.id, currentPreviewMember.name);
+                    const marked = byMusician || (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
                     return (
                       <label
                         key={`${song.id}-${i}`}
+                        title={byMusician ? `Lo marcó ${currentPreviewMember.name} desde sus notas` : undefined}
                         className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none min-w-0"
                       >
                         <input
                           type="checkbox"
                           checked={marked}
+                          disabled={byMusician}
                           onChange={(e) =>
                             setMarkedSongs((m) => {
                               const cur = new Set(m[currentPreviewMember.id] ?? []);

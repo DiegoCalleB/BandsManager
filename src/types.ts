@@ -1250,6 +1250,10 @@ export interface MemberSongNote {
    * estado global de la canción (ya existe Song.estadoTema para eso), sino "¿yo, en concreto, ya
    * me la sé?", para que quien lleve la banda vea de un vistazo quién necesita repasar antes del bolo. */
   estadoPreparacion?: "aprendiendo" | "casi_lista" | "lista";
+  /** "En esta canción quiero ver la tonalidad/BPM en MI hoja impresa" (las que me dan dudas).
+   * Vive en la canción y por miembro, no en los ajustes de impresión de la banda, para que dos
+   * músicos editando a la vez no se pisen. */
+  mostrarTono?: boolean;
 }
 
 export interface Song {
