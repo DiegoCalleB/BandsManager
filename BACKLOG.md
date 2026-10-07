@@ -122,7 +122,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Estado:** idea capturada, sin diseñar. Nota: el "reel editado automáticamente con IA a partir de los clips" es una fase posterior y más compleja — esto de aquí es solo el gancho de entrada al QR, no depende de que exista el editor de IA para tener valor por sí solo.
 
 ### Analizador de acordes/armonía real a partir de audio (no texto)
-* **Qué:** hoy `SongChordsViewerModal.tsx` trabaja con cifrado escrito a mano o inferido por IA a partir de la letra/estructura (`chordUtils.ts`). La idea es que la IA "escuche" el audio real de la canción y saque la progresión de acordes de verdad, detecte modulaciones y genere un párrafo de análisis armónico ("aquí hay un acorde prestado que no pertenece a la tonalidad, por eso suena así").
+* **Qué:** hoy el Atril (`Atril.tsx`) trabaja con cifrado escrito a mano o inferido por IA a partir de la letra/estructura (`chordUtils.ts`). La idea es que la IA "escuche" el audio real de la canción y saque la progresión de acordes de verdad, detecte modulaciones y genere un párrafo de análisis armónico ("aquí hay un acorde prestado que no pertenece a la tonalidad, por eso suena así").
 * **Por qué importa:** es la única feature que le habla directamente a un perfil analista musical (tipo Shountrack/Rick Beato) — convierte a la app en generadora de su propio contenido de análisis, no solo en herramienta de booking/gestión.
 * **Viabilidad (no es trivial, pero tampoco investigación de frontera):**
   * Técnica base: extraer chroma (energía por nota) por compás y comparar contra plantillas de acorde por similitud — MIR clásico, no hace falta deep learning para una v1.
