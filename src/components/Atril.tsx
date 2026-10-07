@@ -58,6 +58,8 @@ import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
 import { ControlBucle } from "./chords/ControlBucle";
 import { ControlVelocidad } from "./chords/ControlVelocidad";
+import { ControlTonoAudio } from "./chords/ControlTonoAudio";
+import { useTonoAudio } from "../hooks/useTonoAudio";
 import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
 import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
@@ -180,7 +182,10 @@ export function Atril({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
-  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
+  const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
+  const semitonosAudio = audioSigueTono ? transpose : 0;
+  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas, semitonosAudio);
+  useTonoAudio(audioRef, audioUrl, semitonosAudio);
   const { bucle, marcar: marcarBucle, limpiar: limpiarBucle } = useBucleAB(audioRef, audioUrl);
 
   // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
@@ -862,6 +867,7 @@ export function Atril({
                 {audioUrl && (
                   <div className="flex flex-wrap items-center gap-2">
                     <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                    <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
                     <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
                   </div>
                 )}
@@ -1392,6 +1398,7 @@ export function Atril({
           <audio
             ref={audioRef}
             src={audioUrl}
+            crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
               if (audioRef.current) {
