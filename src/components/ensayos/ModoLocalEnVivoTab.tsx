@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
 import { useAutoScroll } from "../../hooks/useAutoScroll";
-import { contextoDeAcordes, tonalidadDelCifrado } from "../../utils/vistaAcordes";
+import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
 import { useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "../chords/DrawerDiagramas";
+import { useAcordesDeLaHoja } from "../../hooks/useAcordesDeLaHoja";
 import {
   Play,
   Pause,
@@ -43,7 +44,6 @@ import {
 import { formatTime } from "./EnsayoCronometro";
 import {
   processChordText,
-  extractUniqueChords,
   transposeChordToken,
 } from "../../utils/chordUtils";
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
@@ -367,12 +367,8 @@ export function ModoLocalEnVivoTab({
   // Sin cifrado guardado se muestra vacío: antes caía en una letra
   // de ejemplo escrita en el código que parecía la letra de la canción.
   const rawChordText = currentSong?.cifradoTexto || "";
-  const uniqueChords = extractUniqueChords(rawChordText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rawChordText, currentSong?.tonalidad],
-  );
+  const tonalidadHoja = useMemo(() => tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), [rawChordText, currentSong?.tonalidad]);
+  const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(rawChordText, tonalidadHoja, 0);
 
   if (agenda.length === 0) {
     return (

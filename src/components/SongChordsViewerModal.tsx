@@ -35,10 +35,10 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
-import { contextoDeAcordes } from "../utils/vistaAcordes";
 import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
 import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "./chords/DrawerDiagramas";
+import { useAcordesDeLaHoja } from "../hooks/useAcordesDeLaHoja";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
@@ -482,12 +482,7 @@ export function SongChordsViewerModal({
     const objetivo = letraActiva >= 0 ? `letra-linea-${letraActiva}` : acordeActivo >= 0 ? `cifrado-acorde-${acordeActivo}` : null;
     if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [acordeActivo, letraActiva, isPlayingAudio, autoScroll.activo]);
-  const uniqueChords = extractUniqueChords(processedText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(processedText, uniqueChords, armonia?.tonalidad ?? null, transpose),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [processedText, armonia, transpose],
-  );
+  const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(processedText, armonia?.tonalidad ?? null, transpose);
 
   // Copy chords to clipboard
   const handleCopyChords = () => {
