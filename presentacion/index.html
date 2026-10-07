@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BandManager.io · Trabajo Fin de Máster</title>
+<meta name="description" content="BandManager.io: el sistema operativo de una banda independiente. Presentación del Trabajo Fin de Máster del Máster de Desarrollo con IA (The Big School).">
+<meta property="og:title" content="BandManager.io · Trabajo Fin de Máster">
+<meta property="og:description" content="Buscar salas, cerrar fechas, ensayar, tocar y cobrar desde un solo sitio, con agentes de IA y una persona que aprueba.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F6F7F9">
+<link rel="icon" href="img/logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<noscript><style>html,body{overflow:auto}#viewport{position:static;display:block}#stage{width:100%;height:auto;transform:none}.slide{position:relative;opacity:1;visibility:visible;transform:none;padding:40px 20px}.slide>*{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+<div id="prog"></div>
+<div id="viewport">
+<main id="stage">
+
+<!-- 1 · Portada -->
+<section class="slide cover" data-title="Portada">
+  <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
+  <h1>Menos gestión,<br>más <span class="acc">música</span>.</h1>
+  <p class="sub">El sistema operativo de una banda independiente: buscar salas, cerrar fechas, ensayar, tocar y cobrar desde un solo sitio.</p>
+  <p class="foot"><b>Trabajo Fin de Máster</b> · Máster de Desarrollo con IA, The Big School<br>Diego de la Calle · Octubre de 2026</p>
+  <div class="art"><div class="shot" style="inset:120px 90px 0 90px;border-radius:44px 44px 0 0;background:var(--bg);cursor:zoom-in"><img class="l" loading="lazy" decoding="async" src="img/ml-h-resumen.jpg" alt="BandManager en el móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-resumen.jpg" alt=""></div></div>
+</section>
+
+<!-- 2 · El problema -->
+<section class="slide" data-title="El problema">
+  <span class="tag">El problema</span>
+  <h2>Una banda independiente hace el trabajo de cinco profesionales. Sin cobrar por ello.</h2>
+  <div class="five">
+    <div><div class="num">1</div><h3>Booker</h3><p>Buscar salas, escribir a los programadores, convencer y hacer seguimiento.</p></div>
+    <div><div class="num">2</div><h3>Tour manager</h3><p>Rutas, horarios, furgoneta, quién va y quién no.</p></div>
+    <div><div class="num">3</div><h3>Director musical</h3><p>Ensayos, setlists, tonalidades y transiciones.</p></div>
+    <div><div class="num">4</div><h3>Contable</h3><p>Quién cobra, quién paga y cuánto queda.</p></div>
+    <div><div class="num">5</div><h3>Community manager</h3><p>Redes, reels, fans y un dossier siempre al día.</p></div>
+  </div>
+  <p class="lead" style="margin-top:auto;max-width:1500px">La mayoría pierde más horas en hojas de Excel, correos sin respuesta y WhatsApps que ensayando.</p>
+</section>
+
+<!-- 3 · La plataforma -->
+<section class="slide split sunk" data-title="La plataforma">
+  <div class="copy">
+    <span class="tag">La plataforma</span>
+    <h2>Una sola plataforma, con una IA que hace lo repetitivo.</h2>
+    <ul>
+      <li><b>La IA hace el trabajo de despacho:</b> descubre salas, redacta el pitch y lee las respuestas.</li>
+      <li><b>Una persona aprueba lo importante.</b> Nada sale sin un visto bueno explícito.</li>
+      <li>Alrededor, lo que la banda necesita el día de la gira: calendario, repertorio, dossier, fans y finanzas.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-resumen.jpg" alt="Panel de Os Herdeiros do Código"><img class="d" loading="lazy" decoding="async" src="img/d-h-resumen.jpg" alt=""></div></div>
+</section>
+
+<!-- 4 · Las bandas de la demo -->
+<section class="slide sunk" data-title="Las bandas de la demo">
+  <span class="tag">La demo</span>
+  <h2>Probada con las bandas de Brais.</h2>
+  <p class="lead">Todo lo que se ve en esta presentación es la aplicación real, con los datos de ejemplo de dos bandas.</p>
+  <div class="grid c2" style="margin-top:60px">
+    <div class="card">
+      <h3>Os Herdeiros do Código</h3>
+      <p style="margin-top:6px">Rock bravú y punk galaico nacido en A Coruña, con Brais Moure (MoureDev) a la batería. Letras sobre cultura del software, inteligencia artificial y retranca gallega.</p>
+      <div class="chips"><span class="chip acc">16 contactos en el CRM</span><span class="chip">5 conciertos</span><span class="chip">8 temas</span><span class="chip">Directo de 75 min</span></div>
+    </div>
+    <div class="card">
+      <h3>Master of Prompts</h3>
+      <p style="margin-top:6px">Thrash metal clásico, también de A Coruña: doble bombo, 210 BPM y letras de ingeniería de software, compiladores y modelos de IA que se rebelan.</p>
+      <div class="chips"><span class="chip acc">15 contactos en el CRM</span><span class="chip">9 conciertos</span><span class="chip">8 temas</span><span class="chip">Doble bombo a 210 BPM</span></div>
+    </div>
+  </div>
+  <p class="mut" style="margin-top:auto;font-size:26px">Una misma persona puede llevar varias bandas y cambiar entre ellas desde el menú. El calendario las cruza para avisar de solapes.</p>
+</section>
+
+<!-- 5 · Booking CRM -->
+<section class="slide split" data-title="Booking CRM">
+  <div class="copy">
+    <span class="tag">Directorio</span>
+    <h2>Cada sala, festival o medio es un lead con su embudo.</h2>
+    <ul>
+      <li>Del primer contacto al bolo cerrado: <b>nuevo, contactado, respondido, negociando, confirmado</b>.</li>
+      <li>Descubrimiento con Google Places, setlist.fm, MusicBrainz y Bandsintown.</li>
+      <li>Enriquecimiento de contacto y validación de emails antes de escribir.</li>
+      <li>Detección de duplicados para no contactar dos veces a la misma sala.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-booking.jpg" alt="CRM de booking"><img class="d" loading="lazy" decoding="async" src="img/d-h-booking.jpg" alt=""></div></div>
+</section>
+
+<!-- 6 · Agentes -->
+<section class="slide sunk" data-title="Los agentes de booking">
+  <span class="tag">Directorio</span>
+  <h2>Cuatro agentes y una persona.</h2>
+  <p class="lead" style="max-width:1500px">El ciclo completo de un bolo, de descubrir la sala a leer su respuesta. Un planificador deja los trabajos en una cola, <span class="mono">agent_jobs_queue</span>, en lugar de ejecutarlos dentro de Express.</p>
+  <div class="flow">
+    <div class="step"><small>Agente</small><h3>Scout</h3><p>Descubre y enriquece salas y las deja en <span class="mono">nuevo</span>.</p></div>
+    <div class="step"><small>Agente</small><h3>Redactor</h3><p>Escribe un pitch de menos de 120 palabras con el tono de la banda. Un juez LLM lo evalúa y lo refina.</p></div>
+    <div class="step me"><small>Tú</small><h3>Apruebas</h3><p>Lees, editas y das el visto bueno. El Redactor aprende de tus ediciones.</p></div>
+    <div class="step"><small>Agente</small><h3>Enviador</h3><p>Solo actúa sobre leads aprobados. Respeta la ventana comercial y un tope diario.</p></div>
+    <div class="step"><small>Agente</small><h3>Lector</h3><p>Revisa la bandeja cada ~60 s, empareja por hilo, analiza la intención y propone la réplica.</p></div>
+  </div>
+</section>
+
+<!-- 7 · Humano en el bucle -->
+<section class="slide" data-title="Humano en el bucle">
+  <span class="tag">La regla no negociable</span>
+  <h2 style="font-size:76px;max-width:1700px">Un agente nunca envía un email por su cuenta.</h2>
+  <div class="row" style="gap:60px;margin-top:44px;flex:1">
+    <div style="flex:1.1">
+      <p class="lead" style="margin-top:0">Para una banda, la reputación con una sala lo es todo. Por eso no es una opción de configuración: el código lo impide con cuatro candados.</p>
+      <div class="grid" style="margin-top:44px;gap:20px">
+        <div class="row" style="gap:26px;align-items:flex-start"><div class="num" style="flex:none;margin:0">1</div><p><b>Estado aprobado</b> por una persona: el Enviador solo lee leads aprobados.</p></div>
+        <div class="row" style="gap:26px;align-items:flex-start"><div class="num" style="flex:none;margin:0">2</div><p><b>Interruptor global</b> <span class="mono">AGENT_EMAIL_MODE=send</span> en el servidor. Por defecto es <span class="mono">draft</span>.</p></div>
+        <div class="row" style="gap:26px;align-items:flex-start"><div class="num" style="flex:none;margin:0">3</div><p><b>Modo de despacho directo</b> elegido de forma explícita por la banda.</p></div>
+        <div class="row" style="gap:26px;align-items:flex-start"><div class="num" style="flex:none;margin:0">4</div><p><b>Tope diario</b> de envíos y los rebotes no se reintentan.</p></div>
+      </div>
+    </div>
+    <div class="card" style="flex:.9;align-self:flex-start;padding:44px 48px">
+      <h3>Dos dimensiones, un solo estado</h3>
+      <p style="margin-top:6px;font-size:25px">Dónde está la sala en el embudo</p>
+      <div class="states"><span>nuevo</span><span>contactado</span><span>respondido</span><span>negociando</span><span>confirmado</span><span>aplazado</span><span>no_interesado</span></div>
+      <p style="margin-top:32px;font-size:25px">Qué le toca a la IA y qué te toca a ti</p>
+      <div class="states"><span>pendiente_aprobacion</span><span class="h">aprobado_propuesta</span><span class="h">aprobado_respuesta</span><span>borrador_creado</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · Calendario -->
+<section class="slide split sunk" data-title="Calendario">
+  <div class="copy">
+    <span class="tag">Directorio</span>
+    <h2>Bolos y ensayos de todas tus bandas en un solo calendario.</h2>
+    <ul>
+      <li>Conciertos, ensayos y posibles fechas con su propio color.</li>
+      <li>Varias bandas a la vez, con aviso de solapes.</li>
+      <li>Tiempo meteorológico por evento, recordatorios y hoja de ruta.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-calendario.jpg" alt="Calendario"><img class="d" loading="lazy" decoding="async" src="img/d-h-calendario.jpg" alt=""></div></div>
+</section>
+
+<!-- 9 · Repertorio -->
+<section class="slide split" data-grupo="musica" data-title="Repertorio y setlists">
+  <div class="copy">
+    <span class="tag">Música</span>
+    <h2>El setlist, con el gráfico de energía delante.</h2>
+    <ul>
+      <li>Tonalidad, BPM y energía detectados del audio de la propia banda.</li>
+      <li>Compatibilidad de tonalidad y BPM entre temas contiguos.</li>
+      <li>Análisis con IA, generador de setlist y exportación a PDF.</li>
+      <li>Modo Escenario para tocar en directo, con afinador y metrónomo.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-repertorio.jpg" alt="Setlist con gráfico de energía"><img class="d" loading="lazy" decoding="async" src="img/d-h-repertorio.jpg" alt=""></div></div>
+</section>
+
+<!-- 10 · Ensayos -->
+<section class="slide split rev sunk" data-grupo="musica" data-title="Ensayos">
+  <div class="copy">
+    <span class="tag">Música</span>
+    <h2>Ensayar con orden del día, como una reunión.</h2>
+    <ul>
+      <li>Convocatoria, orden del día y cronómetro por bloque.</li>
+      <li>Grabación y acta de cada sesión.</li>
+      <li>Modo local en vivo durante el ensayo.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-ensayos.jpg" alt="Ensayos"><img class="d" loading="lazy" decoding="async" src="img/d-h-ensayos.jpg" alt=""></div></div>
+</section>
+
+<!-- 11 · EPK y fans -->
+<section class="slide sunk compact" data-grupo="promocion" data-title="Dossier y fans">
+  <span class="tag">Promoción</span>
+  <h2>El dossier que las salas abren, y el QR que trae fans.</h2>
+  <div class="duo">
+    <div><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-epk.jpg" alt="Editor del dossier (EPK)"><img class="d" loading="lazy" decoding="async" src="img/d-h-epk.jpg" alt=""></div><p><b>EPK web</b> con bloques editables, plantillas, seguimiento de aperturas y una ruta pública <span class="mono">/epk</span>.</p></div>
+    <div><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-fans.jpg" alt="Captación de fans por QR"><img class="d" loading="lazy" decoding="async" src="img/d-h-fans.jpg" alt=""></div><p><b>Captura QR y fans:</b> métricas de redes y fans por QR, con consentimiento RGPD explícito antes de guardar un solo email.</p></div>
+  </div>
+</section>
+
+<!-- 12 · Reels -->
+<section class="slide split" data-grupo="promocion" data-title="Reels y redes">
+  <div class="copy">
+    <span class="tag">Promoción</span>
+    <h2>Del vídeo del directo al reel, con la voz de la banda.</h2>
+    <ul>
+      <li>Parte de vídeos de YouTube, TikTok o Instagram y detecta los fragmentos con más energía.</li>
+      <li>Corta los clips con ffmpeg y los guarda en Supabase Storage.</li>
+      <li>El copy lo escribe la IA con el Tone DNA de la banda.</li>
+      <li>Plan de crecimiento y publicación programada.</li>
+    </ul>
+  </div>
+  <div class="pic"><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-reels.jpg" alt="Reels Center"><img class="d" loading="lazy" decoding="async" src="img/d-h-reels.jpg" alt=""></div></div>
+</section>
+
+<!-- 13 · Gira y finanzas -->
+<section class="slide sunk compact" data-grupo="negocio" data-title="Gira y finanzas">
+  <span class="tag">Negocio</span>
+  <h2>La gira en ruta y las cuentas en claro.</h2>
+  <div class="duo">
+    <div><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-giras.jpg" alt="Tour Manager"><img class="d" loading="lazy" decoding="async" src="img/d-h-giras.jpg" alt=""></div><p><b>Tour Manager:</b> rutas, logística y tarjeta de direcciones por fecha.</p></div>
+    <div><div class="shot"><img class="l" loading="lazy" decoding="async" src="img/l-h-finanzas.jpg" alt="Finanzas"><img class="d" loading="lazy" decoding="async" src="img/d-h-finanzas.jpg" alt=""></div><p><b>Finanzas:</b> ingresos y gastos de la banda y métricas de cada concierto.</p></div>
+  </div>
+</section>
+
+<!-- 14 · Móvil -->
+<section class="slide sunk" data-title="Móvil primero">
+  <span class="tag">Pensada para la furgoneta</span>
+  <h2>Móvil primero: cada pantalla se diseña a 390 píxeles.</h2>
+  <div class="row phones" style="gap:48px;margin-top:56px;flex:1;min-height:0;align-items:stretch">
+    <div class="shot" style="position:relative;inset:auto;flex:1;border-radius:var(--r-xl) var(--r-xl) 0 0"><img class="l" loading="lazy" decoding="async" src="img/ml-h-resumen.jpg" alt="Panel en móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-resumen.jpg" alt=""></div>
+    <div class="shot" style="position:relative;inset:auto;flex:1;border-radius:var(--r-xl) var(--r-xl) 0 0"><img class="l" loading="lazy" decoding="async" src="img/ml-h-calendario.jpg" alt="Calendario en móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-calendario.jpg" alt=""></div>
+    <div class="shot" style="position:relative;inset:auto;flex:1;border-radius:var(--r-xl) var(--r-xl) 0 0"><img class="l" loading="lazy" decoding="async" src="img/ml-h-repertorio.jpg" alt="Setlist en móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt=""></div>
+    <div style="flex:1.1;align-self:center"><ul style="list-style:none;display:grid;gap:26px"><li><b>Diseño claro y oscuro</b>, pensado para sesiones largas: sin blanco ni negro puros.</li><li><b>Instalable como PWA</b>, con notificaciones push.</li><li><b>Cinco idiomas:</b> español, inglés, catalán, gallego y euskera.</li></ul></div>
+  </div>
+</section>
+
+<!-- 15 · Arquitectura -->
+<section class="slide" data-title="Arquitectura">
+  <span class="tag">Cómo está hecho</span>
+  <h2 style="font-size:76px;max-width:1700px">Un monolito sensato, con la IA en los bordes.</h2>
+  <div class="arch">
+    <div class="col"><h3>Frontend</h3><ul><li>React 19 + Vite <span>SPA</span></li><li>Tailwind CSS v4 <span>sistema Espectro</span></li><li>Motion <span>animación</span></li><li>Tone.js · wavesurfer <span>audio</span></li><li>PWA <span>instalable</span></li></ul></div>
+    <div class="col mid"><h3>Backend · Express 4 + TypeScript</h3><ul><li><b>Rutas por dominio</b> <span>39 ficheros</span></li><li><b>Servicios de agentes</b> <span>Scout · Enviador · Lector</span></li><li><b>Cola y planificador</b> <span>agent_jobs_queue</span></li><li><b>Aislamiento por banda</b> <span>getTargetBandId</span></li><li><b>Estado en memoria</b> <span>sincronizado con Supabase</span></li></ul></div>
+    <div class="col"><h3>Servicios</h3><ul><li>Supabase <span>PostgreSQL + Storage</span></li><li>Gemini <span>DeepSeek y OpenAI opcionales</span></li><li>Gmail OAuth2 · IMAP <span>correo de cada banda</span></li><li>Stripe · Resend <span>planes y avisos</span></li><li>Railway · Sentry <span>despliegue y errores</span></li></ul></div>
+  </div>
+  <p class="mut" style="margin-top:44px;font-size:28px;max-width:1500px">Supabase es la única fuente de verdad. Cada integración se degrada sola si falta su clave: sin <span class="mono">.env</span> la app arranca igualmente, con usuarios semilla y estado en memoria.</p>
+</section>
+
+<!-- 16 · Método -->
+<section class="slide sunk" data-title="Cómo se construyó con IA">
+  <span class="tag">Cómo se construyó</span>
+  <h2>Construido con IA, gobernado por reglas.</h2>
+  <div class="row" style="gap:70px;margin-top:56px;flex:1">
+    <div style="flex:1.15">
+      <div class="grid" style="gap:30px">
+        <div><h3>AGENTS.md es el contrato</h3><p style="margin-top:8px">Arquitectura, seguridad y reglas de negocio que cualquier agente de código lee antes de tocar nada. Tiene precedencia sobre las convenciones genéricas.</p></div>
+        <div><h3>Skills y hooks</h3><p style="margin-top:8px">21 skills especializadas, espejadas para Claude Code, Gemini, Cursor y Open Code, y un hook que avisa de <span class="mono">/security-review</span> al tocar la superficie sensible.</p></div>
+        <div><h3>Reglas que se comprueban</h3><p style="margin-top:8px">Un test estático rompe el build si reaparece el patrón inseguro de <span class="mono">band_id</span>, y un script verifica en CI que cada ruta citada en la documentación existe.</p></div>
+      </div>
+    </div>
+    <pre class="code" style="flex:.85;align-self:flex-start"><b>AGENTS.md · no negociable</b>
+
+1. Ningún dato de una banda
+   visible para otra.
+
+2. Ningún email automatizado
+   sin aprobación humana
+   explícita.
+
+3. Cero errores nuevos de
+   TypeScript sobre el
+   baseline de CI.</pre>
+  </div>
+</section>
+
+<!-- 17 · Seguridad -->
+<section class="slide" data-title="Seguridad">
+  <span class="tag">Cómo se protege</span>
+  <h2>Defensa por capas: ninguna es la única barrera.</h2>
+  <div class="grid c3" style="margin-top:56px">
+    <div class="card"><h3>Aislamiento por banda</h3><p>La banda se resuelve en el servidor desde la sesión, nunca desde lo que envía el cliente. Un test estático lo vigila en cada CI.</p></div>
+    <div class="card"><h3>Inyección de prompt</h3><p>Lo que viene de webs y de emails de salas se sanea y se marca como dato, no como orden. La última barrera sigue siendo una persona.</p></div>
+    <div class="card"><h3>SSRF y abuso</h3><p>Todo <span class="mono">fetch</span> a una URL de usuario valida la IP y bloquea rangos privados. Limitadores de ritmo para login, IA, render y pagos.</p></div>
+    <div class="card"><h3>Autenticación</h3><p>Contraseñas con PBKDF2-SHA512, login con Google verificado en servidor y sesiones con caducidad.</p></div>
+    <div class="card"><h3>Obra del músico</h3><p>Maquetas y stems bajo una ruta por banda en Storage, sin URLs predecibles ni accesibles sin pertenecer a ella.</p></div>
+    <div class="card"><h3>Errores en producción</h3><p>Los fallos de negocio van a un panel propio; lo que nadie esperaba, a Sentry, con la versión que lo produjo.</p></div>
+  </div>
+</section>
+
+<!-- 18 · Calidad -->
+<section class="slide sunk" data-title="Calidad en cifras">
+  <span class="tag">Calidad</span>
+  <h2>No es una maqueta: es un producto con tests.</h2>
+  <div class="stats">
+    <div class="stat"><b data-count="270" data-suffix="k">270k</b><span>líneas de TypeScript entre cliente y servidor</span></div>
+    <div class="stat"><b data-count="283">283</b><span>endpoints de API</span></div>
+    <div class="stat"><b data-count="47">47</b><span>tablas en PostgreSQL y 31 migraciones SQL</span></div>
+    <div class="stat"><b data-count="1857">1857</b><span>tests unitarios en verde (208 archivos), además de E2E y regresión visual</span></div>
+  </div>
+  <div class="grid c3" style="margin-top:28px">
+    <div class="card"><h3>En cada commit</h3><p>Husky y lint-staged, y mensajes de commit con formato que calculan la versión solos.</p></div>
+    <div class="card"><h3>En cada push</h3><p>Typecheck, guardas de diseño, ratchet de ESLint, tests unitarios y E2E de Playwright.</p></div>
+    <div class="card"><h3>En producción</h3><p>Railway con healthcheck y reinicio automático, y Sentry en servidor y navegador.</p></div>
+  </div>
+</section>
+
+<!-- 19 · Planes -->
+<section class="slide" data-title="Planes y negocio">
+  <span class="tag">Modelo de negocio</span>
+  <h2>De gratis a 79 € al mes, según lo que necesite la banda.</h2>
+  <table>
+    <thead><tr><th>Plan</th><th>Precio</th><th>Créditos IA al mes</th><th>Para qué</th></tr></thead>
+    <tbody>
+      <tr><td>Promo / Promo+</td><td>0 €</td><td>0</td><td>Dossier, QR, fans, calendario y repertorio</td></tr>
+      <tr><td>Ensayo</td><td>0 €</td><td>100</td><td>Primer contacto con booking y agentes</td></tr>
+      <tr><td>Local</td><td>15 €</td><td>300</td><td>Booking con 50 leads y contactos de medios</td></tr>
+      <tr class="hl"><td>De Gira</td><td>29 €</td><td>800</td><td>Todo ilimitado en una banda, Tour Manager y Reels</td></tr>
+      <tr><td>Cabeza de Cartel</td><td>79 €</td><td>2.500</td><td>Hasta 5 bandas, finanzas y agentes en paralelo</td></tr>
+    </tbody>
+  </table>
+  <p class="mut" style="margin-top:34px;font-size:27px;max-width:1500px">Los límites se validan en el servidor, no solo en la interfaz. Los planes de pago están desactivados a propósito mientras se valida el producto: toda banda nueva entra en modo promo.</p>
+</section>
+
+<!-- 20 · Límites -->
+<section class="slide sunk" data-title="Lo que falta, a la vista">
+  <span class="tag">Honestidad técnica</span>
+  <h2>Lo que sé que falta, a la vista.</h2>
+  <div class="grid c2" style="margin-top:56px">
+    <div class="card">
+      <h3>Bloqueantes antes de producción</h3>
+      <p style="margin-top:8px">Exigir titularidad en las descargas de vídeo de YouTube, y añadir el mecanismo de baja a los emails comerciales de los agentes.</p>
+    </div>
+    <div class="card">
+      <h3>Límites de seguridad conocidos</h3>
+      <p style="margin-top:8px">Las políticas RLS de Supabase son permisivas y el aislamiento es de aplicación; no hay <span class="mono">Content-Security-Policy</span>, y el limitador de ritmo vive en memoria.</p>
+    </div>
+    <div class="card">
+      <h3>A medias</h3>
+      <p style="margin-top:8px">La facturación con Stripe está construida y probada, pero desactivada hasta cerrar la idempotencia y los créditos en servidor.</p>
+    </div>
+    <div class="card">
+      <h3>Hecho desde la auditoría</h3>
+      <p style="margin-top:8px">Cifrado de las contraseñas de aplicación de correo, licencia AGPL-3.0 con opción comercial y la defensa contra inyección de prompt.</p>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:auto;font-size:32px;max-width:1500px">La IA acelera el código, pero la responsabilidad legal, de seguridad y de producto sigue siendo de quien firma el proyecto. Por eso todo esto está escrito en el repositorio.</p>
+</section>
+
+<!-- 21 · Qué viene -->
+<section class="slide" data-title="Qué viene">
+  <span class="tag">Siguientes pasos</span>
+  <h2>De proyecto de máster a banda real.</h2>
+  <div class="grid c3" style="margin-top:60px">
+    <div class="card"><div class="num">1</div><h3>Probarlo con una banda real</h3><p>El flujo completo: lead, aprobación, borrador en Gmail y respuesta de la sala.</p></div>
+    <div class="card"><div class="num">2</div><h3>Reactivar el cobro</h3><p>Cerrar los arreglos de facturación y abrir los planes de pago.</p></div>
+    <div class="card"><div class="num">3</div><h3>Vídeos de fans por QR</h3><p>Que el público suba su clip del directo: un motivo para escanear el QR y materia prima para los reels.</p></div>
+  </div>
+  <p class="mut" style="margin-top:50px;font-size:28px;max-width:1500px">En el backlog también: análisis de acordes a partir del audio real, modo escenario sin conexión y escrow de pagos tipo señal para las salas.</p>
+</section>
+
+<!-- 22 · Vídeo (solo aparece si existe video/demo.mp4 o data-embed) -->
+<section class="slide sunk" data-title="Vídeo de demostración" data-optional="video" data-src="video/demo.mp4" data-embed="">
+  <span class="tag">Demostración</span>
+  <h2>La plataforma en funcionamiento.</h2>
+  <div id="videoHost" style="margin-top:44px;flex:1;min-height:0"></div>
+</section>
+
+<!-- 23 · Cierre -->
+<section class="slide cover" data-title="Gracias">
+  <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
+  <h1>Gracias.</h1>
+  <p class="sub">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>
+  <p class="foot"><b>Diego de la Calle</b> · diego.delacalleb@gmail.com<br><a href="https://github.com/DiegoCalleB/BandsManager" target="_blank" rel="noopener">github.com/DiegoCalleB/BandsManager</a></p>
+  <div class="art"><div class="shot" style="inset:120px 90px 0 90px;border-radius:44px 44px 0 0;background:var(--bg);cursor:zoom-in"><img class="l" loading="lazy" decoding="async" src="img/ml-h-repertorio.jpg" alt="Setlist en el móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt=""></div></div>
+</section>
+
+</main>
+</div>
+
+<div id="edgeL" title="Anterior"></div><div id="edgeR" title="Siguiente"></div>
+<div id="hint">← → navegar · G índice · T tema · F pantalla completa · S scroll</div>
+<div id="hud">
+  <span id="count">1</span><span id="title"></span>
+  <button class="hb" id="bTheme" title="Tema claro u oscuro (T)">Tema</button>
+  <button class="hb" id="bScroll" title="Modo scroll (S)">Scroll</button>
+  <button class="hb" id="bGrid" title="Índice (G)">Índice</button>
+  <button class="hb" id="bFs" title="Pantalla completa (F)">Pantalla completa</button>
+  <button class="hb" id="bPrev" title="Anterior" aria-label="Anterior">‹</button>
+  <button class="hb" id="bNext" title="Siguiente" aria-label="Siguiente">›</button>
+</div>
+<div id="grid"><div class="g"></div></div>
+<div id="lb"><img alt=""></div>
+<script src="deck.js"></script>
+</body>
+</html>
