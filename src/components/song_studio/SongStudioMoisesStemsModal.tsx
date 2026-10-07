@@ -11,7 +11,7 @@ interface SongStudioMoisesStemsModalProps {
   setMoisesTab: (tab: 'stems' | 'how_it_works' | 'upload') => void;
   moisesPreset?: MoisesSeparationPreset;
   setMoisesPreset?: (preset: MoisesSeparationPreset) => void;
-  handlePerformAiStemSeparation?: (targetIdea: SongAudioIdea, overrideEngine?: any, stemsToInclude?: string[]) => void;
+  handlePerformAiStemSeparation?: (targetIdea: SongAudioIdea, overrideEngine?: 'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', stemsToInclude?: string[]) => void;
   song?: Song | null;
   onUpdateSong?: (updatedSong: Song) => void;
 }
@@ -24,8 +24,6 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
   moisesPreset = '6_stems',
   setMoisesPreset,
   handlePerformAiStemSeparation,
-  song,
-  onUpdateSong,
 }) => {
   if (!showMoisesStemsModal) return null;
 
@@ -47,6 +45,19 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           >
             <X className="w-5 h-5" />
           </IconButton>
+        </div>
+
+        <div className="relative h-32 sm:h-40 overflow-hidden rounded-[var(--r-m)] bg-black" aria-hidden="true">
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src="/video/iris-prisma.mp4"
+            poster="/video/iris-prisma.jpg"
+            autoPlay={!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
         </div>
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
