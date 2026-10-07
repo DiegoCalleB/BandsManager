@@ -1,5 +1,5 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Song, ThemeColors } from "../../types";
 import {
   Disc,
@@ -45,6 +45,11 @@ import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from "../ui/ShowIcon";
 import { ActionMenu, Button, IconButton, Input } from "../ui";
+import {
+  ProgresoTranscripcion,
+  resumirTranscripcion,
+  transcribirEnCola,
+} from "../../utils/transcripcionMasiva";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -137,6 +142,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     done: number;
     total: number;
     failedTitles: string[];
+  } | null>(null);
+  const [letras, setLetras] = useState<{
+    fase: "confirmar" | "corriendo" | "fin";
+    progreso?: ProgresoTranscripcion;
   } | null>(null);
   // Las 4 formas de crear un disco (vacío / subir MP3-WAV / Spotify / recortar de un concierto)
   // vivían como 4 botones de texto siempre visibles — se usan una vez por disco, no en cada
@@ -510,6 +519,39 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     });
   };
 
+  // «Letras del audio» en lote: una llamada de pago por canción, así que primero se muestra el
+  // coste esperado y solo se tocan canciones con audio y sin cifrado (nunca se sobrescribe).
+  const resumenLetras = resumirTranscripcion(safeSongs);
+  const abortoLetras = useRef<AbortController | null>(null);
+
+  const handleTranscribirTodo = async () => {
+    const pendientes = resumenLetras.pendientes;
+    if (pendientes.length === 0 || letras?.fase === "corriendo") return;
+    const ctl = new AbortController();
+    abortoLetras.current = ctl;
+    setLetras({ fase: "corriendo", progreso: { hechas: 0, total: pendientes.length, fallidas: [], sinLetra: [] } });
+    const final = await transcribirEnCola(pendientes, {
+      signal: ctl.signal,
+      transcribir: async (song) => {
+        const data = await apiFetch<{ success?: boolean; cifradoTexto?: string }>(
+          `/api/songs/${encodeURIComponent(song.id)}/letra-sincronizada`,
+          { method: "POST", body: JSON.stringify({ sobrescribir: false }) },
+        );
+        if (!data?.cifradoTexto) throw new Error("Sin letra");
+        return { cifradoTexto: data.cifradoTexto };
+      },
+      // El servidor ya guardó la canción; aquí solo se refleja en pantalla.
+      alTerminarCancion: (song, resultado, cifradoTexto) => {
+        if (resultado === "hecha" && cifradoTexto) {
+          setSongs((prev) => prev.map((s) => (s.id === song.id ? { ...s, cifradoTexto } : s)));
+        }
+      },
+      alProgresar: (progreso) => setLetras({ fase: "corriendo", progreso }),
+    });
+    abortoLetras.current = null;
+    setLetras({ fase: "fin", progreso: final });
+  };
+
   return (
     <div className="w-full flex flex-col gap-4" data-modulo="discografia">
       {/* Action Buttons: Exportar + Nuevo Disco */}
@@ -734,8 +776,77 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   </Button>
                 </div>
               )}
+              {resumenLetras.pendientes.length > 0 && letras === null && (
+                <Button
+                  variant="neutral"
+                  size="xs"
+                  type="button"
+                  onClick={() => setLetras({ fase: "confirmar" })}
+                  className="items-center gap-1"
+                  title="Transcribir la letra de la voz de todas las canciones que tienen audio y aún no tienen cifrado"
+                >
+                  <FileText className="w-3 h-3 text-[var(--ink-2)]" />
+                  <span className="hidden xs:inline">Letras del audio</span>
+                  <span>({resumenLetras.pendientes.length})</span>
+                </Button>
+              )}
             </div>
           </div>
+
+          {letras && (
+            <div
+              className="w-full rounded-[var(--r-m)] bg-[var(--sunken)] p-3 flex flex-wrap items-center gap-2 text-xs text-[var(--ink)]"
+              role="status"
+              data-letras-masivas={letras.fase}
+            >
+              {letras.fase === "confirmar" && (
+                <>
+                  <span className="flex-1 min-w-[12rem]">
+                    Se transcribirán {resumenLetras.pendientes.length} de {resumenLetras.total} canciones
+                    {resumenLetras.sinAudio + resumenLetras.conCifrado > 0 &&
+                      ` (${[
+                        resumenLetras.sinAudio > 0 ? `${resumenLetras.sinAudio} sin audio` : "",
+                        resumenLetras.conCifrado > 0 ? `${resumenLetras.conCifrado} ya con cifrado` : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" y ")})`}
+                    . Una a una y sin tocar lo que ya hayas escrito; cada una consume IA.
+                  </span>
+                  <Button variant="primary" size="xs" type="button" onClick={handleTranscribirTodo}>
+                    Transcribir
+                  </Button>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setLetras(null)}>
+                    Cancelar
+                  </Button>
+                </>
+              )}
+              {letras.fase === "corriendo" && letras.progreso && (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--ink-2)]" />
+                  <span className="flex-1">
+                    Transcribiendo {letras.progreso.hechas}/{letras.progreso.total}… puedes seguir usando la app, pero no cierres la pestaña.
+                  </span>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => abortoLetras.current?.abort()}>
+                    Parar
+                  </Button>
+                </>
+              )}
+              {letras.fase === "fin" && letras.progreso && (
+                <>
+                  <span className="flex-1">
+                    Listo: {letras.progreso.hechas - letras.progreso.fallidas.length - letras.progreso.sinLetra.length} de{" "}
+                    {letras.progreso.total} con letra
+                    {letras.progreso.sinLetra.length > 0 && ` · sin voz inteligible: ${letras.progreso.sinLetra.join(", ")}`}
+                    {letras.progreso.fallidas.length > 0 && ` · fallaron: ${letras.progreso.fallidas.join(", ")}`}
+                    {letras.progreso.hechas < letras.progreso.total && " · parado antes de terminar"}. Son automáticas: revísalas de oído.
+                  </span>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setLetras(null)}>
+                    Cerrar
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Albums Stack */}
