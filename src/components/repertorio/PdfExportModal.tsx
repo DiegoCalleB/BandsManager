@@ -25,6 +25,7 @@ import {
   Columns2,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
+import { buildQrSvg } from "../../utils/qrSvg";
 import {
   BandMemberOption,
   resolveBandMembers,
@@ -1369,6 +1370,8 @@ function PdfExportModalBody({
  align-items: center;
  gap: 6px;
  }
+ .footer-qr { display: inline-flex; line-height: 0; }
+ .footer-qr svg { display: block; }
  .app-logo-badge {
  font-weight: 900;
  color: #000;
@@ -1523,6 +1526,9 @@ function PdfExportModalBody({
         </div>
       `;
 
+    // El mismo SVG en todas las hojas: se genera una vez por documento.
+    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io", 11) : "";
+
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
       pageNum: number,
@@ -1532,9 +1538,10 @@ function PdfExportModalBody({
         ? `
         <div class="page-footer ${isCentered ? "is-centered" : ""}">
           <div class="footer-left">
+            <span class="footer-qr">${footerQrSvg}</span>
             <span class="app-logo-badge">⚡ BandManager</span>
             <span class="footer-sep">•</span>
-            <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
+            <a href="https://bandmanager.io" target="_blank" class="app-link">bandmanager.io</a>
           </div>
           <div class="footer-right">
             <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
