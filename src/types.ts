@@ -283,6 +283,8 @@ export interface Concert {
   idioma?: string;
   customQrUrl?: string;
   customQrSlug?: string;
+  // Enlace de venta de entradas (Wegow, DICE, Eventbrite...). Se muestra en EPK y landing de fans.
+  enlaceEntradas?: string;
 }
 
 export interface EmailSignatureConfig {

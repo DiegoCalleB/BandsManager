@@ -1,6 +1,13 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
+// El enlace de entradas se muestra como href en páginas públicas (EPK, landing de fans): solo http(s),
+// cualquier otro esquema ("javascript:...") o cadena vacía se guarda como null.
+function safeTicketUrl(url?: string | null): string | null {
+  const trimmed = (url || "").trim();
+  return /^https?:\/\//i.test(trimmed) ? trimmed : null;
+}
+
 export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from("concerts").select("*");
@@ -27,7 +34,8 @@ export async function dbGetConcerts(bandId: string | string[]) {
     giraId: c.gira_id || c.giraId || undefined,
     giraNombre: c.gira_nombre || c.giraNombre || undefined,
     idioma: c.idioma || undefined,
-    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined
+    customQrUrl: c.custom_qr_url || c.customQrUrl || undefined,
+    enlaceEntradas: c.enlace_entradas || c.enlaceEntradas || undefined
   }));
 }
 
@@ -75,7 +83,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     gira_id: concert.gira_id || concert.giraId || null,
     gira_nombre: concert.gira_nombre || concert.giraNombre || null,
     idioma: concert.idioma || "",
-    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null
+    custom_qr_url: concert.custom_qr_url || concert.customQrUrl || null,
+    enlace_entradas: safeTicketUrl(concert.enlace_entradas ?? concert.enlaceEntradas)
   };
 
   let data: any = null;
@@ -111,7 +120,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     ...data,
     giraId: concert.giraId || concert.gira_id,
     giraNombre: concert.giraNombre || concert.gira_nombre,
-    idioma: data?.idioma || concert.idioma
+    idioma: data?.idioma || concert.idioma,
+    enlaceEntradas: data?.enlace_entradas || undefined
   };
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Download, Share2, ExternalLink,
+  Download, Share2, ExternalLink, Ticket,
   Check, Mail, Phone, MapPin, Play, Pause,
   Volume2, X, Music, Radio, Sparkles, Quote, Instagram, Globe
 } from 'lucide-react';
@@ -595,9 +595,20 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
                   </p>
                 </div>
               </div>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
-                {c.tipo}
-              </span>
+              {safeUrl(c.enlaceEntradas) ? (
+                <a
+                  href={safeUrl(c.enlaceEntradas)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full ${styles.accentBtn} shrink-0 print:hidden`}
+                >
+                  <Ticket className="w-3.5 h-3.5" /> {t('comprarEntradas')}
+                </a>
+              ) : (
+                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles.badge} capitalize border`}>
+                  {c.tipo}
+                </span>
+              )}
             </div>
           ))}
         </div>

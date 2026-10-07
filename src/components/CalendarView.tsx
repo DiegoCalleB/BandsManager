@@ -742,7 +742,8 @@ export default function CalendarView({
  tipo: editDraft.tipo,
  notas: editDraft.notas?.trim() || '',
  idioma: editDraft.idioma || undefined,
- setlistId: editDraft.setlistId || undefined
+ setlistId: editDraft.setlistId || undefined,
+ enlaceEntradas: editDraft.enlaceEntradas?.trim() || undefined
  });
  setViewingConcert(null);
  setSyncSuccessMessage(`¡Concierto de ${editDraft.sala} (${editDraft.ciudad}) actualizado!`);
@@ -4596,6 +4597,19 @@ export default function CalendarView({
  }`}
  />
  </div>
+ </div>
+
+ <div>
+ <label className="block text-[10px] font-mono text-neutral-400 mb-1">Enlace de Entradas (público)</label>
+ <input
+ type="url"
+ value={editDraft.enlaceEntradas || ''}
+ onChange={(e) => setEditDraft(prev => prev ? { ...prev, enlaceEntradas: e.target.value } : prev)}
+ placeholder="https://wegow.com/... · DICE · Eventbrite"
+ className={`w-full px-2 py-1 text-[10px] rounded-lg outline-none ${
+ isStitchLight ? 'bg-slate-50 text-slate-900' : 'bg-neutral-900 text-white'
+ }`}
+ />
  </div>
 
  <div className="grid grid-cols-2 gap-3">

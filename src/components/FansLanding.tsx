@@ -3,7 +3,7 @@ import {
   Heart, Check, Download, Tag, Loader2, PartyPopper, Shield, X, Flame,
   Music, Sparkles, Calendar, Briefcase, Mail, Phone, MessageCircle,
   Lock as LockIcon, ExternalLink, BookOpen, ChevronRight, ChevronDown, ChevronUp,
-  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2
+  Copy, Users, Headphones, MapPin, Share2, Play, Pause, Volume2, Ticket
 } from 'lucide-react';
 import { SocialPlatformsList, SocialLinks, PayPalLogo, BizumLogo } from './SocialPlatformsList';
 import { useFanFormLanguage } from '../hooks/useFanFormLanguage';
@@ -1324,9 +1324,21 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                           <MapPin className="w-3 h-3 text-amber-500/80 shrink-0" /> {c.ciudad}
                         </p>
                       </div>
-                      <span className="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-[10px] font-bold shrink-0 font-mono">
-                        {c.fecha}
-                      </span>
+                      <div className="flex flex-col items-end gap-1 shrink-0">
+                        <span className="px-2 py-1 rounded-lg bg-amber-500/15 text-amber-300 text-[10px] font-bold font-mono">
+                          {c.fecha}
+                        </span>
+                        {safeUrl(c.enlaceEntradas) && (
+                          <a
+                            href={safeUrl(c.enlaceEntradas)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-500 text-black text-[10px] font-bold hover:bg-amber-400 transition-colors"
+                          >
+                            <Ticket className="w-3 h-3" /> {t('buyTickets')}
+                          </a>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
