@@ -50,7 +50,9 @@ import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch, getActiveBandId } from "../utils/api";
 import { analizarAcordesDelAudio, resumenAnalisisAcordes } from "../utils/analisisAcordesCliente";
 import { ControlAutoscroll } from "./chords/ControlAutoscroll";
+import { ControlMetronomo } from "./chords/ControlMetronomo";
 import { useAutoScroll } from "../hooks/useAutoScroll";
+import { useMetronomo } from "../hooks/useMetronomo";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { useMezclaStems } from "../hooks/useMezclaStems";
@@ -101,6 +103,7 @@ export function Atril({
   // Auto-scroll state
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const autoScroll = useAutoScroll(scrollContainerRef, 2);
+  const metronomo = useMetronomo(song.bpm || 120);
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
@@ -923,6 +926,7 @@ export function Atril({
                 </Button>
 
                 <ControlAutoscroll auto={autoScroll} />
+                <ControlMetronomo metronomo={metronomo} />
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
