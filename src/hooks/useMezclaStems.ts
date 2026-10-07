@@ -1,6 +1,7 @@
-import { useEffect, type RefObject } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import type { AudioTrack } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
+import { hayPistaEnSolo, volumenEfectivo, type AjustesPistas } from '../utils/mezclaStems';
 
 const DERIVA_MAX_S = 0.15;
 
@@ -8,9 +9,25 @@ const DERIVA_MAX_S = 0.15;
  * Reproduce `pistas` (stems) siguiendo al `<audio>` principal, que sigue siendo el reloj del visor
  * (acordes, letra y barra de posición no cambian). Cuando hay pistas, el principal se silencia.
  * Con `pistas` vacío no hace nada y el principal suena entero.
+ * `ajustes` (silencio/solo/volumen por pista) se aplica en vivo, sin reiniciar la reproducción.
  */
-export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pistas: AudioTrack[], audioUrl: string): void {
+export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pistas: AudioTrack[], audioUrl: string, ajustes: AjustesPistas = {}): void {
   const clave = pistas.map((p) => p.id).join('|');
+  const ajustesRef = useRef(ajustes);
+  const pistasRef = useRef(pistas);
+  const mapaRef = useRef(new Map<string, HTMLAudioElement>());
+  ajustesRef.current = ajustes;
+  pistasRef.current = pistas;
+
+  const aplicarVolumenes = () => {
+    const solo = hayPistaEnSolo(pistasRef.current, ajustesRef.current);
+    for (const p of pistasRef.current) {
+      const el = mapaRef.current.get(p.id);
+      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo);
+    }
+  };
+
+  useEffect(aplicarVolumenes, [ajustes]);
 
   useEffect(() => {
     const maestro = audioRef.current;
@@ -37,17 +54,19 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
         const el = new Audio();
         el.preload = 'auto';
         el.crossOrigin = 'anonymous';
-        el.volume = Math.min(1, Math.max(0, p.volumen ?? 1));
         try { el.src = (await resolveAudioUrl(p.audioUrl)) || p.audioUrl; } catch { el.src = p.audioUrl; }
         if (!vivo) return;
         esclavos.push(el);
+        mapaRef.current.set(p.id, el);
       }
+      aplicarVolumenes();
       ritmo();
       if (!maestro.paused) tocar();
     })();
 
     return () => {
       vivo = false;
+      mapaRef.current.clear();
       maestro.muted = false;
       maestro.removeEventListener('play', tocar);
       maestro.removeEventListener('pause', parar);
