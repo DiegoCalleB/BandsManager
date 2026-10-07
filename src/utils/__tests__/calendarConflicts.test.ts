@@ -7,6 +7,7 @@ import {
   describirChoque,
   describirEvento,
   redactarChoque,
+  peorSeveridadPorDia,
   type ContextoConflictos,
 } from '../calendarConflicts';
 import type { Concert, Rehearsal } from '../../types';
@@ -318,5 +319,23 @@ describe('viabilidad de desplazamiento', () => {
     expect(redactado.distanciaKm).toBeUndefined();
     expect(JSON.stringify(redactado)).not.toContain('Sevilla');
     expect(describirChoque(redactado, new Set(['A']))).toContain('No da tiempo a llegar');
+  });
+});
+
+describe('peorSeveridadPorDia', () => {
+  it('marca los dos días de un choque a través de la medianoche y se queda con el peor', () => {
+    const madrid = concierto('c1', '2026-11-07', {
+      ciudad: 'Madrid',
+      logisticaTecnica: { horaLlegada: '22:00', horaCierreToque: '03:00' },
+    });
+    const bcn = ensayo('r1', '2026-11-08', '08:00 - 10:00', { lugar: 'Local en Barcelona' });
+    const aviso = ensayo('r2', '2026-11-08', '', { lugar: 'Local' });
+    const dias = peorSeveridadPorDia(choques([madrid], [bcn, aviso]));
+    expect(dias['2026-11-07']).toBe('choque');
+    expect(dias['2026-11-08']).toBe('choque');
+  });
+
+  it('sin choques, vacío', () => {
+    expect(peorSeveridadPorDia([])).toEqual({});
   });
 });

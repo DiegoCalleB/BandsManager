@@ -18,6 +18,7 @@ import { CalendarSyncModal } from './calendar/CalendarSyncModal';
 import { CalendarReminderModal } from './calendar/CalendarReminderModal';
 import { CalendarConflictsBanner } from './calendar/CalendarConflictsBanner';
 import { useCalendarConflicts } from './calendar/useCalendarConflicts';
+import { peorSeveridadPorDia } from '../utils/calendarConflicts';
 import { CalendarEventDetailModal } from './calendar/CalendarEventDetailModal';
 import { ShowIcon } from './ui/ShowIcon';
 
@@ -635,6 +636,8 @@ export default function CalendarView({
     rehearsals: eventosParaChoques.rehearsals,
     bandId: activeBandId || '',
   });
+  // Peor severidad por día, para marcar las celdas del mes y de la semana
+  const diasConChoque = React.useMemo(() => peorSeveridadPorDia(choquesCalendario), [choquesCalendario]);
 
   const filteredRehearsals = React.useMemo(() => {
     let list = rehearsals;
@@ -2681,6 +2684,7 @@ export default function CalendarView({
               className={`flex flex-col ${calendarViewMode === '2m' ? 'xl:flex-row gap-6' : 'gap-4'} transition-transform duration-75`}
             >
               <CalendarViewsContainer
+                diasConChoque={diasConChoque}
                 calendarViewMode={calendarViewMode}
                 calendarSearchTerm={calendarSearchTerm}
                 viewDate={viewDate}
