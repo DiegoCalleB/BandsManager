@@ -52,7 +52,7 @@ import { useAutoScroll } from "../hooks/useAutoScroll";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { useMezclaStems } from "../hooks/useMezclaStems";
-import { getSongIrisStemIdea, getIdeaTracks } from "../utils/irisTracks";
+import { pistasDeCancion } from "../utils/irisTracks";
 import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { formatSongShareText } from "../utils/shareUtils";
@@ -147,10 +147,7 @@ export function Atril({
       : "");
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
-  const stems = useMemo(() => {
-    const idea = getSongIrisStemIdea(song);
-    return idea ? getIdeaTracks(idea) : [];
-  }, [song]);
+  const stems = useMemo(() => pistasDeCancion(song), [song]);
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);

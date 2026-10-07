@@ -34,3 +34,12 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
     },
   ];
 }
+
+/**
+ * Pistas separadas de una canción, vengan de donde vengan. Hoy salen de la idea de Iris;
+ * cuando pasen a vivir en la propia canción solo cambia esta función, no quien las consume.
+ */
+export function pistasDeCancion(song?: Song | null): AudioTrack[] {
+  const idea = getSongIrisStemIdea(song);
+  return idea ? getIdeaTracks(idea) : [];
+}
