@@ -195,7 +195,10 @@
     if (push) history.replaceState(null, '', '#' + (cur + 1));
     $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
     countUp(slides[cur]);
-    slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => v.play().catch(() => {}));
+    slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => {
+      if (v.dataset.restart !== undefined) v.currentTime = 0;
+      if (v.offsetParent) v.play().catch(() => {});
+    });
   }
 
   const next = () => { if (!stepForward()) show(cur + 1); };
