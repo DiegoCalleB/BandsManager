@@ -110,6 +110,25 @@ export const GUITAR_CHORD_DATABASE: Record<string, GuitarChordShape> = {
   Sim: { name: 'Sim', frets: [-1, 2, 4, 4, 3, 2], baseFret: 2 },
   Bb: { name: 'Bb', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
   Sib: { name: 'Sib', frets: [-1, 1, 3, 3, 3, 1], baseFret: 1 },
+  // Con bemoles/sostenidos en cejilla (los enarmónicos se resuelven en buscarFormaGuitarra)
+  Ab: { name: 'Ab', frets: [4, 6, 6, 5, 4, 4], baseFret: 4 },
+  Lab: { name: 'Lab', frets: [4, 6, 6, 5, 4, 4], baseFret: 4 },
+  Abm: { name: 'Abm', frets: [4, 6, 6, 4, 4, 4], baseFret: 4 },
+  Labm: { name: 'Labm', frets: [4, 6, 6, 4, 4, 4], baseFret: 4 },
+  Eb: { name: 'Eb', frets: [-1, 6, 8, 8, 8, 6], baseFret: 6 },
+  Mib: { name: 'Mib', frets: [-1, 6, 8, 8, 8, 6], baseFret: 6 },
+  Ebm: { name: 'Ebm', frets: [-1, 6, 8, 8, 7, 6], baseFret: 6 },
+  Mibm: { name: 'Mibm', frets: [-1, 6, 8, 8, 7, 6], baseFret: 6 },
+  Db: { name: 'Db', frets: [-1, 4, 6, 6, 6, 4], baseFret: 4 },
+  Reb: { name: 'Reb', frets: [-1, 4, 6, 6, 6, 4], baseFret: 4 },
+  Dbm: { name: 'Dbm', frets: [-1, 4, 6, 6, 5, 4], baseFret: 4 },
+  Rebm: { name: 'Rebm', frets: [-1, 4, 6, 6, 5, 4], baseFret: 4 },
+  Gb: { name: 'Gb', frets: [2, 4, 4, 3, 2, 2], baseFret: 2 },
+  Solb: { name: 'Solb', frets: [2, 4, 4, 3, 2, 2], baseFret: 2 },
+  'F#': { name: 'F#', frets: [2, 4, 4, 3, 2, 2], baseFret: 2 },
+  'Fa#': { name: 'Fa#', frets: [2, 4, 4, 3, 2, 2], baseFret: 2 },
+  Bbm: { name: 'Bbm', frets: [-1, 1, 3, 3, 2, 1], baseFret: 1 },
+  Sibm: { name: 'Sibm', frets: [-1, 1, 3, 3, 2, 1], baseFret: 1 },
 };
 
 // Regex to identify root note at start of chord token
@@ -331,6 +350,27 @@ export function processChordText(text: string, semitones: number, notation: 'ES'
 }
 
 // Extract all unique chords found in text
+/**
+ * Forma de guitarra de un acorde: busca el nombre tal cual y, si no está, su enarmónico en español o
+ * inglés (Sol# ↔ Lab ↔ G# ↔ Ab) conservando el sufijo; el bajo de un «Sol/Si» se ignora (usa la forma del Sol).
+ */
+export function buscarFormaGuitarra(chord: string): GuitarChordShape | undefined {
+  if (GUITAR_CHORD_DATABASE[chord]) return GUITAR_CHORD_DATABASE[chord];
+  const p = parseRootNote(chord);
+  if (!p) return undefined;
+  const suffix = p.suffix.split('/')[0];
+  const raiz = p.root.charAt(0).toUpperCase() + p.root.slice(1);
+  const idx = [NOTE_NAMES_ES, NOTE_NAMES_ES_FLATS, NOTE_NAMES_EN, NOTE_NAMES_EN_FLATS]
+    .map((lista) => lista.indexOf(raiz))
+    .find((i) => i >= 0);
+  if (idx === undefined) return undefined;
+  for (const lista of [NOTE_NAMES_ES, NOTE_NAMES_ES_FLATS, NOTE_NAMES_EN, NOTE_NAMES_EN_FLATS]) {
+    const forma = GUITAR_CHORD_DATABASE[lista[idx] + suffix];
+    if (forma) return forma;
+  }
+  return undefined;
+}
+
 export function extractUniqueChords(text: string): string[] {
   if (!text) return [];
   const found = new Set<string>();
@@ -340,7 +380,8 @@ export function extractUniqueChords(text: string): string[] {
   if (bracketMatches) {
     bracketMatches.forEach((m) => {
       const clean = m.replace('[', '').replace(']', '').trim();
-      if (clean) found.add(clean);
+      // «[Instrumental]», «[Estribillo]»… son marcas de sección, no acordes.
+      if (clean && parseRootNote(clean)) found.add(clean);
     });
   }
 
