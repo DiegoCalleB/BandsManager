@@ -28,6 +28,7 @@ import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { programarClic } from '../utils/clicMetronomo';
 
 const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
 
@@ -41,18 +42,6 @@ function TrackPitchShiftBridge({ audioElement, semitones }: { audioElement: HTML
   return null;
 }
 
-function scheduleMetronomeClick(ctx: AudioContext, time: number, accent: boolean) {
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.frequency.value = accent ? 1500 : 1000;
-  gain.gain.setValueAtTime(0.0001, time);
-  gain.gain.exponentialRampToValueAtTime(accent ? 0.9 : 0.6, time + 0.005);
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(time);
-  osc.stop(time + 0.06);
-}
 
 /**
  * Sala de ensayo individual: mezcla 100% local (nunca toca `song`/onUpdateSong) para que
@@ -410,7 +399,7 @@ export default function PracticeModePanel({
     const lookaheadSec = 0.15;
     while (metronomeNextClickTimeRef.current < ctx.currentTime + lookaheadSec) {
       const accent = metronomeBeatCounterRef.current % 4 === 0;
-      scheduleMetronomeClick(ctx, metronomeNextClickTimeRef.current, accent);
+      programarClic(ctx, metronomeNextClickTimeRef.current, accent);
       metronomeNextClickTimeRef.current += secPerBeat;
       metronomeBeatCounterRef.current += 1;
     }

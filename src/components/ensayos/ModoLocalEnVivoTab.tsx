@@ -48,6 +48,7 @@ import {
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
+import { programarClic } from '../../utils/clicMetronomo';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -263,18 +264,7 @@ export function ModoLocalEnVivoTab({
 
   const playClick = (time: number, isAccent: boolean) => {
     if (!audioCtxRef.current) return;
-    const osc = audioCtxRef.current.createOscillator();
-    const gain = audioCtxRef.current.createGain();
-
-    osc.frequency.value = isAccent ? 1200 : 800;
-    gain.gain.setValueAtTime(0.7, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-
-    osc.connect(gain);
-    gain.connect(audioCtxRef.current.destination);
-
-    osc.start(time);
-    osc.stop(time + 0.05);
+    programarClic(audioCtxRef.current, time, isAccent, 0.7);
   };
 
   useEffect(() => {
