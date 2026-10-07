@@ -1914,14 +1914,14 @@ function PdfExportModalBody({
     <ModalPortal isOpen={isOpen} onClose={onClose}>
       <div className="fixed inset-0 bg-[var(--scrim)]/90 flex items-center justify-center p-2 sm:p-4 z-[9999] overflow-y-auto overscroll-contain">
         <div
-          className={`w-full max-w-7xl max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] overflow-hidden ${"bg-[var(--surface)]"}`}
+          className={`w-full max-w-7xl sm:max-h-[96vh] my-auto flex flex-col rounded-[var(--r-l)] sm:overflow-hidden ${"bg-[var(--surface)]"}`}
         >
           {/* Modal Top Header — recortado a lo esencial en móvil (badge decorativo e info extra
  ocultos: ver hidden/sm:inline-block y sm:block más abajo) para que en pantallas
  pequeñas no compita por espacio con los controles y la vista previa, que son lo que
  de verdad hace falta ver de un vistazo. */}
           <div
-            className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 ${"bg-[var(--sunken)]"}`}
+            className={`p-3 sm:p-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-3 shrink-0 max-sm:sticky max-sm:top-0 max-sm:z-10 ${"bg-[var(--sunken)]"}`}
           >
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <div className="hidden sm:flex p-2.5 rounded-[var(--r-m)] bg-[var(--acc)]/15 text-[var(--ink)] shrink-0">
@@ -2405,7 +2405,7 @@ function PdfExportModalBody({
           {/* Vista previa: las hojas reales que se imprimirán (clic en un tema = editar su nota). */}
           <div
             ref={previewBoxRef}
-            className="relative flex-1 overflow-y-auto p-3 sm:p-6 flex justify-center bg-[var(--sunken)]"
+            className="relative sm:flex-1 sm:overflow-y-auto p-3 sm:p-6 flex justify-center bg-[var(--sunken)]"
           >
             {previewDoc ? (
               <div
