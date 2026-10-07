@@ -39,7 +39,9 @@ describe('Visor de acordes: el traductor automático no toca los acordes', () =>
   // Con el idioma en gallego, Google Translate convertía «Mi» en «Meu/Miña», «La» en «A» y «Si» en
   // «Non»: los acordes en notación española son palabras castellanas para un traductor.
   it('la hoja de acordes y los diagramas llevan translate="no"', () => {
-    expect((visor.match(/translate="no"/g) || []).length).toBeGreaterThanOrEqual(2);
+    const cajon = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'DrawerDiagramas.tsx'), 'utf-8');
+    expect((visor.match(/translate="no"/g) || []).length).toBeGreaterThanOrEqual(1); // la hoja
+    expect(cajon).toContain('translate="no"'); // el cajón de diagramas
   });
 
   it('la línea de tiempo, el aro de cada acorde y la regleta de compases son no traducibles', () => {

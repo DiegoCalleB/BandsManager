@@ -35,9 +35,10 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
-import { contextoDeAcordes, ordenarPorTonica } from "../utils/vistaAcordes";
+import { contextoDeAcordes } from "../utils/vistaAcordes";
 import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
-import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { DrawerDiagramas } from "./chords/DrawerDiagramas";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
@@ -1270,34 +1271,15 @@ export function SongChordsViewerModal({
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
             {activeTab === "chords" && showChordDiagrams && (
-              <div translate="no" className="notranslate w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <ShowIcon inline emoji="🎸" />Acordes ({uniqueChords.length})
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowChordDiagrams(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
-
-                {uniqueChords.length === 0 ? (
-                  <p className="text-xs text-[var(--ink-2)] font-sans italic">
-                    No se detectaron acordes en el texto.
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-                    {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord) => (
-                      <CajaAcorde key={chord} sonando={chord === acordeSonando} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
-                    ))}
-                  </div>
-                )}
-              </div>
+              <DrawerDiagramas
+                acordes={uniqueChords}
+                contexto={contextoAcordes}
+                vista={vistaAcordes}
+                onVista={setVistaAcordes}
+                onCerrar={() => setShowChordDiagrams(false)}
+                sonando={acordeSonando}
+                estiloArmonia={estiloArmonia}
+              />
             )}
           </div>
         </div>
