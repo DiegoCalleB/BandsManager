@@ -233,7 +233,7 @@ body.scroll .cover .sub { font-size: 22px; } body.scroll .cover .brand { margin-
 body.scroll table { display: block; overflow-x: auto; } body.scroll td, body.scroll th { font-size: 16px; padding: 12px; white-space: nowrap; }
 body.scroll pre.code { font-size: 14px; padding: 18px; }
 body.scroll .arch li { font-size: 18px; } body.scroll .arch li span { font-size: 14px; }
-body.scroll .phones { flex-direction: row; }
+
 body.scroll .slide.sunk, body.scroll .slide { border-bottom: 1px solid var(--hair); }
 
 @media print {
@@ -300,3 +300,24 @@ tr.hl[data-a].in td { animation: glow 1100ms var(--ease) 1100ms both; }
 #steps { font-size: 14px; color: var(--ink-2); min-width: 54px; text-align: right; font-variant-numeric: tabular-nums; }
 .hb[aria-pressed="true"] { background: var(--acc-soft); color: var(--acc-ink); }
 .slide.instant [data-a], .slide.instant [data-a] > img, .slide.instant .w > i { transition: none !important; }
+
+/* Móvil (modo scroll): las tres capturas en fila con proporción real y el texto debajo */
+body.scroll .phones { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: start; }
+body.scroll .phones > div:last-child { grid-column: 1 / -1; margin-top: 12px; }
+body.scroll .phones .shot { flex: none !important; height: auto !important; border-radius: var(--r-m) !important; }
+body.scroll .phones .shot img { width: 100%; height: auto; object-fit: initial; }
+body.scroll .phones ul { gap: 14px !important; }
+
+/* Móvil (modo scroll): titulares, tablas y ampliación de capturas a su medida */
+body.scroll .slide h2, body.scroll .slide.compact h2, body.scroll .split h2 { font-size: 32px; line-height: 1.1; max-width: none; margin-top: 18px; }
+body.scroll .cover h1 { font-size: 56px; }
+body.scroll table { display: table; width: 100%; margin-top: 22px; }
+body.scroll td, body.scroll th { white-space: normal; font-size: 15px; padding: 11px 8px; }
+body.scroll th { font-size: 13px; }
+body.scroll .tight td { font-size: 15px; padding: 11px 8px; }
+body.scroll .stat b { font-size: 52px; }
+body.scroll .compact .stat b { font-size: 52px; }
+body.scroll .num { margin-bottom: 14px; }
+body.scroll .shot { cursor: zoom-in; }
+body.scroll #lb { overflow: auto; place-items: start; padding: 12px; }
+body.scroll #lb img { max-width: none; width: 260%; max-height: none; }
