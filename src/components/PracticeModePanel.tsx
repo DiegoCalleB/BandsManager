@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { saltoDeBucle } from "../utils/bucleAB";
 import {
   X,
   Play,
@@ -452,9 +453,8 @@ export default function PracticeModePanel({
 
     const onTimeUpdate = () => {
       setCurrentTime(el.currentTime);
-      if (loopB != null && el.currentTime >= loopB) {
-        seekAll(loopA ?? 0);
-      }
+      const salto = saltoDeBucle(el.currentTime, loopA, loopB);
+      if (salto != null) seekAll(salto);
     };
     const onLoadedMeta = () => setDuration(el.duration || 0);
     const onEnded = () => setIsPlaying(false);
