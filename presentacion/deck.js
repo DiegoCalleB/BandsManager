@@ -177,21 +177,6 @@
     return true;
   }
 
-  const irisCv = $$('canvas[data-iris]');
-  if (irisCv.length && window.IrisPrism) {
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const t0 = performance.now();
-    const loop = (now) => {
-      irisCv.forEach((cv) => {
-        if (!cv.offsetParent) return;
-        const ctx = cv.getContext('2d');
-        window.IrisPrism.drawIrisPrism(ctx, cv.width, cv.height, still ? 1.8 : (now - t0) / 1000, true);
-      });
-      if (!still) requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-  }
-
   function show(i, push = true, how = 'play') {
     document.querySelectorAll('video').forEach((v) => v.pause());
     const prev = cur;
@@ -210,6 +195,7 @@
     if (push) history.replaceState(null, '', '#' + (cur + 1));
     $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
     countUp(slides[cur]);
+    slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => v.play().catch(() => {}));
   }
 
   const next = () => { if (!stepForward()) show(cur + 1); };

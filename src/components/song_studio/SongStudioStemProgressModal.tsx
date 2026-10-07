@@ -89,7 +89,7 @@ export function SongStudioStemProgressModal<S extends StemProgressBase>({
       <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] space-y-5 animate-in fade-in zoom-in-95 duration-200">
         {!terminado && (
           <div className="-mx-6">
-            <IrisPrism labels className="h-36 sm:h-44" />
+            <IrisPrism className="h-36 sm:h-44" />
           </div>
         )}
 
