@@ -196,7 +196,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
       {profesor}
 
       <p className="text-xs text-[var(--ink-2)]">
-        Basado en {origen}. {analisis ? 'Si algún acorde está mal, corrígelo en «Jamify» y esta ficha se recalcula.' : 'Analiza los acordes del audio para afinarla.'}
+        Basado en {origen}. {analisis ? 'Si algún acorde está mal, corrígelo en «Acordes del audio» y esta ficha se recalcula.' : 'Analiza los acordes del audio para afinarla.'}
       </p>
     </div>
   );

@@ -301,7 +301,7 @@ export function Atril({
     }
   };
 
-  // Jamify va activo por defecto: si el tema tiene audio y aún no está analizado, se analiza solo (una vez por canción).
+  // El análisis de acordes del audio va activo por defecto: si el tema tiene audio y aún no está analizado, se analiza solo (una vez por canción).
   const jamifyAutoIntentado = useRef<string | null>(null);
   useEffect(() => {
     if (!audioUrl || analisisAcordes || isAnalyzingChords || jamifyAutoIntentado.current === song.id) return;
@@ -603,6 +603,9 @@ export function Atril({
                 )}
               </button>
               <div>
+                <p className="text-micro font-sans text-[var(--ink-2)]">
+                  <strong className="text-[var(--acc)]">Jamify</strong> · Toca sobre los acordes
+                </p>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-[var(--ink)]">
                     {formatSongTitle(song.titulo)}
@@ -696,7 +699,7 @@ export function Atril({
                   }
                 >
                   <Music className="w-4 h-4" />
-                  <span>{isAnalyzingChords ? "Analizando..." : "Jamify"}</span>
+                  <span>{isAnalyzingChords ? "Analizando..." : "Acordes del audio"}</span>
                 </Button>
               )}
 
@@ -1096,7 +1099,7 @@ export function Atril({
                       analisisAcordes ? (
                         <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
                       ) : (
-                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Jamify»).</p>
+                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Acordes del audio»).</p>
                       )
                     }
                   />
@@ -1105,7 +1108,7 @@ export function Atril({
                     <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-2)]" />
                     <p className="font-bold text-[var(--ink)]">Aún no hay armonía que contar.</p>
                     <p className="text-sm text-[var(--ink-2)]">
-                      Escribe el cifrado de la canción o pulsa «Jamify» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
+                      Escribe el cifrado de la canción o pulsa «Acordes del audio» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
                     </p>
                   </div>
                 )
