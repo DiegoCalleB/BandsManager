@@ -56,6 +56,8 @@ import { useMetronomo } from "../hooks/useMetronomo";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
+import { ControlBucle } from "./chords/ControlBucle";
+import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
 import { pistasDeCancion } from "../utils/irisTracks";
 import { pistaDelUsuario, pistasParaModo, type AjustesPistas, type ModoEscucha } from "../utils/mezclaStems";
@@ -176,6 +178,7 @@ export function Atril({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [ajustesPistas, setAjustesPistas] = useState<AjustesPistas>({});
   useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
+  const { bucle, marcar: marcarBucle, limpiar: limpiarBucle } = useBucleAB(audioRef, audioUrl);
 
   // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
   const grabacion = useGrabarIdea(audioRef);
@@ -853,6 +856,7 @@ export function Atril({
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}
+                {audioUrl && <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />}
                 <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
                 {modo === 'Ensayar' && (
