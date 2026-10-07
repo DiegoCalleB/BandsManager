@@ -856,10 +856,10 @@ function PdfExportModalBody({
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
                   <span class="song-title" style="${titleStyle}">${escapeHtml(s.titulo.toUpperCase())}</span>
-                  ${isCentered && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
+                  ${(isCentered || badgesScope === "marked") && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
                 </div>
                 ${layout && layout.mode === "inline" ? notesHtml : ""}
-                ${!isCentered && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
+                ${!isCentered && badgesScope !== "marked" && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
               </div>
               ${layout && layout.mode === "below" ? notesHtml : ""}
             </div>
@@ -1413,6 +1413,7 @@ function PdfExportModalBody({
  white-space: nowrap;
  margin-left: 10px;
  }
+ .song-left > .badges-inline { flex-shrink: 0; margin-left: 4px; }
  .badges-inline > span + span {
  margin-left: 8px;
  }
