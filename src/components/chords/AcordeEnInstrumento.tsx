@@ -55,7 +55,7 @@ export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; c
         })}
         {Array.from({ length: trastes }, (_, i) => (
           <g key={i}>
-            <line x1={izq + (i + 1) * w} x2={izq + (i + 1) * w} y1={12} y2={12 + 3 * h} stroke="var(--hair)" strokeWidth={0.6} />
+            <line x1={izq + (i + 1) * w} x2={izq + (i + 1) * w} y1={12} y2={12 + 3 * h} stroke={i === 0 && minT === 0 ? 'var(--ink-2)' : 'var(--hair)'} strokeWidth={i === 0 && minT === 0 ? 3 : 0.6} strokeLinecap="round" />
             <text x={izq + i * w + w / 2} y={8} textAnchor="middle" fontSize={6} fill="var(--ink-2)">{minT + i}</text>
           </g>
         ))}
