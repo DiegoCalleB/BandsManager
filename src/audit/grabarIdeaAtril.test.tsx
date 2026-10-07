@@ -44,3 +44,18 @@ describe('Grabar idea en el Atril', () => {
     expect(src).not.toMatch(/#[0-9a-fA-F]{3,6}\b/);
   });
 });
+
+describe('Jamify y cejuela', () => {
+  it('Jamify arranca activo y se analiza solo, sin aviso previo', () => {
+    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    expect(src).toMatch(/showAnalisisAcordes, setShowAnalisisAcordes\] = useState<boolean>\(true\)/);
+    expect(src).toContain('jamifyAutoIntentado');
+    expect(src).toContain('"Jamify"');
+    expect(src).not.toContain('Analizar acordes');
+  });
+
+  it('el diagrama de guitarra marca la cejuela en posición abierta', () => {
+    const src = readFileSync('src/components/chords/AcordeEnInstrumento.tsx', 'utf8');
+    expect(src).toContain('data-cejuela');
+  });
+});

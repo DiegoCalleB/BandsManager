@@ -137,6 +137,8 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
             <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] pb-0.5">
               {['E', 'A', 'D', 'G', 'B', 'E'].map((c, i) => <span key={i} className="text-center">{c}</span>)}
             </div>
+            {/* Cejuela: línea gruesa entre la cuerda al aire (o) y el traste 1, solo en posición abierta. */}
+            <div data-cejuela={!shape.baseFret || shape.baseFret <= 1 ? 'true' : undefined} className={`mx-0.5 rounded-full ${!shape.baseFret || shape.baseFret <= 1 ? 'h-[3px] bg-[var(--ink-2)]' : 'h-px bg-[var(--hair)]'}`} />
             <div className="grid grid-cols-6 gap-0.5 my-1">
               {shape.frets.map((f, i) => (
                 <span key={i} className={`text-center font-bold ${f === -1 ? 'text-[var(--alert)]' : f === 0 ? 'text-[var(--ok)]' : 'text-[var(--acc)]/70'}`}>
