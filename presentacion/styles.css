@@ -210,8 +210,10 @@ body.scroll { overflow: auto; }
 body.scroll #viewport { position: static; overflow: visible; }
 body.scroll #stage { position: static; margin: 0; width: 100% !important; height: auto !important; transform: none !important; }
 body.scroll .slide, body.scroll .slide.split { position: relative; inset: auto; opacity: 1; visibility: visible; transform: none; padding: 56px 22px 60px; flex-direction: column; }
-body.scroll [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
-body.scroll .w > i { transform: none !important; transition: none !important; }
+body.scroll .slide:not(.active) [data-a] { transition: opacity 520ms var(--ease), transform 720ms var(--ease), clip-path 900ms var(--ease) !important; transition-delay: calc(var(--i, 0) * 60ms + 120ms) !important; }
+body.scroll .slide:not(.active) .w > i { transition: transform 760ms var(--ease) !important; transition-delay: calc(var(--k, 0) * 38ms + 100ms) !important; }
+body.scroll [data-a="rise"], body.scroll [data-a="up"] { transform: translateY(24px); } body.scroll [data-a="left"] { transform: translateX(-18px); }
+body.scroll [data-a].in { transform: none !important; }
 body.scroll .slide { transform: none !important; }
 body.scroll .split .copy, body.scroll .split.rev .copy { width: auto; padding: 0; }
 body.scroll .split .pic, body.scroll .split.rev .pic { margin: 28px 0 0; min-height: 0; }
@@ -245,7 +247,8 @@ body.scroll .slide.sunk, body.scroll .slide { border-bottom: 1px solid var(--hai
   #hud, #edgeL, #edgeR, #hint, #prog { display: none; }
 }
 @page { size: 1920px 1080px; margin: 0; }
-@media (prefers-reduced-motion: reduce) { .slide, [data-a], .w > i, .shot img { transition: none !important; animation: none !important; } [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; } .w > i { transform: none !important; } }
+/* «Reducir movimiento»: solo fundidos, sin desplazamientos ni barridos */
+.calm [data-a]:not(.in) { transform: none !important; } .calm [data-a="wipe"] { clip-path: none; opacity: 0; } .calm [data-a="wipe"].in { opacity: 1; } .calm .w > i { transform: none; opacity: 0; transition: opacity 600ms var(--ease); transition-delay: calc(var(--k, 0) * 30ms + var(--b, 140ms)); } .calm .w > i.in { opacity: 1; } .calm .shot > img { animation: none !important; }
 
 .bul2 { list-style: none; display: grid; gap: 18px; }
 .bul2 li { font-size: 27px; line-height: 1.4; padding-left: 30px; position: relative; color: var(--ink-2); }
@@ -321,3 +324,9 @@ body.scroll .num { margin-bottom: 14px; }
 body.scroll .shot { cursor: zoom-in; }
 body.scroll #lb { overflow: auto; place-items: start; padding: 12px; }
 body.scroll #lb img { max-width: none; width: 260%; max-height: none; }
+
+.bandrow { display: flex; gap: 24px; align-items: flex-start; margin-top: 24px; }
+.bandrow > img { width: 104px; height: 104px; border-radius: 28px; flex: none; }
+.bandrow h3 { font-size: 32px; } .bandrow p { font-size: 21px; margin-top: 4px; line-height: 1.35; }
+.bandrow .chips { margin-top: 14px; } .bandrow .chip { font-size: 20px; padding: 6px 14px; }
+body.scroll .bandrow { gap: 16px; } body.scroll .bandrow > img { width: 72px; height: 72px; border-radius: 18px; } body.scroll .bandrow h3 { font-size: 24px; } body.scroll .bandrow p { font-size: 17px; }

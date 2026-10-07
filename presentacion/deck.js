@@ -45,7 +45,8 @@
   let cur = 0;
 
   const mobile = () => matchMedia('(max-width: 900px), (max-aspect-ratio: 1/1)').matches;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Con «reducir movimiento» en el sistema no se apaga la animación: solo se queda en fundidos suaves
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('calm');
   const isScroll = () => document.body.classList.contains('scroll');
   const setScroll = (on) => { document.body.classList.toggle('scroll', on); fit(); };
 
@@ -119,7 +120,7 @@
 
   // Modo de animación: auto (cascada al entrar) o clics (paso a paso, como PowerPoint)
   let animMode = store.get('deck_anim') === 'clics' ? 'clics' : 'auto';
-  const clicksOn = () => animMode === 'clics' && !isScroll() && !reduced;
+  const clicksOn = () => animMode === 'clics' && !isScroll();
 
   function paintHud() {
     const bar = $('#bAnim');
@@ -151,7 +152,7 @@
     const p = plan[i];
     clearTimeout(p.timer);
     p.timer = setTimeout(() => {
-      if (slides[i].classList.contains('active')) return;
+      if (slides[i].classList.contains('active') || isScroll()) return;
       p.head.forEach((w) => w.classList.remove('in'));
       p.items.forEach((it) => it.el.classList.remove('in'));
       slides[i].classList.remove('instant');
@@ -185,7 +186,7 @@
       s.classList.toggle('after', n > cur);
     });
     if (prev !== cur) reset(prev);
-    reveal(cur, reduced || isScroll() ? 'instant' : how);
+    reveal(cur, how);
     $('#count').textContent = `${cur + 1} / ${N}`;
     $('#title').textContent = slides[cur].dataset.title || '';
     $('#prog').style.width = `${((cur + 1) / N) * 100}%`;
@@ -283,6 +284,16 @@
 
   addEventListener('resize', fit);
   addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10); if (n) show(n - 1, false); });
+
+  // Modo scroll (móvil): cada diapositiva se construye al entrar en pantalla
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting || !isScroll()) return;
+      const i = slides.indexOf(e.target);
+      if (!plan[i].seen) { plan[i].seen = true; reveal(i, 'play'); }
+    }), { threshold: 0.18 });
+    slides.forEach((s) => io.observe(s));
+  }
 
   if (mobile() || location.search.includes('scroll')) document.body.classList.add('scroll');
   fit();
