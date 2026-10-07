@@ -3,6 +3,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { ModalPortal } from '../common/ModalPortal';
 import DirectionsCard from '../DirectionsCard';
 import { EventWeatherCard } from './EventWeatherCard';
+import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { ModuleTutorialModal } from '../common/ModuleTutorialModal';
 import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { Concert, Rehearsal, KeyContactItem, MerchBoloItem, MerchControlBolo } from '../../types';
@@ -505,6 +506,11 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                   </Button>
                 </div>
               </div>
+            )}
+
+            {/* Aviso de festivo, puente o éxodo vacacional en la ciudad del evento */}
+            {eventCity && eventDateStr && (
+              <HolidayDateWarning date={eventDateStr} city={eventCity} />
             )}
 
             {/* Previsión Meteorológica Open-Meteo para el Evento */}
