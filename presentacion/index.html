@@ -22,7 +22,7 @@
 <main id="stage">
 
 <!-- 1 · Portada -->
-<section class="slide cover" data-title="Portada">
+<section class="slide cover" data-title="Portada" data-transition="fade">
   <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
   <h1>Menos gestión,<br>más <span class="acc">música</span>.</h1>
   <p class="sub">El sistema operativo de una banda independiente: buscar salas, cerrar fechas, ensayar, tocar y cobrar desde un solo sitio.</p>
@@ -31,7 +31,7 @@
 </section>
 
 <!-- 2 · El problema -->
-<section class="slide" data-title="El problema">
+<section class="slide" data-title="El problema" data-transition="rise">
   <span class="tag">El problema</span>
   <h2>Una banda independiente hace el trabajo de cinco profesionales. Sin cobrar por ello.</h2>
   <div class="five">
@@ -222,7 +222,7 @@
 </section>
 
 <!-- M1 · Público -->
-<section class="slide compact" data-title="A quién va dirigido">
+<section class="slide compact" data-title="A quién va dirigido" data-transition="zoom">
   <span class="tag">Marketing · Público</span>
   <h2>Cinco perfiles, un mismo problema: sobra gestión y falta tiempo.</h2>
   <div class="grid c5" style="margin-top:56px;gap:20px">
@@ -311,7 +311,7 @@
 </section>
 
 <!-- N1 · Dos motores -->
-<section class="slide sunk compact" data-grupo="negocio" data-title="Cómo ganamos dinero">
+<section class="slide sunk compact" data-grupo="negocio" data-title="Cómo ganamos dinero" data-transition="zoom">
   <span class="tag">Negocio</span>
   <h2>Dos motores: la suscripción y la comisión por bolo.</h2>
   <div class="grid c2" style="margin-top:48px;gap:36px;flex:1;align-content:start">
@@ -381,7 +381,7 @@
 </section>
 
 <!-- 15 · Arquitectura -->
-<section class="slide" data-title="Arquitectura">
+<section class="slide" data-title="Arquitectura" data-transition="zoom">
   <span class="tag">Cómo está hecho</span>
   <h2 style="font-size:76px;max-width:1700px">Un monolito sensato, con la IA en los bordes.</h2>
   <div class="arch">
@@ -451,7 +451,7 @@
 </section>
 
 <!-- 20 · Límites -->
-<section class="slide sunk" data-title="Lo que falta, a la vista">
+<section class="slide sunk" data-title="Lo que falta, a la vista" data-transition="rise">
   <span class="tag">Honestidad técnica</span>
   <h2>Lo que sé que falta, a la vista.</h2>
   <div class="grid c2" style="margin-top:56px">
@@ -476,7 +476,7 @@
 </section>
 
 <!-- 21 · Qué viene -->
-<section class="slide" data-title="Qué viene">
+<section class="slide" data-title="Qué viene" data-transition="rise">
   <span class="tag">Siguientes pasos</span>
   <h2>De proyecto de máster a banda real.</h2>
   <div class="grid c3" style="margin-top:60px">
@@ -495,7 +495,7 @@
 </section>
 
 <!-- 23 · Cierre -->
-<section class="slide cover" data-title="Gracias">
+<section class="slide cover" data-title="Gracias" data-transition="fade">
   <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
   <h1>Gracias.</h1>
   <p class="sub">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>
@@ -507,9 +507,10 @@
 </div>
 
 <div id="edgeL" title="Anterior"></div><div id="edgeR" title="Siguiente"></div>
-<div id="hint">← → navegar · G índice · T tema · F pantalla completa · S scroll</div>
+<div id="hint">← → navegar · A animación por clics · G índice · T tema · F pantalla completa</div>
 <div id="hud">
-  <span id="count">1</span><span id="title"></span>
+  <span id="count">1</span><span id="title"></span><span id="steps"></span>
+  <button class="hb" id="bAnim" title="Animación automática o por clics (A)" aria-pressed="false">Automática</button>
   <button class="hb" id="bTheme" title="Tema claro u oscuro (T)">Tema</button>
   <button class="hb" id="bScroll" title="Modo scroll (S)">Scroll</button>
   <button class="hb" id="bGrid" title="Índice (G)">Índice</button>

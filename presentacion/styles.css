@@ -41,10 +41,18 @@ img { display: block; max-width: 100%; }
 
 .slide {
   position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg);
-  padding: 96px 120px 110px; opacity: 0; visibility: hidden; transform: translateY(10px);
-  transition: opacity 260ms var(--ease), transform 260ms var(--ease), visibility 0s linear 260ms;
+  padding: 96px 120px 110px; opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 320ms var(--ease), transform 320ms var(--ease), visibility 0s linear 360ms;
 }
-.slide.active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.slide.active { opacity: 1; visibility: visible; pointer-events: auto; transform: none !important; transition: opacity 560ms var(--ease) 90ms, transform 700ms var(--ease) 60ms, visibility 0s; z-index: 2; }
+/* Transiciones entre diapositivas (data-transition): empuje (por defecto), fundido y zoom */
+.slide.after  { transform: translateX(7%); }
+.slide.before { transform: translateX(-7%); }
+.slide[data-transition="zoom"].after  { transform: scale(1.07); }
+.slide[data-transition="zoom"].before { transform: scale(.94); }
+.slide[data-transition="fade"].after, .slide[data-transition="fade"].before { transform: none; }
+.slide[data-transition="rise"].after  { transform: translateY(6%); }
+.slide[data-transition="rise"].before { transform: translateY(-4%); }
 .slide.sunk { background: var(--sunken); }
 
 /* Etiqueta de sección: como los grupos del menú de la app */
@@ -66,19 +74,10 @@ b, strong { color: var(--ink); font-weight: 600; }
 .mut { color: var(--ink-2); }
 
 /* Entrada: un solo movimiento por diapositiva, sin escalonados */
-.slide > * { opacity: 0; transform: translateY(14px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
-.slide.active > * { opacity: 1; transform: none; transition-delay: 90ms; }
-.slide.active > *:nth-child(2) { transition-delay: 150ms; }
-.slide.active > *:nth-child(n+3) { transition-delay: 210ms; }
 
 /* ───────── Diseño: texto + captura a sangre ───────── */
 .split { flex-direction: row; padding: 0; }
 .split .copy { width: 700px; flex: none; padding: 96px 0 110px 120px; display: flex; flex-direction: column; opacity: 1; transform: none; }
-.split .copy > * { opacity: 0; transform: translateY(14px); transition: opacity 360ms var(--ease), transform 360ms var(--ease); }
-.split.active .copy > * { opacity: 1; transform: none; }
-.split.active .copy > *:nth-child(2) { transition-delay: 80ms; }
-.split.active .copy > *:nth-child(3) { transition-delay: 140ms; }
-.split.active .copy > *:nth-child(n+4) { transition-delay: 200ms; }
 .split h2 { font-size: 68px; margin-top: 30px; }
 .split ul { list-style: none; display: grid; gap: 22px; margin-top: 44px; }
 .split li { font-size: 28px; padding-left: 34px; position: relative; }
@@ -211,7 +210,9 @@ body.scroll { overflow: auto; }
 body.scroll #viewport { position: static; overflow: visible; }
 body.scroll #stage { position: static; margin: 0; width: 100% !important; height: auto !important; transform: none !important; }
 body.scroll .slide, body.scroll .slide.split { position: relative; inset: auto; opacity: 1; visibility: visible; transform: none; padding: 56px 22px 60px; flex-direction: column; }
-body.scroll .slide > *, body.scroll .split .copy > * { opacity: 1; transform: none; }
+body.scroll [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
+body.scroll .w > i { transform: none !important; transition: none !important; }
+body.scroll .slide { transform: none !important; }
 body.scroll .split .copy, body.scroll .split.rev .copy { width: auto; padding: 0; }
 body.scroll .split .pic, body.scroll .split.rev .pic { margin: 28px 0 0; min-height: 0; }
 body.scroll .shot { position: relative; border-radius: var(--r-l); }
@@ -239,11 +240,12 @@ body.scroll .slide.sunk, body.scroll .slide { border-bottom: 1px solid var(--hai
   html, body { overflow: visible; height: auto; }
   #viewport { position: static; overflow: visible; } #stage { position: static; margin: 0; transform: none !important; height: auto !important; width: 1920px !important; }
   .slide { position: relative; opacity: 1; visibility: visible; transform: none; height: 1080px; page-break-after: always; }
-  .slide > *, .split .copy > * { opacity: 1; transform: none; }
+  [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; }
+  .w > i { transform: none !important; }
   #hud, #edgeL, #edgeR, #hint, #prog { display: none; }
 }
 @page { size: 1920px 1080px; margin: 0; }
-@media (prefers-reduced-motion: reduce) { .slide, .slide > *, .split .copy > * { transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { .slide, [data-a], .w > i, .shot img { transition: none !important; animation: none !important; } [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; } .w > i { transform: none !important; } }
 
 .bul2 { list-style: none; display: grid; gap: 18px; }
 .bul2 li { font-size: 27px; line-height: 1.4; padding-left: 30px; position: relative; color: var(--ink-2); }
@@ -260,3 +262,41 @@ body.scroll .bul2 li { font-size: 18px; }
 .compact .stat b { font-size: 96px; }
 .compact table { margin-top: 34px; }
 .compact .card { padding: 30px 34px; }
+
+/* ───────── Animaciones de construcción (estilo PowerPoint) ─────────
+   Cada elemento lleva data-a (tipo) y --i (orden). El motor añade .in al entrar la diapositiva,
+   en cascada (modo auto) o paso a paso con cada clic (modo clics). Solo transform, opacity y clip-path. */
+[data-a] { opacity: 0; will-change: transform, opacity; transition: opacity 520ms var(--ease), transform 720ms var(--ease), clip-path 900ms var(--ease); transition-delay: calc(var(--i, 0) * 75ms + var(--b, 240ms)); }
+.slide:not(.active) [data-a] { transition: none !important; }
+[data-a="rise"]  { transform: translateY(30px); }
+[data-a="left"]  { transform: translateX(-34px); }
+[data-a="zoom"]  { transform: scale(.93); }
+[data-a="up"]    { transform: translateY(16%); }
+[data-a="wipe"]  { opacity: 1; clip-path: inset(0 100% 0 0); }
+[data-a="wipe"] > img { transform: scale(1.06); transition: transform 1400ms var(--ease); transition-delay: calc(var(--i, 0) * 75ms + var(--b, 240ms)); }
+[data-a].in { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+[data-a="wipe"].in > img { transform: scale(1); }
+.slide:not(.active) [data-a="wipe"] > img { transition: none; }
+
+/* Titulares: cada palabra sube desde una máscara */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding: .06em 0 .16em; margin: -.06em 0 -.16em; }
+.w > i { display: inline-block; font-style: normal; transform: translateY(112%); transition: transform 760ms var(--ease); transition-delay: calc(var(--k, 0) * 38ms + var(--b, 140ms)); }
+.slide.active .w > i.in, .w > i.in { transform: none; }
+.slide:not(.active) .w > i { transition: none; }
+
+/* Énfasis: la tarjeta «Tú» da un latido al aparecer, y el plan destacado se ilumina */
+.flow .step.me.in { animation: beat 900ms var(--ease) 900ms both; }
+@keyframes beat { 0% { transform: scale(1); } 40% { transform: scale(1.035); } 100% { transform: scale(1); } }
+tr.hl[data-a].in td { animation: glow 1100ms var(--ease) 1100ms both; }
+@keyframes glow { 0% { filter: brightness(1); } 45% { filter: brightness(.94); } 100% { filter: brightness(1); } }
+
+/* Capturas: barrido lento mientras se explican, como un recorrido por la app */
+.slide.active .shot > img { animation: drift 18s ease-in-out 1.6s infinite alternate; transform-origin: 0 0; }
+@keyframes drift { from { transform: scale(1); } to { transform: scale(1.05); } }
+.cover .art .shot > img { animation-name: drift-up; transform-origin: 50% 0; }
+@keyframes drift-up { from { transform: translateY(0); } to { transform: translateY(-3%); } }
+
+/* Indicador de pasos en el modo clics */
+#steps { font-size: 14px; color: var(--ink-2); min-width: 54px; text-align: right; font-variant-numeric: tabular-nums; }
+.hb[aria-pressed="true"] { background: var(--acc-soft); color: var(--acc-ink); }
+.slide.instant [data-a], .slide.instant [data-a] > img, .slide.instant .w > i { transition: none !important; }
