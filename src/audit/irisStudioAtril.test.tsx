@@ -42,6 +42,20 @@ describe('Iris no se ofrece dos veces', () => {
   it('el modo concierto no tiene botones «Separar con Iris»: ya existe «Studio» y la tarjeta del Atril', () => {
     const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
     expect(concierto).not.toContain('Separar con Iris');
+    expect(concierto).not.toContain('Separar pistas con Iris');
     expect(concierto).toContain('btn-stage-studio-mode');
+  });
+
+  it('«Modo Studio» solo está en el menú «⋮»: no hay botón suelto en la barra superior', () => {
+    const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+    expect(concierto.indexOf('btn-stage-studio-mode')).toBeGreaterThan(concierto.indexOf('showMoreMenu && ('));
+    expect(concierto).not.toContain('Quick action: Modo Studio');
+  });
+});
+
+describe('Atril en Estudiar: controles secundarios tras «Más»', () => {
+  it('cifrado, diagramas y copiar solo salen siempre fuera de Estudiar', () => {
+    const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+    expect(atril).toContain("(modo !== 'Estudiar' || masControles)");
   });
 });
