@@ -26,6 +26,8 @@ import {
   MessageSquare,
   Upload,
   GraduationCap,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
@@ -134,6 +136,27 @@ export function Atril({
   const [oidoOculto, setOidoOculto] = useState<boolean>(!ajustes.oido);
   const [aiSuccessMsg, setAiSuccessMsg] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<boolean>(false);
+  // Pantalla completa: la hoja ocupa todo el viewport y, si el navegador deja, esconde su barra.
+  const [pantallaCompleta, setPantallaCompleta] = useState<boolean>(false);
+  const alternarPantallaCompleta = () => {
+    const entrar = !pantallaCompleta;
+    setPantallaCompleta(entrar);
+    try {
+      if (entrar) void document.documentElement.requestFullscreen?.().catch(() => {});
+      else if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    } catch {
+      /* sin Fullscreen API (iOS Safari): basta con la hoja a viewport completo */
+    }
+  };
+  useEffect(() => {
+    // Esc del navegador sale de pantalla completa: la hoja vuelve al tamaño de modal.
+    const alCambiar = () => { if (!document.fullscreenElement) setPantallaCompleta(false); };
+    document.addEventListener("fullscreenchange", alCambiar);
+    return () => {
+      document.removeEventListener("fullscreenchange", alCambiar);
+      try { if (document.fullscreenElement) void document.exitFullscreen().catch(() => {}); } catch { /* nada */ }
+    };
+  }, []);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
@@ -490,8 +513,8 @@ export function Atril({
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto">
+      <div className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center overflow-y-auto overscroll-contain ${pantallaCompleta ? "p-0" : "p-2 sm:p-4"}`}>
+        <div className={`relative bg-[var(--surface)] w-full ${pantallaCompleta ? "max-w-none rounded-none h-[100dvh]" : "max-w-5xl rounded-[var(--r-l)] h-[92vh]"} flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto`}>
           {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
           <Button
             variant="neutral"
@@ -504,8 +527,20 @@ export function Atril({
             <X className="w-5 h-5" />
           </Button>
 
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            onClick={alternarPantallaCompleta}
+            className="absolute top-3 right-14 z-20"
+            title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
+            aria-pressed={pantallaCompleta}
+          >
+            {pantallaCompleta ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+          </Button>
+
           {/* MODAL HEADER */}
-          <div className="bg-[var(--sunken)] p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="bg-[var(--sunken)] p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
               {/* INTERACTIVE PLAY / PAUSE BUTTON */}
               <button
