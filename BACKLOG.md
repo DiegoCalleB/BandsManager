@@ -17,6 +17,8 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   * **Ideas**: tomas y riffs (`audioIdeas`).
 * **Por qué importa:** son 12 nombres para 4-5 conceptos; menos nombres = menos que aprender.
 * **Estado:** provisional. Antes de publicar, comprobar dominio y tiendas de apps / OEPM.
+* **Fase 4a (hecha):** Jamify como rótulo del Atril; «El Oído» → Chordscribe en el modal de progreso; «Iris Espectro» → Iris Prism en los modales de separación. El botón de detección del audio vuelve a llamarse «Acordes del audio» (descriptivo).
+* **Fase 4b (pendiente):** niveles de motor de Iris (Ultra / Studio / Cloud / Básico) en `SongStudioModal`, textos de la landing y del chat, Iris Mix, y quitar vistas duplicadas.
 
 ---
 

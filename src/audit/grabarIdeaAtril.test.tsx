@@ -50,7 +50,8 @@ describe('Jamify y cejuela', () => {
     const src = readFileSync('src/components/Atril.tsx', 'utf8');
     expect(src).toMatch(/showAnalisisAcordes, setShowAnalisisAcordes\] = useState<boolean>\(true\)/);
     expect(src).toContain('jamifyAutoIntentado');
-    expect(src).toContain('"Jamify"');
+    expect(src).toContain('"Acordes del audio"');
+    expect(src).toContain('Jamify');
     expect(src).not.toContain('Analizar acordes');
   });
 
