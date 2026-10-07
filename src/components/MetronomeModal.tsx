@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { programarClic } from "../utils/clicMetronomo";
 import {
   X,
   Play,
@@ -97,33 +98,9 @@ export function MetronomeModal({
     }
   };
 
-  // Play click audio oscillator
   const scheduleClick = (beatNumber: number, time: number) => {
     if (!audioCtxRef.current || isMuted) return;
-
-    const osc = audioCtxRef.current.createOscillator();
-    const gain = audioCtxRef.current.createGain();
-
-    // High pitch for beat 1 (accent), lower pitch for other beats
-    if (beatNumber === 0) {
-      osc.frequency.value = 1200; // Accent pitch (Hz)
-      gain.gain.value = volume;
-    } else {
-      osc.frequency.value = 800; // Normal click pitch (Hz)
-      gain.gain.value = volume * 0.6;
-    }
-
-    osc.type = "sine";
-
-    // Fast exponential decay for clean click sound
-    gain.gain.setValueAtTime(gain.gain.value, time);
-    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.05);
-
-    osc.connect(gain);
-    gain.connect(audioCtxRef.current.destination);
-
-    osc.start(time);
-    osc.stop(time + 0.05);
+    programarClic(audioCtxRef.current, time, beatNumber === 0, volume);
   };
 
   // Scheduler loop
