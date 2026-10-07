@@ -21,6 +21,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
 import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
+import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
 
 interface BulkAlbumAudioUploaderModalProps {
@@ -466,10 +467,7 @@ export function BulkAlbumAudioUploaderModal({
             ),
           );
           try {
-            const chordData = await apiFetch<any>(`/api/songs/${encodeURIComponent(savedSong.id)}/analizar-acordes`, {
-              method: "POST",
-              body: JSON.stringify({}),
-            });
+            await analizarAcordesDelAudio(savedSong.id);
             setItems((prev) =>
               prev.map((it, idx) =>
                 idx === i
@@ -477,7 +475,7 @@ export function BulkAlbumAudioUploaderModal({
                       ...it,
                       status: "success",
                       uploadedUrl,
-                      chordsSource: chordData?.analisis ? "audio_real" : undefined,
+                      chordsSource: "audio_real",
                       esAproximado: true,
                     }
                   : it,
@@ -540,10 +538,7 @@ export function BulkAlbumAudioUploaderModal({
               ),
             );
             try {
-              const chordData = await apiFetch<any>(`/api/songs/${encodeURIComponent(finalSaved.id)}/analizar-acordes`, {
-                method: "POST",
-                body: JSON.stringify({}),
-              });
+              await analizarAcordesDelAudio(finalSaved.id);
               setItems((prev) =>
                 prev.map((it, idx) =>
                   idx === i
@@ -551,7 +546,7 @@ export function BulkAlbumAudioUploaderModal({
                         ...it,
                         status: "success",
                         uploadedUrl,
-                        chordsSource: chordData?.analisis ? "audio_real" : undefined,
+                        chordsSource: "audio_real",
                         esAproximado: true,
                       }
                     : it,

@@ -113,7 +113,10 @@ describe('Cliente: la letra solo se pide a propósito', () => {
     for (const f of [bulk, repertorio]) {
       expect(f).not.toContain('generate-song-chords');
       expect(f).not.toContain('letra-sincronizada');
-      expect(f).toContain('analizar-acordes');
+      expect(f).toContain('analizarAcordesDelAudio'); // única llamada cliente a /analizar-acordes
     }
+    const cliente = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'src', 'utils', 'analisisAcordesCliente.ts'), 'utf-8');
+    expect(cliente).toContain('analizar-acordes');
+    expect(cliente).not.toContain('generate-song-chords');
   });
 });
