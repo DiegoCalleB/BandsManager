@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import {
   Play,
   Pause,
@@ -39,8 +40,6 @@ import { formatTime } from "./EnsayoCronometro";
 import {
   processChordText,
   extractUniqueChords,
-  GUITAR_CHORD_DATABASE,
-  GuitarChordShape,
   transposeChordToken,
 } from "../../utils/chordUtils";
 import { SongChordsViewerModal } from "../SongChordsViewerModal";
@@ -64,6 +63,7 @@ export function ModoLocalEnVivoTab({
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
   const [activeIndex, setActiveIndex] = useState(0);
+  const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
 
   const currentItem = agenda[activeIndex] || null;
   const currentSong = currentItem?.songId
@@ -977,6 +977,7 @@ export function ModoLocalEnVivoTab({
                 <span>
                   Diagramas de Acordes de este Tema ({uniqueChords.length})
                 </span>
+                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
                 <IconButton
                   label="Cerrar"
                   onClick={() => setShowChordDiagrams(false)}
@@ -986,7 +987,7 @@ export function ModoLocalEnVivoTab({
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                 {uniqueChords.map((chord, cIdx) => (
-                  <ChordDiagramBox key={cIdx} chord={chord} />
+                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} />
                 ))}
               </div>
             </div>
@@ -1160,56 +1161,3 @@ function renderFormattedChords(
     );
   });
 }
-
-// COMPONENT TO RENDER A SINGLE GUITAR CHORD BOX/FRETBOARD DIAGRAM
-const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
-  const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
-
-  return (
-    <div className="bg-[var(--sunken)] p-2 rounded-[var(--r-m)] text-center space-y-1  transition">
-      <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
-        <span>{chord}</span>
-      </div>
-
-      {shape ? (
-        <div className="flex justify-center pt-0.5">
-          <div className="w-20 bg-[var(--surface)] p-1 rounded text-micro font-sans">
-            {shape.baseFret && shape.baseFret > 1 && (
-              <div className="text-micro text-[var(--acc)] font-bold text-left pl-0.5">
-                Tr. {shape.baseFret}
-              </div>
-            )}
-            <div className="grid grid-cols-6 gap-0.5 my-0.5 text-[var(--ink-2)] pb-0.5 text-micro">
-              {["E", "A", "D", "G", "B", "E"].map((s, i) => (
-                <span key={i} className="text-center">
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-6 gap-0.5 my-0.5">
-              {shape.frets.map((fret, stringIdx) => (
-                <div key={stringIdx} className="flex flex-col items-center">
-                  <span
-                    className={`font-bold ${
-                      fret === -1
-                        ? "text-[var(--alert)]"
-                        : fret === 0
-                          ? "text-[var(--ok)]"
-                          : "text-[var(--acc)]/70"
-                    }`}
-                  >
-                    {fret === -1 ? "x" : fret === 0 ? "o" : fret}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde]</p>
-      )}
-    </div>
-  );
-};
-

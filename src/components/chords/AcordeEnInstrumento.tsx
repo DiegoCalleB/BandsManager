@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { buscarFormaGuitarra } from '../../utils/chordUtils';
+import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
 import { CUERDAS_BAJO, notasParaDibujar, posicionesDeBajo, type VistaAcorde } from '../../utils/vistaAcordes';
 
 const BLANCAS = [0, 2, 4, 5, 7, 9, 11];
@@ -81,3 +83,49 @@ export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: V
     ))}
   </span>
 );
+
+const CLAVE_VISTA = 'bm_vista_acordes';
+
+/** Instrumento con el que se dibujan los acordes: el último que eligió el usuario o, si no, el de su perfil. */
+export function useVistaAcordes(): [VistaAcorde, (v: VistaAcorde) => void] {
+  const [vista, setVista] = useState<VistaAcorde>(() => {
+    try {
+      const g = localStorage.getItem(CLAVE_VISTA);
+      if (g === 'guitarra' || g === 'teclado' || g === 'bajo') return g;
+    } catch { /* sin almacenamiento */ }
+    const i = instrumentoDelUsuario();
+    return i === 'teclado' || i === 'bajo' ? i : 'guitarra';
+  });
+  const cambiar = (v: VistaAcorde) => {
+    setVista(v);
+    try { localStorage.setItem(CLAVE_VISTA, v); } catch { /* vale solo esta sesión */ }
+  };
+  return [vista, cambiar];
+}
+
+/** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
+export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde }> = ({ chord, vista }) => {
+  const shape = vista === 'guitarra' ? buscarFormaGuitarra(chord) : undefined;
+  return (
+    <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5">
+      <div className="text-xs font-bold text-[var(--acc)] font-sans">{chord}</div>
+      {vista === 'teclado' ? <TecladoAcorde acorde={chord} /> : vista === 'bajo' ? <BajoAcorde acorde={chord} /> : shape ? (
+        <div className="flex justify-center pt-1">
+          <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-micro font-sans">
+            {shape.baseFret && shape.baseFret > 1 && <div className="text-micro text-[var(--acc)] font-bold text-left pl-1">Traste {shape.baseFret}</div>}
+            <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] pb-0.5">
+              {['E', 'A', 'D', 'G', 'B', 'E'].map((c, i) => <span key={i} className="text-center">{c}</span>)}
+            </div>
+            <div className="grid grid-cols-6 gap-0.5 my-1">
+              {shape.frets.map((f, i) => (
+                <span key={i} className={`text-center font-bold ${f === -1 ? 'text-[var(--alert)]' : f === 0 ? 'text-[var(--ok)]' : 'text-[var(--acc)]/70'}`}>
+                  {f === -1 ? 'x' : f === 0 ? 'o' : f}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
+    </div>
+  );
+};
