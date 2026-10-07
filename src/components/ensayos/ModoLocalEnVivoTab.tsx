@@ -49,7 +49,7 @@ import {
 import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
-import { programarClic } from '../../utils/clicMetronomo';
+import { useMetronomo } from '../../hooks/useMetronomo';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -88,19 +88,10 @@ export function ModoLocalEnVivoTab({
   const [isTrackTimerActive, setIsTrackTimerActive] = useState(false);
   const trackTimerRef = useRef<number | null>(null);
 
-  // Metronome State
-  const [bpm, setBpm] = useState(currentSong?.bpm || 120);
-  const [isMetronomeActive, setIsMetronomeActive] = useState(false);
-  const [timeSignature, setTimeSignature] = useState<
-    "4/4" | "3/4" | "6/8" | "2/4"
-  >("4/4");
-  const [currentBeat, setCurrentBeat] = useState(0);
-
-  // Web Audio Context for Metronome
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const nextNoteTimeRef = useRef(0);
-  const timerIDRef = useRef<number | null>(null);
-  const tapTimesRef = useRef<number[]>([]);
+  // Metronome: el mismo hook (reloj de audio, clic y tap tempo) que usa el Atril
+  const beatsPerBar = 4;
+  const metronomo = useMetronomo(currentSong?.bpm || 120, beatsPerBar);
+  const { bpm, pulso: currentBeat, activo: isMetronomeActive } = metronomo;
 
   // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
   const [transpose, setTranspose] = useState<number>(0);
@@ -227,11 +218,8 @@ export function ModoLocalEnVivoTab({
     };
   }, [isFullscreen, isTrackTimerActive]);
 
-  // When song changes, update BPM, reset track timer and transposition
+  // When song changes, reset track timer and transposition
   useEffect(() => {
-    if (currentSong?.bpm) {
-      setBpm(currentSong.bpm);
-    }
     setTrackSeconds(0);
     setIsTrackTimerActive(true);
     setTranspose(0);
@@ -252,81 +240,6 @@ export function ModoLocalEnVivoTab({
       if (trackTimerRef.current) clearInterval(trackTimerRef.current);
     };
   }, [isTrackTimerActive]);
-
-  // Metronome Scheduler
-  const beatsPerBar =
-    timeSignature === "3/4"
-      ? 3
-      : timeSignature === "6/8"
-        ? 6
-        : timeSignature === "2/4"
-          ? 2
-          : 4;
-
-  const playClick = (time: number, isAccent: boolean) => {
-    if (!audioCtxRef.current) return;
-    programarClic(audioCtxRef.current, time, isAccent, 0.7);
-  };
-
-  useEffect(() => {
-    if (!isMetronomeActive) {
-      if (timerIDRef.current) clearInterval(timerIDRef.current);
-      setCurrentBeat(0);
-      return;
-    }
-
-    if (!audioCtxRef.current) {
-      const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
-      audioCtxRef.current = new AudioCtx();
-    }
-    if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume();
-    }
-
-    nextNoteTimeRef.current = audioCtxRef.current.currentTime + 0.05;
-    let beatCount = 0;
-
-    const interval = setInterval(() => {
-      if (!audioCtxRef.current) return;
-      const secondsPerBeat = 60.0 / bpm;
-
-      while (nextNoteTimeRef.current < audioCtxRef.current.currentTime + 0.1) {
-        const isAccent = beatCount % beatsPerBar === 0;
-        playClick(nextNoteTimeRef.current, isAccent);
-        setCurrentBeat(beatCount % beatsPerBar);
-        nextNoteTimeRef.current += secondsPerBeat;
-        beatCount++;
-      }
-    }, 25);
-
-    timerIDRef.current = interval as any;
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isMetronomeActive, bpm, beatsPerBar]);
-
-  // Tap Tempo
-  const handleTapTempo = () => {
-    const now = performance.now();
-    const taps = tapTimesRef.current;
-    taps.push(now);
-    if (taps.length > 4) taps.shift();
-
-    if (taps.length >= 2) {
-      const intervals = [];
-      for (let i = 1; i < taps.length; i++) {
-        intervals.push(taps[i] - taps[i - 1]);
-      }
-      const avgInterval =
-        intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      const calculatedBpm = Math.round(60000 / avgInterval);
-      if (calculatedBpm >= 40 && calculatedBpm <= 280) {
-        setBpm(calculatedBpm);
-      }
-    }
-  };
 
   // Evaluation Handler
   const handleSetEvaluation = (
@@ -653,7 +566,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 className="items-center gap-2"
               >
                 {isMetronomeActive ? (
@@ -684,13 +597,13 @@ export function ModoLocalEnVivoTab({
             {/* BPM Controls */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 5))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -5
               </button>
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 1))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -1
@@ -702,13 +615,13 @@ export function ModoLocalEnVivoTab({
               </span>
 
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 1))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +1
               </button>
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 5))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +5
@@ -717,7 +630,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 size="xs"
-                onClick={handleTapTempo}
+                onClick={metronomo.tocarTempo}
               >
                 Tap
               </Button>
@@ -802,7 +715,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 title="Metrónomo clic"
               >
                 {isMetronomeActive ? (
