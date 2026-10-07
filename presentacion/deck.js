@@ -44,7 +44,7 @@
   const slides = $$('.slide'), N = slides.length;
   let cur = 0;
 
-  const mobile = () => matchMedia('(max-width: 900px), (max-aspect-ratio: 1/1)').matches;
+  const mobile = () => matchMedia('(max-width: 700px)').matches;
   // Con «reducir movimiento» en el sistema no se apaga la animación: solo se queda en fundidos suaves
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('calm');
   const isScroll = () => document.body.classList.contains('scroll');
@@ -188,6 +188,7 @@
     if (prev !== cur) reset(prev);
     reveal(cur, how);
     $('#count').textContent = `${cur + 1} / ${N}`;
+    $('#aL').disabled = cur === 0; $('#aR').disabled = cur === N - 1;
     $('#title').textContent = slides[cur].dataset.title || '';
     $('#prog').style.width = `${((cur + 1) / N) * 100}%`;
     if (push) history.replaceState(null, '', '#' + (cur + 1));
@@ -263,7 +264,7 @@
     }
   });
   $('#edgeL').onclick = prev; $('#edgeR').onclick = next;
-  $('#bPrev').onclick = prev; $('#bNext').onclick = next;
+  $('#bPrev').onclick = prev; $('#bNext').onclick = next; $('#aL').onclick = prev; $('#aR').onclick = next;
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;
   $('#bAnim').onclick = toggleAnim;
   $('#bScroll').onclick = () => { setScroll(true); show(cur, false); };

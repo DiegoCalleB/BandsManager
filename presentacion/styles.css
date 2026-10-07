@@ -184,13 +184,23 @@ pre.code b { color: var(--acc-ink); font-weight: 500; }
 #hud { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; align-items: center; gap: 10px; padding: 12px 24px; pointer-events: none; }
 #hud > * { pointer-events: auto; }
 #hud, #hint { transition: opacity 300ms var(--ease); }
-body.idle #hud, body.idle #hint { opacity: 0; }
-body.idle #hud > * { pointer-events: none; }
+body.idle #hint { opacity: 0; }
+body.idle #hud .sec { opacity: 0; pointer-events: none; }
+#hud .sec { transition: opacity 300ms var(--ease); }
+#hud #count { color: var(--ink); }
 #count { font-size: 14px; font-weight: 500; color: var(--ink-2); min-width: 64px; font-variant-numeric: tabular-nums; }
 #title { font-size: 14px; color: var(--ink-2); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hb { height: 40px; min-width: 40px; padding: 0 12px; border-radius: 999px; background: var(--surface); color: var(--ink-2); font-size: 14px; font-weight: 500; display: grid; place-items: center; transition: background 150ms var(--ease), color 150ms var(--ease), transform 120ms var(--ease); }
 .hb:hover { color: var(--ink); background: var(--sunken); }
 .hb:active { transform: scale(.96); }
+/* Flechas de página, siempre a la vista como en un PowerPoint */
+.arrow { position: fixed; top: 50%; z-index: 22; width: 56px; height: 56px; margin-top: -28px; border-radius: 50%; background: var(--surface); color: var(--ink); font-size: 30px; line-height: 1; display: grid; place-items: center; opacity: .7; box-shadow: 0 6px 24px rgba(0,0,0,.18); transition: opacity 200ms var(--ease), transform 150ms var(--ease), background 150ms var(--ease); }
+.arrow:hover { opacity: 1; background: var(--sunken); }
+.arrow:active { transform: scale(.94); }
+.arrow[disabled] { opacity: 0; pointer-events: none; }
+#aL { left: 20px; } #aR { right: 20px; }
+body.idle .arrow:not([disabled]) { opacity: .32; }
+body.scroll .arrow { display: none; }
 #edgeL, #edgeR { position: fixed; top: 0; bottom: 64px; width: 14%; z-index: 10; cursor: pointer; }
 #edgeL { left: 0; } #edgeR { right: 0; }
 #hint { position: fixed; right: 24px; top: 20px; z-index: 25; font-size: 14px; color: var(--ink-2); background: var(--surface); padding: 10px 16px; border-radius: 999px; transition: opacity 400ms var(--ease); }
@@ -244,7 +254,7 @@ body.scroll .slide.sunk, body.scroll .slide { border-bottom: 1px solid var(--hai
   .slide { position: relative; opacity: 1; visibility: visible; transform: none; height: 1080px; page-break-after: always; }
   [data-a] { opacity: 1 !important; transform: none !important; clip-path: none !important; }
   .w > i { transform: none !important; }
-  #hud, #edgeL, #edgeR, #hint, #prog { display: none; }
+  #hud, #edgeL, #edgeR, #hint, #prog, .arrow { display: none; }
 }
 @page { size: 1920px 1080px; margin: 0; }
 /* «Reducir movimiento»: solo fundidos, sin desplazamientos ni barridos */
