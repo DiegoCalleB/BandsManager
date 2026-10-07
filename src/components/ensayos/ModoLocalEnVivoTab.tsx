@@ -362,6 +362,17 @@ export function ModoLocalEnVivoTab({
     }
   };
 
+  // Current chord text
+  // Sin cifrado guardado se muestra vacío: antes caía en una letra
+  // de ejemplo escrita en el código que parecía la letra de la canción.
+  const rawChordText = currentSong?.cifradoTexto || "";
+  const uniqueChords = extractUniqueChords(rawChordText);
+  const contextoAcordes = useMemo(
+    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rawChordText, currentSong?.tonalidad],
+  );
+
   if (agenda.length === 0) {
     return (
       <div className="p-8 sm:p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-4">
@@ -390,16 +401,6 @@ export function ModoLocalEnVivoTab({
         "Outro",
       ];
 
-  // Current chord text
-  // Sin cifrado guardado se muestra vacío: antes caía en una letra
-  // de ejemplo escrita en el código que parecía la letra de la canción.
-  const rawChordText = currentSong?.cifradoTexto || "";
-  const uniqueChords = extractUniqueChords(rawChordText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rawChordText, currentSong?.tonalidad],
-  );
 
   return (
     <div
