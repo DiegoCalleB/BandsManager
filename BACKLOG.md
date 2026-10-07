@@ -8,6 +8,18 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+## 🏷️ Nombres de producto (decididos 2026-10-07, se aplican en la Fase 4)
+
+* **Qué:** nombres de cara al usuario. El código mantiene los suyos hasta renombrar (p. ej. `Atril.tsx`, `ModalOido`).
+  * **Jamify** (subtítulo «Toca sobre los acordes»): experiencia de tocar sobre la hoja de acordes (hoy `Atril`, modos Estudiar / Ensayar / Tocar).
+  * **Iris Prism**: separar pistas (motor). **Iris Mix**: mezclar pistas ya separadas. Llevan subtítulo en la UI («Separar pistas», «Mezclar pistas»).
+  * **Chordscribe**: transcripción de acordes y letra del audio (hoy «El Oído»). Sin «IA» ni «generator» en el nombre: es detección local, no generativa.
+  * **Ideas**: tomas y riffs (`audioIdeas`).
+* **Por qué importa:** son 12 nombres para 4-5 conceptos; menos nombres = menos que aprender.
+* **Estado:** provisional. Antes de publicar, comprobar dominio y tiendas de apps / OEPM.
+
+---
+
 ## ⏸️ Aplazado: billing de planes (auditoría B, 2026-10-06)
 
 * **Qué:** arreglos de `server/routes/billing.ts` que NO se han hecho porque los planes están desactivados (todos los usuarios nuevos entran en modo promo y no pueden cambiar de plan):
