@@ -178,6 +178,7 @@
   }
 
   function show(i, push = true, how = 'play') {
+    document.querySelectorAll('video').forEach((v) => v.pause());
     const prev = cur;
     cur = Math.max(0, Math.min(N - 1, i));
     slides.forEach((s, n) => {
@@ -244,6 +245,7 @@
 
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.tagName === 'VIDEO' && (e.key === ' ' || e.key === 'Enter')) return;
     if (e.key === 'Escape') {
       if (lb.classList.contains('on')) return lb.classList.remove('on');
       if ($('#grid').classList.contains('on')) return toggleGrid();

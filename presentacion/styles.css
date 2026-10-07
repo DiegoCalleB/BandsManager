@@ -355,3 +355,8 @@ body.scroll .shot.mosaic { height: 640px; }
 @keyframes pan { from { transform: translateY(0); } to { transform: translateY(-58%); } }
 .calm .shot.longshot > img { animation: none !important; }
 body.scroll .shot.longshot { height: 520px; } body.scroll .shot.longshot > img { height: auto; animation: none; }
+
+.vid { margin-top: 26px; flex: 1; min-height: 0; display: flex; justify-content: center; }
+.vid video { height: 100%; max-width: 100%; aspect-ratio: 16 / 10; border-radius: var(--r-xl); background: #000; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+body.scroll .vid { flex: none; }
+body.scroll .vid video { width: 100%; height: auto; border-radius: var(--r-m); }
