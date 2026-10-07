@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { ControlAutoscroll } from "../chords/ControlAutoscroll";
+import { useAutoScroll } from "../../hooks/useAutoScroll";
 import { contextoDeAcordes, ordenarPorTonica, tonalidadDelCifrado } from "../../utils/vistaAcordes";
 import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import {
@@ -102,13 +104,12 @@ export function ModoLocalEnVivoTab({
   const [transpose, setTranspose] = useState<number>(0);
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
-  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(1); // 1, 2, 3
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
   const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
     useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
+  const autoScroll = useAutoScroll(atrilScrollRef, 1, viewMode === "atril");
 
   // Swipe and Keyboard Gestures
   const touchStartX = useRef<number | null>(null);
@@ -186,7 +187,7 @@ export function ModoLocalEnVivoTab({
         }
       } else if (e.key === " " && viewMode === "atril") {
         e.preventDefault();
-        setIsAutoScrolling((prev) => !prev);
+        autoScroll.alternar();
       }
     };
 
@@ -232,7 +233,7 @@ export function ModoLocalEnVivoTab({
     setTrackSeconds(0);
     setIsTrackTimerActive(true);
     setTranspose(0);
-    setIsAutoScrolling(false);
+    autoScroll.setActivo(false);
   }, [activeIndex, currentSong?.bpm]);
 
   // Track Timer Interval
@@ -314,27 +315,6 @@ export function ModoLocalEnVivoTab({
       clearInterval(interval);
     };
   }, [isMetronomeActive, bpm, beatsPerBar]);
-
-  // Auto-scroll effect for Atril Mode
-  useEffect(() => {
-    let scrollInterval: any = null;
-    if (isAutoScrolling && viewMode === "atril") {
-      scrollInterval = setInterval(() => {
-        if (atrilScrollRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } =
-            atrilScrollRef.current;
-          if (scrollTop + clientHeight >= scrollHeight - 10) {
-            setIsAutoScrolling(false);
-          } else {
-            atrilScrollRef.current.scrollTop += scrollSpeed * 0.9;
-          }
-        }
-      }, 50);
-    } else {
-      clearInterval(scrollInterval);
-    }
-    return () => clearInterval(scrollInterval);
-  }, [isAutoScrolling, scrollSpeed, viewMode]);
 
   // Tap Tempo
   const handleTapTempo = () => {
@@ -860,37 +840,7 @@ export function ModoLocalEnVivoTab({
             </div>
 
             {/* Middle: Auto-Scroll & Speed */}
-            <div className="flex items-center gap-1.5 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
-              <button
-                onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold cursor-pointer transition-ui ${
-                  isAutoScrolling
-                    ? "bg-[var(--ink)] text-[var(--bg)]"
-                    : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
-              >
-                {isAutoScrolling ? (
-                  <Pause className="w-3.5 h-3.5" />
-                ) : (
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                )}
-                <span>{isAutoScrolling ? "Pausar" : "Auto-Scroll"}</span>
-              </button>
-
-              {/* Speed Switcher */}
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3].map((spd) => (
-                  <Button
-                    variant={scrollSpeed === spd ? "selected" : "ghost"}
-                    size="xs"
-                    key={spd}
-                    onClick={() => setScrollSpeed(spd)}
-                  >
-                    {spd}x
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <ControlAutoscroll auto={autoScroll} velocidadSiempre />
 
             {/* Transpose & Notation & Font Size Controls */}
             <div className="flex items-center gap-2">

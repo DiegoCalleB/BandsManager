@@ -45,6 +45,8 @@ import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaD
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
+import { ControlAutoscroll } from "./chords/ControlAutoscroll";
+import { useAutoScroll } from "../hooks/useAutoScroll";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { useMezclaStems } from "../hooks/useMezclaStems";
@@ -80,9 +82,8 @@ export function SongChordsViewerModal({
   const [transpose, setTranspose] = useState<number>(0);
 
   // Auto-scroll state
-  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(2); // 1 = slow, 3 = fast
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScroll = useAutoScroll(scrollContainerRef, 2);
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
@@ -225,27 +226,6 @@ export function SongChordsViewerModal({
     setCifradoTexto(song.cifradoTexto || "");
     setGuiaSustituto(song.guiaSustituto || {});
   }, [song.cifradoTexto, song.guiaSustituto]);
-
-  // Auto-scroll timer effect
-  useEffect(() => {
-    let interval: any = null;
-    if (isAutoScrolling) {
-      interval = setInterval(() => {
-        if (scrollContainerRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } =
-            scrollContainerRef.current;
-          if (scrollTop + clientHeight >= scrollHeight - 5) {
-            setIsAutoScrolling(false);
-          } else {
-            scrollContainerRef.current.scrollTop += scrollSpeed * 0.8;
-          }
-        }
-      }, 50);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isAutoScrolling, scrollSpeed]);
 
   // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
   const handleAnalyzeChordsFromAudio = async (sobrescribir = false) => {
@@ -497,10 +477,10 @@ export function SongChordsViewerModal({
   // Mantiene a la vista lo que está sonando: la línea de la letra si hay letra con tiempos y, si no,
   // el acorde (con el autoscroll manual apagado, para no pelearse con él).
   useEffect(() => {
-    if (!isPlayingAudio || isAutoScrolling) return;
+    if (!isPlayingAudio || autoScroll.activo) return;
     const objetivo = letraActiva >= 0 ? `letra-linea-${letraActiva}` : acordeActivo >= 0 ? `cifrado-acorde-${acordeActivo}` : null;
     if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [acordeActivo, letraActiva, isPlayingAudio, isAutoScrolling]);
+  }, [acordeActivo, letraActiva, isPlayingAudio, autoScroll.activo]);
   const uniqueChords = extractUniqueChords(processedText);
   const contextoAcordes = useMemo(
     () => contextoDeAcordes(processedText, uniqueChords, armonia?.tonalidad ?? null, transpose),
@@ -859,48 +839,7 @@ export function SongChordsViewerModal({
                   </span>
                 </Button>
 
-                {/* AUTO-SCROLL CONTROLLER */}
-                <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
-                  <button
-                    type="button"
-                    onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1 transition cursor-pointer ${
-                      isAutoScrolling
-                        ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                        : "bg-[var(--ink)]/10 text-[var(--ink)] hover:text-[var(--ink)]"
-                    }`}
-                    title="Iniciar/Pausar desfile automático"
-                  >
-                    {isAutoScrolling ? (
-                      <Pause className="w-3 h-3" />
-                    ) : (
-                      <Play className="w-3 h-3" />
-                    )}
-                    <span>Autoscroll</span>
-                  </button>
-
-                  {isAutoScrolling && (
-                    <div className="flex items-center gap-1 ml-1">
-                      <span className="text-micro text-[var(--ink-2)]">
-                        Vel:
-                      </span>
-                      {[1, 2, 3].map((v) => (
-                        <button
-                          key={v}
-                          type="button"
-                          onClick={() => setScrollSpeed(v)}
-                          className={`w-5 h-5 rounded text-micro font-bold flex items-center justify-center transition cursor-pointer ${
-                            scrollSpeed === v
-                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                              : "bg-[var(--ink)]/10 text-[var(--ink)]"
-                          }`}
-                        >
-                          {v}x
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ControlAutoscroll auto={autoScroll} />
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
