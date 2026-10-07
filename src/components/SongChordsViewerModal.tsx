@@ -35,6 +35,7 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
+import { contextoDeAcordes } from "../utils/vistaAcordes";
 import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
@@ -473,6 +474,11 @@ export function SongChordsViewerModal({
     if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [acordeActivo, letraActiva, isPlayingAudio, isAutoScrolling]);
   const uniqueChords = extractUniqueChords(processedText);
+  const contextoAcordes = useMemo(
+    () => contextoDeAcordes(processedText, uniqueChords, armonia?.tonalidad ?? null, transpose),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [processedText, armonia, transpose],
+  );
 
   // Copy chords to clipboard
   const handleCopyChords = () => {
@@ -1316,7 +1322,7 @@ export function SongChordsViewerModal({
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                     {uniqueChords.map((chord) => (
-                      <CajaAcorde key={chord} chord={chord} vista={vistaAcordes} />
+                      <CajaAcorde key={chord} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
                     ))}
                   </div>
                 )}

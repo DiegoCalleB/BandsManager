@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { contextoDeAcordes, tonalidadDelCifrado } from "../../utils/vistaAcordes";
 import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import {
   Play,
@@ -424,6 +425,11 @@ export function ModoLocalEnVivoTab({
   // de ejemplo escrita en el código que parecía la letra de la canción.
   const rawChordText = currentSong?.cifradoTexto || "";
   const uniqueChords = extractUniqueChords(rawChordText);
+  const contextoAcordes = useMemo(
+    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rawChordText, currentSong?.tonalidad],
+  );
 
   return (
     <div
@@ -987,7 +993,7 @@ export function ModoLocalEnVivoTab({
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                 {uniqueChords.map((chord, cIdx) => (
-                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} />
+                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} />
                 ))}
               </div>
             </div>
