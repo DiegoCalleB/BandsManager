@@ -1527,7 +1527,7 @@ function PdfExportModalBody({
       `;
 
     // El mismo SVG en todas las hojas: se genera una vez por documento.
-    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io", 11) : "";
+    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io/?utm_source=setlist&utm_medium=qr", 11) : "";
 
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
