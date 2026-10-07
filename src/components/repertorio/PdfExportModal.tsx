@@ -25,10 +25,12 @@ import {
   Columns2,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
+import { buildQrSvg } from "../../utils/qrSvg";
 import {
   BandMemberOption,
   resolveBandMembers,
   getSongMemberNote,
+  isSongMarkedForMember,
 } from "../../utils/repertorioUtils";
 import { MemberNotesModal } from "./MemberNotesModal";
 import { ModalPortal } from "../common/ModalPortal";
@@ -737,7 +739,10 @@ function PdfExportModalBody({
         // parecían casi tan grandes como la propia canción.
         const badgePt = Math.max(7.5, Math.min(12, titleFontPt * 0.5));
         // Con "solo marcados", tono y BPM salen únicamente en los temas que ese músico marcó.
-        const songMarked = badgesScope === "all" || (markedSongs[member.id] ?? []).includes(s.id);
+        const songMarked =
+          badgesScope === "all" ||
+          (markedSongs[member.id] ?? []).includes(s.id) ||
+          isSongMarkedForMember(s, member.id, member.name);
         const keyHere = showTonality && songMarked;
         const bpmHere = showBpm && songMarked;
         const badges: NoteLayoutBadge[] = [
@@ -856,10 +861,10 @@ function PdfExportModalBody({
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
                   <span class="song-title" style="${titleStyle}">${escapeHtml(s.titulo.toUpperCase())}</span>
-                  ${isCentered && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
+                  ${(isCentered || badgesScope === "marked") && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
                 </div>
                 ${layout && layout.mode === "inline" ? notesHtml : ""}
-                ${!isCentered && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
+                ${!isCentered && badgesScope !== "marked" && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
               </div>
               ${layout && layout.mode === "below" ? notesHtml : ""}
             </div>
@@ -1365,6 +1370,8 @@ function PdfExportModalBody({
  align-items: center;
  gap: 6px;
  }
+ .footer-qr { display: inline-flex; line-height: 0; }
+ .footer-qr svg { display: block; }
  .app-logo-badge {
  font-weight: 900;
  color: #000;
@@ -1413,6 +1420,7 @@ function PdfExportModalBody({
  white-space: nowrap;
  margin-left: 10px;
  }
+ .song-left > .badges-inline { flex-shrink: 0; margin-left: 4px; }
  .badges-inline > span + span {
  margin-left: 8px;
  }
@@ -1518,6 +1526,9 @@ function PdfExportModalBody({
         </div>
       `;
 
+    // El mismo SVG en todas las hojas: se genera una vez por documento.
+    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io", 11) : "";
+
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
       pageNum: number,
@@ -1527,9 +1538,10 @@ function PdfExportModalBody({
         ? `
         <div class="page-footer ${isCentered ? "is-centered" : ""}">
           <div class="footer-left">
+            <span class="footer-qr">${footerQrSvg}</span>
             <span class="app-logo-badge">⚡ BandManager</span>
             <span class="footer-sep">•</span>
-            <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
+            <a href="https://bandmanager.io" target="_blank" class="app-link">bandmanager.io</a>
           </div>
           <div class="footer-right">
             <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
@@ -2442,15 +2454,18 @@ function PdfExportModalBody({
                   .map((it, i) => {
                     const song = songs.find((x) => x.id === it.songId);
                     if (!song) return null;
-                    const marked = (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
+                    const byMusician = isSongMarkedForMember(song, currentPreviewMember.id, currentPreviewMember.name);
+                    const marked = byMusician || (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
                     return (
                       <label
                         key={`${song.id}-${i}`}
+                        title={byMusician ? `Lo marcó ${currentPreviewMember.name} desde sus notas` : undefined}
                         className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none min-w-0"
                       >
                         <input
                           type="checkbox"
                           checked={marked}
+                          disabled={byMusician}
                           onChange={(e) =>
                             setMarkedSongs((m) => {
                               const cur = new Set(m[currentPreviewMember.id] ?? []);
