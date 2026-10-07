@@ -245,6 +245,7 @@ CREATE TABLE IF NOT EXISTS concerts (
     convocados_ids JSONB DEFAULT '[]'::jsonb,
     convocados_nombres JSONB DEFAULT '[]'::jsonb,
     idioma TEXT DEFAULT '',
+    enlace_entradas TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );

@@ -747,6 +747,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         estado_pago: 'pendiente',
         notas: newEv.titulo,
         tipo: newEventType === 'festival' ? 'festival' : 'sala',
+        enlaceEntradas: newEv.enlaceEntradas || undefined,
       } as any);
     }
 
