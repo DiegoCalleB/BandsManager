@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   NAV_ITEMS,
   NAV_GROUPS,
+  NAV_GROUPS_MOBILE,
+  NAV_GROUPS_DESKTOP,
   NAV_PINNED_TOP_IDS,
   NAV_PINNED_BOTTOM_IDS,
   FLAT_NAV_ORDER_IDS,
@@ -48,8 +50,9 @@ describe('navGroups config', () => {
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
     expect(findNavGroupIdForItem('discografia')).toBe('musica');
-    expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
-    expect(findNavGroupIdForItem('tuner')).toBe('herramientas');
+    expect(findNavGroupIdForItem('metronome')).toBe('musica');
+    expect(findNavGroupIdForItem('tuner')).toBe('musica');
+    expect(NAV_GROUPS.some((g) => g.id === 'herramientas')).toBe(false);
     expect(findNavGroupIdForItem('booking')).toBe('directorio');
     expect(findNavGroupIdForItem('epk')).toBe('promocion');
     expect(findNavGroupIdForItem('giras')).toBe('negocio');
@@ -73,5 +76,11 @@ describe('navGroups config', () => {
     expect(shouldGroupNavForPlan('de_gira')).toBe(true);
     expect(shouldGroupNavForPlan('cabeza_de_cartel')).toBe(true);
     expect(shouldGroupNavForPlan(undefined)).toBe(true);
+  });
+});
+
+describe('un solo menú agrupado', () => {
+  it('móvil y escritorio comparten exactamente los mismos grupos', () => {
+    expect(NAV_GROUPS_MOBILE).toBe(NAV_GROUPS_DESKTOP);
   });
 });

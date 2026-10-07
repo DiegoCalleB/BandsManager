@@ -37,3 +37,11 @@ describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
     expect(repertorio).toContain('openIris: true');
   });
 });
+
+describe('Iris no se ofrece dos veces', () => {
+  it('el modo concierto no tiene botones «Separar con Iris»: ya existe «Studio» y la tarjeta del Atril', () => {
+    const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+    expect(concierto).not.toContain('Separar con Iris');
+    expect(concierto).toContain('btn-stage-studio-mode');
+  });
+});
