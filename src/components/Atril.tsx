@@ -57,10 +57,12 @@ import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
 import { ControlBucle } from "./chords/ControlBucle";
+import { ControlVelocidad } from "./chords/ControlVelocidad";
+import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
 import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
 import { pistasDeCancion } from "../utils/irisTracks";
-import { pistaDelUsuario, pistasParaModo, type AjustesPistas, type ModoEscucha } from "../utils/mezclaStems";
+import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
 import { useGrabarIdea } from "../hooks/useGrabarIdea";
@@ -176,7 +178,8 @@ export function Atril({
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [ajustesPistas, setAjustesPistas] = useState<AjustesPistas>({});
+  const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
+  useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
   useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
   const { bucle, marcar: marcarBucle, limpiar: limpiarBucle } = useBucleAB(audioRef, audioUrl);
 
@@ -856,7 +859,12 @@ export function Atril({
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}
-                {audioUrl && <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />}
+                {audioUrl && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                    <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
+                  </div>
+                )}
                 <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
                 {modo === 'Ensayar' && (
