@@ -20,3 +20,45 @@ export function pistasParaModo(pistas: AudioTrack[], miId: string | null, modo: 
   if (modo === 'todo' || !miId || !pistas.some((p) => p.id === miId)) return [];
   return modo === 'solo' ? pistas.filter((p) => p.id === miId) : pistas.filter((p) => p.id !== miId);
 }
+
+/** Ajuste personal de una pista (solo en este dispositivo): volumen, silencio y solo. */
+export interface AjustePista {
+  volumen?: number;
+  muted?: boolean;
+  solo?: boolean;
+}
+export type AjustesPistas = Record<string, AjustePista>;
+
+/** La pista con su ajuste personal ya aplicado. */
+export function pistaConAjuste(p: AudioTrack, ajustes: AjustesPistas): AudioTrack {
+  const a = ajustes[p.id];
+  return a ? { ...p, ...a } : p;
+}
+
+export function hayPistaEnSolo(pistas: AudioTrack[], ajustes: AjustesPistas): boolean {
+  return pistas.some((p) => pistaConAjuste(p, ajustes).solo);
+}
+
+/** Si la pista suena: con alguna en solo, solo esas; el silencio siempre gana. */
+export function pistaAudible(p: AudioTrack, ajustes: AjustesPistas, hayEnSolo: boolean): boolean {
+  const e = pistaConAjuste(p, ajustes);
+  return (hayEnSolo ? !!e.solo : true) && !e.muted;
+}
+
+/** Volumen final 0..1 que debe tener el elemento de audio (0 si no es audible). */
+export function volumenEfectivo(p: AudioTrack, ajustes: AjustesPistas, hayEnSolo: boolean): number {
+  if (!pistaAudible(p, ajustes, hayEnSolo)) return 0;
+  return Math.max(0, Math.min(1, pistaConAjuste(p, ajustes).volumen ?? 1));
+}
+
+export function alternarSilencio(ajustes: AjustesPistas, id: string): AjustesPistas {
+  return { ...ajustes, [id]: { ...ajustes[id], muted: !(ajustes[id]?.muted ?? false) } };
+}
+
+/** Solo exclusivo, estilo Cubase: activar uno desactiva el resto; pulsar el activo lo apaga. */
+export function alternarSolo(ajustes: AjustesPistas, pistas: AudioTrack[], id: string): AjustesPistas {
+  if (ajustes[id]?.solo) return { ...ajustes, [id]: { ...ajustes[id], solo: false } };
+  const siguiente: AjustesPistas = {};
+  for (const p of pistas) siguiente[p.id] = { ...ajustes[p.id], solo: p.id === id };
+  return siguiente;
+}
