@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { contextoDeAcordes, tonalidadDelCifrado } from "../../utils/vistaAcordes";
+import { contextoDeAcordes, ordenarPorTonica, tonalidadDelCifrado } from "../../utils/vistaAcordes";
 import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import {
   Play,
@@ -992,7 +992,7 @@ export function ModoLocalEnVivoTab({
                 </IconButton>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {uniqueChords.map((chord, cIdx) => (
+                {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord, cIdx) => (
                   <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} />
                 ))}
               </div>

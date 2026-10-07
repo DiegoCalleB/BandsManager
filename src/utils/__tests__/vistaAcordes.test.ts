@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { notasParaDibujar, lineaDeBajo, contextoDeAcordes } from '../vistaAcordes';
+import { notasParaDibujar, lineaDeBajo, contextoDeAcordes, ordenarPorTonica } from '../vistaAcordes';
 import { parseTonalidad } from '../teoriaArmonica';
 
 describe('vistaAcordes', () => {
@@ -27,5 +27,14 @@ describe('vistaAcordes', () => {
     expect(m.get('E')!.siguiente).toBe('A');
     expect(m.get('E')!.info!.funcion).toBe('T');
     expect(m.get('B')!.info!.funcion).toBe('D');
+  });
+  it('tónica marcada y orden por distancia a ella (también transpuesta)', () => {
+    const texto = '[B] [A] [E] [C#m] [E]';
+    const m = contextoDeAcordes(texto, ['B', 'A', 'E', 'C#m'], parseTonalidad('E'), 0);
+    expect(m.get('E')!.tonica).toBe(true);
+    expect(m.get('B')!.tonica).toBe(false);
+    expect(ordenarPorTonica(['B', 'A', 'E', 'C#m'], m)).toEqual(['E', 'A', 'B', 'C#m']);
+    const t = contextoDeAcordes('[F] [Bb] [C]', ['F', 'Bb', 'C'], parseTonalidad('E'), 1);
+    expect(t.get('F')!.tonica).toBe(true);
   });
 });

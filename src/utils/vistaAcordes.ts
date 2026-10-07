@@ -98,7 +98,14 @@ export function lineaDeBajo(acorde: string, siguiente?: string | null): NotaBajo
   return salida;
 }
 
-export interface ContextoAcorde { info: InfoChip | null; siguiente: string | null }
+export interface ContextoAcorde {
+  info: InfoChip | null;
+  siguiente: string | null;
+  /** Es el acorde de la tónica de la canción (para marcarlo de un vistazo). */
+  tonica: boolean;
+  /** Semitonos por encima de la tónica (0 = tónica); null si no hay tonalidad. */
+  distancia: number | null;
+}
 
 /**
  * Para cada acorde distinto del cifrado visible: su grado y función en la tonalidad y el acorde que más veces
@@ -122,9 +129,23 @@ export function contextoDeAcordes(textoVisible: string, acordes: string[], tonal
     const m = cuentas.get(k);
     const mejor = m ? [...m.entries()].sort((x, y) => y[1] - x[1])[0][0] : null;
     const siguiente = mejor ? visible.get(mejor) ?? null : null;
-    salida.set(a, { info: tonalidad ? infoDeAcordeVisible(a, tonalidad, transpose, siguiente) : null, siguiente });
+    const info = tonalidad ? infoDeAcordeVisible(a, tonalidad, transpose, siguiente) : null;
+    const p = parseRootNote(a);
+    const pc = p ? keyToChromaticIndex(p.root) : null;
+    const tonicaVista = tonalidad ? (((tonalidad.tonica + transpose) % 12) + 12) % 12 : null;
+    const distancia = pc !== null && tonicaVista !== null ? (((pc - tonicaVista) % 12) + 12) % 12 : null;
+    const tonica = distancia === 0 && !!info && !info.secundario && info.funcion === 'T';
+    salida.set(a, { info, siguiente, tonica, distancia });
   }
   return salida;
+}
+
+/** Orden con sentido: la tónica primero y el resto por distancia a ella (I, ii, iii, IV, V, vi…). Estable. */
+export function ordenarPorTonica(acordes: string[], contexto: Map<string, ContextoAcorde>): string[] {
+  return acordes
+    .map((a, i) => ({ a, i, d: contexto.get(a)?.distancia ?? 99 }))
+    .sort((x, y) => x.d - y.d || x.i - y.i)
+    .map((x) => x.a);
 }
 
 /** Tonalidad de la canción a partir de su cifrado (para el modo en vivo, que no tiene el análisis completo). */

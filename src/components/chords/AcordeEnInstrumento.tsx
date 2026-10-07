@@ -122,9 +122,12 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
   const fn = contexto?.info?.funcion;
   const color = fn ? COLOR_FUNCION[fn] : undefined;
   return (
-    <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5">
+    <div translate="no" className={`notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}>
       <div className="flex items-center justify-center gap-1.5 text-xs font-bold font-sans">
-        <span className={fn ? `px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[fn]}` : 'text-[var(--acc)]'} title={fn ? `Función ${LETRA_FUNCION[fn]}` : undefined}>{chord}</span>
+        <span
+          className={contexto?.tonica ? 'px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)]' : fn ? `px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[fn]}` : 'text-[var(--acc)]'}
+          title={contexto?.tonica ? 'Tónica' : fn ? `Función ${LETRA_FUNCION[fn]}` : undefined}
+        >{chord}</span>
         {grado && <span className="text-micro font-normal text-[var(--ink-2)]">{grado}</span>}
       </div>
       {vista === 'teclado' ? <TecladoAcorde acorde={chord} color={color} /> : vista === 'bajo' ? <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} /> : shape ? (
