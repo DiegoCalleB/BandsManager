@@ -907,6 +907,9 @@ function PdfExportModalBody({
  }
  .sheet-page {
  position: relative;
+ /* isolation: la marca de agua (z-index:-1) debe quedar DETRÁS del contenido pero DELANTE del
+ fondo blanco de la hoja; sin stacking context propio se colaba bajo el fondo y no se veía. */
+ isolation: isolate;
  width: 100%;
  min-height: ${PAGE_SHEET_HEIGHT_MM}mm;
  display: flex;
@@ -945,7 +948,7 @@ function PdfExportModalBody({
  /* 0.09 se veía casi invisible en papel real (la pantalla ilumina el mismo valor de
  opacidad más de lo que refleja la tinta impresa) — subido a 0.16, todavía sutil
  como marca de agua de fondo, pero perceptible sin competir con el texto negro. */
- opacity: 0.1;
+ opacity: 0.14;
  /* grayscale + multiply: el logo se funde con el papel en vez de pintar su caja. */
  filter: grayscale(100%);
  mix-blend-mode: multiply;
