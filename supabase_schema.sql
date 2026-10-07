@@ -1386,3 +1386,19 @@ SELECT band_id,
        ROUND(SUM(amount_cents - reembolsado_cents) / 100.0, 2)  AS neto_eur
 FROM deal_support_contributions
 GROUP BY band_id;
+
+-- 32. calendar_conflict_notifications (avisos de choque de calendario ya enviados por email)
+--
+-- server/services/calendarConflictService.ts y server/db/calendarConflicts.ts. Evita repetir el
+-- mismo aviso a la misma persona: la huella cambia si se mueve la fecha/hora de algún evento.
+CREATE TABLE IF NOT EXISTS calendar_conflict_notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  band_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  huella TEXT NOT NULL,
+  notified_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT uq_calendar_conflict_user_huella UNIQUE (user_id, huella)
+);
+CREATE INDEX IF NOT EXISTS idx_calendar_conflict_notifications_band ON calendar_conflict_notifications(band_id);
+ALTER TABLE calendar_conflict_notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Permitir acceso total al backend" ON calendar_conflict_notifications FOR ALL USING (true);
