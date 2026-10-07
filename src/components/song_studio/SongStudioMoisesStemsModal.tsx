@@ -3,6 +3,7 @@ import { Sliders, X, Sparkles, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
 import { Button, IconButton } from '../ui';
+import { IrisPrism } from './IrisPrism';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;
@@ -47,18 +48,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           </IconButton>
         </div>
 
-        <div className="relative h-32 sm:h-40 overflow-hidden rounded-[var(--r-m)] bg-black" aria-hidden="true">
-          <video
-            className="absolute inset-0 h-full w-full object-cover"
-            src="/video/iris-prisma.mp4"
-            poster="/video/iris-prisma.jpg"
-            autoPlay={!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        </div>
+        <IrisPrism className="h-32 sm:h-40 rounded-[var(--r-m)]" />
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
           <Button

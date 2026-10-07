@@ -360,3 +360,6 @@ body.scroll .shot.longshot { height: 520px; } body.scroll .shot.longshot > img {
 .vid video { height: 100%; max-width: 100%; aspect-ratio: 16 / 10; border-radius: var(--r-xl); background: #000; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
 body.scroll .vid { flex: none; }
 body.scroll .vid video { width: 100%; height: auto; border-radius: var(--r-m); }
+
+.vid.iris canvas { display: block; width: 100%; max-width: 1500px; height: 100%; border-radius: var(--r-xl); background: #05070d; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+body.scroll .vid.iris canvas { height: auto; aspect-ratio: 5 / 2; border-radius: var(--r-m); }

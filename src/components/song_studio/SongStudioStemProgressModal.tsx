@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import {
-  Sparkles,
   X,
-  Check,
   AlertTriangle,
-  RefreshCw,
-  Layers,
-  ShieldAlert,
-  Loader2,
-  Music,
-  Zap,
-  ExternalLink,
   Cpu,
   AlertCircle,
   CheckCircle2,
@@ -19,101 +9,31 @@ import {
   Copy,
 } from 'lucide-react';
 import { Button, IconButton } from '../ui';
+import { IrisPrism } from './IrisPrism';
 
-const IRIS_PRISM_RAYS = [
-  { d: 'M 195,43 L 400,10', color: '#f43f5e' },
-  { d: 'M 195,43 L 400,22', color: '#f97316' },
-  { d: 'M 195,43 L 400,34', color: '#eab308' },
-  { d: 'M 195,43 L 400,46', color: '#22c55e' },
-  { d: 'M 195,43 L 400,58', color: '#06b6d4' },
-  { d: 'M 195,43 L 400,70', color: '#a855f7' },
-];
-
-const IrisPrismBanner: React.FC = () => {
-  return (
-    <div className="relative w-full h-20 bg-[var(--sunken)] overflow-hidden flex items-center justify-center border-b border-[var(--hair)]/10 select-none">
-      <svg className="w-full h-full absolute inset-0 text-[var(--ink)]" viewBox="0 0 400 80" preserveAspectRatio="none">
-        {/* Rayo de luz blanco entrante animado */}
-        <motion.path
-          d="M 0,40 L 160,40"
-          stroke="white"
-          strokeWidth="2.5"
-          strokeDasharray="6 3"
-          opacity={0.85}
-          animate={{ strokeDashoffset: [0, -18] }}
-          transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-        />
-        {/* Partícula de energía viajando hacia el prisma */}
-        <motion.circle
-          cy={40}
-          r={3}
-          fill="white"
-          animate={{ cx: [0, 160], opacity: [0.1, 1, 0.1] }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
-        />
-        {/* Prisma óptico de cristal */}
-        <polygon points="160,15 220,65 160,65" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" />
-        <motion.polygon
-          points="162,18 218,63 162,63"
-          fill="rgba(255,255,255,0.08)"
-          animate={{ opacity: [0.05, 0.25, 0.05] }}
-          transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-        />
-        {/* Destello focal de refracción */}
-        <motion.circle
-          cx={195}
-          cy={43}
-          r={4}
-          fill="white"
-          animate={{ scale: [0.8, 1.6, 0.8], opacity: [0.6, 1, 0.6] }}
-          transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }}
-        />
-        {/* Rayos del espectro multicolor descompuesto flotando/fluyendo en cascada */}
-        {IRIS_PRISM_RAYS.map((ray, i) => (
-          <motion.path
-            key={i}
-            d={ray.d}
-            stroke={ray.color}
-            strokeWidth="2.5"
-            strokeDasharray="8 4"
-            opacity={0.85}
-            animate={{ strokeDashoffset: [0, -24], opacity: [0.4, 1, 0.4] }}
-            transition={{ repeat: Infinity, duration: 1.4, ease: 'linear', delay: i * 0.12 }}
-          />
-        ))}
-      </svg>
-      <div className="relative z-10 flex items-center gap-2 px-3 py-1 rounded-[var(--r-pill)] bg-[var(--sunken)]/85 text-micro font-mono text-[var(--ink-2)]">
-        <motion.span
-          className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]"
-          animate={{ opacity: [0.3, 1, 0.3] }}
-          transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
-        />
-        <span>Iris Espectro · Separación Multicapa por IA</span>
-      </div>
-    </div>
-  );
-};
-
-interface SongStudioStemProgressModalProps {
-  stemProgressModal: any;
-  setStemProgressModal: (val: any) => void;
-  handleRetryStemSeparation?: (idea: any) => void;
-  handleOpenBillingModal?: () => void;
-  handleSaveSeparatedStemsToIdea?: (idea: any, stems: any[]) => void;
+interface StemProgressBase {
+  isOpen: boolean;
+  ideaTitle?: string;
+  stage?: string;
+  progressPct?: number;
+  minimized?: boolean;
+  errorType?: string;
+  errorDetail?: string;
 }
 
-export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalProps> = ({
+interface SongStudioStemProgressModalProps<S extends StemProgressBase> {
+  stemProgressModal: S | null;
+  setStemProgressModal: React.Dispatch<React.SetStateAction<S | null>>;
+}
+
+export function SongStudioStemProgressModal<S extends StemProgressBase>({
   stemProgressModal,
   setStemProgressModal,
-  handleRetryStemSeparation,
-  handleOpenBillingModal,
-  handleSaveSeparatedStemsToIdea,
-}) => {
+}: SongStudioStemProgressModalProps<S>) {
   const [copiedStemError, setCopiedStemError] = useState(false);
 
   if (!stemProgressModal || !stemProgressModal.isOpen) return null;
 
-  const idea = stemProgressModal.targetIdea;
   const terminado = stemProgressModal.stage === 'completed' || stemProgressModal.stage === 'error';
   const esError = stemProgressModal.stage === 'error';
 
@@ -121,7 +41,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
     return (
       <button
         type="button"
-        onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: false } : null))}
+        onClick={() => setStemProgressModal((prev) => (prev ? { ...prev, minimized: false } : null))}
         className={`fixed bottom-20 right-3 sm:right-6 z-[1150] w-56 rounded-[var(--r-l)] bg-[var(--surface)]/95 p-3 text-left cursor-pointer transition-colors animate-in fade-in slide-in-from-bottom-2 duration-200 ${
           !terminado
             ? ''
@@ -169,7 +89,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
       <div className="bg-[var(--surface)] rounded-[var(--r-l)] max-w-md md:max-w-2xl w-full p-6 text-[var(--ink)] space-y-5 animate-in fade-in zoom-in-95 duration-200">
         {!terminado && (
           <div className="-mx-6">
-            <IrisPrismBanner />
+            <IrisPrism labels className="h-36 sm:h-44" />
           </div>
         )}
 
@@ -205,7 +125,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
             label="Minimizar a segundo plano"
             size="icon-xs"
             type="button"
-            onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
+            onClick={() => setStemProgressModal((prev) => (prev ? { ...prev, minimized: true } : null))}
           >
             <X className="w-5 h-5" />
           </IconButton>
@@ -272,7 +192,7 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
             variant="neutral"
             size="sm"
             type="button"
-            onClick={() => setStemProgressModal((prev: any) => (prev ? { ...prev, minimized: true } : null))}
+            onClick={() => setStemProgressModal((prev) => (prev ? { ...prev, minimized: true } : null))}
           >
             Seguir en segundo plano
           </Button>
@@ -288,4 +208,4 @@ export const SongStudioStemProgressModal: React.FC<SongStudioStemProgressModalPr
       </div>
     </div>
   );
-};
+}
