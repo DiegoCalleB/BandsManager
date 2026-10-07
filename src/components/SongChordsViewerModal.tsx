@@ -35,9 +35,8 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
-import { TecladoAcorde, BajoAcorde, SelectorVistaAcorde } from "./chords/AcordeEnInstrumento";
-import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
-import type { VistaAcorde } from "../utils/vistaAcordes";
+import { contextoDeAcordes } from "../utils/vistaAcordes";
+import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
@@ -50,8 +49,6 @@ import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructur
 import {
   processChordText,
   extractUniqueChords,
-  buscarFormaGuitarra,
-  GuitarChordShape,
   transposeChordToken,
   parseRootNote,
 } from "../utils/chordUtils";
@@ -81,7 +78,7 @@ export function SongChordsViewerModal({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Show Chord Diagrams drawer/panel
-  const [vistaAcordes, setVistaAcordes] = useState<VistaAcorde>(() => { const i = instrumentoDelUsuario(); return i === "teclado" || i === "bajo" ? i : "guitarra"; });
+  const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(() => typeof window === "undefined" || window.innerWidth >= 768);
 
   // Edit form state
@@ -477,6 +474,11 @@ export function SongChordsViewerModal({
     if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [acordeActivo, letraActiva, isPlayingAudio, isAutoScrolling]);
   const uniqueChords = extractUniqueChords(processedText);
+  const contextoAcordes = useMemo(
+    () => contextoDeAcordes(processedText, uniqueChords, armonia?.tonalidad ?? null, transpose),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [processedText, armonia, transpose],
+  );
 
   // Copy chords to clipboard
   const handleCopyChords = () => {
@@ -1297,7 +1299,7 @@ export function SongChordsViewerModal({
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
             {activeTab === "chords" && showChordDiagrams && (
-              <div className="w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
+              <div translate="no" className="notranslate w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
                     <ShowIcon inline emoji="🎸" />Acordes ({uniqueChords.length})
@@ -1320,7 +1322,7 @@ export function SongChordsViewerModal({
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                     {uniqueChords.map((chord) => (
-                      <ChordDiagramBox key={chord} chord={chord} vista={vistaAcordes} />
+                      <CajaAcorde key={chord} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
                     ))}
                   </div>
                 )}
@@ -1556,67 +1558,3 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
     );
   });
 }
-
-// COMPONENT TO RENDER A SINGLE GUITAR CHORD BOX/FRETBOARD DIAGRAM
-const ChordDiagramBox: React.FC<{ chord: string; vista?: VistaAcorde }> = ({ chord, vista = "guitarra" }) => {
-  if (vista !== "guitarra") {
-    return (
-      <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5">
-        <div className="text-xs font-bold text-[var(--acc)] font-sans">{chord}</div>
-        {vista === "teclado" ? <TecladoAcorde acorde={chord} /> : <BajoAcorde acorde={chord} />}
-      </div>
-    );
-  }
-  // Look up in database or clean name
-  const shape: GuitarChordShape | undefined = buscarFormaGuitarra(chord);
-
-  return (
-    <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
-      <div className="text-xs font-bold text-[var(--acc)] font-sans flex items-center justify-center gap-1">
-        <span>{chord}</span>
-      </div>
-
-      {shape ? (
-        <div className="flex justify-center pt-1">
-          {/* Simple 6-string Guitar Fretboard Grid Representation */}
-          <div className="w-24 bg-[var(--surface)] p-1.5 rounded text-micro font-sans">
-            {shape.baseFret && shape.baseFret > 1 && (
-              <div className="text-micro text-[var(--acc)] font-bold text-left pl-1">
-                Traste {shape.baseFret}
-              </div>
-            )}
-            <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] pb-0.5">
-              {["E", "A", "D", "G", "B", "E"].map((s, i) => (
-                <span key={i} className="text-center">
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-6 gap-0.5 my-1">
-              {shape.frets.map((fret, stringIdx) => (
-                <div key={stringIdx} className="flex flex-col items-center">
-                  <span
-                    className={`font-bold ${
-                      fret === -1
-                        ? "text-[var(--alert)]"
-                        : fret === 0
-                          ? "text-[var(--ok)]"
-                          : "text-[var(--acc)]/70"
-                    }`}
-                  >
-                    {fret === -1 ? "x" : fret === 0 ? "o" : fret}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ) : (
-        <p className="text-micro text-[var(--ink-2)] font-sans">
-          [Acorde estándar]
-        </p>
-      )}
-    </div>
-  );
-};
