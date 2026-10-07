@@ -46,6 +46,11 @@ import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
 import { ModalOido } from "./chords/ModalOido";
+import { SelectorEscucha } from "./chords/SelectorEscucha";
+import { useMezclaStems } from "../hooks/useMezclaStems";
+import { getSongIrisStemIdea, getIdeaTracks } from "../utils/irisTracks";
+import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
+import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -130,11 +135,21 @@ export function SongChordsViewerModal({
       ? song.audioIdeas[0].audioUrl
       : "");
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
+  const stems = useMemo(() => {
+    const idea = getSongIrisStemIdea(song);
+    return idea ? getIdeaTracks(idea) : [];
+  }, [song]);
+  const [modoEscucha, setModoEscucha] = useState<ModoEscucha>("todo");
+  const [miPistaId, setMiPistaId] = useState<string | null>(null);
+  const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
+  const pistasSonando = useMemo(() => pistasParaModo(stems, miId, modoEscucha), [stems, miId, modoEscucha]);
   const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
   const [audioDuration, setAudioDuration] = useState<number>(
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  useMezclaStems(audioRef, pistasSonando, audioUrl);
 
   // Sync audio duration and cleanup on unmount
   useEffect(() => {
@@ -783,6 +798,10 @@ export function SongChordsViewerModal({
                     </span>
                   )}
                 </div>
+
+                {stems.length > 1 && (
+                  <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
+                )}
 
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
