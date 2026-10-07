@@ -48,7 +48,7 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
           </IconButton>
         </div>
 
-        <IrisPrism className="h-32 sm:h-40 rounded-[var(--r-m)]" />
+        <IrisPrism className="aspect-video max-h-[38vh] rounded-[var(--r-m)]" />
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
           <Button
