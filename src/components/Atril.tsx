@@ -47,7 +47,7 @@ import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, 
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
-import { apiFetch } from "../utils/api";
+import { apiFetch, getActiveBandId } from "../utils/api";
 import { analizarAcordesDelAudio, resumenAnalisisAcordes } from "../utils/analisisAcordesCliente";
 import { ControlAutoscroll } from "./chords/ControlAutoscroll";
 import { useAutoScroll } from "../hooks/useAutoScroll";
@@ -57,6 +57,11 @@ import { useMezclaStems } from "../hooks/useMezclaStems";
 import { pistasDeCancion } from "../utils/irisTracks";
 import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
+import { GrabarIdea } from "./chords/GrabarIdea";
+import { useGrabarIdea } from "../hooks/useGrabarIdea";
+import { carpetaDeIdea, ficheroDeToma, tituloDeToma } from "../utils/grabarIdea";
+import { crearIdeaDeAtril } from "../utils/ideaDeAtril";
+import { uploadFileToServer } from "../utils/audioStorage";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -181,6 +186,42 @@ export function Atril({
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
   useMezclaStems(audioRef, pistasSonando, audioUrl);
+
+  // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
+  const grabacion = useGrabarIdea(audioRef);
+  const [guardandoIdea, setGuardandoIdea] = useState<boolean>(false);
+  const guardarIdea = async () => {
+    if (!grabacion.toma) return;
+    setGuardandoIdea(true);
+    try {
+      const { extension, tipo } = ficheroDeToma(grabacion.toma.mime);
+      const id = `idea-${Date.now()}`;
+      const fichero = new File([grabacion.toma.blob], `${id}.${extension}`, { type: tipo });
+      const url = await uploadFileToServer(fichero, { bandId: getActiveBandId() || undefined, folder: carpetaDeIdea(String(song.id)) });
+      const instrumento = miId ? stems.find((p) => p.id === miId)?.nombre : undefined;
+      const usuario = (() => {
+        try { const u = JSON.parse(localStorage.getItem("bakandeya_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
+      })();
+      const idea = crearIdeaDeAtril({
+        id,
+        titulo: tituloDeToma(instrumento, song.audioIdeas || []),
+        audioUrl: url,
+        subidoPor: usuario,
+        instrumento,
+        sobrePistas: (pistasSonando.length > 0 ? pistasSonando : stems).map((p) => p.id),
+        offsetSegundos: grabacion.offset,
+      });
+      onUpdateSong({ ...song, audioIdeas: [...(song.audioIdeas || []), idea] });
+      grabacion.descartar();
+      setAiSuccessMsg("🎙️ Idea guardada en la canción.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } catch {
+      setAiSuccessMsg("⚠️ No se pudo guardar la idea. Prueba otra vez.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } finally {
+      setGuardandoIdea(false);
+    }
+  };
 
   // Sync audio duration and cleanup on unmount
   useEffect(() => {
@@ -809,6 +850,23 @@ export function Atril({
 
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
+                )}
+
+                {modo === 'Ensayar' && (
+                  <GrabarIdea
+                    fase={grabacion.fase}
+                    segundos={grabacion.segundos}
+                    toma={grabacion.toma}
+                    offset={grabacion.offset}
+                    error={grabacion.error}
+                    guardando={guardandoIdea}
+                    disponible={!!audioUrl}
+                    onEmpezar={() => { void grabacion.empezar(); }}
+                    onParar={grabacion.parar}
+                    onOffset={grabacion.setOffset}
+                    onGuardar={() => { void guardarIdea(); }}
+                    onDescartar={grabacion.descartar}
+                  />
                 )}
 
                 {/* TRANSPOSITION CONTROL */}
