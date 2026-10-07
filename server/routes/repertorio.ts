@@ -12,8 +12,9 @@ const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
-import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from "../services/transcripcionLetra.js";
-import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
+import { ejecutarLetraSincronizada } from "../services/letraCancion.js";
+import { resumenCola, encolarLetras, cancelarCola, dbSetLetrasAuto } from "../services/colaLetras.js";
+import { analisisAcordesEnCurso } from "../utils/bloqueoOido.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
 import { analizarArmonia } from "../../src/utils/teoriaArmonica.js";
@@ -199,7 +200,6 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
 // POST analizar los acordes del audio de una canción (Chordify propio): detecta acordes con
 // tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
 // Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
-const analisisAcordesEnCurso = new Set<string>();
 // Peticiones idénticas a la vez (subida masiva + apertura del visor, dos pestañas, un reintento del
 // móvil…): la segunda NO falla con un 409 que el usuario ve como «no se pudo guardar»; espera al
 // análisis en marcha y recibe el mismo resultado.
@@ -259,119 +259,50 @@ router.get("/songs/:id/progreso-oido", requireAuth, (req, res) => {
   res.json({ progreso: leerProgreso(`${userBandId}:${req.params.id}`) });
 });
 
-// POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
-// VOZ (Whisper) sobre la pista de voz aislada de Iris (o, si no hay, la mezcla), con marcas de
-// tiempo; los acordes, de la detección propia. Se fusionan por tiempo en un cifrado de texto.
-// Nunca se genera letra a partir del título ni con un modelo generativo: si no se puede
-// transcribir, se devuelve el error y no se escribe nada.
+// POST letra y acordes del audio, sincronizados (lógica en services/letraCancion.ts, compartida
+// con la cola de letras en segundo plano).
 router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
-  const { id } = req.params;
-  const userBandId = getTargetBandId(req);
-  const clave = `${userBandId}:${id}`;
-  if (analisisAcordesEnCurso.has(clave)) {
-    return res.status(409).json({ error: "Ya se está procesando el audio de esta canción." });
-  }
-  analisisAcordesEnCurso.add(clave);
-  iniciarProgreso(clave, "letra", "Preparando la canción…");
+  const { status, body } = await ejecutarLetraSincronizada(req.params.id, getTargetBandId(req), {
+    sobrescribir: req.body?.sobrescribir === true,
+    idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined,
+  });
+  res.status(status).json(body);
+});
+
+// Cola de letras en el servidor (sobrevive a cerrar la pestaña): estado, encolar, cancelar y el
+// ajuste opt-in «Transcribir automáticamente lo nuevo». Todo acotado a la banda del token.
+router.get("/letras/cola", requireAuth, async (req, res) => {
   try {
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
-    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
-
-    // Un cifrado escrito por la banda no se sustituye sin confirmación (y no se gasta transcripción).
-    if (song.cifradoTexto && String(song.cifradoTexto).trim() && req.body?.sobrescribir !== true) {
-      return res.status(409).json({
-        yaTieneCifrado: true,
-        error: "Esta canción ya tiene un cifrado guardado. Transcribir desde el audio lo sustituiría.",
-      });
-    }
-
-    avanzarProgreso(clave, "voz", "Buscando la pista de voz aislada (si no hay, se usa la mezcla)…");
-    const urlVoz = (song.audioIdeas ?? [])
-      .flatMap((i: any) => i.pistas ?? [])
-      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
-    const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
-    const urlLetra: string | undefined = urlVoz || urlMezcla;
-    if (!urlLetra) {
-      return res.status(400).json({ error: "Sin audio no se puede transcribir la letra, y no voy a inventarla. Sube el audio de la canción, o escribe/pega el cifrado." });
-    }
-    const fuenteLetra: "voz" | "mezcla" = urlVoz ? "voz" : "mezcla";
-
-    // Acordes: los ya detectados (con correcciones) o un análisis nuevo. Si fallan, la letra sigue.
-    let analisis = song.analisisAcordes as any;
-    let avisoAcordes: string | undefined;
-    if (!analisis) {
-      const r = await analizarAcordesDeCancion(song, (e, d) => avanzarProgreso(clave, e, d));
-      if (r.ok === true) analisis = r.analisis;
-      else avisoAcordes = (r as { error: string }).error;
-    }
-
-    avanzarProgreso(clave, "transcribir", fuenteLetra === "voz" ? "Escuchando la voz y escribiendo la letra con sus tiempos…" : "Escuchando la mezcla completa y escribiendo la letra (mejor con la voz aislada)…");
-    let transcripcion;
-    try {
-      transcripcion = await transcribirLetra(urlLetra, {
-        idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined,
-        // Para APIs que reciben el fichero (OpenAI): mp3 mono recortado, descargado con la guardia SSRF.
-        archivoLocal: () => getAudioSnippetPath({ audioUrl: urlLetra, allowSyntheticFallback: false, maxSeconds: 600 }),
-      });
-    } catch (err: any) {
-      console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
-      return res.status(502).json({ error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` });
-    }
-
-    const lineas = limpiarLineas(transcripcion.lineas);
-    if (totalPalabras(lineas) < 8) {
-      return res.status(422).json({
-        letraConfianza: "sin_letra",
-        error: "No se oye una letra inteligible en este audio (¿instrumental, o voz muy tapada?). No se ha escrito ninguna letra.",
-      });
-    }
-
-    avanzarProgreso(clave, "unir", "Colocando cada acorde sobre su palabra…");
-    const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
-    const letraConfianza = confianzaGlobal(lineas, fuenteLetra);
-    const analisisFinal = analisis
-      ? {
-          ...analisis,
-          letra: {
-            fuente: fuenteLetra,
-            modelo: transcripcion.modelo,
-            idioma: transcripcion.idioma,
-            transcritaEn: new Date().toISOString(),
-            lineas: lineas.slice(0, 400).map((l) => ({ t0: l.t0, t1: l.t1, texto: l.texto })),
-          },
-        }
-      : undefined;
-
-    const guardada = await dbUpsertSong(
-      {
-        ...song,
-        cifradoTexto,
-        guiaSustituto: { ...(song.guiaSustituto || {}), origenCifrado: "audio_real", cifradoAproximado: true, letraConfianza },
-        ...(analisisFinal ? { analisisAcordes: analisisFinal } : {}),
-      },
-      userBandId
-    );
-
-    res.json({
-      success: true,
-      cifradoTexto,
-      letraConfianza,
-      fuenteLetra,
-      idioma: transcripcion.idioma,
-      modelo: transcripcion.modelo,
-      lineas: lineas.length,
-      conAcordes: Boolean(analisis),
-      avisoAcordes,
-      analisis: analisisFinal ?? analisis ?? null,
-      song: guardada,
-    });
+    res.json(await resumenCola(getTargetBandId(req)));
   } catch (err: any) {
-    console.error("Error en letra-sincronizada:", err);
-    res.status(500).json({ error: err?.message || "No se pudo procesar la letra." });
-  } finally {
-    terminarProgreso(clave, res.statusCode >= 400 ? "No se pudo completar" : undefined);
-    analisisAcordesEnCurso.delete(clave);
+    res.status(500).json({ error: err?.message || "No se pudo leer la cola de letras." });
+  }
+});
+
+router.post("/letras/cola", requireAuth, async (req, res) => {
+  try {
+    const songIds = Array.isArray(req.body?.songIds) ? req.body.songIds.filter((x: unknown) => typeof x === "string") : undefined;
+    res.json(await encolarLetras(getTargetBandId(req), { songIds, origen: "manual" }));
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || "No se pudo encolar las letras." });
+  }
+});
+
+router.delete("/letras/cola", requireAuth, async (req, res) => {
+  try {
+    res.json({ canceladas: await cancelarCola(getTargetBandId(req)) });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || "No se pudo cancelar la cola." });
+  }
+});
+
+router.put("/letras/auto", requireAuth, async (req, res) => {
+  try {
+    if (typeof req.body?.activado !== "boolean") return res.status(400).json({ error: "Falta «activado» (true/false)." });
+    await dbSetLetrasAuto(getTargetBandId(req), req.body.activado);
+    res.json({ activado: req.body.activado });
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || "No se pudo guardar el ajuste." });
   }
 });
 
