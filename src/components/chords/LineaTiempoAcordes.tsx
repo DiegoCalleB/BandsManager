@@ -381,7 +381,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             ref={(el) => { chipsRef.current[i] = el; }}
             type="button"
             onClick={() => alTocar(i)}
-            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %${armonia?.porTramo[i] ? ` · ${explicarAcorde(armonia.porTramo[i]!, nombre(seg.acorde), nombreTonalidad ?? '')}` : ''}`}
+            title={`${formatearTiempo(seg.t0)} – ${formatearTiempo(seg.t1)} · confianza ${Math.round(seg.confianza * 100)} %${armonia?.porTramo[i] ? ` · ${explicarAcorde(armonia.porTramo[i]!, nombre(seg.acorde), nombreTonalidad ?? '', estilo?.grados ?? 'simple')}` : ''}`}
             className={`shrink-0 px-2 py-1 rounded-[var(--r-s)] text-left cursor-pointer transition-ui ${
               i === actual
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]'

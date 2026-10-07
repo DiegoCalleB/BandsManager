@@ -187,3 +187,20 @@ describe('chordUtils', () => {
     });
   });
 });
+
+import { buscarFormaGuitarra as _buscar, extractUniqueChords as _extraer } from '../chordUtils';
+
+describe('diagramas: enarmónicos y marcas de sección', () => {
+  it('Sol# usa la forma de Lab; La#m la de Sibm; Re# la de Mib', () => {
+    expect(_buscar('Sol#')).toBeDefined();
+    expect(_buscar('La#m')).toBeDefined();
+    expect(_buscar('Re#m')).toBeDefined();
+    expect(_buscar('La#')?.frets).toEqual(_buscar('Sib')?.frets);
+  });
+  it('un bajo de slash usa la forma del acorde base', () => {
+    expect(_buscar('Sol/Si')?.frets).toEqual(_buscar('Sol')?.frets);
+  });
+  it('[Instrumental] no es un acorde', () => {
+    expect(_extraer('[Instrumental]\n[Sol] letra [Lam]')).toEqual(['Sol', 'Lam']);
+  });
+});

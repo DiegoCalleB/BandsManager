@@ -41,7 +41,7 @@ export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, pr
     {resumen && <span className="font-bold text-[var(--ink)]">{resumen}</span>}
     <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Mostrar acordes como">
       <Opcion valor="nombre" actual={estilo.mostrar} etiqueta="Acorde" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} />
-      <Opcion valor="grado" actual={estilo.mostrar} etiqueta="Grado" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} titulo="Números romanos: I, IV, V, bVII…" />
+      <Opcion valor="grado" actual={estilo.mostrar} etiqueta="Grado" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} titulo="Números romanos: I, IV, V, VII…" />
       <Opcion valor="ambos" actual={estilo.mostrar} etiqueta="Ambos" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} />
     </span>
     {estilo.mostrar !== 'nombre' && (
@@ -87,7 +87,7 @@ export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, pr
           </li>
         ))}
       </ul>
-      <p className="text-[var(--ink-2)]">En el ordenador, pasa el ratón por un acorde para ver por qué tiene su color; en cualquier dispositivo, la pestaña «Armonía» lo explica acorde por acorde. «Grado» es el número romano: mayúscula = acorde mayor, minúscula = menor, «b» = bajado medio tono.</p>
+      <p className="text-[var(--ink-2)]">En el ordenador, pasa el ratón por un acorde para ver por qué tiene su color; en cualquier dispositivo, la pestaña «Armonía» lo explica acorde por acorde. «Grado» es el número romano: mayúscula = acorde mayor, minúscula = menor.</p>
     </div>
   )}
   </div>

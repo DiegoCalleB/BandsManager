@@ -1,4 +1,4 @@
-import type { Funcion } from './teoriaArmonica';
+import { simplificarGrado, type Funcion } from './teoriaArmonica';
 
 /** Cómo se muestran los acordes en el visor: como nombre, como grado romano o ambos; con o sin color por función. */
 export interface EstiloArmonia {
@@ -57,5 +57,5 @@ export function textoDeAcorde(nombre: string, grado: string | null | undefined, 
  */
 export function gradoVisible(grado: string, estilo?: Pick<EstiloArmonia, 'grados'>): string {
   if ((estilo?.grados ?? ESTILO_POR_DEFECTO.grados) !== 'simple') return grado;
-  return grado.replace(/(^|\/)[b#](?=[ivIV])/g, '$1');
+  return simplificarGrado(grado);
 }

@@ -187,6 +187,11 @@ export function analizarAcorde(acorde: string, tonalidad: Tonalidad, siguiente?:
 
 // ── Explicar un acorde ─────────────────────────────────────────────────────────────────────────
 
+/** Quita la b/# de un grado romano («bVII» → «VII», «V/bVI» → «V/VI»). */
+export function simplificarGrado(grado: string): string {
+  return grado.replace(/(^|\/)[b#](?=[ivIV])/g, '$1');
+}
+
 const PREFIJO_GRADO = /^([#b]?)([IViv]+)/;
 const SEMITONOS_GRADO: Record<string, number> = { I: 0, II: 2, III: 4, IV: 5, V: 7, VI: 9, VII: 11 };
 
@@ -205,6 +210,11 @@ const NOMBRE_POSICION: Record<number, string> = {
   10: 'el 7.º grado bajado', 11: 'el 7.º grado (la sensible)',
 };
 
+/** Igual que NOMBRE_POSICION pero sin «bajado/subido»: para quien ve los grados sin b ni #. */
+const NOMBRE_POSICION_SIMPLE: Record<number, string> = {
+  ...NOMBRE_POSICION, 1: 'el 2.º grado', 3: 'el 3.er grado', 6: 'el 4.º grado', 8: 'el 6.º grado', 10: 'el 7.º grado',
+};
+
 const MOTIVO_FUNCION: Record<Funcion, string> = {
   T: 'es un acorde de reposo: aquí la música se siente «en casa».',
   S: 'te aleja de casa sin tensión: prepara el camino hacia el dominante o vuelve a la tónica.',
@@ -218,13 +228,21 @@ const MOTIVO_FUNCION: Record<Funcion, string> = {
  * hace esa posición. `nombreAcorde` y `nombreTonalidad` son los que se ven en pantalla (ya
  * transpuestos y en el idioma elegido).
  */
-export function explicarAcorde(a: { grado: string; funcion: Funcion; secundario?: string }, nombreAcorde: string, nombreTonalidad: string): string {
+export function explicarAcorde(
+  a: { grado: string; funcion: Funcion; secundario?: string },
+  nombreAcorde: string,
+  nombreTonalidad: string,
+  grados: 'simple' | 'completo' = 'completo',
+): string {
+  const simple = grados === 'simple';
+  const quitarAlteracion = (g: string) => (simple ? simplificarGrado(g) : g);
   const intervalo = intervaloDeGrado(a.grado);
-  const posicion = intervalo === null ? 'un grado' : NOMBRE_POSICION[intervalo];
-  const base = `${nombreAcorde} (${a.grado}) es ${posicion} de ${nombreTonalidad}: `;
+  const posicion = intervalo === null ? 'un grado' : (simple ? NOMBRE_POSICION_SIMPLE : NOMBRE_POSICION)[intervalo];
+  const base = `${nombreAcorde} (${quitarAlteracion(a.grado)}) es ${posicion} de ${nombreTonalidad}: `;
   if (a.secundario) {
-    const destino = a.secundario.replace(/^V\//, '');
-    return `${base}está a una quinta por encima de ${destino} y tira hacia él (dominante secundario ${a.secundario}), por eso cuenta como dominante.`;
+    const sec = quitarAlteracion(a.secundario);
+    const destino = sec.replace(/^V\//, '');
+    return `${base}está a una quinta por encima de ${destino} y tira hacia él (dominante secundario ${sec}), por eso cuenta como dominante.`;
   }
   return `${base}${MOTIVO_FUNCION[a.funcion]}`;
 }
@@ -290,11 +308,11 @@ export interface Modo {
 
 const MODOS: Record<ModoId, { nombre: string; rasgo: string }> = {
   jonico: { nombre: 'mayor (jónico)', rasgo: 'la escala mayor de siempre: luminosa y estable' },
-  mixolidio: { nombre: 'mixolidio', rasgo: 'mayor con séptima menor (bVII): sonido de rock y blues, sin tensión de sensible' },
-  lidio: { nombre: 'lidio', rasgo: 'mayor con cuarta aumentada (#IV): sonido etéreo, de cine' },
+  mixolidio: { nombre: 'mixolidio', rasgo: 'mayor con séptima menor: sonido de rock y blues, sin tensión de sensible' },
+  lidio: { nombre: 'lidio', rasgo: 'mayor con cuarta aumentada: sonido etéreo, de cine' },
   eolico: { nombre: 'menor natural (eólico)', rasgo: 'el menor «de toda la vida»: oscuro y melancólico' },
   dorico: { nombre: 'dórico', rasgo: 'menor con sexta mayor: menor pero con luz, típico del funk y el rock modal' },
-  frigio: { nombre: 'frigio', rasgo: 'menor con segunda menor (bII): sonido flamenco y de metal' },
+  frigio: { nombre: 'frigio', rasgo: 'menor con segunda menor: sonido flamenco y de metal' },
 };
 
 /** Desplazamiento de la tónica de cada modo hasta la tónica de su escala mayor «padre». */

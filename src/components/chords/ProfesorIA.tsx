@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GraduationCap } from 'lucide-react';
 import type { AnalisisAcordes } from '../../types';
 import { Button } from '../ui/Button';
+import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
 
 type Profesor = NonNullable<AnalisisAcordes['profesor']>;
 
@@ -33,7 +34,7 @@ const Lista: React.FC<{ titulo: string; items: string[]; idea?: boolean }> = ({ 
  */
 export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir }) => {
   const [nivel, setNivel] = useState<Profesor['nivel']>(profesor?.nivel ?? 'intermedio');
-  const [instrumento, setInstrumento] = useState<Profesor['instrumento']>(profesor?.instrumento ?? 'guitarra');
+  const [instrumento, setInstrumento] = useState<Profesor['instrumento']>(profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra');
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

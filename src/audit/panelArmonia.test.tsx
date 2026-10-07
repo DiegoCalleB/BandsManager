@@ -19,7 +19,7 @@ describe('PanelArmonia', () => {
   });
 
   it('cada acorde lleva su grado, su función y qué tocar encima', () => {
-    expect(html).toContain('bVII');
+    expect(html).toContain('VII');
     expect(html).toContain('Color modal');
     expect(html).toContain('Pentatónica');
     expect(html).toMatch(/notas guía/);
@@ -33,7 +33,7 @@ describe('PanelArmonia', () => {
   it('la transposición cambia los nombres de nota, no los grados', () => {
     const t = renderToStaticMarkup(<PanelArmonia armonia={armonia} notation="EN" transpose={2} />);
     expect(t).toContain('F# mayor'); // E +2
-    expect(t).toContain('bVII');
+    expect(t).toContain('VII');
   });
 
   it('sin bordes y solo tokens de color (ley 1 del sistema de diseño)', () => {
@@ -94,7 +94,8 @@ describe('explicar los colores', () => {
     const h = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} />);
     expect(h).toContain('Mi (I) es la tónica (el «1») de Mi mayor');
     expect(h).toMatch(/La \(IV\) es el 4\.º grado de Mi mayor: te aleja de casa/);
-    expect(h).toMatch(/Re \(bVII\) es el 7\.º grado bajado de Mi mayor: no pertenece a la escala/);
+    expect(h).toMatch(/Re \(VII\) es el 7\.º grado de Mi mayor: no pertenece a la escala/);
+    expect(h).not.toMatch(/\b[b#][ivIV]/);
   });
 
   it('la leyenda ofrece «¿Por qué estos colores?» y, desplegada, dice que el color depende del lugar en la tonalidad y da ejemplos', () => {

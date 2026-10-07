@@ -51,3 +51,13 @@ describe('gradoVisible', () => {
     expect(gradoVisible('bIII', { grados: 'completo' })).toBe('bIII');
   });
 });
+
+describe('explicarAcorde sin b ni #', () => {
+  it('en modo simple no escribe b/# ni «bajado»; en completo sí', async () => {
+    const { explicarAcorde } = await import('../teoriaArmonica');
+    const a = { grado: 'bVII', funcion: 'M' as const };
+    expect(explicarAcorde(a, 'Re', 'Mi mayor', 'simple')).toMatch(/^Re \(VII\) es el 7\.º grado de Mi mayor/);
+    expect(explicarAcorde(a, 'Re', 'Mi mayor', 'completo')).toMatch(/^Re \(bVII\) es el 7\.º grado bajado de Mi mayor/);
+    expect(explicarAcorde({ grado: 'D', funcion: 'D', secundario: 'V/bVI' } as never, 'X', 'Y', 'simple')).toContain('V/VI');
+  });
+});

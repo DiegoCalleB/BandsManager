@@ -47,7 +47,7 @@ import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructur
 import {
   processChordText,
   extractUniqueChords,
-  GUITAR_CHORD_DATABASE,
+  buscarFormaGuitarra,
   GuitarChordShape,
   transposeChordToken,
   parseRootNote,
@@ -1458,7 +1458,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
             {texto.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{texto.secundario}</sup>}
           </>
         );
-        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad)}` : "";
+        const funcionTitulo = info && armonia ? ` · ${explicarAcorde(info, chordName, armonia.nombreTonalidad, armonia.estilo.grados)}` : "";
         if (sync && par && sync.tiempos[k] !== undefined) {
           const instante = sync.tiempos[k];
           return (
@@ -1554,7 +1554,7 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
 // COMPONENT TO RENDER A SINGLE GUITAR CHORD BOX/FRETBOARD DIAGRAM
 const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
   // Look up in database or clean name
-  const shape: GuitarChordShape | undefined = GUITAR_CHORD_DATABASE[chord];
+  const shape: GuitarChordShape | undefined = buscarFormaGuitarra(chord);
 
   return (
     <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition">
