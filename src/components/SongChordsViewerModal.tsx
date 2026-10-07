@@ -35,6 +35,9 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
+import { TecladoAcorde, BajoAcorde, SelectorVistaAcorde } from "./chords/AcordeEnInstrumento";
+import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
+import type { VistaAcorde } from "../utils/vistaAcordes";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
@@ -78,6 +81,7 @@ export function SongChordsViewerModal({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Show Chord Diagrams drawer/panel
+  const [vistaAcordes, setVistaAcordes] = useState<VistaAcorde>(() => { const i = instrumentoDelUsuario(); return i === "teclado" || i === "bajo" ? i : "guitarra"; });
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(() => typeof window === "undefined" || window.innerWidth >= 768);
 
   // Edit form state
@@ -1296,7 +1300,7 @@ export function SongChordsViewerModal({
               <div className="w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
                 <div className="flex items-center justify-between pb-2">
                   <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <ShowIcon inline emoji="🎸" />Posiciones de Acordes ({uniqueChords.length})
+                    <ShowIcon inline emoji="🎸" />Acordes ({uniqueChords.length})
                   </span>
                   <button
                     type="button"
@@ -1307,6 +1311,8 @@ export function SongChordsViewerModal({
                   </button>
                 </div>
 
+                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
+
                 {uniqueChords.length === 0 ? (
                   <p className="text-xs text-[var(--ink-2)] font-sans italic">
                     No se detectaron acordes en el texto.
@@ -1314,7 +1320,7 @@ export function SongChordsViewerModal({
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
                     {uniqueChords.map((chord) => (
-                      <ChordDiagramBox key={chord} chord={chord} />
+                      <ChordDiagramBox key={chord} chord={chord} vista={vistaAcordes} />
                     ))}
                   </div>
                 )}
@@ -1552,7 +1558,15 @@ export function renderFormattedChordSheet(text: string, letra?: SincronizacionLe
 }
 
 // COMPONENT TO RENDER A SINGLE GUITAR CHORD BOX/FRETBOARD DIAGRAM
-const ChordDiagramBox: React.FC<{ chord: string }> = ({ chord }) => {
+const ChordDiagramBox: React.FC<{ chord: string; vista?: VistaAcorde }> = ({ chord, vista = "guitarra" }) => {
+  if (vista !== "guitarra") {
+    return (
+      <div translate="no" className="notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5">
+        <div className="text-xs font-bold text-[var(--acc)] font-sans">{chord}</div>
+        {vista === "teclado" ? <TecladoAcorde acorde={chord} /> : <BajoAcorde acorde={chord} />}
+      </div>
+    );
+  }
   // Look up in database or clean name
   const shape: GuitarChordShape | undefined = buscarFormaGuitarra(chord);
 
