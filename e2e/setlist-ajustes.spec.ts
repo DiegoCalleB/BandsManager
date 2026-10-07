@@ -62,12 +62,12 @@ test('con ajustes de la banda, un cambio se guarda tras el debounce', async ({ p
   await expect.poll(() => guardados.length, { timeout: 10_000 }).toBeGreaterThan(0);
 
   const ultimo = guardados.at(-1) as Record<string, unknown>;
-  expect(ultimo).toMatchObject({ textAlign: 'center', showBpm: true, columnsChoice: 'auto', handwritingColor: 'blue' });
+  expect(ultimo).toMatchObject({ textAlign: 'center', showBpm: true, columnsChoice: 'auto', handwritingColor: 'blue', badgesScope: 'all', markedSongs: {} });
   // Solo claves de la lista blanca, nada de ruido (p. ej. el nº de hojas no se recuerda).
   expect(Object.keys(ultimo).sort()).toEqual(
     [
-      'columnsChoice', 'handwritingColor', 'handwritingFont', 'showAppBranding', 'showBandLogo', 'showBpm',
-      'showDuration', 'showGeneralNotes', 'showTonality', 'showWatermark', 'textAlign',
+      'badgesScope', 'columnsChoice', 'handwritingColor', 'handwritingFont', 'showAppBranding', 'showBandLogo', 'showBpm',
+      'markedSongs', 'showDuration', 'showGeneralNotes', 'showTonality', 'showWatermark', 'textAlign',
     ].sort(),
   );
 });

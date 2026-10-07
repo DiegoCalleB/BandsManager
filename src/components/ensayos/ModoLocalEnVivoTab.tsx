@@ -46,7 +46,7 @@ import {
   processChordText,
   transposeChordToken,
 } from "../../utils/chordUtils";
-import { SongChordsViewerModal } from "../SongChordsViewerModal";
+import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { programarClic } from '../../utils/clicMetronomo';
@@ -962,10 +962,11 @@ export function ModoLocalEnVivoTab({
             {/* Scrollable Chord Content Container */}
             <div
               ref={atrilScrollRef}
-              className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
+              translate="no"
+              className={`notranslate whitespace-pre-wrap overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
             >
               {rawChordText ? (
-                renderFormattedChords(rawChordText, transpose, notation)
+                renderFormattedChordSheet(processChordText(rawChordText, transpose, notation))
               ) : (
                 <p className="text-sm text-[var(--ink-2)] italic py-6">
                   Esta canción aún no tiene cifrado. Ábrela en Repertorio → Acordes para escribirlo, subir un PDF o
@@ -1038,8 +1039,9 @@ export function ModoLocalEnVivoTab({
 
       {/* Chords Viewer & Editor Modal */}
       {editingSongModal && (
-        <SongChordsViewerModal
-          song={editingSongModal}
+        <Atril
+          cancion={editingSongModal}
+          modo="Ensayar"
           onClose={() => setEditingSongModal(null)}
           onUpdateSong={(updated) => {
             if (onUpdateSong) {
@@ -1051,46 +1053,4 @@ export function ModoLocalEnVivoTab({
       )}
     </div>
   );
-}
-
-// RENDER CHORDS WITH HIGHLIGHTING & SECTION BADGES
-function renderFormattedChords(
-  text: string,
-  transpose: number,
-  notation: "ES" | "EN",
-) {
-  if (!text) return null;
-
-  const lines = text.split("\n");
-
-  return lines.map((rawLine, idx) => {
-    const line = rawLine.trimEnd();
-
-    // Empty line spacer
-    if (!line.trim()) {
-      return <div key={idx} className="h-3" />;
-    }
-
-    // Section header e.g. [Intro], [Verso 1], [Estribillo], [Solo], [Puente], [Outro]
-    if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
-      return (
-        <div key={idx} className="pt-3 pb-1">
-          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] text-xs font-sans font-bold">
-            {line.trim()}
-          </span>
-        </div>
-      );
-    }
-
-    // Check if line contains chords or is a pure chords line
-    const processedLine = processChordText(line, transpose, notation);
-
-    return (
-      <div
-        key={idx}
-        className="text-[var(--ink)] py-0.5 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: processedLine }}
-      />
-    );
-  });
 }

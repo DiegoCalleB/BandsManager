@@ -6,6 +6,7 @@ import {
   resolveBandMembers,
   getSongMemberNote,
   getMemberReadiness,
+  isSongMarkedForMember,
   getReadinessSummary,
   READINESS_LEVELS,
   ReadinessLevel,
@@ -63,6 +64,18 @@ export function MemberNotesModal({
     });
     return initial;
   });
+
+  // "Quiero ver tono/BPM de esta canción en mi hoja": mismo patrón de clave (nombre en minúsculas).
+  const [memberShowKey, setMemberShowKey] = useState<Record<string, boolean>>(
+    () => {
+      const initial: Record<string, boolean> = {};
+      if (!song) return initial;
+      resolvedMembers.forEach((m) => {
+        initial[m.name.toLowerCase()] = isSongMarkedForMember(song, m.id, m.name);
+      });
+      return initial;
+    },
+  );
 
   const [newMemberName, setNewMemberName] = useState<string>("");
   const [newMemberInstrument, setNewMemberInstrument] = useState<string>("");
@@ -136,6 +149,7 @@ export function MemberNotesModal({
     allMembersToDisplay.forEach((member) => {
       const key = member.name.toLowerCase();
       const estado = memberReadiness[key];
+      const mostrarTono = memberShowKey[key] === true;
       const idx = updatedNotasPorMiembro.findIndex(
         (n) =>
           (member.id && n.userId === member.id) ||
@@ -160,6 +174,29 @@ export function MemberNotesModal({
       } else if (idx >= 0) {
         const { estadoPreparacion, ...rest } = updatedNotasPorMiembro[idx];
         updatedNotasPorMiembro[idx] = rest;
+      }
+
+      // Marca de tono/BPM: se aplica sobre la entrada ya resuelta (o crea una vacía si hace falta).
+      const idx2 = updatedNotasPorMiembro.findIndex(
+        (n) =>
+          (member.id && n.userId === member.id) ||
+          (n.memberName && n.memberName.toLowerCase() === key),
+      );
+      if (mostrarTono) {
+        if (idx2 >= 0) {
+          updatedNotasPorMiembro[idx2] = { ...updatedNotasPorMiembro[idx2], mostrarTono: true };
+        } else {
+          updatedNotasPorMiembro.push({
+            userId: member.id,
+            memberName: member.name,
+            nota: "",
+            mostrarTono: true,
+            updatedAt: new Date().toISOString(),
+          });
+        }
+      } else if (idx2 >= 0 && updatedNotasPorMiembro[idx2].mostrarTono) {
+        const { mostrarTono: _quitar, ...rest2 } = updatedNotasPorMiembro[idx2];
+        updatedNotasPorMiembro[idx2] = rest2;
       }
     });
 
@@ -407,6 +444,20 @@ export function MemberNotesModal({
                         </button>
                       ))}
                     </div>
+
+                    <label className="flex items-center gap-2 mb-2 text-micro font-sans text-[var(--ink-2)] cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={memberShowKey[memberKey] === true}
+                        onChange={(e) =>
+                          setMemberShowKey((prev) => ({
+                            ...prev,
+                            [memberKey]: e.target.checked,
+                          }))
+                        }
+                      />
+                      Mostrar tono y BPM en mi hoja impresa (me da dudas)
+                    </label>
 
                     <Textarea
                       rows={2}

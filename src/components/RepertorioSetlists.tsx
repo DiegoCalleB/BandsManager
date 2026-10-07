@@ -99,7 +99,7 @@ import { Button, Chip, IconButton, Input, MenuItem, Select, ShowIcon } from './u
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import SongStudioModal from "./SongStudioModal";
-import { SongChordsViewerModal } from "./SongChordsViewerModal";
+import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
 import { useShareModal } from "../hooks/useShareModal";
 import { useCatalogFilters } from "../hooks/useCatalogFilters";
@@ -6282,8 +6282,9 @@ export default function RepertorioSetlists({
         />
       )}
       {activeChordsSong && (
-        <SongChordsViewerModal
-          song={activeChordsSong}
+        <Atril
+          cancion={activeChordsSong}
+          modo="Estudiar"
           onClose={() => setActiveChordsSong(null)}
           onUpdateSong={handleUpdateSongFromChords}
         />

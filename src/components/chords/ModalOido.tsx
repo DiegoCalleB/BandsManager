@@ -27,8 +27,8 @@ const PORQUE: Record<string, string> = {
 };
 
 const TITULO: Record<ProgresoOido['tarea'], string> = {
-  acordes: 'El Oído está escuchando tu canción',
-  letra: 'El Oído está sacando la letra y los acordes',
+  acordes: 'Chordscribe está escuchando tu canción',
+  letra: 'Chordscribe está sacando la letra y los acordes',
 };
 
 /** Consulta el progreso mientras `activo`; el servidor lo anota, la petición larga sigue su curso. */
@@ -93,7 +93,7 @@ export const ModalOido: React.FC<Props> = ({ abierto, tarea, songId, titulo, onO
             {falla ? <AlertTriangle className="w-5 h-5" /> : <Ear className="w-5 h-5" />}
           </span>
           <div className="min-w-0">
-            <h2 className="font-bold leading-tight">{falla ? 'El Oído no ha podido con esta' : TITULO[tarea]}</h2>
+            <h2 className="font-bold leading-tight">{falla ? 'Chordscribe no ha podido con esta' : TITULO[tarea]}</h2>
             <p className="text-sm text-[var(--ink-2)] truncate">«{titulo}»</p>
           </div>
         </div>

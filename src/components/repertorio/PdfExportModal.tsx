@@ -25,10 +25,12 @@ import {
   Columns2,
 } from "lucide-react";
 import { Setlist, Song, ThemeColors } from "../../types";
+import { buildQrSvg } from "../../utils/qrSvg";
 import {
   BandMemberOption,
   resolveBandMembers,
   getSongMemberNote,
+  isSongMarkedForMember,
 } from "../../utils/repertorioUtils";
 import { MemberNotesModal } from "./MemberNotesModal";
 import { ModalPortal } from "../common/ModalPortal";
@@ -438,6 +440,10 @@ function PdfExportModalBody({
   const [showTonality, setShowTonality] = useState<boolean>(false);
   const [showBpm, setShowBpm] = useState<boolean>(false);
   const [showDuration, setShowDuration] = useState<boolean>(false);
+  // Tono/BPM en todos los temas o solo en los que cada músico marca (los que le generan dudas).
+  const [badgesScope, setBadgesScope] = useState<"all" | "marked">("all");
+  const [markedSongs, setMarkedSongs] = useState<Record<string, string[]>>({});
+  const [showMarksPanel, setShowMarksPanel] = useState(false);
   const [showSetlistNotes, setShowSetlistNotes] = useState<boolean>(true);
   // Notas generales de la canción (las del repertorio, no las del bolo ni las de cada músico).
   const [showGeneralNotes, setShowGeneralNotes] = useState<boolean>(true);
@@ -468,6 +474,8 @@ function PdfExportModalBody({
     showAppBranding,
     handwritingFont,
     handwritingColor,
+    badgesScope,
+    markedSongs,
   };
   const printSettingsKey = JSON.stringify(currentPrintSettings);
   // "off": no hay base de datos (desarrollo local) o falló la carga: se usa sin recordar nada.
@@ -495,6 +503,8 @@ function PdfExportModalBody({
         setShowAppBranding(s.showAppBranding);
         setHandwritingFont(s.handwritingFont);
         setHandwritingColor(s.handwritingColor);
+        setBadgesScope(s.badgesScope);
+        setMarkedSongs(s.markedSongs);
         lastSavedRef.current = JSON.stringify(s);
         setPersist("on");
       })
@@ -568,6 +578,8 @@ function PdfExportModalBody({
     showTonality,
     showBpm,
     showDuration,
+    badgesScope,
+    markedSongs,
     showSetlistNotes,
     showGeneralNotes,
     showAppBranding,
@@ -726,11 +738,18 @@ function PdfExportModalBody({
         // Tono/BPM/duración escalan con el título: a 14pt de título, unos badges de 11pt fijos
         // parecían casi tan grandes como la propia canción.
         const badgePt = Math.max(7.5, Math.min(12, titleFontPt * 0.5));
+        // Con "solo marcados", tono y BPM salen únicamente en los temas que ese músico marcó.
+        const songMarked =
+          badgesScope === "all" ||
+          (markedSongs[member.id] ?? []).includes(s.id) ||
+          isSongMarkedForMember(s, member.id, member.name);
+        const keyHere = showTonality && songMarked;
+        const bpmHere = showBpm && songMarked;
         const badges: NoteLayoutBadge[] = [
-          ...(showTonality && s.tonalidad
+          ...(keyHere && s.tonalidad
             ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 1), extraWidthPx: 22 }]
             : []),
-          ...(showBpm && s.bpm
+          ...(bpmHere && s.bpm
             ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(badgePt), extraWidthPx: 12 }]
             : []),
           ...(showDuration && s.duracion
@@ -738,10 +757,10 @@ function PdfExportModalBody({
             : []),
         ];
         const badgesHtml = [
-          showTonality && s.tonalidad
+          keyHere && s.tonalidad
             ? `<span class="tag-tonality" style="font-size:${badgePt + 1}pt;">${escapeHtml(s.tonalidad)}</span>`
             : "",
-          showBpm && s.bpm
+          bpmHere && s.bpm
             ? `<span class="tag-bpm" style="font-size:${badgePt}pt;">${escapeHtml(s.bpm)} BPM</span>`
             : "",
           showDuration && s.duracion
@@ -842,10 +861,10 @@ function PdfExportModalBody({
                 <div class="song-left">
                   ${numberText ? `<span class="song-num" style="font-size:${deriveSongNumFontPt(titleFontPt)}pt;">${numberText}</span>` : ""}
                   <span class="song-title" style="${titleStyle}">${escapeHtml(s.titulo.toUpperCase())}</span>
-                  ${isCentered && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
+                  ${(isCentered || badgesScope === "marked") && badgesHtml ? `<span class="badges-inline">${badgesHtml}</span>` : ""}
                 </div>
                 ${layout && layout.mode === "inline" ? notesHtml : ""}
-                ${!isCentered && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
+                ${!isCentered && badgesScope !== "marked" && badgesHtml ? `<div class="song-badges">${badgesHtml}</div>` : ""}
               </div>
               ${layout && layout.mode === "below" ? notesHtml : ""}
             </div>
@@ -1351,6 +1370,8 @@ function PdfExportModalBody({
  align-items: center;
  gap: 6px;
  }
+ .footer-qr { display: inline-flex; line-height: 0; }
+ .footer-qr svg { display: block; }
  .app-logo-badge {
  font-weight: 900;
  color: #000;
@@ -1399,6 +1420,7 @@ function PdfExportModalBody({
  white-space: nowrap;
  margin-left: 10px;
  }
+ .song-left > .badges-inline { flex-shrink: 0; margin-left: 4px; }
  .badges-inline > span + span {
  margin-left: 8px;
  }
@@ -1504,6 +1526,9 @@ function PdfExportModalBody({
         </div>
       `;
 
+    // El mismo SVG en todas las hojas: se genera una vez por documento.
+    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io", 11) : "";
+
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
       pageNum: number,
@@ -1513,9 +1538,10 @@ function PdfExportModalBody({
         ? `
         <div class="page-footer ${isCentered ? "is-centered" : ""}">
           <div class="footer-left">
+            <span class="footer-qr">${footerQrSvg}</span>
             <span class="app-logo-badge">⚡ BandManager</span>
             <span class="footer-sep">•</span>
-            <a href="https://www.bandmanager.app" target="_blank" class="app-link">www.bandmanager.app</a>
+            <a href="https://bandmanager.io" target="_blank" class="app-link">bandmanager.io</a>
           </div>
           <div class="footer-right">
             <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
@@ -2348,6 +2374,35 @@ function PdfExportModalBody({
                   />
                   <span>Pie BandManager</span>
                 </label>
+                {(showTonality || showBpm) && (
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <div className="flex items-center gap-1 p-0.5 rounded-[var(--r-m)] bg-[var(--surface)]">
+                      <Button
+                        variant={badgesScope === "all" ? "neutral" : "ghost"}
+                        size="xs"
+                        onClick={() => setBadgesScope("all")}
+                      >
+                        En todos los temas
+                      </Button>
+                      <Button
+                        variant={badgesScope === "marked" ? "neutral" : "ghost"}
+                        size="xs"
+                        onClick={() => {
+                          setBadgesScope("marked");
+                          setShowMarksPanel(true);
+                        }}
+                      >
+                        Solo marcados
+                      </Button>
+                    </div>
+                    {badgesScope === "marked" && (
+                      <Button variant="ghost" size="xs" onClick={() => setShowMarksPanel((v) => !v)}>
+                        {showMarksPanel ? "Ocultar temas" : "Elegir temas"} (
+                        {(markedSongs[currentPreviewMember.id] ?? []).length})
+                      </Button>
+                    )}
+                  </div>
+                )}
                 {saveFailed && (
                   <span className="text-xs text-[var(--alert)]" role="status">
                     No se pudieron guardar estos ajustes para la banda.
@@ -2357,6 +2412,85 @@ function PdfExportModalBody({
             </div>
           </div>
 
+
+          {(showTonality || showBpm) && badgesScope === "marked" && showMarksPanel && (
+            <div className="px-3 sm:px-6 py-2 shrink-0 text-xs font-sans border-t border-[var(--line)]">
+              <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                <span className="font-bold text-[var(--ink-2)]">
+                  Tono/BPM visibles para {currentPreviewMember.name}:
+                </span>
+                <span className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() =>
+                      setMarkedSongs((m) => ({
+                        ...m,
+                        [currentPreviewMember.id]: activeSetlist.items
+                          .filter((it) => it.tipoItem === "cancion" && it.songId)
+                          .map((it) => it.songId as string),
+                      }))
+                    }
+                  >
+                    Todos
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() =>
+                      setMarkedSongs((m) => {
+                        const { [currentPreviewMember.id]: _drop, ...rest } = m;
+                        return rest;
+                      })
+                    }
+                  >
+                    Ninguno
+                  </Button>
+                </span>
+              </div>
+              <div className="max-h-28 overflow-y-auto sm:columns-2 gap-x-4 [&>label]:break-inside-avoid [&>label]:py-0.5">
+                {activeSetlist.items
+                  .filter((it) => it.tipoItem === "cancion" && it.songId)
+                  .map((it, i) => {
+                    const song = songs.find((x) => x.id === it.songId);
+                    if (!song) return null;
+                    const byMusician = isSongMarkedForMember(song, currentPreviewMember.id, currentPreviewMember.name);
+                    const marked = byMusician || (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
+                    return (
+                      <label
+                        key={`${song.id}-${i}`}
+                        title={byMusician ? `Lo marcó ${currentPreviewMember.name} desde sus notas` : undefined}
+                        className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none min-w-0"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={marked}
+                          disabled={byMusician}
+                          onChange={(e) =>
+                            setMarkedSongs((m) => {
+                              const cur = new Set(m[currentPreviewMember.id] ?? []);
+                              if (e.target.checked) cur.add(song.id);
+                              else cur.delete(song.id);
+                              return { ...m, [currentPreviewMember.id]: Array.from(cur) };
+                            })
+                          }
+                          className="rounded accent-[var(--ok)] cursor-pointer"
+                        />
+                        <span className="truncate">
+                          {song.titulo}
+                          {(song.tonalidad || song.bpm) && (
+                            <span className="text-[var(--ink-3)]">
+                              {" "}
+                              · {[song.tonalidad, song.bpm ? `${song.bpm} BPM` : ""].filter(Boolean).join(" ")}
+                            </span>
+                          )}
+                        </span>
+                      </label>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
           {/* Pager Navigation for Multiple Sheets — recortado en móvil: sin el texto largo"Previsualizando hoja X de Y", y los botones Anterior/Siguiente solo con icono (el
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
           {membersToExport.length > 1 && (

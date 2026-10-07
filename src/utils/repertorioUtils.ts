@@ -312,6 +312,23 @@ export function getMemberReadiness(
   return found?.estadoPreparacion || null;
 }
 
+/** ¿Este miembro marcó esta canción para ver tono/BPM en su hoja impresa? */
+export function isSongMarkedForMember(
+  song?: any,
+  memberKey?: string,
+  memberName?: string,
+): boolean {
+  if (!song || !Array.isArray(song.notasPorMiembro)) return false;
+  return song.notasPorMiembro.some(
+    (n: any) =>
+      n.mostrarTono === true &&
+      ((memberKey && n.userId === memberKey) ||
+        (memberName &&
+          n.memberName &&
+          n.memberName.toLowerCase() === memberName.toLowerCase())),
+  );
+}
+
 /** Devuelve el array notasPorMiembro actualizado con el nuevo nivel de preparación de un miembro,
  * sin tocar la nota de texto libre que ya tuviera. Quien llama debe guardar el resultado (p.ej.
  * onUpdateSong({ ...song, notasPorMiembro: nuevoArray })) — esta función no muta nada. */

@@ -88,7 +88,7 @@ const IrisPrismBanner: React.FC = () => {
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }}
         />
-        <span>Iris Espectro · Separación Multicapa por IA</span>
+        <span>Iris Prism · Separar pistas</span>
       </div>
     </div>
   );
