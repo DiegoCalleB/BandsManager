@@ -46,6 +46,7 @@ import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaD
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
 import { apiFetch } from "../utils/api";
+import { analizarAcordesDelAudio, resumenAnalisisAcordes } from "../utils/analisisAcordesCliente";
 import { ControlAutoscroll } from "./chords/ControlAutoscroll";
 import { useAutoScroll } from "../hooks/useAutoScroll";
 import { ModalOido } from "./chords/ModalOido";
@@ -234,19 +235,10 @@ export function SongChordsViewerModal({
       setIsAnalyzingChords(true);
       setOidoOculto(false);
       setAiSuccessMsg(null);
-      const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
-        method: "POST",
-        body: JSON.stringify({ sobrescribir }),
-      });
-      if (!data?.analisis) throw new Error(data?.error || "No se pudieron analizar los acordes");
-      onUpdateSong({ ...song, analisisAcordes: data.analisis });
+      const analisis = await analizarAcordesDelAudio(song.id, sobrescribir);
+      onUpdateSong({ ...song, analisisAcordes: analisis });
       setShowAnalisisAcordes(true);
-      const dudosos = data.analisis.segmentos.filter((s: any) => s.acorde === "N").length;
-      setAiSuccessMsg(
-        dudosos > 0
-          ? `⚠️ Acordes detectados del audio (${data.analisis.segmentos.length} tramos, ${dudosos} sin acorde claro). Es una detección automática: revísala de oído.`
-          : `✓ Acordes detectados del audio (${data.analisis.segmentos.length} tramos). Es una detección automática: revísala de oído.`,
-      );
+      setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err: any) {
       setAiSuccessMsg(`⚠️ ${err.message || "No se pudieron analizar los acordes del audio"}`);
     } finally {

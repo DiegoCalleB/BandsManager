@@ -6,10 +6,20 @@ on:
       - main
       - develop
       - 'claude/**'
+    # Ahorra minutos: la presentación del TFM y los .md no pasan por tsc/vitest/eslint.
+    # Solo en push; en pull_request se mantiene el check completo por si es obligatorio.
+    paths-ignore:
+      - 'presentacion/**'
+      - '**.md'
   pull_request:
     branches:
       - main
       - develop
+
+# Un push nuevo cancela el run viejo de la misma rama (nunca en main: cada merge se valida).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   check:
