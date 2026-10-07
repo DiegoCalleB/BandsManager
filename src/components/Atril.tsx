@@ -47,7 +47,7 @@ import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, 
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
-import { apiFetch } from "../utils/api";
+import { apiFetch, getActiveBandId } from "../utils/api";
 import { analizarAcordesDelAudio, resumenAnalisisAcordes } from "../utils/analisisAcordesCliente";
 import { ControlAutoscroll } from "./chords/ControlAutoscroll";
 import { useAutoScroll } from "../hooks/useAutoScroll";
@@ -57,6 +57,11 @@ import { useMezclaStems } from "../hooks/useMezclaStems";
 import { pistasDeCancion } from "../utils/irisTracks";
 import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
+import { GrabarIdea } from "./chords/GrabarIdea";
+import { useGrabarIdea } from "../hooks/useGrabarIdea";
+import { carpetaDeIdea, ficheroDeToma, tituloDeToma } from "../utils/grabarIdea";
+import { crearIdeaDeAtril } from "../utils/ideaDeAtril";
+import { uploadFileToServer } from "../utils/audioStorage";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -111,25 +116,10 @@ export function Atril({
 
   // Análisis de acordes del audio (detección propia, sin IA generativa)
   const [isAnalyzingChords, setIsAnalyzingChords] = useState<boolean>(false);
-  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
+  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(true);
   const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
   const [seguirEnCifrado, setSeguirEnCifrado] = useState<boolean>(true);
-  // Aviso de una sola vez: la detección de acordes del audio no se descubría sola.
-  const [avisoAcordesVisto, setAvisoAcordesVisto] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem("bm_aviso_acordes_audio") === "1";
-    } catch {
-      return false;
-    }
-  });
-  const cerrarAvisoAcordes = () => {
-    setAvisoAcordesVisto(true);
-    try {
-      localStorage.setItem("bm_aviso_acordes_audio", "1");
-    } catch {
-      /* sin almacenamiento: el aviso volverá a salir, no pasa nada */
-    }
-  };
+
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
@@ -181,6 +171,42 @@ export function Atril({
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
   useMezclaStems(audioRef, pistasSonando, audioUrl);
+
+  // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
+  const grabacion = useGrabarIdea(audioRef);
+  const [guardandoIdea, setGuardandoIdea] = useState<boolean>(false);
+  const guardarIdea = async () => {
+    if (!grabacion.toma) return;
+    setGuardandoIdea(true);
+    try {
+      const { extension, tipo } = ficheroDeToma(grabacion.toma.mime);
+      const id = `idea-${Date.now()}`;
+      const fichero = new File([grabacion.toma.blob], `${id}.${extension}`, { type: tipo });
+      const url = await uploadFileToServer(fichero, { bandId: getActiveBandId() || undefined, folder: carpetaDeIdea(String(song.id)) });
+      const instrumento = miId ? stems.find((p) => p.id === miId)?.nombre : undefined;
+      const usuario = (() => {
+        try { const u = JSON.parse(localStorage.getItem("bakandeya_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
+      })();
+      const idea = crearIdeaDeAtril({
+        id,
+        titulo: tituloDeToma(instrumento, song.audioIdeas || []),
+        audioUrl: url,
+        subidoPor: usuario,
+        instrumento,
+        sobrePistas: (pistasSonando.length > 0 ? pistasSonando : stems).map((p) => p.id),
+        offsetSegundos: grabacion.offset,
+      });
+      onUpdateSong({ ...song, audioIdeas: [...(song.audioIdeas || []), idea] });
+      grabacion.descartar();
+      setAiSuccessMsg("🎙️ Idea guardada en la canción.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } catch {
+      setAiSuccessMsg("⚠️ No se pudo guardar la idea. Prueba otra vez.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } finally {
+      setGuardandoIdea(false);
+    }
+  };
 
   // Sync audio duration and cleanup on unmount
   useEffect(() => {
@@ -274,6 +300,15 @@ export function Atril({
       setTimeout(() => setAiSuccessMsg(null), 7000);
     }
   };
+
+  // Jamify va activo por defecto: si el tema tiene audio y aún no está analizado, se analiza solo (una vez por canción).
+  const jamifyAutoIntentado = useRef<string | null>(null);
+  useEffect(() => {
+    if (!audioUrl || analisisAcordes || isAnalyzingChords || jamifyAutoIntentado.current === song.id) return;
+    jamifyAutoIntentado.current = song.id;
+    handleAnalyzeChordsFromAudio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioUrl, analisisAcordes, song.id]);
 
   // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
   // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
@@ -661,7 +696,7 @@ export function Atril({
                   }
                 >
                   <Music className="w-4 h-4" />
-                  <span>{isAnalyzingChords ? "Analizando..." : analisisAcordes ? "Acordes del audio" : "Analizar acordes"}</span>
+                  <span>{isAnalyzingChords ? "Analizando..." : "Jamify"}</span>
                 </Button>
               )}
 
@@ -811,6 +846,23 @@ export function Atril({
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}
 
+                {modo === 'Ensayar' && (
+                  <GrabarIdea
+                    fase={grabacion.fase}
+                    segundos={grabacion.segundos}
+                    toma={grabacion.toma}
+                    offset={grabacion.offset}
+                    error={grabacion.error}
+                    guardando={guardandoIdea}
+                    disponible={!!audioUrl}
+                    onEmpezar={() => { void grabacion.empezar(); }}
+                    onParar={grabacion.parar}
+                    onOffset={grabacion.setOffset}
+                    onGuardar={() => { void guardarIdea(); }}
+                    onDescartar={grabacion.descartar}
+                  />
+                )}
+
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
                   <span className="text-xs text-[var(--ink-2)] mr-1">
@@ -921,33 +973,6 @@ export function Atril({
               >
                 ✕
               </button>
-            </div>
-          )}
-
-          {/* AVISO DE UNA SOLA VEZ: detección de acordes del audio */}
-          {audioUrl && !analisisAcordes && !avisoAcordesVisto && !isAnalyzingChords && (
-            <div className="px-4 py-2 text-xs font-sans flex items-center justify-between gap-3 bg-[var(--acc-soft)] text-[var(--ink)]">
-              <span className="flex items-center gap-2 min-w-0">
-                <Music className="w-4 h-4 shrink-0 text-[var(--acc)]" />
-                <span>
-                  <strong>Nuevo:</strong> detecta los acordes de tu audio con sus tiempos y síguelos mientras suena la canción.
-                </span>
-              </span>
-              <span className="flex items-center gap-3 shrink-0">
-                <button
-                  type="button"
-                  className="font-bold text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
-                  onClick={() => {
-                    cerrarAvisoAcordes();
-                    handleAnalyzeChordsFromAudio();
-                  }}
-                >
-                  Analizar ahora
-                </button>
-                <button type="button" onClick={cerrarAvisoAcordes} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar aviso">
-                  ✕
-                </button>
-              </span>
             </div>
           )}
 
@@ -1071,7 +1096,7 @@ export function Atril({
                       analisisAcordes ? (
                         <ProfesorIA profesor={analisisAcordes.profesor} onPedir={pedirProfesor} />
                       ) : (
-                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Acordes del audio»).</p>
+                        <p className="text-xs text-[var(--ink-2)]">Para pedir la explicación del profesor, primero analiza los acordes del audio («Jamify»).</p>
                       )
                     }
                   />
@@ -1080,7 +1105,7 @@ export function Atril({
                     <GraduationCap className="w-10 h-10 mx-auto text-[var(--ink-2)]" />
                     <p className="font-bold text-[var(--ink)]">Aún no hay armonía que contar.</p>
                     <p className="text-sm text-[var(--ink-2)]">
-                      Escribe el cifrado de la canción o pulsa «Acordes del audio» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
+                      Escribe el cifrado de la canción o pulsa «Jamify» y aquí verás la tonalidad, el modo, los grados y qué tocar sobre cada acorde.
                     </p>
                   </div>
                 )
