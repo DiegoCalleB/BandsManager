@@ -4724,6 +4724,35 @@ export default function SongStudioModal({
                         Fuente de Audio Principal / Base Rítmica:
                       </span>
 
+                      {/* Pistas de Iris que sonarán al grabar encima de esta idea */}
+                      {pistasDeCancion(song).length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-micro font-sans font-bold text-[var(--ink-2)] block">
+                            Pistas de Iris para grabar encima · {nuevaIdeaPistasIris.length}
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {pistasDeCancion(song).map((st) => {
+                              const on = nuevaIdeaPistasIris.includes(st.id);
+                              return (
+                                <button
+                                  key={st.id}
+                                  type="button"
+                                  aria-pressed={on}
+                                  onClick={() =>
+                                    setNuevaIdeaPistasIris((prev) => (on ? prev.filter((id) => id !== st.id) : [...prev, st.id]))
+                                  }
+                                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans cursor-pointer transition-ui ${
+                                    on ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
+                                  }`}
+                                >
+                                  {st.nombre || st.instrumento || 'Pista'}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
                       <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 [&>*]:min-w-0">
                         {/* Option 1: Tema Base Original */}
                         <button
@@ -4843,35 +4872,6 @@ export default function SongStudioModal({
                           </span>
                         </button>
                       </div>
-
-                      {/* Pistas de Iris que sonarán al grabar encima de esta idea */}
-                      {pistasDeCancion(song).length > 0 && (
-                        <div className="space-y-2">
-                          <span className="text-micro font-sans font-bold text-[var(--ink-2)] block">
-                            Pistas de Iris para grabar encima · {nuevaIdeaPistasIris.length}
-                          </span>
-                          <div className="flex flex-wrap gap-1.5">
-                            {pistasDeCancion(song).map((st) => {
-                              const on = nuevaIdeaPistasIris.includes(st.id);
-                              return (
-                                <button
-                                  key={st.id}
-                                  type="button"
-                                  aria-pressed={on}
-                                  onClick={() =>
-                                    setNuevaIdeaPistasIris((prev) => (on ? prev.filter((id) => id !== st.id) : [...prev, st.id]))
-                                  }
-                                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans cursor-pointer transition-ui ${
-                                    on ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
-                                  }`}
-                                >
-                                  {st.nombre || st.instrumento || 'Pista'}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
 
                       {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
                       {useSongBaseTrack && (
