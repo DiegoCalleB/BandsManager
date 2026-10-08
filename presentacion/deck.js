@@ -166,6 +166,7 @@
     setIn(p.steps[p.shown], true, '0ms');
     p.steps[p.shown].forEach((it, k) => it.el.style.setProperty('--i', k));
     p.shown += 1; paintHud();
+    if (window.DeckSound) window.DeckSound.tick();
     return true;
   }
   function stepBack() {
@@ -187,6 +188,7 @@
   }
 
   let delayedVideoTimer = 0;
+  let soundStarted = false;
 
   function show(i, push = true, how = 'play') {
     document.querySelectorAll('video').forEach((v) => v.pause());
@@ -206,6 +208,7 @@
     if (push) history.replaceState(null, '', '#' + (cur + 1));
     $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
     countUp(slides[cur]);
+    if (window.DeckSound && !isScroll() && (prev !== cur || !soundStarted)) { soundStarted = true; window.DeckSound.slide(slides[cur]); }
     clearTimeout(delayedVideoTimer);
     slides[cur].querySelectorAll('video[data-delay]').forEach((v) => {
       v.pause(); v.currentTime = 0;
@@ -281,6 +284,7 @@
       case 'f': case 'F': fs(); break;
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
+      case 'm': case 'M': window.DeckSound && window.DeckSound.toggle(); break;
       case 'a': case 'A': toggleAnim(); break;
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;
     }
@@ -289,6 +293,8 @@
   $('#bPrev').onclick = prev; $('#bNext').onclick = next; $('#aL').onclick = prev; $('#aR').onclick = next;
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;
   $('#bAnim').onclick = toggleAnim;
+  $('#bSound').onclick = () => window.DeckSound && window.DeckSound.toggle();
+  if (window.DeckSound) window.DeckSound.onChange((on) => { const b = $('#bSound'); b.textContent = on ? 'Sonido: sí' : 'Sonido'; b.setAttribute('aria-pressed', String(on)); });
   $('#bScroll').onclick = () => { setScroll(true); show(cur, false); };
 
   let tx = 0, ty = 0;

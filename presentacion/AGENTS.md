@@ -61,6 +61,8 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 
 - **Diapositivas «héroe»** (clase `.hero`): la app en grande dentro de un marco con perspectiva y parallax, pines numerados sobre la captura y una leyenda de tres líneas. Titular de menos de ocho palabras. Siempre en escena oscura con la captura `d-h-*`. `.device.full` para capturas con ventana modal (se recorta con `style` en el `<img>` y `aspect-ratio` en `.screen`). Colocar los pines en huecos libres, nunca encima de texto. Las leyendas solo dicen lo que la captura muestra o lo que ya consta en el repo.
 
+- **Sonido** (`sound.js`): todo sintetizado con WebAudio, sin archivos. Apagado por defecto; tecla `M` o botón «Sonido». Transición suave en cada diapositiva, golpe grave y cortina en los umbrales de acto, «tics» en los pines de las héroe y banda sonora propia del tráiler (los tiempos van en `trailerScore` y deben coincidir con los planos del CSS). Si cambias la duración de un plano del tráiler, cambia también su evento de sonido.
+
 ## Pipeline de material
 
 - **Capturas y vídeos**: Playwright + Chromium contra la app local (`npm run dev`, puerto 3000), con la API mockeada (`page.route`) y las bandas de Brais. Login de demo y datos de ejemplo, nunca datos reales de clientes.

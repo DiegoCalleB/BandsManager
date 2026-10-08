@@ -550,3 +550,8 @@ body.scroll .tr-logo { width: 96px; height: 96px; border-radius: 24px; } body.sc
 @media (prefers-reduced-motion: reduce) { .tr-logo-vid { opacity: 1 !important; transform: none !important; animation: none !important; } }
 body.scroll .tr-logo-vid { width: 260px; height: 260px; opacity: 1 !important; transform: none !important; animation: none !important; }
 body.scroll .tr-final .tr-tag { margin-top: -14px; }
+
+/* Aviso del sonido en el tráiler (solo mientras está apagado) */
+.tr-sound-hint { position: absolute; left: 36px; bottom: 96px; z-index: 7; padding: 10px 20px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(6px); font-size: 22px; color: rgba(255,255,255,.8); opacity: 0; }
+.slide.trailer.active .tr-sound-hint { animation: trpop 700ms var(--ease) 1.2s both; }
+body.sound-on .tr-sound-hint, body.scroll .tr-sound-hint { display: none; }
