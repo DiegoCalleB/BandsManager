@@ -690,25 +690,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               </Button>
             )}
 
-            {/* Quick action: Modo Studio */}
-            {!isBlock && currentSong && (
-              <button
-                id="btn-stage-studio-mode"
-                type="button"
-                onClick={() => handleLaunchStudio()}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
-                  glareMode
-                    ? "bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]"
-                    : "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]"
-                }`}
-                title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
-              >
-                <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                <span className="hidden sm:inline">Modo Studio</span>
-                <span className="sm:hidden">Studio</span>
-              </button>
-            )}
-
             <button
               onClick={() => setShowMoreMenu((v) => !v)}
               className={`p-1.5 rounded-[var(--r-pill)] transition ${showMoreMenu ? (glareMode ? "bg-[var(--sunken)]" : "bg-[var(--ink)]/15") : glareMode ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]" : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"}`}
@@ -741,7 +722,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   {/* Studio & Ensayo shortcuts inside menu */}
                   {!isBlock && currentSong && (
                     <>
-                      {irisStemIdea ? (
+                      {irisStemIdea && (
                         <button
                           onClick={() => {
                             setShowMoreMenu(false);
@@ -756,31 +737,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <Headphones className="w-4 h-4 shrink-0 text-[var(--ok)]" />
                           <span>Sala de ensayo (pistas iris)</span>
                         </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setShowMoreMenu(false);
-                            handleLaunchStudio();
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
-                            glareMode
-                              ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
-                              : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"
-                          }`}
-                          title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
-                        >
-                          <Headphones className="w-4 h-4 shrink-0 text-[var(--ink-2)]" />
-                          <span className="flex items-center justify-between flex-1">
-                            <span>Separar pistas con Iris</span>
-                            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans">
-                              Studio
-                            </span>
-                          </span>
-                        </button>
                       )}
 
                       {onOpenStudioModal && (
                         <button
+                          id="btn-stage-studio-mode"
                           onClick={() => {
                             setShowMoreMenu(false);
                             handleLaunchStudio();

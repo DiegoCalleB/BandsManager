@@ -175,6 +175,7 @@ export function Atril({
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
   const stems = useMemo(() => pistasDeCancion(song), [song]);
+  const [masControles, setMasControles] = useState(false);
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
@@ -939,6 +940,16 @@ export function Atril({
                   )}
                 </div>
 
+                <ControlAutoscroll auto={autoScroll} />
+                <ControlMetronomo metronomo={metronomo} />
+
+                {modo === 'Estudiar' && (
+                  <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
+                    {masControles ? 'Menos' : 'Más'}
+                  </Button>
+                )}
+                {(modo !== 'Estudiar' || masControles) && (
+                  <>
                 {/* NOTATION TOGGLE (Latino / C-D-E) */}
                 <Button
                   variant="neutral"
@@ -955,9 +966,6 @@ export function Atril({
                     {notation === "ES" ? "Do - Re - Mi" : "C - D - E"}
                   </span>
                 </Button>
-
-                <ControlAutoscroll auto={autoScroll} />
-                <ControlMetronomo metronomo={metronomo} />
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
@@ -982,6 +990,8 @@ export function Atril({
                     <Copy className="w-4 h-4" />
                   )}
                 </button>
+                  </>
+                )}
               </div>
             )}
           </div>
