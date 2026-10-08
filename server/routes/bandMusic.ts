@@ -35,6 +35,34 @@ router.get("/bands/:id/preview", requireAuth, async (req, res) => {
   }
 });
 
+const MAX_DISPONIBILIDAD = 120;
+const CONCURRENCIA_DISPONIBILIDAD = 4;
+
+/**
+ * GET /api/bands/previews-availability — { [bandId]: true } para las bandas que tienen un preview.
+ * Consulta Deezer en paralelo limitado; el resultado va cacheado 24 h en musicPreviewService.
+ */
+router.get("/bands/previews-availability", requireAuth, async (req, res) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const bandas = ((await dbGetBandContacts(bandId)) as BandaCuenta[])
+      .filter((b) => b?.nombre_banda)
+      .slice(0, MAX_DISPONIBILIDAD);
+    const disponibles: Record<string, boolean> = {};
+    for (let i = 0; i < bandas.length; i += CONCURRENCIA_DISPONIBILIDAD) {
+      await Promise.all(
+        bandas.slice(i, i + CONCURRENCIA_DISPONIBILIDAD).map(async (b) => {
+          disponibles[b.id] = (await previewDeBanda(String(b.nombre_banda))) !== null;
+        }),
+      );
+    }
+    res.json({ success: true, disponibles });
+  } catch (err) {
+    console.error("[BandMusic] previews-availability error:", err);
+    res.status(500).json({ error: "No se pudo comprobar la disponibilidad de previews." });
+  }
+});
+
 interface ItemLote extends PlanSpotifyBanda {
   id: string;
   nombre: string;

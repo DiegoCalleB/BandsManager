@@ -141,6 +141,22 @@ export default function BandCRM({
     }
   }, [currentBandId]);
 
+  // Qué bandas tienen algo que escuchar: solo ellas muestran el ▶.
+  useEffect(() => {
+    if (bands.length === 0) return;
+    let cancelado = false;
+    apiFetch<{ success: boolean; disponibles: Record<string, boolean> }>("/api/bands/previews-availability")
+      .then((data) => {
+        if (!cancelado) setDisponibles(data.disponibles || {});
+      })
+      .catch(() => {
+        if (!cancelado) setDisponibles({});
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [currentBandId, bands.length]);
+
   // Save changes to localStorage whenever bands state updates
 
   // Sync leads of type'grupo', management and productoras from the main leads list if new ones appear
@@ -259,6 +275,8 @@ export default function BandCRM({
   const [locationFilter, setLocationFilter] = useState<string>("todos");
   // En móvil las tarjetas se leen sin scroll horizontal; la tabla queda para pantallas anchas.
   const [reproductor, setReproductor] = useState<{ cola: ColaBanda[]; inicio: number } | null>(null);
+  // Bandas con preview disponible (vacío mientras se consulta: no se muestra ningún ▶ sin comprobar).
+  const [disponibles, setDisponibles] = useState<Record<string, boolean>>({});
   const [isSpotifySweepOpen, setIsSpotifySweepOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "table" | "map">(() =>
     typeof window !== "undefined" && window.innerWidth < 640 ? "grid" : "table",
@@ -1704,19 +1722,21 @@ ${myBandName}`;
                         </span>
                       </div>
 
-                      {/* Escuchar: preview de 30 s en el reproductor de la app */}
+                      {/* Escuchar: preview de 30 s en el reproductor de la app (solo si hay preview) */}
+                      {disponibles[band.id] && (
                       <div>
-                        <Button
-                          variant="ghost"
-                          size="xs"
-                          onClick={() => escuchar(band.id)}
-                          className="gap-1.5 text-[var(--acc-ink)]"
-                          title={`Escuchar a ${band.nombre_banda} (preview de 30 s)`}
-                        >
-                          <Play className="w-3.5 h-3.5" />
-                          <span>Escuchar</span>
-                        </Button>
-                      </div>
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            onClick={() => escuchar(band.id)}
+                            className="gap-1.5 text-[var(--acc-ink)]"
+                            title={`Escuchar a ${band.nombre_banda} (preview de 30 s)`}
+                          >
+                            <Play className="w-3.5 h-3.5" />
+                            <span>Escuchar</span>
+                          </Button>
+                        </div>
+                      )}
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
@@ -1799,6 +1819,7 @@ ${myBandName}`;
                         )}
                       </button>
                     </th>
+                    <th className="py-2.5 px-1 w-8" aria-label="Escuchar" />
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[170px]">
                       Banda / artista
                     </th>
@@ -1853,6 +1874,21 @@ ${myBandName}`;
                               <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-2)]" />
                             )}
                           </button>
+                        </td>
+
+                        <td
+                          className="py-2 px-1 w-8 text-center align-middle"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {disponibles[band.id] && (
+                            <IconButton
+                              label={`Escuchar a ${band.nombre_banda}`}
+                              size="icon-xs"
+                              onClick={() => escuchar(band.id)}
+                            >
+                              <Play className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                            </IconButton>
+                          )}
                         </td>
                         <td className="py-2 px-3 font-bold text-[var(--ink)] align-middle whitespace-nowrap">
                           <div className="flex items-center gap-2 min-w-0">
@@ -1947,13 +1983,6 @@ ${myBandName}`;
                               <Repeat className="w-3 h-3 text-[var(--ink-2)]" />
                               <span>Pitch</span>
                             </Button>
-
-                            <IconButton
-                              label={`Escuchar a ${band.nombre_banda}`}
-                              onClick={() => escuchar(band.id)}
-                            >
-                              <Play className="w-3.5 h-3.5" />
-                            </IconButton>
 
                             <IconButton
                               label="Editar"
