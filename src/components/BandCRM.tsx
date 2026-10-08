@@ -8,6 +8,7 @@ import {
 import { api, getAuthHeaders } from "../services/api";
 import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
+import { BandListenEmbed } from "./booking/BandListenEmbed";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ChangeBandImageModal } from "./bandCRM/ChangeBandImageModal";
@@ -1678,6 +1679,12 @@ ${myBandName}`;
                           </span>
                         </span>
                       </div>
+
+                      {/* Escuchar en Spotify (el iframe solo se monta al pulsar) */}
+                      <BandListenEmbed
+                        spotifyUrl={band.spotify_youtube}
+                        bandName={band.nombre_banda}
+                      />
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
