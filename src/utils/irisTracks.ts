@@ -83,10 +83,11 @@ export function metaStemsDeCancion(song?: Song | null): StemsMeta | undefined {
 export function ideaDeStemsDeCancion(song?: Song | null): SongAudioIdea | null {
   if (!song) return null;
   const real = getSongIrisStemIdea(song);
-  if (real) return real;
   const pistas = pistasDeCancion(song);
-  if (pistas.length === 0) return null;
   const meta = metaStemsDeCancion(song);
+  // Con toma real (datos aún sin limpiar) se le superpone lo de la canción: la canción manda.
+  if (real) return pistas.length > 0 ? { ...real, pistas } : real;
+  if (pistas.length === 0) return null;
   return {
     id: `stems-${song.id}`,
     titulo: 'Iris',
@@ -100,16 +101,32 @@ export function ideaDeStemsDeCancion(song?: Song | null): SongAudioIdea | null {
 }
 
 /**
- * Único punto por el que una canción cambia de ideas. Los stems son de la canción, así que
- * `song.pistas` se mantiene al día con los de la idea de Iris; si las ideas ya no traen ninguno
- * (se borró la toma) la canción conserva los suyos en vez de perderlos.
+ * Único punto por el que una canción cambia de ideas. Los stems son de la canción: `song.pistas`
+ * manda y solo si la canción aún no los tiene se copian de la idea de Iris (datos sin limpiar).
  */
 export function cancionConIdeas<T extends { audioIdeas?: SongAudioIdea[]; pistas?: AudioTrack[]; stemsMeta?: StemsMeta }>(
   cancion: T,
   ideas: SongAudioIdea[],
 ): T {
   const deIdeas = pistasDeIdeas(ideas);
-  const pistas = deIdeas.length > 0 ? deIdeas : cancion.pistas;
-  const stemsMeta = metaStemsDeIdeas(ideas) ?? cancion.stemsMeta;
+  const pistas = cancion.pistas && cancion.pistas.length > 0 ? cancion.pistas : deIdeas.length > 0 ? deIdeas : cancion.pistas;
+  const stemsMeta = cancion.stemsMeta ?? metaStemsDeIdeas(ideas);
   return { ...cancion, audioIdeas: ideas, ...(pistas ? { pistas } : {}), ...(stemsMeta ? { stemsMeta } : {}) };
+}
+
+/**
+ * Escribe las pistas de una idea. Si la idea es la de Iris (los stems de la canción) se guardan en
+ * `song.pistas`, sin tocar las tomas; si es una toma normal, en la propia idea. `extra` solo se
+ * aplica a tomas (p. ej. el audioUrl principal).
+ */
+export function cancionConPistas<T extends Song>(
+  cancion: T,
+  idea: SongAudioIdea,
+  pistas: AudioTrack[],
+  extra: Partial<SongAudioIdea> = {},
+): T {
+  const iris = ideaDeStemsDeCancion(cancion);
+  if (iris && iris.id === idea.id) return { ...cancion, pistas };
+  const ideas = (cancion.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas, ...extra } : i));
+  return cancionConIdeas(cancion, ideas);
 }

@@ -30,3 +30,10 @@ describe('El feed de ideas solo lleva tomas', () => {
     expect(src).toContain('{!modoIris && (\n                            <IconButton\n                              label="Eliminar idea"');
   });
 });
+
+describe('Los stems se escriben en la canción', () => {
+  it('el mezclador no escribe `pistas` directamente en una idea: pasa por cancionConPistas', () => {
+    expect(src).not.toMatch(/\.\.\.i, pistas/);
+    expect(src).toContain('cancionConPistas(song, idea, updatedTracks)');
+  });
+});
