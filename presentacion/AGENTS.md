@@ -38,6 +38,10 @@ Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.a
 - **Producto real, no maquetas**: capturas y vídeos salen de la app corriendo con datos de las bandas de Brais.
 - **Las cifras se demuestran**: todo número (tests, endpoints, agentes, pantallas) se saca del repo en el momento y se puede enseñar. Si no se puede comprobar, no se pone.
 
+## Personajes con rostro real
+
+El manager de la banda es un personaje de la demo que lleva la cara del CEO de The Big School (imágenes aportadas por Diego, `img/personaje-manager.jpg`; también hay `personaje-cantante.jpg`). Va rotulado «Personaje de la demo», sin nombre ni afirmaciones sobre la persona. Antes de enseñarlo fuera del círculo de la escuela (la presentación en Railway es una URL pública), confirmar con él que está de acuerdo. Si dice que no, se retira de los umbrales de los actos I, II y V.
+
 ## Estilo de escritura (que no suene a IA)
 
 - Castellano natural, frases cortas, voz de quien lo ha construido. Primera persona del plural donde encaje.
