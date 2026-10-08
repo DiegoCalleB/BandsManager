@@ -45,3 +45,15 @@ describe('Iris tiene su propia hoja', () => {
     expect(src.indexOf('renderIdeaCard(irisIdea, { iris: true })')).toBeGreaterThan(src.indexOf('HOJA DE IRIS'));
   });
 });
+
+describe('Ideas: pistas de Iris para grabar encima', () => {
+  const studio = src;
+  it('el selector guarda ids por referencia (ideasConFondo), sin copiar audio', () => {
+    expect(studio).toContain('Pistas de Iris para grabar encima');
+    expect(studio).toContain('ideasConFondo(');
+  });
+  it('la grabación encima reproduce las pistas elegidas y las para al detener', () => {
+    expect(studio).toContain('pistasBaseDeIdea(idea, pistasDeCancion(song))');
+    expect(studio).toMatch(/stopRecordingTrackOverdub = \(\) => \{\s*basePlayRefs/);
+  });
+});

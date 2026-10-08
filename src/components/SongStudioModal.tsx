@@ -37,7 +37,8 @@ import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
-import { getSongIrisStemIdea, ideaDeStemsDeCancion, cancionConIdeas, cancionConPistas, esIdeaIris, irisPrimero, metaStemsDeCancion } from '../utils/irisTracks';
+import { getSongIrisStemIdea, ideaDeStemsDeCancion, cancionConIdeas, cancionConPistas, esIdeaIris, irisPrimero, metaStemsDeCancion, pistasDeCancion } from '../utils/irisTracks';
+import { ideasConFondo, pistasBaseDeIdea } from '../utils/ideaDeAtril';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import {
@@ -636,6 +637,8 @@ export default function SongStudioModal({
   const [recordingTrackTime, setRecordingTrackTime] = useState(0);
   const trackMediaRecorderRef = useRef<MediaRecorder | null>(null);
   const trackAudioChunksRef = useRef<Blob[]>([]);
+  // Pistas de Iris que suenan mientras se graba encima; viven aparte de trackAudioRefs para no pisar el mezclador de Iris.
+  const basePlayRefs = useRef<HTMLAudioElement[]>([]);
   const trackRecordingTimerRef = useRef<any>(null);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
@@ -2353,7 +2356,18 @@ export default function SongStudioModal({
         return Promise.resolve();
       });
 
-      await Promise.all(playPromises);
+      // Pistas de Iris elegidas para esta idea (por referencia, `sobrePistas`)
+      const basePistas = pistasBaseDeIdea(idea, pistasDeCancion(song)).pistas;
+      const basePlays = basePistas.map((st) => {
+        const url = resolvedAudioUrls[st.id] || st.audioUrl;
+        if (!url || typeof url !== 'string' || url.startsWith('indexeddb:') || url.endsWith('undefined')) return Promise.resolve();
+        const el = new Audio(url);
+        el.volume = applyMasterToElementVolume(st.muted ? 0 : (st.volumen ?? 1));
+        basePlayRefs.current.push(el);
+        return el.play().catch((e) => console.warn('Base track playback notice:', e?.message || e));
+      });
+
+      await Promise.all([...playPromises, ...basePlays]);
 
       // 4. Start MediaRecorder immediately after backing tracks begin playback
       mediaRecorder.start(20);
@@ -2466,6 +2480,8 @@ export default function SongStudioModal({
   };
 
   const stopRecordingTrackOverdub = () => {
+    basePlayRefs.current.forEach((el) => { try { el.pause(); } catch {} });
+    basePlayRefs.current = [];
     if (trackMediaRecorderRef.current && trackMediaRecorderRef.current.state !== 'inactive') {
       trackMediaRecorderRef.current.stop();
     }
@@ -4030,6 +4046,44 @@ export default function SongStudioModal({
                                     />
                                   </div>
                                 </div>
+
+                                {(() => {
+                                  const pistasIris = pistasDeCancion(song);
+                                  if (pistasIris.length === 0) return null;
+                                  const elegidas = idea.sobrePistas ?? [];
+                                  const alternar = (id: string) =>
+                                    onUpdateSong(cancionConIdeas(song, ideasConFondo(
+                                      song.audioIdeas || [],
+                                      idea.id,
+                                      elegidas.includes(id) ? elegidas.filter((x) => x !== id) : [...elegidas, id],
+                                    )));
+                                  return (
+                                    <div className="space-y-1.5">
+                                      <label className="text-micro font-sans text-[var(--ink-2)] block">
+                                        Pistas de Iris para grabar encima{elegidas.length > 0 ? ` · ${elegidas.length}` : ''}
+                                      </label>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {pistasIris.map((st) => {
+                                          const on = elegidas.includes(st.id);
+                                          return (
+                                            <button
+                                              key={st.id}
+                                              type="button"
+                                              aria-pressed={on}
+                                              disabled={isRecordingTrack}
+                                              onClick={() => alternar(st.id)}
+                                              className={`px-3 py-1 rounded-[var(--r-pill)] text-xs font-sans transition-ui cursor-pointer disabled:opacity-50 ${
+                                                on ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--sunken)] text-[var(--ink-2)] hover:text-[var(--ink)]'
+                                              }`}
+                                            >
+                                              {st.nombre || st.instrumento || 'Pista'}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
 
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
                                   {/* Option 1: Live Mic Recording while backing tracks play */}
