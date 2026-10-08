@@ -20,3 +20,15 @@ describe('metrónomo único del producto', () => {
     expect(ensayo).not.toContain('new AudioCtx()');
   });
 });
+
+describe('modos en vivo: mecánicas compartidas', () => {
+  const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+  it('concierto y ensayo usan el mismo wake lock y los mismos gestos de pasar página', () => {
+    for (const src of [ensayo, concierto]) {
+      expect(src).toContain('useWakeLock(');
+      expect(src).toContain('accionDeTecla(');
+      expect(src).toContain('direccionDeSwipe(');
+      expect(src).not.toContain('wakeLock.request');
+    }
+  });
+});
