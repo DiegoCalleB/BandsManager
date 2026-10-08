@@ -56,6 +56,7 @@ import { useMetronomo } from "../hooks/useMetronomo";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
+import { TomasConFondo } from "./chords/TomasConFondo";
 import { ControlBucle } from "./chords/ControlBucle";
 import { ControlVelocidad } from "./chords/ControlVelocidad";
 import { ControlTonoAudio } from "./chords/ControlTonoAudio";
@@ -73,7 +74,7 @@ import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
 import { useGrabarIdea } from "../hooks/useGrabarIdea";
 import { carpetaDeIdea, ficheroDeToma, tituloDeToma } from "../utils/grabarIdea";
-import { crearIdeaDeAtril } from "../utils/ideaDeAtril";
+import { crearIdeaDeAtril, tomasDeCancion, pistasParaToma, ideasConFondo } from "../utils/ideaDeAtril";
 import { uploadFileToServer } from "../utils/audioStorage";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
@@ -190,7 +191,12 @@ export function Atril({
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
-  const pistasSonando = useMemo(() => pistasParaModo(stems, miId, modoEscucha), [stems, miId, modoEscucha]);
+  const pistasModo = useMemo(() => pistasParaModo(stems, miId, modoEscucha), [stems, miId, modoEscucha]);
+  // Toma escuchada con su fondo (stems elegidos): sustituye al modo de escucha mientras esté activa
+  const tomas = useMemo(() => tomasDeCancion(song.audioIdeas), [song.audioIdeas]);
+  const [tomaActivaId, setTomaActivaId] = useState<string | null>(null);
+  const tomaActiva = tomas.find((t) => t.id === tomaActivaId) ?? null;
+  const pistasSonando = useMemo(() => (tomaActiva ? pistasParaToma(tomaActiva, stems) : pistasModo), [tomaActiva, stems, pistasModo]);
   const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
   const [audioDuration, setAudioDuration] = useState<number>(
     song.duracionSegundos || 0,
@@ -894,6 +900,13 @@ export function Atril({
                     <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
                   </div>
                 )}
+                <TomasConFondo
+                  tomas={tomas}
+                  stems={stems}
+                  activaId={tomaActivaId}
+                  onActiva={setTomaActivaId}
+                  onFondo={(ideaId, ids) => onUpdateSong(cancionConIdeas(song, ideasConFondo(song.audioIdeas || [], ideaId, ids)))}
+                />
                 <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
                 {modo === 'Ensayar' && (
