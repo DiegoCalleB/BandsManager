@@ -374,13 +374,22 @@ export async function searchSpotifyArtists(query: string) {
   const token = await getSpotifyAccessToken();
   if (token) {
     try {
-      const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(cleanQ)}&type=artist&limit=8&market=ES`;
-      const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        signal: AbortSignal.timeout(6000)
-      });
+      // Primero el filtro por artista (nombre exacto), con 20 resultados: con 8, el homónimo
+      // correcto se quedaba fuera del top y el enlace se daba por «no encontrado».
+      const consultas = [`artist:"${cleanQ.replace(/"/g, "")}"`, cleanQ];
+      for (const q of consultas) {
+        const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=artist&limit=20`;
+        const res = await fetch(url, {
+          headers: { Authorization: `Bearer ${token}` },
+          signal: AbortSignal.timeout(6000)
+        });
 
-      if (res.ok) {
+        if (!res.ok) {
+          // Antes el fallo era silencioso y caía en Deezer sin dejar rastro.
+          console.warn(`[SpotifyService] Búsqueda de artista respondió ${res.status} para "${cleanQ}"`);
+          break;
+        }
+
         const data = await res.json();
         const items = data.artists?.items || [];
         if (items.length > 0) {
