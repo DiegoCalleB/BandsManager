@@ -19,6 +19,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0010](./0010-stems-cloud-y-dsp-local.md) | Separación de pistas: modelos en GPU y DSP local | Aceptada | retroactiva |
 | [0011](./0011-docs-as-code.md) | Documentación como código, verificada en CI | Aceptada | nueva |
 | [0012](./0012-contrato-api-openapi-por-ast.md) | Contrato de API OpenAPI generado por análisis del AST | Aceptada | nueva |
+| [0013](./0013-puerta-local-de-calidad.md) | Puerta local de calidad antes de cada push | Aceptada | nueva |
 
 ## Cómo añadir uno
 

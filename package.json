@@ -16,6 +16,7 @@
     "test:fast": "vitest run --passWithNoTests",
     "test:security": "vitest run server/db/__tests__/bandIdTrustBoundary.test.ts",
     "check:fast": "npm run typecheck && npm run test:security",
+    "check:all": "node scripts/check-all.mjs",
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
     "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "test:coverage": "vitest run --coverage",

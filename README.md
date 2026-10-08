@@ -27,7 +27,7 @@ Autor: [@DiegoCalleB](https://github.com/DiegoCalleB). Este repositorio es el n�
 |---|---|
 | Qué problema resuelve y para quién | [Para qué existe](#para-qué-existe) y [Qué hace](#qué-hace) |
 | La arquitectura, en diez minutos | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) (diagramas de contexto y contenedores) |
-| **Por qué** se decidió cada cosa, y qué se descartó | [docs/adr/](./docs/adr/README.md): 12 registros de decisión. Los retroactivos están marcados y sus alternativas son razonadas a posteriori |
+| **Por qué** se decidió cada cosa, y qué se descartó | [docs/adr/](./docs/adr/README.md): 13 registros de decisión. Los retroactivos están marcados y sus alternativas son razonadas a posteriori |
 | La API completa | [docs/api/REFERENCIA.md](./docs/api/REFERENCIA.md): todas las rutas, quién puede llamarlas y con qué límites, con enlace a la línea de código. Contrato máquina-legible en [openapi.json](./docs/api/openapi.json) |
 | La seguridad y sus límites | [Seguridad](#seguridad), incluidos los [límites conocidos](#límites-conocidos-honestidad-antes-que-marketing) |
 | Cómo se trabajó con agentes de IA | [AGENTS.md](./AGENTS.md) y [skills/](./skills/README.md): reglas compartidas, skills y tests que impiden que un agente rompa lo que no debe |
