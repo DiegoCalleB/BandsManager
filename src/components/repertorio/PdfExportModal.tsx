@@ -1565,7 +1565,17 @@ function PdfExportModalBody({
       pageNum: number,
       totalPages: number,
     ): string =>
-      showAppBranding
+      showAppBranding && pageNum < totalPages
+        ? // Hojas intermedias: solo numeración, el QR y la marca van en la última hoja de cada copia.
+          `
+        <div class="page-footer ${isCentered ? "is-centered" : ""}">
+          <div class="footer-left"></div>
+          <div class="footer-right">
+            <span>Hoja ${pageNum} de ${totalPages} (${escapeHtml(member.name)})</span>
+          </div>
+        </div>
+      `
+        : showAppBranding
         ? `
         <div class="page-footer ${isCentered ? "is-centered" : ""}">
           <div class="footer-left">

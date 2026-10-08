@@ -5340,6 +5340,23 @@ export default function RepertorioSetlists({
                         </IconButton>
                       </div>
 
+                      {/* Aviso al director: cuántos músicos marcaron este tema como "me da dudas" */}
+                      {(() => {
+                        const dudan = (song.notasPorMiembro ?? []).filter((n) => n.mostrarTono);
+                        if (dudan.length === 0) return null;
+                        const nombres = dudan.map((n) => n.memberName).filter(Boolean).join(", ");
+                        return (
+                          <div
+                            className="px-2.5 pt-1.5 text-micro font-sans text-[var(--accent-alt)]"
+                            title={nombres ? `Dudan: ${nombres}` : undefined}
+                          >
+                            <HelpCircle className="mr-1 inline size-3 align-[-1px]" aria-hidden="true" />
+                            {dudan.length === 1 ? "1 músico duda" : `${dudan.length} músicos dudan`}
+                            {nombres ? ` · ${nombres}` : ""}
+                          </div>
+                        );
+                      })()}
+
                       {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
                       {(() => {
                         // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
