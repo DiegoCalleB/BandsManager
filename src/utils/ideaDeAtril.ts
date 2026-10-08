@@ -53,3 +53,24 @@ export function ideaConPistasBase(idea: SongAudioIdea, ids: string[]): SongAudio
   if (unicos.length === 0) return resto;
   return { ...resto, sobrePistas: unicos, offsetSegundos: idea.offsetSegundos ?? 0 };
 }
+
+/** Tomas de la canción: ideas con audio que no son la separación de Iris. */
+export function tomasDeCancion(ideas: SongAudioIdea[] = []): SongAudioIdea[] {
+  return ideas.filter((i) => i.audioUrl && !(i.pistas && i.pistas.length > 1) && !i.stemEngineUsed);
+}
+
+/** Lo que suena al escuchar una toma: su fondo (stems elegidos) más la propia toma como una pista más. */
+export function pistasParaToma(idea: SongAudioIdea, stems: AudioTrack[]): AudioTrack[] {
+  const toma: AudioTrack = {
+    id: `toma-${idea.id}`,
+    nombre: idea.titulo || 'Toma',
+    audioUrl: idea.audioUrl,
+    instrumento: idea.instrumento,
+  } as AudioTrack;
+  return [...pistasBaseDeIdea(idea, stems).pistas, toma];
+}
+
+/** Reemplaza el fondo de una toma dentro de la lista de ideas (el resto queda intacto). */
+export function ideasConFondo(ideas: SongAudioIdea[], ideaId: string, ids: string[]): SongAudioIdea[] {
+  return ideas.map((i) => (i.id === ideaId ? ideaConPistasBase(i, ids) : i));
+}
