@@ -19,7 +19,7 @@ La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros 
 
 | Acto | Qué cuenta | Diapositivas |
 |---|---|---|
-| Tráiler | Apertura de 17 s que arranca sola y termina en el logo animado | 1 |
+| Tráiler | Apertura de unos 13 s que arranca sola y termina en el logo animado | 1 |
 | Portada | Gancho: «Menos gestión, más música» | 2 |
 | I · Backstage | El caos de gestionar una banda y qué se propone | umbral 3 · 4–6 |
 | II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, redactor que aprende, otras bandas y Date Swap | umbral 7 · 8–18 |
@@ -41,7 +41,7 @@ Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.a
 
 ## Personajes con rostro real
 
-Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes aportadas por Diego): el **manager de Master of Prompts** (`img/personaje-manager.jpg`, actos I, II y V) y el **cantante de Os Herdeiros do Código** (`img/personaje-cantante.jpg`, actos III y IV). Van rotulados «demo», sin nombre ni afirmaciones sobre la persona. Antes de enseñarlos fuera del círculo de la escuela (la presentación en Railway es una URL pública), confirmar con él que está de acuerdo. Si dice que no, se retiran de los umbrales.
+Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes aportadas por Diego): el **manager de Master of Prompts** (`img/personaje-manager.jpg`, solo en el acto II) y el **cantante de Os Herdeiros do Código** (`img/personaje-cantante.jpg`, actos III y IV). Van rotulados «demo», sin nombre ni afirmaciones sobre la persona. Antes de enseñarlos fuera del círculo de la escuela (la presentación en Railway es una URL pública), confirmar con él que está de acuerdo. Si dice que no, se retiran de los umbrales.
 
 ## Estilo de escritura (que no suene a IA)
 
@@ -61,7 +61,7 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 
 - **Diapositivas «héroe»** (clase `.hero`): la app en grande dentro de un marco con perspectiva y parallax, pines numerados sobre la captura y una leyenda de tres líneas. Titular de menos de ocho palabras. Siempre en escena oscura con la captura `d-h-*`. `.device.full` para capturas con ventana modal (se recorta con `style` en el `<img>` y `aspect-ratio` en `.screen`). Colocar los pines en huecos libres, nunca encima de texto. Las leyendas solo dicen lo que la captura muestra o lo que ya consta en el repo.
 
-- **Sonido** (`sound.js`): todo sintetizado con WebAudio, sin archivos. Apagado por defecto; tecla `M` o botón «Sonido». Transición suave en cada diapositiva, golpe grave y cortina en los umbrales de acto, «tics» en los pines de las héroe y banda sonora propia del tráiler (los tiempos van en `trailerScore` y deben coincidir con los planos del CSS). Si cambias la duración de un plano del tráiler, cambia también su evento de sonido.
+- **Sonido** (`sound.js`): todo sintetizado con WebAudio, sin archivos. Apagado por defecto; tecla `M` o botón «Sonido». Transición suave en cada diapositiva, golpe grave y cortina en los umbrales de acto, «tics» en los pines de las héroe y banda sonora propia del tráiler (los tiempos van en `trailerScore` y deben coincidir con los planos del CSS). Si cambias la duración de un plano del tráiler, cambia también su evento de sonido. El personaje del manager aparece solo una vez (acto II) para no repetirlo.
 
 - **Entrada y sonido por defecto**: `#gate` es una pantalla de entrada («Empezar con sonido» / «sin sonido») que da el gesto que exige el navegador y arranca el tráiler. Solo aparece al abrir en la primera diapositiva. Rótulo de crédito oficial: «TFM · Máster de Desarrollo con IA · The Big School by Brais Moure».
 - **Cifras gigantes** (`.bigstats`): cuatro números enormes con cuenta atrás de entrada y una línea de contexto. Cada cifra se mide en el repo el mismo día (líneas con `wc -l` sobre `src`/`server`, rutas con grep de `router.get|post…`, tablas y migraciones sobre `supabase/`, tests con `vitest`) y la diapositiva lleva la fecha de medición.
