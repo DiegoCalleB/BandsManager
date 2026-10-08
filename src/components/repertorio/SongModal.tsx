@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote } from '../../utils/repertorioUtils';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote, isSongMarkedForMember } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -72,6 +72,16 @@ export function SongModal({
     const initial: Record<string, string> = {};
     resolvedMembers.forEach((m) => {
       initial[m.name.toLowerCase()] = getSongMemberNote(editingSong, m.id, m.name);
+    });
+    return initial;
+  });
+
+  // Qué músicos quieren ver tonalidad/BPM en su setlist para este tema (vive en la canción,
+  // por músico, igual que su nota: notasPorMiembro[].mostrarTono).
+  const [memberShowState, setMemberShowState] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    resolvedMembers.forEach((m) => {
+      initial[m.name.toLowerCase()] = isSongMarkedForMember(editingSong, m.id, m.name);
     });
     return initial;
   });
@@ -449,6 +459,17 @@ export function SongModal({
 
                     {/* Member Notes Section */}
                     <input type="hidden" name="notasMiembrosJson" value={JSON.stringify(memberNotesState)} />
+                    <input
+                      type="hidden"
+                      name="mostrarTonoJson"
+                      value={JSON.stringify(
+                        resolvedMembers.map((m) => ({
+                          id: m.id,
+                          name: m.name,
+                          marked: memberShowState[m.name.toLowerCase()] === true,
+                        })),
+                      )}
+                    />
 
                     <div className="pt-2 border-t border-[var(--hair)]/5 space-y-2">
                       <div className="flex items-center justify-between">
@@ -498,6 +519,17 @@ export function SongModal({
                                   placeholder={`Notas para ${member.name}...`}
                                   className="w-full"
                                 />
+                                <label className="flex items-center gap-1.5 text-micro text-[var(--ink-2)] cursor-pointer select-none">
+                                  <input
+                                    type="checkbox"
+                                    checked={memberShowState[memberKey] === true}
+                                    onChange={(e) =>
+                                      setMemberShowState((prev) => ({ ...prev, [memberKey]: e.target.checked }))
+                                    }
+                                    className="rounded accent-[var(--ok)] cursor-pointer"
+                                  />
+                                  Ver la tonalidad en su setlist
+                                </label>
                               </div>
                             );
                           })}

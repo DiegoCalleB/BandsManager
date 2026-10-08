@@ -2203,6 +2203,20 @@ export default function RepertorioSetlists({
         // ignore
       }
     }
+    // Marcas "quiero ver la tonalidad en mi setlist" por músico (notasPorMiembro[].mostrarTono).
+    const aplicarMarcasTono = (base: Song): Song => {
+      const raw = formData.get("mostrarTonoJson") as string;
+      if (!raw) return base;
+      try {
+        const marcas = JSON.parse(raw) as { id?: string; name: string; marked: boolean }[];
+        return marcas.reduce(
+          (acc, m) => withSongMarkedForMember(acc, m.id, m.name, m.marked === true),
+          base,
+        );
+      } catch {
+        return base;
+      }
+    };
     let audioPrincipalUrl =
       (formData.get("audioPrincipalUrl") as string) ||
       editingSong?.audioPrincipalUrl ||
@@ -2230,7 +2244,7 @@ export default function RepertorioSetlists({
     }
 
     if (editingSong) {
-      const updatedSong: Song = {
+      const updatedSong: Song = aplicarMarcasTono({
         ...editingSong,
         titulo,
         duracion,
@@ -2251,7 +2265,7 @@ export default function RepertorioSetlists({
         notasMiembros,
         audioPrincipalUrl,
         portadaUrl,
-      };
+      });
       setSongs((prev) => {
         const next = prev.map((s) =>
           s.id === editingSong.id ? updatedSong : s,
@@ -2280,7 +2294,7 @@ export default function RepertorioSetlists({
       );
       if (hasNewAudio) runAutoChordAnalysis(updatedSong);
     } else {
-      const newSong: Song = {
+      const newSong: Song = aplicarMarcasTono({
         id: `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
         titulo,
         duracion,
@@ -2301,7 +2315,7 @@ export default function RepertorioSetlists({
         notasMiembros,
         audioPrincipalUrl,
         portadaUrl,
-      };
+      });
       setSongs((prev) => {
         const next = [newSong, ...prev];
         saveSongsToLocalStorageSafely(next);
