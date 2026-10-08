@@ -7,7 +7,7 @@ const studio = fs.readFileSync(path.join(__dirname, '..', 'components', 'SongStu
 describe('Estudio: plegado de ideas', () => {
   it('ninguna condición fuerza la idea abierta ignorando el chevron', () => {
     expect(studio).not.toMatch(/isIdeaExpanded\s*=\s*filteredIdeas\.length\s*===\s*1/);
-    expect(studio).toContain('const isIdeaExpanded = expandedIdeaIds.has(idea.id);');
+    expect(studio).toContain('const isIdeaExpanded = modoIris || expandedIdeaIds.has(idea.id);');
   });
 
   it('la auto-expansión solo ocurre una vez por idea (no reabre lo que el usuario plegó)', () => {
