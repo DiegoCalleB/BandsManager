@@ -25,3 +25,15 @@ test('el músico marca un tema como duda desde la lista del setlist', async ({ p
   const nota = (puts.at(-1).notasPorMiembro ?? []).find((n: any) => n.mostrarTono === true);
   expect(nota).toBeTruthy();
 });
+
+test('"Solo <músico>" imprime únicamente la hoja del músico en vista', async ({ page }) => {
+  await abrirModalDeImpresion(page);
+  const solo = page.getByRole('button', { name: /^Solo / }).first();
+  await solo.waitFor({ timeout: 10_000 });
+  await solo.click();
+  await expect.poll(() => page.evaluate(() => (window as any).__htmls.length)).toBeGreaterThan(0);
+  const hojas = await page.evaluate(() => ((window as any).__htmls.at(-1).match(/class="sheet-page/g) ?? []).length);
+  expect(hojas).toBeGreaterThan(0);
+  const todas = await page.evaluate(() => (window as any).__htmls.length);
+  expect(todas).toBe(1);
+});

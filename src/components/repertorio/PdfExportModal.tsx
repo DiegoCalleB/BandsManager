@@ -1913,7 +1913,7 @@ function PdfExportModalBody({
     };
   };
 
-  const handlePrint = async () => {
+  const handlePrint = async (onlyMember?: (typeof membersToExport)[number]) => {
     // La ventana se abre YA, dentro del gesto del usuario: si se abre después de maquetar (varios
     // `await` más tarde) Chrome móvil la bloquea como ventana emergente.
     const printWindow = window.open("", "_blank");
@@ -1925,7 +1925,7 @@ function PdfExportModalBody({
       '<!DOCTYPE html><meta charset="utf-8"><title>Preparando setlist…</title><body style="font-family:sans-serif;color:#555;display:grid;place-items:center;height:100vh;margin:0">Maquetando el setlist…</body>',
     );
     try {
-      const doc = await buildPrintDocument({ members: membersToExport, mode: "print" });
+      const doc = await buildPrintDocument({ members: onlyMember ? [onlyMember] : membersToExport, mode: "print" });
       if (!doc) {
         printWindow.close();
         return;
@@ -2030,6 +2030,17 @@ function PdfExportModalBody({
                 </span>
                 <span className="sm:hidden">Imprimir</span>
               </button>
+              {/* Solo la hoja del músico en vista (con SUS temas marcados): para mandársela o guardar su PDF. */}
+              {membersToExport.length > 1 && currentPreviewMember && (
+                <button
+                  onClick={() => handlePrint(currentPreviewMember)}
+                  title={`Imprimir o guardar en PDF solo la hoja de ${currentPreviewMember.name}`}
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 rounded-[var(--r-pill)] font-sans text-xs font-bold transition-ui flex items-center gap-1.5 cursor-pointer bg-[var(--surface)] text-[var(--ink)] active:scale-[0.97]"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span className="max-w-[9rem] truncate">Solo {currentPreviewMember.name}</span>
+                </button>
+              )}
               <Button variant="ghost" size="sm" aria-label="Cerrar"
                 onClick={onClose}
               >

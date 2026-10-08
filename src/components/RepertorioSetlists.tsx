@@ -5292,7 +5292,7 @@ export default function RepertorioSetlists({
                           const dudaMarcada = isSongMarkedForMember(song, currentUser.id, currentUser.name);
                           return (
                             <IconButton
-                              label={dudaMarcada ? "Quitar de mis dudas (ocultar tono/BPM en mi hoja)" : "Me da dudas: ver tono/BPM en mi hoja impresa"}
+                              label={dudaMarcada ? "Quitar de mis dudas" : "Me da dudas"}
                               aria-pressed={dudaMarcada}
                               onClick={(e) => {
                                 e.stopPropagation();
