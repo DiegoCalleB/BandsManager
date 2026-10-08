@@ -3,7 +3,7 @@
 
 import express from "express";
 import { requireAuth, requireCronOrAuth, loadState, saveState } from "../state.js";
-import { dbGetBandContacts, dbUpsertBandContact } from "../db.js";
+import { dbGetBandContacts } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { previewDeBanda } from "../services/musicPreviewService.js";
 import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
@@ -11,14 +11,19 @@ import { estadoSpotifyBanda, planificarSpotifyBanda, PlanSpotifyBanda } from "..
 import { periodoMensual } from "../utils/metricasBanda.js";
 import { capturarMetricasBanda, guardarMetricasBanda } from "../services/metricasBandaService.js";
 import { getSupabase } from "../db/core.js";
+import { cargarEnlacesDeContactos, guardarEnlace } from "../db/enlacesBandas.js";
+import { EnlacesPorPlataforma } from "../utils/enlacesBandas.js";
 
 const router = express.Router();
 
 interface BandaCuenta {
   id: string;
   nombre_banda?: string;
-  spotify_youtube?: string;
+  enlaces?: EnlacesPorPlataforma;
 }
+
+/** URL de Spotify verificable de la banda (solo la plataforma Spotify; "" si no tiene). */
+const spotifyDe = (b: BandaCuenta): string => b.enlaces?.spotify?.url || "";
 
 const MAX_BANDAS_LOTE = 60;
 const PAUSA_MS = 250;
@@ -73,21 +78,19 @@ interface ItemLote extends PlanSpotifyBanda {
 }
 
 /** Calcula el plan de Spotify para las bandas de la cuenta que lo necesitan. */
-async function calcularLote(bandas: BandaCuenta[]): Promise<{ plan: ItemLote[]; porId: Map<string, BandaCuenta> }> {
-  const porId = new Map<string, BandaCuenta>();
+async function calcularLote(bandas: BandaCuenta[]): Promise<ItemLote[]> {
   const plan: ItemLote[] = [];
   const candidatas = bandas
-    .filter((b) => b?.nombre_banda && planificarSpotifyBanda(b.spotify_youtube, "x").accion !== "mantener")
+    .filter((b) => b?.nombre_banda && planificarSpotifyBanda(spotifyDe(b), "x").accion !== "mantener")
     .slice(0, MAX_BANDAS_LOTE);
 
   for (const b of candidatas) {
-    porId.set(b.id, b);
     const verificada = await resolverUrlSpotifyDeBanda(String(b.nombre_banda));
-    const p = planificarSpotifyBanda(b.spotify_youtube, verificada);
-    plan.push({ ...p, id: b.id, nombre: b.nombre_banda, actual: b.spotify_youtube || "" });
+    const p = planificarSpotifyBanda(spotifyDe(b), verificada);
+    plan.push({ ...p, id: b.id, nombre: b.nombre_banda, actual: spotifyDe(b) });
     await sleep(PAUSA_MS);
   }
-  return { plan, porId };
+  return plan;
 }
 
 /**
@@ -101,7 +104,7 @@ router.post("/bands/spotify-sweep", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const bandas = (await dbGetBandContacts(bandId)) as BandaCuenta[];
-    const { plan, porId } = await calcularLote(bandas);
+    const plan = await calcularLote(bandas);
 
     if (req.body?.apply !== true) {
       return res.json({ success: true, dryRun: true, plan, invalidas: plan.filter((p) => p.accion === "sin_sustituto").length });
@@ -113,11 +116,11 @@ router.post("/bands/spotify-sweep", requireAuth, async (req, res) => {
     let errores = 0;
     for (const item of plan) {
       if (!aprobadas.has(item.id) || !item.nuevo || estadoSpotifyBanda(item.actual) === "valido") continue;
-      const banda = porId.get(item.id);
       try {
-        const guardada = await dbUpsertBandContact({ ...banda, spotify_youtube: item.nuevo }, bandId);
+        // Solo la fila de Spotify: YouTube, web e Instagram de la banda no se tocan.
+        await guardarEnlace(item.id, bandId, "spotify", item.nuevo, true);
         const idx = (state.bands || []).findIndex((b: BandaCuenta) => b.id === item.id);
-        if (idx !== -1) state.bands[idx] = guardada;
+        if (idx !== -1) state.bands[idx] = { ...state.bands[idx], spotify_youtube: item.nuevo };
         aplicadas++;
       } catch (err) {
         errores++;
@@ -141,7 +144,7 @@ router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
     let filas = 0;
     const motivos: Record<string, number> = {};
     for (const b of bandas) {
-      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
+      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), spotifyDe(b));
       filas += await guardarMetricasBanda({ id: b.id, band_id: bandId }, periodo, capturadas);
       for (const f of fallos) {
         const clave = `${f.fuente}: ${f.motivo}`;
@@ -188,13 +191,15 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
  */
 router.post("/cron/metricas-mensual", requireCronOrAuth, async (_req, res) => {
   try {
-    const { data, error } = await getSupabase().from("band_contacts").select("id, band_id, nombre_banda, spotify_youtube");
+    const { data, error } = await getSupabase().from("band_contacts").select("id, band_id, nombre_banda");
     if (error) throw new Error(error.message);
+    const enlacesPorContacto = await cargarEnlacesDeContactos((data || []).map((b) => b.id));
     const periodo = periodoMensual();
     let filas = 0;
     for (const b of (data || []) as (BandaCuenta & { band_id: string })[]) {
       if (!b.nombre_banda) continue;
-      const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
+      const spotify = enlacesPorContacto.get(b.id)?.spotify?.url || "";
+      const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), spotify);
       filas += await guardarMetricasBanda({ id: b.id, band_id: b.band_id }, periodo, capturadas);
       await sleep(PAUSA_MS);
     }
