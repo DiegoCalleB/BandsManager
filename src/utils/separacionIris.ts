@@ -1,4 +1,4 @@
-import type { AudioTrack, SongAudioIdea } from '../types';
+import type { AudioTrack, Song, SongAudioIdea } from '../types';
 
 /**
  * Lógica PURA de la separación de pistas con Iris (sin React, sin red): qué se le dice al usuario en
@@ -138,6 +138,33 @@ export function avanzarProgreso(prev: ProgresoIris | null, ahora: number): Progr
   }
   if (prev.stage === 'persisting') return { ...prev, progressPct: Math.min(prev.progressPct + 1, 96) };
   return prev;
+}
+
+/** Motores que se ofrecen al usuario, del recomendado al gratis. */
+export const MOTORES_IRIS: Array<{ motor: MotorIris; nombre: string; nota: string }> = [
+  { motor: 'fal', nombre: 'Ultra', nota: 'la mejor calidad, ~15 s' },
+  { motor: 'mvsep-mdx23', nombre: 'Studio', nota: 'alta precisión, tarda varios minutos' },
+  { motor: 'demucs', nombre: 'Cloud', nota: 'equilibrado, 1-2 min' },
+  { motor: 'dsp-server', nombre: 'Básico', nota: 'gratis e instantáneo, menos limpio' },
+];
+
+/**
+ * La idea sobre la que separar al lanzar Iris desde el Atril: la que suena (mismo audio), si no la
+ * primera con audio y, si la canción solo tiene audio principal, una maqueta nueva que lo envuelve.
+ */
+export function ideaParaSeparar(song: Song, audioUrlActivo: string, autor = 'Banda'): SongAudioIdea | null {
+  const ideas = (song.audioIdeas || []).filter((i) => !!i.audioUrl);
+  const activa = ideas.find((i) => i.audioUrl === audioUrlActivo) || ideas[0];
+  if (activa) return activa;
+  if (!audioUrlActivo) return null;
+  return {
+    id: `idea-main-${song.id || 'cancion'}`,
+    titulo: `Maqueta Principal (${song.titulo})`,
+    audioUrl: audioUrlActivo,
+    subidoPor: autor,
+    seccion: 'general',
+    fecha: new Date().toLocaleDateString('es-ES'),
+  } as SongAudioIdea;
 }
 
 // ───────────────────────── Fusión de pistas ─────────────────────────

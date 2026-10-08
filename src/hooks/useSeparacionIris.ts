@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AudioTrack, Song, SongAudioIdea } from '../types';
 import { apiFetch } from '../utils/api';
 import { computeAutoBalanceVolumes } from '../utils/audioLatency';
@@ -34,6 +34,12 @@ interface Opciones {
   pistasElegidas: string[];
   /** Se llama con los ids de la idea ya separada para que la UI la deje desplegada. */
   alTerminarIdea?: (ids: string[]) => void;
+  /**
+   * Corta la separación al desmontar. Para quien no es dueño de la canción (el Atril): su `song` se
+   * queda viejo al cerrarse y escribir con él pisaría ediciones posteriores. El servidor guarda el
+   * resultado, así que volver a lanzarla no repite el gasto de GPU.
+   */
+  cancelarAlDesmontar?: boolean;
 }
 
 /**
@@ -44,7 +50,7 @@ interface Opciones {
  * `song`, `onUpdateSong` y las opciones se leen por ref en el momento de escribir: una separación
  * puede durar minutos y la canción habrá cambiado entre tanto (antes se pisaba con la versión vieja).
  */
-export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, alTerminarIdea }: Opciones) {
+export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, alTerminarIdea, cancelarAlDesmontar }: Opciones) {
   const [isSeparatingStemsAi, setIsSeparatingStemsAi] = useState(false);
   const [separationElapsedSeconds, setSeparationElapsedSeconds] = useState(0);
   const [showStemErrorDetails, setShowStemErrorDetails] = useState(false);
@@ -71,6 +77,11 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
     setIsSeparatingStemsAi(false);
     setStemProgressModal(null);
   }, []);
+
+  useEffect(() => {
+    if (!cancelarAlDesmontar) return;
+    return () => abortRef.current?.abort();
+  }, [cancelarAlDesmontar]);
 
   const separar = useCallback(async (targetIdea: SongAudioIdea, overrideEngine?: MotorIris, stemsToInclude?: string[]) => {
     abortRef.current?.abort();
