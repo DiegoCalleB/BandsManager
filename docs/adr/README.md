@@ -18,6 +18,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0009](./0009-licencia-agpl-doble.md) | Licencia AGPL-3.0 con licencia comercial alternativa | Aceptada | retroactiva |
 | [0010](./0010-stems-cloud-y-dsp-local.md) | Separación de pistas: modelos en GPU y DSP local | Aceptada | retroactiva |
 | [0011](./0011-docs-as-code.md) | Documentación como código, verificada en CI | Aceptada | nueva |
+| [0012](./0012-contrato-api-openapi-por-ast.md) | Contrato de API OpenAPI generado por análisis del AST | Aceptada | nueva |
 
 ## Cómo añadir uno
 
@@ -25,5 +26,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 2. Rellena contexto, decisión, **alternativas descartadas** y consecuencias.
 3. Añade la fila al índice.
 4. Si sustituye a otro, cambia el estado del anterior a «Sustituida por».
+
+**Sobre los ADR retroactivos.** Se han reconstruido a partir del código y de AGENTS.md. El contexto, la decisión y las consecuencias se pueden comprobar en el código; las *alternativas descartadas* son las que razonablemente se podían haber elegido, y el repositorio no documenta que se evaluaran en su día.
 
 Un ADR no se reescribe cuando cambia la decisión: se crea uno nuevo que sustituye al anterior.

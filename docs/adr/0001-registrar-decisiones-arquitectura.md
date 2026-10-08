@@ -20,5 +20,5 @@ Cada decisión técnica con alternativas reales tiene un ADR numerado en `docs/a
 
 ## Consecuencias
 
-- Las decisiones anteriores a este ADR se han reconstruido a partir del código y de AGENTS.md. Están marcadas como «retroactiva»: no son actas de la época en que se tomaron.
+- Las decisiones anteriores a este ADR se han reconstruido a partir del código y de AGENTS.md. Están marcadas como «retroactiva»: no son actas de la época en que se tomaron, y sus alternativas descartadas son razonadas a posteriori, no un registro de lo evaluado entonces.
 - Hay que mantener el índice. `npm run verify:docs` no comprueba que cada decisión tenga ADR; eso sigue siendo disciplina.

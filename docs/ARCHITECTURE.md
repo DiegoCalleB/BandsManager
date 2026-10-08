@@ -1,6 +1,6 @@
 # Arquitectura de BandManager.io
 
-Vista de alto nivel para leer en 10 minutos. El detalle de cada decisión está en [docs/adr/](./adr/README.md); el grafo navegable de módulos, en [docs/knowledge_graph/](./knowledge_graph/index.md); el del motor de audio, en [DOCUMENTACION_ARQUITECTURA_SISTEMA.md](./referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md).
+Vista de alto nivel para leer en 10 minutos. La referencia de la API está en [docs/api/](./api/index.html) (OpenAPI generado del código). El detalle de cada decisión está en [docs/adr/](./adr/README.md); el grafo navegable de módulos, en [docs/knowledge_graph/](./knowledge_graph/index.md); el del motor de audio, en [DOCUMENTACION_ARQUITECTURA_SISTEMA.md](./referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md).
 
 ## 1. Contexto del sistema (nivel C1)
 
@@ -40,7 +40,7 @@ flowchart TB
   end
 
   subgraph railway["Railway: un proceso Node"]
-    api["API Express 4<br/>(server/routes/, 284 endpoints)"]
+    api["API Express 4<br/>(server/routes/, 352 rutas HTTP)"]
     agentes["Agentes en proceso<br/>Scheduler + worker de cola<br/>(server/services/agentScheduler.ts)"]
     migr["Runner de migraciones<br/>(al arrancar, server/migrations/)"]
   end

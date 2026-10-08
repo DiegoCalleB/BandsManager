@@ -315,6 +315,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 - [docs/planes/](./docs/planes/): anti-fraude y acuerdos de gira, gestión de tokens IA, BandSplit.
 - [docs/knowledge_graph/](./docs/knowledge_graph/index.md): grafo de arquitectura navegable en Obsidian.
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): vista de arquitectura en diagramas (contexto y contenedores), para leer en 10 minutos.
+- [docs/api/](./docs/api/index.html): referencia de la API generada del código (OpenAPI 3.1, `docs/api/openapi.json`), con autenticación y límites de cada ruta.
 - [docs/adr/](./docs/adr/README.md): registro de decisiones de arquitectura (ADR), con las alternativas descartadas.
 - [docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md](./docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md): arquitectura del motor de audio y stems.
 
@@ -322,7 +323,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 284 endpoints, 57 tablas en producción (con RLS activo en todas), 40 migraciones SQL en el runner, 271 componentes React y 2.079 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 352 rutas HTTP (301 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 40 migraciones SQL en el runner, 271 componentes React y 2.079 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 

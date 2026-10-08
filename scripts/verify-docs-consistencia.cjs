@@ -30,15 +30,26 @@ const esTest = (nombre) => /\.test\.tsx?$/.test(nombre);
 const lineas = (archivos, re) =>
   archivos.reduce((n, f) => n + fs.readFileSync(f, "utf8").split("\n").filter((l) => re.test(l)).length, 0);
 
-const rutasRouter = ficheros("server/routes", (n) => /\.ts$/.test(n) && !esTest(n));
 const testsArchivos = [
   ...ficheros("server", esTest),
   ...ficheros("src", esTest),
   ...ficheros("e2e", esTest),
 ];
 
+// Las rutas salen del contrato OpenAPI generado por AST (scripts/generate-openapi.mjs), no de un regex:
+// un regex sobre `router.get(` subestima porque hay routers con otro nombre y rutas con alias.
+function contarContrato() {
+  const spec = JSON.parse(leer("docs/api/openapi.json"));
+  const fuentes = new Set();
+  let rutasHttp = 0;
+  for (const metodos of Object.values(spec.paths)) {
+    for (const op of Object.values(metodos)) { rutasHttp++; fuentes.add(op["x-source"]); }
+  }
+  return { rutasHttp, declaraciones: fuentes.size };
+}
+
 const metricas = {
-  endpoints: lineas(rutasRouter, /router\.(get|post|put|patch|delete)\(/),
+  ...contarContrato(),
   tests: lineas(testsArchivos, /^\s*(it|test)(\.each)?\(/),
   migraciones: ficheros("supabase/migrations", (n) => n.endsWith(".sql")).length,
   migracionesFueraRunner: ficheros("supabase", (n) => n.endsWith(".sql")).length -
@@ -48,7 +59,8 @@ const metricas = {
 
 // Cada regla: patrón que captura la cifra en el README y la métrica que debe igualar.
 const reglas = [
-  { nombre: "endpoints", re: /(\d[\d.]*) endpoints/, valor: metricas.endpoints },
+  { nombre: "rutas HTTP", re: /(\d[\d.]*) rutas HTTP/, valor: metricas.rutasHttp },
+  { nombre: "declaraciones de handler", re: /(\d[\d.]*) declaraciones de handler/, valor: metricas.declaraciones },
   { nombre: "tests", re: /(\d[\d.]*) tests unitarios/, valor: metricas.tests },
   { nombre: "migraciones", re: /(\d[\d.]*) migraciones SQL en el runner/, valor: metricas.migraciones },
   { nombre: "componentes", re: /(\d[\d.]*) componentes React/, valor: metricas.componentes },

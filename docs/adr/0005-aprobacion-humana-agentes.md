@@ -10,7 +10,12 @@ Los agentes escriben a salas y promotores en nombre de una banda. Un correo mal 
 
 ## Decisión
 
-Los agentes (Scout, Redactor, Enviador, Lector) pueden buscar, redactar y clasificar, pero el envío real requiere aprobación humana explícita. No hay modo «hands-off» ni excepción por configuración: el PR template lo exige como casilla.
+Dos puertas en serie, ambas en `server/services/agentEngine.ts`:
+
+1. **Aprobación humana.** El Enviador solo despacha leads cuyo `estado` es `aprobado`, `aprobado_propuesta` o `aprobado_respuesta` (`ESTADOS_DE_ENVIO`; la consulta de la línea ~117 los filtra siempre y además acota por banda, incluso cuando se pide un lead concreto). Ese estado lo fija una persona con `PUT /api/leads/{id}` (`server/routes/leads/crud.ts:170`). Los agentes buscan, redactan y clasifican, pero no se aprueban a sí mismos.
+2. **Borrador por defecto, envío real opt-in.** Aun aprobado, el lead termina como **borrador en Gmail** salvo que se cumplan las TRES condiciones a la vez (línea 173): la plataforma tiene `AGENT_EMAIL_MODE=send`, la banda ha configurado `dispatch_mode = direct_send` y su `dispatch_level` no es `draft_only`. Sin configuración guardada, el valor por defecto es el seguro (`draft_gmail` / `draft_only`).
+
+El PR template exige una casilla para que ningún cambio rompa estas puertas.
 
 ## Alternativas descartadas
 
@@ -20,5 +25,6 @@ Los agentes (Scout, Redactor, Enviador, Lector) pueden buscar, redactar y clasif
 ## Consecuencias
 
 - Menos automatización real, a cambio de control. Es un coste de producto asumido.
+- **Matiz que el tribunal puede preguntar:** el envío directo sin ver el borrador existe, pero es una decisión explícita de la banda y de la plataforma, y siempre posterior a la aprobación del lead. La aprobación es un cambio de estado en un endpoint genérico (`PUT /api/leads/{id}`), no un endpoint propio; no se ha verificado aquí que el servidor impida que una llamada de API automatizada con credenciales de usuario fije ese estado.
 - Un fallo aquí es un fallo de confianza, no de disponibilidad. Por eso la regla está en AGENTS.md y en el PR template, no solo en el código.
 - Pendiente según AGENTS.md §8: mecanismo de baja en los correos comerciales.
