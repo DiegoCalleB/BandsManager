@@ -75,9 +75,14 @@ export interface PlanSpotifyBanda {
 /**
  * Decide qué hacer con una banda ya guardada. Nunca borra: un enlace roto sin sustituto
  * verificado se deja como está y se informa (`sin_sustituto`).
+ * `enlaceRoto`: el ID tiene formato válido pero Spotify responde 404 (artista inexistente).
  */
-export function planificarSpotifyBanda(valorActual: string | null | undefined, urlVerificada: string): PlanSpotifyBanda {
-  const estado = estadoSpotifyBanda(valorActual);
+export function planificarSpotifyBanda(
+  valorActual: string | null | undefined,
+  urlVerificada: string,
+  enlaceRoto = false,
+): PlanSpotifyBanda {
+  const estado = enlaceRoto ? 'invalido' : estadoSpotifyBanda(valorActual);
   if (estado === 'valido' || estado === 'otro') return { accion: 'mantener' };
   if (!urlVerificada) return estado === 'invalido' ? { accion: 'sin_sustituto' } : { accion: 'mantener' };
   return { accion: estado === 'vacio' ? 'completar' : 'reemplazar', nuevo: urlVerificada };

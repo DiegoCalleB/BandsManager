@@ -6,7 +6,8 @@ import { requireAuth, requireCronOrAuth, loadState, saveState } from "../state.j
 import { dbGetBandContacts } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { previewDeBanda } from "../services/musicPreviewService.js";
-import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
+import { artistaSpotifyExiste, resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
+import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { estadoSpotifyBanda, planificarSpotifyBanda, PlanSpotifyBanda } from "../utils/spotifyMatch.js";
 import { periodoMensual } from "../utils/metricasBanda.js";
 import { capturarMetricasBanda, guardarMetricasBanda } from "../services/metricasBandaService.js";
@@ -27,6 +28,8 @@ const spotifyDe = (b: BandaCuenta): string => b.enlaces?.spotify?.url || "";
 
 const MAX_BANDAS_LOTE = 60;
 const PAUSA_MS = 250;
+// YouTube responde 429 si se le llama en ráfaga: en las métricas se espacia más.
+const PAUSA_METRICAS_MS = 1500;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** GET /api/bands/:id/preview — preview de 30 s de la banda (o null si no hay). */
@@ -77,17 +80,27 @@ interface ItemLote extends PlanSpotifyBanda {
   actual: string;
 }
 
-/** Calcula el plan de Spotify para las bandas de la cuenta que lo necesitan. */
+/**
+ * Calcula el plan de Spotify para las bandas de la cuenta. Un enlace con formato válido se
+ * comprueba contra Spotify: si responde 404 es un artista inexistente y se trata como roto.
+ */
 async function calcularLote(bandas: BandaCuenta[]): Promise<ItemLote[]> {
   const plan: ItemLote[] = [];
   const candidatas = bandas
-    .filter((b) => b?.nombre_banda && planificarSpotifyBanda(spotifyDe(b), "x").accion !== "mantener")
+    .filter((b) => b?.nombre_banda && estadoSpotifyBanda(spotifyDe(b)) !== "otro")
     .slice(0, MAX_BANDAS_LOTE);
 
   for (const b of candidatas) {
+    const actual = spotifyDe(b);
+    const id = spotifyArtistId(actual);
+    const roto = estadoSpotifyBanda(actual) === "valido" && id !== null && (await artistaSpotifyExiste(id)) === false;
+    if (estadoSpotifyBanda(actual) === "valido" && !roto) {
+      await sleep(PAUSA_MS);
+      continue;
+    }
     const verificada = await resolverUrlSpotifyDeBanda(String(b.nombre_banda));
-    const p = planificarSpotifyBanda(spotifyDe(b), verificada);
-    plan.push({ ...p, id: b.id, nombre: b.nombre_banda, actual: spotifyDe(b) });
+    const p = planificarSpotifyBanda(actual, verificada, roto);
+    plan.push({ ...p, id: b.id, nombre: b.nombre_banda, actual });
     await sleep(PAUSA_MS);
   }
   return plan;
@@ -115,7 +128,7 @@ router.post("/bands/spotify-sweep", requireAuth, async (req, res) => {
     let aplicadas = 0;
     let errores = 0;
     for (const item of plan) {
-      if (!aprobadas.has(item.id) || !item.nuevo || estadoSpotifyBanda(item.actual) === "valido") continue;
+      if (!aprobadas.has(item.id) || !item.nuevo) continue;
       try {
         // Solo la fila de Spotify: YouTube, web e Instagram de la banda no se tocan.
         await guardarEnlace(item.id, bandId, "spotify", item.nuevo, true);
@@ -150,7 +163,7 @@ router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
         const clave = `${f.fuente}: ${f.motivo}`;
         motivos[clave] = (motivos[clave] || 0) + 1;
       }
-      await sleep(PAUSA_MS);
+      await sleep(PAUSA_METRICAS_MS);
     }
     // Resumen por motivo: así se ve en pantalla por qué una fuente sale vacía.
     res.json({ success: true, periodo, bandas: bandas.length, filas, motivos });
@@ -201,7 +214,7 @@ router.post("/cron/metricas-mensual", requireCronOrAuth, async (_req, res) => {
       const spotify = enlacesPorContacto.get(b.id)?.spotify?.url || "";
       const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), spotify);
       filas += await guardarMetricasBanda({ id: b.id, band_id: b.band_id }, periodo, capturadas);
-      await sleep(PAUSA_MS);
+      await sleep(PAUSA_METRICAS_MS);
     }
     res.json({ success: true, periodo, filas });
   } catch (err) {

@@ -62,6 +62,25 @@ function formatDuration(ms: number): string {
 }
 
 /**
+ * ¿Existe el artista de ese ID en Spotify? true/false según responda 200/404;
+ * null si no se puede saber (sin token, error de red, 429...). Un null nunca marca una banda como rota.
+ */
+export async function artistaSpotifyExiste(id: string): Promise<boolean | null> {
+  const token = await getSpotifyAccessToken();
+  if (!token) return null;
+  try {
+    const res = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (res.status === 404) return false;
+    return res.ok ? true : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Attempts to retrieve an official Spotify API token if credentials exist.
  */
 export async function getSpotifyAccessToken(): Promise<string | null> {
