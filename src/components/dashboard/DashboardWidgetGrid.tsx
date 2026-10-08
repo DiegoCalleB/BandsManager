@@ -35,6 +35,7 @@ import {
   WidgetType,
 } from "../../types/dashboardWidgets";
 import { CalendarWidget } from "./widgets/CalendarWidget";
+import { RoiBandaWidget } from "./widgets/RoiBandaWidget";
 import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
 import {
   CrmPipelineWidget,
@@ -53,6 +54,7 @@ import {
 } from "./widgets/ChartWidgets";
 import {
   Concert,
+  Payment,
   Rehearsal,
   Lead,
   Tour,
@@ -82,6 +84,7 @@ export interface DashboardWidgetGridProps {
   tours?: Tour[];
   fans?: Fan[];
   posts?: SocialPost[];
+  payments?: Payment[];
   setlists?: Setlist[];
   songs?: Song[];
   epkConfig?: Partial<EPKConfig>;
@@ -104,6 +107,7 @@ export function DashboardWidgetGrid({
   tours = [],
   fans = [],
   posts = [],
+  payments = [],
   setlists = [],
   songs = [],
   epkConfig,
@@ -533,6 +537,16 @@ export function DashboardWidgetGrid({
         );
       case "tour_status":
         return <TourStatusWidget tours={tours} onNavigate={onNavigate} />;
+      case "roi_banda":
+        return (
+          <RoiBandaWidget
+            concerts={concerts}
+            payments={payments}
+            plan={userPlan}
+            puedeVerDinero={currentUser?.role === "leader" || currentUser?.role === "admin"}
+            onNavigate={onNavigate}
+          />
+        );
       default:
         return null;
     }
@@ -561,6 +575,7 @@ export function DashboardWidgetGrid({
               "ai_agent_status",
               "epk_status",
               "repertorio_summary",
+              "roi_banda",
             ].includes(w.type),
           )
           .slice(0, 4)

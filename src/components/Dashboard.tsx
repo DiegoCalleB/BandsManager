@@ -11,6 +11,7 @@ import {
   EPKConfig,
   Tour,
   Fan,
+  Payment,
   SocialPost,
   Setlist,
   Song,
@@ -126,6 +127,7 @@ interface DashboardProps {
   tours?: Tour[];
   fans?: Fan[];
   posts?: SocialPost[];
+  payments?: Payment[];
   setlists?: Setlist[];
   songs?: Song[];
   onNavigate?: (view: any, options?: NavigationOptions) => void;
@@ -176,6 +178,7 @@ export default function Dashboard({
   tours = [],
   fans = [],
   posts = [],
+  payments = [],
   onNavigate,
   onOpenProfileModal,
   isPromoPlan: isPromoPlanProp,
@@ -912,6 +915,7 @@ export default function Dashboard({
         tours={tours}
         fans={fans}
         posts={posts}
+        payments={payments}
         setlists={setlists}
         songs={songs}
         epkConfig={epkConfig}

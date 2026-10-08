@@ -2280,6 +2280,7 @@ export default function App() {
                     tours={tours}
                     fans={fans}
                     posts={posts}
+                    payments={payments}
                     isPromoPlan={isPromoPlan}
                   />
                 )}
