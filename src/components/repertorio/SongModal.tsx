@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { X, Upload, Disc3, CheckCircle2, Music, Users, ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { ThemeColors, Song } from '../../types';
-import { BandMemberOption, resolveBandMembers, getSongMemberNote, isSongMarkedForMember } from '../../utils/repertorioUtils';
+import { BandMemberOption, resolveBandMembers, getSongMemberNote, isSongTonoMarkedForMember, isSongBpmMarkedForMember } from '../../utils/repertorioUtils';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -78,10 +78,13 @@ export function SongModal({
 
   // Qué músicos quieren ver tonalidad/BPM en su setlist para este tema (vive en la canción,
   // por músico, igual que su nota: notasPorMiembro[].mostrarTono).
-  const [memberShowState, setMemberShowState] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
+  const [memberShowState, setMemberShowState] = useState<Record<string, { tono: boolean; bpm: boolean }>>(() => {
+    const initial: Record<string, { tono: boolean; bpm: boolean }> = {};
     resolvedMembers.forEach((m) => {
-      initial[m.name.toLowerCase()] = isSongMarkedForMember(editingSong, m.id, m.name);
+      initial[m.name.toLowerCase()] = {
+        tono: isSongTonoMarkedForMember(editingSong, m.id, m.name),
+        bpm: isSongBpmMarkedForMember(editingSong, m.id, m.name),
+      };
     });
     return initial;
   });
@@ -466,7 +469,8 @@ export function SongModal({
                         resolvedMembers.map((m) => ({
                           id: m.id,
                           name: m.name,
-                          marked: memberShowState[m.name.toLowerCase()] === true,
+                          tono: memberShowState[m.name.toLowerCase()]?.tono === true,
+                          bpm: memberShowState[m.name.toLowerCase()]?.bpm === true,
                         })),
                       )}
                     />
@@ -519,17 +523,28 @@ export function SongModal({
                                   placeholder={`Notas para ${member.name}...`}
                                   className="w-full"
                                 />
-                                <label className="flex items-center gap-1.5 text-micro text-[var(--ink-2)] cursor-pointer select-none">
-                                  <input
-                                    type="checkbox"
-                                    checked={memberShowState[memberKey] === true}
-                                    onChange={(e) =>
-                                      setMemberShowState((prev) => ({ ...prev, [memberKey]: e.target.checked }))
-                                    }
-                                    className="rounded accent-[var(--ok)] cursor-pointer"
-                                  />
-                                  Ver la tonalidad en su setlist
-                                </label>
+                                <div className="flex items-center gap-4 text-micro text-[var(--ink-2)]">
+                                  {([['tono', 'Ver tonalidad'], ['bpm', 'Ver BPM']] as const).map(([flag, label]) => (
+                                    <label key={flag} className="flex items-center gap-1.5 cursor-pointer select-none">
+                                      <input
+                                        type="checkbox"
+                                        checked={memberShowState[memberKey]?.[flag] === true}
+                                        onChange={(e) =>
+                                          setMemberShowState((prev) => ({
+                                            ...prev,
+                                            [memberKey]: {
+                                              tono: prev[memberKey]?.tono === true,
+                                              bpm: prev[memberKey]?.bpm === true,
+                                              [flag]: e.target.checked,
+                                            },
+                                          }))
+                                        }
+                                        className="rounded accent-[var(--ok)] cursor-pointer"
+                                      />
+                                      {label}
+                                    </label>
+                                  ))}
+                                </div>
                               </div>
                             );
                           })}

@@ -152,6 +152,7 @@ import {
   resolveBandMembers,
   isSongMarkedForMember,
   withSongMarkedForMember,
+  withSongFlagsForMember,
   BandMemberOption,
 } from "../utils/repertorioUtils";
 import {
@@ -2208,9 +2209,9 @@ export default function RepertorioSetlists({
       const raw = formData.get("mostrarTonoJson") as string;
       if (!raw) return base;
       try {
-        const marcas = JSON.parse(raw) as { id?: string; name: string; marked: boolean }[];
+        const marcas = JSON.parse(raw) as { id?: string; name: string; tono: boolean; bpm: boolean }[];
         return marcas.reduce(
-          (acc, m) => withSongMarkedForMember(acc, m.id, m.name, m.marked === true),
+          (acc, m) => withSongFlagsForMember(acc, m.id, m.name, { tono: m.tono === true, bpm: m.bpm === true }),
           base,
         );
       } catch {
@@ -5356,7 +5357,7 @@ export default function RepertorioSetlists({
 
                       {/* Aviso al director: cuántos músicos marcaron este tema como "me da dudas" */}
                       {(() => {
-                        const dudan = (song.notasPorMiembro ?? []).filter((n) => n.mostrarTono);
+                        const dudan = (song.notasPorMiembro ?? []).filter((n) => n.mostrarTono || n.mostrarBpm);
                         if (dudan.length === 0) return null;
                         const nombres = dudan.map((n) => n.memberName).filter(Boolean).join(", ");
                         return (
