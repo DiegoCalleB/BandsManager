@@ -44,6 +44,8 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
+import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
+import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
 import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
@@ -128,8 +130,13 @@ app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
 app.use("/api", trackingRouter);
+app.use("/api", enlacesCortosApiRouter);
 app.use("/api", dealsRouter);
 app.use(transposeRouter);
+// Superficies públicas fuera de /api: enlaces cortos (/r/:code), página indexable de cada concierto
+// (/e/:slug), sitemap.xml y robots.txt. Van ANTES del fallback de la SPA, que si no devolvería index.html.
+app.use(enlacesCortosPublicoRouter);
+app.use(paginaConciertoRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
 // archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.
