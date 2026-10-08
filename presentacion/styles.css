@@ -740,3 +740,11 @@ body.scroll .sheet { width: 100%; font-size: 14px; } body.scroll .rehearse { fle
 .sheet td { color: #1f2430; } .sheet td.no { color: #b3261e; }
 .en-top .mono { flex: none; width: 90px; height: 90px; border-radius: 20px; background: #243a63; display: grid; place-items: center; font-size: 34px; font-weight: 700; color: #cfe0ff; letter-spacing: .02em; }
 .rh-sheet img { height: 520px; }
+
+.slide.scene.reveal .rv-photo { position: absolute; right: 120px; top: 120px; bottom: 120px; width: 640px; margin: 0; border-radius: 28px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); z-index: 2; }
+.rv-photo img { width: 100%; height: calc(100% + 60px); object-fit: cover; object-position: 50% 0; }
+.rv-photo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 70px 34px 30px; background: linear-gradient(180deg, transparent, rgba(5,7,13,.92)); }
+.rv-photo figcaption b { display: block; font-size: 38px; font-weight: 600; } .rv-photo figcaption span { font-size: 26px; color: rgba(255,255,255,.7); }
+.slide.scene.reveal h2, .slide.scene.reveal .sub { max-width: 1000px; }
+.slide.scene.reveal h2 { font-size: 108px; }
+body.scroll .slide.scene.reveal .rv-photo { position: relative; right: auto; top: auto; bottom: auto; width: 100%; height: 240px; margin-top: 20px; }
