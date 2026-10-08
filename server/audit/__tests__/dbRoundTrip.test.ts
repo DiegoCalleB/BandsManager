@@ -11,7 +11,7 @@ import { auditarTodas } from '../dbRoundTrip';
 /** Tablas que no admiten fila de prueba por diseño (con motivo). */
 const SALTADAS_ACEPTADAS: Record<string, string> = {
   data_change_history: 'registro append-only alimentado por triggers; no se edita',
-  band_metricas: 'CHECK en fuente y periodo (YYYY-MM): el valor genérico de prueba no es válido por diseño',
+  metricas_bandas_externas: 'CHECK en fuente y periodo (YYYY-MM): el valor genérico de prueba no es válido por diseño',
 };
 
 describe('round-trip de guardado en BD', () => {

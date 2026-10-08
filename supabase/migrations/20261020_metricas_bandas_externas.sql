@@ -1,7 +1,8 @@
--- Métricas públicas de cada banda: una fila por banda, fuente y mes (historial mensual).
+-- Métricas públicas de bandas EXTERNAS (no la propia banda: esa vive en social_metrics).
+-- Una fila por banda, fuente y mes (historial mensual).
 -- Fuentes: Spotify (seguidores, popularidad), Deezer (fans), YouTube (suscriptores, visualizaciones).
--- Idempotente. Rollback: DROP TABLE band_metricas.
-CREATE TABLE IF NOT EXISTS band_metricas (
+-- Idempotente. Rollback: DROP TABLE metricas_bandas_externas.
+CREATE TABLE IF NOT EXISTS metricas_bandas_externas (
   id BIGSERIAL PRIMARY KEY,
   band_id TEXT NOT NULL REFERENCES registered_bands(band_id) ON DELETE CASCADE,
   band_contact_id TEXT NOT NULL REFERENCES band_contacts(id) ON DELETE CASCADE,
@@ -16,7 +17,7 @@ CREATE TABLE IF NOT EXISTS band_metricas (
   UNIQUE (band_contact_id, fuente, periodo)
 );
 
-CREATE INDEX IF NOT EXISTS band_metricas_band_idx ON band_metricas (band_id, periodo);
+CREATE INDEX IF NOT EXISTS metricas_bandas_externas_band_idx ON metricas_bandas_externas (band_id, periodo);
 
 -- RLS activado sin políticas: los clientes no leen ni escriben; el backend usa la service role.
-ALTER TABLE band_metricas ENABLE ROW LEVEL SECURITY;
+ALTER TABLE metricas_bandas_externas ENABLE ROW LEVEL SECURITY;
