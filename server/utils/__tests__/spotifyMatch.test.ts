@@ -89,4 +89,13 @@ describe('planificarSpotifyBanda', () => {
     expect(planificarSpotifyBanda('https://open.spotify.com/artist/inventado', '')).toEqual({ accion: 'sin_sustituto' });
     expect(planificarSpotifyBanda('', '')).toEqual({ accion: 'mantener' });
   });
+  it('un enlace con ID válido pero inexistente (404) se sustituye si hay sustituto verificado', () => {
+    const roto = 'https://open.spotify.com/artist/0OdUWJ0sBjDrqHygGUXeCF';
+    expect(planificarSpotifyBanda(roto, 'https://open.spotify.com/artist/NUEVOID0000000000000A', true)).toEqual({
+      accion: 'reemplazar',
+      nuevo: 'https://open.spotify.com/artist/NUEVOID0000000000000A',
+    });
+    expect(planificarSpotifyBanda(roto, '', true)).toEqual({ accion: 'sin_sustituto' });
+    expect(planificarSpotifyBanda(roto, 'https://open.spotify.com/artist/NUEVOID0000000000000A', false)).toEqual({ accion: 'mantener' });
+  });
 });

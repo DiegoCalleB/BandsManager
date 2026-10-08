@@ -2,6 +2,8 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { cargarEnlacesDeContactos, sincronizarEnlacesDeContacto } from "./enlacesBandas.js";
+import { valorVisibleSpotifyYoutube } from "../utils/enlacesBandas.js";
 
 export async function dbGetBandContacts(bandId: string) {
   const sb = getSupabase();
@@ -14,10 +16,17 @@ export async function dbGetBandContacts(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (band_contacts): ${error.message}`);
   const validated = (data || []).filter(b => cleanBandId(b.band_id) === cleanId);
-  return validated.map(b => ({
-    ...b,
-    dna_expresion: b.dna_expresion || {}
-  }));
+  // Los enlaces viven en `enlaces_bandas_amigas`: si la banda tiene filas, mandan sobre la columna legacy.
+  const enlacesPorContacto = await cargarEnlacesDeContactos(validated.map(b => b.id));
+  return validated.map(b => {
+    const enlaces = enlacesPorContacto.get(b.id);
+    return {
+      ...b,
+      dna_expresion: b.dna_expresion || {},
+      ...(enlaces ? { spotify_youtube: valorVisibleSpotifyYoutube(enlaces) } : {}),
+      enlaces: enlaces || {}
+    };
+  });
 }
 
 export async function dbUpsertBandContact(band: any, bandId: string) {
@@ -68,8 +77,9 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
     contacto_nombre: band.contacto_nombre || band.contactoNombre || existingRecord?.contacto_nombre || "",
     email: band.email || existingRecord?.email || "",
     telefono: band.telefono || existingRecord?.telefono || "",
-    instagram: band.instagram || existingRecord?.instagram || "",
-    spotify_youtube: band.spotify_youtube || band.spotifyYoutube || existingRecord?.spotify_youtube || "",
+    // Si el formulario manda el campo (aunque vacío), es la verdad: así borrar un enlace funciona.
+    instagram: band.instagram ?? existingRecord?.instagram ?? "",
+    spotify_youtube: (band.spotify_youtube ?? band.spotifyYoutube) ?? existingRecord?.spotify_youtube ?? "",
     aforo_promedio: Number(band.aforo_promedio || band.aforoPromedio || existingRecord?.aforo_promedio || 0),
     notas_colaboracion: band.notas_colaboracion || band.notasColaboracion || existingRecord?.notas_colaboracion || "",
     ciudad_origen_swap: band.ciudad_origen_swap || band.ciudadOrigenSwap || existingRecord?.ciudad_origen_swap || "",
@@ -84,6 +94,13 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
 
   const { data, error } = await sb.from("band_contacts").upsert(payload).select().single();
   if (error) throw new Error(`Supabase Error (upsert band_contacts): ${error.message}`);
+  // Tras el upsert: la fila de enlaces necesita que el contacto ya exista (FK).
+  await sincronizarEnlacesDeContacto(
+    payload.id,
+    targetBandId,
+    band.spotify_youtube ?? band.spotifyYoutube,
+    band.instagram,
+  );
   return data;
 }
 
