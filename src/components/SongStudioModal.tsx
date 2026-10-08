@@ -37,7 +37,7 @@ import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
-import { getSongIrisStemIdea, cancionConIdeas } from '../utils/irisTracks';
+import { getSongIrisStemIdea, cancionConIdeas, esIdeaIris, irisPrimero, metaStemsDeCancion } from '../utils/irisTracks';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import {
@@ -548,7 +548,7 @@ export default function SongStudioModal({
     const initialSet = new Set<string>();
     if (song.audioIdeas) {
       song.audioIdeas.forEach((idea) => {
-        if ((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed || song.audioIdeas!.length === 1) {
+        if (esIdeaIris(idea) || song.audioIdeas!.length === 1) {
           initialSet.add(idea.id);
         }
       });
@@ -567,7 +567,7 @@ export default function SongStudioModal({
     if (nuevas.length === 0) return;
     nuevas.forEach((idea) => ideasYaVistasRef.current.add(idea.id));
     const aAbrir = nuevas.filter(
-      (idea) => (idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed || ideas.length === 1
+      (idea) => esIdeaIris(idea) || ideas.length === 1
     );
     if (aAbrir.length === 0) return;
     setExpandedIdeaIds((prev) => new Set([...prev, ...aAbrir.map((i) => i.id)]));
@@ -1281,7 +1281,10 @@ export default function SongStudioModal({
 
   const ideasList = song.audioIdeas || [];
 
-  const filteredIdeas = activeSectionFilter === 'todas' ? ideasList : ideasList.filter((i) => i.seccion === activeSectionFilter);
+  const filteredIdeas = irisPrimero(
+    activeSectionFilter === 'todas' ? ideasList : ideasList.filter((i) => i.seccion === activeSectionFilter)
+  );
+  const metaStems = metaStemsDeCancion(song);
 
   // Safe helper to extract finite audio duration in seconds
   const getSafeTrackDuration = (el: HTMLAudioElement | null | undefined): number => {
@@ -3722,6 +3725,11 @@ export default function SongStudioModal({
                             <div className="min-w-0">
                               <h4 className="text-base font-bold text-[var(--ink)] flex items-center gap-2 flex-wrap">
                                 {idea.titulo}
+                                {esIdeaIris(idea) && (
+                                  <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold">
+                                    Pistas de la canción · Iris
+                                  </span>
+                                )}
                                 <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)] font-semibold">
                                   {tracks.length} {tracks.length === 1 ? 'pista' : 'pistas separadas'}
                                 </span>
@@ -4080,15 +4088,15 @@ export default function SongStudioModal({
                                         <span className="flex items-center gap-1.5 font-bold text-[var(--ink)]">
                                           <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" /> Mezclador de Pistas ({tracks.length})
                                         </span>
-                                        {idea.stemEngineUsed && (
+                                        {esIdeaIris(idea) && metaStems?.motor && (
                                           <span
                                             className={`hidden sm:flex px-2 py-0.5 rounded text-micro font-sans items-center gap-1 font-bold ${
-                                              idea.stemDegraded
+                                              metaStems.degradado
                                                 ? 'bg-[var(--acc-soft)] text-[var(--acc-ink)]'
                                                 : 'bg-[var(--tentative)]/5 text-[var(--ink)]'
                                             }`}
                                           >
-                                            <span>Motor: {idea.stemEngineUsed.split('(')[0].trim()}</span>
+                                            <span>Motor: {metaStems.motor.split('(')[0].trim()}</span>
                                           </span>
                                         )}
                                       </div>

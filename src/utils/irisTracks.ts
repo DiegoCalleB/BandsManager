@@ -9,6 +9,16 @@ export function getSongIrisStemIdea(song?: Song | null): SongAudioIdea | null {
   return song.audioIdeas.find((idea) => (idea.pistas && idea.pistas.length > 1) || Boolean(idea.stemEngineUsed)) || null;
 }
 
+/** ¿Es esta la idea que lleva los stems de Iris (la que la UI trata como "pistas de la canción")? */
+export function esIdeaIris(idea: SongAudioIdea): boolean {
+  return Boolean((idea.pistas && idea.pistas.length > 1) || idea.stemEngineUsed);
+}
+
+/** Pone la idea de Iris la primera y deja las tomas en su orden: los stems no son una toma más. */
+export function irisPrimero(ideas: SongAudioIdea[]): SongAudioIdea[] {
+  return [...ideas.filter(esIdeaIris), ...ideas.filter((i) => !esIdeaIris(i))];
+}
+
 /**
  * Devuelve true si la canción tiene stems separados por Iris (de la canción, o aún en una idea).
  */
