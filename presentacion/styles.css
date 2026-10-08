@@ -597,3 +597,17 @@ body.scroll #gate { display: none; }
 .bs span { max-width: 720px; font-size: 28px; }
 .bs-grid { gap: 8px 110px; margin-top: 22px; }
 body.scroll .bs { flex-direction: column; }
+
+/* Trazado ciudad A → ciudad B del Date Swap */
+.swap-route { display: flex; align-items: center; gap: 14px; margin-top: 34px; }
+.sr-node { flex: none; width: 190px; padding: 14px 18px; border-radius: 18px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); display: flex; flex-direction: column; gap: 4px; opacity: 0; transform: translateY(14px); transition: opacity 600ms var(--ease), transform 700ms var(--ease); transition-delay: calc(.9s + var(--k, 0) * 1.4s); }
+.sr-node b { font-size: 24px; color: var(--acc); } .sr-node span { font-size: 19px; line-height: 1.25; color: var(--ink-2); }
+.sr-node:last-child { --k: 1; }
+.sr-line { position: relative; flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,.14); overflow: hidden; }
+.sr-line i { position: absolute; left: -30%; top: 0; width: 30%; height: 100%; background: var(--acc); box-shadow: 0 0 14px var(--acc); border-radius: 2px; }
+.slide.hero.active .sr-node, .slide.hero.before .sr-node { opacity: 1; transform: none; }
+.slide.hero.active .sr-line i { animation: srrun 2.2s var(--ease) 1.2s infinite; }
+.slide.hero:not(.active) .sr-node { transition: none; }
+@keyframes srrun { to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .sr-node { opacity: 1; transform: none; transition: none; } .sr-line i { animation: none; left: 0; width: 100%; } }
+body.scroll .swap-route { margin-top: 18px; } body.scroll .sr-node { opacity: 1; transform: none; width: auto; flex: 1; }
