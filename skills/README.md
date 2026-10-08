@@ -18,7 +18,7 @@ Cada skill es independiente y proporciona checklist, patrones detallados, anti-p
 - Máquina de estados 2D (CRM × Agentic)
 - Ciclo de vida completo de los agentes
 - Human-in-the-loop patterns
-- Scheduler operation (60s tick)
+- Scheduler operation (tick de 24 h por defecto, configurable)
 - Checklist de arquitectura agéntica
 
 **Archivos clave:** `server/services/agentEngine.ts`, `server/services/lectorAgent.ts`, `server/services/agentScheduler.ts`
@@ -98,7 +98,7 @@ Cada skill es independiente y proporciona checklist, patrones detallados, anti-p
 
 - Arquitectura de observabilidad en dos capas (`agent_execution_logs` vs Sentry)
 - Contabilidad de tokens e inferencia IA en `aiLedger`
-- Trazabilidad y latencia de tareas atómicas del scheduler de 60s
+- Trazabilidad y latencia de tareas atómicas del scheduler
 
 ---
 
@@ -147,12 +147,49 @@ Referencia directa: `/skills/NOMBRE_SKILL/SKILL.md`
 
 ## 🔄 Sincronización Entre Tools
 
-`/skills/` (aquí) es la fuente única. `.claude/skills/` y `.gemini/skills/` son **copias reales** (no symlinks — un symlink no sobrevive de forma fiable un build/deploy de Railway), una por herramienta:
-- **Claude Code** → lee desde `.claude/skills/` (copia real, se carga con `/skill <nombre>`)
-- **Google AI Studio** → lee desde `.gemini/skills/` (copia real)
-- **GitHub Copilot** → referencia directa a `/skills/` (sin copia propia, referencia el path en el prompt)
+`/skills/` (aquí) es la **fuente única**. Cada herramienta lee una **copia real** (no symlinks: no sobreviven de forma fiable a un build/deploy de Railway):
 
-**Importante — esto es una copia manual, no automática:** si editas un `SKILL.md`, cópialo también a `.claude/skills/<nombre>/` y `.gemini/skills/<nombre>/` en el mismo commit. No hay tooling que lo sincronice solo todavía — es la misma trampa de deriva que tuvo `context/` (retirado; ver `git log -- context/` si hace falta recuperar algo de esa carpeta), así que no dejes que las copias se desincronicen del original.
+| Herramienta | Carpeta | Cómo se carga |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `/skill <nombre>` |
+| Google AI Studio (Gemini) | `.gemini/skills/` | lee el directorio |
+| Open Code | `.opencode/skills/` | lee el directorio |
+| GitHub Copilot y cualquier otro | `skills/` | referencia el path en el prompt |
+
+**Edita siempre `skills/`, nunca una copia**, y sincroniza:
+
+```bash
+npm run skills:sync     # copia skills/ a las tres carpetas
+```
+
+`npm run verify:docs` (y por tanto el CI) ejecuta `scripts/sync-skills.mjs --check` y falla si alguna copia difiere de la fuente, si falta un skill o si hay uno huérfano. Antes esto era una copia manual y se desvió: faltaban skills en la fuente y `.claude/skills/` no existía.
+
+## 📇 Índice completo (22 skills)
+
+| Skill | Para qué |
+|---|---|
+| `agent-skills` | Agent Skills specification, schema, and orchestration framework for creating, validating, and sharing interoperable AI agent skills (SKILL.md standard). |
+| `agentic-harness` | Guía de arquitectura para los agentes de IA (Booking CRM, Reels, Music Studio) y control del Scheduler en BandManager.io. Usar al modificar agentEngine.ts, lectorAgent.ts |
+| `agentic-runtime-telemetry` | Observability, two-layer error tracking (agent_execution_logs vs Sentry), and precise AI token accounting in aiLedger for Claude Code, Open Code, Cursor, and Gemini. |
+| `audio-and-media-engine` | Tone.js Web Audio synthesis, MIDI export, audio key/BPM analysis, and Supabase Storage asset hierarchy for BandManager.io. Works across Claude Code, Open Code, Cursor, an |
+| `clean-code-discipline` | Reglas de concisión extrema, prevención de sobre-ingeniería (anti-bloat), reutilización de utilidades nativas y existentes de BandManager.io, y cero deuda técnica de Type |
+| `code-graph-navigator` | Guía de navegación determinista y mapeo de dependencias de la arquitectura de BandManager.io (frontend React 19, backend Express, agentes IA, capa de persistencia Supabas |
+| `cyber-and-trust-guardian` | Universal zero-trust multi-tenant security & OWASP LLM defense skill for Claude Code, Open Code, Cursor, and Gemini. Enforces getTargetBandId, SSRF guard, anti-prompt inj |
+| `fullstack-ux-design` | Guía de ingeniería Frontend (React 19, Motion, Tailwind v4) y Backend (Express modular, Vitest) para BandManager.io. Usar al crear componentes UI o refinamientos API. Par |
+| `graphify` | Universal AST & Obsidian Knowledge Graph engine for BandManager.io. Works seamlessly with Claude Code, Open Code, Cursor, and Gemini. Enables zero-latency navigation via  |
+| `human-in-the-loop-flow` | Human-in-the-loop state protocol, agent execution lifecycle, and dispatch safety rules for BandManager.io. Works across Claude Code, Open Code, Cursor, and Gemini. |
+| `llm-evals-benchmark` | Scientific evaluation and benchmarking harness for LLM agents in BandManager.io. Works across Claude Code, Open Code, Cursor, and Gemini to quantify hallucination rate, R |
+| `omniroute` | Open-source AI gateway integration, multi-model fallback, quota-aware routing, and unified AI provider orchestration for coding agents and LLM services. |
+| `owasp-llm-security-auditor` | Blindaje de ciberseguridad avanzado y auditoría contra los riesgos del OWASP Top 10 for LLMs en BandManager.io. Protege contra inyecciones directas/indirectas, fuga de da |
+| `ponytail` | Lazy senior developer mindset. Write less code, use existing solutions, prioritize standard libraries, avoid premature abstractions, and apply the YAGNI decision ladder. |
+| `prompt-craft-and-dna` | Advanced prompt engineering, Band DNA injection, anti-AI cliché filters, and Read Aloud score validation for BandManager.io. Works across Claude Code, Open Code, Cursor,  |
+| `security-multitenancy` | Guía de auditoría de seguridad y aislamiento multi-inquilino para Express y Supabase en BandManager.io. Usar al modificar rutas de servidor, endpoints API o consultas a b |
+| `supabase-architect` | Guía de arquitectura de datos con Supabase PostgreSQL para BandManager.io. Usar al modificar tablas, crear migraciones SQL, definir modelos TypeScript o actualizar handle |
+| `supabase-schema-architect` | PostgreSQL database schema migrations, multi-tenant index optimization, idempotency, and RLS security hardening for Supabase in BandManager.io. Works across Claude Code,  |
+| `tdd-fast-feedback` | Fast feedback TDD workflow and anti-regression engine for Claude Code, Open Code, Cursor, and Gemini. Uses Vitest and Playwright with <1.5s validation loops. |
+| `tdd-regression-guardian` | Marco de Test-Driven Development (TDD) estricto y prevención de regresiones para BandManager.io. Aplica ciclo Red-Green-Refactor con Vitest y Playwright E2E antes de alte |
+| `telemetry-and-cost-auditor` | Observabilidad distribuida, auditoría de agentes, seguimiento de errores en dos capas (agent_execution_logs vs Sentry) y contabilidad precisa de tokens/costes en BandMana |
+| `visual-identity` | Sistema de identidad visual «Espectro» de BandManager.io — cero bordes, radio escalado, color por módulo, la Onda como lenguaje de datos y los tres temas (Claro/Oscuro/Cl |
 
 ---
 
