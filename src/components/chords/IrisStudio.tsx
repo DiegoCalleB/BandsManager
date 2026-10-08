@@ -1,18 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
+import { MOTORES_IRIS, type MotorIris } from '../../utils/separacionIris';
 
 /**
  * Puerta de Iris dentro del Atril. Iris es una acción de la CANCIÓN (separar su audio en pistas),
  * no de una idea. Con pistas es la cabecera del mezclador; sin pistas, la invitación a separarlas.
- * No separa nada: solo avisa al que la pinta (el motor y su coste viven en el estudio).
+ * No separa nada: deja elegir el motor y avisa al que la pinta, que es quien lanza la separación.
  */
+const SelectorMotor: React.FC<{ onElegir: (m: MotorIris) => void }> = ({ onElegir }) => (
+  <div className="flex flex-wrap gap-2 w-full" data-iris-motores>
+    {MOTORES_IRIS.map(m => (
+      <button
+        key={m.motor}
+        type="button"
+        onClick={() => onElegir(m.motor)}
+        className="flex flex-col items-start px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--acc-soft)] cursor-pointer transition-ui text-left"
+      >
+        <span className="text-xs font-bold font-sans">{m.nombre}</span>
+        <span className="text-micro font-sans text-[var(--ink-2)]">{m.nota}</span>
+      </button>
+    ))}
+  </div>
+);
+
 export const IrisStudio: React.FC<{
   pistas: number;
   motor?: string;
   tieneAudio: boolean;
-  onSeparar?: () => void;
-}> = ({ pistas, motor, tieneAudio, onSeparar }) => {
+  separando?: boolean;
+  onSeparar?: (motor: MotorIris) => void;
+}> = ({ pistas, motor, tieneAudio, separando, onSeparar }) => {
+  const [eligiendo, setEligiendo] = useState(false);
   if (!tieneAudio) return null;
+  const elegir = (m: MotorIris) => {
+    setEligiendo(false);
+    onSeparar?.(m);
+  };
 
   if (pistas > 1) {
     return (
@@ -25,13 +48,15 @@ export const IrisStudio: React.FC<{
         {onSeparar && (
           <button
             type="button"
-            onClick={onSeparar}
+            onClick={() => setEligiendo(v => !v)}
+            disabled={separando}
             className="ml-auto px-2.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] hover:bg-[var(--acc-soft)] cursor-pointer transition-ui"
             title="Volver a separar con otro motor de Iris"
           >
             Cambiar motor
           </button>
         )}
+        {eligiendo && onSeparar && <SelectorMotor onElegir={elegir} />}
       </div>
     );
   }
@@ -46,11 +71,13 @@ export const IrisStudio: React.FC<{
       </p>
       <button
         type="button"
-        onClick={onSeparar}
+        onClick={() => setEligiendo(v => !v)}
+        disabled={separando}
         className="px-3 py-1 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-xs font-bold font-sans cursor-pointer transition-ui"
       >
         Separar con Iris
       </button>
+      {eligiendo && <SelectorMotor onElegir={elegir} />}
     </div>
   );
 };

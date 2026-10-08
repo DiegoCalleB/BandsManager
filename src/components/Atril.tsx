@@ -65,6 +65,9 @@ import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
 import { getSongIrisStemIdea, pistasDeCancion } from "../utils/irisTracks";
 import { IrisStudio } from "./chords/IrisStudio";
+import { useSeparacionIris } from "../hooks/useSeparacionIris";
+import { ideaParaSeparar, type MotorIris } from "../utils/separacionIris";
+import { SongStudioStemProgressModal } from "./song_studio/SongStudioStemProgressModal";
 import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
@@ -90,8 +93,6 @@ export interface AtrilProps {
   modo?: ModoAtril;
   onClose: () => void;
   onUpdateSong: (updated: Song) => void;
-  /** Abre la separación de Iris de esta canción (el estudio). Sin él no se ofrece separar. */
-  onAbrirIris?: (song: Song) => void;
 }
 
 export function Atril({
@@ -99,7 +100,6 @@ export function Atril({
   modo = 'Estudiar',
   onClose,
   onUpdateSong,
-  onAbrirIris,
 }: AtrilProps) {
   const ajustes = useMemo(
     () => ajustesDeModoAtril(modo, typeof window === "undefined" ? 1024 : window.innerWidth),
@@ -175,6 +175,17 @@ export function Atril({
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
   const stems = useMemo(() => pistasDeCancion(song), [song]);
+  const iris = useSeparacionIris({
+    song,
+    onUpdateSong,
+    motor: "fal",
+    pistasElegidas: ["Voz", "Batería", "Bajo", "Guitarras", "Teclados", "Arreglos"],
+    cancelarAlDesmontar: true,
+  });
+  const separarConIris = (motor: MotorIris) => {
+    const idea = ideaParaSeparar(song, audioUrl);
+    if (idea) void iris.handlePerformAiStemSeparation(idea, motor);
+  };
   const [masControles, setMasControles] = useState(false);
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
@@ -870,7 +881,8 @@ export function Atril({
                   pistas={stems.length}
                   motor={getSongIrisStemIdea(song)?.stemEngineUsed?.split("(")[0].trim()}
                   tieneAudio={!!audioUrl}
-                  onSeparar={onAbrirIris ? () => onAbrirIris(song) : undefined}
+                  separando={iris.isSeparatingStemsAi}
+                  onSeparar={separarConIris}
                 />
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
@@ -1383,6 +1395,11 @@ export function Atril({
             )}
           </div>
         </div>
+
+        <SongStudioStemProgressModal
+          stemProgressModal={iris.stemProgressModal}
+          setStemProgressModal={iris.setStemProgressModal}
+        />
 
         {/* SHARE MODAL FOR WHATSAPP / APPS */}
         <ShareModal
