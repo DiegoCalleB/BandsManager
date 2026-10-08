@@ -15,7 +15,7 @@ import {
 } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
-import { pistasDeIdeas } from "../../src/utils/irisTracks.js";
+import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -35,14 +35,42 @@ import { pistasDeIdeas } from "../../src/utils/irisTracks.js";
  * (~23ms de resolución), que ya no está pegado a esa rejilla.
  */
 /**
- * Valor de songs.pistas al guardar: espejo de los stems de la idea de Iris. Vacío y sin columna
- * en la fila (nueva, o antes de migrar) → undefined, para no enviar una columna que no existe.
+ * Valor de songs.pistas al guardar. Los stems son de la canción: mientras las escrituras del
+ * cliente migran, manda el espejo de la idea de Iris; sin ella vale lo que llegue en `pistas`
+ * (un `[]` explícito los borra) y, si no llega nada, se conserva lo que ya había (borrar la idea
+ * ya no vacía la canción). Vacío y sin columna en la fila (nueva, o antes de migrar) → undefined,
+ * para no enviar una columna que no existe.
  */
-export function pistasParaGuardar(incomingIdeas: any[] | undefined, existing: any): any[] | undefined {
-  if (!Array.isArray(incomingIdeas)) return undefined;
-  const pistas = pistasDeIdeas(incomingIdeas);
-  if (pistas.length === 0 && !(existing && "pistas" in existing)) return undefined;
-  return pistas;
+export function pistasParaGuardar(
+  incomingIdeas: any[] | undefined,
+  existing: any,
+  incomingPistas?: any[] | null,
+): any[] | undefined {
+  const deIdeas = Array.isArray(incomingIdeas) ? pistasDeIdeas(incomingIdeas) : [];
+  let propias: any[] | undefined;
+  if (deIdeas.length > 0) propias = deIdeas;
+  else if (Array.isArray(incomingPistas)) propias = incomingPistas;
+  else if (Array.isArray(existing?.pistas)) propias = existing.pistas;
+  else if (Array.isArray(incomingIdeas)) propias = [];
+  if (propias === undefined) return undefined;
+  if (propias.length === 0 && !(existing && "pistas" in existing)) return undefined;
+  return propias;
+}
+
+/**
+ * Valor de songs.stems_meta al guardar (misma lógica que pistasParaGuardar): manda el espejo de
+ * la idea de Iris; si no, lo que llegue; si no, lo ya guardado. Sin valor → undefined (no se envía).
+ */
+export function stemsMetaParaGuardar(
+  incomingIdeas: any[] | undefined,
+  existing: any,
+  incomingMeta?: any,
+): Record<string, unknown> | undefined {
+  const deIdeas = Array.isArray(incomingIdeas) ? metaStemsDeIdeas(incomingIdeas) : undefined;
+  if (deIdeas) return deIdeas as Record<string, unknown>;
+  if (incomingMeta && typeof incomingMeta === "object") return incomingMeta;
+  if (existing?.stems_meta && typeof existing.stems_meta === "object") return existing.stems_meta;
+  return undefined;
 }
 
 export async function analizarYGuardarDinamicaCancion(
@@ -593,6 +621,7 @@ export function mapSongRecord(s: any) {
     guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
     // Igual que analisis_acordes: solo si existe (la columna llega con la migración).
     ...(Array.isArray(s.pistas) ? { pistas: s.pistas } : {}),
+    ...(s.stems_meta && typeof s.stems_meta === "object" ? { stemsMeta: s.stems_meta } : {}),
     // Solo si existe: la columna se crea con una migración y antes de ella no debe aparecer.
     ...((s.analisis_acordes || s.analisisAcordes)
       ? { analisisAcordes: s.analisis_acordes || s.analisisAcordes, analisis_acordes: s.analisis_acordes || s.analisisAcordes }
@@ -790,6 +819,9 @@ export async function dbUpsertSong(
     }
   }
 
+  const pistasFinal = pistasParaGuardar(incomingIdeas, existing, song.pistas);
+  const stemsMetaFinal = stemsMetaParaGuardar(incomingIdeas, existing, song.stemsMeta);
+
   const payload: any = {
     id:
       finalSongId ||
@@ -877,11 +909,9 @@ export async function dbUpsertSong(
     // Solo se envía si hay valor (del payload o rescatado): sin migración ejecutada no hay
     // valor y la columna no aparece, así que un guardado cualquiera no falla.
     ...(analisisAcordesFinal !== undefined ? { analisis_acordes: analisisAcordesFinal } : {}),
-    // songs.pistas espeja los stems de la idea de Iris en cada guardado (la migración rellena el
-    // histórico). Sin ideas en el payload no se toca; sin columna (antes de migrar) no se envía.
-    ...(pistasParaGuardar(incomingIdeas, existing) !== undefined
-      ? { pistas: pistasParaGuardar(incomingIdeas, existing) }
-      : {}),
+    // songs.pistas: stems de la canción (ver pistasParaGuardar). Sin columna (antes de migrar) no se envía.
+    ...(pistasFinal !== undefined ? { pistas: pistasFinal } : {}),
+    ...(stemsMetaFinal !== undefined ? { stems_meta: stemsMetaFinal } : {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
       song.enlace_acordes,

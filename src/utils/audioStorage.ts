@@ -462,6 +462,26 @@ export async function resolveAudioUrl(url: string): Promise<string> {
  * to IndexedDB first and keeping lightweight references in localStorage,
  * preventing'Setting the value exceeded the quota' errors.
  */
+/** Pasa a IndexedDB las pistas con audio inline (data:/blob:) y deja la referencia `indexeddb:`. */
+async function sanearPistas(pistas: any[] | undefined): Promise<any[]> {
+  return Promise.all(
+    (pistas || []).map(async (pista: any) => {
+      let trackUrl = pista.audioUrl || '';
+      if (trackUrl.startsWith('data:audio') || trackUrl.startsWith('blob:')) {
+        const key = `audio_track_${pista.id || Date.now()}`;
+        try {
+          const blob = await getAudioBlobFromUrl(trackUrl);
+          await saveAudioToStorage(key, blob);
+          trackUrl = `indexeddb:${key}`;
+        } catch (err) {
+          console.warn('Failed saving track audio to IndexedDB:', err);
+        }
+      }
+      return { ...pista, audioUrl: trackUrl };
+    })
+  );
+}
+
 export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: string): Promise<void> {
   if (!songs || !Array.isArray(songs)) return;
 
@@ -508,25 +528,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
               }
             }
 
-            const sanitizedPistas = await Promise.all(
-              (idea.pistas || []).map(async (pista: any) => {
-                let trackUrl = pista.audioUrl || '';
-                if (trackUrl.startsWith('data:audio') || trackUrl.startsWith('blob:')) {
-                  const key = `audio_track_${pista.id || Date.now()}`;
-                  try {
-                    const blob = await getAudioBlobFromUrl(trackUrl);
-                    await saveAudioToStorage(key, blob);
-                    trackUrl = `indexeddb:${key}`;
-                  } catch (err) {
-                    console.warn('Failed saving track audio to IndexedDB:', err);
-                  }
-                }
-                return {
-                  ...pista,
-                  audioUrl: trackUrl,
-                };
-              })
-            );
+            const sanitizedPistas = await sanearPistas(idea.pistas);
 
             return {
               ...idea,
@@ -536,11 +538,15 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
           })
         );
 
+        // Los stems de la canción llevan las mismas URLs que los de las ideas: mismas claves.
+        const pistasCancion = Array.isArray(song.pistas) && song.pistas.length > 0 ? await sanearPistas(song.pistas) : song.pistas;
+
         return {
           ...song,
           audioPrincipalUrl: principalUrl,
           portadaUrl: coverUrl,
           audioIdeas: sanitizedIdeas,
+          ...(pistasCancion ? { pistas: pistasCancion } : {}),
         };
       })
     );

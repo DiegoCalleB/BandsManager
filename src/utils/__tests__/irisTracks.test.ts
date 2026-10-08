@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks } from '../irisTracks';
+import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas, pistasDeCancion, metaStemsDeCancion, ideaDeStemsDeCancion } from '../irisTracks';
 import { Song, SongAudioIdea } from '../../types';
 
 describe('irisTracks helpers', () => {
@@ -79,5 +79,51 @@ describe('irisTracks helpers', () => {
     expect(tracks).toHaveLength(1);
     expect(tracks[0].nombre).toBe('Maqueta Acústica');
     expect(tracks[0].audioUrl).toBe('https://example.com/acoustic.mp3');
+  });
+});
+
+describe('cancionConIdeas', () => {
+  const stem = (id: string) => ({ id, nombre: id, audioUrl: `${id}.mp3` });
+  const ideaIris = { id: 'i1', titulo: 'Iris', seccion: 'general', audioUrl: 'a', subidoPor: 'x', fecha: 'f', stemEngineUsed: 'Demucs', pistas: [stem('drums'), stem('bass')] } as never;
+
+  it('copia en song.pistas los stems de la idea de Iris', () => {
+    const r = cancionConIdeas({ audioIdeas: [] as never[] }, [ideaIris]);
+    expect(r.pistas?.map((p) => p.id)).toEqual(['drums', 'bass']);
+  });
+  it('si ya no hay idea de Iris conserva los stems de la canción', () => {
+    const r = cancionConIdeas({ pistas: [stem('drums'), stem('bass')] }, []);
+    expect(r.pistas?.map((p) => p.id)).toEqual(['drums', 'bass']);
+  });
+  it('sin stems en ningún sitio no inventa la clave pistas', () => {
+    expect('pistas' in cancionConIdeas({}, [])).toBe(false);
+  });
+});
+
+describe('lectura desde la canción', () => {
+  const stems = [
+    { id: 'p1', nombre: 'Voz', audioUrl: 'v' },
+    { id: 'p2', nombre: 'Bajo', audioUrl: 'b' },
+  ] as any;
+
+  it('song.pistas manda sobre las de la idea', () => {
+    const song = { id: 's', pistas: stems, audioIdeas: [{ id: 'i', pistas: [stems[0], stems[1], stems[0]] }] } as any;
+    expect(pistasDeCancion(song)).toBe(stems);
+  });
+  it('sin song.pistas cae a la idea (datos antiguos)', () => {
+    const song = { id: 's', audioIdeas: [{ id: 'i', pistas: stems }] } as any;
+    expect(pistasDeCancion(song)).toEqual(stems);
+  });
+  it('metaStemsDeCancion prefiere song.stemsMeta', () => {
+    const song = { id: 's', stemsMeta: { motor: 'a' }, audioIdeas: [{ id: 'i', pistas: stems, stemEngineUsed: 'b' }] } as any;
+    expect(metaStemsDeCancion(song)?.motor).toBe('a');
+  });
+  it('ideaDeStemsDeCancion fabrica una idea sintética si solo hay stems en la canción', () => {
+    const idea = ideaDeStemsDeCancion({ id: 's', pistas: stems, audioIdeas: [] } as any);
+    expect(idea?.id).toBe('stems-s');
+    expect(idea?.pistas).toEqual(stems);
+  });
+  it('hasIrisStems detecta stems solo en la canción', () => {
+    expect(hasIrisStems({ id: 's', pistas: stems } as any)).toBe(true);
+    expect(hasIrisStems({ id: 's' } as any)).toBe(false);
   });
 });

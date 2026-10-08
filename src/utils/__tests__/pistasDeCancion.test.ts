@@ -27,9 +27,9 @@ describe('pistasDeCancion con songs.pistas', () => {
   it('si la idea de Iris ya no está, valen las pistas guardadas en la canción', () => {
     expect(pistasDeCancion({ audioIdeas: [], pistas } as never)).toEqual(pistas);
   });
-  it('si hay idea de Iris, manda la idea (es lo que se edita en directo)', () => {
+  it('si hay song.pistas, manda la canción (todas las escrituras la espejan vía cancionConIdeas)', () => {
     const nuevas = [...pistas, { id: 'p3', nombre: 'Batería', audioUrl: 'd' }];
     const song = { audioIdeas: [{ id: 'a', titulo: 'a', audioUrl: 'u', pistas: nuevas }], pistas } as never;
-    expect(pistasDeCancion(song)).toEqual(nuevas);
+    expect(pistasDeCancion(song)).toEqual(pistas);
   });
 });

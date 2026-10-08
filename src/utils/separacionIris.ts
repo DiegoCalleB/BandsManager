@@ -1,4 +1,5 @@
-import type { AudioTrack, Song, SongAudioIdea } from '../types';
+import type { AudioTrack, Song, SongAudioIdea, StemsMeta } from '../types';
+import { cancionConIdeas } from './irisTracks';
 
 /**
  * Lógica PURA de la separación de pistas con Iris (sin React, sin red): qué se le dice al usuario en
@@ -324,6 +325,17 @@ export function ideasConSeparacion(
   if (i >= 0) lista[i] = { ...lista[i], ...idea };
   else lista.push(idea);
   return { ideas: lista, idea };
+}
+
+/**
+ * Canción con el resultado de una separación: las ideas actualizadas y, a la vez, los stems y su
+ * metadato en la canción (`song.pistas`, `song.stemsMeta`), que es lo que lee la app.
+ */
+export function cancionConSeparacion<T extends { audioIdeas?: SongAudioIdea[]; pistas?: AudioTrack[]; stemsMeta?: StemsMeta }>(
+  cancion: T,
+  ideas: SongAudioIdea[]
+): T {
+  return cancionConIdeas(cancion, ideas);
 }
 
 // ───────────────────────── Errores ─────────────────────────
