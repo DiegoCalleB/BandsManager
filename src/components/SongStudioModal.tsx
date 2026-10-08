@@ -1389,6 +1389,23 @@ export default function SongStudioModal({
     }));
   };
 
+  // Pistas de Iris elegidas como base de la idea (por referencia, no copiadas): se oyen con el
+  // transporte de la idea pero NO entran en getIdeaTracks, así las escrituras del mezclador
+  // nunca las copian a la idea. id propio para no chocar con el refs de la hoja de Iris.
+  const pistasBaseVirtuales = (idea: SongAudioIdea): AudioTrack[] => {
+    const cancion = songRef.current || song;
+    const ideaFresca = (cancion.audioIdeas || []).find((i) => i.id === idea.id) || idea;
+    return pistasBaseDeIdea(ideaFresca, pistasDeCancion(cancion)).pistas.map((st) => ({
+      ...st,
+      id: `base-${idea.id}-${st.id}`,
+      solo: false,
+    }));
+  };
+  const pistasDeReproduccion = (idea: SongAudioIdea): AudioTrack[] => [
+    ...getIdeaTracks(idea),
+    ...pistasBaseVirtuales(idea),
+  ];
+
   // High-Precision Master Sync Loop (16ms / requestAnimationFrame)
   // Keeps all multitrack audio elements aligned within < 10ms with pitch-safe micro-adjustments
   // Handles variable track durations cleanly by padding shorter tracks
@@ -1398,7 +1415,7 @@ export default function SongStudioModal({
       syncAnimationFrameRef.current = null;
     }
 
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     if (tracks.length === 0) return;
 
     const hasSolo = tracks.some((t: any) => t.solo);
@@ -1448,7 +1465,7 @@ export default function SongStudioModal({
       // Read fresh track definitions and solo status from songRef
       const currentSong = songRef.current || song;
       const currentIdea = (currentSong.audioIdeas || []).find((i) => i.id === idea.id) || idea;
-      const activeTracks = getIdeaTracks(currentIdea);
+      const activeTracks = pistasDeReproduccion(currentIdea);
       const activeHasSolo = activeTracks.some((t) => t.solo);
 
       // Rock-solid Master Clock reference:
@@ -1603,7 +1620,7 @@ export default function SongStudioModal({
       cancelAnimationFrame(syncAnimationFrameRef.current);
       syncAnimationFrameRef.current = null;
     }
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     tracks.forEach((tr) => {
       const el = trackAudioRefs.current[tr.id];
       if (el) {
@@ -1622,7 +1639,7 @@ export default function SongStudioModal({
       cancelAnimationFrame(syncAnimationFrameRef.current);
       syncAnimationFrameRef.current = null;
     }
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const loopCfg = loopConfigMap[idea.id];
     const startPos = loopCfg && loopCfg.enabled && loopCfg.start > 0 ? loopCfg.start : 0;
 
@@ -1664,7 +1681,7 @@ export default function SongStudioModal({
       if (el) el.pause();
     });
 
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     if (tracks.length === 0) return;
 
     const hasSoloTrack = tracks.some((t) => t.solo);
@@ -1779,7 +1796,7 @@ export default function SongStudioModal({
 
   // Seek master progress for an idea
   const handleSeekIdea = (idea: SongAudioIdea, newTime: number) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const targetTime = Math.max(0, newTime);
 
     tracks.forEach((tr) => {
@@ -3363,7 +3380,7 @@ export default function SongStudioModal({
                                     <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] pb-1.5 flex-wrap gap-2">
                                       <div className="flex items-center gap-2 flex-wrap">
                                         <span className="flex items-center gap-1.5 font-bold text-[var(--ink)]">
-                                          <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" /> Mezclador de Pistas ({tracks.length})
+                                          <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" /> Mezclador de Pistas ({tracks.length + pistasBaseVirtuales(idea).length})
                                         </span>
                                         {esIdeaIris(idea) && metaStems?.motor && (
                                           <span
@@ -3856,6 +3873,39 @@ export default function SongStudioModal({
                                           </div>
                                         );
                                       })}
+
+                                      {/* PISTAS DE IRIS (base de la idea): solo lectura, viven en la canción */}
+                                      {pistasBaseVirtuales(idea).map((tr, i) => (
+                                        <div key={tr.id} className="rounded-[var(--r-m)] overflow-hidden bg-[var(--acc-soft)]/40">
+                                          <div className="flex flex-col sm:flex-row sm:items-stretch">
+                                            <div className="flex items-center gap-2 px-3 py-2 sm:w-56 shrink-0 min-w-0">
+                                              <span
+                                                className="w-2.5 h-2.5 rounded-[var(--r-pill)] shrink-0"
+                                                style={{ backgroundColor: getTrackRainbowColor(tr, i + tracks.length) }}
+                                              />
+                                              <span className="text-xs font-bold text-[var(--ink)] truncate">
+                                                {tr.nombre || tr.instrumento || 'Pista'}
+                                              </span>
+                                              <span className="ml-auto px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold shrink-0">
+                                                Iris
+                                              </span>
+                                            </div>
+                                            <div className="w-full sm:flex-1 relative bg-[var(--sunken)]">
+                                              <WaveformTrack
+                                                ref={(el) => {
+                                                  trackAudioRefs.current[tr.id] = el as HTMLAudioElement;
+                                                }}
+                                                audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
+                                                color={getTrackRainbowColor(tr, i + tracks.length)}
+                                                masterDuration={duration || 30}
+                                                trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
+                                                currentTime={currentTime}
+                                                onSeekTrack={(seekSec) => handleSeekIdea(idea, seekSec)}
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      ))}
 
                                       {/* CUBASE LIVE RECORDING TRACK ROW */}
                                       {isRecordingTrack && recordingTrackIdeaId === idea.id && (
