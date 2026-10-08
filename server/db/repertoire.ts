@@ -15,6 +15,7 @@ import {
 } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
+import { pistasDeIdeas } from "../../src/utils/irisTracks.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -33,6 +34,17 @@ import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
  * (100/118/154). `analizarAudioConIris` mide onsets por flujo espectral sobre el PCM real
  * (~23ms de resolución), que ya no está pegado a esa rejilla.
  */
+/**
+ * Valor de songs.pistas al guardar: espejo de los stems de la idea de Iris. Vacío y sin columna
+ * en la fila (nueva, o antes de migrar) → undefined, para no enviar una columna que no existe.
+ */
+export function pistasParaGuardar(incomingIdeas: any[] | undefined, existing: any): any[] | undefined {
+  if (!Array.isArray(incomingIdeas)) return undefined;
+  const pistas = pistasDeIdeas(incomingIdeas);
+  if (pistas.length === 0 && !(existing && "pistas" in existing)) return undefined;
+  return pistas;
+}
+
 export async function analizarYGuardarDinamicaCancion(
   songId: string,
   audioUrl: string,
@@ -579,6 +591,8 @@ export function mapSongRecord(s: any) {
     cifrado_texto: s.cifrado_texto || s.cifradoTexto || "",
     guiaSustituto: s.guia_sustituto || s.guiaSustituto || {},
     guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
+    // Igual que analisis_acordes: solo si existe (la columna llega con la migración).
+    ...(Array.isArray(s.pistas) ? { pistas: s.pistas } : {}),
     // Solo si existe: la columna se crea con una migración y antes de ella no debe aparecer.
     ...((s.analisis_acordes || s.analisisAcordes)
       ? { analisisAcordes: s.analisis_acordes || s.analisisAcordes, analisis_acordes: s.analisis_acordes || s.analisisAcordes }
@@ -863,6 +877,11 @@ export async function dbUpsertSong(
     // Solo se envía si hay valor (del payload o rescatado): sin migración ejecutada no hay
     // valor y la columna no aparece, así que un guardado cualquiera no falla.
     ...(analisisAcordesFinal !== undefined ? { analisis_acordes: analisisAcordesFinal } : {}),
+    // songs.pistas espeja los stems de la idea de Iris en cada guardado (la migración rellena el
+    // histórico). Sin ideas en el payload no se toca; sin columna (antes de migrar) no se envía.
+    ...(pistasParaGuardar(incomingIdeas, existing) !== undefined
+      ? { pistas: pistasParaGuardar(incomingIdeas, existing) }
+      : {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
       song.enlace_acordes,

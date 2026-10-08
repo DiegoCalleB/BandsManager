@@ -35,11 +35,19 @@ export function getIdeaTracks(idea: SongAudioIdea): AudioTrack[] {
   ];
 }
 
+/** Pistas (stems) que cuelgan de la idea de Iris dentro de una lista de ideas; [] si no hay. */
+export function pistasDeIdeas(ideas?: SongAudioIdea[] | null): AudioTrack[] {
+  const idea = (ideas || []).find((i) => (i.pistas && i.pistas.length > 1) || Boolean(i.stemEngineUsed));
+  return idea ? getIdeaTracks(idea) : [];
+}
+
 /**
- * Pistas separadas de una canción, vengan de donde vengan. Hoy salen de la idea de Iris;
- * cuando pasen a vivir en la propia canción solo cambia esta función, no quien las consume.
+ * Pistas separadas de una canción, vengan de donde vengan. Manda la idea de Iris (es lo que se
+ * edita en directo); `song.pistas` es la copia que guarda el servidor y cubre el caso de que la
+ * idea ya no esté. El día que los escritores pasen a la canción solo cambia esta función.
  */
 export function pistasDeCancion(song?: Song | null): AudioTrack[] {
-  const idea = getSongIrisStemIdea(song);
-  return idea ? getIdeaTracks(idea) : [];
+  if (!song) return [];
+  const deIdeas = pistasDeIdeas(song.audioIdeas);
+  return deIdeas.length > 0 ? deIdeas : song.pistas ?? [];
 }
