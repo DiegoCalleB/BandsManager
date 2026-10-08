@@ -7,6 +7,7 @@ import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitc
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
+import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
@@ -661,12 +662,32 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
   return lead;
 }
 
+/** Guarda la banda enriquecida y refresca la copia en memoria. */
+async function persistirBandaEnriquecida(band: any, userBandId: string): Promise<any> {
+  const savedEnriched = await dbUpsertBandContact(band, userBandId);
+  const state = loadState();
+  const idx = (state.bands || []).findIndex((b: any) => b.id === band.id);
+  if (idx !== -1) {
+    state.bands[idx] = savedEnriched;
+    saveState(state);
+  }
+  return savedEnriched;
+}
+
 export async function autoEnrichBandContact(band: any, userBandId: string): Promise<any> {
   if (!band || !band.nombre_banda) return band;
 
   const client = getAiClient();
   if (!client) {
     console.warn("[AutoEnrich] AI Client no disponible para enriquecimiento de banda.");
+    // El Spotify no necesita IA: se busca en la API real de Spotify.
+    if (!band.spotify_youtube) {
+      const spotify = await resolverUrlSpotifyDeBanda(band.nombre_banda);
+      if (spotify) {
+        band.spotify_youtube = spotify;
+        return persistirBandaEnriquecida(band, userBandId).catch(() => band);
+      }
+    }
     return band;
   }
 
@@ -725,7 +746,15 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
     if (data.email && !band.email) { band.email = data.email; modified = true; }
     if (data.telefono && !band.telefono) { band.telefono = data.telefono; modified = true; }
     if (data.instagram && !band.instagram) { band.instagram = data.instagram; modified = true; }
-    if (data.spotify_youtube && !band.spotify_youtube) { band.spotify_youtube = data.spotify_youtube; modified = true; }
+    if (!band.spotify_youtube) {
+      // Un enlace de Spotify que da el modelo suele tener el ID inventado: se sustituye por el
+      // verificado en la búsqueda real y, si no hay coincidencia segura, se descarta. YouTube o
+      // una web sí se conservan tal cual.
+      const spotify = await resolverUrlSpotifyDeBanda(band.nombre_banda);
+      const delModelo = String(data.spotify_youtube || "").trim();
+      const valor = spotify || (/spotify\.com/i.test(delModelo) ? "" : delModelo);
+      if (valor) { band.spotify_youtube = valor; modified = true; }
+    }
     if (data.aforo_promedio && (!band.aforo_promedio || band.aforo_promedio === 0)) { band.aforo_promedio = Number(data.aforo_promedio) || 0; modified = true; }
     if (data.notas_colaboracion && (!band.notas_colaboracion || band.notas_colaboracion.length < 10)) { band.notas_colaboracion = data.notas_colaboracion; modified = true; }
     if (data.ciudad_origen_swap && !band.ciudad_origen_swap) { band.ciudad_origen_swap = data.ciudad_origen_swap; modified = true; }
@@ -734,14 +763,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
 
     if (modified) {
       console.log(`[AutoEnrich] Banda '${band.nombre_banda}' enriquecida con éxito.`);
-      const savedEnriched = await dbUpsertBandContact(band, userBandId);
-      const state = loadState();
-      const idx = (state.bands || []).findIndex((b: any) => b.id === band.id);
-      if (idx !== -1) {
-        state.bands[idx] = savedEnriched;
-        saveState(state);
-      }
-      return savedEnriched;
+      return await persistirBandaEnriquecida(band, userBandId);
     }
   } catch (err: any) {
     console.warn(`[AutoEnrich] Error enriqueciendo Banda '${band.nombre_banda}':`, err?.message || err);

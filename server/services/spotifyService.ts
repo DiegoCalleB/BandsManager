@@ -1,6 +1,7 @@
 import { dbGetSongs, dbUpsertSong, dbGetEpkConfig, dbUpsertEpkConfig } from "../db.js";
 import { Song } from "../../src/types.js";
 import { cleanBandId } from "../utils.js";
+import { elegirArtistaSpotify } from "../utils/spotifyMatch.js";
 
 // Cached token for Spotify API
 let spotifyCachedToken: { token: string; expiresAt: number } | null = null;
@@ -469,6 +470,21 @@ export async function searchSpotifyArtists(query: string) {
       uri: `spotify:artist:custom`
     }
   ];
+}
+
+/**
+ * Devuelve la URL de Spotify VERIFICADA de una banda (o "" si no hay coincidencia segura).
+ * Sirve para sustituir los enlaces que se inventa el modelo: nunca lanza, y solo acepta un
+ * artista con el mismo nombre y un ID real de Spotify (ver `elegirArtistaSpotify`).
+ */
+export async function resolverUrlSpotifyDeBanda(nombreBanda: string): Promise<string> {
+  try {
+    const candidatos = await searchSpotifyArtists(nombreBanda);
+    return elegirArtistaSpotify(nombreBanda, candidatos)?.url || "";
+  } catch (err: any) {
+    console.warn("[SpotifyService] No se pudo verificar el Spotify de la banda:", err?.message);
+    return "";
+  }
 }
 
 /**
