@@ -18,7 +18,7 @@ import { CalendarSyncModal } from './calendar/CalendarSyncModal';
 import { CalendarReminderModal } from './calendar/CalendarReminderModal';
 import { CalendarConflictsBanner } from './calendar/CalendarConflictsBanner';
 import { useCalendarConflicts } from './calendar/useCalendarConflicts';
-import { peorSeveridadPorDia } from '../utils/calendarConflicts';
+import { peorSeveridadPorDia, choquesDeEvento } from '../utils/calendarConflicts';
 import { CalendarEventDetailModal } from './calendar/CalendarEventDetailModal';
 import { ShowIcon } from './ui/ShowIcon';
 
@@ -1805,6 +1805,15 @@ export default function CalendarView({
 
   const selectedConcert = selectedEvents.concerts.find((c) => c.id === activeDayEventId);
   const selectedRehearsal = selectedEvents.rehearsals.find((r) => r.id === activeDayEventId);
+  const choquesEventoActivo = React.useMemo(
+    () =>
+      selectedConcert
+        ? choquesDeEvento(choquesCalendario, 'concierto', selectedConcert.id)
+        : selectedRehearsal
+          ? choquesDeEvento(choquesCalendario, 'ensayo', selectedRehearsal.id)
+          : [],
+    [choquesCalendario, selectedConcert, selectedRehearsal],
+  );
 
   const currentRehearsal = selectedRehearsal;
   const isGeneralRehearsal =
@@ -3343,6 +3352,7 @@ export default function CalendarView({
 
       {/* Ficha Modal Emergente y Centrada del Evento */}
       <CalendarEventDetailModal
+        choquesEvento={choquesEventoActivo}
         showEventFichaModal={showEventFichaModal}
         setShowEventFichaModal={setShowEventFichaModal}
         selectedConcert={selectedConcert}

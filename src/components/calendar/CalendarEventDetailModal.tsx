@@ -48,10 +48,14 @@ import { Sparkles,
   Zap,
 } from 'lucide-react';
 import { PromocionConciertoModal } from './PromocionConciertoModal';
+import { CalendarEventConflicts } from './CalendarEventConflicts';
+import type { Choque } from '../../utils/calendarConflicts';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 export interface CalendarEventDetailModalProps {
+  /** Choques y avisos de calendario del evento mostrado (ver useCalendarConflicts). */
+  choquesEvento?: Choque[];
   showEventFichaModal: boolean;
   setShowEventFichaModal: (show: boolean) => void;
   selectedConcert: Concert | null;
@@ -116,6 +120,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
   const {
     showEventFichaModal,
     setShowEventFichaModal,
+    choquesEvento = [],
     selectedConcert,
     selectedRehearsal,
     allChronologicalEvents,
@@ -602,6 +607,13 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
             {/* TAB 1: RESUMEN GENERAL & DETALLES */}
             {modalActiveTab === 'resumen' && (
               <div className="space-y-4">
+                {(selectedConcert || selectedRehearsal) && (
+                  <CalendarEventConflicts
+                    choques={choquesEvento}
+                    tipo={selectedConcert ? 'concierto' : 'ensayo'}
+                    eventoId={(selectedConcert || selectedRehearsal)!.id}
+                  />
+                )}
                 <div
                   className={`space-y-3 rounded-[var(--r-m)] p-4 ${'bg-[var(--sunken)]'}`}
                 >

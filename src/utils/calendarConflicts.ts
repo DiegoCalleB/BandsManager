@@ -355,7 +355,8 @@ export function describirEvento(ev: EventoCalendario, bandasVisibles?: Set<strin
   if (bandasVisibles && !bandasVisibles.has(ev.bandId)) return 'otro compromiso en otra banda';
   const hora = ev.inicio !== undefined ? ` (${hhmm(ev.inicio)}${ev.fin !== undefined ? `–${hhmm(ev.fin)}` : ''})` : '';
   const banda = ev.bandName ? ` de ${ev.bandName}` : '';
-  return `${ETIQUETA_TIPO[ev.tipo]} «${ev.titulo}»${banda}${hora}`;
+  const lugar = ev.ciudad && !ev.titulo.toLowerCase().includes(ev.ciudad.toLowerCase()) ? ` en ${ev.ciudad}` : '';
+  return `${ETIQUETA_TIPO[ev.tipo]} «${ev.titulo}»${lugar}${banda}${hora}`;
 }
 
 function duracion(min?: number): string {
@@ -388,6 +389,49 @@ export function describirChoque(c: Choque, bandasVisibles?: Set<string>): string
         : `Mismo día y en ciudades lejanas: ${a} y ${b}.`;
     default:
       return `Mismo día, sin horas que lo descarten: ${a} y ${b}.`;
+  }
+}
+
+/**
+ * El choque contado desde el punto de vista de UN evento ("se pisa con…", "vienes de…"),
+ * para la ficha de ese evento. `null` si el choque no le afecta.
+ */
+export function describirDesdeEvento(
+  c: Choque,
+  tipo: TipoEventoCalendario,
+  id: string,
+  bandasVisibles?: Set<string>,
+): string | null {
+  const esConcierto = tipo === 'concierto';
+  const es = (e: EventoCalendario) => e.id === id && (e.tipo === 'concierto') === esConcierto;
+  const yoEsA = es(c.a);
+  if (!yoEsA && !es(c.b)) return null;
+
+  const otro = describirEvento(yoEsA ? c.b : c.a, bandasVisibles);
+  // `a` es el que empieza antes: si yo soy `b`, vengo de `a`
+  const vengoDeOtro = !yoEsA;
+  const margen = duracion(c.margenMin);
+  const viaje = c.viajeMin !== undefined ? duracion(c.viajeMin) : null;
+
+  switch (c.motivo) {
+    case 'solape_horario':
+      return `Se pisa con ${otro}.`;
+    case 'margen_corto':
+      return `Muy poco margen (${margen}) con ${otro}, en sitios distintos.`;
+    case 'viaje_inviable':
+      if (!viaje) return vengoDeOtro ? `No da tiempo a llegar desde ${otro}.` : `No da tiempo a llegar a ${otro}.`;
+      return vengoDeOtro
+        ? `No da tiempo: vienes de ${otro}, hay ${margen} y solo el viaje son unas ${viaje}.`
+        : `No da tiempo: después tienes ${otro}, hay ${margen} y solo el viaje son unas ${viaje}.`;
+    case 'viaje_justo':
+      if (!viaje) return `Muy justo con ${otro}.`;
+      return vengoDeOtro
+        ? `Muy justo: vienes de ${otro}, con ${margen} de margen y unas ${viaje} de viaje, sin tiempo para montar.`
+        : `Muy justo: después tienes ${otro}, con ${margen} de margen y unas ${viaje} de viaje.`;
+    case 'distancia_dia':
+      return viaje ? `Mismo día que ${otro}, a unas ${viaje} de viaje.` : `Mismo día que ${otro}, en ciudades lejanas.`;
+    default:
+      return `Mismo día que ${otro}, sin horas que lo descarten.`;
   }
 }
 
