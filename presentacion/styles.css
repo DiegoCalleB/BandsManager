@@ -433,3 +433,16 @@ body.scroll .act-char { right: 22px; top: 40px; bottom: auto; width: 120px; heig
 body.scroll .act-char .cap { display: none; }
 
 .slide.act.has-char h2 { max-width: 1250px; }
+
+/* Portada: el cantante en el panel y el móvil asomando por debajo */
+.cover .art .singer { position: absolute; left: 0; top: 0; width: 100%; height: 700px; object-fit: cover; object-position: 50% 22%; opacity: 0; transform: scale(1.08); transition: opacity 1300ms var(--ease) 200ms, transform 7s var(--ease) 200ms; }
+.slide.cover.active .art .singer { opacity: 1; transform: none; }
+.slide.cover:not(.active) .art .singer { transition: none; }
+.cover .art::before { content: ""; position: absolute; left: 0; right: 0; top: 420px; height: 282px; z-index: 1; background: linear-gradient(180deg, transparent, var(--acc)); pointer-events: none; }
+.cover .art .shot { z-index: 2; }
+.cover .art .singer-cap { position: absolute; left: 28px; top: 28px; z-index: 3; padding: 8px 16px; border-radius: 999px; background: rgba(5,7,13,.55); color: #fff; font-size: 20px; backdrop-filter: blur(6px); }
+@media (prefers-reduced-motion: reduce) { .cover .art .singer { opacity: 1; transform: none; transition: none; } }
+body.scroll .cover .art { display: block; position: relative; width: auto; height: 280px; margin-top: 28px; border-radius: 16px; overflow: hidden; }
+body.scroll .cover .art .singer { height: 100%; }
+body.scroll .cover .art .shot, body.scroll .cover .art::before { display: none; }
+body.scroll .cover .art .singer-cap { font-size: 13px; left: 12px; top: 12px; }
