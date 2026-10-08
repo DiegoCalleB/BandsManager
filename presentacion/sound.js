@@ -190,6 +190,16 @@
     if (el.classList.contains('act')) {
       k.whoosh(at(0.02), 1.6, 160, 3000, 0.18); k.hit(at(0.3), 0.6);
       if (el.querySelector('.act-char')) k.chime(at(1.5), 0.08);
+    } else if (el.classList.contains('scene')) {
+      k.whoosh(at(0.02), 0.7, 200, 2400, 0.1);
+      const n = el.querySelectorAll('.chat li').length;
+      for (let i = 0; i < n; i++) k.blip(at(0.7 + i * 0.55), i === n - 1 ? 520 : 760, 0.07);
+      const rows = el.querySelectorAll('.sheet tbody tr').length;
+      for (let i = 0; i < rows; i++) k.tick(at(0.8 + i * 0.28));
+      if (el.querySelector('.cartel')) { k.riser(at(0.2), 1.1, 0.12); k.hit(at(1.3), 0.7); }
+      if (el.querySelector('.eq')) { k.whoosh(at(0.1), 0.9, 800, 5200, 0.07); k.chime(at(0.9), 0.06); }
+      if (el.classList.contains('reveal')) { k.hit(at(0.5), 0.8); k.chime(at(0.6), 0.1); }
+      if (el.querySelector('.mail')) k.chime(at(0.7), 0.1);
     } else if (el.classList.contains('hero')) {
       k.whoosh(at(0.02), 0.8, 300, 3400, 0.13);
       [740, 880, 1040].forEach((f, n) => k.blip(at(1.55 + n * 0.3), f, 0.09));
