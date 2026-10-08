@@ -4,7 +4,7 @@ import { apiFetch } from '../utils/api';
 import { computeAutoBalanceVolumes } from '../utils/audioLatency';
 import { resolveAudioUrl, saveAudioToStorage, uploadFileToServer } from '../utils/audioStorage';
 import { resolverAudioUrlParaSubida } from '../utils/audioParaSubida';
-import { getIdeaTracks } from '../utils/irisTracks';
+import { getIdeaTracks, pistasDeCancion } from '../utils/irisTracks';
 import { separateAudioIntoStems, type IsolatedStemResult } from '../utils/stemSeparator';
 import {
   autorDeSeparacion,
@@ -13,7 +13,6 @@ import {
   esErrorDeRed,
   esperaMaximaMs,
   fusionarPistasServidor,
-  ideasConSeparacion,
   cancionConSeparacion,
   mensajeTiempoAgotado,
   motorFinal,
@@ -222,7 +221,9 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
         prev ? { ...prev, stage: 'persisting', progressPct: 92, currentStepText: 'Sincronizando pistas aisladas MP3 HQ en la nube...' } : null
       );
 
-      const existentes = pistasSinMaestra(getIdeaTracks(targetIdea), targetIdea);
+      // Si la canción ya tiene stems se parte de ellos (volver a separar); si no, de lo que traiga la toma.
+      const yaSeparadas = pistasDeCancion(songRef.current);
+      const existentes = pistasSinMaestra(yaSeparadas.length > 0 ? yaSeparadas : getIdeaTracks(targetIdea), targetIdea);
       let newTracks: AudioTrack[] = existentes;
       let stemsAdded = 0;
 
@@ -304,14 +305,15 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
       const motorAnotado = motorFinal(data, engineToUse);
       // Se lee la canción ahora (no la de hace minutos) para no pisar lo que se haya editado mientras tanto.
       const actual = songRef.current;
-      const { ideas, idea } = ideasConSeparacion(actual.audioIdeas, targetIdea, newTracks, {
-        motor: motorAnotado,
-        neural: !!data.isNeural,
-        degradado: !!data.degraded,
-        procesadoEn: new Date().toISOString(),
-      });
-      onUpdateSongRef.current(cancionConSeparacion(actual, ideas));
-      alTerminarRef.current?.([targetIdea.id, idea.id]);
+      onUpdateSongRef.current(
+        cancionConSeparacion(actual, newTracks, {
+          motor: motorAnotado,
+          neural: !!data.isNeural,
+          degradado: !!data.degraded,
+          procesadoEn: new Date().toISOString(),
+        })
+      );
+      alTerminarRef.current?.([targetIdea.id]);
 
       const stemsInfo = newTracks.map((t) => ({
         instrument: t.instrumento || 'Pista',

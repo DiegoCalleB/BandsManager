@@ -35,9 +35,8 @@ import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
  * (~23ms de resolución), que ya no está pegado a esa rejilla.
  */
 /**
- * Valor de songs.pistas al guardar. Los stems son de la canción: mientras las escrituras del
- * cliente migran, manda el espejo de la idea de Iris; sin ella vale lo que llegue en `pistas`
- * (un `[]` explícito los borra) y, si no llega nada, se conserva lo que ya había (borrar la idea
+ * Valor de songs.pistas al guardar. Los stems son de la canción: manda lo que llegue en
+ * `pistas` (un `[]` explícito los borra); sin eso, el espejo de la idea de Iris (datos sin limpiar) y, si no llega nada, se conserva lo que ya había (borrar la idea
  * ya no vacía la canción). Vacío y sin columna en la fila (nueva, o antes de migrar) → undefined,
  * para no enviar una columna que no existe.
  */
@@ -48,8 +47,8 @@ export function pistasParaGuardar(
 ): any[] | undefined {
   const deIdeas = Array.isArray(incomingIdeas) ? pistasDeIdeas(incomingIdeas) : [];
   let propias: any[] | undefined;
-  if (deIdeas.length > 0) propias = deIdeas;
-  else if (Array.isArray(incomingPistas)) propias = incomingPistas;
+  if (Array.isArray(incomingPistas)) propias = incomingPistas;
+  else if (deIdeas.length > 0) propias = deIdeas;
   else if (Array.isArray(existing?.pistas)) propias = existing.pistas;
   else if (Array.isArray(incomingIdeas)) propias = [];
   if (propias === undefined) return undefined;
@@ -58,17 +57,17 @@ export function pistasParaGuardar(
 }
 
 /**
- * Valor de songs.stems_meta al guardar (misma lógica que pistasParaGuardar): manda el espejo de
- * la idea de Iris; si no, lo que llegue; si no, lo ya guardado. Sin valor → undefined (no se envía).
+ * Valor de songs.stems_meta al guardar (misma lógica que pistasParaGuardar): manda lo que llegue de la
+ * canción; si no, el espejo de la idea de Iris (datos sin limpiar); si no, lo ya guardado. Sin valor → undefined (no se envía).
  */
 export function stemsMetaParaGuardar(
   incomingIdeas: any[] | undefined,
   existing: any,
   incomingMeta?: any,
 ): Record<string, unknown> | undefined {
+  if (incomingMeta && typeof incomingMeta === "object") return incomingMeta;
   const deIdeas = Array.isArray(incomingIdeas) ? metaStemsDeIdeas(incomingIdeas) : undefined;
   if (deIdeas) return deIdeas as Record<string, unknown>;
-  if (incomingMeta && typeof incomingMeta === "object") return incomingMeta;
   if (existing?.stems_meta && typeof existing.stems_meta === "object") return existing.stems_meta;
   return undefined;
 }

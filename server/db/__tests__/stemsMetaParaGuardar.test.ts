@@ -11,6 +11,9 @@ describe('stemsMetaParaGuardar', () => {
     const r = stemsMetaParaGuardar([{ id: 'a', pistas: stems, stemEngineUsed: 'demucs', stemIsNeural: true }], null);
     expect(r).toMatchObject({ motor: 'demucs', neural: true });
   });
+  it('lo que llega en la canción manda sobre el espejo de la idea', () => {
+    expect(stemsMetaParaGuardar([{ id: 'a', pistas: stems, stemEngineUsed: 'viejo' }], null, { motor: 'nuevo' })).toEqual({ motor: 'nuevo' });
+  });
   it('sin idea de Iris usa lo que llega en la canción', () => {
     expect(stemsMetaParaGuardar([], null, { motor: 'x' })).toEqual({ motor: 'x' });
   });

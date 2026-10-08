@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas, pistasDeCancion, metaStemsDeCancion, ideaDeStemsDeCancion } from '../irisTracks';
+import { cancionConPistas, getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas, pistasDeCancion, metaStemsDeCancion, ideaDeStemsDeCancion } from '../irisTracks';
 import { Song, SongAudioIdea } from '../../types';
 
 describe('irisTracks helpers', () => {
@@ -96,6 +96,30 @@ describe('cancionConIdeas', () => {
   });
   it('sin stems en ningún sitio no inventa la clave pistas', () => {
     expect('pistas' in cancionConIdeas({}, [])).toBe(false);
+  });
+});
+
+describe('cancionConPistas', () => {
+  const stem = (id: string) => ({ id, nombre: id, audioUrl: `${id}.mp3` });
+  const toma = { id: 't1', titulo: 'Toma', seccion: 'general', audioUrl: 'a', subidoPor: 'x', fecha: 'f' } as never;
+  it('con los stems de la canción escribe en song.pistas y no toca las tomas', () => {
+    const song = { id: 's', pistas: [stem('a'), stem('b')], audioIdeas: [toma] } as any;
+    const iris = ideaDeStemsDeCancion(song)!;
+    const r = cancionConPistas(song, iris, [stem('b')]);
+    expect(r.pistas?.map((p) => p.id)).toEqual(['b']);
+    expect(r.audioIdeas).toBe(song.audioIdeas);
+  });
+  it('con una toma normal escribe en la propia idea', () => {
+    const song = { id: 's', pistas: [stem('a'), stem('b')], audioIdeas: [toma] } as any;
+    const r = cancionConPistas(song, toma, [stem('x')], { audioUrl: 'z' });
+    expect(r.audioIdeas?.[0]).toMatchObject({ pistas: [stem('x')], audioUrl: 'z' });
+    expect(r.pistas?.map((p) => p.id)).toEqual(['a', 'b']);
+  });
+  it('si la toma real de Iris no está al día, la canción manda al leerla', () => {
+    const vieja = { ...toma, stemEngineUsed: 'd', pistas: [stem('a'), stem('b'), stem('c')] } as any;
+    const song = { id: 's', pistas: [stem('a'), stem('b')], audioIdeas: [vieja] } as any;
+    expect(ideaDeStemsDeCancion(song)?.pistas?.map((p) => p.id)).toEqual(['a', 'b']);
+    expect(cancionConIdeas(song, [vieja]).pistas?.map((p) => p.id)).toEqual(['a', 'b']);
   });
 });
 

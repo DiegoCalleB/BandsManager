@@ -37,7 +37,7 @@ import { useAccompanimentGenerator } from '../hooks/useAccompanimentGenerator';
 import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
-import { getSongIrisStemIdea, cancionConIdeas, esIdeaIris, irisPrimero, metaStemsDeCancion } from '../utils/irisTracks';
+import { getSongIrisStemIdea, ideaDeStemsDeCancion, cancionConIdeas, cancionConPistas, esIdeaIris, irisPrimero, metaStemsDeCancion } from '../utils/irisTracks';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import {
@@ -849,9 +849,7 @@ export default function SongStudioModal({
       desfaseMs: aiTrackGenStartOffsetSec > 0 ? -(aiTrackGenStartOffsetSec * 1000) : 0,
     };
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === targetIdea.id ? { ...i, pistas: [...existing, newAiTrack] } : i));
-
-    onUpdateSong(cancionConIdeas(song, updatedIdeas));
+    onUpdateSong(cancionConPistas(song, targetIdea, [...existing, newAiTrack]));
     setShowAiTrackGenModal(null);
     setAiTrackGenPreview(null);
     setAiTrackGenPrompt('');
@@ -1286,7 +1284,7 @@ export default function SongStudioModal({
   );
   const tomas = filteredIdeas.filter((i) => !esIdeaIris(i));
   const metaStems = metaStemsDeCancion(song);
-  const irisIdea = getSongIrisStemIdea(song);
+  const irisIdea = ideaDeStemsDeCancion(song);
   // Audio de partida para separar: la primera toma con audio, o el audio principal de la canción
   const fuenteIris: SongAudioIdea | null =
     ideasList.find((i) => i.audioUrl) ??
@@ -1982,8 +1980,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2003,8 +2000,7 @@ export default function SongStudioModal({
       } catch {}
     }
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2030,8 +2026,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2066,8 +2061,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2085,8 +2079,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2109,8 +2102,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    const updatedSong = cancionConIdeas(song, updatedIdeas);
+    const updatedSong = cancionConPistas(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -2160,8 +2152,7 @@ export default function SongStudioModal({
     if (!newName.trim()) return;
     const tracks = getIdeaTracks(idea);
     const updatedTracks = tracks.map((tr) => (tr.id === trackId ? { ...tr, nombre: newName.trim() } : tr));
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-    onUpdateSong(cancionConIdeas(song, updatedIdeas));
+    onUpdateSong(cancionConPistas(song, idea, updatedTracks));
     setEditingTrackId(null);
   };
 
@@ -2189,16 +2180,7 @@ export default function SongStudioModal({
         if (el) el.pause();
 
         const updatedTracks = tracks.filter((tr) => tr.id !== trackId);
-        const updatedIdeas = (song.audioIdeas || []).map((i) =>
-          i.id === idea.id
-            ? {
-                ...i,
-                pistas: updatedTracks,
-                audioUrl: updatedTracks[0]?.audioUrl || i.audioUrl,
-              }
-            : i
-        );
-        onUpdateSong(cancionConIdeas(song, updatedIdeas));
+        onUpdateSong(cancionConPistas(song, idea, updatedTracks, { audioUrl: updatedTracks[0]?.audioUrl || idea.audioUrl }));
       },
     });
   };
@@ -2220,8 +2202,7 @@ export default function SongStudioModal({
     const [moved] = reordered.splice(fromIndex, 1);
     reordered.splice(toIndex, 0, moved);
 
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: reordered } : i));
-    onUpdateSong(cancionConIdeas(song, updatedIdeas));
+    onUpdateSong(cancionConPistas(song, idea, reordered));
   };
 
   const handleMoveTrack = (idea: SongAudioIdea, trackId: string, direction: 'up' | 'down') => {
@@ -2528,8 +2509,7 @@ export default function SongStudioModal({
 
       const tracks = getIdeaTracks(idea);
       const updatedTracks = tracks.map((t) => (t.id === track.id ? { ...t, audioUrl: serverUrl } : t));
-      const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-      onUpdateSong(cancionConIdeas(song, updatedIdeas));
+      onUpdateSong(cancionConPistas(song, idea, updatedTracks));
     } catch (err) {
       console.error('Error cleaning track audio:', err);
       alert('No se pudo filtrar el ruido de la pista.');
@@ -2579,9 +2559,7 @@ export default function SongStudioModal({
     };
 
     const updatedTracks = [...existingTracks, newTrack];
-    const updatedIdeas = (song.audioIdeas || []).map((i) => (i.id === idea.id ? { ...i, pistas: updatedTracks } : i));
-
-    onUpdateSong(cancionConIdeas(song, updatedIdeas));
+    onUpdateSong(cancionConPistas(song, idea, updatedTracks));
 
     // Reset overdub form
     setAddingTrackIdeaId(null);
