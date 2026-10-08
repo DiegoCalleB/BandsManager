@@ -9,6 +9,7 @@ import {
   esperaMaximaMs,
   fusionarPistasServidor,
   ideasConSeparacion,
+  cancionConSeparacion,
   motorFinal,
   nombreMotor,
   pistasSinMaestra,
@@ -240,5 +241,21 @@ describe('ideaParaSeparar', () => {
   });
   it('sin nada devuelve null', () => {
     expect(ideaParaSeparar({ id: 's', titulo: 'T' } as any, '')).toBeNull();
+  });
+});
+
+describe('cancionConSeparacion', () => {
+  const meta = { motor: 'Iris Studio', neural: true, degradado: false, procesadoEn: '2026-10-08T00:00:00Z' };
+  it('escribe las ideas y, a la vez, song.pistas con los stems de Iris', () => {
+    const i = idea();
+    const { ideas } = ideasConSeparacion([], i, [pista({ id: 'a' }), pista({ id: 'b' })], meta);
+    const s = cancionConSeparacion({ id: 's1', titulo: 'T' } as never, ideas) as { audioIdeas: SongAudioIdea[]; pistas: AudioTrack[] };
+    expect(s.audioIdeas).toBe(ideas);
+    expect(s.pistas.map((p) => p.id)).toEqual(['a', 'b']);
+  });
+  it('conserva el resto de campos de la canción', () => {
+    const s = cancionConSeparacion({ id: 's1', bpm: 120 } as never, []) as { bpm: number; pistas: AudioTrack[] };
+    expect(s.bpm).toBe(120);
+    expect(s.pistas).toEqual([]);
   });
 });

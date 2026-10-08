@@ -14,6 +14,7 @@ import {
   esperaMaximaMs,
   fusionarPistasServidor,
   ideasConSeparacion,
+  cancionConSeparacion,
   mensajeTiempoAgotado,
   motorFinal,
   pistasSinMaestra,
@@ -309,7 +310,7 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
         degradado: !!data.degraded,
         procesadoEn: new Date().toISOString(),
       });
-      onUpdateSongRef.current({ ...actual, audioIdeas: ideas });
+      onUpdateSongRef.current(cancionConSeparacion(actual, ideas));
       alTerminarRef.current?.([targetIdea.id, idea.id]);
 
       const stemsInfo = newTracks.map((t) => ({
