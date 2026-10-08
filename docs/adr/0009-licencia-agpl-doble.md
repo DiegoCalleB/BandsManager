@@ -1,7 +1,7 @@
 # ADR 0009: Licencia AGPL-3.0 con licencia comercial alternativa
 
 - **Estado:** Aceptada
-- **Fecha:** no registrada (AGENTS.md y README la marcan como hecha; el commit exacto no se ha buscado)
+- **Fecha:** 2026-10-06 (primer commit del fichero LICENSE; la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `LICENSE` (AGPL-3.0), `COMMERCIAL-LICENSE.md`, `NOTICE`, `PRIVATE-CORE.md`.
 
 ## Contexto

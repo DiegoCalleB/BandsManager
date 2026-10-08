@@ -1,7 +1,7 @@
 # ADR 0002: Monolito Express + SPA React/Vite
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `package.json`, `server.ts`, `railway.json`, `package.json` (scripts `build` y `start`).
 
 ## Contexto

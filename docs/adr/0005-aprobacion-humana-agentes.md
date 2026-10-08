@@ -1,7 +1,7 @@
 # ADR 0005: Aprobación humana antes de cualquier envío de agente
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: AGENTS.md §3 («Reglas de Negocio de Agentes IA»), `server/services/agentEngine.ts`, `server/services/lectorAgent.ts`.
 
 ## Contexto

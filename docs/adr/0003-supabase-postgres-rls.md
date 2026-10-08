@@ -1,7 +1,7 @@
 # ADR 0003: Supabase (Postgres) con RLS
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `supabase/migrations/` (políticas RLS), migraciones `restrict_rls_to_service_role` y `enable_rls_stem_tables` en el proyecto `BandManagement`, `server/db/*.ts`.
 
 ## Contexto

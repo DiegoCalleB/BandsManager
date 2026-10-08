@@ -1,7 +1,7 @@
 # ADR 0007: Scheduler de agentes en el mismo proceso
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `server/services/agentScheduler.ts:15` (`TICK_MS`, por defecto 24 h, configurable con `AGENT_SCHEDULER_INTERVAL_MS`), `server/services/agentQueueWorker.ts:23` (`POLL_INTERVAL_MS`, por defecto 24 h).
 
 ## Contexto

@@ -1,7 +1,7 @@
 # ADR 0006: IA multi-proveedor con Gemini por defecto y DeepSeek de respaldo
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `server/services/pitchEngine.ts:367` (`providers || ["gemini", "deepseek"]`), `server/ai.ts` (conmutación a DeepSeek ante el tope de gasto de Gemini), `scripts/` y `docs/referencia/TOOL_COMPATIBILITY.md`.
 
 ## Contexto

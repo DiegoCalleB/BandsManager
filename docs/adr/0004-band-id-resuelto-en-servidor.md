@@ -1,7 +1,7 @@
 # ADR 0004: `band_id` resuelto siempre en servidor
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `server/utils/bandAccess.ts` (`getTargetBandId`), `server/db/__tests__/bandIdTrustBoundary.test.ts`, `.github/pull_request_template.md`, AGENTS.md §2.1.
 
 ## Contexto

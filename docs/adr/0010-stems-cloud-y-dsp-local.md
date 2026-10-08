@@ -1,7 +1,7 @@
 # ADR 0010: Separación de pistas con modelos en GPU y DSP local
 
 - **Estado:** Aceptada
-- **Fecha:** anterior a 2026-10-08 (no consta en el repo)
+- **Fecha:** 2026-10-06 (primer commit del fichero; el historial de git empieza ese día, la decisión puede ser anterior)
 - **Origen:** retroactiva. Fuentes: `server/services/audioSeparator/` (`AudioSeparatorFactory.ts`, `AudioSeparatorService.ts`, `FalAiService.ts`, `LalalAiService.ts`, `LocalDspService.ts`), y `docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md` §3 y §4.
 
 ## Contexto
