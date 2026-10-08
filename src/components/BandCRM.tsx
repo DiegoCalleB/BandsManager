@@ -8,9 +8,9 @@ import {
 import { api, getAuthHeaders } from "../services/api";
 import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
-import { BandListenEmbed } from "./booking/BandListenEmbed";
+import { BandPreviewPlayer, ColaBanda } from "./booking/BandPreviewPlayer";
+import { SpotifySweepModal } from "./bandCRM/SpotifySweepModal";
 import { instagramPerfil } from "../utils/instagramPerfil";
-import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ChangeBandImageModal } from "./bandCRM/ChangeBandImageModal";
@@ -258,6 +258,8 @@ export default function BandCRM({
   const [styleFilter, setStyleFilter] = useState<string>("todos");
   const [locationFilter, setLocationFilter] = useState<string>("todos");
   // En móvil las tarjetas se leen sin scroll horizontal; la tabla queda para pantallas anchas.
+  const [reproductor, setReproductor] = useState<{ cola: ColaBanda[]; inicio: number } | null>(null);
+  const [isSpotifySweepOpen, setIsSpotifySweepOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "table" | "map">(() =>
     typeof window !== "undefined" && window.innerWidth < 640 ? "grid" : "table",
   );
@@ -930,6 +932,13 @@ export default function BandCRM({
   };
 
   // Filter logic
+  // Escucha: la cola es la lista visible, empezando por la banda pulsada.
+  const escuchar = (bandId: string) => {
+    const cola = filteredBands.map((b) => ({ id: b.id, nombre: b.nombre_banda }));
+    const inicio = cola.findIndex((b) => b.id === bandId);
+    if (inicio !== -1) setReproductor({ cola, inicio });
+  };
+
   const filteredBands = bands.filter((band) => {
     // Search
     const searchLower = searchTerm.toLowerCase().trim();
@@ -1148,6 +1157,18 @@ ${myBandName}`;
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
             <span>Scout IA</span>
+          </Button>
+
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            onClick={() => setIsSpotifySweepOpen(true)}
+            className="items-center gap-1.5 max-sm:hidden"
+            title="Buscar el Spotify de todas las bandas y revisar antes de guardar"
+          >
+            <Music className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
+            <span>Spotify</span>
           </Button>
 
           <Button
@@ -1683,11 +1704,19 @@ ${myBandName}`;
                         </span>
                       </div>
 
-                      {/* Escuchar en Spotify (el iframe solo se monta al pulsar) */}
-                      <BandListenEmbed
-                        spotifyUrl={band.spotify_youtube}
-                        bandName={band.nombre_banda}
-                      />
+                      {/* Escuchar: preview de 30 s en el reproductor de la app */}
+                      <div>
+                        <Button
+                          variant="ghost"
+                          size="xs"
+                          onClick={() => escuchar(band.id)}
+                          className="gap-1.5 text-[var(--acc-ink)]"
+                          title={`Escuchar a ${band.nombre_banda} (preview de 30 s)`}
+                        >
+                          <Play className="w-3.5 h-3.5" />
+                          <span>Escuchar</span>
+                        </Button>
+                      </div>
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
@@ -1919,18 +1948,12 @@ ${myBandName}`;
                               <span>Pitch</span>
                             </Button>
 
-                            {spotifyArtistUrl(band.spotify_youtube) && (
-                              <a
-                                href={spotifyArtistUrl(band.spotify_youtube)!}
-                                target="_blank"
-                                rel="noreferrer"
-                                aria-label={`Escuchar a ${band.nombre_banda} en Spotify`}
-                                title={`Escuchar a ${band.nombre_banda} en Spotify`}
-                                className="inline-flex items-center justify-center size-7 rounded-[var(--r-pill)] text-[var(--acc-ink)] hover:bg-[var(--sunken)]"
-                              >
-                                <Play className="w-3.5 h-3.5" />
-                              </a>
-                            )}
+                            <IconButton
+                              label={`Escuchar a ${band.nombre_banda}`}
+                              onClick={() => escuchar(band.id)}
+                            >
+                              <Play className="w-3.5 h-3.5" />
+                            </IconButton>
 
                             <IconButton
                               label="Editar"
@@ -2039,6 +2062,22 @@ ${myBandName}`;
           setIsPitchModalOpen(true);
         }}
       />
+
+      {isSpotifySweepOpen && (
+        <SpotifySweepModal
+          isOpen
+          onClose={() => setIsSpotifySweepOpen(false)}
+          onApplied={() => fetchBands()}
+        />
+      )}
+
+      {reproductor && (
+        <BandPreviewPlayer
+          cola={reproductor.cola}
+          inicio={reproductor.inicio}
+          onClose={() => setReproductor(null)}
+        />
+      )}
 
       <AIBandScoutModal
         isOpen={isScoutModalOpen}
