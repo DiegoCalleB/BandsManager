@@ -10,6 +10,7 @@ import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandListenEmbed } from "./booking/BandListenEmbed";
 import { instagramPerfil } from "../utils/instagramPerfil";
+import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ChangeBandImageModal } from "./bandCRM/ChangeBandImageModal";
@@ -22,6 +23,7 @@ import { isLeadVerificado } from "../utils/leadReliability";
 import {
   Users,
   Music,
+  Play,
   MapPin,
   Clock,
   Sparkles,
@@ -1916,6 +1918,19 @@ ${myBandName}`;
                               <Repeat className="w-3 h-3 text-[var(--ink-2)]" />
                               <span>Pitch</span>
                             </Button>
+
+                            {spotifyArtistUrl(band.spotify_youtube) && (
+                              <a
+                                href={spotifyArtistUrl(band.spotify_youtube)!}
+                                target="_blank"
+                                rel="noreferrer"
+                                aria-label={`Escuchar a ${band.nombre_banda} en Spotify`}
+                                title={`Escuchar a ${band.nombre_banda} en Spotify`}
+                                className="inline-flex items-center justify-center size-7 rounded-[var(--r-pill)] text-[var(--acc-ink)] hover:bg-[var(--sunken)]"
+                              >
+                                <Play className="w-3.5 h-3.5" />
+                              </a>
+                            )}
 
                             <IconButton
                               label="Editar"

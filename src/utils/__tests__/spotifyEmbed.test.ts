@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { spotifyArtistEmbedUrl, spotifyArtistId } from '../spotifyEmbed';
+import { spotifyArtistEmbedUrl, spotifyArtistId, spotifyArtistUrl } from '../spotifyEmbed';
 
 const ID = '4Z8W4fKeB5YxbusRsdQVPb';
 
@@ -42,5 +42,14 @@ describe('spotifyArtistEmbedUrl', () => {
       `https://open.spotify.com/embed/artist/${ID}`,
     );
     expect(spotifyArtistEmbedUrl('https://youtube.com/x')).toBeNull();
+  });
+});
+
+describe('spotifyArtistUrl', () => {
+  it('devuelve el perfil del artista normalizado o null', () => {
+    expect(spotifyArtistUrl(`https://open.spotify.com/intl-es/artist/${ID}?si=x`)).toBe(
+      `https://open.spotify.com/artist/${ID}`,
+    );
+    expect(spotifyArtistUrl('https://youtube.com/@bala')).toBeNull();
   });
 });

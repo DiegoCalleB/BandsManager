@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { escapeHtml } from "../utils/escapeHtml";
+import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 
 interface BandMapProps {
   bands: BandContact[];
@@ -550,6 +551,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
  </div>
  <div style="font-size: 11px; font-weight: 600; color: ${accColor}; margin-bottom: 8px;">
  🎵 ${escapeHtml(band.estilo_musical)}
+ ${spotifyArtistUrl(band.spotify_youtube) ? `· <a href="${escapeHtml(spotifyArtistUrl(band.spotify_youtube) || '')}" target="_blank" rel="noopener noreferrer" style="color: ${accColor};">▶ Escuchar</a>` : ''}
  </div>
  <div style="margin-bottom: 8px;">
  <span style="
