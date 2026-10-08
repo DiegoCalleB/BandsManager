@@ -5,10 +5,15 @@ import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { mergeWithExisting } from './mergeWithExisting.js';
 
+// Filas de `concerts` tal como vienen de PostgREST o del cuerpo de una petición: sin tipo estático
+// (el contrato columna a columna lo vigila server/audit/__tests__/schemaContract.test.ts).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FilaConcierto = Record<string, any>;
+
 export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from('concerts').select('*');
-  let allowedIds: string[] = [];
+  let allowedIds: string[];
 
   if (Array.isArray(bandId)) {
     allowedIds = bandId
@@ -70,13 +75,13 @@ export async function dbGetConcerts(bandId: string | string[]) {
   }));
 }
 
-export async function dbUpsertConcert(concert: any, bandId: string) {
+export async function dbUpsertConcert(concert: FilaConcierto, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   let finalConcertId = concert.id;
-  let existingConcert: any = null;
+  let existingConcert: FilaConcierto | null = null;
   if (finalConcertId) {
     // La fila entera viene en este SELECT: sin fetch previo no hay forma de preservar lo que un
     // guardado parcial no incluye (gastos_detalle, setlist, etc.) — antes se reseteaba en silencio.
@@ -102,7 +107,7 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
 
   const merged = mergeWithExisting(existingConcert, concert);
 
-  const payload: any = {
+  const payload: FilaConcierto = {
     id: finalConcertId || `cnc-${Date.now()}`,
     band_id: targetBandId,
     band_name: merged.band_name || merged.bandName || '',
@@ -155,17 +160,13 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     cartel_url: merged.cartel_url || merged.cartelUrl || null,
   };
 
-  let data: any = null;
-  let error: any = null;
-
-  const currentPayload: Record<string, any> = { ...payload };
+  const currentPayload: FilaConcierto = { ...payload };
   // Solo se quita la columna exacta que la BD dice no tener (antes caían gira_id, gira_nombre e
   // idioma juntos) y el aviso de guardado parcial deja constancia (ver server/db/tolerantWrite.ts).
   const res = await escrituraTolerante('concerts', currentPayload, (p) =>
     sb.from('concerts').upsert(p).select().single()
   );
-  data = res.data;
-  error = res.error;
+  const { data, error } = res;
 
   if (error)
     throw new Error(`Supabase Error (upsert concert): ${error.message}`);
