@@ -51,17 +51,10 @@ import {
 } from "../../utils/setlistPaginator";
 import { escapeHtml } from "../../utils/escapeHtml";
 import { apiFetch } from "../../utils/api";
-import {
-  mergePrintSettings,
-  type PrintSettings,
-} from "../../utils/printSettings";
-import {
-  cleanPrintedNote,
-  cleanSetlistName,
-  isAutoVersionNote,
-} from "../../utils/setlistNoteText";
-import { ShowIcon } from "../ui/ShowIcon";
-import { Button, Select } from "../ui";
+import { mergePrintSettings, type PrintSettings } from "../../utils/printSettings";
+import { cleanPrintedNote, cleanSetlistName, isAutoVersionNote } from "../../utils/setlistNoteText";
+import { ShowIcon } from '../ui/ShowIcon';
+import { Button, Select } from '../ui';
 
 const ptToPx = (pt: number) => (pt * 96) / 72;
 
@@ -124,10 +117,7 @@ const PRINT_FONT_FACES = [
 
 async function ensurePrintFonts(doc: Document): Promise<void> {
   if (!doc.fonts) return;
-  if (
-    !doc.getElementById("bm-print-fonts") &&
-    !doc.getElementById("measure-fonts-link")
-  ) {
+  if (!doc.getElementById("bm-print-fonts") && !doc.getElementById("measure-fonts-link")) {
     const link = doc.createElement("link");
     link.id = "bm-print-fonts";
     link.rel = "stylesheet";
@@ -329,13 +319,9 @@ function computeNoteLayout(input: NoteLayoutInput): NoteLayoutResult | null {
       input.noteMaxFontSizePx * INLINE_MIN_NOTE_FRACTION,
     );
     const unreadable = inlineFit.lines.some((l) => {
-      const floor =
-        l.className === "note-general"
-          ? input.noteMinFontSizePx
-          : inlineFloorPx;
+      const floor = l.className === "note-general" ? input.noteMinFontSizePx : inlineFloorPx;
       const overflows =
-        input.measure(l.text, l.fontSizePx, input.noteFontFamily, 700) >
-        rightSpaceAvailable;
+        input.measure(l.text, l.fontSizePx, input.noteFontFamily, 700) > rightSpaceAvailable;
       return l.fontSizePx < floor || overflows;
     });
     if (unreadable) return null;
@@ -534,13 +520,10 @@ function PdfExportModalBody({
     if (persist !== "on" || printSettingsKey === lastSavedRef.current) return;
     const timer = setTimeout(async () => {
       try {
-        const r = await apiFetch<{ success: boolean }>(
-          "/api/bands/print-settings",
-          {
-            method: "PUT",
-            body: printSettingsKey,
-          },
-        );
+        const r = await apiFetch<{ success: boolean }>("/api/bands/print-settings", {
+          method: "PUT",
+          body: printSettingsKey,
+        });
         if (r?.success) {
           lastSavedRef.current = printSettingsKey;
           setSaveFailed(false);
@@ -584,30 +567,17 @@ function PdfExportModalBody({
   // igual que cuando las pone el propio músico desde sus notas. markedSongs (ajustes de la banda)
   // solo se lee por compatibilidad con lo guardado antes.
   const isMarked = (song: Song) =>
-    isSongMarkedForMember(
-      song,
-      currentPreviewMember.id,
-      currentPreviewMember.name,
-    ) || (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
+    isSongMarkedForMember(song, currentPreviewMember.id, currentPreviewMember.name) ||
+    (markedSongs[currentPreviewMember.id] ?? []).includes(song.id);
   const setMark = (song: Song, marked: boolean) => {
     // Un marcado antiguo (en ajustes) se retira de ahí para que desmarcar funcione de verdad.
-    if (
-      !marked &&
-      (markedSongs[currentPreviewMember.id] ?? []).includes(song.id)
-    ) {
+    if (!marked && (markedSongs[currentPreviewMember.id] ?? []).includes(song.id)) {
       setMarkedSongs((m) => ({
         ...m,
-        [currentPreviewMember.id]: (m[currentPreviewMember.id] ?? []).filter(
-          (id) => id !== song.id,
-        ),
+        [currentPreviewMember.id]: (m[currentPreviewMember.id] ?? []).filter((id) => id !== song.id),
       }));
     }
-    const next = withSongMarkedForMember(
-      song,
-      currentPreviewMember.id,
-      currentPreviewMember.name,
-      marked,
-    );
+    const next = withSongMarkedForMember(song, currentPreviewMember.id, currentPreviewMember.name, marked);
     if (next !== song) onUpdateSong?.(next);
   };
   const setAllMarks = (marked: boolean) => {
@@ -623,7 +593,6 @@ function PdfExportModalBody({
       const song = songs.find((x) => x.id === it.songId);
       return !!song && isMarked(song);
     }).length;
-
   // Una clave con todo lo que cambia la maquetación (solo primitivos: `bandMembers` y los
   // arrays por defecto son objetos nuevos en cada render y dispararían el efecto sin parar).
   const previewKey = JSON.stringify([
@@ -680,6 +649,7 @@ function PdfExportModalBody({
     ro.observe(el);
     return () => ro.disconnect();
   }, [isOpen, hasPreview]);
+
 
   const selectedMember = resolvedMembers.find(
     (m) => m.id === selectedMemberId,
@@ -794,9 +764,7 @@ function PdfExportModalBody({
           showGeneralNotes && !isAutoVersionNote(rawGeneralNote)
             ? cleanPrintedNote(rawGeneralNote)
             : "";
-        const setlistNote = cleanPrintedNote(
-          (item as any).notaTema || item.notas || "",
-        );
+        const setlistNote = cleanPrintedNote((item as any).notaTema || item.notas || "");
         const numberText = showSongNumbers ? `${idx + 1}.` : "";
         // Tono/BPM/duración escalan con el título: a 14pt de título, unos badges de 11pt fijos
         // parecían casi tan grandes como la propia canción.
@@ -810,31 +778,13 @@ function PdfExportModalBody({
         const bpmHere = showBpm && songMarked;
         const badges: NoteLayoutBadge[] = [
           ...(keyHere && s.tonalidad
-            ? [
-                {
-                  text: s.tonalidad,
-                  fontSizePx: ptToPx(badgePt + 1),
-                  extraWidthPx: 22,
-                },
-              ]
+            ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 1), extraWidthPx: 22 }]
             : []),
           ...(bpmHere && s.bpm
-            ? [
-                {
-                  text: `${s.bpm} BPM`,
-                  fontSizePx: ptToPx(badgePt),
-                  extraWidthPx: 12,
-                },
-              ]
+            ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(badgePt), extraWidthPx: 12 }]
             : []),
           ...(showDuration && s.duracion
-            ? [
-                {
-                  text: s.duracion,
-                  fontSizePx: ptToPx(badgePt),
-                  extraWidthPx: 8,
-                },
-              ]
+            ? [{ text: s.duracion, fontSizePx: ptToPx(badgePt), extraWidthPx: 8 }]
             : []),
         ];
         const badgesHtml = [
@@ -974,12 +924,12 @@ function PdfExportModalBody({
             <div class="interlude-item" style="font-size:${auxFontPt + 1}pt;">
               <span class="interlude-title">${escapeHtml((item.tituloCustom || item.notas || (item as any).notaTema || item.tipoItem || "INTERLUDIO").toUpperCase())}</span>
               ${
-                (item.notas || (item as any).notaTema) && item.tituloCustom
-                  ? `
+   (item.notas || (item as any).notaTema) && item.tituloCustom
+     ? `
                 <span class="interlude-note" style="font-size:${auxFontPt + 1.5}pt;">${escapeHtml(cleanPrintedNote(item.notas || (item as any).notaTema))}</span>
               `
-                  : ""
-              }
+     : ""
+ }
             </div>
           `;
       }
@@ -1585,12 +1535,12 @@ function PdfExportModalBody({
         <div class="page-header ${isCentered ? "is-centered" : ""}">
           <div class="header-left">
             ${
-              showBandLogo && customLogoUrl
-                ? `
+   showBandLogo && customLogoUrl
+     ? `
               <img src="${escapeHtml(customLogoUrl)}" alt="${escapeHtml(bandName)}" class="band-logo-img" onerror="this.style.display='none'" />
             `
-                : ""
-            }
+     : ""
+ }
  <div class="band-text-block">
  <h1 class="band-heading">${escapeHtml(bandName.toUpperCase())}</h1>
               <div class="setlist-meta">${escapeHtml(cleanSetlistName(activeSetlist.nombre).toUpperCase())}</div>
@@ -1608,12 +1558,7 @@ function PdfExportModalBody({
       `;
 
     // El mismo SVG en todas las hojas: se genera una vez por documento.
-    const footerQrSvg = showAppBranding
-      ? buildQrSvg(
-          "https://bandmanager.io/?utm_source=setlist&utm_medium=qr",
-          11,
-        )
-      : "";
+    const footerQrSvg = showAppBranding ? buildQrSvg("https://bandmanager.io/?utm_source=setlist&utm_medium=qr", 11) : "";
 
     const buildFooterHtml = (
       member: (typeof membersToExport)[number],
@@ -1728,22 +1673,14 @@ function PdfExportModalBody({
     // baja a dos líneas; esa altura extra la mide el motor como cualquier otra fila.
     const titleWidthsAt100 = items
       .map((it) => {
-        const s =
-          it.tipoItem === "cancion"
-            ? songs.find((x) => x.id === it.songId)
-            : undefined;
-        return s
-          ? measure(s.titulo.toUpperCase(), 100, titleFontFamily, 900)
-          : 0;
+        const s = it.tipoItem === "cancion" ? songs.find((x) => x.id === it.songId) : undefined;
+        return s ? measure(s.titulo.toUpperCase(), 100, titleFontFamily, 900) : 0;
       })
       .sort((a, b) => b - a);
     const outliersToSkip = Math.min(
       Math.max(0, titleWidthsAt100.length - 1),
       Math.floor(titleWidthsAt100.length * 0.1) +
-        (titleWidthsAt100.length > 1 &&
-        titleWidthsAt100[0] > 1.3 * titleWidthsAt100[1]
-          ? 1
-          : 0),
+        (titleWidthsAt100.length > 1 && titleWidthsAt100[0] > 1.3 * titleWidthsAt100[1] ? 1 : 0),
     );
     const widestTitleAt100 = titleWidthsAt100[outliersToSkip] ?? 0;
     const numberAt100 = showSongNumbers
@@ -1751,17 +1688,13 @@ function PdfExportModalBody({
       : 0;
     // Ancho que se llevan tono/BPM/duración en su columna de la derecha (modo izquierda).
     const badgesReservePx =
-      (showTonality ? 34 : 0) +
-      (showBpm ? 74 : 0) +
-      (showDuration ? 46 : 0) +
-      (showTonality || showBpm || showDuration ? 14 : 0);
+      (showTonality ? 34 : 0) + (showBpm ? 74 : 0) + (showDuration ? 46 : 0) + (showTonality || showBpm || showDuration ? 14 : 0);
     const maxFontFor = (cols: 1 | 2) =>
       Math.min(
         MAX_DESIGN_TITLE_FONT_PT,
         maxFontPtForWidth(
           widestTitleAt100 + numberAt100,
-          (cols === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX) * 0.96 -
-            badgesReservePx,
+          (cols === 2 ? COLUMN_WIDTH_PX : PAGE_CONTENT_WIDTH_PX) * 0.96 - badgesReservePx,
         ),
       );
     // `in-columns` va en la propia fila medida: las reglas que cambian la altura no pueden colgar
@@ -1804,23 +1737,16 @@ function PdfExportModalBody({
         });
       // 1 o 2 columnas. En automático, 2 columnas solo si el set es largo y aportan algo claro:
       // menos hojas con letra legible, o las mismas hojas con letra bastante mayor.
-      const resolveLayout = (
-        forcedPages?: number,
-      ): { cols: 1 | 2; plan: ReturnType<typeof planFor> } => {
+      const resolveLayout = (forcedPages?: number): { cols: 1 | 2; plan: ReturnType<typeof planFor> } => {
         if (columnsChoice === 1 || columnsChoice === 2) {
-          return {
-            cols: columnsChoice,
-            plan: planFor(columnsChoice, forcedPages),
-          };
+          return { cols: columnsChoice, plan: planFor(columnsChoice, forcedPages) };
         }
         const one = planFor(1, forcedPages);
         if (songCounter < AUTO_COLUMNS_MIN_SONGS) return { cols: 1, plan: one };
         const two = planFor(2, forcedPages);
         const better =
-          (two.pages.length < one.pages.length &&
-            two.fontPt >= MIN_TITLE_FONT_PT + 2) ||
-          (two.pages.length === one.pages.length &&
-            two.fontPt >= one.fontPt + 3);
+          (two.pages.length < one.pages.length && two.fontPt >= MIN_TITLE_FONT_PT + 2) ||
+          (two.pages.length === one.pages.length && two.fontPt >= one.fontPt + 3);
         return better ? { cols: 2, plan: two } : { cols: 1, plan: one };
       };
       const forcedPages = pagesChoice === "auto" ? undefined : pagesChoice;
@@ -1833,28 +1759,17 @@ function PdfExportModalBody({
       // Con las columnas fijadas por el usuario y letra pequeña, se calcula la otra opción para
       // poder sugerirla en el modal ("con 2 columnas: 18 pt"). Solo en la vista previa.
       let alt: { cols: 1 | 2; fontPt: number; pages: number } | undefined;
-      if (
-        opts.mode === "preview" &&
-        (columnsChoice === 1 || columnsChoice === 2) &&
-        plan.fontPt < MIN_TITLE_FONT_PT
-      ) {
+      if (opts.mode === "preview" && (columnsChoice === 1 || columnsChoice === 2) && plan.fontPt < MIN_TITLE_FONT_PT) {
         const otherCols: 1 | 2 = columnsChoice === 1 ? 2 : 1;
         const other = planFor(otherCols, forcedPages);
-        alt = {
-          cols: otherCols,
-          fontPt: other.fontPt,
-          pages: other.pages.length,
-        };
+        alt = { cols: otherCols, fontPt: other.fontPt, pages: other.pages.length };
       }
       return { member, isMaster, plan, cols, autoPages, alt };
     });
 
     document.body.removeChild(measureFrame);
 
-    const totalSheets = memberPlans.reduce(
-      (sum, mp) => sum + mp.plan.pages.length,
-      0,
-    );
+    const totalSheets = memberPlans.reduce((sum, mp) => sum + mp.plan.pages.length, 0);
 
     // Resolver URLs relativas a absolutas para que funcionen en la ventana de impresión
     // Usar window.location.origin + ruta si es relativa, sino usar URL tal cual
@@ -1886,22 +1801,12 @@ function PdfExportModalBody({
         plan.pages
           .map((page, pageIdx) => {
             sheetIdx++;
-            const columnHtml = (
-              col: { from: number; to: number; rowGapPx: number },
-              widthPx?: number,
-            ) => `
+            const columnHtml = (col: { from: number; to: number; rowGapPx: number }, widthPx?: number) => `
                   <div class="${containerClassFor(cols)}" style="${widthPx ? `width:${widthPx}px;` : ""}gap:${col.rowGapPx.toFixed(1)}px">
                     ${items
                       .slice(col.from, col.to)
                       .map((item, k) =>
-                        buildRowHtml(
-                          item,
-                          songNumberByItem[col.from + k],
-                          plan.fontPt,
-                          member,
-                          isMaster,
-                          cols,
-                        ),
+                        buildRowHtml(item, songNumberByItem[col.from + k], plan.fontPt, member, isMaster, cols),
                       )
                       .join("")}
                   </div>`;
@@ -2008,24 +1913,19 @@ function PdfExportModalBody({
     };
   };
 
-  const handlePrint = async () => {
+  const handlePrint = async (onlyMember?: (typeof membersToExport)[number]) => {
     // La ventana se abre YA, dentro del gesto del usuario: si se abre después de maquetar (varios
     // `await` más tarde) Chrome móvil la bloquea como ventana emergente.
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
-      alert(
-        "Tu navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para bandmanager.io y vuelve a pulsar Imprimir.",
-      );
+      alert("Tu navegador ha bloqueado la ventana de impresión. Permite las ventanas emergentes para bandmanager.io y vuelve a pulsar Imprimir.");
       return;
     }
     printWindow.document.write(
       '<!DOCTYPE html><meta charset="utf-8"><title>Preparando setlist…</title><body style="font-family:sans-serif;color:#555;display:grid;place-items:center;height:100vh;margin:0">Maquetando el setlist…</body>',
     );
     try {
-      const doc = await buildPrintDocument({
-        members: membersToExport,
-        mode: "print",
-      });
+      const doc = await buildPrintDocument({ members: onlyMember ? [onlyMember] : membersToExport, mode: "print" });
       if (!doc) {
         printWindow.close();
         return;
@@ -2050,10 +1950,7 @@ function PdfExportModalBody({
       if (!member) return;
       setPreviewLoading(true);
       try {
-        const doc = await buildPrintDocument({
-          members: [member],
-          mode: "preview",
-        });
+        const doc = await buildPrintDocument({ members: [member], mode: "preview" });
         if (!cancelled && doc) {
           setPreviewDoc({ html: doc.html, layout: doc.layouts[0] ?? null });
         }
@@ -2071,6 +1968,7 @@ function PdfExportModalBody({
     // cambia la maquetación está en previewKey (y en el repertorio/canciones).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previewKey, activeSetlist, songs]);
+
 
   return (
     <ModalPortal isOpen={isOpen} onClose={onClose}>
@@ -2132,10 +2030,18 @@ function PdfExportModalBody({
                 </span>
                 <span className="sm:hidden">Imprimir</span>
               </button>
-              <Button
-                variant="ghost"
-                size="sm"
-                aria-label="Cerrar"
+              {/* Solo la hoja del músico en vista (con SUS temas marcados): para mandársela o guardar su PDF. */}
+              {membersToExport.length > 1 && currentPreviewMember && (
+                <button
+                  onClick={() => handlePrint(currentPreviewMember)}
+                  title={`Imprimir o guardar en PDF solo la hoja de ${currentPreviewMember.name}`}
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 rounded-[var(--r-pill)] font-sans text-xs font-bold transition-ui flex items-center gap-1.5 cursor-pointer bg-[var(--surface)] text-[var(--ink)] active:scale-[0.97]"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span className="max-w-[9rem] truncate">Solo {currentPreviewMember.name}</span>
+                </button>
+              )}
+              <Button variant="ghost" size="sm" aria-label="Cerrar"
                 onClick={onClose}
               >
                 <X className="w-5 h-5" />
@@ -2270,8 +2176,7 @@ function PdfExportModalBody({
                   className="items-center gap-1.5"
                   title="Títulos alineados a la izquierda, notas a su lado"
                 >
-                  <AlignLeft className="w-3.5 h-3.5" />
-                  Izquierda
+                  <AlignLeft className="w-3.5 h-3.5" />Izquierda
                 </Button>
                 <Button
                   variant={textAlign === "center" ? "neutral" : "ghost"}
@@ -2280,8 +2185,7 @@ function PdfExportModalBody({
                   className="items-center gap-1.5"
                   title="Títulos, números y notas centrados en la hoja"
                 >
-                  <AlignCenter className="w-3.5 h-3.5" />
-                  Centrado
+                  <AlignCenter className="w-3.5 h-3.5" />Centrado
                 </Button>
               </div>
 
@@ -2318,27 +2222,20 @@ function PdfExportModalBody({
                     title="Letra del título resultante en la hoja impresa"
                   >
                     {previewDoc.layout.fontPt} pt
-                    {previewDoc.layout.fontPt < MIN_TITLE_FONT_PT &&
-                      " · letra pequeña"}
+                    {previewDoc.layout.fontPt < MIN_TITLE_FONT_PT && " · letra pequeña"}
                   </span>
                 )}
                 {previewDoc?.layout?.alt &&
-                  previewDoc.layout.alt.fontPt >=
-                    previewDoc.layout.fontPt + 3 &&
+                  previewDoc.layout.alt.fontPt >= previewDoc.layout.fontPt + 3 &&
                   previewDoc.layout.alt.pages <= previewDoc.layout.pages && (
                     <Button
                       variant="soft"
                       size="xs"
-                      onClick={() =>
-                        setColumnsChoice(previewDoc.layout!.alt!.cols)
-                      }
+                      onClick={() => setColumnsChoice(previewDoc.layout!.alt!.cols)}
                       title="Cambia el número de columnas para que la letra salga más grande en las mismas hojas"
                     >
-                      Con {previewDoc.layout.alt.cols}{" "}
-                      {previewDoc.layout.alt.cols === 1
-                        ? "columna"
-                        : "columnas"}
-                      : {previewDoc.layout.alt.fontPt} pt
+                      Con {previewDoc.layout.alt.cols} {previewDoc.layout.alt.cols === 1 ? "columna" : "columnas"}:{" "}
+                      {previewDoc.layout.alt.fontPt} pt
                     </Button>
                   )}
               </div>
@@ -2384,8 +2281,7 @@ function PdfExportModalBody({
                   className="px-2.5 py-1 rounded text-xs font-bold bg-[var(--acc)]/20 text-[var(--ink)]"
                   title="El tamaño y el número de hojas se calculan automáticamente para aprovechar mejor el espacio El motor decide cuántas hojas usar, la letra (de 17pt en adelante), dónde cortar sin dejar bloques colgando y reparte el espacio sobrante entre las filas."
                 >
-                  <ShowIcon inline emoji="⚡" />
-                  Automático
+                  <ShowIcon inline emoji="⚡" />Automático
                 </span>
               </div>
 
@@ -2542,13 +2438,8 @@ function PdfExportModalBody({
                       </Button>
                     </div>
                     {badgesScope === "marked" && (
-                      <Button
-                        variant="ghost"
-                        size="xs"
-                        onClick={() => setShowMarksPanel((v) => !v)}
-                      >
-                        {showMarksPanel ? "Ocultar temas" : "Elegir temas"} (
-                        {markedCountForMember()})
+                      <Button variant="ghost" size="xs" onClick={() => setShowMarksPanel((v) => !v)}>
+                        {showMarksPanel ? "Ocultar temas" : "Elegir temas"} ({markedCountForMember()})
                       </Button>
                     )}
                   </div>
@@ -2562,70 +2453,63 @@ function PdfExportModalBody({
             </div>
           </div>
 
-          {(showTonality || showBpm) &&
-            badgesScope === "marked" &&
-            showMarksPanel && (
-              <div className="px-3 sm:px-6 py-2 shrink-0 text-xs font-sans border-t border-[var(--line)]">
-                <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
-                  <span className="font-bold text-[var(--ink-2)]">
-                    Tono/BPM visibles para {currentPreviewMember.name}:
-                  </span>
-                  <span className="flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => setAllMarks(true)}
-                    >
-                      Todos
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="xs"
-                      onClick={() => setAllMarks(false)}
-                    >
-                      Ninguno
-                    </Button>
-                  </span>
-                </div>
-                <div className="max-h-28 overflow-y-auto sm:columns-2 gap-x-4 [&>label]:break-inside-avoid [&>label]:py-0.5">
-                  {activeSetlist.items
-                    .filter((it) => it.tipoItem === "cancion" && it.songId)
-                    .map((it, i) => {
-                      const song = songs.find((x) => x.id === it.songId);
-                      if (!song) return null;
-                      const marked = isMarked(song);
-                      return (
-                        <label
-                          key={`${song.id}-${i}`}
-                          className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none min-w-0"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={marked}
-                            onChange={(e) => setMark(song, e.target.checked)}
-                            className="rounded accent-[var(--ok)] cursor-pointer"
-                          />
-                          <span className="truncate">
-                            {song.titulo}
-                            {(song.tonalidad || song.bpm) && (
-                              <span className="text-[var(--ink-3)]">
-                                {" "}
-                                ·{" "}
-                                {[
-                                  song.tonalidad,
-                                  song.bpm ? `${song.bpm} BPM` : "",
-                                ]
-                                  .filter(Boolean)
-                                  .join(" ")}
-                              </span>
-                            )}
-                          </span>
-                        </label>
-                      );
-                    })}
-                </div>
+
+          {(showTonality || showBpm) && badgesScope === "marked" && showMarksPanel && (
+            <div className="px-3 sm:px-6 py-2 shrink-0 text-xs font-sans border-t border-[var(--line)]">
+              <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                <span className="font-bold text-[var(--ink-2)]">
+                  Tono/BPM visibles para {currentPreviewMember.name}:
+                </span>
+                <span className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setAllMarks(true)}
+                  >
+                    Todos
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => setAllMarks(false)}
+                  >
+                    Ninguno
+                  </Button>
+                </span>
               </div>
-            )}
+              <div className="max-h-28 overflow-y-auto sm:columns-2 gap-x-4 [&>label]:break-inside-avoid [&>label]:py-0.5">
+                {activeSetlist.items
+                  .filter((it) => it.tipoItem === "cancion" && it.songId)
+                  .map((it, i) => {
+                    const song = songs.find((x) => x.id === it.songId);
+                    if (!song) return null;
+                    const marked = isMarked(song);
+                    return (
+                      <label
+                        key={`${song.id}-${i}`}
+                        className="flex items-center gap-1.5 text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer select-none min-w-0"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={marked}
+                          onChange={(e) => setMark(song, e.target.checked)}
+                          className="rounded accent-[var(--ok)] cursor-pointer"
+                        />
+                        <span className="truncate">
+                          {song.titulo}
+                          {(song.tonalidad || song.bpm) && (
+                            <span className="text-[var(--ink-3)]">
+                              {" "}
+                              · {[song.tonalidad, song.bpm ? `${song.bpm} BPM` : ""].filter(Boolean).join(" ")}
+                            </span>
+                          )}
+                        </span>
+                      </label>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
           {/* Pager Navigation for Multiple Sheets — recortado en móvil: sin el texto largo"Previsualizando hoja X de Y", y los botones Anterior/Siguiente solo con icono (el
  texto competía por ancho con el badge del músico en pantallas pequeñas). */}
           {membersToExport.length > 1 && (
@@ -2642,8 +2526,7 @@ function PdfExportModalBody({
                 </span>
                 <span className="px-2.5 sm:px-3 py-0.5 rounded-[var(--r-pill)] bg-[var(--ok)]/20 text-[var(--ink)] font-bold flex items-center gap-1.5 min-w-0 truncate">
                   <span className="truncate">
-                    <ShowIcon inline emoji="👤" />
-                    {currentPreviewMember.name}
+                    <ShowIcon inline emoji="👤" />{currentPreviewMember.name}
                   </span>
                   <span className="hidden sm:inline text-[var(--ink-2)] text-micro shrink-0">
                     ({currentPreviewMember.instrument})
@@ -2705,9 +2588,7 @@ function PdfExportModalBody({
                 />
               </div>
             ) : (
-              <p className="m-auto text-sm text-[var(--ink-2)]">
-                Maquetando el setlist…
-              </p>
+              <p className="m-auto text-sm text-[var(--ink-2)]">Maquetando el setlist…</p>
             )}
             {previewLoading && previewDoc && (
               <span className="absolute top-3 right-4 rounded-[var(--r-pill)] bg-[var(--surface)] px-3 py-1 text-xs font-semibold text-[var(--ink-2)]">

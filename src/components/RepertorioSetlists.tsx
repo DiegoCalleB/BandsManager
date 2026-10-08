@@ -150,6 +150,8 @@ import {
 import {
   calculateSetlistStats,
   resolveBandMembers,
+  isSongMarkedForMember,
+  withSongMarkedForMember,
   BandMemberOption,
 } from "../utils/repertorioUtils";
 import {
@@ -5284,6 +5286,26 @@ export default function RepertorioSetlists({
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </IconButton>
+
+                        {/* "Me da dudas": el músico pide ver tono/BPM de este tema en su hoja impresa */}
+                        {currentUser?.name && (() => {
+                          const dudaMarcada = isSongMarkedForMember(song, currentUser.id, currentUser.name);
+                          return (
+                            <IconButton
+                              label={dudaMarcada ? "Quitar de mis dudas" : "Me da dudas"}
+                              aria-pressed={dudaMarcada}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUpdateSongFromStudio(
+                                  withSongMarkedForMember(song, currentUser.id, currentUser.name, !dudaMarcada),
+                                );
+                              }}
+                              className={`shrink-0 ${dudaMarcada ? "text-[var(--accent-alt)]" : ""}`}
+                            >
+                              <HelpCircle className="w-3.5 h-3.5" />
+                            </IconButton>
+                          );
+                        })()}
 
                         {/* Expand button for details */}
                         <Button
