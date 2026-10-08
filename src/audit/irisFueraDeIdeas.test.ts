@@ -57,3 +57,10 @@ describe('Ideas: pistas de Iris para grabar encima', () => {
     expect(studio).toMatch(/stopRecordingTrackOverdub = \(\) => \{\s*basePlayRefs/);
   });
 });
+
+describe('Ideas: pistas de Iris al crear la idea', () => {
+  it('el formulario de nueva idea deja elegir pistas de Iris y las guarda por referencia', () => {
+    expect(src).toContain('nuevaIdeaPistasIris');
+    expect(src).toContain('ideaConPistasBase(newIdea, idsIris)');
+  });
+});
