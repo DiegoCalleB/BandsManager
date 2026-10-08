@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, lazy, Suspense } from "react";
 import { guardarOReverter } from "../utils/guardarConReversion";
 import {
   X,
@@ -28,6 +28,8 @@ import {
   GraduationCap,
   Maximize2,
   Minimize2,
+  Timer,
+  Guitar,
 } from "lucide-react";
 import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
@@ -87,6 +89,9 @@ import {
 import { ShowIcon } from './ui/ShowIcon';
 import { ajustesDeModoAtril, type ModoAtril } from "../utils/modosAtril";
 import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
+
+const MetronomeModal = lazy(() => import("./MetronomeModal").then((m) => ({ default: m.MetronomeModal })));
+const TunerModal = lazy(() => import("./TunerModal").then((m) => ({ default: m.TunerModal })));
 
 export interface AtrilProps {
   cancion: Song;
@@ -163,6 +168,8 @@ export function Atril({
     };
   }, []);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
+  const [showMetronomeModal, setShowMetronomeModal] = useState<boolean>(false);
+  const [showTunerModal, setShowTunerModal] = useState<boolean>(false);
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
 
@@ -756,6 +763,22 @@ export function Atril({
                 onClick={() => setShowShareModal(true)}
               >
                 <MessageSquare className="w-4 h-4" />
+              </IconButton>
+
+              <IconButton
+                label="Metrónomo"
+                type="button"
+                onClick={() => setShowMetronomeModal(true)}
+              >
+                <Timer className="w-4 h-4" />
+              </IconButton>
+
+              <IconButton
+                label="Afinador"
+                type="button"
+                onClick={() => setShowTunerModal(true)}
+              >
+                <Guitar className="w-4 h-4" />
               </IconButton>
 
               <IconButton
@@ -1426,6 +1449,19 @@ export function Atril({
           })}
           itemType="song"
         />
+
+        {(showMetronomeModal || showTunerModal) && (
+          <Suspense fallback={null}>
+            {showMetronomeModal && (
+              <MetronomeModal
+                isOpen={showMetronomeModal}
+                onClose={() => setShowMetronomeModal(false)}
+                initialBpm={song.bpm || 120}
+              />
+            )}
+            {showTunerModal && <TunerModal isOpen={showTunerModal} onClose={() => setShowTunerModal(false)} />}
+          </Suspense>
+        )}
 
         <ModalOido
           abierto={(isAnalyzingChords || isGeneratingAi) && !oidoOculto}

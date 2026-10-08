@@ -13,7 +13,6 @@ import {
   Guitar,
   Coins,
   Sparkles,
-  Clock,
   Music,
   Disc2,
   Briefcase,
@@ -37,9 +36,7 @@ export type NavItemId =
   | 'discografia'
   | 'chat'
   | 'finanzas'
-  | 'merchan'
-  | 'metronome'
-  | 'tuner';
+  | 'merchan';
 
 export interface NavItemDef {
   id: NavItemId;
@@ -70,8 +67,6 @@ export const NAV_ITEMS: Record<NavItemId, NavItemDef> = {
   chat: { id: 'chat', icon: Guitar, labelKey: 'nav.chat', labelDefault: 'Agente Mánager' },
   finanzas: { id: 'finanzas', icon: Coins, labelKey: 'nav.finanzas', labelDefault: 'Finanzas', adminOnly: true },
   merchan: { id: 'merchan', icon: Sparkles, labelKey: 'nav.merchan', labelDefault: 'Merchandising', adminOnly: true },
-  metronome: { id: 'metronome', icon: Clock, labelKey: 'nav.metronome', labelDefault: 'Metrónomo' },
-  tuner: { id: 'tuner', icon: Guitar, labelKey: 'nav.tuner', labelDefault: 'Afinador' },
 };
 
 export interface NavGroupDef {
@@ -97,8 +92,8 @@ export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
  * Agrupación del menú (la misma en escritorio y móvil: mantener dos listas idénticas a mano
- * acababa siempre en que una mentía). Metrónomo y Afinador cuelgan de Música: son
- * herramientas de músico y no merecen un grupo propio con dos filas.
+ * acababa siempre en que una mentía). Metrónomo y Afinador ya no están en el menú: viven
+ * como botones pequeños dentro del Atril (Jamify).
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
   {
@@ -111,7 +106,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'ensayos', 'discografia', 'metronome', 'tuner'],
+    itemIds: ['repertorio', 'ensayos', 'discografia'],
   },
   {
     id: 'promocion',
@@ -136,8 +131,7 @@ export const NAV_GROUPS = NAV_GROUPS_DESKTOP;
  * Orden plano actual del <aside> de escritorio y del drawer móvil. Se usa tal cual
  * cuando el plan no supera MIN_MODULES_FOR_GROUPED_NAV (hoy, solo `promo`), para no
  * cambiar nada visualmente en ese caso. Incluye'repertorio' (no los 4 submódulos que
- * solo aparecen en el grupo Música de la vista agrupada). metronome/tuner también
- * solo en vista agrupada.
+ * solo aparecen en el grupo Música de la vista agrupada).
  */
 export const FLAT_NAV_ORDER_IDS: NavItemId[] = [
   'resumen',

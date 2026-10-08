@@ -112,14 +112,6 @@ const FontSelectorModal = safeLazy(() =>
     default: m.FontSelectorModal,
   })),
 );
-const MetronomeModal = safeLazy(() =>
-  import("./components/MetronomeModal").then((m) => ({
-    default: m.MetronomeModal,
-  })),
-);
-const TunerModal = safeLazy(() =>
-  import("./components/TunerModal").then((m) => ({ default: m.TunerModal })),
-);
 const BandSwitcherModal = safeLazy(() =>
   import("./components/BandSwitcherModal").then((m) => ({
     default: m.BandSwitcherModal,
@@ -633,9 +625,7 @@ export default function App() {
       | "merchan"
       | "epk"
       | "fans"
-      | "planes"
-      | "metronome"
-      | "tuner",
+      | "planes",
     options?: {
       sectionTab?: "salas" | "medios" | "grupos";
       statusFilter?: LeadStatus | "todos" | string;
@@ -645,18 +635,6 @@ export default function App() {
       concertId?: string;
     },
   ) => {
-    // Herramientas (metronome/tuner): abren modal sin cambiar vista
-    if (view === "metronome") {
-      setShowMetronomeModal(true);
-      setIsMobileMenuOpen(false);
-      return;
-    }
-    if (view === "tuner") {
-      setShowTunerModal(true);
-      setIsMobileMenuOpen(false);
-      return;
-    }
-
     // Antes, si el plan no incluía el módulo, el código igualmente navegaba a `view` salvo para
     //'finanzas' (el único caso con un `return` real): el control de acceso por plan no bloqueaba
     // nada en el resto de módulos. Y en finanzas, el bloqueo dependía de `isAdmin`, no del plan
@@ -797,8 +775,6 @@ export default function App() {
       setIsChatLoading(loading);
     }, 0);
   }, []);
-  const [showMetronomeModal, setShowMetronomeModal] = useState(false);
-  const [showTunerModal, setShowTunerModal] = useState(false);
   const [showBandSwitcherModal, setShowBandSwitcherModal] = useState(false);
 
   // Redirect non-admins away from finanzas if they end up there
@@ -2696,21 +2672,6 @@ export default function App() {
               )}
             </button>
           )}
-
-          {/* Metronome Pro Modal */}
-          <MetronomeModal
-            isOpen={showMetronomeModal}
-            onClose={() => setShowMetronomeModal(false)}
-            songs={[]}
-            colors={colors}
-          />
-
-          {/* Tuner Pro Modal */}
-          <TunerModal
-            isOpen={showTunerModal}
-            onClose={() => setShowTunerModal(false)}
-            colors={colors}
-          />
 
           {/* Band Switcher Modal (Netflix Style) */}
           <BandSwitcherModal
