@@ -35,21 +35,12 @@ CREATE TABLE IF NOT EXISTS public.short_link_clicks (
 CREATE INDEX IF NOT EXISTS idx_short_link_clicks_band_fecha ON public.short_link_clicks(band_id, clicked_at DESC);
 CREATE INDEX IF NOT EXISTS idx_short_link_clicks_code ON public.short_link_clicks(code);
 
--- RLS: mismo patrón que el resto de tablas (acceso total al backend). El aislamiento por banda
--- lo hace la capa de aplicación (getTargetBandId), ver AGENTS.md §2.1.
+-- RLS activado SIN políticas: es lo que tienen ya las demás tablas en producción. Solo el backend
+-- (clave de servicio, que se salta RLS) accede; la clave anónima, que va en el navegador, no puede
+-- leer los clics ni fabricar enlaces. El aislamiento por banda lo hace la capa de aplicación
+-- (getTargetBandId), ver AGENTS.md §2.1. No copies aquí la política «USING (true)» del esquema antiguo.
 ALTER TABLE public.short_links ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.short_links;
-CREATE POLICY "Permitir acceso total al backend" ON public.short_links
-  FOR ALL
-  USING (true)
-  WITH CHECK (true);
-
 ALTER TABLE public.short_link_clicks ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "Permitir acceso total al backend" ON public.short_link_clicks;
-CREATE POLICY "Permitir acceso total al backend" ON public.short_link_clicks
-  FOR ALL
-  USING (true)
-  WITH CHECK (true);
 
 COMMENT ON TABLE public.short_links IS 'Enlaces cortos de una banda (/r/<code>) con destino lógico resuelto al pulsar.';
 COMMENT ON TABLE public.short_link_clicks IS 'Clics en enlaces cortos. Sin IP: visitante es un hash que rota a diario.';
