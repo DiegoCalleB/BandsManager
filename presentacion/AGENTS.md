@@ -13,6 +13,10 @@ Cada cambio se juzga con tres preguntas:
 
 Si la respuesta a la 2 o a la 3 es «no», se rehace.
 
+## Historia (ficción) que hilvana el recorrido
+
+Rama `claude/tfm-historia-herdeiros`. Antes de cada bloque de producto hay una escena corta (`.slide.scene`) con la historia de **Os Herdeiros do Código**: la banda a punto de separarse por la logística (prólogo: chat del grupo, «0 · 0 · 3», el bajista que pregunta a «Claudio» y «Guglio»), la respuesta de la sala (interludio antes del acto III), el festival y la radio (interludio antes del acto V) y el giro «La banda es de demo. La aplicación, no.» antes del acto VI. Todas las escenas llevan el pie «Historia de ficción». La presentación es privada (profesorado del máster); si se hiciera pública, quitar los nombres reales del festival y la radio. Regla: las pruebas de producto siguen siendo el grueso; la ficción solo abre y enlaza.
+
 ## Narrativa: el hilo son las bandas de Brais
 
 La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros do Código** y **Master of Prompts**, que son de Brais. Es un recorrido por la vida de una banda, no un catálogo de pantallas. Mantener unas 48 diapositivas (no es una meta a reducir; puede variar según la necesidad), organizadas en actos con nombre:
@@ -21,6 +25,7 @@ La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros 
 |---|---|---|
 | Tráiler | Apertura de unos 13 s que arranca sola y termina en el logo animado | 1 |
 | Portada | Gancho: «Menos gestión, más música» | 2 |
+| Prólogo | La banda que se rompe: chat, ceros, el bajista y las IA (ficción) | 3–5 |
 | I · Backstage | El caos de gestionar una banda y qué se propone | umbral 3 · 4–6 |
 | II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, redactor que aprende, otras bandas y Date Swap | umbral 7 · 8–18 |
 | III · Antes del concierto | Calendario, repertorio y setlists (impresión por músico), Iris, Atril, cifrado por músico, armonía, ensayos | umbral 19 · 20–32 |
