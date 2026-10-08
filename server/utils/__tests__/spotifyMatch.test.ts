@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { elegirArtistaSpotify, normalizarNombreArtista } from '../spotifyMatch.js';
+import {
+  elegirArtistaSpotify,
+  estadoSpotifyBanda,
+  normalizarNombreArtista,
+  planificarSpotifyBanda,
+} from '../spotifyMatch.js';
 
 const ID_A = '4Z8W4fKeB5YxbusRsdQVPb';
 const ID_B = '0TnOYISbd1XYRBk9myaseg';
@@ -45,5 +50,43 @@ describe('elegirArtistaSpotify', () => {
   it('devuelve null con nombre vacío o sin candidatos', () => {
     expect(elegirArtistaSpotify('', [{ id: ID_A, name: 'Bala' }])).toBeNull();
     expect(elegirArtistaSpotify('Bala', [])).toBeNull();
+  });
+});
+
+describe('estadoSpotifyBanda', () => {
+  it('distingue vacío, válido, roto y otro', () => {
+    expect(estadoSpotifyBanda('')).toBe('vacio');
+    expect(estadoSpotifyBanda(undefined)).toBe('vacio');
+    expect(estadoSpotifyBanda(`https://open.spotify.com/artist/${ID_A}?si=x`)).toBe('valido');
+    expect(estadoSpotifyBanda(`https://open.spotify.com/intl-es/artist/${ID_A}`)).toBe('valido');
+    expect(estadoSpotifyBanda(`spotify:artist:${ID_A}`)).toBe('valido');
+    expect(estadoSpotifyBanda('https://open.spotify.com/artist/lasenoratomasa')).toBe('invalido');
+    expect(estadoSpotifyBanda('https://open.spotify.com/search/Bala')).toBe('invalido');
+    expect(estadoSpotifyBanda(`https://open.spotify.com/artist/${ID_A}extra`)).toBe('invalido');
+    expect(estadoSpotifyBanda('https://youtube.com/@bala')).toBe('otro');
+    expect(estadoSpotifyBanda('https://labanda.es')).toBe('otro');
+  });
+});
+
+describe('planificarSpotifyBanda', () => {
+  const URL_OK = `https://open.spotify.com/artist/${ID_A}`;
+
+  it('completa los vacíos y reemplaza los rotos cuando hay sustituto verificado', () => {
+    expect(planificarSpotifyBanda('', URL_OK)).toEqual({ accion: 'completar', nuevo: URL_OK });
+    expect(planificarSpotifyBanda('https://open.spotify.com/artist/inventado', URL_OK)).toEqual({
+      accion: 'reemplazar',
+      nuevo: URL_OK,
+    });
+  });
+
+  it('nunca toca un enlace válido, un YouTube ni una web', () => {
+    expect(planificarSpotifyBanda(URL_OK, `https://open.spotify.com/artist/${ID_B}`).accion).toBe('mantener');
+    expect(planificarSpotifyBanda('https://youtube.com/@bala', URL_OK).accion).toBe('mantener');
+    expect(planificarSpotifyBanda('https://labanda.es', URL_OK).accion).toBe('mantener');
+  });
+
+  it('no borra un enlace roto si no hay sustituto verificado', () => {
+    expect(planificarSpotifyBanda('https://open.spotify.com/artist/inventado', '')).toEqual({ accion: 'sin_sustituto' });
+    expect(planificarSpotifyBanda('', '')).toEqual({ accion: 'mantener' });
   });
 });

@@ -49,3 +49,36 @@ export function elegirArtistaSpotify(
   const id = coincidencias[0].id as string;
   return { id, url: `https://open.spotify.com/artist/${id}` };
 }
+
+export type EstadoSpotifyBanda = 'vacio' | 'valido' | 'invalido' | 'otro';
+
+/**
+ * Qué hay guardado en `spotify_youtube`: nada, un artista de Spotify con ID real, un enlace de
+ * Spotify roto (ID inventado, búsqueda, perfil sin ID...) u otra cosa (YouTube, web) que no se toca.
+ */
+export function estadoSpotifyBanda(valor?: string | null): EstadoSpotifyBanda {
+  const texto = (valor || '').trim();
+  if (!texto) return 'vacio';
+  const conId =
+    /spotify\.com\/(?:intl-[a-z]{2}(?:-[a-z]{2})?\/)?artist\/[A-Za-z0-9]{22}(?![A-Za-z0-9])/i.test(texto) ||
+    /^spotify:artist:[A-Za-z0-9]{22}$/i.test(texto);
+  if (conId) return 'valido';
+  if (/spotify\.com|^spotify:/i.test(texto)) return 'invalido';
+  return 'otro';
+}
+
+export interface PlanSpotifyBanda {
+  accion: 'completar' | 'reemplazar' | 'mantener' | 'sin_sustituto';
+  nuevo?: string;
+}
+
+/**
+ * Decide qué hacer con una banda ya guardada. Nunca borra: un enlace roto sin sustituto
+ * verificado se deja como está y se informa (`sin_sustituto`).
+ */
+export function planificarSpotifyBanda(valorActual: string | null | undefined, urlVerificada: string): PlanSpotifyBanda {
+  const estado = estadoSpotifyBanda(valorActual);
+  if (estado === 'valido' || estado === 'otro') return { accion: 'mantener' };
+  if (!urlVerificada) return estado === 'invalido' ? { accion: 'sin_sustituto' } : { accion: 'mantener' };
+  return { accion: estado === 'vacio' ? 'completar' : 'reemplazar', nuevo: urlVerificada };
+}
