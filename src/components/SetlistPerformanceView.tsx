@@ -36,7 +36,8 @@ import {
   SlidersHorizontal,
   WifiOff,
 } from "lucide-react";
-import { Setlist, SetlistItem, Song, SongAudioIdea, User } from "../types";
+import { Rehearsal, RehearsalAgendaItem, Setlist, SetlistItem, Song, SongAudioIdea, User } from "../types";
+import { BarraSeguimientoEnsayo } from "./ensayos/BarraSeguimientoEnsayo";
 import { isImageDocument, isPdfDocument } from "../utils/documentType";
 import {
   getSemitoneDifference,
@@ -65,6 +66,11 @@ interface SetlistPerformanceViewProps {
   onUpdateSong?: (song: Song) => void;
   currentUser?: User;
   initialMode?: "directo" | "ensayo";
+  /** Si el visor se abre desde un ensayo: agenda original y callback para guardar la evaluación. */
+  seguimientoEnsayo?: {
+    agenda: RehearsalAgendaItem[];
+    onUpdateRehearsal: (cambios: Partial<Rehearsal>) => void;
+  };
 }
 
 // Distancia mínima de swipe (px) para contar como"pasar página" y no como un scroll normal
@@ -109,6 +115,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   onUpdateSong,
   currentUser,
   initialMode = "directo",
+  seguimientoEnsayo,
 }) => {
   const [modeArchetype, setModeArchetype] = useState<"directo" | "ensayo">(
     initialMode,
@@ -1049,6 +1056,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       <div
         className={`shrink-0 px-3 sm:px-4 py-2 space-y-2 z-20 ${glareMode ? "bg-gradient-to-t from-white to-white/0" : "bg-gradient-to-t from-black to-[var(--sunken)]/0"}`}
       >
+        {seguimientoEnsayo && (
+          <BarraSeguimientoEnsayo
+            agenda={seguimientoEnsayo.agenda}
+            itemId={currentItem?.id}
+            onUpdateRehearsal={seguimientoEnsayo.onUpdateRehearsal}
+          />
+        )}
+
         {!isBlock && !showScannedSheet && currentSong?.tonalidad && (
           <div className="flex items-center justify-center gap-2 text-xs">
             <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-0.5 rounded">
