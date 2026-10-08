@@ -539,3 +539,14 @@ body.scroll .tr-beat { display: none; }
 body.scroll .tr-final { position: relative; inset: auto; opacity: 1 !important; padding: 56px 22px; min-height: 420px; }
 body.scroll .tr-logo, body.scroll .tr-word, body.scroll .tr-tag, body.scroll .tr-hint { opacity: 1 !important; transform: none !important; animation: none !important; }
 body.scroll .tr-logo { width: 96px; height: 96px; border-radius: 24px; } body.scroll .tr-word { font-size: 40px; } body.scroll .tr-tag { font-size: 22px; text-align: center; } body.scroll .tr-hint { position: static; font-size: 14px; }
+
+/* Cierre del tráiler: el logo animado de la app (el de la pantalla de acceso) */
+.tr-final { background: #0f0f0f; gap: 6px; }
+.tr-logo-vid { width: 780px; height: 780px; display: block; opacity: 0; transform: scale(.94);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent), linear-gradient(0deg, transparent, #000 13%, #000 87%, transparent);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 13%, #000 87%, transparent), linear-gradient(0deg, transparent, #000 13%, #000 87%, transparent); mask-composite: intersect; }
+.slide.trailer.active .tr-logo-vid { animation: trlogo 900ms var(--ease) calc(var(--t) + .1s) both; }
+.tr-final .tr-tag { font-size: 46px; margin-top: -40px; }
+@media (prefers-reduced-motion: reduce) { .tr-logo-vid { opacity: 1 !important; transform: none !important; animation: none !important; } }
+body.scroll .tr-logo-vid { width: 260px; height: 260px; opacity: 1 !important; transform: none !important; animation: none !important; }
+body.scroll .tr-final .tr-tag { margin-top: -14px; }

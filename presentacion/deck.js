@@ -186,6 +186,8 @@
     });
   }
 
+  let delayedVideoTimer = 0;
+
   function show(i, push = true, how = 'play') {
     document.querySelectorAll('video').forEach((v) => v.pause());
     const prev = cur;
@@ -204,6 +206,11 @@
     if (push) history.replaceState(null, '', '#' + (cur + 1));
     $$('#grid button').forEach((b, n) => b.classList.toggle('cur', n === cur));
     countUp(slides[cur]);
+    clearTimeout(delayedVideoTimer);
+    slides[cur].querySelectorAll('video[data-delay]').forEach((v) => {
+      v.pause(); v.currentTime = 0;
+      delayedVideoTimer = setTimeout(() => { if (v.offsetParent) v.play().catch(() => {}); }, Number(v.dataset.delay));
+    });
     slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => {
       if (v.dataset.restart !== undefined) v.currentTime = 0;
       if (v.offsetParent) v.play().catch(() => {});
