@@ -6,6 +6,8 @@ import { elegirCanalYoutube } from "../utils/metricasBanda.js";
 import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { getSupabase } from "../db/core.js";
 
+export type Resultado = { fila: FilaMetrica } | { motivo: string };
+
 export interface FilaMetrica {
   fuente: "spotify" | "youtube";
   seguidores?: number | null;
@@ -14,67 +16,74 @@ export interface FilaMetrica {
   popularidad?: number | null;
 }
 
-async function metricasSpotify(enlace: string): Promise<FilaMetrica | null> {
+async function metricasSpotify(enlace: string): Promise<Resultado> {
   const id = spotifyArtistId(enlace);
-  const token = id ? await getSpotifyAccessToken() : null;
-  if (!id || !token) return null;
+  if (!id) return { motivo: "sin enlace de Spotify verificado" };
+  const token = await getSpotifyAccessToken();
+  if (!token) return { motivo: "Spotify no da token (revisa SPOTIFY_CLIENT_ID/SECRET)" };
   try {
     const res = await fetch(`https://api.spotify.com/v1/artists/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
       signal: AbortSignal.timeout(6000),
     });
-    if (!res.ok) {
-      console.warn(`[Metricas] Spotify respondió ${res.status} para el artista ${id}`);
-      return null;
-    }
+    if (!res.ok) return { motivo: `Spotify respondió ${res.status}` };
     const a = (await res.json()) as { followers?: { total?: number }; popularity?: number };
-    return { fuente: "spotify", seguidores: a.followers?.total ?? null, popularidad: a.popularity ?? null };
+    return { fila: { fuente: "spotify", seguidores: a.followers?.total ?? null, popularidad: a.popularity ?? null } };
   } catch (err) {
-    console.warn("[Metricas] Spotify no disponible:", err instanceof Error ? err.message : err);
-    return null;
+    return { motivo: `Spotify no responde (${err instanceof Error ? err.message : "error"})` };
   }
 }
 
-async function metricasYoutube(nombre: string): Promise<FilaMetrica | null> {
+async function metricasYoutube(nombre: string): Promise<Resultado> {
   const clave = (process.env.YOUTUBE_API_KEY || process.env.YT_API_KEY || "").trim();
-  if (!clave) return null;
+  if (!clave) return { motivo: "falta YOUTUBE_API_KEY" };
   try {
     // search.list cuesta 100 unidades de cuota: por eso solo se hace una vez al mes por banda.
     const busqueda = await fetch(
       `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=10&q=${encodeURIComponent(nombre)}&key=${encodeURIComponent(clave)}`,
       { signal: AbortSignal.timeout(6000) },
     );
-    if (!busqueda.ok) return null;
+    if (!busqueda.ok) return { motivo: `YouTube respondió ${busqueda.status} en la búsqueda` };
     const datos = (await busqueda.json()) as { items?: { id?: { channelId?: string }; snippet?: { channelTitle?: string } }[] };
     const canal = elegirCanalYoutube(
       nombre,
       (datos.items || []).map((i) => ({ channelId: i.id?.channelId || "", channelTitle: i.snippet?.channelTitle || "" })),
     );
-    if (!canal) return null;
+    if (!canal) return { motivo: "YouTube no tiene un canal con ese nombre exacto" };
 
     const stats = await fetch(
       `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${encodeURIComponent(canal.channelId)}&key=${encodeURIComponent(clave)}`,
       { signal: AbortSignal.timeout(6000) },
     );
-    if (!stats.ok) return null;
+    if (!stats.ok) return { motivo: `YouTube respondió ${stats.status} en estadísticas` };
     const s = (await stats.json()) as { items?: { statistics?: { subscriberCount?: string; viewCount?: string; hiddenSubscriberCount?: boolean } }[] };
     const est = s.items?.[0]?.statistics;
-    if (!est) return null;
+    if (!est) return { motivo: "YouTube no devuelve estadísticas" };
     return {
-      fuente: "youtube",
-      suscriptores: est.hiddenSubscriberCount ? null : Number(est.subscriberCount ?? NaN) || null,
-      visualizaciones: Number(est.viewCount ?? NaN) || null,
+      fila: {
+        fuente: "youtube",
+        suscriptores: est.hiddenSubscriberCount ? null : Number(est.subscriberCount ?? NaN) || null,
+        visualizaciones: Number(est.viewCount ?? NaN) || null,
+      },
     };
   } catch (err) {
-    console.warn("[Metricas] YouTube no disponible:", err instanceof Error ? err.message : err);
-    return null;
+    return { motivo: `YouTube no responde (${err instanceof Error ? err.message : "error"})` };
   }
 }
 
-/** Todas las fuentes disponibles para una banda. Lo que falle simplemente no aparece. */
-export async function capturarMetricasBanda(nombre: string, enlaceSpotify: string): Promise<FilaMetrica[]> {
-  const resultados = await Promise.all([metricasSpotify(enlaceSpotify), metricasYoutube(nombre)]);
-  return resultados.filter((r): r is FilaMetrica => r !== null);
+/** Todas las fuentes de una banda: filas válidas y motivos de las que fallan. */
+export async function capturarMetricasBanda(
+  nombre: string,
+  enlaceSpotify: string,
+): Promise<{ filas: FilaMetrica[]; motivos: { fuente: "spotify" | "youtube"; motivo: string }[] }> {
+  const [sp, yt] = await Promise.all([metricasSpotify(enlaceSpotify), metricasYoutube(nombre)]);
+  const filas: FilaMetrica[] = [];
+  const motivos: { fuente: "spotify" | "youtube"; motivo: string }[] = [];
+  for (const [fuente, r] of [["spotify", sp], ["youtube", yt]] as const) {
+    if ("fila" in r) filas.push(r.fila);
+    else motivos.push({ fuente, motivo: r.motivo });
+  }
+  return { filas, motivos };
 }
 
 /** Guarda las filas del periodo; un reintento del mismo mes sobrescribe (UNIQUE band_contact_id+fuente+periodo). */

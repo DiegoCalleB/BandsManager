@@ -139,12 +139,18 @@ router.post("/bands/metricas/actualizar", requireAuth, async (req, res) => {
     const bandas = ((await dbGetBandContacts(bandId)) as BandaCuenta[]).filter((b) => b?.nombre_banda).slice(0, MAX_BANDAS_LOTE);
     const periodo = periodoMensual();
     let filas = 0;
+    const motivos: Record<string, number> = {};
     for (const b of bandas) {
-      const capturadas = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
+      const { filas: capturadas, motivos: fallos } = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
       filas += await guardarMetricasBanda({ id: b.id, band_id: bandId }, periodo, capturadas);
+      for (const f of fallos) {
+        const clave = `${f.fuente}: ${f.motivo}`;
+        motivos[clave] = (motivos[clave] || 0) + 1;
+      }
       await sleep(PAUSA_MS);
     }
-    res.json({ success: true, periodo, bandas: bandas.length, filas });
+    // Resumen por motivo: así se ve en pantalla por qué una fuente sale vacía.
+    res.json({ success: true, periodo, bandas: bandas.length, filas, motivos });
   } catch (err) {
     console.error("[BandMusic] metricas/actualizar error:", err);
     res.status(500).json({ error: "No se pudieron actualizar las métricas." });
@@ -188,7 +194,7 @@ router.post("/cron/metricas-mensual", requireCronOrAuth, async (_req, res) => {
     let filas = 0;
     for (const b of (data || []) as (BandaCuenta & { band_id: string })[]) {
       if (!b.nombre_banda) continue;
-      const capturadas = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
+      const { filas: capturadas } = await capturarMetricasBanda(String(b.nombre_banda), b.spotify_youtube || "");
       filas += await guardarMetricasBanda({ id: b.id, band_id: b.band_id }, periodo, capturadas);
       await sleep(PAUSA_MS);
     }

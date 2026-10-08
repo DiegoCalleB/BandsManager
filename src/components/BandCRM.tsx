@@ -166,8 +166,16 @@ export default function BandCRM({
   const actualizarMetricas = async () => {
     setActualizandoMetricas(true);
     try {
-      await apiFetch("/api/bands/metricas/actualizar", { method: "POST" });
+      const r = await apiFetch<{ filas: number; bandas: number; motivos: Record<string, number> }>(
+        "/api/bands/metricas/actualizar",
+        { method: "POST" },
+      );
       cargarMetricas();
+      const motivos = Object.entries(r.motivos || {}).map(([m, n]) => `· ${m} (${n} bandas)`);
+      alert(
+        `Métricas guardadas: ${r.filas} filas de ${r.bandas} bandas.` +
+          (motivos.length ? `\n\nFuentes sin dato:\n${motivos.join("\n")}` : ""),
+      );
     } catch {
       alert("No se pudieron actualizar las métricas. Inténtalo más tarde.");
     } finally {
