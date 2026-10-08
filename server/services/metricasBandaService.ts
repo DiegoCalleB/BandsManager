@@ -1,16 +1,14 @@
-// Captura mensual de métricas públicas de una banda: Spotify (seguidores, popularidad),
-// Deezer (fans) y YouTube (suscriptores, visualizaciones). Cada fuente falla por separado.
+// Captura mensual de métricas públicas de una banda: Spotify (seguidores, popularidad) y
+// YouTube (suscriptores, visualizaciones). Cada fuente falla por separado.
 
 import { getSpotifyAccessToken } from "./spotifyService.js";
-import { fansDeezerDeBanda } from "./musicPreviewService.js";
 import { elegirCanalYoutube } from "../utils/metricasBanda.js";
 import { spotifyArtistId } from "../../src/utils/spotifyEmbed.js";
 import { getSupabase } from "../db/core.js";
 
 export interface FilaMetrica {
-  fuente: "spotify" | "deezer" | "youtube";
+  fuente: "spotify" | "youtube";
   seguidores?: number | null;
-  fans?: number | null;
   suscriptores?: number | null;
   visualizaciones?: number | null;
   popularidad?: number | null;
@@ -73,18 +71,9 @@ async function metricasYoutube(nombre: string): Promise<FilaMetrica | null> {
   }
 }
 
-async function metricasDeezer(nombre: string): Promise<FilaMetrica | null> {
-  const fans = await fansDeezerDeBanda(nombre);
-  return fans === null ? null : { fuente: "deezer", fans };
-}
-
 /** Todas las fuentes disponibles para una banda. Lo que falle simplemente no aparece. */
 export async function capturarMetricasBanda(nombre: string, enlaceSpotify: string): Promise<FilaMetrica[]> {
-  const resultados = await Promise.all([
-    metricasSpotify(enlaceSpotify),
-    metricasDeezer(nombre),
-    metricasYoutube(nombre),
-  ]);
+  const resultados = await Promise.all([metricasSpotify(enlaceSpotify), metricasYoutube(nombre)]);
   return resultados.filter((r): r is FilaMetrica => r !== null);
 }
 
@@ -104,7 +93,6 @@ export async function guardarMetricasBanda(
         fuente: f.fuente,
         periodo,
         seguidores: f.seguidores ?? null,
-        fans: f.fans ?? null,
         suscriptores: f.suscriptores ?? null,
         visualizaciones: f.visualizaciones ?? null,
         popularidad: f.popularidad ?? null,

@@ -67,15 +67,3 @@ export async function previewDeBanda(nombreBanda: string): Promise<PreviewBanda 
     return null;
   }
 }
-
-/** Fans de la banda en Deezer (nombre exacto), o null. Sin clave. */
-export async function fansDeezerDeBanda(nombreBanda: string): Promise<number | null> {
-  try {
-    const busqueda = await getJson(`https://api.deezer.com/search/artist?q=${encodeURIComponent(nombreBanda)}&limit=10`);
-    const artista = elegirArtistaDeezer(nombreBanda, (busqueda.data || []) as ArtistaDeezer[]);
-    return artista ? artista.nb_fan || 0 : null;
-  } catch (err) {
-    console.warn(`[MusicPreview] fans Deezer no disponibles para "${nombreBanda}":`, err instanceof Error ? err.message : err);
-    return null;
-  }
-}
