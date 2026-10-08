@@ -31,4 +31,10 @@ describe('modos en vivo: mecánicas compartidas', () => {
       expect(src).not.toContain('wakeLock.request');
     }
   });
+  it('concierto y ensayo comparten la pantalla completa (sin requestFullscreen propio)', () => {
+    for (const src of [ensayo, concierto]) {
+      expect(src).toContain('useFullscreen(');
+      expect(src).not.toContain('requestFullscreen');
+    }
+  });
 });

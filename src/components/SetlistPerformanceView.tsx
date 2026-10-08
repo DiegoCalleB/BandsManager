@@ -51,6 +51,7 @@ import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { useFullscreen } from "../hooks/useFullscreen";
 import { useWakeLock } from '../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../utils/pasarPagina';
 
@@ -113,7 +114,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     initialMode,
   );
   const [showSongListDrawer, setShowSongListDrawer] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -149,6 +149,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   );
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Pantalla completa real del navegador: oculta la barra de Chrome/Safari y evita toques accidentales.
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Modo Escenario Offline Guard: almacena en caché local letras, cifrados y metadatos
   // para que el concierto siga funcionando al 100% si se corta la conexión o el wifi en la sala.
@@ -376,26 +378,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // WAKE LOCK: lo más importante para un músico en directo — que la pantalla NO se apague a media
   // canción. Se libera en Modo Descanso (isResting), la única vez que SÍ queremos que se apague.
   useWakeLock(!isResting);
-
-  // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
-  // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
-  // ahí robando espacio y invitando a un toque accidental que saque al músico de la app.
-  const toggleFullscreen = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (!document.fullscreenElement) {
-      el.requestFullscreen?.().catch(() => {});
-    } else {
-      document.exitFullscreen?.().catch(() => {});
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleChange = () =>
-      setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", handleChange);
-    return () => document.removeEventListener("fullscreenchange", handleChange);
-  }, []);
 
   const handlePrev = () => {
     setCurrentIndex((i) => Math.max(0, i - 1));

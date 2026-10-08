@@ -50,6 +50,7 @@ import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
+import { useFullscreen } from "../../hooks/useFullscreen";
 import { useWakeLock } from '../../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
 
@@ -81,8 +82,8 @@ export function ModoLocalEnVivoTab({
   const [viewMode, setViewMode] = useState<"escenario" | "atril">("escenario");
 
   // Fullscreen state
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Track / Block Timer State
   const [trackSeconds, setTrackSeconds] = useState(0);
@@ -243,21 +244,6 @@ export function ModoLocalEnVivoTab({
       a.id === currentItem.id ? { ...a, enfoque: nota } : a,
     );
     onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Toggle Fullscreen
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      setIsFullscreen(true);
-      if (containerRef.current && containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen().catch(() => {});
-      }
-    } else {
-      setIsFullscreen(false);
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
   };
 
   // Current chord text
