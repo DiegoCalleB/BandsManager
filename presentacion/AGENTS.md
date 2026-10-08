@@ -41,7 +41,7 @@ Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.a
 
 ## Personajes con rostro real
 
-Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes aportadas por Diego): el **manager de Master of Prompts** (`img/personaje-manager.jpg`, solo en el acto II) y el **cantante de Os Herdeiros do Código** (`img/personaje-cantante.jpg`, actos III y IV). Van rotulados «demo», sin nombre ni afirmaciones sobre la persona. Antes de enseñarlos fuera del círculo de la escuela (la presentación en Railway es una URL pública), confirmar con él que está de acuerdo. Si dice que no, se retiran de los umbrales.
+Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes aportadas por Diego): el **manager de Master of Prompts** (`img/personaje-manager.jpg`, solo en el acto II) y el **cantante de Os Herdeiros do Código** (`img/personaje-cantante.jpg`, solo en el acto IV y la portada). Van rotulados «demo», sin nombre ni afirmaciones sobre la persona. Antes de enseñarlos fuera del círculo de la escuela (la presentación en Railway es una URL pública), confirmar con él que está de acuerdo. Si dice que no, se retiran de los umbrales.
 
 ## Estilo de escritura (que no suene a IA)
 
