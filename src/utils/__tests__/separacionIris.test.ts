@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { AudioTrack, SongAudioIdea } from '../../types';
 import {
+  ideaParaSeparar,
   autorDeSeparacion,
   avanzarProgreso,
   describirErrorSeparacion,
@@ -219,5 +220,25 @@ describe('errores', () => {
     const e = describirErrorSeparacion({ data: { errorType: 'rara', message: 'm' } }, 'demucs');
     expect(e.errorTitle).toBe('Inconveniente en la Separación de Pistas');
     expect(e.actionAdvice).toContain('Motor DSP local');
+  });
+});
+
+describe('ideaParaSeparar', () => {
+  const idea = (id: string, audioUrl: string) => ({ id, titulo: id, audioUrl, subidoPor: 'x', seccion: 'general', fecha: '2026-01-01' }) as any;
+  it('prefiere la idea cuyo audio es el activo', () => {
+    const song = { id: 's', titulo: 'T', audioIdeas: [idea('a', 'u1'), idea('b', 'u2')] } as any;
+    expect(ideaParaSeparar(song, 'u2')?.id).toBe('b');
+  });
+  it('si ninguna coincide usa la primera con audio', () => {
+    const song = { id: 's', titulo: 'T', audioIdeas: [idea('a', ''), idea('b', 'u2')] } as any;
+    expect(ideaParaSeparar(song, 'otro')?.id).toBe('b');
+  });
+  it('sin ideas crea la maqueta principal desde el audio activo', () => {
+    const r = ideaParaSeparar({ id: 's', titulo: 'T' } as any, 'u9');
+    expect(r?.id).toBe('idea-main-s');
+    expect(r?.audioUrl).toBe('u9');
+  });
+  it('sin nada devuelve null', () => {
+    expect(ideaParaSeparar({ id: 's', titulo: 'T' } as any, '')).toBeNull();
   });
 });

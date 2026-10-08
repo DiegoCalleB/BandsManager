@@ -2,6 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { IrisStudio } from '../components/chords/IrisStudio';
+import { MOTORES_IRIS } from '../utils/separacionIris';
+
+// El selector se abre con estado interno: en estático solo comprobamos que no se pinta cerrado.
+const selectorHtml = () => (renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio onSeparar={() => {}} />).includes('data-iris-motores') ? 'abierto' : '');
 
 const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
 const repertorio = readFileSync(new URL('../components/RepertorioSetlists.tsx', import.meta.url), 'utf8');
@@ -30,11 +34,18 @@ describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
     expect(html).not.toContain('border');
   });
 
-  it('el Atril lo pinta y el repertorio abre la separación del estudio', () => {
+  it('el Atril separa con Iris él mismo (sin saltar al estudio) y las tarjetas del catálogo siguen abriendo el estudio', () => {
     expect(atril).toContain('<IrisStudio');
-    expect(atril).toContain('onAbrirIris');
-    expect(repertorio).toContain('onAbrirIris={');
+    expect(atril).toContain('useSeparacionIris');
+    expect(atril).toContain('SongStudioStemProgressModal');
+    expect(atril).not.toContain('onAbrirIris');
+    expect(repertorio).not.toContain('onAbrirIris');
     expect(repertorio).toContain('openIris: true');
+  });
+
+  it('el selector de motor ofrece los cuatro motores sin bordes', () => {
+    expect(MOTORES_IRIS.map(m => m.motor)).toEqual(['fal', 'mvsep-mdx23', 'demucs', 'dsp-server']);
+    expect(selectorHtml()).toBe('');
   });
 });
 
