@@ -42,4 +42,10 @@ describe('modos en vivo: mecánicas compartidas', () => {
       expect(src).toContain('useNavegacionItems(');
     }
   });
+  it('el ensayo delega cronómetro/evaluación/notas en useSeguimientoEnsayo y BotonesEvaluacion', () => {
+    expect(ensayo).toContain('useSeguimientoEnsayo(');
+    expect(ensayo).toContain('<BotonesEvaluacion');
+    expect(ensayo).not.toContain('setInterval');
+    expect(ensayo.match(/<BotonesEvaluacion/g)).toHaveLength(2);
+  });
 });
