@@ -50,6 +50,8 @@ import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
+import { useNavegacionItems } from "../../hooks/useNavegacionItems";
+import { useFullscreen } from "../../hooks/useFullscreen";
 import { useWakeLock } from '../../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
 
@@ -69,7 +71,12 @@ export function ModoLocalEnVivoTab({
   onUpdateSong,
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {
+    indice: activeIndex,
+    irA: setActiveIndex,
+    anterior: irAnterior,
+    siguiente: irSiguiente,
+  } = useNavegacionItems(agenda.length);
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
 
   const currentItem = agenda[activeIndex] || null;
@@ -81,8 +88,8 @@ export function ModoLocalEnVivoTab({
   const [viewMode, setViewMode] = useState<"escenario" | "atril">("escenario");
 
   // Fullscreen state
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Track / Block Timer State
   const [trackSeconds, setTrackSeconds] = useState(0);
@@ -174,12 +181,12 @@ export function ModoLocalEnVivoTab({
       if (accion === "adelante") {
         if (activeIndex < agenda.length - 1) {
           e.preventDefault();
-          setActiveIndex((prev) => prev + 1);
+          irSiguiente();
         }
       } else if (accion === "atras") {
         if (activeIndex > 0) {
           e.preventDefault();
-          setActiveIndex((prev) => prev - 1);
+          irAnterior();
         }
       } else if (accion === "espacio" && viewMode === "atril") {
         e.preventDefault();
@@ -243,21 +250,6 @@ export function ModoLocalEnVivoTab({
       a.id === currentItem.id ? { ...a, enfoque: nota } : a,
     );
     onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Toggle Fullscreen
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      setIsFullscreen(true);
-      if (containerRef.current && containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen().catch(() => {});
-      }
-    } else {
-      setIsFullscreen(false);
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
   };
 
   // Current chord text
@@ -666,7 +658,7 @@ export function ModoLocalEnVivoTab({
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
                 disabled={activeIndex === 0}
-                onClick={() => setActiveIndex((prev) => prev - 1)}
+                onClick={() => irAnterior()}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-sans font-bold text-xs cursor-pointer transition-ui"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -676,7 +668,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 disabled={activeIndex === agenda.length - 1}
-                onClick={() => setActiveIndex((prev) => prev + 1)}
+                onClick={() => irSiguiente()}
                 className="flex-1 sm:flex-none items-center justify-center gap-1"
               >
                 <span>Siguiente</span>
@@ -913,7 +905,7 @@ export function ModoLocalEnVivoTab({
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   disabled={activeIndex === 0}
-                  onClick={() => setActiveIndex((prev) => prev - 1)}
+                  onClick={() => irAnterior()}
                   className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans font-bold disabled:opacity-30 cursor-pointer transition-ui"
                 >
                   ← Anterior
@@ -923,7 +915,7 @@ export function ModoLocalEnVivoTab({
                   variant="primary"
                   size="xs"
                   disabled={activeIndex === agenda.length - 1}
-                  onClick={() => setActiveIndex((prev) => prev + 1)}
+                  onClick={() => irSiguiente()}
                   className="flex-1 sm:flex-none"
                 >
                   Siguiente →

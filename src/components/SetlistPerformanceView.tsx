@@ -51,6 +51,8 @@ import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { useNavegacionItems } from "../hooks/useNavegacionItems";
+import { useFullscreen } from "../hooks/useFullscreen";
 import { useWakeLock } from '../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../utils/pasarPagina';
 
@@ -108,12 +110,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   currentUser,
   initialMode = "directo",
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [modeArchetype, setModeArchetype] = useState<"directo" | "ensayo">(
     initialMode,
   );
   const [showSongListDrawer, setShowSongListDrawer] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -149,6 +149,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   );
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Pantalla completa real del navegador: oculta la barra de Chrome/Safari y evita toques accidentales.
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Modo Escenario Offline Guard: almacena en caché local letras, cifrados y metadatos
   // para que el concierto siga funcionando al 100% si se corta la conexión o el wifi en la sala.
@@ -177,6 +179,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       (item.tipoItem === "cancion" && item.songId) ||
       item.tipoItem === "bloque",
   );
+  const {
+    indice: currentIndex,
+    irA: setCurrentIndex,
+    anterior: handlePrev,
+    siguiente: handleNext,
+    esPrimero: isFirst,
+    esUltimo: isLast,
+  } = useNavegacionItems(allItems.length);
   const currentItem = allItems[currentIndex];
   const isBlock = currentItem?.tipoItem === "bloque";
   const currentSong = !isBlock
@@ -377,34 +387,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // canción. Se libera en Modo Descanso (isResting), la única vez que SÍ queremos que se apague.
   useWakeLock(!isResting);
 
-  // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
-  // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
-  // ahí robando espacio y invitando a un toque accidental que saque al músico de la app.
-  const toggleFullscreen = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (!document.fullscreenElement) {
-      el.requestFullscreen?.().catch(() => {});
-    } else {
-      document.exitFullscreen?.().catch(() => {});
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleChange = () =>
-      setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", handleChange);
-    return () => document.removeEventListener("fullscreenchange", handleChange);
-  }, []);
-
-  const handlePrev = () => {
-    setCurrentIndex((i) => Math.max(0, i - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((i) => Math.min(allItems.length - 1, i + 1));
-  };
-
   // Avanzar/retroceder de SECCIÓN dentro del tema (Intro→Verso→Estribillo...) cuando la hay;
   // al llegar al final o al principio, pasa de canción — así el pedal/tecla de"pasar página"
   // funciona igual de natural para moverse dentro de un tema largo que para cambiar de tema.
@@ -513,8 +495,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     : "";
   const structure = currentSong?.guiaSustituto?.estructura || "";
   const progression = currentSong?.guiaSustituto?.progresionClave || "";
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === allItems.length - 1;
   const blockMeta = isBlock ? getBlockMeta(currentItem) : null;
 
   // MODO DESCANSO: pantalla negra a pantalla completa, sin wake lock — la opción real más
