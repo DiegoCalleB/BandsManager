@@ -38,7 +38,7 @@ import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
 import { getSongIrisStemIdea, ideaDeStemsDeCancion, cancionConIdeas, cancionConPistas, esIdeaIris, irisPrimero, metaStemsDeCancion, pistasDeCancion } from '../utils/irisTracks';
-import { ideasConFondo, pistasBaseDeIdea } from '../utils/ideaDeAtril';
+import { ideaConPistasBase, ideasConFondo, pistasBaseDeIdea } from '../utils/ideaDeAtril';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import {
@@ -1204,6 +1204,7 @@ export default function SongStudioModal({
 
   // --- SONG ORIGINAL BASE TRACK STATE ---
   const [useSongBaseTrack, setUseSongBaseTrack] = useState<boolean>(false);
+  const [nuevaIdeaPistasIris, setNuevaIdeaPistasIris] = useState<string[]>([]);
   const [selectedSongBaseUrl, setSelectedSongBaseUrl] = useState<string>(
     song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || ''
   );
@@ -2858,7 +2859,8 @@ export default function SongStudioModal({
       comentarios: [],
     };
 
-    const updatedIdeas = [newIdea, ...(song.audioIdeas || [])];
+    const idsIris = nuevaIdeaPistasIris.filter((id) => pistasDeCancion(song).some((p) => p.id === id));
+    const updatedIdeas = [ideaConPistasBase(newIdea, idsIris), ...(song.audioIdeas || [])];
     onUpdateSong({
       ...cancionConIdeas(song, updatedIdeas),
       // CRITICAL: Preserve original song demo audio and never overwrite with an idea
@@ -2873,6 +2875,7 @@ export default function SongStudioModal({
     setRecordedAudioUrl(null);
     setDriveAudioUrl('');
     setGenAiOnNewIdea(false);
+    setNuevaIdeaPistasIris([]);
     setShowAddIdea(false);
   };
 
@@ -4840,6 +4843,35 @@ export default function SongStudioModal({
                           </span>
                         </button>
                       </div>
+
+                      {/* Pistas de Iris que sonarán al grabar encima de esta idea */}
+                      {pistasDeCancion(song).length > 0 && (
+                        <div className="space-y-2">
+                          <span className="text-micro font-sans font-bold text-[var(--ink-2)] block">
+                            Pistas de Iris para grabar encima · {nuevaIdeaPistasIris.length}
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {pistasDeCancion(song).map((st) => {
+                              const on = nuevaIdeaPistasIris.includes(st.id);
+                              return (
+                                <button
+                                  key={st.id}
+                                  type="button"
+                                  aria-pressed={on}
+                                  onClick={() =>
+                                    setNuevaIdeaPistasIris((prev) => (on ? prev.filter((id) => id !== st.id) : [...prev, st.id]))
+                                  }
+                                  className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans cursor-pointer transition-ui ${
+                                    on ? 'bg-[var(--acc)] text-[var(--on-acc)] font-bold' : 'bg-[var(--ink)]/5 text-[var(--ink-2)] hover:bg-[var(--ink)]/10'
+                                  }`}
+                                >
+                                  {st.nombre || st.instrumento || 'Pista'}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
 
                       {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
                       {useSongBaseTrack && (
