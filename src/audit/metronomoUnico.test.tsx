@@ -48,4 +48,9 @@ describe('modos en vivo: mecánicas compartidas', () => {
     expect(ensayo).not.toContain('setInterval');
     expect(ensayo.match(/<BotonesEvaluacion/g)).toHaveLength(2);
   });
+  it('el concierto monta la barra de seguimiento solo si viene de un ensayo', () => {
+    expect(concierto).toContain('seguimientoEnsayo &&');
+    expect(concierto).toContain('<BarraSeguimientoEnsayo');
+    expect(concierto).not.toContain('useSeguimientoEnsayo(');
+  });
 });
