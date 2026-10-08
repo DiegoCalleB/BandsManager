@@ -157,17 +157,17 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const { data, error } = await getSupabase()
       .from("metricas_bandas_amigas")
-      .select("band_contact_id, fuente, periodo, seguidores, fans, suscriptores, visualizaciones, popularidad")
+      .select("band_contact_id, fuente, periodo, seguidores, suscriptores, visualizaciones, popularidad")
       .eq("band_id", bandId)
       .order("periodo", { ascending: false });
     if (error) throw new Error(error.message);
 
-    const porBanda: Record<string, { periodo: string; spotify?: unknown; deezer?: unknown; youtube?: unknown }> = {};
+    const porBanda: Record<string, { periodo: string; spotify?: unknown; youtube?: unknown }> = {};
     for (const fila of data || []) {
       const actual = porBanda[fila.band_contact_id] || (porBanda[fila.band_contact_id] = { periodo: fila.periodo });
       // Solo el periodo más reciente de cada banda (las filas vienen ordenadas por periodo desc).
       if (actual.periodo !== fila.periodo) continue;
-      actual[fila.fuente as "spotify" | "deezer" | "youtube"] = fila;
+      actual[fila.fuente as "spotify" | "youtube"] = fila;
     }
     res.json({ success: true, metricas: porBanda });
   } catch (err) {

@@ -92,14 +92,12 @@ interface BandCRMProps {
 
 interface MetricaFuente {
   seguidores?: number | null;
-  fans?: number | null;
   suscriptores?: number | null;
 }
 
 interface MetricasBanda {
   periodo: string;
   spotify?: MetricaFuente;
-  deezer?: MetricaFuente;
   youtube?: MetricaFuente;
 }
 
@@ -318,7 +316,7 @@ export default function BandCRM({
   const [reproductor, setReproductor] = useState<{ id: number; cola: ColaBanda[]; inicio: number } | null>(null);
   // Bandas con preview disponible (vacío mientras se consulta: no se muestra ningún ▶ sin comprobar).
   const [disponibles, setDisponibles] = useState<Record<string, boolean>>({});
-  // Último periodo de métricas por banda (seguidores, fans, suscriptores).
+  // Último periodo de métricas por banda (seguidores y suscriptores).
   const [metricas, setMetricas] = useState<Record<string, MetricasBanda>>({});
   const [actualizandoMetricas, setActualizandoMetricas] = useState(false);
   const [isSpotifySweepOpen, setIsSpotifySweepOpen] = useState(false);
@@ -1232,7 +1230,7 @@ ${myBandName}`;
             onClick={actualizarMetricas}
             disabled={actualizandoMetricas}
             className="items-center gap-1.5 max-sm:hidden"
-            title="Actualizar seguidores, fans y suscriptores de todas las bandas (se hace solo cada mes)"
+            title="Actualizar seguidores y suscriptores de todas las bandas (se hace solo cada mes)"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0 ${actualizandoMetricas ? "animate-spin" : ""}`} />
             <span>{actualizandoMetricas ? "Actualizando…" : "Métricas"}</span>
@@ -1763,9 +1761,6 @@ ${myBandName}`;
                           )}
                           {metricas[band.id].youtube?.suscriptores != null && (
                             <span title="Suscriptores en YouTube">YouTube {formatoCompacto(metricas[band.id].youtube!.suscriptores!)}</span>
-                          )}
-                          {metricas[band.id].deezer?.fans != null && (
-                            <span title="Fans en Deezer">Deezer {formatoCompacto(metricas[band.id].deezer!.fans!)}</span>
                           )}
                           <span className="text-[var(--ink-2)]">· {metricas[band.id].periodo}</span>
                         </div>
