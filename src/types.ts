@@ -173,7 +173,7 @@ export interface EmailMessage {
   };
   resumen_ejecutivo?: string;
   sugerencia_estrategia?: string;
-  analisis_ia?: any;
+  analisis_ia?: unknown;
 }
 
 export interface PitchFeedbackLog {
@@ -768,6 +768,8 @@ export interface EPKConfig {
     nombre: string;
     email: string;
     telefono: string;
+    /** Foto de la persona de contacto (se enseña en el dossier público). */
+    fotoUrl?: string;
   };
   temasDestacadosIds: string[];
   audioPreview?: {
