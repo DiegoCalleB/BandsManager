@@ -48,7 +48,7 @@ export function RoiBandaWidget({ concerts, payments, plan, puedeVerDinero, onNav
     <Card as="section" padding="md" className="space-y-4" aria-label="Lo que has cobrado">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-[var(--ink-2)]">Lo has cobrado</h3>
+          <h3 className="text-sm font-semibold text-[var(--ink-2)]">Lo que has cobrado</h3>
           <p
             className="text-xs text-[var(--ink-2)]"
             title="Caché de los bolos marcados como pagados y otros ingresos cobrados en Finanzas, de los últimos 3 meses. No incluye lo pendiente ni lo previsto."
@@ -69,6 +69,14 @@ export function RoiBandaWidget({ concerts, payments, plan, puedeVerDinero, onNav
           title="Aquí aparecerá lo que cobres."
           description="Marca un bolo como pagado en el calendario y se suma solo."
         />
+      ) : roi.ingresos === 0 ? (
+        <>
+          <p className="text-sm text-[var(--ink-2)]">Todavía no has cobrado ningún bolo en estos meses.</p>
+          <p className="text-xs text-[var(--ink-2)] tabular-nums">
+            {roi.entradasVendidas} entradas vendidas
+            {roi.clicsEntradas > 0 && ` · ${roi.clicsEntradas} clics a entradas en 90 días`}
+          </p>
+        </>
       ) : (
         <>
           <div className="flex items-end justify-between gap-3 flex-wrap">

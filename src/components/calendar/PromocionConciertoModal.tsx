@@ -62,6 +62,7 @@ export function PromocionConciertoModal({ isOpen, onClose, concert }: PromocionC
   const [abierto, setAbierto] = useState<HitoId | null>(null);
   const [piezas, setPiezas] = useState<Record<string, PiezaRedactada>>({});
   const [textos, setTextos] = useState<Record<string, string>>({});
+  const [variante, setVariante] = useState<Record<string, 0 | 1>>({});
   const [cargando, setCargando] = useState<string | null>(null);
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [avisos, setAvisos] = useState<Record<string, string>>({});
@@ -93,6 +94,7 @@ export function PromocionConciertoModal({ isOpen, onClose, concert }: PromocionC
         const pieza = await redactarPieza({ concertId: concert.id, hito, canal: c, usarIA });
         setPiezas((prev) => ({ ...prev, [k]: pieza }));
         setTextos((prev) => ({ ...prev, [k]: pieza.variantes[0] }));
+        setVariante((prev) => ({ ...prev, [k]: 0 }));
         if (usarIA && !pieza.generadaPorIA) {
           setAvisos((prev) => ({ ...prev, [k]: 'La IA no ha podido ayudar ahora. Te dejamos las plantillas.' }));
         }
@@ -190,8 +192,9 @@ export function PromocionConciertoModal({ isOpen, onClose, concert }: PromocionC
           <div className="flex items-start justify-between gap-3 px-5 pt-5 pb-3">
             <div className="min-w-0">
               <h2 className="text-lg font-bold text-balance">Promocionar el concierto</h2>
-              <p className="text-xs text-[var(--ink-2)] truncate">
-                {concert.sala} · {concert.ciudad} · {fechaCorta(concert.fecha)}
+              <p className="text-sm text-[var(--ink)] truncate">{concert.sala}</p>
+              <p className="text-xs text-[var(--ink-2)]">
+                {concert.ciudad} · {fechaCorta(concert.fecha)}
               </p>
             </div>
             <IconButton label="Cerrar" onClick={onClose}>
@@ -255,28 +258,9 @@ export function PromocionConciertoModal({ isOpen, onClose, concert }: PromocionC
                               )}
                               {pieza && (
                                 <>
-                                  <div role="radiogroup" aria-label="Variante del texto" className="grid gap-2">
-                                    {pieza.variantes.map((v, i) => {
-                                      const elegida = (textos[k] ?? pieza.variantes[0]) === v;
-                                      return (
-                                        <button
-                                          key={i}
-                                          type="button"
-                                          role="radio"
-                                          aria-checked={elegida}
-                                          onClick={() => setTextos((prev) => ({ ...prev, [k]: v }))}
-                                          className={`text-left text-xs p-3 rounded-[var(--r-s)] cursor-pointer transition-ui ${
-                                            elegida ? 'bg-[var(--surface)] text-[var(--ink)]' : 'bg-transparent text-[var(--ink-2)] hover:bg-[var(--surface)]'
-                                          }`}
-                                        >
-                                          {v}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
                                   <Textarea
                                     aria-label="Texto de la publicación (puedes editarlo)"
-                                    rows={3}
+                                    rows={5}
                                     value={textos[k] ?? ''}
                                     onChange={(e) => setTextos((prev) => ({ ...prev, [k]: e.target.value }))}
                                   />
@@ -290,6 +274,17 @@ export function PromocionConciertoModal({ isOpen, onClose, concert }: PromocionC
                                         <Send className="w-4 h-4" /> Guardar borrador en Redes
                                       </Button>
                                     )}
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        const otra: 0 | 1 = (variante[k] ?? 0) === 0 ? 1 : 0;
+                                        setVariante((prev) => ({ ...prev, [k]: otra }));
+                                        setTextos((prev) => ({ ...prev, [k]: pieza.variantes[otra] }));
+                                      }}
+                                    >
+                                      Otra versión
+                                    </Button>
                                     <Button size="sm" variant="ghost" disabled={cargando === k} onClick={() => void cargarPieza(h.id, canal, true)}>
                                       <Sparkles className="w-4 h-4" /> Reescribir con IA
                                     </Button>
