@@ -28,7 +28,13 @@ async function metricasSpotify(enlace: string): Promise<Resultado> {
     });
     if (!res.ok) return { motivo: `Spotify respondió ${res.status}` };
     const a = (await res.json()) as { followers?: { total?: number }; popularity?: number };
-    return { fila: { fuente: "spotify", seguidores: a.followers?.total ?? null, popularidad: a.popularity ?? null } };
+    const seguidores = a.followers?.total ?? null;
+    const popularidad = a.popularity ?? null;
+    // Spotify contesta 200 pero sin datos: una fila vacía no sirve y se oculta en la app. Mejor avisar.
+    if (seguidores === null && popularidad === null) {
+      return { motivo: "Spotify respondió sin seguidores ni popularidad (revisar token o cuota de la app)" };
+    }
+    return { fila: { fuente: "spotify", seguidores, popularidad } };
   } catch (err) {
     return { motivo: `Spotify no responde (${err instanceof Error ? err.message : "error"})` };
   }
