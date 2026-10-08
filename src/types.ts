@@ -1268,6 +1268,8 @@ export interface MemberSongNote {
    * Vive en la canción y por miembro, no en los ajustes de impresión de la banda, para que dos
    * músicos editando a la vez no se pisen. */
   mostrarTono?: boolean;
+  /** Ver el BPM en su hoja. Si falta, hereda de `mostrarTono` (marcas antiguas). */
+  mostrarBpm?: boolean;
 }
 
 export interface Song {

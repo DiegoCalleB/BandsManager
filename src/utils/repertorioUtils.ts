@@ -312,53 +312,77 @@ export function getMemberReadiness(
   return found?.estadoPreparacion || null;
 }
 
-/** ¿Este miembro marcó esta canción para ver tono/BPM en su hoja impresa? */
-export function isSongMarkedForMember(
-  song?: any,
-  memberKey?: string,
-  memberName?: string,
-): boolean {
-  if (!song || !Array.isArray(song.notasPorMiembro)) return false;
-  return song.notasPorMiembro.some(
+function findMemberNote(song: any, memberKey?: string, memberName?: string): any | undefined {
+  if (!song || !Array.isArray(song.notasPorMiembro)) return undefined;
+  return song.notasPorMiembro.find(
     (n: any) =>
-      n.mostrarTono === true &&
-      ((memberKey && n.userId === memberKey) ||
-        (memberName &&
-          n.memberName &&
-          n.memberName.toLowerCase() === memberName.toLowerCase())),
+      (memberKey && n.userId === memberKey) ||
+      (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase()),
   );
 }
 
-/** Devuelve la canción con la marca "ver tono/BPM en mi hoja" puesta o quitada para ese miembro,
+/** ¿Este miembro quiere ver la tonalidad de esta canción en su hoja? */
+export function isSongTonoMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+  return findMemberNote(song, memberKey, memberName)?.mostrarTono === true;
+}
+
+/** ¿Este miembro quiere ver el BPM? Las marcas antiguas (solo `mostrarTono`) cubrían tono y BPM,
+ * así que sin `mostrarBpm` explícito se hereda de `mostrarTono`. */
+export function isSongBpmMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+  const n = findMemberNote(song, memberKey, memberName);
+  return (n?.mostrarBpm ?? n?.mostrarTono) === true;
+}
+
+/** ¿Este miembro marcó esta canción para ver tono y/o BPM en su hoja impresa? */
+export function isSongMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+  return (
+    isSongTonoMarkedForMember(song, memberKey, memberName) ||
+    isSongBpmMarkedForMember(song, memberKey, memberName)
+  );
+}
+
+/** Devuelve la canción con las marcas "ver tono" y "ver BPM" de ese miembro puestas o quitadas,
  * sin tocar nota ni nivel de preparación. No muta; si no hay cambio devuelve la misma canción. */
-export function withSongMarkedForMember<T extends { notasPorMiembro?: any[] }>(
+export function withSongFlagsForMember<T extends { notasPorMiembro?: any[] }>(
   song: T,
   memberKey: string | undefined,
   memberName: string,
-  marked: boolean,
+  flags: { tono: boolean; bpm: boolean },
 ): T {
-  if (isSongMarkedForMember(song, memberKey, memberName) === marked) return song;
+  if (
+    isSongTonoMarkedForMember(song, memberKey, memberName) === flags.tono &&
+    isSongBpmMarkedForMember(song, memberKey, memberName) === flags.bpm
+  )
+    return song;
   const list: any[] = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
   const idx = list.findIndex(
     (n) =>
       (memberKey && n.userId === memberKey) ||
       (n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase()),
   );
-  if (marked) {
-    if (idx >= 0) list[idx] = { ...list[idx], mostrarTono: true };
-    else
-      list.push({
-        userId: memberKey,
-        memberName,
-        nota: "",
-        mostrarTono: true,
-        updatedAt: new Date().toISOString(),
-      });
-  } else if (idx >= 0) {
-    const { mostrarTono: _quitar, ...rest } = list[idx];
-    list[idx] = rest;
-  }
+  if (idx < 0 && !flags.tono && !flags.bpm) return song;
+  const base =
+    idx >= 0
+      ? list[idx]
+      : { userId: memberKey, memberName, nota: "", updatedAt: new Date().toISOString() };
+  const { mostrarTono: _t, mostrarBpm: _b, ...rest } = base;
+  const next: any = { ...rest };
+  if (flags.tono) next.mostrarTono = true;
+  if (flags.bpm) next.mostrarBpm = true;
+  else if (flags.tono) next.mostrarBpm = false;
+  if (idx >= 0) list[idx] = next;
+  else list.push(next);
   return { ...song, notasPorMiembro: list };
+}
+
+/** Atajo: marca/desmarca tono y BPM a la vez. */
+export function withSongMarkedForMember<T extends { notasPorMiembro?: any[] }>(
+  song: T,
+  memberKey: string | undefined,
+  memberName: string,
+  marked: boolean,
+): T {
+  return withSongFlagsForMember(song, memberKey, memberName, { tono: marked, bpm: marked });
 }
 
 /** Devuelve el array notasPorMiembro actualizado con el nuevo nivel de preparación de un miembro,

@@ -31,6 +31,8 @@ import {
   resolveBandMembers,
   getSongMemberNote,
   isSongMarkedForMember,
+  isSongTonoMarkedForMember,
+  isSongBpmMarkedForMember,
   withSongMarkedForMember,
 } from "../../utils/repertorioUtils";
 import { MemberNotesModal } from "./MemberNotesModal";
@@ -770,12 +772,13 @@ function PdfExportModalBody({
         // parecían casi tan grandes como la propia canción.
         const badgePt = Math.max(7.5, Math.min(12, titleFontPt * 0.5));
         // Con "solo marcados", tono y BPM salen únicamente en los temas que ese músico marcó.
-        const songMarked =
-          badgesScope === "all" ||
-          (markedSongs[member.id] ?? []).includes(s.id) ||
-          isSongMarkedForMember(s, member.id, member.name);
-        const keyHere = showTonality && songMarked;
-        const bpmHere = showBpm && songMarked;
+        const legacyMarked = (markedSongs[member.id] ?? []).includes(s.id);
+        const keyHere =
+          showTonality &&
+          (badgesScope === "all" || legacyMarked || isSongTonoMarkedForMember(s, member.id, member.name));
+        const bpmHere =
+          showBpm &&
+          (badgesScope === "all" || legacyMarked || isSongBpmMarkedForMember(s, member.id, member.name));
         const badges: NoteLayoutBadge[] = [
           ...(keyHere && s.tonalidad
             ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 1), extraWidthPx: 22 }]
