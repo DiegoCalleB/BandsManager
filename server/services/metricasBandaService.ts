@@ -94,7 +94,7 @@ export async function guardarMetricasBanda(
 ): Promise<number> {
   if (filas.length === 0) return 0;
   const { error } = await getSupabase()
-    .from("bandas_amigas_metricas")
+    .from("metricas_bandas_amigas")
     .upsert(
       filas.map((f) => ({
         band_id: banda.band_id,
