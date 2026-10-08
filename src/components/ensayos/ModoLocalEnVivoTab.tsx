@@ -51,6 +51,8 @@ import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
 import { useNavegacionItems } from "../../hooks/useNavegacionItems";
+import { useSeguimientoEnsayo } from "../../hooks/useSeguimientoEnsayo";
+import { BotonesEvaluacion } from "./BotonesEvaluacion";
 import { useFullscreen } from "../../hooks/useFullscreen";
 import { useWakeLock } from '../../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
@@ -92,9 +94,17 @@ export function ModoLocalEnVivoTab({
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Track / Block Timer State
-  const [trackSeconds, setTrackSeconds] = useState(0);
-  const [isTrackTimerActive, setIsTrackTimerActive] = useState(false);
-  const trackTimerRef = useRef<number | null>(null);
+  const {
+    trackSeconds,
+    isTrackTimerActive,
+    handleSetEvaluation,
+    handleUpdateCurrentNote,
+  } = useSeguimientoEnsayo({
+    agenda,
+    currentItem,
+    claveDePista: `${activeIndex}|${currentSong?.bpm}`,
+    onUpdateRehearsal,
+  });
 
   // Metronome: el mismo hook (reloj de audio, clic y tap tempo) que usa el Atril
   const beatsPerBar = 4;
@@ -209,48 +219,11 @@ export function ModoLocalEnVivoTab({
   // Pantalla encendida mientras se ensaya (pantalla completa o cronómetro de la pista en marcha)
   useWakeLock(isFullscreen || isTrackTimerActive);
 
-  // When song changes, reset track timer and transposition
+  // Al cambiar de pista se reinicia la transposición y se para el autoscroll
   useEffect(() => {
-    setTrackSeconds(0);
-    setIsTrackTimerActive(true);
     setTranspose(0);
     autoScroll.setActivo(false);
   }, [activeIndex, currentSong?.bpm]);
-
-  // Track Timer Interval
-  useEffect(() => {
-    if (isTrackTimerActive) {
-      trackTimerRef.current = window.setInterval(() => {
-        setTrackSeconds((prev) => prev + 1);
-      }, 1000);
-    } else if (trackTimerRef.current) {
-      clearInterval(trackTimerRef.current);
-      trackTimerRef.current = null;
-    }
-    return () => {
-      if (trackTimerRef.current) clearInterval(trackTimerRef.current);
-    };
-  }, [isTrackTimerActive]);
-
-  // Evaluation Handler
-  const handleSetEvaluation = (
-    evaluacion: "bordada" | "regular" | "repetir",
-  ) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, evaluacion } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Note handler for current item
-  const handleUpdateCurrentNote = (nota: string) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, enfoque: nota } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
 
   // Current chord text
   // Sin cifrado guardado se muestra vacío: antes caía en una letra
@@ -617,41 +590,7 @@ export function ModoLocalEnVivoTab({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
             {/* 1-Tap Evaluation Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-              <span className="text-xs font-sans text-[var(--ink-2)] mr-1 hidden xs:inline">
-                Evaluación:
-              </span>
-
-              <Button
-                variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                size="sm"
-                onClick={() => handleSetEvaluation("bordada")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟢" /></span>
-                <span>Bordada</span>
-              </Button>
-
-              <Button
-                variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                size="sm"
-                onClick={() => handleSetEvaluation("regular")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟡" /></span>
-                <span>Regular</span>
-              </Button>
-
-              <button
-                onClick={() => handleSetEvaluation("repetir")}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  currentItem?.evaluacion === "repetir"
-                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                    : "bg-[var(--alert)]/15 text-[var(--ink)] hover:bg-[var(--alert)]/25"
-                }`}
-              >
-                <span><ShowIcon inline emoji="🔴" /></span>
-                <span>Repetir</span>
-              </button>
+              <BotonesEvaluacion actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
             </div>
 
             {/* Previous / Next Song Buttons */}
@@ -867,34 +806,7 @@ export function ModoLocalEnVivoTab({
             {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                <Button
-                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("bordada")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟢" />Bordada</span>
-                </Button>
-
-                <Button
-                  variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("regular")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟡" />Regular</span>
-                </Button>
-
-                <button
-                  onClick={() => handleSetEvaluation("repetir")}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                    currentItem?.evaluacion === "repetir"
-                      ? "bg-[var(--alert)] text-[var(--on-alert)] font-bold"
-                      : "bg-[var(--alert)]/15 text-[var(--ink)]"
-                  }`}
-                >
-                  <span><ShowIcon inline emoji="🔴" />Repetir</span>
-                </button>
+                <BotonesEvaluacion compacto actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
               </div>
 
               {/* Middle swipe hint indicator */}
