@@ -53,4 +53,9 @@ describe('modos en vivo: mecánicas compartidas', () => {
     expect(concierto).toContain('<BarraSeguimientoEnsayo');
     expect(concierto).not.toContain('useSeguimientoEnsayo(');
   });
+  it('el ensayo se puede abrir en el visor de concierto con su seguimiento', () => {
+    const manager = readFileSync(new URL('../components/ensayos/EnsayosManager.tsx', import.meta.url), 'utf8');
+    expect(manager).toContain('agendaASetlist(');
+    expect(manager).toContain('seguimientoEnsayo={{');
+  });
 });
