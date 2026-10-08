@@ -156,7 +156,8 @@ describe('renderizarPaginaConcierto', () => {
     expect(html).toContain('Comprar entradas');
     expect(html).toContain('index,follow');
     expect(html).toContain('Viernes, 16 de octubre de 2026');
-    expect(html).toContain('Hecho con <a href="https://bandmanager.io/?ref=ABC123"');
+    expect(html).toContain('Powered by <a href="https://bandmanager.io/?ref=ABC123"');
+    expect(html).toContain('>BandManager.io</a>');
   });
 
   it('NUNCA pinta datos privados aunque vengan en el objeto', () => {
@@ -209,7 +210,7 @@ describe('renderizarPaginaConcierto', () => {
   });
 
   it('no incluye insignia si la banda no la lleva', () => {
-    expect(renderizarPaginaConcierto({ ...datos, insigniaHref: null })).not.toContain('Hecho con');
+    expect(renderizarPaginaConcierto({ ...datos, insigniaHref: null })).not.toContain('Powered by');
   });
 
   it('no usa bordes ni mayúsculas decorativas (identidad Espectro)', () => {

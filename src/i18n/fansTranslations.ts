@@ -117,7 +117,6 @@ type FanFormDict = {
   privacyPara3: string; // {bandName}
   privacyPara4: string;
   understood: string;
-  madeWith: string;
   interactiveSimulation: string;
   backToForm: string;
   previewModalTitle: string;
@@ -246,7 +245,6 @@ const es: FanFormDict = {
   privacyPara4:
     '**4. Derechos:** Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión y portabilidad escribiendo a nuestro correo de contacto o indicándolo en cualquiera de nuestros correos informativos.',
   understood: 'Entendido',
-  madeWith: 'Hecho con',
   interactiveSimulation: 'Simulación Interactiva',
   backToForm: 'Volver al Formulario',
   previewModalTitle: 'Simulador del Formulario "Únete"',
@@ -374,7 +372,6 @@ const en: FanFormDict = {
   privacyPara4:
     '**4. Your rights:** You can exercise your rights of access, rectification, erasure and portability at any time by writing to our contact email or by requesting it in any of our newsletters.',
   understood: 'Got it',
-  madeWith: 'Made with',
   interactiveSimulation: 'Interactive Simulation',
   backToForm: 'Back to Form',
   previewModalTitle: '"Join" Form Simulator',
@@ -501,7 +498,6 @@ const it: FanFormDict = {
   privacyPara4:
     '**4. Diritti:** Puoi esercitare in qualsiasi momento i tuoi diritti di accesso, rettifica, cancellazione e portabilità scrivendo alla nostra email di contatto o richiedendolo in una qualsiasi delle nostre email informative.',
   understood: 'Capito',
-  madeWith: 'Fatto con',
   interactiveSimulation: 'Simulazione Interattiva',
   backToForm: 'Torna al Modulo',
   previewModalTitle: 'Simulatore del Modulo "Unisciti"',
@@ -628,7 +624,6 @@ const cs: FanFormDict = {
   privacyPara4:
     '**4. Tvá práva:** Kdykoli můžeš uplatnit svá práva na přístup, opravu, výmaz a přenositelnost údajů, a to napsáním na náš kontaktní e-mail nebo uvedením v kterémkoli z našich informačních e-mailů.',
   understood: 'Rozumím',
-  madeWith: 'Vytvořeno s',
   interactiveSimulation: 'Interaktivní simulace',
   backToForm: 'Zpět na formulář',
   previewModalTitle: 'Simulátor formuláře "Připoj se"',

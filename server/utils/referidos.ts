@@ -1,5 +1,5 @@
 /**
- * Insignia «Hecho con BandManager» y referidos entre bandas. Lógica pura, sin I/O.
+ * Insignia «Powered by BandManager.io» y referidos entre bandas. Lógica pura, sin I/O.
  *
  * La insignia solo la llevan los planes gratuitos: es el canal de crecimiento del producto (cada
  * dossier, landing de fans y página de concierto compartida enseña la marca) y a la vez una razón
@@ -59,7 +59,7 @@ export function urlInsignia(baseUrl: string, codigo: string | null | undefined, 
   if (ref) u.searchParams.set('ref', ref);
   u.searchParams.set('utm_source', 'insignia');
   u.searchParams.set('utm_medium', origen);
-  u.searchParams.set('utm_campaign', 'hecho_con_bandmanager');
+  u.searchParams.set('utm_campaign', 'powered_by');
   return u.toString();
 }
 

@@ -128,7 +128,7 @@ export interface DatosPaginaConcierto {
   epkUrl: string;
   fansUrl: string;
   pasado: boolean;
-  /** Insignia «Hecho con BandManager» (solo planes gratuitos). */
+  /** Insignia «Powered by BandManager.io» (solo planes gratuitos). */
   insigniaHref?: string | null;
 }
 
@@ -254,7 +254,7 @@ ${bloqueEntradas}
 ${d.pasado ? '' : `<a class="boton suave" href="${atributoUrl(d.fansUrl)}">Avisadme de las próximas fechas</a>`}
 </div>
 </section>
-${d.insigniaHref ? `<p class="pie">Hecho con <a href="${atributoUrl(d.insigniaHref)}" rel="noopener">BandManager</a></p>` : ''}
+${d.insigniaHref ? `<p class="pie">Powered by <a href="${atributoUrl(d.insigniaHref)}" rel="noopener">BandManager.io</a></p>` : ''}
 </main>
 </body>
 </html>`;

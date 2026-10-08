@@ -7,18 +7,16 @@ export interface InsigniaBandManagerProps {
   bandId: string | undefined;
   /** Superficie donde se enseña: se registra en la UTM para saber cuál convierte más. */
   origen: 'epk' | 'fans' | 'concierto';
-  /** «Hecho con» ya traducido. */
-  etiqueta: string;
   className?: string;
 }
 
 /**
- * «Hecho con BandManager» al pie de las páginas públicas de una banda. Solo la llevan los planes
+ * «Powered by BandManager.io» al pie de las páginas públicas de una banda. Solo la llevan los planes
  * gratuitos: el servidor decide y devuelve el enlace (o null). Es el canal de crecimiento del
  * producto, así que NUNCA puede romper ni retrasar la página: sin enlace, sin red o con cualquier
  * fallo, no se pinta nada. Sin sesión ni cookies: es una petición pública y anónima.
  */
-export function InsigniaBandManager({ bandId, origen, etiqueta, className }: InsigniaBandManagerProps) {
+export function InsigniaBandManager({ bandId, origen, className }: InsigniaBandManagerProps) {
   const [href, setHref] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,9 +36,9 @@ export function InsigniaBandManager({ bandId, origen, etiqueta, className }: Ins
   if (!href) return null;
   return (
     <p className={cn('text-xs text-[var(--ink-2)] print:hidden', className)}>
-      {etiqueta}{' '}
+      Powered by{' '}
       <a href={href} target="_blank" rel="noopener noreferrer" className="font-semibold text-[var(--acc-ink)] hover:underline">
-        BandManager
+        BandManager.io
       </a>
     </p>
   );

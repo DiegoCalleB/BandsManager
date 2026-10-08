@@ -76,7 +76,7 @@ describe('GET /e/:slug', () => {
     expect(res.body).toContain('application/ld+json');
     expect(res.body).toContain('index,follow');
     expect(res.body).toContain('Rúa Nova 1');
-    expect(res.body).toContain('Hecho con <a href="https://bandmanager.io/?ref=ABCD2345');
+    expect(res.body).toContain('Powered by <a href="https://bandmanager.io/?ref=ABCD2345');
   });
 
   it('el botón de entradas pasa por un enlace corto del canal «web» y el JSON-LD lleva la URL directa', async () => {
@@ -149,7 +149,7 @@ describe('GET /e/:slug', () => {
   it('la insignia solo sale en bandas que la llevan', async () => {
     const res = await pedir(`otra-banda-sala-de-b-${FUTURO}--c5`);
     expect(res.code).toBe(200);
-    expect(res.body).not.toContain('Hecho con');
+    expect(res.body).not.toContain('Powered by');
   });
 
   it('un fallo de la base de datos devuelve una página, no un volcado de error', async () => {

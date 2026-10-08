@@ -2062,7 +2062,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           </div>
         </div>
-        <InsigniaBandManager bandId={resolvedBandId} origen="fans" etiqueta={t("madeWith")} className="text-center" />
+        <InsigniaBandManager bandId={resolvedBandId} origen="fans" className="text-center" />
       </div>
 
       {/* Privacy Policy Modal */}

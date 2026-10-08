@@ -1246,7 +1246,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </a>
           )}
           <p>{t("pieDerechos")}</p>
-          <InsigniaBandManager bandId={epkData?.bandId} origen="epk" etiqueta={t("hechoCon")} />
+          <InsigniaBandManager bandId={epkData?.bandId} origen="epk" />
         </footer>
       </div>
 

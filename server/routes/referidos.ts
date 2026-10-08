@@ -1,4 +1,4 @@
-// Referidos entre bandas e insignia «Hecho con BandManager».
+// Referidos entre bandas e insignia «Powered by BandManager.io».
 //   · GET  /api/referidos            con sesión: código de la banda, enlace de invitación y cuántas ha invitado.
 //   · POST /api/referidos/atribuir   con sesión: atribuye el alta (reciente) a la banda dueña del código.
 //   · GET  /api/public/insignia      sin sesión: enlace de la insignia de una banda (null si su plan no la lleva).
