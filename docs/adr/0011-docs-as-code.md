@@ -17,7 +17,8 @@ La documentación se trata como código:
 3. **Referencias comprobables:** `scripts/verify-docs-refs.cjs` ya comprobaba rutas en AGENTS.md y en las skills.
 4. **Generadores validados:** `generate_obsidian_graph.ts` falla si un nodo enlaza a otro que no existe.
 5. **Contrato de API generado:** `scripts/generate-openapi.mjs` analiza el AST y escribe `docs/api/openapi.json` ([ADR 0012](./0012-contrato-api-openapi-por-ast.md)). El README toma de ahí su cifra de rutas.
-6. **Workflow propio:** `.github/workflows/docs.yml` corre con los cambios de `.md`, que `ci.yml` ignora. Además comprueba que el grafo regenerado coincide con el commiteado.
+6. **Skills sincronizados:** `scripts/sync-skills.mjs --check` falla si las copias por herramienta (`.claude/`, `.gemini/`, `.opencode/`) difieren de `skills/`. Antes era una copia manual y se desvió: la fuente conservaba una versión retirada de `fullstack-ux-design`, `visual-identity` solo existía en una copia y `.claude/skills/` no existía.
+7. **Workflow propio:** `.github/workflows/docs.yml` corre con los cambios de `.md`, que `ci.yml` ignora. Además comprueba que el grafo regenerado coincide con el commiteado.
 
 ## Alternativas descartadas
 
@@ -25,6 +26,8 @@ La documentación se trata como código:
 - **Revisión manual en cada PR:** ya falló; las cifras acumulaban deriva.
 
 ## Consecuencias
+
+- **Rigor proporcionado al ritmo del repo.** Se mergean varios PRs al día. Por eso las cifras del README admiten una tolerancia (`max(3, 3 %)`, con `npm run docs:metricas` para reescribirlas) y el contrato de API ignora los cambios de número de línea: solo exige regenerarlo cuando cambia una ruta, su autenticación o sus límites. La primera versión era exacta y habría puesto el CI en rojo en casi cualquier PR de backend; se detectó al fusionar `main` y comprobar el resultado.
 
 - Las cifras del README deben actualizarse cuando cambie el código. El script dice cuál es el valor real.
 - El script no verifica que el contenido sea correcto, solo que coincida con el recuento. Un ADR mal razonado pasa.

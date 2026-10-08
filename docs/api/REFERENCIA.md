@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**352 rutas HTTP** (301 declaraciones de handler; el resto son alias) en 30 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**354 rutas HTTP** (303 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 306 |
+| Sesión | 308 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -42,9 +42,9 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:2037`](../../server/routes/users.ts#L2037) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:973`](../../server/routes/billing.ts#L973) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:432`](../../server/routes/concerts.ts#L432) |
-| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:252`](../../server.ts#L252) |
+| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:254`](../../server.ts#L254) |
 | `GET` | `/api/gmail-oauth/callback` | Pública | — |  | [`server/routes/gmailOAuth.ts:149`](../../server/routes/gmailOAuth.ts#L149) |
-| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:163`](../../server.ts#L163) |
+| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:165`](../../server.ts#L165) |
 | `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:209`](../../server/routes/deals.ts#L209) |
 | `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:434`](../../server/routes/deals.ts#L434) |
 | `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:288`](../../server/routes/deals.ts#L288) |
@@ -55,7 +55,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:993`](../../server/routes/epk_fans.ts#L993) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/api/spotify/status` | Pública | — |  | [`server/routes/spotify.ts:19`](../../server/routes/spotify.ts#L19) |
-| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:493`](../../server.ts#L493) |
+| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:495`](../../server.ts#L495) |
 | `POST` | `/api/stripe/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:974`](../../server/routes/billing.ts#L974) |
 | `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:146`](../../server/routes/tracking.ts#L146) |
 | `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
@@ -64,12 +64,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | — |  | [`server/routes/ai_music.ts:4099`](../../server/routes/ai_music.ts#L4099) |
 | `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:466`](../../server/routes/tracking.ts#L466) |
 | `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:39`](../../server/routes/paginaConcierto.ts#L39) |
-| `GET` | `/health` | Pública | — |  | [`server.ts:163`](../../server.ts#L163) |
-| `GET` | `/privacy` | Pública | — |  | [`server.ts:177`](../../server.ts#L177) |
+| `GET` | `/health` | Pública | — |  | [`server.ts:165`](../../server.ts#L165) |
+| `GET` | `/privacy` | Pública | — |  | [`server.ts:179`](../../server.ts#L179) |
 | `GET` | `/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/robots.txt` | Pública | — |  | [`server/routes/paginaConcierto.ts:150`](../../server/routes/paginaConcierto.ts#L150) |
 | `GET` | `/sitemap.xml` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:132`](../../server/routes/paginaConcierto.ts#L132) |
-| `GET` | `/terms` | Pública | — |  | [`server.ts:219`](../../server.ts#L219) |
+| `GET` | `/terms` | Pública | — |  | [`server.ts:221`](../../server.ts#L221) |
 
 ## Operaciones con esquema documentado
 
@@ -120,6 +120,13 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `POST` | `/api/generate` | Sesión | iaRateLimiter |  | [`server/routes/ai_music.ts:2371`](../../server/routes/ai_music.ts#L2371) |
 | `POST` | `/api/generate-music` | Sesión | iaRateLimiter |  | [`server/routes/ai_music.ts:2371`](../../server/routes/ai_music.ts#L2371) |
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | — |  | [`server/routes/ai_music.ts:4099`](../../server/routes/ai_music.ts#L4099) |
+
+### bandMusic
+
+| Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
+|---|---|---|---|---|---|
+| `POST` | `/api/bands/spotify-sweep` | Sesión | — |  | [`server/routes/bandMusic.ts:69`](../../server/routes/bandMusic.ts#L69) |
+| `GET` | `/api/bands/{id}/preview` | Sesión | — |  | [`server/routes/bandMusic.ts:25`](../../server/routes/bandMusic.ts#L25) |
 
 ### bands
 
@@ -458,33 +465,33 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 |---|---|---|---|---|---|
 | `POST` | `/api/ai-composer-arrangement` | Sesión | — |  | [`server/routes/repertorio.ts:733`](../../server/routes/repertorio.ts#L733) |
 | `POST` | `/api/enrich-missing-audio` | Sesión | — |  | [`server/routes/repertorio.ts:950`](../../server/routes/repertorio.ts#L950) |
-| `POST` | `/api/generate-song-chords` | Sesión | — |  | [`server/routes/repertorio.ts:537`](../../server/routes/repertorio.ts#L537) |
-| `PUT` | `/api/letras/auto` | Sesión | — |  | [`server/routes/repertorio.ts:299`](../../server/routes/repertorio.ts#L299) |
-| `GET` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:274`](../../server/routes/repertorio.ts#L274) |
-| `POST` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:282`](../../server/routes/repertorio.ts#L282) |
-| `DELETE` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:291`](../../server/routes/repertorio.ts#L291) |
+| `POST` | `/api/generate-song-chords` | Sesión | — |  | [`server/routes/repertorio.ts:538`](../../server/routes/repertorio.ts#L538) |
+| `PUT` | `/api/letras/auto` | Sesión | — |  | [`server/routes/repertorio.ts:300`](../../server/routes/repertorio.ts#L300) |
+| `GET` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:275`](../../server/routes/repertorio.ts#L275) |
+| `POST` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:283`](../../server/routes/repertorio.ts#L283) |
+| `DELETE` | `/api/letras/cola` | Sesión | — |  | [`server/routes/repertorio.ts:292`](../../server/routes/repertorio.ts#L292) |
 | `POST` | `/api/optimize-wavs` | Sesión | — |  | [`server/routes/repertorio.ts:937`](../../server/routes/repertorio.ts#L937) |
-| `GET` | `/api/setlist-shortcuts` | Sesión | — |  | [`server/routes/repertorio.ts:493`](../../server/routes/repertorio.ts#L493) |
-| `POST` | `/api/setlist-shortcuts` | Sesión | — |  | [`server/routes/repertorio.ts:505`](../../server/routes/repertorio.ts#L505) |
-| `DELETE` | `/api/setlist-shortcuts/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:524`](../../server/routes/repertorio.ts#L524) |
-| `GET` | `/api/setlists` | Sesión | — |  | [`server/routes/repertorio.ts:425`](../../server/routes/repertorio.ts#L425) |
-| `POST` | `/api/setlists` | Sesión | — |  | [`server/routes/repertorio.ts:437`](../../server/routes/repertorio.ts#L437) |
+| `GET` | `/api/setlist-shortcuts` | Sesión | — |  | [`server/routes/repertorio.ts:494`](../../server/routes/repertorio.ts#L494) |
+| `POST` | `/api/setlist-shortcuts` | Sesión | — |  | [`server/routes/repertorio.ts:506`](../../server/routes/repertorio.ts#L506) |
+| `DELETE` | `/api/setlist-shortcuts/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:525`](../../server/routes/repertorio.ts#L525) |
+| `GET` | `/api/setlists` | Sesión | — |  | [`server/routes/repertorio.ts:426`](../../server/routes/repertorio.ts#L426) |
+| `POST` | `/api/setlists` | Sesión | — |  | [`server/routes/repertorio.ts:438`](../../server/routes/repertorio.ts#L438) |
 | `POST` | `/api/setlists/import-from-image` | Sesión | iaRateLimiter |  | [`server/routes/repertorio.ts:901`](../../server/routes/repertorio.ts#L901) |
-| `PUT` | `/api/setlists/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:462`](../../server/routes/repertorio.ts#L462) |
-| `DELETE` | `/api/setlists/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:479`](../../server/routes/repertorio.ts#L479) |
+| `PUT` | `/api/setlists/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:463`](../../server/routes/repertorio.ts#L463) |
+| `DELETE` | `/api/setlists/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:480`](../../server/routes/repertorio.ts#L480) |
 | `POST` | `/api/setlists/{setlistId}/analyze-with-ai` | Sesión | — |  | [`server/routes/repertorio.ts:794`](../../server/routes/repertorio.ts#L794) |
 | `POST` | `/api/setlists/{setlistId}/generate-perfect-setlist` | Sesión | iaRateLimiter |  | [`server/routes/repertorio.ts:849`](../../server/routes/repertorio.ts#L849) |
-| `GET` | `/api/songs` | Sesión | — |  | [`server/routes/repertorio.ts:127`](../../server/routes/repertorio.ts#L127) |
-| `POST` | `/api/songs` | Sesión | — |  | [`server/routes/repertorio.ts:141`](../../server/routes/repertorio.ts#L141) |
-| `PUT` | `/api/songs/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:163`](../../server/routes/repertorio.ts#L163) |
-| `DELETE` | `/api/songs/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:411`](../../server/routes/repertorio.ts#L411) |
-| `PATCH` | `/api/songs/{id}/acordes` | Sesión | — |  | [`server/routes/repertorio.ts:312`](../../server/routes/repertorio.ts#L312) |
-| `POST` | `/api/songs/{id}/analizar-acordes` | Sesión | — |  | [`server/routes/repertorio.ts:231`](../../server/routes/repertorio.ts#L231) |
-| `POST` | `/api/songs/{id}/analizar-dinamica` | Sesión | — |  | [`server/routes/repertorio.ts:183`](../../server/routes/repertorio.ts#L183) |
-| `PATCH` | `/api/songs/{id}/energia` | Sesión | — |  | [`server/routes/repertorio.ts:394`](../../server/routes/repertorio.ts#L394) |
-| `POST` | `/api/songs/{id}/letra-sincronizada` | Sesión | — |  | [`server/routes/repertorio.ts:264`](../../server/routes/repertorio.ts#L264) |
-| `POST` | `/api/songs/{id}/profesor-armonia` | Sesión | — |  | [`server/routes/repertorio.ts:338`](../../server/routes/repertorio.ts#L338) |
-| `GET` | `/api/songs/{id}/progreso-oido` | Sesión | — |  | [`server/routes/repertorio.ts:257`](../../server/routes/repertorio.ts#L257) |
+| `GET` | `/api/songs` | Sesión | — |  | [`server/routes/repertorio.ts:128`](../../server/routes/repertorio.ts#L128) |
+| `POST` | `/api/songs` | Sesión | — |  | [`server/routes/repertorio.ts:142`](../../server/routes/repertorio.ts#L142) |
+| `PUT` | `/api/songs/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:164`](../../server/routes/repertorio.ts#L164) |
+| `DELETE` | `/api/songs/{id}` | Sesión | — |  | [`server/routes/repertorio.ts:412`](../../server/routes/repertorio.ts#L412) |
+| `PATCH` | `/api/songs/{id}/acordes` | Sesión | — |  | [`server/routes/repertorio.ts:313`](../../server/routes/repertorio.ts#L313) |
+| `POST` | `/api/songs/{id}/analizar-acordes` | Sesión | — |  | [`server/routes/repertorio.ts:232`](../../server/routes/repertorio.ts#L232) |
+| `POST` | `/api/songs/{id}/analizar-dinamica` | Sesión | — |  | [`server/routes/repertorio.ts:184`](../../server/routes/repertorio.ts#L184) |
+| `PATCH` | `/api/songs/{id}/energia` | Sesión | — |  | [`server/routes/repertorio.ts:395`](../../server/routes/repertorio.ts#L395) |
+| `POST` | `/api/songs/{id}/letra-sincronizada` | Sesión | — |  | [`server/routes/repertorio.ts:265`](../../server/routes/repertorio.ts#L265) |
+| `POST` | `/api/songs/{id}/profesor-armonia` | Sesión | — |  | [`server/routes/repertorio.ts:339`](../../server/routes/repertorio.ts#L339) |
+| `GET` | `/api/songs/{id}/progreso-oido` | Sesión | — |  | [`server/routes/repertorio.ts:258`](../../server/routes/repertorio.ts#L258) |
 
 ### sistema
 
@@ -492,12 +499,12 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:252`](../../server.ts#L252) |
-| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:163`](../../server.ts#L163) |
-| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:493`](../../server.ts#L493) |
-| `GET` | `/health` | Pública | — |  | [`server.ts:163`](../../server.ts#L163) |
-| `GET` | `/privacy` | Pública | — |  | [`server.ts:177`](../../server.ts#L177) |
-| `GET` | `/terms` | Pública | — |  | [`server.ts:219`](../../server.ts#L219) |
+| `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:254`](../../server.ts#L254) |
+| `GET` | `/api/health` | Pública | — | ★ | [`server.ts:165`](../../server.ts#L165) |
+| `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:495`](../../server.ts#L495) |
+| `GET` | `/health` | Pública | — |  | [`server.ts:165`](../../server.ts#L165) |
+| `GET` | `/privacy` | Pública | — |  | [`server.ts:179`](../../server.ts#L179) |
+| `GET` | `/terms` | Pública | — |  | [`server.ts:221`](../../server.ts#L221) |
 
 ### songs
 
@@ -607,5 +614,5 @@ Declaradas dos veces (Express usa la primera; la segunda es código muerto):
 
 Omitidas a propósito:
 
-- GET /* (server.ts:577): fallback de la SPA, no es API
+- GET /* (server.ts:579): fallback de la SPA, no es API
 

@@ -45,6 +45,18 @@ export default tseslint.config(
     },
   },
   {
+    // Los scripts de utilidad (CommonJS y ESM) corren en Node: sin esto, cada require/process/console
+    // salía como no-undef y los scripts nuevos gastaban margen del ratchet de CI sin ser un problema real.
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      globals: globals.node,
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
+  {
     // Los tests son el sitio establecido en el repo para castear/mockear con libertad
     // (ver server/__tests__/auth_bandas.test.ts) - no vale la pena que el lint discuta eso.
     files: ['**/__tests__/**', '**/*.test.ts', '**/*.test.tsx'],

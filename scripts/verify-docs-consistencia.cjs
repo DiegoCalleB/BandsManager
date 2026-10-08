@@ -66,8 +66,16 @@ const reglas = [
   { nombre: "componentes", re: /(\d[\d.]*) componentes React/, valor: metricas.componentes },
 ];
 
+// Tolerancia: el README cita cifras redondas y este repo mergea varios PRs al día. Exigir el número exacto
+// pondría el CI en rojo por añadir un test. Falla solo si la deriva supera max(3, 3 %). Con --fix se reescriben
+// exactas (npm run docs:metricas).
+const FIX = process.argv.includes("--fix");
+const tolerancia = (v) => Math.max(3, Math.round(v * 0.03));
+const formatear = (n) => (n >= 1000 ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".") : String(n));
+
 let problemas = 0;
-const readme = leer("README.md");
+let readme = leer("README.md");
+let readmeModificado = false;
 
 for (const regla of reglas) {
   const m = readme.match(regla.re);
@@ -77,11 +85,19 @@ for (const regla of reglas) {
     continue;
   }
   const citado = Number(m[1].replace(/\./g, ""));
-  if (citado !== regla.valor) {
+  if (FIX && citado !== regla.valor) {
+    readme = readme.replace(regla.re, (todo, num) => todo.replace(num, formatear(regla.valor)));
+    readmeModificado = true;
+    console.log(`[docs-consistencia] --fix: «${regla.nombre}» ${citado} -> ${regla.valor}`);
+    continue;
+  }
+  if (Math.abs(citado - regla.valor) > tolerancia(regla.valor)) {
     console.error(`[docs-consistencia] README dice ${citado} ${regla.nombre}, el repo tiene ${regla.valor}`);
     problemas++;
   }
 }
+
+if (readmeModificado) fs.writeFileSync(path.join(ROOT, "README.md"), readme);
 
 // Enlaces del grafo: [[destino]] o [[destino|texto]] debe existir como docs/knowledge_graph/destino.md
 const nodos = ficheros("docs/knowledge_graph", (n) => n.endsWith(".md"));

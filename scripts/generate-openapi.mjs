@@ -202,13 +202,11 @@ function montar(file, sf, llamada, imports, prefijo, dominio, pila) {
 function registrarRuta(file, sf, llamada, metodo, prefijo, dominio) {
   const args = [...llamada.arguments];
   const linea = sf.getLineAndCharacterOfPosition(llamada.getStart()).line + 1;
-  let rutas = [];
-  if (args[0] && ts.isArrayLiteralExpression(args[0])) rutas = args[0].elements.map(textoLiteral);
-  else rutas = [textoLiteral(args[0])];
-  if (rutas.some((r) => r === null)) {
+  const candidatas = args[0] && ts.isArrayLiteralExpression(args[0]) ? args[0].elements.map(textoLiteral) : [textoLiteral(args[0])];
+  if (candidatas.some((r) => r === null)) {
     noResueltas.push(`${rel(file)}:${linea} ruta no literal: ${args[0]?.getText(sf).slice(0, 60)}`);
-    rutas = rutas.filter((r) => r !== null);
   }
+  const rutas = candidatas.filter((r) => r !== null);
 
   const resto = args.slice(1);
   const handler = resto.length ? resto[resto.length - 1] : null;
@@ -476,7 +474,10 @@ if (duplicadas.length) console.warn(`[openapi] ${duplicadas.length} declaracione
 if (noResueltas.length) console.warn(`[openapi] ${noResueltas.length} casos no resueltos:\n  - ${noResueltas.join("\n  - ")}`);
 
 if (MODO_CHECK) {
-  const igual = (f, v) => fs.existsSync(f) && fs.readFileSync(f, "utf8") === v;
+  // Los números de línea (x-source, #L12, fichero.ts:12) cambian con cualquier edición del fichero y no son
+  // contrato: se ignoran, para que mover una ruta o añadir un comentario no ponga el CI en rojo.
+  const sinLineas = (t) => t.replace(/(\.tsx?):\d+/g, "$1:N").replace(/#L\d+/g, "#LN");
+  const igual = (f, v) => fs.existsSync(f) && sinLineas(fs.readFileSync(f, "utf8")) === sinLineas(v);
   if (!igual(SALIDA_JSON, json) || !igual(SALIDA_HTML, html) || !igual(SALIDA_MD, referenciaMd)) {
     console.error("[openapi] docs/api no coincide con el código. Ejecuta: node scripts/generate-openapi.mjs");
     process.exit(1);

@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "2.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (352) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (354) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -34,6 +34,9 @@
     },
     {
       "name": "ai_music"
+    },
+    {
+      "name": "bandMusic"
     },
     {
       "name": "bands"
@@ -2054,6 +2057,41 @@
         "x-autenticacion": "middleware"
       }
     },
+    "/api/bands/spotify-sweep": {
+      "post": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "postApiBandsSpotifySweep",
+        "description": "Comentario en el código: POST /api/bands/spotify-sweep { apply: false } → plan propuesto, no escribe nada. { apply: true, ids: [...] } → escribe SOLO las bandas aprobadas que tengan un sustituto verificado. El enlace se recalcula aquí: el cliente no puede inyectar una URL.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:69",
+        "x-autenticacion": "middleware"
+      }
+    },
     "/api/bands/sync": {
       "post": {
         "tags": [
@@ -2339,6 +2377,49 @@
           }
         },
         "x-source": "server/routes/bands.ts:192",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/bands/{id}/preview": {
+      "get": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "getApiBandsIdPreview",
+        "description": "Comentario en el código: GET /api/bands/:id/preview — preview de 30 s de la banda (o null si no hay).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:25",
         "x-autenticacion": "middleware"
       }
     },
@@ -3987,7 +4068,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:252",
+        "x-source": "server.ts:254",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -4685,7 +4766,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:537",
+        "x-source": "server/routes/repertorio.ts:538",
         "x-autenticacion": "middleware"
       }
     },
@@ -4858,7 +4939,7 @@
             }
           }
         },
-        "x-source": "server.ts:163",
+        "x-source": "server.ts:165",
         "x-autenticacion": "ninguna",
         "summary": "Salud del servicio",
         "x-esquemas": "curado"
@@ -7016,7 +7097,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:299",
+        "x-source": "server/routes/repertorio.ts:300",
         "x-autenticacion": "middleware"
       }
     },
@@ -7051,7 +7132,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:274",
+        "x-source": "server/routes/repertorio.ts:275",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -7083,7 +7164,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:282",
+        "x-source": "server/routes/repertorio.ts:283",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -7115,7 +7196,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:291",
+        "x-source": "server/routes/repertorio.ts:292",
         "x-autenticacion": "middleware"
       }
     },
@@ -9241,7 +9322,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:493",
+        "x-source": "server/routes/repertorio.ts:494",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9274,7 +9355,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:505",
+        "x-source": "server/routes/repertorio.ts:506",
         "x-autenticacion": "middleware"
       }
     },
@@ -9317,7 +9398,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:524",
+        "x-source": "server/routes/repertorio.ts:525",
         "x-autenticacion": "middleware"
       }
     },
@@ -9352,7 +9433,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:425",
+        "x-source": "server/routes/repertorio.ts:426",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9385,7 +9466,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:437",
+        "x-source": "server/routes/repertorio.ts:438",
         "x-autenticacion": "middleware"
       }
     },
@@ -9469,7 +9550,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:462",
+        "x-source": "server/routes/repertorio.ts:463",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -9510,7 +9591,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:479",
+        "x-source": "server/routes/repertorio.ts:480",
         "x-autenticacion": "middleware"
       }
     },
@@ -9983,7 +10064,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:127",
+        "x-source": "server/routes/repertorio.ts:128",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -10016,7 +10097,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:141",
+        "x-source": "server/routes/repertorio.ts:142",
         "x-autenticacion": "middleware"
       }
     },
@@ -10059,7 +10140,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:163",
+        "x-source": "server/routes/repertorio.ts:164",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -10100,7 +10181,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:411",
+        "x-source": "server/routes/repertorio.ts:412",
         "x-autenticacion": "middleware"
       }
     },
@@ -10143,7 +10224,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:312",
+        "x-source": "server/routes/repertorio.ts:313",
         "x-autenticacion": "middleware"
       }
     },
@@ -10185,7 +10266,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:231",
+        "x-source": "server/routes/repertorio.ts:232",
         "x-autenticacion": "middleware"
       }
     },
@@ -10228,7 +10309,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:183",
+        "x-source": "server/routes/repertorio.ts:184",
         "x-autenticacion": "middleware"
       }
     },
@@ -10271,7 +10352,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:394",
+        "x-source": "server/routes/repertorio.ts:395",
         "x-autenticacion": "middleware"
       }
     },
@@ -10314,7 +10395,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:264",
+        "x-source": "server/routes/repertorio.ts:265",
         "x-autenticacion": "middleware"
       }
     },
@@ -10357,7 +10438,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:338",
+        "x-source": "server/routes/repertorio.ts:339",
         "x-autenticacion": "middleware"
       }
     },
@@ -10400,7 +10481,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:257",
+        "x-source": "server/routes/repertorio.ts:258",
         "x-autenticacion": "middleware"
       }
     },
@@ -10635,7 +10716,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:493",
+        "x-source": "server.ts:495",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -12980,7 +13061,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:163",
+        "x-source": "server.ts:165",
         "x-autenticacion": "ninguna"
       }
     },
@@ -12997,7 +13078,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:177",
+        "x-source": "server.ts:179",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13204,7 +13285,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:219",
+        "x-source": "server.ts:221",
         "x-autenticacion": "ninguna"
       }
     },
