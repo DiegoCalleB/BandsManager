@@ -156,7 +156,7 @@ router.get("/bands/metricas", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const { data, error } = await getSupabase()
-      .from("metricas_bandas_externas")
+      .from("metricas_bandas_amigas")
       .select("band_contact_id, fuente, periodo, seguidores, fans, suscriptores, visualizaciones, popularidad")
       .eq("band_id", bandId)
       .order("periodo", { ascending: false });
