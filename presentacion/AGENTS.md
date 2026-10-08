@@ -17,18 +17,19 @@ Si la respuesta a la 2 o a la 3 es «no», se rehace.
 
 La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros do Código** y **Master of Prompts**, que son de Brais. Es un recorrido por la vida de una banda, no un catálogo de pantallas. Mantener unas 48 diapositivas (no es una meta a reducir; puede variar según la necesidad), organizadas en actos con nombre:
 
-| Acto | Qué cuenta | Diapositivas actuales |
+| Acto | Qué cuenta | Diapositivas |
 |---|---|---|
-| I · Backstage | El caos de gestionar una banda y qué se propone | 1–4 |
-| II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos | 5–12 |
-| III · Antes del concierto | Calendario, repertorio, Iris, Atril, armonía, ensayos | 13–21 |
-| IV · Que te conozcan | Dossier, QR, fans, reels | 22–29 |
-| V · Después del concierto | Gira, finanzas, móvil | 30–31 |
-| VI · El negocio | Públicos, marketing, planes, márgenes | 32–40 |
-| VII · Bajo el capó | Arquitectura, método, seguridad, calidad, límites, futuro | 41–46 |
-| Telón | Demostración y cierre | 47–48 |
+| Portada | Gancho: «Menos gestión, más música» | 1 |
+| I · Backstage | El caos de gestionar una banda y qué se propone | umbral 2 · 3–5 |
+| II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos | umbral 6 · 7–14 |
+| III · Antes del concierto | Calendario, repertorio, Iris, Atril, armonía, ensayos | umbral 15 · 16–24 |
+| IV · Que te conozcan | Dossier, QR, fans, reels | umbral 25 · 26–33 |
+| V · Después del concierto | Gira, finanzas, móvil | umbral 34 · 35–36 |
+| VI · El negocio | Públicos, marketing, planes, márgenes | umbral 37 · 38–46 |
+| VII · Bajo el capó | Arquitectura, método, seguridad, calidad, límites, futuro | umbral 47 · 48–53 |
+| Telón | Demostración (si hay vídeo) y cierre | 54 |
 
-Este reparto es un borrador hasta que Diego lo apruebe. Cada acto abre con una diapositiva-umbral breve y visual (una frase, una cifra o un vídeo) y las bandas reaparecen como personajes: la misma banda que sufre en el acto I es la que cierra el concierto en el V.
+Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.act`: foto de concierto, número romano en trazo, cortina que se abre y tira de progreso de los 7 actos) y las bandas reaparecen como personajes: la misma banda que sufre en el acto I es la que cierra el concierto en el V.
 
 ## Qué se considera impactante aquí
 
