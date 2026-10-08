@@ -19,7 +19,8 @@ La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros 
 
 | Acto | Qué cuenta | Diapositivas |
 |---|---|---|
-| Portada | Gancho: «Menos gestión, más música» | 1 |
+| Tráiler | Apertura de 17 s que arranca sola y termina en el logo | 1 |
+| Portada | Gancho: «Menos gestión, más música» | 2 |
 | I · Backstage | El caos de gestionar una banda y qué se propone | umbral 2 · 3–5 |
 | II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos | umbral 6 · 7–14 |
 | III · Antes del concierto | Calendario, repertorio, Iris, Atril, armonía, ensayos | umbral 15 · 16–24 |
