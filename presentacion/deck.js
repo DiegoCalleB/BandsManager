@@ -177,6 +177,15 @@
     return true;
   }
 
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.addEventListener('mousemove', (e) => {
+      const dv = document.querySelector('.slide.hero.active .device');
+      if (!dv) return;
+      dv.style.setProperty('--ry', ((e.clientX / innerWidth - 0.5) * 6).toFixed(2) + 'deg');
+      dv.style.setProperty('--rx', ((0.5 - e.clientY / innerHeight) * 4).toFixed(2) + 'deg');
+    });
+  }
+
   function show(i, push = true, how = 'play') {
     document.querySelectorAll('video').forEach((v) => v.pause());
     const prev = cur;

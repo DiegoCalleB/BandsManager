@@ -446,3 +446,51 @@ body.scroll .cover .art { display: block; position: relative; width: auto; heigh
 body.scroll .cover .art .singer { height: 100%; }
 body.scroll .cover .art .shot, body.scroll .cover .art::before { display: none; }
 body.scroll .cover .art .singer-cap { font-size: 13px; left: 12px; top: 12px; }
+
+/* ───────── Diapositivas «héroe»: la app en grande, en perspectiva y con pines ───────── */
+.slide.hero { background: #05070d; padding: 0; overflow: hidden; --ink: #fff; --ink-2: rgba(255,255,255,.76); color: #fff; }
+.hero-bg { position: absolute; inset: 0; background:
+  radial-gradient(900px 620px at 72% 48%, rgba(79,125,255,.30), transparent 70%),
+  repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 72px),
+  repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 72px); }
+.hero-copy { position: absolute; left: 120px; top: 96px; width: 520px; z-index: 3; display: flex; flex-direction: column; }
+.slide.hero .tag { background: rgba(255,255,255,.12); color: #fff; }
+.slide.hero h2 { font-size: 66px; line-height: 1.04; margin-top: 30px; max-width: 520px; }
+.hero-legend { list-style: none; display: grid; gap: 28px; margin-top: 56px; }
+.hero-legend li { display: flex; gap: 18px; align-items: flex-start; font-size: 25px; line-height: 1.35; color: var(--ink-2); padding-left: 0; }
+.hero-legend li::before { display: none; }
+.hero-legend b { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--acc); color: #fff; font-size: 22px; font-weight: 600; }
+.device {
+  position: absolute; left: 730px; top: 150px; width: 1120px; z-index: 2; border-radius: 22px; background: #0b0d14;
+  box-shadow: 0 60px 140px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.12), 0 0 240px rgba(79,125,255,.28);
+  opacity: 0; transform: perspective(2200px) rotateY(-14deg) rotateX(5deg) translateX(90px) scale(.94);
+  transition: transform 1500ms var(--ease) 300ms, opacity 900ms var(--ease) 300ms;
+}
+.slide.hero.active .device, .slide.hero.before .device {
+  opacity: 1; transform: perspective(2200px) rotateY(calc(-5deg + var(--ry, 0deg))) rotateX(calc(1.5deg + var(--rx, 0deg)));
+  transition: transform 600ms var(--ease), opacity 900ms var(--ease) 300ms;
+}
+.slide.hero:not(.active) .device { transition: none; }
+.device .chrome { height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #121521; border-radius: 22px 22px 0 0; }
+.device .chrome i { width: 11px; height: 11px; border-radius: 50%; background: #3a3f55; }
+.device .screen { position: relative; overflow: hidden; height: 790px; border-radius: 0 0 22px 22px; background: #0b0d14; }
+.device .screen img { position: absolute; left: -23.08%; top: 0; width: 123.08%; height: auto; max-width: none; }
+.pin { position: absolute; left: var(--x); top: var(--y); width: 42px; height: 42px; margin: -21px 0 0 -21px; border-radius: 50%; background: var(--acc); color: #fff; font-size: 21px; font-weight: 700; display: grid; place-items: center; z-index: 3;
+  box-shadow: 0 0 0 4px rgba(5,7,13,.65), 0 0 28px var(--acc); opacity: 0; transform: scale(.3); transition: opacity 500ms var(--ease), transform 600ms cubic-bezier(.3,1.6,.5,1); transition-delay: calc(1.5s + var(--n) * 300ms); }
+.slide.hero.active .pin, .slide.hero.before .pin { opacity: 1; transform: none; animation: pinpulse 2.4s ease-in-out calc(2.4s + var(--n) * .3s) infinite; }
+.slide.hero:not(.active) .pin { transition: none; }
+@keyframes pinpulse { 50% { box-shadow: 0 0 0 4px rgba(5,7,13,.65), 0 0 0 16px rgba(79,125,255,0); } }
+@media (prefers-reduced-motion: reduce) { .device, .pin { opacity: 1; transform: none; transition: none; animation: none; } }
+body.scroll .slide.hero { display: block; padding: 28px 22px 24px; overflow: visible; }
+body.scroll .hero-copy { position: static; width: auto; }
+body.scroll .slide.hero h2 { font-size: 34px; max-width: none; }
+body.scroll .hero-legend { margin-top: 22px; gap: 14px; } body.scroll .hero-legend li { font-size: 17px; } body.scroll .hero-legend b { width: 30px; height: 30px; font-size: 15px; }
+body.scroll .device { position: relative; left: auto; top: auto; width: 100%; margin-top: 22px; opacity: 1; transform: none; }
+body.scroll .device .screen { height: auto; aspect-ratio: 1560 / 1100; }
+body.scroll .pin { width: 26px; height: 26px; margin: -13px 0 0 -13px; font-size: 13px; }
+
+/* Variante para ventanas modales: se enseña la captura entera, sin recortar la barra lateral */
+.device.full { top: 215px; }
+.device.full .screen { height: auto; aspect-ratio: 1920 / 1100; }
+.device.full .screen img { left: 0; width: 100%; }
+body.scroll .device.full .screen { aspect-ratio: 1920 / 1100; }

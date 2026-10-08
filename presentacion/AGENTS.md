@@ -58,6 +58,8 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 - Nada de texto que se salga de la pantalla: el QA de abajo es obligatorio.
 - Antes de tocar estilos de la **app**, cargar el skill `visual-identity`. La presentación hereda su estética.
 
+- **Diapositivas «héroe»** (clase `.hero`): la app en grande dentro de un marco con perspectiva y parallax, pines numerados sobre la captura y una leyenda de tres líneas. Titular de menos de ocho palabras. Siempre en escena oscura con la captura `d-h-*`. `.device.full` para capturas con ventana modal (se recorta con `style` en el `<img>` y `aspect-ratio` en `.screen`). Colocar los pines en huecos libres, nunca encima de texto. Las leyendas solo dicen lo que la captura muestra o lo que ya consta en el repo.
+
 ## Pipeline de material
 
 - **Capturas y vídeos**: Playwright + Chromium contra la app local (`npm run dev`, puerto 3000), con la API mockeada (`page.route`) y las bandas de Brais. Login de demo y datos de ejemplo, nunca datos reales de clientes.
