@@ -4545,6 +4545,7 @@ export default function SongStudioModal({
             {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
  y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
             {/* Iris es de la canción, no de una toma: separar y ver el estado vive aquí, fuera de Ideas */}
+            <section aria-label="Pistas de la canción (Iris)" className="space-y-2.5 sm:space-y-4">
             <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--acc-soft)] rounded-[var(--r-l)] flex-wrap">
               <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
                 <Cpu className="w-4 h-4" /> Iris · pistas de la canción
@@ -4568,8 +4569,10 @@ export default function SongStudioModal({
               </button>
             </div>
             {irisIdea && <div className="space-y-6">{renderIdeaCard(irisIdea, { iris: true })}</div>}
+            </section>
 
-            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
+            {/* Ideas: bloque propio, separado de Iris por aire (sin bordes) */}
+            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 mt-6 sm:mt-10 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
               <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                 <Music className="w-4 h-4 text-[var(--tentative)]" /> Ideas y grabaciones
               </span>
