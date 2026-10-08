@@ -1,5 +1,5 @@
 import type { AudioTrack, Song, SongAudioIdea } from '../types';
-import { pistasDeIdeas } from './irisTracks';
+import { cancionConIdeas } from './irisTracks';
 
 /**
  * Lógica PURA de la separación de pistas con Iris (sin React, sin red): qué se le dice al usuario en
@@ -335,7 +335,7 @@ export function cancionConSeparacion<T extends { audioIdeas?: SongAudioIdea[]; p
   cancion: T,
   ideas: SongAudioIdea[]
 ): T {
-  return { ...cancion, audioIdeas: ideas, pistas: pistasDeIdeas(ideas) };
+  return cancionConIdeas(cancion, ideas);
 }
 
 // ───────────────────────── Errores ─────────────────────────

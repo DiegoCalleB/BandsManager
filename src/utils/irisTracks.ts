@@ -51,3 +51,17 @@ export function pistasDeCancion(song?: Song | null): AudioTrack[] {
   const deIdeas = pistasDeIdeas(song.audioIdeas);
   return deIdeas.length > 0 ? deIdeas : song.pistas ?? [];
 }
+
+/**
+ * Único punto por el que una canción cambia de ideas. Los stems son de la canción, así que
+ * `song.pistas` se mantiene al día con los de la idea de Iris; si las ideas ya no traen ninguno
+ * (se borró la toma) la canción conserva los suyos en vez de perderlos.
+ */
+export function cancionConIdeas<T extends { audioIdeas?: SongAudioIdea[]; pistas?: AudioTrack[] }>(
+  cancion: T,
+  ideas: SongAudioIdea[],
+): T {
+  const deIdeas = pistasDeIdeas(ideas);
+  const pistas = deIdeas.length > 0 ? deIdeas : cancion.pistas;
+  return { ...cancion, audioIdeas: ideas, ...(pistas ? { pistas } : {}) };
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks } from '../irisTracks';
+import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas } from '../irisTracks';
 import { Song, SongAudioIdea } from '../../types';
 
 describe('irisTracks helpers', () => {
@@ -79,5 +79,22 @@ describe('irisTracks helpers', () => {
     expect(tracks).toHaveLength(1);
     expect(tracks[0].nombre).toBe('Maqueta Acústica');
     expect(tracks[0].audioUrl).toBe('https://example.com/acoustic.mp3');
+  });
+});
+
+describe('cancionConIdeas', () => {
+  const stem = (id: string) => ({ id, nombre: id, audioUrl: `${id}.mp3` });
+  const ideaIris = { id: 'i1', titulo: 'Iris', seccion: 'general', audioUrl: 'a', subidoPor: 'x', fecha: 'f', stemEngineUsed: 'Demucs', pistas: [stem('drums'), stem('bass')] } as never;
+
+  it('copia en song.pistas los stems de la idea de Iris', () => {
+    const r = cancionConIdeas({ audioIdeas: [] as never[] }, [ideaIris]);
+    expect(r.pistas?.map((p) => p.id)).toEqual(['drums', 'bass']);
+  });
+  it('si ya no hay idea de Iris conserva los stems de la canción', () => {
+    const r = cancionConIdeas({ pistas: [stem('drums'), stem('bass')] }, []);
+    expect(r.pistas?.map((p) => p.id)).toEqual(['drums', 'bass']);
+  });
+  it('sin stems en ningún sitio no inventa la clave pistas', () => {
+    expect('pistas' in cancionConIdeas({}, [])).toBe(false);
   });
 });

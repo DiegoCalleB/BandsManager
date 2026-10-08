@@ -1,4 +1,4 @@
-import type { SongAudioIdea } from '../types';
+import type { AudioTrack, SongAudioIdea } from '../types';
 
 export interface DatosIdeaDeAtril {
   id: string;
@@ -34,4 +34,22 @@ export function ideasCompatiblesConPistas(ideas: SongAudioIdea[], idsPistas: str
   return ideas.filter(
     (i) => i.origen === 'atril' && (!i.sobrePistas || i.sobrePistas.some((id) => idsPistas.includes(id))),
   );
+}
+
+/**
+ * Stems de la canción que acompañan a una toma (`sobrePistas`), en el orden de la canción.
+ * Los ids que ya no existen (stem borrado o canción vuelta a separar) salen en `faltan`.
+ */
+export function pistasBaseDeIdea(idea: SongAudioIdea, stems: AudioTrack[]): { pistas: AudioTrack[]; faltan: string[] } {
+  const ids = idea.sobrePistas ?? [];
+  const faltan = ids.filter((id) => !stems.some((s) => s.id === id));
+  return { pistas: stems.filter((s) => ids.includes(s.id)), faltan };
+}
+
+/** Toma con otro fondo: p. ej. solo la batería. Vacío la deja en seco (sin fondo ni desfase). */
+export function ideaConPistasBase(idea: SongAudioIdea, ids: string[]): SongAudioIdea {
+  const { sobrePistas: _s, offsetSegundos: _o, ...resto } = idea;
+  const unicos = [...new Set(ids)];
+  if (unicos.length === 0) return resto;
+  return { ...resto, sobrePistas: unicos, offsetSegundos: idea.offsetSegundos ?? 0 };
 }

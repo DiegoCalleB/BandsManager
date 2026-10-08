@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Song, SongAudioIdea, AudioComment } from '../types';
+import { cancionConIdeas } from '../utils/irisTracks';
 
 /** Comentarios con marca de tiempo sobre una idea de audio de una canción. */
 export function useIdeaComments(
@@ -40,7 +41,7 @@ export function useIdeaComments(
       return i;
     });
 
-    onUpdateSong({ ...song, audioIdeas: updatedIdeas });
+    onUpdateSong(cancionConIdeas(song, updatedIdeas));
 
     setCommentTextMap((prev) => ({ ...prev, [idea.id]: '' }));
     setCommentTimeTagMap((prev) => ({ ...prev, [idea.id]: null }));
