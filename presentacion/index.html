@@ -129,6 +129,18 @@
   <p class="scene-foot"><b>Hoy,</b> el proyecto tiene 1.857 pruebas automáticas en verde, medidas en el repositorio el 8 de octubre de 2026.</p>
 </section>
 
+<section class="slide scene" data-title="Prólogo · El sábado en el local" data-transition="fade">
+  <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg)"></div>
+  <span class="tag">Prólogo · Miércoles, 22:10</span>
+  <h2>Iago convocó el ensayo del sábado.</h2>
+  <ul class="chat">
+    <li class="me"><b>Iago · bajo <i>22:10</i></b>Sábado a las 11, en el local. Os enseño lo que he hecho.</li>
+    <li><b>Xandre · voz <i>22:14</i></b>¿Y qué es exactamente?</li>
+    <li><b>Álvaro · guitarra <i>22:19</i></b>Si me ahorra escribir a salas, me apunto.</li>
+    <li><b>Brais · batería <i>22:31</i></b>Llevo el café. Y mis dudas.</li>
+  </ul>
+</section>
+
 <!-- Acto I · Backstage -->
 <section class="slide act has-char" data-title="Acto I · Backstage" data-transition="fade" style="--bg-img:url(img/concierto-1.jpg)">
   <div class="act-bg"></div>
@@ -374,7 +386,7 @@
   <span class="tag">Acto III de VII · Antes del concierto</span>
   <h2>Todo listo para tocar.</h2>
   <p class="sub">Calendario, repertorio, stems, acordes y ensayo: lo que pasa entre el sí y el escenario.</p>
-  <div class="act-msg"><b>Iago · bajo</b>Para los que tocáis: cada uno tendrá su hoja con su nota, y el atril os pasa los acordes sincronizados.</div>
+  <div class="act-msg"><b>Iago · bajo</b>Para los que tocáis: cada uno tiene su hoja con su nota y marca en qué temas quiere el tono y el BPM. El atril os pasa los acordes sincronizados.</div>
   <div class="act-foot">
     <div class="act-dots" aria-hidden="true"><i class="done"></i><i class="done"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div>
     <div class="act-cast"><img src="img/logo-hdc.png" alt=""><img src="img/logo-mop.png" alt=""><span>Os Herdeiros do Código · Master of Prompts</span></div>
@@ -447,14 +459,16 @@
   <p class="lead" style="margin-top:40px;max-width:1500px">Cada músico se lleva su hoja con sus notas, sin que nadie tenga que copiarlas.</p>
 </section>
 
-<!-- Setlists: lo que falta (acto III, en diseño) -->
-<section class="slide sunk compact" data-grupo="musica" data-title="Setlists: el tono tema a tema, en diseño">
-  <span class="tag">Música · En diseño</span>
-  <h2>Hoy el tono y el BPM valen para toda la hoja. Tema a tema, todavía no.</h2>
-  <div class="grid c2" style="margin-top:48px">
-    <div class="card"><h3>Hoy</h3><p>Tono, BPM y duración se activan para todas las canciones de la hoja.</p><p style="margin-top:14px">Cada músico recibe sus notas en cada tema.</p></div>
-    <div class="card"><h3>Pendiente</h3><p>Elegir, canción a canción, en qué temas aparecen el tono o el BPM.</p></div>
+<!-- Setlists: tono y BPM por músico (acto III) -->
+<section class="slide sunk compact" data-grupo="musica" data-title="Setlists: tono y BPM donde los quiere cada músico">
+  <span class="tag">Música · Setlists</span>
+  <h2>Cada músico marca en qué temas quiere ver el tono y el BPM.</h2>
+  <div class="grid c3" style="margin-top:48px">
+    <div class="card"><h3>Dos marcas independientes</h3><p>La tonalidad y el BPM se activan por separado, tema a tema y para cada músico.</p></div>
+    <div class="card"><h3>«Me da dudas»</h3><p>Un botón en cada tema marca el tono o el BPM del músico sin abrir nada más.</p></div>
+    <div class="card"><h3>Elegir temas</h3><p>Un panel escribe esas marcas en la canción, y la hoja de cada uno sale con lo suyo.</p></div>
   </div>
+  <div style="margin-top:34px;height:330px;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:var(--sunken)"><img src="img/d-h-print.jpg" alt="Generador de hojas con las casillas de tono y BPM" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%"></div>
 </section>
 
 
@@ -502,18 +516,6 @@
   <div class="vid"><video controls preload="metadata" playsinline poster="img/atril-poster.jpg"><source src="video/atril.mp4" type="video/mp4"></video></div>
   <p class="mut" style="margin-top:22px;font-size:23px">Pasan los acordes con el audio, se activa el autoscroll y se cambia entre guitarra, piano y bajo. El audio de la demo es un loop sintetizado de ejemplo.</p>
 </section>
-
-<!-- Cifrado por músico (acto III, en diseño) -->
-<section class="slide sunk compact" data-title="Un cifrado impreso para cada músico">
-  <span class="tag">Música · En diseño</span>
-  <h2>Un cifrado impreso para cada músico, con su instrumento.</h2>
-  <div class="grid c2" style="margin-top:44px">
-    <div class="card"><h3>Ya existe</h3><p>Diagramas de guitarra, piano y bajo en el Atril, con el instrumento que elijas.</p><p style="margin-top:14px">Notas por miembro en cada canción, con su estado de preparación.</p><p style="margin-top:14px">Imprimir el cifrado completo desde el visor.</p></div>
-    <div class="card"><h3>En diseño</h3><p>Una hoja por músico, con sus acordes en su instrumento.</p><p style="margin-top:14px">Sus notas de la canción, en la misma hoja.</p></div>
-  </div>
-  <p class="mut" style="margin-top:36px;font-size:26px">Hoy la impresión sale del visor del cifrado. La hoja por músico todavía no está hecha.</p>
-</section>
-
 
 <!-- 9c · Profesor de armonía e improvisación -->
 <section class="slide split" data-grupo="musica" data-title="Profesor de armonía e improvisación">
@@ -1068,6 +1070,7 @@
   <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
   <h1>Gracias.</h1>
   <p class="sub">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>
+  <div class="sign-msg"><b>Iago · bajo</b>Ensayamos el sábado. Traed vuestras hojas.</div>
   <p class="foot"><b>Diego de la Calle</b> · diego.delacalleb@gmail.com<br><a href="https://github.com/DiegoCalleB/BandsManager" target="_blank" rel="noopener">github.com/DiegoCalleB/BandsManager</a></p>
   <div class="art"><div class="shot" style="inset:120px 90px 0 90px;border-radius:44px 44px 0 0;background:var(--bg);cursor:zoom-in"><img class="l" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt="Setlist en el móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt=""></div></div>
 </section>

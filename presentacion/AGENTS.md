@@ -28,7 +28,7 @@ La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros 
 | Prólogo | La banda que se rompe: chat, ceros, el bajista y las IA (ficción) | 3–5 |
 | I · Backstage | El caos de gestionar una banda y qué se propone | umbral 3 · 4–6 |
 | II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, redactor que aprende, otras bandas y Date Swap | umbral 7 · 8–18 |
-| III · Antes del concierto | Calendario, repertorio y setlists (impresión por músico), Iris, Atril, cifrado por músico, armonía, ensayos | umbral 19 · 20–32 |
+| III · Antes del concierto | Calendario, repertorio y setlists (impresión por músico), Iris, Atril, armonía, ensayos | umbral 19 · 20–32 |
 | IV · Que te conozcan | Dossier, QR, fans, reels | umbral 33 · 34–41 |
 | V · Después del concierto | Gira, finanzas, móvil | umbral 42 · 43–44 |
 | VI · El negocio | Públicos, marketing, planes, márgenes | umbral 45 · 46–54 |
