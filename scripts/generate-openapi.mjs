@@ -20,6 +20,7 @@ const ts = createRequire(import.meta.url)("typescript");
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SALIDA_JSON = path.join(ROOT, "docs/api/openapi.json");
 const SALIDA_HTML = path.join(ROOT, "docs/api/index.html");
+const SALIDA_MD = path.join(ROOT, "docs/api/REFERENCIA.md");
 const OVERRIDES = path.join(ROOT, "docs/api/overrides.json");
 const MODO_CHECK = process.argv.includes("--check");
 
@@ -328,6 +329,7 @@ const sombreadas = [];
   }
 }
 const total = operaciones.size;
+const declaraciones = new Set([...operaciones.values()].map((o) => o["x-source"])).size;
 const documento = {
   openapi: "3.1.0",
   info: {
@@ -394,10 +396,78 @@ const html = `<!doctype html>
 </html>
 `;
 
+
+// ── Referencia en Markdown (se lee directamente en GitHub, sin visor) ───────────────────────────
+const ETIQUETA_ACCESO = {
+  middleware: "Sesión",
+  handler: "Sesión (comprobada en el handler)",
+  "handler-opcional": "Sesión opcional",
+  firma: "Firma o secreto",
+  ninguna: "Pública",
+  desconocida: "No determinado",
+};
+const celda = (t) => String(t ?? "").replace(/\|/g, "\\|").replace(/\n/g, " ");
+const enlaceFuente = (x) => { const [fichero, linea] = x.split(":"); return `[\`${x}\`](../../${fichero}#L${linea})`; };
+const accesoDe = (op) => ETIQUETA_ACCESO[op["x-autenticacion"]] + (op["x-requires-leader"] ? " + líder" : "");
+const filaDe = (metodo, ruta, op) =>
+  `| \`${metodo.toUpperCase()}\` | \`${celda(ruta)}\` | ${accesoDe(op)} | ${(op["x-rate-limiters"] || []).join(", ") || "—"} | ${op["x-esquemas"] === "curado" ? "★" : ""} | ${enlaceFuente(op["x-source"])} |`;
+const CABECERA = "| Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |\n|---|---|---|---|---|---|";
+
+const porDominio = new Map();
+const sinSesion = [];
+for (const [ruta, metodos] of Object.entries(rutas)) {
+  for (const [metodo, op] of Object.entries(metodos)) {
+    const dom = op.tags[0];
+    if (!porDominio.has(dom)) porDominio.set(dom, []);
+    porDominio.get(dom).push(filaDe(metodo, ruta, op));
+    if (op["x-autenticacion"] !== "middleware") sinSesion.push({ metodo, ruta, op });
+  }
+}
+const cuentaAcceso = {};
+for (const o of operaciones.values()) cuentaAcceso[o.auth.tipo] = (cuentaAcceso[o.auth.tipo] || 0) + 1;
+
+const referenciaMd = [
+  "# Referencia de la API",
+  "",
+  "> Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.",
+  "",
+  `**${total} rutas HTTP** (${declaraciones} declaraciones de handler; el resto son alias) en ${dominios.size} dominios. Contrato máquina-legible: [\`openapi.json\`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [\`index.html\`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).`,
+  "",
+  "## Cómo leerla",
+  "",
+  "- **Acceso** es lo que el código muestra, no lo que se supone. Una ruta \"Pública\" es una ruta sin ninguna comprobación detectada; puede ser intencionada (login, páginas públicas) y conviene revisarla.",
+  "- **Esquema ★** significa que la petición y la respuesta están descritas a mano en [`overrides.json`](./overrides.json). El resto solo documenta la superficie (método, ruta, acceso, límites, código): el proyecto no usa una librería de validación de la que derivar esquemas.",
+  "- La banda activa se envía en la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario ([ADR 0004](../adr/0004-band-id-resuelto-en-servidor.md)).",
+  "",
+  "| Acceso | Rutas |",
+  "|---|---|",
+  ...Object.entries(ETIQUETA_ACCESO).filter(([k]) => cuentaAcceso[k]).map(([k, v]) => `| ${v} | ${cuentaAcceso[k]} |`),
+  "",
+  "## Rutas sin sesión de middleware",
+  "",
+  "Son las que un revisor de seguridad querrá mirar primero.",
+  "",
+  CABECERA,
+  ...sinSesion.map(({ metodo, ruta, op }) => filaDe(metodo, ruta, op)),
+  "",
+  "## Operaciones con esquema documentado",
+  "",
+  ...Object.entries(overrides.operations || {}).map(([k, v]) => `- \`${k}\`: ${v.summary || ""}`),
+  "",
+  "## Todas las rutas por dominio",
+  "",
+  ...[...porDominio.keys()].sort().flatMap((dom) => [`### ${dom}`, ...(overrides.tags?.[dom] ? ["", overrides.tags[dom]] : []), "", CABECERA, ...porDominio.get(dom), ""]),
+  "## Avisos del análisis estático",
+  "",
+  ...(duplicadas.length ? ["Declaradas dos veces (Express usa la primera; la segunda es código muerto):", "", ...duplicadas.map((d) => `- ${d}`), ""] : ["- Sin rutas declaradas dos veces.", ""]),
+  ...(sombreadas.length ? ["Posiblemente inalcanzables (sombreadas por una ruta con parámetro declarada antes):", "", ...sombreadas.map((d) => `- ${d}`), ""] : ["- Sin rutas sombreadas.", ""]),
+  ...(noResueltas.length ? ["No resueltas por el análisis:", "", ...noResueltas.map((d) => `- ${d}`), ""] : []),
+  ...(omitidas.length ? ["Omitidas a propósito:", "", ...omitidas.map((d) => `- ${d}`), ""] : []),
+].join("\n") + "\n";
+
 // ── Informe y escritura ─────────────────────────────────────────────────────────────────────────
 const porAuth = {};
 for (const o of operaciones.values()) porAuth[o.auth.tipo] = (porAuth[o.auth.tipo] || 0) + 1;
-const declaraciones = new Set([...operaciones.values()].map((o) => o["x-source"])).size;
 console.log(`[openapi] ${total} operaciones HTTP (${declaraciones} declaraciones de handler) · ${curadas} con esquemas curados · ${dominios.size} dominios`);
 console.log(`[openapi] autenticación: ${JSON.stringify(porAuth)}`);
 if (sombreadas.length) console.warn(`[openapi] ${sombreadas.length} rutas posiblemente inalcanzables (sombreadas por una ruta con parámetro declarada antes):\n  - ${sombreadas.join("\n  - ")}`);
@@ -407,7 +477,7 @@ if (noResueltas.length) console.warn(`[openapi] ${noResueltas.length} casos no r
 
 if (MODO_CHECK) {
   const igual = (f, v) => fs.existsSync(f) && fs.readFileSync(f, "utf8") === v;
-  if (!igual(SALIDA_JSON, json) || !igual(SALIDA_HTML, html)) {
+  if (!igual(SALIDA_JSON, json) || !igual(SALIDA_HTML, html) || !igual(SALIDA_MD, referenciaMd)) {
     console.error("[openapi] docs/api no coincide con el código. Ejecuta: node scripts/generate-openapi.mjs");
     process.exit(1);
   }
@@ -416,5 +486,6 @@ if (MODO_CHECK) {
   fs.mkdirSync(path.dirname(SALIDA_JSON), { recursive: true });
   fs.writeFileSync(SALIDA_JSON, json);
   fs.writeFileSync(SALIDA_HTML, html);
-  console.log(`[openapi] escrito ${rel(SALIDA_JSON)} y ${rel(SALIDA_HTML)}`);
+  fs.writeFileSync(SALIDA_MD, referenciaMd);
+  console.log(`[openapi] escrito ${rel(SALIDA_JSON)}, ${rel(SALIDA_HTML)} y ${rel(SALIDA_MD)}`);
 }

@@ -2,7 +2,7 @@
 
 - **Estado:** Aceptada
 - **Fecha:** 2026-10-08
-- **Origen:** nueva. Implementación: `scripts/generate-openapi.mjs`; resultado: `docs/api/openapi.json` y `docs/api/index.html`; descripciones a mano: `docs/api/overrides.json`.
+- **Origen:** nueva. Implementación: `scripts/generate-openapi.mjs`; resultado: `docs/api/openapi.json`, `docs/api/REFERENCIA.md` (tablas legibles en GitHub) y `docs/api/index.html` (visor); descripciones a mano: `docs/api/overrides.json`.
 
 ## Contexto
 
@@ -23,6 +23,7 @@ El script tiene modo `--check` para CI: falla si `docs/api/` no coincide con el 
 - **tsoa o decoradores:** exige reestructurar la API en controladores.
 - **OpenAPI escrito a mano:** se queda desfasado el primer día.
 - **Servir Swagger UI desde la propia app (`/api-docs`):** amplía la superficie pública del servidor. Se prefiere una página estática en `docs/api/index.html`.
+- **Solo el visor HTML:** el repositorio es privado y GitHub no renderiza HTML, así que un evaluador solo vería código fuente. Por eso la referencia principal es `REFERENCIA.md`, que GitHub sí renderiza; el visor queda como complemento local.
 
 ## Consecuencias
 

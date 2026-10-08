@@ -13,7 +13,7 @@ La documentación se desincronizaba del código sin que nadie lo notara. Al revi
 La documentación se trata como código:
 
 1. **Cifras comprobables:** `scripts/verify-docs-consistencia.cjs` cuenta endpoints, tests, migraciones y componentes y compara con el README. Falla si no coinciden.
-2. **Enlaces comprobables:** el mismo script falla si un `[[enlace]]` del grafo apunta a una nota inexistente.
+2. **Enlaces comprobables:** el mismo script falla si un `[[enlace]]` del grafo apunta a una nota inexistente, o si un enlace relativo entre ficheros Markdown (README y `docs/`) apunta a un fichero que no existe. Al activarlo salieron tres enlaces rotos a un skill que no está donde `CLAUDE.md` dice.
 3. **Referencias comprobables:** `scripts/verify-docs-refs.cjs` ya comprobaba rutas en AGENTS.md y en las skills.
 4. **Generadores validados:** `generate_obsidian_graph.ts` falla si un nodo enlaza a otro que no existe.
 5. **Contrato de API generado:** `scripts/generate-openapi.mjs` analiza el AST y escribe `docs/api/openapi.json` ([ADR 0012](./0012-contrato-api-openapi-por-ast.md)). El README toma de ahí su cifra de rutas.

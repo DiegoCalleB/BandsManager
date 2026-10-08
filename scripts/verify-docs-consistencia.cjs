@@ -96,6 +96,21 @@ for (const f of nodos) {
   }
 }
 
+// Enlaces relativos entre ficheros Markdown: [texto](./ruta/o/fichero). Los anclas (#...) y las URL externas no se comprueban.
+{
+  const mds = [path.join(ROOT, "README.md"), ...ficheros("docs", (n) => n.endsWith(".md") && n !== "REFERENCIA.md" && n !== "0000-plantilla.md")];
+  for (const md of mds) {
+    const texto = fs.readFileSync(md, "utf8").replace(/```[\s\S]*?```/g, "");
+    for (const [, destino] of texto.matchAll(/\]\((?!https?:|mailto:|#)([^)#\s]+)(?:#[^)]*)?\)/g)) {
+      const limpio = decodeURIComponent(destino);
+      if (!fs.existsSync(path.resolve(path.dirname(md), limpio))) {
+        console.error(`[docs-consistencia] ${path.relative(ROOT, md)}: enlace roto (${destino})`);
+        problemas++;
+      }
+    }
+  }
+}
+
 if (problemas > 0) {
   console.error(`[docs-consistencia] ${problemas} incoherencia(s). Recuentos reales: ${JSON.stringify(metricas)}`);
   process.exit(1);
