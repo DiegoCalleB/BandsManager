@@ -254,8 +254,7 @@ Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin f
     "localizacion": "Ciudad y región de origen",
     "instagram_url": "URL de su Instagram (o déjalo vacío si no lo sabes)",
     "spotify_url": "URL de su Spotify (o vacío)",
-    "youtube_url": "URL de YouTube (o vacío)",
-    "aforo_promedio": 150
+    "youtube_url": "URL de YouTube (o vacío)"
   }
 ]`;
 
