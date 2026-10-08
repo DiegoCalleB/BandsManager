@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "2.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (354) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (358) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -1866,6 +1866,111 @@
         "x-autenticacion": "middleware"
       }
     },
+    "/api/bands/metricas": {
+      "get": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "getApiBandsMetricas",
+        "description": "Comentario en el código: GET /api/bands/metricas — último periodo disponible por banda de la cuenta.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:155",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/bands/metricas/actualizar": {
+      "post": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "postApiBandsMetricasActualizar",
+        "description": "Comentario en el código: POST /api/bands/metricas/actualizar — captura el mes en curso de las bandas de la cuenta.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:136",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/bands/previews-availability": {
+      "get": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "getApiBandsPreviewsAvailability",
+        "description": "Comentario en el código: GET /api/bands/previews-availability — { [bandId]: true } para las bandas que tienen un preview. Consulta Deezer en paralelo limitado; el resultado va cacheado 24 h en musicPreviewService.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:48",
+        "x-autenticacion": "middleware"
+      }
+    },
     "/api/bands/print-settings": {
       "get": {
         "tags": [
@@ -2077,7 +2182,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:69",
+        "x-source": "server/routes/bandMusic.ts:100",
         "x-autenticacion": "middleware"
       }
     },
@@ -2408,7 +2513,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bandMusic.ts:25",
+        "x-source": "server/routes/bandMusic.ts:28",
         "x-autenticacion": "middleware"
       }
     },
@@ -3685,6 +3790,44 @@
           }
         },
         "x-source": "server/routes/users.ts:2627",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/cron/metricas-mensual": {
+      "post": {
+        "tags": [
+          "bandMusic"
+        ],
+        "operationId": "postApiCronMetricasMensual",
+        "description": "Comentario en el código: POST /api/cron/metricas-mensual — captura de TODAS las bandas (Railway cron, una vez al mes). Protegido por CRON_SECRET (requireCronOrAuth). Los datos de banda vienen de la base, no del cliente.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "cronSecret": []
+          },
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/bandMusic.ts:183",
         "x-autenticacion": "middleware"
       }
     },
