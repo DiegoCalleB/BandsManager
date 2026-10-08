@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { elegirArtistaDeezer, elegirPreview } from '../musicPreview.js';
+import { elegirArtistaDeezer, elegirPreview, elegirPreviews } from '../musicPreview.js';
 
 describe('elegirArtistaDeezer', () => {
   it('exige nombre exacto tras normalizar y prefiere el de más fans', () => {
@@ -31,5 +31,21 @@ describe('elegirPreview', () => {
   it('devuelve null si ningún tema tiene preview', () => {
     expect(elegirPreview([{ title: 'a' }])).toBeNull();
     expect(elegirPreview([])).toBeNull();
+  });
+});
+
+describe('elegirPreviews', () => {
+  it('devuelve todos los temas con preview https, en orden y con límite', () => {
+    const temas = elegirPreviews(
+      [
+        { title: 'a', preview: 'https://c/1.mp3' },
+        { title: 'sin' },
+        { title: 'http', preview: 'http://c/2.mp3' },
+        { title: 'b', preview: 'https://c/3.mp3' },
+      ],
+      10,
+    );
+    expect(temas.map((t) => t.title)).toEqual(['a', 'b']);
+    expect(elegirPreviews([{ title: 'a', preview: 'https://c/1.mp3' }, { title: 'b', preview: 'https://c/2.mp3' }], 1)).toHaveLength(1);
   });
 });

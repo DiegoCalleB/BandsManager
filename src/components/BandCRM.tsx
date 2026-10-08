@@ -9,6 +9,7 @@ import { api, getAuthHeaders } from "../services/api";
 import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandPreviewPlayer, ColaBanda } from "./booking/BandPreviewPlayer";
+import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 import { SpotifySweepModal } from "./bandCRM/SpotifySweepModal";
 import { instagramPerfil } from "../utils/instagramPerfil";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
@@ -274,7 +275,8 @@ export default function BandCRM({
   const [styleFilter, setStyleFilter] = useState<string>("todos");
   const [locationFilter, setLocationFilter] = useState<string>("todos");
   // En móvil las tarjetas se leen sin scroll horizontal; la tabla queda para pantallas anchas.
-  const [reproductor, setReproductor] = useState<{ cola: ColaBanda[]; inicio: number } | null>(null);
+  // `id` cambia en cada pulsación: el reproductor se remonta y una cola nueva siempre arranca.
+  const [reproductor, setReproductor] = useState<{ id: number; cola: ColaBanda[]; inicio: number } | null>(null);
   // Bandas con preview disponible (vacío mientras se consulta: no se muestra ningún ▶ sin comprobar).
   const [disponibles, setDisponibles] = useState<Record<string, boolean>>({});
   const [isSpotifySweepOpen, setIsSpotifySweepOpen] = useState(false);
@@ -952,9 +954,13 @@ export default function BandCRM({
   // Filter logic
   // Escucha: la cola es la lista visible, empezando por la banda pulsada.
   const escuchar = (bandId: string) => {
-    const cola = filteredBands.map((b) => ({ id: b.id, nombre: b.nombre_banda }));
+    const cola = filteredBands.map((b) => ({
+      id: b.id,
+      nombre: b.nombre_banda,
+      spotifyUrl: spotifyArtistUrl(b.spotify_youtube),
+    }));
     const inicio = cola.findIndex((b) => b.id === bandId);
-    if (inicio !== -1) setReproductor({ cola, inicio });
+    if (inicio !== -1) setReproductor({ id: Date.now(), cola, inicio });
   };
 
   const filteredBands = bands.filter((band) => {
@@ -2102,6 +2108,7 @@ ${myBandName}`;
 
       {reproductor && (
         <BandPreviewPlayer
+          key={reproductor.id}
           cola={reproductor.cola}
           inicio={reproductor.inicio}
           onClose={() => setReproductor(null)}

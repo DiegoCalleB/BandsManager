@@ -1,13 +1,19 @@
 // Previews de 30 s de una banda, vía la API pública de Deezer (sin clave).
 // Host fijo: nunca se llama a una URL que venga del usuario.
 
-import { elegirArtistaDeezer, elegirPreview, ArtistaDeezer, TemaDeezer } from "../utils/musicPreview.js";
+import { elegirArtistaDeezer, elegirPreviews, ArtistaDeezer, TemaDeezer } from "../utils/musicPreview.js";
+
+export interface TemaPreview {
+  titulo: string;
+  preview: string;
+  imagen: string;
+}
 
 export interface PreviewBanda {
-  preview: string;
-  cancion: string;
   artista: string;
+  imagen: string;
   fans: number;
+  temas: TemaPreview[];
 }
 
 const TTL_MS = 24 * 60 * 60 * 1000;
@@ -39,9 +45,18 @@ export async function previewDeBanda(nombreBanda: string): Promise<PreviewBanda 
     let valor: PreviewBanda | null = null;
     if (artista) {
       const top = await getJson(`https://api.deezer.com/artist/${artista.id}/top?limit=10`);
-      const tema = elegirPreview((top.data || []) as TemaDeezer[]);
-      if (tema?.preview) {
-        valor = { preview: tema.preview, cancion: tema.title, artista: artista.name, fans: artista.nb_fan || 0 };
+      const temas = elegirPreviews((top.data || []) as TemaDeezer[], 10);
+      if (temas.length > 0) {
+        valor = {
+          artista: artista.name,
+          imagen: artista.picture_big || "",
+          fans: artista.nb_fan || 0,
+          temas: temas.map((t) => ({
+            titulo: t.title,
+            preview: t.preview as string,
+            imagen: t.album?.cover_medium || "",
+          })),
+        };
       }
     }
     cache.set(clave, { valor, expira: Date.now() + TTL_MS });
