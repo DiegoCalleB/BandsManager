@@ -9,6 +9,8 @@ import { api, getAuthHeaders } from "../services/api";
 import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandPreviewPlayer, ColaBanda } from "./booking/BandPreviewPlayer";
+import { spotifyArtistUrl } from "../utils/spotifyEmbed";
+import { BandListenEmbed } from "./booking/BandListenEmbed";
 import { SpotifySweepModal } from "./bandCRM/SpotifySweepModal";
 import { instagramPerfil } from "../utils/instagramPerfil";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
@@ -88,6 +90,22 @@ interface BandCRMProps {
   onNavigate?: (view: any, options?: any) => void;
 }
 
+interface MetricaFuente {
+  seguidores?: number | null;
+  fans?: number | null;
+  suscriptores?: number | null;
+}
+
+interface MetricasBanda {
+  periodo: string;
+  spotify?: MetricaFuente;
+  deezer?: MetricaFuente;
+  youtube?: MetricaFuente;
+}
+
+const formatoCompacto = (n: number) =>
+  new Intl.NumberFormat("es-ES", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+
 export default function BandCRM({
   colors,
   leads = [],
@@ -140,6 +158,44 @@ export default function BandCRM({
       fetchBands();
     }
   }, [currentBandId]);
+
+  const cargarMetricas = () => {
+    apiFetch<{ success: boolean; metricas: Record<string, MetricasBanda> }>("/api/bands/metricas")
+      .then((data) => setMetricas(data.metricas || {}))
+      .catch(() => setMetricas({}));
+  };
+
+  const actualizarMetricas = async () => {
+    setActualizandoMetricas(true);
+    try {
+      await apiFetch("/api/bands/metricas/actualizar", { method: "POST" });
+      cargarMetricas();
+    } catch {
+      alert("No se pudieron actualizar las métricas. Inténtalo más tarde.");
+    } finally {
+      setActualizandoMetricas(false);
+    }
+  };
+
+  useEffect(() => {
+    if (bands.length > 0) cargarMetricas();
+  }, [currentBandId, bands.length]);
+
+  // Qué bandas tienen algo que escuchar: solo ellas muestran el ▶.
+  useEffect(() => {
+    if (bands.length === 0) return;
+    let cancelado = false;
+    apiFetch<{ success: boolean; disponibles: Record<string, boolean> }>("/api/bands/previews-availability")
+      .then((data) => {
+        if (!cancelado) setDisponibles(data.disponibles || {});
+      })
+      .catch(() => {
+        if (!cancelado) setDisponibles({});
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [currentBandId, bands.length]);
 
   // Save changes to localStorage whenever bands state updates
 
@@ -258,7 +314,13 @@ export default function BandCRM({
   const [styleFilter, setStyleFilter] = useState<string>("todos");
   const [locationFilter, setLocationFilter] = useState<string>("todos");
   // En móvil las tarjetas se leen sin scroll horizontal; la tabla queda para pantallas anchas.
-  const [reproductor, setReproductor] = useState<{ cola: ColaBanda[]; inicio: number } | null>(null);
+  // `id` cambia en cada pulsación: el reproductor se remonta y una cola nueva siempre arranca.
+  const [reproductor, setReproductor] = useState<{ id: number; cola: ColaBanda[]; inicio: number } | null>(null);
+  // Bandas con preview disponible (vacío mientras se consulta: no se muestra ningún ▶ sin comprobar).
+  const [disponibles, setDisponibles] = useState<Record<string, boolean>>({});
+  // Último periodo de métricas por banda (seguidores, fans, suscriptores).
+  const [metricas, setMetricas] = useState<Record<string, MetricasBanda>>({});
+  const [actualizandoMetricas, setActualizandoMetricas] = useState(false);
   const [isSpotifySweepOpen, setIsSpotifySweepOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "table" | "map">(() =>
     typeof window !== "undefined" && window.innerWidth < 640 ? "grid" : "table",
@@ -934,9 +996,13 @@ export default function BandCRM({
   // Filter logic
   // Escucha: la cola es la lista visible, empezando por la banda pulsada.
   const escuchar = (bandId: string) => {
-    const cola = filteredBands.map((b) => ({ id: b.id, nombre: b.nombre_banda }));
+    const cola = filteredBands.map((b) => ({
+      id: b.id,
+      nombre: b.nombre_banda,
+      spotifyUrl: spotifyArtistUrl(b.spotify_youtube),
+    }));
     const inicio = cola.findIndex((b) => b.id === bandId);
-    if (inicio !== -1) setReproductor({ cola, inicio });
+    if (inicio !== -1) setReproductor({ id: Date.now(), cola, inicio });
   };
 
   const filteredBands = bands.filter((band) => {
@@ -1157,6 +1223,19 @@ ${myBandName}`;
           >
             <Sparkles className="w-3.5 h-3.5 text-[var(--acc)] shrink-0" />
             <span>Scout IA</span>
+          </Button>
+
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            onClick={actualizarMetricas}
+            disabled={actualizandoMetricas}
+            className="items-center gap-1.5 max-sm:hidden"
+            title="Actualizar seguidores, fans y suscriptores de todas las bandas (se hace solo cada mes)"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0 ${actualizandoMetricas ? "animate-spin" : ""}`} />
+            <span>{actualizandoMetricas ? "Actualizando…" : "Métricas"}</span>
           </Button>
 
           <Button
@@ -1677,6 +1756,21 @@ ${myBandName}`;
                       )}
                     </div>
 
+                    {metricas[band.id] && (
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-micro text-[var(--ink-2)] font-sans">
+                          {metricas[band.id].spotify?.seguidores != null && (
+                            <span title="Seguidores en Spotify">Spotify {formatoCompacto(metricas[band.id].spotify!.seguidores!)}</span>
+                          )}
+                          {metricas[band.id].youtube?.suscriptores != null && (
+                            <span title="Suscriptores en YouTube">YouTube {formatoCompacto(metricas[band.id].youtube!.suscriptores!)}</span>
+                          )}
+                          {metricas[band.id].deezer?.fans != null && (
+                            <span title="Fans en Deezer">Deezer {formatoCompacto(metricas[band.id].deezer!.fans!)}</span>
+                          )}
+                          <span className="text-[var(--ink-2)]">· {metricas[band.id].periodo}</span>
+                        </div>
+                      )}
+
                     {/* Card Footer Actions */}
                     <div className="pt-3 space-y-3">
                       {/* Social Links & Last Contact */}
@@ -1704,19 +1798,24 @@ ${myBandName}`;
                         </span>
                       </div>
 
-                      {/* Escuchar: preview de 30 s en el reproductor de la app */}
+                      {/* Escuchar: preview de 30 s en el reproductor de la app (solo si hay preview) */}
+                      {disponibles[band.id] && (
                       <div>
-                        <Button
-                          variant="ghost"
-                          size="xs"
-                          onClick={() => escuchar(band.id)}
-                          className="gap-1.5 text-[var(--acc-ink)]"
-                          title={`Escuchar a ${band.nombre_banda} (preview de 30 s)`}
-                        >
-                          <Play className="w-3.5 h-3.5" />
-                          <span>Escuchar</span>
-                        </Button>
-                      </div>
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            onClick={() => escuchar(band.id)}
+                            className="gap-1.5 text-[var(--acc-ink)]"
+                            title={`Escuchar a ${band.nombre_banda} (preview de 30 s)`}
+                          >
+                            <Play className="w-3.5 h-3.5" />
+                            <span>Escuchar</span>
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Canción completa en el embed de Spotify (solo enlaces verificados) */}
+                      <BandListenEmbed spotifyUrl={band.spotify_youtube} bandName={band.nombre_banda} />
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
@@ -1799,6 +1898,7 @@ ${myBandName}`;
                         )}
                       </button>
                     </th>
+                    <th className="py-2.5 px-1 w-8" aria-label="Escuchar" />
                     <th className="py-2.5 px-3 whitespace-nowrap min-w-[170px]">
                       Banda / artista
                     </th>
@@ -1853,6 +1953,21 @@ ${myBandName}`;
                               <Square className="w-4 h-4 text-[var(--ink-2)] hover:text-[var(--ink-2)]" />
                             )}
                           </button>
+                        </td>
+
+                        <td
+                          className="py-2 px-1 w-8 text-center align-middle"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {disponibles[band.id] && (
+                            <IconButton
+                              label={`Escuchar a ${band.nombre_banda}`}
+                              size="icon-xs"
+                              onClick={() => escuchar(band.id)}
+                            >
+                              <Play className="w-3.5 h-3.5 text-[var(--acc-ink)]" />
+                            </IconButton>
+                          )}
                         </td>
                         <td className="py-2 px-3 font-bold text-[var(--ink)] align-middle whitespace-nowrap">
                           <div className="flex items-center gap-2 min-w-0">
@@ -1947,13 +2062,6 @@ ${myBandName}`;
                               <Repeat className="w-3 h-3 text-[var(--ink-2)]" />
                               <span>Pitch</span>
                             </Button>
-
-                            <IconButton
-                              label={`Escuchar a ${band.nombre_banda}`}
-                              onClick={() => escuchar(band.id)}
-                            >
-                              <Play className="w-3.5 h-3.5" />
-                            </IconButton>
 
                             <IconButton
                               label="Editar"
@@ -2073,6 +2181,7 @@ ${myBandName}`;
 
       {reproductor && (
         <BandPreviewPlayer
+          key={reproductor.id}
           cola={reproductor.cola}
           inicio={reproductor.inicio}
           onClose={() => setReproductor(null)}
