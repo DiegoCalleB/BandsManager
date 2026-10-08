@@ -35,14 +35,26 @@ import { pistasDeIdeas } from "../../src/utils/irisTracks.js";
  * (~23ms de resolución), que ya no está pegado a esa rejilla.
  */
 /**
- * Valor de songs.pistas al guardar: espejo de los stems de la idea de Iris. Vacío y sin columna
- * en la fila (nueva, o antes de migrar) → undefined, para no enviar una columna que no existe.
+ * Valor de songs.pistas al guardar. Los stems son de la canción: mientras las escrituras del
+ * cliente migran, manda el espejo de la idea de Iris; sin ella vale lo que llegue en `pistas`
+ * (un `[]` explícito los borra) y, si no llega nada, se conserva lo que ya había (borrar la idea
+ * ya no vacía la canción). Vacío y sin columna en la fila (nueva, o antes de migrar) → undefined,
+ * para no enviar una columna que no existe.
  */
-export function pistasParaGuardar(incomingIdeas: any[] | undefined, existing: any): any[] | undefined {
-  if (!Array.isArray(incomingIdeas)) return undefined;
-  const pistas = pistasDeIdeas(incomingIdeas);
-  if (pistas.length === 0 && !(existing && "pistas" in existing)) return undefined;
-  return pistas;
+export function pistasParaGuardar(
+  incomingIdeas: any[] | undefined,
+  existing: any,
+  incomingPistas?: any[] | null,
+): any[] | undefined {
+  const deIdeas = Array.isArray(incomingIdeas) ? pistasDeIdeas(incomingIdeas) : [];
+  let propias: any[] | undefined;
+  if (deIdeas.length > 0) propias = deIdeas;
+  else if (Array.isArray(incomingPistas)) propias = incomingPistas;
+  else if (Array.isArray(existing?.pistas)) propias = existing.pistas;
+  else if (Array.isArray(incomingIdeas)) propias = [];
+  if (propias === undefined) return undefined;
+  if (propias.length === 0 && !(existing && "pistas" in existing)) return undefined;
+  return propias;
 }
 
 export async function analizarYGuardarDinamicaCancion(
@@ -790,6 +802,8 @@ export async function dbUpsertSong(
     }
   }
 
+  const pistasFinal = pistasParaGuardar(incomingIdeas, existing, song.pistas);
+
   const payload: any = {
     id:
       finalSongId ||
@@ -877,11 +891,8 @@ export async function dbUpsertSong(
     // Solo se envía si hay valor (del payload o rescatado): sin migración ejecutada no hay
     // valor y la columna no aparece, así que un guardado cualquiera no falla.
     ...(analisisAcordesFinal !== undefined ? { analisis_acordes: analisisAcordesFinal } : {}),
-    // songs.pistas espeja los stems de la idea de Iris en cada guardado (la migración rellena el
-    // histórico). Sin ideas en el payload no se toca; sin columna (antes de migrar) no se envía.
-    ...(pistasParaGuardar(incomingIdeas, existing) !== undefined
-      ? { pistas: pistasParaGuardar(incomingIdeas, existing) }
-      : {}),
+    // songs.pistas: stems de la canción (ver pistasParaGuardar). Sin columna (antes de migrar) no se envía.
+    ...(pistasFinal !== undefined ? { pistas: pistasFinal } : {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
       song.enlace_acordes,

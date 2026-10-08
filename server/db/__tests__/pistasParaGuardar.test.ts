@@ -14,7 +14,15 @@ describe('pistasParaGuardar', () => {
     expect(pistasParaGuardar([{ id: 'a', audioUrl: 'u' }], null)).toBeUndefined();
     expect(pistasParaGuardar([], { id: 's1' })).toBeUndefined();
   });
-  it('si la columna ya existe y la idea de Iris se borró, la vacía', () => {
-    expect(pistasParaGuardar([], { id: 's1', pistas: stems })).toEqual([]);
+  it('si la idea de Iris se borró, la canción conserva sus stems', () => {
+    expect(pistasParaGuardar([], { id: 's1', pistas: stems })).toEqual(stems);
+  });
+  it('sin idea de Iris vale lo que llega en song.pistas, y un [] explícito los borra', () => {
+    expect(pistasParaGuardar([], { id: 's1', pistas: [] }, stems)).toEqual(stems);
+    expect(pistasParaGuardar([], { id: 's1', pistas: stems }, [])).toEqual([]);
+  });
+  it('si la idea trae stems manda el espejo de la idea', () => {
+    const nuevos = [{ id: 'p9', nombre: 'Batería', audioUrl: 'd' }, ...stems];
+    expect(pistasParaGuardar([{ id: 'a', audioUrl: 'u', pistas: nuevos }], { id: 's1', pistas: stems }, stems)).toEqual(nuevos);
   });
 });

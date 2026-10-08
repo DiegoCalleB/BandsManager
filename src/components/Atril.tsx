@@ -63,7 +63,7 @@ import { useTonoAudio } from "../hooks/useTonoAudio";
 import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
 import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
-import { getSongIrisStemIdea, pistasDeCancion } from "../utils/irisTracks";
+import { getSongIrisStemIdea, pistasDeCancion, cancionConIdeas } from "../utils/irisTracks";
 import { IrisStudio } from "./chords/IrisStudio";
 import { useSeparacionIris } from "../hooks/useSeparacionIris";
 import { ideaParaSeparar, type MotorIris } from "../utils/separacionIris";
@@ -228,7 +228,7 @@ export function Atril({
         sobrePistas: (pistasSonando.length > 0 ? pistasSonando : stems).map((p) => p.id),
         offsetSegundos: grabacion.offset,
       });
-      onUpdateSong({ ...song, audioIdeas: [...(song.audioIdeas || []), idea] });
+      onUpdateSong(cancionConIdeas(song, [...(song.audioIdeas || []), idea]));
       grabacion.descartar();
       setAiSuccessMsg("🎙️ Idea guardada en la canción.");
       setTimeout(() => setAiSuccessMsg(null), 4000);

@@ -256,6 +256,6 @@ describe('cancionConSeparacion', () => {
   it('conserva el resto de campos de la canción', () => {
     const s = cancionConSeparacion({ id: 's1', bpm: 120 } as never, []) as { bpm: number; pistas: AudioTrack[] };
     expect(s.bpm).toBe(120);
-    expect(s.pistas).toEqual([]);
+    expect(s.pistas).toBeUndefined();
   });
 });
