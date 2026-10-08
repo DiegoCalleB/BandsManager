@@ -1,0 +1,8 @@
+[
+  {
+    "file": "server/audit/__tests__/schemaContract.test.ts",
+    "test": "el esquema del repo se carga entero",
+    "motivo": "La migración 20261013_security_hardening_functions.sql hace ALTER FUNCTION sobre trg_fn_archive_deleted_lead() y trg_fn_archive_deleted_band(), que existen en producción pero no en ninguna migración del repo, y referencia el rol anon, ausente en la base de pruebas. Ya fallaba en main antes de este fichero.",
+    "desde": "2026-10-08"
+  }
+]
