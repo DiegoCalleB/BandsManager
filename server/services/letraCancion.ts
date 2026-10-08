@@ -10,6 +10,7 @@ import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from 
 import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
 import { iniciarProgreso, avanzarProgreso, terminarProgreso } from "../utils/progresoOido.js";
 import { analisisAcordesEnCurso } from "../utils/bloqueoOido.js";
+import { pistasDeCancion } from "../../src/utils/irisTracks.js";
 import { getAudioSnippetPath } from "../routes/concert_to_album.js";
 import { dbGetSongs, dbUpsertSong } from "../db.js";
 
@@ -64,9 +65,8 @@ async function transcribirYGuardar(
   }
 
   avanzarProgreso(clave, "voz", "Buscando la pista de voz aislada (si no hay, se usa la mezcla)…");
-  const urlVoz = (song.audioIdeas ?? [])
-    .flatMap((i: any) => i.pistas ?? [])
-    .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+  const urlVoz = pistasDeCancion(song as any)
+      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
   const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
   const urlLetra: string | undefined = urlVoz || urlMezcla;
   if (!urlLetra) {

@@ -10,6 +10,7 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 // Más de ~3 minutos de audio no mejora la transcripción y sí el coste, el tamaño y el timeout.
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
+import { pistasDeCancion } from "../../src/utils/irisTracks.js";
 import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
 import { ejecutarLetraSincronizada } from "../services/letraCancion.js";
@@ -573,8 +574,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     // Audio de la mezcla (acordes y estructura) y, si Iris separó la voz, pista de voz aislada
     // (la letra se oye mucho mejor sin guitarras ni batería).
-    const urlVoz = (cancion?.audioIdeas ?? [])
-      .flatMap((i: any) => i.pistas ?? [])
+    const urlVoz = pistasDeCancion(cancion as any)
       .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
     const [snippetMezcla, snippetVoz] = await Promise.all([
       audioUrl ? getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,

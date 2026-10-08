@@ -15,7 +15,7 @@ import {
 } from "../utils/audioKey.js";
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
-import { pistasDeIdeas } from "../../src/utils/irisTracks.js";
+import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -55,6 +55,22 @@ export function pistasParaGuardar(
   if (propias === undefined) return undefined;
   if (propias.length === 0 && !(existing && "pistas" in existing)) return undefined;
   return propias;
+}
+
+/**
+ * Valor de songs.stems_meta al guardar (misma lógica que pistasParaGuardar): manda el espejo de
+ * la idea de Iris; si no, lo que llegue; si no, lo ya guardado. Sin valor → undefined (no se envía).
+ */
+export function stemsMetaParaGuardar(
+  incomingIdeas: any[] | undefined,
+  existing: any,
+  incomingMeta?: any,
+): Record<string, unknown> | undefined {
+  const deIdeas = Array.isArray(incomingIdeas) ? metaStemsDeIdeas(incomingIdeas) : undefined;
+  if (deIdeas) return deIdeas as Record<string, unknown>;
+  if (incomingMeta && typeof incomingMeta === "object") return incomingMeta;
+  if (existing?.stems_meta && typeof existing.stems_meta === "object") return existing.stems_meta;
+  return undefined;
 }
 
 export async function analizarYGuardarDinamicaCancion(
@@ -605,6 +621,7 @@ export function mapSongRecord(s: any) {
     guia_sustituto: s.guia_sustituto || s.guiaSustituto || {},
     // Igual que analisis_acordes: solo si existe (la columna llega con la migración).
     ...(Array.isArray(s.pistas) ? { pistas: s.pistas } : {}),
+    ...(s.stems_meta && typeof s.stems_meta === "object" ? { stemsMeta: s.stems_meta } : {}),
     // Solo si existe: la columna se crea con una migración y antes de ella no debe aparecer.
     ...((s.analisis_acordes || s.analisisAcordes)
       ? { analisisAcordes: s.analisis_acordes || s.analisisAcordes, analisis_acordes: s.analisis_acordes || s.analisisAcordes }
@@ -803,6 +820,7 @@ export async function dbUpsertSong(
   }
 
   const pistasFinal = pistasParaGuardar(incomingIdeas, existing, song.pistas);
+  const stemsMetaFinal = stemsMetaParaGuardar(incomingIdeas, existing, song.stemsMeta);
 
   const payload: any = {
     id:
@@ -893,6 +911,7 @@ export async function dbUpsertSong(
     ...(analisisAcordesFinal !== undefined ? { analisis_acordes: analisisAcordesFinal } : {}),
     // songs.pistas: stems de la canción (ver pistasParaGuardar). Sin columna (antes de migrar) no se envía.
     ...(pistasFinal !== undefined ? { pistas: pistasFinal } : {}),
+    ...(stemsMetaFinal !== undefined ? { stems_meta: stemsMetaFinal } : {}),
     enlace_acordes: preferClearableString(
       song.enlaceAcordes,
       song.enlace_acordes,

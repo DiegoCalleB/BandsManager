@@ -1123,6 +1123,14 @@ export interface AudioComment {
   fecha: string;
 }
 
+/** Cómo se separaron los stems de una canción (columna songs.stems_meta). */
+export interface StemsMeta {
+  motor?: string;
+  neural?: boolean;
+  degradado?: boolean;
+  procesadoEn?: string;
+}
+
 export interface AudioTrack {
   id: string;
   nombre: string;
@@ -1301,8 +1309,10 @@ export interface Song {
   audioPrincipalUrl?: string; // Demo / Master audio file
   audioUrl?: string; // Alias for audioPrincipalUrl for legacy/sample playback
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
-  /** Stems de la canción (columna songs.pistas). Hoy el servidor la rellena espejando la idea de Iris. */
+  /** Stems de la canción (columna songs.pistas): la app los lee de aquí; la idea de Iris sigue espejándolos hasta la limpieza. */
   pistas?: AudioTrack[];
+  /** Motor y fecha de la separación de `pistas` (columna songs.stems_meta). */
+  stemsMeta?: StemsMeta;
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
   analisisAcordes?: AnalisisAcordes; // Acordes con tiempos detectados del audio (Chordify propio)
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
