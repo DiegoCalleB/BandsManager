@@ -1284,6 +1284,7 @@ export default function SongStudioModal({
   const filteredIdeas = irisPrimero(
     activeSectionFilter === 'todas' ? ideasList : ideasList.filter((i) => i.seccion === activeSectionFilter)
   );
+  const tomas = filteredIdeas.filter((i) => !esIdeaIris(i));
   const metaStems = metaStemsDeCancion(song);
   const irisIdea = getSongIrisStemIdea(song);
   // Audio de partida para separar: la primera toma con audio, o el audio principal de la canción
@@ -2978,749 +2979,8 @@ export default function SongStudioModal({
     });
   };
 
-  return (
-    <ModalPortal isOpen={true} onClose={onClose}>
-      <div
-        className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
-          isFullScreen ? 'p-0' : 'p-2 sm:p-4'
-        }`}
-      >
-        {countInCountdown !== null && (
-          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold px-6 py-3 rounded-[var(--r-l)] flex items-center gap-3">
-            <span className="text-2xl"><ShowIcon inline emoji="🥁" /></span>
-            <div className="text-sm">
-              <div>PREPARANDO GRABACIÓN MULTIPISTA…</div>
-              <div className="text-xs opacity-80 font-bold">Arranca en: ¡{countInCountdown}!</div>
-            </div>
-            <span className="text-3xl font-black ml-2 bg-[var(--sunken)] text-[var(--acc)] px-3.5 py-1 rounded-[var(--r-m)]">
-              {countInCountdown}
-            </span>
-          </div>
-        )}
-        <div
-          className={`w-full ${
-            isFullScreen
-              ? 'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none'
-              : 'max-w-4xl rounded-[var(--r-l)] overflow-hidden my-auto max-h-[92vh]'
-          } flex flex-col ${'bg-[var(--surface)] text-[var(--ink-2)]'}`}
-        >
-          {/* Header Bar */}
-          <div className="p-2.5 sm:p-5 flex items-center justify-between bg-[var(--ink)]/5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--on-acc)]">
-                <Disc className="w-5 h-5 animate-spin-slow" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2
-                    className="text-xl font-bold tracking-tight text-[var(--ink)]"
-                    title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
-                  >
-                    {formatSongTitle(song.titulo)}
-                  </h2>
-                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-semibold">
-                    {song.estadoTema || 'componiendo'}
-                  </span>
-                  {song.favoritoGeneral && (
-                    <span className="text-[var(--acc)]" title="Tema favorito">
-                      <Sparkles className="w-3.5 h-3.5 fill-[var(--acc)]" />
-                    </span>
-                  )}
-
-                  {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
- es un estado global (ya existe song.estadoTema para eso). Sirve para que quien
- lleva la banda vea de un vistazo quién necesita repasar antes del bolo.
- En móvil se oculta de la cabecera y vive dentro de Herramientas. */}
-                  {(() => {
-                    const myKey = currentUser?.id || currentUser?.username;
-                    const myName = currentUser?.name || currentUser?.username || currentUsername;
-                    const myReadiness = getMemberReadiness(song, myKey, myName);
-                    const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
-                    return (
-                      <select data-raw
-                        value={myReadiness || ''}
-                        onChange={(e) => {
-                          const val = e.target.value as ReadinessLevel;
-                          if (!val) return;
-                          onUpdateSong({
-                            ...song,
-                            notasPorMiembro: withMemberReadiness(song, myKey, myName, val),
-                          });
-                        }}
-                        title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
-                        className={`hidden sm:inline-block px-2.5 py-1 rounded-[var(--r-m)] text-xs font-sans font-bold cursor-pointer outline-none ${
-                          levelInfo ? levelInfo.colorClass : 'bg-[var(--ink)]/5 text-[var(--ink-2)]'
-                        }`}
-                      >
-                        <option value="" disabled>
-                          Mi preparación…
-                        </option>
-                        {READINESS_LEVELS.map((l) => (
-                          <option key={l.value} value={l.value}>
-                            <ShowIcon inline emoji={l.icon} /> {l.label}
-                          </option>
-                        ))}
-                      </select>
-                    );
-                  })()}
-
-                  {/* Menú Desplegable de Herramientas Secundarias */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowToolsMenu((prev) => !prev)}
-                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]"
-                      title="Herramientas y opciones del Estudio"
-                    >
-                      <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                      <span>Herramientas <ShowIcon inline emoji="⚙️" /></span>
-                    </button>
-
-                    {showToolsMenu && (
-                      <PopoverAncla className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
-                        <MenuItem
-                          tone="acc"
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            onUpdateSong({
-                              ...song,
-                              favoritoGeneral: !song.favoritoGeneral,
-                            });
-                          }}
-                        >
-                          <Sparkles className={`w-4 h-4 text-[var(--acc)] ${song.favoritoGeneral ? 'fill-[var(--acc)]' : ''}`} />
-                          {song.favoritoGeneral ? 'Quitar de Favoritos' : 'Marcar como Favorito'}
-                        </MenuItem>
-                        {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
-                        <div className="sm:hidden px-1 pb-1">
-                          {(() => {
-                            const myKey = currentUser?.id || currentUser?.username;
-                            const myName = currentUser?.name || currentUser?.username || currentUsername;
-                            const myReadiness = getMemberReadiness(song, myKey, myName);
-                            const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
-                            return (
-                              <Select
-                                size="sm"
-                                value={myReadiness || ''}
-                                onChange={(e) => {
-                                  const val = e.target.value as ReadinessLevel;
-                                  if (!val) return;
-                                  onUpdateSong({
-                                    ...song,
-                                    notasPorMiembro: withMemberReadiness(song, myKey, myName, val),
-                                  });
-                                }}
-                                title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
-                                wrapperClassName="w-full"
-                              >
-                                <option value="" disabled>
-                                  Mi preparación…
-                                </option>
-                                {READINESS_LEVELS.map((l) => (
-                                  <option key={l.value} value={l.value}>
-                                    <ShowIcon inline emoji={l.icon} /> {l.label}
-                                  </option>
-                                ))}
-                              </Select>
-                            );
-                          })()}
-                        </div>
-                        <MenuItem
-                          tone="acc"
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            setShowChordsModal(true);
-                          }}
-                        >
-                          <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes y Partitura
-                        </MenuItem>
-                        <MenuItem
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            setShowAiComposerModal(true);
-                          }}
-                        >
-                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Arreglos IA (músico virtual)
-                        </MenuItem>
-                        <MenuItem
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            setShowAiMusicModal(true);
-                          }}
-                        >
-                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Soundtrack IA (Lyria)
-                        </MenuItem>
-                        <MenuItem
-                          tone="muted"
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            setShowCubaseHelp(true);
-                          }}
-                        >
-                          <Keyboard className="w-4 h-4 text-[var(--ink-2)]" /> Atajos teclado (Cubase)
-                        </MenuItem>
-                        <MenuItem
-                          tone="muted"
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            openTutorial();
-                          }}
-                        >
-                          <Info className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
-                        </MenuItem>
-                        <MenuItem
-                          tone="muted"
-                          dense
-                          type="button"
-                          onClick={() => {
-                            setShowToolsMenu(false);
-                            handleShareSong();
-                          }}
-                        >
-                          <MessageSquare className="w-4 h-4 text-[var(--ok)]" /> Compartir tema por WhatsApp
-                        </MenuItem>
-                      </PopoverAncla>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {/* Volumen master de salida — control personal de escucha, no se guarda en la canción */}
-              <div
-                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5"
-                title="Volumen master de salida (solo tu escucha, no afecta a la mezcla de la banda)"
-              >
-                <button
-                  type="button"
-                  onClick={() => setMasterVolume((v) => (v > 0 ? 0 : 1))}
-                  className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer shrink-0"
-                >
-                  {masterVolume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                </button>
-                <input
-                  type="range"
-                  min={0}
-                  max={1.5}
-                  step={0.01}
-                  value={masterVolume}
-                  onChange={(e) => setMasterVolume(Number(e.target.value))}
-                  className="w-20 accent-amber-500"
-                />
-                <span className="text-micro font-sans text-[var(--ink-2)] w-8 text-right">{Math.round(masterVolume * 100)}%</span>
-              </div>
-
-              <button
-                type="button"
-                onClick={toggleIsFullScreen}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
-                  isFullScreen
-                    ? 'bg-[var(--ink)] text-[var(--bg)] font-bold hover:bg-[var(--acc)]/60'
-                    : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'
-                }`}
-                title={isFullScreen ? 'Salir de Pantalla Completa' : 'Poner Modo Studio en Pantalla Completa'}
-              >
-                {isFullScreen ? (
-                  <>
-                    <Minimize2 className="w-4 h-4 text-[var(--acc-ink)]" />
-                    <span className="hidden sm:inline">Salir pantalla completa</span>
-                  </>
-                ) : (
-                  <>
-                    <Maximize2 className="w-4 h-4 text-[var(--acc)]" />
-                    <span className="hidden sm:inline">Pantalla completa HD</span>
-                  </>
-                )}
-              </button>
-
-              <IconButton
-                label="Cerrar"
-                type="button"
-                onClick={onClose}
-              >
-                <X className="w-5 h-5" />
-              </IconButton>
-            </div>
-          </div>
-
-          {/* Content Body */}
-          <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
-            {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
- y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
-            {/* Iris es de la canción, no de una toma: separar y ver el estado vive aquí, fuera de Ideas */}
-            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--acc-soft)] rounded-[var(--r-l)] flex-wrap">
-              <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
-                <Cpu className="w-4 h-4" /> Iris · pistas de la canción
-                {irisIdea && metaStems?.motor && (
-                  <span className="font-semibold text-[var(--ink-2)]">
-                    {' '}
-                    · {metaStems.motor.split('(')[0].trim()}
-                    {metaStems.degradado ? ' (degradado)' : ''}
-                  </span>
-                )}
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowMoisesStemsModal(irisIdea ?? fuenteIris)}
-                disabled={isSeparatingStemsAi || !fuenteIris}
-                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-110 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
-                title="Elegir pistas y motor (Iris Studio, Iris Cloud o Iris Básico)"
-              >
-                <Sliders className="w-3.5 h-3.5" />
-                <span>{isSeparatingStemsAi ? 'Separando...' : irisIdea ? 'Volver a separar' : 'Separar con Iris'}</span>
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
-              <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
-                <Music className="w-4 h-4 text-[var(--tentative)]" /> Ideas y grabaciones
-              </span>
-
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => setShowAddIdea(true)}
-                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-110 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui"
-              >
-                <Plus className="w-4 h-4" />
-                <span>+ Grabar / subir idea</span>
-              </motion.button>
-            </div>
-
-            {/* Add New Audio Idea Form */}
-            <AnimatePresence>
-              {showAddIdea && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0, y: -10 }}
-                  animate={{ opacity: 1, height: 'auto', y: 0 }}
-                  exit={{ opacity: 0, height: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="overflow-hidden"
-                >
-                  <div className="p-5 rounded-[var(--r-l)] bg-[var(--ok-soft)] space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
-                        <Mic className="w-4 h-4 text-[var(--ok)]" /> Aportar idea o arreglo de audio
-                      </h4>
-                      <IconButton label="Cerrar" type="button" onClick={() => setShowAddIdea(false)}>
-                        <X className="w-4 h-4" />
-                      </IconButton>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Título de la idea / arreglo *</label>
-                        <Input
-                          size="sm"
-                          type="text"
-                          value={ideaTitle}
-                          onChange={(e) => setIdeaTitle(e.target.value)}
-                          placeholder="Ej: Riff Estribillo / Arreglo Vientos / Base Acústica"
-                          className="w-full"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Sección del tema *</label>
-                        <Select size="sm" aria-label="Sección del tema"
-                          value={ideaSection}
-                          onChange={(e) => setIdeaSection(e.target.value as any)}
-                          wrapperClassName="w-full"
-                        >
-                          {SECCIONES_TEMA.map((sec) => (
-                            <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
-                              {sec.icon} {sec.label}
-                            </option>
-                          ))}
-                        </Select>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Aportado por (Tu nombre)</label>
-                        <Input size="sm" aria-label="Aportado por (Tu nombre)"
-                          type="text"
-                          value={ideaUploader}
-                          onChange={(e) => setIdeaUploader(e.target.value)}
-                          className="w-full"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Instrumento / rol (Opcional)</label>
-                        <Input
-                          size="sm"
-                          type="text"
-                          value={ideaInstrument}
-                          onChange={(e) => setIdeaInstrument(e.target.value)}
-                          placeholder="Ej: Guitarra, Trompeta, Batería, Voz"
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Source Selector */}
-                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
-                      <span className="text-xs font-sans font-bold text-[var(--ink-2)] block">
-                        Fuente de Audio Principal / Base Rítmica:
-                      </span>
-
-                      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 [&>*]:min-w-0">
-                        {/* Option 1: Tema Base Original */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const next = !useSongBaseTrack;
-                            setUseSongBaseTrack(next);
-                            if (next && !selectedSongBaseUrl) {
-                              setSelectedSongBaseUrl(song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || '');
-                            }
-                          }}
-                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
-                            useSongBaseTrack
-                              ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-[var(--acc)]/60'
-                              : 'bg-[var(--acc-soft)]/50 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]'
-                          }`}
-                        >
-                          <Disc className={`w-5 h-5 text-[var(--acc)] ${useSongBaseTrack ? 'animate-spin-slow' : ''}`} />
-                          <span className="text-xs font-bold text-center">Tema original</span>
-                          <span className="text-micro text-[var(--acc)]/70 text-center font-sans">
-                            {useSongBaseTrack ? '✓ Base Cargada' : `Usar "${song.titulo}"`}
-                          </span>
-                        </button>
-
-                        {/* Option 2: File Upload */}
-                        <label className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui">
-                          <Upload className="w-5 h-5 text-[var(--ok)]" />
-                          <span className="text-xs font-semibold text-[var(--ink)] text-center w-full truncate" title={selectedAudioFile?.name}>
-                            {selectedAudioFile ? selectedAudioFile.name : 'Subir Archivo'}
-                          </span>
-                          <span className="text-micro text-[var(--ink-2)]">MP3, WAV, M4A</span>
-                          <input
-                            type="file"
-                            accept="audio/*"
-                            className="hidden"
-                            onChange={(e) => {
-                              if (e.target.files && e.target.files[0]) {
-                                setSelectedAudioFile(e.target.files[0]);
-                                setRecordedAudioUrl(null);
-                                setDriveAudioUrl('');
-                              }
-                            }}
-                          />
-                        </label>
-
-                        {/* Mic Recording */}
-                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col items-center justify-center gap-2">
-                          {!isRecording ? (
-                            <Button
-                              variant="danger"
-                              size="xs"
-                              type="button"
-                              onClick={startRecording}
-                              className="items-center gap-1.5 w-full justify-center whitespace-nowrap"
-                            >
-                              <Mic className="w-3.5 h-3.5 shrink-0" /> Grabar micro
-                            </Button>
-                          ) : (
-                            <div className="w-full space-y-2">
-                              <button
-                                type="button"
-                                onClick={stopRecording}
-                                className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap"
-                              >
-                                <ShowIcon inline emoji="⏹️" />Detener ({formatTime(recordingTime)})
-                              </button>
-                              <div className="w-full h-11 relative rounded overflow-hidden">
-                                <LiveMicWaveformCanvas
-                                  stream={activeRecordingStream}
-                                  audioCtx={studioAudioCtxRef.current}
-                                  isRecording={isRecording}
-                                  color="#f43f5e"
-                                  height={44}
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {recordedAudioUrl && (
-                            <span className="text-micro text-[var(--ok)] font-sans font-bold text-center">✓ Grabación lista</span>
-                          )}
-                        </div>
-
-                        {/* Drive Link */}
-                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col justify-center gap-1">
-                          <span className="text-micro font-sans font-bold text-[var(--acc)]/70 flex items-center gap-1 min-w-0">
-                            <Music className="w-3 h-3 text-[var(--acc)] shrink-0" /> <span className="truncate">Enlace Google Drive:</span>
-                          </span>
-                          <Input
-                            size="sm"
-                            type="text"
-                            value={driveAudioUrl}
-                            onChange={(e) => {
-                              setDriveAudioUrl(e.target.value);
-                              setSelectedAudioFile(null);
-                              setRecordedAudioUrl(null);
-                            }}
-                            placeholder="https://drive.google.com/…"
-                            className="w-full"
-                          />
-                        </div>
-
-                        {/* AI Base Generator Card */}
-                        <button
-                          type="button"
-                          onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
-                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
-                            genAiOnNewIdea
-                              ? 'bg-[var(--tentative)]/15 text-[var(--tentative)] ring-1 ring-[var(--tentative)]/50'
-                              : 'bg-[var(--tentative)]/5 text-[var(--ink)] hover:bg-[var(--tentative)]/10'
-                          }`}
-                        >
-                          <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
-                          <span className="text-xs font-bold text-center">Base IA (Batería + bajo)</span>
-                          <span className="text-micro text-[var(--tentative)]/80 text-center font-sans">
-                            {genAiOnNewIdea ? '✓ Activado' : 'Generar Sintética'}
-                          </span>
-                        </button>
-                      </div>
-
-                      {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
-                      {useSongBaseTrack && (
-                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--ink)] animate-in fade-in duration-150">
-                          <div className="flex items-center gap-2.5">
-                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
-                              <Disc className="w-5 h-5 animate-spin-slow" />
-                            </div>
-                            <div>
-                              <span className="font-bold text-[var(--ink)] block text-sm">Pista base creada sobre: "{song.titulo}"</span>
-                              <span className="text-micro text-[var(--acc)]/70 block mt-0.5 font-sans">
-                                {selectedAudioFile || recordedAudioUrl || driveAudioUrl
-                                  ? 'Se cargará el tema original como Pista Base de fondo para sonar sincronizado junto a tu idea/grabación.'
-                                  : 'Se cargará la pista original en la idea para que puedas usar el botón "+ Pista" o "Grabar encima (Mic)" e improvisar sobre el tema.'}
-                              </span>
-                            </div>
-                          </div>
-
-                          {((song.audioIdeas && song.audioIdeas.length > 0) || song.audioPrincipalUrl) && (
-                            <div className="flex items-center gap-2 min-w-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto sm:max-w-[60%]">
-                              <span className="text-micro text-[var(--acc)] font-bold shrink-0 whitespace-nowrap">Seleccionar Maqueta:</span>
-                              <Select
-                                size="sm"
-                                value={selectedSongBaseUrl}
-                                onChange={(e) => setSelectedSongBaseUrl(e.target.value)}
-                                wrapperClassName="flex-1 min-w-0"
-                              >
-                                {song.audioPrincipalUrl && <option value={song.audioPrincipalUrl}>Tema Original ({song.titulo})</option>}
-                                {song.audioIdeas?.map((idItem) => (
-                                  <option key={idItem.id} value={idItem.audioUrl}>
-                                    Idea: {idItem.titulo} ({idItem.seccion})
-                                  </option>
-                                ))}
-                              </Select>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* AI ACCOMPANIMENT GENERATION CONTROLS ON NEW IDEA */}
-                      {genAiOnNewIdea && (
-                        <div className="mt-3 bg-[var(--tentative)]/5 p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-150">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
-                              Ajustes de la base IA (Batería + bajo)
-                            </span>
-                            <span className="text-micro font-sans text-[var(--ink)] bg-[var(--tentative)]/10 px-2 py-0.5 rounded">
-                              {selectedAudioFile || recordedAudioUrl || driveAudioUrl
-                                ? 'Se añadirá como Pista 2'
-                                : 'Será la Pista Principal'}
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                            <div>
-                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Estilo Rítmico</label>
-                              <Select size="sm" aria-label="Estilo Rítmico"
-                                value={newIdeaStyle}
-                                onChange={(e) => setNewIdeaStyle(e.target.value as any)}
-                                wrapperClassName="w-full"
-                              >
-                                <option value="rock">Rock / pop standard</option>
-                                <option value="pop">Pop / Disco 4-on-floor</option>
-                                <option value="funk">Funk Syncopated</option>
-                                <option value="reggae">Reggae One-Drop</option>
-                                <option value="ska">Ska Skank</option>
-                                <option value="cumbia">Cumbia Tresillo</option>
-                                <option value="punk">Punk Corcheas</option>
-                              </Select>
-                            </div>
-
-                            <div>
-                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tempo (BPM)</label>
-                              <Input size="sm" aria-label="Tempo (BPM)"
-                                type="number"
-                                value={newIdeaBpm}
-                                onChange={(e) => setNewIdeaBpm(parseInt(e.target.value) || 120)}
-                                className="w-full"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tonalidad base</label>
-                              <Input
-                                size="sm"
-                                type="text"
-                                value={newIdeaKey}
-                                onChange={(e) => setNewIdeaKey(e.target.value)}
-                                className="w-full"
-                                placeholder="Do, Re, Mi…"
-                              />
-                            </div>
-
-                            <div className="sm:col-span-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-[var(--ink-2)] pt-1">
-                              <div className="flex flex-wrap items-center gap-4">
-                                <label className="flex items-center gap-1.5 cursor-pointer">
-                                  <input
-                                    type="checkbox"
-                                    checked={newIdeaIncludeDrums}
-                                    onChange={(e) => setNewIdeaIncludeDrums(e.target.checked)}
-                                    className="accent-purple-500"
-                                  />
-                                  <span><ShowIcon inline emoji="🥁" />Batería Synth</span>
-                                </label>
-                                <label className="flex items-center gap-1.5 cursor-pointer">
-                                  <input
-                                    type="checkbox"
-                                    checked={newIdeaIncludeBass}
-                                    onChange={(e) => setNewIdeaIncludeBass(e.target.checked)}
-                                    className="accent-purple-500"
-                                  />
-                                  <span><ShowIcon inline emoji="🎸" />Bajo</span>
-                                </label>
-                              </div>
-
-                              <span className="text-micro text-[var(--tentative)]/80 italic">
-                                <ShowIcon inline emoji="⚡" />Se sintetizará un bucle rítmico automático al guardar la idea.
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Notas o explicación para el grupo</label>
-                      <Textarea
-                        value={ideaNotes}
-                        onChange={(e) => setIdeaNotes(e.target.value)}
-                        placeholder="Explica qué has grabado o la propuesta…"
-                        rows={2}
-                        className="w-full"
-                      />
-                    </div>
-
-                    {/* Status Indicator of Primary Audio Track */}
-                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-2 font-sans text-xs text-[var(--ink-2)]">
-                      <span className="font-bold flex items-center gap-1.5 text-[var(--tentative)]/80">
-                        <Disc className="w-4 h-4 text-[var(--tentative)]" /> Pista 1 de la Idea:
-                      </span>
-                      <div>
-                        {selectedAudioFile ? (
-                          <span className="text-[var(--ok)] font-bold flex items-center gap-1">
-                            <Check className="w-4 h-4" /> Archivo: {selectedAudioFile.name}
-                          </span>
-                        ) : isRecording ? (
-                          <span className="text-[var(--alert)] font-bold flex items-center gap-1">
-                            <Mic className="w-4 h-4" /> Grabando micro ({Math.floor(recordingTime / 60)}:
-                            {String(recordingTime % 60).padStart(2, '0')})…
-                          </span>
-                        ) : recordedAudioUrl ? (
-                          <span className="text-[var(--ok)] font-bold flex items-center gap-1">
-                            <Check className="w-4 h-4" /> Grabación de micrófono lista ({recordingTime}s)
-                          </span>
-                        ) : driveAudioUrl.trim() ? (
-                          <span className="text-[var(--acc)] font-bold flex items-center gap-1">
-                            <Check className="w-4 h-4" /> Google Drive vinculado
-                          </span>
-                        ) : useSongBaseTrack && selectedSongBaseUrl ? (
-                          <span className="text-[var(--acc)]/70 font-bold flex items-center gap-1">
-                            <Disc className="w-4 h-4 text-[var(--acc)] animate-spin-slow" /> Base: Tema Original ({song.titulo})
-                          </span>
-                        ) : genAiOnNewIdea ? (
-                          <span className="text-[var(--tentative)]/80 font-bold flex items-center gap-1">
-                            Base IA ({newIdeaStyle.toUpperCase()} - {newIdeaKey})
-                          </span>
-                        ) : (
-                          <span className="text-[var(--acc)]/90 italic text-xs">
-                            <ShowIcon inline emoji="⚠️" />Selecciona un archivo, carga el Tema Original, graba con el micro o activa Base IA
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end gap-2 pt-2">
-                      <Button
-                        variant="neutral"
-                        size="sm"
-                        type="button"
-                        onClick={() => setShowAddIdea(false)}
-                      >
-                        Cancelar
-                      </Button>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        type="button"
-                        onClick={handleSaveIdea}
-                        disabled={isUploading}
-                      >
-                        {isUploading ? 'Guardando en Servidor...' : 'Guardar Idea'}
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Ideas Audio Feed */}
-            {filteredIdeas.length === 0 ? (
-              <div className="p-8 rounded-[var(--r-l)] text-center space-y-3">
-                <Sparkles className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
-                <p className="text-sm text-[var(--ink-2)] font-sans">
-                  {activeSectionFilter === 'todas'
-                    ? 'Aún no hay ideas de audio subidas para este tema.'
-                    : `No hay propuestas grabadas para la sección "${activeSectionFilter}".`}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (activeSectionFilter !== 'todas') setIdeaSection(activeSectionFilter as any);
-                    setShowAddIdea(true);
-                  }}
-                  className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-xs text-[var(--ink)] font-bold transition-ui cursor-pointer"
-                >
-                  + Grabar / Subir la primera idea
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <AnimatePresence>
-                  {filteredIdeas.map((idea) => {
+  // Tarjeta de una idea con su mezclador. La usan las tomas y el panel de Iris (que es la idea con stems).
+  const renderIdeaCard = (idea: SongAudioIdea) => {
                     const isPlaying = playingIdeaId === idea.id;
                     const currentTime = currentTimeMap[idea.id] || 0;
                     const rawDuration = durationMap[idea.id];
@@ -5015,7 +4275,752 @@ export default function SongStudioModal({
                         )}
                       </motion.div>
                     );
-                  })}
+  };
+
+  return (
+    <ModalPortal isOpen={true} onClose={onClose}>
+      <div
+        className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/80 flex items-center justify-center overflow-y-auto overscroll-contain animate-in fade-in duration-200 ${
+          isFullScreen ? 'p-0' : 'p-2 sm:p-4'
+        }`}
+      >
+        {countInCountdown !== null && (
+          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[10000] bg-[var(--acc)]  text-[var(--on-acc)] font-sans font-bold px-6 py-3 rounded-[var(--r-l)] flex items-center gap-3">
+            <span className="text-2xl"><ShowIcon inline emoji="🥁" /></span>
+            <div className="text-sm">
+              <div>PREPARANDO GRABACIÓN MULTIPISTA…</div>
+              <div className="text-xs opacity-80 font-bold">Arranca en: ¡{countInCountdown}!</div>
+            </div>
+            <span className="text-3xl font-black ml-2 bg-[var(--sunken)] text-[var(--acc)] px-3.5 py-1 rounded-[var(--r-m)]">
+              {countInCountdown}
+            </span>
+          </div>
+        )}
+        <div
+          className={`w-full ${
+            isFullScreen
+              ? 'fixed inset-0 z-[9999] w-screen h-screen max-w-none max-h-none rounded-none m-0 shadow-none'
+              : 'max-w-4xl rounded-[var(--r-l)] overflow-hidden my-auto max-h-[92vh]'
+          } flex flex-col ${'bg-[var(--surface)] text-[var(--ink-2)]'}`}
+        >
+          {/* Header Bar */}
+          <div className="p-2.5 sm:p-5 flex items-center justify-between bg-[var(--ink)]/5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-[var(--r-m)] bg-[var(--acc)]  flex items-center justify-center text-[var(--on-acc)]">
+                <Disc className="w-5 h-5 animate-spin-slow" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2
+                    className="text-xl font-bold tracking-tight text-[var(--ink)]"
+                    title={`⏱️ ${song.duracion} · 🎵 ${song.tonalidad} · ⚡ ${song.bpm} BPM${song.afinacion ? ` · 🎸 ${song.afinacion}` : ''}`}
+                  >
+                    {formatSongTitle(song.titulo)}
+                  </h2>
+                  <span className="text-micro font-sans px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)]/20 text-[var(--ink)] font-semibold">
+                    {song.estadoTema || 'componiendo'}
+                  </span>
+                  {song.favoritoGeneral && (
+                    <span className="text-[var(--acc)]" title="Tema favorito">
+                      <Sparkles className="w-3.5 h-3.5 fill-[var(--acc)]" />
+                    </span>
+                  )}
+
+                  {/* Mi nivel de preparación con esta canción — cada miembro opina por sí mismo, no
+ es un estado global (ya existe song.estadoTema para eso). Sirve para que quien
+ lleva la banda vea de un vistazo quién necesita repasar antes del bolo.
+ En móvil se oculta de la cabecera y vive dentro de Herramientas. */}
+                  {(() => {
+                    const myKey = currentUser?.id || currentUser?.username;
+                    const myName = currentUser?.name || currentUser?.username || currentUsername;
+                    const myReadiness = getMemberReadiness(song, myKey, myName);
+                    const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
+                    return (
+                      <select data-raw
+                        value={myReadiness || ''}
+                        onChange={(e) => {
+                          const val = e.target.value as ReadinessLevel;
+                          if (!val) return;
+                          onUpdateSong({
+                            ...song,
+                            notasPorMiembro: withMemberReadiness(song, myKey, myName, val),
+                          });
+                        }}
+                        title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
+                        className={`hidden sm:inline-block px-2.5 py-1 rounded-[var(--r-m)] text-xs font-sans font-bold cursor-pointer outline-none ${
+                          levelInfo ? levelInfo.colorClass : 'bg-[var(--ink)]/5 text-[var(--ink-2)]'
+                        }`}
+                      >
+                        <option value="" disabled>
+                          Mi preparación…
+                        </option>
+                        {READINESS_LEVELS.map((l) => (
+                          <option key={l.value} value={l.value}>
+                            <ShowIcon inline emoji={l.icon} /> {l.label}
+                          </option>
+                        ))}
+                      </select>
+                    );
+                  })()}
+
+                  {/* Menú Desplegable de Herramientas Secundarias */}
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowToolsMenu((prev) => !prev)}
+                      className="px-3 py-1 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]"
+                      title="Herramientas y opciones del Estudio"
+                    >
+                      <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
+                      <span>Herramientas <ShowIcon inline emoji="⚙️" /></span>
+                    </button>
+
+                    {showToolsMenu && (
+                      <PopoverAncla className="absolute right-0 top-full mt-2 w-56 bg-[var(--surface)] rounded-[var(--r-m)] p-1.5 z-50 space-y-1 text-xs font-sans">
+                        <MenuItem
+                          tone="acc"
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            onUpdateSong({
+                              ...song,
+                              favoritoGeneral: !song.favoritoGeneral,
+                            });
+                          }}
+                        >
+                          <Sparkles className={`w-4 h-4 text-[var(--acc)] ${song.favoritoGeneral ? 'fill-[var(--acc)]' : ''}`} />
+                          {song.favoritoGeneral ? 'Quitar de Favoritos' : 'Marcar como Favorito'}
+                        </MenuItem>
+                        {/* Mi preparación: solo en móvil, en escritorio ya se ve en la cabecera */}
+                        <div className="sm:hidden px-1 pb-1">
+                          {(() => {
+                            const myKey = currentUser?.id || currentUser?.username;
+                            const myName = currentUser?.name || currentUser?.username || currentUsername;
+                            const myReadiness = getMemberReadiness(song, myKey, myName);
+                            const levelInfo = READINESS_LEVELS.find((l) => l.value === myReadiness);
+                            return (
+                              <Select
+                                size="sm"
+                                value={myReadiness || ''}
+                                onChange={(e) => {
+                                  const val = e.target.value as ReadinessLevel;
+                                  if (!val) return;
+                                  onUpdateSong({
+                                    ...song,
+                                    notasPorMiembro: withMemberReadiness(song, myKey, myName, val),
+                                  });
+                                }}
+                                title="Tu nivel de preparación con esta canción, de cara al próximo bolo"
+                                wrapperClassName="w-full"
+                              >
+                                <option value="" disabled>
+                                  Mi preparación…
+                                </option>
+                                {READINESS_LEVELS.map((l) => (
+                                  <option key={l.value} value={l.value}>
+                                    <ShowIcon inline emoji={l.icon} /> {l.label}
+                                  </option>
+                                ))}
+                              </Select>
+                            );
+                          })()}
+                        </div>
+                        <MenuItem
+                          tone="acc"
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            setShowChordsModal(true);
+                          }}
+                        >
+                          <FileText className="w-4 h-4 text-[var(--acc)]" /> Acordes y Partitura
+                        </MenuItem>
+                        <MenuItem
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            setShowAiComposerModal(true);
+                          }}
+                        >
+                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Arreglos IA (músico virtual)
+                        </MenuItem>
+                        <MenuItem
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            setShowAiMusicModal(true);
+                          }}
+                        >
+                          <Sparkles className="w-4 h-4 text-[var(--tentative)]" /> Soundtrack IA (Lyria)
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            setShowCubaseHelp(true);
+                          }}
+                        >
+                          <Keyboard className="w-4 h-4 text-[var(--ink-2)]" /> Atajos teclado (Cubase)
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            openTutorial();
+                          }}
+                        >
+                          <Info className="w-4 h-4 text-[var(--ink-2)]" /> Guía rápida
+                        </MenuItem>
+                        <MenuItem
+                          tone="muted"
+                          dense
+                          type="button"
+                          onClick={() => {
+                            setShowToolsMenu(false);
+                            handleShareSong();
+                          }}
+                        >
+                          <MessageSquare className="w-4 h-4 text-[var(--ok)]" /> Compartir tema por WhatsApp
+                        </MenuItem>
+                      </PopoverAncla>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Volumen master de salida — control personal de escucha, no se guarda en la canción */}
+              <div
+                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--r-m)] bg-[var(--ink)]/5"
+                title="Volumen master de salida (solo tu escucha, no afecta a la mezcla de la banda)"
+              >
+                <button
+                  type="button"
+                  onClick={() => setMasterVolume((v) => (v > 0 ? 0 : 1))}
+                  className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer shrink-0"
+                >
+                  {masterVolume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
+                <input
+                  type="range"
+                  min={0}
+                  max={1.5}
+                  step={0.01}
+                  value={masterVolume}
+                  onChange={(e) => setMasterVolume(Number(e.target.value))}
+                  className="w-20 accent-amber-500"
+                />
+                <span className="text-micro font-sans text-[var(--ink-2)] w-8 text-right">{Math.round(masterVolume * 100)}%</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={toggleIsFullScreen}
+                className={`px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold flex items-center gap-1.5 transition-ui cursor-pointer ${
+                  isFullScreen
+                    ? 'bg-[var(--ink)] text-[var(--bg)] font-bold hover:bg-[var(--acc)]/60'
+                    : 'bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-[var(--ink)]'
+                }`}
+                title={isFullScreen ? 'Salir de Pantalla Completa' : 'Poner Modo Studio en Pantalla Completa'}
+              >
+                {isFullScreen ? (
+                  <>
+                    <Minimize2 className="w-4 h-4 text-[var(--acc-ink)]" />
+                    <span className="hidden sm:inline">Salir pantalla completa</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="w-4 h-4 text-[var(--acc)]" />
+                    <span className="hidden sm:inline">Pantalla completa HD</span>
+                  </>
+                )}
+              </button>
+
+              <IconButton
+                label="Cerrar"
+                type="button"
+                onClick={onClose}
+              >
+                <X className="w-5 h-5" />
+              </IconButton>
+            </div>
+          </div>
+
+          {/* Content Body */}
+          <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
+            {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
+ y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
+            {/* Iris es de la canción, no de una toma: separar y ver el estado vive aquí, fuera de Ideas */}
+            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--acc-soft)] rounded-[var(--r-l)] flex-wrap">
+              <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
+                <Cpu className="w-4 h-4" /> Iris · pistas de la canción
+                {irisIdea && metaStems?.motor && (
+                  <span className="font-semibold text-[var(--ink-2)]">
+                    {' '}
+                    · {metaStems.motor.split('(')[0].trim()}
+                    {metaStems.degradado ? ' (degradado)' : ''}
+                  </span>
+                )}
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowMoisesStemsModal(irisIdea ?? fuenteIris)}
+                disabled={isSeparatingStemsAi || !fuenteIris}
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-110 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                title="Elegir pistas y motor (Iris Studio, Iris Cloud o Iris Básico)"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>{isSeparatingStemsAi ? 'Separando...' : irisIdea ? 'Volver a separar' : 'Separar con Iris'}</span>
+              </button>
+            </div>
+            {irisIdea && <div className="space-y-6">{renderIdeaCard(irisIdea)}</div>}
+
+            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
+              <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
+                <Music className="w-4 h-4 text-[var(--tentative)]" /> Ideas y grabaciones
+              </span>
+
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.95 }}
+                type="button"
+                onClick={() => setShowAddIdea(true)}
+                className="px-3.5 py-1.5 rounded-[var(--r-m)] bg-[var(--ok)] hover:brightness-110 text-[var(--on-ok)] font-bold text-xs flex items-center gap-1.5 cursor-pointer transition-ui"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ Grabar / subir idea</span>
+              </motion.button>
+            </div>
+
+            {/* Add New Audio Idea Form */}
+            <AnimatePresence>
+              {showAddIdea && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: -10 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: 'easeInOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="p-5 rounded-[var(--r-l)] bg-[var(--ok-soft)] space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-bold text-[var(--ink-2)] font-sans flex items-center gap-2">
+                        <Mic className="w-4 h-4 text-[var(--ok)]" /> Aportar idea o arreglo de audio
+                      </h4>
+                      <IconButton label="Cerrar" type="button" onClick={() => setShowAddIdea(false)}>
+                        <X className="w-4 h-4" />
+                      </IconButton>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Título de la idea / arreglo *</label>
+                        <Input
+                          size="sm"
+                          type="text"
+                          value={ideaTitle}
+                          onChange={(e) => setIdeaTitle(e.target.value)}
+                          placeholder="Ej: Riff Estribillo / Arreglo Vientos / Base Acústica"
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Sección del tema *</label>
+                        <Select size="sm" aria-label="Sección del tema"
+                          value={ideaSection}
+                          onChange={(e) => setIdeaSection(e.target.value as any)}
+                          wrapperClassName="w-full"
+                        >
+                          {SECCIONES_TEMA.map((sec) => (
+                            <option key={sec.key} value={sec.key} className="bg-[var(--bg)] text-[var(--ink)]">
+                              {sec.icon} {sec.label}
+                            </option>
+                          ))}
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Aportado por (Tu nombre)</label>
+                        <Input size="sm" aria-label="Aportado por (Tu nombre)"
+                          type="text"
+                          value={ideaUploader}
+                          onChange={(e) => setIdeaUploader(e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Instrumento / rol (Opcional)</label>
+                        <Input
+                          size="sm"
+                          type="text"
+                          value={ideaInstrument}
+                          onChange={(e) => setIdeaInstrument(e.target.value)}
+                          placeholder="Ej: Guitarra, Trompeta, Batería, Voz"
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Source Selector */}
+                    <div className="p-4 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-3">
+                      <span className="text-xs font-sans font-bold text-[var(--ink-2)] block">
+                        Fuente de Audio Principal / Base Rítmica:
+                      </span>
+
+                      <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5 [&>*]:min-w-0">
+                        {/* Option 1: Tema Base Original */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = !useSongBaseTrack;
+                            setUseSongBaseTrack(next);
+                            if (next && !selectedSongBaseUrl) {
+                              setSelectedSongBaseUrl(song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || '');
+                            }
+                          }}
+                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
+                            useSongBaseTrack
+                              ? 'bg-[var(--acc-soft)] text-[var(--ink)] ring-1 ring-[var(--acc)]/60'
+                              : 'bg-[var(--acc-soft)]/50 text-[var(--acc-ink)] hover:bg-[var(--acc-soft)]'
+                          }`}
+                        >
+                          <Disc className={`w-5 h-5 text-[var(--acc)] ${useSongBaseTrack ? 'animate-spin-slow' : ''}`} />
+                          <span className="text-xs font-bold text-center">Tema original</span>
+                          <span className="text-micro text-[var(--acc)]/70 text-center font-sans">
+                            {useSongBaseTrack ? '✓ Base Cargada' : `Usar "${song.titulo}"`}
+                          </span>
+                        </button>
+
+                        {/* Option 2: File Upload */}
+                        <label className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 hover:bg-[var(--ink)]/10 flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui">
+                          <Upload className="w-5 h-5 text-[var(--ok)]" />
+                          <span className="text-xs font-semibold text-[var(--ink)] text-center w-full truncate" title={selectedAudioFile?.name}>
+                            {selectedAudioFile ? selectedAudioFile.name : 'Subir Archivo'}
+                          </span>
+                          <span className="text-micro text-[var(--ink-2)]">MP3, WAV, M4A</span>
+                          <input
+                            type="file"
+                            accept="audio/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                setSelectedAudioFile(e.target.files[0]);
+                                setRecordedAudioUrl(null);
+                                setDriveAudioUrl('');
+                              }
+                            }}
+                          />
+                        </label>
+
+                        {/* Mic Recording */}
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col items-center justify-center gap-2">
+                          {!isRecording ? (
+                            <Button
+                              variant="danger"
+                              size="xs"
+                              type="button"
+                              onClick={startRecording}
+                              className="items-center gap-1.5 w-full justify-center whitespace-nowrap"
+                            >
+                              <Mic className="w-3.5 h-3.5 shrink-0" /> Grabar micro
+                            </Button>
+                          ) : (
+                            <div className="w-full space-y-2">
+                              <button
+                                type="button"
+                                onClick={stopRecording}
+                                className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--alert)] hover:bg-[var(--alert)] text-[var(--on-alert)] font-bold text-xs flex items-center justify-center gap-1 cursor-pointer whitespace-nowrap"
+                              >
+                                <ShowIcon inline emoji="⏹️" />Detener ({formatTime(recordingTime)})
+                              </button>
+                              <div className="w-full h-11 relative rounded overflow-hidden">
+                                <LiveMicWaveformCanvas
+                                  stream={activeRecordingStream}
+                                  audioCtx={studioAudioCtxRef.current}
+                                  isRecording={isRecording}
+                                  color="#f43f5e"
+                                  height={44}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {recordedAudioUrl && (
+                            <span className="text-micro text-[var(--ok)] font-sans font-bold text-center">✓ Grabación lista</span>
+                          )}
+                        </div>
+
+                        {/* Drive Link */}
+                        <div className="p-3 rounded-[var(--r-m)] bg-[var(--ink)]/5 flex flex-col justify-center gap-1">
+                          <span className="text-micro font-sans font-bold text-[var(--acc)]/70 flex items-center gap-1 min-w-0">
+                            <Music className="w-3 h-3 text-[var(--acc)] shrink-0" /> <span className="truncate">Enlace Google Drive:</span>
+                          </span>
+                          <Input
+                            size="sm"
+                            type="text"
+                            value={driveAudioUrl}
+                            onChange={(e) => {
+                              setDriveAudioUrl(e.target.value);
+                              setSelectedAudioFile(null);
+                              setRecordedAudioUrl(null);
+                            }}
+                            placeholder="https://drive.google.com/…"
+                            className="w-full"
+                          />
+                        </div>
+
+                        {/* AI Base Generator Card */}
+                        <button
+                          type="button"
+                          onClick={() => setGenAiOnNewIdea(!genAiOnNewIdea)}
+                          className={`p-3 rounded-[var(--r-m)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-ui text-center ${
+                            genAiOnNewIdea
+                              ? 'bg-[var(--tentative)]/15 text-[var(--tentative)] ring-1 ring-[var(--tentative)]/50'
+                              : 'bg-[var(--tentative)]/5 text-[var(--ink)] hover:bg-[var(--tentative)]/10'
+                          }`}
+                        >
+                          <Wand2 className="w-5 h-5 text-[var(--tentative)]" />
+                          <span className="text-xs font-bold text-center">Base IA (Batería + bajo)</span>
+                          <span className="text-micro text-[var(--tentative)]/80 text-center font-sans">
+                            {genAiOnNewIdea ? '✓ Activado' : 'Generar Sintética'}
+                          </span>
+                        </button>
+                      </div>
+
+                      {/* ORIGINAL SONG BASE TRACK BANNER & SELECTOR */}
+                      {useSongBaseTrack && (
+                        <div className="mt-3 p-3.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-sans text-[var(--ink)] animate-in fade-in duration-150">
+                          <div className="flex items-center gap-2.5">
+                            <div className="p-2 rounded-[var(--r-s)] bg-[var(--acc)]/20 text-[var(--ink)] shrink-0">
+                              <Disc className="w-5 h-5 animate-spin-slow" />
+                            </div>
+                            <div>
+                              <span className="font-bold text-[var(--ink)] block text-sm">Pista base creada sobre: "{song.titulo}"</span>
+                              <span className="text-micro text-[var(--acc)]/70 block mt-0.5 font-sans">
+                                {selectedAudioFile || recordedAudioUrl || driveAudioUrl
+                                  ? 'Se cargará el tema original como Pista Base de fondo para sonar sincronizado junto a tu idea/grabación.'
+                                  : 'Se cargará la pista original en la idea para que puedas usar el botón "+ Pista" o "Grabar encima (Mic)" e improvisar sobre el tema.'}
+                              </span>
+                            </div>
+                          </div>
+
+                          {((song.audioIdeas && song.audioIdeas.length > 0) || song.audioPrincipalUrl) && (
+                            <div className="flex items-center gap-2 min-w-0 bg-[var(--sunken)] p-2 rounded-[var(--r-m)] w-full sm:w-auto sm:max-w-[60%]">
+                              <span className="text-micro text-[var(--acc)] font-bold shrink-0 whitespace-nowrap">Seleccionar Maqueta:</span>
+                              <Select
+                                size="sm"
+                                value={selectedSongBaseUrl}
+                                onChange={(e) => setSelectedSongBaseUrl(e.target.value)}
+                                wrapperClassName="flex-1 min-w-0"
+                              >
+                                {song.audioPrincipalUrl && <option value={song.audioPrincipalUrl}>Tema Original ({song.titulo})</option>}
+                                {song.audioIdeas?.map((idItem) => (
+                                  <option key={idItem.id} value={idItem.audioUrl}>
+                                    Idea: {idItem.titulo} ({idItem.seccion})
+                                  </option>
+                                ))}
+                              </Select>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* AI ACCOMPANIMENT GENERATION CONTROLS ON NEW IDEA */}
+                      {genAiOnNewIdea && (
+                        <div className="mt-3 bg-[var(--tentative)]/5 p-3.5 rounded-[var(--r-m)] space-y-3 animate-in fade-in duration-150">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-sans font-bold text-[var(--tentative)]/80 flex items-center gap-1.5">
+                              Ajustes de la base IA (Batería + bajo)
+                            </span>
+                            <span className="text-micro font-sans text-[var(--ink)] bg-[var(--tentative)]/10 px-2 py-0.5 rounded">
+                              {selectedAudioFile || recordedAudioUrl || driveAudioUrl
+                                ? 'Se añadirá como Pista 2'
+                                : 'Será la Pista Principal'}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                            <div>
+                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Estilo Rítmico</label>
+                              <Select size="sm" aria-label="Estilo Rítmico"
+                                value={newIdeaStyle}
+                                onChange={(e) => setNewIdeaStyle(e.target.value as any)}
+                                wrapperClassName="w-full"
+                              >
+                                <option value="rock">Rock / pop standard</option>
+                                <option value="pop">Pop / Disco 4-on-floor</option>
+                                <option value="funk">Funk Syncopated</option>
+                                <option value="reggae">Reggae One-Drop</option>
+                                <option value="ska">Ska Skank</option>
+                                <option value="cumbia">Cumbia Tresillo</option>
+                                <option value="punk">Punk Corcheas</option>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tempo (BPM)</label>
+                              <Input size="sm" aria-label="Tempo (BPM)"
+                                type="number"
+                                value={newIdeaBpm}
+                                onChange={(e) => setNewIdeaBpm(parseInt(e.target.value) || 120)}
+                                className="w-full"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="text-micro font-sans text-[var(--ink-2)] block mb-0.5">Tonalidad base</label>
+                              <Input
+                                size="sm"
+                                type="text"
+                                value={newIdeaKey}
+                                onChange={(e) => setNewIdeaKey(e.target.value)}
+                                className="w-full"
+                                placeholder="Do, Re, Mi…"
+                              />
+                            </div>
+
+                            <div className="sm:col-span-3 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-[var(--ink-2)] pt-1">
+                              <div className="flex flex-wrap items-center gap-4">
+                                <label className="flex items-center gap-1.5 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={newIdeaIncludeDrums}
+                                    onChange={(e) => setNewIdeaIncludeDrums(e.target.checked)}
+                                    className="accent-purple-500"
+                                  />
+                                  <span><ShowIcon inline emoji="🥁" />Batería Synth</span>
+                                </label>
+                                <label className="flex items-center gap-1.5 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={newIdeaIncludeBass}
+                                    onChange={(e) => setNewIdeaIncludeBass(e.target.checked)}
+                                    className="accent-purple-500"
+                                  />
+                                  <span><ShowIcon inline emoji="🎸" />Bajo</span>
+                                </label>
+                              </div>
+
+                              <span className="text-micro text-[var(--tentative)]/80 italic">
+                                <ShowIcon inline emoji="⚡" />Se sintetizará un bucle rítmico automático al guardar la idea.
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-sans text-[var(--ink-2)] block mb-1">Notas o explicación para el grupo</label>
+                      <Textarea
+                        value={ideaNotes}
+                        onChange={(e) => setIdeaNotes(e.target.value)}
+                        placeholder="Explica qué has grabado o la propuesta…"
+                        rows={2}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Status Indicator of Primary Audio Track */}
+                    <div className="p-3 rounded-[var(--r-m)] bg-[var(--sunken)] flex flex-wrap items-center justify-between gap-2 font-sans text-xs text-[var(--ink-2)]">
+                      <span className="font-bold flex items-center gap-1.5 text-[var(--tentative)]/80">
+                        <Disc className="w-4 h-4 text-[var(--tentative)]" /> Pista 1 de la Idea:
+                      </span>
+                      <div>
+                        {selectedAudioFile ? (
+                          <span className="text-[var(--ok)] font-bold flex items-center gap-1">
+                            <Check className="w-4 h-4" /> Archivo: {selectedAudioFile.name}
+                          </span>
+                        ) : isRecording ? (
+                          <span className="text-[var(--alert)] font-bold flex items-center gap-1">
+                            <Mic className="w-4 h-4" /> Grabando micro ({Math.floor(recordingTime / 60)}:
+                            {String(recordingTime % 60).padStart(2, '0')})…
+                          </span>
+                        ) : recordedAudioUrl ? (
+                          <span className="text-[var(--ok)] font-bold flex items-center gap-1">
+                            <Check className="w-4 h-4" /> Grabación de micrófono lista ({recordingTime}s)
+                          </span>
+                        ) : driveAudioUrl.trim() ? (
+                          <span className="text-[var(--acc)] font-bold flex items-center gap-1">
+                            <Check className="w-4 h-4" /> Google Drive vinculado
+                          </span>
+                        ) : useSongBaseTrack && selectedSongBaseUrl ? (
+                          <span className="text-[var(--acc)]/70 font-bold flex items-center gap-1">
+                            <Disc className="w-4 h-4 text-[var(--acc)] animate-spin-slow" /> Base: Tema Original ({song.titulo})
+                          </span>
+                        ) : genAiOnNewIdea ? (
+                          <span className="text-[var(--tentative)]/80 font-bold flex items-center gap-1">
+                            Base IA ({newIdeaStyle.toUpperCase()} - {newIdeaKey})
+                          </span>
+                        ) : (
+                          <span className="text-[var(--acc)]/90 italic text-xs">
+                            <ShowIcon inline emoji="⚠️" />Selecciona un archivo, carga el Tema Original, graba con el micro o activa Base IA
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-2 pt-2">
+                      <Button
+                        variant="neutral"
+                        size="sm"
+                        type="button"
+                        onClick={() => setShowAddIdea(false)}
+                      >
+                        Cancelar
+                      </Button>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        type="button"
+                        onClick={handleSaveIdea}
+                        disabled={isUploading}
+                      >
+                        {isUploading ? 'Guardando en Servidor...' : 'Guardar Idea'}
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Ideas Audio Feed */}
+            {tomas.length === 0 ? (
+              <div className="p-8 rounded-[var(--r-l)] text-center space-y-3">
+                <Sparkles className="w-8 h-8 text-[var(--ink-2)] mx-auto" />
+                <p className="text-sm text-[var(--ink-2)] font-sans">
+                  {activeSectionFilter === 'todas'
+                    ? 'Aún no hay ideas de audio subidas para este tema.'
+                    : `No hay propuestas grabadas para la sección "${activeSectionFilter}".`}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (activeSectionFilter !== 'todas') setIdeaSection(activeSectionFilter as any);
+                    setShowAddIdea(true);
+                  }}
+                  className="px-4 py-2 rounded-[var(--r-pill)] bg-[var(--ink)]/10 hover:bg-[var(--ink)]/20 text-xs text-[var(--ink)] font-bold transition-ui cursor-pointer"
+                >
+                  + Grabar / Subir la primera idea
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <AnimatePresence>
+                  {tomas.map(renderIdeaCard)}
                 </AnimatePresence>
               </div>
             )}

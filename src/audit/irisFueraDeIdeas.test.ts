@@ -14,3 +14,11 @@ describe('Iris vive a nivel de canción en el modal', () => {
     expect(src.match(/Separar con Iris/g)?.length).toBe(1);
   });
 });
+
+describe('El feed de ideas solo lleva tomas', () => {
+  it('el feed mapea las tomas (sin Iris) y Iris se pinta en su panel', () => {
+    expect(src).toContain('{tomas.map(renderIdeaCard)}');
+    expect(src).toContain('{irisIdea && <div className="space-y-6">{renderIdeaCard(irisIdea)}</div>}');
+    expect(src).not.toContain('{filteredIdeas.map((idea)');
+  });
+});
