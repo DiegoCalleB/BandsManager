@@ -58,6 +58,14 @@ export async function cargarEsquema(): Promise<CargaEsquema> {
   const db = new PGlite({ extensions: { uuid_ossp, pgcrypto } });
   const errores: CargaEsquema['errores'] = [];
   const ficheros = ficherosDeEsquema();
+  // Roles que Supabase trae de serie y que los GRANT/REVOKE de las migraciones referencian.
+  await db.exec(`
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN CREATE ROLE anon NOLOGIN; END IF;
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'service_role') THEN CREATE ROLE service_role NOLOGIN; END IF;
+    END $$;
+  `);
   // Stub mínimo del esquema `auth` de Supabase, que las políticas RLS de las migraciones referencian.
   await db.exec(`
     CREATE SCHEMA IF NOT EXISTS auth;
@@ -70,10 +78,10 @@ export async function cargarEsquema(): Promise<CargaEsquema> {
     for (const sentencia of dividirSentencias(adaptarParaPglite(fs.readFileSync(path.join(RAIZ, f), 'utf8')))) {
       try {
         await db.exec(sentencia);
-      } catch (e: any) {
+      } catch (e: unknown) {
         errores.push({
           fichero: f,
-          mensaje: `${String(e?.message || e).split('\n')[0]} :: ${sentencia.trim().slice(0, 90).replace(/\s+/g, ' ')}`,
+          mensaje: `${String((e as Error)?.message || e).split('\n')[0]} :: ${sentencia.trim().slice(0, 90).replace(/\s+/g, ' ')}`,
         });
       }
     }
