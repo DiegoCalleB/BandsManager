@@ -1,7 +1,7 @@
 /* Sonido de la presentación. Todo se sintetiza con WebAudio: no hay archivos de audio.
    Apagado por defecto (el navegador exige un gesto). Tecla M o botón «Sonido». */
 (function () {
-  const KEY = 'deck_sound';
+  const KEY = 'deck_sound_v2';
 
   // Reverb de sala generada: ruido con caída exponencial estéreo. Da profundidad sin cargar nada.
   function impulse(c, secs = 2.4, decay = 3.2) {
@@ -154,7 +154,7 @@
   }
 
   let ctx = null, input = null, scene = null, enabled = false, curEl = null, curStart = 0, onChange = () => {};
-  try { enabled = localStorage.getItem(KEY) === 'on'; } catch (e) { /* sin almacenamiento */ }
+  try { enabled = localStorage.getItem(KEY) !== 'off'; } catch (e) { enabled = true; }
 
   function ensure() {
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
@@ -208,11 +208,11 @@
       play(el, 0);
     },
     enable(on) {
+      if (on) ensure();
       if (enabled === on) return;
       enabled = on;
       try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }
       document.body.classList.toggle('sound-on', on);
-      if (on) ensure();
       onChange(on);
     },
     tick() { if (enabled && ensure()) kit(ctx, newScene()).tick(ctx.currentTime + 0.01, 0.07); },

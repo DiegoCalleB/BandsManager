@@ -11,8 +11,8 @@
   };
 
   // Tema: oscuro por defecto, salvo que se haya elegido uno antes (tecla T)
-  const setTheme = (t) => { root.dataset.theme = t; store.set('deck_theme', t); };
-  setTheme(store.get('deck_theme') || 'dark');
+  const setTheme = (t) => { root.dataset.theme = t; store.set('deck_theme_v2', t); };
+  setTheme(store.get('deck_theme_v2') || 'dark');
   const toggleTheme = () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
 
   // Diapositiva de vídeo opcional: solo existe si hay video/demo.mp4 o un data-embed (YouTube/Vimeo)
