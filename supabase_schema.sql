@@ -264,6 +264,18 @@ CREATE TABLE IF NOT EXISTS concerts (
     convocados_ids JSONB DEFAULT '[]'::jsonb,
     convocados_nombres JSONB DEFAULT '[]'::jsonb,
     idioma TEXT DEFAULT '',
+    is_posible BOOLEAN DEFAULT FALSE,
+    custom_qr_url TEXT,
+    cartel_url TEXT,
+    es_hito_destacado BOOLEAN DEFAULT FALSE,
+    asistencia_propia INTEGER DEFAULT 0,
+    asistencia_otras_bandas INTEGER DEFAULT 0,
+    bandas_compartidas JSONB DEFAULT '[]'::jsonb,
+    post_show_review TEXT DEFAULT '',
+    gira_id TEXT,
+    gira_nombre TEXT,
+    entradas_url TEXT,
+    entradas_lugar_fisico TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
