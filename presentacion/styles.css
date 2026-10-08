@@ -748,3 +748,15 @@ body.scroll .sheet { width: 100%; font-size: 14px; } body.scroll .rehearse { fle
 .slide.scene.reveal h2, .slide.scene.reveal .sub { max-width: 1000px; }
 .slide.scene.reveal h2 { font-size: 108px; }
 body.scroll .slide.scene.reveal .rv-photo { position: relative; right: auto; top: auto; bottom: auto; width: 100%; height: 240px; margin-top: 20px; }
+
+/* Reparto y cameos */
+.cast { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 44px; }
+.cast figure { position: relative; margin: 0; border-radius: 26px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); aspect-ratio: 1; }
+.cast img { width: 100%; height: 100%; object-fit: cover; }
+.cast figcaption, .cameo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 26px 22px; background: linear-gradient(180deg, transparent, rgba(5,7,13,.92)); }
+.cast figcaption b, .cameo figcaption b { display: block; font-size: 40px; font-weight: 600; }
+.cast figcaption span, .cameo figcaption span { font-size: 26px; color: rgba(255,255,255,.72); }
+.cameo { position: absolute !important; right: 120px; top: 150px; width: 420px; height: 566px; margin: 0; border-radius: 26px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); z-index: 3; }
+.cameo img { width: 100%; height: 100%; object-fit: cover; }
+body.scroll .cast { grid-template-columns: 1fr 1fr; gap: 12px; } body.scroll .cast figcaption b { font-size: 18px; } body.scroll .cast figcaption span { font-size: 14px; }
+body.scroll .cameo { position: relative !important; right: auto; top: auto; width: 100%; height: 260px; margin-top: 18px; }
