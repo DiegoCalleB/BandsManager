@@ -702,13 +702,12 @@ Devuelve EXCLUSIVAMENTE un JSON válido con la estructura exacta:
   "telefono": "teléfono público",
   "instagram": "URL o usuario de Instagram",
   "spotify_youtube": "URL de Spotify o canal de YouTube",
-  "aforo_promedio": 0,
   "notas_colaboracion": "Breve resumen del estilo, trayectoria e ideas para colaboraciones o conciertos conjuntos",
   "ciudad_origen_swap": "Ciudad para intercambio de fechas",
   "imagen_url": "URL pública directa del logo oficial o foto principal",
   "icono": "Emoji característico (ej: 🎸, 🎤, ⚡, 🎺, 🎷, 🎶)"
 }
-Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes información sin base real.`;
+Usa cadena vacía "" para textos no encontrados. No inventes información sin base real.`;
 
   try {
     console.log(`[AutoEnrich] Buscando información automática para Banda: '${band.nombre_banda}'...`);
@@ -755,7 +754,6 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo. No inventes info
       const valor = spotify || (/spotify\.com/i.test(delModelo) ? "" : delModelo);
       if (valor) { band.spotify_youtube = valor; modified = true; }
     }
-    if (data.aforo_promedio && (!band.aforo_promedio || band.aforo_promedio === 0)) { band.aforo_promedio = Number(data.aforo_promedio) || 0; modified = true; }
     if (data.notas_colaboracion && (!band.notas_colaboracion || band.notas_colaboracion.length < 10)) { band.notas_colaboracion = data.notas_colaboracion; modified = true; }
     if (data.ciudad_origen_swap && !band.ciudad_origen_swap) { band.ciudad_origen_swap = data.ciudad_origen_swap; modified = true; }
     if (data.imagen_url && !band.imagen_url) { band.imagen_url = data.imagen_url; modified = true; }
