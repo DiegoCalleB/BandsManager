@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { crearIdeaDeAtril, ideasCompatiblesConPistas, pistasBaseDeIdea, ideaConPistasBase } from '../ideaDeAtril';
+import { crearIdeaDeAtril, ideasCompatiblesConPistas, pistasBaseDeIdea, ideaConPistasBase, tomasDeCancion, pistasParaToma, ideasConFondo } from '../ideaDeAtril';
 
 const base = { id: 'i1', titulo: 'Riff', audioUrl: 'u', subidoPor: 'diego', fecha: '2026-01-01' };
 
@@ -53,5 +53,39 @@ describe('pistasBaseDeIdea / ideaConPistasBase', () => {
     const r = pistasBaseDeIdea({ ...toma, sobrePistas: ['drums', 'guitar'] }, stems);
     expect(r.pistas.map((p) => p.id)).toEqual(['drums']);
     expect(r.faltan).toEqual(['guitar']);
+  });
+});
+
+describe('tomas con fondo', () => {
+  const stems = [
+    { id: 'v', nombre: 'Voz', audioUrl: 'v.mp3' },
+    { id: 'd', nombre: 'Batería', audioUrl: 'd.mp3' },
+    { id: 'b', nombre: 'Bajo', audioUrl: 'b.mp3' },
+  ] as any;
+  const toma = { id: 't1', titulo: 'Guitarra', audioUrl: 't.webm', sobrePistas: ['d', 'x'] } as any;
+
+  it('tomasDeCancion excluye la idea de Iris y las ideas sin audio', () => {
+    const iris = { id: 'i', audioUrl: 'u', pistas: stems } as any;
+    const motor = { id: 'm', audioUrl: 'u', stemEngineUsed: 'demucs' } as any;
+    const vacia = { id: 'e', audioUrl: '' } as any;
+    expect(tomasDeCancion([iris, motor, vacia, toma]).map((i) => i.id)).toEqual(['t1']);
+  });
+
+  it('pistasParaToma = solo los stems del fondo que existen + la toma al final', () => {
+    const r = pistasParaToma(toma, stems);
+    expect(r.map((p) => p.id)).toEqual(['d', 'toma-t1']);
+    expect(r[1].audioUrl).toBe('t.webm');
+  });
+
+  it('una toma en seco suena sola', () => {
+    expect(pistasParaToma({ id: 's', titulo: 'x', audioUrl: 'a' } as any, stems).map((p) => p.id)).toEqual(['toma-s']);
+  });
+
+  it('ideasConFondo cambia solo la toma pedida y [] la deja en seco', () => {
+    const otra = { id: 't2', titulo: 'o', audioUrl: 'o', sobrePistas: ['v'], offsetSegundos: 1 } as any;
+    const r = ideasConFondo([toma, otra], 't1', ['b', 'd']);
+    expect(r[0].sobrePistas).toEqual(['b', 'd']);
+    expect(r[1]).toBe(otra);
+    expect(ideasConFondo([otra], 't2', [])[0].sobrePistas).toBeUndefined();
   });
 });
