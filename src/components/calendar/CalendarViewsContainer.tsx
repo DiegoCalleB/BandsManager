@@ -29,7 +29,23 @@ import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 
+type SeveridadDia = 'choque' | 'aviso';
+
+/** Marca de un día con choque (rojo) o aviso (gris) de calendario; ver CalendarConflictsBanner. */
+const MarcaChoqueDia: React.FC<{ severidad?: SeveridadDia }> = ({ severidad }) => {
+  if (!severidad) return null;
+  const esChoque = severidad === 'choque';
+  const texto = esChoque ? 'Choque de calendario este día' : 'Aviso de calendario este día';
+  return (
+    <span role="img" aria-label={texto} title={texto} className="inline-flex shrink-0">
+      <AlertTriangle className={`size-3.5 ${esChoque ? 'text-[var(--alert)]' : 'text-[var(--ink-2)]'}`} aria-hidden="true" />
+    </span>
+  );
+};
+
 export interface CalendarViewsContainerProps {
+  /** Peor severidad de cada día (YYYY-MM-DD) con choques o avisos. */
+  diasConChoque?: Record<string, SeveridadDia>;
   calendarViewMode: '1m' | '2m' | 'week' | 'agenda';
   calendarSearchTerm: string;
   viewDate: Date;
@@ -92,6 +108,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
     currentMonth,
     nextMonthYear,
     nextMonth,
+    diasConChoque = {},
     getEventsForDateStr,
     getCampaignsForDate,
     getBandIdentity,
@@ -224,6 +241,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                     {cell.day}
                   </span>
                   <div className="flex items-center gap-1">
+                    <MarcaChoqueDia severidad={diasConChoque[formattedDate]} />
                     {primaryAlert && <CalendarWeatherBadge alert={primaryAlert} compact />}
                     
                   </div>
@@ -381,6 +399,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
                         const wAlerts = getCachedEventWeatherAlerts(cCity, dIso);
                         return wAlerts[0] ? <CalendarWeatherBadge alert={wAlerts[0]} compact /> : null;
                       })()}
+                      <MarcaChoqueDia severidad={diasConChoque[dayStr]} />
                       {isToday && <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] shrink-0" />}
                     </div>
                     <IconButton

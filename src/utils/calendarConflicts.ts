@@ -315,6 +315,17 @@ export function detectarChoques(eventos: EventoCalendario[], ctx: ContextoConfli
   );
 }
 
+/** Peor severidad de cada día afectado (YYYY-MM-DD → 'choque' | 'aviso'), para marcar el calendario. */
+export function peorSeveridadPorDia(choques: Choque[]): Record<string, SeveridadChoque> {
+  const out: Record<string, SeveridadChoque> = {};
+  for (const c of choques) {
+    for (const dia of new Set([c.a.fecha, c.b.fecha])) {
+      if (out[dia] !== 'choque') out[dia] = c.severidad;
+    }
+  }
+  return out;
+}
+
 /** Choques en los que participa un evento concreto (para el aviso al guardarlo). */
 export function choquesDeEvento(choques: Choque[], tipo: TipoEventoCalendario, id: string): Choque[] {
   const esConcierto = tipo === 'concierto';
