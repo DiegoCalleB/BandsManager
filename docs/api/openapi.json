@@ -1536,7 +1536,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:279",
+        "x-source": "server/routes/bands.ts:293",
         "x-autenticacion": "middleware"
       }
     },
@@ -1570,7 +1570,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:217",
+        "x-source": "server/routes/bands.ts:231",
         "x-autenticacion": "middleware"
       }
     },
@@ -1605,7 +1605,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:857",
+        "x-source": "server/routes/bands.ts:871",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1638,7 +1638,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:869",
+        "x-source": "server/routes/bands.ts:883",
         "x-autenticacion": "middleware"
       }
     },
@@ -1672,7 +1672,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:343",
+        "x-source": "server/routes/bands.ts:357",
         "x-autenticacion": "middleware"
       }
     },
@@ -1706,7 +1706,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:157",
+        "x-source": "server/routes/bands.ts:171",
         "x-autenticacion": "middleware"
       }
     },
@@ -1740,7 +1740,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:731",
+        "x-source": "server/routes/bands.ts:745",
         "x-autenticacion": "middleware"
       }
     },
@@ -1783,7 +1783,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:715",
+        "x-source": "server/routes/bands.ts:729",
         "x-autenticacion": "middleware"
       }
     },
@@ -1821,7 +1821,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/bands.ts:985",
+        "x-source": "server/routes/bands.ts:987",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -1894,7 +1894,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:883",
+        "x-source": "server/routes/bands.ts:897",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1902,7 +1902,7 @@
           "bands"
         ],
         "operationId": "putApiBandsPrintSettings",
-        "description": "Comentario en el código: PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).",
+        "description": "Comentario en el código: IMPORTANTE: va ANTES de PUT /bands/:id. Express resuelve por orden de declaración; detrás, \"print-settings\" entraba en el handler de :id y creaba un contacto fantasma en lugar de guardar los ajustes. PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -1927,7 +1927,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:895",
+        "x-source": "server/routes/bands.ts:140",
         "x-autenticacion": "middleware"
       }
     },
@@ -1961,7 +1961,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:688",
+        "x-source": "server/routes/bands.ts:702",
         "x-autenticacion": "middleware"
       }
     },
@@ -2004,7 +2004,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:672",
+        "x-source": "server/routes/bands.ts:686",
         "x-autenticacion": "middleware"
       }
     },
@@ -2039,7 +2039,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:769",
+        "x-source": "server/routes/bands.ts:783",
         "x-autenticacion": "middleware"
       }
     },
@@ -2073,7 +2073,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:194",
+        "x-source": "server/routes/bands.ts:208",
         "x-autenticacion": "middleware"
       }
     },
@@ -2108,7 +2108,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:557",
+        "x-source": "server/routes/bands.ts:571",
         "x-autenticacion": "middleware"
       },
       "patch": {
@@ -2140,7 +2140,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:568",
+        "x-source": "server/routes/bands.ts:582",
         "x-autenticacion": "middleware"
       }
     },
@@ -2175,7 +2175,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:619",
+        "x-source": "server/routes/bands.ts:633",
         "x-autenticacion": "middleware"
       }
     },
@@ -2210,7 +2210,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:907",
+        "x-source": "server/routes/bands.ts:909",
         "x-autenticacion": "middleware"
       }
     },
@@ -2287,7 +2287,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:137",
+        "x-source": "server/routes/bands.ts:151",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -2327,7 +2327,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:178",
+        "x-source": "server/routes/bands.ts:192",
         "x-autenticacion": "middleware"
       }
     },
