@@ -1285,6 +1285,20 @@ export default function SongStudioModal({
     activeSectionFilter === 'todas' ? ideasList : ideasList.filter((i) => i.seccion === activeSectionFilter)
   );
   const metaStems = metaStemsDeCancion(song);
+  const irisIdea = getSongIrisStemIdea(song);
+  // Audio de partida para separar: la primera toma con audio, o el audio principal de la canción
+  const fuenteIris: SongAudioIdea | null =
+    ideasList.find((i) => i.audioUrl) ??
+    ((song.audioPrincipalUrl || (song as any).audioUrl)
+      ? {
+          id: `idea-main-${song.id}`,
+          titulo: `Maqueta Principal (${song.titulo})`,
+          audioUrl: song.audioPrincipalUrl || (song as any).audioUrl,
+          subidoPor: currentUsername || 'Banda',
+          seccion: 'general',
+          fecha: new Date().toLocaleDateString('es-ES'),
+        }
+      : null);
 
   // Safe helper to extract finite audio duration in seconds
   const getSafeTrackDuration = (el: HTMLAudioElement | null | undefined): number => {
@@ -3246,6 +3260,30 @@ export default function SongStudioModal({
           <div className="p-2.5 sm:p-6 overflow-y-auto space-y-2.5 sm:space-y-6 flex-1">
             {/* Sleek Top Action Bar:"Atajos" y"Cargar Tema Original" viven ya en Herramientas
  y en el propio formulario de nueva idea — un único botón de acción aquí basta */}
+            {/* Iris es de la canción, no de una toma: separar y ver el estado vive aquí, fuera de Ideas */}
+            <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--acc-soft)] rounded-[var(--r-l)] flex-wrap">
+              <span className="text-xs font-sans font-bold text-[var(--acc-ink)] flex items-center gap-1.5">
+                <Cpu className="w-4 h-4" /> Iris · pistas de la canción
+                {irisIdea && metaStems?.motor && (
+                  <span className="font-semibold text-[var(--ink-2)]">
+                    {' '}
+                    · {metaStems.motor.split('(')[0].trim()}
+                    {metaStems.degradado ? ' (degradado)' : ''}
+                  </span>
+                )}
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowMoisesStemsModal(irisIdea ?? fuenteIris)}
+                disabled={isSeparatingStemsAi || !fuenteIris}
+                className="px-3 py-1.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:brightness-110 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-ui cursor-pointer disabled:opacity-50"
+                title="Elegir pistas y motor (Iris Studio, Iris Cloud o Iris Básico)"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+                <span>{isSeparatingStemsAi ? 'Separando...' : irisIdea ? 'Volver a separar' : 'Separar con Iris'}</span>
+              </button>
+            </div>
+
             <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
               <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
                 <Music className="w-4 h-4 text-[var(--tentative)]" /> Ideas y grabaciones
@@ -3903,32 +3941,6 @@ export default function SongStudioModal({
  Una vez ya hay stems separados,"Separar Stems" deja paso a"Comparar
  Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
                             <div className="flex items-center gap-2 flex-wrap justify-end">
-                              {!idea.stemEngineUsed && (
-                                <div className="flex items-center rounded-[var(--r-m)] bg-[var(--acc)]  overflow-hidden">
-                                  <button
-                                    type="button"
-                                    onClick={() => setShowMoisesStemsModal(idea)}
-                                    disabled={isSeparatingStemsAi}
-                                    className="px-3 py-1.5 hover:bg-[var(--acc)]/60 text-[var(--on-acc)] font-bold text-xs flex items-center gap-1.5 transition-ui active:scale-[0.97] cursor-pointer disabled:opacity-50"
-                                    title="Elegir pistas y aislar voz, batería, bajo, guitarras, etc. (Modo Moises)"
-                                  >
-                                    <Cpu
-                                      className={`w-4 h-4 ${isSeparatingStemsAi ? 'animate-spin text-[var(--acc-ink)]' : 'text-[var(--acc-ink)]'}`}
-                                    />
-                                    <span>{isSeparatingStemsAi ? 'Separando...' : 'Separar con Iris'}</span>
-                                  </button>
-                                  <IconButton
-                                    label="Elegir pistas y motor de separación (Iris Studio, Iris Cloud o Iris Básico)"
-                                    variant="neutral"
-                                    type="button"
-                                    onClick={() => setShowMoisesStemsModal(idea)}
-                                    className="flex"
-                                  >
-                                    <Sliders className="w-3.5 h-3.5" />
-                                  </IconButton>
-                                </div>
-                              )}
-
                               <button
                                 type="button"
                                 onClick={() => {
