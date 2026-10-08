@@ -127,3 +127,22 @@ describe('lectura desde la canción', () => {
     expect(hasIrisStems({ id: 's' } as any)).toBe(false);
   });
 });
+
+describe('Iris separado de las tomas en la lista', () => {
+  const toma = { id: 't1', titulo: 'Toma', audioUrl: 'u' } as any;
+  const iris = { id: 'i1', titulo: 'Iris', audioUrl: 'u', stemEngineUsed: 'demucs' } as any;
+  const multi = { id: 'm1', titulo: 'Multi', audioUrl: 'u', pistas: [{ id: 'a' }, { id: 'b' }] } as any;
+
+  it('esIdeaIris detecta motor o varias pistas', async () => {
+    const { esIdeaIris } = await import('../irisTracks');
+    expect(esIdeaIris(iris)).toBe(true);
+    expect(esIdeaIris(multi)).toBe(true);
+    expect(esIdeaIris(toma)).toBe(false);
+  });
+
+  it('irisPrimero sube Iris y respeta el orden de las tomas', async () => {
+    const { irisPrimero } = await import('../irisTracks');
+    expect(irisPrimero([toma, { ...toma, id: 't2' }, iris]).map((i) => i.id)).toEqual(['i1', 't1', 't2']);
+    expect(irisPrimero([toma]).map((i) => i.id)).toEqual(['t1']);
+  });
+});
