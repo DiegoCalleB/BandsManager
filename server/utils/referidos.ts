@@ -95,6 +95,21 @@ export function decidirReferido(entrada: {
   return { ok: true };
 }
 
+/** Horas desde el alta en las que aún se puede atribuir un referido. */
+export const VENTANA_ALTA_RECIENTE_HORAS = 48;
+
+/**
+ * Solo las altas de las últimas 48 h pueden atribuirse a un referido: así una banda antigua no
+ * puede «reclamar» una invitación a posteriori ni inflar el contador de otra.
+ */
+export function esAltaReciente(fechaRegistro: unknown, ahora: Date = new Date()): boolean {
+  if (typeof fechaRegistro !== 'string' && !(fechaRegistro instanceof Date)) return false;
+  const t = new Date(fechaRegistro).getTime();
+  if (Number.isNaN(t)) return false;
+  const edadMs = ahora.getTime() - t;
+  return edadMs >= -60_000 && edadMs <= VENTANA_ALTA_RECIENTE_HORAS * 3_600_000;
+}
+
 /** `band-x`, `reg-x` y `x` son la misma banda (AGENTS.md: ids con y sin prefijo conviven en la BD). */
 function mismaBandaId(a: string, b: string): boolean {
   const limpia = (v: string) => v.trim().toLowerCase().replace(/^(band|reg)-/, '');
