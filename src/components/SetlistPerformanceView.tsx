@@ -51,6 +51,8 @@ import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { useWakeLock } from '../hooks/useWakeLock';
+import { accionDeTecla, direccionDeSwipe } from '../utils/pasarPagina';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -147,7 +149,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   );
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wakeLockRef = useRef<any>(null);
 
   // Modo Escenario Offline Guard: almacena en caché local letras, cifrados y metadatos
   // para que el concierto siga funcionando al 100% si se corta la conexión o el wifi en la sala.
@@ -372,50 +373,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     };
   }, []);
 
-  // WAKE LOCK: lo más importante para un músico en directo — que la pantalla del móvil/tablet
-  // NO se apague a media canción por inactividad táctil (el músico está tocando, no tocando la
-  // pantalla). Sin esto, el modo concierto es inservible en un bolo real. Se libera cuando el
-  // propio músico activa el Modo Descanso para el tema actual (isResting) — es la única
-  // situación en la que SÍ queremos que el móvil pueda apagar la pantalla solo.
-  useEffect(() => {
-    if (isResting) {
-      wakeLockRef.current?.release?.().catch(() => {});
-      wakeLockRef.current = null;
-      return;
-    }
-
-    let released = false;
-    const requestLock = async () => {
-      try {
-        if ("wakeLock" in navigator) {
-          wakeLockRef.current = await (navigator as any).wakeLock.request(
-            "screen",
-          );
-        }
-      } catch {
-        // Algunos navegadores lo rechazan si la pestaña no está en foco o no hay soporte —
-        // degradamos en silencio, no es motivo para romper el modo concierto.
-      }
-    };
-    requestLock();
-
-    // iOS/Android liberan el wake lock al cambiar de pestaña/app; lo repedimos al volver.
-    const handleVisibility = () => {
-      if (!released && document.visibilityState === "visible") {
-        requestLock();
-      } else if (document.visibilityState === "hidden") {
-        wakeLockRef.current?.release?.().catch(() => {});
-        wakeLockRef.current = null;
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    return () => {
-      released = true;
-      document.removeEventListener("visibilitychange", handleVisibility);
-      wakeLockRef.current?.release?.().catch(() => {});
-    };
-  }, [isResting]);
+  // WAKE LOCK: lo más importante para un músico en directo — que la pantalla NO se apague a media
+  // canción. Se libera en Modo Descanso (isResting), la única vez que SÍ queremos que se apague.
+  useWakeLock(!isResting);
 
   // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
   // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
@@ -477,15 +437,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // partituras (los que usan orquestas de verdad con iPad) emulan esas teclas, no solo flechas.
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      const accion = accionDeTecla(e.key);
+      if (accion === "atras") {
         e.preventDefault();
         handleRetreat();
       }
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
+      if (accion === "adelante") {
         e.preventDefault();
         handleAdvance();
       }
-      if (e.key === " ") {
+      if (accion === "espacio") {
         e.preventDefault();
         if (teleprompterMode === "scroll") {
           setIsTeleprompterPlaying((p) => !p);
@@ -519,9 +480,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     if (touchStartX.current === null) return;
     const deltaX = e.changedTouches[0].clientX - touchStartX.current;
     touchStartX.current = null;
-    if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
-    if (deltaX > 0) handlePrev();
-    else handleNext();
+    const dir = direccionDeSwipe(deltaX, 0, SWIPE_THRESHOLD);
+    if (dir === "anterior") handlePrev();
+    else if (dir === "siguiente") handleNext();
   };
 
   if (!currentItem) {

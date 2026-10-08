@@ -50,6 +50,8 @@ import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
+import { useWakeLock } from '../../hooks/useWakeLock';
+import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -81,7 +83,6 @@ export function ModoLocalEnVivoTab({
   // Fullscreen state
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wakeLockRef = useRef<any>(null);
 
   // Track / Block Timer State
   const [trackSeconds, setTrackSeconds] = useState(0);
@@ -133,9 +134,10 @@ export function ModoLocalEnVivoTab({
     const dx = touchDeltaX.current;
     const dy = touchDeltaY.current;
 
-    // Detect horizontal swipe (at least 35px and predominantly horizontal)
-    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-      if (dx < 0 && activeIndex < agenda.length - 1) {
+    // Swipe horizontal claro (35 px y predominantemente horizontal)
+    const dir = direccionDeSwipe(dx, dy || 0.0001, 35);
+    if (dir) {
+      if (dir === "siguiente" && activeIndex < agenda.length - 1) {
         // Swipe Left -> Next Song
         const nextIdx = activeIndex + 1;
         setActiveIndex(nextIdx);
@@ -144,7 +146,7 @@ export function ModoLocalEnVivoTab({
           dir: "left",
         });
         setTimeout(() => setSwipeToast(null), 1000);
-      } else if (dx > 0 && activeIndex > 0) {
+      } else if (dir === "anterior" && activeIndex > 0) {
         // Swipe Right -> Previous Song
         const prevIdx = activeIndex - 1;
         setActiveIndex(prevIdx);
@@ -168,17 +170,18 @@ export function ModoLocalEnVivoTab({
       if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
         return;
 
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
+      const accion = accionDeTecla(e.key);
+      if (accion === "adelante") {
         if (activeIndex < agenda.length - 1) {
           e.preventDefault();
           setActiveIndex((prev) => prev + 1);
         }
-      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      } else if (accion === "atras") {
         if (activeIndex > 0) {
           e.preventDefault();
           setActiveIndex((prev) => prev - 1);
         }
-      } else if (e.key === " " && viewMode === "atril") {
+      } else if (accion === "espacio" && viewMode === "atril") {
         e.preventDefault();
         autoScroll.alternar();
       }
@@ -196,27 +199,8 @@ export function ModoLocalEnVivoTab({
     "text-lg sm:text-2xl leading-loose font-medium",
   ];
 
-  // Wake Lock handler to prevent phone screen from turning off in rehearsals
-  useEffect(() => {
-    async function requestWakeLock() {
-      if ("wakeLock" in navigator && (isFullscreen || isTrackTimerActive)) {
-        try {
-          wakeLockRef.current = await (navigator as any).wakeLock.request(
-            "screen",
-          );
-        } catch {
-          // Wake lock rejected or unsupported
-        }
-      }
-    }
-    requestWakeLock();
-    return () => {
-      if (wakeLockRef.current) {
-        wakeLockRef.current.release().catch(() => {});
-        wakeLockRef.current = null;
-      }
-    };
-  }, [isFullscreen, isTrackTimerActive]);
+  // Pantalla encendida mientras se ensaya (pantalla completa o cronómetro de la pista en marcha)
+  useWakeLock(isFullscreen || isTrackTimerActive);
 
   // When song changes, reset track timer and transposition
   useEffect(() => {
