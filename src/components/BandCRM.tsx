@@ -9,6 +9,7 @@ import { api, getAuthHeaders } from "../services/api";
 import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandListenEmbed } from "./booking/BandListenEmbed";
+import { instagramPerfil } from "../utils/instagramPerfil";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
 import { BandToneModal, ToneAnalysisData } from "./bandCRM/BandToneModal";
 import { ChangeBandImageModal } from "./bandCRM/ChangeBandImageModal";
@@ -1658,16 +1659,16 @@ ${myBandName}`;
                       {/* Social Links & Last Contact */}
                       <div className="flex items-center justify-between text-micro font-sans text-[var(--ink-2)]">
                         <div className="flex items-center gap-2">
-                          {band.instagram && (
+                          {instagramPerfil(band.instagram) && (
                             <a
-                              href={`https://instagram.com/${band.instagram.replace("@", "")}`}
+                              href={instagramPerfil(band.instagram)!.url}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-[var(--acc)] hover:text-[var(--acc)] flex items-center gap-1"
-                              title="Ver Instagram"
+                              className="text-[var(--acc-ink)] hover:underline flex items-center gap-1"
+                              title="Escribirles por Instagram (mensaje directo) o ver su perfil"
                             >
-                              <Globe className="w-3 h-3" />
-                              <span>{band.instagram}</span>
+                              <MessageCircle className="w-3 h-3" />
+                              <span>@{instagramPerfil(band.instagram)!.handle}</span>
                             </a>
                           )}
                         </div>
