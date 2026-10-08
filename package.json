@@ -17,6 +17,7 @@
     "test:security": "vitest run server/db/__tests__/bandIdTrustBoundary.test.ts",
     "check:fast": "npm run typecheck && npm run test:security",
     "graph:sync": "tsx scripts/generate_obsidian_graph.ts",
+    "spotify:bandas": "tsx scripts/arreglar-spotify-bandas.ts",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "lint:eslint": "eslint .",
