@@ -611,3 +611,43 @@ body.scroll .bs { flex-direction: column; }
 @keyframes srrun { to { left: 100%; } }
 @media (prefers-reduced-motion: reduce) { .sr-node { opacity: 1; transform: none; transition: none; } .sr-line i { animation: none; left: 0; width: 100%; } }
 body.scroll .swap-route { margin-top: 18px; } body.scroll .sr-node { opacity: 1; transform: none; width: auto; flex: 1; }
+
+/* ───────── Fans: la página real, desplazándose en un móvil, con los cuatro puntos sincronizados ───────── */
+.slide.fans-live { padding: 96px 120px 110px; }
+.fl-wrap { display: flex; gap: 90px; align-items: center; flex: 1; min-height: 0; margin-top: 40px; }
+.fl-steps { list-style: none; display: grid; gap: 26px; flex: 1; max-width: 760px; }
+.fl-steps li { position: relative; padding: 22px 26px 22px 34px; border-radius: 22px; background: var(--surface); opacity: .55; transition: opacity 400ms var(--ease), transform 400ms var(--ease); }
+.fl-steps li::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 6px; border-radius: 3px; background: var(--acc); opacity: 0; }
+.fl-steps b { display: block; font-size: 34px; font-weight: 600; color: var(--ink); }
+.fl-steps span { display: block; margin-top: 6px; font-size: 25px; line-height: 1.4; color: var(--ink-2); }
+.slide.fans-live.active .fl-steps li { animation: flstep 14s ease-in-out 1.2s infinite alternate; }
+.slide.fans-live.active .fl-steps li:nth-child(2) { animation-delay: 4.4s; }
+.slide.fans-live.active .fl-steps li:nth-child(3) { animation-delay: 7.6s; }
+.slide.fans-live.active .fl-steps li:nth-child(4) { animation-delay: 10.8s; }
+@keyframes flstep { 0%, 100% { opacity: .55; transform: none; } 6%, 22% { opacity: 1; transform: translateX(8px); } 30% { opacity: .55; transform: none; } }
+.fl-steps li:nth-child(1)::before { }
+.fl-phone { flex: none; width: 420px; height: 830px; padding: 16px; border-radius: 58px; background: #0b0d14; box-shadow: 0 50px 120px rgba(0,0,0,.45), 0 0 0 2px #2a2f3e inset, 0 0 0 1px rgba(255,255,255,.08); position: relative; }
+.fl-screen { position: relative; width: 100%; height: 100%; border-radius: 44px; overflow: hidden; background: #0b0d14; }
+.fl-screen img { display: block; width: 100%; height: auto; animation: flpan 14s ease-in-out 1.2s infinite alternate; }
+.slide.fans-live:not(.active) .fl-screen img { animation: none; }
+@keyframes flpan { from { transform: translateY(0); } to { transform: translateY(-62%); } }
+@media (prefers-reduced-motion: reduce) { .fl-screen img, .slide.fans-live.active .fl-steps li { animation: none !important; } .fl-steps li { opacity: 1; } }
+body.scroll .fl-wrap { flex-direction: column; gap: 22px; } body.scroll .fl-phone { width: 260px; height: 520px; border-radius: 36px; padding: 10px; } body.scroll .fl-screen { border-radius: 28px; } body.scroll .fl-screen img { animation: none; }
+body.scroll .fl-steps li { opacity: 1; } body.scroll .fl-steps li { animation: none !important; }
+.slide.fans-live h2 { font-size: 66px; max-width: 1560px; margin-top: 26px; }
+.slide.fans-live > p { position: absolute; left: 120px; right: 120px; bottom: 56px; font-size: 24px; line-height: 1.4; margin: 0; }
+.slide.fans-live .fl-wrap { margin-top: 34px; margin-bottom: 70px; }
+.fl-steps li { padding: 18px 24px 18px 32px; }
+.fl-steps span { font-size: 23px; }
+.fl-phone { width: 360px !important; height: 620px !important; border-radius: 48px !important; }
+.fl-screen { border-radius: 36px !important; }
+@keyframes flpan { from { transform: translateY(0); } to { transform: translateY(-64%); } }
+.slide.fans-live .fl-wrap { align-items: flex-end; }
+
+/* Reels: el móvil de la captura se sustituye por un reel real en bucle */
+.shot.reels-shot { overflow: hidden; }
+.reel-phone { position: absolute; left: 74.2%; top: 26.6%; width: 21.2%; height: 52%; border-radius: 34px; overflow: hidden; background: #000;
+  box-shadow: 0 0 0 7px #0b0d14, 0 0 0 9px rgba(255,255,255,.12), 0 40px 90px rgba(0,0,0,.6); z-index: 2; }
+.reel-phone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel-tag { position: absolute; left: 12px; bottom: 14px; padding: 6px 12px; border-radius: 999px; background: rgba(5,7,13,.7); color: #fff; font-size: 14px; }
+body.scroll .reel-phone { position: relative; left: auto; top: auto; width: 240px; height: 427px; margin: 20px auto; }
