@@ -3,6 +3,7 @@ import { Sliders, X, Sparkles, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
 import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
 import { Button, IconButton } from '../ui';
+import { IrisPrism } from './IrisPrism';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;
@@ -11,7 +12,7 @@ interface SongStudioMoisesStemsModalProps {
   setMoisesTab: (tab: 'stems' | 'how_it_works' | 'upload') => void;
   moisesPreset?: MoisesSeparationPreset;
   setMoisesPreset?: (preset: MoisesSeparationPreset) => void;
-  handlePerformAiStemSeparation?: (targetIdea: SongAudioIdea, overrideEngine?: any, stemsToInclude?: string[]) => void;
+  handlePerformAiStemSeparation?: (targetIdea: SongAudioIdea, overrideEngine?: 'fal' | 'mvsep-mdx23' | 'demucs' | 'dsp-server', stemsToInclude?: string[]) => void;
   song?: Song | null;
   onUpdateSong?: (updatedSong: Song) => void;
 }
@@ -24,8 +25,6 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
   moisesPreset = '6_stems',
   setMoisesPreset,
   handlePerformAiStemSeparation,
-  song,
-  onUpdateSong,
 }) => {
   if (!showMoisesStemsModal) return null;
 
@@ -48,6 +47,8 @@ export const SongStudioMoisesStemsModal: React.FC<SongStudioMoisesStemsModalProp
             <X className="w-5 h-5" />
           </IconButton>
         </div>
+
+        <IrisPrism className="aspect-video max-h-[38vh] rounded-[var(--r-m)]" />
 
         <div className="flex items-center gap-2 border-b border-[var(--hair)]/10 pb-2 font-mono text-xs">
           <Button
