@@ -12,6 +12,7 @@ import { sendTransactionalEmail } from "../services/transactionalEmail.js";
 import { buildServerEmailHtml, buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
+import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 import { getTargetBandId, puedeEscribirEnBanda } from "../utils/bandAccess.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
@@ -260,6 +261,14 @@ Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin f
     if (!cleanJson.endsWith(']')) cleanJson = `${cleanJson}]`;
     
     const parsedData = JSON.parse(cleanJson);
+    // El modelo se inventa los IDs de Spotify: solo se deja el enlace que la búsqueda real confirma.
+    if (Array.isArray(parsedData)) {
+      await Promise.all(
+        parsedData.map(async (b: any) => {
+          b.spotify_url = b?.nombre_banda ? await resolverUrlSpotifyDeBanda(String(b.nombre_banda)) : "";
+        }),
+      );
+    }
     res.json({ bands: parsedData });
   } catch (error: any) {
     console.error("AI Scout Error:", error);
@@ -302,6 +311,9 @@ Devuelve EXCLUSIVAMENTE un objeto JSON:
     const text = response.text || "{}";
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const data = JSON.parse(cleanedText.substring(cleanedText.indexOf('{'), cleanedText.lastIndexOf('}') + 1));
+
+    // Spotify verificado contra la búsqueda real (el que devuelve el modelo suele estar inventado).
+    data.spotify_url = await resolverUrlSpotifyDeBanda(nombre_banda);
 
     // Robust enrichment
     const instagram = data.instagram || "";
