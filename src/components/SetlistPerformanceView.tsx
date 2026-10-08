@@ -51,6 +51,7 @@ import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { useNavegacionItems } from "../hooks/useNavegacionItems";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { useWakeLock } from '../hooks/useWakeLock';
 import { accionDeTecla, direccionDeSwipe } from '../utils/pasarPagina';
@@ -109,7 +110,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   currentUser,
   initialMode = "directo",
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [modeArchetype, setModeArchetype] = useState<"directo" | "ensayo">(
     initialMode,
   );
@@ -179,6 +179,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       (item.tipoItem === "cancion" && item.songId) ||
       item.tipoItem === "bloque",
   );
+  const {
+    indice: currentIndex,
+    irA: setCurrentIndex,
+    anterior: handlePrev,
+    siguiente: handleNext,
+    esPrimero: isFirst,
+    esUltimo: isLast,
+  } = useNavegacionItems(allItems.length);
   const currentItem = allItems[currentIndex];
   const isBlock = currentItem?.tipoItem === "bloque";
   const currentSong = !isBlock
@@ -379,14 +387,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // canción. Se libera en Modo Descanso (isResting), la única vez que SÍ queremos que se apague.
   useWakeLock(!isResting);
 
-  const handlePrev = () => {
-    setCurrentIndex((i) => Math.max(0, i - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((i) => Math.min(allItems.length - 1, i + 1));
-  };
-
   // Avanzar/retroceder de SECCIÓN dentro del tema (Intro→Verso→Estribillo...) cuando la hay;
   // al llegar al final o al principio, pasa de canción — así el pedal/tecla de"pasar página"
   // funciona igual de natural para moverse dentro de un tema largo que para cambiar de tema.
@@ -495,8 +495,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     : "";
   const structure = currentSong?.guiaSustituto?.estructura || "";
   const progression = currentSong?.guiaSustituto?.progresionClave || "";
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === allItems.length - 1;
   const blockMeta = isBlock ? getBlockMeta(currentItem) : null;
 
   // MODO DESCANSO: pantalla negra a pantalla completa, sin wake lock — la opción real más
