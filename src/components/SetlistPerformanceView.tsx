@@ -46,7 +46,7 @@ import {
   splitIntoChordSections,
   ChordSection,
 } from "../utils/chordUtils";
-import { getSongIrisStemIdea, getIdeaTracks } from "../utils/irisTracks";
+import { hasIrisStems, ideaDeStemsDeCancion, getIdeaTracks } from "../utils/irisTracks";
 import { cacheActiveStageSetlist } from "../utils/stageOfflineCache";
 import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
@@ -209,19 +209,19 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     return allItems.filter((item) => {
       if (item.tipoItem !== "cancion" || !item.songId) return false;
       const s = songs.find((x) => x.id === item.songId);
-      return s ? Boolean(getSongIrisStemIdea(s)) : false;
+      return s ? hasIrisStems(s) : false;
     }).length;
   }, [allItems, songs]);
 
   const irisStemIdea = useMemo(() => {
-    return getSongIrisStemIdea(currentSong);
+    return ideaDeStemsDeCancion(currentSong);
   }, [currentSong]);
 
   const handleLaunchPractice = useCallback(
     (customSong?: Song, customIdea?: SongAudioIdea) => {
       const targetSong = customSong || currentSong;
       const targetIdea =
-        customIdea || (targetSong ? getSongIrisStemIdea(targetSong) : null);
+        customIdea || (targetSong ? ideaDeStemsDeCancion(targetSong) : null);
       if (!targetSong || !targetIdea) return;
       if (onOpenPracticeMode) {
         onOpenPracticeMode(targetSong, targetIdea);
@@ -1244,7 +1244,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   ? songs.find((s) => s.id === item.songId)
                   : undefined;
                 const isCurrent = idx === currentIndex;
-                const songIrisIdea = song ? getSongIrisStemIdea(song) : null;
+                const songIrisIdea = song ? ideaDeStemsDeCancion(song) : null;
                 const stemCount = songIrisIdea
                   ? getIdeaTracks(songIrisIdea).length
                   : 0;

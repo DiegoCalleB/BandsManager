@@ -314,12 +314,37 @@ export async function optimizeWavSongsForBand(targetBandId?: string): Promise<Op
       }
     }
 
+    // Stems de la canción (songs.pistas): mismas conversiones que los de las ideas.
+    if (Array.isArray(song.pistas)) {
+      for (const pista of song.pistas) {
+        if (pista?.audioUrl && pista.audioUrl.toLowerCase().includes(".wav")) {
+          const conv = await convertWavUrlToMp3(pista.audioUrl, songBandId, `${song.titulo}-${pista.nombre || 'pista'}`);
+          if (conv) {
+            result.totalWavsProcessed++;
+            result.originalSizeBytes += conv.origSize;
+            result.optimizedSizeBytes += conv.newSize;
+            result.details.push({
+              songId: song.id,
+              songTitle: `${song.titulo} [Pista: ${pista.nombre || 'Pista'}]`,
+              wavUrl: pista.audioUrl,
+              mp3Url: conv.mp3Url,
+              origMB: (conv.origSize / 1024 / 1024).toFixed(2),
+              newMB: (conv.newSize / 1024 / 1024).toFixed(2)
+            });
+            pista.audioUrl = conv.mp3Url;
+            songUpdated = true;
+          }
+        }
+      }
+    }
+
     // Si la canción fue modificada, actualizarla en Supabase
     if (songUpdated) {
       const updatePayload: any = {
         audio_principal_url: song.audio_principal_url,
         audio_url: song.audio_url,
-        audio_ideas: song.audio_ideas
+        audio_ideas: song.audio_ideas,
+        ...(Array.isArray(song.pistas) ? { pistas: song.pistas } : {})
       };
 
       const { error: updateError } = await sb

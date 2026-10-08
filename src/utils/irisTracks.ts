@@ -1,4 +1,4 @@
-import { Song, SongAudioIdea, AudioTrack } from '../types';
+import { Song, SongAudioIdea, AudioTrack, StemsMeta } from '../types';
 
 /**
  * Retorna la idea de audio de la canción que cuenta con pistas separadas (stems) por Iris
@@ -10,10 +10,10 @@ export function getSongIrisStemIdea(song?: Song | null): SongAudioIdea | null {
 }
 
 /**
- * Devuelve true si la canción tiene al menos una idea con pistas separadas por Iris.
+ * Devuelve true si la canción tiene stems separados por Iris (de la canción, o aún en una idea).
  */
 export function hasIrisStems(song?: Song | null): boolean {
-  return Boolean(getSongIrisStemIdea(song));
+  return pistasDeCancion(song).length > 1 || Boolean(metaStemsDeCancion(song)?.motor);
 }
 
 /**
@@ -41,15 +41,52 @@ export function pistasDeIdeas(ideas?: SongAudioIdea[] | null): AudioTrack[] {
   return idea ? getIdeaTracks(idea) : [];
 }
 
-/**
- * Pistas separadas de una canción, vengan de donde vengan. Manda la idea de Iris (es lo que se
- * edita en directo); `song.pistas` es la copia que guarda el servidor y cubre el caso de que la
- * idea ya no esté. El día que los escritores pasen a la canción solo cambia esta función.
- */
+/** Cómo se separaron los stems según la idea de Iris (motor, neural, degradado, fecha); undefined si no consta. */
+export function metaStemsDeIdeas(ideas?: SongAudioIdea[] | null): StemsMeta | undefined {
+  const idea = (ideas || []).find((i) => (i.pistas && i.pistas.length > 1) || Boolean(i.stemEngineUsed));
+  if (!idea) return undefined;
+  const meta: StemsMeta = {
+    ...(idea.stemEngineUsed ? { motor: idea.stemEngineUsed } : {}),
+    ...(idea.stemIsNeural !== undefined ? { neural: idea.stemIsNeural } : {}),
+    ...(idea.stemDegraded !== undefined ? { degradado: idea.stemDegraded } : {}),
+    ...(idea.stemProcessedAt ? { procesadoEn: idea.stemProcessedAt } : {}),
+  };
+  return Object.keys(meta).length > 0 ? meta : undefined;
+}
+
+/** Pistas separadas de una canción: manda `song.pistas`; las ideas cubren datos que aún no se migraron. */
 export function pistasDeCancion(song?: Song | null): AudioTrack[] {
   if (!song) return [];
-  const deIdeas = pistasDeIdeas(song.audioIdeas);
-  return deIdeas.length > 0 ? deIdeas : song.pistas ?? [];
+  return song.pistas && song.pistas.length > 0 ? song.pistas : pistasDeIdeas(song.audioIdeas);
+}
+
+/** Metadatos de la separación: manda `song.stemsMeta`; la idea de Iris cubre lo no migrado. */
+export function metaStemsDeCancion(song?: Song | null): StemsMeta | undefined {
+  if (!song) return undefined;
+  return song.stemsMeta ?? metaStemsDeIdeas(song.audioIdeas);
+}
+
+/**
+ * Idea a la que dar a los visores que aún piden una toma (modo práctica): la de Iris si existe o,
+ * si la toma se borró, una sintética con los stems de la canción. Desaparece con la limpieza.
+ */
+export function ideaDeStemsDeCancion(song?: Song | null): SongAudioIdea | null {
+  if (!song) return null;
+  const real = getSongIrisStemIdea(song);
+  if (real) return real;
+  const pistas = pistasDeCancion(song);
+  if (pistas.length === 0) return null;
+  const meta = metaStemsDeCancion(song);
+  return {
+    id: `stems-${song.id}`,
+    titulo: 'Iris',
+    seccion: 'general',
+    audioUrl: song.audioPrincipalUrl || pistas[0].audioUrl,
+    pistas,
+    subidoPor: 'Iris',
+    fecha: meta?.procesadoEn || '',
+    ...(meta?.motor ? { stemEngineUsed: meta.motor } : {}),
+  };
 }
 
 /**
@@ -57,11 +94,12 @@ export function pistasDeCancion(song?: Song | null): AudioTrack[] {
  * `song.pistas` se mantiene al día con los de la idea de Iris; si las ideas ya no traen ninguno
  * (se borró la toma) la canción conserva los suyos en vez de perderlos.
  */
-export function cancionConIdeas<T extends { audioIdeas?: SongAudioIdea[]; pistas?: AudioTrack[] }>(
+export function cancionConIdeas<T extends { audioIdeas?: SongAudioIdea[]; pistas?: AudioTrack[]; stemsMeta?: StemsMeta }>(
   cancion: T,
   ideas: SongAudioIdea[],
 ): T {
   const deIdeas = pistasDeIdeas(ideas);
   const pistas = deIdeas.length > 0 ? deIdeas : cancion.pistas;
-  return { ...cancion, audioIdeas: ideas, ...(pistas ? { pistas } : {}) };
+  const stemsMeta = metaStemsDeIdeas(ideas) ?? cancion.stemsMeta;
+  return { ...cancion, audioIdeas: ideas, ...(pistas ? { pistas } : {}), ...(stemsMeta ? { stemsMeta } : {}) };
 }

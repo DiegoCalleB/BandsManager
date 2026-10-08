@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas } from '../irisTracks';
+import { getSongIrisStemIdea, hasIrisStems, getIdeaTracks, cancionConIdeas, pistasDeCancion, metaStemsDeCancion, ideaDeStemsDeCancion } from '../irisTracks';
 import { Song, SongAudioIdea } from '../../types';
 
 describe('irisTracks helpers', () => {
@@ -96,5 +96,34 @@ describe('cancionConIdeas', () => {
   });
   it('sin stems en ningún sitio no inventa la clave pistas', () => {
     expect('pistas' in cancionConIdeas({}, [])).toBe(false);
+  });
+});
+
+describe('lectura desde la canción', () => {
+  const stems = [
+    { id: 'p1', nombre: 'Voz', audioUrl: 'v' },
+    { id: 'p2', nombre: 'Bajo', audioUrl: 'b' },
+  ] as any;
+
+  it('song.pistas manda sobre las de la idea', () => {
+    const song = { id: 's', pistas: stems, audioIdeas: [{ id: 'i', pistas: [stems[0], stems[1], stems[0]] }] } as any;
+    expect(pistasDeCancion(song)).toBe(stems);
+  });
+  it('sin song.pistas cae a la idea (datos antiguos)', () => {
+    const song = { id: 's', audioIdeas: [{ id: 'i', pistas: stems }] } as any;
+    expect(pistasDeCancion(song)).toEqual(stems);
+  });
+  it('metaStemsDeCancion prefiere song.stemsMeta', () => {
+    const song = { id: 's', stemsMeta: { motor: 'a' }, audioIdeas: [{ id: 'i', pistas: stems, stemEngineUsed: 'b' }] } as any;
+    expect(metaStemsDeCancion(song)?.motor).toBe('a');
+  });
+  it('ideaDeStemsDeCancion fabrica una idea sintética si solo hay stems en la canción', () => {
+    const idea = ideaDeStemsDeCancion({ id: 's', pistas: stems, audioIdeas: [] } as any);
+    expect(idea?.id).toBe('stems-s');
+    expect(idea?.pistas).toEqual(stems);
+  });
+  it('hasIrisStems detecta stems solo en la canción', () => {
+    expect(hasIrisStems({ id: 's', pistas: stems } as any)).toBe(true);
+    expect(hasIrisStems({ id: 's' } as any)).toBe(false);
   });
 });
