@@ -22,13 +22,13 @@ La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros 
 | Tráiler | Apertura de 17 s que arranca sola y termina en el logo animado | 1 |
 | Portada | Gancho: «Menos gestión, más música» | 2 |
 | I · Backstage | El caos de gestionar una banda y qué se propone | umbral 3 · 4–6 |
-| II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, otras bandas y Date Swap | umbral 7 · 8–17 |
-| III · Antes del concierto | Calendario, repertorio, Iris, Atril, armonía, ensayos | umbral 18 · 19–27 |
-| IV · Que te conozcan | Dossier, QR, fans, reels | umbral 28 · 29–36 |
-| V · Después del concierto | Gira, finanzas, móvil | umbral 37 · 38–39 |
-| VI · El negocio | Públicos, marketing, planes, márgenes | umbral 40 · 41–49 |
-| VII · Bajo el capó | Arquitectura, método, seguridad, calidad, límites, futuro | umbral 50 · 51–56 |
-| Telón | Demostración (si hay vídeo) y cierre | 57–58 |
+| II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, redactor que aprende, otras bandas y Date Swap | umbral 7 · 8–18 |
+| III · Antes del concierto | Calendario, repertorio, Iris, Atril, cifrado por músico, armonía, ensayos | umbral 19 · 20–29 |
+| IV · Que te conozcan | Dossier, QR, fans, reels | umbral 30 · 31–38 |
+| V · Después del concierto | Gira, finanzas, móvil | umbral 39 · 40–41 |
+| VI · El negocio | Públicos, marketing, planes, márgenes | umbral 42 · 43–51 |
+| VII · Bajo el capó | Arquitectura, método, seguridad, calidad, límites, futuro | umbral 52 · 53–58 |
+| Telón | Demostración (si hay vídeo) y cierre | 59–60 |
 
 Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.act`: foto de concierto, número romano en trazo, cortina que se abre y tira de progreso de los 7 actos) y las bandas reaparecen como personajes: la misma banda que sufre en el acto I es la que cierra el concierto en el V.
 
