@@ -120,7 +120,7 @@ export const BandPreviewPlayer: React.FC<BandPreviewPlayerProps> = ({ cola, inic
           </div>
         </div>
 
-        <span className="text-micro text-[var(--ink-3)] tabular-nums hidden sm:inline">
+        <span className="text-micro text-[var(--ink-2)] tabular-nums hidden sm:inline">
           {indice + 1}/{cola.length}
         </span>
 
