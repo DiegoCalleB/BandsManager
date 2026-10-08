@@ -555,3 +555,45 @@ body.scroll .tr-final .tr-tag { margin-top: -14px; }
 .tr-sound-hint { position: absolute; left: 36px; bottom: 96px; z-index: 7; padding: 10px 20px; border-radius: 999px; background: rgba(255,255,255,.12); backdrop-filter: blur(6px); font-size: 22px; color: rgba(255,255,255,.8); opacity: 0; }
 .slide.trailer.active .tr-sound-hint { animation: trpop 700ms var(--ease) 1.2s both; }
 body.sound-on .tr-sound-hint, body.scroll .tr-sound-hint { display: none; }
+
+/* ───────── Cifras gigantes ───────── */
+.slide.bigstats { background: #05070d; color: #fff; --ink: #fff; --ink-2: rgba(255,255,255,.76); overflow: hidden; padding: 96px 120px 90px; }
+.slide.bigstats .tag { background: rgba(255,255,255,.12); color: #fff; position: relative; z-index: 2; }
+.slide.bigstats h2 { font-size: 66px; margin-top: 28px; position: relative; z-index: 2; max-width: 1500px; }
+.bs-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 90px; margin-top: 34px; flex: 1; align-content: center; }
+.bs { display: flex; align-items: center; gap: 36px; min-height: 0; }
+.bs-n { flex: none; min-width: 560px; font-size: 235px; line-height: 1; font-weight: 700; letter-spacing: -.055em; font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #fff 8%, var(--acc) 118%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bs span { font-size: 29px; line-height: 1.32; color: var(--ink-2); max-width: 300px; }
+.bs-foot { position: relative; z-index: 2; font-size: 24px; line-height: 1.5; color: var(--ink-2); max-width: 1680px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 22px; }
+.bs-foot b { color: #fff; font-weight: 600; margin-left: 10px; } .bs-foot b:first-child { margin-left: 0; }
+.bs-foot i { display: block; margin-top: 6px; font-size: 21px; color: rgba(255,255,255,.55); }
+body.scroll .slide.bigstats { padding: 28px 22px; } body.scroll .slide.bigstats h2 { font-size: 32px; }
+body.scroll .bs-grid { grid-template-columns: 1fr; gap: 18px; } body.scroll .bs { gap: 16px; } body.scroll .bs-n { min-width: 0; font-size: 72px; } body.scroll .bs span { font-size: 16px; max-width: none; } body.scroll .bs-foot { font-size: 14px; }
+
+/* ───────── Pantalla de entrada ───────── */
+#gate { position: fixed; inset: 0; z-index: 90; display: flex; align-items: center; justify-content: center; background: radial-gradient(900px 600px at 50% 40%, rgba(79,125,255,.22), transparent 70%), #05070d; color: #fff; transition: opacity 600ms var(--ease); }
+#gate.out { opacity: 0; pointer-events: none; }
+.gate-card { display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center; padding: 24px; }
+.gate-card img { width: 112px; height: 112px; border-radius: 28px; }
+.gate-title { font-size: 56px; font-weight: 700; letter-spacing: -.03em; }
+.gate-sub { font-size: 24px; line-height: 1.5; color: rgba(255,255,255,.72); }
+.gate-btns { display: flex; gap: 16px; margin-top: 22px; flex-wrap: wrap; justify-content: center; }
+.gate-btn { font: inherit; font-size: 22px; font-weight: 600; padding: 16px 30px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08); color: #fff; cursor: pointer; }
+.gate-btn.primary { background: var(--acc); border-color: var(--acc); }
+.gate-btn:hover, .gate-btn:focus-visible { filter: brightness(1.15); outline: none; }
+.gate-note { font-size: 15px; color: rgba(255,255,255,.5); margin-top: 8px; }
+body.gate .slide.active, body.gate .slide.active * { animation-play-state: paused !important; }
+body.scroll #gate { display: none; }
+/* rótulo del tráiler */
+.tr-hint { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; bottom: 70px; }
+.tr-hint b { font-size: 27px; font-weight: 500; color: rgba(255,255,255,.88); letter-spacing: .01em; }
+.tr-hint span { font-size: 21px; color: rgba(255,255,255,.5); }
+.gate-btn.primary { color: #05070d; }
+
+/* Cifras: el número arriba y la etiqueta debajo */
+.bs { flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }
+.bs-n { min-width: 0; font-size: 200px; }
+.bs span { max-width: 720px; font-size: 28px; }
+.bs-grid { gap: 8px 110px; margin-top: 22px; }
+body.scroll .bs { flex-direction: column; }

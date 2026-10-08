@@ -17,6 +17,18 @@
 <noscript><style>html,body{overflow:auto}#viewport{position:static;display:block}#stage{width:100%;height:auto;transform:none}.slide{position:relative;opacity:1;visibility:visible;transform:none;padding:40px 20px}.slide>*{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
+<div id="gate" role="dialog" aria-modal="true" aria-label="Empezar la presentación">
+  <div class="gate-card">
+    <img src="img/logo.png" alt="">
+    <div class="gate-title">BandManager.io</div>
+    <div class="gate-sub">TFM · Máster de Desarrollo con IA<br>The Big School by Brais Moure</div>
+    <div class="gate-btns">
+      <button id="gateSound" class="gate-btn primary">Empezar con sonido</button>
+      <button id="gateSilent" class="gate-btn">Empezar sin sonido</button>
+    </div>
+    <div class="gate-note">Pensada para pantalla grande: F para pantalla completa · M para el sonido</div>
+  </div>
+</div>
 <div id="prog"></div>
 <div id="viewport">
 <main id="stage">
@@ -35,11 +47,11 @@
     <div class="tr-cut" style="--k:2"><img src="img/d-h-repertorio.jpg" alt=""><b>Setlists</b></div>
     <div class="tr-cut" style="--k:3"><img src="img/d-h-pitch.jpg" alt=""><b>Correos con IA</b></div>
   </div>
-  <div class="tr-beat tr-prism" style="--t:12.2s;--d:2.8s"><video data-ambient muted loop playsinline preload="auto" poster="video/iris-spectrum-loop.jpg"><source src="video/iris-spectrum-loop.mp4" type="video/mp4"></video><div class="tr-big">Cada instrumento, por separado.</div></div>
+  <div class="tr-beat tr-prism" style="--t:12.2s;--d:2.8s"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/iris-spectrum-loop.jpg"><source src="video/iris-spectrum-loop.mp4" type="video/mp4"></video><div class="tr-big">Cada instrumento, por separado.</div></div>
   <div class="tr-final" style="--t:14.8s">
     <video class="tr-logo-vid" data-delay="14900" muted loop playsinline preload="auto" poster="video/logo-animado.jpg" aria-label="BandManager.io, la plataforma integral para tus bandas"><source src="video/logo-animado.mp4" type="video/mp4"></video>
     <div class="tr-tag">Menos gestión, más <span>música</span>.</div>
-    <div class="tr-hint">Trabajo Fin de Máster · pulsa → para empezar</div>
+    <div class="tr-hint"><b>TFM · Máster de Desarrollo con IA · The Big School by Brais Moure</b><span>Pulsa → para empezar</span></div>
   </div>
   <div class="tr-sound-hint">Sonido: pulsa M</div>
 </section>
@@ -49,7 +61,7 @@
   <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
   <h1>Menos gestión,<br>más <span class="acc">música</span>.</h1>
   <p class="sub">Buscar salas, cerrar fechas, ensayar, tocar y cobrar sin saltar entre diez herramientas distintas. Eso es BandManager.</p>
-  <p class="foot"><b>Trabajo Fin de Máster</b> · Máster de Desarrollo con IA, The Big School<br>Diego de la Calle · Octubre de 2026</p>
+  <p class="foot"><b>TFM · Máster de Desarrollo con IA</b> · The Big School by Brais Moure<br>Diego de la Calle · Octubre de 2026</p>
   <div class="art"><img class="singer" src="img/portada-cantante.jpg" alt="El cantante de Os Herdeiros do Código en directo"><span class="singer-cap">El cantante · Os Herdeiros do Código · demo</span><div class="shot" style="inset:610px 80px 0 80px;border-radius:44px 44px 0 0;background:var(--bg);cursor:zoom-in"><img class="l" loading="lazy" decoding="async" src="img/ml-h-resumen.jpg" alt="BandManager en el móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-resumen.jpg" alt=""></div></div>
 </section>
 
@@ -656,19 +668,17 @@
 </section>
 
 <!-- N3 · Unit economics -->
-<section class="slide sunk compact" data-grupo="negocio" data-title="Márgenes e IA sin taxímetro">
+<section class="slide bigstats" data-grupo="negocio" data-title="Márgenes e IA sin taxímetro">
+  <div class="hero-bg"></div>
   <span class="tag">Negocio · Márgenes</span>
-  <h2>La IA de texto cuesta céntimos, así que no ponemos taxímetro.</h2>
-  <div class="stats">
-    <div class="stat"><b>0,28 €</b><span>coste de servidores de una banda ultra activa en un mes (estimación)</span></div>
-    <div class="stat"><b>15 €</b><span>cuota del plan Local</span></div>
-    <div class="stat"><b>98 %</b><span>margen bruto en ese peor escenario</span></div>
-    <div class="stat"><b>80</b><span>acciones de texto cada 5 horas por banda en el plan Local, como uso justo</span></div>
+  <h2>La IA de texto cuesta céntimos: sin taxímetro.</h2>
+  <div class="bs-grid">
+    <div class="bs"><b class="bs-n" data-count="0.28" data-dec="2" data-suffix=" €">0,28 €</b><span>coste de servidores de una banda ultra activa en un mes (estimación)</span></div>
+    <div class="bs"><b class="bs-n" data-count="15" data-suffix=" €">15 €</b><span>cuota del plan Local</span></div>
+    <div class="bs"><b class="bs-n" data-count="98" data-suffix=" %">98 %</b><span>margen bruto en ese peor escenario</span></div>
+    <div class="bs"><b class="bs-n" data-count="80">80</b><span>acciones de texto cada 5 horas por banda en el plan Local, como uso justo</span></div>
   </div>
-  <div class="grid c2" style="margin-top:28px">
-    <div class="card"><h3>Lo que es ilimitado</h3><p>Buscar salas y redactar pitches y copys. Un contador de «monedas» en cada botón frena el hábito, y el hábito es lo que retiene.</p></div>
-    <div class="card"><h3>Lo que va por cupo</h3><p>Los reels y la separación de pistas gastan GPU y CPU de verdad. Se acotan por duración, por caché y por un render a la vez, y cada plan trae su cupo mensual.</p></div>
-  </div>
+  <p class="bs-foot"><b>Ilimitado</b> buscar salas y redactar pitches y copys · <b>Por cupo</b> los reels y la separación de pistas, que gastan GPU y CPU de verdad, acotados por duración, caché y un render a la vez.</p>
 </section>
 
 <!-- N4 · Comisión -->
@@ -757,20 +767,17 @@
 </section>
 
 <!-- 18 · Calidad -->
-<section class="slide sunk" data-title="Calidad en cifras">
+<section class="slide bigstats" data-title="Calidad en cifras">
+  <div class="hero-bg"></div>
   <span class="tag">Calidad</span>
   <h2>Un producto con tests de verdad.</h2>
-  <div class="stats">
-    <div class="stat"><b data-count="270" data-suffix="k">270k</b><span>líneas de TypeScript entre cliente y servidor</span></div>
-    <div class="stat"><b data-count="283">283</b><span>endpoints de API</span></div>
-    <div class="stat"><b data-count="47">47</b><span>tablas en PostgreSQL y 31 migraciones SQL</span></div>
-    <div class="stat"><b data-count="1857">1857</b><span>tests unitarios en verde (208 archivos), además de E2E y regresión visual</span></div>
+  <div class="bs-grid">
+    <div class="bs"><b class="bs-n" data-count="271" data-suffix="k">271k</b><span>líneas de TypeScript, entre cliente y servidor</span></div>
+    <div class="bs"><b class="bs-n" data-count="295">295</b><span>rutas de API declaradas</span></div>
+    <div class="bs"><b class="bs-n" data-count="51">51</b><span>tablas en PostgreSQL, con 33 migraciones SQL</span></div>
+    <div class="bs"><b class="bs-n" data-count="1857">1857</b><span>tests unitarios en verde, en 208 archivos, además de E2E y regresión visual</span></div>
   </div>
-  <div class="grid c3" style="margin-top:28px">
-    <div class="card"><h3>En cada commit</h3><p>Husky y lint-staged, y mensajes de commit con formato que calculan la versión solos.</p></div>
-    <div class="card"><h3>En cada push</h3><p>Typecheck, guardas de diseño, ratchet de ESLint, tests unitarios y E2E de Playwright.</p></div>
-    <div class="card"><h3>En producción</h3><p>Railway con healthcheck y reinicio automático, y Sentry en servidor y navegador.</p></div>
-  </div>
+  <p class="bs-foot"><b>En cada commit</b> Husky y lint-staged · <b>En cada push</b> typecheck, ESLint, unitarios y E2E · <b>En producción</b> healthcheck, reinicio automático y Sentry. <i>Medido en el repositorio el 8 de octubre de 2026.</i></p>
 </section>
 
 <!-- 20 · Límites -->

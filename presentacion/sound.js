@@ -135,7 +135,7 @@
       k.whoosh(at(0.2), 0.8, 300, 2800, 0.14);
       [740, 880, 1040].forEach((f, n) => k.blip(at(1.55 + n * 0.3), f, 0.09));
     } else {
-      k.whoosh(at(0.02), 0.45, 300, 2200, 0.07);
+      k.whoosh(at(0.02), 0.5, 300, 2400, 0.11);
     }
   }
 
@@ -145,7 +145,16 @@
     onChange(fn) { onChange = fn; fn(enabled); },
     slide(el) {
       curEl = el; curStart = performance.now();
+      if (document.body.classList.contains('gate')) return;
       play(el, 0);
+    },
+    enable(on) {
+      if (enabled === on) return;
+      enabled = on;
+      try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }
+      document.body.classList.toggle('sound-on', on);
+      if (on) ensure();
+      onChange(on);
     },
     tick() { if (enabled && ensure()) kit(ctx, newScene()).tick(ctx.currentTime + 0.01, 0.07); },
     toggle() {

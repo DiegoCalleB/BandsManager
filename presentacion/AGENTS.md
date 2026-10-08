@@ -63,6 +63,9 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 
 - **Sonido** (`sound.js`): todo sintetizado con WebAudio, sin archivos. Apagado por defecto; tecla `M` o botón «Sonido». Transición suave en cada diapositiva, golpe grave y cortina en los umbrales de acto, «tics» en los pines de las héroe y banda sonora propia del tráiler (los tiempos van en `trailerScore` y deben coincidir con los planos del CSS). Si cambias la duración de un plano del tráiler, cambia también su evento de sonido.
 
+- **Entrada y sonido por defecto**: `#gate` es una pantalla de entrada («Empezar con sonido» / «sin sonido») que da el gesto que exige el navegador y arranca el tráiler. Solo aparece al abrir en la primera diapositiva. Rótulo de crédito oficial: «TFM · Máster de Desarrollo con IA · The Big School by Brais Moure».
+- **Cifras gigantes** (`.bigstats`): cuatro números enormes con cuenta atrás de entrada y una línea de contexto. Cada cifra se mide en el repo el mismo día (líneas con `wc -l` sobre `src`/`server`, rutas con grep de `router.get|post…`, tablas y migraciones sobre `supabase/`, tests con `vitest`) y la diapositiva lleva la fecha de medición.
+
 ## Pipeline de material
 
 - **Capturas y vídeos**: Playwright + Chromium contra la app local (`npm run dev`, puerto 3000), con la API mockeada (`page.route`) y las bandas de Brais. Login de demo y datos de ejemplo, nunca datos reales de clientes.

@@ -220,6 +220,26 @@
     });
   }
 
+  // Pantalla de entrada: da el gesto que el navegador exige para el sonido y arranca el tráiler a la vez
+  const gate = $('#gate');
+  if (gate) {
+    const startsAtBeginning = !location.hash || location.hash === '#1';
+    if (startsAtBeginning && !isScroll()) {
+      document.body.classList.add('gate');
+      const go = (withSound) => {
+        document.body.classList.remove('gate');
+        gate.classList.add('out');
+        setTimeout(() => gate.remove(), 700);
+        if (window.DeckSound) window.DeckSound.enable(withSound);
+        soundStarted = false;
+        show(cur, false);
+      };
+      $('#gateSound').onclick = () => go(true);
+      $('#gateSilent').onclick = () => go(false);
+      $('#gateSound').focus({ preventScroll: true });
+    } else gate.remove();
+  }
+
   const next = () => { if (!stepForward()) show(cur + 1); };
   const prev = () => { if (!stepBack()) show(cur - 1, true, clicksOn() ? 'instant' : 'play'); };
 
@@ -230,7 +250,8 @@
       const to = +el.dataset.count, t0 = performance.now() + 500, dur = 1100;
       const tick = (t) => {
         const p = Math.max(0, Math.min(1, (t - t0) / dur)), e = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(to * e).toLocaleString('es-ES') + (el.dataset.suffix || '');
+        const dec = +(el.dataset.dec || 0), v = to * e;
+        el.textContent = (dec ? v.toLocaleString('es-ES', { minimumFractionDigits: dec, maximumFractionDigits: dec }) : Math.round(v).toLocaleString('es-ES')) + (el.dataset.suffix || '');
         if (p < 1) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);
@@ -268,6 +289,10 @@
 
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.body.classList.contains('gate')) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); $('#gateSound').click(); }
+      return;
+    }
     if (e.target.tagName === 'VIDEO' && (e.key === ' ' || e.key === 'Enter')) return;
     if (e.key === 'Escape') {
       if (lb.classList.contains('on')) return lb.classList.remove('on');
