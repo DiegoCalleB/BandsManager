@@ -10,6 +10,7 @@ import { apiFetch } from "../utils/api";
 import BandMap from "./BandMap";
 import { BandPreviewPlayer, ColaBanda } from "./booking/BandPreviewPlayer";
 import { spotifyArtistUrl } from "../utils/spotifyEmbed";
+import { BandListenEmbed } from "./booking/BandListenEmbed";
 import { SpotifySweepModal } from "./bandCRM/SpotifySweepModal";
 import { instagramPerfil } from "../utils/instagramPerfil";
 import { BandPitchModal } from "./bandCRM/BandPitchModal";
@@ -1743,6 +1744,9 @@ ${myBandName}`;
                           </Button>
                         </div>
                       )}
+
+                      {/* Canción completa en el embed de Spotify (solo enlaces verificados) */}
+                      <BandListenEmbed spotifyUrl={band.spotify_youtube} bandName={band.nombre_banda} />
 
                       {/* Action Buttons */}
                       <div className="flex items-center gap-2">
