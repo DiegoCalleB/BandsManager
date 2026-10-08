@@ -37,4 +37,9 @@ describe('modos en vivo: mecánicas compartidas', () => {
       expect(src).not.toContain('requestFullscreen');
     }
   });
+  it('concierto y ensayo comparten la navegación por ítems', () => {
+    for (const src of [ensayo, concierto]) {
+      expect(src).toContain('useNavegacionItems(');
+    }
+  });
 });
