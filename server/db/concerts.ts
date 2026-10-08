@@ -4,11 +4,17 @@ import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { mergeWithExisting } from './mergeWithExisting.js';
+import { urlHttpSegura } from '../utils/enlacesCortos.js';
+
+// Filas de `concerts` tal como vienen de PostgREST o del cuerpo de una petición: sin tipo estático
+// (el contrato columna a columna lo vigila server/audit/__tests__/schemaContract.test.ts).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilaConcierto = Record<string, any>;
 
 export async function dbGetConcerts(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from('concerts').select('*');
-  let allowedIds: string[] = [];
+  let allowedIds: string[];
 
   if (Array.isArray(bandId)) {
     allowedIds = bandId
@@ -70,13 +76,13 @@ export async function dbGetConcerts(bandId: string | string[]) {
   }));
 }
 
-export async function dbUpsertConcert(concert: any, bandId: string) {
+export async function dbUpsertConcert(concert: FilaConcierto, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   let finalConcertId = concert.id;
-  let existingConcert: any = null;
+  let existingConcert: FilaConcierto | null = null;
   if (finalConcertId) {
     // La fila entera viene en este SELECT: sin fetch previo no hay forma de preservar lo que un
     // guardado parcial no incluye (gastos_detalle, setlist, etc.) — antes se reseteaba en silencio.
@@ -102,7 +108,7 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
 
   const merged = mergeWithExisting(existingConcert, concert);
 
-  const payload: any = {
+  const payload: FilaConcierto = {
     id: finalConcertId || `cnc-${Date.now()}`,
     band_id: targetBandId,
     band_name: merged.band_name || merged.bandName || '',
@@ -134,7 +140,8 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     idioma: merged.idioma || '',
     is_posible: Boolean(merged.is_posible ?? merged.isPosible),
     custom_qr_url: merged.custom_qr_url || merged.customQrUrl || null,
-    entradas_url: merged.entradas_url || merged.entradasUrl || null,
+    // Se pinta como href en páginas públicas: solo http(s); «javascript:...» se guarda como null.
+    entradas_url: urlHttpSegura(merged.entradas_url || merged.entradasUrl),
     entradas_lugar_fisico:
       merged.entradas_lugar_fisico || merged.entradasLugarFisico || null,
     asistencia_propia: Number(
@@ -155,17 +162,13 @@ export async function dbUpsertConcert(concert: any, bandId: string) {
     cartel_url: merged.cartel_url || merged.cartelUrl || null,
   };
 
-  let data: any = null;
-  let error: any = null;
-
-  const currentPayload: Record<string, any> = { ...payload };
+  const currentPayload: FilaConcierto = { ...payload };
   // Solo se quita la columna exacta que la BD dice no tener (antes caían gira_id, gira_nombre e
   // idioma juntos) y el aviso de guardado parcial deja constancia (ver server/db/tolerantWrite.ts).
   const res = await escrituraTolerante('concerts', currentPayload, (p) =>
     sb.from('concerts').upsert(p).select().single()
   );
-  data = res.data;
-  error = res.error;
+  const { data, error } = res;
 
   if (error)
     throw new Error(`Supabase Error (upsert concert): ${error.message}`);
@@ -199,3 +202,41 @@ export async function dbDeleteConcert(id: string, bandId: string) {
 }
 
 // --- SONGS ---
+
+/**
+ * Un concierto de UNA banda por id (para validar que pertenece a la banda de la sesión o a la del
+ * enlace). El filtro por `band_id` va en la propia consulta: un id ajeno devuelve null.
+ */
+export async function dbGetConcertDeBanda(id: string, bandId: string): Promise<FilaConcierto | null> {
+  const { data, error } = await getSupabase()
+    .from('concerts')
+    .select('*')
+    .eq('id', id)
+    .eq('band_id', cleanBandId(bandId))
+    .maybeSingle();
+  if (error) throw new Error(`Supabase Error (concert): ${error.message}`);
+  return data ?? null;
+}
+
+/**
+ * Concierto por id SIN banda: solo para las páginas públicas (/e/...), que parten de una URL y
+ * sacan la banda de la propia fila. Quien llama debe filtrar los campos que expone
+ * (`esConciertoPublicable` + lista blanca): la fila trae caché, notas y datos de contrato.
+ */
+export async function dbGetConcertPublicoPorId(id: string): Promise<FilaConcierto | null> {
+  const { data, error } = await getSupabase().from('concerts').select('*').eq('id', id).maybeSingle();
+  if (error) throw new Error(`Supabase Error (concert): ${error.message}`);
+  return data ?? null;
+}
+
+/** Próximos conciertos de todas las bandas, para el sitemap (con tope de filas). */
+export async function dbGetConciertosFuturosParaSitemap(desdeFecha: string, limite = 5000): Promise<FilaConcierto[]> {
+  const { data, error } = await getSupabase()
+    .from('concerts')
+    .select('*') // incluye is_posible, que ningún SQL del repo declara todavía (ver esConciertoPublicable)
+    .gte('fecha', desdeFecha)
+    .order('fecha', { ascending: true })
+    .limit(limite);
+  if (error) throw new Error(`Supabase Error (concerts sitemap): ${error.message}`);
+  return data || [];
+}

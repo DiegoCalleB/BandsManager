@@ -96,9 +96,9 @@ export const NAV_PINNED_TOP_IDS: NavItemId[] = ['resumen', 'calendario'];
 export const NAV_PINNED_BOTTOM_IDS: NavItemId[] = ['chat'];
 
 /**
- * Agrupación para desktop: incluye los 3 módulos de música
- * (repertorios, ensayos y discografía) cuando el plan desbloquea
- * suficientes módulos (ver MIN_MODULES_FOR_GROUPED_NAV).
+ * Agrupación del menú (la misma en escritorio y móvil: mantener dos listas idénticas a mano
+ * acababa siempre en que una mentía). Metrónomo y Afinador cuelgan de Música: son
+ * herramientas de músico y no merecen un grupo propio con dos filas.
  */
 export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
   {
@@ -111,7 +111,7 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     id: 'musica',
     titleKey: 'navGroup.musica',
     titleDefault: 'Música',
-    itemIds: ['repertorio', 'ensayos', 'discografia'],
+    itemIds: ['repertorio', 'ensayos', 'discografia', 'metronome', 'tuner'],
   },
   {
     id: 'promocion',
@@ -124,51 +124,10 @@ export const NAV_GROUPS_DESKTOP: NavGroupDef[] = [
     titleKey: 'navGroup.negocio',
     titleDefault: 'Negocio',
     itemIds: ['giras', 'finanzas', 'merchan'],
-  },
-  {
-    id: 'herramientas',
-    titleKey: 'navGroup.herramientas',
-    titleDefault: 'Herramientas',
-    itemIds: ['metronome', 'tuner'],
   },
 ];
 
-/**
- * Agrupación para móvil: mismos 3 módulos de música que desktop (repertorio,
- * ensayos, discografia).
- */
-export const NAV_GROUPS_MOBILE: NavGroupDef[] = [
-  {
-    id: 'directorio',
-    titleKey: 'navGroup.directorio',
-    titleDefault: 'Directorio',
-    itemIds: ['booking', 'medios', 'management', 'bandas'],
-  },
-  {
-    id: 'musica',
-    titleKey: 'navGroup.musica',
-    titleDefault: 'Música',
-    itemIds: ['repertorio', 'ensayos', 'discografia'],
-  },
-  {
-    id: 'promocion',
-    titleKey: 'navGroup.promocion',
-    titleDefault: 'Promoción',
-    itemIds: ['epk', 'fans', 'reels'],
-  },
-  {
-    id: 'negocio',
-    titleKey: 'navGroup.negocio',
-    titleDefault: 'Negocio',
-    itemIds: ['giras', 'finanzas', 'merchan'],
-  },
-  {
-    id: 'herramientas',
-    titleKey: 'navGroup.herramientas',
-    titleDefault: 'Herramientas',
-    itemIds: ['metronome', 'tuner'],
-  },
-];
+export const NAV_GROUPS_MOBILE: NavGroupDef[] = NAV_GROUPS_DESKTOP;
 
 // Mantener NAV_GROUPS como alias para compatibilidad (apunta a desktop)
 export const NAV_GROUPS = NAV_GROUPS_DESKTOP;

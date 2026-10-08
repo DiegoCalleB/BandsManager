@@ -49,7 +49,13 @@ import {
 import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
-import { programarClic } from '../../utils/clicMetronomo';
+import { useMetronomo } from '../../hooks/useMetronomo';
+import { useNavegacionItems } from "../../hooks/useNavegacionItems";
+import { useSeguimientoEnsayo } from "../../hooks/useSeguimientoEnsayo";
+import { BotonesEvaluacion } from "./BotonesEvaluacion";
+import { useFullscreen } from "../../hooks/useFullscreen";
+import { useWakeLock } from '../../hooks/useWakeLock';
+import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -67,7 +73,12 @@ export function ModoLocalEnVivoTab({
   onUpdateSong,
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {
+    indice: activeIndex,
+    irA: setActiveIndex,
+    anterior: irAnterior,
+    siguiente: irSiguiente,
+  } = useNavegacionItems(agenda.length);
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
 
   const currentItem = agenda[activeIndex] || null;
@@ -79,28 +90,26 @@ export function ModoLocalEnVivoTab({
   const [viewMode, setViewMode] = useState<"escenario" | "atril">("escenario");
 
   // Fullscreen state
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wakeLockRef = useRef<any>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Track / Block Timer State
-  const [trackSeconds, setTrackSeconds] = useState(0);
-  const [isTrackTimerActive, setIsTrackTimerActive] = useState(false);
-  const trackTimerRef = useRef<number | null>(null);
+  const {
+    trackSeconds,
+    isTrackTimerActive,
+    handleSetEvaluation,
+    handleUpdateCurrentNote,
+  } = useSeguimientoEnsayo({
+    agenda,
+    currentItem,
+    claveDePista: `${activeIndex}|${currentSong?.bpm}`,
+    onUpdateRehearsal,
+  });
 
-  // Metronome State
-  const [bpm, setBpm] = useState(currentSong?.bpm || 120);
-  const [isMetronomeActive, setIsMetronomeActive] = useState(false);
-  const [timeSignature, setTimeSignature] = useState<
-    "4/4" | "3/4" | "6/8" | "2/4"
-  >("4/4");
-  const [currentBeat, setCurrentBeat] = useState(0);
-
-  // Web Audio Context for Metronome
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const nextNoteTimeRef = useRef(0);
-  const timerIDRef = useRef<number | null>(null);
-  const tapTimesRef = useRef<number[]>([]);
+  // Metronome: el mismo hook (reloj de audio, clic y tap tempo) que usa el Atril
+  const beatsPerBar = 4;
+  const metronomo = useMetronomo(currentSong?.bpm || 120, beatsPerBar);
+  const { bpm, pulso: currentBeat, activo: isMetronomeActive } = metronomo;
 
   // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
   const [transpose, setTranspose] = useState<number>(0);
@@ -142,9 +151,10 @@ export function ModoLocalEnVivoTab({
     const dx = touchDeltaX.current;
     const dy = touchDeltaY.current;
 
-    // Detect horizontal swipe (at least 35px and predominantly horizontal)
-    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-      if (dx < 0 && activeIndex < agenda.length - 1) {
+    // Swipe horizontal claro (35 px y predominantemente horizontal)
+    const dir = direccionDeSwipe(dx, dy || 0.0001, 35);
+    if (dir) {
+      if (dir === "siguiente" && activeIndex < agenda.length - 1) {
         // Swipe Left -> Next Song
         const nextIdx = activeIndex + 1;
         setActiveIndex(nextIdx);
@@ -153,7 +163,7 @@ export function ModoLocalEnVivoTab({
           dir: "left",
         });
         setTimeout(() => setSwipeToast(null), 1000);
-      } else if (dx > 0 && activeIndex > 0) {
+      } else if (dir === "anterior" && activeIndex > 0) {
         // Swipe Right -> Previous Song
         const prevIdx = activeIndex - 1;
         setActiveIndex(prevIdx);
@@ -177,17 +187,18 @@ export function ModoLocalEnVivoTab({
       if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
         return;
 
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
+      const accion = accionDeTecla(e.key);
+      if (accion === "adelante") {
         if (activeIndex < agenda.length - 1) {
           e.preventDefault();
-          setActiveIndex((prev) => prev + 1);
+          irSiguiente();
         }
-      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      } else if (accion === "atras") {
         if (activeIndex > 0) {
           e.preventDefault();
-          setActiveIndex((prev) => prev - 1);
+          irAnterior();
         }
-      } else if (e.key === " " && viewMode === "atril") {
+      } else if (accion === "espacio" && viewMode === "atril") {
         e.preventDefault();
         autoScroll.alternar();
       }
@@ -205,163 +216,14 @@ export function ModoLocalEnVivoTab({
     "text-lg sm:text-2xl leading-loose font-medium",
   ];
 
-  // Wake Lock handler to prevent phone screen from turning off in rehearsals
-  useEffect(() => {
-    async function requestWakeLock() {
-      if ("wakeLock" in navigator && (isFullscreen || isTrackTimerActive)) {
-        try {
-          wakeLockRef.current = await (navigator as any).wakeLock.request(
-            "screen",
-          );
-        } catch {
-          // Wake lock rejected or unsupported
-        }
-      }
-    }
-    requestWakeLock();
-    return () => {
-      if (wakeLockRef.current) {
-        wakeLockRef.current.release().catch(() => {});
-        wakeLockRef.current = null;
-      }
-    };
-  }, [isFullscreen, isTrackTimerActive]);
+  // Pantalla encendida mientras se ensaya (pantalla completa o cronómetro de la pista en marcha)
+  useWakeLock(isFullscreen || isTrackTimerActive);
 
-  // When song changes, update BPM, reset track timer and transposition
+  // Al cambiar de pista se reinicia la transposición y se para el autoscroll
   useEffect(() => {
-    if (currentSong?.bpm) {
-      setBpm(currentSong.bpm);
-    }
-    setTrackSeconds(0);
-    setIsTrackTimerActive(true);
     setTranspose(0);
     autoScroll.setActivo(false);
   }, [activeIndex, currentSong?.bpm]);
-
-  // Track Timer Interval
-  useEffect(() => {
-    if (isTrackTimerActive) {
-      trackTimerRef.current = window.setInterval(() => {
-        setTrackSeconds((prev) => prev + 1);
-      }, 1000);
-    } else if (trackTimerRef.current) {
-      clearInterval(trackTimerRef.current);
-      trackTimerRef.current = null;
-    }
-    return () => {
-      if (trackTimerRef.current) clearInterval(trackTimerRef.current);
-    };
-  }, [isTrackTimerActive]);
-
-  // Metronome Scheduler
-  const beatsPerBar =
-    timeSignature === "3/4"
-      ? 3
-      : timeSignature === "6/8"
-        ? 6
-        : timeSignature === "2/4"
-          ? 2
-          : 4;
-
-  const playClick = (time: number, isAccent: boolean) => {
-    if (!audioCtxRef.current) return;
-    programarClic(audioCtxRef.current, time, isAccent, 0.7);
-  };
-
-  useEffect(() => {
-    if (!isMetronomeActive) {
-      if (timerIDRef.current) clearInterval(timerIDRef.current);
-      setCurrentBeat(0);
-      return;
-    }
-
-    if (!audioCtxRef.current) {
-      const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
-      audioCtxRef.current = new AudioCtx();
-    }
-    if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume();
-    }
-
-    nextNoteTimeRef.current = audioCtxRef.current.currentTime + 0.05;
-    let beatCount = 0;
-
-    const interval = setInterval(() => {
-      if (!audioCtxRef.current) return;
-      const secondsPerBeat = 60.0 / bpm;
-
-      while (nextNoteTimeRef.current < audioCtxRef.current.currentTime + 0.1) {
-        const isAccent = beatCount % beatsPerBar === 0;
-        playClick(nextNoteTimeRef.current, isAccent);
-        setCurrentBeat(beatCount % beatsPerBar);
-        nextNoteTimeRef.current += secondsPerBeat;
-        beatCount++;
-      }
-    }, 25);
-
-    timerIDRef.current = interval as any;
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isMetronomeActive, bpm, beatsPerBar]);
-
-  // Tap Tempo
-  const handleTapTempo = () => {
-    const now = performance.now();
-    const taps = tapTimesRef.current;
-    taps.push(now);
-    if (taps.length > 4) taps.shift();
-
-    if (taps.length >= 2) {
-      const intervals = [];
-      for (let i = 1; i < taps.length; i++) {
-        intervals.push(taps[i] - taps[i - 1]);
-      }
-      const avgInterval =
-        intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      const calculatedBpm = Math.round(60000 / avgInterval);
-      if (calculatedBpm >= 40 && calculatedBpm <= 280) {
-        setBpm(calculatedBpm);
-      }
-    }
-  };
-
-  // Evaluation Handler
-  const handleSetEvaluation = (
-    evaluacion: "bordada" | "regular" | "repetir",
-  ) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, evaluacion } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Note handler for current item
-  const handleUpdateCurrentNote = (nota: string) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, enfoque: nota } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Toggle Fullscreen
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      setIsFullscreen(true);
-      if (containerRef.current && containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen().catch(() => {});
-      }
-    } else {
-      setIsFullscreen(false);
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
-  };
 
   // Current chord text
   // Sin cifrado guardado se muestra vacío: antes caía en una letra
@@ -653,7 +515,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 className="items-center gap-2"
               >
                 {isMetronomeActive ? (
@@ -684,13 +546,13 @@ export function ModoLocalEnVivoTab({
             {/* BPM Controls */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 5))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -5
               </button>
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 1))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -1
@@ -702,13 +564,13 @@ export function ModoLocalEnVivoTab({
               </span>
 
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 1))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +1
               </button>
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 5))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +5
@@ -717,7 +579,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 size="xs"
-                onClick={handleTapTempo}
+                onClick={metronomo.tocarTempo}
               >
                 Tap
               </Button>
@@ -728,48 +590,14 @@ export function ModoLocalEnVivoTab({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
             {/* 1-Tap Evaluation Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-              <span className="text-xs font-sans text-[var(--ink-2)] mr-1 hidden xs:inline">
-                Evaluación:
-              </span>
-
-              <Button
-                variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                size="sm"
-                onClick={() => handleSetEvaluation("bordada")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟢" /></span>
-                <span>Bordada</span>
-              </Button>
-
-              <Button
-                variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                size="sm"
-                onClick={() => handleSetEvaluation("regular")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟡" /></span>
-                <span>Regular</span>
-              </Button>
-
-              <button
-                onClick={() => handleSetEvaluation("repetir")}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  currentItem?.evaluacion === "repetir"
-                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                    : "bg-[var(--alert)]/15 text-[var(--ink)] hover:bg-[var(--alert)]/25"
-                }`}
-              >
-                <span><ShowIcon inline emoji="🔴" /></span>
-                <span>Repetir</span>
-              </button>
+              <BotonesEvaluacion actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
             </div>
 
             {/* Previous / Next Song Buttons */}
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
                 disabled={activeIndex === 0}
-                onClick={() => setActiveIndex((prev) => prev - 1)}
+                onClick={() => irAnterior()}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-sans font-bold text-xs cursor-pointer transition-ui"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -779,7 +607,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 disabled={activeIndex === agenda.length - 1}
-                onClick={() => setActiveIndex((prev) => prev + 1)}
+                onClick={() => irSiguiente()}
                 className="flex-1 sm:flex-none items-center justify-center gap-1"
               >
                 <span>Siguiente</span>
@@ -802,7 +630,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 title="Metrónomo clic"
               >
                 {isMetronomeActive ? (
@@ -978,34 +806,7 @@ export function ModoLocalEnVivoTab({
             {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                <Button
-                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("bordada")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟢" />Bordada</span>
-                </Button>
-
-                <Button
-                  variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("regular")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟡" />Regular</span>
-                </Button>
-
-                <button
-                  onClick={() => handleSetEvaluation("repetir")}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                    currentItem?.evaluacion === "repetir"
-                      ? "bg-[var(--alert)] text-[var(--on-alert)] font-bold"
-                      : "bg-[var(--alert)]/15 text-[var(--ink)]"
-                  }`}
-                >
-                  <span><ShowIcon inline emoji="🔴" />Repetir</span>
-                </button>
+                <BotonesEvaluacion compacto actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
               </div>
 
               {/* Middle swipe hint indicator */}
@@ -1016,7 +817,7 @@ export function ModoLocalEnVivoTab({
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   disabled={activeIndex === 0}
-                  onClick={() => setActiveIndex((prev) => prev - 1)}
+                  onClick={() => irAnterior()}
                   className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans font-bold disabled:opacity-30 cursor-pointer transition-ui"
                 >
                   ← Anterior
@@ -1026,7 +827,7 @@ export function ModoLocalEnVivoTab({
                   variant="primary"
                   size="xs"
                   disabled={activeIndex === agenda.length - 1}
-                  onClick={() => setActiveIndex((prev) => prev + 1)}
+                  onClick={() => irSiguiente()}
                   className="flex-1 sm:flex-none"
                 >
                   Siguiente →

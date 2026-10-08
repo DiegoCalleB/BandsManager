@@ -3,6 +3,8 @@ import { User } from '../types';
 import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
+import { atribuirReferidoPendiente } from '../utils/referido';
+import { atribuirReferido } from '../utils/promocionApi';
 
 /** Sesión del usuario: estado persistido en `localStorage` (`bakandeya_user`), login y logout. */
 export function useAuth() {
@@ -155,6 +157,13 @@ export function useAuth() {
       document.removeEventListener('visibilitychange', handleFocus);
     };
   }, [isLoggedIn, authToken, refreshSession]);
+
+  // Una banda recién registrada que llegó por una invitación (?ref=) se atribuye a quien la invitó.
+  // El servidor decide (solo altas recientes, la primera atribución manda); aquí se envía una vez.
+  useEffect(() => {
+    if (!isLoggedIn || !authToken) return;
+    void atribuirReferidoPendiente((codigo) => atribuirReferido(codigo));
+  }, [isLoggedIn, authToken]);
 
   const handleLoginSuccess = useCallback(
     (user: User, token: string, bandsList?: any[]) => {

@@ -1,5 +1,5 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Song, ThemeColors } from "../../types";
 import {
   Disc,
@@ -45,6 +45,8 @@ import { ExportAlbumSongsModal } from "./ExportAlbumSongsModal";
 import { SongCardRow } from "./SongCardRow";
 import { ShowIcon } from "../ui/ShowIcon";
 import { ActionMenu, Button, IconButton, Input } from "../ui";
+import { resumirTranscripcion } from "../../utils/transcripcionMasiva";
+import { colaActiva, useColaLetras } from "../../hooks/useColaLetras";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -138,6 +140,8 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     total: number;
     failedTitles: string[];
   } | null>(null);
+  const [confirmandoLetras, setConfirmandoLetras] = useState(false);
+  const [colaVista, setColaVista] = useState(false);
   // Las 4 formas de crear un disco (vacío / subir MP3-WAV / Spotify / recortar de un concierto)
   // vivían como 4 botones de texto siempre visibles — se usan una vez por disco, no en cada
   // visita. Un solo punto de entrada"+ Nuevo disco" con las 4 opciones explicadas, mismo patrón
@@ -510,6 +514,37 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     });
   };
 
+  // «Letras del audio» en lote: una llamada de pago por canción, así que primero se muestra el
+  // coste esperado. La cola vive en el servidor (sigue aunque cierres la pestaña) y solo toca
+  // canciones con audio y sin cifrado: nunca se sobrescribe lo que escribió la banda.
+  const resumenLetras = resumirTranscripcion(safeSongs);
+  const recargarCancionesConLetra = async () => {
+    try {
+      const d = await apiFetch<{ songs?: Song[] }>("/api/songs");
+      const nuevas = d?.songs ?? [];
+      setSongs((prev) =>
+        prev.map((s) => {
+          const n = nuevas.find((x) => x.id === s.id);
+          return n?.cifradoTexto && n.cifradoTexto !== s.cifradoTexto ? { ...s, cifradoTexto: n.cifradoTexto } : s;
+        }),
+      );
+    } catch {
+      /* se verá al recargar */
+    }
+  };
+  const cola = useColaLetras(recargarCancionesConLetra);
+  const colaEnMarcha = colaActiva(cola.resumen);
+  useEffect(() => {
+    if (colaEnMarcha) setColaVista(true);
+  }, [colaEnMarcha]);
+  const titulosDe = (ids: string[]) =>
+    ids.map((id) => safeSongs.find((s) => s.id === id)?.titulo || id).join(", ");
+
+  const handleEncolarLetras = async () => {
+    setConfirmandoLetras(false);
+    await cola.encolar(resumenLetras.pendientes.map((s) => s.id));
+  };
+
   return (
     <div className="w-full flex flex-col gap-4" data-modulo="discografia">
       {/* Action Buttons: Exportar + Nuevo Disco */}
@@ -734,8 +769,89 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
                   </Button>
                 </div>
               )}
+              {cola.resumen && resumenLetras.pendientes.length > 0 && !colaEnMarcha && !confirmandoLetras && (
+                <Button
+                  variant="neutral"
+                  size="xs"
+                  type="button"
+                  onClick={() => setConfirmandoLetras(true)}
+                  className="items-center gap-1"
+                  title="Transcribir la letra de la voz de todas las canciones que tienen audio y aún no tienen cifrado"
+                >
+                  <FileText className="w-3 h-3 text-[var(--ink-2)]" />
+                  <span className="hidden xs:inline">Letras del audio</span>
+                  <span>({resumenLetras.pendientes.length})</span>
+                </Button>
+              )}
             </div>
           </div>
+
+          {(confirmandoLetras || colaVista || cola.error) && cola.resumen && (
+            <div
+              className="w-full rounded-[var(--r-m)] bg-[var(--sunken)] p-3 flex flex-wrap items-center gap-2 text-xs text-[var(--ink)]"
+              role="status"
+              data-letras-masivas={confirmandoLetras ? "confirmar" : colaEnMarcha ? "corriendo" : "fin"}
+            >
+              {confirmandoLetras && (
+                <>
+                  <span className="flex-1 min-w-[12rem]">
+                    Se transcribirán {resumenLetras.pendientes.length} de {resumenLetras.total} canciones
+                    {resumenLetras.sinAudio + resumenLetras.conCifrado > 0 &&
+                      ` (${[
+                        resumenLetras.sinAudio > 0 ? `${resumenLetras.sinAudio} sin audio` : "",
+                        resumenLetras.conCifrado > 0 ? `${resumenLetras.conCifrado} ya con cifrado` : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" y ")})`}
+                    . Una a una, en el servidor (puedes cerrar la pestaña) y sin tocar lo que ya hayas escrito; cada una consume IA.
+                    Tu plan permite {cola.resumen.limiteMes} al mes y llevas {cola.resumen.hechasMes}.
+                  </span>
+                  <Button variant="primary" size="xs" type="button" onClick={handleEncolarLetras}>
+                    Transcribir
+                  </Button>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setConfirmandoLetras(false)}>
+                    Cancelar
+                  </Button>
+                </>
+              )}
+              {!confirmandoLetras && colaEnMarcha && (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--ink-2)]" />
+                  <span className="flex-1">
+                    Transcribiendo en el servidor: {cola.resumen.pendientes + cola.resumen.enCurso} por hacer. Puedes cerrar la pestaña; seguirá.
+                  </span>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => void cola.parar()}>
+                    Parar
+                  </Button>
+                </>
+              )}
+              {!confirmandoLetras && !colaEnMarcha && colaVista && (
+                <>
+                  <span className="flex-1">
+                    Listo: {cola.resumen.hechas} con letra
+                    {cola.resumen.sinLetra.length > 0 && ` · sin voz inteligible: ${titulosDe(cola.resumen.sinLetra)}`}
+                    {cola.resumen.fallidas.length > 0 && ` · fallaron: ${titulosDe(cola.resumen.fallidas)}`}
+                    {cola.porTope > 0 && ` · ${cola.porTope} fuera por el tope mensual del plan`}. Son automáticas: revísalas de oído.
+                  </span>
+                  <Button variant="ghost" size="xs" type="button" onClick={() => setColaVista(false)}>
+                    Cerrar
+                  </Button>
+                </>
+              )}
+              {cola.error && <span className="w-full text-[var(--ink-2)]">{cola.error}</span>}
+            </div>
+          )}
+
+          {cola.resumen && (
+            <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] cursor-pointer" data-letras-auto>
+              <input
+                type="checkbox"
+                checked={cola.resumen.activado}
+                onChange={(e) => void cola.fijarAuto(e.target.checked)}
+              />
+              Transcribir automáticamente lo nuevo (audio nuevo sin cifrado; consume IA y cuenta para el tope del plan)
+            </label>
+          )}
         </div>
 
         {/* Albums Stack */}

@@ -51,6 +51,10 @@ import PracticeModePanel from "./PracticeModePanel";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { useNavegacionItems } from "../hooks/useNavegacionItems";
+import { useFullscreen } from "../hooks/useFullscreen";
+import { useWakeLock } from '../hooks/useWakeLock';
+import { accionDeTecla, direccionDeSwipe } from '../utils/pasarPagina';
 
 interface SetlistPerformanceViewProps {
   setlist: Setlist;
@@ -106,12 +110,10 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   currentUser,
   initialMode = "directo",
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [modeArchetype, setModeArchetype] = useState<"directo" | "ensayo">(
     initialMode,
   );
   const [showSongListDrawer, setShowSongListDrawer] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [fontSizeIdx, setFontSizeIdx] = useState(1);
   const [showNotes, setShowNotes] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -147,7 +149,8 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   );
   const touchStartX = useRef<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wakeLockRef = useRef<any>(null);
+  // Pantalla completa real del navegador: oculta la barra de Chrome/Safari y evita toques accidentales.
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Modo Escenario Offline Guard: almacena en caché local letras, cifrados y metadatos
   // para que el concierto siga funcionando al 100% si se corta la conexión o el wifi en la sala.
@@ -176,6 +179,14 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
       (item.tipoItem === "cancion" && item.songId) ||
       item.tipoItem === "bloque",
   );
+  const {
+    indice: currentIndex,
+    irA: setCurrentIndex,
+    anterior: handlePrev,
+    siguiente: handleNext,
+    esPrimero: isFirst,
+    esUltimo: isLast,
+  } = useNavegacionItems(allItems.length);
   const currentItem = allItems[currentIndex];
   const isBlock = currentItem?.tipoItem === "bloque";
   const currentSong = !isBlock
@@ -372,78 +383,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     };
   }, []);
 
-  // WAKE LOCK: lo más importante para un músico en directo — que la pantalla del móvil/tablet
-  // NO se apague a media canción por inactividad táctil (el músico está tocando, no tocando la
-  // pantalla). Sin esto, el modo concierto es inservible en un bolo real. Se libera cuando el
-  // propio músico activa el Modo Descanso para el tema actual (isResting) — es la única
-  // situación en la que SÍ queremos que el móvil pueda apagar la pantalla solo.
-  useEffect(() => {
-    if (isResting) {
-      wakeLockRef.current?.release?.().catch(() => {});
-      wakeLockRef.current = null;
-      return;
-    }
-
-    let released = false;
-    const requestLock = async () => {
-      try {
-        if ("wakeLock" in navigator) {
-          wakeLockRef.current = await (navigator as any).wakeLock.request(
-            "screen",
-          );
-        }
-      } catch {
-        // Algunos navegadores lo rechazan si la pestaña no está en foco o no hay soporte —
-        // degradamos en silencio, no es motivo para romper el modo concierto.
-      }
-    };
-    requestLock();
-
-    // iOS/Android liberan el wake lock al cambiar de pestaña/app; lo repedimos al volver.
-    const handleVisibility = () => {
-      if (!released && document.visibilityState === "visible") {
-        requestLock();
-      } else if (document.visibilityState === "hidden") {
-        wakeLockRef.current?.release?.().catch(() => {});
-        wakeLockRef.current = null;
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    return () => {
-      released = true;
-      document.removeEventListener("visibilitychange", handleVisibility);
-      wakeLockRef.current?.release?.().catch(() => {});
-    };
-  }, [isResting]);
-
-  // FULLSCREEN real del navegador (oculta la barra de direcciones/UI del sistema) — el
-  // fixed inset-0 ya cubre la ventana, pero en un móvil/tablet la barra de Chrome/Safari sigue
-  // ahí robando espacio y invitando a un toque accidental que saque al músico de la app.
-  const toggleFullscreen = useCallback(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    if (!document.fullscreenElement) {
-      el.requestFullscreen?.().catch(() => {});
-    } else {
-      document.exitFullscreen?.().catch(() => {});
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleChange = () =>
-      setIsFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", handleChange);
-    return () => document.removeEventListener("fullscreenchange", handleChange);
-  }, []);
-
-  const handlePrev = () => {
-    setCurrentIndex((i) => Math.max(0, i - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((i) => Math.min(allItems.length - 1, i + 1));
-  };
+  // WAKE LOCK: lo más importante para un músico en directo — que la pantalla NO se apague a media
+  // canción. Se libera en Modo Descanso (isResting), la única vez que SÍ queremos que se apague.
+  useWakeLock(!isResting);
 
   // Avanzar/retroceder de SECCIÓN dentro del tema (Intro→Verso→Estribillo...) cuando la hay;
   // al llegar al final o al principio, pasa de canción — así el pedal/tecla de"pasar página"
@@ -477,15 +419,16 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
   // partituras (los que usan orquestas de verdad con iPad) emulan esas teclas, no solo flechas.
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      const accion = accionDeTecla(e.key);
+      if (accion === "atras") {
         e.preventDefault();
         handleRetreat();
       }
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
+      if (accion === "adelante") {
         e.preventDefault();
         handleAdvance();
       }
-      if (e.key === " ") {
+      if (accion === "espacio") {
         e.preventDefault();
         if (teleprompterMode === "scroll") {
           setIsTeleprompterPlaying((p) => !p);
@@ -519,9 +462,9 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     if (touchStartX.current === null) return;
     const deltaX = e.changedTouches[0].clientX - touchStartX.current;
     touchStartX.current = null;
-    if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
-    if (deltaX > 0) handlePrev();
-    else handleNext();
+    const dir = direccionDeSwipe(deltaX, 0, SWIPE_THRESHOLD);
+    if (dir === "anterior") handlePrev();
+    else if (dir === "siguiente") handleNext();
   };
 
   if (!currentItem) {
@@ -552,8 +495,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
     : "";
   const structure = currentSong?.guiaSustituto?.estructura || "";
   const progression = currentSong?.guiaSustituto?.progresionClave || "";
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === allItems.length - 1;
   const blockMeta = isBlock ? getBlockMeta(currentItem) : null;
 
   // MODO DESCANSO: pantalla negra a pantalla completa, sin wake lock — la opción real más
@@ -690,43 +631,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
               </Button>
             )}
 
-            {/* Quick action: Separar con Iris si no tiene pistas */}
-            {!isBlock && currentSong && !irisStemIdea && (
-              <button
-                type="button"
-                onClick={() => handleLaunchStudio()}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-semibold flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
-                  glareMode
-                    ? "bg-[var(--surface)] hover:bg-[var(--sunken)] text-[var(--ink)]"
-                    : "bg-[var(--sunken)]/80 hover:bg-[var(--ink-3)]/60 text-[var(--ink-2)]"
-                }`}
-                title="Separar pistas de este tema con el motor de IA iris en modo Studio"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                <span className="hidden sm:inline">Separar con Iris</span>
-                <span className="sm:hidden">Iris</span>
-              </button>
-            )}
-
-            {/* Quick action: Modo Studio */}
-            {!isBlock && currentSong && (
-              <button
-                id="btn-stage-studio-mode"
-                type="button"
-                onClick={() => handleLaunchStudio()}
-                className={`px-2.5 py-1 rounded-[var(--r-pill)] text-xs font-medium flex items-center gap-1.5 transition shrink-0 cursor-pointer ${
-                  glareMode
-                    ? "bg-[var(--tentative)]/10 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]"
-                    : "bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)]"
-                }`}
-                title="Modo Studio: grabaciones multipista, ideas de audio, acordes y arreglos de este tema"
-              >
-                <Sliders className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                <span className="hidden sm:inline">Modo Studio</span>
-                <span className="sm:hidden">Studio</span>
-              </button>
-            )}
-
             <button
               onClick={() => setShowMoreMenu((v) => !v)}
               className={`p-1.5 rounded-[var(--r-pill)] transition ${showMoreMenu ? (glareMode ? "bg-[var(--sunken)]" : "bg-[var(--ink)]/15") : glareMode ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]" : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"}`}
@@ -759,7 +663,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                   {/* Studio & Ensayo shortcuts inside menu */}
                   {!isBlock && currentSong && (
                     <>
-                      {irisStemIdea ? (
+                      {irisStemIdea && (
                         <button
                           onClick={() => {
                             setShowMoreMenu(false);
@@ -774,31 +678,11 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <Headphones className="w-4 h-4 shrink-0 text-[var(--ok)]" />
                           <span>Sala de ensayo (pistas iris)</span>
                         </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            setShowMoreMenu(false);
-                            handleLaunchStudio();
-                          }}
-                          className={`w-full text-left px-3 py-2 rounded-[var(--r-s)] flex items-center gap-2.5 transition ${
-                            glareMode
-                              ? "hover:bg-[var(--sunken)] text-[var(--ink-2)]"
-                              : "hover:bg-[var(--ink)]/10 text-[var(--ink-2)]"
-                          }`}
-                          title="Abre el Studio para separar las pistas de este tema con el motor de IA Iris"
-                        >
-                          <Headphones className="w-4 h-4 shrink-0 text-[var(--ink-2)]" />
-                          <span className="flex items-center justify-between flex-1">
-                            <span>Separar pistas con Iris</span>
-                            <span className="text-micro px-1.5 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)] font-sans">
-                              Studio
-                            </span>
-                          </span>
-                        </button>
                       )}
 
                       {onOpenStudioModal && (
                         <button
+                          id="btn-stage-studio-mode"
                           onClick={() => {
                             setShowMoreMenu(false);
                             handleLaunchStudio();
@@ -1438,7 +1322,7 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                     </div>
 
                     <div className="flex items-center gap-1.5 pt-1">
-                      {songIrisIdea ? (
+                      {songIrisIdea && (
                         <Button
                           variant="neutral"
                           size="xs"
@@ -1453,19 +1337,6 @@ export const SetlistPerformanceView: React.FC<SetlistPerformanceViewProps> = ({
                           <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
                           <span>Modo ensayo</span>
                         </Button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowSongListDrawer(false);
-                            handleLaunchStudio(song);
-                          }}
-                          className="flex-1 py-1.5 px-2 rounded-[var(--r-pill)] text-xs font-bold bg-[var(--tentative)]/20 hover:bg-[var(--tentative)]/30 text-[var(--tentative)] flex items-center justify-center gap-1 transition cursor-pointer active:scale-[0.97]"
-                          title="Separar pistas de este tema con el motor de IA iris en modo Studio"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-[var(--tentative)]" />
-                          <span>Separar con Iris</span>
-                        </button>
                       )}
 
                       <Button

@@ -56,9 +56,19 @@ import { useMetronomo } from "../hooks/useMetronomo";
 import { ModalOido } from "./chords/ModalOido";
 import { SelectorEscucha } from "./chords/SelectorEscucha";
 import { MezclaPistas } from "./chords/MezclaPistas";
+import { ControlBucle } from "./chords/ControlBucle";
+import { ControlVelocidad } from "./chords/ControlVelocidad";
+import { ControlTonoAudio } from "./chords/ControlTonoAudio";
+import { useTonoAudio } from "../hooks/useTonoAudio";
+import { useMezclaGuardada } from "../hooks/useMezclaGuardada";
+import { useBucleAB } from "../hooks/useBucleAB";
 import { useMezclaStems } from "../hooks/useMezclaStems";
-import { pistasDeCancion } from "../utils/irisTracks";
-import { pistaDelUsuario, pistasParaModo, type AjustesPistas, type ModoEscucha } from "../utils/mezclaStems";
+import { getSongIrisStemIdea, pistasDeCancion } from "../utils/irisTracks";
+import { IrisStudio } from "./chords/IrisStudio";
+import { useSeparacionIris } from "../hooks/useSeparacionIris";
+import { ideaParaSeparar, type MotorIris } from "../utils/separacionIris";
+import { SongStudioStemProgressModal } from "./song_studio/SongStudioStemProgressModal";
+import { pistaDelUsuario, pistasParaModo, type ModoEscucha } from "../utils/mezclaStems";
 import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
 import { GrabarIdea } from "./chords/GrabarIdea";
 import { useGrabarIdea } from "../hooks/useGrabarIdea";
@@ -165,6 +175,18 @@ export function Atril({
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
   const stems = useMemo(() => pistasDeCancion(song), [song]);
+  const iris = useSeparacionIris({
+    song,
+    onUpdateSong,
+    motor: "fal",
+    pistasElegidas: ["Voz", "Batería", "Bajo", "Guitarras", "Teclados", "Arreglos"],
+    cancelarAlDesmontar: true,
+  });
+  const separarConIris = (motor: MotorIris) => {
+    const idea = ideaParaSeparar(song, audioUrl);
+    if (idea) void iris.handlePerformAiStemSeparation(idea, motor);
+  };
+  const [masControles, setMasControles] = useState(false);
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
@@ -174,8 +196,13 @@ export function Atril({
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [ajustesPistas, setAjustesPistas] = useState<AjustesPistas>({});
-  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
+  const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
+  useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
+  const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
+  const semitonosAudio = audioSigueTono ? transpose : 0;
+  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas, semitonosAudio);
+  useTonoAudio(audioRef, audioUrl, semitonosAudio);
+  const { bucle, marcar: marcarBucle, limpiar: limpiarBucle } = useBucleAB(audioRef, audioUrl);
 
   // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
   const grabacion = useGrabarIdea(audioRef);
@@ -850,8 +877,22 @@ export function Atril({
                   )}
                 </div>
 
+                <IrisStudio
+                  pistas={stems.length}
+                  motor={getSongIrisStemIdea(song)?.stemEngineUsed?.split("(")[0].trim()}
+                  tieneAudio={!!audioUrl}
+                  separando={iris.isSeparatingStemsAi}
+                  onSeparar={separarConIris}
+                />
                 {stems.length > 1 && (
                   <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
+                )}
+                {audioUrl && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                    <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
+                    <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
+                  </div>
                 )}
                 <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
@@ -911,6 +952,16 @@ export function Atril({
                   )}
                 </div>
 
+                <ControlAutoscroll auto={autoScroll} />
+                <ControlMetronomo metronomo={metronomo} />
+
+                {modo === 'Estudiar' && (
+                  <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
+                    {masControles ? 'Menos' : 'Más'}
+                  </Button>
+                )}
+                {(modo !== 'Estudiar' || masControles) && (
+                  <>
                 {/* NOTATION TOGGLE (Latino / C-D-E) */}
                 <Button
                   variant="neutral"
@@ -927,9 +978,6 @@ export function Atril({
                     {notation === "ES" ? "Do - Re - Mi" : "C - D - E"}
                   </span>
                 </Button>
-
-                <ControlAutoscroll auto={autoScroll} />
-                <ControlMetronomo metronomo={metronomo} />
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
@@ -954,6 +1002,8 @@ export function Atril({
                     <Copy className="w-4 h-4" />
                   )}
                 </button>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -1346,6 +1396,11 @@ export function Atril({
           </div>
         </div>
 
+        <SongStudioStemProgressModal
+          stemProgressModal={iris.stemProgressModal}
+          setStemProgressModal={iris.setStemProgressModal}
+        />
+
         {/* SHARE MODAL FOR WHATSAPP / APPS */}
         <ShareModal
           isOpen={showShareModal}
@@ -1380,6 +1435,7 @@ export function Atril({
           <audio
             ref={audioRef}
             src={audioUrl}
+            crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
               if (audioRef.current) {

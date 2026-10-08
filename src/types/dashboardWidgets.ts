@@ -12,7 +12,8 @@ export type WidgetType =
   | 'epk_status'
   | 'ai_agent_status'
   | 'tour_status'
-  | 'growth_guidance';
+  | 'growth_guidance'
+  | 'roi_banda';
 
 export type CalendarWidgetViewMode = 'list' | 'mini_month' | 'weekly_grid';
 
@@ -94,6 +95,15 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
     visible: true,
     order: 5,
   },
+  {
+    id: 'roi-banda-widget',
+    type: 'roi_banda',
+    title: 'Lo que has cobrado',
+    wSpan: 6,
+    hSpan: 'normal',
+    visible: true,
+    order: 6,
+  },
 ];
 
 export interface ModuleWidgetMeta {
@@ -157,6 +167,16 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     defaultHSpan: 'normal',
     iconName: 'TrendingUp',
     requiredModule: 'booking',
+  },
+  {
+    type: 'roi_banda',
+    title: 'Lo que has cobrado',
+    category: 'Negocio & Finanzas',
+    description: 'Lo cobrado en los últimos 3 meses frente a lo que cuesta tu plan. Solo dinero cobrado, visible para líderes.',
+    defaultWSpan: 6,
+    defaultHSpan: 'normal',
+    iconName: 'TrendingUp',
+    requiredModule: 'resumen',
   },
   {
     type: 'finances_chart',

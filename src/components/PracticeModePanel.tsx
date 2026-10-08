@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { saltoDeBucle } from "../utils/bucleAB";
 import {
   X,
   Play,
@@ -399,13 +400,8 @@ export default function PracticeModePanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metronomeOn, isPlaying, speed, song.bpm]);
 
-  const effectiveSemitones = useMemo(() => {
-    if (semitonesOffset === 0) return 0;
-    // La velocidad de práctica ya cambia el tono de forma natural (playbackRate). Compensamos ese
-    // desvío para que"+2 semitonos" siga significando"+2 respecto al tono ORIGINAL" sin importar
-    // a qué velocidad estés ensayando.
-    return semitonesOffset - 12 * Math.log2(speed);
-  }, [semitonesOffset, speed]);
+  // OJO: los semitonos van tal cual al Tone.PitchShift. Los navegadores conservan el tono al
+  // cambiar playbackRate (preservesPitch), así que NO hay que compensar con 12·log2(speed).
 
   // Carga inicial + limpieza total al cambiar de idea o desmontar
   useEffect(() => {
@@ -452,9 +448,8 @@ export default function PracticeModePanel({
 
     const onTimeUpdate = () => {
       setCurrentTime(el.currentTime);
-      if (loopB != null && el.currentTime >= loopB) {
-        seekAll(loopA ?? 0);
-      }
+      const salto = saltoDeBucle(el.currentTime, loopA, loopB);
+      if (salto != null) seekAll(salto);
     };
     const onLoadedMeta = () => setDuration(el.duration || 0);
     const onEnded = () => setIsPlaying(false);

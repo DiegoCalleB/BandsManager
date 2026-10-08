@@ -58,7 +58,7 @@ import {
   WHATSAPP_WINDOW_NAME,
 } from "../utils/whatsapp";
 import { decodeBandIdClient } from "../utils/bandHash";
-import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
+import { Button, IconButton, InsigniaBandManager, Input, LinkButton, Textarea } from './ui';
 
 export interface FansLandingProps {
   currentBandId?: string;
@@ -1688,9 +1688,9 @@ export const FansLanding: React.FC<FansLandingProps> = ({
                       </div>
                       {(c.entradasUrl || c.entradasLugarFisico) && (
                         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          {c.entradasUrl && (
+                          {safeUrl(c.entradasUrl) && (
                             <a
-                              href={c.entradasUrl}
+                              href={safeUrl(c.entradasUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-micro font-bold hover:bg-[var(--ok)] transition-colors"
@@ -2062,6 +2062,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
             </div>
           </div>
         </div>
+        <InsigniaBandManager bandId={resolvedBandId} origen="fans" className="text-center" />
       </div>
 
       {/* Privacy Policy Modal */}

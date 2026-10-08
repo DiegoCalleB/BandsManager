@@ -40,6 +40,7 @@ import {
 } from "./epk/epkTemplates";
 import { getFontFamilyById } from "../config/bandFonts";
 import { ShowIcon } from './ui/ShowIcon';
+import { InsigniaBandManager } from './ui/InsigniaBandManager';
 
 interface PublicEPKProps {
   initialData?: {
@@ -1027,9 +1028,9 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               </div>
               {(c.entradasUrl || c.entradasLugarFisico) && (
                 <div className="flex flex-wrap items-center gap-2 pt-2 print:hidden">
-                  {c.entradasUrl && (
+                  {safeUrl(c.entradasUrl) && (
                     <a
-                      href={c.entradasUrl}
+                      href={safeUrl(c.entradasUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)] text-xs font-bold hover:bg-[var(--ok)] transition-colors"
@@ -1245,6 +1246,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </a>
           )}
           <p>{t("pieDerechos")}</p>
+          <InsigniaBandManager bandId={epkData?.bandId} origen="epk" />
         </footer>
       </div>
 

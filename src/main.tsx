@@ -9,6 +9,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import '@fontsource-variable/onest';
 import './index.css';
 import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
+import { capturarReferidoDeLaUrl } from './utils/referido';
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
@@ -23,6 +24,9 @@ instalarAvisoDeGuardados();
 // modo oscuro del móvil no se notaría hasta recargar. Vive aquí (arranque, se monta una
 // sola vez) y no en UserProfileModal, que puede cerrarse.
 escucharSistema(leerPreferenciaEspectro);
+
+// Invitación de otra banda (?ref=): se guarda 30 días y se atribuye cuando la persona tenga cuenta.
+capturarReferidoDeLaUrl();
 
 // Rutas públicas (/epk, /musicos) se cargan bajo demanda
 const PublicEPK = lazy(() => import('./components/PublicEPK'));

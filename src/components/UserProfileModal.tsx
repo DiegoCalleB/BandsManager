@@ -1,3 +1,4 @@
+import { InvitarBandaCard } from "./InvitarBandaCard";
 import React, { useState, useEffect } from "react";
 import {
   User as UserIcon,
@@ -612,6 +613,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 ))}
               </div>
             </div>
+
+            {(currentUser?.role === "leader" || currentUser?.role === "admin") && <InvitarBandaCard />}
 
             {/* Active Band Logo Edit Section (Netflix Profile Style) */}
             <div className="space-y-2 pt-2 ">

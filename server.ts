@@ -16,6 +16,7 @@ import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
+import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { getAppInfo } from "./server/utils/version.js";
 
@@ -43,6 +44,10 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
+import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
+import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
+import { referidosRouter } from "./server/routes/referidos.js";
+import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
 import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
@@ -127,8 +132,15 @@ app.use("/api", campaignsRouter);
 app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
 app.use("/api", trackingRouter);
+app.use("/api", enlacesCortosApiRouter);
+app.use("/api", referidosRouter);
+app.use("/api", campanaConciertoRouter);
 app.use("/api", dealsRouter);
 app.use(transposeRouter);
+// Superficies públicas fuera de /api: enlaces cortos (/r/:code), página indexable de cada concierto
+// (/e/:slug), sitemap.xml y robots.txt. Van ANTES del fallback de la SPA, que si no devolvería index.html.
+app.use(enlacesCortosPublicoRouter);
+app.use(paginaConciertoRouter);
 // nosniff: sin esto, un navegador puede intentar adivinar el tipo real de un archivo servido
 // aquí en vez de confiar en su extensión, ampliando la superficie de un XSS almacenado si algún
 // archivo subido se cuela sin pasar por la validación de tipo de server/routes/upload.ts.
@@ -601,6 +613,12 @@ async function startServer() {
       startCalendarConflictScheduler();
     } catch (e) {
       console.error("Error starting Calendar Conflict Scheduler:", e);
+    }
+    // Cola de letras del audio en segundo plano (ver server/services/colaLetras.ts)
+    try {
+      iniciarColaLetras();
+    } catch (e) {
+      console.error("Error starting Letras Queue:", e);
     }
   });
 

@@ -65,19 +65,21 @@ describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
 });
 
 describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunca generativo', () => {
+  // La lógica vive en el servicio (lo comparten la ruta manual y la cola de letras).
+  const ruta = leer('server', 'services', 'letraCancion.ts');
   const ini = rutas.indexOf('router.post("/songs/:id/letra-sincronizada"');
-  const ruta = rutas.slice(ini, rutas.indexOf('// PATCH corrección manual de los acordes detectados.'));
 
   it('existe y transcribe con el servicio de voz, sin pasar por un modelo generativo', () => {
     expect(ini).toBeGreaterThan(-1);
+    expect(rutas).toContain('ejecutarLetraSincronizada(');
     expect(ruta).toContain('transcribirLetra(');
     expect(ruta).not.toContain('generateContentWithFallback');
     expect(ruta).not.toContain('getAiClient');
   });
 
   it('si la transcripción falla responde 502 y NO guarda nada (el guardado va después)', () => {
-    expect(ruta.indexOf('status(502)')).toBeGreaterThan(-1);
-    expect(ruta.indexOf('status(502)')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
+    expect(ruta.indexOf('status: 502')).toBeGreaterThan(-1);
+    expect(ruta.indexOf('status: 502')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
   });
 
   it('una letra con menos de 8 palabras se rechaza como «sin letra», no se guarda', () => {
@@ -86,7 +88,7 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
   });
 
   it('no sustituye un cifrado existente sin sobrescribir: true y lo comprueba antes de transcribir', () => {
-    expect(ruta.indexOf('req.body?.sobrescribir !== true')).toBeLessThan(ruta.indexOf('transcribirLetra('));
+    expect(ruta.indexOf('!sobrescribir')).toBeLessThan(ruta.indexOf('transcribirLetra('));
   });
 
   it('prefiere la pista de voz aislada de Iris y avisa de que la mezcla es peor', () => {

@@ -27,6 +27,7 @@ import { Sparkles,
   DoorClosed,
   Edit,
   MapPin,
+  Megaphone,
   MessageSquare,
   MoreHorizontal,
   Music,
@@ -46,6 +47,7 @@ import { Sparkles,
   Wrench,
   Zap,
 } from 'lucide-react';
+import { PromocionConciertoModal } from './PromocionConciertoModal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
@@ -194,6 +196,7 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
   const textSub = 'text-[var(--ink-2)]';
 
   const [showFichaMenu, setShowFichaMenu] = useState(false);
+  const [showPromocion, setShowPromocion] = useState(false);
   const [showAddContactForm, setShowAddContactForm] = useState(false);
   const [newContactTelefono, setNewContactTelefono] = useState('');
   const [newContactNotas, setNewContactNotas] = useState('');
@@ -401,43 +404,23 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                     <span className="hidden xs:inline">WhatsApp</span>
                   </Button>
 
-                  <Button
-                    variant="neutral"
-                    size="xs"
-                    type="button"
-                    onClick={() => handleNotifyBandMembers(modalEvent, isConcert)}
-                    className="items-center gap-1"
-                    title="Enviar recordatorio / notificación push a los músicos"
-                  >
-                    <Bell className="w-3.5 h-3.5" />
-                    <span className="hidden xs:inline">Notificar</span>
-                  </Button>
-
-                  <Button
-                    variant={copiedEventModalId === modalEvent.id ? "primary" : "neutral"}
-                    size="xs"
-                    type="button"
-                    onClick={() => handleCopyEventFicha(modalEvent, isConcert)}
-                    className="items-center gap-1"
-                    title="Copiar texto de convocatoria al portapapeles"
-                  >
-                    {copiedEventModalId === modalEvent.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span className="hidden xs:inline">{copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar'}</span>
-                  </Button>
-
-                  <button
-                    type="button"
-                    onClick={() => setDeletingEventConfirmId(modalEvent.id)}
-                    className="px-2.5 py-1.5 text-xs font-mono font-bold rounded-[var(--r-pill)] transition-colors cursor-pointer bg-[var(--alert)]/40 text-[var(--ink)] hover:bg-[var(--alert)]/50 flex items-center gap-1"
-                    title="Eliminar este evento del calendario"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span className="hidden xs:inline">Eliminar</span>
-                  </button>
+                  {isConcert && (
+                    <Button
+                      variant="soft"
+                      size="xs"
+                      type="button"
+                      onClick={() => setShowPromocion(true)}
+                      className="items-center gap-1"
+                      title="Cuenta atrás, textos y enlaces con clics para promocionar este concierto"
+                    >
+                      <Megaphone className="w-3.5 h-3.5" />
+                      <span className="hidden xs:inline">Promocionar</span>
+                    </Button>
+                  )}
                   </div>
 
                   {/* Móvil: lo secundario detrás de ⋯ (AGENTS.md §6) */}
-                  <div className="relative sm:hidden">
+                  <div className="relative">
                     <Button
                       variant="neutral"
                       size="sm"
@@ -452,14 +435,19 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                       <>
                         <div className="fixed inset-0 z-[9998]" onClick={() => setShowFichaMenu(false)} />
                         <PopoverAncla className="menu-pop absolute right-0 mt-1.5 w-52 rounded-[var(--r-m)] bg-[var(--surface)] p-1.5 z-[9999] border border-[var(--line)]">
-                          <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleShareEventWhatsApp(modalEvent, isConcert); }}>
+                          {isConcert && (
+                            <button type="button" className="sm:hidden w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); setShowPromocion(true); }}>
+                              <Megaphone className="w-4 h-4 text-[var(--ink-2)]" /> Promocionar
+                            </button>
+                          )}
+                          <button type="button" className="sm:hidden w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleShareEventWhatsApp(modalEvent, isConcert); }}>
                             <Share2 className="w-4 h-4 text-[var(--ink-2)]" /> Compartir por WhatsApp
                           </button>
                           <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleNotifyBandMembers(modalEvent, isConcert); }}>
                             <Bell className="w-4 h-4 text-[var(--ink-2)]" /> Avisar a la banda
                           </button>
                           <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleCopyEventFicha(modalEvent, isConcert); }}>
-                            <Copy className="w-4 h-4 text-[var(--ink-2)]" /> Copiar convocatoria
+                            <Copy className="w-4 h-4 text-[var(--ink-2)]" /> {copiedEventModalId === modalEvent.id ? 'Copiado' : 'Copiar convocatoria'}
                           </button>
                           <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--alert)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); setDeletingEventConfirmId(modalEvent.id); }}>
                             <Trash2 className="w-4 h-4" /> Eliminar evento
@@ -471,6 +459,10 @@ export const CalendarEventDetailModal: React.FC<CalendarEventDetailModalProps> =
                 </div>
               )}
             </div>
+
+            {selectedConcert && (
+              <PromocionConciertoModal isOpen={showPromocion} onClose={() => setShowPromocion(false)} concert={selectedConcert} />
+            )}
 
             {/* Panel de Confirmación de Eliminación In-Modal */}
             {isConfirmingDelete && modalEvent && (
