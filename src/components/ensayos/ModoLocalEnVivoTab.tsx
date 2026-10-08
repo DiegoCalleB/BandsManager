@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { contextoDeAcordes, ordenarPorTonica, tonalidadDelCifrado } from "../../utils/vistaAcordes";
-import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
+import { ControlAutoscroll } from "../chords/ControlAutoscroll";
+import { useAutoScroll } from "../../hooks/useAutoScroll";
+import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
+import { useVistaAcordes } from "../chords/AcordeEnInstrumento";
+import { DrawerDiagramas } from "../chords/DrawerDiagramas";
+import { useAcordesDeLaHoja } from "../../hooks/useAcordesDeLaHoja";
 import {
   Play,
   Pause,
@@ -40,12 +44,12 @@ import {
 import { formatTime } from "./EnsayoCronometro";
 import {
   processChordText,
-  extractUniqueChords,
   transposeChordToken,
 } from "../../utils/chordUtils";
-import { SongChordsViewerModal } from "../SongChordsViewerModal";
+import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
+import { programarClic } from '../../utils/clicMetronomo';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -102,13 +106,12 @@ export function ModoLocalEnVivoTab({
   const [transpose, setTranspose] = useState<number>(0);
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
-  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(1); // 1, 2, 3
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
   const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
     useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
+  const autoScroll = useAutoScroll(atrilScrollRef, 1, viewMode === "atril");
 
   // Swipe and Keyboard Gestures
   const touchStartX = useRef<number | null>(null);
@@ -186,7 +189,7 @@ export function ModoLocalEnVivoTab({
         }
       } else if (e.key === " " && viewMode === "atril") {
         e.preventDefault();
-        setIsAutoScrolling((prev) => !prev);
+        autoScroll.alternar();
       }
     };
 
@@ -232,7 +235,7 @@ export function ModoLocalEnVivoTab({
     setTrackSeconds(0);
     setIsTrackTimerActive(true);
     setTranspose(0);
-    setIsAutoScrolling(false);
+    autoScroll.setActivo(false);
   }, [activeIndex, currentSong?.bpm]);
 
   // Track Timer Interval
@@ -262,18 +265,7 @@ export function ModoLocalEnVivoTab({
 
   const playClick = (time: number, isAccent: boolean) => {
     if (!audioCtxRef.current) return;
-    const osc = audioCtxRef.current.createOscillator();
-    const gain = audioCtxRef.current.createGain();
-
-    osc.frequency.value = isAccent ? 1200 : 800;
-    gain.gain.setValueAtTime(0.7, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-
-    osc.connect(gain);
-    gain.connect(audioCtxRef.current.destination);
-
-    osc.start(time);
-    osc.stop(time + 0.05);
+    programarClic(audioCtxRef.current, time, isAccent, 0.7);
   };
 
   useEffect(() => {
@@ -314,27 +306,6 @@ export function ModoLocalEnVivoTab({
       clearInterval(interval);
     };
   }, [isMetronomeActive, bpm, beatsPerBar]);
-
-  // Auto-scroll effect for Atril Mode
-  useEffect(() => {
-    let scrollInterval: any = null;
-    if (isAutoScrolling && viewMode === "atril") {
-      scrollInterval = setInterval(() => {
-        if (atrilScrollRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } =
-            atrilScrollRef.current;
-          if (scrollTop + clientHeight >= scrollHeight - 10) {
-            setIsAutoScrolling(false);
-          } else {
-            atrilScrollRef.current.scrollTop += scrollSpeed * 0.9;
-          }
-        }
-      }, 50);
-    } else {
-      clearInterval(scrollInterval);
-    }
-    return () => clearInterval(scrollInterval);
-  }, [isAutoScrolling, scrollSpeed, viewMode]);
 
   // Tap Tempo
   const handleTapTempo = () => {
@@ -392,6 +363,13 @@ export function ModoLocalEnVivoTab({
     }
   };
 
+  // Current chord text
+  // Sin cifrado guardado se muestra vacío: antes caía en una letra
+  // de ejemplo escrita en el código que parecía la letra de la canción.
+  const rawChordText = currentSong?.cifradoTexto || "";
+  const tonalidadHoja = useMemo(() => tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), [rawChordText, currentSong?.tonalidad]);
+  const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(rawChordText, tonalidadHoja, 0);
+
   if (agenda.length === 0) {
     return (
       <div className="p-8 sm:p-12 text-center bg-[var(--surface)] rounded-[var(--r-l)] space-y-4">
@@ -420,16 +398,6 @@ export function ModoLocalEnVivoTab({
         "Outro",
       ];
 
-  // Current chord text
-  // Sin cifrado guardado se muestra vacío: antes caía en una letra
-  // de ejemplo escrita en el código que parecía la letra de la canción.
-  const rawChordText = currentSong?.cifradoTexto || "";
-  const uniqueChords = extractUniqueChords(rawChordText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rawChordText, currentSong?.tonalidad],
-  );
 
   return (
     <div
@@ -860,37 +828,7 @@ export function ModoLocalEnVivoTab({
             </div>
 
             {/* Middle: Auto-Scroll & Speed */}
-            <div className="flex items-center gap-1.5 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
-              <button
-                onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold cursor-pointer transition-ui ${
-                  isAutoScrolling
-                    ? "bg-[var(--ink)] text-[var(--bg)]"
-                    : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
-              >
-                {isAutoScrolling ? (
-                  <Pause className="w-3.5 h-3.5" />
-                ) : (
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                )}
-                <span>{isAutoScrolling ? "Pausar" : "Auto-Scroll"}</span>
-              </button>
-
-              {/* Speed Switcher */}
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3].map((spd) => (
-                  <Button
-                    variant={scrollSpeed === spd ? "selected" : "ghost"}
-                    size="xs"
-                    key={spd}
-                    onClick={() => setScrollSpeed(spd)}
-                  >
-                    {spd}x
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <ControlAutoscroll auto={autoScroll} velocidadSiempre />
 
             {/* Transpose & Notation & Font Size Controls */}
             <div className="flex items-center gap-2">
@@ -978,25 +916,14 @@ export function ModoLocalEnVivoTab({
 
           {/* Guitar Chord Shapes Drawer (if open) */}
           {showChordDiagrams && uniqueChords.length > 0 && (
-            <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0">
-              <div className="flex items-center justify-between text-xs font-sans font-bold text-[var(--acc)]">
-                <span>
-                  Diagramas de Acordes de este Tema ({uniqueChords.length})
-                </span>
-                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
-                <IconButton
-                  label="Cerrar"
-                  onClick={() => setShowChordDiagrams(false)}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </IconButton>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord, cIdx) => (
-                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} />
-                ))}
-              </div>
-            </div>
+            <DrawerDiagramas
+              disposicion="tira"
+              acordes={uniqueChords}
+              contexto={contextoAcordes}
+              vista={vistaAcordes}
+              onVista={setVistaAcordes}
+              onCerrar={() => setShowChordDiagrams(false)}
+            />
           )}
 
           {/* Teleprompter Chords Sheet Card */}
@@ -1035,10 +962,11 @@ export function ModoLocalEnVivoTab({
             {/* Scrollable Chord Content Container */}
             <div
               ref={atrilScrollRef}
-              className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
+              translate="no"
+              className={`notranslate whitespace-pre-wrap overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
             >
               {rawChordText ? (
-                renderFormattedChords(rawChordText, transpose, notation)
+                renderFormattedChordSheet(processChordText(rawChordText, transpose, notation))
               ) : (
                 <p className="text-sm text-[var(--ink-2)] italic py-6">
                   Esta canción aún no tiene cifrado. Ábrela en Repertorio → Acordes para escribirlo, subir un PDF o
@@ -1111,8 +1039,9 @@ export function ModoLocalEnVivoTab({
 
       {/* Chords Viewer & Editor Modal */}
       {editingSongModal && (
-        <SongChordsViewerModal
-          song={editingSongModal}
+        <Atril
+          cancion={editingSongModal}
+          modo="Ensayar"
           onClose={() => setEditingSongModal(null)}
           onUpdateSong={(updated) => {
             if (onUpdateSong) {
@@ -1124,46 +1053,4 @@ export function ModoLocalEnVivoTab({
       )}
     </div>
   );
-}
-
-// RENDER CHORDS WITH HIGHLIGHTING & SECTION BADGES
-function renderFormattedChords(
-  text: string,
-  transpose: number,
-  notation: "ES" | "EN",
-) {
-  if (!text) return null;
-
-  const lines = text.split("\n");
-
-  return lines.map((rawLine, idx) => {
-    const line = rawLine.trimEnd();
-
-    // Empty line spacer
-    if (!line.trim()) {
-      return <div key={idx} className="h-3" />;
-    }
-
-    // Section header e.g. [Intro], [Verso 1], [Estribillo], [Solo], [Puente], [Outro]
-    if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
-      return (
-        <div key={idx} className="pt-3 pb-1">
-          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] text-xs font-sans font-bold">
-            {line.trim()}
-          </span>
-        </div>
-      );
-    }
-
-    // Check if line contains chords or is a pure chords line
-    const processedLine = processChordText(line, transpose, notation);
-
-    return (
-      <div
-        key={idx}
-        className="text-[var(--ink)] py-0.5 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: processedLine }}
-      />
-    );
-  });
 }

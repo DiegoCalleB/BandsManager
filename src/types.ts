@@ -1167,6 +1167,12 @@ export interface SongAudioIdea {
   stemIsNeural?: boolean;
   stemDegraded?: boolean;
   stemProcessedAt?: string;
+  /** Ids de las pistas (stems) que sonaban mientras se grabó esta toma. */
+  sobrePistas?: string[];
+  /** Desfase en segundos de esta toma respecto al inicio de las pistas (puede ser negativo). */
+  offsetSegundos?: number;
+  /** De dónde viene: subida a mano o grabada en el Atril sobre las pistas. */
+  origen?: "subida" | "atril";
 }
 
 /** Un tramo de la canción con su acorde detectado en el audio. */

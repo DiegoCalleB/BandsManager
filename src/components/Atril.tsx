@@ -26,6 +26,8 @@ import {
   MessageSquare,
   Upload,
   GraduationCap,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import { Song, SongSubstituteGuide, AnalisisAcordes } from "../types";
 import { formatSongTitle } from "../utils/formatSongTitle";
@@ -35,15 +37,34 @@ import { RelojEnAcorde } from "./chords/RelojEnAcorde";
 import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
-import { contextoDeAcordes, ordenarPorTonica } from "../utils/vistaAcordes";
-import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
+import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { DrawerDiagramas } from "./chords/DrawerDiagramas";
+import { useAcordesDeLaHoja } from "../hooks/useAcordesDeLaHoja";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
 import { CLASE_FUNCION, leerEstiloArmonia, guardarEstiloArmonia, textoDeAcorde, gradoVisible, type EstiloArmonia } from "../utils/estiloArmonia";
 import { alinearCifradoConAudio, tiemposDeAcordes, acordeActivoPorTiempo, lineaDeCadaAcorde, acordesDelCifrado, esLineaCabecera, esTokenAcorde, asociarLineasConLetra, Alineacion } from "../utils/alineacionAcordes";
 import { indiceSegmentoEn } from "../utils/lineaTiempoAcordes";
 import { ModalPortal } from "./common/ModalPortal";
-import { apiFetch } from "../utils/api";
+import { apiFetch, getActiveBandId } from "../utils/api";
+import { analizarAcordesDelAudio, resumenAnalisisAcordes } from "../utils/analisisAcordesCliente";
+import { ControlAutoscroll } from "./chords/ControlAutoscroll";
+import { ControlMetronomo } from "./chords/ControlMetronomo";
+import { useAutoScroll } from "../hooks/useAutoScroll";
+import { useMetronomo } from "../hooks/useMetronomo";
+import { ModalOido } from "./chords/ModalOido";
+import { SelectorEscucha } from "./chords/SelectorEscucha";
+import { MezclaPistas } from "./chords/MezclaPistas";
+import { useMezclaStems } from "../hooks/useMezclaStems";
+import { pistasDeCancion } from "../utils/irisTracks";
+import { pistaDelUsuario, pistasParaModo, type AjustesPistas, type ModoEscucha } from "../utils/mezclaStems";
+import { instrumentoDelUsuario } from "../utils/instrumentoProfesor";
+import { GrabarIdea } from "./chords/GrabarIdea";
+import { useGrabarIdea } from "../hooks/useGrabarIdea";
+import { carpetaDeIdea, ficheroDeToma, tituloDeToma } from "../utils/grabarIdea";
+import { crearIdeaDeAtril } from "../utils/ideaDeAtril";
+import { uploadFileToServer } from "../utils/audioStorage";
 import { formatSongShareText } from "../utils/shareUtils";
 import { SongStudioStructureUploadModal } from "./song_studio/SongStudioStructureUploadModal";
 import {
@@ -53,19 +74,27 @@ import {
   parseRootNote,
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
+import { ajustesDeModoAtril, type ModoAtril } from "../utils/modosAtril";
 import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
-interface SongChordsViewerModalProps {
-  song: Song;
+export interface AtrilProps {
+  cancion: Song;
+  /** Estudiar / Ensayar / Tocar: decide qué se ve y qué suena al abrir. */
+  modo?: ModoAtril;
   onClose: () => void;
   onUpdateSong: (updated: Song) => void;
 }
 
-export function SongChordsViewerModal({
-  song,
+export function Atril({
+  cancion: song,
+  modo = 'Estudiar',
   onClose,
   onUpdateSong,
-}: SongChordsViewerModalProps) {
+}: AtrilProps) {
+  const ajustes = useMemo(
+    () => ajustesDeModoAtril(modo, typeof window === "undefined" ? 1024 : window.innerWidth),
+    [modo],
+  );
   const [activeTab, setActiveTab] = useState<"chords" | "substitute" | "armonia" | "edit">(
     "chords",
   );
@@ -73,13 +102,13 @@ export function SongChordsViewerModal({
   const [transpose, setTranspose] = useState<number>(0);
 
   // Auto-scroll state
-  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(2); // 1 = slow, 3 = fast
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScroll = useAutoScroll(scrollContainerRef, 2);
+  const metronomo = useMetronomo(song.bpm || 120);
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
-  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(() => typeof window === "undefined" || window.innerWidth >= 768);
+  const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(ajustes.diagramas);
 
   // Edit form state
   const [cifradoTexto, setCifradoTexto] = useState<string>(
@@ -91,30 +120,37 @@ export function SongChordsViewerModal({
 
   // Análisis de acordes del audio (detección propia, sin IA generativa)
   const [isAnalyzingChords, setIsAnalyzingChords] = useState<boolean>(false);
-  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(false);
+  const [showAnalisisAcordes, setShowAnalisisAcordes] = useState<boolean>(true);
   const analisisAcordes: AnalisisAcordes | undefined = song.analisisAcordes;
   const [seguirEnCifrado, setSeguirEnCifrado] = useState<boolean>(true);
-  // Aviso de una sola vez: la detección de acordes del audio no se descubría sola.
-  const [avisoAcordesVisto, setAvisoAcordesVisto] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem("bm_aviso_acordes_audio") === "1";
-    } catch {
-      return false;
-    }
-  });
-  const cerrarAvisoAcordes = () => {
-    setAvisoAcordesVisto(true);
-    try {
-      localStorage.setItem("bm_aviso_acordes_audio", "1");
-    } catch {
-      /* sin almacenamiento: el aviso volverá a salir, no pasa nada */
-    }
-  };
+
 
   // AI Generation loading state
   const [isGeneratingAi, setIsGeneratingAi] = useState<boolean>(false);
+  const [oidoOculto, setOidoOculto] = useState<boolean>(!ajustes.oido);
   const [aiSuccessMsg, setAiSuccessMsg] = useState<string | null>(null);
   const [copiedText, setCopiedText] = useState<boolean>(false);
+  // Pantalla completa: la hoja ocupa todo el viewport y, si el navegador deja, esconde su barra.
+  const [pantallaCompleta, setPantallaCompleta] = useState<boolean>(false);
+  const alternarPantallaCompleta = () => {
+    const entrar = !pantallaCompleta;
+    setPantallaCompleta(entrar);
+    try {
+      if (entrar) void document.documentElement.requestFullscreen?.().catch(() => {});
+      else if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    } catch {
+      /* sin Fullscreen API (iOS Safari): basta con la hoja a viewport completo */
+    }
+  };
+  useEffect(() => {
+    // Esc del navegador sale de pantalla completa: la hoja vuelve al tamaño de modal.
+    const alCambiar = () => { if (!document.fullscreenElement) setPantallaCompleta(false); };
+    document.addEventListener("fullscreenchange", alCambiar);
+    return () => {
+      document.removeEventListener("fullscreenchange", alCambiar);
+      try { if (document.fullscreenElement) void document.exitFullscreen().catch(() => {}); } catch { /* nada */ }
+    };
+  }, []);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
@@ -127,11 +163,55 @@ export function SongChordsViewerModal({
       ? song.audioIdeas[0].audioUrl
       : "");
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  // Stems de Iris: escuchar todo, solo mi pista o todo menos mi pista
+  const stems = useMemo(() => pistasDeCancion(song), [song]);
+  const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
+  const [miPistaId, setMiPistaId] = useState<string | null>(null);
+  const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
+  const pistasSonando = useMemo(() => pistasParaModo(stems, miId, modoEscucha), [stems, miId, modoEscucha]);
   const [audioCurrentTime, setAudioCurrentTime] = useState<number>(0);
   const [audioDuration, setAudioDuration] = useState<number>(
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [ajustesPistas, setAjustesPistas] = useState<AjustesPistas>({});
+  useMezclaStems(audioRef, pistasSonando, audioUrl, ajustesPistas);
+
+  // Grabar idea (modo Ensayar): la toma queda ligada a las pistas sobre las que se tocó
+  const grabacion = useGrabarIdea(audioRef);
+  const [guardandoIdea, setGuardandoIdea] = useState<boolean>(false);
+  const guardarIdea = async () => {
+    if (!grabacion.toma) return;
+    setGuardandoIdea(true);
+    try {
+      const { extension, tipo } = ficheroDeToma(grabacion.toma.mime);
+      const id = `idea-${Date.now()}`;
+      const fichero = new File([grabacion.toma.blob], `${id}.${extension}`, { type: tipo });
+      const url = await uploadFileToServer(fichero, { bandId: getActiveBandId() || undefined, folder: carpetaDeIdea(String(song.id)) });
+      const instrumento = miId ? stems.find((p) => p.id === miId)?.nombre : undefined;
+      const usuario = (() => {
+        try { const u = JSON.parse(localStorage.getItem("bakandeya_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
+      })();
+      const idea = crearIdeaDeAtril({
+        id,
+        titulo: tituloDeToma(instrumento, song.audioIdeas || []),
+        audioUrl: url,
+        subidoPor: usuario,
+        instrumento,
+        sobrePistas: (pistasSonando.length > 0 ? pistasSonando : stems).map((p) => p.id),
+        offsetSegundos: grabacion.offset,
+      });
+      onUpdateSong({ ...song, audioIdeas: [...(song.audioIdeas || []), idea] });
+      grabacion.descartar();
+      setAiSuccessMsg("🎙️ Idea guardada en la canción.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } catch {
+      setAiSuccessMsg("⚠️ No se pudo guardar la idea. Prueba otra vez.");
+      setTimeout(() => setAiSuccessMsg(null), 4000);
+    } finally {
+      setGuardandoIdea(false);
+    }
+  };
 
   // Sync audio duration and cleanup on unmount
   useEffect(() => {
@@ -208,45 +288,16 @@ export function SongChordsViewerModal({
     setGuiaSustituto(song.guiaSustituto || {});
   }, [song.cifradoTexto, song.guiaSustituto]);
 
-  // Auto-scroll timer effect
-  useEffect(() => {
-    let interval: any = null;
-    if (isAutoScrolling) {
-      interval = setInterval(() => {
-        if (scrollContainerRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } =
-            scrollContainerRef.current;
-          if (scrollTop + clientHeight >= scrollHeight - 5) {
-            setIsAutoScrolling(false);
-          } else {
-            scrollContainerRef.current.scrollTop += scrollSpeed * 0.8;
-          }
-        }
-      }, 50);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isAutoScrolling, scrollSpeed]);
-
   // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
   const handleAnalyzeChordsFromAudio = async (sobrescribir = false) => {
     try {
       setIsAnalyzingChords(true);
+      setOidoOculto(false);
       setAiSuccessMsg(null);
-      const data = await apiFetch<any>(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
-        method: "POST",
-        body: JSON.stringify({ sobrescribir }),
-      });
-      if (!data?.analisis) throw new Error(data?.error || "No se pudieron analizar los acordes");
-      onUpdateSong({ ...song, analisisAcordes: data.analisis });
+      const analisis = await analizarAcordesDelAudio(song.id, sobrescribir);
+      onUpdateSong({ ...song, analisisAcordes: analisis });
       setShowAnalisisAcordes(true);
-      const dudosos = data.analisis.segmentos.filter((s: any) => s.acorde === "N").length;
-      setAiSuccessMsg(
-        dudosos > 0
-          ? `⚠️ Acordes detectados del audio (${data.analisis.segmentos.length} tramos, ${dudosos} sin acorde claro). Es una detección automática: revísala de oído.`
-          : `✓ Acordes detectados del audio (${data.analisis.segmentos.length} tramos). Es una detección automática: revísala de oído.`,
-      );
+      setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err: any) {
       setAiSuccessMsg(`⚠️ ${err.message || "No se pudieron analizar los acordes del audio"}`);
     } finally {
@@ -254,6 +305,15 @@ export function SongChordsViewerModal({
       setTimeout(() => setAiSuccessMsg(null), 7000);
     }
   };
+
+  // El análisis de acordes del audio va activo por defecto: si el tema tiene audio y aún no está analizado, se analiza solo (una vez por canción).
+  const jamifyAutoIntentado = useRef<string | null>(null);
+  useEffect(() => {
+    if (!audioUrl || analisisAcordes || isAnalyzingChords || jamifyAutoIntentado.current === song.id) return;
+    jamifyAutoIntentado.current = song.id;
+    handleAnalyzeChordsFromAudio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioUrl, analisisAcordes, song.id]);
 
   // Corrección manual de los acordes detectados: se refleja al instante y se revierte si el
   // servidor la rechaza, para que lo que se ve sea lo que hay guardado.
@@ -292,6 +352,7 @@ export function SongChordsViewerModal({
   const handleGenerateWithAi = async () => {
     try {
       setIsGeneratingAi(true);
+      setOidoOculto(false);
       setAiSuccessMsg(null);
 
       // Un cifrado que ya existe (escrito por la banda) no se sustituye sin preguntar.
@@ -416,6 +477,14 @@ export function SongChordsViewerModal({
   }, [alineacion, analisisAcordes, cifradoTexto, lineasConLetra, letraTranscrita]);
   const acordeActivo = sincronizado ? acordeActivoPorTiempo(tiemposAcordes, audioCurrentTime) : -1;
 
+  // El acorde que suena ahora, tal como se ve (transpuesto): ilumina su diagrama en el cajón.
+  const acordeSonando = useMemo(() => {
+    if (acordeActivo < 0 || !isPlayingAudio) return null;
+    const visible = acordesDelCifrado(processedText)[acordeActivo];
+    const k = normalizarAcorde(visible);
+    return k ? extractUniqueChords(processedText).find((c) => normalizarAcorde(c) === k) ?? null : null;
+  }, [acordeActivo, isPlayingAudio, processedText]);
+
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
   useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
 
@@ -469,16 +538,11 @@ export function SongChordsViewerModal({
   // Mantiene a la vista lo que está sonando: la línea de la letra si hay letra con tiempos y, si no,
   // el acorde (con el autoscroll manual apagado, para no pelearse con él).
   useEffect(() => {
-    if (!isPlayingAudio || isAutoScrolling) return;
+    if (!isPlayingAudio || autoScroll.activo) return;
     const objetivo = letraActiva >= 0 ? `letra-linea-${letraActiva}` : acordeActivo >= 0 ? `cifrado-acorde-${acordeActivo}` : null;
     if (objetivo) document.getElementById(objetivo)?.scrollIntoView({ block: "center", behavior: "smooth" });
-  }, [acordeActivo, letraActiva, isPlayingAudio, isAutoScrolling]);
-  const uniqueChords = extractUniqueChords(processedText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(processedText, uniqueChords, armonia?.tonalidad ?? null, transpose),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [processedText, armonia, transpose],
-  );
+  }, [acordeActivo, letraActiva, isPlayingAudio, autoScroll.activo]);
+  const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(processedText, armonia?.tonalidad ?? null, transpose);
 
   // Copy chords to clipboard
   const handleCopyChords = () => {
@@ -489,8 +553,8 @@ export function SongChordsViewerModal({
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
-      <div className="fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
-        <div className="relative bg-[var(--surface)] rounded-[var(--r-l)] w-full max-w-5xl h-[92vh] flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto">
+      <div className={`fixed inset-0 z-[9999] bg-[var(--scrim)]/85 flex items-center justify-center overflow-y-auto overscroll-contain ${pantallaCompleta ? "p-0" : "p-2 sm:p-4"}`}>
+        <div className={`relative bg-[var(--surface)] w-full ${pantallaCompleta ? "max-w-none rounded-none h-[100dvh]" : "max-w-5xl rounded-[var(--r-l)] h-[92vh]"} flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden text-[var(--ink)] my-auto`}>
           {/* CLOSE BUTTON — fixed to the modal's top-right corner, independent of header actions */}
           <Button
             variant="neutral"
@@ -503,8 +567,20 @@ export function SongChordsViewerModal({
             <X className="w-5 h-5" />
           </Button>
 
+          <Button
+            variant="neutral"
+            size="xs"
+            type="button"
+            onClick={alternarPantallaCompleta}
+            className="absolute top-3 right-14 z-20"
+            title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
+            aria-pressed={pantallaCompleta}
+          >
+            {pantallaCompleta ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
+          </Button>
+
           {/* MODAL HEADER */}
-          <div className="bg-[var(--sunken)] p-4 pr-12 flex flex-wrap items-center justify-between gap-3 shrink-0">
+          <div className="bg-[var(--sunken)] p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
               {/* INTERACTIVE PLAY / PAUSE BUTTON */}
               <button
@@ -532,6 +608,9 @@ export function SongChordsViewerModal({
                 )}
               </button>
               <div>
+                <p className="text-micro font-sans text-[var(--ink-2)]">
+                  <strong className="text-[var(--acc)]">Jamify</strong> · Toca sobre los acordes
+                </p>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-[var(--ink)]">
                     {formatSongTitle(song.titulo)}
@@ -606,7 +685,7 @@ export function SongChordsViewerModal({
                 <Wand2
                   className={`w-4 h-4 text-[var(--acc-ink)] ${isGeneratingAi ? "animate-spin" : ""}`}
                 />
-                <span>{isGeneratingAi ? "Transcribiendo…" : "Letra del audio"}</span>
+                <span>{isGeneratingAi ? "Escuchando…" : "Letra del audio"}</span>
               </Button>
 
               {/* Detección propia de acordes con tiempos, sin IA generativa */}
@@ -625,7 +704,7 @@ export function SongChordsViewerModal({
                   }
                 >
                   <Music className="w-4 h-4" />
-                  <span>{isAnalyzingChords ? "Analizando..." : analisisAcordes ? "Acordes del audio" : "Analizar acordes"}</span>
+                  <span>{isAnalyzingChords ? "Analizando..." : "Acordes del audio"}</span>
                 </Button>
               )}
 
@@ -771,6 +850,28 @@ export function SongChordsViewerModal({
                   )}
                 </div>
 
+                {stems.length > 1 && (
+                  <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
+                )}
+                <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
+
+                {modo === 'Ensayar' && (
+                  <GrabarIdea
+                    fase={grabacion.fase}
+                    segundos={grabacion.segundos}
+                    toma={grabacion.toma}
+                    offset={grabacion.offset}
+                    error={grabacion.error}
+                    guardando={guardandoIdea}
+                    disponible={!!audioUrl}
+                    onEmpezar={() => { void grabacion.empezar(); }}
+                    onParar={grabacion.parar}
+                    onOffset={grabacion.setOffset}
+                    onGuardar={() => { void guardarIdea(); }}
+                    onDescartar={grabacion.descartar}
+                  />
+                )}
+
                 {/* TRANSPOSITION CONTROL */}
                 <div className="flex items-center gap-1 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
                   <span className="text-xs text-[var(--ink-2)] mr-1">
@@ -827,48 +928,8 @@ export function SongChordsViewerModal({
                   </span>
                 </Button>
 
-                {/* AUTO-SCROLL CONTROLLER */}
-                <div className="flex items-center gap-1.5 bg-[var(--sunken)] px-2 py-1 rounded-[var(--r-m)]">
-                  <button
-                    type="button"
-                    onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                    className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1 transition cursor-pointer ${
-                      isAutoScrolling
-                        ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                        : "bg-[var(--ink)]/10 text-[var(--ink)] hover:text-[var(--ink)]"
-                    }`}
-                    title="Iniciar/Pausar desfile automático"
-                  >
-                    {isAutoScrolling ? (
-                      <Pause className="w-3 h-3" />
-                    ) : (
-                      <Play className="w-3 h-3" />
-                    )}
-                    <span>Autoscroll</span>
-                  </button>
-
-                  {isAutoScrolling && (
-                    <div className="flex items-center gap-1 ml-1">
-                      <span className="text-micro text-[var(--ink-2)]">
-                        Vel:
-                      </span>
-                      {[1, 2, 3].map((v) => (
-                        <button
-                          key={v}
-                          type="button"
-                          onClick={() => setScrollSpeed(v)}
-                          className={`w-5 h-5 rounded text-micro font-bold flex items-center justify-center transition cursor-pointer ${
-                            scrollSpeed === v
-                              ? "bg-[var(--ok)] text-[var(--on-ok)]"
-                              : "bg-[var(--ink)]/10 text-[var(--ink)]"
-                          }`}
-                        >
-                          {v}x
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ControlAutoscroll auto={autoScroll} />
+                <ControlMetronomo metronomo={metronomo} />
 
                 {/* TOGGLE CHORD DIAGRAMS */}
                 <Button
@@ -922,33 +983,6 @@ export function SongChordsViewerModal({
               >
                 ✕
               </button>
-            </div>
-          )}
-
-          {/* AVISO DE UNA SOLA VEZ: detección de acordes del audio */}
-          {audioUrl && !analisisAcordes && !avisoAcordesVisto && !isAnalyzingChords && (
-            <div className="px-4 py-2 text-xs font-sans flex items-center justify-between gap-3 bg-[var(--acc-soft)] text-[var(--ink)]">
-              <span className="flex items-center gap-2 min-w-0">
-                <Music className="w-4 h-4 shrink-0 text-[var(--acc)]" />
-                <span>
-                  <strong>Nuevo:</strong> detecta los acordes de tu audio con sus tiempos y síguelos mientras suena la canción.
-                </span>
-              </span>
-              <span className="flex items-center gap-3 shrink-0">
-                <button
-                  type="button"
-                  className="font-bold text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
-                  onClick={() => {
-                    cerrarAvisoAcordes();
-                    handleAnalyzeChordsFromAudio();
-                  }}
-                >
-                  Analizar ahora
-                </button>
-                <button type="button" onClick={cerrarAvisoAcordes} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar aviso">
-                  ✕
-                </button>
-              </span>
             </div>
           )}
 
@@ -1299,34 +1333,15 @@ export function SongChordsViewerModal({
 
             {/* RIGHT SIDEBAR: CHORD DIAGRAMS DRAWER */}
             {activeTab === "chords" && showChordDiagrams && (
-              <div translate="no" className="notranslate w-full md:w-64 bg-[var(--sunken)] md:border-t-0 md:border-l p-4 overflow-y-auto shrink-0 space-y-4">
-                <div className="flex items-center justify-between pb-2">
-                  <span className="text-xs font-sans font-bold text-[var(--acc)] flex items-center gap-1.5">
-                    <ShowIcon inline emoji="🎸" />Acordes ({uniqueChords.length})
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowChordDiagrams(false)}
-                    className="text-[var(--ink-2)] hover:text-[var(--ink)] text-xs"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
-
-                {uniqueChords.length === 0 ? (
-                  <p className="text-xs text-[var(--ink-2)] font-sans italic">
-                    No se detectaron acordes en el texto.
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-1 gap-3">
-                    {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord) => (
-                      <CajaAcorde key={chord} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} grado={estiloArmonia.mostrar === "nombre" ? undefined : (contextoAcordes.get(chord)?.info ? gradoVisible(contextoAcordes.get(chord)!.info!.grado, estiloArmonia) : undefined)} />
-                    ))}
-                  </div>
-                )}
-              </div>
+              <DrawerDiagramas
+                acordes={uniqueChords}
+                contexto={contextoAcordes}
+                vista={vistaAcordes}
+                onVista={setVistaAcordes}
+                onCerrar={() => setShowChordDiagrams(false)}
+                sonando={acordeSonando}
+                estiloArmonia={estiloArmonia}
+              />
             )}
           </div>
         </div>
@@ -1342,6 +1357,14 @@ export function SongChordsViewerModal({
             includeGuide: true,
           })}
           itemType="song"
+        />
+
+        <ModalOido
+          abierto={(isAnalyzingChords || isGeneratingAi) && !oidoOculto}
+          tarea={isGeneratingAi ? "letra" : "acordes"}
+          songId={song.id}
+          titulo={song.titulo}
+          onOcultar={() => setOidoOculto(true)}
         />
 
         {/* STRUCTURE UPLOAD MODAL */}

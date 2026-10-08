@@ -404,7 +404,7 @@ export function extractUniqueChords(text: string): string[] {
 }
 
 // Encabezados de sección reconocidos en un cifrado (mismo vocabulario que usa la IA al
-// extraer estructura y que ya resalta SongChordsViewerModal al renderizar).
+// extraer estructura y que ya resalta el Atril al renderizar).
 export const CHORD_SECTION_HEADER_REGEX =
   /^\[(Intro(?:\s*\d+)?|Verso(?:\s*\d+)?|Estribillo(?:\s*\d+)?|Coro(?:\s*\d+)?|Puente|Solo|Outro|Coda|Final)\]$/i;
 

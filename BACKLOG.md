@@ -8,6 +8,20 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+## 🏷️ Nombres de producto (decididos 2026-10-07, se aplican en la Fase 4)
+
+* **Qué:** nombres de cara al usuario. El código mantiene los suyos hasta renombrar (p. ej. `Atril.tsx`, `ModalOido`).
+  * **Jamify** (subtítulo «Toca sobre los acordes»): experiencia de tocar sobre la hoja de acordes (hoy `Atril`, modos Estudiar / Ensayar / Tocar).
+  * **Iris Prism**: separar pistas (motor). **Iris Mix**: mezclar pistas ya separadas. Llevan subtítulo en la UI («Separar pistas», «Mezclar pistas»).
+  * **Chordscribe**: transcripción de acordes y letra del audio (hoy «El Oído»). Sin «IA» ni «generator» en el nombre: es detección local, no generativa.
+  * **Ideas**: tomas y riffs (`audioIdeas`).
+* **Por qué importa:** son 12 nombres para 4-5 conceptos; menos nombres = menos que aprender.
+* **Estado:** provisional. Antes de publicar, comprobar dominio y tiendas de apps / OEPM.
+* **Fase 4a (hecha):** Jamify como rótulo del Atril; «El Oído» → Chordscribe en el modal de progreso; «Iris Espectro» → Iris Prism en los modales de separación. El botón de detección del audio vuelve a llamarse «Acordes del audio» (descriptivo).
+* **Fase 4b (pendiente):** niveles de motor de Iris (Ultra / Studio / Cloud / Básico) en `SongStudioModal`, textos de la landing y del chat, Iris Mix, y quitar vistas duplicadas.
+
+---
+
 ## ⏸️ Aplazado: billing de planes (auditoría B, 2026-10-06)
 
 * **Qué:** arreglos de `server/routes/billing.ts` que NO se han hecho porque los planes están desactivados (todos los usuarios nuevos entran en modo promo y no pueden cambiar de plan):
@@ -110,7 +124,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Estado:** idea capturada, sin diseñar. Nota: el "reel editado automáticamente con IA a partir de los clips" es una fase posterior y más compleja — esto de aquí es solo el gancho de entrada al QR, no depende de que exista el editor de IA para tener valor por sí solo.
 
 ### Analizador de acordes/armonía real a partir de audio (no texto)
-* **Qué:** hoy `SongChordsViewerModal.tsx` trabaja con cifrado escrito a mano o inferido por IA a partir de la letra/estructura (`chordUtils.ts`). La idea es que la IA "escuche" el audio real de la canción y saque la progresión de acordes de verdad, detecte modulaciones y genere un párrafo de análisis armónico ("aquí hay un acorde prestado que no pertenece a la tonalidad, por eso suena así").
+* **Qué:** hoy el Atril (`Atril.tsx`) trabaja con cifrado escrito a mano o inferido por IA a partir de la letra/estructura (`chordUtils.ts`). La idea es que la IA "escuche" el audio real de la canción y saque la progresión de acordes de verdad, detecte modulaciones y genere un párrafo de análisis armónico ("aquí hay un acorde prestado que no pertenece a la tonalidad, por eso suena así").
 * **Por qué importa:** es la única feature que le habla directamente a un perfil analista musical (tipo Shountrack/Rick Beato) — convierte a la app en generadora de su propio contenido de análisis, no solo en herramienta de booking/gestión.
 * **Viabilidad (no es trivial, pero tampoco investigación de frontera):**
   * Técnica base: extraer chroma (energía por nota) por compás y comparar contra plantillas de acorde por similitud — MIR clásico, no hace falta deep learning para una v1.
@@ -245,3 +259,8 @@ _(vacío)_
 - **Auto-balance** (`audioLatency.ts`): un stem casi vacío arrastra al resto al volumen mínimo; ignorar pistas bajo un umbral de RMS.
 - **Deriva** en `PracticeModePanel` (sin re-sync periódico, a diferencia del mezclador de `SongStudioModal`).
 - **Progreso simulado** en `handlePerformAiStemSeparation`: porcentajes por tiempo, no del proveedor.
+
+## Ear training integrado en las canciones (idea, 2026-10-07)
+- **Qué:** educar el oído dentro del Atril/El Oído, con las propias canciones del repertorio: adivinar el siguiente acorde, reconocer grado/función (I–IV–V) sobre la canción real, intervalos de la melodía, «¿en qué tonalidad está?».
+- **Por qué importa:** diferencia frente a apps de ear training genéricas (usa SU repertorio) y refuerza el motor armónico que ya existe (`teoriaArmonica`, grados y funciones). Encaja con el modo Estudiar.
+- **Estado:** idea, sin evaluar. Retomar tras el Atril unificado (plan maestro, fases 2-3). Recordárselo a Diego si no lo menciona.

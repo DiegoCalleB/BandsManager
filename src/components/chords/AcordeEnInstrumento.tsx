@@ -55,7 +55,7 @@ export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; c
         })}
         {Array.from({ length: trastes }, (_, i) => (
           <g key={i}>
-            <line x1={izq + (i + 1) * w} x2={izq + (i + 1) * w} y1={12} y2={12 + 3 * h} stroke="var(--hair)" strokeWidth={0.6} />
+            <line x1={izq + (i + 1) * w} x2={izq + (i + 1) * w} y1={12} y2={12 + 3 * h} stroke={i === 0 && minT === 0 ? 'var(--ink-2)' : 'var(--hair)'} strokeWidth={i === 0 && minT === 0 ? 3 : 0.6} strokeLinecap="round" />
             <text x={izq + i * w + w / 2} y={8} textAnchor="middle" fontSize={6} fill="var(--ink-2)">{minT + i}</text>
           </g>
         ))}
@@ -117,12 +117,12 @@ export function useVistaAcordes(): [VistaAcorde, (v: VistaAcorde) => void] {
 }
 
 /** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
-export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string }> = ({ chord, vista, contexto, grado }) => {
+export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean }> = ({ chord, vista, contexto, grado, sonando }) => {
   const shape = vista === 'guitarra' ? buscarFormaGuitarra(chord) : undefined;
   const fn = contexto?.info?.funcion;
   const color = fn ? COLOR_FUNCION[fn] : undefined;
   return (
-    <div translate="no" className={`notranslate bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}>
+    <div translate="no" data-sonando={sonando ? 'true' : undefined} className={`notranslate p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition-all duration-150 ${sonando ? 'bg-[var(--acc-soft)] ring-2 ring-[var(--acc)] scale-[1.03]' : `bg-[var(--sunken)] ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}`}>
       <div className="flex items-center justify-center gap-1.5 text-xs font-bold font-sans">
         <span
           className={contexto?.tonica ? 'px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)]' : fn ? `px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[fn]}` : 'text-[var(--acc)]'}
@@ -137,6 +137,8 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
             <div className="grid grid-cols-6 gap-0.5 my-1 text-[var(--ink-2)] pb-0.5">
               {['E', 'A', 'D', 'G', 'B', 'E'].map((c, i) => <span key={i} className="text-center">{c}</span>)}
             </div>
+            {/* Cejuela: línea gruesa entre la cuerda al aire (o) y el traste 1, solo en posición abierta. */}
+            <div data-cejuela={!shape.baseFret || shape.baseFret <= 1 ? 'true' : undefined} className={`mx-0.5 rounded-full ${!shape.baseFret || shape.baseFret <= 1 ? 'h-[3px] bg-[var(--ink-2)]' : 'h-px bg-[var(--hair)]'}`} />
             <div className="grid grid-cols-6 gap-0.5 my-1">
               {shape.frets.map((f, i) => (
                 <span key={i} className={`text-center font-bold ${f === -1 ? 'text-[var(--alert)]' : f === 0 ? 'text-[var(--ok)]' : 'text-[var(--acc)]/70'}`}>

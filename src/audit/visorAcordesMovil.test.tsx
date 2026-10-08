@@ -5,18 +5,21 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { AroAcorde } from '../components/chords/AroAcorde';
 
-const visor = fs.readFileSync(path.join(__dirname, '..', 'components', 'SongChordsViewerModal.tsx'), 'utf-8');
+const modos = fs.readFileSync(path.join(__dirname, '..', 'utils', 'modosAtril.ts'), 'utf-8');
+const visor = fs.readFileSync(path.join(__dirname, '..', 'components', 'Atril.tsx'), 'utf-8');
 
 describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () => {
   // Con la cabecera y el panel de acordes ocupando casi toda la pantalla, el cuerpo con flex-1 se
   // quedaba en 2 px y no había forma de bajar a la letra (captura del usuario).
   it('el modal se desplaza en móvil y el cuerpo tiene altura propia', () => {
-    expect(visor).toMatch(/h-\[92vh\] flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden/);
+    expect(visor).toContain('h-[92vh]');
+    expect(visor).toMatch(/flex flex-col overflow-y-auto overscroll-contain md:overflow-hidden/);
     expect(visor).toMatch(/shrink-0 h-\[75vh\] md:h-auto md:flex-1 md:shrink overflow-hidden/);
   });
 
   it('los diagramas empiezan cerrados en pantallas estrechas', () => {
-    expect(visor).toContain('window.innerWidth >= 768');
+    expect(modos).toContain('anchoPantalla >= 768');
+    expect(visor).toContain('ajustes.diagramas');
   });
 });
 
@@ -57,5 +60,14 @@ describe('AroAcorde: aro de cuenta atrás del acorde', () => {
 
   it('no deja que el traductor automático toque el nombre del acorde', () => {
     expect(html({})).toContain('translate="no"');
+  });
+});
+
+describe('Atril: pantalla completa', () => {
+  it('tiene botón que alterna, usa el viewport entero y sale con Esc', () => {
+    expect(visor).toContain('alternarPantallaCompleta');
+    expect(visor).toContain('h-[100dvh]');
+    expect(visor).toContain('fullscreenchange');
+    expect(visor).toContain('aria-pressed={pantallaCompleta}');
   });
 });

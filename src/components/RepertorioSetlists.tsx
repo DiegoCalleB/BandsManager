@@ -6,6 +6,7 @@
  react-hooks/purity,
  react-hooks/immutability
 */
+import { analizarAcordesDelAudio } from "../utils/analisisAcordesCliente";
 import { PopoverAncla } from './ui/PopoverAncla';
 import { guardarOReverter } from "../utils/guardarConReversion";
 import { getLowLatencyAudioStream } from "../utils/audioLatency";
@@ -98,7 +99,7 @@ import { Button, Chip, IconButton, Input, MenuItem, Select, ShowIcon } from './u
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import SongStudioModal from "./SongStudioModal";
-import { SongChordsViewerModal } from "./SongChordsViewerModal";
+import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
 import { useShareModal } from "../hooks/useShareModal";
 import { useCatalogFilters } from "../hooks/useCatalogFilters";
@@ -2139,33 +2140,21 @@ export default function RepertorioSetlists({
     try {
       // Solo se detectan los ACORDES (cálculo propio, sin IA generativa): la letra nunca se genera
       // en segundo plano; se pide a propósito con «Letra del audio» y se transcribe de la voz.
-      const res = await fetch(`/api/songs/${encodeURIComponent(song.id)}/analizar-acordes`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({}),
+      const analisis = await analizarAcordesDelAudio(song.id);
+      setSongs((prev) => {
+        const next = prev.map((s) => (s.id === song.id ? { ...s, analisisAcordes: analisis } : s));
+        saveSongsToLocalStorageSafely(next);
+        return next;
       });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data?.analisis) {
-        setSongs((prev) => {
-          const next = prev.map((s) => (s.id === song.id ? { ...s, analisisAcordes: data.analisis } : s));
-          saveSongsToLocalStorageSafely(next);
-          return next;
-        });
-        setStatusBanner({
-          text: `✓ Acordes de "${song.titulo}" detectados del audio. Es automático: revísalos de oído. Abre «Acordes» para ver la línea de tiempo`,
-          type: "success",
-        });
-      } else {
-        // El servidor explica el motivo (sin audio, audio ilegible, resultado poco fiable…).
-        setStatusBanner({
-          text: data?.error || `No se pudieron detectar los acordes de "${song.titulo}"`,
-          type: "error",
-        });
-      }
+      setStatusBanner({
+        text: `✓ Acordes de "${song.titulo}" detectados del audio. Es automático: revísalos de oído. Abre «Acordes» para ver la línea de tiempo`,
+        type: "success",
+      });
     } catch (err) {
       console.error("Error detecting chords from audio:", err);
+      // El servidor explica el motivo (sin audio, audio ilegible, resultado poco fiable…).
       setStatusBanner({
-        text: `No se pudieron detectar los acordes de "${song.titulo}"`,
+        text: err instanceof Error && err.message ? err.message : `No se pudieron detectar los acordes de "${song.titulo}"`,
         type: "error",
       });
     } finally {
@@ -6293,8 +6282,9 @@ export default function RepertorioSetlists({
         />
       )}
       {activeChordsSong && (
-        <SongChordsViewerModal
-          song={activeChordsSong}
+        <Atril
+          cancion={activeChordsSong}
+          modo="Estudiar"
           onClose={() => setActiveChordsSong(null)}
           onUpdateSong={handleUpdateSongFromChords}
         />
