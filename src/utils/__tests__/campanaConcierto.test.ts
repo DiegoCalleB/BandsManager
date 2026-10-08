@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diasEntre, fechaCorta, hashtagsCampana, planificarCampana, sanearVarianteIA, sumarDias, textoPieza, variantesPieza, type DatosPieza } from '../campanaConcierto';
+import { CANALES_PUBLICACION, describirCuando, diasEntre, fechaCorta, hashtagsCampana, planificarCampana, plataformaDeCanal, sanearVarianteIA, sumarDias, textoPieza, variantesPieza, type DatosPieza } from '../campanaConcierto';
 
 const ids = (fechaConcierto: string, hoy: string) => planificarCampana(fechaConcierto, hoy).map((h) => `${h.id}@${h.fecha}`);
 
@@ -174,5 +174,26 @@ describe('sanearVarianteIA', () => {
     const r = sanearVarianteIA('<script>alert(1)</script> Hoy tocamos en el Capitol', enlace)!;
     // No se ejecuta nada: React pinta texto, pero además el texto no debe llevar etiquetas de enlace con URL ajena.
     expect(r).not.toMatch(/https?:\/\/(?!bandmanager\.io)/);
+  });
+});
+
+describe('presentación', () => {
+  it('describe cuándo toca publicar', () => {
+    expect(describirCuando('2026-10-08', '2026-10-08')).toBe('hoy');
+    expect(describirCuando('2026-10-09', '2026-10-08')).toBe('mañana');
+    expect(describirCuando('2026-10-14', '2026-10-08')).toBe('en 6 días');
+    expect(describirCuando('2026-10-07', '2026-10-08')).toBe('ya pasó');
+  });
+
+  it('WhatsApp no tiene plataforma de redes; el resto sí', () => {
+    expect(plataformaDeCanal('whatsapp')).toBeNull();
+    expect(plataformaDeCanal('instagram')).toBe('Instagram');
+    expect(plataformaDeCanal('tiktok')).toBe('TikTok');
+    expect(plataformaDeCanal('facebook')).toBe('Facebook');
+  });
+
+  it('todos los canales de publicación tienen etiqueta y el servidor los acepta', () => {
+    expect(CANALES_PUBLICACION.map((c) => c.id)).toEqual(['instagram', 'tiktok', 'whatsapp', 'facebook']);
+    expect(CANALES_PUBLICACION.every((c) => c.etiqueta.length > 0)).toBe(true);
   });
 });

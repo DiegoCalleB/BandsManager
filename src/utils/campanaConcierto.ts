@@ -164,3 +164,30 @@ export function sanearVarianteIA(texto: unknown, enlace: string | null | undefin
   if (t.replace(enlace || '', '').replace(/[^\p{L}\p{N}]/gu, '').length < 8) return null;
   return t;
 }
+
+/* ------------------------------------------------------------------ presentación */
+
+export type CanalPublicacion = 'instagram' | 'tiktok' | 'whatsapp' | 'facebook';
+export const CANALES_PUBLICACION: ReadonlyArray<{ id: CanalPublicacion; etiqueta: string }> = [
+  { id: 'instagram', etiqueta: 'Instagram' },
+  { id: 'tiktok', etiqueta: 'TikTok' },
+  { id: 'whatsapp', etiqueta: 'WhatsApp' },
+  { id: 'facebook', etiqueta: 'Facebook' },
+];
+
+/** Plataforma del calendario de redes (`SocialPost.plataforma`). WhatsApp no tiene: no hay borrador en redes. */
+export function plataformaDeCanal(canal: CanalPublicacion): 'Instagram' | 'TikTok' | 'Facebook' | null {
+  if (canal === 'instagram') return 'Instagram';
+  if (canal === 'tiktok') return 'TikTok';
+  if (canal === 'facebook') return 'Facebook';
+  return null;
+}
+
+/** «hoy», «mañana», «en 6 días»: cuándo toca publicar, dicho como lo diría una persona. */
+export function describirCuando(fechaHito: string, hoy: string): string {
+  const d = diasEntre(hoy, fechaHito);
+  if (d === 0) return 'hoy';
+  if (d === 1) return 'mañana';
+  if (d > 1) return `en ${d} días`;
+  return 'ya pasó';
+}

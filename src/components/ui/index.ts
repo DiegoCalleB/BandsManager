@@ -49,5 +49,7 @@ export type { ChannelChipProps } from './ChannelChip';
 export { Tabs } from './Tabs';
 export type { TabsProps, TabItem } from './Tabs';
 export { PopoverAncla } from './PopoverAncla';
+export { InsigniaBandManager } from './InsigniaBandManager';
+export type { InsigniaBandManagerProps } from './InsigniaBandManager';
 export { ActionMenu } from './ActionMenu';
 export type { ActionMenuProps, ActionMenuItem } from './ActionMenu';
