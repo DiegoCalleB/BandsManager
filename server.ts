@@ -46,6 +46,8 @@ import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
 import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
 import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
+import { referidosRouter } from "./server/routes/referidos.js";
+import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
 import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
@@ -131,6 +133,8 @@ app.use("/api/gmail-oauth", gmailOAuthRouter);
 app.use("/api", songsRouter);
 app.use("/api", trackingRouter);
 app.use("/api", enlacesCortosApiRouter);
+app.use("/api", referidosRouter);
+app.use("/api", campanaConciertoRouter);
 app.use("/api", dealsRouter);
 app.use(transposeRouter);
 // Superficies públicas fuera de /api: enlaces cortos (/r/:code), página indexable de cada concierto
