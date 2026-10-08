@@ -13,19 +13,19 @@ tags: ["agent", "scheduler", "cron"]
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Bucle in-process (60s tick) que orquesta el Scout, Enviador y Lector.
+Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(Layer: #agent, Domain: #booking)*
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
-- [[db_agent_schedule]]
+- [[db_agent_schedule|Estado del Scheduler de agentes]] *(Layer: #db, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
 
 ---
 

@@ -262,7 +262,7 @@ El código es **pasivo por diseño**: sin esas variables Sentry es un no-op tota
 - **Datos:** Supabase (PostgreSQL) como única fuente de verdad, Supabase Storage para multimedia.
 - **IA:** Gemini (`@google/genai`), con DeepSeek/OpenAI opcionales; Replicate/fal para stems.
 - **Servicios:** Stripe (planes), Resend (emails transaccionales), Sentry (errores en producción).
-- **Despliegue:** Railway (`railway.json`, healthcheck en `/api/health`); las migraciones SQL se aplican solas en `npm start`.
+- **Despliegue:** Railway (`railway.json`, healthcheck en `/api/health`); las migraciones de `supabase/migrations/` se aplican solas en `npm start`; los `.sql` sueltos de `supabase/` no (ver [ADR 0008](./docs/adr/0008-migraciones-sql-versionadas.md)).
 
 ## Puesta en marcha
 
@@ -314,12 +314,14 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 - [docs/referencia/](./docs/referencia/): arquitectura del motor de audio y stems, sistema de diseño Espectro, manual de negociación del Redactor, compatibilidad entre herramientas de IA.
 - [docs/planes/](./docs/planes/): anti-fraude y acuerdos de gira, gestión de tokens IA, BandSplit.
 - [docs/knowledge_graph/](./docs/knowledge_graph/index.md): grafo de arquitectura navegable en Obsidian.
+- [docs/adr/](./docs/adr/README.md): registro de decisiones de arquitectura (ADR), con las alternativas descartadas.
+- [docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md](./docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md): arquitectura del motor de audio y stems.
 
 ## Hasta dónde hemos llegado
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 283 endpoints, 47 tablas, 31 migraciones, más de 230 componentes React y más de 1.400 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 284 endpoints, 57 tablas en producción (con RLS activo en todas), 40 migraciones SQL en el runner, 271 componentes React y 2.079 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 

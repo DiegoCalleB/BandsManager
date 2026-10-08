@@ -26,6 +26,7 @@ Registro histórico de mensajes enviados y recibidos por lead y sala.
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 
 ---
 

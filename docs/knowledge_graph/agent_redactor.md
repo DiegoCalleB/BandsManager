@@ -1,32 +1,31 @@
 ---
-id: agent_lector
-title: "Lector Agent (Listener)"
+id: agent_redactor
+title: "Agente Redactor (borradores de respuesta)"
 layer: agent
 domain: booking
-file: "server/services/lectorAgent.ts"
-tags: ["agent", "listener", "gmail-oauth"]
+file: "server/services/replyDrafting.ts"
+tags: ["agent", "booking", "human-in-the-loop"]
 ---
 
-# 📌 Lector Agent (Listener)
+# 📌 Agente Redactor (borradores de respuesta)
 
-> **Ubicación:** `server/services/lectorAgent.ts`  
+> **Ubicación:** `server/services/replyDrafting.ts`  
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el scheduler (ver ADR 0007).
+Redacta borradores de respuesta a salas. Nunca envía: el borrador pasa por aprobación humana.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
+- [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
 - [[db_lead_messages|Lead Messages & Thread DB]] *(Layer: #db, Domain: #booking)*
-- [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
-- [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 
 ---
 

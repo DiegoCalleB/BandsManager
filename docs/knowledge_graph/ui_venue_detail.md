@@ -20,7 +20,7 @@ Ficha técnica de la sala, hilo de conversación y generador de respuestas.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
-- [[agent_redactor]]
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(Layer: #agent, Domain: #booking)*
 
 ---
 

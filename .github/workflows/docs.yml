@@ -1,0 +1,41 @@
+name: Docs
+
+# ci.yml ignora los cambios que solo tocan .md, así que sin este workflow la verificación de
+# documentación nunca corría en un PR de solo documentación. Este lo cubre.
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'claude/**'
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - 'scripts/generate_obsidian_graph.ts'
+      - 'scripts/verify-docs-*.cjs'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verificar referencias, cifras y enlaces de la documentación
+        run: npm run verify:docs
+
+      - name: El grafo Obsidian está al día con su generador
+        run: |
+          npx tsx scripts/generate_obsidian_graph.ts
+          git diff --exit-code docs/knowledge_graph || (echo "::error::docs/knowledge_graph no coincide con scripts/generate_obsidian_graph.ts. Ejecuta npm run graph:sync y haz commit." && exit 1)

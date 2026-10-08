@@ -9,7 +9,6 @@ on:
     # Ahorra minutos: la presentación del TFM y los .md no pasan por tsc/vitest/eslint.
     # Solo en push; en pull_request se mantiene el check completo por si es obligatorio.
     paths-ignore:
-      - 'presentacion/**'
       - '**.md'
   pull_request:
     branches:
