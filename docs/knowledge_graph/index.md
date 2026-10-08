@@ -15,7 +15,7 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 - [[ui_booking_crm|Panel Principal de Booking CRM]]
 - [[ui_leads_table|Tabla de Salas & Leads]]
 - [[ui_venue_detail|Ficha Técnica & Simulador de Pitch]]
-- [[agent_scheduler|Scheduler In-Process (60s)]]
+- [[agent_scheduler|Scheduler In-Process (tick 24 h por defecto)]]
 - [[agent_enviador|Enviador Agent (Human-in-the-Loop)]]
 - [[agent_lector|Lector Agent (Gmail OAuth2/IMAP)]]
 - [[service_pitch_engine|Motor Multi-Modelo (Gemini / DeepSeek / OpenAI)]]

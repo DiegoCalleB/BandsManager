@@ -4,6 +4,48 @@ El sistema operativo de una banda independiente: **encontrar salas, cerrar fecha
 
 > Las reglas de desarrollo (seguridad, multi-tenancy, agentes, estilo) viven en **[AGENTS.md](./AGENTS.md)**. Este README es la puerta de entrada; no las duplica.
 
+## Guía rápida para evaluadores
+
+Autor: [@DiegoCalleB](https://github.com/DiegoCalleB). Este repositorio es el núcleo técnico del Trabajo Fin de Máster de Desarrollo con IA (The Big School). Está pensado para que se pueda **comprobar**, no solo leer: casi todo lo que afirma esta documentación se puede verificar con un comando o con un fichero concreto.
+
+<table>
+  <tr>
+    <td><img src="public/landing/panel-light.jpg" alt="Panel principal de una banda" width="400"></td>
+    <td><img src="public/landing/booking-light.jpg" alt="CRM de booking: salas y estados" width="400"></td>
+  </tr>
+  <tr>
+    <td><img src="public/landing/repertorio-light.jpg" alt="Repertorio y setlists" width="400"></td>
+    <td><img src="public/landing/calendario-light.jpg" alt="Calendario de ensayos y conciertos" width="400"></td>
+  </tr>
+</table>
+
+*Capturas de la banda de demo ficticia (Ruta 66), generadas por script.*
+
+### Qué mirar para comprobar qué
+
+| Quiero ver… | Dónde |
+|---|---|
+| Qué problema resuelve y para quién | [Para qué existe](#para-qué-existe) y [Qué hace](#qué-hace) |
+| La arquitectura, en diez minutos | [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) (diagramas de contexto y contenedores) |
+| **Por qué** se decidió cada cosa, y qué se descartó | [docs/adr/](./docs/adr/README.md): 12 registros de decisión. Los retroactivos están marcados y sus alternativas son razonadas a posteriori |
+| La API completa | [docs/api/REFERENCIA.md](./docs/api/REFERENCIA.md): todas las rutas, quién puede llamarlas y con qué límites, con enlace a la línea de código. Contrato máquina-legible en [openapi.json](./docs/api/openapi.json) |
+| La seguridad y sus límites | [Seguridad](#seguridad), incluidos los [límites conocidos](#límites-conocidos-honestidad-antes-que-marketing) |
+| Cómo se trabajó con agentes de IA | [AGENTS.md](./AGENTS.md) y [skills/](./skills/README.md): reglas compartidas, skills y tests que impiden que un agente rompa lo que no debe |
+| Qué está hecho y qué no | [Hasta dónde hemos llegado](#hasta-dónde-hemos-llegado) |
+
+### Comprobarlo uno mismo
+
+Requiere Node 22.
+
+```bash
+npm ci
+npm run typecheck     # tsc --noEmit
+npm test              # suite de Vitest
+npm run verify:docs   # la documentación coincide con el código: cifras, enlaces, rutas y contrato de API
+```
+
+`verify:docs` es la pieza más representativa del enfoque «documentación como código» ([ADR 0011](./docs/adr/0011-docs-as-code.md)): falla si el README cita una cifra que no cuadra o si alguien cambia una ruta sin regenerar el contrato de la API.
+
 ## Para qué existe
 
 Una banda DIY hace, sin cobrar por ello, el trabajo de cinco profesionales: **booker** (buscar y convencer a las salas), **tour manager** (logística y rutas), **director musical** (ensayos y setlists), **contable** (quién cobra y quién paga) y **community manager** (redes y fans). La mayoría de la gente que toca pierde más horas en Excel, correos sin respuesta y WhatsApps que ensayando. BandManager.io convierte esas cinco figuras en una única plataforma asistida por IA.
@@ -262,7 +304,7 @@ El código es **pasivo por diseño**: sin esas variables Sentry es un no-op tota
 - **Datos:** Supabase (PostgreSQL) como única fuente de verdad, Supabase Storage para multimedia.
 - **IA:** Gemini (`@google/genai`), con DeepSeek/OpenAI opcionales; Replicate/fal para stems.
 - **Servicios:** Stripe (planes), Resend (emails transaccionales), Sentry (errores en producción).
-- **Despliegue:** Railway (`railway.json`, healthcheck en `/api/health`); las migraciones SQL se aplican solas en `npm start`.
+- **Despliegue:** Railway (`railway.json`, healthcheck en `/api/health`); las migraciones de `supabase/migrations/` se aplican solas en `npm start`; los `.sql` sueltos de `supabase/` no (ver [ADR 0008](./docs/adr/0008-migraciones-sql-versionadas.md)).
 
 ## Puesta en marcha
 
@@ -314,12 +356,16 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 - [docs/referencia/](./docs/referencia/): arquitectura del motor de audio y stems, sistema de diseño Espectro, manual de negociación del Redactor, compatibilidad entre herramientas de IA.
 - [docs/planes/](./docs/planes/): anti-fraude y acuerdos de gira, gestión de tokens IA, BandSplit.
 - [docs/knowledge_graph/](./docs/knowledge_graph/index.md): grafo de arquitectura navegable en Obsidian.
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md): vista de arquitectura en diagramas (contexto y contenedores), para leer en 10 minutos.
+- [docs/api/](./docs/api/index.html): referencia de la API generada del código (OpenAPI 3.1, `docs/api/openapi.json`), con autenticación y límites de cada ruta.
+- [docs/adr/](./docs/adr/README.md): registro de decisiones de arquitectura (ADR), con las alternativas descartadas.
+- [docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md](./docs/referencia/DOCUMENTACION_ARQUITECTURA_SISTEMA.md): arquitectura del motor de audio y stems.
 
 ## Hasta dónde hemos llegado
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 283 endpoints, 47 tablas, 31 migraciones, más de 230 componentes React y más de 1.400 tests unitarios, además de los E2E de Playwright y 15 capturas de regresión visual.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 354 rutas HTTP (303 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 42 migraciones SQL en el runner, 272 componentes React y 2.106 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 

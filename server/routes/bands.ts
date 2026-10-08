@@ -134,6 +134,20 @@ router.post("/bands", requireAuth, async (req, res) => {
   }
 });
 
+// IMPORTANTE: va ANTES de PUT /bands/:id. Express resuelve por orden de declaración; detrás, "print-settings"
+// entraba en el handler de :id y creaba un contacto fantasma en lugar de guardar los ajustes.
+// PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).
+router.put("/bands/print-settings", requireAuth, async (req: any, res: any) => {
+  try {
+    const bandId = getTargetBandId(req);
+    const settings = await dbUpsertPrintSettings(bandId, req.body);
+    return res.json({ success: settings !== null, settings });
+  } catch (err: any) {
+    console.error("Error guardando ajustes de impresión:", err);
+    return res.status(500).json({ error: err?.message || "Error guardando ajustes de impresión" });
+  }
+});
+
 router.put("/bands/:id", requireAuth, async (req, res) => {
   const userBandId = (req as any).user?.band_id ;
   const { id } = req.params;
@@ -888,18 +902,6 @@ router.get("/bands/print-settings", requireAuth, async (req: any, res: any) => {
   } catch (err: any) {
     console.error("Error obteniendo ajustes de impresión:", err);
     return res.status(500).json({ error: err?.message || "Error consultando ajustes de impresión" });
-  }
-});
-
-// PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).
-router.put("/bands/print-settings", requireAuth, async (req: any, res: any) => {
-  try {
-    const bandId = getTargetBandId(req);
-    const settings = await dbUpsertPrintSettings(bandId, req.body);
-    return res.json({ success: settings !== null, settings });
-  } catch (err: any) {
-    console.error("Error guardando ajustes de impresión:", err);
-    return res.status(500).json({ error: err?.message || "Error guardando ajustes de impresión" });
   }
 });
 

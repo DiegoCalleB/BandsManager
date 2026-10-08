@@ -29,6 +29,7 @@ Operaciones CRUD en Supabase PostgreSQL con scoping forzoso por bandId.
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 
 ---
 

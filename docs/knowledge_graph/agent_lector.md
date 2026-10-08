@@ -13,7 +13,7 @@ tags: ["agent", "listener", "gmail-oauth"]
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP cada ~60s.
+Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el scheduler (ver ADR 0007).
 
 ---
 

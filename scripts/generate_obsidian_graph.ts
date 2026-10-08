@@ -164,7 +164,7 @@ const NODES: GraphNode[] = [
     layer: 'agent',
     domain: 'booking',
     file: 'server/services/agentScheduler.ts',
-    description: 'Bucle in-process (60s tick) que orquesta el Scout, Enviador y Lector.',
+    description: 'Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.',
     linksTo: ['agent_enviador', 'agent_lector', 'db_agent_schedule'],
     tags: ['agent', 'scheduler', 'cron']
   },
@@ -184,7 +184,7 @@ const NODES: GraphNode[] = [
     layer: 'agent',
     domain: 'booking',
     file: 'server/services/lectorAgent.ts',
-    description: 'Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP cada ~60s.',
+    description: 'Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el scheduler (ver ADR 0007).',
     linksTo: ['sec_prompt_safety', 'db_lead_messages', 'db_leads'],
     tags: ['agent', 'listener', 'gmail-oauth']
   },
@@ -269,8 +269,57 @@ const NODES: GraphNode[] = [
     description: 'Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.',
     linksTo: [],
     tags: ['schema', 'postgresql', 'supabase', 'rls']
+  },
+  {
+    id: 'agent_redactor',
+    title: 'Agente Redactor (borradores de respuesta)',
+    layer: 'agent',
+    domain: 'booking',
+    file: 'server/services/replyDrafting.ts',
+    description: 'Redacta borradores de respuesta a salas. Nunca envía: el borrador pasa por aprobación humana.',
+    linksTo: ['service_pitch_engine', 'db_lead_messages'],
+    tags: ['agent', 'booking', 'human-in-the-loop']
+  },
+  {
+    id: 'db_agent_schedule',
+    title: 'Estado del Scheduler de agentes',
+    layer: 'db',
+    domain: 'system',
+    file: 'server/services/agentScheduler.ts',
+    description: 'Tabla agent_schedule_state: cuándo toca cada agente (Scout, Lector) y su último resultado.',
+    linksTo: ['agent_scheduler', 'schema_supabase'],
+    tags: ['db', 'scheduler']
+  },
+  {
+    id: 'db_payments',
+    title: 'Pagos y suscripciones (Stripe)',
+    layer: 'db',
+    domain: 'finances',
+    file: 'server/db/payments.ts',
+    description: 'Persistencia de pagos y suscripciones. Facturación desactivada en producción (ver BACKLOG).',
+    linksTo: ['sec_trust_boundary', 'schema_supabase'],
+    tags: ['db', 'billing', 'stripe']
+  },
+  {
+    id: 'route_leads_enrichment',
+    title: 'Ruta de enriquecimiento de salas',
+    layer: 'route',
+    domain: 'booking',
+    file: 'server/routes/leads/enrichment.ts',
+    description: 'Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por protección SSRF.',
+    linksTo: ['sec_ssrf_guard', 'db_leads'],
+    tags: ['route', 'booking', 'enrichment']
   }
 ];
+
+// Falla en voz alta si un nodo enlaza a otro que no existe (así no vuelven los enlaces rotos).
+for (const nodo of NODES) {
+  for (const destino of nodo.linksTo) {
+    if (!NODES.some((n) => n.id === destino)) {
+      throw new Error(`[graph] ${nodo.id} enlaza a un nodo inexistente: ${destino}`);
+    }
+  }
+}
 
 export function generateObsidianGraph(outputDir = 'docs/knowledge_graph') {
   if (!fs.existsSync(outputDir)) {
@@ -348,7 +397,7 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 - [[ui_booking_crm|Panel Principal de Booking CRM]]
 - [[ui_leads_table|Tabla de Salas & Leads]]
 - [[ui_venue_detail|Ficha Técnica & Simulador de Pitch]]
-- [[agent_scheduler|Scheduler In-Process (60s)]]
+- [[agent_scheduler|Scheduler In-Process (tick 24 h por defecto)]]
 - [[agent_enviador|Enviador Agent (Human-in-the-Loop)]]
 - [[agent_lector|Lector Agent (Gmail OAuth2/IMAP)]]
 - [[service_pitch_engine|Motor Multi-Modelo (Gemini / DeepSeek / OpenAI)]]

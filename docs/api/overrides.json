@@ -1,0 +1,651 @@
+{
+  "_nota": "Descripciones escritas a mano de las operaciones clave. Cada entrada se ha contrastado con el handler indicado en x-source. Si el código cambia y la operación desaparece, el generador falla. Las operaciones no listadas aquí solo documentan método, ruta, autenticación y límites.",
+  "tags": {
+    "sistema": "Salud del servicio, estado de la sesión y páginas legales servidas por server.ts.",
+    "users": "Autenticación (login, registro, Google, invitaciones, cambio de banda) y gestión de usuarios.",
+    "leads": "Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, Enviador, Lector) trabajan sobre estos registros; la aprobación es un cambio de `estado`.",
+    "epk_fans": "EPK público de la banda y registro de fans con consentimiento RGPD.",
+    "deals": "Acuerdos de concierto: vista pública por token y firma."
+  },
+  "components": {
+    "schemas": {
+      "Lead": {
+        "type": "object",
+        "description": "Sala, festival o contacto del CRM. Solo se listan los campos que usan los endpoints documentados aquí; el tipo completo está en `src/types.ts` y la tabla `leads` tiene muchas más columnas.",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "nombre_sala": {
+            "type": "string"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "email_contacto": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "imagen_url": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Por ejemplo `festival` o `ayuntamiento`; hay más valores."
+          },
+          "estado": {
+            "type": "string",
+            "description": "Estado en el embudo. Los valores `aprobado`, `aprobado_propuesta` y `aprobado_respuesta` son los únicos que el Enviador despacha (`ESTADOS_DE_ENVIO`, ADR 0005). La lista completa de estados no está enumerada aquí."
+          }
+        }
+      },
+      "ErrorConCodigo": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "codigo": {
+            "type": "string",
+            "description": "Código estable para que el cliente decida qué hacer, p. ej. `estado_cambiado`, `limite_plan_alcanzado`, `email_contacto_invalido`."
+          }
+        },
+        "required": [
+          "error"
+        ]
+      }
+    }
+  },
+  "operations": {
+    "GET /api/health": {
+      "summary": "Salud del servicio",
+      "description": "Lo consulta el healthcheck de Railway. Devuelve solo lo imprescindible: antes exponía el nombre y la longitud de claves de API (corregido, ver comentario en `server.ts`). También responde en `/health`.",
+      "responses": {
+        "200": {
+          "description": "Servicio operativo.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "ok"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "commit": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "uptimeSeconds": {
+                    "type": "integer"
+                  },
+                  "emailService": {
+                    "type": "object",
+                    "properties": {
+                      "configured": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "POST /api/auth/login": {
+      "summary": "Iniciar sesión",
+      "description": "Crea una sesión de 30 días y la devuelve en el cuerpo y en la cookie `bakandeya_token`. La cookie **no es HttpOnly a propósito** (el cliente también guarda el token en localStorage; migrar a solo cookie está en `BACKLOG.md`). Limitado por `loginRateLimiter`.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "username",
+                "password"
+              ],
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Se normaliza a minúsculas y sin espacios."
+                },
+                "password": {
+                  "type": "string"
+                },
+                "band_id": {
+                  "type": "string",
+                  "description": "Banda con la que iniciar sesión, si la cuenta pertenece a varias."
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Sesión creada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "32 bytes aleatorios en hexadecimal."
+                  },
+                  "user": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Usuario sin `passwordHash` ni `salt`."
+                  },
+                  "availableBands": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "multipleBands": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Faltan usuario o contraseña.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Usuario o contraseña incorrectos.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GET /api/leads": {
+      "summary": "Listar salas de la banda activa",
+      "description": "Sin parámetros devuelve todas las salas de la banda (filtradas por la campaña activa si la hay). Con cualquiera de los filtros o de `page`/`limit` pagina en servidor; `pagination` solo aparece si se pasa `page` o `limit`.",
+      "parameters": [
+        {
+          "name": "page",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "estado",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "search",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "ciudad",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sortBy",
+          "in": "query",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sortOrder",
+          "in": "query",
+          "schema": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Salas de la banda.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "leads": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Lead"
+                    }
+                  },
+                  "pagination": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error al leer de Supabase.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "GET /api/leads/{id}": {
+      "summary": "Obtener una sala",
+      "description": "Acotada a la banda activa: pedir el id de un lead de otra banda devuelve 404.",
+      "responses": {
+        "200": {
+          "description": "La sala.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "lead": {
+                    "$ref": "#/components/schemas/Lead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No existe en esta banda.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "error": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "POST /api/leads": {
+      "summary": "Crear una sala",
+      "description": "Respeta el límite de salas del plan de la banda. Puede devolver un `warning` sin fallar.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Lead"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Sala creada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "lead": {
+                    "$ref": "#/components/schemas/Lead"
+                  },
+                  "warning": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "403": {
+          "description": "Límite del plan alcanzado (`codigo: limite_plan_alcanzado`).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorConCodigo"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Error al crear la sala.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "PUT /api/leads/{id}": {
+      "summary": "Actualizar una sala (y aprobar)",
+      "description": "Aquí se aprueba: poner `estado` a `aprobado`, `aprobado_propuesta` o `aprobado_respuesta` deja el lead disponible para el Enviador (ADR 0005) y guarda la edición humana (borrador de la IA frente a texto aprobado) para aprender el tono de la banda. Tras guardar, lanza un enriquecimiento automático en segundo plano. Envía `expectedStatus` con el estado que el usuario vio al decidir: si el lead cambió entretanto se rechaza con 409 en lugar de pisarlo con una decisión basada en datos viejos.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Lead"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "expectedStatus": {
+                      "type": "string",
+                      "description": "Estado esperado del lead. No se guarda."
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Sala actualizada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "lead": {
+                    "$ref": "#/components/schemas/Lead"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Dato inválido, p. ej. `codigo: email_contacto_invalido`.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ErrorConCodigo"
+              }
+            }
+          }
+        },
+        "409": {
+          "description": "El estado cambió mientras el usuario decidía (`codigo: estado_cambiado`).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "error": {
+                    "type": "string"
+                  },
+                  "codigo": {
+                    "type": "string",
+                    "example": "estado_cambiado"
+                  },
+                  "estado_actual": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "POST /api/public/fans": {
+      "summary": "Registrar un fan (con consentimiento RGPD)",
+      "description": "Público, limitado por `publicoRateLimiter`. Rechaza el registro si `consentimientoRGPD` no es verdadero. La banda destino puede ir en `band_id` (cuerpo) o en `?band_id=` / `?band=`. Devuelve el incentivo solo si la banda lo ha configurado de verdad.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "nombre",
+                "email",
+                "consentimientoRGPD"
+              ],
+              "properties": {
+                "nombre": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Se guarda en minúsculas y sin espacios."
+                },
+                "ciudad": {
+                  "type": "string"
+                },
+                "comoConocio": {
+                  "type": "string"
+                },
+                "conciertoOrigenId": {
+                  "type": "string"
+                },
+                "conciertoOrigenNombre": {
+                  "type": "string"
+                },
+                "consentimientoRGPD": {
+                  "type": "boolean",
+                  "description": "Debe ser verdadero."
+                },
+                "band_id": {
+                  "type": "string"
+                },
+                "mensaje": {
+                  "type": "string"
+                },
+                "cancionFavorita": {
+                  "type": "string"
+                },
+                "instagram": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Fan registrado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "incentivo": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Falta la banda, el nombre, el correo o el consentimiento RGPD.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    },
+    "POST /api/public/deals/{token}/sign": {
+      "summary": "Firmar un acuerdo de concierto",
+      "description": "Público: el `token` de la URL es la credencial. La firma es una imagen (PNG/JPEG en base64) dibujada en pantalla, y se exige confirmar la revisión de las condiciones técnicas. La respuesta incluye el hash SHA-256 del contrato (`deal.contrato_sha256`) y el `concertId` del concierto que se crea al firmar. Los textos se sanean con `sanitizeExternalText`.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "nombre_firmante",
+                "firma_imagen",
+                "rider_validado_por_sala"
+              ],
+              "properties": {
+                "nombre_firmante": {
+                  "type": "string"
+                },
+                "cargo_firmante": {
+                  "type": "string",
+                  "description": "Si falta se guarda `Programador / Representante Sala`."
+                },
+                "email_firmante": {
+                  "type": "string"
+                },
+                "firma_imagen": {
+                  "type": "string",
+                  "description": "Imagen PNG o JPEG codificada en base64."
+                },
+                "rider_validado_por_sala": {
+                  "type": "boolean",
+                  "description": "Confirmación de que la sala revisó las condiciones técnicas."
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Acuerdo firmado y concierto confirmado.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean"
+                  },
+                  "mensaje": {
+                    "type": "string"
+                  },
+                  "deal": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "estado": {
+                        "type": "string"
+                      },
+                      "nombre_firmante": {
+                        "type": "string"
+                      },
+                      "cargo_firmante": {
+                        "type": "string"
+                      },
+                      "firma_timestamp": {
+                        "type": "string"
+                      },
+                      "contrato_sha256": {
+                        "type": "string",
+                        "description": "Hash SHA-256 del contrato."
+                      }
+                    }
+                  },
+                  "concertId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Falta nombre, firma o confirmación del rider, o la firma no es una imagen válida.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

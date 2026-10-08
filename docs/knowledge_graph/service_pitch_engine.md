@@ -27,6 +27,7 @@ Motor de IA generativa con fallback automático Gemini ➔ DeepSeek ➔ OpenAI.
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 
 ---
 

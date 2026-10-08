@@ -20,7 +20,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
-- [[db_payments]]
+- [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 
 ---
@@ -32,6 +32,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
+- [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
 
 ---
 

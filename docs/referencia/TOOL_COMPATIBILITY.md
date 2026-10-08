@@ -36,8 +36,7 @@ BandsManager/
 ├── CLAUDE.md                  Pointer corto a AGENTS.md (Claude Code lo lee al arrancar)
 │
 ├── skills/                    ⭐ Fuente única de los skills (4: agentic-harness,
-│   │                            security-multitenancy, fullstack-ux-design,
-│   │                            supabase-architect)
+│   │                            ver el índice completo en skills/README.md)
 │   └── README.md              Cómo usar skills + política de sincronización de copias
 │
 ├── .claude/
@@ -46,6 +45,9 @@ BandsManager/
 │
 ├── .gemini/
 │   └── skills/                Copia real de /skills/, para AI Studio
+│
+├── .opencode/
+│   └── skills/                Copia real de /skills/, para Open Code
 │
 └── ... (código del proyecto)
 ```

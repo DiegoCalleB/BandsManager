@@ -19,13 +19,14 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_scout|Scout Discovery Agent]] *(Layer: #agent, Domain: #booking)*
-- [[route_leads_enrichment]]
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 
 ---
 
