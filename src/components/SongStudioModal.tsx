@@ -2979,8 +2979,9 @@ export default function SongStudioModal({
     });
   };
 
-  // Tarjeta de una idea con su mezclador. La usan las tomas y el panel de Iris (que es la idea con stems).
-  const renderIdeaCard = (idea: SongAudioIdea) => {
+  // Tarjeta de una toma con su mezclador. El panel de Iris la reutiliza en modoIris: solo stems y mezclador, sin cabecera de idea.
+  const renderIdeaCard = (idea: SongAudioIdea, opts?: { iris?: boolean }) => {
+                    const modoIris = !!opts?.iris;
                     const isPlaying = playingIdeaId === idea.id;
                     const currentTime = currentTimeMap[idea.id] || 0;
                     const rawDuration = durationMap[idea.id];
@@ -2990,7 +2991,7 @@ export default function SongStudioModal({
                     const hasVoted = votes.includes(currentUsername);
                     const tracks = getIdeaTracks(idea);
                     const isAddingTrack = addingTrackIdeaId === idea.id;
-                    const isIdeaExpanded = expandedIdeaIds.has(idea.id);
+                    const isIdeaExpanded = modoIris || expandedIdeaIds.has(idea.id);
 
                     return (
                       <motion.div
@@ -3009,23 +3010,25 @@ export default function SongStudioModal({
  menú de"más opciones" para todo lo demás. El resto se revela al expandir. */}
                         <div className="flex items-center justify-between gap-2 pb-3">
                           <div className="flex items-center gap-2 flex-wrap min-w-0">
-                            <button
+                            {!modoIris && (<button
                               type="button"
                               onClick={() => toggleIdeaExpanded(idea.id)}
                               title={isIdeaExpanded ? 'Plegar idea' : 'Expandir idea'}
                               className="p-1 rounded-[var(--r-pill)] text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--ink)]/10 transition-ui cursor-pointer shrink-0"
                             >
                               {isIdeaExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                            </button>
+                            </button>)}
+                            {!modoIris && (
                             <span className={`px-2.5 py-1 rounded-[var(--r-s)] text-xs font-sans font-bold shrink-0 ${sectionInfo.color}`}>
                               <ShowIcon inline emoji={sectionInfo.icon} /> {sectionInfo.label}
                             </span>
+                            )}
                             <div className="min-w-0">
                               <h4 className="text-base font-bold text-[var(--ink)] flex items-center gap-2 flex-wrap">
-                                {idea.titulo}
+                                {modoIris ? 'Pistas de la canción' : idea.titulo}
                                 {esIdeaIris(idea) && (
                                   <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold">
-                                    Pistas de la canción · Iris
+                                    Iris
                                   </span>
                                 )}
                                 <span className="text-micro font-sans px-2 py-0.5 rounded bg-[var(--tentative)]/20 text-[var(--tentative)] font-semibold">
@@ -3069,10 +3072,12 @@ export default function SongStudioModal({
                                   </div>
                                 )}
                               </h4>
+                              {!modoIris && (
                               <span className="text-xs text-[var(--ink-2)] font-sans flex items-center gap-1 mt-0.5 truncate">
                                 <UserIcon className="w-3 h-3 text-[var(--tentative)] shrink-0" />
                                 {idea.subidoPor} {idea.instrumento ? `(${idea.instrumento})` : ''} • {idea.fecha}
                               </span>
+                              )}
                             </div>
                           </div>
 
@@ -3089,6 +3094,7 @@ export default function SongStudioModal({
                               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
                             </Button>
 
+                            {!modoIris && (
                             <IconButton
                               label="Eliminar idea"
                               variant="danger"
@@ -3097,8 +3103,9 @@ export default function SongStudioModal({
                             >
                               <Trash2 className="w-4 h-4" />
                             </IconButton>
+                            )}
 
-                            <div className="relative">
+                            {!modoIris && (<div className="relative">
                               <IconButton
                                 label="Más opciones"
                                 type="button"
@@ -3185,13 +3192,13 @@ export default function SongStudioModal({
                                   </MenuItem>
                                 </PopoverAncla>
                               )}
-                            </div>
+                            </div>)}
                           </div>
                         </div>
 
                         {isIdeaExpanded && (
                           <>
-                            {idea.notas && (
+                            {!modoIris && idea.notas && (
                               <p className="text-xs text-[var(--ink-2)] italic bg-[var(--sunken)] p-2.5 rounded-[var(--r-m)]">
                                 "{idea.notas}"
                               </p>
@@ -3200,7 +3207,7 @@ export default function SongStudioModal({
                             {/* Separar Stems / Añadir Pista: se revelan solo al expandir la idea.
  Una vez ya hay stems separados,"Separar Stems" deja paso a"Comparar
  Motor" (en la cabecera del mezclador) — no hace falta tenerlo doblado aquí. */}
-                            <div className="flex items-center gap-2 flex-wrap justify-end">
+                            {!modoIris && (<div className="flex items-center gap-2 flex-wrap justify-end">
                               <button
                                 type="button"
                                 onClick={() => {
@@ -3218,7 +3225,7 @@ export default function SongStudioModal({
                                 <Plus className="w-4 h-4" />
                                 <span>+ Pista</span>
                               </button>
-                            </div>
+                            </div>)}
 
                             {/* MASTER MULTITRACK CONTROLS & TIMELINE */}
                             <div className="p-2.5 sm:p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] space-y-2 sm:space-y-3">
@@ -3273,7 +3280,7 @@ export default function SongStudioModal({
                                 {/* Extra Tools & Stems Actions:"+ Base Rítmica IA" vive en el menú ⋮ de la
  idea (es una acción ocasional, no algo que hace falta tener siempre a mano) */}
                                 <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                                  {selectedSongBaseUrl && !tracks.some((t) => t.audioUrl === selectedSongBaseUrl) && (
+                                  {!modoIris && selectedSongBaseUrl && !tracks.some((t) => t.audioUrl === selectedSongBaseUrl) && (
                                     <Button
                                       variant="neutral"
                                       size="xs"
@@ -4582,7 +4589,7 @@ export default function SongStudioModal({
                 <span>{isSeparatingStemsAi ? 'Separando...' : irisIdea ? 'Volver a separar' : 'Separar con Iris'}</span>
               </button>
             </div>
-            {irisIdea && <div className="space-y-6">{renderIdeaCard(irisIdea)}</div>}
+            {irisIdea && <div className="space-y-6">{renderIdeaCard(irisIdea, { iris: true })}</div>}
 
             <div className="flex items-center justify-between gap-3 p-2 sm:p-3 bg-[var(--bg)]/80 rounded-[var(--r-l)]">
               <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
@@ -5020,7 +5027,7 @@ export default function SongStudioModal({
             ) : (
               <div className="space-y-6">
                 <AnimatePresence>
-                  {tomas.map(renderIdeaCard)}
+                  {tomas.map((toma) => renderIdeaCard(toma))}
                 </AnimatePresence>
               </div>
             )}

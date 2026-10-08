@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { readFileSync } from 'node:fs';
 import {
   NAV_ITEMS,
   NAV_GROUPS,
@@ -36,22 +37,23 @@ describe('navGroups config', () => {
     expect(new Set(FLAT_NAV_ORDER_IDS)).toEqual(new Set(TOP_TABS_ORDER_IDS));
   });
 
-  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools', () => {
-    // Cuando hay agrupación (planes >7 módulos), mostramos:
-    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye'repertorio' y'discografia')
-    // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
+  it('groups + pinned-top + pinned-bottom contain exactly FLAT_NAV_ORDER_IDS', () => {
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
-    const toolIds: NavItemId[] = ['metronome', 'tuner'];
-    const groupedWithoutExtraItems = grouped.filter((id) => !toolIds.includes(id));
-    expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
-    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
+    expect(new Set(grouped)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
+    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length);
+  });
+
+  it('metrónomo y afinador no están en el menú: viven como botones del Atril', () => {
+    expect(Object.keys(NAV_ITEMS)).not.toContain('metronome');
+    expect(Object.keys(NAV_ITEMS)).not.toContain('tuner');
+    const atril = readFileSync(new URL('../../components/Atril.tsx', import.meta.url), 'utf8');
+    expect(atril).toContain('label="Metrónomo"');
+    expect(atril).toContain('label="Afinador"');
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
     expect(findNavGroupIdForItem('discografia')).toBe('musica');
-    expect(findNavGroupIdForItem('metronome')).toBe('musica');
-    expect(findNavGroupIdForItem('tuner')).toBe('musica');
     expect(NAV_GROUPS.some((g) => g.id === 'herramientas')).toBe(false);
     expect(findNavGroupIdForItem('booking')).toBe('directorio');
     expect(findNavGroupIdForItem('epk')).toBe('promocion');
