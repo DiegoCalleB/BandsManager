@@ -867,3 +867,7 @@ body.scroll .tr-time { display: none; }
 .slide.scene.reveal .sub { font-size: 36px; margin-top: 30px; max-width: 980px; }
 .slide.scene.reveal .sub2 { margin-top: 22px; color: rgba(255,255,255,.9); }
 .slide.scene.reveal h2 { font-size: 100px; }
+
+.slide.scene.reveal .sub { font-size: 33px; margin-top: 22px; }
+.slide.scene.reveal .sub3 { color: #ffd596; font-weight: 500; }
+.slide.scene.reveal h2 { font-size: 92px; }
