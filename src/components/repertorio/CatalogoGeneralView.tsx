@@ -5,7 +5,7 @@ import { PopoverAncla } from "../ui/PopoverAncla";
 import { AlbumCover } from "../AlbumCover";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { SongCardRow } from "./SongCardRow";
-import ShowIcon from "../ui/ShowIcon";
+import { ShowIcon } from "../ui/ShowIcon";
 import {
   Play,
   Pause,

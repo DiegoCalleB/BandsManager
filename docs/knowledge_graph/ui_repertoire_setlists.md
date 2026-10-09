@@ -35,6 +35,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_components_repertorio_ConfirmDeleteModal|src/components/repertorio/ConfirmDeleteModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -46,6 +47,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_SetlistStatsSummaryBar|src/components/repertorio/SetlistStatsSummaryBar.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*

@@ -195,6 +195,7 @@ BandManager UI Component Library
 - [[src_components_repertorio_ConfirmDeleteModal|src/components/repertorio/ConfirmDeleteModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
+- [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ExportAlbumSongsModal|src/components/repertorio/ExportAlbumSongsModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
@@ -208,6 +209,7 @@ BandManager UI Component Library
 - [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistStatsSummaryBar|src/components/repertorio/SetlistStatsSummaryBar.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*

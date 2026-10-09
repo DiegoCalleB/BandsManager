@@ -11,7 +11,7 @@ import {
   Timer,
   Lightbulb,
 } from "lucide-react";
-import ShowIcon from "../ui/ShowIcon";
+import { ShowIcon } from "../ui/ShowIcon";
 
 export interface SetlistShowItemRowProps {
   item: SetlistItem;
