@@ -34,7 +34,6 @@ _Sin dependencias salientes directas._
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

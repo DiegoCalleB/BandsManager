@@ -1,19 +1,16 @@
+import type { User } from "../../../types";
+import type { AddableItemKind } from "../setlistItemKind";
 /**
  * Acciones sobre los items del setlist activo: añadir canciones y bloques, atajos personalizados, notas, asignación a conciertos e impresión de escenario.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
+ @typescript-eslint/no-unused-vars
 */
-import { SetlistItem, Setlist, SetlistShortcut, Concert, Rehearsal, Song } from "../../../types";
+import { Dispatch,SetStateAction } from "react";
+import { Concert,Rehearsal,Setlist,SetlistItem,SetlistShortcut,Song } from "../../../types";
 import { saveSetlistsToLocalStorageSafely } from "../../../utils/audioStorage";
-import { buildStageSetlistHtml, generatePdfStylesheet, getTokenValueForPrint } from "../../../utils/repertorioPdf";
-import { Dispatch, SetStateAction } from "react";
+import { buildStageSetlistHtml,generatePdfStylesheet,getTokenValueForPrint } from "../../../utils/repertorioPdf";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface SetlistItemActionsParams {
@@ -45,7 +42,7 @@ export interface SetlistItemActionsParams {
   setAssigningSetlist: Dispatch<SetStateAction<Setlist>>;
   songs: Song[];
   activeSetlistMetrics: { totalSeconds: number; formattedTime: string; songCount: number; eventCount: number; blockCount: number; avgBpm: number; };
-  currentUser: any;
+  currentUser: User | undefined;
 }
 
 /**
@@ -56,7 +53,7 @@ export interface SetlistItemActionsParams {
 export function useSetlistItemActions({ activeSetlist, selectedSetlistItemId, setSetlists, syncSetlistToBackend, setSelectedSetlistItemId, newShortcutLabel, getHeaders, newShortcutIcon, newShortcutMinutes, setCustomShortcuts, setNewShortcutLabel, setNewShortcutIcon, setNewShortcutMinutes, setIsAddingShortcut, editingShowItem, showItemAudioUrl, setShowShowItemModal, setEditingShowItem, setShowItemAudioUrl, assigningSetlist, selectedConcertToAssign, concerts, onUpdateConcert, rehearsals, onUpdateRehearsal, setAssigningSetlist, songs, activeSetlistMetrics, currentUser }: SetlistItemActionsParams) {
   const handleAddItemToSetlist = (
     songId?: string,
-    tipoItem: any = "cancion",
+    tipoItem: AddableItemKind = "cancion",
     tituloCustom?: string,
     duracionEstimadaMinutos?: number,
     duracionEstimadaSegundos?: number,
@@ -71,7 +68,7 @@ export function useSetlistItemActions({ activeSetlist, selectedSetlistItemId, se
 
     if (tipoItem !== "cancion") {
       actualTipoItem = "bloque";
-      bloqueSubtipo = tipoItem; // Map directly:'presentacion','bis','header', etc.
+      bloqueSubtipo = tipoItem as SetlistItem["bloqueSubtipo"]; // Map directly:'presentacion','bis','header', etc.
     }
 
     const newItem: SetlistItem = {
@@ -259,8 +256,8 @@ export function useSetlistItemActions({ activeSetlist, selectedSetlistItemId, se
     const mappedData = { ...itemData };
     if (mappedData.tipoItem && mappedData.tipoItem !== "cancion") {
       const subtype = mappedData.tipoItem;
-      mappedData.tipoItem = "bloque" as any;
-      mappedData.bloqueSubtipo = subtype as any;
+      mappedData.tipoItem = "bloque" as const;
+      mappedData.bloqueSubtipo = subtype as SetlistItem["bloqueSubtipo"];
     }
 
     let updatedItems: SetlistItem[];
@@ -272,7 +269,7 @@ export function useSetlistItemActions({ activeSetlist, selectedSetlistItemId, se
           : it,
       );
     } else {
-      const defaultSubtype = (mappedData.bloqueSubtipo || "otro") as any;
+      const defaultSubtype = (mappedData.bloqueSubtipo || "otro") as NonNullable<SetlistItem["bloqueSubtipo"]>;
       const newItem: SetlistItem = {
         id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
         tipoItem: mappedData.tipoItem === "cancion" ? "cancion" : "bloque",

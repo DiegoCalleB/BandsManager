@@ -13,12 +13,13 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Acciones sobre los items del setlist activo: añadir canciones y bloques, atajos personalizados, notas, asignación a conciertos e impresión de escenario.
+Exporta: SetlistItemActionsParams, useSetlistItemActions.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[src_components_repertorio_setlistItemKind|src/components/repertorio/setlistItemKind.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(Layer: #service, Domain: #system)*

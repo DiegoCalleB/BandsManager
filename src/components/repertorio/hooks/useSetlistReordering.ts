@@ -1,20 +1,14 @@
+import { getErrorMessage } from "../../../utils/errorMessage";
 /**
  * Reordenación y optimización del setlist activo: deshacer, sugerencia de chapa, plan de Setlist Perfecto y drag and drop.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { PerfectSetlistAction, SetlistFeedbackInput, PerfectSetlistPlan } from "../PerfectSetlistModal";
-import { SetlistItem, Setlist } from "../../../types";
+ 
+import { Dispatch,SetStateAction } from "react";
 import { api } from "../../../services/api";
+import { Setlist,SetlistItem } from "../../../types";
 import { saveSetlistsToLocalStorageSafely } from "../../../utils/audioStorage";
-import { Dispatch, SetStateAction } from "react";
+import { PerfectSetlistAction,PerfectSetlistPlan,SetlistFeedbackInput } from "../PerfectSetlistModal";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface SetlistReorderingParams {
@@ -145,8 +139,8 @@ export function useSetlistReordering({ reorderSetlistItems, removeSetlistItemAtI
       } else {
         setPerfectSetlistError(result.error || "Error al generar el plan");
       }
-    } catch (err: any) {
-      setPerfectSetlistError(err.message || "Error desconocido");
+    } catch (err: unknown) {
+      setPerfectSetlistError(getErrorMessage(err, "Error desconocido"));
     } finally {
       setPerfectSetlistLoading(false);
     }

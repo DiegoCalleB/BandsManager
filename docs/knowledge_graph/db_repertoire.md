@@ -34,9 +34,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*

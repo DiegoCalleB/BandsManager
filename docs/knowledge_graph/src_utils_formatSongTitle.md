@@ -35,7 +35,6 @@ Exporta: formatSongTitle, normalizeSongTitlesInList.
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

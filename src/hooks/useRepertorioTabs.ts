@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback,useEffect,useState } from "react";
 import { sobrescribirModulo } from "../utils/moduloGlobal";
 
 /** Pestaña principal del módulo Repertorio. */

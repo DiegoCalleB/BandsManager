@@ -13,7 +13,7 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: SetlistAIAnalysisModal.
+Exporta: Analysis, SetlistAIAnalysisModal.
 
 ---
 
@@ -31,7 +31,9 @@ Exporta: SetlistAIAnalysisModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_hooks_useRepertorioViewState|src/components/repertorio/hooks/useRepertorioViewState.ts]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

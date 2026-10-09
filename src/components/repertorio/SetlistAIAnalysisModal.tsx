@@ -77,7 +77,7 @@ interface Suggestion {
   suggested_reorder?: { from_position: number; to_position: number } | null;
 }
 
-interface Analysis {
+export interface Analysis {
   narrativeArc: string;
   psychologicalFlow: string;
   suggestions: Suggestion[];

@@ -3,18 +3,13 @@
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
+ @typescript-eslint/no-unused-vars
 */
-import { guardarOReverter } from "../../../utils/guardarConReversion";
+import { Dispatch,SetStateAction } from "react";
+import { Setlist,Song } from "../../../types";
 import { saveSongsToLocalStorageSafely } from "../../../utils/audioStorage";
 import { normalizeSongTitlesInList } from "../../../utils/formatSongTitle";
-import { Song, Setlist } from "../../../types";
-import { Dispatch, SetStateAction } from "react";
+import { guardarOReverter } from "../../../utils/guardarConReversion";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface CatalogActionsParams {
@@ -189,11 +184,11 @@ export function useCatalogActions({ setSelectedCatalogIds, setConfirmDeleteModal
         const updated = { ...s, albumDisco: albumName };
         if (albumExtraInfo?.portadaUrl !== undefined && albumExtraInfo.portadaUrl !== "") {
           updated.portadaUrl = albumExtraInfo.portadaUrl;
-          (updated as any).portada_url = albumExtraInfo.portadaUrl;
+          (updated as SongAlbumExtras).portada_url = albumExtraInfo.portadaUrl;
         }
         if (albumExtraInfo?.año) {
-          (updated as any).albumYear = albumExtraInfo.año;
-          (updated as any).album_year = albumExtraInfo.año;
+          (updated as SongAlbumExtras).albumYear = albumExtraInfo.año;
+          (updated as SongAlbumExtras).album_year = albumExtraInfo.año;
         }
         return updated;
       } else if (isCurrentlyInAlbum) {
@@ -212,7 +207,7 @@ export function useCatalogActions({ setSelectedCatalogIds, setConfirmDeleteModal
         !original ||
         original.albumDisco !== s.albumDisco ||
         original.portadaUrl !== s.portadaUrl ||
-        (original as any).albumYear !== (s as any).albumYear;
+        (original as SongAlbumExtras).albumYear !== (s as SongAlbumExtras).albumYear;
 
       if (isModified || selectedSet.has(s.id)) {
         fetch(`/api/songs/${s.id}`, {
@@ -312,3 +307,6 @@ export function useCatalogActions({ setSelectedCatalogIds, setConfirmDeleteModal
 
   return { handleToggleFavorite, handleNormalizeCatalogTitles, clearCatalogSelection, toggleCatalogSelect, handleBulkAddSelectedToSetlist, handleBulkDeleteSongs, handleSaveAlbumSongs, handleUnassignAlbumSongs, handleDeleteAlbumAndSongs };
 }
+
+/** Campos de álbum que algunos registros heredados guardan fuera del tipo `Song`. */
+type SongAlbumExtras = { portada_url?: string; albumYear?: string | number; album_year?: string | number };

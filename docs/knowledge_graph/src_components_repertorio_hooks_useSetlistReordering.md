@@ -13,7 +13,7 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Reordenación y optimización del setlist activo: deshacer, sugerencia de chapa, plan de Setlist Perfecto y drag and drop.
+Exporta: SetlistReorderingParams, useSetlistReordering.
 
 ---
 
@@ -22,6 +22,7 @@ Reordenación y optimización del setlist activo: deshacer, sugerencia de chapa,
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

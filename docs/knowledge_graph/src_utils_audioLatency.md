@@ -27,7 +27,6 @@ _Sin dependencias salientes directas._
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[src_hooks_useGrabarIdea|src/hooks/useGrabarIdea.ts]] *(from #hook)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

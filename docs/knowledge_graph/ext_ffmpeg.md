@@ -24,9 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*

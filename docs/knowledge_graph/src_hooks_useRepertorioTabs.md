@@ -23,6 +23,8 @@ Exporta: RepertorioTab, CatalogoViewMode, RepertorioTabState, resolveRepertorioT
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_RepertorioCatalogView|src/components/repertorio/RepertorioCatalogView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

@@ -252,7 +252,6 @@ BandManager UI Component Library
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

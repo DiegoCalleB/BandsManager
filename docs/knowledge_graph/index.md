@@ -29,7 +29,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 ## 🌐 Servicios externos
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 8 ficheros lo usan
 - [[ext_fal|fal.ai]] — 7 ficheros lo usan
-- [[ext_ffmpeg|FFmpeg]] — 23 ficheros lo usan
+- [[ext_ffmpeg|FFmpeg]] — 21 ficheros lo usan
 - [[ext_gemini|Gemini (Google GenAI)]] — 10 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 11 ficheros lo usan
 - [[ext_replicate|Replicate]] — 9 ficheros lo usan
@@ -38,7 +38,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_spotify|Spotify]] — 10 ficheros lo usan
 - [[ext_stripe|Stripe]] — 3 ficheros lo usan
 - [[ext_supabase|Supabase (Postgres)]] — 2 ficheros lo usan
-- [[ext_supabase_storage|Supabase Storage]] — 10 ficheros lo usan
+- [[ext_supabase_storage|Supabase Storage]] — 8 ficheros lo usan
 
 ---
 
@@ -73,12 +73,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-815 nodos: 17 agent · 40 db · 12 external · 14 feature · 315 frontend · 40 hook · 42 route · 61 schema · 10 security · 264 service.
+828 nodos: 17 agent · 40 db · 12 external · 14 feature · 328 frontend · 40 hook · 42 route · 61 schema · 10 security · 264 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 300 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 212 ficheros dependen de él
+- [[src_types|src/types.ts]] — 313 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 211 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 129 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
@@ -86,17 +86,17 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 40 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 38 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 37 ficheros dependen de él
 - [[server_db|server/db.ts]] — 35 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 25 ficheros dependen de él
-- [[route_repertoire|Repertoire & Setlists Route]] — 24 ficheros dependen de él
-- [[ext_ffmpeg|FFmpeg]] — 23 ficheros dependen de él
-- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 19 ficheros dependen de él
+- [[route_repertoire|Repertoire & Setlists Route]] — 27 ficheros dependen de él
+- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 24 ficheros dependen de él
+- [[ext_ffmpeg|FFmpeg]] — 21 ficheros dependen de él
 - [[tabla_leads|tabla leads]] — 19 ficheros dependen de él
+- [[route_leads_crud|Leads CRUD Route]] — 18 ficheros dependen de él
 
 ---
 

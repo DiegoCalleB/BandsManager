@@ -47,7 +47,6 @@ _Sin dependencias salientes directas._
 - [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
 - [[src_components_ui_EmptyState|src/components/ui/EmptyState.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

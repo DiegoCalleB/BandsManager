@@ -24,8 +24,9 @@ Exporta: ConfirmDeleteAlbumData, ConfirmDeleteAlbumModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_hooks_useRepertorioDialogs|src/components/repertorio/hooks/useRepertorioDialogs.ts]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioCatalogView|src/components/repertorio/RepertorioCatalogView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

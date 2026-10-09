@@ -49,9 +49,6 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
-- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
@@ -62,8 +59,14 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useCatalogActions|src/components/repertorio/hooks/useCatalogActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioDialogs|src/components/repertorio/hooks/useRepertorioDialogs.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPersistence|src/components/repertorio/hooks/useRepertorioPersistence.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPlaybackAndModals|src/components/repertorio/hooks/useRepertorioPlaybackAndModals.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSetlistCrud|src/components/repertorio/hooks/useSetlistCrud.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistDeletion|src/components/repertorio/hooks/useSetlistDeletion.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSetlistItemActions|src/components/repertorio/hooks/useSetlistItemActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemPopovers|src/components/repertorio/hooks/useSetlistItemPopovers.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*

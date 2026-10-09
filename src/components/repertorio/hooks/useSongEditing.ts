@@ -2,20 +2,13 @@
  * Edición de canciones: análisis automático de acordes, guardado desde el formulario y borrado.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { Song, Setlist } from "../../../types";
+ 
+import React,{ Dispatch,SetStateAction } from "react";
+import { Setlist,Song } from "../../../types";
 import { analizarAcordesDelAudio } from "../../../utils/analisisAcordesCliente";
-import { saveSongsToLocalStorageSafely, uploadFileToServer } from "../../../utils/audioStorage";
-import React, { Dispatch, SetStateAction } from "react";
-import { withSongFlagsForMember } from "../../../utils/repertorioUtils";
+import { saveSongsToLocalStorageSafely,uploadFileToServer } from "../../../utils/audioStorage";
 import { guardarOReverter } from "../../../utils/guardarConReversion";
+import { withSongFlagsForMember } from "../../../utils/repertorioUtils";
 import { formatSecondsToMmSs } from "../../../utils/stageTimeFormat";
 
 /** Dependencias que el componente contenedor inyecta al hook. */

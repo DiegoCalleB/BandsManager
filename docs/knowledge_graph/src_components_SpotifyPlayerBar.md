@@ -32,7 +32,6 @@ Exporta: SpotifyPlayerBar.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_GlobalPlayer|src/components/GlobalPlayer.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

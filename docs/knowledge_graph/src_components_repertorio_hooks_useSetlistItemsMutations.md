@@ -13,11 +13,12 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Mutaciones puras del setlist activo: aplicar cambios de items con snapshot de deshacer, reordenar, insertar y quitar elementos, sugerir chapa y optimizar transiciones.
+Exporta: SetlistItemsMutationsParams, useSetlistItemsMutations.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_repertorio_setlistItemKind|src/components/repertorio/setlistItemKind.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_setlistCompatibility|src/utils/setlistCompatibility.ts]] *(Layer: #service, Domain: #repertoire)*

@@ -29,7 +29,7 @@ Exporta: CatalogoGeneralViewProps, CatalogoGeneralView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioCatalogView|src/components/repertorio/RepertorioCatalogView.tsx]] *(from #frontend)*
 
 ---
 

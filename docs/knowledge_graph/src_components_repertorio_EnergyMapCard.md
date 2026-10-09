@@ -28,7 +28,7 @@ Exporta: EnergyMapCardProps, EnergyMapCard.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 
 ---
 

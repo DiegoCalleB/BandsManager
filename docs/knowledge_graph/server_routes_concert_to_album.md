@@ -29,9 +29,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server|server.ts]] *(from #route)*

@@ -24,7 +24,6 @@ Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de can
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
-- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(Layer: #db, Domain: #repertoire)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*

@@ -1,19 +1,13 @@
+import type { AddableItemKind } from "../setlistItemKind";
 /**
  * Mutaciones puras del setlist activo: aplicar cambios de items con snapshot de deshacer, reordenar, insertar y quitar elementos, sugerir chapa y optimizar transiciones.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { SetlistItem, Setlist, Song } from "../../../types";
+ 
+import { Dispatch,SetStateAction } from "react";
+import { Setlist,SetlistItem,Song } from "../../../types";
 import { saveSetlistsToLocalStorageSafely } from "../../../utils/audioStorage";
-import { sugerirMejorPuntoParaChapa, HuecoCancion, costeTotalTransiciones, optimizarOrdenPorTransiciones, SugerenciaChapa } from "../../../utils/setlistCompatibility";
-import { Dispatch, SetStateAction } from "react";
+import { costeTotalTransiciones,HuecoCancion,optimizarOrdenPorTransiciones,SugerenciaChapa,sugerirMejorPuntoParaChapa } from "../../../utils/setlistCompatibility";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface SetlistItemsMutationsParams {
@@ -25,7 +19,7 @@ export interface SetlistItemsMutationsParams {
   setChapaSuggestion: Dispatch<SetStateAction<SugerenciaChapa>>;
   setOptimizeSummary: Dispatch<SetStateAction<string>>;
   chapaSuggestion: SugerenciaChapa;
-  handleAddItemToSetlist: (songId?: string, tipoItem?: any, tituloCustom?: string, duracionEstimadaMinutos?: number, duracionEstimadaSegundos?: number, notaTema?: string, insertAfterId?: string) => void;
+  handleAddItemToSetlist: (songId?: string, tipoItem?: AddableItemKind, tituloCustom?: string, duracionEstimadaMinutos?: number, duracionEstimadaSegundos?: number, notaTema?: string, insertAfterId?: string) => void;
 }
 
 /**

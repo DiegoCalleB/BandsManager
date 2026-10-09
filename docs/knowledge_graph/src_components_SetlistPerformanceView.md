@@ -41,7 +41,6 @@ Exporta: SetlistPerformanceView.
 - [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 
