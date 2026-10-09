@@ -115,6 +115,8 @@ export async function getSpotifyAccessToken(): Promise<string | null> {
           return data.access_token;
         }
       }
+      // Sin este aviso el fallo era silencioso y se usaba el token de respaldo, con datos incompletos.
+      console.warn(`[SpotifyService] Client credentials respondió ${res.status}; usando token de respaldo`);
     } catch (err: any) {
       console.warn("[SpotifyService] Client credentials token fetch failed:", err?.message);
     }
