@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sliders, X, Sparkles, Info } from 'lucide-react';
 import { SongAudioIdea, Song } from '../../types';
-import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from '../SongStudioModal';
+import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from './moisesStems';
 import { Button, IconButton } from '../ui';
 import { IrisPrism } from './IrisPrism';
 
