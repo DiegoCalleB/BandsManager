@@ -206,6 +206,7 @@
     } else {
       k.whoosh(at(0.02), 0.5, 320, 2800, 0.1);
     }
+    if (el.querySelector('.react')) k.blip(at(2.6), 940, 0.07);
   }
 
   window.DeckSound = {

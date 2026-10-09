@@ -789,3 +789,17 @@ body.scroll .sign-msg { font-size: 18px; }
 .rm-crowd img { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.55); }
 body.scroll .rm-wall, body.scroll .rm-tv, body.scroll .rm-iago, body.scroll .rm-crowd { position: relative !important; inset: auto; left: auto; top: auto; width: auto; right: auto; bottom: auto; margin-top: 16px; }
 body.scroll .rm-crowd { gap: 12px; flex-wrap: wrap; } body.scroll .rm-iago > img { width: 90px; height: 90px; } body.scroll .rm-say { font-size: 16px; }
+
+/* Reacciones de la banda, de vez en cuando */
+.react { position: absolute; right: 100px; bottom: 76px; z-index: 30; display: flex; align-items: flex-start; gap: 18px; max-width: 640px; padding: 16px 24px 16px 16px; border-radius: 28px 28px 8px 28px; background: rgba(20,28,46,.96); border: 1px solid rgba(143,182,255,.4); box-shadow: 0 18px 60px rgba(0,0,0,.5); color: #fff; font-size: 27px; line-height: 1.28; opacity: 0; transform: translateY(18px) scale(.96); pointer-events: none; }
+.react img { flex: none; width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 3px solid #8fb6ff; }
+.react b { display: block; font-size: 19px; font-weight: 600; color: #8fb6ff; margin-bottom: 3px; }
+.react .re2 { display: block; margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(143,182,255,.25); }
+.slide.active .react { animation: reactin 560ms var(--ease) 2.6s forwards; }
+@keyframes reactin { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .react { opacity: 1; transform: none; } }
+body.scroll .react { position: relative; right: auto; bottom: auto; opacity: 1; transform: none; margin-top: 18px; font-size: 16px; max-width: none; }
+
+.react.bl { right: auto; left: 120px; }
+.react.tr { bottom: auto; top: 96px; right: 100px; }
+.react.narrow { max-width: 430px; bottom: 130px; }
