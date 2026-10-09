@@ -98,6 +98,8 @@ import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { Button, Chip, IconButton, Input, MenuItem, Select, ShowIcon } from './ui';
 import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
+import { ActiveSetlistHeader } from "./repertorio/ActiveSetlistHeader";
+import { SetlistItemsList } from "./repertorio/SetlistItemsList";
 import SongStudioModal from "./SongStudioModal";
 import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
@@ -3008,17 +3010,15 @@ export default function RepertorioSetlists({
         <div className="w-full">
           {/* MAIN EDITOR FOR ACTIVE SETLIST */}
           <div
-            className={`w-full p-3 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-2 sm:space-y-4 bg-[var(--surface)] max-lg:sticky max-lg:top-[-0.75rem] max-lg:z-20`}
+            className="w-full p-3 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-2 sm:space-y-4 bg-[var(--surface)] max-lg:sticky max-lg:top-[-0.75rem] max-lg:z-20"
           >
-            <input data-raw
-              className={`w-full flex-1 min-w-0 text-base sm:text-lg font-bold tracking-tight rounded-[var(--r-s)] px-2 py-1 bg-transparent hover:bg-[var(--surface)]/80 focus:bg-[var(--surface)]/80 focus:outline-none focus:ring-1 focus:ring-[var(--acc)]/50 text-[var(--ink)]`}
-              placeholder="Nombre del repertorio"
-              value={activeSetlist?.nombre || ""}
-              onChange={(e) => {
+            <ActiveSetlistHeader
+              activeSetlist={activeSetlist}
+              onUpdateSetlistName={(val) => {
                 if (!activeSetlist) return;
                 const updatedSetlist = {
                   ...activeSetlist,
-                  nombre: e.target.value,
+                  nombre: val,
                 };
                 setSetlists((prev) =>
                   prev.map((st) =>
@@ -3026,231 +3026,40 @@ export default function RepertorioSetlists({
                   ),
                 );
               }}
+              onEnterStageMode={() => {
+                if (activeSetlist) {
+                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
+                  setPerformanceInitialMode("directo");
+                  setPerformanceSetlistId(activeSetlist.id);
+                }
+              }}
+              onEnterRehearsalMode={() => {
+                if (activeSetlist) {
+                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
+                  setPerformanceInitialMode("ensayo");
+                  setPerformanceSetlistId(activeSetlist.id);
+                }
+              }}
+              onOpenAIAnalysis={() => setShowAIAnalysisModal(true)}
+              onOpenPerfectSetlist={() => {
+                setPerfectSetlistPlan(null);
+                setPerfectSetlistError(null);
+                setShowPerfectSetlistModal(true);
+              }}
+              aiAnalysisOverallScore={aiAnalysisResult?.overallScore}
+              onPrintSetlist={() => setShowPdfPreview(true)}
+              onShareSetlist={() => handleShareSetlist(activeSetlist)}
+              onAssignSetlist={() => setAssigningSetlist(activeSetlist)}
+              onDuplicateSetlist={() => handleDuplicateSetlist(activeSetlist)}
+              onImportSetlist={() => setShowImportSetlistModal(true)}
+              onEditSetlistDetails={() =>
+                setSetlistModalData({
+                  isOpen: true,
+                  setlistToEdit: activeSetlist,
+                })
+              }
+              onDeleteSetlist={() => handleDeleteSetlist(activeSetlist.id)}
             />
-
-            <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
-              {/* MODO ESCENARIO / ATRIL: la acción principal para directo */}
-              <Button
-                id="btn-stage-mode-header"
-                variant="primary"
-                size="sm"
-                onClick={() => {
-                  if (activeSetlist) {
-                    cacheActiveStageSetlist(activeSetlist, songs, bandId);
-                    setPerformanceInitialMode("directo");
-                    setPerformanceSetlistId(activeSetlist.id);
-                  }
-                }}
-                title="Modo Escenario / Atril: teleprompter con partituras, acordes y letras en directo"
-              >
-                <Mic className="size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Modo escenario</span>
-                <span className="sm:hidden">Atril</span>
-              </Button>
-
-              {/* MODO ENSAYO: atril de ensayo con pistas Iris */}
-              <Button
-                id="btn-rehearsal-mode-header"
-                variant="neutral"
-                size="sm"
-                onClick={() => {
-                  if (activeSetlist) {
-                    cacheActiveStageSetlist(activeSetlist, songs, bandId);
-                    setPerformanceInitialMode("ensayo");
-                    setPerformanceSetlistId(activeSetlist.id);
-                  }
-                }}
-                title="Modo Ensayo: atril optimizado para ensayo con pistas Iris, silenciamiento de instrumentos y metrónomo"
-              >
-                <Headphones className="size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Modo ensayo</span>
-                <span className="sm:hidden">Ensayo</span>
-              </Button>
-
-              {/* ASISTENTE IA: análisis (Cerebro) y setlist perfecto (Optimizar) en un solo sitio */}
-              <div className="relative hidden shrink-0 sm:block">
-                <Button
-                  id="btn-ai-analysis-header"
-                  variant="neutral"
-                  size="sm"
-                  onClick={() => setShowAssistantChooser((v) => !v)}
-                  aria-expanded={showAssistantChooser}
-                  title="Asistente IA del repertorio: análisis de narrativa y energía, y setlist perfecto"
-                >
-                  <Sparkles className="size-4 text-[var(--acc)]" aria-hidden="true" />
-                  <span className="hidden sm:inline">Asistente IA</span>
-                  <span className="sm:hidden">IA</span>
-                  {aiAnalysisResult?.overallScore && (
-                    <Chip tone="neutral" className="tabular-nums">{aiAnalysisResult.overallScore}</Chip>
-                  )}
-                </Button>
-                {showAssistantChooser && (
-                  <>
-                    <div className="fixed inset-0 z-30" onClick={() => setShowAssistantChooser(false)} />
-                    <PopoverAncla className="absolute right-0 top-full mt-1.5 z-40 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--r-l)] border border-[var(--line)] bg-[var(--surface)] p-1.5 space-y-0.5 text-xs text-[var(--ink)]">
-                      <MenuItem
-                        id="btn-ai-perfect-header"
-                        type="button"
-                        onClick={() => {
-                          setShowAssistantChooser(false);
-                          setShowAIAnalysisModal(true);
-                        }}
-                      >
-                        <span className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
-                          <Brain className="size-4 text-[var(--acc)]" aria-hidden="true" /> Ver análisis
-                        </span>
-                        <span className="block mt-0.5 pl-6 text-xs text-[var(--ink-2)]">Arco narrativo, puntuación y sugerencias explicadas.</span>
-                      </MenuItem>
-                      <MenuItem
-                        type="button"
-                        onClick={() => {
-                          setShowAssistantChooser(false);
-                          setPerfectSetlistPlan(null);
-                          setPerfectSetlistError(null);
-                          setShowPerfectSetlistModal(true);
-                        }}
-                      >
-                        <span className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
-                          <Sparkles className="size-4 text-[var(--acc)]" aria-hidden="true" /> Generar plan de cambios
-                        </span>
-                        <span className="block mt-0.5 pl-6 text-xs text-[var(--ink-2)]">Reordena y optimiza canciones sobre una copia.</span>
-                      </MenuItem>
-                    </PopoverAncla>
-                  </>
-                )}
-              </div>
-
-              {/* IMPRIMIR: el setlist de papel es lo que se pega en el escenario; con etiqueta y color
-                  de firma (único `soft` de la vista) para que se vea, también en móvil. */}
-              <Button
-                id="btn-print-setlist-header"
-                variant="soft"
-                size="sm"
-                onClick={() => setShowPdfPreview(true)}
-                title="Imprimir el setlist en papel (A4): una hoja por músico, maquetado automático"
-              >
-                <Printer className="size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Imprimir setlist</span>
-                <span className="sm:hidden">Imprimir</span>
-              </Button>
-
-              <div className="relative shrink-0">
-                <Button
-                  variant="ghost"
-                  size="xs"
-                  type="button"
-                  onClick={() => setShowSetlistActionsMenu((v) => !v)}
-                  title="Acciones del repertorio: compartir, asignar a bolo, duplicar, editar detalles, eliminar"
-                >
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-                {showSetlistActionsMenu && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-30"
-                      onClick={() => setShowSetlistActionsMenu(false)}
-                    />
-                    <PopoverAncla
-                      className={`absolute right-0 top-full mt-1.5 z-40 w-56 rounded-[var(--r-l)] p-1.5 space-y-1 text-xs ${"bg-[var(--sunken)] text-[var(--ink)]"}`}
-                    >
-                      {/* En móvil el asistente IA vive aquí: menos botones a la vista */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          setShowAIAnalysisModal(true);
-                        }}
-                        className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--r-m)] px-2.5 py-2 text-left text-[var(--ink)] transition hover:bg-[var(--surface)] sm:hidden"
-                      >
-                        <Brain className="w-3.5 h-3.5 shrink-0" /> Asistente IA: ver análisis
-                        {aiAnalysisResult?.overallScore ? ` (${aiAnalysisResult.overallScore})` : ""}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          setPerfectSetlistPlan(null);
-                          setPerfectSetlistError(null);
-                          setShowPerfectSetlistModal(true);
-                        }}
-                        className="flex w-full cursor-pointer items-center gap-2 rounded-[var(--r-m)] px-2.5 py-2 text-left text-[var(--ink)] transition hover:bg-[var(--surface)] sm:hidden"
-                      >
-                        <Sparkles className="w-3.5 h-3.5 shrink-0" /> Generar plan de cambios
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          handleShareSetlist(activeSetlist);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ink)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
-                      >
-                        <MessageSquare className="w-3.5 h-3.5 shrink-0" />{" "}
-                        Compartir repertorio
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          setAssigningSetlist(activeSetlist);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--ink)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--surface)]"}`}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />{" "}
-                        Asignar a bolo/ensayo
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          setShowPdfPreview(true);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${"text-[var(--ink)] hover:bg-[var(--sunken)]"}`}
-                      >
-                        <Printer className="w-3.5 h-3.5 shrink-0" /> Imprimir /
-                        PDF
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          handleDuplicateSetlist(activeSetlist);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
-                      >
-                        <Copy className="w-3.5 h-3.5 shrink-0" /> Duplicar
-                        setlist
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          setSetlistModalData({
-                            isOpen: true,
-                            setlistToEdit: activeSetlist,
-                          });
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] transition cursor-pointer flex items-center gap-2 ${"text-[var(--ink-2)] hover:bg-[var(--sunken)]"}`}
-                      >
-                        <Edit3 className="w-3.5 h-3.5 shrink-0" /> Editar
-                        detalles
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowSetlistActionsMenu(false);
-                          handleDeleteSetlist(activeSetlist.id);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-[var(--r-m)] text-[var(--alert)] transition cursor-pointer flex items-center gap-2 ${"hover:bg-[var(--alert-soft)]"}`}
-                      >
-                        <Trash2 className="w-3.5 h-3.5 shrink-0" /> Eliminar
-                        setlist
-                      </button>
-                    </PopoverAncla>
-                  </>
-                )}
-              </div>
-            </div>
           </div>
 
           {/* SETLIST VIEW MODES & SUMMARY BAR */}
@@ -3341,268 +3150,64 @@ export default function RepertorioSetlists({
           />
 
           {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
-          <div className="space-y-2 max-h-[calc(88vh-200px)] min-h-[480px] overflow-y-auto pr-1">
-            {activeSetlist.items.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <PublicoSilhouette opacity={0.12} size="medium" />
-                <p className="mt-6 font-medium text-[var(--ink)] text-sm">
-                  Setlist vacío. Añade el primer tema.
-                </p>
-                <p className="mt-2 text-[var(--ink-2)] text-xs max-w-xs">
-                  Usa la barra superior para añadir temas o eventos.
-                </p>
-              </div>
-            ) : (
-              activeSetlist.items.map((it, index) => {
-                const isSelected = selectedSetlistItemId === it.id;
-                const isDragging = draggedItemIndex === index;
-                const isDragOver = dragOverItemIndex === index;
-
-                if (it.tipoItem === "cancion" && it.songId) {
-                  const song = songs.find((s) => s.id === it.songId);
-                  if (!song) return null;
-
-                  const isExpanded = expandedSetlistItemIds.has(it.id);
-                  const toggleExpand = () => {
-                    const newSet = new Set(expandedSetlistItemIds);
-                    if (newSet.has(it.id)) {
-                      newSet.delete(it.id);
-                    } else {
-                      newSet.add(it.id);
-                    }
-                    setExpandedSetlistItemIds(newSet);
-                  };
-
-                  const isPlayingThisRow =
-                    activePlayerSong?.id === song.id && isPlayerPlaying;
-                  const playThisSong = () => {
-                    const setlistSongs = activeSetlist.items
-                      .filter((i) => i.tipoItem === "cancion" && i.songId)
-                      .map((i) => songs.find((s) => s.id === i.songId))
-                      .filter((s): s is Song => !!s);
-                    const diffResult =
-                      song.tonalidad && it.tonalidadDeseada
-                        ? getSemitoneDifference(
-                            song.tonalidad,
-                            it.tonalidadDeseada,
-                          )
-                        : null;
-                    const transposeSemitones = diffResult ?? 0;
-                    selectPlayerSongWithQueue(
-                      song,
-                      true,
-                      setlistSongs,
-                      transposeSemitones,
-                    );
-                  };
-
-                  const songIndex = activeSetlist.items
-                    .slice(0, index)
-                    .filter((i) => i.tipoItem === "cancion").length;
-
-                  const prevSong =
-                    index > 0 && activeSetlist.items[index - 1]?.songId
-                      ? songs.find(
-                          (s) => s.id === activeSetlist.items[index - 1].songId,
-                        )
-                      : undefined;
-
-                  return (
-                    <SetlistSongRow
-                      key={it.id}
-                      item={it}
-                      index={index}
-                      song={song}
-                      songIndex={songIndex}
-                      isDragging={isDragging}
-                      isDragOver={isDragOver}
-                      onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0,
-                          );
-                        setDraggedItemIndex(index);
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setDragOverItemIndex(index);
-                      }}
-                      onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        handleDropItem(index);
-                      }}
-                      onDragEnd={() => {
-                        setDraggedItemIndex(null);
-                        setDragOverItemIndex(null);
-                      }}
-                      isSelected={isSelected}
-                      onSelect={() => {
-                        if (!isSelected && !isExpanded) {
-                          setExpandedSetlistItemIds(
-                            new Set(expandedSetlistItemIds).add(it.id),
-                          );
-                        }
-                        setSelectedSetlistItemId(isSelected ? null : it.id);
-                      }}
-                      isExpanded={isExpanded}
-                      onToggleExpand={toggleExpand}
-                      isPlaying={isPlayingThisRow}
-                      onPlay={playThisSong}
-                      isEditingKey={editingKeyItemId === it.id}
-                      keyPopoverPos={keyPopoverPos}
-                      onToggleKeyPopover={(e) => {
-                        e.stopPropagation();
-                        if (editingKeyItemId === it.id) {
-                          setEditingKeyItemId(null);
-                          return;
-                        }
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setKeyPopoverPos({
-                          top: Math.min(
-                            rect.bottom + 4,
-                            window.innerHeight - 110 - 8,
-                          ),
-                          left: Math.min(
-                            rect.left,
-                            window.innerWidth - 200 - 8,
-                          ),
-                        });
-                        setEditingKeyItemId(it.id);
-                      }}
-                      onSetTonalidadDeseada={(note) =>
-                        handleSetTonalidadDeseada(it.id, note)
+          <SetlistItemsList
+            activeSetlist={activeSetlist}
+            songs={songs}
+            selectedSetlistItemId={selectedSetlistItemId}
+            setSelectedSetlistItemId={setSelectedSetlistItemId}
+            expandedSetlistItemIds={expandedSetlistItemIds}
+            setExpandedSetlistItemIds={setExpandedSetlistItemIds}
+            draggedItemIndex={draggedItemIndex}
+            setDraggedItemIndex={setDraggedItemIndex}
+            dragOverItemIndex={dragOverItemIndex}
+            setDragOverItemIndex={setDragOverItemIndex}
+            handleDropItem={handleDropItem}
+            activePlayerSong={activePlayerSong}
+            isPlayerPlaying={isPlayerPlaying}
+            selectPlayerSongWithQueue={selectPlayerSongWithQueue}
+            editingKeyItemId={editingKeyItemId}
+            setEditingKeyItemId={setEditingKeyItemId}
+            keyPopoverPos={keyPopoverPos}
+            setKeyPopoverPos={setKeyPopoverPos}
+            handleSetTonalidadDeseada={handleSetTonalidadDeseada}
+            editingEnergyItemId={editingEnergyItemId}
+            setEditingEnergyItemId={setEditingEnergyItemId}
+            energyPopoverPos={energyPopoverPos}
+            setEnergyPopoverPos={setEnergyPopoverPos}
+            savingEnergyItemId={savingEnergyItemId}
+            handleSetEnergiaManual={handleSetEnergiaManual}
+            handleOpenTransitionPreview={handleOpenTransitionPreview}
+            handleRemoveSetlistItem={handleRemoveSetlistItem}
+            handleUpdateItemNote={handleUpdateItemNote}
+            onEditSong={(song) => {
+              setEditingSong(song);
+              setShowSongModal(true);
+            }}
+            onOpenStudio={(song) => handleOpenStudioModal(song)}
+            onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
+            onOpenChords={(song) => setActiveChordsSong(song)}
+            currentUser={currentUser}
+            handleUpdateSongFromStudio={handleUpdateSongFromStudio}
+            onUpdateShowItemTitle={(itemId, val) => {
+              setSetlists((prev) =>
+                prev.map((s) =>
+                  s.id === activeSetlist.id
+                    ? {
+                        ...s,
+                        items: s.items.map((x) =>
+                          x.id === itemId ? { ...x, tituloCustom: val } : x,
+                        ),
                       }
-                      isEditingEnergy={editingEnergyItemId === it.id}
-                      energyPopoverPos={energyPopoverPos}
-                      isSavingEnergy={savingEnergyItemId === it.id}
-                      onToggleEnergyPopover={(e) => {
-                        e.stopPropagation();
-                        if (editingEnergyItemId === it.id) {
-                          setEditingEnergyItemId(null);
-                          return;
-                        }
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        const openUpward =
-                          window.innerHeight - rect.bottom < 36 + 8;
-                        setEnergyPopoverPos({
-                          top: openUpward
-                            ? rect.top - 36 - 4
-                            : rect.bottom + 4,
-                          left: Math.min(
-                            rect.left,
-                            window.innerWidth - 220 - 8,
-                          ),
-                          openUpward,
-                        });
-                        setEditingEnergyItemId(it.id);
-                      }}
-                      onSetEnergiaManual={(val) =>
-                        handleSetEnergiaManual(song, it.id, val)
-                      }
-                      prevSong={prevSong}
-                      onOpenTransitionPreview={() =>
-                        handleOpenTransitionPreview(index - 1, index)
-                      }
-                      onRemove={() => handleRemoveSetlistItem(it.id)}
-                      onUpdateNote={(note) =>
-                        handleUpdateItemNote(it.id, note)
-                      }
-                      onEditSong={() => {
-                        setEditingSong(song);
-                        setShowSongModal(true);
-                      }}
-                      onOpenStudio={() => handleOpenStudioModal(song)}
-                      onOpenMemberNotes={() => setActiveMemberNotesSong(song)}
-                      onOpenChords={() => setActiveChordsSong(song)}
-                      currentUser={currentUser}
-                      onToggleDuda={() => {
-                        if (!currentUser?.name) return;
-                        const dudaMarcada = isSongMarkedForMember(
-                          song,
-                          currentUser.id,
-                          currentUser.name,
-                        );
-                        handleUpdateSongFromStudio(
-                          withSongMarkedForMember(
-                            song,
-                            currentUser.id,
-                            currentUser.name,
-                            !dudaMarcada,
-                          ),
-                        );
-                      }}
-                    />
-                  );
-                } else {
-                  return (
-                    <SetlistShowItemRow
-                      key={it.id}
-                      item={it}
-                      index={index}
-                      isSelected={isSelected}
-                      isDragging={isDragging}
-                      isDragOver={isDragOver}
-                      onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0,
-                          );
-                        setDraggedItemIndex(index);
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setDragOverItemIndex(index);
-                      }}
-                      onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        handleDropItem(index);
-                      }}
-                      onDragEnd={() => {
-                        setDraggedItemIndex(null);
-                        setDragOverItemIndex(null);
-                      }}
-                      onSelect={() =>
-                        setSelectedSetlistItemId(isSelected ? null : it.id)
-                      }
-                      onUpdateTitle={(val) => {
-                        setSetlists((prev) =>
-                          prev.map((s) =>
-                            s.id === activeSetlist.id
-                              ? {
-                                  ...s,
-                                  items: s.items.map((x) =>
-                                    x.id === it.id
-                                      ? { ...x, tituloCustom: val }
-                                      : x,
-                                  ),
-                                }
-                              : s,
-                          ),
-                        );
-                      }}
-                      onEdit={() => {
-                        setEditingShowItem(it);
-                        setShowShowItemModal(true);
-                      }}
-                      onRemove={() => handleRemoveSetlistItem(it.id)}
-                    />
-                  );
-                }
-              })
-            )}
-          </div>
+                    : s,
+                ),
+              );
+            }}
+            onEditShowItem={(it) => {
+              setEditingShowItem(it);
+              setShowShowItemModal(true);
+            }}
+            transparentDragImage={TRANSPARENT_DRAG_IMAGE}
+          />
         </div>
       )}
 

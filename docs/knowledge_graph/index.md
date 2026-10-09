@@ -73,11 +73,11 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-777 nodos: 16 agent · 40 db · 12 external · 14 feature · 281 frontend · 39 hook · 42 route · 61 schema · 10 security · 262 service.
+779 nodos: 16 agent · 40 db · 12 external · 14 feature · 283 frontend · 39 hook · 42 route · 61 schema · 10 security · 262 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 266 ficheros dependen de él
+- [[src_types|src/types.ts]] — 268 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 196 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 115 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
@@ -92,11 +92,11 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_db|server/db.ts]] — 35 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 32 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
+- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 24 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 23 ficheros dependen de él
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 23 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 21 ficheros dependen de él
+- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 19 ficheros dependen de él
 - [[tabla_leads|tabla leads]] — 19 ficheros dependen de él
-- [[server_utils|server/utils.ts]] — 18 ficheros dependen de él
 
 ---
 
