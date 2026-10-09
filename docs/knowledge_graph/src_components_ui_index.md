@@ -190,6 +190,7 @@ BandManager UI Component Library
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ConfirmDeleteAlbumModal|src/components/repertorio/ConfirmDeleteAlbumModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ConfirmDeleteModal|src/components/repertorio/ConfirmDeleteModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*

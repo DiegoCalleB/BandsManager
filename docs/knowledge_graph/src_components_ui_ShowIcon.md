@@ -103,6 +103,7 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
 - [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
 - [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*

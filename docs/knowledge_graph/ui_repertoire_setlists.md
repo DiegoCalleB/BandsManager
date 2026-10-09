@@ -30,6 +30,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_ConfirmDeleteAlbumModal|src/components/repertorio/ConfirmDeleteAlbumModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_ConfirmDeleteModal|src/components/repertorio/ConfirmDeleteModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(Layer: #frontend, Domain: #system)*

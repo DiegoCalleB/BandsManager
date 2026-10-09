@@ -73,13 +73,13 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-774 nodos: 16 agent · 40 db · 12 external · 14 feature · 278 frontend · 39 hook · 42 route · 61 schema · 10 security · 262 service.
+775 nodos: 16 agent · 40 db · 12 external · 14 feature · 279 frontend · 39 hook · 42 route · 61 schema · 10 security · 262 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 265 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 193 ficheros dependen de él
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 113 ficheros dependen de él
+- [[src_types|src/types.ts]] — 266 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 194 ficheros dependen de él
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 114 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 59 ficheros dependen de él
@@ -93,7 +93,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 32 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 23 ficheros dependen de él
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 22 ficheros dependen de él
+- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 23 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 21 ficheros dependen de él
 - [[tabla_leads|tabla leads]] — 19 ficheros dependen de él
 - [[server_utils|server/utils.ts]] — 18 ficheros dependen de él

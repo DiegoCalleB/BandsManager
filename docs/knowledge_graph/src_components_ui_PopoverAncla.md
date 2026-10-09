@@ -33,6 +33,7 @@ Exporta: PopoverAncla.
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_epk_EPKHeader|src/components/epk/EPKHeader.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAddBar|src/components/repertorio/SetlistAddBar.tsx]] *(from #frontend)*
 - [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
