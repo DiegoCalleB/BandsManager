@@ -71,4 +71,9 @@ describe('Ideas: pistas de Iris visibles y audibles en el mezclador', () => {
     expect(src).toContain('cancionConMezcla(song, idea, updatedTracks)');
     expect(src).toContain('esPistaBase(idea.id, tr.id)');
   });
+
+  it('las pistas de Iris se quitan de la idea con el aspa (sin tocar la canción) y el sync corrige deriva fina', () => {
+    expect(src).toContain('Quitar de la idea (la pista sigue en Iris)');
+    expect(src).toContain('lastDriftFixMapRef');
+  });
 });

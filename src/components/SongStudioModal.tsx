@@ -1405,6 +1405,7 @@ export default function SongStudioModal({
   // High-Precision Master Sync Loop (16ms / requestAnimationFrame)
   // Keeps all multitrack audio elements aligned within < 10ms with pitch-safe micro-adjustments
   // Handles variable track durations cleanly by padding shorter tracks
+  const lastDriftFixMapRef = useRef<Record<string, number>>({});
   const runMasterSyncLoop = (idea: SongAudioIdea) => {
     if (syncAnimationFrameRef.current) {
       cancelAnimationFrame(syncAnimationFrameRef.current);
@@ -1577,7 +1578,11 @@ export default function SongStudioModal({
         // Hard seek ONLY when drift is severe (> 350ms) to prevent continuous seek popping
         if (currentMasterEl && slaveEl !== currentMasterEl) {
           const diff = slaveEl.currentTime - targetSlaveTime;
-          if (Math.abs(diff) > 0.35) {
+          const ahora = performance.now();
+          const ultimo = lastDriftFixMapRef.current[tr.id] || 0;
+          // Umbral fino (>35 ms) con pausa entre saltos para no crujir: así las pistas no se van unos ms del tema
+          if (Math.abs(diff) > (ahora - ultimo > 800 ? 0.035 : 0.35)) {
+            lastDriftFixMapRef.current[tr.id] = ahora;
             try {
               slaveEl.currentTime = Math.max(0, targetSlaveTime);
             } catch {}
@@ -3610,6 +3615,30 @@ export default function SongStudioModal({
                                                         <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] ring-1 ring-[var(--ink)]" />
                                                       )}
                                                     </button>
+                                                    {esBase && (
+                                                      <IconButton
+                                                        label="Quitar de la idea (la pista sigue en Iris)"
+                                                        type="button"
+                                                        onClick={() => {
+                                                          const stemId = tr.id.slice(`base-${idea.id}-`.length);
+                                                          const ideasNuevas = ideasConFondo(
+                                                            song.audioIdeas || [],
+                                                            idea.id,
+                                                            (idea.sobrePistas ?? []).filter((x) => x !== stemId),
+                                                          ).map((i) => {
+                                                            if (i.id !== idea.id || !i.mezclaBase) return i;
+                                                            const { [stemId]: _q, ...resto } = i.mezclaBase;
+                                                            return { ...i, mezclaBase: resto };
+                                                          });
+                                                          const el = trackAudioRefs.current[tr.id];
+                                                          if (el) el.pause();
+                                                          onUpdateSong(cancionConIdeas(song, ideasNuevas));
+                                                        }}
+                                                        className="shrink-0"
+                                                      >
+                                                        <X className="w-3 h-3" />
+                                                      </IconButton>
+                                                    )}
                                                   </div>
                                                 </div>
 
@@ -3954,22 +3983,19 @@ export default function SongStudioModal({
                                   </IconButton>
                                 </div>
 
-                                <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
-                                  <div className="flex items-center gap-2 text-[var(--acc)]/70 text-xs font-semibold">
-                                    <Headphones className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                                    <span>RECOMENDACIÓN MULTIPISTA ESTUDIO:</span>
-                                  </div>
-                                  <p className="text-micro text-[var(--ink-2)] leading-relaxed font-sans">
-                                    Para evitar que el sonido de las pistas anteriores se cuele por el micrófono (acople de altavoces),{' '}
-                                    <strong className="text-[var(--ink)]">utiliza auriculares para escuchar la mezcla</strong> mientras
-                                    grabas la nueva pista.
-                                  </p>
+                                <p className="px-1 text-micro font-sans text-[var(--ink-2)] flex items-center gap-1.5">
+                                  <Headphones className="w-3.5 h-3.5 shrink-0" />
+                                  Mejor con auriculares, así la mezcla no se cuela por el micro.
+                                </p>
 
-                                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
-                                    <span className="text-micro font-sans text-[var(--ink-2)] font-bold flex items-center gap-1">
-                                      <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" /> Filtros Anti-Ruido Studio:
-                                    </span>
+                                <details className="rounded-[var(--r-s)] bg-[var(--sunken)]">
+                                  <summary className="cursor-pointer select-none px-3 py-2 text-micro font-sans text-[var(--ink-2)] flex items-center gap-1.5">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
+                                    Ajustes de grabación
+                                    <span className="text-[var(--ink-3)]">· filtros y latencia ({autoLatencyTrimMs} ms)</span>
+                                  </summary>
 
+                                  <div className="px-3 pb-3 pt-1">
                                     <div className="flex flex-wrap items-center gap-3 text-micro font-sans">
                                       <label className="flex items-center gap-1.5 cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)]">
                                         <input
@@ -4041,7 +4067,7 @@ export default function SongStudioModal({
                                       </div>
                                     </div>
                                   </div>
-                                </div>
+                                </details>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                   <div>
