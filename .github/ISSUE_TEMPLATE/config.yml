@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "📖 Documentación de Arquitectura (TFM)"
+    url: "https://github.com/DiegoCalleB/BandsManager/blob/main/docs/ARCHITECTURE.md"
+    about: "Consulta los diagramas de arquitectura C4 y contratos antes de abrir un issue."
+  - name: "🤖 Mandamientos y Reglas Agénticas (AGENTS.md)"
+    url: "https://github.com/DiegoCalleB/BandsManager/blob/main/AGENTS.md"
+    about: "Estándar de calidad, seguridad multi-tenant y directrices para agentes IA."

@@ -4,7 +4,7 @@
 
 ## Rama base
 
-- [ ] Este PR apunta a `develop` (rama activa), no a `main` (solo la toca el entorno de producción de Railway y suele ir por detrás)
+- [ ] Rama base verificada (`main` o rama de trabajo correspondiente)
 
 ## Plan de pruebas
 
