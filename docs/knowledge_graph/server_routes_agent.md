@@ -36,11 +36,16 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
 - [[src_constants_regions|src/constants/regions.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
+- [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
 
 ---
 

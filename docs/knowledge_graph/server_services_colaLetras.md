@@ -23,12 +23,15 @@ Cola de transcripción de letras en el servidor: sobrevive a recargar o cerrar l
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_colaLetras|server/utils/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_transcripcionMasiva|src/utils/transcripcionMasiva.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_band_letras_auto|tabla band_letras_auto]] *(Layer: #schema, Domain: #repertoire)*
+- [[tabla_letras_jobs|tabla letras_jobs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 
 ---
 

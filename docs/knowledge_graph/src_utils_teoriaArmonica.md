@@ -37,6 +37,17 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/profesorArmonia.test.ts`
+- `src/audit/panelArmonia.test.tsx`
+- `src/utils/__tests__/armoniaVisor.test.ts`
+- `src/utils/__tests__/estiloArmonia.test.ts`
+- `src/utils/__tests__/guiasArmonia.test.ts`
+- `src/utils/__tests__/teoriaArmonica.test.ts`
+- `src/utils/__tests__/vistaAcordes.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

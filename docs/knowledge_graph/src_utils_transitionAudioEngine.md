@@ -31,6 +31,11 @@ Exporta: TransitionStyle, TransitionConfig, DEFAULT_TRANSITION_CONFIG, Transitio
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/transitionAudioEngine.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

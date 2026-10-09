@@ -33,6 +33,11 @@ Exporta: TONALIDAD_FALLBACK, ParsedKey, parseTonalidad, tonalidadesSonFiables, C
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/harmonicAnalysis.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

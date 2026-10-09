@@ -17,6 +17,11 @@ interface GraphNode {
   description: string;
   linksTo: string[];
   tags: string[];
+  /** Tests que importan este fichero (solo informativo; los tests no son nodos). */
+  tests?: string[];
+  /** Solo nodos de tabla: columnas y ficheros SQL donde se define. */
+  columnas?: string[];
+  definidaEn?: string[];
 }
 
 const NODES: GraphNode[] = [
@@ -333,7 +338,9 @@ const EXT = ['.ts', '.tsx'];
 
 const esTest = (f: string) => /\.(test|spec)\.tsx?$/.test(f) || f.includes('__tests__') || f.endsWith('.d.ts');
 
-export function escanearFicheros(): string[] {
+const RAIZ_SUELTOS = ['server.ts'];
+
+function recorrerTodo(): string[] {
   const salida: string[] = [];
   const recorrer = (dir: string) => {
     const abs = path.join(RAIZ, dir);
@@ -342,13 +349,89 @@ export function escanearFicheros(): string[] {
       const rel = `${dir}/${e.name}`;
       if (e.isDirectory()) {
         if (e.name !== 'node_modules') recorrer(rel);
-      } else if (EXT.includes(path.extname(e.name)) && !esTest(rel)) {
+      } else if (EXT.includes(path.extname(e.name))) {
         salida.push(rel);
       }
     }
   };
   DIRS_ESCANEO.forEach(recorrer);
+  RAIZ_SUELTOS.filter((f) => fs.existsSync(path.join(RAIZ, f))).forEach((f) => salida.push(f));
   return salida.sort();
+}
+
+export function escanearFicheros(): string[] {
+  return recorrerTodo().filter((f) => !esTest(f));
+}
+
+function escanearTests(): string[] {
+  return recorrerTodo().filter((f) => esTest(f) && !f.endsWith('.d.ts'));
+}
+
+// ─── Tablas de Supabase ─────────────────────────────────────────────────────────────────────────
+const FUENTES_SQL = ['supabase_schema.sql', 'supabase_migration_only_new.sql', 'server/migrations/runner.ts'];
+
+function ficherosSql(): string[] {
+  const sueltos: string[] = [];
+  const recorrer = (dir: string) => {
+    const abs = path.join(RAIZ, dir);
+    if (!fs.existsSync(abs)) return;
+    for (const e of fs.readdirSync(abs, { withFileTypes: true })) {
+      if (e.isDirectory()) recorrer(`${dir}/${e.name}`);
+      else if (e.name.endsWith('.sql')) sueltos.push(`${dir}/${e.name}`);
+    }
+  };
+  recorrer('supabase');
+  // El esquema base va primero: así la tabla se "define en" él y no en la última migración que la toca.
+  return [...FUENTES_SQL, ...sueltos.sort()].filter((f) => fs.existsSync(path.join(RAIZ, f)));
+}
+
+interface Tabla { nombre: string; columnas: string[]; definidaEn: string[] }
+
+function cuerpoParentesis(texto: string, desde: number): string {
+  let prof = 0;
+  for (let i = desde; i < texto.length; i++) {
+    if (texto[i] === '(') prof++;
+    else if (texto[i] === ')' && --prof === 0) return texto.slice(desde + 1, i);
+  }
+  return '';
+}
+
+export function extraerTablas(): Tabla[] {
+  const tablas = new Map<string, Tabla>();
+  const get = (nombre: string, fichero: string) => {
+    const t = tablas.get(nombre) ?? { nombre, columnas: [], definidaEn: [] };
+    if (!t.definidaEn.includes(fichero)) t.definidaEn.push(fichero);
+    tablas.set(nombre, t);
+    return t;
+  };
+  const anadir = (t: Tabla, col: string) => { if (!t.columnas.includes(col)) t.columnas.push(col); };
+  const NO_COLUMNA = /^(CONSTRAINT|PRIMARY|FOREIGN|UNIQUE|CHECK|EXCLUDE|LIKE)$/i;
+  for (const f of ficherosSql()) {
+    const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
+    for (const m of texto.matchAll(/CREATE TABLE(?: IF NOT EXISTS)?\s+(?:public\.)?"?([a-z_][a-z_0-9]*)"?\s*\(/gi)) {
+      const t = get(m[1].toLowerCase(), f);
+      const cuerpo = cuerpoParentesis(texto, m.index! + m[0].length - 1);
+      let prof = 0, trozo = '';
+      const trozos: string[] = [];
+      for (const ch of cuerpo) {
+        if (ch === '(') prof++;
+        if (ch === ')') prof--;
+        if (ch === ',' && prof === 0) { trozos.push(trozo); trozo = ''; } else trozo += ch;
+      }
+      trozos.push(trozo);
+      for (const tr of trozos) {
+        const tok = tr.replace(/--[^\n]*/g, '').trim().split(/\s+/)[0]?.replace(/"/g, '');
+        if (tok && /^[a-z_][a-z_0-9]*$/i.test(tok) && !NO_COLUMNA.test(tok)) anadir(t, tok.toLowerCase());
+      }
+    }
+    for (const m of texto.matchAll(/ALTER TABLE\s+(?:IF EXISTS\s+)?(?:ONLY\s+)?(?:public\.)?"?([a-z_][a-z_0-9]*)"?([^;]*);/gi)) {
+      const nombre = m[1].toLowerCase();
+      for (const c of m[2].matchAll(/ADD COLUMN(?: IF NOT EXISTS)?\s+"?([a-z_][a-z_0-9]*)"?/gi)) {
+        anadir(get(nombre, f), c[1].toLowerCase());
+      }
+    }
+  }
+  return [...tablas.values()].sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
 const slug = (f: string) => f.replace(/\.tsx?$/, '').replace(/[^A-Za-z0-9]+/g, '_');
@@ -368,7 +451,7 @@ function resolverImport(desde: string, spec: string, existentes: Set<string>): s
 function capaDe(f: string): GraphNode['layer'] {
   if (/agent/i.test(f)) return 'agent';
   if (/(ssrf|middleware|trust|sanitiz|security|auth)/i.test(f)) return 'security';
-  if (f.startsWith('server/routes')) return 'route';
+  if (f === 'server.ts' || f.startsWith('server/routes')) return 'route';
   if (f.startsWith('server/db')) return 'db';
   if (f.startsWith('server/')) return 'service';
   if (f.startsWith('src/hooks')) return 'hook';
@@ -414,6 +497,24 @@ export function construirNodos(): GraphNode[] {
     idDe.set(f, id);
   }
 
+  const tablas = extraerTablas();
+  const nombresTabla = new Set(tablas.map((t) => t.nombre));
+  const idTabla = (n: string) => `tabla_${n}`;
+  const testsDe = new Map<string, string[]>();
+  for (const t of escanearTests()) {
+    const imports = ts.preProcessFile(fs.readFileSync(path.join(RAIZ, t), 'utf-8'), true, true).importedFiles.map((i) => i.fileName);
+    for (const spec of imports) {
+      const r = resolverImport(t, spec, existentes);
+      if (r) testsDe.set(r, [...(testsDe.get(r) ?? []), t]);
+    }
+  }
+  const tablasUsadas = (texto: string): string[] => {
+    const usadas = new Set<string>();
+    for (const m of texto.matchAll(/\.from\(\s*['"`]([a-z_][a-z_0-9]*)['"`]/g)) if (nombresTabla.has(m[1])) usadas.add(m[1]);
+    for (const m of texto.matchAll(/\b(?:FROM|INTO|UPDATE|JOIN)\s+(?:public\.)?"?([a-z_][a-z_0-9]*)"?/g)) if (nombresTabla.has(m[1])) usadas.add(m[1]);
+    return [...usadas].map(idTabla);
+  };
+
   const nodos: GraphNode[] = NODES.filter((n) => !existentes.has(n.file)).map((n) => ({ ...n }));
   for (const f of ficheros) {
     const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
@@ -423,9 +524,11 @@ export function construirNodos(): GraphNode[] {
       const r = resolverImport(f, spec, existentes);
       if (r && r !== f) destinos.add(idDe.get(r)!);
     }
+    for (const t of tablasUsadas(texto)) destinos.add(t);
+    const tests = [...new Set(testsDe.get(f) ?? [])].sort();
     const cur = curadoPorFichero.get(f);
     if (cur) {
-      nodos.push({ ...cur, linksTo: [...new Set([...cur.linksTo, ...destinos])].sort() });
+      nodos.push({ ...cur, linksTo: [...new Set([...cur.linksTo, ...destinos])].sort(), tests });
     } else {
       const layer = capaDe(f);
       const domain = dominioDe(f);
@@ -438,9 +541,26 @@ export function construirNodos(): GraphNode[] {
         description: descripcionDe(texto),
         linksTo: [...destinos].sort(),
         tags: [layer, domain, 'auto'],
+        tests,
       });
     }
   }
+  for (const t of tablas) {
+    nodos.push({
+      id: idTabla(t.nombre),
+      title: `tabla ${t.nombre}`,
+      layer: 'schema',
+      domain: dominioDe(t.nombre),
+      file: t.definidaEn[0],
+      description: `Tabla de Supabase \`${t.nombre}\` (${t.columnas.length} columnas).`,
+      linksTo: [],
+      tags: ['schema', 'tabla', 'auto'],
+      columnas: t.columnas,
+      definidaEn: t.definidaEn,
+    });
+  }
+  const esquema = nodos.find((n) => n.id === 'schema_supabase');
+  if (esquema) esquema.linksTo = [...new Set([...esquema.linksTo, ...tablas.map((t) => idTabla(t.nombre))])].sort();
   return nodos.sort((a, b) => a.id.localeCompare(b.id));
 }
 
@@ -508,7 +628,7 @@ ${backlinks || '_Sin llamadas entrantes indexadas._'}
 
 ---
 
-## 🛡️ Reglas de Aislamiento & Calidad
+${node.columnas ? `## 🗄️ Columnas\n${node.columnas.map((c) => `- \`${c}\``).join('\n')}\n\n**Definida en:** ${(node.definidaEn ?? []).map((d) => `\`${d}\``).join(', ')}\n\n---\n\n` : ''}${node.tests?.length ? `## 🧪 Tests que lo cubren\n${node.tests.map((t) => `- \`${t}\``).join('\n')}\n\n---\n\n` : ''}## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de \`band_id\`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?
 `;

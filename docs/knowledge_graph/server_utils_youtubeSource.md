@@ -30,6 +30,12 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsRoute.test.ts`
+- `server/utils/__tests__/youtubeSource.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

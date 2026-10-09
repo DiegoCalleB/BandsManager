@@ -23,7 +23,13 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/version.test.ts`
 
 ---
 

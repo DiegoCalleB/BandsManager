@@ -23,7 +23,13 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(from #db)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/tolerantWrite.test.ts`
 
 ---
 

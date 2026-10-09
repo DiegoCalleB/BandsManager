@@ -19,6 +19,7 @@ Horario comercial de la banda (`band_schedules`).
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_band_schedules|tabla band_schedules]] *(Layer: #schema, Domain: #system)*
 
 ---
 

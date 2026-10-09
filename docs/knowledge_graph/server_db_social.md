@@ -20,6 +20,11 @@ Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_band_social_accounts|tabla band_social_accounts]] *(Layer: #schema, Domain: #social)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_social_content_items|tabla social_content_items]] *(Layer: #schema, Domain: #social)*
+- [[tabla_social_metrics|tabla social_metrics]] *(Layer: #schema, Domain: #social)*
+- [[tabla_social_posts|tabla social_posts]] *(Layer: #schema, Domain: #social)*
 
 ---
 

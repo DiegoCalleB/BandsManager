@@ -32,6 +32,11 @@ Página pública de un concierto (`/e/<slug>`), generada en el servidor.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/paginaConcierto.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

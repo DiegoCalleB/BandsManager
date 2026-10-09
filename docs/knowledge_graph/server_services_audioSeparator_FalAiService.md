@@ -30,6 +30,11 @@ Exporta: ACTIVE_FAL_KEY, FalAiService.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

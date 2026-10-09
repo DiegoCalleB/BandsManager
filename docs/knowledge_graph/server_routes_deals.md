@@ -32,7 +32,12 @@ Acuerdos de concierto (`concert_deals`): CRUD autenticado y vista pública por t
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/dealsRouter.test.ts`
 
 ---
 

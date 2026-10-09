@@ -30,11 +30,22 @@ Usuarios y autenticación: registro, login Google verificado, invitaciones de mi
 - [[server_utils_invitacion|server/utils/invitacion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/adminPassword.test.ts`
+- `server/routes/__tests__/authGoogleSeguridad.test.ts`
+- `server/routes/__tests__/buildAvailableBandsForUser.test.ts`
+- `server/routes/__tests__/invitacionMiembros.test.ts`
+- `server/routes/__tests__/seguridadAutorizacion.test.ts`
+- `server/routes/__tests__/usersCuentasSeguridad.test.ts`
 
 ---
 

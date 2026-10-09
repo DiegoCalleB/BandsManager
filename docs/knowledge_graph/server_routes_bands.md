@@ -34,11 +34,19 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/bandsAnalyzeTone.test.ts`
+- `server/routes/__tests__/bandsRutasSombreadas.test.ts`
+- `server/routes/__tests__/seguridadAutorizacion.test.ts`
 
 ---
 

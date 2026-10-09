@@ -29,6 +29,14 @@ Detección de acordes con tiempos a partir de audio (el motor de un «Chordify p
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/analisisAcordes.test.ts`
+- `server/utils/__tests__/chordDetection.realista.test.ts`
+- `server/utils/__tests__/chordDetection.test.ts`
+- `server/utils/__tests__/refinarFronteras.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

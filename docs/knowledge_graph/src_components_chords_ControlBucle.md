@@ -27,6 +27,11 @@ Exporta: ControlBucle.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/bucleABCompartido.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

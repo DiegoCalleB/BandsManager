@@ -35,10 +35,17 @@ AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Re
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*
 - [[server_services_audioSeparator_LocalDspService|server/services/audioSeparator/LocalDspService.ts]] *(from #service)*
 - [[server_services_audioSeparator_ReplicateService|server/services/audioSeparator/ReplicateService.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/roformerStems.test.ts`
 
 ---
 

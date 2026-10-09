@@ -20,6 +20,7 @@ PITCH VECTOR STORE — RAG VECTORIAL & FEW-SHOT DINÁMICO CON PGVECTOR
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
 
 ---
 

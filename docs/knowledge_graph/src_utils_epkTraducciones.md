@@ -31,6 +31,11 @@ Exporta: IDIOMA_ORIGEN, CLAVES_DATOS_TRADUCIBLES, ClaveDatoTraducible, TextosTra
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/epkTraducciones.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

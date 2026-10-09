@@ -22,12 +22,18 @@ Contactos de la banda (`band_contacts`): lectura, upsert y borrado (también en 
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesBandas|server/db/enlacesBandas.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_enlacesBandas|server/utils/enlacesBandas.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_band_contacts|tabla band_contacts]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/contacts.test.ts`
 
 ---
 

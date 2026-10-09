@@ -29,6 +29,12 @@ Exporta: Metronomo, BPM_MIN, BPM_MAX, acotarBpm, bpmDeToques, useMetronomo.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/metronomoAtril.test.tsx`
+- `src/audit/metronomoUnico.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

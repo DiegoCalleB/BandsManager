@@ -18,12 +18,17 @@ Aplicador de migraciones: ejecuta las de supabase/migrations/*.sql que aún no s
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_schema_migrations|tabla schema_migrations]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 _Sin llamadas entrantes indexadas._
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/migrations/__tests__/runner.test.ts`
 
 ---
 

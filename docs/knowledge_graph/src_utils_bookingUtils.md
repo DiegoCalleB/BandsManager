@@ -30,6 +30,11 @@ Exporta: BookingMetrics, normalizeStatus, normalizeType, VENUE_ADDRESS_DATABASE,
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/bookingUtils.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

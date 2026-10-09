@@ -30,7 +30,13 @@ Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationR
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/donations.test.ts`
+- `server/routes/__tests__/donationsDealSupport.test.ts`
 
 ---
 

@@ -22,6 +22,7 @@ Captura mensual de métricas públicas de una banda: Spotify (seguidores, popula
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_metricasBanda|server/utils/metricasBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_spotifyEmbed|src/utils/spotifyEmbed.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 
 ---
 

@@ -29,6 +29,11 @@ Afina los cambios de acorde con los ataques del audio.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/refinarFronteras.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

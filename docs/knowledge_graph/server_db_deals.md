@@ -26,6 +26,7 @@ Acuerdos de concierto (`concert_deals`): comisión, hash SHA-256 del acuerdo, to
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_dealSupport|server/utils/dealSupport.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_concert_deals|tabla concert_deals]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -34,6 +35,12 @@ Acuerdos de concierto (`concert_deals`): comisión, hash SHA-256 del acuerdo, to
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(from #db)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/deals.test.ts`
+- `server/routes/__tests__/dealsRouter.test.ts`
 
 ---
 

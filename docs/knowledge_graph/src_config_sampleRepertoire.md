@@ -28,6 +28,11 @@ Exporta: SAMPLER_ALBUM_NAME, SAMPLER_COVER_URL, SAMPLER_SONGS, SAMPLER_SETLISTS.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/config/__tests__/sampleRepertoire.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

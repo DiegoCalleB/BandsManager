@@ -36,6 +36,7 @@ Carga del estado en memoria desde Supabase (`loadStateFromSupabase`) e invalidac
 - [[server_db_tours|server/db/tours.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
 - [[server_seeds_demoEpk|server/seeds/demoEpk.ts]] *(Layer: #service, Domain: #epk)*
+- [[tabla_user_bands|tabla user_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -46,6 +47,11 @@ Carga del estado en memoria desde Supabase (`loadStateFromSupabase`) e invalidac
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/stateCacheInvalidation.test.ts`
 
 ---
 

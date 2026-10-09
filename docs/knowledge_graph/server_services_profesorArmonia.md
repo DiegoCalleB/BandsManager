@@ -27,6 +27,11 @@ Exporta: Nivel, Instrumento, NIVELES, INSTRUMENTOS, Hechos, construirHechos, hue
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/profesorArmonia.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -27,7 +27,12 @@ Publicaciones sociales y cuentas conectadas de la banda.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
 
 ---
 

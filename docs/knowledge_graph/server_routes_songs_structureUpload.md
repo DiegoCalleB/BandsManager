@@ -25,6 +25,7 @@ Subida y procesado de la estructura de una canción (`/songs/...`).
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_songs|tabla songs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 

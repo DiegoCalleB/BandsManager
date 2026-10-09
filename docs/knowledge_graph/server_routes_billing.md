@@ -23,11 +23,20 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/stripeWebhookFiabilidad.test.ts`
 
 ---
 

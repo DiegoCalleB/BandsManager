@@ -28,6 +28,7 @@ _Sin dependencias salientes directas._
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
@@ -283,6 +284,47 @@ _Sin dependencias salientes directas._
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
+- `server/utils/__tests__/perfectSetlistPlanner.test.ts`
+- `src/audit/mezclaBaseIdea.test.ts`
+- `src/audit/mezclaPistasAtril.test.tsx`
+- `src/audit/tomasConFondoAtril.test.tsx`
+- `src/audit/transcripcionMasiva.test.tsx`
+- `src/components/booking/__tests__/ExportLeadsModal.test.ts`
+- `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
+- `src/utils/__tests__/agendaASetlist.test.ts`
+- `src/utils/__tests__/audioCueDetector.test.ts`
+- `src/utils/__tests__/bookingUtils.test.ts`
+- `src/utils/__tests__/calendarConflicts.test.ts`
+- `src/utils/__tests__/campaignMatch.test.ts`
+- `src/utils/__tests__/duplicateLeads.test.ts`
+- `src/utils/__tests__/energyPacingUtils.test.ts`
+- `src/utils/__tests__/epkTraducciones.test.ts`
+- `src/utils/__tests__/epkUtils.test.ts`
+- `src/utils/__tests__/fanUtils.test.ts`
+- `src/utils/__tests__/financeUtils.test.ts`
+- `src/utils/__tests__/formatSongTitle.test.ts`
+- `src/utils/__tests__/grabarIdea.test.ts`
+- `src/utils/__tests__/harmonicAnalysis.test.ts`
+- `src/utils/__tests__/instrumentSynth.test.ts`
+- `src/utils/__tests__/irisTracks.test.ts`
+- `src/utils/__tests__/lineaTiempoAcordes.test.ts`
+- `src/utils/__tests__/managerAlerts.test.ts`
+- `src/utils/__tests__/mezclaAjustes.test.ts`
+- `src/utils/__tests__/mezclaStems.test.ts`
+- `src/utils/__tests__/midiExport.test.ts`
+- `src/utils/__tests__/pistasDeCancion.test.ts`
+- `src/utils/__tests__/separacionIris.test.ts`
+- `src/utils/__tests__/setlistCompatibility.test.ts`
+- `src/utils/__tests__/setlistOptimization.test.ts`
+- `src/utils/__tests__/sheetsUtils.test.ts`
+- `src/utils/__tests__/stageOfflineCache.test.ts`
+- `src/utils/__tests__/tourRouting.test.ts`
+- `src/utils/__tests__/transitionAudioEngine.test.ts`
 
 ---
 

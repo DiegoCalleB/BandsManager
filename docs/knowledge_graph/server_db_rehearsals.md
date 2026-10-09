@@ -22,12 +22,19 @@ Ensayos (`rehearsals`): lectura, upsert y borrado acotados por `bandId`.
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/rehearsalsPartialSaveMerge.test.ts`
+- `server/routes/__tests__/deleteEvents.test.ts`
 
 ---
 

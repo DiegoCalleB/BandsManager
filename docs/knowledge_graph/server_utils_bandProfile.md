@@ -30,6 +30,11 @@ Perfil de banda para los prompts de IA.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/bandProfile.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

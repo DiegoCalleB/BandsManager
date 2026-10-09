@@ -28,6 +28,11 @@ Exporta: TomasConFondo.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/tomasConFondoAtril.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

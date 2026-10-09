@@ -29,6 +29,11 @@ Endpoints para configurar estrategias de respuesta condicionales por banda
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/responseStrategies.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -28,6 +28,11 @@ Exporta: MezclaGuardada, VELOCIDADES_ATRIL, MEZCLA_VACIA, claveMezclaAtril, leer
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/mezclaGuardadaAtril.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

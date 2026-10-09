@@ -37,6 +37,12 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/pitchJudgeAndVectorStore.test.ts`
+- `server/utils/__tests__/promptSafety.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

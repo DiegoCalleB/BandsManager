@@ -29,6 +29,10 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
+- [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -37,6 +41,13 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/agentEngine.test.ts`
+- `server/services/__tests__/agentEngineDirectSend.test.ts`
+- `server/services/__tests__/agentEngineSeguridad.test.ts`
 
 ---
 

@@ -41,6 +41,11 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/leadsConcurrenciaEstado.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

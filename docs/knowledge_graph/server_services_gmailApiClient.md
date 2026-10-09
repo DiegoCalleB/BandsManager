@@ -33,6 +33,11 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/gmailApiClient.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

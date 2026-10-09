@@ -29,6 +29,12 @@ Exporta: MotorIris, EtapaIris, ProveedorErrorIris, ProgresoIris, nombreMotor, te
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/irisStudioAtril.test.tsx`
+- `src/utils/__tests__/separacionIris.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

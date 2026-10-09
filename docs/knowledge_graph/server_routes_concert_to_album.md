@@ -29,7 +29,15 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/acordesHonestos.test.ts`
+- `server/routes/__tests__/concertCueDetection.test.ts`
+- `server/routes/__tests__/rutaFuenteSegura.test.ts`
 
 ---
 

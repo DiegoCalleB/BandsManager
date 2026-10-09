@@ -25,6 +25,7 @@ Exporta: scrapeChannelMetrics, executeSocialRadar, startSocialRadarScheduler.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 
 ---

@@ -24,6 +24,11 @@ Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refi
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 
 ---
 
@@ -34,6 +39,11 @@ Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refi
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/campaignToneDnaMerge.test.ts`
 
 ---
 

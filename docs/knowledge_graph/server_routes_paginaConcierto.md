@@ -31,7 +31,12 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/paginaConcierto.test.ts`
 
 ---
 

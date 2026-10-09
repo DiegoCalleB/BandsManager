@@ -19,6 +19,8 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -48,6 +50,11 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 - [[server_db_tours|server/db/tours.ts]] *(from #db)*
 - [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/bandDnaExpresionLock.test.ts`
 
 ---
 

@@ -20,12 +20,19 @@ Cuentas de email SMTP/IMAP por banda (`band_email_accounts`). `toSafeEmailAccoun
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_secretCrypto|server/utils/secretCrypto.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_band_email_accounts|tabla band_email_accounts]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/emailAccounts.test.ts`
+- `server/services/__tests__/emailAgentClient.test.ts`
 
 ---
 

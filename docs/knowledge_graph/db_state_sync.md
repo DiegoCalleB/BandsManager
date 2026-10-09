@@ -38,6 +38,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*

@@ -28,6 +28,11 @@ Exportador a MIDI (Standard MIDI File tipo 0) de las ideas que compone la IA.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/midiExport.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

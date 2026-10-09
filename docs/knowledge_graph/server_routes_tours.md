@@ -24,7 +24,7 @@ Rutas de giras; la lógica vive en `server/controllers/` (capa fina routes → c
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
 
 ---
 

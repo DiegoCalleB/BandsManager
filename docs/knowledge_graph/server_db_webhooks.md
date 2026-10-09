@@ -19,6 +19,7 @@ Exporta: dbIsWebhookEventProcessed, dbRecordWebhookEvent.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_stripe_webhook_events|tabla stripe_webhook_events]] *(Layer: #schema, Domain: #finances)*
 
 ---
 

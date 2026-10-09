@@ -23,11 +23,17 @@ OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el bac
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/gmailOAuthEstado.test.ts`
 
 ---
 

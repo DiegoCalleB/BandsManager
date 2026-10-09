@@ -20,6 +20,7 @@ Giras (`tours`): lectura, upsert y borrado acotados por `bandId`.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_tours|tabla tours]] *(Layer: #schema, Domain: #system)*
 
 ---
 

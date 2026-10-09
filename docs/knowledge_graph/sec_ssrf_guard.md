@@ -41,6 +41,14 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/roformerStems.test.ts`
+- `server/services/__tests__/stemWebhookAndLocks.test.ts`
+- `server/utils/__tests__/ssrfGuard.test.ts`
+- `server/utils/__tests__/ssrfGuardAgente.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

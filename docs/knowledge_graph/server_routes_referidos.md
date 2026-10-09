@@ -32,7 +32,12 @@ Referidos entre bandas e insignia «Powered by BandManager.io».
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/referidos.test.ts`
 
 ---
 

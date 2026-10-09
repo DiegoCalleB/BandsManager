@@ -22,6 +22,7 @@ Persistencia de pagos y suscripciones. Facturación desactivada en producción (
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_payments|tabla payments]] *(Layer: #schema, Domain: #finances)*
 
 ---
 

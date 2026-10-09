@@ -32,6 +32,11 @@ Exporta: TecladoAcorde, BajoAcorde, ETIQUETA_VISTA, SelectorVistaAcorde, useVist
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/cajaAcorde.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

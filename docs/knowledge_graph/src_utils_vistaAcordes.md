@@ -34,6 +34,12 @@ Exporta: VistaAcorde, NotasParaDibujar, notasParaDibujar, CUERDAS_BAJO, RolBajo,
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/drawerDiagramas.test.tsx`
+- `src/utils/__tests__/vistaAcordes.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

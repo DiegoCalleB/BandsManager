@@ -28,6 +28,11 @@ Exporta: normalizeText, normalizeVenueName, normalizeEmail, normalizeWebOrHandle
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/duplicateLeads.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -43,6 +43,11 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/__tests__/autoEnrichRespetarVacios.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -34,7 +34,12 @@ Reels & Social Content Generator: metadatos de YouTube, análisis de momentos vi
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsRoute.test.ts`
 
 ---
 

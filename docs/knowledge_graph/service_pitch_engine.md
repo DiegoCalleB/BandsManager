@@ -42,6 +42,11 @@ Motor de IA generativa con fallback automático Gemini ➔ DeepSeek ➔ OpenAI.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/pitchEngine.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

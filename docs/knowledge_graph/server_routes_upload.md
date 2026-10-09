@@ -24,8 +24,15 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_utils_storage|server/utils/storage.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/subcarpetaSegura.test.ts`
 
 ---
 

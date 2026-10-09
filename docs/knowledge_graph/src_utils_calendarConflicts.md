@@ -31,6 +31,12 @@ Detector de choques de calendario (conciertos, ensayos y reuniones).
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
+- `src/utils/__tests__/calendarConflicts.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

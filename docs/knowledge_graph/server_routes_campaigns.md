@@ -26,7 +26,7 @@ Campañas de booking masivas: CRUD, campaña activa y registro de entrenamiento 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
 
 ---
 

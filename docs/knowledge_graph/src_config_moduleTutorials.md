@@ -27,6 +27,11 @@ Exporta: MODULE_TUTORIALS.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/useModuleTutorial.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

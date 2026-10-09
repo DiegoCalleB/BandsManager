@@ -29,6 +29,11 @@ SINTETIZADOR TONE.JS PARA IDEAS MELÓDICAS DE IA POR INSTRUMENTO (GUITARRA, VIOL
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/instrumentSynth.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

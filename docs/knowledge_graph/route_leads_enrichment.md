@@ -52,6 +52,11 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/seguridadAutorizacion.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

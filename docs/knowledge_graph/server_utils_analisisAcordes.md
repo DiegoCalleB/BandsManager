@@ -28,6 +28,12 @@ Exporta: VERSION_ANALISIS_ACORDES, normalizarTonalidad, FuenteAudioAcordes, eleg
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/analisisAcordes.test.ts`
+- `server/utils/__tests__/chordDetection.realista.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

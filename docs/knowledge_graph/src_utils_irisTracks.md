@@ -36,6 +36,12 @@ Exporta: getSongIrisStemIdea, esIdeaIris, irisPrimero, hasIrisStems, getIdeaTrac
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/irisTracks.test.ts`
+- `src/utils/__tests__/pistasDeCancion.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

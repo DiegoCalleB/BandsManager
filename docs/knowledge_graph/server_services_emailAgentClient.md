@@ -20,6 +20,7 @@ Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lec
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -30,6 +31,12 @@ Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lec
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/emailAgentClient.test.ts`
+- `server/services/__tests__/gmailApiClient.test.ts`
 
 ---
 

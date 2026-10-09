@@ -66,6 +66,12 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/__tests__/ai_fallback.test.ts`
+- `server/utils/__tests__/enrichCoversWithoutAudio.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

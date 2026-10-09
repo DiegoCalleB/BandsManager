@@ -19,6 +19,7 @@ Servicio de Cola de Tareas Distribuidas y Resilientes para Agentes de IA.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_agent_jobs_queue|tabla agent_jobs_queue]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -26,6 +27,11 @@ Servicio de Cola de Tareas Distribuidas y Resilientes para Agentes de IA.
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[server_routes_agentQueue|server/routes/agentQueue.ts]] *(from #agent)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/agentQueueRecuperacion.test.ts`
 
 ---
 

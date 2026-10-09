@@ -31,6 +31,11 @@ Escritura tolerante a columnas que aún no existen.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/tolerantWrite.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -29,6 +29,11 @@ Exporta: OFFSET_MAX_SEGUNDOS, PASO_OFFSET_SEGUNDOS, carpetaDeIdea, offsetInicial
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/grabarIdea.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

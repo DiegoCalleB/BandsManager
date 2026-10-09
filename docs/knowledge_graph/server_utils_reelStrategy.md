@@ -27,6 +27,11 @@ Qué buscar y cómo titularlo, según cómo esté grabado el material.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/reelStrategy.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

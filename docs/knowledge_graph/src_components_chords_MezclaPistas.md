@@ -28,6 +28,11 @@ Exporta: MezclaPistas.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/mezclaPistasAtril.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -21,6 +21,7 @@ Ajustes de impresión del setlist por banda (`band_print_settings`).
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[src_utils_printSettings|src/utils/printSettings.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_band_print_settings|tabla band_print_settings]] *(Layer: #schema, Domain: #system)*
 
 ---
 

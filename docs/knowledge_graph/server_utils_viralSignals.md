@@ -29,6 +29,13 @@ Detección de los fragmentos con más potencial viral.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsRoute.test.ts`
+- `server/utils/__tests__/reelStrategy.test.ts`
+- `server/utils/__tests__/viralSignals.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

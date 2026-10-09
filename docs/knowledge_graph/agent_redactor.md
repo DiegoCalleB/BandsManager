@@ -42,6 +42,12 @@ Redacta borradores de respuesta a salas. Nunca envía: el borrador pasa por apro
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/lectorAgentOrder.test.ts`
+- `server/services/__tests__/replyDrafting.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -20,6 +20,7 @@ Registro histórico de mensajes enviados y recibidos por lead y sala.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 
 ---
 

@@ -32,6 +32,11 @@ Exporta: PanelArmonia.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/panelArmonia.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

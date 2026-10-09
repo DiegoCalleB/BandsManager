@@ -30,6 +30,11 @@ Exporta: useAcordesDeLaHoja.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/useAcordesDeLaHoja.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

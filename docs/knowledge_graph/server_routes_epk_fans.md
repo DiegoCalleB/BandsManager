@@ -32,11 +32,20 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[src_i18n_epkTranslations|src/i18n/epkTranslations.ts]] *(Layer: #service, Domain: #epk)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(Layer: #service, Domain: #epk)*
+- [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
+- `server/routes/__tests__/seguridadAutorizacion.test.ts`
 
 ---
 

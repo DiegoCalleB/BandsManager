@@ -20,6 +20,7 @@ Exporta: ReelAnalysisRecord, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateRe
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_reel_analyses|tabla reel_analyses]] *(Layer: #schema, Domain: #social)*
 
 ---
 

@@ -37,6 +37,12 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/ensayos/__tests__/ensayosCalculations.test.ts`
+- `src/utils/__tests__/chordUtils.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

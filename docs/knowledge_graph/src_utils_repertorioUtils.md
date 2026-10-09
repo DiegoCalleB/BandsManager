@@ -34,6 +34,12 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/repertorioUtils.test.ts`
+- `src/utils/__tests__/songMarkedForMember.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

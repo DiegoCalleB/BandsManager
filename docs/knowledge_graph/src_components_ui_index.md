@@ -236,6 +236,11 @@ BandManager UI Component Library
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/ui/__tests__/primitives.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

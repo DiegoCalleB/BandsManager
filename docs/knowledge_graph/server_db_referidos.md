@@ -20,6 +20,7 @@ Referidos entre bandas sobre `registered_bands` (ref_code, referido_por, referid
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_referidos|server/utils/referidos.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 

@@ -26,6 +26,9 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[tabla_setlist_shortcuts|tabla setlist_shortcuts]] *(Layer: #schema, Domain: #repertoire)*
+- [[tabla_setlists|tabla setlists]] *(Layer: #schema, Domain: #repertoire)*
+- [[tabla_songs|tabla songs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
@@ -37,6 +40,15 @@ Persistencia de canciones, pistas, energía y afinaciones.
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/pistasParaGuardar.test.ts`
+- `server/db/__tests__/repertoireNotasSustitutoMerge.test.ts`
+- `server/db/__tests__/stemsMetaParaGuardar.test.ts`
+- `server/utils/__tests__/analisisAcordes.test.ts`
+- `server/utils/__tests__/enrichCoversWithoutAudio.test.ts`
 
 ---
 

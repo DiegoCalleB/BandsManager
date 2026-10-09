@@ -23,6 +23,7 @@ Conciertos (`concerts`): lectura, upsert y borrado acotados por `bandId`.
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_enlacesCortos|server/utils/enlacesCortos.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_concerts|tabla concerts]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -33,6 +34,12 @@ Conciertos (`concerts`): lectura, upsert y borrado acotados por `bandId`.
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/concertsGastosDetalleMerge.test.ts`
+- `server/routes/__tests__/deleteEvents.test.ts`
 
 ---
 

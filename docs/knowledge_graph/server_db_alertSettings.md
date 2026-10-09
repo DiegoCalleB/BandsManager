@@ -20,6 +20,7 @@ Ajustes de alertas por banda (`band_alert_settings`).
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_band_alert_settings|tabla band_alert_settings]] *(Layer: #schema, Domain: #system)*
 
 ---
 

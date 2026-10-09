@@ -25,7 +25,7 @@ Cola de trabajos de los agentes (`agent_jobs_queue`): estadísticas, métricas, 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
 
 ---
 

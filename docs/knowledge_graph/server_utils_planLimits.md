@@ -28,6 +28,12 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/planLimits.test.ts`
+- `src/utils/__tests__/documentacionPlanes.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

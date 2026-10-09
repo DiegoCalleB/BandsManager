@@ -20,12 +20,18 @@ Hilos de ejemplo (`pitch_example_threads`) que alimentan el tono del Redactor.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_pitch_example_threads|tabla pitch_example_threads]] *(Layer: #schema, Domain: #booking)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/exampleThreads.test.ts`
 
 ---
 

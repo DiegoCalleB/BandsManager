@@ -21,6 +21,7 @@ Exporta: dbGetCategoryTemplates, dbUpsertCategoryTemplate.
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_category_pitch_templates|tabla category_pitch_templates]] *(Layer: #schema, Domain: #booking)*
 
 ---
 

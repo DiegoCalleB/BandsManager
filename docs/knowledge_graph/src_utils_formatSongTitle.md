@@ -37,6 +37,11 @@ Exporta: formatSongTitle, normalizeSongTitlesInList.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/formatSongTitle.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

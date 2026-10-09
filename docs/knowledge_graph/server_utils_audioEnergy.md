@@ -33,6 +33,13 @@ Curva de energía del audio para elegir highlights.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsRoute.test.ts`
+- `server/utils/__tests__/audioEnergy.test.ts`
+- `server/utils/__tests__/viralSignals.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

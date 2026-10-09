@@ -82,6 +82,17 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/core.test.ts`
+- `server/db/__tests__/rolClaveSupabase.test.ts`
+- `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/buildAvailableBandsForUser.test.ts`
+- `server/services/__tests__/emailAgentClient.test.ts`
+- `server/services/__tests__/stemWebhookAndLocks.test.ts`
+- `server/services/__tests__/stemsReintento.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

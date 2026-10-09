@@ -20,6 +20,8 @@ Producción de directo: run of show (`run_of_show`) y checklists de equipo (`gea
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_gear_checklists|tabla gear_checklists]] *(Layer: #schema, Domain: #system)*
+- [[tabla_run_of_show|tabla run_of_show]] *(Layer: #schema, Domain: #system)*
 
 ---
 

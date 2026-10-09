@@ -20,11 +20,19 @@ Caché de separación de stems (`song_stems_cache`) en memoria y persistente, co
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_song_stems_cache|tabla song_stems_cache]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/roformerStems.test.ts`
+- `server/services/__tests__/stemWebhookAndLocks.test.ts`
+- `server/services/__tests__/stemsReintento.test.ts`
 
 ---
 

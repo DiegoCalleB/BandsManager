@@ -34,6 +34,12 @@ Exporta: ModoEscucha, instrumentoDePista, pistaDelUsuario, pistasParaModo, Ajust
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/mezclaAjustes.test.ts`
+- `src/utils/__tests__/mezclaStems.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

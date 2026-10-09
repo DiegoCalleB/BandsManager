@@ -30,11 +30,13 @@ Escucha y Spotify en lote para las bandas de la cuenta. Todo va acotado a la ban
 - [[server_utils_metricasBanda|server/utils/metricasBanda.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_spotifyMatch|server/utils/spotifyMatch.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_spotifyEmbed|src/utils/spotifyEmbed.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_band_contacts|tabla band_contacts]] *(Layer: #schema, Domain: #system)*
+- [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server|server.ts]] *(from #route)*
 
 ---
 

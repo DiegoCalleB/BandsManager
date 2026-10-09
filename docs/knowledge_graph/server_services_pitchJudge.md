@@ -28,6 +28,11 @@ PITCH JUDGE — EVALUADOR LLM-AS-A-JUDGE Y AUTO-REFINAMIENTO QUIRÚRGICO
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/pitchJudgeAndVectorStore.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

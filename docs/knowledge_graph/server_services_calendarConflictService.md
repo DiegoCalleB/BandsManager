@@ -30,7 +30,13 @@ Avisos por email de choques de calendario.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/calendarConflictService.test.ts`
 
 ---
 

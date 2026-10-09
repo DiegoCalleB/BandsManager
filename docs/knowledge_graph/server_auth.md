@@ -25,7 +25,16 @@ Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, getUserFro
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/__tests__/auth_bandas.test.ts`
+- `server/routes/__tests__/adminPassword.test.ts`
+- `server/routes/__tests__/seguridadAutorizacion.test.ts`
+- `server/routes/__tests__/usersCuentasSeguridad.test.ts`
 
 ---
 

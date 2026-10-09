@@ -30,6 +30,12 @@ Exporta: DatosIdeaDeAtril, crearIdeaDeAtril, ideasCompatiblesConPistas, pistasBa
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/audit/mezclaBaseIdea.test.ts`
+- `src/utils/__tests__/ideaDeAtril.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

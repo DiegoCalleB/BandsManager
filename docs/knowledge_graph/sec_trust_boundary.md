@@ -36,6 +36,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_agentQueue|server/routes/agentQueue.ts]] *(from #agent)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
@@ -64,6 +65,11 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/bandAccess.test.ts`
 
 ---
 

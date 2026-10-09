@@ -40,6 +40,13 @@ _Sin dependencias salientes directas._
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/middleware/__tests__/rateLimiter.test.ts`
+- `server/middleware/__tests__/rateLimiterIp.test.ts`
+- `server/routes/__tests__/reelsRoute.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -21,6 +21,7 @@ Exporta: OptimizationResult, convertWavUrlToMp3, optimizeWavSongsForBand.
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
+- [[tabla_songs|tabla songs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 

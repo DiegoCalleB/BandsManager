@@ -27,6 +27,12 @@ Pulso (tempo y posición de los tiempos) deducido del propio audio, sin modelos 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/utils/__tests__/chordDetection.realista.test.ts`
+- `server/utils/__tests__/pulso.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -62,6 +62,7 @@ Módulo sin exportaciones con nombre.
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
@@ -87,6 +88,16 @@ Módulo sin exportaciones con nombre.
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/__tests__/db.test.ts`
+- `server/routes/__tests__/billing.test.ts`
+- `server/routes/__tests__/stripeWebhookFiabilidad.test.ts`
+- `server/services/__tests__/agentEngine.test.ts`
+- `server/services/__tests__/agentEngineDirectSend.test.ts`
+- `server/services/__tests__/agentEngineSeguridad.test.ts`
 
 ---
 
