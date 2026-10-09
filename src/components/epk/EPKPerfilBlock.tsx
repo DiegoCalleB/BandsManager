@@ -8,7 +8,6 @@ import {
   Upload,
   Loader2,
   Instagram,
-  User as UserIcon,
   Users,
   Globe,
   Music2,
@@ -18,9 +17,13 @@ import {
 } from "lucide-react";
 import { EPKConfig, BandMember } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { uploadFileToServer } from "../../utils/audioStorage";
+
+const legacyFoto = (m: BandMember): string =>
+  (m as BandMember & { foto_url?: string }).foto_url || "";
 
 interface EPKPerfilBlockProps {
   config: EPKConfig;
@@ -39,7 +42,7 @@ interface EPKPerfilBlockProps {
   }>;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }
@@ -61,6 +64,36 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
   isAllView = false,
 }) => {
   const [similarBandInput, setSimilarBandInput] = useState("");
+  const [subiendoFotoContacto, setSubiendoFotoContacto] = useState(false);
+  const [errorFotoContacto, setErrorFotoContacto] = useState<string | null>(null);
+
+  const subirFotoContacto = async (file: File) => {
+    setSubiendoFotoContacto(true);
+    setErrorFotoContacto(null);
+    const guardar = (fotoUrl: string) =>
+      setConfig((prev) => ({
+        ...prev,
+        contactoBooking: { ...prev.contactoBooking, fotoUrl },
+      }));
+    try {
+      const url = await uploadFileToServer(file, {
+        bandId: config.bandId,
+        category: "contacto",
+      });
+      guardar(url);
+    } catch (err) {
+      setErrorFotoContacto(
+        err instanceof Error ? err.message : "No se pudo subir la foto. Inténtalo de nuevo.",
+      );
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (typeof ev.target?.result === "string") guardar(ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    } finally {
+      setSubiendoFotoContacto(false);
+    }
+  };
 
   const handleAddSimilarBand = () => {
     const val = similarBandInput.trim();
@@ -449,9 +482,9 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                     <div className="w-16 h-16 rounded-[var(--r-m)] overflow-hidden bg-[var(--surface)] flex items-center justify-center relative">
                       {subiendoFotoMiembro === m.id ? (
                         <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
-                      ) : (m.fotoUrl && m.fotoUrl.trim() !== "") || ((m as any).foto_url && (m as any).foto_url.trim() !== "") ? (
+                      ) : (m.fotoUrl && m.fotoUrl.trim() !== "") || legacyFoto(m).trim() !== "" ? (
                         <img
-                          src={m.fotoUrl || (m as any).foto_url}
+                          src={m.fotoUrl || legacyFoto(m)}
                           alt={m.nombre || "Miembro"}
                           className="w-full h-full object-cover"
                         />
@@ -552,6 +585,48 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
           </h3>
 
           <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <label
+                className="shrink-0 cursor-pointer group"
+                title="Subir la foto de la persona de contacto"
+              >
+                <div className="w-20 h-20 rounded-[var(--r-pill)] overflow-hidden bg-[var(--sunken)] flex items-center justify-center">
+                  {subiendoFotoContacto ? (
+                    <Loader2 className="w-5 h-5 text-[var(--acc)] animate-spin" />
+                  ) : config.contactoBooking?.fotoUrl ? (
+                    <img
+                      src={config.contactoBooking.fotoUrl}
+                      alt={config.contactoBooking.nombre || "Contacto de booking"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-1 text-center">
+                      <Upload className="w-4 h-4 text-[var(--ink-2)] group-hover:text-[var(--acc)] transition mb-0.5" />
+                      <span className="text-micro text-[var(--ink-2)] font-medium">
+                        Foto
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void subirFotoContacto(f);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+              <p className="text-xs text-[var(--ink-2)] leading-snug pt-1">
+                La cara de quien atiende las contrataciones. Se enseña junto a
+                sus datos en el dossier público.
+                {errorFotoContacto && (
+                  <span className="block mt-1 text-[var(--alert)]">{errorFotoContacto}</span>
+                )}
+              </p>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
                 <label className="text-xs font-semibold text-[var(--ink-2)]">
@@ -687,7 +762,7 @@ export const EPKPerfilBlock: React.FC<EPKPerfilBlockProps> = ({
                         size="sm"
                         type="text"
                         placeholder={item.placeholder}
-                        value={(config.enlacesRedes as any)?.[item.key] || ""}
+                        value={(config.enlacesRedes as Record<string, string | undefined> | undefined)?.[item.key] || ""}
                         onChange={(e) => {
                           const updatedVal = e.target.value;
                           setConfig((prev) => {

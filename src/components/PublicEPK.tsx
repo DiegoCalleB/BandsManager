@@ -9,12 +9,9 @@ import {
   MapPin,
   Play,
   Pause,
-  Volume2,
   X,
   Music,
   Music2,
-  Radio,
-  Sparkles,
   Quote,
   Instagram,
   Globe,
@@ -42,6 +39,27 @@ import { getFontFamilyById } from "../config/bandFonts";
 import { ShowIcon } from './ui/ShowIcon';
 import { InsigniaBandManager } from './ui/InsigniaBandManager';
 
+// Carga del servidor: snake_case y camelCase conviven según el origen del dato.
+type PublicSong = Song & {
+  album?: string;
+  album_disco?: string;
+  audio_principal_url?: string;
+  portada_url?: string;
+};
+
+interface PublicEpkPayload {
+  bandId?: string;
+  bandName?: string;
+  registeredBand?: { nombre_banda?: string };
+  epkConfig?: EPKConfig;
+  highlightedSongs?: PublicSong[];
+  upcomingConcerts?: Concert[];
+  [campo: string]: unknown;
+}
+
+const fotoDe = (p: unknown): string =>
+  typeof p === "string" ? p : (p as { url?: string } | null)?.url || "";
+
 interface PublicEPKProps {
   initialData?: {
     epkConfig: EPKConfig;
@@ -51,7 +69,7 @@ interface PublicEPKProps {
 }
 
 export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
-  const [epkData, setEpkData] = useState<any>(initialData || null);
+  const [epkData, setEpkData] = useState<PublicEpkPayload | null>(initialData || null);
   const [loading, setLoading] = useState(!initialData);
   const [copiedLink, setCopiedLink] = useState(false);
   const [playingSongId, setPlayingSongId] = useState<string | null>(null);
@@ -91,9 +109,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             bandId: epkData?.bandId,
           }),
         }).catch(() => {});
-      } catch (_) {}
+      } catch {
+        // el seguimiento nunca debe romper la vista del dossier
+      }
     },
-    [trackingLeadId, trackingToken, epkData?.bandId]
+    [trackingLeadId, trackingToken, epkData]
   );
 
   const getPdfDownloadUrl = React.useCallback((rawUrl?: string) => {
@@ -196,7 +216,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
   // resto de la app usa camelCase. Sin normalizar,'albumDisco' salía undefined y caía al
   // literal"Sencillo", y el audio real que ya está subido no se reproducía nunca.
-  const songs: any[] = (epkData?.highlightedSongs || []).map((s: any) => ({
+  const songs: PublicSong[] = (epkData?.highlightedSongs || []).map((s) => ({
     ...s,
     albumDisco: s.albumDisco ?? s.album_disco ?? s.album,
     audioPrincipalUrl: s.audioPrincipalUrl ?? s.audio_principal_url,
@@ -238,11 +258,11 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   const miembros = (config.miembros || [])
     .map((m) => ({
       ...m,
-      fotoUrl: m?.fotoUrl || (m as any)?.foto_url || "",
+      fotoUrl: m?.fotoUrl || (m as { foto_url?: string })?.foto_url || "",
     }))
     .filter((m) => m?.nombre || m?.fotoUrl);
   const normalizedBandPhotos = (config.bandPhotos || [])
-    .map((p) => (typeof p === "string" ? p : (p as any)?.url || ""))
+    .map(fotoDe)
     .filter((u) => typeof u === "string" && u.trim() !== "");
   // Foto de portada del hero: la primera de la Galería de Imagen & Prensa, si existe. Es lo
   // que hace que esto lea como la web real de una banda en directo y no como una tarjeta de
@@ -663,6 +683,14 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             </p>
 
             <div className="space-y-2.5 pt-2 text-sm">
+              {config.contactoBooking?.fotoUrl && (
+                <img
+                  src={config.contactoBooking.fotoUrl}
+                  alt={config.contactoBooking.nombre || t("managerPorDefecto")}
+                  className="w-16 h-16 rounded-[var(--r-pill)] object-cover mb-1"
+                  loading="lazy"
+                />
+              )}
               <div className="flex items-center gap-2.5 font-medium">
                 <span
                   className={`w-2 h-2 rounded-[var(--r-pill)] ${styles.accentBtn.includes("fuchsia") ? "bg-[var(--tentative)]" : styles.accentBtn.includes("orange") ? "bg-[var(--acc)]" : "bg-[var(--acc)]"} shrink-0`}
@@ -792,7 +820,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           {t("seccionTemas")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {songs.map((song: any) => {
+          {songs.map((song) => {
             const sonando = playingSongId === song.id;
             return (
               <div
@@ -853,7 +881,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   const renderGaleria = () => {
     const validPhotos = (config.bandPhotos || [])
-      .map((p) => (typeof p === "string" ? p : (p as any)?.url || ""))
+      .map(fotoDe)
       .filter((u) => typeof u === "string" && u.trim() !== "");
     if (validPhotos.length === 0) return null;
     return (
