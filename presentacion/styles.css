@@ -874,3 +874,7 @@ body.scroll .tr-time { display: none; }
 
 .slide.scene .sc-react { position: absolute !important; right: 100px; bottom: 90px; left: auto; max-width: 560px; z-index: 30 !important; font-size: 30px; background: linear-gradient(135deg, rgba(36,58,99,.98), rgba(52,40,98,.98)); border-color: rgba(255,214,150,.6); }
 .slide.scene .sc-react img { width: 88px; height: 88px; border-color: #ffd596; } .slide.scene .sc-react b { color: #ffd596; }
+
+.chat.tight { gap: 8px; margin-top: 20px; } .chat.tight li { font-size: 28px; padding: 10px 22px; } .chat.tight li b { font-size: 19px; margin-bottom: 2px; }
+.chat.tight + .fin-crowd { margin-top: 28px; }
+.chat.tight + .fin-crowd img { width: 96px; height: 96px; }
