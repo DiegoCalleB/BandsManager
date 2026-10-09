@@ -858,3 +858,8 @@ body.scroll .fin-crowd { flex-wrap: wrap; gap: 14px; } body.scroll .fin-crowd im
 .slide.trailer.active .tr-time { animation: trpop 500ms var(--ease) calc(var(--t) + .1s) both; }
 .tr-photo .tr-big { font-size: 128px; }
 body.scroll .tr-time { display: none; }
+
+.tr-q { position: absolute; top: 26px; left: 0; right: 0; z-index: 5; text-align: center; font-size: 70px; font-weight: 700; letter-spacing: -.03em; opacity: 0; }
+.slide.trailer.active .tr-q { animation: trtext 900ms var(--ease) calc(var(--t) + .2s) both; }
+.sheet td.yes { color: #146c2e; font-weight: 600; background: #e6f6ea; }
+.sheet td { white-space: nowrap; }
