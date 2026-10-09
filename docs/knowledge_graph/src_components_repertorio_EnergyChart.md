@@ -33,6 +33,7 @@ Exporta: EnergyChartPoint, EnergyChartZone, EnergyChart.
 - [[src_components_repertorio_PerfectSetlistModal|src/components/repertorio/PerfectSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistsTabContentView|src/components/repertorio/SetlistsTabContentView.tsx]] *(from #frontend)*
+- [[src_hooks_useRepertorioItemPopovers|src/hooks/useRepertorioItemPopovers.ts]] *(from #hook)*
 - [[src_hooks_useSetlistEnergyAnalysis|src/hooks/useSetlistEnergyAnalysis.ts]] *(from #hook)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
