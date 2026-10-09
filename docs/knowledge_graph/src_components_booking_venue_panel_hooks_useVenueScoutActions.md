@@ -18,6 +18,7 @@ Exporta: VenueScoutActionsParams, useVenueScoutActions.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_venue_panel_apiResponses|src/components/booking/venue_panel/apiResponses.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*

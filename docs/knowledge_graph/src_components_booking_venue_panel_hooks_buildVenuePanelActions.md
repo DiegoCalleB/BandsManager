@@ -25,6 +25,7 @@ Exporta: buildVenuePanelActionsParams, buildVenuePanelActions.
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_camposCambiados|src/utils/camposCambiados.ts]] *(Layer: #service, Domain: #system)*

@@ -31,6 +31,11 @@ Tarjeta de contacto y ubicación y roster de artistas representados.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

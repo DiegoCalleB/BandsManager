@@ -34,10 +34,12 @@ Ficha técnica de la sala, hilo de conversación y generador de respuestas.
 - [[src_components_booking_venue_panel_VenueIntelligenceSection|src/components/booking/venue_panel/VenueIntelligenceSection.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_VenueTitleBar|src/components/booking/venue_panel/VenueTitleBar.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_venue_panel_apiResponses|src/components/booking/venue_panel/apiResponses.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_hooks_useVenueEnrichment|src/components/booking/venue_panel/hooks/useVenueEnrichment.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_hooks_useVenueScoutActions|src/components/booking/venue_panel/hooks/useVenueScoutActions.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_venueTheme|src/components/booking/venue_panel/venueTheme.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

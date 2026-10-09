@@ -93,6 +93,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueWorkspaceModal|src/components/booking/venue_modal/VenueWorkspaceModal.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_apiResponses|src/components/booking/venue_panel/apiResponses.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_useVenueEnrichment|src/components/booking/venue_panel/hooks/useVenueEnrichment.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(from #frontend)*
@@ -108,6 +109,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_venue_panel_VenueIntelligenceSection|src/components/booking/venue_panel/VenueIntelligenceSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueLeadHealthRow|src/components/booking/venue_panel/VenueLeadHealthRow.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueLeadInfoEditForm|src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchFeedbackPanel|src/components/booking/venue_panel/VenuePitchFeedbackPanel.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
@@ -332,6 +334,7 @@ _Sin dependencias salientes directas._
 - `src/audit/tomasConFondoAtril.test.tsx`
 - `src/audit/transcripcionMasiva.test.tsx`
 - `src/components/booking/__tests__/ExportLeadsModal.test.ts`
+- `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
