@@ -24,6 +24,7 @@ Exporta: BAKANDEYA_DEMO_MEMBERS, SHOW_ITEM_TYPES, TRANSPARENT_DRAG_IMAGE, DEFAUL
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

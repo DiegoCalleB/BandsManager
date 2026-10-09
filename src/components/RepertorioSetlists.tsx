@@ -153,6 +153,8 @@ import {
   isSongMarkedForMember,
   withSongMarkedForMember,
   withSongFlagsForMember,
+  formatSecondsToMinutes,
+  formatItemDuration,
   BandMemberOption,
 } from "../utils/repertorioUtils";
 import {
@@ -209,6 +211,7 @@ import {
   DEFAULT_SETLISTS,
 } from "../config/defaultRepertoire";
 import {
+  buildStageSetlistHtml,
   generatePdfStylesheet,
   getTokenValueForPrint,
 } from "../utils/repertorioPdf";
@@ -1544,25 +1547,6 @@ export default function RepertorioSetlists({
       });
   };
 
-  // Helper to format seconds to"X min Y s"
-  const formatSecondsToMinutes = (totalSec: number): string => {
-    const m = Math.floor(totalSec / 60);
-    const s = totalSec % 60;
-    if (s === 0) return `${m} min`;
-    return `${m}m ${s}s`;
-  };
-
-  const formatItemDuration = (item: SetlistItem): string => {
-    if (item.duracionEstimadaSegundos) {
-      const m = Math.floor(item.duracionEstimadaSegundos / 60);
-      const s = item.duracionEstimadaSegundos % 60;
-      return s > 0 ? `${m}m ${s}s` : `${m} min`;
-    }
-    if (item.duracionEstimadaMinutos) {
-      return `${item.duracionEstimadaMinutos} min`;
-    }
-    return "0 min";
-  };
 
   // Calculate active setlist metrics (delegated to the shared, unit-tested helper)
   const activeSetlistMetrics = useMemo(() => {
@@ -2961,130 +2945,26 @@ export default function RepertorioSetlists({
     setAssigningSetlist(null);
   };
 
-  // Print Stage Setlist
+  // Print Stage Setlist (el HTML lo construye la función pura buildStageSetlistHtml)
   const handlePrintStageSetlist = () => {
     if (!activeSetlist) return;
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
-    const pdfStylesheet = generatePdfStylesheet();
-    const okColorForPrint = getTokenValueForPrint("--ok");
-    const accColorForPrint = getTokenValueForPrint("--acc");
-    const sunkenColorForPrint = getTokenValueForPrint("--sunken");
-    const bandDisplayName = currentUser?.bandName || "BANDMANAGER";
-
-    printWindow.document.write(`
- <!DOCTYPE html>
- <html>
- <head>
- <title>SETLIST ${bandDisplayName.toUpperCase()} - ${activeSetlist.nombre}</title>
- <style>
- ${pdfStylesheet}
- </style>
- </head>
- <body>
- <div class="header">
- <div>
- <h1>${bandDisplayName.toUpperCase()} — HOJA DE ESCENARIO</h1>
- <div class="meta">${activeSetlist.nombre} (${activeSetlistMetrics.formattedTime} • ${activeSetlistMetrics.songCount} Temas)</div>
- </div>
- <div style="font-size:20px; font-weight:bold; color:${okColorForPrint}; font-family:monospace;">
- AVG BPM: ${activeSetlistMetrics.avgBpm}
- </div>
- </div>
-
- <table class="set-table">
- <thead>
- <tr>
- <th style="width:40px;">#</th>
- <th>TÍTULO DEL TEMA y CUES</th>
- <th style="width:90px;">TONO</th>
- <th style="width:80px;">BPM</th>
- <th style="width:80px;">TIEMPO</th>
- </tr>
- </thead>
- <tbody>
- ${activeSetlist.items
-   .map((it, idx) => {
-     if (it.tipoItem === "cancion" && it.songId) {
-       const s = songs.find((x) => x.id === it.songId);
-       if (!s) return "";
-       const memberNotes = Array.isArray(s.notasPorMiembro)
-         ? s.notasPorMiembro
-         : [];
-       return `
- <tr>
- <td class="num">${idx + 1}</td>
- <td>
- <div style="font-size: 20px; color: #fff;">${s.titulo}</div>
- ${it.notaTema ? `<span class="note">💡 <b>CUE:</b> ${it.notaTema}</span>` : ""}
- ${
-   memberNotes.length > 0
-     ? `
- <div style="margin-top: 4px;">
- ${memberNotes
-   .map(
-     (m) => `
- <span class="member-note">
- <b style="color: #f2ca50;">[${m.instrument || m.memberName}]:</b> ${m.nota}
- </span>
- `,
-   )
-   .join("")}
- </div>
- `
-     : ""
- }
- ${s.notasRepertorio ? `<span class="note" style="color: #93c5fd;">📝 ${s.notasRepertorio}</span>` : ""}
- </td>
- <td><span class="key-badge">${it.tonalidadDeseada || s.tonalidad}</span></td>
- <td class="bpm">${s.bpm}</td>
- <td style="font-family:monospace; font-size:16px; color:#aaa;">${s.duracion}</td>
- </tr>
- `;
-     } else if (it.tipoItem === "bloque" && it.bloqueSubtipo === "header") {
-       return `
- <tr style="background:${sunkenColorForPrint}; border-top: 3px solid ${accColorForPrint}; border-bottom: 2px solid ${accColorForPrint};">
- <td colspan="5" style="color:${accColorForPrint}; font-size:18px; font-weight:900; letter-spacing:1px; padding: 12px 10px;">
- ${it.tituloCustom || "⚡ Bloque del show"}
- </td>
- </tr>
- `;
-     } else {
-       const typeInfo = SHOW_ITEM_TYPES[it.tipoItem] || {
-         label: "Evento",
-         icon: "📌",
-       };
-       const durText = formatItemDuration(it);
-       return `
- <tr style="background:#0f172a; border-left: 4px solid #38bdf8;">
- <td class="num" style="color:#38bdf8;">•</td>
- <td colspan="3" style="color:#e0f2fe; font-size:16px; font-weight:bold;">
- <span style="background:rgba(56,189,248,0.2); color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:12px; font-family:monospace; margin-right:8px;">
- ${typeInfo.icon} ${typeInfo.label.toUpperCase()}
- </span>
- ${it.tituloCustom || "Evento del Show"}
- ${it.notaTema ? `<span class="note" style="color:#94a3b8; font-size:12px;">📋 CUE: ${it.notaTema}</span>` : ""}
- </td>
- <td style="font-family:monospace; font-size:16px; color:var(--acc); text-align:right;">${durText}</td>
- </tr>
- `;
-     }
-   })
-   .join("")}
- </tbody>
- </table>
-
- <div class="footer">
- Hoja de Escenario Impresa • ${bandDisplayName} • Repertoire Manager
- </div>
-
- <script>
- window.onload = function() { window.print(); }
- </script>
- </body>
- </html>
- `);
+    printWindow.document.write(
+      buildStageSetlistHtml({
+        setlist: activeSetlist,
+        songs,
+        metrics: activeSetlistMetrics,
+        bandDisplayName: currentUser?.bandName || "BANDMANAGER",
+        stylesheet: generatePdfStylesheet(),
+        colors: {
+          ok: getTokenValueForPrint("--ok"),
+          acc: getTokenValueForPrint("--acc"),
+          sunken: getTokenValueForPrint("--sunken"),
+        },
+      }),
+    );
     printWindow.document.close();
   };
 

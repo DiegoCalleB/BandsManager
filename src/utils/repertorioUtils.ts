@@ -453,3 +453,28 @@ export function getReadinessSummary(
     total: totalMembers,
   };
 }
+
+/**
+ * Formatea segundos como "X min" o "Xm Ys" (duración total de un setlist)
+ */
+export function formatSecondsToMinutes(totalSec: number): string {
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  if (s === 0) return `${m} min`;
+  return `${m}m ${s}s`;
+}
+
+/**
+ * Duración legible de un ítem no-canción del setlist (chapa, presentación, bis...)
+ */
+export function formatItemDuration(item: SetlistItemLike): string {
+  if (item.duracionEstimadaSegundos) {
+    const m = Math.floor(item.duracionEstimadaSegundos / 60);
+    const s = item.duracionEstimadaSegundos % 60;
+    return s > 0 ? `${m}m ${s}s` : `${m} min`;
+  }
+  if (item.duracionEstimadaMinutos) {
+    return `${item.duracionEstimadaMinutos} min`;
+  }
+  return "0 min";
+}
