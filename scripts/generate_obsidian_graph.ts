@@ -6,6 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import ts from 'typescript';
 
 interface GraphNode {
   id: string;
@@ -285,7 +286,7 @@ const NODES: GraphNode[] = [
     title: 'Estado del Scheduler de agentes',
     layer: 'db',
     domain: 'system',
-    file: 'server/services/agentScheduler.ts',
+    file: 'server/db/agentSchedule.ts',
     description: 'Tabla agent_schedule_state: cuándo toca cada agente (Scout, Lector) y su último resultado.',
     linksTo: ['agent_scheduler', 'schema_supabase'],
     tags: ['db', 'scheduler']
@@ -321,15 +322,151 @@ for (const nodo of NODES) {
   }
 }
 
+// ─── Capa automática ───────────────────────────────────────────────────────────────────────────
+// Los nodos de arriba son la parte curada a mano (descripciones de los módulos clave). Todo lo demás
+// sale del código: un nodo por fichero de src/ y server/, con sus enlaces sacados de los imports
+// reales. Así el grafo no depende de que alguien se acuerde de editar una lista.
+
+const RAIZ = process.cwd();
+const DIRS_ESCANEO = ['src', 'server'];
+const EXT = ['.ts', '.tsx'];
+
+const esTest = (f: string) => /\.(test|spec)\.tsx?$/.test(f) || f.includes('__tests__') || f.endsWith('.d.ts');
+
+export function escanearFicheros(): string[] {
+  const salida: string[] = [];
+  const recorrer = (dir: string) => {
+    const abs = path.join(RAIZ, dir);
+    if (!fs.existsSync(abs)) return;
+    for (const e of fs.readdirSync(abs, { withFileTypes: true })) {
+      const rel = `${dir}/${e.name}`;
+      if (e.isDirectory()) {
+        if (e.name !== 'node_modules') recorrer(rel);
+      } else if (EXT.includes(path.extname(e.name)) && !esTest(rel)) {
+        salida.push(rel);
+      }
+    }
+  };
+  DIRS_ESCANEO.forEach(recorrer);
+  return salida.sort();
+}
+
+const slug = (f: string) => f.replace(/\.tsx?$/, '').replace(/[^A-Za-z0-9]+/g, '_');
+
+function resolverImport(desde: string, spec: string, existentes: Set<string>): string | null {
+  let base: string;
+  if (spec.startsWith('@/')) base = spec.slice(2);
+  else if (spec.startsWith('.')) base = path.posix.normalize(path.posix.join(path.posix.dirname(desde), spec));
+  else return null;
+  const sinJs = base.replace(/\.(js|jsx)$/, '');
+  for (const cand of [base, ...EXT.map((x) => sinJs + x), ...EXT.map((x) => `${base}/index${x}`)]) {
+    if (existentes.has(cand)) return cand;
+  }
+  return null;
+}
+
+function capaDe(f: string): GraphNode['layer'] {
+  if (/agent/i.test(f)) return 'agent';
+  if (/(ssrf|middleware|trust|sanitiz|security|auth)/i.test(f)) return 'security';
+  if (f.startsWith('server/routes')) return 'route';
+  if (f.startsWith('server/db')) return 'db';
+  if (f.startsWith('server/')) return 'service';
+  if (f.startsWith('src/hooks')) return 'hook';
+  if (f.startsWith('src/components') || f.startsWith('src/pages') || f === 'src/App.tsx') return 'frontend';
+  return 'service';
+}
+
+function dominioDe(f: string): GraphNode['domain'] {
+  if (/(lead|booking|venue|crm|pitch|scout|enrich)/i.test(f)) return 'booking';
+  if (/(repertoire|song|setlist|stem|iris|audio|studio|atril|jam|mixer|multitrack|chord|lyric|letra)/i.test(f)) return 'repertoire';
+  if (/(payment|finance|invoice|stripe|billing|expense|merch)/i.test(f)) return 'finances';
+  if (/epk/i.test(f)) return 'epk';
+  if (/(auth|login|session)/i.test(f)) return 'auth';
+  if (/(reel|social|fan|instagram|tiktok)/i.test(f)) return 'social';
+  return 'system';
+}
+
+function descripcionDe(texto: string): string {
+  const cab = texto.match(/^\s*(?:\/\*\*?([\s\S]*?)\*\/|((?:\/\/[^\n]*\n?)+))/);
+  if (cab) {
+    const limpio = (cab[1] ?? cab[2] ?? '')
+      .split('\n')
+      .map((l) => l.replace(/^\s*(\*|\/\/)\s?/, '').trim())
+      .filter(Boolean)[0];
+    if (limpio && limpio.length > 15) return limpio.slice(0, 200);
+  }
+  const exports = [...texto.matchAll(/^export\s+(?:default\s+)?(?:async\s+)?(?:const|function|class|interface|type|enum)\s+(\w+)/gm)].map((m) => m[1]);
+  return exports.length ? `Exporta: ${[...new Set(exports)].slice(0, 8).join(', ')}.` : 'Módulo sin exportaciones con nombre.';
+}
+
+export function construirNodos(): GraphNode[] {
+  const ficheros = escanearFicheros();
+  const existentes = new Set(ficheros);
+  const curadoPorFichero = new Map(NODES.map((n) => [n.file, n]));
+  const idDe = new Map<string, string>();
+  const usados = new Set(NODES.map((n) => n.id));
+  for (const f of ficheros) {
+    const cur = curadoPorFichero.get(f);
+    if (cur) { idDe.set(f, cur.id); continue; }
+    let id = slug(f);
+    if (usados.has(id)) id = `${id}_${path.extname(f).slice(1)}`;
+    usados.add(id);
+    idDe.set(f, id);
+  }
+
+  const nodos: GraphNode[] = NODES.filter((n) => !existentes.has(n.file)).map((n) => ({ ...n }));
+  for (const f of ficheros) {
+    const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
+    const imports = ts.preProcessFile(texto, true, true).importedFiles.map((i) => i.fileName);
+    const destinos = new Set<string>();
+    for (const spec of imports) {
+      const r = resolverImport(f, spec, existentes);
+      if (r && r !== f) destinos.add(idDe.get(r)!);
+    }
+    const cur = curadoPorFichero.get(f);
+    if (cur) {
+      nodos.push({ ...cur, linksTo: [...new Set([...cur.linksTo, ...destinos])].sort() });
+    } else {
+      const layer = capaDe(f);
+      const domain = dominioDe(f);
+      nodos.push({
+        id: idDe.get(f)!,
+        title: f,
+        layer,
+        domain,
+        file: f,
+        description: descripcionDe(texto),
+        linksTo: [...destinos].sort(),
+        tags: [layer, domain, 'auto'],
+      });
+    }
+  }
+  return nodos.sort((a, b) => a.id.localeCompare(b.id));
+}
+
+// Cada fichero tiene como mucho un nodo curado (si no, uno taparía al otro en silencio).
+{
+  const vistos = new Set<string>();
+  for (const n of NODES) {
+    if (vistos.has(n.file)) throw new Error(`[graph] dos nodos curados apuntan al mismo fichero: ${n.file}`);
+    vistos.add(n.file);
+  }
+}
+
 export function generateObsidianGraph(outputDir = 'docs/knowledge_graph') {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const nodesMap = new Map(NODES.map((n) => [n.id, n]));
+  const TODOS = construirNodos();
+  const nodesMap = new Map(TODOS.map((n) => [n.id, n]));
+  const idsGenerados = new Set(TODOS.map((n) => `${n.id}.md`).concat('index.md'));
+  for (const viejo of fs.readdirSync(outputDir)) {
+    if (viejo.endsWith('.md') && !idsGenerados.has(viejo)) fs.rmSync(path.join(outputDir, viejo));
+  }
 
   // 1. Generate Individual Node Markdown Files with [[Wikilinks]]
-  for (const node of NODES) {
+  for (const node of TODOS) {
     const linkedWikilinks = node.linksTo
       .map((targetId) => {
         const targetNode = nodesMap.get(targetId);
@@ -338,7 +475,7 @@ export function generateObsidianGraph(outputDir = 'docs/knowledge_graph') {
       })
       .join('\n');
 
-    const backlinks = NODES.filter((n) => n.linksTo.includes(node.id))
+    const backlinks = TODOS.filter((n) => n.linksTo.includes(node.id))
       .map((sourceNode) => `- [[${sourceNode.id}|${sourceNode.title}]] *(from #${sourceNode.layer})*`)
       .join('\n');
 
@@ -380,6 +517,25 @@ ${backlinks || '_Sin llamadas entrantes indexadas._'}
   }
 
   // 2. Generate Index Overview
+  const entrantes = new Map<string, number>();
+  for (const n of TODOS) for (const d of n.linksTo) entrantes.set(d, (entrantes.get(d) ?? 0) + 1);
+  const porCapa = new Map<string, number>();
+  for (const n of TODOS) porCapa.set(n.layer, (porCapa.get(n.layer) ?? 0) + 1);
+  const calientes = [...TODOS]
+    .sort((a, b) => (entrantes.get(b.id) ?? 0) - (entrantes.get(a.id) ?? 0) || a.id.localeCompare(b.id))
+    .slice(0, 20)
+    .map((n) => `- [[${n.id}|${n.title}]] — ${entrantes.get(n.id) ?? 0} ficheros dependen de él`)
+    .join('\n');
+  const mapaAuto = `## 🤖 Mapa automático (generado desde los imports reales)
+
+${TODOS.length} nodos: ${[...porCapa.entries()].sort().map(([c, n]) => `${n} ${c}`).join(' · ')}.
+No se edita a mano: lo regenera \`npm run graph:sync\` (hook de pre-commit) y el test \`grafoConocimiento\` falla si queda desfasado.
+
+### 🔥 Los 20 ficheros más importados
+${calientes}
+
+---
+`;
   const indexContent = `---
 title: "BandManager.io Architecture Knowledge Graph"
 tags: ["obsidian", "architecture", "graphify", "tfm"]
@@ -420,6 +576,7 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 
 ---
 
+${mapaAuto}
 ## 💡 Cómo Visualizar en Obsidian
 1. Abre **Obsidian**.
 2. Selecciona **Open folder as vault** y abre la carpeta \`docs/knowledge_graph\`.

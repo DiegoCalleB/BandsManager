@@ -18,13 +18,17 @@ Persistencia de pagos y suscripciones. Facturación desactivada en producción (
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
+- [[server_db|server/db.ts]] *(from #db)*
+- [[server_db_sync|server/db/sync.ts]] *(from #db)*
 
 ---
 

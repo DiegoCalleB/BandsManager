@@ -1,0 +1,67 @@
+---
+id: src_services_api
+title: "src/services/api.ts"
+layer: service
+domain: system
+file: "src/services/api.ts"
+tags: ["service", "system", "auto"]
+---
+
+# 📌 src/services/api.ts
+
+> **Ubicación:** `src/services/api.ts`  
+> **Capa:** `#layer/service` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Exporta: ApiError, getAuthHeaders, api.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[hook_app_data|useAppData Hook]] *(from #hook)*
+- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
+- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
+- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
+- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(from #frontend)*
+- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
+- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(from #frontend)*
+- [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
+- [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
+- [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
+- [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
+- [[src_components_epk_AILogoGeneratorModal|src/components/epk/AILogoGeneratorModal.tsx]] *(from #frontend)*
+- [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
+- [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
+- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
+- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
+- [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
+- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
+- [[src_hooks_useEmailTemplates|src/hooks/useEmailTemplates.ts]] *(from #hook)*
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
+- [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
+- [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
+- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

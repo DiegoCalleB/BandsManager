@@ -19,13 +19,24 @@ Persistencia de canciones, pistas, energía y afinaciones.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
+- [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_audioKey|server/utils/audioKey.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
+- [[server_db|server/db.ts]] *(from #db)*
+- [[server_db_sync|server/db/sync.ts]] *(from #db)*
+- [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
+- [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(from #service)*
+- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

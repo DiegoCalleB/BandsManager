@@ -20,6 +20,8 @@ Gestión del estado reactivo del pipeline de salas, filtros y transiciones de es
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_bookingUtils|src/utils/bookingUtils.ts]] *(Layer: #service, Domain: #booking)*
 
 ---
 

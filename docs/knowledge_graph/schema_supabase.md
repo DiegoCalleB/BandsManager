@@ -23,13 +23,13 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[db_leads|Leads DB Handlers]] *(from #db)*
-- [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
-- [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
-- [[db_ai_ledger|AI Token Ledger]] *(from #db)*
-- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
+- [[db_ai_ledger|AI Token Ledger]] *(from #db)*
+- [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
+- [[db_leads|Leads DB Handlers]] *(from #db)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
+- [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 
 ---
 

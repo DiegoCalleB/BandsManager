@@ -38,6 +38,35 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 
 ---
 
+## 🤖 Mapa automático (generado desde los imports reales)
+
+683 nodos: 16 agent · 40 db · 276 frontend · 39 hook · 41 route · 1 schema · 10 security · 260 service.
+No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
+
+### 🔥 Los 20 ficheros más importados
+- [[src_types|src/types.ts]] — 260 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 191 ficheros dependen de él
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 112 ficheros dependen de él
+- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 59 ficheros dependen de él
+- [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
+- [[db_state_sync|In-Memory State & Supabase Sync]] — 48 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 40 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 37 ficheros dependen de él
+- [[src_services_api|src/services/api.ts]] — 36 ficheros dependen de él
+- [[server_db|server/db.ts]] — 34 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 31 ficheros dependen de él
+- [[server_db_bands|server/db/bands.ts]] — 25 ficheros dependen de él
+- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 22 ficheros dependen de él
+- [[server_utils|server/utils.ts]] — 18 ficheros dependen de él
+- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 16 ficheros dependen de él
+- [[src_utils_cn|src/utils/cn.ts]] — 15 ficheros dependen de él
+- [[src_utils_planPermissions|src/utils/planPermissions.ts]] — 15 ficheros dependen de él
+- [[sec_ssrf_guard|SSRF URL Validator]] — 14 ficheros dependen de él
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 14 ficheros dependen de él
+
+---
+
 ## 💡 Cómo Visualizar en Obsidian
 1. Abre **Obsidian**.
 2. Selecciona **Open folder as vault** y abre la carpeta `docs/knowledge_graph`.

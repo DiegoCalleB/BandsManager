@@ -20,12 +20,23 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_lead_messages|Lead Messages & Thread DB]] *(Layer: #db, Domain: #booking)*
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
+- [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 
 ---
 

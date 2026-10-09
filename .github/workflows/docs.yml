@@ -11,6 +11,8 @@ on:
     paths:
       - '**.md'
       - 'docs/**'
+      - 'src/**'
+      - 'server/**'
       - 'scripts/generate_obsidian_graph.ts'
       - 'scripts/verify-docs-*.cjs'
   pull_request:
@@ -38,4 +40,4 @@ jobs:
       - name: El grafo Obsidian está al día con su generador
         run: |
           npx tsx scripts/generate_obsidian_graph.ts
-          git diff --exit-code docs/knowledge_graph || (echo "::error::docs/knowledge_graph no coincide con scripts/generate_obsidian_graph.ts. Ejecuta npm run graph:sync y haz commit." && exit 1)
+          git diff --exit-code docs/knowledge_graph || (echo "::error::docs/knowledge_graph está desfasado respecto al código. Ejecuta npm run graph:sync y haz commit." && exit 1)
