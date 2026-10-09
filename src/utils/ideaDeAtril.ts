@@ -1,4 +1,5 @@
-import type { AudioTrack, SongAudioIdea } from '../types';
+import type { AudioTrack, Song, SongAudioIdea } from '../types';
+import { cancionConPistas } from './irisTracks';
 
 export interface DatosIdeaDeAtril {
   id: string;
@@ -73,4 +74,40 @@ export function pistasParaToma(idea: SongAudioIdea, stems: AudioTrack[]): AudioT
 /** Reemplaza el fondo de una toma dentro de la lista de ideas (el resto queda intacto). */
 export function ideasConFondo(ideas: SongAudioIdea[], ideaId: string, ids: string[]): SongAudioIdea[] {
   return ideas.map((i) => (i.id === ideaId ? ideaConPistasBase(i, ids) : i));
+}
+
+/** Id con el que una pista de Iris suena y se mezcla dentro de una idea (distinto del de la hoja de Iris). */
+export const idPistaBase = (ideaId: string, stemId: string) => `base-${ideaId}-${stemId}`;
+export const esPistaBase = (ideaId: string, trackId: string) => trackId.startsWith(`base-${ideaId}-`);
+
+/** Pistas de Iris de la idea con su mezcla propia (`mezclaBase`) aplicada. */
+export function pistasBaseMezcladas(idea: SongAudioIdea, stems: AudioTrack[]): AudioTrack[] {
+  return pistasBaseDeIdea(idea, stems).pistas.map((st) => ({
+    ...st,
+    ...(idea.mezclaBase?.[st.id] ?? {}),
+    id: idPistaBase(idea.id, st.id),
+  }));
+}
+
+/**
+ * Guarda una mezcla de pistas mixtas: las de la idea van a `pistas`, las de Iris a `mezclaBase`
+ * (nunca se copian a la idea ni tocan la mezcla de la hoja de Iris).
+ */
+export function cancionConMezcla<T extends Song>(cancion: T, idea: SongAudioIdea, pistas: AudioTrack[]): T {
+  const propias = pistas.filter((t) => !esPistaBase(idea.id, t.id));
+  const mezclaBase = { ...(idea.mezclaBase ?? {}) };
+  for (const t of pistas) {
+    if (!esPistaBase(idea.id, t.id)) continue;
+    mezclaBase[t.id.slice(`base-${idea.id}-`.length)] = {
+      muted: t.muted,
+      solo: t.solo,
+      volumen: t.volumen,
+      pan: t.pan,
+      eqLow: t.eqLow,
+      eqMid: t.eqMid,
+      eqHigh: t.eqHigh,
+      desfaseMs: t.desfaseMs,
+    };
+  }
+  return cancionConPistas(cancion, idea, propias, { mezclaBase });
 }
