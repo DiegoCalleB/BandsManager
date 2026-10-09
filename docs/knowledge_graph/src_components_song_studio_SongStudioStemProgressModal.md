@@ -25,7 +25,7 @@ Exporta: SongStudioStemProgressModal.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(from #frontend)*
 
 ---
 

@@ -71,9 +71,9 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_hooks_useAiTrackGeneration|src/components/song_studio/hooks/useAiTrackGeneration.ts]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAiComposerModal|src/components/song_studio/SongStudioAiComposerModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAiMusicModal|src/components/song_studio/SongStudioAiMusicModal.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(from #hook)*

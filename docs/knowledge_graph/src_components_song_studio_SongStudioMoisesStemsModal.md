@@ -18,15 +18,15 @@ Exporta: SongStudioMoisesStemsModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_IrisPrism|src/components/song_studio/IrisPrism.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_moisesStems|src/components/song_studio/moisesStems.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(from #frontend)*
 
 ---
 

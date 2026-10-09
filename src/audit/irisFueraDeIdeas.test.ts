@@ -7,8 +7,11 @@ const src = leerModuloSongStudio();
 
 describe('Iris vive a nivel de canción en el modal', () => {
   it('hay una barra de Iris antes de "Ideas y grabaciones"', () => {
-    expect(src.indexOf('Iris · pistas de la canción')).toBeGreaterThan(0);
-    expect(src.indexOf('Iris · pistas de la canción')).toBeLessThan(src.indexOf('Ideas y grabaciones'));
+    expect(src).toContain('Iris · pistas de la canción');
+    expect(src).toContain('Ideas y grabaciones');
+    const cuerpo = readFileSync('src/components/song_studio/SongStudioContentBody.tsx', 'utf8');
+    expect(cuerpo.indexOf('<SongStudioIrisBar />')).toBeGreaterThan(-1);
+    expect(cuerpo.indexOf('<SongStudioIrisBar />')).toBeLessThan(cuerpo.indexOf('<SongStudioIdeasBar />'));
   });
 
   it('las tomas ya no ofrecen "Separar con Iris" por su cuenta', () => {

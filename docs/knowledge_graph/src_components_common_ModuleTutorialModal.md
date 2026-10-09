@@ -32,7 +32,6 @@ Exporta: ModuleTutorialModal.
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---

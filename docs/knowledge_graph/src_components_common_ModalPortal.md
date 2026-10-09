@@ -92,8 +92,9 @@ _Sin dependencias salientes directas._
 - [[src_components_song_studio_SongStudioAiMusicModal|src/components/song_studio/SongStudioAiMusicModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioCubaseHelpModal|src/components/song_studio/SongStudioCubaseHelpModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioDeleteConfirmModal|src/components/song_studio/SongStudioDeleteConfirmModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIrisSheet|src/components/song_studio/SongStudioIrisSheet.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioLayout|src/components/song_studio/SongStudioLayout.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*

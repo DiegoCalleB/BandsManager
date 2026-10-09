@@ -23,7 +23,7 @@ Exporta: resolverAudioUrlParaSubida.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaVoteBar|src/components/song_studio/SongStudioIdeaVoteBar.tsx]] *(from #frontend)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
 
 ---
