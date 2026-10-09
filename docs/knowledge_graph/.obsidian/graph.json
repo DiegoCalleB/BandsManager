@@ -3,29 +3,65 @@
   "search": "",
   "showTags": true,
   "showAttachments": false,
-  "hideUnresolved": false,
+  "hideUnresolved": true,
   "showOrphans": true,
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "tag:#ui OR tag:#layer/frontend",
-      "color": { "a": 1, "rgb": 11883775 }
+      "query": "tag:#layer/frontend",
+      "color": {
+        "a": 1,
+        "rgb": 11883775
+      }
     },
     {
-      "query": "tag:#api OR tag:#layer/route",
-      "color": { "a": 1, "rgb": 3381759 }
+      "query": "tag:#layer/route",
+      "color": {
+        "a": 1,
+        "rgb": 3381759
+      }
     },
     {
-      "query": "tag:#agent OR tag:#layer/agent",
-      "color": { "a": 1, "rgb": 3394611 }
+      "query": "tag:#layer/agent",
+      "color": {
+        "a": 1,
+        "rgb": 3394611
+      }
     },
     {
-      "query": "tag:#security OR tag:#layer/security",
-      "color": { "a": 1, "rgb": 16730419 }
+      "query": "tag:#layer/security",
+      "color": {
+        "a": 1,
+        "rgb": 16730419
+      }
     },
     {
-      "query": "tag:#database OR tag:#layer/db OR tag:#schema",
-      "color": { "a": 1, "rgb": 16766720 }
+      "query": "tag:#layer/db",
+      "color": {
+        "a": 1,
+        "rgb": 16766720
+      }
+    },
+    {
+      "query": "tag:#layer/schema",
+      "color": {
+        "a": 1,
+        "rgb": 16744192
+      }
+    },
+    {
+      "query": "tag:#layer/service",
+      "color": {
+        "a": 1,
+        "rgb": 10066329
+      }
+    },
+    {
+      "query": "tag:#layer/hook",
+      "color": {
+        "a": 1,
+        "rgb": 5635925
+      }
     }
   ],
   "collapse-display": false,

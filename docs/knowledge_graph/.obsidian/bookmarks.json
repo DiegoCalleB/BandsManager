@@ -1,0 +1,98 @@
+{
+  "items": [
+    {
+      "type": "group",
+      "title": "Grafo por capa",
+      "items": [
+        {
+          "type": "graph",
+          "title": "Frontend",
+          "options": {
+            "search": "tag:#layer/frontend",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Rutas",
+          "options": {
+            "search": "tag:#layer/route",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Servicios",
+          "options": {
+            "search": "tag:#layer/service",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Hooks",
+          "options": {
+            "search": "tag:#layer/hook",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Agentes",
+          "options": {
+            "search": "tag:#layer/agent",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "DB",
+          "options": {
+            "search": "tag:#layer/db",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Seguridad",
+          "options": {
+            "search": "tag:#layer/security",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Schema + tablas",
+          "options": {
+            "search": "tag:#layer/schema",
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
+          }
+        },
+        {
+          "type": "graph",
+          "title": "Solo tablas Supabase",
+          "options": {
+            "search": "path:tabla_",
+            "showOrphans": false
+          }
+        }
+      ]
+    }
+  ]
+}
