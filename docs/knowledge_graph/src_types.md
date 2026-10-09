@@ -235,6 +235,7 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useSavedFilters|src/hooks/useSavedFilters.ts]] *(from #hook)*
 - [[src_hooks_useSeguimientoEnsayo|src/hooks/useSeguimientoEnsayo.ts]] *(from #hook)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
+- [[src_hooks_useSetlistTransitionsOptimizer|src/hooks/useSetlistTransitionsOptimizer.ts]] *(from #hook)*
 - [[src_hooks_useShareModal|src/hooks/useShareModal.ts]] *(from #hook)*
 - [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
 - [[src_hooks_useStudioShareModal|src/hooks/useStudioShareModal.ts]] *(from #hook)*

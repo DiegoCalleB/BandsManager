@@ -28,6 +28,7 @@ Exporta: SetlistFeedbackInput, PerfectSetlistActionType, PerfectSetlistAction, P
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_hooks_useSetlistTransitionsOptimizer|src/hooks/useSetlistTransitionsOptimizer.ts]] *(from #hook)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

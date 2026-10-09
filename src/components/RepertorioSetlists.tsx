@@ -108,6 +108,7 @@ import { useShareModal } from "../hooks/useShareModal";
 import { useCatalogFilters } from "../hooks/useCatalogFilters";
 import { useAudioPlayer } from "../hooks/useAudioPlayer";
 import { useStagePlayer } from "../hooks/useStagePlayer";
+import { useSetlistTransitionsOptimizer } from "../hooks/useSetlistTransitionsOptimizer";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -757,46 +758,11 @@ export default function RepertorioSetlists({
   // Modal para importar un repertorio ya impreso desde una foto o PDF, analizado con IA
   const [showImportSetlistModal, setShowImportSetlistModal] = useState(false);
   // El plan se genera y aplica sobre una COPIA del setlist activo (ver handleGeneratePerfectSetlist),
-  // nunca sobre el original — este estado vive en el padre, no en el modal, precisamente porque
-  // generar el plan cambia qué setlist está activo (duplicado) y el modal no debe reiniciarse
-  // (perder el plan a medio aplicar) solo porque activeSetlistId cambió por su propia acción.
-  const [perfectSetlistPlan, setPerfectSetlistPlan] =
-    useState<PerfectSetlistPlan | null>(null);
-  const [perfectSetlistLoading, setPerfectSetlistLoading] = useState(false);
-  const [perfectSetlistError, setPerfectSetlistError] = useState<string | null>(
-    null,
-  );
-  // Qué copia de trabajo ya existe para esta ronda de"Setlist Perfecto" — se especificó que
-  //"Regenerar" no crease una copia nueva cada vez, así que se recuerda cuál ya se creó (por
-  // ambos ids: el original del que salió y el propio id de la copia) y se reutiliza mientras no se
-  // pida explícitamente una copia nueva. Solo se recuerda LA MÁS RECIENTE, no un historial por setlist.
-  const [perfectSetlistDraft, setPerfectSetlistDraft] = useState<{
-    originalSetlistId: string;
-    draftSetlistId: string;
-  } | null>(null);
   // Resultados del análisis IA guardados (para mostrar en la vista sin abrir modal)
   const [aiAnalysisResult, setAiAnalysisResult] = useState<any | null>(null);
   const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
   // IDs de canciones a resaltar en el gráfico cuando se interactúa con sugerencias
   const [highlightedSongIds, setHighlightedSongIds] = useState<string[]>([]);
-  // Snapshot del orden de items justo antes del ÚLTIMO reordenamiento (manual arrastrando, o por
-  //"Aplicar" de un aviso/sugerencia) — permite un único"Deshacer" sobre ese cambio concreto.
-  // Se sobrescribe con cada nuevo reordenamiento, así que solo cubre el más reciente, no un historial.
-  // `sourceKey` identifica QUÉ acción generó este snapshot (p.ej."ai-suggestion-2") — así el botón
-  //"Aplicar" de esa sugerencia concreta puede convertirse en"Deshacer" solo mientras siga siendo
-  // la acción más reciente (la única que este snapshot de un solo nivel puede revertir de verdad).
-  const [undoReorderSnapshot, setUndoReorderSnapshot] = useState<{
-    setlistId: string;
-    items: Setlist["items"];
-    sourceKey: string;
-  } | null>(null);
-  // Mensaje breve tras"Optimizar orden" (mejora %, o"ya estaba bien") — se autodesvanece solo,
-  // sin necesidad de un sistema de toasts global para un mensaje puntual como este.
-  const [optimizeSummary, setOptimizeSummary] = useState<string | null>(null);
-  // Sugerencia activa de"¿dónde meto una chapa?" — se queda fija (no se autodesvanece como el
-  // resumen de arriba) hasta que el usuario la inserta o pide otra, porque trae una acción propia.
-  const [chapaSuggestion, setChapaSuggestion] =
-    useState<SugerenciaChapa | null>(null);
 
   // Datos del Mapa de Energía, memoizados por setlist/repertorio real — si se recalculan en
   // cada render (p.ej. cada vez que cambia highlightedSongIds al hacer hover), Recharts ve un
@@ -2286,13 +2252,7 @@ export default function RepertorioSetlists({
         }
         // Si se borra justo la copia de trabajo de"Setlist Perfecto" (o su original), esa referencia
         // ya no vale — la próxima vez que se pida el plan, se creará una copia nueva desde cero.
-        if (
-          perfectSetlistDraft &&
-          (perfectSetlistDraft.draftSetlistId === stId ||
-            perfectSetlistDraft.originalSetlistId === stId)
-        ) {
-          setPerfectSetlistDraft(null);
-        }
+        clearDraftIfMatches(stId);
 
         void guardarOReverter(
           fetch(`/api/setlists/${stId}`, {
@@ -2309,330 +2269,6 @@ export default function RepertorioSetlists({
         );
       },
     });
-  };
-
-  // Setlist Item Manipulation & Agile Reordering (Drag & Drop) — lógica pura, parametrizada por
-  // índices en vez de leer el estado de arrastre de la lista (draggedItemIndex), para poder
-  // reutilizarla también desde el drag horizontal sobre el Mapa de Energía (ver EnergyChart).
-  //
-  // Punto único que de verdad escribe un array de items nuevo — reordenar, quitar una canción,
-  // añadir una del catálogo o insertar un bloque son todos casos de"sustituir items por otro
-  // array", así que todos pasan por aquí para compartir el snapshot de"Deshacer" (sourceKey
-  // identifica qué acción lo generó) y el guardado/sync.
-  const applySetlistItemsChange = (
-    newItems: SetlistItem[],
-    sourceKey: string,
-  ) => {
-    if (!activeSetlist) return;
-
-    setUndoReorderSnapshot({
-      setlistId: activeSetlist.id,
-      items: activeSetlist.items,
-      sourceKey,
-    });
-
-    const updatedSetlist: Setlist = {
-      ...activeSetlist,
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: newItems,
-    };
-
-    setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st,
-      );
-      saveSetlistsToLocalStorageSafely(next);
-      return next;
-    });
-    syncSetlistToBackend(updatedSetlist);
-  };
-
-  const reorderSetlistItems = (
-    fromIndex: number,
-    toIndex: number,
-    sourceKey: string = "manual",
-  ) => {
-    if (!activeSetlist || fromIndex === toIndex || fromIndex < 0 || toIndex < 0)
-      return;
-    const newItems = [...activeSetlist.items];
-    const [movedItem] = newItems.splice(fromIndex, 1);
-    newItems.splice(toIndex, 0, movedItem);
-    applySetlistItemsChange(newItems, sourceKey);
-  };
-
-  // Busca el mejor hueco del setlist ACTUAL para meter una chapa/interludio — la transición entre
-  // dos canciones ya consecutivas que más"chirría" (choque de tonalidad + salto de tempo/energía).
-  // No reordena nada: solo sugiere, y el usuario decide si la inserta.
-  const suggestChapaSpot = () => {
-    if (!activeSetlist) return;
-    const sugerencia = sugerirMejorPuntoParaChapa(activeSetlist.items, songs);
-    setChapaSuggestion(sugerencia);
-    if (!sugerencia) {
-      setOptimizeSummary(
-        "👍 Las transiciones ya van suaves — no hace falta forzar una chapa en ningún punto concreto.",
-      );
-      window.setTimeout(() => setOptimizeSummary(null), 7000);
-    }
-  };
-
-  // Inserta la chapa sugerida justo donde se calculó — reutiliza el mismo flujo que"+ Añadir
-  // bloque" del editor manual (handleAddItemToSetlist ya sabe rellenar título/duración por defecto
-  // para el subtipo'chapa').
-  const insertSuggestedChapa = () => {
-    if (!chapaSuggestion) return;
-    handleAddItemToSetlist(
-      undefined,
-      "chapa",
-      undefined,
-      undefined,
-      undefined,
-      undefined,
-      chapaSuggestion.insertAfterItemId,
-    );
-    setChapaSuggestion(null);
-  };
-
-  // Reordena solo las CANCIONES (nunca los bloques de chapa/presentación/bis, que el usuario
-  // colocó a propósito en un punto concreto del show) para minimizar el coste total de transición
-  // — choque de tonalidad + salto de tempo + salto de energía entre temas consecutivos. La
-  // primera canción del setlist nunca se mueve (ver optimizarOrdenPorTransiciones): es la apertura
-  // que ya eligió el usuario, no un dato más a optimizar.
-  const optimizeSetlistTransitions = () => {
-    if (!activeSetlist) return;
-    setChapaSuggestion(null); // el orden va a cambiar: cualquier sugerencia calculada sobre el orden anterior queda obsoleta
-    const items = activeSetlist.items;
-    const songPositions: number[] = [];
-    const slots: HuecoCancion[] = [];
-    items.forEach((item, i) => {
-      if (item.tipoItem === "cancion" && item.songId) {
-        const song = songs.find((s) => s.id === item.songId);
-        if (song) {
-          songPositions.push(i);
-          slots.push({ item, song });
-        }
-      }
-    });
-    if (slots.length < 3) return; // con 2 canciones o menos no hay nada que reordenar
-
-    const costeAntes = costeTotalTransiciones(slots);
-    const optimizado = optimizarOrdenPorTransiciones(slots);
-    const costeDespues = costeTotalTransiciones(optimizado);
-
-    const newItems = [...items];
-    songPositions.forEach((pos, idx) => {
-      newItems[pos] = optimizado[idx].item;
-    });
-    applySetlistItemsChange(newItems, "optimize-transitions");
-
-    const mejoraPct =
-      costeAntes > 0 ? Math.round((1 - costeDespues / costeAntes) * 100) : 0;
-    setOptimizeSummary(
-      mejoraPct > 0
-        ? `🎯 Orden optimizado: transiciones un ${mejoraPct}% más suaves (tonalidad + tempo + energía).`
-        : "El orden actual ya es prácticamente el mejor posible para estas transiciones.",
-    );
-    window.setTimeout(() => setOptimizeSummary(null), 7000);
-  };
-
-  // Quita el item en `index` (usado por el plan de"Setlist Perfecto" para retirar una canción que
-  // no encaja — a diferencia de handleRemoveSetlistItem, que borra por id desde la lista visual,
-  // esto trabaja por índice porque así es como el plan referencia sus posiciones).
-  const removeSetlistItemAtIndex = (index: number, sourceKey: string) => {
-    if (!activeSetlist || index < 0 || index >= activeSetlist.items.length)
-      return;
-    const newItems = activeSetlist.items.filter((_, i) => i !== index);
-    applySetlistItemsChange(newItems, sourceKey);
-  };
-
-  // Inserta una canción del catálogo en `insertIndex` — variante de handleAddItemToSetlist que
-  // inserta en una posición concreta (la que propuso el plan) en vez de tras el item seleccionado.
-  const insertSongAtIndex = (
-    songId: string,
-    insertIndex: number,
-    sourceKey: string,
-  ) => {
-    if (!activeSetlist) return;
-    const newItem: SetlistItem = {
-      id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      tipoItem: "cancion",
-      songId,
-    };
-    const newItems = [...activeSetlist.items];
-    const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
-    newItems.splice(clampedIndex, 0, newItem);
-    applySetlistItemsChange(newItems, sourceKey);
-  };
-
-  // Inserta un bloque (presentación, pausa, bis...) en `insertIndex` — el plan de"Setlist
-  // Perfecto" ya viene con block_type validado contra los tipoItem reales, así que aquí no hace
-  // falta repetir los defaults por tipo que sí tiene handleAddItemToSetlist para el editor manual.
-  const insertBlockAtIndex = (
-    tipoItem: SetlistItem["tipoItem"],
-    tituloCustom: string,
-    duracionEstimadaMinutos: number | undefined,
-    insertIndex: number,
-    sourceKey: string,
-  ) => {
-    if (!activeSetlist) return;
-    const newItem: SetlistItem = {
-      id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      tipoItem,
-      tituloCustom,
-      duracionEstimadaMinutos,
-      duracionEstimadaSegundos: duracionEstimadaMinutos
-        ? Math.round(duracionEstimadaMinutos * 60)
-        : undefined,
-    };
-    const newItems = [...activeSetlist.items];
-    const clampedIndex = Math.max(0, Math.min(insertIndex, newItems.length));
-    newItems.splice(clampedIndex, 0, newItem);
-    applySetlistItemsChange(newItems, sourceKey);
-  };
-
-  // Ejecuta UNA acción concreta del plan de"Setlist Perfecto" — cada acción ya viene validada por
-  // el servidor (posiciones dentro de rango, catalog_index resuelto a un song_id real, block_type
-  // dentro del enum), así que aquí solo se traduce cada tipo a la función que ya mueve/inserta/quita.
-  const applyPerfectSetlistAction = (
-    action: PerfectSetlistAction,
-    sourceKey: string,
-  ) => {
-    switch (action.type) {
-      case "reorder":
-        if (action.from_position != null && action.to_position != null) {
-          reorderSetlistItems(
-            action.from_position - 1,
-            action.to_position - 1,
-            sourceKey,
-          );
-        }
-        break;
-      case "remove_song":
-        if (action.item_position != null) {
-          removeSetlistItemAtIndex(action.item_position - 1, sourceKey);
-        }
-        break;
-      case "add_song":
-        if (action.song_id && action.insert_at_position != null) {
-          insertSongAtIndex(
-            action.song_id,
-            action.insert_at_position - 1,
-            sourceKey,
-          );
-        }
-        break;
-      case "add_block":
-        if (action.block_type && action.insert_at_position != null) {
-          insertBlockAtIndex(
-            action.block_type as SetlistItem["tipoItem"],
-            action.title || "Nuevo bloque",
-            action.duracion_minutos,
-            action.insert_at_position - 1,
-            sourceKey,
-          );
-        }
-        break;
-    }
-  };
-
-  // Genera el plan de"Setlist Perfecto" y, la PRIMERA vez, duplica el setlist ANTES de que se
-  // pueda aplicar ninguna acción — para no arriesgar el original. Pero"Regenerar" no debe crear
-  // una copia nueva cada vez (eso fue justo la queja: demasiadas copias) — mientras el usuario siga
-  // trabajando sobre el mismo original (o ya esté sobre la copia), se reutiliza esa misma copia y
-  // el plan nuevo se calcula contra SU estado actual (con lo que ya se haya aplicado). Solo se crea
-  // una copia nueva si no existe ninguna todavía para este setlist, o si se pide explícitamente
-  // (`forceNewCopy`, botón"Nueva copia" del modal).
-  const handleGeneratePerfectSetlist = async (
-    forceNewCopy: boolean = false,
-    feedback?: SetlistFeedbackInput,
-  ) => {
-    if (!activeSetlist) return;
-
-    const existingDraft =
-      !forceNewCopy &&
-      perfectSetlistDraft &&
-      (perfectSetlistDraft.draftSetlistId === activeSetlist.id ||
-        perfectSetlistDraft.originalSetlistId === activeSetlist.id)
-        ? perfectSetlistDraft
-        : null;
-
-    // Si el usuario volvió al setlist ORIGINAL (no a la copia) pero ya existe una copia de una
-    // ronda anterior, se retoma esa copia en vez de generar/duplicar desde el original de nuevo.
-    let targetSetlist = activeSetlist;
-    if (existingDraft && existingDraft.draftSetlistId !== activeSetlist.id) {
-      const draft = setlists.find((s) => s.id === existingDraft.draftSetlistId);
-      if (draft) {
-        targetSetlist = draft;
-        setActiveSetlistId(draft.id);
-      }
-    }
-
-    setPerfectSetlistLoading(true);
-    setPerfectSetlistError(null);
-    try {
-      const result = await api.generatePerfectSetlist(
-        targetSetlist.id,
-        feedback,
-      );
-      if (result.success && result.plan) {
-        if (!existingDraft) {
-          const copy = handleDuplicateSetlist(
-            targetSetlist,
-            "(Setlist Perfecto)",
-          );
-          setPerfectSetlistDraft({
-            originalSetlistId: targetSetlist.id,
-            draftSetlistId: copy.id,
-          });
-        }
-        setPerfectSetlistPlan(result.plan);
-      } else {
-        setPerfectSetlistError(result.error || "Error al generar el plan");
-      }
-    } catch (err: any) {
-      setPerfectSetlistError(err.message || "Error desconocido");
-    } finally {
-      setPerfectSetlistLoading(false);
-    }
-  };
-
-  const canUndoReorder =
-    !!undoReorderSnapshot &&
-    undoReorderSnapshot.setlistId === activeSetlist?.id;
-  // Qué acción concreta es la que"Deshacer" revertiría ahora mismo — null si no hay nada que
-  // deshacer, o si el setlist activo cambió desde entonces. Solo la acción que dejó este snapshot
-  // (la más reciente) puede mostrar su propio botón como"Deshacer" en vez de"Aplicar"/"Aplicado".
-  const undoSourceKey = canUndoReorder ? undoReorderSnapshot!.sourceKey : null;
-
-  const undoLastReorder = () => {
-    if (
-      !activeSetlist ||
-      !undoReorderSnapshot ||
-      undoReorderSnapshot.setlistId !== activeSetlist.id
-    )
-      return;
-
-    const restoredSetlist: Setlist = {
-      ...activeSetlist,
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: undoReorderSnapshot.items,
-    };
-
-    setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? restoredSetlist : st,
-      );
-      saveSetlistsToLocalStorageSafely(next);
-      return next;
-    });
-    syncSetlistToBackend(restoredSetlist);
-    setUndoReorderSnapshot(null);
-  };
-
-  const handleDropItem = (targetIndex: number) => {
-    if (draggedItemIndex !== null)
-      reorderSetlistItems(draggedItemIndex, targetIndex);
-    setDraggedItemIndex(null);
-    setDragOverItemIndex(null);
   };
 
   const handleAddItemToSetlist = (
@@ -2736,6 +2372,53 @@ export default function RepertorioSetlists({
     syncSetlistToBackend(updatedSetlist);
     setSelectedSetlistItemId(newItem.id);
   };
+
+  // Hook que encapsula optimización acústica de transiciones, sugerencia de chapas y Setlist Perfecto
+  const {
+    undoReorderSnapshot,
+    chapaSuggestion,
+    setChapaSuggestion,
+    optimizeSummary,
+    setOptimizeSummary,
+    perfectSetlistLoading,
+    perfectSetlistPlan,
+    setPerfectSetlistPlan,
+    perfectSetlistError,
+    setPerfectSetlistError,
+    clearDraftIfMatches,
+    applySetlistItemsChange,
+    reorderSetlistItems,
+    suggestChapaSpot,
+    insertSuggestedChapa,
+    optimizeSetlistTransitions,
+    removeSetlistItemAtIndex,
+    insertSongAtIndex,
+    insertBlockAtIndex,
+    applyPerfectSetlistAction,
+    handleGeneratePerfectSetlist,
+    canUndoReorder,
+    undoSourceKey,
+    undoLastReorder,
+  } = useSetlistTransitionsOptimizer({
+    activeSetlist,
+    songs,
+    setlists,
+    setSetlists,
+    setActiveSetlistId,
+    saveSetlistsToLocalStorageSafely,
+    syncSetlistToBackend,
+    handleDuplicateSetlist,
+    handleAddItemToSetlist,
+  });
+
+
+  const handleDropItem = (targetIndex: number) => {
+    if (draggedItemIndex !== null)
+      reorderSetlistItems(draggedItemIndex, targetIndex);
+    setDraggedItemIndex(null);
+    setDragOverItemIndex(null);
+  };
+
 
   // Inserts a band-created custom shortcut into the active setlist as a generic ('otro') item
   const handleUseCustomShortcut = (sc: SetlistShortcut) => {

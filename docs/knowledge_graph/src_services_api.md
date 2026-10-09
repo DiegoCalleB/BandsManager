@@ -70,6 +70,7 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
 - [[src_hooks_useEmailTemplates|src/hooks/useEmailTemplates.ts]] *(from #hook)*
+- [[src_hooks_useSetlistTransitionsOptimizer|src/hooks/useSetlistTransitionsOptimizer.ts]] *(from #hook)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
