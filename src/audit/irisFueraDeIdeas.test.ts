@@ -64,3 +64,11 @@ describe('Ideas: pistas de Iris al crear la idea', () => {
     expect(src).toContain('ideaConPistasBase(newIdea, idsIris)');
   });
 });
+
+describe('Ideas: pistas de Iris visibles y audibles en el mezclador', () => {
+  it('el transporte usa pistasDeReproduccion y las filas son de solo lectura', () => {
+    expect(src).toContain('pistasDeReproduccion(idea)');
+    expect(src).toContain('pistasBaseVirtuales(idea).map');
+    expect(src).toContain('`base-${idea.id}-${st.id}`');
+  });
+});
