@@ -781,7 +781,7 @@ function PdfExportModalBody({
           (badgesScope === "all" || legacyMarked || isSongBpmMarkedForMember(s, member.id, member.name));
         const badges: NoteLayoutBadge[] = [
           ...(keyHere && s.tonalidad
-            ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 1), extraWidthPx: 22 }]
+            ? [{ text: s.tonalidad, fontSizePx: ptToPx(badgePt + 3), extraWidthPx: 24 }]
             : []),
           ...(bpmHere && s.bpm
             ? [{ text: `${s.bpm} BPM`, fontSizePx: ptToPx(badgePt), extraWidthPx: 12 }]
@@ -792,7 +792,7 @@ function PdfExportModalBody({
         ];
         const badgesHtml = [
           keyHere && s.tonalidad
-            ? `<span class="tag-tonality" style="font-size:${badgePt + 1}pt;">${escapeHtml(s.tonalidad)}</span>`
+            ? `<span class="tag-tonality" style="font-size:${badgePt + 3}pt;">${escapeHtml(s.tonalidad)}</span>`
             : "",
           bpmHere && s.bpm
             ? `<span class="tag-bpm" style="font-size:${badgePt}pt;">${escapeHtml(s.bpm)} BPM</span>`
@@ -1232,19 +1232,22 @@ function PdfExportModalBody({
  .song-badges .tag-bpm { min-width: 4.4em; text-align: right; }
  .tag-tonality {
  font-family: monospace;
- font-size: 11pt;
+ font-size: 13pt;
  font-weight: 800;
- padding: 1px 5px;
- border-radius: 3px;
- background: #fff;
- color: #000;
+ padding: 1px 6px;
+ border-radius: 4px;
+ /* Pastilla negra con letra blanca: la tonalidad se lee de un vistazo en el atril. */
+ background: #000;
+ color: #fff;
+ -webkit-print-color-adjust: exact;
+ print-color-adjust: exact;
  flex-shrink: 0;
  }
  .tag-bpm {
  font-family: monospace;
  font-size: 10pt;
- font-weight: 700;
- color: #444;
+ font-weight: 800;
+ color: #111;
  flex-shrink: 0;
  }
  .tag-dur {
