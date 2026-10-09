@@ -19,6 +19,8 @@ const TABLAS_OPCIONALES = new Set(['booking_campaigns']);
 const ERRORES_ESQUEMA_ACEPTADOS: Array<{ contiene: string; motivo: string }> = [
   { contiene: 'Función RPC de recuperación híbrida', motivo: 'usa el operador <=> de pgvector, que PGlite no incluye' },
   { contiene: 'public.band_campaigns', motivo: 'la migración 20260919 protege una tabla band_campaigns que no existe en ningún sitio (huérfana)' },
+  { contiene: 'role "anon" does not exist', motivo: 'PGlite no trae los roles de Supabase (anon/authenticated); los REVOKE de 20261013 solo aplican en Supabase real' },
+  { contiene: 'function public.trg_fn_archive_deleted_', motivo: 'esas funciones de trigger existen en Supabase pero no están definidas en el SQL del repo, así que PGlite no las tiene al ejecutar 20261013' },
 ];
 
 let columnas: Map<string, Set<string>>;
