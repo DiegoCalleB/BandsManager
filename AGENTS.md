@@ -1,11 +1,17 @@
 # AGENTS.md — Instrucciones para agentes de código (BandManager.io)
 
-Plataforma integral para bandas y artistas independientes (booking CRM, agentes de IA, EPK, repertorio, finanzas) y núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica. Este documento tiene precedencia sobre convenciones genéricas — léelo antes de tocar el repositorio.
+Plataforma integral para bandas y artistas independientes (booking CRM, agentes de IA, EPK, repertorio, finanzas) y núcleo técnico de un **Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica**.
 
-**No negociable, sin excepción:**
-- Ningún dato de una banda visible para otra (§2.1).
-- Ningún envío de email automatizado por un agente sin aprobación humana explícita (§3).
-- Cero errores *nuevos* de TypeScript sobre el baseline de CI (§5.1) — la deuda existente no se exige arreglar de golpe, pero no crece.
+**🎯 Estándar de Excelencia del TFM:** Este proyecto está concebido y ejecutado con la meta explícita de obtener **Matrícula de Honor y ser reconocido como el mejor proyecto jamás presentado del máster**. En consecuencia, queda estrictamente prohibido el código improvisado, los parches rápidos o la deuda técnica invisible que degrade la arquitectura. Cada módulo, refactorización y test debe ser técnicamente ejemplar y defendible con orgullo ante el tribunal más exigente.
+
+**🤖 Rol del Agente:** Actúas como **Principal Fullstack Software Engineer & AI Systems Architect**. Eres el brazo ejecutor y cotutor técnico de un único desarrollador humano. Tu estándar es el de ingeniería de élite: código limpio, tipado estricto, separación de responsabilidades, economía implacable de tokens y pragmatismo sin sobreingeniería.
+
+**⚡ Los 5 Mandamientos Sagrados (No negociables, sin excepción):**
+1. **Multi-tenancy Zero-Trust (§2.1):** Ningún dato de una banda es jamás visible ni modificable por otra. Scoping obligatorio con `getTargetBandId(req)`.
+2. **Human-in-the-Loop (§3):** Ningún envío de email comercial o pitch se despacha sin aprobación humana explícita en interfaz.
+3. **Calidad TypeScript & Cero Regresiones (§5.1):** Cero errores *nuevos* de TypeScript sobre el baseline de CI (`tsc --noEmit`).
+4. **Arquitectura Limpia & Anti-God Components (§5.6):** Archivos saludables (<600 líneas, límite 800). Desacoplamiento obligatorio de modales, lógica pura y hooks.
+5. **Simplicidad de Interfaz & Mobile-First (§6):** La potencia vive en el backend y los agentes; la interfaz es limpia, sin saturación y diseñada para 390 px.
 
 **Índice:** 1. Arquitectura · 2. Seguridad y multi-tenancy · 3. Agentes IA · 4. Subsistemas · 5. Código y calidad · 6. Simplicidad en pantalla · 7. Eficiencia de desarrollo · 8. Riesgos Legales
 
@@ -13,23 +19,19 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ## ⚡ 1. Arquitectura General y Persistencia (CRÍTICO)
 
-* **Arranque local (Quickstart):** `npm install` → copiar `.env.example` a `.env` y rellenar al menos `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` y `GEMINI_API_KEY` (el resto son opcionales por subsistema, ver abajo) → `npm run dev` (Express + Vite, `server.ts`). Sin `.env` configurado la app también arranca (ver `e2e/onboarding-journey.spec.ts`, §5.3.2) usando los usuarios semilla de `src/db_seed.ts` y estado en memoria, pero sin IA/Supabase real. `npm run build` tipa (`tsc --noEmit`) antes de compilar — un fallo de tipos rompe el build, no solo el lint. `npm run typecheck` / `npm run lint:eslint` / `npm test` / `npm run test:e2e` / `npm run test:visual` para verificación puntual.
-* **Variables de entorno por subsistema (`.env.example` es la referencia completa, ~20 variables):** Supabase (persistencia, obligatoria) · `GEMINI_API_KEY`/`DEEPSEEK_API_KEY`/`OPENAI_API_KEY` (generación de pitches, transcripción, ver `generateMultiModelProposals`) · `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` (billing) · `RESEND_API_KEY` (emails transaccionales; sin ella, modo simulación en consola) · `AGENT_EMAIL_MODE` (interruptor global de envío, §3) · `CRON_SECRET` (triggers internos) · `GOOGLE_OAUTH_CLIENT_ID`/`_SECRET`/`_REDIRECT_URI` (Gmail OAuth2 por banda) · `SENTRY_DSN`/`VITE_SENTRY_DSN` (observabilidad backend/frontend, ver abajo) · `REPLICATE_API_TOKEN`/`FAL_KEY` (separación de stems). Ninguna de estas hace fallar el arranque si falta — cada subsistema se degrada solo (ver comentarios en `.env.example`).
-* **Observabilidad — dos capas distintas, no una:** (1) `agent_execution_logs` en Supabase audita fallos de **negocio** esperables de los agentes (banda sin cuenta de email conectada, sala con email inválido...) con su propio panel en la app. (2) `server/utils/errorTracking.ts` (Sentry backend) y `src/utils/errorTracking.ts` (Sentry frontend en React ErrorBoundary) capturan el resto — bugs no anticipados que de otro modo solo terminaban en `console.error`. Sentry es un no-op total sin `SENTRY_DSN` / `VITE_SENTRY_DSN` (ni carga el SDK): en local/dev esto no cambia nada, se activa al definir los DSNs en Railway / Vercel / `.env`. No pisan responsabilidades: si un fallo es "de negocio, esperable", va a `agent_execution_logs`; si es "nadie lo vio venir", a Sentry.
-* **Única Fuente de Verdad (Single Source of Truth):** **Supabase (PostgreSQL)**.
-* **Prohibición Estricta:** Google Sheets está **totalmente descartado y en desuso**. No se debe mencionar ni utilizar. Toda la persistencia (`leads`, `bands`, `users`, `tours`, `songs`, `finances`, `fans`, `social`, `autonomy_configs`, etc.) se gestiona exclusivamente a través de **Supabase**.
-* **Estado en Memoria & Sincronización:** El backend Express mantiene un estado sincronizado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
-* **Autenticación y cuentas (auditoría 2026-10):**
-  * `/auth/google` NO se fía del `email`/`uid` del cuerpo: verifica el access token con Google (`server/utils/googleVerify.ts`) y exige que sea de nuestro client id (`GOOGLE_CLIENT_ID`, o `VITE_GOOGLE_CLIENT_ID`, o `oAuthClientId` de `firebase-applet-config.json`).
-  * La contraseña del admin global sale SOLO de `ADMIN_PASSWORD` (≥ 12 caracteres). Sin ella no se crea admin ni se tocan sus credenciales. Nunca escribas contraseñas en el código.
-  * Las cuentas especiales (Brais) se reconocen por id o email EXACTO (`server/utils/cuentaBrais.ts`, ampliable con `BRAIS_EMAILS`), nunca por `includes()`.
-  * El plan de pago solo cambia por Stripe (webhook/`confirm-success`); `PUT /users/:id` con `plan` es solo para el admin de la plataforma.
-  * Un líder solo restablece la contraseña de cuentas que son únicamente de su banda (`puedeRestablecerContrasenaDe`); vincular una cuenta existente a tu banda siempre es como `member`.
-* **Agente Enviador (auditoría 2026-10):** la consulta SIEMPRE va acotada a `band_id` y a los estados de envío (también con `leadId`); el envío real exige `AGENT_EMAIL_MODE=send` + `dispatchMode=direct_send` + `dispatchLevel` distinto de `draft_only`; hay tope diario (`AGENT_DAILY_SEND_CAP`, 30), guarda contra ejecuciones simultáneas, y un email rebotado (`[Email Rechazado]`) no se reintenta. Un UPDATE tras enviar se comprueba y se reintenta. El Lector solo enriquece el email del lead cuando el emparejamiento es por hilo (thread/References/In-Reply-To), nunca por dominio o asunto.
-* **Autorización por banda (auditoría 2026-10, parte 2):** toda ruta con un `:bandId`/`band_id` del cliente debe comprobar `puedeEscribirEnBanda(req, bandId)` (403 si no); las cachés globales (`state.leads`...) se filtran siempre por `mismaBanda(l.band_id, userBandId)`. Lo que es de la plataforma (lista de espera de músicos, `storage-stats`, `cleanup-unused-media`, diagnósticos que gastan saldo) es solo `role === 'admin'`.
-  * El limitador de ritmo usa la ÚLTIMA entrada de `X-Forwarded-For` (`ipDelCliente`), nunca la primera (la escribe el cliente). Los endpoints públicos que escriben (`/public/*`, registro, reenvío de email) llevan limitador.
-  * El reseteo de contraseña exige el identificador exacto de la cuenta, máximo 5 intentos por código y no loguea el código.
-* **Seguimiento público y correos (auditoría 2026-10, parte 3):** los endpoints `/api/tracking/*` y la telemetría de `/public/epk` solo registran con un token FIRMADO (`server/utils/trackingSeguro.ts`); nunca con un `leadId` en claro ni con base64 sin firma, y no hay atajos por nombre de usuario o sala. Los clics redirigen solo a destinos firmados (`firmarDestino`) o a dominios conocidos. El webhook de Resend exige firma Svix (`RESEND_WEBHOOK_SECRET`). Todo texto de usuario que va a HTML de un correo pasa por `escapeHtml`/`escaparTextos` (`server/utils/html.ts`); el asunto se queda en texto plano.
+* **Arranque local (Quickstart):** `npm install` → copiar `.env.example` a `.env` y rellenar al menos `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` y `GEMINI_API_KEY` → `npm run dev` (Express + Vite, `server.ts`). Sin `.env` configurado la app también arranca usando usuarios semilla de `src/db_seed.ts` y estado en memoria. `npm run build` tipa (`tsc --noEmit`) antes de compilar. Comandos rápidos de verificación: `npm run check:fast` (<1.5s), `npm test`, `npm run lint:eslint`.
+* **Variables de entorno por subsistema:** Referencia completa en `.env.example` (~20 variables). Cada subsistema degrada de forma tolerante si faltan claves secundarias (IA multi-modelo, Stripe, Resend, Gmail OAuth, Replicate/Fal).
+* **Observabilidad en Dos Capas:** (1) `agent_execution_logs` en Supabase audita eventos de negocio esperables de los agentes (cuentas no conectadas, salas sin email). (2) `server/utils/errorTracking.ts` y `src/utils/errorTracking.ts` (Sentry) capturan excepciones runtime inesperadas.
+* **Única Fuente de Verdad:** **Supabase (PostgreSQL)**. Prohibición estricta de Google Sheets o almacenes no tipados.
+* **Estado y Sincronización:** Backend Express sincroniza estado (`server/state.ts` / `server/db.ts`) cargado desde Supabase (`loadStateFromSupabase`).
+* **Reglas Clave de Autenticación y Autorización:**
+  * `/auth/google` verifica tokens de acceso criptográficamente con Google (`server/utils/googleVerify.ts`) contra el Client ID configurado.
+  * Contraseña del administrador global proviene únicamente de `ADMIN_PASSWORD` (≥ 12 caracteres).
+  * Cuentas privilegiadas se validan por ID o email exacto (`server/utils/cuentaBrais.ts`).
+  * Los líderes de banda solo pueden restablecer credenciales de miembros exclusivos de su banda (`puedeRestablecerContrasenaDe`).
+  * Rate limiting de IP usa la última entrada no falsificable de `X-Forwarded-For` (`ipDelCliente`).
+  * Tracking y telemetría (`/api/tracking/*`, `/public/epk`) operan exclusivamente con tokens firmados (`server/utils/trackingSeguro.ts`).
+  * Todo texto externo interpolado en HTML de correos pasa por `escapeHtml` (`server/utils/html.ts`).
 * **Migraciones de Esquema:** Cualquier modificación en la base de datos debe documentarse en SQL idempotente (`supabase/migrations/` o `supabase_schema.sql`).
   * **Se aplican solas al arrancar** (`npm start` ejecuta `scripts/migrate.ts` antes del servidor; registro en la tabla `schema_migrations`). Necesita `DATABASE_URL` en Railway (cadena de conexión de Supabase, *Session pooler*). Sin ella avisa y arranca igual: entonces hay que lanzarlas a mano en el SQL Editor. `npm run migrate:check` lista las pendientes.
   * **Una migración aplicada no se edita**: crea otra nueva (el runner avisa si cambia el checksum). Cada una va en su transacción: si falla, se revierte y el despliegue no se promociona.
@@ -198,83 +200,25 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ---
 
-## 🎨 4. Subsistemas Especializados
+## 🎨 4. Subsistemas Especializados (Índice Rápido)
 
-1. **Reels & Social Content Generator (`server/routes/reels.ts` / `socialRadarService.ts`):**
-   * Scrapea canales de la banda (YouTube, TikTok, Instagram) usando la API de YouTube o `yt-dlp`.
-   * Filtra fragmentos virales analizando la energía del audio.
-   * Almacena clips generados en **Supabase Storage**.
-   * Utiliza el "Tone DNA" persistente y configurable por banda para generar copias alineadas con la identidad de la banda.
+> Los detalles de implementación, invariantes y flujos específicos se han modularizado bajo demanda en **[docs/referencia/SUBSISTEMAS.md](./docs/referencia/SUBSISTEMAS.md)**. Consulta ese documento al modificar o ampliar cualquiera de estos módulos:
 
-2. **AI Music & Sound Studio (`server/routes/ai_music.ts` / `src/utils/instrumentSynth.ts`):**
-   * Genera pistas de acompañamiento y jingles utilizando modelos de Gemini (Lyria).
-   * Genera bases rítmicas y sintetiza instrumentos (guitarra, violín, handpan, percusión) con `tone.js`.
-   * Valida y repara notas generadas por la IA antes de la síntesis para evitar distorsiones de audio.
-   * Exporta conceptos musicales a formato MIDI (`src/utils/midiExport.ts`).
+1. **Reels & Social Content Generator:** `server/routes/reels.ts` / `server/services/socialRadarService.ts`
+2. **AI Music & Sound Studio:** `server/routes/ai_music.ts` / `src/utils/instrumentSynth.ts`
+3. **Campañas de Booking:** `server/routes/campaigns.ts`
+4. **Gestión de Ensayos:** `server/routes/concerts.ts` / `server/db/rehearsals.ts` / `src/components/ensayos/`
+5. **Transiciones de Canciones & Compatibility:** `src/utils/transitionAudioEngine.ts` / `src/utils/setlistCompatibility.ts`
+6. **Audio Analysis & Cues:** `server/utils/audioKey.ts` / `src/utils/audioCueDetector.ts`
+7. **Deduplicación de Leads:** `src/utils/duplicateLeads.ts` / `src/components/booking/LeadDuplicatesModal.tsx`
+8. **Migración Concierto → Álbum:** `server/routes/concert_to_album.ts`
+9. **Enriquecimiento de Covers:** `server/utils/enrichCoversWithoutAudio.ts`
+10. **Facturación y Ledger de IA (TDD obligatorio):** `server/routes/billing.ts` / `server/db/aiLedger.ts`
+11. **Impresión de Repertorios (Paginación e Invariantes):** `src/components/repertorio/PdfExportModal.tsx` / `src/utils/setlistPaginator.ts`
+12. **Choques de Calendario (Detector puro):** `src/utils/calendarConflicts.ts` / `server/services/calendarConflictService.ts`
+13. **Promoción, Enlaces Cortos y Referidos:** `server/routes/enlacesCortos.ts` / `server/routes/paginaConcierto.ts` / `server/routes/referidos.ts`
 
-3. **Campañas de Booking (`server/routes/campaigns.ts`):**
-   * Gestión de campañas masivas segmentadas con scoping estricto por `band_id` resuelto en sesión.
-
-4. **Gestión de Ensayos (endpoints en `server/routes/concerts.ts`, capa de datos en `server/db/rehearsals.ts`, `src/components/ensayos/`):**
-   * Orden del día, cronómetro de bloque, grabación/acta, modo local en vivo.
-   * Cálculo de duración total, detección de cues de audio para precisar transiciones.
-   * Integración con repertorio para vincular canciones a ensayos y extraer métricas de desempeño.
-
-5. **Transiciones de Canciones & Compatibility (`src/utils/transitionAudioEngine.ts`, `setlistCompatibility.ts`):**
-   * Motor de síntesis de transiciones entre canciones usando `tone.js` y análisis de key/energía.
-   * Validación de compatibilidad de tonalidad/BPM/energía entre temas adyacentes en un setlist.
-   * Generación de pistas de transición con efectos de síntesis personalizables.
-
-6. **Audio Analysis & Cues (`server/utils/audioKey.ts`, `src/utils/audioCueDetector.ts`):**
-   * Detección automática de tonalidad, onset density, BPM, energía del audio.
-   * Identificación de cues de audio (cambios rítmicos, puntos de entrada de voces) para timing de ensayos.
-   * Energía percibida para ordenar canciones en setlists y evitar picos innecesarios.
-
-7. **Deduplicación de Leads (`src/utils/duplicateLeads.ts`, `src/components/booking/LeadDuplicatesModal.tsx`):**
-   * Fuzzy matching de salas/festivales contra la base de datos existente para evitar leads duplicados.
-   * Scoring de similitud (bigrams, concatenación, distancia de edición).
-   * UI modal para resolver duplicados antes de crear leads nuevos.
-
-8. **Migración Concierto → Álbum (`server/routes/concert_to_album.ts`):**
-   * Procesamiento de grabaciones en vivo (descarga de YouTube, conversión, análisis).
-   * Aislamiento automático de stems y pistas individuales.
-   * Generación de metadatos (duración, cues, energia) a partir de la grabación.
-
-9. **Enriquecimiento de Covers (`server/utils/enrichCoversWithoutAudio.ts`):**
-   * Mapeo automático de covers a los originals (búsqueda de metadatos, scoring de similitud).
-   * Extracción de tonalidad/BPM de originals cuando el audio de la banda no disponible.
-   * Generación de links de referencia para estudio.
-
-10. **Facturación y Ledger de IA (`server/routes/billing.ts`, `server/routes/donations.ts`, `server/db/aiLedger.ts`):**
-   * Checkout y webhooks de Stripe (cambios de plan, suscripciones), donaciones (Ko-fi) y el ledger de consumo de IA por banda.
-   * Junto con el aislamiento por `band_id` (§2.1), es la única área con excepción obligatoria de TDD (test del caso límite antes que el código) — ver §5.3.1.
-   * **Cambio reciente:** `dbGetAiDebtCents` ahora hace fallback silencioso a tabla directa si la RPC falla, en lugar de rechazar — invariante: nunca rechaza, nunca devuelve NaN/undefined.
-
-11. **Impresión de repertorios (`src/components/repertorio/PdfExportModal.tsx`, `src/utils/setlistPaginator.ts`):**
-   * `buildPrintDocument` genera UN solo HTML por músico y lo consumen la ventana de impresión y la vista previa (iframe A4 con `sandbox="allow-scripts"`). No reintroduzcas una maqueta de preview aparte: ya hubo una y divergía de lo impreso.
-   * `setlistPaginator.ts` (función pura, con tests) decide nº de hojas, letra, columnas (1 o 2) y cortes: reparto equilibrado por ITEMS (canciones, bloques e interludios), nunca un encabezado de bloque colgando al final de una hoja, misma letra en todas las hojas y un 10 % de aire repartido entre filas. El usuario puede imponer 1-3 hojas (`forcedPages`); entonces la letra baja hasta donde haga falta y el modal avisa si queda por debajo de 17 pt.
-   * **Texto limpio antes de imprimir (`src/utils/setlistNoteText.ts`):** se quitan el historial de edición pegado a las notas ("15:56 EDITADA 2 veces"), la nota general autogenerada "Versión Original: …" (duplica los badges de tono/BPM) y los paréntesis repetidos del nombre del setlist. Con datos reales de Ruta 66 esa basura aparecía en casi todos los temas. Cada nota lleva su propio tamaño (`textFit.ts`): una general larga no puede encoger la del músico. Los títulos nunca se truncan con "…": si no caben, bajan a dos líneas.
-   * **Columnas en automático:** el motor prueba 1 y 2 columnas y elige 2 solo con ≥14 temas y si ahorran hojas con letra legible o dan ≥3 pt más con las mismas hojas.
-   * **Medir con las fuentes ya cargadas:** una web font no se descarga hasta que algo la usa y `document.fonts.ready` resuelve antes. `ensurePrintFonts` pide cada cara con `fonts.load`; sin eso las alturas salían ~10 % menores que las impresas y las hojas se desbordaban.
-   * **Toda regla CSS que cambie la altura de una fila debe colgar de la clase de su propio contenedor** (`is-centered`, `in-columns`), no de un ancestro: el iframe de medición solo contiene el contenedor y la regla no se aplicaría al medir.
-   * **Ajustes recordados por banda (`band_print_settings`, `GET/PUT /api/bands/print-settings`):** alineación, columnas, notas generales, badges, logo, marca de agua y tinta, y qué temas llevan tono/BPM por músico (`badgesScope` + `markedSongs`: "En todos" o "Solo marcados"). Además cada músico marca desde sus notas (`MemberNotesModal`) las canciones donde quiere ver tono/BPM: se guarda en `Song.notasPorMiembro[].mostrarTono` (por canción y miembro, para que dos músicos no se pisen) y `isSongMarkedForMember` lo suma a `markedSongs` al imprimir. El panel "Elegir temas" del modal de impresión (Todos/Ninguno/checkbox) escribe esa misma marca en la canción vía `onUpdateSong` + `withSongMarkedForMember`; `markedSongs` queda solo como lectura legacy. Entradas del músico: botón "Me da dudas" (icono ?) en cada tema de la lista del setlist (`RepertorioSetlists.tsx`, usa `currentUser`) y botón "Solo <músico>" en el modal de impresión para imprimir/guardar PDF de una sola hoja. El director ve en cada tema "N músicos dudan · nombres" (cuenta `notasPorMiembro[].mostrarTono`). En el impreso, el QR y la marca van solo en la última hoja de cada copia; las intermedias llevan solo "Hoja X de Y" (la altura reservada del pie es la del pie completo). Cubierto por `e2e/setlist-mis-dudas.spec.ts`. El modal los carga al abrir y los guarda con debounce. Lista blanca estricta en `src/utils/printSettings.ts` (compartida cliente/servidor): el servidor solo guarda claves y valores conocidos, nunca el JSON que mande el cliente. El nº de hojas NO se recuerda (depende de cada repertorio). Sin base de datos (desarrollo local) o con la tabla sin crear, la carga devuelve `null` y el modal funciona sin recordar nada. Contrato cubierto por `e2e/setlist-ajustes.spec.ts`. La marca "ver la tonalidad en mi setlist" (`notasPorMiembro[].mostrarTono`) también se edita en `SongModal` junto a la nota de cada miembro (campo oculto `mostrarTonoJson` → `handleSaveSong`). Son dos marcas independientes: `mostrarTono` y `mostrarBpm` (si falta `mostrarBpm` hereda de `mostrarTono`, por las marcas antiguas); helpers `isSongTonoMarkedForMember`, `isSongBpmMarkedForMember`, `withSongFlagsForMember`. **Defaults de impresión:** Tono ✓, BPM ✓ y alcance "Solo marcados" (`DEFAULT_PRINT_SETTINGS` y estado inicial del modal); las bandas con ajustes ya guardados conservan los suyos.
-   * **Pie con QR:** el pie (`showAppBranding`, "Pie BandManager") lleva un QR a `https://bandmanager.io/?utm_source=setlist&utm_medium=qr` (para medir escaneos) de 11 mm, generado como SVG síncrono por `src/utils/qrSvg.ts`. Su altura entra sola en la medición del pie, no hay que reservarla aparte.
-   * **Todo texto de banda interpolado en el HTML pasa por `escapeHtml`** (la ventana de impresión es del mismo origen que la app); lo vigila `src/components/repertorio/__tests__/pdfExportHtmlEscaping.test.ts`. Nunca metas texto de usuario dentro de un atributo `onerror`/JS.
-12. **Choques de calendario (`src/utils/calendarConflicts.ts`, `server/services/calendarConflictService.ts`):**
-   * Un único detector puro, compartido por cliente (banner en `CalendarView`) y servidor (email). Un choque exige una PERSONA en los dos sitios a la vez: misma banda = intersección de convocados; bandas distintas = solo los músicos que están en ambas. Solape de horas = `choque`; mismo día sin horas o margen corto = `aviso` (solo en pantalla); un bolo `posible` nunca pasa de `aviso`. **Viabilidad de desplazamiento** (`src/utils/viajeEstimado.ts`, tabla de ciudades + fórmula, sin red ni IA para que sea determinista): aunque no coincidan en hora, si el margen entre el fin de uno y el inicio del otro (también a través de la medianoche, hasta el día siguiente) es menor que el viaje estimado = `choque` (`viaje_inviable`); si llega pero sin 45 min para montar = `aviso` (`viaje_justo`); sin horas y a ≥3 h de viaje el mismo día = `aviso` (`distancia_dia`). Ciudades fuera de la tabla no generan avisos de viaje (no se inventa). Los ensayos toman la ciudad del `lugar` solo si es una conocida. `ctx.tiempoViajeMin` permite sustituir la estimación por datos reales.
-   * **Email solo por `choque`**, una vez por persona y huella (`calendar_conflict_notifications`; la huella cambia si se mueve una fecha u hora). Se programa 20 s después de guardar un evento (agrupa ediciones seguidas) y hay un barrido diario (`CALENDAR_CONFLICT_SWEEP_MS`). Respeta `band_alert_settings.email_notifications_enabled`. Es un aviso transaccional del sistema, no de un agente, así que no entra en §3.
-   * **§2.1 entre bandas:** el músico que está en las dos ve los dos eventos; el líder de una solo ve "otro compromiso en otra banda". La redacción se hace en el DATO (`redactarChoque`), no solo en el texto, porque `GET /api/calendar/conflicts` llega al navegador. Hay test que lo vigila (`calendarConflicts.test.ts`, `calendarConflictService.test.ts`).
-   * **Deuda conocida:** `getMemberCrossBandConflicts` en `agentIntelligence.ts` sigue siendo una copia aparte (y mete sala/ciudad de la otra banda en el prompt del agente); migrarla a este detector es un refactor propio.
-
-13. **Promoción y atribución (enlaces cortos, página de concierto, campaña, ROI, referidos):**
-   * **Enlaces cortos (`/r/:code`, `server/routes/enlacesCortos.ts`, lógica pura en `server/utils/enlacesCortos.ts`, datos en `server/db/enlacesCortos.ts`).** Un enlace apunta a un **destino lógico** (`entradas`, `concierto`, `epk`, `fans`), NUNCA a una URL libre: la URL real la resuelve el servidor al pulsar (`resolverDestino`) desde los datos de la banda. Así el dominio de la marca no sirve para redirigir a un sitio arbitrario y, si la banda cambia su enlace de entradas, los enlaces ya repartidos lo siguen. Un destino que no se puede servir (sin entradas, concierto borrado, privado) degrada a la página del concierto y por último al dossier: un enlace repartido no acaba en 404. El concierto se busca SIEMPRE acotado a la banda de la fila del enlace (`dbGetConcertDeBanda`). Los clics no guardan IP: `visitante` es un hash que rota cada día (`hashVisitante`); rastreadores y vistas previas (WhatsApp, Googlebot...) reciben la redirección pero no cuentan (`esBot`). Tope de 300 enlaces por banda y limitador en la escritura.
-   * **Un evento privado (`tipo === 'privado'`) o sin confirmar (`is_posible`) no se publica por NINGUNA vía** (`esConciertoPublicable` en `server/utils/paginaConcierto.ts` es la única puerta): ni la página `/e/:slug`, ni el sitemap, ni su enlace de entradas, ni la campaña. Ante «no existe», «privado» y «sin confirmar», la página devuelve el MISMO 404 (no revela cuál es).
-   * **Página pública de concierto (`/e/:slug`, `/sitemap.xml`, `/robots.txt`, `server/routes/paginaConcierto.ts`).** HTML generado en servidor (Open Graph + `MusicEvent` de schema.org) para Google y para las vistas previas de WhatsApp/Instagram, que no ejecutan la SPA. Todo texto de banda pasa por `escapeHtml`, el JSON-LD escapa `<` y los separadores Unicode, y solo salen los campos de la lista blanca de `DatosPaginaConcierto` (nunca caché, notas ni contrato). Un concierto pasado se sirve pero con `noindex`. Estas rutas van **antes del fallback de la SPA** en `server.ts`; `e2e/superficies-publicas.spec.ts` lo vigila. Los tokens de Espectro están copiados a mano en el CSS de esa página: si cambian en `src/styles/tokens.css`, actualiza `ESTILOS`.
-   * **Campaña de cuenta atrás (`src/utils/campanaConcierto.ts`, `POST /api/campana-concierto/redactar`).** Cuatro hitos (anuncio, recordatorio, última llamada, día D) adaptados a los días que faltan, con dos variantes de texto ya escritas: funciona sin IA y sin gastar créditos. Con `usarIA` el modelo las reescribe con el tono de la banda, y su salida pasa SIEMPRE por `sanearVarianteIA` (solo nuestro enlace, sin guiones largos, emojis ni hashtags); si falla o devuelve basura se usan las plantillas. Los datos del concierto entran al prompt por `sanitizeExternalText` y marcados como datos. Nada se publica solo: el resultado son borradores (`estado: 'borrador'`, `auto_publish: false`) que la banda revisa (§3).
-   * **ROI (`src/utils/roiBanda.ts`, `RoiBandaWidget`).** Deliberadamente conservador: solo dinero COBRADO (caché de bolos en `pagado` + otros ingresos cobrados que no sean de concierto, para no contar un bolo dos veces) frente al coste del plan (`precioMensualPlan`, sale de `PLANS`). Sin ingresos o con plan gratuito no se inventa ningún múltiplo, y nunca se afirma que BandManager lo haya generado. Solo lo ven los líderes, como el resto del dinero.
-   * **Insignia «Powered by BandManager.io» y referidos (`server/utils/referidos.ts`, `server/routes/referidos.ts`, `src/utils/referido.ts`).** La insignia solo la llevan los planes gratuitos (`debeMostrarInsignia`; un test la compara con los planes de «0€» de `PLANS`) con el mismo texto en todos los idiomas (es una marca, no se traduce) y es una petición pública que nunca puede romper la página (`GET /api/public/insignia`, no expone el plan). El `?ref=` se guarda 30 días en el cliente y se atribuye UNA vez tras el alta: solo altas de las últimas 48 h, nunca la propia banda, la primera atribución manda y la respuesta es idéntica exista o no el código. Una banda ve de las que ha invitado SOLO un número. **Pendiente de decisión de producto:** la recompensa por invitar (créditos, mes gratis) no está aplicada; hoy solo se registra la atribución. Antes de recompensar hará falta verificar el email de la banda invitada (el contador es manipulable con altas falsas) y tocar `billing.ts` (excepción de TDD, §5.3.1).
-   * **`entradas_url` del concierto** se guarda solo si es http(s) (`urlHttpSegura`) y se pinta con `safeUrl`: es un `href` en páginas que ve cualquiera.
-   * **Migraciones:** `20261015_enlaces_cortos.sql` (`short_links`, `short_link_clicks`) y `20261016_referidos_banda.sql` (`ref_code`, `referido_por`, `referido_en` en `registered_bands`; rellena el código de las bandas existentes). Las dos tablas nuevas llevan RLS activado SIN políticas (como el resto de tablas de producción: solo el backend con clave de servicio accede; no copies la política `USING (true)` del esquema antiguo, abriría los clics y los enlaces a la clave anónima). Tests con un Supabase falso en memoria (`server/db/__tests__/helpers/fakeSupabaseTablas.ts`) que verifican aislamiento entre bandas.
+👉 *Detalles completos de lógica, edge cases y contratos en [docs/referencia/SUBSISTEMAS.md](./docs/referencia/SUBSISTEMAS.md).*
 
 ---
 
@@ -286,46 +230,21 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 * **Contrato de API:** si añades, quitas o cambias una ruta (método, ruta, middleware de auth o limitador), ejecuta `npm run docs:api` y commitea `docs/api/`. CI falla si el contrato no coincide con el código (`verify:docs`); los cambios de número de línea se ignoran a propósito. Si cambian las cifras del README (rutas, tests, migraciones), `npm run docs:metricas` las actualiza; solo falla si se desvían más de ~3 %. **Skills:** edita siempre `skills/`, nunca una copia, y ejecuta `npm run skills:sync` (CI falla si `.claude/`, `.gemini/` u `.opencode/` difieren). Las descripciones de esquemas van a mano en `docs/api/overrides.json` (ADR 0012).
 
-### 5.2 Frontend (React 19 + Vite + CSS)
-* **Diseño e Interfaz — la autoridad es `skills/visual-identity/SKILL.md`, no esta línea.** Cárgala antes de escribir un solo `className`; tiene precedencia sobre cualquier otra guía estética, brand book externo incluido. Resumen de lo no negociable: todo color y fuente salen de tokens (cero hexadecimales literales, cero `dark:` en el marcado), una sola escala de gris (`neutral`), el oro `#F2CA50` ilumina y nunca rellena (prohibidos halos, `glow-*` y degradados dorados), `font-mono` solo en dato tabular real, y toda serie de datos se dibuja con `<Onda>`. Micro-animaciones sobrias con `motion`, respetando `prefers-reduced-motion`. Sin placeholders. **Cómo se siente la interfaz —escala tipográfica (mínimo 11 px), zonas táctiles, estados, movimiento, ausencia de emojis— lo fija `skills/craft-interfaces/SKILL.md`; cárgala también al tocar UI.**
-  > Esta línea pedía antes *«interfaces vibrantes con dark mode moderno, glassmorphism»*, y la skill `fullstack-ux-design` lo desarrollaba con `bg-slate-900/80`, `backdrop-blur-md` y degradados `indigo→purple`. Los agentes obedecieron: 154 `backdrop-blur`, 209 degradados, 138 `animate-pulse` y una app que parecía un panel de trading de criptomonedas. Se retiró a propósito en septiembre de 2026 — no lo reintroduzcas.
+#### 5.2 Frontend (React 19 + Vite + Tailwind CSS)
+* **Diseño e Interfaz — la autoridad es `skills/visual-identity/SKILL.md`:** Cárgala antes de escribir `className`. Resumen no negociable: colores y tipografía salen estrictamente de tokens (`tokens.css`), una sola escala de gris (`neutral`), acento oro `#F2CA50` solo ilumina (cero halos/degradados dorados), `font-mono` solo para datos tabulares y micro-animaciones sobrias con `motion`.
 * **Consumo de API:** Todas las llamadas HTTP desde componentes deben canalizarse a través de `src/services/api.ts` o `src/utils/api.ts` (inyecta automáticamente JWT de auth y cabeceras `x-band-id`).
-* **Excepción i18n:** El componente del EPK público (`/epk`) se renderiza fuera de `LanguageProvider` para prevenir que Google Translate altere nombres de canciones o bandas.
+* **Excepción i18n:** El componente del EPK público (`/epk`) se renderiza fuera de `LanguageProvider` para prevenir que traductores automáticos alteren nombres de canciones o bandas.
 
-### 5.3 Testing — fullstack, no solo backend (por eso vive aparte de §5.1)
+### 5.3 Estrategia de Testing (Vitest & Playwright)
+* **Referencia técnica completa:** Especificaciones detalladas de suites, invariantes de maquetación y fixtures en **[docs/referencia/TESTING_STRATEGY.md](./docs/referencia/TESTING_STRATEGY.md)**.
+* **Vitest (Unitarios & Lógica Pura):**
+  * Tests en carpetas `__tests__/` adyacentes al código que prueban (ej: `server/utils/__tests__/bandAccess.test.ts`).
+  * Pruebas rápidas de funciones puras sin levantar servidor HTTP (`npm test`, `npx vitest run ruta/al/test.ts`).
+  * **TDD Obligatorio:** En **aislamiento multi-banda (`band_id`)** y **dinero/facturación (Stripe, ledger de IA `aiLedger.ts`)**, el test del caso límite se escribe **antes** de tocar el código.
+* **Playwright (E2E Smoke & Journeys):**
+  * Suites de humo sobre superficies críticas (`health.spec.ts`, `auth.spec.ts`, `epk-public.spec.ts`, `onboarding-journey.spec.ts`).
+  * Ejecución local sin credenciales externas con `npm run test:e2e`. Regresión visual con `npm run test:visual`.
 
-#### 5.3.1 Vitest (unit)
-* **Estructura:** Tests en carpetas `__tests__/` adyacentes al código que prueban (ej: `server/utils/__tests__/bandAccess.test.ts`, no en un `tests/` central).
-* **Estrategia:** Unit-testing de funciones puras exportadas contra objetos `req`/`loadState` falsos, sin usar HTTP client (`supertest`). Priorizar lógica de seguridad y multi-tenancy.
-* **Ejecución:**
-  ```bash
-  npm test                          # Suite completa
-  npx vitest run ruta/al/test.ts   # Un test específico
-  npx vitest                        # Watch mode
-  npm run test:coverage            # Reporte de cobertura
-  ```
-* **Tests:** número vivo — correr `npm test` para el real (no fiarse de una cifra escrita aquí, caduca en el próximo commit).
-* **Cobertura reportada vs real:** `npm run test:coverage` da ~36% de statements, pero solo mide archivos que tests importan (cero cobertura de React: 0 de 150 componentes, ~96k líneas). El % no refleja cobertura de la app entera, solo del backend tocable sin servidor.
-* **Dentro de lo medido:** `server/utils` bien cubierto. `server/db/core.ts` + escáner estático (`bandIdTrustBoundary.test.ts`) protegen multi-tenancy. Resto de `server/db` y `server/routes/*.ts` sin test — importa solo en §5.3.1 (multi-tenancy/dinero).
-* **Excepción de TDD (`band_id`/dinero):** `bandAccess.ts`, `server/db/aiLedger.ts`, `billing.ts` y `donations.ts` (Stripe/Ko-fi) ya tienen tests reales (`server/routes/__tests__/billing.test.ts`, `.../donations.test.ts`) — la cobertura pendiente que mencionaba una versión anterior de este punto ya se hizo.
-* **Por qué esas áreas están débiles — testability, no pereza:** `server/utils`/`server/db` están mejor cubiertos porque son funciones puras exportadas, fáciles de testear contra un `req`/`bandId` falso; `server/routes/*.ts` está peor cubierto porque mezcla lógica de negocio directamente con `req`/`res` de Express dentro del propio handler — no es que falte tiempo, es que esos handlers no se pueden testear sin levantar el servidor entero. **Extraer a una función pura testeable (patrón `bandAccess.ts`) cuando:** (a) el handler hace algo más que parsear el request y delegar — cálculo, validación con varias ramas, transformación de datos; (b) toca `band_id` o dinero (excepción de TDD más abajo — sin algo testeable no hay nada que testear antes de tocar el código); (c) el síntoma más simple — si no puedes escribir el test sin arrancar Express, esa es la señal, no una excusa para saltártelo.
-* **Priorización:** Seguridad > multi-tenancy > coverage puro. El patrón estático de `server/db/__tests__/bandIdTrustBoundary.test.ts` (regex sobre texto de archivo) vale para clases de bugs recurrentes.
-* **TDD selectivo (no obligatorio salvo en dos áreas):** TDD estricto (test antes que código) NO es la norma en este proyecto — la velocidad de iteración depende de poder arreglar un bug o probar una idea en minutos, y aquí se cambia de diseño a media implementación con frecuencia, lo que dejaría obsoleto un test escrito primero junto con el código que describía. El estándar general sigue siendo el actual: tests escritos junto al fix o la feature, no antes.
-  * **Excepción obligatoria — aislamiento multi-banda (`band_id`/RLS) y todo lo que toca dinero (Stripe, ledger de IA — ver §4 punto 10):** aquí sí se escribe el test del caso límite **antes** de tocar el código. Un bug en estas dos áreas no es un fallo visual, es "una banda ve datos de otra" o "se cobra mal".
-  * En ambas, el test debe verificar un **invariante**, no la implementación de hoy (ej. "ninguna query devuelve filas de otro `band_id`", "el ledger nunca queda negativo sin un evento que lo explique"), siguiendo el patrón de escaneo estático de `bandIdTrustBoundary.test.ts` en vez de un mock atado a una función concreta — así el test sigue protegiendo aunque la implementación cambie por completo.
-
-#### 5.3.2 E2E (Playwright) — smoke suite mínimo, no cobertura completa
-* **Por qué solo "smoke" (+ un journey):** la UI de esta app cambia de sitio constantemente (rebrands, rediseños de pantallas enteras en días). Un E2E que cubra visualmente todo el flujo se rompería a menudo por cosas que no son bugs, y con un solo desarrollador eso lleva a silenciar tests en vez de arreglar código real. Por eso `e2e/` cubre solo lo que, si se rompe, es grave y no lo detectarías con un test unitario mockeado: `health.spec.ts` (healthcheck que usa Railway para decidir si el deploy está vivo), `auth.spec.ts` (login real contra un usuario semilla, no un mock de auth), `epk-public.spec.ts` (la única ruta pública de la app — si se rompe, las salas no pueden ver el dossier y se pierden leads sin que nadie se entere).
-* **Journey test (`onboarding-journey.spec.ts`):** a diferencia de los smoke de arriba (una acción aislada cada uno), este encadena el flujo completo de alguien nuevo — registro → asistente de configuración inicial de 12 pasos (`OnboardingWizardModal`, se dispara solo en el primer login) → panel funcionando. Crea una banda real distinta en cada corrida (sufijo con timestamp) para no chocar con ejecuciones anteriores. Es el candidato natural a journey test en esta app porque es la única secuencia multi-paso que se puede probar sin credenciales de IA/email/Stripe — el otro journey obvio (lead → aprobación humana → borrador del Enviador, el subsistema más crítico del negocio, ver §3) queda pendiente hasta decidir cómo evitar gastar cuota real de Gemini en cada corrida de CI.
-* **Corre sin credenciales:** `npm run test:e2e` arranca el servidor de dev (`npm run dev`) sin `SUPABASE_URL`/`STRIPE_SECRET_KEY`/`GEMINI_API_KEY` configurados — la app arranca igual, y el login del test funciona contra los usuarios semilla de `src/db_seed.ts` (`diego` / `bakandeya2026`) porque la sincronización con Supabase en `/auth/login` está en `try/catch` y sigue con el estado en memoria si falla. No añadir aquí ningún test que dependa de Stripe/Gemini/SMTP reales sin antes confirmar que hay secretos de un proyecto de pruebas configurados en CI — si no, se queda en verde por accidente o roto por accidente, ninguna de las dos cosas vale.
-* **Selectores estables:** usar `getByPlaceholder`/`getByRole` sobre el texto visible, no clases CSS (cambian en cada rediseño). El selector del panel autenticado usa un `title` fijo del componente, no el nombre de la banda ni el logo.
-* **Login reutilizable — el disparador ya saltó (2026-09-19), y se resolvió con `storageState`, no con `test.extend`.** La regla anterior decía: "en cuanto un SEGUNDO archivo de `e2e/` necesite sesión iniciada, extraer un fixture de login reutilizable en ese mismo commit". Ese segundo archivo es `visual.spec.ts`. Se extrajo a `e2e/auth.setup.ts` + un proyecto `setup-visual` que guarda la sesión en `e2e/.auth/user.json` (ignorado por git), en vez de un fixture `test.extend`, **por una razón concreta y no por gusto**: el backend limita el login a 10 intentos/minuto (`loginRateLimiter`, §2.2) y un fixture que hace login por test agotaba la cuota a mitad de corrida — la suite fallaba con "Demasiadas peticiones" de forma aleatoria. Con sesión reutilizada hay **un solo login por corrida completa** y la suite bajó de 4,7 min a ~37 s. Si un tercer archivo necesita sesión, apúntalo al proyecto `visual` o crea uno análogo; no vuelvas a loguear por test.
-* **Setlist impreso (`setlist-impreso.spec.ts`, fixture `e2e/fixtures/setlistRuta66.ts`):** imprime un set realista de 25 temas (tono/BPM, título de 50 caracteres, notas por músico, la nota autogenerada "Versión Original", historial de edición pegado a una nota, interludios) en 4 configuraciones y comprueba INVARIANTES sobre el HTML resultante, no píxeles: ninguna hoja se pasa del alto útil, ningún título lleva "…", están todos los temas, ningún bloque queda colgando y no sale basura de datos. Los datos se inyectan interceptando `/api/songs` y `/api/setlists`. Validado rompiendo el código a propósito (3 mutaciones, las 3 fallan). Si añades una regla de maquetación nueva, añade su invariante aquí.
-* **Regresión visual (`visual.spec.ts`, proyecto `visual`):** 15 capturas de referencia — 9 pantallas en escritorio (1280×800) y 5 en móvil (390×844), más el login en ambos. `npm run test:visual` compara; `npm run test:visual:update` regenera. **Es la única red que detecta que un cambio de estilos haya desplazado, solapado o recortado media pantalla**, porque los 1000+ tests unitarios son de lógica y no miran `className`. Validada a propósito: con un desplazamiento inyectado de 7px fallan 9 de 15; sin él, 15/15 en tres corridas seguidas.
-  * **Determinismo, y por qué cada pieza está ahí:** reloj congelado (`page.clock.setFixedTime`) o el calendario cambia solo cada día; animaciones y transiciones apagadas; `document.fonts.ready` antes de disparar; y sobre todo **los tutoriales de módulo silenciados sembrando `bm_tutorial_seen_*` en `addInitScript`** (`useModuleTutorial` los abre la primera vez que entras en booking/calendario/epk/fans/repertorio/song_studio). Cerrarlos de forma reactiva NO vale: se montan con retraso variable y salían dibujados encima en una corrida sí y otra no. Si añades un módulo con tutorial, añádelo a `MODULOS_CON_TUTORIAL`.
-  * **Qué NO cubre, y por qué:** `finanzas` y `merchan` quedan fuera porque el usuario semilla está en plan `de_gira`, cuyo `allowedModules` (`planPermissions.ts`) no los incluye — el sidebar los filtra bien, no hay nada que capturar. Para cubrirlos hace falta un semilla en `cabeza_de_cartel`.
-  * **Cuándo regenerar:** solo cuando el cambio visual sea DELIBERADO y esté revisado. Regenerar "para que pase el CI" es exactamente el fallo que esta suite existe para detectar. Las referencias se sufijan por plataforma; si CI renderiza fuentes distinto, hay que regenerarlas allí una vez.
-* **En CI (`.github/workflows/ci.yml`):** paso E2E separado — verifica que el deploy no queda completamente roto, sin necesidad de verde en todos los specs. Salta tests que cambian de run a run (ej. timestamps de banda nueva) usando sufijos temporales.
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
 * **Qué es y qué NO es:** un code smell no es un fallo de comportamiento (eso lo pillan los tests) — es código que funciona pero está mal diseñado y va a morder más adelante: duplicación, funciones/componentes enormes, parámetros booleanos que cambian el comportamiento entero, abstracciones que nadie usa, código muerto. No hace falta montar tooling nuevo para esto: ya existen dos capas.
@@ -454,68 +373,14 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 ---
 
-## ⚖️ 8. Riesgos Legales Detectados — Pendientes de Mitigar (auditoría 2026-09-16)
+## ⚖️ 8. Riesgos Legales Detectados y Auditorías Técnicas
 
-> Esta sección existe para que estos flecos no se pierdan entre commits. `TERMS_OF_SERVICE.md` protege la propiedad intelectual del código frente a terceros, pero **no cubre nada de lo de abajo** — eso es sobre cómo la app trata datos y contenido de terceros, y es responsabilidad de quien opera el servicio, no del texto legal del repo. No bloquea el desarrollo del TFM; sí bloquea pasar a producción con usuarios reales sin resolver al menos los dos puntos 🔴.
+> Documento completo, marco normativo y seguimiento de mitigaciones en **[docs/referencia/RIESGOS_LEGALES.md](./docs/referencia/RIESGOS_LEGALES.md)**.
 
-1. 🔴 **Descarga de YouTube sin verificar titularidad (`server/routes/concert_to_album.ts`, `server/routes/reels.ts`, `server/utils/youtubeSource.ts`):**
-   * Usan `ytdl-core`/`yt-dlp` con banderas anti-bot y gestión de cookies explícitas para saltarse los bloqueos de YouTube (comentarios propios en el código lo documentan: "el que se comía los bloqueos antibot de YouTube").
-   * Incumplimiento de los ToS de YouTube por diseño, y si la URL introducida no es contenido propio del usuario, **infracción de copyright** al descargar/reprocesar/redistribuir el clip.
-   * Hoy no hay ninguna verificación de que el vídeo pertenezca al usuario (ni checkbox de titularidad, ni comprobación de canal propio).
-   * **Mitigación mínima antes de producción:** exigir confirmación explícita de titularidad del contenido antes de procesar, y valorar restringir a canal propio verificado.
+* **Bloqueantes antes de producción (🔴):**
+  1. *YouTube sin verificar titularidad:* `server/routes/concert_to_album.ts`, `server/routes/reels.ts` (posible infracción copyright con `ytdl-core`/`yt-dlp`).
+  2. *Credenciales email en texto plano:* `server/db/emailAccounts.ts` (cifrado en reposo obligatorio para `app_password` antes de abrir a bandas reales).
+* **Riesgos a mitigar (🟠):** Emails comerciales sin baja (LSSICE), scraping con User-Agent falseado, datos personales sin política B2B documentada, derecho al olvido (RGPD art. 17) y accesibilidad web en superficies públicas.
+* **Notas técnicas de auditorías:** Gmail OAuth (`state` con nonce), cola de agentes (`agent_jobs_queue`), guardado optimista (`src/utils/guardarConReversion.ts`), invitaciones de miembros y layout móvil.
 
-2. 🔴 **Credenciales de email en texto plano (`server/db/emailAccounts.ts`):**
-   * El `app_password` de Gmail de cada banda se guarda sin cifrar en Supabase. Solo se excluye de las respuestas HTTP (`const { app_password, ...safe } = account`), no se cifra en reposo.
-   * Da acceso de lectura/escritura completo al buzón conectado. Una fuga de esa tabla compromete el correo de todas las bandas conectadas — expuesto directamente al régimen sancionador del art. 32 RGPD (deber de seguridad en el tratamiento).
-   * **Mitigación mínima:** cifrar `app_password` en reposo (AES con clave en variable de entorno, como mínimo) antes de manejar cuentas de bandas reales, no solo de prueba.
-
-3. 🟠 **Emails comerciales automatizados sin mecanismo de baja (`server/routes/leads/pitch.ts`, `server/services/emailAgentClient.ts`, `server/services/agentEngine.ts`):**
-   * El pipeline de outreach a salas/festivales no incluye enlace ni gestión de baja (`unsubscribe`) visible en el código.
-   * La LSSICE (art. 21, España) exige opción de baja en toda comunicación comercial no solicitada; sanción de hasta 30.000€ por infracción grave.
-   * **Mitigación:** añadir enlace/mecanismo de baja y registrar el opt-out por lead antes de escalar el volumen de envíos.
-
-4. 🟠 **Scraping de redes sociales con user-agent falseado (`server/services/socialRadarService.ts`):**
-   * `scrapeChannelMetrics` suplanta un navegador real (`User-Agent` de Chrome hardcodeado) para leer Instagram/TikTok/YouTube.
-   * No es delito, pero incumple los ToS de esas plataformas → riesgo de bloqueo de IP/cuenta de la banda, no de sanción legal.
-   * **Mitigación:** documentar el riesgo de bloqueo al usuario, y preferir APIs oficiales donde existan en vez de scraping cuando el volumen crezca.
-
-5. 🟠 **Datos personales de contactos de salas/festivales sin base de legitimación documentada (`server/routes/leads/enrichment.ts`, `places.ts`):**
-   * Nombre, email y teléfono de personas de contacto de salas se scrapean, enriquecen y almacenan como parte del lead. Son datos personales de terceros (no solo datos de la entidad "sala"), tratados sin una base de legitimación RGPD explícita en el propio sistema (interés legítimo probablemente aplicable, pero no documentado).
-   * **Mitigación:** documentar la base de legitimación (interés legítimo B2B) en una política de privacidad real, y ofrecer vía de baja/oposición al tratamiento.
-
-6. 🟠 **Sin mecanismo de borrado/exportación de cuenta (RGPD art. 17/20, derecho al olvido y portabilidad):**
-   * Una banda que se da de baja no tiene hoy una vía en la app para pedir el borrado completo de sus datos (stems, credenciales de email conectadas, leads, contactos de terceros scrapeados) ni para exportarlos.
-   * No es solo texto legal: implica un flujo real (borrado en cascada en Supabase respetando `band_id`, revocar tokens OAuth de Gmail, purgar Storage) — no se resuelve solo documentándolo.
-   * **Mitigación mínima antes de producción:** al menos un proceso manual documentado (vía soporte) para atender una solicitud de borrado en el plazo legal; un flujo self-service en la app es deseable pero no bloqueante para el TFM.
-7. 🟠 **Accesibilidad web no evaluada (posible Real Decreto de transposición de la Directiva (UE) 2019/882, "European Accessibility Act"):**
-   * La superficie pública de la app (EPK, captación de fans, QR de conciertos) es contenido dirigido a consumidores finales, no solo a las bandas clientas — el tipo de superficie que la normativa de accesibilidad puede alcanzar según el servicio concreto que se preste.
-   * Hoy no hay auditoría de contraste, `aria-label`, navegación por teclado ni lectores de pantalla en ningún componente (§6 no lo menciona en ninguno de sus 9 puntos).
-   * **Aplicabilidad sin confirmar** — depende de si las pantallas públicas cuentan como "servicio de comercio electrónico"/"acceso a medios audiovisuales" a efectos de la norma; no asumir que aplica ni que no aplica sin revisarlo. **Mitigación mínima:** auditoría con Lighthouse/axe de `EPKManager`/`PublicFanCapture`/`FansLanding` antes de producción, y confirmar aplicabilidad real con la normativa vigente en el momento del lanzamiento.
-
-**Ya resuelto correctamente, no tocar sin razón:** `PublicFanCapture.tsx` sí implementa checkbox de consentimiento RGPD explícito (`consentimientoRGPD`) antes de capturar el email de un fan — usar ese componente como referencia de patrón cuando se añadan otros formularios de captación de datos de terceros.
-
-### Gmail OAuth, cookies y tamaño de cuerpo (auditoría B)
-- El `state` de Gmail OAuth lleva nonce firmado + cookie HttpOnly del navegador y se consume una sola vez (`validarYConsumirEstadoOAuth`). Al desconectar se revoca el token en Google y se invalida `accessTokenCache` (`invalidarAccessTokenGmail`). No sincronizar `registered_bands.email` si ya es de otra banda.
-- JSON: 1 MB para anónimos, 50 MB solo con sesión válida (`server/middleware/limiteCuerpo.ts`). Una ruta pública que necesite más debe justificarlo y validar su propio límite.
-- Cookie de sesión `httpOnly:false` es deliberado hasta migrar el cliente (BACKLOG.md); lleva `Secure` en producción.
-
-### Enviador y cola de agentes (auditoría B)
-- Un borrador de Gmail que desaparece (404) NO equivale a «enviado»: se confirma con `buscarMensajeEnviadoA` (Enviados, 30 días). Si no hay envío, el lead no pasa a `contactado`.
-- `agent_jobs_queue`: los trabajos `processing` con `locked_until` vencido más de 10 min se recuperan (`recuperarTrabajosColgados`); antes quedaban bloqueados para siempre y además impedían encolar otro igual (deduplicación).
-
-### Guardado optimista en cliente (auditoría B)
-- Un handler que actualiza la UI al instante y luego hace `fetch` NO puede ignorar la respuesta (`.catch(log)`): usa `guardarOReverter(peticion, revertir)` (`src/utils/guardarConReversion.ts`) para dejar la pantalla como estaba si el servidor rechaza o no hay red. Nunca muestres «guardado con éxito» antes de la respuesta.
-- Un `useEffect` que copia props del servidor a estado local debe comparar CONTENIDO (JSON), no identidad: `fetchState()` devuelve objetos nuevos en cada refresco y pisaría lo que la persona está editando.
-
-### Invitaciones de miembros (auditoría B)
-- `/auth/check-invitation` y `/auth/activate-member` exigen el token de un solo uso del correo (`server/utils/invitacion.ts`); solo se guarda su hash en `ui_preferences._invitacion` (persiste en Supabase, sobrevive a reinicios; `getSafeUsers` lo oculta). Reenviar = `POST /users` con el mismo usuario/correo (genera token nuevo e invalida el anterior).
-- La pantalla activa en producción es `SimplePromoLoginModal` (sin paso de activación); el enlace `?invitacion=…&email=…` lo entiende el `LoginModal` completo. El invitado que entre por la pantalla simple usa «recuperar contraseña» (código por correo).
-
-### Popovers y menús (revisión visual)
-- Un desplegable bajo un botón NO se escribe como `absolute top-full …`: dentro de una tarjeta con `overflow-hidden`, o con la ventana baja, se recorta o se sale de pantalla. Usa `ActionMenu` (lista de acciones) o `PopoverAncla` (`src/components/ui/PopoverAncla.tsx`, contenido libre): portal + posición fija calculada con `posicionMenu` y scroll interno.
-- No ocultes con `sm:hidden` una acción que en escritorio no tenga otro acceso (pasó con «Editar canción»).
-- Un `mb-310`/`p-410`/`…]10` en un `className` es un resto de un restyle automático (un `10` pegado): el margen real es de 1.240 px o la clase deja de aplicarse. Búscalos con `grep -rnE "(rounded|bg|border)-\[[^]]*\]\)?[0-9]{2}\b"`.
-
-### Botones flotantes y final del scroll (móvil)
-- El contenedor de cada vista (`App.tsx`, «Dynamic Views») es `flex-auto shrink-0 min-h-[500px]`: crece con su contenido. Con `h-full` el contenido desbordaba el contenedor y el `padding-bottom` de `<main>` no contaba: en móvil el final de cualquier lista quedaba tapado por la barra inferior y los botones flotantes. No volver a `h-full` ahí.
-- Pila de flotantes en móvil (de abajo arriba): barra de navegación (64 px) → «Agent IA» (`bottom-20`) → FAB de la vista (`bottom-36`). Un FAB nuevo se coloca encima de esa pila, nunca en las mismas coordenadas.
+👉 *Detalles normativos y mitigaciones completas en [docs/referencia/RIESGOS_LEGALES.md](./docs/referencia/RIESGOS_LEGALES.md).*
