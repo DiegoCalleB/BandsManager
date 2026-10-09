@@ -70,6 +70,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_hooks_useAudioPlayer|src/hooks/useAudioPlayer.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useCatalogFilters|src/hooks/useCatalogFilters.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useModuleTutorial|src/hooks/useModuleTutorial.ts]] *(Layer: #hook, Domain: #system)*
+- [[src_hooks_useRepertorioSetlistOperations|src/hooks/useRepertorioSetlistOperations.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useRepertorioSongAlbumHandlers|src/hooks/useRepertorioSongAlbumHandlers.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useRepertorioSync|src/hooks/useRepertorioSync.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useSetlistEnergyAnalysis|src/hooks/useSetlistEnergyAnalysis.ts]] *(Layer: #hook, Domain: #repertoire)*

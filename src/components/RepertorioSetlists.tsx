@@ -115,6 +115,7 @@ import { useSetlistEnergyAnalysis } from "../hooks/useSetlistEnergyAnalysis";
 import { useActiveSetlistMetrics } from "../hooks/useActiveSetlistMetrics";
 import { useRepertorioSync } from "../hooks/useRepertorioSync";
 import { useRepertorioSongAlbumHandlers } from "../hooks/useRepertorioSongAlbumHandlers";
+import { useRepertorioSetlistOperations } from "../hooks/useRepertorioSetlistOperations";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -925,10 +926,6 @@ export default function RepertorioSetlists({
     isOpen: boolean;
     albumName: string;
   } | null>(null);
-  const [setlistModalData, setSetlistModalData] = useState<{
-    isOpen: boolean;
-    setlistToEdit: Setlist | null;
-  } | null>(null);
   const [isAddSongsModalOpen, setIsAddSongsModalOpen] = useState(false);
   const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] =
     useState<string>("");
@@ -1129,301 +1126,33 @@ export default function RepertorioSetlists({
     toggleFavoriteSong(songId);
   };
 
-  // Setlist Operations
-  const handleCreateSetlist = () => {
-    setSetlistModalData({ isOpen: true, setlistToEdit: null });
-  };
-
-  // El modal de importación ya hizo el POST tanto de las canciones nuevas como del setlist —
-  // aquí solo se actualiza el estado local y se cambia a verlo, igual que tras crear/duplicar
-  // un setlist a mano.
-  const handleSetlistImported = (setlist: Setlist, newSongs: Song[]) => {
-    if (newSongs.length > 0) {
-      setSongs((prev) => {
-        const next = [...prev, ...newSongs];
-        saveSongsToLocalStorageSafely(next);
-        return next;
-      });
-    }
-    setSetlists((prev) => {
-      const next = [setlist, ...prev];
-      saveSetlistsToLocalStorageSafely(next);
-      return next;
-    });
-    setActiveSetlistId(setlist.id);
-  };
-
-  const handleSaveSetlistModal = (setlistData: {
-    id?: string;
-    nombre: string;
-    descripcion: string;
-    tipoFormato: Setlist["tipoFormato"];
-  }) => {
-    if (setlistData.id) {
-      setSetlists((prev) =>
-        prev.map((s) =>
-          s.id === setlistData.id
-            ? {
-                ...s,
-                nombre: setlistData.nombre,
-                descripcion: setlistData.descripcion,
-                tipoFormato: setlistData.tipoFormato,
-                fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-              }
-            : s,
-        ),
-      );
-      const existing = setlists.find((s) => s.id === setlistData.id);
-      if (existing) {
-        const payload = {
-          ...existing,
-          nombre: setlistData.nombre,
-          descripcion: setlistData.descripcion,
-          tipoFormato: setlistData.tipoFormato,
-        };
-        void guardarOReverter(
-          fetch(`/api/setlists/${setlistData.id}`, {
-            method: "PUT",
-            headers: getHeaders(),
-            body: JSON.stringify(payload),
-          }),
-          () => setSetlists((prev) => prev.map((s) => (s.id === existing.id ? existing : s))),
-        );
-      }
-    } else {
-      const newSetlist: Setlist = {
-        id: `setlist-${Date.now()}`,
-        nombre: setlistData.nombre,
-        descripcion: setlistData.descripcion || "Nuevo repertorio para directo",
-        tipoFormato: setlistData.tipoFormato || "festival",
-        duracionTotalEstimadaMinutos: 45,
-        fechaCreacion: new Date().toISOString().split("T")[0],
-        fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-        items: [],
-      };
-      setSetlists((prev) => [newSetlist, ...prev]);
-      setActiveSetlistId(newSetlist.id);
-
-      void guardarOReverter(
-        fetch("/api/setlists", {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify(newSetlist),
-        }),
-        () => {
-          setSetlists((prev) => prev.filter((s) => s.id !== newSetlist.id));
-          setActiveSetlistId((actual) => (actual === newSetlist.id ? "" : actual));
-        },
-      );
-    }
-  };
-
-  const handleOldSetlist = () => {
-    const name = prompt(
-      "Nombre para el nuevo repertorio:",
-      "Festival Verano 2026",
-    );
-    if (!name || !name.trim()) return;
-
-    const newSetlist: Setlist = {
-      id: `setlist-${Date.now()}`,
-      nombre: name.trim(),
-      descripcion: "Nuevo repertorio para directo",
-      tipoFormato: "festival",
-      duracionTotalEstimadaMinutos: 45,
-      fechaCreacion: new Date().toISOString().split("T")[0],
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: songs
-        .filter((s) => s.favoritoGeneral)
-        .map((s, idx) => ({
-          id: `it-${Date.now()}-${idx}`,
-          songId: s.id,
-          tipoItem: "cancion",
-        })),
-    };
-
-    setSetlists((prev) => [newSetlist, ...prev]);
-    setActiveSetlistId(newSetlist.id);
-
-    void guardarOReverter(
-      fetch("/api/setlists", {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(newSetlist),
-      }),
-      () => {
-          setSetlists((prev) => prev.filter((s) => s.id !== newSetlist.id));
-          setActiveSetlistId((actual) => (actual === newSetlist.id ? "" : actual));
-        },
-    );
-  };
-
-  const handleDuplicateSetlist = (
-    st: Setlist,
-    nameSuffix: string = "(Copia)",
-  ): Setlist => {
-    const duplicated: Setlist = {
-      ...st,
-      id: `setlist-${Date.now()}`,
-      nombre: `${st.nombre} ${nameSuffix}`,
-      fechaCreacion: new Date().toISOString().split("T")[0],
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: st.items.map((it) => ({
-        ...it,
-        id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-      })),
-    };
-    setSetlists((prev) => [duplicated, ...prev]);
-    setActiveSetlistId(duplicated.id);
-
-    void guardarOReverter(
-      fetch("/api/setlists", {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify(duplicated),
-      }),
-      () => {
-          setSetlists((prev) => prev.filter((s) => s.id !== duplicated.id));
-          setActiveSetlistId((actual) => (actual === duplicated.id ? "" : actual));
-        },
-    );
-
-    return duplicated;
-  };
-
-  const handleDeleteSetlist = (stId: string) => {
-    const st = setlists.find((s) => s.id === stId);
-    setConfirmDeleteModal({
-      title: "Eliminar Repertorio",
-      description: `¿Seguro que deseas eliminar el repertorio "${st?.nombre || "este repertorio"}"?`,
-      onConfirm: () => {
-        const remaining = setlists.filter((s) => s.id !== stId);
-        setSetlists(remaining);
-        if (activeSetlistId === stId) {
-          setActiveSetlistId(remaining[0]?.id || "");
-        }
-        // Si se borra justo la copia de trabajo de"Setlist Perfecto" (o su original), esa referencia
-        // ya no vale — la próxima vez que se pida el plan, se creará una copia nueva desde cero.
-        clearDraftIfMatches(stId);
-
-        void guardarOReverter(
-          fetch(`/api/setlists/${stId}`, {
-            method: "DELETE",
-            headers: getHeaders(),
-          }),
-          () => {
-            if (st) {
-              setSetlists((prev) =>
-                prev.some((s) => s.id === st.id) ? prev : [st, ...prev],
-              );
-            }
-          },
-        );
-      },
-    });
-  };
-
-  const handleAddItemToSetlist = (
-    songId?: string,
-    tipoItem: any = "cancion",
-    tituloCustom?: string,
-    duracionEstimadaMinutos?: number,
-    duracionEstimadaSegundos?: number,
-    notaTema?: string,
-    insertAfterId?: string | null,
-  ) => {
-    if (!activeSetlist) return;
-
-    // Map old tipoItem values to new (tipoItem, bloqueSubtipo) structure
-    let actualTipoItem: "cancion" | "bloque" = "cancion";
-    let bloqueSubtipo: SetlistItem["bloqueSubtipo"] = undefined;
-
-    if (tipoItem !== "cancion") {
-      actualTipoItem = "bloque";
-      bloqueSubtipo = tipoItem; // Map directly:'presentacion','bis','header', etc.
-    }
-
-    const newItem: SetlistItem = {
-      id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      tipoItem: actualTipoItem,
-      bloqueSubtipo,
-      songId,
-      tituloCustom,
-      duracionEstimadaMinutos,
-      duracionEstimadaSegundos,
-      notaTema,
-    };
-
-    if (!tituloCustom) {
-      const subtype = bloqueSubtipo || tipoItem;
-      if (subtype === "header" || subtype === "bloque_header") {
-        newItem.tituloCustom = "Nuevo bloque del show";
-      } else if (subtype === "presentacion") {
-        newItem.tituloCustom = "Presentación Banda & Saludo";
-        newItem.duracionEstimadaMinutos = 2;
-        newItem.duracionEstimadaSegundos = 120;
-      } else if (subtype === "beatbox") {
-        newItem.tituloCustom = "Solo de Batería / Percusión";
-        newItem.duracionEstimadaMinutos = 2;
-        newItem.duracionEstimadaSegundos = 120;
-      } else if (subtype === "intro_tema") {
-        newItem.tituloCustom = "Intro / Historia del Tema";
-        newItem.duracionEstimadaMinutos = 1;
-        newItem.duracionEstimadaSegundos = 60;
-      } else if (subtype === "solo_performance") {
-        newItem.tituloCustom = "Solo Instrumental / Jam";
-        newItem.duracionEstimadaMinutos = 2;
-        newItem.duracionEstimadaSegundos = 120;
-      } else if (subtype === "cambio_instrumento") {
-        newItem.tituloCustom = "Cambio Instrumento & Afinación";
-        newItem.duracionEstimadaMinutos = 1;
-        newItem.duracionEstimadaSegundos = 60;
-      } else if (subtype === "chapa") {
-        newItem.tituloCustom = "Chapa / Discurso con Público";
-        newItem.duracionEstimadaMinutos = 2;
-        newItem.duracionEstimadaSegundos = 120;
-      } else if (subtype === "descanso") {
-        newItem.tituloCustom = "Pausa / Intermedio / Agua";
-        newItem.duracionEstimadaMinutos = 2;
-        newItem.duracionEstimadaSegundos = 120;
-      } else if (subtype === "bis") {
-        newItem.tituloCustom = "💣 BIS / PARTE FINAL DEL SHOW";
-        newItem.duracionEstimadaMinutos = 1;
-        newItem.duracionEstimadaSegundos = 60;
-      }
-    }
-
-    const targetRefId =
-      insertAfterId !== undefined ? insertAfterId : selectedSetlistItemId;
-    let newItems: SetlistItem[];
-    if (targetRefId) {
-      const idx = activeSetlist.items.findIndex((it) => it.id === targetRefId);
-      if (idx !== -1) {
-        newItems = [...activeSetlist.items];
-        newItems.splice(idx + 1, 0, newItem);
-      } else {
-        newItems = [...activeSetlist.items, newItem];
-      }
-    } else {
-      newItems = [...activeSetlist.items, newItem];
-    }
-
-    const updatedSetlist: Setlist = {
-      ...activeSetlist,
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: newItems,
-    };
-
-    setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st,
-      );
-      saveSetlistsToLocalStorageSafely(next);
-      return next;
-    });
-    syncSetlistToBackend(updatedSetlist);
-    setSelectedSetlistItemId(newItem.id);
-  };
+  // Hook que encapsula operaciones de gestión de Setlists (crear, duplicar, importar, borrar, añadir items)
+  const {
+    setlistModalData,
+    setSetlistModalData,
+    handleCreateSetlist,
+    handleSetlistImported,
+    handleSaveSetlistModal,
+    handleDuplicateSetlist,
+    handleDeleteSetlist,
+    handleAddItemToSetlist,
+    handleRemoveSetlistItem,
+    handleUpdateItemNote,
+  } = useRepertorioSetlistOperations({
+    activeSetlist,
+    songs,
+    setlists,
+    setSetlists,
+    setActiveSetlistId,
+    getHeaders,
+    syncSetlistToBackend,
+    saveSetlistsToLocalStorageSafely,
+    saveSongsToLocalStorageSafely,
+    guardarOReverter,
+    setConfirmDeleteModal,
+    selectedSetlistItemId,
+    setSelectedSetlistItemId,
+  });
 
   // Hook que encapsula optimización acústica de transiciones, sugerencia de chapas y Setlist Perfecto
   const {
@@ -1593,35 +1322,6 @@ export default function RepertorioSetlists({
     setShowShowItemModal(false);
     setEditingShowItem(null);
     setShowItemAudioUrl("");
-  };
-
-  const handleRemoveSetlistItem = (itemId: string) => {
-    if (!activeSetlist) return;
-    const updatedSetlist: Setlist = {
-      ...activeSetlist,
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: activeSetlist.items.filter((it) => it.id !== itemId),
-    };
-
-    setSetlists((prev) =>
-      prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)),
-    );
-    syncSetlistToBackend(updatedSetlist);
-  };
-
-  const handleUpdateItemNote = (itemId: string, note: string) => {
-    if (!activeSetlist) return;
-    const updatedSetlist: Setlist = {
-      ...activeSetlist,
-      items: activeSetlist.items.map((it) =>
-        it.id === itemId ? { ...it, notaTema: note } : it,
-      ),
-    };
-
-    setSetlists((prev) =>
-      prev.map((st) => (st.id === activeSetlist.id ? updatedSetlist : st)),
-    );
-    syncSetlistToBackend(updatedSetlist);
   };
 
   // Assign setlist to concert or rehearsal
