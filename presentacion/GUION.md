@@ -16,9 +16,10 @@ Pregunta que sostiene toda la presentación: **¿qué ha construido Iago y llega
    - Cap. 1 Conseguir el bolo: CRM, correos, Date Swap (aparece el cantante de Master of Prompts) → *Tres semanas después: la sala contestó* (el Excel en verde; el cantante ya es manager).
    - Cap. 2 Antes del concierto: hoja por músico, acordes, Iris, calendario → *El primer ensayo que sirvió para algo*.
    - Cap. 3 Que te conozcan: dossier, QR de fans, reels.
-   - Cap. 4 Después del concierto: las cuentas → *Lo han visto todo* (sábado, 13:00).
+   - Cap. 4 Después del concierto: las cuentas → *Lo han visto todo* (sábado, 13:00) → *Esto lo necesitan todos* (13:05): «¿Cómo lo hacemos?».
+   - Cap. 5 Cómo lo hacemos: a quién se lo vendemos, cómo ganamos dinero y márgenes. Es la respuesta de Iago a su pregunta.
 4. **Acto III · Convergencia.** El festival a las 02:14 (el plano del principio), Rock FM, el chat espejo y el giro «El bajista soy yo».
-5. **Para el tribunal.** El negocio y la técnica. Cierra con «Ensayamos el sábado», una puerta abierta.
+5. **Para el tribunal.** La técnica (arquitectura, método, seguridad, calidad) y los siguientes pasos. Cierra con «Ensayamos el sábado», una puerta abierta.
 
 ## Reglas
 - Una idea por diapositiva; las pantallas de producto no explican, enseñan.
