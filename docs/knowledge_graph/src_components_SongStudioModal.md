@@ -18,8 +18,8 @@ Punto de entrada de Song Studio. Solo cablea: el controlador compone el estado y
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioLayout|src/components/song_studio/SongStudioLayout.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioProvider|src/components/song_studio/SongStudioProvider.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_hooks_useSongStudioController|src/components/song_studio/hooks/useSongStudioController.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_ideaTracks|src/components/song_studio/ideaTracks.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_moisesStems|src/components/song_studio/moisesStems.ts]] *(Layer: #frontend, Domain: #repertoire)*
@@ -31,6 +31,11 @@ Punto de entrada de Song Studio. Solo cablea: el controlador compone el estado y
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
 
 ---
 

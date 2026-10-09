@@ -1,23 +1,18 @@
+import { getErrorMessage } from "../../../utils/errorMessage";
+import { getAudioContextClass } from "../audioContext";
+import type { CleanRecordingPipeline } from "./useTrackAudioDsp";
 /**
  * Alta de pistas nuevas en una idea: grabación overdub con cuenta atrás, subida de archivo, limpieza de audio y autosincronía de latencia
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { SongAudioIdea, AudioTrack, Song } from "../../../types";
-import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, autoDetectAudioLatencyOffset, trimAudioBlobLatency, cleanAudioBlobOffline } from "../../../utils/audioLatency";
+import { Dispatch, RefObject, SetStateAction } from "react";
+import { AudioTrack, Song, SongAudioIdea } from "../../../types";
+import { autoDetectAudioLatencyOffset, cleanAudioBlobOffline, createCleanAudioRecordingPipeline, getLowLatencyAudioStream, trimAudioBlobLatency } from "../../../utils/audioLatency";
+import { getAudioBlobFromUrl, resolveAudioUrl, uploadFileToServer } from "../../../utils/audioStorage";
+import { pistasBaseDeIdea } from "../../../utils/ideaDeAtril";
+import { cancionConPistas, pistasDeCancion } from "../../../utils/irisTracks";
 import { getIdeaTracks } from "../ideaTracks";
 import { SILENT_AUDIO_URI } from "../silentAudio";
-import { pistasBaseDeIdea } from "../../../utils/ideaDeAtril";
-import { pistasDeCancion, cancionConPistas } from "../../../utils/irisTracks";
-import { resolveAudioUrl, uploadFileToServer, getAudioBlobFromUrl } from "../../../utils/audioStorage";
-import { RefObject, Dispatch, SetStateAction } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface TrackOverdubParams {
@@ -29,7 +24,7 @@ export interface TrackOverdubParams {
   useNoiseSuppression: boolean;
   setActiveRecordingStream: Dispatch<SetStateAction<MediaStream>>;
   useCleanDSPFilter: boolean;
-  cleanPipelineRef: RefObject<any>;
+  cleanPipelineRef: RefObject<CleanRecordingPipeline | null>;
   trackMediaRecorderRef: RefObject<MediaRecorder>;
   trackAudioChunksRef: RefObject<Blob[]>;
   setCurrentTimeMap: Dispatch<SetStateAction<Record<string, number>>>;
@@ -40,7 +35,7 @@ export interface TrackOverdubParams {
   setIsRecordingTrack: Dispatch<SetStateAction<boolean>>;
   setRecordingTrackIdeaId: Dispatch<SetStateAction<string>>;
   setRecordingTrackTime: Dispatch<SetStateAction<number>>;
-  trackRecordingTimerRef: RefObject<any>;
+  trackRecordingTimerRef: RefObject<ReturnType<typeof setInterval> | null>;
   playingIdeaIdRef: RefObject<string>;
   setPlayingIdeaId: Dispatch<SetStateAction<string>>;
   runMasterSyncLoop: (idea: SongAudioIdea) => void;
@@ -81,7 +76,7 @@ export function useTrackOverdub({ useCountInMetronome, triggerCountInBeeps, song
       // Resume studio audio context if suspended
       try {
         if (!studioAudioCtxRef.current) {
-          const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+          const AudioCtxClass = getAudioContextClass();
           if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
         }
         if (studioAudioCtxRef.current && studioAudioCtxRef.current.state === 'suspended') {
@@ -121,8 +116,8 @@ export function useTrackOverdub({ useCountInMetronome, triggerCountInBeeps, song
       };
 
       const tracks = getIdeaTracks(idea);
-      const hasSolo = tracks.some((t: any) => t.solo);
-      const activeBackingTracks = tracks.filter((t) => !t.muted && (!hasSolo || (t as any).solo));
+      const hasSolo = tracks.some((t) => t.solo);
+      const activeBackingTracks = tracks.filter((t) => !t.muted && (!hasSolo || t.solo));
 
       // 2. Pre-align backing tracks at position 0
       setCurrentTimeMap((prev) => ({ ...prev, [idea.id]: 0 }));
@@ -152,9 +147,9 @@ export function useTrackOverdub({ useCountInMetronome, triggerCountInBeeps, song
           }
           try {
             el.currentTime = 0;
-          } catch {}
+          } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
           el.playbackRate = 1.0;
-          const isMuted = tr.muted || (hasSolo && !(tr as any).solo);
+          const isMuted = tr.muted || (hasSolo && !tr.solo);
           el.volume = applyMasterToElementVolume(isMuted ? 0 : (tr.volumen ?? 1));
         }
       });
@@ -180,11 +175,11 @@ export function useTrackOverdub({ useCountInMetronome, triggerCountInBeeps, song
           if (el.readyState === 0) {
             try {
               el.load();
-            } catch {}
+            } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
           }
           try {
             el.currentTime = 0;
-          } catch {}
+          } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
           return el.play().catch((e) => console.warn('Backing track playback notice:', e?.message || e));
         }
         return Promise.resolve();
@@ -302,19 +297,19 @@ export function useTrackOverdub({ useCountInMetronome, triggerCountInBeeps, song
           setIsUploading(false);
         }
       };
-    } catch (err: any) {
+    } catch (err) {
       setIsRecordingTrack(false);
       setRecordingTrackIdeaId(null);
       if (trackRecordingTimerRef.current) {
         clearInterval(trackRecordingTimerRef.current);
       }
-      console.warn('Microphone access for overdub not available:', err?.message || err);
-      alert('No se pudo acceder al micrófono para grabar la pista (' + (err?.message || 'comprueba los permisos del navegador') + ').');
+      console.warn('Microphone access for overdub not available:', getErrorMessage(err, 'error desconocido'));
+      alert('No se pudo acceder al micrófono para grabar la pista (' + getErrorMessage(err, 'comprueba los permisos del navegador') + ').');
     }
   };
 
   const stopRecordingTrackOverdub = () => {
-    basePlayRefs.current.forEach((el) => { try { el.pause(); } catch {} });
+    basePlayRefs.current.forEach((el) => { try { el.pause(); } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ } });
     basePlayRefs.current = [];
     if (trackMediaRecorderRef.current && trackMediaRecorderRef.current.state !== 'inactive') {
       trackMediaRecorderRef.current.stop();

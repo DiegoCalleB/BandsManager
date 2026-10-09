@@ -18,9 +18,8 @@ Mini-transporte fijo: reproducir/pausar la idea activa sin volver a la cabecera
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

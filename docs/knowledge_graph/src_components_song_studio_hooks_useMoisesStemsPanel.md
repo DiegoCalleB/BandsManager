@@ -19,6 +19,7 @@ Estado del panel de Iris/Moisés: motor, preset, stems elegidos, pestaña y aper
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_song_studio_moisesStems|src/components/song_studio/moisesStems.ts]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_songAudioSource|src/components/song_studio/songAudioSource.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 

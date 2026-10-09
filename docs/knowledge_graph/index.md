@@ -73,19 +73,19 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-874 nodos: 17 agent · 40 db · 12 external · 14 feature · 373 frontend · 40 hook · 42 route · 61 schema · 10 security · 265 service.
+881 nodos: 17 agent · 40 db · 12 external · 14 feature · 380 frontend · 40 hook · 42 route · 61 schema · 10 security · 265 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 347 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 220 ficheros dependen de él
+- [[src_types|src/types.ts]] — 346 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 221 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 135 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 76 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 64 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 63 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 46 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 45 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
@@ -94,9 +94,9 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 27 ficheros dependen de él
 - [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 24 ficheros dependen de él
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] — 23 ficheros dependen de él
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] — 22 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 21 ficheros dependen de él
-- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 19 ficheros dependen de él
 
 ---
 

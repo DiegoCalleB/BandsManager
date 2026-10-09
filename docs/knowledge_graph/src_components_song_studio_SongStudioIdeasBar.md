@@ -18,7 +18,7 @@ Barra del bloque de ideas con el botón de grabar o subir una idea
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 
 ---
 

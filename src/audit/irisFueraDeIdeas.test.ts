@@ -28,11 +28,13 @@ describe('El feed de ideas solo lleva tomas', () => {
   });
 
   it('el panel de Iris no lleva cabecera de idea (título, autor, borrar, + Pista, + Base tema)', () => {
-    expect(src).toContain('const modoIris = !!opts?.iris;');
-    expect(src).toContain("{modoIris ? 'Pistas de la canción' : idea.titulo}");
-    expect(src).toContain('{!modoIris && (<div className="flex items-center gap-2 flex-wrap justify-end">');
-    expect(src).toContain('{!modoIris && selectedSongBaseUrl');
-    expect(src).toContain('{!modoIris && (\n                            <IconButton\n                              label="Eliminar idea"');
+    // El JSX se movió de archivo y de indentación: se compara sin depender de los espacios.
+    const compacto = src.replace(/\s+/g, ' ');
+    expect(compacto).toContain('const modoIris = !!opts?.iris;');
+    expect(compacto).toContain("{modoIris ? 'Pistas de la canción' : idea.titulo}");
+    expect(compacto).toContain('{!modoIris && (<div className="flex items-center gap-2 flex-wrap justify-end">');
+    expect(compacto).toContain('{!modoIris && selectedSongBaseUrl');
+    expect(compacto).toContain('{!modoIris && ( <IconButton label="Eliminar idea"');
   });
 });
 

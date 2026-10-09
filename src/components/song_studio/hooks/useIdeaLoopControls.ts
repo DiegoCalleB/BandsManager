@@ -2,16 +2,8 @@
  * Bucle y puntos de entrada/salida (cue in/out) por idea
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { SongAudioIdea } from "../../../types";
 import { Dispatch, SetStateAction } from "react";
+import { SongAudioIdea } from "../../../types";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface IdeaLoopControlsParams {
@@ -66,14 +58,6 @@ export function useIdeaLoopControls({ getValidIdeaDuration, setLoopConfigMap, cu
         [idea.id]: { enabled: true, start: newStart, end: curTime },
       };
     });
-  };
-
-  const resetIdeaLoopBounds = (idea: SongAudioIdea) => {
-    const maxDur = getValidIdeaDuration(idea.id);
-    setLoopConfigMap((prev) => ({
-      ...prev,
-      [idea.id]: { enabled: true, start: 0, end: maxDur },
-    }));
   };
 
   return { toggleIdeaLoop, setIdeaCueIn, setIdeaCueOut };

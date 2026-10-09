@@ -1,8 +1,8 @@
 /**
- * Contexto de Song Studio: reparte el estado y las acciones del controlador a las vistas del estudio.
+ * Contexto de Song Studio (solo tipos, contexto y hook; el proveedor vive en SongStudioProvider.tsx): reparte el estado y las acciones del controlador a las vistas del estudio.
  * Existe para que cada vista lea solo lo que usa, en vez de recibir decenas de props encadenadas.
  */
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext } from 'react';
 import type { Song, ThemeColors, User } from '../../types';
 import type { useSongStudioController } from './hooks/useSongStudioController';
 
@@ -22,15 +22,7 @@ export interface SongStudioHostProps {
 /** Valor del contexto: controlador + props del anfitrión. */
 export type SongStudioContextValue = SongStudioController & SongStudioHostProps;
 
-const SongStudioContext = createContext<SongStudioContextValue | null>(null);
-
-/**
- * Proveedor del contexto de Song Studio.
- * @param props.value Valor completo (controlador + props del modal).
- */
-export function SongStudioProvider({ value, children }: { value: SongStudioContextValue; children: ReactNode }) {
-  return <SongStudioContext.Provider value={value}>{children}</SongStudioContext.Provider>;
-}
+export const SongStudioContext = createContext<SongStudioContextValue | null>(null);
 
 /**
  * Lee el contexto de Song Studio.

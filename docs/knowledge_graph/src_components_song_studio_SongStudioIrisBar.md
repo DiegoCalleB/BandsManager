@@ -18,8 +18,7 @@ Barra de Iris a nivel de canción: resumen de pistas y entrada a la hoja de Iris
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 
 ---
 

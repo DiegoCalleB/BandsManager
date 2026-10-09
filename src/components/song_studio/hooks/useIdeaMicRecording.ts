@@ -1,18 +1,12 @@
+import { getErrorMessage } from "../../../utils/errorMessage";
 /**
  * Grabación de una idea nueva con el micrófono (inicio, parada y temporizador)
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { getLowLatencyAudioStream, createCleanAudioRecordingPipeline, cleanAudioBlobOffline } from "../../../utils/audioLatency";
+import { Dispatch, RefObject, SetStateAction } from "react";
+import { cleanAudioBlobOffline, createCleanAudioRecordingPipeline, getLowLatencyAudioStream } from "../../../utils/audioLatency";
 import { uploadFileToServer } from "../../../utils/audioStorage";
-import { Dispatch, SetStateAction, RefObject } from "react";
+import type { CleanRecordingPipeline } from "./useTrackAudioDsp";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface IdeaMicRecordingParams {
@@ -28,7 +22,7 @@ export interface IdeaMicRecordingParams {
   setRecordedAudioUrl: Dispatch<SetStateAction<string>>;
   setIsRecording: Dispatch<SetStateAction<boolean>>;
   setRecordingTime: Dispatch<SetStateAction<number>>;
-  recordingTimerRef: RefObject<any>;
+  recordingTimerRef: RefObject<ReturnType<typeof setInterval> | null>;
 }
 
 /**
@@ -48,7 +42,7 @@ export function useIdeaMicRecording({ useEchoCancellation, useNoiseSuppression, 
       setActiveRecordingStream(rawStream);
 
       let streamToRecord = rawStream;
-      let cleanPipeline: any = null;
+      let cleanPipeline: CleanRecordingPipeline | null = null;
       if (useCleanDSPFilter) {
         cleanPipeline = createCleanAudioRecordingPipeline(rawStream, studioAudioCtxRef.current);
         streamToRecord = cleanPipeline.cleanStream;
@@ -59,7 +53,7 @@ export function useIdeaMicRecording({ useEchoCancellation, useNoiseSuppression, 
       audioChunksRef.current = [];
 
       let resolveFn: (url: string) => void = () => {};
-      let rejectFn: (err: any) => void = () => {};
+      let rejectFn: (err: unknown) => void = () => {};
       recordingPromiseRef.current = new Promise<string>((resolve, reject) => {
         resolveFn = resolve;
         rejectFn = reject;
@@ -104,9 +98,9 @@ export function useIdeaMicRecording({ useEchoCancellation, useNoiseSuppression, 
       recordingTimerRef.current = setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
-    } catch (err: any) {
-      console.warn('Microphone capture warning:', err?.message || err);
-      alert('No se pudo acceder al micrófono (' + (err?.message || 'comprueba los permisos del navegador') + ').');
+    } catch (err) {
+      console.warn('Microphone capture warning:', getErrorMessage(err, 'error desconocido'));
+      alert('No se pudo acceder al micrófono (' + getErrorMessage(err, 'comprueba los permisos del navegador') + ').');
     }
   };
 

@@ -2,27 +2,13 @@
  * Pantalla completa de Song Studio: alternar, entrar/salir con la Fullscreen API y sincronizar el estado al salir con Escape
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useState, useEffect } from "react";
-
-/** Dependencias que el componente contenedor inyecta al hook. */
-export interface StudioFullScreenParams {
-
-}
+import { useEffect, useState } from "react";
 
 /**
  * Pantalla completa de Song Studio: alternar, entrar/salir con la Fullscreen API y sincronizar el estado al salir con Escape
- * @param params Estado y callbacks del contenedor ({@link StudioFullScreenParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useStudioFullScreen({  }: StudioFullScreenParams) {
+export function useStudioFullScreen() {
   // Studio Fullscreen Mode State & Handler
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 

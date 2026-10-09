@@ -1,9 +1,9 @@
+import { Info, Sliders, Sparkles, X } from 'lucide-react';
 import React from 'react';
-import { Sliders, X, Sparkles, Info } from 'lucide-react';
-import { SongAudioIdea, Song } from '../../types';
-import { MoisesSeparationPreset, MOISES_PRESETS_CONFIG } from './moisesStems';
+import { Song, SongAudioIdea } from '../../types';
 import { Button, IconButton } from '../ui';
 import { IrisPrism } from './IrisPrism';
+import { MOISES_PRESETS_CONFIG, MoisesSeparationPreset } from './moisesStems';
 
 interface SongStudioMoisesStemsModalProps {
   showMoisesStemsModal: SongAudioIdea | null;

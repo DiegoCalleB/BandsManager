@@ -2,17 +2,9 @@
  * Atajos de teclado estilo Cubase de Song Studio (espacio, bucle, cue, mute/solo, grabar)
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useEffect, RefObject, Dispatch, SetStateAction } from "react";
-import { getIdeaTracks } from "../ideaTracks";
+import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
 import { Song, SongAudioIdea } from "../../../types";
+import { getIdeaTracks } from "../ideaTracks";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface StudioKeyboardShortcutsParams {

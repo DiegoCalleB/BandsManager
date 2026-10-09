@@ -1,19 +1,12 @@
+import { getAudioContextClass } from "../audioContext";
 /**
  * Motor de reproducción multipista de Song Studio: sincronía maestra, play/pausa/stop/seek y silencio de otros audios al abrir
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useRef, useEffect, RefObject, Dispatch, SetStateAction } from "react";
-import { SongAudioIdea, AudioTrack, Song } from "../../../types";
-import { SILENT_AUDIO_URI } from "../silentAudio";
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef } from "react";
+import { AudioTrack, Song, SongAudioIdea } from "../../../types";
 import { resolveAudioUrl } from "../../../utils/audioStorage";
+import { SILENT_AUDIO_URI } from "../silentAudio";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface StudioPlaybackEngineParams {
@@ -59,8 +52,6 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
 
     const tracks = pistasDeReproduccion(idea);
     if (tracks.length === 0) return;
-
-    const hasSolo = tracks.some((t: any) => t.solo);
 
     // 1. Determine maximum idea duration across all loaded audio tracks
     let maxIdeaDuration = 0;
@@ -167,7 +158,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
             if (Math.abs(currentGain - targetGain) > 0.005) {
               dsp.gainNode.gain.setTargetAtTime(targetGain, studioAudioCtxRef.current.currentTime, 0.015);
             }
-          } catch (_) {}
+          } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
         }
 
         const trackOffsetSec = (tr.desfaseMs || 0) / 1000;
@@ -179,7 +170,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
           if (Math.abs(slaveEl.currentTime) > 0.01) {
             try {
               slaveEl.currentTime = 0;
-            } catch {}
+            } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
           }
           return;
         }
@@ -230,7 +221,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
             lastDriftFixMapRef.current[tr.id] = ahora;
             try {
               slaveEl.currentTime = Math.max(0, targetSlaveTime);
-            } catch {}
+            } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
           }
         }
       });
@@ -274,6 +265,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
         el.playbackRate = 1.0;
       }
     });
+    // eslint-disable-next-line react-hooks/immutability -- ref/elemento <audio> compartido entre hooks: mutación imperativa intencionada
     pendingPlayPromiseRefs.current = {};
     playingIdeaIdRef.current = null;
     setPlayingIdeaId(null);
@@ -296,11 +288,12 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
         const targetTrackTime = Math.max(0, startPos + (tr.desfaseMs || 0) / 1000);
         try {
           el.currentTime = targetTrackTime;
-        } catch {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
         el.playbackRate = 1.0;
       }
     });
 
+    // eslint-disable-next-line react-hooks/immutability -- ref/elemento <audio> compartido entre hooks: mutación imperativa intencionada
     pendingPlayPromiseRefs.current = {};
     setCurrentTimeMap((prev) => ({ ...prev, [idea.id]: startPos }));
     playingIdeaIdRef.current = null;
@@ -312,7 +305,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
     // 1. Immediately unlock and resume AudioContext in the user click callstack
     try {
       if (!studioAudioCtxRef.current) {
-        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioCtx = getAudioContextClass();
         if (AudioCtx) studioAudioCtxRef.current = new AudioCtx();
       }
       if (studioAudioCtxRef.current && studioAudioCtxRef.current.state === 'suspended') {
@@ -360,6 +353,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
       let el = trackAudioRefs.current[tr.id];
       if (!el) {
         el = new Audio(SILENT_AUDIO_URI);
+        // eslint-disable-next-line react-hooks/immutability -- ref/elemento <audio> compartido entre hooks: mutación imperativa intencionada
         trackAudioRefs.current[tr.id] = el;
       }
 
@@ -371,7 +365,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
             resolvedUrl = res;
             setResolvedAudioUrls((prev) => ({ ...prev, [tr.id]: res }));
           }
-        } catch (_) {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       }
 
       if (
@@ -385,7 +379,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
       if (el.readyState === 0 && el.src && !el.src.startsWith('indexeddb:')) {
         try {
           el.load();
-        } catch {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       }
 
       const trackDur = getSafeTrackDuration(el);
@@ -395,13 +389,13 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
       if (trackDur > 0 && startPos >= trackDur) {
         try {
           el.currentTime = trackDur;
-        } catch {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
         el.pause();
       } else {
         if (Math.abs((el.currentTime || 0) - targetTrackTime) > 0.03) {
           try {
             el.currentTime = targetTrackTime;
-          } catch {}
+          } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
         }
         el.playbackRate = 1.0;
         el.muted = false;
@@ -414,6 +408,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
           if (!pendingPlayPromiseRefs.current[tr.id]) {
             const p = el.play();
             if (p !== undefined) {
+              // eslint-disable-next-line react-hooks/immutability -- ref/elemento <audio> compartido entre hooks: mutación imperativa intencionada
               pendingPlayPromiseRefs.current[tr.id] = p;
               p.then(() => {
                 delete pendingPlayPromiseRefs.current[tr.id];
@@ -483,7 +478,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
     allAudioElements.forEach((el) => {
       try {
         el.pause();
-      } catch {}
+      } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
     });
 
     return () => {
@@ -496,7 +491,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
           try {
             el.pause();
             el.currentTime = 0;
-          } catch {}
+          } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
         }
       });
       playingIdeaIdRef.current = null;

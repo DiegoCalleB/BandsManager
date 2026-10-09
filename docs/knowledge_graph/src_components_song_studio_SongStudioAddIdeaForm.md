@@ -19,7 +19,7 @@ Formulario de nueva idea de audio: fuente (tema base, archivo, micrófono, Drive
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_song_studio_LiveMicWaveformCanvas|src/components/song_studio/LiveMicWaveformCanvas.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_studioConstants|src/components/song_studio/studioConstants.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*

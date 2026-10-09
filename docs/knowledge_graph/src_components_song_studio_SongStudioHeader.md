@@ -18,11 +18,10 @@ Cabecera del estudio: título, estado, favorita, preparación, herramientas y co
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioHeaderControls|src/components/song_studio/SongStudioHeaderControls.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioReadinessSelect|src/components/song_studio/SongStudioReadinessSelect.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_formatSongTitle|src/utils/formatSongTitle.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---

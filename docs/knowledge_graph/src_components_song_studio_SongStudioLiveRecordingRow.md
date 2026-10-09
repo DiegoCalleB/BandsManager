@@ -19,13 +19,14 @@ Exporta: SongStudioLiveRecordingRowProps, SongStudioLiveRecordingRow.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_song_studio_LiveMicWaveformCanvas|src/components/song_studio/LiveMicWaveformCanvas.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_song_studio_SongStudioIdeaCard|src/components/song_studio/SongStudioIdeaCard.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaMixer|src/components/song_studio/SongStudioIdeaMixer.tsx]] *(from #frontend)*
 
 ---
 

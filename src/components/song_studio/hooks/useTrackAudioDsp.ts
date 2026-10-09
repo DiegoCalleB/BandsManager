@@ -1,17 +1,17 @@
+import { createCleanAudioRecordingPipeline } from "../../../utils/audioLatency";
+import { getAudioContextClass } from "../audioContext";
 /**
  * Procesado de audio por pista (cadena WebAudio: ganancia, paneo, EQ, filtro limpio) y cuenta atrás con metrónomo
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useState, useRef, RefObject } from "react";
+import { RefObject, useRef, useState } from "react";
 import { Song } from "../../../types";
+
+/** Tubería de limpieza de grabación creada por `createCleanAudioRecordingPipeline`. */
+export type CleanRecordingPipeline = Awaited<ReturnType<typeof createCleanAudioRecordingPipeline>>;
+
+/** Elemento de audio al que se le guarda su nodo de origen WebAudio (solo se puede crear uno por elemento). */
+type TaggedAudioElement = HTMLAudioElement & { __mediaElementSource?: MediaElementAudioSourceNode };
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface TrackAudioDspParams {
@@ -31,12 +31,12 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
   // DSP Noise Reduction & Anti-Bleed Studio Settings
   const [useCleanDSPFilter, setUseCleanDSPFilter] = useState<boolean>(true);
   const [useEchoCancellation, setUseEchoCancellation] = useState<boolean>(true);
-  const [useNoiseSuppression, setUseNoiseSuppression] = useState<boolean>(true);
+  const useNoiseSuppression = true;
   const [autoLatencyTrimMs, setAutoLatencyTrimMs] = useState<number>(110);
-  const [useCountInMetronome, setUseCountInMetronome] = useState<boolean>(true);
+  const useCountInMetronome = true;
   const [countInCountdown, setCountInCountdown] = useState<number | null>(null);
   const [cleaningTrackId, setCleaningTrackId] = useState<string | null>(null);
-  const cleanPipelineRef = useRef<any>(null);
+  const cleanPipelineRef = useRef<CleanRecordingPipeline | null>(null);
 
   // Web Audio API DSP nodes map for live smooth volume, 3-band EQ, Stem Isolators and Stereo Panning per track
   const trackDSPMapRef = useRef<
@@ -82,11 +82,11 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
     try {
       el.volume = applyMasterToElementVolume(targetGain);
       el.muted = !isAudible;
-    } catch (e) {}
+    } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
 
     try {
       if (!studioAudioCtxRef.current || studioAudioCtxRef.current.state === 'closed') {
-        const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioCtxClass = getAudioContextClass();
         if (AudioCtxClass) {
           studioAudioCtxRef.current = new AudioCtxClass();
         }
@@ -102,7 +102,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
       let dsp = trackDSPMapRef.current[trackId];
 
       if (!dsp || dsp.element !== el) {
-        let source: MediaElementAudioSourceNode | undefined = (el as any).__mediaElementSource;
+        let source: MediaElementAudioSourceNode | undefined = (el as TaggedAudioElement).__mediaElementSource;
 
         if (!source) {
           const isSameOriginOrBlob =
@@ -110,9 +110,9 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
           if (isSameOriginOrBlob) {
             try {
               source = ctx.createMediaElementSource(el);
-              (el as any).__mediaElementSource = source;
-            } catch (e) {
-              source = (el as any).__mediaElementSource;
+              (el as TaggedAudioElement).__mediaElementSource = source;
+            } catch {
+              source = (el as TaggedAudioElement).__mediaElementSource;
             }
           }
         }
@@ -245,7 +245,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
   const triggerCountInBeeps = (bpm: number, onDone: () => void) => {
     try {
       if (!studioAudioCtxRef.current) {
-        const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioCtxClass = getAudioContextClass();
         if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
       }
       const ctx = studioAudioCtxRef.current;
@@ -267,7 +267,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
           gain.connect(getOrCreateMasterGain(ctx));
           osc.start(ctx.currentTime);
           osc.stop(ctx.currentTime + 0.09);
-        } catch (_) {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       };
 
       setCountInCountdown(4);
@@ -285,7 +285,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
           onDone();
         }
       }, beatIntervalMs);
-    } catch (err) {
+    } catch {
       setCountInCountdown(null);
       onDone();
     }

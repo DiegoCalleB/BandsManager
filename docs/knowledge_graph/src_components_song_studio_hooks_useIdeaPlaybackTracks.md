@@ -30,6 +30,11 @@ Pistas que suenan de una idea: las propias más las pistas base virtuales de la 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

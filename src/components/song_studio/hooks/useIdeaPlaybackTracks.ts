@@ -2,19 +2,11 @@
  * Pistas que suenan de una idea: las propias más las pistas base virtuales de la canción
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { SongAudioIdea, AudioTrack, Song } from "../../../types";
+import { RefObject } from "react";
+import { AudioTrack, Song, SongAudioIdea } from "../../../types";
 import { pistasBaseMezcladas } from "../../../utils/ideaDeAtril";
 import { pistasDeCancion } from "../../../utils/irisTracks";
 import { getIdeaTracks } from "../ideaTracks";
-import { RefObject } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface IdeaPlaybackTracksParams {

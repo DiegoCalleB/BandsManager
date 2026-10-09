@@ -2,22 +2,14 @@
  * CRUD de ideas de audio: guardar, crear, votar, borrar, duplicar y borrar comentarios
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { uploadFileToServer } from "../../../utils/audioStorage";
-import { SECCIONES_TEMA } from "../studioConstants";
+import React,{ Dispatch,RefObject,SetStateAction } from "react";
+import { AudioTrack, DrumPatternStyle, Song, SongAudioIdea } from "../../../types";
 import { generateAccompanimentAudioBlob } from "../../../utils/accompanimentSynth";
-import { AudioTrack, SongAudioIdea, Song, DrumPatternStyle } from "../../../types";
-import { pistasDeCancion, cancionConIdeas } from "../../../utils/irisTracks";
+import { uploadFileToServer } from "../../../utils/audioStorage";
 import { ideaConPistasBase } from "../../../utils/ideaDeAtril";
-import React, { Dispatch, SetStateAction, RefObject } from "react";
+import { cancionConIdeas, pistasDeCancion } from "../../../utils/irisTracks";
 import { getIdeaTracks } from "../ideaTracks";
+import { SECCIONES_TEMA } from "../studioConstants";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface SongIdeasCrudParams {

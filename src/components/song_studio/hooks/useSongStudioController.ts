@@ -2,37 +2,29 @@
  * Controlador de Song Studio: compone todos los hooks de estado y lógica del estudio y expone lo que consumen las vistas
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useRef, useEffect, useState } from "react";
-import { Song, SongAudioIdea, DrumPatternStyle } from "../../../types";
-import { esIdeaIris } from "../../../utils/irisTracks";
+import { useEffect, useRef, useState } from "react";
+import { useAccompanimentGenerator } from "../../../hooks/useAccompanimentGenerator";
+import { useIdeaComments } from "../../../hooks/useIdeaComments";
 import { useModuleTutorial } from "../../../hooks/useModuleTutorial";
 import { useStudioShareModal } from "../../../hooks/useStudioShareModal";
-import { useIdeaComments } from "../../../hooks/useIdeaComments";
-import { useMoisesStemsPanel } from "./useMoisesStemsPanel";
+import { DrumPatternStyle, Song, SongAudioIdea } from "../../../types";
+import { esIdeaIris } from "../../../utils/irisTracks";
 import { useAiTrackGeneration } from "./useAiTrackGeneration";
-import { useStudioFullScreen } from "./useStudioFullScreen";
-import { useStudioMasterGain } from "./useStudioMasterGain";
-import { useTrackAudioDsp } from "./useTrackAudioDsp";
-import { useResolvedAudioUrls } from "./useResolvedAudioUrls";
-import { useStudioIdeasView } from "./useStudioIdeasView";
 import { useIdeaDurations } from "./useIdeaDurations";
 import { useIdeaLoopControls } from "./useIdeaLoopControls";
-import { useIdeaPlaybackTracks } from "./useIdeaPlaybackTracks";
-import { useStudioPlaybackEngine } from "./useStudioPlaybackEngine";
 import { useIdeaMicRecording } from "./useIdeaMicRecording";
+import { useIdeaPlaybackTracks } from "./useIdeaPlaybackTracks";
+import { useMoisesStemsPanel } from "./useMoisesStemsPanel";
+import { useResolvedAudioUrls } from "./useResolvedAudioUrls";
 import { useSongIdeasCrud } from "./useSongIdeasCrud";
+import { useStudioFullScreen } from "./useStudioFullScreen";
+import { useStudioIdeasView } from "./useStudioIdeasView";
+import { useStudioKeyboardShortcuts } from "./useStudioKeyboardShortcuts";
+import { useStudioMasterGain } from "./useStudioMasterGain";
+import { useStudioPlaybackEngine } from "./useStudioPlaybackEngine";
+import { useTrackAudioDsp } from "./useTrackAudioDsp";
 import { useTrackMixerActions } from "./useTrackMixerActions";
 import { useTrackOverdub } from "./useTrackOverdub";
-import { useStudioKeyboardShortcuts } from "./useStudioKeyboardShortcuts";
-import { useAccompanimentGenerator } from "../../../hooks/useAccompanimentGenerator";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface SongStudioControllerParams {
@@ -53,7 +45,7 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
     songRef.current = song;
   }, [song]);
 
-  const [activeSectionFilter, setActiveSectionFilter] = useState<string>('todas');
+  const [activeSectionFilter] = useState<string>('todas');
   // Auto-expandir de inicio cualquier idea que ya contenga pistas separadas por Iris
   const [expandedIdeaIds, setExpandedIdeaIds] = useState<Set<string>>(() => {
     const initialSet = new Set<string>();
@@ -99,7 +91,7 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
   const [showAiMusicModal, setShowAiMusicModal] = useState<boolean>(false);
   const [showAiComposerModal, setShowAiComposerModal] = useState<boolean>(false);
   const [practiceModeIdea, setPracticeModeIdea] = useState<SongAudioIdea | null>(null);
-  const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('song_studio');
+  const { openTutorial } = useModuleTutorial('song_studio');
   const { shareModalData, setShareModalData, handleShareSong, handleShareIdea } = useStudioShareModal(song);
 
   const [playingIdeaId, setPlayingIdeaId] = useState<string | null>(null);
@@ -110,7 +102,6 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
   const {
     commentTextMap,
     setCommentTextMap,
-    commentTimeTagMap,
     setCommentTimeTagMap,
     commentTrackTagMap,
     setCommentTrackTagMap,
@@ -134,14 +125,14 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
   const [recordingTime, setRecordingTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
-  const recordingTimerRef = useRef<any>(null);
+  const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recordingPromiseRef = useRef<Promise<string> | null>(null);
 
   // --- MULTITRACK (OVERDUB) STATE ---
   const [addingTrackIdeaId, setAddingTrackIdeaId] = useState<string | null>(null);
   const [newTrackName, setNewTrackName] = useState('');
   const [newTrackInstrument, setNewTrackInstrument] = useState('');
-  const [selectedTrackFile, setSelectedTrackFile] = useState<File | null>(null);
+  const [, setSelectedTrackFile] = useState<File | null>(null);
   const [isRecordingTrack, setIsRecordingTrack] = useState(false);
   const [recordingTrackIdeaId, setRecordingTrackIdeaId] = useState<string | null>(null);
   const [recordingTrackTime, setRecordingTrackTime] = useState(0);
@@ -149,16 +140,16 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
   const trackAudioChunksRef = useRef<Blob[]>([]);
   // Pistas de Iris que suenan mientras se graba encima; viven aparte de trackAudioRefs para no pisar el mezclador de Iris.
   const basePlayRefs = useRef<HTMLAudioElement[]>([]);
-  const trackRecordingTimerRef = useRef<any>(null);
+  const trackRecordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [editingTrackName, setEditingTrackName] = useState('');
   const [activeRecordingStream, setActiveRecordingStream] = useState<MediaStream | null>(null);
 
   const { selectedStemEngine, selectedStemsToExtract, setShowMoisesStemsModal, setShowIrisPanel, showIrisPanel, showMoisesStemsModal, moisesTab, setMoisesTab, moisesPreset, handleSelectMoisesPreset } = useMoisesStemsPanel({ initialOpenIrisModal, song, setExpandedIdeaIds, currentUsername });
 
-  const { setAiTrackGenPreview, setAiTrackGenError, setAiTrackGenStartOffsetSec, setShowAiTrackGenModal, isSeparatingStemsAi, handlePerformAiStemSeparation, showAiTrackGenModal, stemProgressModal, setStemProgressModal } = useAiTrackGeneration({ song, onUpdateSong, selectedStemEngine, selectedStemsToExtract, setExpandedIdeaIds });
+  const { setShowAiTrackGenModal, isSeparatingStemsAi, handlePerformAiStemSeparation, showAiTrackGenModal, stemProgressModal, setStemProgressModal } = useAiTrackGeneration({ song, onUpdateSong, selectedStemEngine, selectedStemsToExtract, setExpandedIdeaIds });
 
-  const { isFullScreen, toggleIsFullScreen } = useStudioFullScreen({  });
+  const { isFullScreen, toggleIsFullScreen } = useStudioFullScreen();
 
   // Audio elements refs map for multitrack: trackAudioRefs.current[trackId]
   const trackAudioRefs = useRef<Record<string, HTMLAudioElement | null>>({});
@@ -196,13 +187,16 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
     song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || ''
   );
 
-  useEffect(() => {
+  // Ajuste durante el render (no en un efecto): cuando cambia la canción, la base vuelve a la principal.
+  const [songDeLaBase, setSongDeLaBase] = useState(song);
+  if (songDeLaBase !== song) {
+    setSongDeLaBase(song);
     if (song.audioPrincipalUrl) {
       setSelectedSongBaseUrl(song.audioPrincipalUrl);
     } else if (song.audioIdeas && song.audioIdeas.length > 0 && song.audioIdeas[0]?.audioUrl) {
       setSelectedSongBaseUrl(song.audioIdeas[0].audioUrl);
     }
-  }, [song]);
+  }
 
   // --- CONFIRMATION MODAL STATE FOR DELETIONS ---
   const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
@@ -256,5 +250,5 @@ export function useSongStudioController({ song, onUpdateSong, currentUsername, i
     handleGenerateAccompaniment,
   } = useAccompanimentGenerator(song, saveNewTrackToIdea);
 
-  return { playingIdeaId, currentTimeMap, durationMap, addingTrackIdeaId, expandedIdeaIds, toggleIdeaExpanded, togglePlayIdea, handleDeleteIdea, setOpenIdeaActionsMenuId, openIdeaActionsMenuId, handleShareIdea, handleExportMasterMix, isExportingMaster, handleDuplicateIdea, setAiTrackGenPreview, setAiTrackGenError, setAiTrackGenStartOffsetSec, setShowAiTrackGenModal, setShowGenModalForIdea, setGenBpm, setGenKey, setAddingTrackIdeaId, setNewTrackName, setNewTrackInstrument, handleStopIdea, loopConfigMap, toggleIdeaLoop, selectedSongBaseUrl, saveNewTrackToIdea, formatTime, handleSeekIdea, pistasDeReproduccion, pistasBaseVirtuales, metaStems, setPracticeModeIdea, setShowMoisesStemsModal, editingTrackId, draggedTrackInfo, dragOverTrackIndex, setDragOverTrackIndex, handleDropTrack, setDraggedTrackInfo, editingTrackName, setEditingTrackName, handleSaveTrackName, setEditingTrackId, handleToggleMuteTrack, handleToggleSoloTrack, handleTrackVolumeChange, setExpandedTrackSettingsId, expandedTrackSettingsId, formatDesfase, trackAudioRefs, resolvedAudioUrls, setDurationMap, handleTrackPanChange, cleaningTrackId, handleCleanTrackAudio, handleTrackEqChange, handleAutoSyncTrackLatency, handleTrackDesfaseChange, handleMoveTrack, handleDeleteTrack, isRecordingTrack, recordingTrackIdeaId, newTrackName, recordingTrackTime, stopRecordingTrackOverdub, activeRecordingStream, studioAudioCtxRef, autoLatencyTrimMs, useCleanDSPFilter, setUseCleanDSPFilter, useEchoCancellation, setUseEchoCancellation, setAutoLatencyTrimMs, newTrackInstrument, startRecordingTrackOverdub, isUploading, handleUploadTrackFile, handleToggleVote, jumpToTime, handleDeleteComment, setCommentTimeTagMap, commentTrackTagMap, setCommentTrackTagMap, commentTextMap, setCommentTextMap, handleAddComment, isFullScreen, countInCountdown, setShowToolsMenu, showToolsMenu, setShowChordsModal, setShowAiComposerModal, setShowAiMusicModal, setShowCubaseHelp, openTutorial, handleShareSong, setMasterVolume, masterVolume, toggleIsFullScreen, irisIdea, setShowIrisPanel, fuenteIris, isSeparatingStemsAi, setShowAddIdea, showAddIdea, ideaTitle, setIdeaTitle, ideaSection, setIdeaSection, ideaUploader, setIdeaUploader, ideaInstrument, setIdeaInstrument, nuevaIdeaPistasIris, setNuevaIdeaPistasIris, useSongBaseTrack, setUseSongBaseTrack, setSelectedSongBaseUrl, selectedAudioFile, setSelectedAudioFile, setRecordedAudioUrl, setDriveAudioUrl, isRecording, startRecording, stopRecording, recordingTime, recordedAudioUrl, driveAudioUrl, setGenAiOnNewIdea, genAiOnNewIdea, newIdeaStyle, setNewIdeaStyle, newIdeaBpm, setNewIdeaBpm, newIdeaKey, setNewIdeaKey, newIdeaIncludeDrums, setNewIdeaIncludeDrums, newIdeaIncludeBass, setNewIdeaIncludeBass, ideaNotes, setIdeaNotes, handleSaveIdea, tomas, activeSectionFilter, showGenModalForIdea, genBpm, genKey, includeDrums, setIncludeDrums, includeBass, setIncludeBass, drumStyle, setDrumStyle, genDuration, setGenDuration, isGeneratingAccompaniment, handleGenerateAccompaniment, showIrisPanel, showChordsModal, showCubaseHelp, confirmDeleteModal, setConfirmDeleteModal, shareModalData, setShareModalData, showAiMusicModal, showAiComposerModal, practiceModeIdea, showMoisesStemsModal, moisesTab, setMoisesTab, moisesPreset, handleSelectMoisesPreset, handlePerformAiStemSeparation, showAiTrackGenModal, stemProgressModal, setStemProgressModal };
+  return { playingIdeaId, currentTimeMap, durationMap, addingTrackIdeaId, expandedIdeaIds, toggleIdeaExpanded, togglePlayIdea, handleDeleteIdea, setOpenIdeaActionsMenuId, openIdeaActionsMenuId, handleShareIdea, handleExportMasterMix, isExportingMaster, handleDuplicateIdea, setShowAiTrackGenModal, setShowGenModalForIdea, setGenBpm, setGenKey, setAddingTrackIdeaId, setNewTrackName, setNewTrackInstrument, handleStopIdea, loopConfigMap, toggleIdeaLoop, selectedSongBaseUrl, saveNewTrackToIdea, formatTime, handleSeekIdea, pistasDeReproduccion, pistasBaseVirtuales, metaStems, setPracticeModeIdea, setShowMoisesStemsModal, editingTrackId, draggedTrackInfo, dragOverTrackIndex, setDragOverTrackIndex, handleDropTrack, setDraggedTrackInfo, editingTrackName, setEditingTrackName, handleSaveTrackName, setEditingTrackId, handleToggleMuteTrack, handleToggleSoloTrack, handleTrackVolumeChange, setExpandedTrackSettingsId, expandedTrackSettingsId, formatDesfase, trackAudioRefs, resolvedAudioUrls, setDurationMap, handleTrackPanChange, cleaningTrackId, handleCleanTrackAudio, handleTrackEqChange, handleAutoSyncTrackLatency, handleTrackDesfaseChange, handleMoveTrack, handleDeleteTrack, isRecordingTrack, recordingTrackIdeaId, newTrackName, recordingTrackTime, stopRecordingTrackOverdub, activeRecordingStream, studioAudioCtxRef, autoLatencyTrimMs, useCleanDSPFilter, setUseCleanDSPFilter, useEchoCancellation, setUseEchoCancellation, setAutoLatencyTrimMs, newTrackInstrument, startRecordingTrackOverdub, isUploading, handleUploadTrackFile, handleToggleVote, jumpToTime, handleDeleteComment, setCommentTimeTagMap, commentTrackTagMap, setCommentTrackTagMap, commentTextMap, setCommentTextMap, handleAddComment, isFullScreen, countInCountdown, setShowToolsMenu, showToolsMenu, setShowChordsModal, setShowAiComposerModal, setShowAiMusicModal, setShowCubaseHelp, openTutorial, handleShareSong, setMasterVolume, masterVolume, toggleIsFullScreen, irisIdea, setShowIrisPanel, fuenteIris, isSeparatingStemsAi, setShowAddIdea, showAddIdea, ideaTitle, setIdeaTitle, ideaSection, setIdeaSection, ideaUploader, setIdeaUploader, ideaInstrument, setIdeaInstrument, nuevaIdeaPistasIris, setNuevaIdeaPistasIris, useSongBaseTrack, setUseSongBaseTrack, setSelectedSongBaseUrl, selectedAudioFile, setSelectedAudioFile, setRecordedAudioUrl, setDriveAudioUrl, isRecording, startRecording, stopRecording, recordingTime, recordedAudioUrl, driveAudioUrl, setGenAiOnNewIdea, genAiOnNewIdea, newIdeaStyle, setNewIdeaStyle, newIdeaBpm, setNewIdeaBpm, newIdeaKey, setNewIdeaKey, newIdeaIncludeDrums, setNewIdeaIncludeDrums, newIdeaIncludeBass, setNewIdeaIncludeBass, ideaNotes, setIdeaNotes, handleSaveIdea, tomas, activeSectionFilter, showGenModalForIdea, genBpm, genKey, includeDrums, setIncludeDrums, includeBass, setIncludeBass, drumStyle, setDrumStyle, genDuration, setGenDuration, isGeneratingAccompaniment, handleGenerateAccompaniment, showIrisPanel, showChordsModal, showCubaseHelp, confirmDeleteModal, setConfirmDeleteModal, shareModalData, setShareModalData, showAiMusicModal, showAiComposerModal, practiceModeIdea, showMoisesStemsModal, moisesTab, setMoisesTab, moisesPreset, handleSelectMoisesPreset, handlePerformAiStemSeparation, showAiTrackGenModal, stemProgressModal, setStemProgressModal };
 }

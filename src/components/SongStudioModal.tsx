@@ -2,7 +2,7 @@
  * Punto de entrada de Song Studio. Solo cablea: el controlador compone el estado y la lógica,
  * el contexto los reparte y `SongStudioLayout` pinta. Cada responsabilidad vive en `song_studio/`.
  */
-import { SongStudioProvider } from './song_studio/SongStudioContext';
+import { SongStudioProvider } from './song_studio/SongStudioProvider';
 import { SongStudioLayout } from './song_studio/SongStudioLayout';
 import { useSongStudioController } from './song_studio/hooks/useSongStudioController';
 import type { Song, ThemeColors, User } from '../types';
@@ -18,6 +18,7 @@ interface SongStudioModalProps {
 }
 
 // Contrato público histórico: otros módulos importan estos símbolos desde aquí.
+/* eslint-disable react-refresh/only-export-components */
 export { getIdeaTracks } from './song_studio/ideaTracks';
 export { MOISES_AVAILABLE_STEMS, MOISES_PRESETS_CONFIG } from './song_studio/moisesStems';
 export type { MoisesSeparationPreset, MoisesStemOption } from './song_studio/moisesStems';

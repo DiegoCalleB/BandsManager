@@ -1,23 +1,16 @@
+import { getErrorMessage } from "../../../utils/errorMessage";
 /**
  * Acciones del mezclador sobre las pistas de una idea: volumen, desfase, mute/solo, paneo, EQ, exportar mezcla, renombrar, borrar, reordenar y arrastrar
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { SongAudioIdea, AudioTrack, Song } from "../../../types";
-import { cancionConMezcla } from "../../../utils/ideaDeAtril";
-import { getIdeaTracks } from "../ideaTracks";
+import { Dispatch, RefObject, SetStateAction, useState, type MouseEvent } from "react";
+import { AudioTrack, Song, SongAudioIdea } from "../../../types";
 import { exportMasterMixAudioBlob } from "../../../utils/audioLatency";
 import { resolveAudioUrl } from "../../../utils/audioStorage";
+import { cancionConMezcla } from "../../../utils/ideaDeAtril";
 import { cancionConPistas } from "../../../utils/irisTracks";
+import { getIdeaTracks } from "../ideaTracks";
 import { RAINBOW_HUE_STEPS } from "../trackColors";
-import { useState, RefObject, Dispatch, SetStateAction, type MouseEvent } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface TrackMixerActionsParams {
@@ -69,8 +62,9 @@ export function useTrackMixerActions({ pistasDeReproduccion, trackAudioRefs, upd
       const masterTime = currentTimeMap[idea.id] || 0;
       const targetTime = Math.max(0, masterTime + newDesfaseMs / 1000);
       try {
+        // eslint-disable-next-line react-hooks/immutability -- ref/elemento <audio> compartido entre hooks: mutación imperativa intencionada
         el.currentTime = targetTime;
-      } catch {}
+      } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
     }
 
     const updatedSong = cancionConMezcla(song, idea, updatedTracks);
@@ -212,9 +206,9 @@ export function useTrackMixerActions({ pistasDeReproduccion, trackAudioRefs, upd
       link.click();
       document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error al exportar la mezcla máster:', err);
-      alert('No se pudo exportar la mezcla máster: ' + (err.message || err));
+      alert('No se pudo exportar la mezcla máster: ' + getErrorMessage(err, 'error desconocido'));
     } finally {
       setIsExportingMaster(false);
     }

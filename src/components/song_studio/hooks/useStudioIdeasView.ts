@@ -2,16 +2,9 @@
  * Vista derivada de las ideas de la canción: filtradas por sección, tomas, ideas de Iris y fuente de stems
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { irisPrimero, esIdeaIris, metaStemsDeCancion, ideaDeStemsDeCancion } from "../../../utils/irisTracks";
-import { SongAudioIdea, Song } from "../../../types";
+import { Song, SongAudioIdea } from "../../../types";
+import { esIdeaIris, ideaDeStemsDeCancion, irisPrimero, metaStemsDeCancion } from "../../../utils/irisTracks";
+import { getSongMainAudioUrl } from "../songAudioSource";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface StudioIdeasViewParams {
@@ -37,11 +30,11 @@ export function useStudioIdeasView({ song, activeSectionFilter, currentUsername 
   // Audio de partida para separar: la primera toma con audio, o el audio principal de la canción
   const fuenteIris: SongAudioIdea | null =
     ideasList.find((i) => i.audioUrl) ??
-    ((song.audioPrincipalUrl || (song as any).audioUrl)
+    (getSongMainAudioUrl(song)
       ? {
           id: `idea-main-${song.id}`,
           titulo: `Maqueta Principal (${song.titulo})`,
-          audioUrl: song.audioPrincipalUrl || (song as any).audioUrl,
+          audioUrl: getSongMainAudioUrl(song),
           subidoPor: currentUsername || 'Banda',
           seccion: 'general',
           fecha: new Date().toLocaleDateString('es-ES'),

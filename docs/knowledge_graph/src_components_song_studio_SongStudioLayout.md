@@ -20,7 +20,7 @@ Maquetación del estudio: fondo modal, cuenta atrás, tarjeta (cabecera, cuerpo,
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_song_studio_SongStudioContentBody|src/components/song_studio/SongStudioContentBody.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioHeader|src/components/song_studio/SongStudioHeader.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioMiniTransport|src/components/song_studio/SongStudioMiniTransport.tsx]] *(Layer: #frontend, Domain: #repertoire)*

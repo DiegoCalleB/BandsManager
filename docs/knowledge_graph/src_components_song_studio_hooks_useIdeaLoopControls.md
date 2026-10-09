@@ -27,6 +27,11 @@ Bucle y puntos de entrada/salida (cue in/out) por idea
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

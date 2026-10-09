@@ -243,8 +243,9 @@ BandManager UI Component Library
 - [[src_components_song_studio_SongStudioCubaseHelpModal|src/components/song_studio/SongStudioCubaseHelpModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioDeleteConfirmModal|src/components/song_studio/SongStudioDeleteConfirmModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioHeaderControls|src/components/song_studio/SongStudioHeaderControls.tsx]] *(from #frontend)*
-- [[src_components_song_studio_SongStudioIdeaCard|src/components/song_studio/SongStudioIdeaCard.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioIdeaComments|src/components/song_studio/SongStudioIdeaComments.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaHeader|src/components/song_studio/SongStudioIdeaHeader.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioIdeaTransport|src/components/song_studio/SongStudioIdeaTransport.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioIrisSheet|src/components/song_studio/SongStudioIrisSheet.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioLiveRecordingRow|src/components/song_studio/SongStudioLiveRecordingRow.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioMiniTransport|src/components/song_studio/SongStudioMiniTransport.tsx]] *(from #frontend)*

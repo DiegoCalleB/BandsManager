@@ -2,18 +2,10 @@
  * Resolución asíncrona de las URLs de audio (firmadas o relativas) de todas las pistas de la canción
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AudioTrack, Song } from "../../../types";
-import { getIdeaTracks } from "../ideaTracks";
 import { resolveAudioUrl } from "../../../utils/audioStorage";
+import { getIdeaTracks } from "../ideaTracks";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface ResolvedAudioUrlsParams {

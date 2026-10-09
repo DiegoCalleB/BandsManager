@@ -2,15 +2,7 @@
  * Volumen maestro de Song Studio: nodo de ganancia global del AudioContext y aplicación al volumen de cada elemento
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps,
- react-hooks/purity,
- react-hooks/immutability
-*/
-import { useState, useRef, useEffect, RefObject } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface StudioMasterGainParams {
@@ -58,7 +50,7 @@ export function useStudioMasterGain({ trackAudioRefs, lastPerTrackGainRef }: Stu
       const perTrackGain = lastPerTrackGainRef.current[trackId] ?? 1;
       try {
         el.volume = applyMasterToElementVolume(perTrackGain);
-      } catch {}
+      } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [masterVolume]);

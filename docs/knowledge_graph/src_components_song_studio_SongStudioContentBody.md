@@ -19,7 +19,6 @@ Cuerpo del estudio: barra de Iris, barra de ideas, formulario de nueva idea y fe
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_song_studio_SongStudioAddIdeaForm|src/components/song_studio/SongStudioAddIdeaForm.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioIdeasBar|src/components/song_studio/SongStudioIdeasBar.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioIdeasFeed|src/components/song_studio/SongStudioIdeasFeed.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioIrisBar|src/components/song_studio/SongStudioIrisBar.tsx]] *(Layer: #frontend, Domain: #repertoire)*

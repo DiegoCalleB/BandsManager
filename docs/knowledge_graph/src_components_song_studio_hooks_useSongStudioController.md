@@ -44,7 +44,7 @@ Controlador de Song Studio: compone todos los hooks de estado y lógica del estu
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioContext|src/components/song_studio/SongStudioContext.ts]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 
 ---

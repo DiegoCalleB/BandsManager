@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, type RefObject } from 'react';
 
 /**
  * Forma de onda en vivo del micrófono para la grabación estilo Cubase: pinta una barra por
@@ -6,11 +6,11 @@ import React, { useEffect, useRef } from 'react';
  */
 export const LiveMicWaveformCanvas: React.FC<{
   stream: MediaStream | null;
-  audioCtx: AudioContext | null;
+  audioCtxRef: RefObject<AudioContext | null>;
   isRecording: boolean;
   color?: string;
   height?: number;
-}> = ({ stream, audioCtx, isRecording, color = '#ef4444', height = 48 }) => {
+}> = ({ stream, audioCtxRef, isRecording, color = '#ef4444', height = 48 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const LiveMicWaveformCanvas: React.FC<{
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let ctxToUse = audioCtx;
+    let ctxToUse = audioCtxRef.current;
     let createdLocalCtx = false;
     if (!ctxToUse || ctxToUse.state === 'closed') {
       const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -108,17 +108,17 @@ export const LiveMicWaveformCanvas: React.FC<{
       if (animId) cancelAnimationFrame(animId);
       try {
         sourceNode?.disconnect();
-      } catch {}
+      } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       try {
         analyserNode?.disconnect();
-      } catch {}
+      } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       if (createdLocalCtx && ctxToUse) {
         try {
           ctxToUse.close();
-        } catch {}
+        } catch { /* limpieza best-effort: puede fallar si el nodo ya se soltó */ }
       }
     };
-  }, [isRecording, stream, audioCtx, color, height]);
+  }, [isRecording, stream, audioCtxRef, color, height]);
 
   return <canvas ref={canvasRef} className="w-full h-full block rounded bg-[var(--sunken)]" />;
 };
