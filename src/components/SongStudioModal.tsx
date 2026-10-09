@@ -3954,22 +3954,19 @@ export default function SongStudioModal({
                                   </IconButton>
                                 </div>
 
-                                <div className="p-3 rounded-[var(--r-s)] bg-[var(--sunken)] space-y-2">
-                                  <div className="flex items-center gap-2 text-[var(--acc)]/70 text-xs font-semibold">
-                                    <Headphones className="w-4 h-4 text-[var(--acc)] shrink-0" />
-                                    <span>RECOMENDACIÓN MULTIPISTA ESTUDIO:</span>
-                                  </div>
-                                  <p className="text-micro text-[var(--ink-2)] leading-relaxed font-sans">
-                                    Para evitar que el sonido de las pistas anteriores se cuele por el micrófono (acople de altavoces),{' '}
-                                    <strong className="text-[var(--ink)]">utiliza auriculares para escuchar la mezcla</strong> mientras
-                                    grabas la nueva pista.
-                                  </p>
+                                <p className="px-1 text-micro font-sans text-[var(--ink-2)] flex items-center gap-1.5">
+                                  <Headphones className="w-3.5 h-3.5 shrink-0" />
+                                  Mejor con auriculares, así la mezcla no se cuela por el micro.
+                                </p>
 
-                                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
-                                    <span className="text-micro font-sans text-[var(--ink-2)] font-bold flex items-center gap-1">
-                                      <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)]" /> Filtros Anti-Ruido Studio:
-                                    </span>
+                                <details className="rounded-[var(--r-s)] bg-[var(--sunken)]">
+                                  <summary className="cursor-pointer select-none px-3 py-2 text-micro font-sans text-[var(--ink-2)] flex items-center gap-1.5">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
+                                    Ajustes de grabación
+                                    <span className="text-[var(--ink-3)]">· filtros y latencia ({autoLatencyTrimMs} ms)</span>
+                                  </summary>
 
+                                  <div className="px-3 pb-3 pt-1">
                                     <div className="flex flex-wrap items-center gap-3 text-micro font-sans">
                                       <label className="flex items-center gap-1.5 cursor-pointer text-[var(--ink-2)] hover:text-[var(--ink)]">
                                         <input
@@ -4041,7 +4038,7 @@ export default function SongStudioModal({
                                       </div>
                                     </div>
                                   </div>
-                                </div>
+                                </details>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                   <div>
