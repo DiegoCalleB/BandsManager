@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { AnalisisAcordes } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import {
@@ -18,6 +19,8 @@ interface Props {
   estilo?: EstiloArmonia;
   /** Texto del «profesor» (IA) si ya se ha pedido, o null; el padre decide cómo pedirlo. */
   profesor?: React.ReactNode;
+  /** Abre la explicación extendida desde el principio (por defecto solo se ve lo esencial). */
+  extendida?: boolean;
 }
 
 const ORDEN: Funcion[] = ['T', 'S', 'D', 'M', 'X'];
@@ -29,7 +32,8 @@ const ritmoArmonico = (cpm: number) => (cpm < 12 ? 'lento' : cpm < 30 ? 'tranqui
  * (todo sale de `analizarArmonia`). Cada afirmación es un dato calculado; la fiabilidad la marca el
  * origen de los acordes (audio corregido por la banda, audio detectado o cifrado escrito).
  */
-export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor }) => {
+export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation, transpose, estilo, profesor, extendida = false }) => {
+  const [ext, setExt] = useState(extendida);
   const { tonalidad, modo } = armonia;
   const grado = (g: string) => gradoVisible(g, estilo);
   const bemoles = usaBemoles(tonalidad, modo.id);
@@ -85,7 +89,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-1 text-[var(--ink)]">
           {bpm ? <span><b className="font-bold">{Math.round(analisis?.pulso?.bpm ?? bpm)}</b> BPM{cuadricula ? ` · ${cuadricula.tiemposPorCompas}/4` : ''}</span> : null}
-          <span>Ritmo armónico <b className="font-bold">{ritmoArmonico(armonia.cambiosPorMinuto)}</b> ({armonia.cambiosPorMinuto} cambios por minuto)</span>
+          {ext && <span>Ritmo armónico <b className="font-bold">{ritmoArmonico(armonia.cambiosPorMinuto)}</b> ({armonia.cambiosPorMinuto} cambios por minuto)</span>}
           {analisis?.tonalidades && analisis.tonalidades.length > 1 && (
             <span>Cambia de tono: {analisis.tonalidades.map((t) => acorde(t.tonalidad)).join(' → ')}</span>
           )}
@@ -105,8 +109,10 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
             ))}
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-[var(--ink-2)]">
-            {ORDEN.filter((f) => armonia.funciones[f] > 0.005).map((f) => (
+            {ORDEN.filter((f) => armonia.funciones[f] > 0.005).map((f) => ext ? (
               <span key={f}><b className="font-bold text-[var(--ink)]">{LETRA_FUNCION[f]} {NOMBRE_FUNCION[f]}</b>: {SENSACION_FUNCION[f]}</span>
+            ) : (
+              <span key={f}><b className="font-bold text-[var(--ink)]">{LETRA_FUNCION[f]}</b> {NOMBRE_FUNCION[f]}</span>
             ))}
           </div>
         </div>
@@ -127,7 +133,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
       {bloques.length > 0 && (
         <section className="space-y-2" aria-label="Mapa de la canción">
           <h3 className="font-bold text-[var(--ink)]">Mapa de la canción</h3>
-          <p className="text-xs text-[var(--ink-2)]">Los bloques con la misma progresión comparten letra: es lo que se repite de verdad, no una estructura inventada.</p>
+          {ext && <p className="text-xs text-[var(--ink-2)]">Los bloques con la misma progresión comparten letra: es lo que se repite de verdad, no una estructura inventada.</p>}
           <div className="grid gap-2 sm:grid-cols-2">
             {bloques.map((b) => (
               <div key={b.letra} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3">
@@ -143,7 +149,22 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
         </section>
       )}
 
-      {/* 3. Los acordes de la canción */}
+      {/* 3. Los acordes de la canción: en corto, solo los principales; el detalle va en la explicación extendida */}
+      {!ext && armonia.acordes.length > 0 && (
+        <section className="space-y-2" aria-label="Acordes principales">
+          <h3 className="font-bold text-[var(--ink)]">Los acordes que mandan</h3>
+          <div className="flex flex-wrap gap-2">
+            {armonia.acordes.slice(0, 6).map((r: ResumenAcorde) => (
+              <span key={r.acorde} className="inline-flex items-center gap-2 bg-[var(--sunken)] rounded-[var(--r-pill)] pl-1 pr-3 py-1">
+                <span className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold ${CLASE_FUNCION[r.funcion]}`}>{acorde(r.acorde)}</span>
+                <span className="font-bold text-[var(--ink)]">{grado(r.grado)}</span>
+                <span className="text-xs text-[var(--ink-2)]">{NOMBRE_FUNCION[r.funcion]}</span>
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+      {ext && (
       <section className="space-y-2" aria-label="Acordes de la canción">
         <h3 className="font-bold text-[var(--ink)]">Los acordes y qué hacer sobre cada uno</h3>
         <div className="space-y-2">
@@ -178,8 +199,10 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
           })}
         </div>
       </section>
+      )}
 
       {/* 4. Para improvisar y componer */}
+      {ext && (
       <section className="space-y-2" aria-label="Para improvisar y componer">
         <h3 className="font-bold text-[var(--ink)]">Para improvisar y componer</h3>
         <ul className="space-y-2">
@@ -191,6 +214,16 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
           ))}
         </ul>
       </section>
+      )}
+
+      <button
+        type="button"
+        onClick={() => setExt((v) => !v)}
+        aria-expanded={ext}
+        className="flex items-center gap-1.5 mx-auto px-4 py-2 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] font-bold cursor-pointer hover:bg-[var(--surface)] transition-ui"
+      >
+        {ext ? <><ChevronUp className="w-4 h-4" /> Ver menos</> : <><ChevronDown className="w-4 h-4" /> Explicación extendida</>}
+      </button>
 
       {/* 5. El profesor (IA), si se ha pedido */}
       {profesor}
