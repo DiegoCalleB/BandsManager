@@ -101,6 +101,7 @@ import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import { ActiveSetlistHeader } from "./repertorio/ActiveSetlistHeader";
 import { SetlistItemsList } from "./repertorio/SetlistItemsList";
 import { RepertorioModalsContainer } from "./repertorio/RepertorioModalsContainer";
+import { SetlistsTabContentView } from "./repertorio/SetlistsTabContentView";
 import SongStudioModal from "./SongStudioModal";
 import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
@@ -2536,210 +2537,119 @@ export default function RepertorioSetlists({
         onOpenTutorial={openTutorial}
       />
 
-      {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO */}
+      {/* VIEW 1: SETLISTS & REPERTORIOS DE DIRECTO (Desacoplado en SetlistsTabContentView) */}
       {activeTab === "setlists" && (
-        <div className="w-full">
-          {/* MAIN EDITOR FOR ACTIVE SETLIST */}
-          <div
-            className="w-full p-3 sm:p-6 rounded-[var(--r-l)] sm:rounded-[var(--r-l)] space-y-2 sm:space-y-4 bg-[var(--surface)] max-lg:sticky max-lg:top-[-0.75rem] max-lg:z-20"
-          >
-            <ActiveSetlistHeader
-              activeSetlist={activeSetlist}
-              onUpdateSetlistName={(val) => {
-                if (!activeSetlist) return;
-                const updatedSetlist = {
-                  ...activeSetlist,
-                  nombre: val,
-                };
-                setSetlists((prev) =>
-                  prev.map((st) =>
-                    st.id === activeSetlist.id ? updatedSetlist : st,
-                  ),
-                );
-              }}
-              onEnterStageMode={() => {
-                if (activeSetlist) {
-                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
-                  setPerformanceInitialMode("directo");
-                  setPerformanceSetlistId(activeSetlist.id);
-                }
-              }}
-              onEnterRehearsalMode={() => {
-                if (activeSetlist) {
-                  cacheActiveStageSetlist(activeSetlist, songs, bandId);
-                  setPerformanceInitialMode("ensayo");
-                  setPerformanceSetlistId(activeSetlist.id);
-                }
-              }}
-              onOpenAIAnalysis={() => setShowAIAnalysisModal(true)}
-              onOpenPerfectSetlist={() => {
-                setPerfectSetlistPlan(null);
-                setPerfectSetlistError(null);
-                setShowPerfectSetlistModal(true);
-              }}
-              aiAnalysisOverallScore={aiAnalysisResult?.overallScore}
-              onPrintSetlist={() => setShowPdfPreview(true)}
-              onShareSetlist={() => handleShareSetlist(activeSetlist)}
-              onAssignSetlist={() => setAssigningSetlist(activeSetlist)}
-              onDuplicateSetlist={() => handleDuplicateSetlist(activeSetlist)}
-              onImportSetlist={() => setShowImportSetlistModal(true)}
-              onEditSetlistDetails={() =>
-                setSetlistModalData({
-                  isOpen: true,
-                  setlistToEdit: activeSetlist,
-                })
-              }
-              onDeleteSetlist={() => handleDeleteSetlist(activeSetlist.id)}
-            />
-          </div>
-
-          {/* SETLIST VIEW MODES & SUMMARY BAR */}
-          {(() => {
-            return (
-              <div className="flex flex-col gap-2.5">
-                <SetlistStatsSummaryBar
-                  metrics={activeSetlistMetrics}
-                  profileLabel={energyAnalysis.profileLabel}
-                  showStats={showSetlistStats}
-                  onToggleShowStats={() => setShowSetlistStats((v) => !v)}
-                />
-
-                {/* MAPA Y CURVA DE ENERGÍA DEL SHOW */}
-                {energyAnalysis.points.length > 0 && (
-                  <EnergyMapCard
-                    setlistKey={activeSetlist.id}
-                    energyAnalysis={energyAnalysis}
-                    chartData={chartData}
-                    yDomain={yDomain}
-                    zonasEnergia={ZONAS_ENERGIA}
-                    canUndoReorder={canUndoReorder}
-                    undoLastReorder={undoLastReorder}
-                    showEnergyMap={showEnergyMap}
-                    setShowEnergyMap={setShowEnergyMap}
-                    optimizeSetlistTransitions={optimizeSetlistTransitions}
-                    suggestChapaSpot={suggestChapaSpot}
-                    showChartSettingsMenu={showChartSettingsMenu}
-                    setShowChartSettingsMenu={setShowChartSettingsMenu}
-                    showIdealCurve={showIdealCurve}
-                    setShowIdealCurve={setShowIdealCurve}
-                    showBpmLine={showBpmLine}
-                    setShowBpmLine={setShowBpmLine}
-                    showTonalidad={showTonalidad}
-                    setShowTonalidad={setShowTonalidad}
-                    chartZoom={chartZoom}
-                    setChartZoom={setChartZoom}
-                    showTransitionBadges={showTransitionBadges}
-                    setShowTransitionBadges={setShowTransitionBadges}
-                    showConcertPlayer={showConcertPlayer}
-                    setShowConcertPlayer={setShowConcertPlayer}
-                    optimizeSummary={optimizeSummary}
-                    chapaSuggestion={chapaSuggestion}
-                    setChapaSuggestion={setChapaSuggestion}
-                    insertSuggestedChapa={insertSuggestedChapa}
-                    highlightedSongIds={highlightedSongIds}
-                    setHighlightedSongIds={setHighlightedSongIds}
-                    selectedSetlistItemId={selectedSetlistItemId}
-                    setSelectedSetlistItemId={setSelectedSetlistItemId}
-                    playerCurrentSongId={playerCurrentSong?.id}
-                    handleOpenTransitionPreview={handleOpenTransitionPreview}
-                    reorderSetlistItems={reorderSetlistItems}
-                    handleEnergyChartDrag={handleEnergyChartDrag}
-                    showHeuristicWarnings={showHeuristicWarnings}
-                    setShowHeuristicWarnings={setShowHeuristicWarnings}
-                    aiAnalysisResult={aiAnalysisResult}
-                    setShowAIAnalysisModal={setShowAIAnalysisModal}
-                    titlesMatch={titlesMatch}
-                  />
-                )}
-              </div>
-            );
-          })()}
-
-          {/* ADD ITEMS ACTION BAR (Modular) */}
-          <SetlistAddBar
-            activeSetlist={activeSetlist}
-            songs={songs}
-            sortedSongsByAlbumAndOrder={sortedSongsByAlbumAndOrder}
-            selectedSetlistItemId={selectedSetlistItemId}
-            setSelectedSetlistItemId={setSelectedSetlistItemId}
-            handleAddItemToSetlist={handleAddItemToSetlist}
-            setIsAddSongsModalOpen={setIsAddSongsModalOpen}
-            setEditingShowItem={setEditingShowItem}
-            setShowShowItemModal={setShowShowItemModal}
-            customShortcuts={customShortcuts}
-            handleUseCustomShortcut={handleUseCustomShortcut}
-            handleDeleteShortcut={handleDeleteShortcut}
-            isAddingShortcut={isAddingShortcut}
-            setIsAddingShortcut={setIsAddingShortcut}
-            newShortcutIcon={newShortcutIcon}
-            setNewShortcutIcon={setNewShortcutIcon}
-            newShortcutLabel={newShortcutLabel}
-            setNewShortcutLabel={setNewShortcutLabel}
-            newShortcutMinutes={newShortcutMinutes}
-            setNewShortcutMinutes={setNewShortcutMinutes}
-            handleCreateShortcut={handleCreateShortcut}
-          />
-
-          {/* ITEMS LIST WITH DRAG & DROP AND SELECTION */}
-          <SetlistItemsList
-            activeSetlist={activeSetlist}
-            songs={songs}
-            selectedSetlistItemId={selectedSetlistItemId}
-            setSelectedSetlistItemId={setSelectedSetlistItemId}
-            expandedSetlistItemIds={expandedSetlistItemIds}
-            setExpandedSetlistItemIds={setExpandedSetlistItemIds}
-            draggedItemIndex={draggedItemIndex}
-            setDraggedItemIndex={setDraggedItemIndex}
-            dragOverItemIndex={dragOverItemIndex}
-            setDragOverItemIndex={setDragOverItemIndex}
-            handleDropItem={handleDropItem}
-            activePlayerSong={activePlayerSong}
-            isPlayerPlaying={isPlayerPlaying}
-            selectPlayerSongWithQueue={selectPlayerSongWithQueue}
-            editingKeyItemId={editingKeyItemId}
-            setEditingKeyItemId={setEditingKeyItemId}
-            keyPopoverPos={keyPopoverPos}
-            setKeyPopoverPos={setKeyPopoverPos}
-            handleSetTonalidadDeseada={handleSetTonalidadDeseada}
-            editingEnergyItemId={editingEnergyItemId}
-            setEditingEnergyItemId={setEditingEnergyItemId}
-            energyPopoverPos={energyPopoverPos}
-            setEnergyPopoverPos={setEnergyPopoverPos}
-            savingEnergyItemId={savingEnergyItemId}
-            handleSetEnergiaManual={handleSetEnergiaManual}
-            handleOpenTransitionPreview={handleOpenTransitionPreview}
-            handleRemoveSetlistItem={handleRemoveSetlistItem}
-            handleUpdateItemNote={handleUpdateItemNote}
-            onEditSong={(song) => {
-              setEditingSong(song);
-              setShowSongModal(true);
-            }}
-            onOpenStudio={(song) => handleOpenStudioModal(song)}
-            onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
-            onOpenChords={(song) => setActiveChordsSong(song)}
-            currentUser={currentUser}
-            handleUpdateSongFromStudio={handleUpdateSongFromStudio}
-            onUpdateShowItemTitle={(itemId, val) => {
-              setSetlists((prev) =>
-                prev.map((s) =>
-                  s.id === activeSetlist.id
-                    ? {
-                        ...s,
-                        items: s.items.map((x) =>
-                          x.id === itemId ? { ...x, tituloCustom: val } : x,
-                        ),
-                      }
-                    : s,
-                ),
-              );
-            }}
-            onEditShowItem={(it) => {
-              setEditingShowItem(it);
-              setShowShowItemModal(true);
-            }}
-            transparentDragImage={TRANSPARENT_DRAG_IMAGE}
-          />
-        </div>
+        <SetlistsTabContentView
+          activeSetlist={activeSetlist}
+          songs={songs}
+          sortedSongsByAlbumAndOrder={sortedSongsByAlbumAndOrder}
+          bandId={bandId}
+          currentUser={currentUser}
+          setSetlists={setSetlists}
+          activeSetlistMetrics={activeSetlistMetrics}
+          energyAnalysis={energyAnalysis}
+          chartData={chartData}
+          yDomain={yDomain}
+          ZONAS_ENERGIA={ZONAS_ENERGIA}
+          canUndoReorder={canUndoReorder}
+          undoLastReorder={undoLastReorder}
+          showEnergyMap={showEnergyMap}
+          setShowEnergyMap={setShowEnergyMap}
+          showSetlistStats={showSetlistStats}
+          setShowSetlistStats={setShowSetlistStats}
+          optimizeSetlistTransitions={optimizeSetlistTransitions}
+          suggestChapaSpot={suggestChapaSpot}
+          showChartSettingsMenu={showChartSettingsMenu}
+          setShowChartSettingsMenu={setShowChartSettingsMenu}
+          showIdealCurve={showIdealCurve}
+          setShowIdealCurve={setShowIdealCurve}
+          showBpmLine={showBpmLine}
+          setShowBpmLine={setShowBpmLine}
+          showTonalidad={showTonalidad}
+          setShowTonalidad={setShowTonalidad}
+          chartZoom={chartZoom}
+          setChartZoom={setChartZoom}
+          showTransitionBadges={showTransitionBadges}
+          setShowTransitionBadges={setShowTransitionBadges}
+          showConcertPlayer={showConcertPlayer}
+          setShowConcertPlayer={setShowConcertPlayer}
+          optimizeSummary={optimizeSummary}
+          chapaSuggestion={chapaSuggestion}
+          setChapaSuggestion={setChapaSuggestion}
+          insertSuggestedChapa={insertSuggestedChapa}
+          highlightedSongIds={highlightedSongIds}
+          setHighlightedSongIds={setHighlightedSongIds}
+          selectedSetlistItemId={selectedSetlistItemId}
+          setSelectedSetlistItemId={setSelectedSetlistItemId}
+          playerCurrentSong={playerCurrentSong}
+          handleOpenTransitionPreview={handleOpenTransitionPreview}
+          reorderSetlistItems={reorderSetlistItems}
+          handleEnergyChartDrag={handleEnergyChartDrag}
+          showHeuristicWarnings={showHeuristicWarnings}
+          setShowHeuristicWarnings={setShowHeuristicWarnings}
+          aiAnalysisResult={aiAnalysisResult}
+          setShowAIAnalysisModal={setShowAIAnalysisModal}
+          titlesMatch={titlesMatch}
+          handleAddItemToSetlist={handleAddItemToSetlist}
+          setIsAddSongsModalOpen={setIsAddSongsModalOpen}
+          setEditingShowItem={setEditingShowItem}
+          setShowShowItemModal={setShowShowItemModal}
+          customShortcuts={customShortcuts}
+          handleUseCustomShortcut={handleUseCustomShortcut}
+          handleDeleteShortcut={handleDeleteShortcut}
+          isAddingShortcut={isAddingShortcut}
+          setIsAddingShortcut={setIsAddingShortcut}
+          newShortcutIcon={newShortcutIcon}
+          setNewShortcutIcon={setNewShortcutIcon}
+          newShortcutLabel={newShortcutLabel}
+          setNewShortcutLabel={setNewShortcutLabel}
+          newShortcutMinutes={newShortcutMinutes}
+          setNewShortcutMinutes={setNewShortcutMinutes}
+          handleCreateShortcut={handleCreateShortcut}
+          expandedSetlistItemIds={expandedSetlistItemIds}
+          setExpandedSetlistItemIds={setExpandedSetlistItemIds}
+          draggedItemIndex={draggedItemIndex}
+          setDraggedItemIndex={setDraggedItemIndex}
+          dragOverItemIndex={dragOverItemIndex}
+          setDragOverItemIndex={setDragOverItemIndex}
+          handleDropItem={handleDropItem}
+          activePlayerSong={activePlayerSong}
+          isPlayerPlaying={isPlayerPlaying}
+          selectPlayerSongWithQueue={selectPlayerSongWithQueue}
+          editingKeyItemId={editingKeyItemId}
+          setEditingKeyItemId={setEditingKeyItemId}
+          keyPopoverPos={keyPopoverPos}
+          setKeyPopoverPos={setKeyPopoverPos}
+          handleSetTonalidadDeseada={handleSetTonalidadDeseada}
+          editingEnergyItemId={editingEnergyItemId}
+          setEditingEnergyItemId={setEditingEnergyItemId}
+          energyPopoverPos={energyPopoverPos}
+          setEnergyPopoverPos={setEnergyPopoverPos}
+          savingEnergyItemId={savingEnergyItemId}
+          handleSetEnergiaManual={handleSetEnergiaManual}
+          handleRemoveSetlistItem={handleRemoveSetlistItem}
+          handleUpdateItemNote={handleUpdateItemNote}
+          setEditingSong={setEditingSong}
+          setShowSongModal={setShowSongModal}
+          handleOpenStudioModal={handleOpenStudioModal}
+          setActiveMemberNotesSong={setActiveMemberNotesSong}
+          setActiveChordsSong={setActiveChordsSong}
+          handleUpdateSongFromStudio={handleUpdateSongFromStudio}
+          cacheActiveStageSetlist={cacheActiveStageSetlist}
+          setPerformanceInitialMode={setPerformanceInitialMode}
+          setPerformanceSetlistId={setPerformanceSetlistId}
+          setPerfectSetlistPlan={setPerfectSetlistPlan}
+          setPerfectSetlistError={setPerfectSetlistError}
+          setShowPerfectSetlistModal={setShowPerfectSetlistModal}
+          setShowPdfPreview={setShowPdfPreview}
+          handleShareSetlist={handleShareSetlist}
+          setAssigningSetlist={setAssigningSetlist}
+          handleDuplicateSetlist={handleDuplicateSetlist}
+          setShowImportSetlistModal={setShowImportSetlistModal}
+          setSetlistModalData={setSetlistModalData}
+          handleDeleteSetlist={handleDeleteSetlist}
+          transparentDragImage={TRANSPARENT_DRAG_IMAGE}
+        />
       )}
 
       {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}

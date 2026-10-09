@@ -51,6 +51,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SetlistStatsSummaryBar|src/components/repertorio/SetlistStatsSummaryBar.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_SetlistsTabContentView|src/components/repertorio/SetlistsTabContentView.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*

@@ -23,6 +23,7 @@ Exporta: SetlistMetrics, SetlistStatsSummaryBarProps, SetlistStatsSummaryBar.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_SetlistsTabContentView|src/components/repertorio/SetlistsTabContentView.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
