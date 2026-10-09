@@ -3,9 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
+ @typescript-eslint/no-explicit-any
 */
 import { Compass, Loader2, Globe, Calendar, Instagram, CheckCircle2, PartyPopper, TrendingUp, AlertCircle, CalendarCheck, ExternalLink } from "lucide-react";
 import { Button } from "../../ui";

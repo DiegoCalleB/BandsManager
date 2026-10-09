@@ -1,0 +1,37 @@
+---
+id: src_components_booking_venue_panel_VenuePlaybookBanner
+title: "src/components/booking/venue_panel/VenuePlaybookBanner.tsx"
+layer: frontend
+domain: booking
+file: "src/components/booking/venue_panel/VenuePlaybookBanner.tsx"
+tags: ["frontend", "booking", "auto"]
+---
+
+# 📌 src/components/booking/venue_panel/VenuePlaybookBanner.tsx
+
+> **Ubicación:** `src/components/booking/venue_panel/VenuePlaybookBanner.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
+
+## 📖 Descripción
+Banner del playbook táctico y extracción de entidades del lead.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_venue_panel_VenuePitchFeedbackPanel|src/components/booking/venue_panel/VenuePitchFeedbackPanel.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_venue_panel_VenueLeadInfoEditForm|src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

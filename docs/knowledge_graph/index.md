@@ -73,28 +73,28 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-780 nodos: 16 agent · 40 db · 12 external · 14 feature · 284 frontend · 39 hook · 42 route · 61 schema · 10 security · 262 service.
+812 nodos: 17 agent · 40 db · 12 external · 14 feature · 313 frontend · 40 hook · 42 route · 61 schema · 10 security · 263 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 269 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 196 ficheros dependen de él
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 115 ficheros dependen de él
+- [[src_types|src/types.ts]] — 298 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 213 ficheros dependen de él
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 130 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 59 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 64 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 38 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
-- [[src_services_api|src/services/api.ts]] — 36 ficheros dependen de él
+- [[src_services_api|src/services/api.ts]] — 37 ficheros dependen de él
 - [[server_db|server/db.ts]] — 35 ficheros dependen de él
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 32 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 24 ficheros dependen de él
+- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 25 ficheros dependen de él
+- [[route_repertoire|Repertoire & Setlists Route]] — 24 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 23 ficheros dependen de él
-- [[route_repertoire|Repertoire & Setlists Route]] — 21 ficheros dependen de él
 - [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 19 ficheros dependen de él
 - [[tabla_leads|tabla leads]] — 19 ficheros dependen de él
 

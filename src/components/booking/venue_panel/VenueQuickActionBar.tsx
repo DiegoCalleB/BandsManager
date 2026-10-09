@@ -2,11 +2,7 @@
  * Barra de acciones rápidas de booking.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
+ 
 import { Zap, MessageCircle, Smartphone, Phone, PhoneCall } from "lucide-react";
 import { Lead } from "../../../types";
 import React, { Dispatch, SetStateAction } from "react";

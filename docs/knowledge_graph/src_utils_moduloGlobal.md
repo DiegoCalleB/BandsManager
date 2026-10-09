@@ -24,7 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_App|src/App.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_hooks_useRepertorioTabs|src/hooks/useRepertorioTabs.ts]] *(from #hook)*
 
 ---
 

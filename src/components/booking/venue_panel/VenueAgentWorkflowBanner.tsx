@@ -4,8 +4,7 @@
  */
 /* eslint-disable
  @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
+ @typescript-eslint/no-explicit-any
 */
 import { Sparkles, Loader2, CheckCircle2, Send } from "lucide-react";
 import { Button } from "../../ui";

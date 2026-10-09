@@ -3,9 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
+ @typescript-eslint/no-unused-vars
 */
 import { Sparkles, RefreshCw, Headphones, MapPin, Star, Disc, ShieldCheck, Truck, Navigation, Instagram, CheckCircle2, CalendarDays, Flame, Megaphone, Handshake, Calculator, Coins } from "lucide-react";
 import { Button, LinkButton, Input } from "../../ui";

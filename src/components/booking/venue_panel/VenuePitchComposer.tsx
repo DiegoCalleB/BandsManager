@@ -3,9 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
+ @typescript-eslint/no-explicit-any
 */
 import { Layers, Copy, MessageCircle, Loader2, CheckCircle2, Sparkles, CalendarCheck, Handshake, ShieldAlert } from "lucide-react";
 import { ShowIcon } from "../../ui/ShowIcon";

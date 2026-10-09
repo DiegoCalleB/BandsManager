@@ -2,11 +2,7 @@
  * Radares de ventana de programación y eventos locales.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
+ 
 import { CalendarDays, RefreshCw, Flame } from "lucide-react";
 import { ShowIcon } from "../../ui/ShowIcon";
 import { Button } from "../../ui";

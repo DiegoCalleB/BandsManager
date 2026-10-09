@@ -1,0 +1,33 @@
+---
+id: src_components_booking_venue_panel_hooks_useVenueEnrichment
+title: "src/components/booking/venue_panel/hooks/useVenueEnrichment.ts"
+layer: frontend
+domain: booking
+file: "src/components/booking/venue_panel/hooks/useVenueEnrichment.ts"
+tags: ["frontend", "booking", "auto"]
+---
+
+# 📌 src/components/booking/venue_panel/hooks/useVenueEnrichment.ts
+
+> **Ubicación:** `src/components/booking/venue_panel/hooks/useVenueEnrichment.ts`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
+
+## 📖 Descripción
+Estado y acciones de enriquecimiento externo: rutas, redes, ventana de programación, eventos, prensa, co-booking y simulador financiero.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

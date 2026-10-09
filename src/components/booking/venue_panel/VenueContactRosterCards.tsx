@@ -2,11 +2,7 @@
  * Tarjeta de contacto y ubicación y roster de artistas representados.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
+ 
 import { ShowIcon } from "../../ui/ShowIcon";
 import { getWhatsAppUrl, WHATSAPP_WINDOW_NAME, openWhatsAppChat } from "../../../utils/whatsapp";
 import { Smartphone, Phone, PhoneCall, Sparkles } from "lucide-react";

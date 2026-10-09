@@ -4,8 +4,7 @@
  */
 /* eslint-disable
  @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
+ @typescript-eslint/no-explicit-any
 */
 import { Edit3, Sparkles, Upload, Clock, Calendar, Coins, Sliders, Layers, Copy, MessageCircle, Loader2, CheckCircle2, CalendarCheck, Handshake, ShieldAlert, Star, MessageSquare, Undo2, RefreshCw, RotateCcw } from "lucide-react";
 import { Input, Select, Button, Textarea, LinkButton } from "../../ui";

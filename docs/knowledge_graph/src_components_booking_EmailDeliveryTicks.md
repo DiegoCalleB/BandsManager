@@ -25,7 +25,6 @@ Exporta: EmailDeliveryTicks.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
-- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---
 

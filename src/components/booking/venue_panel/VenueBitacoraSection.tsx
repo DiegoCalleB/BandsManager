@@ -2,11 +2,7 @@
  * Pestaña de bitácora de contacto del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
+ 
 import { History, Save, Trash2 } from "lucide-react";
 import { Input, Textarea, IconButton } from "../../ui";
 import { PublicoSilhouette } from "../../ui/PublicoSilhouette";

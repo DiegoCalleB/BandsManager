@@ -2,11 +2,7 @@
  * Panel de feedback y entrenamiento IA del pitch.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
+ 
 import { LinkButton, Textarea, Button } from "../../ui";
 import { Star, MessageSquare, CheckCircle2, Loader2, Undo2, RefreshCw, RotateCcw } from "lucide-react";
 import { ShowIcon } from "../../ui/ShowIcon";
