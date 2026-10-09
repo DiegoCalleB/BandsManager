@@ -118,6 +118,7 @@ import { useRepertorioSongAlbumHandlers } from "../hooks/useRepertorioSongAlbumH
 import { useRepertorioSetlistOperations } from "../hooks/useRepertorioSetlistOperations";
 import { useRepertorioItemPopovers } from "../hooks/useRepertorioItemPopovers";
 import { useRepertorioShortcutsAndEvents } from "../hooks/useRepertorioShortcutsAndEvents";
+import { useRepertorioAuxModals } from "../hooks/useRepertorioAuxModals";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -596,67 +597,31 @@ export default function RepertorioSetlists({
     ],
   );
 
-  // Song Modal State
-  const [showSongModal, setShowSongModal] = useState(false);
-  const [isSpotifyModalOpen, setIsSpotifyModalOpen] = useState(false);
-  const [editingSong, setEditingSong] = useState<Song | null>(null);
-
-  // Studio Ideas Modal State
-  const [activeStudioSong, setActiveStudioSong] = useState<Song | null>(null);
-  const [activeStudioOpenIris, setActiveStudioOpenIris] =
-    useState<boolean>(false);
-
-  const handleOpenStudioModal = useCallback(
-    (song: Song | null, opts?: { openIris?: boolean }) => {
-      setIsPlayerPlaying(false);
-      setActiveStudioOpenIris(!!opts?.openIris);
-      setActiveStudioSong(song);
-    },
-    [setIsPlayerPlaying],
-  );
-
-  // Chords Viewer Modal State
-  const [activeChordsSong, setActiveChordsSong] = useState<Song | null>(null);
-  const [activeMemberNotesSong, setActiveMemberNotesSong] =
-    useState<Song | null>(null);
-
-  // Transition Preview Modal State (para comprobar el enlace auditivo/armónico entre temas consecutivos)
-  const [transitionPreviewData, setTransitionPreviewData] = useState<{
-    isOpen: boolean;
-    songA: Song | null;
-    songB: Song | null;
-    itemA: SetlistItem | null;
-    itemB: SetlistItem | null;
-    indexA: number;
-    indexB: number;
-  } | null>(null);
-
-  const handleOpenTransitionPreview = useCallback(
-    (idxA: number, idxB: number) => {
-      if (!activeSetlist || !activeSetlist.items) return;
-      const items = activeSetlist.items;
-      if (idxA < 0 || idxB < 0 || idxA >= items.length || idxB >= items.length)
-        return;
-
-      const itA = items[idxA];
-      const itB = items[idxB];
-      const sA = itA?.songId ? songs.find((s) => s.id === itA.songId) : null;
-      const sB = itB?.songId ? songs.find((s) => s.id === itB.songId) : null;
-
-      if (sA && sB) {
-        setTransitionPreviewData({
-          isOpen: true,
-          songA: sA,
-          songB: sB,
-          itemA: itA,
-          itemB: itB,
-          indexA: idxA,
-          indexB: idxB,
-        });
-      }
-    },
-    [activeSetlist, songs],
-  );
+  // Hook que encapsula modales auxiliares (Studio, Chords, MemberNotes, TransitionPreview, Spotify)
+  const {
+    showSongModal,
+    setShowSongModal,
+    isSpotifyModalOpen,
+    setIsSpotifyModalOpen,
+    editingSong,
+    setEditingSong,
+    activeStudioSong,
+    setActiveStudioSong,
+    activeStudioOpenIris,
+    setActiveStudioOpenIris,
+    handleOpenStudioModal,
+    activeChordsSong,
+    setActiveChordsSong,
+    activeMemberNotesSong,
+    setActiveMemberNotesSong,
+    transitionPreviewData,
+    setTransitionPreviewData,
+    handleOpenTransitionPreview,
+  } = useRepertorioAuxModals({
+    songs,
+    setIsPlayerPlaying,
+    activeSetlist,
+  });
 
   // Selected item in active setlist (for intelligent insertion beneath selected song)
   const [selectedSetlistItemId, setSelectedSetlistItemId] = useState<
