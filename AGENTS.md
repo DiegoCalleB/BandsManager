@@ -351,6 +351,19 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Escape hatch:** `git commit --no-verify` / `git push --no-verify` saltan el hook de ese commit o push puntual (ej. un WIP que sabes que no compila del todo). Úsalo con criterio, no como costumbre.
 * **A prueba de romper el deploy:** el script `prepare` (`"husky || exit 0"`) nunca hace fallar `npm ci`/`npm install` aunque no se puedan instalar los hooks (ej. un build de Railway sin `.git` disponible) — la instalación de dependencias nunca depende de que Husky funcione.
 
+### 5.6 Arquitectura Limpia, SRP y Control de Tamaño (Anti-God Components)
+* **Objetivo de excelencia (TFM):** La mantenibilidad por un solo desarrollador y el estándar académico/técnico de calidad del proyecto exigen modularidad real. Se prohíben expresamente los *God Objects* y *God Components* sin caer en la trampa de la sobre-fragmentación (*ravioli code*).
+* **Umbrales pragmáticos de tamaño (evitar monstruos reales, no monstruitos recién nacidos):**
+  * `0 - 600 líneas`: Zona verde. Tamaño normal y saludable en React/TypeScript con JSX estructurado, estilos de Tailwind y tipado completo. No fragmentar por deporte.
+  * `600 - 800 líneas`: Zona de atención. Si el archivo crece, evaluar desacoplamiento en la siguiente refactorización.
+  * `> 800 líneas`: Zona roja / Monstruo en gestación. **La IA tiene terminantemente prohibido inflar con bloques nuevos de JSX o lógica compleja un archivo que ya supere las 800 líneas.** Toda nueva funcionalidad o bloque debe nacer en subcomponente, hook o función utilitaria.
+* **Los 3 Gatillos Objetivos de Extracción (cuándo separar obligatoriamente):**
+  1. **Modales y paneles secundarios:** Si una vista principal contiene un `<Modal>` o `<Drawer>` que pasa de ~100-150 líneas, debe residir en su propio archivo (ej. dentro de una subcarpeta del dominio como `modals/` o subcomponentes). La vista principal solo gestiona su apertura/cierre.
+  2. **Lógica de cálculo pura fuera de React:** Algoritmos (música, semitonos, fechas, métricas, filtros complejos) que no consuman hooks ni JSX deben residir en `src/utils/` o `server/utils/` como funciones puras desacopladas de React. Beneficio directo: test unitario instantáneo sin montar DOM.
+  3. **Explosión de estado React:** Si un componente acumula más de 8-10 `useState` relacionados con un mismo flujo, la lógica se extrae a un Custom Hook (`useNombreFeature.ts`).
+* **Thin Controllers en Backend (`server/routes/`):**
+  * Las rutas Express no son vertederos de lógica de negocio. Un endpoint se limita a: autenticar/autorizar, validar entrada (`req.body` / `req.params`), delegar la operación a un servicio (`server/services/`) o capa de datos (`server/db/`), y responder (`res.json()`). Si un handler supera las 80-100 líneas, la lógica de negocio debe extraerse a un servicio o utilidad testeable.
+
 ---
 
 ## 🧘 6. Simplicidad en Pantalla (REGLA TRANSVERSAL — aplica a TODA la app)
