@@ -117,6 +117,7 @@ import { useRepertorioSync } from "../hooks/useRepertorioSync";
 import { useRepertorioSongAlbumHandlers } from "../hooks/useRepertorioSongAlbumHandlers";
 import { useRepertorioSetlistOperations } from "../hooks/useRepertorioSetlistOperations";
 import { useRepertorioItemPopovers } from "../hooks/useRepertorioItemPopovers";
+import { useRepertorioShortcutsAndEvents } from "../hooks/useRepertorioShortcutsAndEvents";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -481,10 +482,6 @@ export default function RepertorioSetlists({
   // the built-in ones (Presentación, Chapa, BIS...). Persisted per band in Supabase via
   // /api/setlist-shortcuts so every member of the band sees the same set.
   const [customShortcuts, setCustomShortcuts] = useState<SetlistShortcut[]>([]);
-  const [isAddingShortcut, setIsAddingShortcut] = useState(false);
-  const [newShortcutIcon, setNewShortcutIcon] = useState("⭐");
-  const [newShortcutLabel, setNewShortcutLabel] = useState("");
-  const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
 
   const {
     shareModalData,
@@ -918,19 +915,6 @@ export default function RepertorioSetlists({
   const [selectedConcertToAssign, setSelectedConcertToAssign] =
     useState<string>("");
 
-  // Show Event / Interludio Modal State & Mic Recorder
-  const [showShowItemModal, setShowShowItemModal] = useState(false);
-  const [editingShowItem, setEditingShowItem] = useState<SetlistItem | null>(
-    null,
-  );
-  const [showItemAudioUrl, setShowItemAudioUrl] = useState<string>("");
-  const [isRecordingShowItem, setIsRecordingShowItem] =
-    useState<boolean>(false);
-  const [recordingShowItemSecs, setRecordingShowItemSecs] = useState<number>(0);
-  const showItemMediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const showItemChunksRef = useRef<Blob[]>([]);
-  const showItemTimerRef = useRef<any>(null);
-
   // Métricas agregadas del setlist activo (duración, temas, bloques y BPM)
   const activeSetlistMetrics = useActiveSetlistMetrics(activeSetlist, songs);
 
@@ -1093,60 +1077,35 @@ export default function RepertorioSetlists({
   };
 
 
-  // Inserts a band-created custom shortcut into the active setlist as a generic ('otro') item
-  const handleUseCustomShortcut = (sc: SetlistShortcut) => {
-    handleAddItemToSetlist(
-      undefined,
-      "otro",
-      sc.tituloCustom,
-      sc.duracionEstimadaMinutos,
-      sc.duracionEstimadaSegundos,
-      sc.notaTema,
-    );
-  };
-
-  const handleCreateShortcut = async () => {
-    const etiqueta = newShortcutLabel.trim();
-    if (!etiqueta) return;
-    try {
-      const res = await fetch("/api/setlist-shortcuts", {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({
-          icono: newShortcutIcon.trim() || "⭐",
-          etiqueta,
-          tituloCustom: etiqueta,
-          duracionEstimadaMinutos: newShortcutMinutes,
-          duracionEstimadaSegundos: newShortcutMinutes * 60,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.shortcut) {
-          setCustomShortcuts((prev) => [...prev, data.shortcut]);
-        }
-      }
-    } catch (err) {
-      console.error("Error al crear el acceso rápido:", err);
-    } finally {
-      setNewShortcutLabel("");
-      setNewShortcutIcon("⭐");
-      setNewShortcutMinutes(1);
-      setIsAddingShortcut(false);
-    }
-  };
-
-  const handleDeleteShortcut = async (id: string) => {
-    setCustomShortcuts((prev) => prev.filter((sc) => sc.id !== id));
-    try {
-      await fetch(`/api/setlist-shortcuts/${id}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      });
-    } catch (err) {
-      console.error("Error al eliminar el acceso rápido:", err);
-    }
-  };
+  // Hook que encapsula accesos rápidos personalizados y grabación de audio de show items
+  const {
+    isAddingShortcut,
+    setIsAddingShortcut,
+    newShortcutIcon,
+    setNewShortcutIcon,
+    newShortcutLabel,
+    setNewShortcutLabel,
+    newShortcutMinutes,
+    setNewShortcutMinutes,
+    showShowItemModal,
+    setShowShowItemModal,
+    editingShowItem,
+    setEditingShowItem,
+    showItemAudioUrl,
+    setShowItemAudioUrl,
+    isRecordingShowItem,
+    recordingShowItemSecs,
+    handleUseCustomShortcut,
+    handleCreateShortcut,
+    handleDeleteShortcut,
+    handleStartRecordingShowItem,
+    handleStopRecordingShowItem,
+    handleShowItemAudioFileUpload,
+  } = useRepertorioShortcutsAndEvents({
+    getHeaders,
+    setCustomShortcuts,
+    handleAddItemToSetlist,
+  });
 
   const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
     if (!activeSetlist) return;

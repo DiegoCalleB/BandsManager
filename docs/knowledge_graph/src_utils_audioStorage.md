@@ -49,6 +49,7 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_components_WaveformTrack|src/components/WaveformTrack.tsx]] *(from #frontend)*
 - [[src_hooks_useAccompanimentGenerator|src/hooks/useAccompanimentGenerator.ts]] *(from #hook)*
 - [[src_hooks_useMezclaStems|src/hooks/useMezclaStems.ts]] *(from #hook)*
+- [[src_hooks_useRepertorioShortcutsAndEvents|src/hooks/useRepertorioShortcutsAndEvents.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSongAlbumHandlers|src/hooks/useRepertorioSongAlbumHandlers.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSync|src/hooks/useRepertorioSync.ts]] *(from #hook)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*

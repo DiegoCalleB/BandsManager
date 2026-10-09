@@ -237,6 +237,7 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useNegotiationSimulation|src/hooks/useNegotiationSimulation.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioItemPopovers|src/hooks/useRepertorioItemPopovers.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSetlistOperations|src/hooks/useRepertorioSetlistOperations.ts]] *(from #hook)*
+- [[src_hooks_useRepertorioShortcutsAndEvents|src/hooks/useRepertorioShortcutsAndEvents.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSongAlbumHandlers|src/hooks/useRepertorioSongAlbumHandlers.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSync|src/hooks/useRepertorioSync.ts]] *(from #hook)*
 - [[src_hooks_useSavedFilters|src/hooks/useSavedFilters.ts]] *(from #hook)*

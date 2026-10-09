@@ -68,6 +68,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[src_hooks_useColaLetras|src/hooks/useColaLetras.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioItemPopovers|src/hooks/useRepertorioItemPopovers.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSetlistOperations|src/hooks/useRepertorioSetlistOperations.ts]] *(from #hook)*
+- [[src_hooks_useRepertorioShortcutsAndEvents|src/hooks/useRepertorioShortcutsAndEvents.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSongAlbumHandlers|src/hooks/useRepertorioSongAlbumHandlers.ts]] *(from #hook)*
 - [[src_hooks_useRepertorioSync|src/hooks/useRepertorioSync.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
