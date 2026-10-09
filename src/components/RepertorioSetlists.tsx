@@ -129,6 +129,8 @@ import { ModuleTutorialModal } from "./common/ModuleTutorialModal";
 import { ImportSetlistModal } from "./repertorio/ImportSetlistModal";
 import { DiscografiaView } from "./repertorio/DiscografiaView";
 import { SongCardRow } from "./repertorio/SongCardRow";
+import { SetlistSongRow } from "./repertorio/SetlistSongRow";
+import { SetlistShowItemRow } from "./repertorio/SetlistShowItemRow";
 import { SpotifyDiscographyModal } from "./repertorio/SpotifyDiscographyModal";
 import { EscenarioView } from "./repertorio/EscenarioView";
 import { SetlistPerformanceView } from "./SetlistPerformanceView";
@@ -4148,13 +4150,6 @@ export default function RepertorioSetlists({
                   const song = songs.find((s) => s.id === it.songId);
                   if (!song) return null;
 
-                  // Check if this song has member notes
-                  const memberNotesCount = song.notasMiembros
-                    ? Object.values(song.notasMiembros).filter(
-                        (v) => typeof v === "string" && v.trim().length > 0,
-                      ).length
-                    : 0;
-
                   const isExpanded = expandedSetlistItemIds.has(it.id);
                   const toggleExpand = () => {
                     const newSet = new Set(expandedSetlistItemIds);
@@ -4166,7 +4161,6 @@ export default function RepertorioSetlists({
                     setExpandedSetlistItemIds(newSet);
                   };
 
-                  // Reproducir esta canción sin tener que expandir la fila
                   const isPlayingThisRow =
                     activePlayerSong?.id === song.id && isPlayerPlaying;
                   const playThisSong = () => {
@@ -4174,7 +4168,6 @@ export default function RepertorioSetlists({
                       .filter((i) => i.tipoItem === "cancion" && i.songId)
                       .map((i) => songs.find((s) => s.id === i.songId))
                       .filter((s): s is Song => !!s);
-                    // Calculate transposition from tonalidadDeseada if set
                     const diffResult =
                       song.tonalidad && it.tonalidadDeseada
                         ? getSemitoneDifference(
@@ -4195,10 +4188,22 @@ export default function RepertorioSetlists({
                     .slice(0, index)
                     .filter((i) => i.tipoItem === "cancion").length;
 
+                  const prevSong =
+                    index > 0 && activeSetlist.items[index - 1]?.songId
+                      ? songs.find(
+                          (s) => s.id === activeSetlist.items[index - 1].songId,
+                        )
+                      : undefined;
+
                   return (
-                    <div
+                    <SetlistSongRow
                       key={it.id}
-                      draggable={true}
+                      item={it}
+                      index={index}
+                      song={song}
+                      songIndex={songIndex}
+                      isDragging={isDragging}
+                      isDragOver={isDragOver}
                       onDragStart={(e) => {
                         if (TRANSPARENT_DRAG_IMAGE)
                           e.dataTransfer.setDragImage(
@@ -4224,7 +4229,8 @@ export default function RepertorioSetlists({
                         setDraggedItemIndex(null);
                         setDragOverItemIndex(null);
                       }}
-                      onClick={() => {
+                      isSelected={isSelected}
+                      onSelect={() => {
                         if (!isSelected && !isExpanded) {
                           setExpandedSetlistItemIds(
                             new Set(expandedSetlistItemIds).add(it.id),
@@ -4232,772 +4238,104 @@ export default function RepertorioSetlists({
                         }
                         setSelectedSetlistItemId(isSelected ? null : it.id);
                       }}
-                      className={`group rounded-[var(--r-m)] transition-ui cursor-pointer ${
-                        isDragging ? "opacity-40 scale-[0.98]" : ""
-                      } ${isDragOver ? "scale-[1.01] bg-[var(--ok)]/10" : ""} ${
-                        isSelected
-                          ? "ring-2 ring-[var(--acc)]/20 bg-[var(--ok)]/10"
-                          : "bg-[var(--surface)] hover:bg-[var(--surface)]/80"
-                      }`}
-                    >
-                      {/* MAIN ROW - COMPACT */}
-                      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 px-3 py-2.5">
-                        {/* Drag Handle */}
-                        <div
-                          className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors shrink-0"
-                          title="Arrastrar y soltar para reordenar"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <GripVertical className="w-3.5 h-3.5" />
-                        </div>
-
-                        {/* Index / Play */}
-                        <button data-raw
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            playThisSong();
-                          }}
-                          className="w-6 h-6 rounded-[var(--r-pill)] flex items-center justify-center shrink-0 transition-ui cursor-pointer bg-[var(--acc-soft)] text-[var(--acc-ink)] sm:bg-transparent sm:group-hover:bg-[var(--ok)] sm:group-hover:text-[var(--ink)]"
-                          title={
-                            isPlayingThisRow
-                              ? "Sonando ahora"
-                              : "Reproducir esta canción"
-                          }
-                        >
-                          {isPlayingThisRow ? (
-                            <div className="flex items-center gap-0.5">
-                              <span className="w-0.5 h-2 bg-[var(--ok)] rounded-[var(--r-pill)]" />
-                              <span className="w-0.5 h-2.5 bg-[var(--ok)] rounded-[var(--r-pill)] delay-75" />
-                              <span className="w-0.5 h-1.5 bg-[var(--ok)] rounded-[var(--r-pill)] delay-150" />
-                            </div>
-                          ) : (
-                            <>
-                              <span className="hidden sm:inline sm:group-hover:hidden text-xs font-semibold text-[var(--ink-2)]">
-                                {songIndex + 1}
-                              </span>
-                              <Play className="w-3 h-3 fill-current sm:hidden sm:group-hover:block ml-0.5 text-[var(--ink)]" />
-                            </>
-                          )}
-                        </button>
-
-                        {/* Title + metadata */}
-                        <span
-                          className="min-w-0 flex-1 basis-32 truncate text-sm font-semibold text-[var(--ink)] sm:max-w-[240px] sm:flex-none"
-                          title={formatSongTitle(song.titulo)}
-                        >
-                          {formatSongTitle(song.titulo)}
-                        </span>
-
-                        {(() => {
-                          // Tono en el que se quiere tocar ESTE tema en ESTE repertorio (distinto del tono
-                          // original de grabación por registro vocal, cantante sustituto, etc.) — se guarda en
-                          // el SetlistItem (it.tonalidadDeseada) y el Modo Concierto lo transporta solo.
-                          const desiredKey = it.tonalidadDeseada;
-                          const isEditingKey = editingKeyItemId === it.id;
-                          const KEY_POPOVER_WIDTH_PX = 200;
-                          const KEY_POPOVER_HEIGHT_PX = 110;
-                          const rawOrigKey = (song.tonalidad || "").trim();
-                          const isEsKey = /^(Do|Re|Mi|Fa|Sol|La|Si)/i.test(
-                            rawOrigKey,
-                          );
-                          const baseRoots = isEsKey
-                            ? [
-                                "Do",
-                                "Do#",
-                                "Re",
-                                "Re#",
-                                "Mi",
-                                "Fa",
-                                "Fa#",
-                                "Sol",
-                                "Sol#",
-                                "La",
-                                "La#",
-                                "Si",
-                              ]
-                            : [
-                                "C",
-                                "C#",
-                                "D",
-                                "D#",
-                                "E",
-                                "F",
-                                "F#",
-                                "G",
-                                "G#",
-                                "A",
-                                "A#",
-                                "B",
-                              ];
-                          const keyMatch = rawOrigKey.match(
-                            /^(Do#|Re#|Fa#|Sol#|La#|Do|Re|Mi|Fa|Sol|La|Si|C#|D#|F#|G#|A#|Db|Eb|Gb|Ab|Bb|C|D|E|F|G|A|B)(.*)$/i,
-                          );
-                          const keySuffix = keyMatch ? keyMatch[2] : "";
-                          const keyNotes = baseRoots.map(
-                            (root) => `${root}${keySuffix}`,
-                          );
-                          return (
-                            <div className="relative shrink-0">
-                              <button
-                                type="button"
-                                data-key-popover
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (isEditingKey) {
-                                    setEditingKeyItemId(null);
-                                    return;
-                                  }
-                                  const rect =
-                                    e.currentTarget.getBoundingClientRect();
-                                  setKeyPopoverPos({
-                                    top: Math.min(
-                                      rect.bottom + 4,
-                                      window.innerHeight -
-                                        KEY_POPOVER_HEIGHT_PX -
-                                        8,
-                                    ),
-                                    left: Math.min(
-                                      rect.left,
-                                      window.innerWidth -
-                                        KEY_POPOVER_WIDTH_PX -
-                                        8,
-                                    ),
-                                  });
-                                  setEditingKeyItemId(it.id);
-                                }}
-                                className={`text-micro font-sans px-1.5 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${
-                                  desiredKey
-                                    ? "bg-[var(--acc-soft)] text-[var(--acc-ink)]"
-                                    : "bg-[var(--sunken)] text-[var(--ink)]"
-                                }`}
-                                title={
-                                  desiredKey
-                                    ? `Original: ${song.tonalidad || "—"} · Tocar en este repertorio: ${desiredKey}. Clic para cambiar.`
-                                    : "Tonalidad original. Clic para definir en qué tono tocarla en este repertorio (transposición automática)."
-                                }
-                              >
-                                {desiredKey
-                                  ? `${song.tonalidad || "—"} → ${desiredKey}`
-                                  : song.tonalidad || "—"}
-                              </button>
-                              {isEditingKey &&
-                                keyPopoverPos &&
-                                createPortal(
-                                  <div
-                                    data-key-popover
-                                    className="fixed z-[100] bg-[var(--sunken)] rounded-[var(--r-s)] p-2 space-y-1.5 w-[200px]"
-                                    style={{
-                                      top: keyPopoverPos.top,
-                                      left: keyPopoverPos.left,
-                                    }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    <p className="text-micro font-sans text-[var(--ink-2)] px-0.5">
-                                      Tocar en tono (original:{" "}
-                                      {song.tonalidad || "—"}):
-                                    </p>
-                                    <div className="grid grid-cols-4 gap-1">
-                                      {keyNotes.map((note) => (
-                                        <button
-                                          key={note}
-                                          type="button"
-                                          onClick={() =>
-                                            handleSetTonalidadDeseada(
-                                              it.id,
-                                              note,
-                                            )
-                                          }
-                                          className={`px-1 py-1 rounded text-micro font-sans font-bold transition cursor-pointer ${
-                                            desiredKey === note
-                                              ? "bg-[var(--ink)] text-[var(--bg)]"
-                                              : "bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70"
-                                          }`}
-                                        >
-                                          {note}
-                                        </button>
-                                      ))}
-                                    </div>
-                                    {desiredKey && (
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleSetTonalidadDeseada(it.id, null)
-                                        }
-                                        className="w-full text-center text-micro font-sans text-[var(--ink-2)] hover:text-[var(--alert)] pt-1.5 cursor-pointer"
-                                      >
-                                        Volver al original (
-                                        {song.tonalidad || "—"})
-                                      </button>
-                                    )}
-                                  </div>,
-                                  document.body,
-                                )}
-                            </div>
-                          );
-                        })()}
-
-                        {/* Solo se muestra si hay estructura subida: distingue de un vistazo un cifrado ya
- comprobado por alguien de la banda de uno recién subido en el que nadie ha confiado
- todavía — justo lo que hace falta saber antes de fiarse de él en un concierto. */}
-                        {song.estructuraDocumentoUrl && (
-                          <span
-                            className={`text-micro font-sans px-1 py-0.5 rounded shrink-0 ${
-                              song.estructuraVerificada
-                                ? "bg-[var(--ok)]/15 text-[var(--ink)]"
-                                : "bg-[var(--acc)]/15 text-[var(--ink)]"
-                            }`}
-                            title={
-                              song.estructuraVerificada
-                                ? "Acordes verificados"
-                                : "Acordes sin verificar — revísalos antes de tocarla en directo"
-                            }
-                          >
-                            {song.estructuraVerificada ? <Check className="size-3" aria-label="Acordes verificados" /> : <AlertTriangle className="size-3" aria-label="Acordes sin verificar" />}
-                          </span>
-                        )}
-
-                        <span className="shrink-0 text-xs tabular-nums text-[var(--ink-2)]" title="BPM">
-                          {song.bpm ? `${song.bpm}` : "—"}
-                        </span>
-
-                        <span className="shrink-0 text-xs font-medium tabular-nums text-[var(--ink)]" title="Duración">
-                          {song.duracion || "0:00"}
-                        </span>
-
-                        {(() => {
-                          const energy = getEnergyInfo(song);
-                          const currentVal1a10 = Math.max(
-                            1,
-                            Math.min(10, Math.round((song.energia || 10) / 2)),
-                          );
-                          const isEditingThis = editingEnergyItemId === it.id;
-                          // Alto aproximado del popover (10 botones de 20px + padding) para decidir si hay hueco
-                          // debajo en el viewport o si hay que abrirlo hacia arriba.
-                          const POPOVER_HEIGHT_PX = 36;
-                          const POPOVER_WIDTH_PX = 220;
-                          return (
-                            <div className="relative shrink-0">
-                              <button
-                                type="button"
-                                data-energy-popover
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (isEditingThis) {
-                                    setEditingEnergyItemId(null);
-                                    return;
-                                  }
-                                  const rect =
-                                    e.currentTarget.getBoundingClientRect();
-                                  const openUpward =
-                                    window.innerHeight - rect.bottom <
-                                    POPOVER_HEIGHT_PX + 8;
-                                  setEnergyPopoverPos({
-                                    top: openUpward
-                                      ? rect.top - POPOVER_HEIGHT_PX - 4
-                                      : rect.bottom + 4,
-                                    left: Math.min(
-                                      rect.left,
-                                      window.innerWidth - POPOVER_WIDTH_PX - 8,
-                                    ),
-                                    openUpward,
-                                  });
-                                  setEditingEnergyItemId(it.id);
-                                }}
-                                className={`text-micro font-sans px-1 py-0.5 rounded font-bold shrink-0 cursor-pointer transition hover:ring-1 hover:ring-[var(--ink)]/40 ${energy.bgClass} ${energy.textClass}`}
-                                title={`Energía: ${energy.label} (${currentVal1a10}/10)${song.energiaManual ? " — fijada a mano" : ""}. Clic para cambiarla.`}
-                              >
-                                <span><ShowIcon inline emoji={energy.icon} /></span>
-                                {song.energiaManual && (
-                                  <span
-                                    className="ml-0.5"
-                                    title="Energía fijada a mano"
-                                  >
-                                    <ShowIcon inline emoji="✋" />
-                                  </span>
-                                )}
-                              </button>
-                              {/* Portal + position:fixed a propósito: la fila vive dentro de una lista con
- overflow-y-auto (ver contenedor"ITEMS LIST"), así que un popover position:absolute
- quedaba recortado/oculto por ese overflow en canciones cerca del final del scroll —
- de ahí que"hubiera que bajar" para verlo. Con fixed + posición calculada al abrir
- (arriba o abajo según el hueco real en el viewport) escapa a ese clipping. */}
-                              {isEditingThis &&
-                                energyPopoverPos &&
-                                createPortal(
-                                  // Selector 1-10 (más fácil de puntuar que 1-20 directamente) — se guarda como
-                                  // energia = valor*2 para no tocar el resto del sistema, que ya usa escala 1-20.
-                                  <div
-                                    data-energy-popover
-                                    className="fixed z-[100] bg-[var(--sunken)] rounded-[var(--r-s)] p-1.5 flex items-center gap-0.5"
-                                    style={{
-                                      top: energyPopoverPos.top,
-                                      left: energyPopoverPos.left,
-                                    }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    {Array.from(
-                                      { length: 10 },
-                                      (_, i) => i + 1,
-                                    ).map((val) => (
-                                      <button
-                                        key={val}
-                                        type="button"
-                                        disabled={savingEnergyItemId === it.id}
-                                        onClick={() =>
-                                          handleSetEnergiaManual(
-                                            song,
-                                            it.id,
-                                            val,
-                                          )
-                                        }
-                                        className={`w-5 h-5 rounded text-micro font-sans font-bold flex items-center justify-center transition disabled:opacity-50 ${
-                                          currentVal1a10 === val
-                                            ? "bg-[var(--ink)] text-[var(--bg)]"
-                                            : "bg-[var(--surface)]/80 text-[var(--ink)] hover:bg-[var(--surface)]/70"
-                                        }`}
-                                      >
-                                        {val}
-                                      </button>
-                                    ))}
-                                  </div>,
-                                  document.body,
-                                )}
-                            </div>
-                          );
-                        })()}
-
-                        {isSelected && (
-                          <span className="shrink-0 text-[var(--acc-ink)]" title="Seleccionada: lo que añadas irá debajo">
-                            <Pin className="size-3.5" aria-hidden="true" />
-                          </span>
-                        )}
-
-                        {/* Spacer */}
-                        <div className="flex-1"></div>
-
-                        {/* Notas de miembros / acordes ya no van en la fila compacta — se han movido al panel
- expandible (ver más abajo): son consultas ocasionales, no algo que se mira en cada fila
- de cada setlist. Reordenar arriba/abajo se ha quitado por completo: ya lo cubren el drag
- handle y el joystick del gráfico (seleccionar el punto + ◀▶) sin duplicar el control.
- AGENTS.md §6. */}
-                        {memberNotesCount > 0 && (
-                          <span
-                            className="text-[var(--acc)]/70 shrink-0"
-                            title={`${memberNotesCount} nota(s) de miembros`}
-                          >
-                            <Users className="w-3 h-3" />
-                          </span>
-                        )}
-
-                        {/* Studio button */}
-                        <IconButton
-                          label="Abrir Studio de grabación multipista y pistas"
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenStudioModal(song);
-                          }}
-                          className="shrink-0"
-                        >
-                          <Headphones className="w-3.5 h-3.5 text-[var(--ok)]" />
-                        </IconButton>
-
-                        {/* Probar unión con tema anterior con indicador de calidad (✓ o ✕) */}
-                        {index > 0 &&
-                          activeSetlist.items[index - 1]?.songId &&
-                          (() => {
-                            const prevSong = songs.find(
-                              (s) =>
-                                s.id === activeSetlist.items[index - 1].songId,
-                            );
-                            const evalUnion =
-                              prevSong && song
-                                ? evaluarCalidadUnion(prevSong, song)
-                                : null;
-                            return (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleOpenTransitionPreview(index - 1, index);
-                                }}
-                                className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans font-bold flex items-center gap-1 transition-ui cursor-pointer shrink-0 ${
-                                  evalUnion?.status === "ok"
-                                    ? "bg-[var(--ok)]/15 hover:bg-[var(--ok)]/25 text-[var(--ink)]"
-                                    : "bg-[var(--alert)]/15 hover:bg-[var(--alert)]/25 text-[var(--ink)]"
-                                }`}
-                                title={
-                                  evalUnion
-                                    ? `🎧 Probar unión con #${index} (${prevSong?.titulo}): ${evalUnion.title} · ${evalUnion.motivos.join(", ")}`
-                                    : "Probar unión y transición con la canción anterior"
-                                }
-                              >
-                                <span>{evalUnion?.icon || "⚡"}</span>
-                                <Headphones className="w-3 h-3" />
-                              </button>
-                            );
-                          })()}
-
-                        {/* Edit song button */}
-                        <IconButton
-                          label="Editar canción"
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingSong(song);
-                            setShowSongModal(true);
-                          }}
-                          className="shrink-0"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </IconButton>
-
-                        {/* "Me da dudas": el músico pide ver tono/BPM de este tema en su hoja impresa */}
-                        {currentUser?.name && (() => {
-                          const dudaMarcada = isSongMarkedForMember(song, currentUser.id, currentUser.name);
-                          return (
-                            <IconButton
-                              label={dudaMarcada ? "Quitar de mis dudas" : "Me da dudas"}
-                              aria-pressed={dudaMarcada}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleUpdateSongFromStudio(
-                                  withSongMarkedForMember(song, currentUser.id, currentUser.name, !dudaMarcada),
-                                );
-                              }}
-                              className={`shrink-0 ${dudaMarcada ? "text-[var(--accent-alt)]" : ""}`}
-                            >
-                              <HelpCircle className="w-3.5 h-3.5" />
-                            </IconButton>
-                          );
-                        })()}
-
-                        {/* Expand button for details */}
-                        <Button
-                          variant="ghost"
-                          size="xs"
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleExpand();
-                          }}
-                          className="shrink-0"
-                          title={
-                            isExpanded
-                              ? "Ocultar detalles"
-                              : "Ver afinación, disco, cantante, acordes y notas de miembros"
-                          }
-                        >
-                          {isExpanded ? (
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          ) : (
-                            <ChevronDown className="w-3.5 h-3.5" />
-                          )}
-                        </Button>
-
-                        <IconButton
-                          label="Quitar del setlist"
-                          variant="danger"
-                          onClick={() => handleRemoveSetlistItem(it.id)}
-                          className="shrink-0"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </IconButton>
-                      </div>
-
-                      {/* Aviso al director: cuántos músicos marcaron este tema como "me da dudas" */}
-                      {(() => {
-                        const dudan = (song.notasPorMiembro ?? []).filter((n) => n.mostrarTono || n.mostrarBpm);
-                        if (dudan.length === 0) return null;
-                        const nombres = dudan.map((n) => n.memberName).filter(Boolean).join(", ");
-                        return (
-                          <div
-                            className="px-2.5 pt-1.5 text-micro font-sans text-[var(--accent-alt)]"
-                            title={nombres ? `Dudan: ${nombres}` : undefined}
-                          >
-                            <HelpCircle className="mr-1 inline size-3 align-[-1px]" aria-hidden="true" />
-                            {dudan.length === 1 ? "1 músico duda" : `${dudan.length} músicos dudan`}
-                            {nombres ? ` · ${nombres}` : ""}
-                          </div>
-                        );
-                      })()}
-
-                      {/* ALWAYS SHOW NOTES IF EXIST - Compact line */}
-                      {(() => {
-                        // La nota "general para el grupo" que se edita en MemberNotesModal/SongModal se guarda en
-                        // notasRepertorio, no en notasInternas (un campo distinto, sin UI de edición expuesta aquí)
-                        // — mirar notasInternas hacía que esta línea nunca mostrara la nota general recién guardada.
-                        // La clave del músico activo siempre se guarda en minúsculas (ver handleNoteChange en
-                        // MemberNotesModal/SongModal), así que hay que normalizar currentUser.name igual al buscarla.
-                        const userNote =
-                          currentUser?.name &&
-                          song.notasMiembros?.[currentUser.name.toLowerCase()];
-                        const hasMemberNotes =
-                          Array.isArray(song.notasPorMiembro) &&
-                          song.notasPorMiembro.length > 0;
-                        return song.notasRepertorio ||
-                          it.notaTema ||
-                          userNote ||
-                          hasMemberNotes ? (
-                          <div
-                            className="px-2.5 py-1.5 text-micro font-sans space-y-1"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {song.notasRepertorio && (
-                              <div
-                                className="text-[var(--accent-alt)]/80 truncate"
-                                title={song.notasRepertorio}
-                              >
-                                <ShowIcon inline emoji="📝" />{song.notasRepertorio}
-                              </div>
-                            )}
-                            {userNote && (
-                              <div
-                                className="text-[var(--ok)]/80 truncate"
-                                title={userNote}
-                              >
-                                <ShowIcon inline emoji="👤" />{currentUser.name}: {userNote}
-                              </div>
-                            )}
-                            {it.notaTema && (
-                              <div
-                                className="text-[var(--ok)]/80 truncate"
-                                title={it.notaTema}
-                              >
-                                <Lightbulb className="mr-1 inline size-3 align-[-1px]" aria-hidden="true" />{it.notaTema}
-                              </div>
-                            )}
-                            {hasMemberNotes && (
-                              <div className="flex flex-wrap gap-1.5 pt-0.5">
-                                {song.notasPorMiembro!.map((m, mIdx) => (
-                                  <span
-                                    key={m.userId || m.memberName || mIdx}
-                                    className="inline-flex items-center gap-1 bg-[var(--acc-soft)] text-[var(--acc-ink)] px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro"
-                                  >
-                                    <b>[{m.instrument || m.memberName}]:</b>{" "}
-                                    {m.nota}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ) : null;
-                      })()}
-
-                      {/* EXPANDED DETAILS - Only when isExpanded */}
-                      {isExpanded && (
-                        <div
-                          className={` px-2.5 py-2 text-micro font-sans space-y-1 ${"bg-[var(--bg)]"}`}
-                        >
-                          {song.cantantePrincipal && (
-                            <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Cantante:
-                              </span>{" "}
-                              {song.cantantePrincipal}
-                            </div>
-                          )}
-                          {song.afinacion && (
-                            <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Afinación:
-                              </span>{" "}
-                              {song.afinacion}
-                            </div>
-                          )}
-                          {song.albumDisco && (
-                            <div className="text-[var(--ink-2)]">
-                              <span className="font-bold text-[var(--ink-2)]">
-                                Disco:
-                              </span>{" "}
-                              {song.albumDisco}
-                            </div>
-                          )}
-
-                          <Input
-                            size="sm"
-                            type="text"
-                            placeholder="Nota para este bolo (ej. Cambio a acústica / empalmar solo)…"
-                            value={it.notaTema || ""}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={(e) =>
-                              handleUpdateItemNote(it.id, e.target.value)
-                            }
-                            className="w-full mt-1"
-                          />
-
-                          {/* Notas de miembros / acordes / studio */}
-                          <div className="flex items-center gap-2 pt-1">
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActiveMemberNotesSong(song);
-                              }}
-                              className={`flex items-center gap-1 px-1.5 py-0.5 rounded transition-colors ${
-                                memberNotesCount > 0
-                                  ? "text-[var(--acc)]/70 hover:text-[var(--acc)]"
-                                  : "text-[var(--ink-2)] hover:text-[var(--acc)]/70"
-                              }`}
-                            >
-                              <Users className="w-3 h-3" /> Notas de miembros
-                              {memberNotesCount > 0
-                                ? ` (${memberNotesCount})`
-                                : ""}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActiveChordsSong(song);
-                              }}
-                              className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors"
-                            >
-                              <FileText className="w-3 h-3" /> Acordes
-                            </button>
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenStudioModal(song);
-                              }}
-                              className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[var(--ink-2)] hover:text-[var(--ok)] transition-colors"
-                            >
-                              <Headphones className="w-3 h-3 text-[var(--ok)]" />{" "}
-                              Studio multipista
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                } else if (
-                  it.tipoItem === "bloque" &&
-                  it.bloqueSubtipo === "header"
-                ) {
-                  return (
-                    <div
-                      key={it.id}
-                      draggable={true}
-                      onDragStart={(e) => {
-                        if (TRANSPARENT_DRAG_IMAGE)
-                          e.dataTransfer.setDragImage(
-                            TRANSPARENT_DRAG_IMAGE,
-                            0,
-                            0,
-                          );
-                        setDraggedItemIndex(index);
+                      isExpanded={isExpanded}
+                      onToggleExpand={toggleExpand}
+                      isPlaying={isPlayingThisRow}
+                      onPlay={playThisSong}
+                      isEditingKey={editingKeyItemId === it.id}
+                      keyPopoverPos={keyPopoverPos}
+                      onToggleKeyPopover={(e) => {
+                        e.stopPropagation();
+                        if (editingKeyItemId === it.id) {
+                          setEditingKeyItemId(null);
+                          return;
+                        }
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setKeyPopoverPos({
+                          top: Math.min(
+                            rect.bottom + 4,
+                            window.innerHeight - 110 - 8,
+                          ),
+                          left: Math.min(
+                            rect.left,
+                            window.innerWidth - 200 - 8,
+                          ),
+                        });
+                        setEditingKeyItemId(it.id);
                       }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        setDragOverItemIndex(index);
-                      }}
-                      onDragLeave={() => {
-                        if (dragOverItemIndex === index)
-                          setDragOverItemIndex(null);
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        handleDropItem(index);
-                      }}
-                      onDragEnd={() => {
-                        setDraggedItemIndex(null);
-                        setDragOverItemIndex(null);
-                      }}
-                      onClick={() =>
-                        setSelectedSetlistItemId(isSelected ? null : it.id)
+                      onSetTonalidadDeseada={(note) =>
+                        handleSetTonalidadDeseada(it.id, note)
                       }
-                      className={`rounded-[var(--r-s)] transition-ui cursor-pointer ${
-                        isDragging ? "opacity-40 scale-[0.98]" : ""
-                      } ${isDragOver ? "scale-[1.01] bg-[var(--acc)]/10" : ""} ${
-                        isSelected
-                          ? "ring-2 ring-[var(--acc)]/40 bg-[var(--sunken)]"
-                          : "bg-[var(--sunken)] hover:brightness-95"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 px-2.5 py-1.5">
-                        {/* Drag Handle */}
-                        <div
-                          className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors shrink-0"
-                          title="Arrastrar y soltar para reordenar"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <GripVertical className="size-4" />
-                        </div>
-
-                        {/* Icon */}
-                        <Layers className="size-4 shrink-0 text-[var(--acc-ink)]" aria-hidden="true" />
-
-                        {/* Title input - inline */}
-                        <input data-raw
-                          type="text"
-                          value={it.tituloCustom || ""}
-                          placeholder="Ej: Bloque 1 · Calentamiento"
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setSetlists((prev) =>
-                              prev.map((s) =>
-                                s.id === activeSetlist.id
-                                  ? {
-                                      ...s,
-                                      items: s.items.map((x) =>
-                                        x.id === it.id
-                                          ? { ...x, tituloCustom: val }
-                                          : x,
-                                      ),
-                                    }
-                                  : s,
-                              ),
-                            );
-                          }}
-                          className="bg-transparent text-sm font-semibold font-sans text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none min-w-0 flex-1"
-                        />
-
-                        {/* Spacer */}
-                        <div className="flex-1"></div>
-
-                        {/* Controls */}
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingShowItem(it);
-                            setShowShowItemModal(true);
-                          }}
-                          title="Editar bloque"
-                          aria-label="Editar bloque"
-                          className="hidden sm:inline-flex"
-                        >
-                          <Edit3 className="size-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleRemoveSetlistItem(it.id);
-                          }}
-                          title="Eliminar bloque"
-                          aria-label="Eliminar bloque"
-                          className="hover:text-[var(--alert)]"
-                        >
-                          <X className="size-4" />
-                        </Button>
-                      </div>
-                    </div>
+                      isEditingEnergy={editingEnergyItemId === it.id}
+                      energyPopoverPos={energyPopoverPos}
+                      isSavingEnergy={savingEnergyItemId === it.id}
+                      onToggleEnergyPopover={(e) => {
+                        e.stopPropagation();
+                        if (editingEnergyItemId === it.id) {
+                          setEditingEnergyItemId(null);
+                          return;
+                        }
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const openUpward =
+                          window.innerHeight - rect.bottom < 36 + 8;
+                        setEnergyPopoverPos({
+                          top: openUpward
+                            ? rect.top - 36 - 4
+                            : rect.bottom + 4,
+                          left: Math.min(
+                            rect.left,
+                            window.innerWidth - 220 - 8,
+                          ),
+                          openUpward,
+                        });
+                        setEditingEnergyItemId(it.id);
+                      }}
+                      onSetEnergiaManual={(val) =>
+                        handleSetEnergiaManual(song, it.id, val)
+                      }
+                      prevSong={prevSong}
+                      onOpenTransitionPreview={() =>
+                        handleOpenTransitionPreview(index - 1, index)
+                      }
+                      onRemove={() => handleRemoveSetlistItem(it.id)}
+                      onUpdateNote={(note) =>
+                        handleUpdateItemNote(it.id, note)
+                      }
+                      onEditSong={() => {
+                        setEditingSong(song);
+                        setShowSongModal(true);
+                      }}
+                      onOpenStudio={() => handleOpenStudioModal(song)}
+                      onOpenMemberNotes={() => setActiveMemberNotesSong(song)}
+                      onOpenChords={() => setActiveChordsSong(song)}
+                      currentUser={currentUser}
+                      onToggleDuda={() => {
+                        if (!currentUser?.name) return;
+                        const dudaMarcada = isSongMarkedForMember(
+                          song,
+                          currentUser.id,
+                          currentUser.name,
+                        );
+                        handleUpdateSongFromStudio(
+                          withSongMarkedForMember(
+                            song,
+                            currentUser.id,
+                            currentUser.name,
+                            !dudaMarcada,
+                          ),
+                        );
+                      }}
+                    />
                   );
                 } else {
-                  const typeConfig =
-                    SHOW_ITEM_TYPES[it.tipoItem] || SHOW_ITEM_TYPES.otro;
-                  const durationText = formatItemDuration(it);
-
                   return (
-                    <div
+                    <SetlistShowItemRow
                       key={it.id}
-                      draggable={true}
+                      item={it}
+                      index={index}
+                      isSelected={isSelected}
+                      isDragging={isDragging}
+                      isDragOver={isDragOver}
                       onDragStart={(e) => {
                         if (TRANSPARENT_DRAG_IMAGE)
                           e.dataTransfer.setDragImage(
@@ -5023,107 +4361,31 @@ export default function RepertorioSetlists({
                         setDraggedItemIndex(null);
                         setDragOverItemIndex(null);
                       }}
-                      onClick={() =>
+                      onSelect={() =>
                         setSelectedSetlistItemId(isSelected ? null : it.id)
                       }
-                      className={`rounded-[var(--r-s)] transition-ui cursor-pointer ${typeConfig.bg} ${
-                        isDragging ? "opacity-40 scale-[0.98]" : ""
-                      } ${isDragOver ? "border-2 scale-[1.01]" : ""} ${
-                        isSelected ? "ring-2 ring-[var(--acc)]/60" : ""
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-2.5 py-2">
-                        {/* Drag Handle */}
-                        <div
-                          className="cursor-grab active:cursor-grabbing text-[var(--ink-2)] hover:text-[var(--acc)] transition-colors shrink-0"
-                          title="Arrastrar y soltar para reordenar"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <GripVertical className="w-3.5 h-3.5" />
-                        </div>
-
-                        {/* Icon */}
-                        <span className={`shrink-0 ${typeConfig.text}`}>
-                          <ShowIcon emoji={typeConfig.icon} className="size-4" />
-                        </span>
-
-                        {/* Type Label */}
-                        <span
-                          className={`text-micro font-sans font-extrabold px-1.5 py-0.5 rounded-[var(--r-s)] shrink-0 ${typeConfig.text}`}
-                        >
-                          {typeConfig.label}
-                        </span>
-
-                        {/* Duration */}
-                        <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-[var(--ink-2)] tabular-nums">
-                          <Timer className="size-3.5" aria-hidden="true" />
-                          {durationText}
-                        </span>
-
-                        {/* Title - inline */}
-                        <input data-raw
-                          type="text"
-                          value={it.tituloCustom || ""}
-                          placeholder="Título/descripción…"
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setSetlists((prev) =>
-                              prev.map((s) =>
-                                s.id === activeSetlist.id
-                                  ? {
-                                      ...s,
-                                      items: s.items.map((x) =>
-                                        x.id === it.id
-                                          ? { ...x, tituloCustom: val }
-                                          : x,
-                                      ),
-                                    }
-                                  : s,
-                              ),
-                            );
-                          }}
-                          className="bg-transparent text-sm font-semibold font-sans text-[var(--ink)] placeholder:text-[var(--ink-2)] focus:outline-none min-w-[9rem] flex-1 basis-[12rem]"
-                        />
-
-                        {isSelected && (
-                          <span className="px-1 py-0.5 rounded text-micro font-sans font-bold bg-[var(--acc)] text-[var(--on-acc)] shrink-0">
-                            <ShowIcon inline emoji="📌" />
-                          </span>
-                        )}
-
-                        {/* Controls */}
-                        <IconButton
-                          label="Editar detalles"
-                          size="icon-xs"
-                          onClick={() => {
-                            setEditingShowItem(it);
-                            setShowShowItemModal(true);
-                          }}
-                          className="shrink-0"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </IconButton>
-                        <IconButton
-                          label="Quitar del setlist"
-                          variant="danger"
-                          onClick={() => handleRemoveSetlistItem(it.id)}
-                          className="shrink-0"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </IconButton>
-                      </div>
-
-                      {/* SHOW NOTES IF EXIST */}
-                      {it.notaTema && (
-                        <div
-                          className="px-2.5 py-1 text-micro font-sans text-[var(--ink)]/70 truncate"
-                          title={it.notaTema}
-                        >
-                          <Lightbulb className="mr-1 inline size-3 align-[-1px]" aria-hidden="true" />{it.notaTema}
-                        </div>
-                      )}
-                    </div>
+                      onUpdateTitle={(val) => {
+                        setSetlists((prev) =>
+                          prev.map((s) =>
+                            s.id === activeSetlist.id
+                              ? {
+                                  ...s,
+                                  items: s.items.map((x) =>
+                                    x.id === it.id
+                                      ? { ...x, tituloCustom: val }
+                                      : x,
+                                  ),
+                                }
+                              : s,
+                          ),
+                        );
+                      }}
+                      onEdit={() => {
+                        setEditingShowItem(it);
+                        setShowShowItemModal(true);
+                      }}
+                      onRemove={() => handleRemoveSetlistItem(it.id)}
+                    />
                   );
                 }
               })
