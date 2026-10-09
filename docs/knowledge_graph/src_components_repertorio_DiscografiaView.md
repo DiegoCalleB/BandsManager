@@ -18,6 +18,7 @@ Exporta: DiscografiaView.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[src_components_AlbumCover|src/components/AlbumCover.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_ExportAlbumSongsModal|src/components/repertorio/ExportAlbumSongsModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*

@@ -50,6 +50,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 59 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 56 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 40 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
@@ -59,11 +60,10 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_db_bands|server/db/bands.ts]] — 25 ficheros dependen de él
 - [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 22 ficheros dependen de él
 - [[server_utils|server/utils.ts]] — 18 ficheros dependen de él
+- [[route_repertoire|Repertoire & Setlists Route]] — 16 ficheros dependen de él
 - [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 16 ficheros dependen de él
+- [[server_routes_bands|server/routes/bands.ts]] — 15 ficheros dependen de él
 - [[src_utils_cn|src/utils/cn.ts]] — 15 ficheros dependen de él
-- [[src_utils_planPermissions|src/utils/planPermissions.ts]] — 15 ficheros dependen de él
-- [[sec_ssrf_guard|SSRF URL Validator]] — 14 ficheros dependen de él
-- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 14 ficheros dependen de él
 
 ---
 

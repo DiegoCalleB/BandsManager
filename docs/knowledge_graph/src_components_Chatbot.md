@@ -18,6 +18,13 @@ Exporta: ProposedAction, ChatMessage, Chatbot.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_chatbot_ChatbotModeSwitcher|src/components/chatbot/ChatbotModeSwitcher.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*

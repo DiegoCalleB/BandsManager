@@ -18,7 +18,9 @@ Tabla de Supabase `concert_deals` (35 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_concerts|tabla concerts]] *(Layer: #schema, Domain: #system)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -26,6 +28,7 @@ _Sin dependencias salientes directas._
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(from #db)*
+- [[tabla_deal_support_contributions|tabla deal_support_contributions]] *(from #schema)*
 
 ---
 

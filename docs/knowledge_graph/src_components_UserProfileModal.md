@@ -18,6 +18,7 @@ Exporta: UserProfileModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*

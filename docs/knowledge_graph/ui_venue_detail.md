@@ -19,8 +19,13 @@ Ficha técnica de la sala, hilo de conversación y generador de respuestas.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(Layer: #agent, Domain: #booking)*
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_booking_BoloConfirmadoSetlistModal|src/components/booking/BoloConfirmadoSetlistModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_DealAndLogisticsCopilot|src/components/booking/DealAndLogisticsCopilot.tsx]] *(Layer: #frontend, Domain: #booking)*

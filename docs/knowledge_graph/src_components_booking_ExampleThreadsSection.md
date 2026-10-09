@@ -18,6 +18,7 @@ Exporta: ExampleThreadsSection.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(Layer: #route, Domain: #booking)*
 - [[src_components_booking_TemplateConfigSection|src/components/booking/TemplateConfigSection.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

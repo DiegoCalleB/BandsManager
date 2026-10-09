@@ -19,6 +19,7 @@ Tabla interactiva de salas con estados CRM y acciones masivas.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(Layer: #hook, Domain: #booking)*
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_EmailDeliveryTicks|src/components/booking/EmailDeliveryTicks.tsx]] *(Layer: #frontend, Domain: #booking)*

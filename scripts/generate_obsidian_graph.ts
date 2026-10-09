@@ -385,7 +385,9 @@ function ficherosSql(): string[] {
   return [...FUENTES_SQL, ...sueltos.sort()].filter((f) => fs.existsSync(path.join(RAIZ, f)));
 }
 
-interface Tabla { nombre: string; columnas: string[]; definidaEn: string[] }
+// Clave foránea: REFERENCES otra_tabla(...)
+const REFERENCIA = /REFERENCES\s+(?:public\.)?"?([a-z_][a-z_0-9]*)"?/gi;
+interface Tabla { nombre: string; columnas: string[]; definidaEn: string[]; fk: string[] }
 
 function cuerpoParentesis(texto: string, desde: number): string {
   let prof = 0;
@@ -399,12 +401,13 @@ function cuerpoParentesis(texto: string, desde: number): string {
 export function extraerTablas(): Tabla[] {
   const tablas = new Map<string, Tabla>();
   const get = (nombre: string, fichero: string) => {
-    const t = tablas.get(nombre) ?? { nombre, columnas: [], definidaEn: [] };
+    const t = tablas.get(nombre) ?? { nombre, columnas: [], definidaEn: [], fk: [] };
     if (!t.definidaEn.includes(fichero)) t.definidaEn.push(fichero);
     tablas.set(nombre, t);
     return t;
   };
   const anadir = (t: Tabla, col: string) => { if (!t.columnas.includes(col)) t.columnas.push(col); };
+  const anadirFk = (t: Tabla, otra: string) => { const o = otra.toLowerCase(); if (o !== t.nombre && !t.fk.includes(o)) t.fk.push(o); };
   const NO_COLUMNA = /^(CONSTRAINT|PRIMARY|FOREIGN|UNIQUE|CHECK|EXCLUDE|LIKE)$/i;
   for (const f of ficherosSql()) {
     const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
@@ -423,12 +426,14 @@ export function extraerTablas(): Tabla[] {
         const tok = tr.replace(/--[^\n]*/g, '').trim().split(/\s+/)[0]?.replace(/"/g, '');
         if (tok && /^[a-z_][a-z_0-9]*$/i.test(tok) && !NO_COLUMNA.test(tok)) anadir(t, tok.toLowerCase());
       }
+      for (const r of cuerpo.matchAll(REFERENCIA)) anadirFk(t, r[1]);
     }
     for (const m of texto.matchAll(/ALTER TABLE\s+(?:IF EXISTS\s+)?(?:ONLY\s+)?(?:public\.)?"?([a-z_][a-z_0-9]*)"?([^;]*);/gi)) {
       const nombre = m[1].toLowerCase();
       for (const c of m[2].matchAll(/ADD COLUMN(?: IF NOT EXISTS)?\s+"?([a-z_][a-z_0-9]*)"?/gi)) {
         anadir(get(nombre, f), c[1].toLowerCase());
       }
+      for (const r of m[2].matchAll(REFERENCIA)) anadirFk(get(nombre, f), r[1]);
     }
   }
   return [...tablas.values()].sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -482,6 +487,50 @@ function descripcionDe(texto: string): string {
   return exports.length ? `Exporta: ${[...new Set(exports)].slice(0, 8).join(', ')}.` : 'Módulo sin exportaciones con nombre.';
 }
 
+// Rutas Express reales: prefijos de server.ts y de los routers anidados (router.use).
+// Cada ruta lleva sus segmentos ya unidos al prefijo, con ':param' para los parámetros.
+const segmentosDe = (ruta: string) => ruta.split('/').filter(Boolean);
+function rutasApi(): { segmentos: string[]; fichero: string }[] {
+  const salida: { segmentos: string[]; fichero: string }[] = [];
+  const existentes = new Set(escanearFicheros());
+  const leer = (f: string) => {
+    const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
+    const mapa = new Map<string, string>();
+    for (const m of texto.matchAll(/import\s+(\w+)\s*(?:,\s*\{[^}]*\}\s*)?from\s*['"]([^'"]+)['"]/g)) {
+      const r = resolverImport(f, m[2], existentes);
+      if (r) mapa.set(m[1], r);
+    }
+    return { texto, mapa };
+  };
+  const recorrer = (f: string, prefijo: string, profundidad: number) => {
+    if (profundidad > 5) return;
+    const { texto, mapa } = leer(f);
+    for (const m of texto.matchAll(/\b\w*[Rr]outer\.(?:get|post|put|patch|delete|all)\(\s*['"`]([^'"`]*)/g)) {
+      salida.push({ segmentos: segmentosDe(`${prefijo}/${m[1]}`), fichero: f });
+    }
+    for (const m of texto.matchAll(/\.use\(\s*(?:['"`]([^'"`]*)['"`]\s*,\s*)?(\w+)\s*\)/g)) {
+      const sub = mapa.get(m[2]);
+      if (sub && sub !== f) recorrer(sub, `${prefijo}/${m[1] ?? ''}`, profundidad + 1);
+    }
+  };
+  const { texto, mapa } = leer('server.ts');
+  for (const m of texto.matchAll(/\.use\(\s*(?:['"`]([^'"`]*)['"`]\s*,\s*)?(\w+)\s*\)/g)) {
+    const f = mapa.get(m[2]);
+    if (f) recorrer(f, m[1] ?? '', 0);
+  }
+  return salida;
+}
+
+// Llamadas del frontend a /api/... (las expresiones ${x} cuentan como parámetro).
+const urlsApiDe = (texto: string): string[] =>
+  [...texto.matchAll(/['"`](\/api\/[^'"`\s?#]*)/g)].map((m) => segmentosDe(m[1].replace(/\$\{[^}]*\}/g, ':p')).join('/'));
+
+// Compara segmento a segmento; un segmento con ':' (parámetro o plantilla) casa con cualquier valor.
+const coincideRuta = (url: string, patron: string[]): boolean => {
+  const seg = url.split('/');
+  return seg.length === patron.length && patron.every((p, i) => p.includes(':') || seg[i].includes(':') || seg[i] === p);
+};
+
 export function construirNodos(): GraphNode[] {
   const ficheros = escanearFicheros();
   const existentes = new Set(ficheros);
@@ -515,6 +564,7 @@ export function construirNodos(): GraphNode[] {
     return [...usadas].map(idTabla);
   };
 
+  const rutas = rutasApi();
   const nodos: GraphNode[] = NODES.filter((n) => !existentes.has(n.file)).map((n) => ({ ...n }));
   for (const f of ficheros) {
     const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
@@ -525,6 +575,9 @@ export function construirNodos(): GraphNode[] {
       if (r && r !== f) destinos.add(idDe.get(r)!);
     }
     for (const t of tablasUsadas(texto)) destinos.add(t);
+    for (const url of urlsApiDe(texto)) {
+      for (const r of rutas) if (coincideRuta(url, r.segmentos)) destinos.add(idDe.get(r.fichero)!);
+    }
     const tests = [...new Set(testsDe.get(f) ?? [])].sort();
     const cur = curadoPorFichero.get(f);
     if (cur) {
@@ -553,7 +606,7 @@ export function construirNodos(): GraphNode[] {
       domain: dominioDe(t.nombre),
       file: t.definidaEn[0],
       description: `Tabla de Supabase \`${t.nombre}\` (${t.columnas.length} columnas).`,
-      linksTo: [],
+      linksTo: t.fk.filter((o) => nombresTabla.has(o)).map(idTabla).sort(),
       tags: ['schema', 'tabla', 'auto'],
       columnas: t.columnas,
       definidaEn: t.definidaEn,

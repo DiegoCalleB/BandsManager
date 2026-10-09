@@ -18,7 +18,7 @@ Tabla de Supabase `users` (22 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -29,6 +29,8 @@ _Sin dependencias salientes directas._
 - [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(from #schema)*
+- [[tabla_user_bands|tabla user_bands]] *(from #schema)*
 
 ---
 

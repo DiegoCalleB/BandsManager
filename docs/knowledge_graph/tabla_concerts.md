@@ -18,13 +18,16 @@ Tabla de Supabase `concerts` (35 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_setlists|tabla setlists]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_concerts|server/db/concerts.ts]] *(from #db)*
+- [[tabla_concert_deals|tabla concert_deals]] *(from #schema)*
+- [[tabla_fans|tabla fans]] *(from #schema)*
 
 ---
 

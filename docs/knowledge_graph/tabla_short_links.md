@@ -25,6 +25,7 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(from #db)*
+- [[tabla_short_link_clicks|tabla short_link_clicks]] *(from #schema)*
 
 ---
 

@@ -18,6 +18,7 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[src_components_MetronomeModal|src/components/MetronomeModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(Layer: #frontend, Domain: #system)*

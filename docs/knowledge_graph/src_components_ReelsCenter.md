@@ -18,6 +18,12 @@ Exporta: YoutubeVideoMeta, ReelsCenter.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(Layer: #frontend, Domain: #social)*

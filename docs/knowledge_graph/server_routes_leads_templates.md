@@ -32,6 +32,9 @@ Plantillas de email: listar, guardar, previsualizar, optimizar y generar todas c
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_hooks_useEmailTemplates|src/hooks/useEmailTemplates.ts]] *(from #hook)*
 
 ---
 

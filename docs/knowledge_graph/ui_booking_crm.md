@@ -19,6 +19,10 @@ Panel principal del embudo de contratación, gestión de salas y radar comercial
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(Layer: #hook, Domain: #booking)*
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(Layer: #frontend, Domain: #booking)*

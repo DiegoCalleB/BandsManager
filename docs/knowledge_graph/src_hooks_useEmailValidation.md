@@ -18,6 +18,7 @@ Exporta: useEmailValidation, getEmailStatus, isBouncedLead.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
 ---

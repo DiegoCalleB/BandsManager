@@ -18,6 +18,22 @@ Exporta: ApiError, getAuthHeaders, api.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_campaigns|server/routes/campaigns.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
+- [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
