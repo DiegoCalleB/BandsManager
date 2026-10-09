@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Acciones del panel de sala: regenerar y revertir pitch, enriquecer ficha, edición, confirmación de bolo, borrador, bitácora y formateo de teléfonos.
+Exporta: buildVenuePanelActionsParams, buildVenuePanelActions.
 
 ---
 
@@ -28,6 +28,7 @@ Acciones del panel de sala: regenerar y revertir pitch, enriquecer ficha, edici�
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_camposCambiados|src/utils/camposCambiados.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

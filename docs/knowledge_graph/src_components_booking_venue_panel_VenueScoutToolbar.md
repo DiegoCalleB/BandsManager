@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Barra de herramientas de inteligencia Scout (Jina, Wegow, Instagram).
+Exporta: VenueScoutToolbarProps, VenueScoutToolbar.
 
 ---
 

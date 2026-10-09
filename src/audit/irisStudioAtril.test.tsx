@@ -9,6 +9,8 @@ const selectorHtml = () => (renderToStaticMarkup(<IrisStudio pistas={0} tieneAud
 
 const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
 const repertorio = readFileSync(new URL('../components/RepertorioSetlists.tsx', import.meta.url), 'utf8');
+// Las tarjetas del catálogo viven en CatalogoGeneralView desde el desacople del monolito.
+const catalogoView = readFileSync(new URL('../components/repertorio/CatalogoGeneralView.tsx', import.meta.url), 'utf8');
 
 describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
   it('sin audio no pinta nada', () => {
@@ -40,7 +42,7 @@ describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
     expect(atril).toContain('SongStudioStemProgressModal');
     expect(atril).not.toContain('onAbrirIris');
     expect(repertorio).not.toContain('onAbrirIris');
-    expect(repertorio).toContain('openIris: true');
+    expect(catalogoView).toContain('openIris: true');
   });
 
   it('el selector de motor ofrece los cuatro motores sin bordes', () => {

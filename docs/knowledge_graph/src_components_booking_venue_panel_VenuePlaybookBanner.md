@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Banner del playbook táctico y extracción de entidades del lead.
+Exporta: VenuePlaybookBannerProps, VenuePlaybookBanner.
 
 ---
 
@@ -28,7 +28,6 @@ Banner del playbook táctico y extracción de entidades del lead.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_panel_VenueLeadInfoEditForm|src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
 
 ---
 

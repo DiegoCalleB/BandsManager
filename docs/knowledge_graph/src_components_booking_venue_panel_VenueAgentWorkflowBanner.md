@@ -13,7 +13,7 @@ tags: ["agent", "booking", "auto"]
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Banner del flujo de agentes y subestado agéntico del lead.
+Exporta: VenueAgentWorkflowBannerProps, VenueAgentWorkflowBanner.
 
 ---
 
@@ -23,6 +23,7 @@ Banner del flujo de agentes y subestado agéntico del lead.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

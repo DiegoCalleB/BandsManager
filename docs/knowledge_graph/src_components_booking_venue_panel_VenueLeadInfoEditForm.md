@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Formulario inline para editar la ficha del lead.
+Exporta: VenueLeadInfoEditFormProps, VenueLeadInfoEditForm.
 
 ---
 

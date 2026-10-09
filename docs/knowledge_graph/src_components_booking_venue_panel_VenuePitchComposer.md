@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Barra de acciones, banners de campaña, fechas, snippets de deal y editor del pitch.
+Exporta: VenuePitchComposerProps, VenuePitchComposer.
 
 ---
 
@@ -27,7 +27,6 @@ Barra de acciones, banners de campaña, fechas, snippets de deal y editor del pi
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePlaybookBanner|src/components/booking/venue_panel/VenuePlaybookBanner.tsx]] *(from #frontend)*
 
 ---

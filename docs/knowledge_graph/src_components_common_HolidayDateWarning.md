@@ -24,7 +24,6 @@ Exporta: HolidayDateWarning.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueTitleBar|src/components/booking/venue_panel/VenueTitleBar.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*

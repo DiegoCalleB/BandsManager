@@ -27,7 +27,6 @@ Exporta: BandDateAvailability, CityPerformanceHistory, CommercialDealType, Comme
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueEmailsSection|src/components/booking/venue_panel/VenueEmailsSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueScoutToolbar|src/components/booking/venue_panel/VenueScoutToolbar.tsx]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 

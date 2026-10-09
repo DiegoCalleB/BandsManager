@@ -61,7 +61,6 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_venue_panel_VenueLeadInfoEditForm|src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchFeedbackPanel|src/components/booking/venue_panel/VenuePitchFeedbackPanel.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_panel_VenuePitchInfoSection|src/components/booking/venue_panel/VenuePitchInfoSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePlaybookBanner|src/components/booking/venue_panel/VenuePlaybookBanner.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueRouteSocialCards|src/components/booking/venue_panel/VenueRouteSocialCards.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueScoutToolbar|src/components/booking/venue_panel/VenueScoutToolbar.tsx]] *(from #frontend)*

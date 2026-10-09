@@ -13,7 +13,7 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Barra de título del panel con avatar, estado y acciones.
+Exporta: VenueTitleBarProps, VenueTitleBar.
 
 ---
 
