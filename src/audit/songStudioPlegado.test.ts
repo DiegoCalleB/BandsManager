@@ -2,7 +2,9 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
-const studio = fs.readFileSync(path.join(__dirname, '..', 'components', 'SongStudioModal.tsx'), 'utf-8');
+import { leerModuloSongStudio } from './songStudioSource';
+
+const studio = leerModuloSongStudio();
 
 describe('Estudio: plegado de ideas', () => {
   it('ninguna condición fuerza la idea abierta ignorando el chevron', () => {

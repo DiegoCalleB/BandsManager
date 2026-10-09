@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
-const src = readFileSync('src/components/SongStudioModal.tsx', 'utf8');
+import { leerModuloSongStudio } from './songStudioSource';
+
+const src = leerModuloSongStudio();
 
 describe('Iris vive a nivel de canción en el modal', () => {
   it('hay una barra de Iris antes de "Ideas y grabaciones"', () => {
