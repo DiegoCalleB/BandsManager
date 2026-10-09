@@ -19,15 +19,31 @@ Motor de IA generativa con fallback automático Gemini ➔ DeepSeek ➔ OpenAI.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
+- [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
+- [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_tourRouting|src/utils/tourRouting.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
+- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
-- [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/pitchEngine.test.ts`
 
 ---
 

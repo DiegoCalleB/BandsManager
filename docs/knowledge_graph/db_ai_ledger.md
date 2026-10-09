@@ -19,12 +19,24 @@ Contabilidad exacta de tokens consumidos por banda y modelo para control de cost
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
+- [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
+- [[server_ai|server/ai.ts]] *(from #service)*
+- [[server_db|server/db.ts]] *(from #db)*
+- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/aiLedger.test.ts`
+- `server/db/__tests__/aiLedgerBatch.test.ts`
+- `server/db/__tests__/aiLedgerSimulation.test.ts`
 
 ---
 

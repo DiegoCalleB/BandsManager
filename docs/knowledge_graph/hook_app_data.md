@@ -18,13 +18,15 @@ Carga y sincronización global de datos de la banda autenticada.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---
 

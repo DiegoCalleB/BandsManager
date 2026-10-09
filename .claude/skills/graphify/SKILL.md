@@ -22,7 +22,7 @@ Cuando se solicite modificar o auditar una funcionalidad:
 
 1. **Localizar el Nodo:** Consultar `docs/knowledge_graph/{node_id}.md` para ver el contrato exacto y sus dependencias.
 2. **Seguir las Conexiones (`[[...]]`):** Saltar directamente a los archivos conectados sin escaneos ciegos ni búsquedas recursivas.
-3. **Sincronización:** Si se añaden nuevas rutas o componentes, ejecutar:
+3. **Sincronización:** es automática. Un nodo por fichero de `src/` y `server/`, con enlaces sacados de los imports reales (`ts.preProcessFile`). El pre-commit lo regenera (`.husky/pre-commit`), el test `src/audit/grafoConocimiento.test.ts` falla si queda desfasado o si un fichero no tiene nodo, y `docs.yml` lo comprueba en CI. A mano solo quedan las descripciones de los módulos clave (`NODES` en `scripts/generate_obsidian_graph.ts`). Para forzarlo:
    ```bash
    npm run graph:sync
    ```
@@ -31,5 +31,5 @@ Cuando se solicite modificar o auditar una funcionalidad:
 
 ## 🛠️ Comandos Universales
 
-- `npm run graph:sync` ➔ Regenera el grafo de Obsidian desde el AST de TypeScript.
+- `npm run graph:sync` ➔ Regenera el grafo de Obsidian desde los imports reales del código.
 - `npm run check:fast` ➔ Validación rápida de tipos y tests de seguridad en <1.5s.
