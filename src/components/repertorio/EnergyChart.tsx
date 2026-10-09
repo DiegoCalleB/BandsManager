@@ -379,7 +379,10 @@ export function EnergyChart({
         }
         const canEditEnergy =
           !!onEnergyChange && from !== null && chartData[from]?.songId != null;
-        dragAxisRef.current = dy > dx && canEditEnergy ? "y" : "x";
+        // En táctil el arrastre vertical NO edita la energía: se cambiaba sin querer al hacer
+        // scroll. Allí se edita con el joystick del punto seleccionado.
+        dragAxisRef.current =
+          dy > dx && canEditEnergy && e.pointerType !== "touch" ? "y" : "x";
         setDragAxis(dragAxisRef.current);
         if (dragAxisRef.current === "y" && from !== null) {
           dragStartScoreRef.current = chartData[from]?.score ?? null;
@@ -706,7 +709,7 @@ export function EnergyChart({
                       onPointerLeave={() => setTip((t) => (t?.i === i ? null : t))}
                       className="absolute w-9 h-9 rounded-[var(--r-pill)] flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink)]"
                       style={{
-                        left: x - 18, top: y - 18, touchAction: canDragThis ? "none" : undefined,
+                        left: x - 18, top: y - 18, touchAction: canDragThis ? "pan-y" : undefined,
                         transition: isDraggingThis ? "none" : "top 150ms ease-out, left 150ms ease-out",
                         cursor: canDragThis ? (onReorder && canEditThisEnergy ? "move" : canEditThisEnergy ? "ns-resize" : "ew-resize") : "pointer",
                       }}
