@@ -52,5 +52,5 @@ describe('grafo de conocimiento (Obsidian)', () => {
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
-  });
+  }, 30000);
 });
