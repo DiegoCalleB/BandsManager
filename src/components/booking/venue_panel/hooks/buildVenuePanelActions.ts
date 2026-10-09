@@ -1,12 +1,12 @@
 import type { BookingCampaign } from "../../../../types";
 import { getErrorMessage } from "../../../../utils/errorMessage";
+import type { TriggerAgentResponse,VenueThreadEntry } from "../venuePanelTypes";
 /**
  * Acciones del panel de sala: regenerar y revertir pitch, enriquecer ficha, edición, confirmación de bolo, borrador, bitácora y formateo de teléfonos.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any
+ @typescript-eslint/no-unused-vars
 */
 import React,{ Dispatch,RefObject,SetStateAction } from "react";
 import { InteractionLog,Lead,LeadStatus,Setlist } from "../../../../types";
@@ -42,7 +42,7 @@ export interface buildVenuePanelActionsParams {
   setIsEditingLeadInfo: Dispatch<SetStateAction<boolean>>;
   setShowBoloConfirmadoModal: Dispatch<SetStateAction<boolean>>;
   setFeedbackBoloMsg: Dispatch<SetStateAction<string>>;
-  hiloCompleto: any[];
+  hiloCompleto: VenueThreadEntry[];
   setIsCreatingDraft: Dispatch<SetStateAction<boolean>>;
   setDraftError: Dispatch<SetStateAction<string>>;
   editedPitch: string;
@@ -310,7 +310,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
     };
     // Solo lo cambiado: antes se mandaba el lead entero de cuando se pulsó «Editar» y se pisaban
     // el estado o el hilo de correos cambiados mientras tanto.
-    const cambios = leadAlEditarRef.current ? camposCambiados(leadAlEditarRef.current as any, finalInfo as any) : finalInfo;
+    const cambios = leadAlEditarRef.current ? camposCambiados(leadAlEditarRef.current, finalInfo) : finalInfo;
     if (Object.keys(cambios).length > 0) {
       onUpdateLead(selectedLead.id, cambios as Partial<Lead>);
     }
@@ -447,7 +447,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
 
     let draftError = "";
     try {
-      const data = await apiFetch("/api/trigger-agent", {
+      const data = await apiFetch<TriggerAgentResponse>("/api/trigger-agent", {
         method: "POST",
         body: JSON.stringify({
           agentName: "enviador",
@@ -456,7 +456,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
       });
 
       const leadResult = Array.isArray(data.results)
-        ? data.results.find((r: any) => r.id === selectedLead.id)
+        ? data.results.find((r) => r.id === selectedLead.id)
         : null;
       if (
         leadResult?.status === "borrador" ||

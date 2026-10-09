@@ -4,8 +4,7 @@ import { getErrorMessage } from "../../../utils/errorMessage";
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any
+ @typescript-eslint/no-unused-vars
 */
 import { CheckCircle2,Loader2,Send,Sparkles } from "lucide-react";
 import { Dispatch,SetStateAction } from "react";
@@ -146,7 +145,7 @@ export function VenueAgentWorkflowBanner({ selectedLead, normalizeStatus, isRepl
                       });
                       const leadResult = Array.isArray(data.results)
                         ? data.results.find(
-                            (r: any) => r.id === selectedLead.id,
+                            (r: { id: string }) => r.id === selectedLead.id,
                           )
                         : null;
                       if (

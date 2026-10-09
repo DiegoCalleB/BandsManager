@@ -1,18 +1,17 @@
+import type { VenueThreadEntry } from "./venuePanelTypes";
 /**
  * Pestaña de hilo de correos y simulación de respuesta.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from "../../../utils/bookingFollowup";
-import { Clock, Sparkles, Loader2, Handshake } from "lucide-react";
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { Clock,Handshake,Loader2,Sparkles } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Lead } from "../../../types";
+import { generateFollowupTemplate,getDaysSinceContact,isLeadNeedsFollowup } from "../../../utils/bookingFollowup";
+import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
 import { Button } from "../../ui";
 import { PublicoSilhouette } from "../../ui/PublicoSilhouette";
-import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
-import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueEmailsSectionProps {
@@ -23,7 +22,7 @@ export interface VenueEmailsSectionProps {
   setIsEditingPitch: Dispatch<SetStateAction<boolean>>;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
   setActiveTab: Dispatch<SetStateAction<"info" | "emails" | "intelligence" | "copilot" | "bitacora">>;
-  hiloCompleto: any[];
+  hiloCompleto: VenueThreadEntry[];
   handleAnalyzeMessageSentiment: (messageId: string, messageText: string) => Promise<void>;
   isAnalyzingMessageSentiment: string;
   editedPitch: string;

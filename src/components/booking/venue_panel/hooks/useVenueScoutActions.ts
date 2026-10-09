@@ -1,11 +1,10 @@
 import { getErrorMessage } from "../../../../utils/errorMessage";
+import type { DateRadarResponse,InstagramEnrichmentResponse,LeadMutationResponse } from "../apiResponses";
 /**
  * Acciones de inteligencia Scout: Jina, fechas de sala, Instagram y fechas de festival.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
+ 
 import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
@@ -43,8 +42,8 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
       setScoutActionFeedback(
         "Escaneando sitio web con Jina Reader (r.jina.ai)...",
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-jina`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-jina`,
         {
           method: "POST",
           body: JSON.stringify({ website: targetUrl }),
@@ -78,8 +77,8 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
       setScoutActionFeedback(
         "Consultando y contrastando radar en Wegow y Bandsintown...",
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/detect-dates`,
+      const res = await apiFetch<DateRadarResponse>(
+`/api/leads/${selectedLead.id}/detect-dates`,
         {
           method: "POST",
         },
@@ -133,8 +132,8 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
     try {
       setIsEnrichingInstagram(true);
       setScoutActionFeedback("Consultando perfil comercial de Instagram...");
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-instagram`,
+      const res = await apiFetch<InstagramEnrichmentResponse>(
+`/api/leads/${selectedLead.id}/enrich-instagram`,
         {
           method: "POST",
           body: JSON.stringify({ instagram: igHandle }),

@@ -3,9 +3,7 @@ import type { BookingCampaign } from "../../../types";
  * Barra de herramientas de inteligencia Scout (Jina, Wegow, Instagram).
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
+ 
 import { AlertCircle,Calendar,CalendarCheck,CheckCircle2,Compass,ExternalLink,Globe,Instagram,Loader2,PartyPopper,TrendingUp } from "lucide-react";
 import { Dispatch,SetStateAction } from "react";
 import { Concert,Lead } from "../../../types";
@@ -40,6 +38,8 @@ export interface VenueScoutToolbarProps {
  * @returns Sección de interfaz.
  */
 export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDetectVenueDates, isDetectingDates, selectedLead, editedLeadInfo, handleEnrichInstagram, isEnrichingInstagram, scoutActionFeedback, activeCampaign, concerts, bandName, editedPitch, setEditedPitch, setIsEditingPitch, onUpdateLead, setShowWhatsAppModal }: VenueScoutToolbarProps) {
+  /** Campos heredados que algunos leads antiguos aún traen y que `Lead` ya no declara. */
+  const legacyLead = selectedLead as Lead & { fecha_posible_evento?: string; fechas_disponibles?: string[]; fechas_propuestas?: string[] };
   return (
     <>
 {/* Intelligence Scout Tools Toolbar (Jina Reader, Radar Wegow, Instagram Apify) */}
@@ -131,14 +131,14 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
           {/* 🎯 DISPONIBILIDAD Y CONFLICTO EN LA GIRA DE LA BANDA (Punto 1) */}
           {(() => {
             const targetDate =
-              (selectedLead as any).fecha_posible_evento ||
+              legacyLead.fecha_posible_evento ||
               (selectedLead.fechas_propuestas_sala &&
                 selectedLead.fechas_propuestas_sala[0]) ||
               (selectedLead.fechas_libres_detectadas &&
                 selectedLead.fechas_libres_detectadas[0]) ||
-              (selectedLead as any).fechas_libres_campana?.[0] ||
-              (selectedLead as any).fechas_propuestas?.[0] ||
-              (selectedLead as any).fechas_disponibles?.[0];
+              selectedLead.fechas_libres_campana?.[0] ||
+              legacyLead.fechas_propuestas?.[0] ||
+              legacyLead.fechas_disponibles?.[0];
             const conflictCheck = checkBandDateConflict(
               targetDate,
               concerts,
@@ -287,39 +287,39 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
             const campaignIsActive =
               activeCampaign &&
               (activeCampaign.isActive ??
-                (activeCampaign as any).is_active ??
+                (activeCampaign as BookingCampaign & { is_active?: boolean }).is_active ??
                 true);
             const fechasLibres =
-              campaignIsActive && (editedLeadInfo as any)?.fechas_libres_campana
-                ? (editedLeadInfo as any).fechas_libres_campana
+              campaignIsActive && editedLeadInfo?.fechas_libres_campana
+                ? editedLeadInfo.fechas_libres_campana
                 : editedLeadInfo?.fechas_libres_detectadas &&
                     editedLeadInfo.fechas_libres_detectadas.length > 0
                   ? editedLeadInfo.fechas_libres_detectadas
                   : campaignIsActive &&
-                      (selectedLead as any)?.fechas_libres_campana
-                    ? (selectedLead as any).fechas_libres_campana
+                      selectedLead?.fechas_libres_campana
+                    ? selectedLead.fechas_libres_campana
                     : selectedLead?.fechas_libres_detectadas || [];
 
             const hasVerifiedSources =
               (Array.isArray(selectedLead?.radar_fuentes_verificadas) &&
                 selectedLead.radar_fuentes_verificadas.length > 0) ||
               (Array.isArray(
-                (editedLeadInfo as any)?.radar_fuentes_verificadas,
+                editedLeadInfo?.radar_fuentes_verificadas,
               ) &&
-                (editedLeadInfo as any).radar_fuentes_verificadas.length > 0);
+                editedLeadInfo.radar_fuentes_verificadas.length > 0);
             const hasOccupied =
               (selectedLead?.fechas_ocupadas?.length || 0) > 0 ||
-              ((editedLeadInfo as any)?.fechas_ocupadas?.length || 0) > 0;
+              (editedLeadInfo?.fechas_ocupadas?.length || 0) > 0;
             const hasWegowOk =
-              (selectedLead as any)?.radar_wegow_status === "ok" ||
-              (editedLeadInfo as any)?.radar_wegow_status === "ok";
+              selectedLead?.radar_wegow_status === "ok" ||
+              editedLeadInfo?.radar_wegow_status === "ok";
             const hasBandsintownOk =
-              (selectedLead as any)?.radar_bandsintown_status === "ok" ||
-              (editedLeadInfo as any)?.radar_bandsintown_status === "ok";
+              selectedLead?.radar_bandsintown_status === "ok" ||
+              editedLeadInfo?.radar_bandsintown_status === "ok";
 
             const hasConcertsOrSources =
               selectedLead?.datos_fechas_encontrados === true ||
-              (editedLeadInfo as any)?.datos_fechas_encontrados === true ||
+              editedLeadInfo?.datos_fechas_encontrados === true ||
               hasWegowOk ||
               hasBandsintownOk ||
               hasVerifiedSources ||
@@ -327,17 +327,17 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
             const hasNoData =
               !hasConcertsOrSources ||
               selectedLead?.datos_fechas_encontrados === false ||
-              (editedLeadInfo as any)?.datos_fechas_encontrados === false;
+              editedLeadInfo?.datos_fechas_encontrados === false;
 
             const wegowStatus =
-              (selectedLead as any)?.radar_wegow_status ||
+              selectedLead?.radar_wegow_status ||
               ((selectedLead?.fechas_ocupadas?.length || 0) > 0
                 ? "ok"
                 : "sin_datos");
             const bandsintownStatus =
-              (selectedLead as any)?.radar_bandsintown_status || "sin_datos";
+              selectedLead?.radar_bandsintown_status || "sin_datos";
             const contrastado = Boolean(
-              (selectedLead as any)?.contrastado_multi_fuente ||
+              selectedLead?.contrastado_multi_fuente ||
               (wegowStatus === "ok" && bandsintownStatus === "ok"),
             );
 
@@ -397,7 +397,7 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
                 <div className="flex items-center gap-2 text-micro font-mono text-[var(--ink-2)] pl-0.5">
                   {wegowStatus === "ok" && (
                     <a
-                      href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
+                      href={`https://www.wegow.com/es-es/busqueda?query=${encodeURIComponent(selectedLead?.nombre_sala || editedLeadInfo?.nombre_sala || "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 hover:text-[var(--ok)] transition-colors cursor-pointer"
@@ -413,7 +413,7 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
                   {wegowStatus === "ok" && bandsintownStatus === "ok" && <span>•</span>}
                   {bandsintownStatus === "ok" && (
                     <a
-                      href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || (editedLeadInfo as any)?.nombre_sala || "")}`}
+                      href={`https://www.bandsintown.com/a/search?q=${encodeURIComponent(selectedLead?.nombre_sala || editedLeadInfo?.nombre_sala || "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 hover:text-[var(--acc)] transition-colors cursor-pointer"

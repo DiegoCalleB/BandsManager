@@ -26,10 +26,12 @@ import { VenueEmailsSection } from "./venue_panel/VenueEmailsSection";
 import { VenueIntelligenceSection } from "./venue_panel/VenueIntelligenceSection";
 import { VenuePitchInfoSection } from "./venue_panel/VenuePitchInfoSection";
 import { VenueTitleBar } from "./venue_panel/VenueTitleBar";
+import type { LeadMutationResponse } from "./venue_panel/apiResponses";
 import { buildVenuePanelActions } from "./venue_panel/hooks/buildVenuePanelActions";
 import { useVenueEnrichment } from "./venue_panel/hooks/useVenueEnrichment";
 import { useVenueMessageThread } from "./venue_panel/hooks/useVenueMessageThread";
 import { useVenueScoutActions } from "./venue_panel/hooks/useVenueScoutActions";
+import type { VenuePanelTab } from "./venue_panel/venuePanelTypes";
 import { isStitchLight } from "./venue_panel/venueTheme";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
@@ -75,15 +77,15 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   concerts = [],
 }) => {
   // Active Tab inside panel
-  const [activeTab, setActiveTab] = useState<
-    "info" | "emails" | "intelligence" | "copilot" | "bitacora"
-  >(initialTab as any);
-
-  useEffect(() => {
-    if (initialTab) {
-      setActiveTab(initialTab);
-    }
-  }, [initialTab, selectedLead?.id]);
+  const [activeTab, setActiveTab] = useState<VenuePanelTab>(initialTab);
+  // Vuelve a la pestaña inicial al cambiar de lead o de pestaña solicitada. Se ajusta durante el
+  // render (patrón recomendado por React) en lugar de con un efecto que llama a setState.
+  const initialTabKey = `${initialTab}:${selectedLead?.id ?? ""}`;
+  const [syncedInitialTabKey, setSyncedInitialTabKey] = useState(initialTabKey);
+  if (syncedInitialTabKey !== initialTabKey) {
+    setSyncedInitialTabKey(initialTabKey);
+    if (initialTab) setActiveTab(initialTab);
+  }
 
   // Edit Lead State
   const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
@@ -159,7 +161,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
     if (!selectedLead) return;
     try {
       setIsExtractingDates(true);
-      const res: any = await apiFetch("/api/leads/enrich-lead", {
+      const res = await apiFetch<LeadMutationResponse>(
+"/api/leads/enrich-lead", {
         method: "POST",
         body: JSON.stringify({ leadId: selectedLead.id, force: true }),
       });
@@ -192,8 +195,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
       setScoutActionFeedback(
         `Buscando bandas locales afines para co-booking en ${selectedLead.ciudad || "la ciudad"}...`,
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-co-booking`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-co-booking`,
         {
           method: "POST",
         },
@@ -366,7 +369,6 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         activeCampaign={activeCampaign}
         onSelectProposal={(text, providerName) => {
           setEditedPitch(text);
-          selectedLead.pitch_generado = text;
           onUpdateLead(selectedLead.id, { pitch_generado: text });
           const label =
             providerName === "deepseek" ? "DeepSeek V3" : "Gemini 3.7 Flash";
@@ -404,7 +406,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               tipo: "WhatsApp",
               autor: interactionAutor || "Mánager / Booking",
               notas: logData.notas,
-              resultado: (logData.resultado as any) || "Interesado",
+              resultado: (logData.resultado as InteractionLog["resultado"]) || "Interesado",
             };
             const existingLogs = selectedLead.historial_contacto || [];
             onUpdateLead(leadId, {

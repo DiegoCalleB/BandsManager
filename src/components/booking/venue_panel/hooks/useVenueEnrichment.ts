@@ -1,10 +1,10 @@
 import { getErrorMessage } from "../../../../utils/errorMessage";
+import type { LeadMutationResponse } from "../apiResponses";
 /**
  * Estado y acciones de enriquecimiento externo: rutas, redes, ventana de programación, eventos, prensa, co-booking y simulador financiero.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-explicit-any,
  react-hooks/set-state-in-effect
 */
 import { Dispatch,SetStateAction,useEffect,useState } from "react";
@@ -86,8 +86,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
       setScoutActionFeedback(
         "Analizando Spotify, Google Places, Setlist, Ruta, Redes, Ventana Booking, Eventos, Prensa y Co-Booking...",
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-all-apis`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-all-apis`,
         {
           method: "POST",
         },
@@ -120,8 +120,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
       setScoutActionFeedback(
         `Calculando ruta y gasolina desde ${routeOrigin}...`,
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-logistics`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-logistics`,
         {
           method: "POST",
           body: JSON.stringify({ origen: routeOrigin }),
@@ -147,8 +147,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
     try {
       setIsEnrichingSocial(true);
       setScoutActionFeedback("Analizando Instagram & TikTok de la sala...");
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-social`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-social`,
         {
           method: "POST",
         },
@@ -187,8 +187,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
         gastosProduccionFijos: simGastosProd,
         numMusicos: simNumMusicos,
       };
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/calculate-break-even`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/calculate-break-even`,
         {
           method: "POST",
           body: JSON.stringify(payload),
@@ -222,8 +222,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
       setScoutActionFeedback(
         "Analizando ventana de programación y antelación ideal...",
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-booking-window`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-booking-window`,
         {
           method: "POST",
         },
@@ -250,8 +250,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
       setScoutActionFeedback(
         `Escaneando festivales y eventos locales en ${selectedLead.ciudad || "la zona"}...`,
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-local-events`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-local-events`,
         {
           method: "POST",
         },
@@ -278,8 +278,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
       setScoutActionFeedback(
         `Buscando radios, fanzines y prensa cultural en ${selectedLead.ciudad || "la provincia"}...`,
       );
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/enrich-press-media`,
+      const res = await apiFetch<LeadMutationResponse>(
+`/api/leads/${selectedLead.id}/enrich-press-media`,
         {
           method: "POST",
         },

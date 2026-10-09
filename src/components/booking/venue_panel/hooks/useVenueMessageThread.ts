@@ -1,14 +1,14 @@
+import type { SentimentResponse } from "../apiResponses";
 /**
  * Hilo de mensajes del lead y análisis de sentimiento.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 /* eslint-disable
- @typescript-eslint/no-explicit-any,
  react-hooks/set-state-in-effect
 */
-import React, { useState, useEffect } from "react";
-import { EmailMessage, Lead } from "../../../../types";
+import React,{ useEffect,useState } from "react";
 import { api } from "../../../../services/api";
+import { EmailMessage,Lead } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -56,8 +56,8 @@ export function useVenueMessageThread({ selectedLead, onUpdateLead }: VenueMessa
     if (!selectedLead || !messageText) return;
     try {
       setIsAnalyzingMessageSentiment(messageId);
-      const res: any = await apiFetch(
-        `/api/leads/${selectedLead.id}/analyze-sentiment`,
+      const res = await apiFetch<SentimentResponse>(
+`/api/leads/${selectedLead.id}/analyze-sentiment`,
         {
           method: "POST",
           body: JSON.stringify({ messageText }),
@@ -109,7 +109,7 @@ export function useVenueMessageThread({ selectedLead, onUpdateLead }: VenueMessa
   // aproximada, y ordenado cronológicamente - una banda puede tener las dos fuentes a la vez si
   // sincronizó Gmail a mano alguna vez además de dejar que los agentes trabajen.
   const hiloCompleto = React.useMemo(() => {
-    const manual = (selectedLead?.hilo_emails || []).map((m: any) => ({
+    const manual = (selectedLead?.hilo_emails || []).map((m) => ({
       ...m,
       _origen: "manual" as const,
     }));

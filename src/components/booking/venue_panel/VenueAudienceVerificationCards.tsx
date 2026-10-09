@@ -2,17 +2,15 @@
  * Audiencia en Spotify, Google Places, Setlist.fm y verificación de email.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { Headphones, MapPin, Star, Disc, ShieldCheck } from "lucide-react";
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { Disc,Headphones,MapPin,ShieldCheck,Star } from "lucide-react";
+import React,{ Dispatch,SetStateAction } from "react";
+import { Lead } from "../../../types";
 import { LinkButton } from "../../ui";
-import { VenueRouteSocialCards } from "./VenueRouteSocialCards";
+import { ShowIcon } from "../../ui/ShowIcon";
 import { VenueCalendarEventsCards } from "./VenueCalendarEventsCards";
 import { VenueCoBookingMediaCards } from "./VenueCoBookingMediaCards";
-import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
+import { VenueRouteSocialCards } from "./VenueRouteSocialCards";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueAudienceVerificationCardsProps {
@@ -158,7 +156,7 @@ export function VenueAudienceVerificationCards({ selectedLead, onUpdateLead, set
                                 alt={`${selectedLead.nombre_sala} foto ${i + 1}`}
                                 className="w-full h-full object-cover transition-transform duration-300"
                                 referrerPolicy="no-referrer"
-                                onError={(e: any) => {
+                                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                                   e.currentTarget.style.display = "none";
                                 }}
                               />
