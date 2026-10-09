@@ -38,7 +38,7 @@ import { useIdeaComments } from '../hooks/useIdeaComments';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { getMemberReadiness, withMemberReadiness, READINESS_LEVELS, ReadinessLevel } from '../utils/repertorioUtils';
 import { getSongIrisStemIdea, ideaDeStemsDeCancion, cancionConIdeas, cancionConPistas, esIdeaIris, irisPrimero, metaStemsDeCancion, pistasDeCancion } from '../utils/irisTracks';
-import { ideaConPistasBase, ideasConFondo, pistasBaseDeIdea } from '../utils/ideaDeAtril';
+import { cancionConMezcla, esPistaBase, ideaConPistasBase, ideasConFondo, pistasBaseDeIdea, pistasBaseMezcladas } from '../utils/ideaDeAtril';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { formatSongTitle } from '../utils/formatSongTitle';
 import {
@@ -1395,11 +1395,7 @@ export default function SongStudioModal({
   const pistasBaseVirtuales = (idea: SongAudioIdea): AudioTrack[] => {
     const cancion = songRef.current || song;
     const ideaFresca = (cancion.audioIdeas || []).find((i) => i.id === idea.id) || idea;
-    return pistasBaseDeIdea(ideaFresca, pistasDeCancion(cancion)).pistas.map((st) => ({
-      ...st,
-      id: `base-${idea.id}-${st.id}`,
-      solo: false,
-    }));
+    return pistasBaseMezcladas(ideaFresca, pistasDeCancion(cancion));
   };
   const pistasDeReproduccion = (idea: SongAudioIdea): AudioTrack[] => [
     ...getIdeaTracks(idea),
@@ -1991,7 +1987,7 @@ export default function SongStudioModal({
 
   // Handle Track Volume Change
   const handleTrackVolumeChange = (idea: SongAudioIdea, trackId: string, newVol: number) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const updatedTracks = tracks.map((tr) => (tr.id === trackId ? { ...tr, volumen: newVol } : tr));
     const hasSolo = updatedTracks.some((t) => t.solo);
 
@@ -2002,14 +1998,14 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
 
   // Handle Track Latency Desfase Change (Nudge in ms)
   const handleTrackDesfaseChange = (idea: SongAudioIdea, trackId: string, newDesfaseMs: number) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const updatedTracks = tracks.map((tr) => (tr.id === trackId ? { ...tr, desfaseMs: newDesfaseMs } : tr));
 
     // Immediately adjust active element currentTime if currently playing
@@ -2022,14 +2018,14 @@ export default function SongStudioModal({
       } catch {}
     }
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
 
   // Handle Track Mute Toggle
   const handleToggleMuteTrack = (idea: SongAudioIdea, trackId: string) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const updatedTracks = tracks.map((tr) => {
       if (tr.id !== trackId) return tr;
       const nextMuted = !tr.muted;
@@ -2048,14 +2044,14 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
 
   // Handle Track Solo Toggle (Cubase style: Exclusive Solo)
   const handleToggleSoloTrack = (idea: SongAudioIdea, trackId: string) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const targetTrack = tracks.find((t) => t.id === trackId);
     const isTargetCurrentlySolo = !!targetTrack?.solo;
 
@@ -2083,14 +2079,14 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
 
   // Handle Track Pan Change (-1 to 1)
   const handleTrackPanChange = (idea: SongAudioIdea, trackId: string, pan: number) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const updatedTracks = tracks.map((tr) => (tr.id === trackId ? { ...tr, pan } : tr));
     const hasSolo = updatedTracks.some((t) => t.solo);
 
@@ -2101,14 +2097,14 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
 
   // Handle Track EQ Change (low, mid, high: -12dB to +12dB)
   const handleTrackEqChange = (idea: SongAudioIdea, trackId: string, band: 'low' | 'mid' | 'high', value: number) => {
-    const tracks = getIdeaTracks(idea);
+    const tracks = pistasDeReproduccion(idea);
     const updatedTracks = tracks.map((tr) => {
       if (tr.id !== trackId) return tr;
       if (band === 'low') return { ...tr, eqLow: value };
@@ -2124,7 +2120,7 @@ export default function SongStudioModal({
       }
     });
 
-    const updatedSong = cancionConPistas(song, idea, updatedTracks);
+    const updatedSong = cancionConMezcla(song, idea, updatedTracks);
     songRef.current = updatedSong;
     onUpdateSong(updatedSong);
   };
@@ -3374,7 +3370,7 @@ export default function SongStudioModal({
                             {/* MINI DAW TRACK LIST MIXER */}
                             <div className="space-y-1.5 sm:space-y-2 bg-[var(--sunken)] p-2 sm:p-3 rounded-[var(--r-m)]">
                               {(() => {
-                                const hasSoloInIdea = tracks.some((t) => t.solo);
+                                const hasSoloInIdea = pistasDeReproduccion(idea).some((t) => t.solo);
                                 return (
                                   <>
                                     <div className="flex items-center justify-between text-xs font-sans text-[var(--ink-2)] pb-1.5 flex-wrap gap-2">
@@ -3425,7 +3421,8 @@ export default function SongStudioModal({
                                     </div>
 
                                     <div className="space-y-1.5 sm:space-y-2">
-                                      {tracks.map((tr, idx) => {
+                                      {pistasDeReproduccion(idea).map((tr, idx) => {
+                                        const esBase = esPistaBase(idea.id, tr.id);
                                         const isMuted = tr.muted;
                                         const isSolo = (tr as any).solo;
                                         const vol = tr.volumen ?? 1;
@@ -3465,7 +3462,7 @@ export default function SongStudioModal({
                                               {/* Asa de arrastre grande, ocupa todo el alto de la fila — igual sistema
  (HTML5 drag nativo) que ya funciona en el repertorio, pero con un
  objetivo táctil mucho mayor que un icono suelto */}
-                                              {tracks.length > 1 && (
+                                              {tracks.length > 1 && !esBase && (
                                                 <div
                                                   draggable
                                                   onDragStart={() =>
@@ -3532,7 +3529,12 @@ export default function SongStudioModal({
                                                         <span className="text-xs font-bold text-[var(--ink)] font-sans truncate">
                                                           {tr.nombre}
                                                         </span>
-                                                        <IconButton
+                                                        {esBase && (
+                                                          <span className="px-1.5 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold shrink-0">
+                                                            Iris
+                                                          </span>
+                                                        )}
+                                                        {!esBase && <IconButton
                                                           label="Editar nombre de pista"
                                                           type="button"
                                                           onClick={() => {
@@ -3542,7 +3544,7 @@ export default function SongStudioModal({
                                                           className="shrink-0"
                                                         >
                                                           <Edit2 className="w-2.5 h-2.5" />
-                                                        </IconButton>
+                                                        </IconButton>}
                                                       </div>
                                                     )}
                                                   </div>
@@ -3673,7 +3675,7 @@ export default function SongStudioModal({
                                                   </div>
 
                                                   {/* Clean Noise Filter Button */}
-                                                  <Button
+                                                  {!esBase && <Button
                                                     variant={cleaningTrackId === tr.id ? "neutral" : "neutral"}
                                                     size="xs"
                                                     type="button"
@@ -3683,7 +3685,7 @@ export default function SongStudioModal({
                                                     title="Limpiar ruido de fondo y zumbidos de esta pista con Filtro Studio DSP (High-Pass 80Hz + Notch)"
                                                   >
                                                     <span>{cleaningTrackId === tr.id ? 'Limpiando...' : 'Filtro Zumbidos'}</span>
-                                                  </Button>
+                                                  </Button>}
                                                 </div>
 
                                                 {/* Row 2: 3-Band EQ */}
@@ -3766,14 +3768,14 @@ export default function SongStudioModal({
                                                     </span>
 
                                                     <div className="flex items-center gap-1">
-                                                      <button
+                                                      {!esBase && <button
                                                         type="button"
                                                         onClick={() => handleAutoSyncTrackLatency(idea, tr)}
                                                         className="px-2 py-0.5 rounded bg-[var(--acc)]/20 hover:bg-[var(--acc)]/30 text-[var(--ink)] font-bold cursor-pointer transition-colors flex items-center gap-1 text-micro"
                                                         title="Sincronizar automáticamente por IA/DSP comparando las ondas de sonido de la mezcla"
                                                       >
                                                         <ShowIcon inline emoji="⚡" />Sync Auto IA
-                                                      </button>
+                                                      </button>}
                                                       {(tr.desfaseMs || 0) !== 0 && (
                                                         <button
                                                           type="button"
@@ -3838,7 +3840,7 @@ export default function SongStudioModal({
 
                                                 {/* Row 4: Reordenar / Borrar pista — acciones ocasionales, fuera de
  la fila principal para que no se pulsen sin querer */}
-                                                <div className="flex items-center justify-between/10 pt-2">
+                                                {!esBase && <div className="flex items-center justify-between/10 pt-2">
                                                   <div className="flex items-center gap-1">
                                                     <span className="text-[var(--ink-2)] font-bold mr-1">Orden:</span>
                                                     <IconButton
@@ -3867,45 +3869,12 @@ export default function SongStudioModal({
                                                   >
                                                     <X className="w-3 h-3" /> Borrar pista
                                                   </Button>
-                                                </div>
+                                                </div>}
                                               </div>
                                             )}
                                           </div>
                                         );
                                       })}
-
-                                      {/* PISTAS DE IRIS (base de la idea): solo lectura, viven en la canción */}
-                                      {pistasBaseVirtuales(idea).map((tr, i) => (
-                                        <div key={tr.id} className="rounded-[var(--r-m)] overflow-hidden bg-[var(--acc-soft)]/40">
-                                          <div className="flex flex-col sm:flex-row sm:items-stretch">
-                                            <div className="flex items-center gap-2 px-3 py-2 sm:w-56 shrink-0 min-w-0">
-                                              <span
-                                                className="w-2.5 h-2.5 rounded-[var(--r-pill)] shrink-0"
-                                                style={{ backgroundColor: getTrackRainbowColor(tr, i + tracks.length) }}
-                                              />
-                                              <span className="text-xs font-bold text-[var(--ink)] truncate">
-                                                {tr.nombre || tr.instrumento || 'Pista'}
-                                              </span>
-                                              <span className="ml-auto px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc)] text-[var(--on-acc)] text-micro font-bold shrink-0">
-                                                Iris
-                                              </span>
-                                            </div>
-                                            <div className="w-full sm:flex-1 relative bg-[var(--sunken)]">
-                                              <WaveformTrack
-                                                ref={(el) => {
-                                                  trackAudioRefs.current[tr.id] = el as HTMLAudioElement;
-                                                }}
-                                                audioUrl={resolvedAudioUrls[tr.id] || tr.audioUrl}
-                                                color={getTrackRainbowColor(tr, i + tracks.length)}
-                                                masterDuration={duration || 30}
-                                                trackDuration={trackAudioRefs.current[tr.id]?.duration || durationMap[tr.id]}
-                                                currentTime={currentTime}
-                                                onSeekTrack={(seekSec) => handleSeekIdea(idea, seekSec)}
-                                              />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      ))}
 
                                       {/* CUBASE LIVE RECORDING TRACK ROW */}
                                       {isRecordingTrack && recordingTrackIdeaId === idea.id && (

@@ -66,9 +66,9 @@ describe('Ideas: pistas de Iris al crear la idea', () => {
 });
 
 describe('Ideas: pistas de Iris visibles y audibles en el mezclador', () => {
-  it('el transporte usa pistasDeReproduccion y las filas son de solo lectura', () => {
+  it('el transporte usa pistasDeReproduccion y la mezcla de las pistas de Iris va a la idea', () => {
     expect(src).toContain('pistasDeReproduccion(idea)');
-    expect(src).toContain('pistasBaseVirtuales(idea).map');
-    expect(src).toContain('`base-${idea.id}-${st.id}`');
+    expect(src).toContain('cancionConMezcla(song, idea, updatedTracks)');
+    expect(src).toContain('esPistaBase(idea.id, tr.id)');
   });
 });

@@ -1179,6 +1179,8 @@ export interface SongAudioIdea {
   sobrePistas?: string[];
   /** Desfase en segundos de esta toma respecto al inicio de las pistas (puede ser negativo). */
   offsetSegundos?: number;
+  /** Mezcla propia de esta toma sobre cada stem de `sobrePistas` (mute, solo, volumen, paneo, EQ, desfase), por id de stem. */
+  mezclaBase?: Record<string, Partial<Pick<AudioTrack, "muted" | "solo" | "volumen" | "pan" | "eqLow" | "eqMid" | "eqHigh" | "desfaseMs">>>;
   /** De dónde viene: subida a mano o grabada en el Atril sobre las pistas. */
   origen?: "subida" | "atril";
 }
