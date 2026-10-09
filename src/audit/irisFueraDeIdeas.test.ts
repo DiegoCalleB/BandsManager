@@ -19,8 +19,8 @@ describe('Iris vive a nivel de canción en el modal', () => {
 
 describe('El feed de ideas solo lleva tomas', () => {
   it('el feed mapea las tomas (sin Iris) y Iris se pinta en su panel', () => {
-    expect(src).toContain('{tomas.map((toma) => renderIdeaCard(toma))}');
-    expect(src).toContain('{irisIdea ? (\n                  <div className="space-y-6">{renderIdeaCard(irisIdea, { iris: true })}</div>');
+    expect(src).toMatch(/tomas\.map\(\(toma\) => \(\s*<SongStudioIdeaCard key=\{toma\.id\} idea=\{toma\} \/>/);
+    expect(src).toMatch(/\{irisIdea \? \(\s*<div className="space-y-6"><SongStudioIdeaCard idea=\{irisIdea\} opts=\{\{ iris: true \}\} \/><\/div>/);
     expect(src).not.toContain('{filteredIdeas.map((idea)');
   });
 
@@ -44,7 +44,7 @@ describe('Iris tiene su propia hoja', () => {
   it('el estudio solo trae la entrada y la hoja lleva el mezclador', () => {
     expect(src).toContain('setShowIrisPanel(true)');
     expect(src).toContain('aria-label="Iris, pistas de la canción"');
-    expect(src.indexOf('renderIdeaCard(irisIdea, { iris: true })')).toBeGreaterThan(src.indexOf('HOJA DE IRIS'));
+    expect(src.indexOf('<SongStudioIdeaCard idea={irisIdea} opts={{ iris: true }} />')).toBeGreaterThan(src.indexOf('HOJA DE IRIS'));
   });
 });
 
