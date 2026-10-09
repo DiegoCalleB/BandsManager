@@ -189,7 +189,7 @@ import {
   EvaluacionUnion,
 } from "../utils/setlistCompatibility";
 import { getSemitoneDifference } from "../utils/chordUtils";
-import { sobrescribirModulo } from "../utils/moduloGlobal";
+import { useRepertorioTabs } from "../hooks/useRepertorioTabs";
 import { EnergyChart, EnergyChartPoint } from "./repertorio/EnergyChart";
 import { SongTransitionPreviewModal } from "./repertorio/SongTransitionPreviewModal";
 import { titlesMatch } from "../utils/songTitleMatch";
@@ -318,44 +318,8 @@ export default function RepertorioSetlists({
 
   // Navigation tab inside module
   const [showPdfPreview, setShowPdfPreview] = useState(false);
-  const [activeTab, setActiveTab] = useState<"catalogo" | "setlists">(
-    "setlists",
-  );
-  const [catalogoViewMode, setCatalogoViewMode] = useState<
-    "albumes" | "canciones"
-  >("albumes");
-
-  // El acento global (sidebar, modales) sigue a la subpestaña: Discografía tiene su propio verde.
-  useEffect(() => {
-    sobrescribirModulo(activeTab === "catalogo" ? "discografia" : null);
-    return () => sobrescribirModulo(null);
-  }, [activeTab]);
-
-  // Sync activeTab with the view prop (when navigating from sidebar)
-  useEffect(() => {
-    if (view === "catalogo") {
-      setActiveTab("catalogo");
-      setCatalogoViewMode("canciones");
-    } else if (view === "discografia") {
-      setActiveTab("catalogo");
-      setCatalogoViewMode("albumes");
-    } else {
-      // repertorio, undefined, o el antiguo'directo' (módulo eliminado) — aterriza en Repertorio
-      // en vez de en una vista muerta.
-      setActiveTab("setlists");
-    }
-  }, [view]);
-
-  const handleTabChange = useCallback(
-    (newTab: "catalogo" | "setlists") => {
-      setActiveTab(newTab);
-      if (onNavigate) {
-        const targetView = newTab === "setlists" ? "repertorio" : "discografia";
-        onNavigate(targetView);
-      }
-    },
-    [onNavigate],
-  );
+  const { activeTab, catalogoViewMode, setCatalogoViewMode, handleTabChange } =
+    useRepertorioTabs(view, onNavigate);
 
   // Songs Repertoire State
   const [songs, setSongs] = useState<Song[]>(() => {
