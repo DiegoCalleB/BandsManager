@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GraduationCap } from 'lucide-react';
+import { ChevronDown, ChevronUp, GraduationCap } from 'lucide-react';
 import type { AnalisisAcordes } from '../../types';
 import { Button } from '../ui/Button';
 import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
@@ -9,6 +9,8 @@ type Profesor = NonNullable<AnalisisAcordes['profesor']>;
 interface Props {
   profesor?: Profesor;
   /** Pide la explicación al servidor; devuelve el profesor guardado o lanza con el motivo. */
+  /** Abre la explicación extendida desde el principio. */
+  extendida?: boolean;
   onPedir: (opciones: { nivel: Profesor['nivel']; instrumento: Profesor['instrumento']; forzar: boolean }) => Promise<Profesor>;
 }
 
@@ -32,11 +34,12 @@ const Lista: React.FC<{ titulo: string; items: string[]; idea?: boolean }> = ({ 
  * El «profesor» con IA: redacta lo que el código ya sabe de la canción. Bajo demanda (no gasta nada
  * hasta que se pide) y avisa de qué es dato y qué es sugerencia.
  */
-export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir }) => {
+export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = false }) => {
   const [nivel, setNivel] = useState<Profesor['nivel']>(profesor?.nivel ?? 'intermedio');
   const [instrumento, setInstrumento] = useState<Profesor['instrumento']>(profesor?.instrumento ?? instrumentoDelUsuario() ?? 'guitarra');
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ext, setExt] = useState(extendida);
 
   const pedir = async (forzar: boolean) => {
     setCargando(true);
@@ -79,34 +82,45 @@ export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir }) => {
         <div className="space-y-3 text-sm">
           {e.resumen && <p className="text-[var(--ink)] bg-[var(--sunken)] rounded-[var(--r-m)] p-3">{e.resumen}</p>}
           {e.comoFunciona.length > 0 && (
-            <div className="space-y-1.5">
-              <h4 className="font-bold text-[var(--ink)]">Cómo funciona</h4>
-              <ul className="space-y-1.5">
-                {e.comoFunciona.map((c, i) => <li key={i} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">{c.texto}</li>)}
-              </ul>
-            </div>
+            <ul className="space-y-1.5" aria-label="Lo esencial">
+              {e.comoFunciona.slice(0, ext ? undefined : 2).map((c, i) => <li key={i} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">{c.texto}</li>)}
+            </ul>
           )}
-          <Lista titulo="Para improvisar" items={e.paraImprovisar} idea />
-          <Lista titulo="Para componer" items={e.paraComponer} idea />
-          {e.dinamismo.length > 0 && (
-            <div className="space-y-1.5">
-              <h4 className="font-bold text-[var(--ink)] flex items-center gap-2">
-                Para darle dinamismo
-                <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs font-bold">Idea</span>
-              </h4>
-              <ul className="space-y-1.5">
-                {e.dinamismo.map((d, i) => (
-                  <li key={i} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">
-                    <b className="font-bold">{d.idea}</b>{d.ejemplo ? <span className="text-[var(--ink-2)]"> — {d.ejemplo}</span> : null}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {ext && (
+            <>
+            <Lista titulo="Para improvisar" items={e.paraImprovisar} idea />
+            <Lista titulo="Para componer" items={e.paraComponer} idea />
+            {e.dinamismo.length > 0 && (
+              <div className="space-y-1.5">
+                <h4 className="font-bold text-[var(--ink)] flex items-center gap-2">
+                  Para darle dinamismo
+                  <span className="px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs font-bold">Idea</span>
+                </h4>
+                <ul className="space-y-1.5">
+                  {e.dinamismo.map((d, i) => (
+                    <li key={i} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">
+                      <b className="font-bold">{d.idea}</b>{d.ejemplo ? <span className="text-[var(--ink-2)]"> — {d.ejemplo}</span> : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            </>
           )}
-          <p className="text-xs text-[var(--ink-2)]">
+          <button
+            type="button"
+            onClick={() => setExt((v) => !v)}
+            aria-expanded={ext}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink)] text-xs font-bold cursor-pointer hover:bg-[var(--surface)] transition-ui"
+          >
+            {ext ? <><ChevronUp className="w-3.5 h-3.5" /> Ver menos</> : <><ChevronDown className="w-3.5 h-3.5" /> Explicación extendida</>}
+          </button>
+          {ext && (
+            <p className="text-xs text-[var(--ink-2)]">
             Redactado por IA para nivel {profesor!.nivel} ({profesor!.instrumento}). Lo marcado «Idea» son sugerencias, no datos de la canción.
             {profesor!.descartadas > 0 ? ` Se descartaron ${profesor!.descartadas} frase${profesor!.descartadas === 1 ? '' : 's'} que no se podían comprobar con los datos.` : ''}
           </p>
+          )}
         </div>
       )}
     </section>

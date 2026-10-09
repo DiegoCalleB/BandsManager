@@ -10,7 +10,7 @@ const seq = (...a: string[]) => a.map((acorde, i) => ({ t0: i * 2, t1: i * 2 + 2
 const armonia = analizarArmonia(seq('E', 'E', 'A', 'D', 'E', 'E', 'A', 'D', 'E', 'E', 'A', 'D'), 'E')!;
 
 describe('PanelArmonia', () => {
-  const html = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} />);
+  const html = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} extendida />);
 
   it('cuenta la tonalidad, el modo y el bucle con datos calculados', () => {
     expect(html).toContain('Mi mayor · mixolidio');
@@ -31,7 +31,7 @@ describe('PanelArmonia', () => {
   });
 
   it('la transposición cambia los nombres de nota, no los grados', () => {
-    const t = renderToStaticMarkup(<PanelArmonia armonia={armonia} notation="EN" transpose={2} />);
+    const t = renderToStaticMarkup(<PanelArmonia armonia={armonia} notation="EN" transpose={2} extendida />);
     expect(t).toContain('F# mayor'); // E +2
     expect(t).toContain('VII');
   });
@@ -78,10 +78,17 @@ describe('ProfesorIA', () => {
     expect(h).toMatch(/solo a los datos calculados/);
   });
 
+  it('con explicación en corto: lo esencial y el botón', () => {
+    const largo = renderToStaticMarkup(<ProfesorIA profesor={profesor} onPedir={async () => profesor} />);
+    expect(largo).toContain('Es rock mixolidio.');
+    expect(largo).toContain('Explicación extendida');
+    expect(largo).not.toContain('Para darle dinamismo');
+  });
+
   it('con explicación: separa datos de ideas y avisa de lo descartado', () => {
-    const h = renderToStaticMarkup(<ProfesorIA profesor={profesor} onPedir={async () => profesor} />);
+    const h = renderToStaticMarkup(<ProfesorIA extendida profesor={profesor} onPedir={async () => profesor} />);
     expect(h).toContain('Es rock mixolidio.');
-    expect(h).toContain('Cómo funciona');
+    expect(h).toContain('Ver menos');
     expect((h.match(/>Idea</g) ?? []).length).toBe(3); // improvisar, componer y dinamismo
     expect(h).toMatch(/Se descartaron 2 frases/);
     expect(h).toContain('Volver a explicar');
@@ -91,7 +98,7 @@ describe('ProfesorIA', () => {
 
 describe('explicar los colores', () => {
   it('el panel de Armonía explica por qué cada acorde tiene su función, con su posición en la tonalidad', () => {
-    const h = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} />);
+    const h = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} extendida />);
     expect(h).toContain('Mi (I) es la tónica (el «1») de Mi mayor');
     expect(h).toMatch(/La \(IV\) es el 4\.º grado de Mi mayor: te aleja de casa/);
     expect(h).toMatch(/Re \(VII\) es el 7\.º grado de Mi mayor: no pertenece a la escala/);
@@ -102,5 +109,14 @@ describe('explicar los colores', () => {
     const cerrada = renderToStaticMarkup(<SelectorArmonia estilo={ESTILO_POR_DEFECTO} onCambio={() => {}} presentes={['T', 'S']} />);
     expect(cerrada).toContain('¿Por qué estos colores?');
     expect(cerrada).not.toContain('no depende del nombre del acorde');
+  });
+});
+
+describe('lo esencial primero', () => {
+  it('Armonía y profesor ocultan el detalle tras «Explicación extendida»', () => {
+    const corto = renderToStaticMarkup(<PanelArmonia armonia={armonia} bpm={146} notation="ES" transpose={0} />);
+    expect(corto).toContain('Explicación extendida');
+    expect(corto).not.toContain('Pentatónica');
+    expect(corto).not.toContain('Para improvisar y componer');
   });
 });
