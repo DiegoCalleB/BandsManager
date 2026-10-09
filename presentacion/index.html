@@ -451,6 +451,109 @@
   <p class="mut" style="margin-top:44px;font-size:28px;max-width:1500px">Supabase es la única fuente de verdad. Cada integración se desactiva sola si falta su clave: sin <span class="mono">.env</span> la app arranca igual, con usuarios semilla y estado en memoria.</p>
 </section>
 
+<section class="slide" data-title="El mapa que lee la IA" data-transition="zoom">
+  <span class="tag">Cómo se construyó</span>
+  <h2 style="font-size:70px;max-width:1700px">Un mapa del código que lee la propia IA.</h2>
+  <div style="margin-top:30px"><svg viewBox="0 0 1500 560" width="100%" role="img" aria-label="Mapa de 24 módulos y 47 dependencias del grafo de conocimiento">
+<line x1="977" y1="72" x2="1430" y2="150" stroke="var(--line)" stroke-width="2"/>
+<line x1="550" y1="40" x2="977" y2="176" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="323" x2="1430" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="237" x2="1430" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="410" x2="1430" y2="323" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="215" x2="977" y2="488" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="85" x2="1430" y2="237" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="345" x2="550" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="750" y1="40" x2="977" y2="384" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="497" x2="523" y2="215" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="63" x2="1430" y2="410" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="237" x2="70" y2="323" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="150" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="410" x2="523" y2="475" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="63" x2="1430" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="950" y1="40" x2="750" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="63" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="497" x2="523" y2="345" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="345" x2="977" y2="488" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="384" x2="750" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="475" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="345" x2="1430" y2="150" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="150" x2="523" y2="85" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="237" x2="70" y2="150" stroke="var(--line)" stroke-width="2"/>
+<line x1="950" y1="40" x2="1430" y2="237" stroke="var(--line)" stroke-width="2"/>
+<line x1="550" y1="40" x2="977" y2="488" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="176" x2="550" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="384" x2="1430" y2="237" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="176" x2="1430" y2="237" stroke="var(--line)" stroke-width="2"/>
+<line x1="950" y1="40" x2="1430" y2="323" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="72" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="488" x2="550" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="237" x2="1430" y2="410" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="475" x2="1430" y2="323" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="488" x2="1430" y2="63" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="72" x2="1430" y2="237" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="237" x2="70" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="176" x2="1430" y2="150" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="150" x2="1430" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="323" x2="70" y2="150" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="280" x2="977" y2="72" stroke="var(--line)" stroke-width="2"/>
+<line x1="977" y1="280" x2="977" y2="176" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="215" x2="550" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="70" y1="323" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="1430" y1="410" x2="1430" y2="497" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="85" x2="950" y2="40" stroke="var(--line)" stroke-width="2"/>
+<line x1="523" y1="215" x2="1430" y2="63" stroke="var(--line)" stroke-width="2"/>
+<circle cx="70" cy="63" r="11" fill="var(--acc)"/>
+<text x="88" y="69" font-size="17" fill="var(--ink-2)" text-anchor="start">hook_app_data</text>
+<circle cx="70" cy="150" r="11" fill="var(--acc)"/>
+<text x="88" y="156" font-size="17" fill="var(--ink-2)" text-anchor="start">hook_booking_pipeline</text>
+<circle cx="70" cy="237" r="11" fill="var(--acc)"/>
+<text x="88" y="243" font-size="17" fill="var(--ink-2)" text-anchor="start">ui_booking_crm</text>
+<circle cx="70" cy="323" r="11" fill="var(--acc)"/>
+<text x="88" y="329" font-size="17" fill="var(--ink-2)" text-anchor="start">ui_leads_table</text>
+<circle cx="70" cy="410" r="11" fill="var(--acc)"/>
+<text x="88" y="416" font-size="17" fill="var(--ink-2)" text-anchor="start">ui_repertoire_setlists</text>
+<circle cx="70" cy="497" r="11" fill="var(--acc)"/>
+<text x="88" y="503" font-size="17" fill="var(--ink-2)" text-anchor="start">ui_venue_detail</text>
+<circle cx="523" cy="85" r="11" fill="var(--ink-2)"/>
+<text x="541" y="91" font-size="17" fill="var(--ink-2)" text-anchor="start">route_leads_crud</text>
+<circle cx="523" cy="215" r="11" fill="var(--ink-2)"/>
+<text x="541" y="221" font-size="17" fill="var(--ink-2)" text-anchor="start">route_leads_pitch</text>
+<circle cx="523" cy="345" r="11" fill="var(--ink-2)"/>
+<text x="541" y="351" font-size="17" fill="var(--ink-2)" text-anchor="start">route_leads_reply</text>
+<circle cx="523" cy="475" r="11" fill="var(--ink-2)"/>
+<text x="541" y="481" font-size="17" fill="var(--ink-2)" text-anchor="start">route_repertoire</text>
+<circle cx="977" cy="72" r="11" fill="var(--ok)"/>
+<text x="995" y="78" font-size="17" fill="var(--ink-2)" text-anchor="start">agent_enviador</text>
+<circle cx="977" cy="176" r="11" fill="var(--ok)"/>
+<text x="995" y="182" font-size="17" fill="var(--ink-2)" text-anchor="start">agent_lector</text>
+<circle cx="977" cy="280" r="11" fill="var(--ok)"/>
+<text x="995" y="286" font-size="17" fill="var(--ink-2)" text-anchor="start">agent_scheduler</text>
+<circle cx="977" cy="384" r="11" fill="var(--ok)"/>
+<text x="995" y="390" font-size="17" fill="var(--ink-2)" text-anchor="start">agent_scout</text>
+<circle cx="977" cy="488" r="11" fill="var(--ok)"/>
+<text x="995" y="494" font-size="17" fill="var(--ink-2)" text-anchor="start">service_pitch_engine</text>
+<circle cx="1430" cy="63" r="11" fill="var(--ink)"/>
+<text x="1412" y="69" font-size="17" fill="var(--ink-2)" text-anchor="end">db_ai_ledger</text>
+<circle cx="1430" cy="150" r="11" fill="var(--ink)"/>
+<text x="1412" y="156" font-size="17" fill="var(--ink-2)" text-anchor="end">db_lead_messages</text>
+<circle cx="1430" cy="237" r="11" fill="var(--ink)"/>
+<text x="1412" y="243" font-size="17" fill="var(--ink-2)" text-anchor="end">db_leads</text>
+<circle cx="1430" cy="323" r="11" fill="var(--ink)"/>
+<text x="1412" y="329" font-size="17" fill="var(--ink-2)" text-anchor="end">db_repertoire</text>
+<circle cx="1430" cy="410" r="11" fill="var(--ink)"/>
+<text x="1412" y="416" font-size="17" fill="var(--ink-2)" text-anchor="end">db_state_sync</text>
+<circle cx="1430" cy="497" r="11" fill="var(--ink)"/>
+<text x="1412" y="503" font-size="17" fill="var(--ink-2)" text-anchor="end">schema_supabase</text>
+<circle cx="550" cy="40" r="11" fill="var(--alert)"/>
+<text x="568" y="46" font-size="17" fill="var(--ink-2)" text-anchor="start">sec_prompt_safety</text>
+<circle cx="750" cy="40" r="11" fill="var(--alert)"/>
+<text x="768" y="46" font-size="17" fill="var(--ink-2)" text-anchor="start">sec_ssrf_guard</text>
+<circle cx="950" cy="40" r="11" fill="var(--alert)"/>
+<text x="968" y="46" font-size="17" fill="var(--ink-2)" text-anchor="start">sec_trust_boundary</text>
+</svg></div>
+  <p class="mut" style="margin-top:14px;font-size:26px;max-width:1650px">Un grafo de conocimiento en Markdown (24 módulos, 47 dependencias) generado desde el código con <span class="mono">npm run graph:sync</span>. Los agentes saltan de un nodo a otro en vez de buscar a ciegas. <b style="color:var(--alert)">Rojo</b> seguridad · <b style="color:var(--ok)">verde</b> agentes · <b style="color:var(--acc)">azul</b> interfaz.</p>
+</section>
+
 <section class="slide sunk" data-title="Cómo se construyó con IA">
   <span class="tag">Cómo se construyó</span>
   <h2>Construido con IA y gobernado por reglas.</h2>
