@@ -18,11 +18,12 @@ Núcleo puro del generador de Reels: parseo de tiempos, saneado de lo que devuel
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 
 ---

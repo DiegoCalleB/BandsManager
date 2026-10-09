@@ -18,6 +18,8 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
+- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_utils_emailDeliveryTracker|server/utils/emailDeliveryTracker.ts]] *(Layer: #service, Domain: #system)*
@@ -28,6 +30,7 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 

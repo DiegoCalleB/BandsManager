@@ -4,7 +4,7 @@ title: "src/components/CalendarView.tsx"
 layer: frontend
 domain: system
 file: "src/components/CalendarView.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/CalendarView.tsx
@@ -60,6 +60,7 @@ Exporta: CalendarView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

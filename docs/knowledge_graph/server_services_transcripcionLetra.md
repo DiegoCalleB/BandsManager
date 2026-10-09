@@ -18,7 +18,7 @@ Transcripción de la letra con un modelo de voz (Whisper en Replicate) y tiempos
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 
 ---
 

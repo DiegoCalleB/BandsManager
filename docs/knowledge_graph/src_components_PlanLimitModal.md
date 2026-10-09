@@ -4,7 +4,7 @@ title: "src/components/PlanLimitModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/PlanLimitModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/PlanLimitModal.tsx

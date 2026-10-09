@@ -24,6 +24,7 @@ Exporta: CheckoutButton.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
 

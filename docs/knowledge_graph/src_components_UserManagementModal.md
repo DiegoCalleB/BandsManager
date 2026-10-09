@@ -4,7 +4,7 @@ title: "src/components/UserManagementModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/UserManagementModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/UserManagementModal.tsx

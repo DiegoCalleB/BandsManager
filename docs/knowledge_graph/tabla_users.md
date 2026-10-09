@@ -23,6 +23,8 @@ Tabla de Supabase `users` (22 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*

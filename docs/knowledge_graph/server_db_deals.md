@@ -31,6 +31,8 @@ Acuerdos de concierto (`concert_deals`): comisión, hash SHA-256 del acuerdo, to
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(from #db)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*

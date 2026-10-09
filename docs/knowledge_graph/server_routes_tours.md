@@ -24,6 +24,8 @@ Rutas de giras; la lógica vive en `server/controllers/` (capa fina routes → c
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_gira|Tour Manager]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*

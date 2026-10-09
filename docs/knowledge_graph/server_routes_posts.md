@@ -27,6 +27,7 @@ Publicaciones sociales y cuentas conectadas de la banda.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*

@@ -4,7 +4,7 @@ title: "src/components/notifications/NotificationCenterBell.tsx"
 layer: frontend
 domain: system
 file: "src/components/notifications/NotificationCenterBell.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/notifications/NotificationCenterBell.tsx

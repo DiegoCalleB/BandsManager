@@ -26,6 +26,7 @@ Enlaces cortos (`short_links`) y sus clics (`short_link_clicks`). Toda lectura/e
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*

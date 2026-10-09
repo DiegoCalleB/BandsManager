@@ -18,6 +18,7 @@ Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningú
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_sentry|Sentry]] *(Layer: #external, Domain: #system)*
 - [[server_utils_version|server/utils/version.ts]] *(Layer: #service, Domain: #system)*
 
 ---

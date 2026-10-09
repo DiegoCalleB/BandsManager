@@ -27,6 +27,8 @@ Métricas de la banda y de redes: CRUD, sincronización y métricas reales
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*

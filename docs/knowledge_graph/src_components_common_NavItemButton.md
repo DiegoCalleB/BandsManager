@@ -4,7 +4,7 @@ title: "src/components/common/NavItemButton.tsx"
 layer: frontend
 domain: system
 file: "src/components/common/NavItemButton.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/common/NavItemButton.tsx

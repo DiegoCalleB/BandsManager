@@ -4,7 +4,7 @@ title: "src/components/LoginModal.tsx"
 layer: frontend
 domain: auth
 file: "src/components/LoginModal.tsx"
-tags: ["frontend", "auth", "auto"]
+tags: ["frontend", "auth", "auto", "pantalla"]
 ---
 
 # 📌 src/components/LoginModal.tsx
@@ -31,6 +31,7 @@ Exporta: LoginModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

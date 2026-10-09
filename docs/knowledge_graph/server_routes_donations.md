@@ -19,6 +19,7 @@ Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationR
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_stripe|Stripe]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
@@ -30,6 +31,7 @@ Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationR
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_booking_DealSupportCard|src/components/booking/DealSupportCard.tsx]] *(from #frontend)*
 - [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(from #hook)*

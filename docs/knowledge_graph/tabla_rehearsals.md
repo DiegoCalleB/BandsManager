@@ -24,6 +24,7 @@ Tabla de Supabase `rehearsals` (25 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 

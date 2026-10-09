@@ -23,6 +23,7 @@ Tabla de Supabase `tours` (20 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_gira|Tour Manager]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_tours|server/db/tours.ts]] *(from #db)*
 

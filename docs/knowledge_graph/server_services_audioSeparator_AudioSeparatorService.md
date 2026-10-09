@@ -18,6 +18,7 @@ Exporta: AudioSeparatorOptions, AudioSeparatorResult, AudioSeparatorJobStatus.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_stemStorageRetryQueue|server/services/stemStorageRetryQueue.ts]] *(Layer: #service, Domain: #repertoire)*

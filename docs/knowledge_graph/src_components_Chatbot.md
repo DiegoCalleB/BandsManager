@@ -4,7 +4,7 @@ title: "src/components/Chatbot.tsx"
 layer: frontend
 domain: system
 file: "src/components/Chatbot.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/Chatbot.tsx
@@ -41,6 +41,7 @@ Exporta: ProposedAction, ChatMessage, Chatbot.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 

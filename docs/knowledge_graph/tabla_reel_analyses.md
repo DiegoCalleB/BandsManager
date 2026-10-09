@@ -23,6 +23,7 @@ Tabla de Supabase `reel_analyses` (17 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
 

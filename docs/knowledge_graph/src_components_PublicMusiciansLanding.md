@@ -4,7 +4,7 @@ title: "src/components/PublicMusiciansLanding.tsx"
 layer: frontend
 domain: system
 file: "src/components/PublicMusiciansLanding.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/PublicMusiciansLanding.tsx

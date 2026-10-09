@@ -29,6 +29,10 @@ Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*

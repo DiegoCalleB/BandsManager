@@ -24,6 +24,7 @@ VENUE & ARTIST INTELLIGENCE SERVICE (SERPER + SPOTIFY)
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*

@@ -18,7 +18,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 
 ---
 

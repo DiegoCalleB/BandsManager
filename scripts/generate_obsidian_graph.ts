@@ -11,7 +11,7 @@ import ts from 'typescript';
 interface GraphNode {
   id: string;
   title: string;
-  layer: 'frontend' | 'hook' | 'route' | 'service' | 'db' | 'schema' | 'security' | 'agent';
+  layer: 'frontend' | 'hook' | 'route' | 'service' | 'db' | 'schema' | 'security' | 'agent' | 'external' | 'feature';
   domain: 'booking' | 'repertoire' | 'finances' | 'epk' | 'auth' | 'system' | 'social';
   file: string;
   description: string;
@@ -531,6 +531,48 @@ const coincideRuta = (url: string, patron: string[]): boolean => {
   return seg.length === patron.length && patron.every((p, i) => p.includes(':') || seg[i].includes(':') || seg[i] === p);
 };
 
+
+// Servicios externos: un nodo ext_* por proveedor, enlazado desde todo fichero cuyo código lo usa.
+const PROVEEDORES: { id: string; title: string; descripcion: string; re: RegExp }[] = [
+  { id: 'ext_gemini', title: 'Gemini (Google GenAI)', descripcion: 'Modelos de Google para pitch, chat, scouting y análisis musical.', re: /@google\/genai|generativelanguage\.googleapis\.com/ },
+  { id: 'ext_supabase', title: 'Supabase (Postgres)', descripcion: 'Base de datos y cliente `@supabase/supabase-js`.', re: /@supabase\/supabase-js/ },
+  { id: 'ext_supabase_storage', title: 'Supabase Storage', descripcion: 'Buckets de audio, imágenes y PDFs (`storage.from(...)`).', re: /\.storage\s*\.from\(/ },
+  { id: 'ext_stripe', title: 'Stripe', descripcion: 'Cobros, suscripciones y planes.', re: /['"]stripe['"]|api\.stripe\.com/ },
+  { id: 'ext_resend', title: 'Resend', descripcion: 'Email transaccional.', re: /['"]resend['"]|api\.resend\.com/ },
+  { id: 'ext_correo_smtp_imap', title: 'Correo SMTP / IMAP', descripcion: 'Envío y lectura de correo (nodemailer, imapflow, mailparser).', re: /nodemailer|imapflow|mailparser/ },
+  { id: 'ext_google_oauth_gmail', title: 'Google OAuth / Gmail API', descripcion: 'Inicio de sesión con Google y lectura/envío de Gmail.', re: /accounts\.google\.com|gmail\.googleapis|oauth2\.googleapis/ },
+  { id: 'ext_spotify', title: 'Spotify', descripcion: 'Métricas de artista, audiencia y previews.', re: /api\.spotify\.com|accounts\.spotify\.com/ },
+  { id: 'ext_replicate', title: 'Replicate', descripcion: 'Separación de pistas (Iris) y transcripción de letras.', re: /api\.replicate\.com|ReplicateService/ },
+  { id: 'ext_fal', title: 'fal.ai', descripcion: 'Separación de pistas en la nube.', re: /fal\.run|queue\.fal\.ai|FalAiService/ },
+  { id: 'ext_sentry', title: 'Sentry', descripcion: 'Seguimiento de errores en cliente y servidor.', re: /@sentry\// },
+  { id: 'ext_ffmpeg', title: 'FFmpeg', descripcion: 'Procesado de audio y vídeo en servidor.', re: /ffmpeg/ },
+];
+
+// Funciones clave de la aplicación: cada una agrupa pantalla → hook → ruta → servicio/agente → tabla → proveedor.
+// `entradas` son los ficheros de arranque; rutas, tablas y proveedores se deducen del propio grafo.
+const FUNCIONES: { id: string; title: string; domain: GraphNode['domain']; descripcion: string; entradas: string[] }[] = [
+  { id: 'fn_acceso_sesion', title: 'Acceso y sesión', domain: 'auth', descripcion: 'Login (email o Google), sesión por cookie y multi-banda: de quién es cada petición.', entradas: ['src/components/LoginModal.tsx', 'src/hooks/useAuth.ts', 'server/auth.ts', 'server/routes/users.ts', 'server/routes/bands.ts', 'src/utils/googleAuth.ts'] },
+  { id: 'fn_booking_crm', title: 'Booking CRM y pitch', domain: 'booking', descripcion: 'Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y seguimiento.', entradas: ['src/components/BookingCRM.tsx', 'src/hooks/useBookingPipeline.ts', 'server/routes/leads.ts', 'server/routes/deals.ts', 'server/routes/campaigns.ts', 'server/services/pitchEngine.ts', 'server/services/replyDrafting.ts'] },
+  { id: 'fn_agentes_correo', title: 'Agentes de correo', domain: 'booking', descripcion: 'Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.', entradas: ['server/routes/agent.ts', 'server/routes/gmailOAuth.ts', 'server/services/agentScheduler.ts', 'server/services/agentEngine.ts', 'server/services/agentQueueWorker.ts', 'server/services/lectorAgent.ts', 'server/services/emailAgentClient.ts', 'server/services/gmailApiClient.ts'] },
+  { id: 'fn_scout_salas', title: 'Búsqueda de salas y festivales', domain: 'booking', descripcion: 'Descubrimiento de salas, eventos y contactos desde fuentes abiertas, mapas y redes.', entradas: ['src/components/VenueMap.tsx', 'server/auto_enrichment.ts', 'server/services/multiSourceVenueDiscoveryService.ts', 'server/services/googlePlacesVenueService.ts', 'server/services/venueIntelligenceService.ts', 'server/services/bandsintownVenueService.ts', 'server/db/leads.ts'] },
+  { id: 'fn_repertorio_setlists', title: 'Repertorio y setlists', domain: 'repertoire', descripcion: 'Catálogo de canciones, setlists, atril, modo escenario y práctica.', entradas: ['src/components/RepertorioSetlists.tsx', 'src/components/SetlistPerformanceView.tsx', 'src/components/Atril.tsx', 'server/routes/repertorio.ts', 'server/routes/songs/index.ts', 'server/services/acordesCancion.ts', 'server/services/letraCancion.ts', 'server/db/repertoire.ts'] },
+  { id: 'fn_iris_estudio', title: 'Estudio de canción e Iris (stems)', domain: 'repertoire', descripcion: 'Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de canción.', entradas: ['src/components/SongStudioModal.tsx', 'src/hooks/useSeparacionIris.ts', 'src/utils/separacionIris.ts', 'server/routes/ai_music.ts', 'server/routes/upload.ts', 'server/services/audioSeparator/index.ts', 'server/services/stemPredictionReconciler.ts', 'server/services/stemStorageRetryQueue.ts', 'server/db/stemsCache.ts'] },
+  { id: 'fn_ensayos', title: 'Ensayos', domain: 'repertoire', descripcion: 'Convocatorias, orden del día, acta y seguimiento del ensayo.', entradas: ['src/components/ensayos/EnsayosManager.tsx', 'src/hooks/useSeguimientoEnsayo.ts', 'src/components/PracticeModePanel.tsx', 'server/db/rehearsals.ts'] },
+  { id: 'fn_conciertos_qr', title: 'Conciertos, QR y calendario', domain: 'booking', descripcion: 'Bolos confirmados, calendario, página pública del concierto, QR y enlaces cortos.', entradas: ['src/components/CalendarView.tsx', 'src/components/QrExportModal.tsx', 'server/routes/concerts.ts', 'server/routes/paginaConcierto.ts', 'server/routes/campanaConcierto.ts', 'server/routes/enlacesCortos.ts', 'server/routes/concert_to_album.ts', 'server/db/concerts.ts'] },
+  { id: 'fn_reels_social', title: 'Reels y redes sociales', domain: 'social', descripcion: 'Generación de reels virales, publicaciones y plan de crecimiento.', entradas: ['src/components/ReelsCenter.tsx', 'server/routes/reels.ts', 'server/routes/posts.ts', 'server/services/socialPublisher.ts', 'server/utils/reelsCore.ts', 'server/db/reelAnalyses.ts'] },
+  { id: 'fn_fans_epk', title: 'Fans y EPK', domain: 'epk', descripcion: 'Captación de fans, landing pública y dossier de prensa (EPK).', entradas: ['src/components/FansPanel.tsx', 'src/components/FansLanding.tsx', 'src/components/EPKManager.tsx', 'src/components/PublicEPK.tsx', 'server/routes/epk_fans.ts', 'server/services/perfilPublicoBanda.ts', 'server/db/epk.ts', 'server/db/fans.ts'] },
+  { id: 'fn_finanzas_planes', title: 'Finanzas, merchan y planes', domain: 'finances', descripcion: 'Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.', entradas: ['src/components/Finanzas.tsx', 'src/components/Merchan.tsx', 'src/components/Planes.tsx', 'src/components/CheckoutButton.tsx', 'server/routes/billing.ts', 'server/routes/donations.ts', 'server/services/financialBreakEvenService.ts', 'server/db/payments.ts'] },
+  { id: 'fn_gira', title: 'Tour Manager', domain: 'booking', descripcion: 'Planificación de giras, logística y rutas entre bolos.', entradas: ['src/components/TourManager.tsx', 'server/routes/tours.ts', 'server/controllers/tours.controller.ts', 'server/db/tours.ts', 'server/services/tourLogisticsService.ts'] },
+  { id: 'fn_metricas_panel', title: 'Panel y métricas', domain: 'system', descripcion: 'Dashboard de la banda con métricas de Spotify, redes y actividad.', entradas: ['src/components/Dashboard.tsx', 'server/routes/metrics.ts', 'server/routes/spotify.ts', 'server/services/metricasBandaService.ts', 'server/services/spotifyService.ts'] },
+  { id: 'fn_asistente_ia', title: 'Asistente de IA (chat)', domain: 'system', descripcion: 'Chatbot con herramientas que lee y actúa sobre los datos de la banda.', entradas: ['src/components/Chatbot.tsx', 'server/routes/chat.ts', 'server/services/chatTools.ts', 'server/ai.ts'] },
+];
+
+// Una función clave pinta: sus entradas, las rutas, tablas y proveedores que alcanza (hasta 2 saltos, sin pasar por utilidades compartidas).
+const MAX_SALTOS_FUNCION = 2;
+const MAX_ENTRANTES_COMPARTIDO = 25;
+// Proveedores que usa todo el mundo: enlazarlos desde cada función solo añade ruido.
+const TRANSVERSALES = new Set(['ext_sentry', 'ext_supabase']);
+
 export function construirNodos(): GraphNode[] {
   const ficheros = escanearFicheros();
   const existentes = new Set(ficheros);
@@ -565,6 +607,12 @@ export function construirNodos(): GraphNode[] {
   };
 
   const rutas = rutasApi();
+  const appTexto = fs.readFileSync(path.join(RAIZ, 'src/App.tsx'), 'utf-8');
+  const pantallas = new Set(
+    ts.preProcessFile(appTexto, true, true).importedFiles
+      .map((i) => resolverImport('src/App.tsx', i.fileName, existentes))
+      .filter((r): r is string => !!r && /^src\/(components|pages)\//.test(r)),
+  );
   const nodos: GraphNode[] = NODES.filter((n) => !existentes.has(n.file)).map((n) => ({ ...n }));
   for (const f of ficheros) {
     const texto = fs.readFileSync(path.join(RAIZ, f), 'utf-8');
@@ -575,6 +623,7 @@ export function construirNodos(): GraphNode[] {
       if (r && r !== f) destinos.add(idDe.get(r)!);
     }
     for (const t of tablasUsadas(texto)) destinos.add(t);
+    for (const p of PROVEEDORES) if (p.re.test(texto)) destinos.add(p.id);
     for (const url of urlsApiDe(texto)) {
       for (const r of rutas) if (coincideRuta(url, r.segmentos)) destinos.add(idDe.get(r.fichero)!);
     }
@@ -593,7 +642,7 @@ export function construirNodos(): GraphNode[] {
         file: f,
         description: descripcionDe(texto),
         linksTo: [...destinos].sort(),
-        tags: [layer, domain, 'auto'],
+        tags: [layer, domain, 'auto', ...(pantallas.has(f) ? ['pantalla'] : [])],
         tests,
       });
     }
@@ -610,6 +659,59 @@ export function construirNodos(): GraphNode[] {
       tags: ['schema', 'tabla', 'auto'],
       columnas: t.columnas,
       definidaEn: t.definidaEn,
+    });
+  }
+  for (const p of PROVEEDORES) {
+    nodos.push({
+      id: p.id,
+      title: p.title,
+      layer: 'external',
+      domain: 'system',
+      file: 'servicio externo',
+      description: p.descripcion,
+      linksTo: [],
+      tags: ['external', 'auto'],
+    });
+  }
+  const entrantes = new Map<string, number>();
+  for (const n of nodos) for (const d of n.linksTo) entrantes.set(d, (entrantes.get(d) ?? 0) + 1);
+  const porId = new Map(nodos.map((n) => [n.id, n]));
+  for (const fn of FUNCIONES) {
+    const ids = fn.entradas.map((f) => {
+      const id = idDe.get(f);
+      if (!id) throw new Error(`[graph] la función ${fn.id} apunta a un fichero que no existe: ${f}`);
+      return id;
+    });
+    const vistos = new Set(ids);
+    let frontera = [...ids];
+    for (let salto = 0; salto < MAX_SALTOS_FUNCION; salto++) {
+      const siguiente: string[] = [];
+      for (const id of frontera) {
+        for (const d of porId.get(id)?.linksTo ?? []) {
+          const nodo = porId.get(d);
+          if (!nodo || vistos.has(d) || ['schema', 'security', 'external', 'feature'].includes(nodo.layer)) continue;
+          if ((entrantes.get(d) ?? 0) > MAX_ENTRANTES_COMPARTIDO) continue;
+          vistos.add(d);
+          siguiente.push(d);
+        }
+      }
+      frontera = siguiente;
+    }
+    const destinos = new Set(ids);
+    for (const id of vistos) {
+      const nodo = porId.get(id)!;
+      if (nodo.layer === 'route' || nodo.layer === 'db') destinos.add(id);
+      if (nodo.layer !== 'db' || ids.includes(id)) for (const d of nodo.linksTo) if (d.startsWith('tabla_') || (d.startsWith('ext_') && !TRANSVERSALES.has(d))) destinos.add(d);
+    }
+    nodos.push({
+      id: fn.id,
+      title: fn.title,
+      layer: 'feature',
+      domain: fn.domain,
+      file: fn.entradas[0],
+      description: fn.descripcion,
+      linksTo: [...destinos].sort(),
+      tags: ['feature', fn.domain, 'auto'],
     });
   }
   const esquema = nodos.find((n) => n.id === 'schema_supabase');
@@ -699,6 +801,12 @@ ${node.columnas ? `## 🗄️ Columnas\n${node.columnas.map((c) => `- \`${c}\``)
     .slice(0, 20)
     .map((n) => `- [[${n.id}|${n.title}]] — ${entrantes.get(n.id) ?? 0} ficheros dependen de él`)
     .join('\n');
+  const funciones = TODOS.filter((n) => n.layer === 'feature')
+    .map((n) => `- [[${n.id}|${n.title}]] — ${n.description}`)
+    .join('\n');
+  const proveedores = TODOS.filter((n) => n.layer === 'external')
+    .map((n) => `- [[${n.id}|${n.title}]] — ${entrantes.get(n.id) ?? 0} ficheros lo usan`)
+    .join('\n');
   const mapaAuto = `## 🤖 Mapa automático (generado desde los imports reales)
 
 ${TODOS.length} nodos: ${[...porCapa.entries()].sort().map(([c, n]) => `${n} ${c}`).join(' · ')}.
@@ -717,6 +825,15 @@ tags: ["obsidian", "architecture", "graphify", "tfm"]
 # 🗺️ BandManager.io — Obsidian Knowledge Graph
 
 Este grafo de conocimiento interactivo mapea de forma determinista todas las capas y módulos del sistema para **Obsidian**, herramientas de desarrollo y agentes de IA.
+
+---
+
+## ⭐ Funciones clave de la aplicación
+Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor externo. Abre una y expande sus conexiones.
+${funciones}
+
+## 🌐 Servicios externos
+${proveedores}
 
 ---
 

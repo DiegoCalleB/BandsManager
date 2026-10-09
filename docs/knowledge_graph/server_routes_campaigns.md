@@ -26,6 +26,7 @@ Campañas de booking masivas: CRUD, campaña activa y registro de entrenamiento 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 

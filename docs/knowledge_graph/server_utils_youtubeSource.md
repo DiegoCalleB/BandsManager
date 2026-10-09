@@ -18,7 +18,7 @@ Exporta: ejecutar, COOKIES_FILE, banderasDeCookies, banderasAntiBot, rutaYtDlp, 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 
 ---
 

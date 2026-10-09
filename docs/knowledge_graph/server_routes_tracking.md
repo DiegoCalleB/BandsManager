@@ -30,6 +30,9 @@ Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webho
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*

@@ -4,7 +4,7 @@ title: "src/components/ErrorBoundary.tsx"
 layer: frontend
 domain: system
 file: "src/components/ErrorBoundary.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/ErrorBoundary.tsx

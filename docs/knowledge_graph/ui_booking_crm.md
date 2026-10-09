@@ -70,6 +70,7 @@ Panel principal del embudo de contratación, gestión de salas y radar comercial
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

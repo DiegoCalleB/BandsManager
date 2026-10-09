@@ -18,7 +18,7 @@ Red de errores del frontend (React / Navegador del usuario).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_sentry|Sentry]] *(Layer: #external, Domain: #system)*
 
 ---
 

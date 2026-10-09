@@ -36,6 +36,7 @@ Escucha y Spotify en lote para las bandas de la cuenta. Todo va acotado a la ban
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*

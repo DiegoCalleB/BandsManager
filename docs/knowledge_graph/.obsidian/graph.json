@@ -8,6 +8,20 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
+      "query": "tag:#layer/feature",
+      "color": {
+        "a": 1,
+        "rgb": 16777215
+      }
+    },
+    {
+      "query": "tag:#layer/external",
+      "color": {
+        "a": 1,
+        "rgb": 65535
+      }
+    },
+    {
       "query": "path:tabla_",
       "color": {
         "a": 1,

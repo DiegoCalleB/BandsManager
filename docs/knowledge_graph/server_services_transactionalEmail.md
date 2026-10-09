@@ -18,6 +18,7 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[server_utils_html|server/utils/html.ts]] *(Layer: #service, Domain: #system)*
 
 ---

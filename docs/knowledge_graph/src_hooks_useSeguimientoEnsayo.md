@@ -24,6 +24,7 @@ Exporta: EvaluacionPista, useSeguimientoEnsayo.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[src_components_ensayos_BarraSeguimientoEnsayo|src/components/ensayos/BarraSeguimientoEnsayo.tsx]] *(from #frontend)*
 - [[src_components_ensayos_BotonesEvaluacion|src/components/ensayos/BotonesEvaluacion.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*

@@ -24,6 +24,7 @@ Exporta: PublishResult, publishSocialPostNow, publishDueScheduledPosts.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 
 ---

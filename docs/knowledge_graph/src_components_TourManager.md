@@ -4,7 +4,7 @@ title: "src/components/TourManager.tsx"
 layer: frontend
 domain: system
 file: "src/components/TourManager.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/TourManager.tsx
@@ -29,6 +29,7 @@ Exporta: TourManager.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_gira|Tour Manager]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

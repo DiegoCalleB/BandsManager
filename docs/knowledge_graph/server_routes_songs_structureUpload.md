@@ -20,6 +20,7 @@ Subida y procesado de la estructura de una canción (`/songs/...`).
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
@@ -30,6 +31,7 @@ Subida y procesado de la estructura de una canción (`/songs/...`).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server_routes_songs_index|server/routes/songs/index.ts]] *(from #route)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 

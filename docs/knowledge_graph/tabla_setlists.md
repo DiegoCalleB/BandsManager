@@ -24,6 +24,7 @@ Tabla de Supabase `setlists` (11 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[tabla_concerts|tabla concerts]] *(from #schema)*
 - [[tabla_rehearsals|tabla rehearsals]] *(from #schema)*

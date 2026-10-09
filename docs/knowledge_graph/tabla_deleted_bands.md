@@ -24,6 +24,7 @@ Tabla de Supabase `deleted_bands` (7 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_leads|Leads DB Handlers]] *(from #db)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 
 ---

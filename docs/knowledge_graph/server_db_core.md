@@ -18,7 +18,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_supabase|Supabase (Postgres)]] *(Layer: #external, Domain: #system)*
 
 ---
 

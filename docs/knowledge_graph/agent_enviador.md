@@ -39,6 +39,7 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 

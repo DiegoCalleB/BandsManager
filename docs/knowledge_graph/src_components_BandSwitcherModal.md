@@ -4,7 +4,7 @@ title: "src/components/BandSwitcherModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/BandSwitcherModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/BandSwitcherModal.tsx

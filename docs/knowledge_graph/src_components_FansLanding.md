@@ -4,7 +4,7 @@ title: "src/components/FansLanding.tsx"
 layer: frontend
 domain: social
 file: "src/components/FansLanding.tsx"
-tags: ["frontend", "social", "auto"]
+tags: ["frontend", "social", "auto", "pantalla"]
 ---
 
 # 📌 src/components/FansLanding.tsx
@@ -34,6 +34,7 @@ Exporta: FansLandingProps, FansLanding.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
 

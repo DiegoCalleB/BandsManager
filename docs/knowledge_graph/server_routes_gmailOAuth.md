@@ -19,6 +19,7 @@ OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el bac
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
@@ -28,6 +29,7 @@ OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el bac
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 

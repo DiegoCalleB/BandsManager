@@ -32,6 +32,7 @@ Acuerdos de concierto (`concert_deals`): CRUD autenticado y vista pública por t
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 
 ---

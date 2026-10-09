@@ -18,6 +18,7 @@ Persistencia de canciones, pistas, energía y afinaciones.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
@@ -33,6 +34,11 @@ Persistencia de canciones, pistas, energía y afinaciones.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_ensayos|Ensayos]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
 - [[server_db|server/db.ts]] *(from #db)*

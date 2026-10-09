@@ -4,7 +4,7 @@ title: "src/components/Finanzas.tsx"
 layer: frontend
 domain: system
 file: "src/components/Finanzas.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/Finanzas.tsx
@@ -33,6 +33,7 @@ Exporta: Finanzas.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

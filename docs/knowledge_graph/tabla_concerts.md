@@ -24,6 +24,7 @@ Tabla de Supabase `concerts` (35 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_concerts|server/db/concerts.ts]] *(from #db)*
 - [[tabla_concert_deals|tabla concert_deals]] *(from #schema)*

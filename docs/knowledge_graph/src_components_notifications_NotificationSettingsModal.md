@@ -4,7 +4,7 @@ title: "src/components/notifications/NotificationSettingsModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/notifications/NotificationSettingsModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/notifications/NotificationSettingsModal.tsx

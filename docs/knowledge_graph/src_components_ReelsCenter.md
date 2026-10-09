@@ -4,7 +4,7 @@ title: "src/components/ReelsCenter.tsx"
 layer: frontend
 domain: social
 file: "src/components/ReelsCenter.tsx"
-tags: ["frontend", "social", "auto"]
+tags: ["frontend", "social", "auto", "pantalla"]
 ---
 
 # 📌 src/components/ReelsCenter.tsx
@@ -18,6 +18,7 @@ Exporta: YoutubeVideoMeta, ReelsCenter.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
@@ -39,6 +40,7 @@ Exporta: YoutubeVideoMeta, ReelsCenter.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

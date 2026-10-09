@@ -27,6 +27,7 @@ Exporta: ResultadoAnalisis, analizarAcordesDeCancion.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
 

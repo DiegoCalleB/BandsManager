@@ -18,6 +18,7 @@ Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lec
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
@@ -27,6 +28,7 @@ Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lec
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*

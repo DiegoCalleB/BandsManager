@@ -4,7 +4,7 @@ title: "src/pages/PublicDealView.tsx"
 layer: frontend
 domain: system
 file: "src/pages/PublicDealView.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/pages/PublicDealView.tsx

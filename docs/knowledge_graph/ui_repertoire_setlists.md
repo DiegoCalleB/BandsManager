@@ -80,6 +80,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
 

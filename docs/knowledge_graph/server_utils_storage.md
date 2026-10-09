@@ -18,6 +18,7 @@ Subida a Supabase Storage, en un solo sitio.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 
 ---

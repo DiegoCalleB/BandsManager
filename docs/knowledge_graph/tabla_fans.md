@@ -24,6 +24,7 @@ Tabla de Supabase `fans` (15 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 

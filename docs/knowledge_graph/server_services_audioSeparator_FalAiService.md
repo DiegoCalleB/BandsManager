@@ -18,6 +18,7 @@ Exporta: ACTIVE_FAL_KEY, FalAiService.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
 

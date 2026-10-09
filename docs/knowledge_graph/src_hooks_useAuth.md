@@ -29,6 +29,7 @@ Exporta: useAuth.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---
