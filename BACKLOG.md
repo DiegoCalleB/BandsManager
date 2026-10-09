@@ -114,8 +114,10 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### 8. Hoja de Ruta de Excelencia Técnica TFM: Nivel Dios (Super Saiyan Arquitectónico)
 * **Qué:** Elevación de la arquitectura, observabilidad y experiencia de evaluación del proyecto al estándar más alto jamás presentado en el máster:
   1. *Fase 1: Desmantelamiento Quirúrgico de los 3 Monolitos "God Components" (Patrón Strangler Fig)*:
-     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas iniciales -> **3.086 líneas actuales**, -3.441 líneas / >52% desacoplado):
+     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas iniciales -> **2.933 líneas actuales**, -3.594 líneas / >55% desacoplado):
        - Extraídos componentes visuales puros y hooks con contratos Vitest y nodos Obsidian:
+          - `useSetlistEnergyAnalysis.ts` (cálculo de curva de energía, pacing acústico, zonas y detección de choques armónicos)
+          - `useSetlistTransitionsOptimizer.ts` (lógica de optimización acústica de transiciones, cálculo de puntos de chapa, plan de Setlist Perfecto e historial Undo)
           - `useSetlistTransitionsOptimizer.ts` (lógica de optimización acústica de transiciones, cálculo de puntos de chapa, plan de Setlist Perfecto e historial Undo)
          - `ActiveSetlistHeader.tsx` (cabecera interactiva y acciones del setlist)
          - `SetlistItemsList.tsx` (lista interactiva de canciones y eventos con drag & drop)
@@ -133,7 +135,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   4. *Fase 4: Comunicación de Impacto (Vídeo Loom 3 Min + Architecture Whitepaper)*:
      - Demostración audiovisual concisa del ciclo agéntico y documento ejecutivo de 5 páginas con diagramas C4 y ADRs.
 * **Por qué importa:** Convierte la arquitectura interna en un ejemplo académico de manual, elimina toda deuda técnica de componentes gigantes y permite al tribunal evaluar la plataforma completa en 30 segundos sin fricción.
-* **Estado:** Fase 1 en ejecución activa (RepertorioSetlists.tsx desmantelado al 52,7%).
+* **Estado:** Fase 1 en ejecución activa (RepertorioSetlists.tsx desmantelado al 55,1%).
 
 ---
 

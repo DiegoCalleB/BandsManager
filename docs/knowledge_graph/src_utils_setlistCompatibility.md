@@ -27,6 +27,7 @@ Exporta: CosteTransicion, calcularCosteTransicion, EvaluacionUnion, evaluarCalid
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
+- [[src_hooks_useSetlistEnergyAnalysis|src/hooks/useSetlistEnergyAnalysis.ts]] *(from #hook)*
 - [[src_hooks_useSetlistTransitionsOptimizer|src/hooks/useSetlistTransitionsOptimizer.ts]] *(from #hook)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 

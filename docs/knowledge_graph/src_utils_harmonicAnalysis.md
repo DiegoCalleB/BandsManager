@@ -25,6 +25,7 @@ Exporta: TONALIDAD_FALLBACK, ParsedKey, parseTonalidad, tonalidadesSonFiables, C
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
+- [[src_hooks_useSetlistEnergyAnalysis|src/hooks/useSetlistEnergyAnalysis.ts]] *(from #hook)*
 - [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(from #service)*
 - [[src_utils_setlistCompatibility|src/utils/setlistCompatibility.ts]] *(from #service)*
 - [[src_utils_transitionAudioEngine|src/utils/transitionAudioEngine.ts]] *(from #service)*
