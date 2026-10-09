@@ -803,3 +803,31 @@ body.scroll .react { position: relative; right: auto; bottom: auto; opacity: 1; 
 .react.bl { right: auto; left: 120px; }
 .react.tr { bottom: auto; top: 96px; right: 100px; }
 .react.narrow { max-width: 430px; bottom: 130px; }
+
+/* ───────── Diapositivas de producto ligeras: una idea, una pantalla, una reacción ───────── */
+.slide.feat { background: #05070d; color: #fff; --ink: #fff; --ink-2: rgba(255,255,255,.78); overflow: hidden; padding: 0; }
+.slide.feat::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 70% at 78% 45%, rgba(96,165,250,.20), transparent 70%), radial-gradient(40% 50% at 10% 100%, rgba(255,179,106,.10), transparent 70%); pointer-events: none; }
+.feat .ft-copy { position: absolute; left: 120px; top: 150px; width: 640px; z-index: 3; }
+.feat .tag { background: rgba(255,255,255,.12); color: #fff; }
+.feat h2 { font-size: 76px; line-height: 1.05; letter-spacing: -.035em; margin-top: 30px; }
+.feat .lead { font-size: 33px; line-height: 1.34; color: rgba(255,255,255,.78); margin-top: 30px; }
+.feat .ft-shot { position: absolute; right: 80px; top: 100px; width: 1040px; height: 760px; border-radius: 26px; overflow: hidden; border: 1px solid rgba(255,255,255,.18); box-shadow: 0 40px 120px rgba(0,0,0,.6), 0 0 100px rgba(96,165,250,.18); background: #0b0d12; z-index: 2; }
+.feat .ft-shot img, .feat .ft-shot video { width: 100%; height: 100%; object-fit: cover; }
+.feat .ft-shot.phone { right: 190px; top: 70px; width: 450px; height: 940px; border-radius: 52px; border: 8px solid #1b1f29; }
+.feat .ft-cameo { position: absolute; right: 100px; bottom: 90px; width: 300px; height: 392px; margin: 0; border-radius: 22px; overflow: hidden; border: 3px solid #fff; box-shadow: 0 24px 70px rgba(0,0,0,.6); z-index: 4; transform: rotate(3deg); }
+.feat .ft-cameo img { width: 100%; height: 100%; object-fit: cover; }
+.feat .ft-cameo figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 50px 16px 14px; background: linear-gradient(180deg, transparent, rgba(5,7,13,.92)); font-size: 18px; line-height: 1.25; color: rgba(255,255,255,.8); }
+.feat .ft-cameo figcaption b { display: block; font-size: 25px; color: #fff; font-weight: 600; }
+/* Reacción de sorpresa: sale con rebote, anillo que late y brillo */
+.feat .react { left: 120px; right: auto; bottom: 100px; max-width: 740px; font-size: 34px; padding: 20px 28px 20px 20px; background: linear-gradient(135deg, rgba(36,58,99,.98), rgba(52,40,98,.98)); border-color: rgba(255,214,150,.6); }
+.feat .react img { width: 96px; height: 96px; border-color: #ffd596; }
+.feat .react b { font-size: 21px; color: #ffd596; }
+.feat .react .re2 { font-size: 30px; }
+.feat .react .re2 b { color: #8fb6ff; }
+.slide.active .react.wow { animation: wowin 700ms cubic-bezier(.2,1.5,.4,1) 2.2s forwards; }
+.slide.active .react.wow img { animation: ringp 1.3s ease-out 2.9s 3; }
+@keyframes wowin { 0% { opacity: 0; transform: translateY(40px) scale(.7) rotate(-3deg); } 60% { opacity: 1; transform: translateY(-10px) scale(1.07) rotate(1.5deg); } 100% { opacity: 1; transform: none; } }
+@keyframes ringp { 0% { box-shadow: 0 0 0 0 rgba(255,213,150,.7); } 100% { box-shadow: 0 0 0 26px rgba(255,213,150,0); } }
+@media (prefers-reduced-motion: reduce) { .slide.active .react.wow, .slide.active .react.wow img { animation: none; } }
+body.scroll .slide.feat { padding: 28px 22px; } body.scroll .feat .ft-copy, body.scroll .feat .ft-shot, body.scroll .feat .ft-shot.phone, body.scroll .feat .ft-cameo { position: relative; left: auto; right: auto; top: auto; bottom: auto; width: 100%; height: auto; margin-top: 16px; }
+body.scroll .feat h2 { font-size: 32px; } body.scroll .feat .lead { font-size: 18px; } body.scroll .feat .ft-shot img { height: auto; } body.scroll .feat .react { position: relative; left: auto; bottom: auto; margin-top: 16px; font-size: 16px; }

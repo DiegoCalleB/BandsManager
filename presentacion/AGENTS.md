@@ -21,19 +21,17 @@ Rama `claude/tfm-historia-herdeiros`. Antes de cada bloque de producto hay una e
 
 La presentación cuenta una historia con las dos bandas de demo, **Os Herdeiros do Código** y **Master of Prompts**, que son de Brais. Es un recorrido por la vida de una banda, no un catálogo de pantallas. Mantener unas 48 diapositivas (no es una meta a reducir; puede variar según la necesidad), organizadas en actos con nombre:
 
-| Acto | Qué cuenta | Diapositivas |
+| Bloque | Qué cuenta | Diapositivas |
 |---|---|---|
-| Tráiler | Apertura de unos 13 s que arranca sola y termina en el logo animado | 1 |
-| Portada | Gancho: «Menos gestión, más música» | 2 |
-| Prólogo | La banda que se rompe: chat, ceros, el bajista y las IA (ficción) | 3–5 |
-| I · Backstage | El caos de gestionar una banda y qué se propone | umbral 3 · 4–6 |
-| II · Conseguir el bolo | Booking CRM, agentes, humano en el bucle, Manager, correos, redactor que aprende, otras bandas y Date Swap | umbral 7 · 8–18 |
-| III · Antes del concierto | Calendario, repertorio y setlists (impresión por músico), Iris, Atril, armonía, ensayos | umbral 19 · 20–32 |
-| IV · Que te conozcan | Dossier, QR, fans, reels | umbral 33 · 34–41 |
-| V · Después del concierto | Gira, finanzas, móvil | umbral 42 · 43–44 |
-| VI · El negocio | Públicos, marketing, planes, márgenes | umbral 45 · 46–54 |
-| VII · Bajo el capó | Arquitectura, método, seguridad, calidad, límites, futuro | umbral 55 · 56–61 |
-| Telón | Demostración (si hay vídeo) y cierre | 62–63 |
+| Tráiler y portada | Apertura de unos 13 s y gancho «Menos gestión, más música» | 1–2 |
+| Prólogo | La banda, el chat de las 23:47, el Excel, Iago y el máster, la convocatoria y el local de ensayo | 3–8 |
+| Cap. 1 · Conseguir el bolo | CRM, correos con aprobación, Date Swap (aquí aparece el cantante de Master of Prompts) y «La sala contestó» (ya como manager) | 9–13 |
+| Cap. 2 · Antes del concierto | Hoja por músico, atril, Iris, calendario | 14–18 |
+| Cap. 3 · Que te conozcan | Dossier, QR de fans, reels; festival y radio | 19–24 |
+| Cap. 4 · Después | Cuentas, chat espejo, el giro «El bajista soy yo» | 25–29 |
+| Para el tribunal | Público, negocio, arquitectura, método, seguridad, calidad, límites, futuro, gracias | 30–40 |
+
+El hilo: **Iago** (bajo de Os Herdeiros do Código) se apunta al Máster de Desarrollo con IA, hace BandManager como TFM y se lo enseña a sus compañeros en el local. Cada diapositiva de producto (`.feat`) tiene **una idea, una pantalla y una reacción de sorpresa** de un miembro (con exclamaciones, por decisión de Diego); el producto se cuenta sin detalle y los números van al tribunal. La foto de los cuatro alucinando en el local de ensayo la aporta Diego (`img/local-ensayo.jpg`). El cantante de Master of Prompts acaba de manager de Os Herdeiros gracias a Date Swap; sus fotos no llevan la palabra «cantante».
 
 Reparto aprobado por Diego. Cada acto abre con una diapositiva-umbral (clase `.act`: foto de concierto, número romano en trazo, cortina que se abre y tira de progreso de los 7 actos) y las bandas reaparecen como personajes: la misma banda que sufre en el acto I es la que cierra el concierto en el V.
 
