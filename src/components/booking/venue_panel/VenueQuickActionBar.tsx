@@ -3,9 +3,9 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { Zap, MessageCircle, Smartphone, Phone, PhoneCall } from "lucide-react";
+import { MessageCircle,Phone,PhoneCall,Smartphone,Zap } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueQuickActionBarProps {

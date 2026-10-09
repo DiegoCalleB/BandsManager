@@ -7,7 +7,7 @@
 
 ## Decisión
 Extraer sin cambiar el contrato público del componente, usando el compilador de TypeScript para calcular dependencias y tipos de cada bloque:
-- **Lógica → hooks** en `repertorio/hooks/`: `useRepertorioData`, `useRepertorioPersistence`, `useActiveSetlistState`, `useRepertorioViewState`, `useEnergyMapData`, `useRepertorioPlaybackAndModals`, `useRepertorioDialogs`, `useSetlistItemPopovers`, `useSetlistSync`, `useSetlistCrud`, `useSetlistDeletion`, `useSetlistItemActions`, `useSetlistItemsMutations`, `useSetlistReordering`, `useCatalogActions`, `useSongEditing`.
+- **Lógica → hooks** en `repertorio/hooks/`: `useBandRepertoireScope` (aislamiento de plantillas por banda), `useRepertorioPlayers`, `useRepertorioData`, `useRepertorioPersistence`, `useActiveSetlistState`, `useRepertorioViewState`, `useEnergyMapData`, `useRepertorioPlaybackAndModals`, `useRepertorioDialogs`, `useSetlistItemPopovers`, `useSetlistSync`, `useSetlistCrud`, `useSetlistDeletion`, `useSetlistItemActions`, `useSetlistItemsMutations`, `useSetlistReordering`, `useCatalogActions`, `useSongEditing`.
 - **JSX → vistas** `RepertorioSetlistsView` y `RepertorioCatalogView`.
 - Navegación de pestañas en `src/hooks/useRepertorioTabs.ts` (función pura `resolveRepertorioTab` testeada).
 - Tipos: `AddableItemKind`, `Analysis` exportado, `getErrorMessage` en lugar de `catch (err: any)`.
@@ -16,11 +16,11 @@ Extraer sin cambiar el contrato público del componente, usando el compilador de
 
 | Métrica | Antes | Después |
 |---|---|---|
-| Líneas de `RepertorioSetlists.tsx` | 3403 | ~420 |
-| Archivo más grande del módulo | 3403 | 421 |
+| Líneas de `RepertorioSetlists.tsx` | 3403 | 276 |
+| Archivo más grande del módulo | 3403 | 421 (`RepertorioSetlistsView` y otros hooks quedan por debajo de 400) |
 | `any` en el contenedor, hooks y vistas | decenas | 0 |
 | Errores ESLint en esos archivos | no medido | 0 |
-| Suite completa | verde | verde (281 archivos, 2449 tests) |
+| Suite completa | verde | verde (281 archivos, 2451 tests) |
 
 ## Cambios de comportamiento a conocer
 - Se eliminó código muerto: los handlers de grabación y subida de audio para items de show (`handleStartRecordingShowItem`, `handleStopRecordingShowItem`, `handleShowItemAudioFileUpload`) y sus estados/refs no se usaban en ningún sitio.

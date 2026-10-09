@@ -3,11 +3,11 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { Truck, Navigation, RefreshCw, Instagram, CheckCircle2 } from "lucide-react";
+import { CheckCircle2,Instagram,Navigation,RefreshCw,Truck } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Lead } from "../../../types";
 import { Button } from "../../ui";
 import { ShowIcon } from "../../ui/ShowIcon";
-import React, { Dispatch, SetStateAction } from "react";
-import { Lead } from "../../../types";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueRouteSocialCardsProps {

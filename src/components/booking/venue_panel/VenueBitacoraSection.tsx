@@ -3,11 +3,11 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { History, Save, Trash2 } from "lucide-react";
-import { Input, Textarea, IconButton } from "../../ui";
-import { PublicoSilhouette } from "../../ui/PublicoSilhouette";
+import { History,Save,Trash2 } from "lucide-react";
+import { Dispatch,FormEvent,SetStateAction } from "react";
 import { Lead } from "../../../types";
-import React, { FormEvent, Dispatch, SetStateAction } from "react";
+import { IconButton,Input,Textarea } from "../../ui";
+import { PublicoSilhouette } from "../../ui/PublicoSilhouette";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueBitacoraSectionProps {

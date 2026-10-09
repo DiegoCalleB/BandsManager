@@ -3,13 +3,12 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { ShowIcon } from "../../ui/ShowIcon";
-import { getWhatsAppUrl, WHATSAPP_WINDOW_NAME, openWhatsAppChat } from "../../../utils/whatsapp";
-import { Smartphone, Phone, PhoneCall, Sparkles } from "lucide-react";
-import { Button } from "../../ui";
-import DirectionsCard from "../../DirectionsCard";
+import { Phone,PhoneCall,Smartphone,Sparkles } from "lucide-react";
 import { Lead } from "../../../types";
-import React from "react";
+import { getWhatsAppUrl,openWhatsAppChat,WHATSAPP_WINDOW_NAME } from "../../../utils/whatsapp";
+import DirectionsCard from "../../DirectionsCard";
+import { Button } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueContactRosterCardsProps {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe,expect,it } from "vitest";
 import { VenueDetailPanel } from "../VenueDetailPanel";
 
 const sections = import.meta.glob("../venue_panel/*.tsx", { eager: true });

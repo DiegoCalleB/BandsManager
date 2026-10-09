@@ -3,10 +3,9 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { LeadHealthBadge } from "../LeadHealthBadge";
+import { Lead,LeadStatus,LeadType } from "../../../types";
 import { ReliabilityBadge } from "../../common/ReliabilityBadge";
-import { LeadType, LeadStatus, Lead } from "../../../types";
-import React from "react";
+import { LeadHealthBadge } from "../LeadHealthBadge";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueLeadHealthRowProps {

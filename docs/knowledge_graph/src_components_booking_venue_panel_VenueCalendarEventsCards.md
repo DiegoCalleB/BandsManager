@@ -26,7 +26,6 @@ Radares de ventana de programación y eventos locales.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_panel_VenueAudienceVerificationCards|src/components/booking/venue_panel/VenueAudienceVerificationCards.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_panel_VenueIntelligenceSection|src/components/booking/venue_panel/VenueIntelligenceSection.tsx]] *(from #frontend)*
 
 ---
 

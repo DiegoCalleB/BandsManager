@@ -2,19 +2,13 @@
  * Pestaña de inteligencia de datos y APIs externas del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars
-*/
-import { Sparkles, RefreshCw, Headphones, MapPin, Star, Disc, ShieldCheck, Truck, Navigation, Instagram, CheckCircle2, CalendarDays, Flame, Megaphone, Handshake, Calculator, Coins } from "lucide-react";
-import { Button, LinkButton, Input } from "../../ui";
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { RefreshCw,Sparkles } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
-import { VenueFinancialSimulatorCard } from "./VenueFinancialSimulatorCard";
-import { VenueCalendarEventsCards } from "./VenueCalendarEventsCards";
-import { VenueCoBookingMediaCards } from "./VenueCoBookingMediaCards";
-import { VenueRouteSocialCards } from "./VenueRouteSocialCards";
+import { Button } from "../../ui";
 import { VenueAudienceVerificationCards } from "./VenueAudienceVerificationCards";
-import React, { Dispatch, SetStateAction } from "react";
+import { VenueFinancialSimulatorCard } from "./VenueFinancialSimulatorCard";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueIntelligenceSectionProps {

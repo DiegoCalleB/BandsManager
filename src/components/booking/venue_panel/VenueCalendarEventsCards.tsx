@@ -3,11 +3,10 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { CalendarDays, RefreshCw, Flame } from "lucide-react";
-import { ShowIcon } from "../../ui/ShowIcon";
-import { Button } from "../../ui";
+import { CalendarDays,Flame,RefreshCw } from "lucide-react";
 import { Lead } from "../../../types";
-import React from "react";
+import { Button } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueCalendarEventsCardsProps {

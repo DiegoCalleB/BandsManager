@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { describe,expect,it,vi } from "vitest";
 import type { Lead } from "../../../../types";
-import { VenueQuickActionBar } from "../VenueQuickActionBar";
-import { VenueLeadHealthRow } from "../VenueLeadHealthRow";
 import { VenueContactRosterCards } from "../VenueContactRosterCards";
 import { VenueFinancialSimulatorCard } from "../VenueFinancialSimulatorCard";
+import { VenueLeadHealthRow } from "../VenueLeadHealthRow";
+import { VenueQuickActionBar } from "../VenueQuickActionBar";
 
 const baseLead = { id: "lead-1", nombre_sala: "Sala Apolo", ciudad: "Barcelona", estado: "nuevo" } as Lead;
 const noop = vi.fn();

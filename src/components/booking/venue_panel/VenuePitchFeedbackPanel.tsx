@@ -3,11 +3,11 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { LinkButton, Textarea, Button } from "../../ui";
-import { Star, MessageSquare, CheckCircle2, Loader2, Undo2, RefreshCw, RotateCcw } from "lucide-react";
-import { ShowIcon } from "../../ui/ShowIcon";
+import { CheckCircle2,Loader2,MessageSquare,RefreshCw,RotateCcw,Star,Undo2 } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
+import { Button,LinkButton,Textarea } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenuePitchFeedbackPanelProps {

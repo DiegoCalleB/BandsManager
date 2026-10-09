@@ -3,11 +3,11 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
  
-import { Megaphone, RefreshCw, Handshake } from "lucide-react";
-import { LinkButton, Button } from "../../ui";
-import { ShowIcon } from "../../ui/ShowIcon";
+import { Handshake,Megaphone,RefreshCw } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
+import { Button,LinkButton } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueCoBookingMediaCardsProps {

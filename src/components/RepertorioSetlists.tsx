@@ -3,38 +3,21 @@ import type { Analysis } from "./repertorio/SetlistAIAnalysisModal";
  @typescript-eslint/no-unused-vars,
  react-hooks/exhaustive-deps
 */
-import React,{
-useEffect,
-useMemo,
-useState
-} from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
-import { usePlayer } from "../context/PlayerContext";
-import { useAudioPlayer } from "../hooks/useAudioPlayer";
-import { useCatalogFilters } from "../hooks/useCatalogFilters";
 import { useModuleTutorial } from "../hooks/useModuleTutorial";
 import { useRepertorioTabs } from "../hooks/useRepertorioTabs";
-import { useShareModal } from "../hooks/useShareModal";
-import { useStagePlayer } from "../hooks/useStagePlayer";
-import {
-Concert,
-Rehearsal,
-Setlist,
-Song,
-ThemeColors
-} from "../types";
-import {
-BandMemberOption,
-resolveBandMembers
-} from "../utils/repertorioUtils";
+import { Concert, Rehearsal, ThemeColors } from "../types";
 import { formatSecondsToMmSs } from "../utils/stageTimeFormat";
 import { useActiveSetlistState } from "./repertorio/hooks/useActiveSetlistState";
+import { useBandRepertoireScope } from "./repertorio/hooks/useBandRepertoireScope";
 import { useCatalogActions } from "./repertorio/hooks/useCatalogActions";
 import { useEnergyMapData } from "./repertorio/hooks/useEnergyMapData";
 import { useRepertorioData } from "./repertorio/hooks/useRepertorioData";
 import { useRepertorioDialogs } from "./repertorio/hooks/useRepertorioDialogs";
 import { useRepertorioPersistence } from "./repertorio/hooks/useRepertorioPersistence";
 import { useRepertorioPlaybackAndModals } from "./repertorio/hooks/useRepertorioPlaybackAndModals";
+import { useRepertorioPlayers } from "./repertorio/hooks/useRepertorioPlayers";
 import { useRepertorioViewState } from "./repertorio/hooks/useRepertorioViewState";
 import { useSetlistCrud } from "./repertorio/hooks/useSetlistCrud";
 import { useSetlistDeletion } from "./repertorio/hooks/useSetlistDeletion";
@@ -64,10 +47,7 @@ interface RepertorioSetlistsProps {
   onNavigate?: (view: "repertorio" | "catalogo" | "discografia") => void;
 }
 
-import {
-BAKANDEYA_DEMO_MEMBERS,
-SHOW_ITEM_TYPES
-} from "../config/defaultRepertoire";
+import { SHOW_ITEM_TYPES } from "../config/defaultRepertoire";
 
 export { SHOW_ITEM_TYPES };
 
@@ -105,56 +85,7 @@ export default function RepertorioSetlists({
     closeTutorial,
   } = useModuleTutorial("repertorio");
 
-  const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
-  const isBakandeya = cleanBand === "bakandeya";
-  const isMasterOfPrompts = cleanBand === "master-of-prompts";
-
-  // Plantilla de Bakandeya solo para la propia Bakandeya; el resto de bandas ven a sus
-  // miembros reales (bandUsers, ya filtrados por banda en el servidor) y nunca el roster
-  // de otra banda — este mismo bug (ver MemberNotesModal/PdfExportModal/SongModal más abajo)
-  // hacía que cualquier banda viera hardcodeados los músicos de Bakandeya en"Repertorios".
-  const bandRosterMembers: BandMemberOption[] = useMemo(() => {
-    if (isBakandeya) return BAKANDEYA_DEMO_MEMBERS;
-    return resolveBandMembers(bandUsers);
-  }, [isBakandeya, bandUsers]);
-
-  // Helper to filter out template songs for non-Bakandeya bands
-  const sanitizeBandSongs = React.useCallback(
-    (rawList: Song[]): Song[] => {
-      if (!Array.isArray(rawList)) return [];
-      if (isBakandeya) return rawList;
-      return rawList.filter((s) => {
-        if (!s || typeof s !== "object") return false;
-        const sId = (s.id || "").toLowerCase();
-        if (sId.startsWith("mop-song-") && isMasterOfPrompts) return true;
-        if (sId.startsWith("sample-track-")) return true;
-        if (
-          sId.startsWith("song-cm-") ||
-          /^song-[1-8]$/.test(sId) ||
-          sId.startsWith("live_song_")
-        ) {
-          return false;
-        }
-        return true;
-      });
-    },
-    [isBakandeya, isMasterOfPrompts],
-  );
-
-  const sanitizeBandSetlists = React.useCallback(
-    (rawList: Setlist[]): Setlist[] => {
-      if (!Array.isArray(rawList)) return [];
-      if (isBakandeya) return rawList;
-      return rawList.filter((sl) => {
-        if (!sl || typeof sl !== "object") return false;
-        const slId = (sl.id || "").toLowerCase();
-        if (slId.startsWith("setlist-sample-")) return true;
-        if (slId === "setlist-1" || slId === "setlist-2") return false;
-        return true;
-      });
-    },
-    [isBakandeya],
-  );
+  const { cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists, bandRosterMembers } = useBandRepertoireScope({ bandId, bandUsers });
 
   // Navigation tab inside module
   const [showPdfPreview, setShowPdfPreview] = useState(false);
@@ -166,83 +97,7 @@ export default function RepertorioSetlists({
   const { activeSetlist, setActiveSetlistId, setCustomShortcuts, newShortcutLabel, newShortcutIcon, setNewShortcutLabel, setNewShortcutIcon, setIsAddingShortcut, activeSetlistId, setPerformanceInitialMode, setPerformanceSetlistId, customShortcuts, isAddingShortcut, performanceSetlistId, performanceInitialMode } = useActiveSetlistState({ setlists });
   const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
 
-  const {
-    shareModalData,
-    setShareModalData,
-    handleShareSetlist,
-    handleShareSong,
-  } = useShareModal(songs, bName);
-
-  // Filter States for Catalog
-  const {
-    groupByAlbum,
-    setGroupByAlbum,
-    catalogSearch,
-    setCatalogSearch,
-    catalogAlbumFilter,
-    setCatalogAlbumFilter,
-    catalogStatusFilter,
-    setCatalogStatusFilter,
-    albumsList,
-    filteredSongs,
-  } = useCatalogFilters(songs);
-
-  // Helper to parse"mm:ss" to seconds
-  const parseMmSsToSeconds = (timeStr: string): number => {
-    if (!timeStr) return 0;
-    const parts = timeStr.trim().split(":");
-    if (parts.length === 2) {
-      const min = parseInt(parts[0], 10) || 0;
-      const sec = parseInt(parts[1], 10) || 0;
-      return min * 60 + sec;
-    }
-    const minOnly = parseInt(timeStr, 10) || 0;
-    return minOnly * 60;
-  };
-
-  const {
-    activePlayerSong,
-    setActivePlayerSong,
-    playerAutoPlay,
-    playSignal,
-    isPlayerPlaying,
-    setIsPlayerPlaying,
-    playerTransposeSemitones,
-    handleSelectPlayerSong,
-  } = useAudioPlayer();
-
-  // Global player context for persistent playback across modules
-  const {
-    currentSong: playerCurrentSong,
-    setCurrentSong,
-    setSongs: setPlayerSongs,
-    setIsPlaying: setPlayerIsPlaying,
-  } = usePlayer();
-
-  // Concert Player (Reproductor de Concierto / Modo Escenario)
-  const {
-    stageAudioRef,
-    stageAudioRefB,
-    stagePlayingIndex,
-    setStagePlayingIndex,
-    stageIsPlaying,
-    setStageIsPlaying,
-    stageAutoplayNext,
-    setStageAutoplayNext,
-    stageCurrentTime,
-    setStageCurrentTime,
-    stageItemDuration,
-    stageResolvedUrl,
-    stageCrossfadeEnabled,
-    setStageCrossfadeEnabled,
-    isCrossfading,
-    handleStageAudioEnded,
-    handleStageTimeUpdate,
-    handleStageSeek,
-    handleStagePrev,
-    handleStageNext,
-    toggleStagePlayPause,
-  } = useStagePlayer(activeSetlist, songs, parseMmSsToSeconds);
+  const { handleSelectPlayerSong, setCurrentSong, setPlayerSongs, setPlayerIsPlaying, setIsPlayerPlaying, activePlayerSong, setActivePlayerSong, albumsList, handleShareSetlist, playerCurrentSong, isPlayerPlaying, handleShareSong, filteredSongs, catalogAlbumFilter, setCatalogAlbumFilter, catalogStatusFilter, setCatalogStatusFilter, catalogSearch, groupByAlbum, setGroupByAlbum, shareModalData, setShareModalData } = useRepertorioPlayers({ songs, bName, activeSetlist });
 
   const { getHeaders, toggleFavoriteSong } = useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, sanitizeBandSongs, isBakandeya, sanitizeBandSetlists, setSetlists, setActiveSetlistId, setlists, setCustomShortcuts });
 

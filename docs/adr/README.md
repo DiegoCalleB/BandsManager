@@ -21,7 +21,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0012](./0012-contrato-api-openapi-por-ast.md) | Contrato de API OpenAPI generado por análisis del AST | Aceptada | nueva |
 | [0013](./0013-puerta-local-de-calidad.md) | Puerta local de calidad antes de cada push | Aceptada | nueva |
 | [0014](./0014-modularizacion-venue-detail-panel.md) | Modularización de VenueDetailPanel (5607 → ~440 líneas) | Aceptada | nueva |
-| [0015](./0015-modularizacion-repertorio-setlists.md) | Modularización de RepertorioSetlists (3403 → ~420 líneas) | Aceptada | nueva |
+| [0015](./0015-modularizacion-repertorio-setlists.md) | Modularización de RepertorioSetlists (3403 → ~280 líneas) | Aceptada | nueva |
 
 ## Cómo añadir uno
 

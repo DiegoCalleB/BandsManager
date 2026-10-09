@@ -19,11 +19,7 @@ Pestaña de inteligencia de datos y APIs externas del lead.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_booking_venue_panel_VenueAudienceVerificationCards|src/components/booking/venue_panel/VenueAudienceVerificationCards.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_booking_venue_panel_VenueCalendarEventsCards|src/components/booking/venue_panel/VenueCalendarEventsCards.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_booking_venue_panel_VenueCoBookingMediaCards|src/components/booking/venue_panel/VenueCoBookingMediaCards.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_panel_VenueFinancialSimulatorCard|src/components/booking/venue_panel/VenueFinancialSimulatorCard.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_booking_venue_panel_VenueRouteSocialCards|src/components/booking/venue_panel/VenueRouteSocialCards.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
