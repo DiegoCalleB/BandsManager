@@ -1405,6 +1405,7 @@ export default function SongStudioModal({
   // High-Precision Master Sync Loop (16ms / requestAnimationFrame)
   // Keeps all multitrack audio elements aligned within < 10ms with pitch-safe micro-adjustments
   // Handles variable track durations cleanly by padding shorter tracks
+  const lastDriftFixMapRef = useRef<Record<string, number>>({});
   const runMasterSyncLoop = (idea: SongAudioIdea) => {
     if (syncAnimationFrameRef.current) {
       cancelAnimationFrame(syncAnimationFrameRef.current);
@@ -1577,7 +1578,11 @@ export default function SongStudioModal({
         // Hard seek ONLY when drift is severe (> 350ms) to prevent continuous seek popping
         if (currentMasterEl && slaveEl !== currentMasterEl) {
           const diff = slaveEl.currentTime - targetSlaveTime;
-          if (Math.abs(diff) > 0.35) {
+          const ahora = performance.now();
+          const ultimo = lastDriftFixMapRef.current[tr.id] || 0;
+          // Umbral fino (>35 ms) con pausa entre saltos para no crujir: así las pistas no se van unos ms del tema
+          if (Math.abs(diff) > (ahora - ultimo > 800 ? 0.035 : 0.35)) {
+            lastDriftFixMapRef.current[tr.id] = ahora;
             try {
               slaveEl.currentTime = Math.max(0, targetSlaveTime);
             } catch {}
@@ -3610,6 +3615,30 @@ export default function SongStudioModal({
                                                         <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-[var(--r-pill)] bg-[var(--acc)] ring-1 ring-[var(--ink)]" />
                                                       )}
                                                     </button>
+                                                    {esBase && (
+                                                      <IconButton
+                                                        label="Quitar de la idea (la pista sigue en Iris)"
+                                                        type="button"
+                                                        onClick={() => {
+                                                          const stemId = tr.id.slice(`base-${idea.id}-`.length);
+                                                          const ideasNuevas = ideasConFondo(
+                                                            song.audioIdeas || [],
+                                                            idea.id,
+                                                            (idea.sobrePistas ?? []).filter((x) => x !== stemId),
+                                                          ).map((i) => {
+                                                            if (i.id !== idea.id || !i.mezclaBase) return i;
+                                                            const { [stemId]: _q, ...resto } = i.mezclaBase;
+                                                            return { ...i, mezclaBase: resto };
+                                                          });
+                                                          const el = trackAudioRefs.current[tr.id];
+                                                          if (el) el.pause();
+                                                          onUpdateSong(cancionConIdeas(song, ideasNuevas));
+                                                        }}
+                                                        className="shrink-0"
+                                                      >
+                                                        <X className="w-3 h-3" />
+                                                      </IconButton>
+                                                    )}
                                                   </div>
                                                 </div>
 
