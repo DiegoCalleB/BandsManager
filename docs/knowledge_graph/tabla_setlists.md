@@ -18,13 +18,15 @@ Tabla de Supabase `setlists` (11 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
+- [[tabla_concerts|tabla concerts]] *(from #schema)*
+- [[tabla_rehearsals|tabla rehearsals]] *(from #schema)*
 
 ---
 

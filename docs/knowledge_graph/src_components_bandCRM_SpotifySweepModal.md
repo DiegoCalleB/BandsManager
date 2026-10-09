@@ -18,6 +18,8 @@ Exporta: SpotifySweepModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

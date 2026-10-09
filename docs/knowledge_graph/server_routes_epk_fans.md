@@ -40,6 +40,12 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
+- [[src_components_PublicFanCapture|src/components/PublicFanCapture.tsx]] *(from #frontend)*
+- [[src_components_PublicMusiciansLanding|src/components/PublicMusiciansLanding.tsx]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

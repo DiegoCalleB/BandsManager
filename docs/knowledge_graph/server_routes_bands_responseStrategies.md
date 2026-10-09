@@ -26,6 +26,7 @@ Endpoints para configurar estrategias de respuesta condicionales por banda
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

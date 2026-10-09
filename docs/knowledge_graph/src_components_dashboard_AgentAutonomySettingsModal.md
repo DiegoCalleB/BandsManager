@@ -18,6 +18,9 @@ Exporta: DispatchAutonomyLevel, NegotiationDepthLevel, AgentAutonomyConfig, DAYS
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
 - [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*

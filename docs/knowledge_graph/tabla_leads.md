@@ -18,7 +18,7 @@ Tabla de Supabase `leads` (65 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -32,6 +32,9 @@ _Sin dependencias salientes directas._
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
+- [[tabla_concert_deals|tabla concert_deals]] *(from #schema)*
+- [[tabla_lead_messages|tabla lead_messages]] *(from #schema)*
+- [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(from #schema)*
 
 ---
 

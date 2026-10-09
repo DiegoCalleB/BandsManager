@@ -18,6 +18,7 @@ Exporta: UserManagementModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*

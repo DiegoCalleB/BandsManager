@@ -18,6 +18,7 @@ Exporta: OnboardingWizardModalProps, OnboardingWizardModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_spotify|server/routes/spotify.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_onboarding_steps_StepAgentEmail|src/components/onboarding/steps/StepAgentEmail.tsx]] *(Layer: #agent, Domain: #system)*
 - [[src_components_onboarding_steps_StepBio|src/components/onboarding/steps/StepBio.tsx]] *(Layer: #frontend, Domain: #system)*

@@ -18,6 +18,7 @@ Exporta: EtapaOido, ProgresoOido, useProgresoOido, pctVisible, ModalOido.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 

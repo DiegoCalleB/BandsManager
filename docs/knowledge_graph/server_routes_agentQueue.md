@@ -26,6 +26,7 @@ Cola de trabajos de los agentes (`agent_jobs_queue`): estadísticas, métricas, 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_booking_AgentQueueMonitorModal|src/components/booking/AgentQueueMonitorModal.tsx]] *(from #agent)*
 
 ---
 

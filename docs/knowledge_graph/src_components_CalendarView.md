@@ -18,6 +18,8 @@ Exporta: CalendarView.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_calendar_AnimatedWeatherIcon|src/components/calendar/AnimatedWeatherIcon.tsx]] *(Layer: #frontend, Domain: #system)*

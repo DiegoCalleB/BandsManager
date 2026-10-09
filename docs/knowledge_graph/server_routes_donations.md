@@ -31,6 +31,9 @@ Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationR
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_booking_DealSupportCard|src/components/booking/DealSupportCard.tsx]] *(from #frontend)*
+- [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(from #hook)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

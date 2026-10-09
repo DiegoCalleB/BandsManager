@@ -18,6 +18,7 @@ Exporta: PublicMusiciansLanding.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_i18n_fansTranslations|src/i18n/fansTranslations.ts]] *(Layer: #service, Domain: #social)*
 - [[src_i18n_musiciansTranslations|src/i18n/musiciansTranslations.ts]] *(Layer: #service, Domain: #system)*

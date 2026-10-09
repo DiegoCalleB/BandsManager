@@ -18,7 +18,7 @@ Tabla de Supabase `campaigns` (14 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -27,6 +27,7 @@ _Sin dependencias salientes directas._
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(from #schema)*
 
 ---
 

@@ -31,6 +31,7 @@ Subida y procesado de la estructura de una canción (`/songs/...`).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_songs_index|server/routes/songs/index.ts]] *(from #route)*
+- [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 
 ---
 

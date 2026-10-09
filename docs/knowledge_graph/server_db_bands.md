@@ -19,6 +19,7 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 

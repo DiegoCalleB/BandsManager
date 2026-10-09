@@ -18,6 +18,9 @@ Exporta: BandCRM.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_BandMap|src/components/BandMap.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(Layer: #frontend, Domain: #booking)*

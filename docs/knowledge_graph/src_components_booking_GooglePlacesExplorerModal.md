@@ -18,6 +18,7 @@ Exporta: PlaceResult, DiscardedPlace, GooglePlacesExplorerModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*

@@ -18,6 +18,9 @@ Exporta: LeadDuplicatesModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*

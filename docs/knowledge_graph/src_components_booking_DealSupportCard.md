@@ -18,6 +18,7 @@ Exporta: DealSupportCard.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

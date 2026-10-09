@@ -18,7 +18,8 @@ Tabla de Supabase `ai_token_ledger` (8 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
+- [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -38,7 +39,7 @@ _Sin dependencias salientes directas._
 - `settled_by_event`
 - `created_at`
 
-**Definida en:** `supabase/migrations/20260914_ai_token_ledger.sql`
+**Definida en:** `supabase/migrations/20260914_ai_token_ledger.sql`, `supabase/migrations/20260915_ai_token_ledger_band_scope.sql`
 
 ---
 

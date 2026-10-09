@@ -18,6 +18,7 @@ Exporta: FansPanel.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(Layer: #route, Domain: #epk)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(Layer: #frontend, Domain: #system)*

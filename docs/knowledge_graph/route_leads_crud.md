@@ -38,6 +38,18 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
+- [[src_components_booking_ExcelImportModal|src/components/booking/ExcelImportModal.tsx]] *(from #frontend)*
+- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
+- [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(from #hook)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---
 

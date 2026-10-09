@@ -18,6 +18,7 @@ Exporta: ApoyableDeal, useApoyableDeals.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
 ---

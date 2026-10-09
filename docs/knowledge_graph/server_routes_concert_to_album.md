@@ -31,6 +31,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server|server.ts]] *(from #route)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
 
 ---
 

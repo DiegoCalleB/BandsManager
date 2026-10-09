@@ -25,6 +25,8 @@ Rutas de giras; la lógica vive en `server/controllers/` (capa fina routes → c
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

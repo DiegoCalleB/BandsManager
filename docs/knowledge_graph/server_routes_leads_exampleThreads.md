@@ -27,6 +27,7 @@ CRUD de hilos de ejemplo que alimentan el tono del Redactor.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_booking_ExampleThreadsSection|src/components/booking/ExampleThreadsSection.tsx]] *(from #frontend)*
 
 ---
 

@@ -18,7 +18,7 @@ Tabla de Supabase `band_contacts` (24 columnas).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 
@@ -26,6 +26,8 @@ _Sin dependencias salientes directas._
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
+- [[tabla_enlaces_bandas_amigas|tabla enlaces_bandas_amigas]] *(from #schema)*
+- [[tabla_metricas_bandas_amigas|tabla metricas_bandas_amigas]] *(from #schema)*
 
 ---
 

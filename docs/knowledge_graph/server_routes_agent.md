@@ -46,6 +46,12 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
+- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---
 

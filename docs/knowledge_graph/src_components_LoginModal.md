@@ -18,6 +18,7 @@ Exporta: LoginModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*

@@ -13,6 +13,16 @@ describe('grafo de conocimiento (Obsidian)', () => {
     expect(sinNodo).toEqual([]);
   });
 
+  it('las conexiones reales están: frontend → rutas /api y tabla → tabla por clave foránea', () => {
+    const nodos = construirNodos();
+    const rutas = new Set(nodos.filter((n) => n.layer === 'route').map((n) => n.id));
+    const llamadasApi = nodos.filter((n) => n.layer === 'frontend' && n.linksTo.some((d) => rutas.has(d)));
+    expect(llamadasApi.length).toBeGreaterThanOrEqual(20);
+    const tablas = new Set(nodos.filter((n) => n.layer === 'schema' && n.id.startsWith('tabla_')).map((n) => n.id));
+    const fks = nodos.filter((n) => tablas.has(n.id) && n.linksTo.some((d) => tablas.has(d)));
+    expect(fks.length).toBeGreaterThanOrEqual(1);
+  });
+
   it('docs/knowledge_graph está al día: ejecuta `npm run graph:sync`', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'grafo-'));
     try {

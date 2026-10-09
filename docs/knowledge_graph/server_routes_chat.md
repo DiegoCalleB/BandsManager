@@ -36,6 +36,8 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
 
 ---
 

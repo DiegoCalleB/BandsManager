@@ -29,6 +29,7 @@ OAuth "offline" de Gmail por banda: una banda conecta su cuenta UNA vez y el bac
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 
