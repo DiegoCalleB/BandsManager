@@ -440,11 +440,11 @@ function PdfExportModalBody({
   const customLogoUrl = bandLogoUrl;
   const [showSongNumbers, setShowSongNumbers] = useState<boolean>(true);
   const [showBlockLines, setShowBlockLines] = useState<boolean>(true);
-  const [showTonality, setShowTonality] = useState<boolean>(false);
-  const [showBpm, setShowBpm] = useState<boolean>(false);
+  const [showTonality, setShowTonality] = useState<boolean>(true);
+  const [showBpm, setShowBpm] = useState<boolean>(true);
   const [showDuration, setShowDuration] = useState<boolean>(false);
   // Tono/BPM en todos los temas o solo en los que cada músico marca (los que le generan dudas).
-  const [badgesScope, setBadgesScope] = useState<"all" | "marked">("all");
+  const [badgesScope, setBadgesScope] = useState<"all" | "marked">("marked");
   const [markedSongs, setMarkedSongs] = useState<Record<string, string[]>>({});
   const [showMarksPanel, setShowMarksPanel] = useState(false);
   const [showSetlistNotes, setShowSetlistNotes] = useState<boolean>(true);

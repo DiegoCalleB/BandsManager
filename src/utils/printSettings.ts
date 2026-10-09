@@ -32,15 +32,15 @@ export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   textAlign: "left",
   columnsChoice: "auto",
   showGeneralNotes: true,
-  showTonality: false,
-  showBpm: false,
+  showTonality: true,
+  showBpm: true,
   showDuration: false,
   showBandLogo: true,
   showWatermark: true,
   showAppBranding: true,
   handwritingFont: "caveat",
   handwritingColor: "blue",
-  badgesScope: "all",
+  badgesScope: "marked",
   markedSongs: {},
 };
 
