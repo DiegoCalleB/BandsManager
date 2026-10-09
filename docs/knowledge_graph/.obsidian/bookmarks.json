@@ -86,10 +86,12 @@
         },
         {
           "type": "graph",
-          "title": "Solo tablas Supabase",
+          "title": "Tablas (tabla_*)",
           "options": {
             "search": "path:tabla_",
-            "showOrphans": false
+            "showTags": false,
+            "showOrphans": false,
+            "hideUnresolved": true
           }
         }
       ]

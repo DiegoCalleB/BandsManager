@@ -8,6 +8,13 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
+      "query": "path:tabla_",
+      "color": {
+        "a": 1,
+        "rgb": 16711884
+      }
+    },
+    {
       "query": "tag:#layer/frontend",
       "color": {
         "a": 1,
