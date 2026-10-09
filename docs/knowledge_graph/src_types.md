@@ -223,6 +223,7 @@ _Sin dependencias salientes directas._
 - [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(from #service)*
 - [[src_db_seed|src/db_seed.ts]] *(from #service)*
 - [[src_hooks_useAccompanimentGenerator|src/hooks/useAccompanimentGenerator.ts]] *(from #hook)*
+- [[src_hooks_useActiveSetlistMetrics|src/hooks/useActiveSetlistMetrics.ts]] *(from #hook)*
 - [[src_hooks_useAudioPlayer|src/hooks/useAudioPlayer.ts]] *(from #hook)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
 - [[src_hooks_useBrowserPushNotifications|src/hooks/useBrowserPushNotifications.ts]] *(from #hook)*

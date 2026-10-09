@@ -35,6 +35,7 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(from #service)*
+- [[src_hooks_useActiveSetlistMetrics|src/hooks/useActiveSetlistMetrics.ts]] *(from #hook)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 

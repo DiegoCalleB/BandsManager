@@ -111,6 +111,7 @@ import { useAudioPlayer } from "../hooks/useAudioPlayer";
 import { useStagePlayer } from "../hooks/useStagePlayer";
 import { useSetlistTransitionsOptimizer } from "../hooks/useSetlistTransitionsOptimizer";
 import { useSetlistEnergyAnalysis } from "../hooks/useSetlistEnergyAnalysis";
+import { useActiveSetlistMetrics } from "../hooks/useActiveSetlistMetrics";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -1370,30 +1371,8 @@ export default function RepertorioSetlists({
   };
 
 
-  // Calculate active setlist metrics (delegated to the shared, unit-tested helper)
-  const activeSetlistMetrics = useMemo(() => {
-    if (!activeSetlist)
-      return {
-        totalSeconds: 0,
-        formattedTime: "0 min",
-        songCount: 0,
-        eventCount: 0,
-        blockCount: 0,
-        avgBpm: 0,
-      };
-
-    const songMap = new Map(songs.map((s) => [s.id, s]));
-    const stats = calculateSetlistStats(activeSetlist.items, songMap);
-
-    return {
-      totalSeconds: stats.totalDurationSeconds,
-      formattedTime: formatSecondsToMinutes(stats.totalDurationSeconds),
-      songCount: stats.songCount,
-      eventCount: stats.eventCount,
-      blockCount: stats.blockCount,
-      avgBpm: stats.averageBpm,
-    };
-  }, [activeSetlist, songs]);
+  // Métricas agregadas del setlist activo (duración, temas, bloques y BPM)
+  const activeSetlistMetrics = useActiveSetlistMetrics(activeSetlist, songs);
 
   // Detecta en segundo plano los acordes del audio recién subido (sin generar ninguna letra).
   const runAutoChordAnalysis = async (song: Song) => {
