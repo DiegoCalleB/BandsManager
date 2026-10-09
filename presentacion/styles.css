@@ -878,3 +878,7 @@ body.scroll .tr-time { display: none; }
 .chat.tight { gap: 8px; margin-top: 20px; } .chat.tight li { font-size: 28px; padding: 10px 22px; } .chat.tight li b { font-size: 19px; margin-bottom: 2px; }
 .chat.tight + .fin-crowd { margin-top: 28px; }
 .chat.tight + .fin-crowd img { width: 96px; height: 96px; }
+
+.feat .ft-shot.phone.acuerdo img { animation: acpan 18s ease-in-out 1.2s infinite; }
+@keyframes acpan { 0%, 10% { transform: translateY(0); } 50%, 70% { transform: translateY(-1030px); } 100% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .feat .ft-shot.phone.acuerdo img { animation: none; } }
