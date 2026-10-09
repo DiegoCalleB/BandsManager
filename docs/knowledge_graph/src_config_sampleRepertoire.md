@@ -24,6 +24,7 @@ Exporta: SAMPLER_ALBUM_NAME, SAMPLER_COVER_URL, SAMPLER_SONGS, SAMPLER_SETLISTS.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
+- [[src_hooks_useRepertorioSync|src/hooks/useRepertorioSync.ts]] *(from #hook)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
