@@ -114,6 +114,7 @@ import { useSetlistTransitionsOptimizer } from "../hooks/useSetlistTransitionsOp
 import { useSetlistEnergyAnalysis } from "../hooks/useSetlistEnergyAnalysis";
 import { useActiveSetlistMetrics } from "../hooks/useActiveSetlistMetrics";
 import { useRepertorioSync } from "../hooks/useRepertorioSync";
+import { useRepertorioSongAlbumHandlers } from "../hooks/useRepertorioSongAlbumHandlers";
 import { ConfirmDeleteModal } from "./repertorio/ConfirmDeleteModal";
 import {
   ConfirmDeleteAlbumModal,
@@ -918,13 +919,6 @@ export default function RepertorioSetlists({
     [songs],
   );
 
-  // Deletion Confirmation Modal State
-  const [confirmDeleteModal, setConfirmDeleteModal] = useState<{
-    title: string;
-    description: string;
-    onConfirm: () => void;
-  } | null>(null);
-
   const [deleteAlbumData, setDeleteAlbumData] =
     useState<ConfirmDeleteAlbumData | null>(null);
   const [assignSongsModalData, setAssignSongsModalData] = useState<{
@@ -936,15 +930,8 @@ export default function RepertorioSetlists({
     setlistToEdit: Setlist | null;
   } | null>(null);
   const [isAddSongsModalOpen, setIsAddSongsModalOpen] = useState(false);
-  const [statusBanner, setStatusBanner] = useState<{
-    text: string;
-    type: "loading" | "success" | "warning" | "error";
-  } | null>(null);
   const [defaultAlbumForNewSong, setDefaultAlbumForNewSong] =
     useState<string>("");
-  const [selectedCatalogIds, setSelectedCatalogIds] = useState<Set<string>>(
-    new Set(),
-  );
 
   const sortedSongsByAlbumAndOrder = useMemo(() => {
     return [...songs].sort((a, b) => {
@@ -967,7 +954,7 @@ export default function RepertorioSetlists({
       s.id === updatedSong.id ? updatedSong : s,
     );
     setSongs(updatedList);
-    saveSongsToLocalStorageSafely(updatedList);
+    saveSongsToLocalStorageSafely(updatedList, bandId);
     setActiveChordsSong(updatedSong);
     if (activeStudioSong?.id === updatedSong.id) {
       setActiveStudioSong(updatedSong);
@@ -983,10 +970,6 @@ export default function RepertorioSetlists({
     );
     setSongs(updatedList);
     saveSongsToLocalStorageSafely(updatedList, bandId);
-    // Este handler se reutiliza como "guardar canción" genérico (MemberNotesModal, favorito,
-    // PdfExportModal, SpotifyPlayerBar), no solo desde el propio Song Studio: sin este guard
-    // (mismo patrón que handleUpdateSongFromChords de arriba) forzaba la apertura del Studio en
-    // cualquiera de esos sitios aunque estuviera cerrado, p.ej. al guardar notas por miembro.
     if (activeStudioSong?.id === updatedSong.id) {
       setActiveStudioSong(updatedSong);
     }
@@ -1044,29 +1027,6 @@ export default function RepertorioSetlists({
   const showItemChunksRef = useRef<Blob[]>([]);
   const showItemTimerRef = useRef<any>(null);
 
-  const toggleFavoriteSong = (songId: string) => {
-    const target = songs.find((s) => s.id === songId);
-    if (!target) return;
-    const updatedSong = { ...target, favoritoGeneral: !target.favoritoGeneral };
-    const aplicar = (favorito: boolean | undefined) =>
-      setSongs((prev) => {
-        const next = prev.map((s) =>
-          s.id === songId ? { ...s, favoritoGeneral: favorito } : s,
-        );
-        saveSongsToLocalStorageSafely(next);
-        return next;
-      });
-    aplicar(updatedSong.favoritoGeneral);
-    void guardarOReverter(
-      fetch("/api/songs/" + songId, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updatedSong),
-      }),
-      () => aplicar(target.favoritoGeneral),
-    );
-  };
-
   // Sincronización robusta offline/online y persistencia segura (AGENTS.md §2)
   const { getHeaders, syncSetlistToBackend } = useRepertorioSync({
     bandId,
@@ -1082,631 +1042,91 @@ export default function RepertorioSetlists({
     sanitizeBandSetlists,
   });
 
-  // Cuando cambia el setlist activo, cargar el análisis IA guardado si existe
-  useEffect(() => {
-    if (activeSetlist?.ai_analysis_json) {
-      setAiAnalysisResult(activeSetlist.ai_analysis_json);
-    } else {
-      setAiAnalysisResult(null);
-    }
-    setHighlightedSongIds([]);
-  }, [activeSetlist?.id, activeSetlist?.ai_analysis_json]);
-
-  // Microphone recording for Show Items (Presentaciones/Chapas)
-  const handleStartRecordingShowItem = async () => {
-    try {
-      const stream = await getLowLatencyAudioStream();
-      const mediaRecorder = new MediaRecorder(stream);
-      showItemMediaRecorderRef.current = mediaRecorder;
-      showItemChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          showItemChunksRef.current.push(e.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(showItemChunksRef.current, {
-          type: "audio/webm",
-        });
-        const file = new File(
-          [audioBlob],
-          `recording-show-${Date.now()}.webm`,
-          { type: "audio/webm" },
-        );
-        try {
-          const serverUrl = await uploadFileToServer(file);
-          setShowItemAudioUrl(serverUrl);
-        } catch (err) {
-          console.error(
-            "Error uploading show item recording to server disk:",
-            err,
-          );
-        }
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      mediaRecorder.start(100);
-      setIsRecordingShowItem(true);
-      setRecordingShowItemSecs(0);
-
-      showItemTimerRef.current = setInterval(() => {
-        setRecordingShowItemSecs((s) => s + 1);
-      }, 1000);
-    } catch (err: any) {
-      console.warn("Microphone access warning:", err?.message || err);
-      alert(
-        "No se pudo acceder al micrófono (" +
-          (err?.message || "permisos denegados") +
-          "). Por favor, comprueba los permisos de audio en tu navegador.",
-      );
-    }
-  };
-
-  const handleStopRecordingShowItem = () => {
-    if (showItemMediaRecorderRef.current && isRecordingShowItem) {
-      showItemMediaRecorderRef.current.stop();
-      setIsRecordingShowItem(false);
-      if (showItemTimerRef.current) {
-        clearInterval(showItemTimerRef.current);
-      }
-    }
-  };
-
-  const handleShowItemAudioFileUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const base64 = await uploadFileToServer(file);
-      setShowItemAudioUrl(base64);
-
-      const audioObj = new Audio(base64);
-      audioObj.onloadedmetadata = () => {
-        if (audioObj.duration && !isNaN(audioObj.duration)) {
-          setRecordingShowItemSecs(Math.round(audioObj.duration));
-        }
-      };
-    } catch (err) {
-      console.error("Error uploading audio file for show item:", err);
-    }
-  };
-
-
-
   // Métricas agregadas del setlist activo (duración, temas, bloques y BPM)
   const activeSetlistMetrics = useActiveSetlistMetrics(activeSetlist, songs);
 
-  // Detecta en segundo plano los acordes del audio recién subido (sin generar ninguna letra).
-  const runAutoChordAnalysis = async (song: Song) => {
-    if (!song.audioPrincipalUrl) return;
+  // Forward declaration para desacoplar handlers de canciones y álbumes
+  const handleAddMultipleSongsToSetlist = (songIds: string[]) => {
+    if (!activeSetlist || songIds.length === 0) return;
 
-    // Si la subida cayó en uno de los fallbacks locales de audioStorage (IndexedDB o data URL),
-    // el servidor no puede descargar ese audio. Mejor decirlo que fingir que se ha analizado.
-    if (
-      !/^https?:\/\//i.test(song.audioPrincipalUrl) &&
-      !song.audioPrincipalUrl.startsWith("/")
-    ) {
-      setStatusBanner({
-        text: `El audio de "${song.titulo}" no llegó a subirse al servidor, así que no se pueden detectar los acordes. Vuelve a subirlo.`,
-        type: "error",
-      });
-      setTimeout(() => setStatusBanner(null), 6000);
-      return;
-    }
+    const newSongItems: SetlistItem[] = songIds.map((songId) => ({
+      id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      tipoItem: "cancion",
+      songId,
+    }));
 
-    setStatusBanner({
-      text: `🎵 Detectando los acordes de "${song.titulo}" desde el audio…`,
-      type: "loading",
-    });
-    try {
-      // Solo se detectan los ACORDES (cálculo propio, sin IA generativa): la letra nunca se genera
-      // en segundo plano; se pide a propósito con «Letra del audio» y se transcribe de la voz.
-      const analisis = await analizarAcordesDelAudio(song.id);
-      setSongs((prev) => {
-        const next = prev.map((s) => (s.id === song.id ? { ...s, analisisAcordes: analisis } : s));
-        saveSongsToLocalStorageSafely(next);
-        return next;
-      });
-      setStatusBanner({
-        text: `✓ Acordes de "${song.titulo}" detectados del audio. Es automático: revísalos de oído. Abre «Acordes» para ver la línea de tiempo`,
-        type: "success",
-      });
-    } catch (err) {
-      console.error("Error detecting chords from audio:", err);
-      // El servidor explica el motivo (sin audio, audio ilegible, resultado poco fiable…).
-      setStatusBanner({
-        text: err instanceof Error && err.message ? err.message : `No se pudieron detectar los acordes de "${song.titulo}"`,
-        type: "error",
-      });
-    } finally {
-      setTimeout(() => setStatusBanner(null), 6000);
-    }
-  };
-
-  // Handle Add/Edit Song Form Submit
-  const handleSaveSong = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const titulo = formData.get("titulo") as string;
-    // La duración se introduce (y se autodetecta del audio) en dos campos separados, min y seg.
-    const duracionMin =
-      parseInt(formData.get("duracionMin") as string, 10) || 0;
-    const duracionSeg =
-      parseInt(formData.get("duracionSeg") as string, 10) || 0;
-    const duracionSegundos = duracionMin * 60 + duracionSeg;
-    const duracion = formatSecondsToMmSs(duracionSegundos);
-    const tonalidad = (formData.get("tonalidad") as string) || "Am";
-    const bpm = parseInt(formData.get("bpm") as string, 10) || 120;
-    const afinacion = formData.get("afinacion") as string;
-    const albumDisco = formData.get("albumDisco") as string;
-    const genero = (formData.get("genero") as string) || "";
-    const tipo = (formData.get("tipo") as string) || "propio";
-    const energia = parseInt(formData.get("energia") as string, 10) || 5;
-    const cantantePrincipal =
-      (formData.get("cantantePrincipal") as string) || "";
-    const estadoTema =
-      (formData.get("estadoTema") as Song["estadoTema"]) || "listo";
-    //"Cover / Versión" en el selector de tipo es la única fuente de este flag: evitamos
-    // tener dos controles distintos que signifiquen lo mismo.
-    const esVersionCovers = tipo === "cover";
-    const enlaceAcordes = (formData.get("enlaceAcordes") as string) || "";
-    const notasInternas = formData.get("notasInternas") as string;
-    const notasRepertorio = (formData.get("notasRepertorio") as string) || "";
-    const notasMiembrosJson = formData.get("notasMiembrosJson") as string;
-    let notasMiembros: Record<string, string> =
-      editingSong?.notasMiembros || {};
-    if (notasMiembrosJson) {
-      try {
-        notasMiembros = JSON.parse(notasMiembrosJson);
-      } catch {
-        // ignore
+    const targetRefId = selectedSetlistItemId;
+    let newItems: SetlistItem[];
+    if (targetRefId) {
+      const idx = activeSetlist.items.findIndex((it) => it.id === targetRefId);
+      if (idx !== -1) {
+        newItems = [...activeSetlist.items];
+        newItems.splice(idx + 1, 0, ...newSongItems);
+      } else {
+        newItems = [...activeSetlist.items, ...newSongItems];
       }
-    }
-    // Marcas "quiero ver la tonalidad en mi setlist" por músico (notasPorMiembro[].mostrarTono).
-    const aplicarMarcasTono = (base: Song): Song => {
-      const raw = formData.get("mostrarTonoJson") as string;
-      if (!raw) return base;
-      try {
-        const marcas = JSON.parse(raw) as { id?: string; name: string; tono: boolean; bpm: boolean }[];
-        return marcas.reduce(
-          (acc, m) => withSongFlagsForMember(acc, m.id, m.name, { tono: m.tono === true, bpm: m.bpm === true }),
-          base,
-        );
-      } catch {
-        return base;
-      }
-    };
-    let audioPrincipalUrl =
-      (formData.get("audioPrincipalUrl") as string) ||
-      editingSong?.audioPrincipalUrl ||
-      "";
-    let portadaUrl =
-      (formData.get("portadaUrl") as string) || editingSong?.portadaUrl || "";
-
-    const audioFile = formData.get("audioFile") as File;
-    const hasNewAudio = Boolean(audioFile && audioFile.size > 0);
-    if (hasNewAudio) {
-      try {
-        audioPrincipalUrl = await uploadFileToServer(audioFile);
-      } catch (err) {
-        console.error("Error reading uploaded audio file:", err);
-      }
-    }
-
-    const portadaFile = formData.get("portadaFile") as File;
-    if (portadaFile && portadaFile.size > 0) {
-      try {
-        portadaUrl = await uploadFileToServer(portadaFile);
-      } catch (err) {
-        console.error("Error reading uploaded portada file:", err);
-      }
-    }
-
-    if (editingSong) {
-      const updatedSong: Song = aplicarMarcasTono({
-        ...editingSong,
-        titulo,
-        duracion,
-        duracionSegundos,
-        tonalidad,
-        bpm,
-        afinacion,
-        albumDisco,
-        genero,
-        tipo,
-        energia,
-        cantantePrincipal,
-        estadoTema,
-        esVersionCovers,
-        enlaceAcordes,
-        notasInternas,
-        notasRepertorio,
-        notasMiembros,
-        audioPrincipalUrl,
-        portadaUrl,
-      });
-      setSongs((prev) => {
-        const next = prev.map((s) =>
-          s.id === editingSong.id ? updatedSong : s,
-        );
-        saveSongsToLocalStorageSafely(next);
-        return next;
-      });
-      if (activePlayerSong?.id === editingSong.id) {
-        setActivePlayerSong(updatedSong);
-      }
-      const cancionAntes = editingSong;
-      void guardarOReverter(
-        fetch(`/api/songs/${editingSong.id}`, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(updatedSong),
-        }),
-        () =>
-          setSongs((prev) => {
-            const next = prev.map((s) =>
-              s.id === cancionAntes.id ? cancionAntes : s,
-            );
-            saveSongsToLocalStorageSafely(next);
-            return next;
-          }),
-      );
-      if (hasNewAudio) runAutoChordAnalysis(updatedSong);
     } else {
-      const newSong: Song = aplicarMarcasTono({
-        id: `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-        titulo,
-        duracion,
-        duracionSegundos,
-        tonalidad,
-        bpm,
-        afinacion,
-        albumDisco,
-        genero,
-        tipo,
-        energia,
-        cantantePrincipal,
-        estadoTema,
-        esVersionCovers,
-        enlaceAcordes,
-        notasInternas,
-        notasRepertorio,
-        notasMiembros,
-        audioPrincipalUrl,
-        portadaUrl,
-      });
-      setSongs((prev) => {
-        const next = [newSong, ...prev];
-        saveSongsToLocalStorageSafely(next);
-        return next;
-      });
-      void guardarOReverter(
-        fetch("/api/songs", {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify(newSong),
-        }),
-        () =>
-          setSongs((prev) => {
-            const next = prev.filter((s) => s.id !== newSong.id);
-            saveSongsToLocalStorageSafely(next);
-            return next;
-          }),
-      );
-      if (hasNewAudio) runAutoChordAnalysis(newSong);
+      newItems = [...activeSetlist.items, ...newSongItems];
     }
 
-    setShowSongModal(false);
-    setEditingSong(null);
-  };
+    const updatedSetlist: Setlist = {
+      ...activeSetlist,
+      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
+      items: newItems,
+    };
 
-  const handleDeleteSong = (songId: string) => {
-    const song = songs.find((s) => s.id === songId);
-    setConfirmDeleteModal({
-      title: "Eliminar Canción",
-      description: `¿Seguro que deseas eliminar "${song?.titulo || "esta canción"}" del catálogo del grupo?`,
-      onConfirm: () => {
-        const setlistsAntes = setlists;
-        setSongs((prev) => prev.filter((s) => s.id !== songId));
-        setSetlists((prev) =>
-          prev.map((st) => ({
-            ...st,
-            items: st.items.filter((it) => it.songId !== songId),
-          })),
-        );
-
-        void guardarOReverter(
-          fetch(`/api/songs/${songId}`, {
-            method: "DELETE",
-            headers: getHeaders(),
-          }),
-          () => {
-            if (song) {
-              setSongs((prev) =>
-                prev.some((s) => s.id === song.id) ? prev : [song, ...prev],
-              );
-            }
-            setSetlists(setlistsAntes);
-          },
-        );
-      },
-    });
-  };
-
-  // Catalog multi-select: lets the user act on several songs at once instead of one by one
-  const toggleCatalogSelect = (songId: string) => {
-    setSelectedCatalogIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(songId)) next.delete(songId);
-      else next.add(songId);
+    setSetlists((prev) => {
+      const next = prev.map((st) =>
+        st.id === activeSetlist.id ? updatedSetlist : st,
+      );
+      saveSetlistsToLocalStorageSafely(next);
       return next;
     });
+    syncSetlistToBackend(updatedSetlist);
+    setSelectedSetlistItemId(newSongItems[newSongItems.length - 1].id);
   };
 
-  const clearCatalogSelection = () => setSelectedCatalogIds(new Set());
-
-  const handleBulkDeleteSongs = (songIds: string[]) => {
-    if (songIds.length === 0) return;
-    setConfirmDeleteModal({
-      title: "Eliminar Canciones Seleccionadas",
-      description: `¿Seguro que deseas eliminar ${songIds.length} canciones del catálogo del grupo? Se quitarán también de los repertorios donde aparezcan.`,
-      onConfirm: () => {
-        const idsSet = new Set(songIds);
-        const cancionesBorradas = songs.filter((s) => idsSet.has(s.id));
-        const setlistsAntes = setlists;
-        setSongs((prev) => prev.filter((s) => !idsSet.has(s.id)));
-        setSetlists((prev) =>
-          prev.map((st) => ({
-            ...st,
-            items: st.items.filter(
-              (it) => !it.songId || !idsSet.has(it.songId),
-            ),
-          })),
-        );
-        songIds.forEach((songId) => {
-          void guardarOReverter(
-            fetch(`/api/songs/${songId}`, {
-              method: "DELETE",
-              headers: getHeaders(),
-            }),
-            () => {
-              const cancion = cancionesBorradas.find((c) => c.id === songId);
-              if (cancion) {
-                setSongs((prev) =>
-                  prev.some((s) => s.id === cancion.id) ? prev : [cancion, ...prev],
-                );
-              }
-              setSetlists(setlistsAntes);
-            },
-          );
-        });
-        clearCatalogSelection();
-      },
-    });
-  };
-
-  const handleBulkAddSelectedToSetlist = (songIds: string[]) => {
-    if (songIds.length === 0) return;
-    if (!activeSetlist) {
-      setStatusBanner({
-        text: 'Selecciona o crea primero un repertorio en la pestaña "Setlists & Directos" para añadir estas canciones.',
-        type: "error",
-      });
-      setTimeout(() => setStatusBanner(null), 5000);
-      return;
-    }
-    handleAddMultipleSongsToSetlist(songIds);
-    setStatusBanner({
-      text: `✓ ${songIds.length} canciones añadidas a "${activeSetlist.nombre}"`,
-      type: "success",
-    });
-    setTimeout(() => setStatusBanner(null), 4000);
-    clearCatalogSelection();
-  };
+  // Hook que desacopla operaciones de canciones, álbumes, favoritos y multiselección del catálogo
+  const {
+    statusBanner,
+    setStatusBanner,
+    confirmDeleteModal,
+    setConfirmDeleteModal,
+    selectedCatalogIds,
+    setSelectedCatalogIds,
+    toggleCatalogSelect,
+    clearCatalogSelection,
+    handleSaveSong,
+    handleDeleteSong,
+    handleBulkDeleteSongs,
+    handleBulkAddSelectedToSetlist,
+    toggleFavoriteSong,
+    handleUnassignAlbumSongs,
+    handleDeleteAlbumAndSongs,
+    handleSaveAlbumSongs,
+    handleReorderAlbumTrack,
+    handleNormalizeCatalogTitles,
+  } = useRepertorioSongAlbumHandlers({
+    songs,
+    setSongs,
+    setlists,
+    setSetlists,
+    activeSetlist,
+    bandId,
+    getHeaders,
+    editingSong,
+    setEditingSong,
+    setShowSongModal,
+    activeStudioSong,
+    setActiveStudioSong,
+    activePlayerSong,
+    setActivePlayerSong,
+    guardarOReverter,
+    handleAddMultipleSongsToSetlist,
+  });
 
   const handleToggleFavorite = (songId: string) => {
-    // Misma lógica que toggleFavoriteSong (con marcha atrás si el servidor lo rechaza).
     toggleFavoriteSong(songId);
-  };
-
-  const handleUnassignAlbumSongs = (albumName: string) => {
-    const updatedSongs = songs.map((s) => {
-      if (
-        (s.albumDisco || "Singles / Sin Disco") === albumName ||
-        s.albumDisco === albumName
-      ) {
-        return { ...s, albumDisco: "" };
-      }
-      return s;
-    });
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-
-    updatedSongs
-      .filter(
-        (s) =>
-          (s.albumDisco || "Singles / Sin Disco") === albumName ||
-          s.albumDisco === albumName,
-      )
-      .forEach((s) => {
-        fetch(`/api/songs/${s.id}`, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(s),
-        }).catch((err) =>
-          console.error("Error updating song album on server:", err),
-        );
-      });
-  };
-
-  const handleDeleteAlbumAndSongs = (albumName: string) => {
-    const songsToDelete = songs.filter(
-      (s) =>
-        (s.albumDisco || "Singles / Sin Disco") === albumName ||
-        s.albumDisco === albumName,
-    );
-    const idsToDelete = new Set(songsToDelete.map((s) => s.id));
-
-    const updatedSongs = songs.filter((s) => !idsToDelete.has(s.id));
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-
-    setSetlists((prev) =>
-      prev.map((st) => ({
-        ...st,
-        items: st.items.filter((it) => !idsToDelete.has(it.songId)),
-      })),
-    );
-
-    songsToDelete.forEach((s) => {
-      fetch(`/api/songs/${s.id}`, {
-        method: "DELETE",
-        headers: getHeaders(),
-      }).catch((err) => console.error("Error deleting song on server:", err));
-    });
-  };
-
-  const handleSaveAlbumSongs = (
-    albumName: string,
-    selectedSongIds: string[],
-    albumExtraInfo?: {
-      año?: string;
-      portadaUrl?: string;
-      tipoTrabajo?: string;
-      descripcion?: string;
-    },
-  ) => {
-    const selectedSet = new Set(selectedSongIds);
-    const updatedSongs = songs.map((s) => {
-      const isCurrentlyInAlbum =
-        (s.albumDisco || "Singles / Sin Disco") === albumName ||
-        s.albumDisco === albumName;
-      if (selectedSet.has(s.id)) {
-        const updated = { ...s, albumDisco: albumName };
-        if (albumExtraInfo?.portadaUrl !== undefined && albumExtraInfo.portadaUrl !== "") {
-          updated.portadaUrl = albumExtraInfo.portadaUrl;
-          (updated as any).portada_url = albumExtraInfo.portadaUrl;
-        }
-        if (albumExtraInfo?.año) {
-          (updated as any).albumYear = albumExtraInfo.año;
-          (updated as any).album_year = albumExtraInfo.año;
-        }
-        return updated;
-      } else if (isCurrentlyInAlbum) {
-        return { ...s, albumDisco: "" };
-      }
-      return s;
-    });
-
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-
-    // Persist all affected songs to the backend
-    updatedSongs.forEach((s) => {
-      const original = songs.find((o) => o.id === s.id);
-      const isModified =
-        !original ||
-        original.albumDisco !== s.albumDisco ||
-        original.portadaUrl !== s.portadaUrl ||
-        (original as any).albumYear !== (s as any).albumYear;
-
-      if (isModified || selectedSet.has(s.id)) {
-        fetch(`/api/songs/${s.id}`, {
-          method: "PUT",
-          headers: getHeaders(),
-          body: JSON.stringify(s),
-        }).catch((err) =>
-          console.error("Error updating song album on server:", err),
-        );
-      }
-    });
-
-    window.dispatchEvent(new CustomEvent("app-data-updated"));
-  };
-
-  const handleReorderAlbumTrack = (
-    albumName: string,
-    songId: string,
-    direction: "up" | "down",
-  ) => {
-    const albumSongs = songs
-      .filter((s) => (s.albumDisco || "Singles / Sin Disco") === albumName)
-      .sort((a, b) => (a.ordenAlbum ?? 0) - (b.ordenAlbum ?? 0));
-
-    const index = albumSongs.findIndex((s) => s.id === songId);
-    if (index === -1) return;
-
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= albumSongs.length) return;
-
-    const newAlbumSongs = [...albumSongs];
-    const temp = newAlbumSongs[index];
-    newAlbumSongs[index] = newAlbumSongs[targetIndex];
-    newAlbumSongs[targetIndex] = temp;
-
-    const orderMap = new Map<string, number>();
-    newAlbumSongs.forEach((song, idx) => {
-      orderMap.set(song.id, idx + 1);
-    });
-
-    const updatedSongs = songs.map((s) => {
-      if (orderMap.has(s.id)) {
-        return { ...s, ordenAlbum: orderMap.get(s.id) };
-      }
-      return s;
-    });
-
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-
-    newAlbumSongs.forEach((s) => {
-      const updated = { ...s, ordenAlbum: orderMap.get(s.id) };
-      fetch(`/api/songs/${s.id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(updated),
-      }).catch((err) =>
-        console.error("Error updating song order on server:", err),
-      );
-    });
-  };
-
-  const handleNormalizeCatalogTitles = async () => {
-    const { updatedSongs, changedCount } = normalizeSongTitlesInList(songs);
-    if (changedCount === 0) {
-      setStatusBanner({
-        text: "Todos los temas del catálogo ya tienen formato con mayúsculas de nombres propios.",
-        type: "success",
-      });
-      setTimeout(() => setStatusBanner(null), 3500);
-      return;
-    }
-
-    setSongs(updatedSongs);
-    saveSongsToLocalStorageSafely(updatedSongs);
-    setStatusBanner({
-      text: `✨ Se han normalizado ${changedCount} temas con mayúsculas de nombres propios.`,
-      type: "success",
-    });
-    setTimeout(() => setStatusBanner(null), 4000);
-
-    const changed = updatedSongs.filter((s) => {
-      const orig = songs.find((o) => o.id === s.id);
-      return orig && orig.titulo !== s.titulo;
-    });
-
-    for (const songToUpdate of changed) {
-      fetch(`/api/songs/${songToUpdate.id}`, {
-        method: "PUT",
-        headers: getHeaders(),
-        body: JSON.stringify(songToUpdate),
-      }).catch((err) =>
-        console.warn("Error saving normalized song:", songToUpdate.id, err),
-      );
-    }
   };
 
   // Setlist Operations
@@ -2105,47 +1525,6 @@ export default function RepertorioSetlists({
     } catch (err) {
       console.error("Error al eliminar el acceso rápido:", err);
     }
-  };
-
-  // Add several catalog songs to the active setlist in a single action/save
-  const handleAddMultipleSongsToSetlist = (songIds: string[]) => {
-    if (!activeSetlist || songIds.length === 0) return;
-
-    const newSongItems: SetlistItem[] = songIds.map((songId) => ({
-      id: `it-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-      tipoItem: "cancion",
-      songId,
-    }));
-
-    const targetRefId = selectedSetlistItemId;
-    let newItems: SetlistItem[];
-    if (targetRefId) {
-      const idx = activeSetlist.items.findIndex((it) => it.id === targetRefId);
-      if (idx !== -1) {
-        newItems = [...activeSetlist.items];
-        newItems.splice(idx + 1, 0, ...newSongItems);
-      } else {
-        newItems = [...activeSetlist.items, ...newSongItems];
-      }
-    } else {
-      newItems = [...activeSetlist.items, ...newSongItems];
-    }
-
-    const updatedSetlist: Setlist = {
-      ...activeSetlist,
-      fechaUltimaEdicion: new Date().toISOString().split("T")[0],
-      items: newItems,
-    };
-
-    setSetlists((prev) => {
-      const next = prev.map((st) =>
-        st.id === activeSetlist.id ? updatedSetlist : st,
-      );
-      saveSetlistsToLocalStorageSafely(next);
-      return next;
-    });
-    syncSetlistToBackend(updatedSetlist);
-    setSelectedSetlistItemId(newSongItems[newSongItems.length - 1].id);
   };
 
   const handleSaveShowItem = (itemData: Partial<SetlistItem>) => {
