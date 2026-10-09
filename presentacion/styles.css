@@ -831,3 +831,10 @@ body.scroll .react { position: relative; right: auto; bottom: auto; opacity: 1; 
 @media (prefers-reduced-motion: reduce) { .slide.active .react.wow, .slide.active .react.wow img { animation: none; } }
 body.scroll .slide.feat { padding: 28px 22px; } body.scroll .feat .ft-copy, body.scroll .feat .ft-shot, body.scroll .feat .ft-shot.phone, body.scroll .feat .ft-cameo { position: relative; left: auto; right: auto; top: auto; bottom: auto; width: 100%; height: auto; margin-top: 16px; }
 body.scroll .feat h2 { font-size: 32px; } body.scroll .feat .lead { font-size: 18px; } body.scroll .feat .ft-shot img { height: auto; } body.scroll .feat .react { position: relative; left: auto; bottom: auto; margin-top: 16px; font-size: 16px; }
+
+.radio .head { font-size: 54px; max-width: 1180px; }
+.cameo figcaption span { font-size: 21px; line-height: 1.25; }
+/* Teléfono de fans: el scroll recorre la página hasta los próximos conciertos con sus entradas */
+.feat .ft-shot.phone img { position: absolute; left: 0; top: 0; width: 100%; height: auto; object-fit: initial; animation: phpan 20s ease-in-out 1.2s infinite; }
+@keyframes phpan { 0%, 8% { transform: translateY(0); } 48%, 66% { transform: translateY(-1150px); } 100% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .feat .ft-shot.phone img { animation: none; } }
