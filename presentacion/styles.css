@@ -871,3 +871,6 @@ body.scroll .tr-time { display: none; }
 .slide.scene.reveal .sub { font-size: 33px; margin-top: 22px; }
 .slide.scene.reveal .sub3 { color: #ffd596; font-weight: 500; }
 .slide.scene.reveal h2 { font-size: 92px; }
+
+.slide.scene .sc-react { position: absolute !important; right: 100px; bottom: 90px; left: auto; max-width: 560px; z-index: 30 !important; font-size: 30px; background: linear-gradient(135deg, rgba(36,58,99,.98), rgba(52,40,98,.98)); border-color: rgba(255,214,150,.6); }
+.slide.scene .sc-react img { width: 88px; height: 88px; border-color: #ffd596; } .slide.scene .sc-react b { color: #ffd596; }
