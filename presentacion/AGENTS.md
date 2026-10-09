@@ -45,6 +45,7 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 ## Estilo de escritura (que no suene a IA)
 
 - Castellano natural, frases cortas, voz de quien lo ha construido. Primera persona del plural donde encaje.
+- Excepción acordada con Diego: los chats y las reacciones de la banda llevan emojis y exclamaciones, como un grupo de WhatsApp. El resto de la presentación no.
 - Prohibido: «potente», «revolucionario», «de vanguardia», «ecosistema», «holístico», «seamless», «en el panorama actual», triadas por inercia, signos de exclamación, emojis y guiones largos decorativos.
 - Los límites se cuentan con sobriedad y sin disculparse (diapositiva «Lo que falta»). La honestidad suma puntos.
 - No inventar nada: ni clientes, ni métricas, ni integraciones, ni fotos de miembros. Si un dato es de demo, la diapositiva lo dice.
