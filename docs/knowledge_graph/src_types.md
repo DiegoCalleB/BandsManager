@@ -210,6 +210,7 @@ _Sin dependencias salientes directas._
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*
+- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(from #service)*
 - [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(from #service)*
 - [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(from #service)*
 - [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(from #service)*

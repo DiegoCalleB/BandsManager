@@ -111,7 +111,20 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   5. *Tour CFO Predictivo*: Cálculo en vivo del umbral de rentabilidad de la gira durante el trayecto y kilometraje GPS automático.
 * **Por qué importa:** Resuelve la causa número 1 de discusiones y ruptura de bandas (el dinero y las cuentas tanto en gira como en el local), automatiza la contabilidad y protege el patrimonio de los músicos.
 * **Documento maestro:** `docs/planes/splitband.md`
-* **Estado:** Especificado con arquitectura de IA, modelo de compensación y esquema DDL listos.
+### 8. Hoja de Ruta de Excelencia Técnica TFM: Nivel Dios (Super Saiyan Arquitectónico)
+* **Qué:** Elevación de la arquitectura, observabilidad y experiencia de evaluación del proyecto al estándar más alto jamás presentado en el máster:
+  1. *Fase 1: Desmantelamiento Quirúrgico de los 3 Monolitos "God Components" (Patrón Strangler Fig)*:
+     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas): Extracción de cálculo musical y compatibilidad tonal a `src/utils/` puro testeable, y desacoplamiento de modales hijos.
+     - `src/components/SongStudioModal.tsx` (>6.000 líneas): Separación de paneles de grabación, stems, efectos y mezclador.
+     - `server/routes/users.ts` (3.773 líneas): Modularización de rutas por dominio (auth, perfiles, uploads, preferencias).
+  2. *Fase 2: Dashboard de Observabilidad y Telemetría de Agentes IA (AI Ops)*:
+     - Panel interactivo para evaluadores con métricas en tiempo real de `agent_execution_logs` y `ai_token_ledger`: ratio de aprobación Human-in-the-Loop, tiempos de respuesta, fallbacks y coste de tokens.
+  3. *Fase 3: Sandbox / Modo Demo con Semilla Automática ("Evaluación en 1 Clic")*:
+     - Comando y script `npm run demo:seed` que precarga una banda completa ficticia con leads en todas las etapas, historial de correos y setlists listos para probar sin configurar APIs externas.
+  4. *Fase 4: Comunicación de Impacto (Vídeo Loom 3 Min + Architecture Whitepaper)*:
+     - Demostración audiovisual concisa del ciclo agéntico y documento ejecutivo de 5 páginas con diagramas C4 y ADRs.
+* **Por qué importa:** Convierte la arquitectura interna en un ejemplo académico de manual, elimina toda deuda técnica de componentes gigantes y permite al tribunal evaluar la plataforma completa en 30 segundos sin fricción.
+* **Estado:** Fase 1 en ejecución activa.
 
 ---
 
