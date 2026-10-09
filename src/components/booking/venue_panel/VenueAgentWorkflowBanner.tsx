@@ -1,3 +1,4 @@
+import { getErrorMessage } from "../../../utils/errorMessage";
 /**
  * Banner del flujo de agentes y subestado agéntico del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
@@ -6,12 +7,12 @@
  @typescript-eslint/no-unused-vars,
  @typescript-eslint/no-explicit-any
 */
-import { Sparkles, Loader2, CheckCircle2, Send } from "lucide-react";
+import { CheckCircle2,Loader2,Send,Sparkles } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Lead,LeadStatus } from "../../../types";
+import { apiFetch } from "../../../utils/api";
 import { Button } from "../../ui";
 import { ShowIcon } from "../../ui/ShowIcon";
-import { apiFetch } from "../../../utils/api";
-import { Lead, LeadStatus } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueAgentWorkflowBannerProps {
@@ -161,9 +162,9 @@ export function VenueAgentWorkflowBanner({ selectedLead, normalizeStatus, isRepl
                       } else if (leadResult?.error || data.message) {
                         setDraftError(leadResult?.error || data.message);
                       }
-                    } catch (err: any) {
+                    } catch (err: unknown) {
                       setDraftError(
-                        err.message || "Error al despachar el correo.",
+                        getErrorMessage(err, "Error al despachar el correo."),
                       );
                     } finally {
                       setIsCreatingDraft(false);

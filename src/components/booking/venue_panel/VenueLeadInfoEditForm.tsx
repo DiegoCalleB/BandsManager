@@ -1,20 +1,19 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Formulario inline para editar la ficha del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { Edit3, Sparkles, Upload, Clock } from "lucide-react";
-import { Input, Select, Button } from "../../ui";
-import { LeadType, Lead } from "../../../types";
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { Clock,Edit3,Sparkles,Upload } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Lead,LeadType } from "../../../types";
+import { generateFollowupTemplate,getDaysSinceContact,isLeadNeedsFollowup } from "../../../utils/bookingFollowup";
 import { toIsoDateString } from "../../../utils/festivalDateFormat";
-import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from "../../../utils/bookingFollowup";
+import { Button,Input,Select } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 import { QuickDealSimulator } from "../QuickDealSimulator";
-import { isStitchLight } from "./venueTheme";
 import { VenuePlaybookBanner } from "./VenuePlaybookBanner";
-import React, { Dispatch, SetStateAction } from "react";
+import { isStitchLight } from "./venueTheme";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueLeadInfoEditFormProps {
@@ -43,7 +42,7 @@ export interface VenueLeadInfoEditFormProps {
   setShowWhatsAppModal: Dispatch<SetStateAction<boolean>>;
   handleApprovePitchDirectly: () => void;
   isCreatingDraft: boolean;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   handleRegeneratePitchWithFeedback: (targetProvider?: "gemini" | "deepseek") => Promise<void>;
   isRegeneratingPitch: boolean;
   editedPitch: string;

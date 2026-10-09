@@ -1,3 +1,5 @@
+import type { BookingCampaign } from "../../../../types";
+import { getErrorMessage } from "../../../../utils/errorMessage";
 /**
  * Acciones del panel de sala: regenerar y revertir pitch, enriquecer ficha, edición, confirmación de bolo, borrador, bitácora y formateo de teléfonos.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
@@ -6,10 +8,10 @@
  @typescript-eslint/no-unused-vars,
  @typescript-eslint/no-explicit-any
 */
+import React,{ Dispatch,RefObject,SetStateAction } from "react";
+import { InteractionLog,Lead,LeadStatus,Setlist } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
 import { camposCambiados } from "../../../../utils/camposCambiados";
-import { Lead, LeadStatus, Setlist, InteractionLog } from "../../../../types";
-import React, { Dispatch, SetStateAction, RefObject } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface buildVenuePanelActionsParams {
@@ -21,7 +23,7 @@ export interface buildVenuePanelActionsParams {
   contentRating: number;
   feedbackComment: string;
   feedbackScope: "este_pitch" | "global";
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   setEditedPitch: Dispatch<SetStateAction<string>>;
   setIsEditingPitch: Dispatch<SetStateAction<boolean>>;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
@@ -132,10 +134,10 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
       } else {
         alert(data.error || "No se pudo regenerar el pitch.");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error al regenerar pitch:", err);
       alert(
-        `Error de conexión al reescribir el pitch con IA: ${err.message || "Verifica la conexión"}`,
+        `Error de conexión al reescribir el pitch con IA: ${getErrorMessage(err, "Verifica la conexión")}`,
       );
     } finally {
       setIsRegeneratingPitch(false);
@@ -233,9 +235,9 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
         );
         setTimeout(() => setEnrichStatusMsg(null), 4000);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error enriqueciendo lead:", err);
-      setEnrichStatusMsg(err.message || "Error al completar datos.");
+      setEnrichStatusMsg(getErrorMessage(err, "Error al completar datos."));
       setTimeout(() => setEnrichStatusMsg(null), 4000);
     } finally {
       setIsEnrichingLead(false);
@@ -465,9 +467,9 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
         draftError =
           leadResult?.error || data.message || "No se pudo crear el borrador.";
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error aprobando lead:", err);
-      draftError = err.message || "Error al aprobar el lead.";
+      draftError = getErrorMessage(err, "Error al aprobar el lead.");
     }
 
     if (draftError) {

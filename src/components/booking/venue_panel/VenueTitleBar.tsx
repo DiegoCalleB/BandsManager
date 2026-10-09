@@ -1,25 +1,24 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Barra de título del panel con avatar, estado y acciones.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { LeadAvatar } from "../LeadAvatar";
-import { VerifiedBadge } from "../../common/VerifiedBadge";
-import { isLeadVerificado } from "../../../utils/leadReliability";
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { Edit3,Trash2,X } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Concert,Lead,LeadStatus } from "../../../types";
 import { formatFestivalDateRange } from "../../../utils/festivalDateFormat";
-import { HolidayDateWarning } from "../../common/HolidayDateWarning";
+import { isLeadVerificado } from "../../../utils/leadReliability";
 import { FavoriteButton } from "../../common/FavoriteButton";
-import { IconButton, Button } from "../../ui";
-import { Edit3, Trash2, X } from "lucide-react";
+import { HolidayDateWarning } from "../../common/HolidayDateWarning";
+import { VerifiedBadge } from "../../common/VerifiedBadge";
+import { Button,IconButton } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
+import { LeadAvatar } from "../LeadAvatar";
+import { VenueAgentWorkflowBanner } from "./VenueAgentWorkflowBanner";
 import { VenueLeadHealthRow } from "./VenueLeadHealthRow";
 import { VenueQuickActionBar } from "./VenueQuickActionBar";
 import { VenueScoutToolbar } from "./VenueScoutToolbar";
-import { VenueAgentWorkflowBanner } from "./VenueAgentWorkflowBanner";
-import { Lead, LeadStatus, Concert } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueTitleBarProps {
@@ -42,7 +41,7 @@ export interface VenueTitleBarProps {
   handleEnrichInstagram: () => Promise<void>;
   isEnrichingInstagram: boolean;
   scoutActionFeedback: string;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   concerts: Concert[];
   bandName: string;
   editedPitch: string;

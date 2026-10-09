@@ -5,6 +5,7 @@ Sparkles,
 X
 } from "lucide-react";
 import React,{ useEffect,useRef,useState } from "react";
+import type { BookingCampaign } from "../../types";
 import {
 Concert,
 InteractionLog,
@@ -12,6 +13,7 @@ Lead,
 LeadStatus
 } from "../../types";
 import { apiFetch } from "../../utils/api";
+import { getErrorMessage } from "../../utils/errorMessage";
 import { IconButton } from '../ui';
 import { BoloConfirmadoSetlistModal } from "./BoloConfirmadoSetlistModal";
 import { DealAndLogisticsCopilot } from "./DealAndLogisticsCopilot";
@@ -45,7 +47,7 @@ interface VenueDetailPanelProps {
   normalizeType: (type?: string) => string;
   autoDetectVenueAddress: (venueName: string, city: string) => string;
   sectionTab: "salas" | "medios" | "grupos";
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   onLeadLogoUpload?: (file: File) => Promise<string | null> | void;
   isUploadingLeadLogo?: boolean;
   initialTab?: "info" | "emails" | "copilot" | "bitacora";
@@ -174,7 +176,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           onUpdateLead(selectedLead.id, res.lead);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.warn("Error enriqueciendo fechas:", err);
     } finally {
       setIsExtractingDates(false);
@@ -201,8 +203,8 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
         setEditedLeadInfo(res.lead);
         setScoutActionFeedback("✓ Bandas locales para co-booking encontradas.");
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error bandas locales: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error bandas locales: ${getErrorMessage(err)}`);
     } finally {
       setIsEnrichingCoBooking(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);

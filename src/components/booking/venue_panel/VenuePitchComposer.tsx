@@ -1,17 +1,16 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Barra de acciones, banners de campaña, fechas, snippets de deal y editor del pitch.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { Layers, Copy, MessageCircle, Loader2, CheckCircle2, Sparkles, CalendarCheck, Handshake, ShieldAlert } from "lucide-react";
-import { ShowIcon } from "../../ui/ShowIcon";
-import { HolidayDateWarning } from "../../common/HolidayDateWarning";
-import { Button, Textarea } from "../../ui";
-import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
-import React, { Dispatch, SetStateAction } from "react";
+ 
+import { CalendarCheck,CheckCircle2,Copy,Handshake,Layers,Loader2,MessageCircle,ShieldAlert,Sparkles } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../types";
+import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
+import { HolidayDateWarning } from "../../common/HolidayDateWarning";
+import { Button,Textarea } from "../../ui";
+import { ShowIcon } from "../../ui/ShowIcon";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenuePitchComposerProps {
@@ -23,7 +22,7 @@ export interface VenuePitchComposerProps {
   selectedLead: Lead;
   handleApprovePitchDirectly: () => void;
   isCreatingDraft: boolean;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   handleRegeneratePitchWithFeedback: (targetProvider?: "gemini" | "deepseek") => Promise<void>;
   isRegeneratingPitch: boolean;
   editedLeadInfo: Partial<Lead>;

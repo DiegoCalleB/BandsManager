@@ -1,3 +1,4 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Barra de herramientas de inteligencia Scout (Jina, Wegow, Instagram).
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
@@ -5,12 +6,12 @@
 /* eslint-disable
  @typescript-eslint/no-explicit-any
 */
-import { Compass, Loader2, Globe, Calendar, Instagram, CheckCircle2, PartyPopper, TrendingUp, AlertCircle, CalendarCheck, ExternalLink } from "lucide-react";
+import { AlertCircle,Calendar,CalendarCheck,CheckCircle2,Compass,ExternalLink,Globe,Instagram,Loader2,PartyPopper,TrendingUp } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Concert,Lead } from "../../../types";
+import { checkBandDateConflict,getCityTourHistory } from "../../../utils/bookingTourContext";
 import { Button } from "../../ui";
-import { checkBandDateConflict, getCityTourHistory } from "../../../utils/bookingTourContext";
 import { ShowIcon } from "../../ui/ShowIcon";
-import { Lead, Concert } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenueScoutToolbarProps {
@@ -23,7 +24,7 @@ export interface VenueScoutToolbarProps {
   handleEnrichInstagram: () => Promise<void>;
   isEnrichingInstagram: boolean;
   scoutActionFeedback: string;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   concerts: Concert[];
   bandName: string;
   editedPitch: string;
@@ -137,8 +138,7 @@ export function VenueScoutToolbar({ handleScanWithJina, isScanningJina, handleDe
                 selectedLead.fechas_libres_detectadas[0]) ||
               (selectedLead as any).fechas_libres_campana?.[0] ||
               (selectedLead as any).fechas_propuestas?.[0] ||
-              (selectedLead as any).fechas_disponibles?.[0] ||
-              activeCampaign?.fecha_inicio;
+              (selectedLead as any).fechas_disponibles?.[0];
             const conflictCheck = checkBandDateConflict(
               targetDate,
               concerts,

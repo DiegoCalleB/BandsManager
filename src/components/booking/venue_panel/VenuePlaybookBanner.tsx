@@ -1,17 +1,16 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Banner del playbook táctico y extracción de entidades del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
-import { ShowIcon } from "../../ui/ShowIcon";
+ 
+import { Calendar,Coins,Sliders,Sparkles } from "lucide-react";
+import { Dispatch,SetStateAction } from "react";
+import { Lead } from "../../../types";
 import { Button } from "../../ui";
-import { Sparkles, Calendar, Coins, Sliders } from "lucide-react";
+import { ShowIcon } from "../../ui/ShowIcon";
 import { VenuePitchComposer } from "./VenuePitchComposer";
 import { VenuePitchFeedbackPanel } from "./VenuePitchFeedbackPanel";
-import { Lead } from "../../../types";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenuePlaybookBannerProps {
@@ -25,7 +24,7 @@ export interface VenuePlaybookBannerProps {
   setShowWhatsAppModal: Dispatch<SetStateAction<boolean>>;
   handleApprovePitchDirectly: () => void;
   isCreatingDraft: boolean;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   handleRegeneratePitchWithFeedback: (targetProvider?: "gemini" | "deepseek") => Promise<void>;
   isRegeneratingPitch: boolean;
   editedLeadInfo: Partial<Lead>;

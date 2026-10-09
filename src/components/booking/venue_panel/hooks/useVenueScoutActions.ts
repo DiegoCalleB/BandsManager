@@ -1,3 +1,4 @@
+import { getErrorMessage } from "../../../../utils/errorMessage";
 /**
  * Acciones de inteligencia Scout: Jina, fechas de sala, Instagram y fechas de festival.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
@@ -5,9 +6,9 @@
 /* eslint-disable
  @typescript-eslint/no-explicit-any
 */
-import { apiFetch } from "../../../../utils/api";
+import { Dispatch,SetStateAction } from "react";
 import { Lead } from "../../../../types";
-import { Dispatch, SetStateAction } from "react";
+import { apiFetch } from "../../../../utils/api";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface VenueScoutActionsParams {
@@ -60,9 +61,9 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
           `Aviso: ${res?.error || "No se encontraron datos adicionales."}`,
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setScoutActionFeedback(
-        `Error Jina Reader: ${err?.message || "Error de conexión"}`,
+        `Error Jina Reader: ${getErrorMessage(err, "Error de conexión")}`,
       );
     } finally {
       setIsScanningJina(false);
@@ -109,9 +110,9 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
           `Aviso: ${res?.error || "No se pudieron calcular las fechas."}`,
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setScoutActionFeedback(
-        `Error Radar: ${err?.message || "Error de conexión"}`,
+        `Error Radar: ${getErrorMessage(err, "Error de conexión")}`,
       );
     } finally {
       setIsDetectingDates(false);
@@ -152,9 +153,9 @@ export function useVenueScoutActions({ selectedLead, editedLeadInfo, setScoutAct
           "No se extrajeron datos adicionales";
         setScoutActionFeedback(`Aviso: ${info}`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setScoutActionFeedback(
-        `Error Instagram: ${err?.message || "Error de conexión"}`,
+        `Error Instagram: ${getErrorMessage(err, "Error de conexión")}`,
       );
     } finally {
       setIsEnrichingInstagram(false);

@@ -1,3 +1,4 @@
+import { getErrorMessage } from "../../../../utils/errorMessage";
 /**
  * Estado y acciones de enriquecimiento externo: rutas, redes, ventana de programación, eventos, prensa, co-booking y simulador financiero.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
@@ -6,9 +7,9 @@
  @typescript-eslint/no-explicit-any,
  react-hooks/set-state-in-effect
 */
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { apiFetch } from "../../../../utils/api";
+import { Dispatch,SetStateAction,useEffect,useState } from "react";
 import { Lead } from "../../../../types";
+import { apiFetch } from "../../../../utils/api";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface VenueEnrichmentParams {
@@ -102,9 +103,9 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           `Aviso: ${res?.error || "No se pudieron completar todas las consultas"}`,
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setScoutActionFeedback(
-        `Error Inteligencia: ${err?.message || "Error de conexión"}`,
+        `Error Inteligencia: ${getErrorMessage(err, "Error de conexión")}`,
       );
     } finally {
       setIsEnrichingApis(false);
@@ -133,8 +134,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           "✓ Hoja de ruta y costes de furgoneta calculados.",
         );
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error al calcular ruta: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error al calcular ruta: ${getErrorMessage(err)}`);
     } finally {
       setIsCalculatingRoute(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);
@@ -159,8 +160,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           "✓ Radar de redes sociales y co-promoción actualizado.",
         );
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error al analizar redes: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error al analizar redes: ${getErrorMessage(err)}`);
     } finally {
       setIsEnrichingSocial(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);
@@ -206,8 +207,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
         }
         setScoutActionFeedback("✓ P&L Financiero y Break-Even actualizados.");
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error en simulación: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error en simulación: ${getErrorMessage(err)}`);
     } finally {
       setIsRecalculatingFinancial(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);
@@ -234,8 +235,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           "✓ Ventana de programación y lead time calculados.",
         );
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error ventana booking: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error ventana booking: ${getErrorMessage(err)}`);
     } finally {
       setIsEnrichingBookingWindow(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);
@@ -262,8 +263,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           "✓ Radar de eventos locales y alertas de clash actualizadas.",
         );
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error radar eventos: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error radar eventos: ${getErrorMessage(err)}`);
     } finally {
       setIsEnrichingLocalEvents(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);
@@ -290,8 +291,8 @@ export function useVenueEnrichment({ selectedLead, setIsEnrichingApis, setScoutA
           "✓ Medios locales y gancho para nota de prensa listos.",
         );
       }
-    } catch (err: any) {
-      setScoutActionFeedback(`Error medios locales: ${err?.message}`);
+    } catch (err: unknown) {
+      setScoutActionFeedback(`Error medios locales: ${getErrorMessage(err)}`);
     } finally {
       setIsEnrichingPressMedia(false);
       setTimeout(() => setScoutActionFeedback(null), 4000);

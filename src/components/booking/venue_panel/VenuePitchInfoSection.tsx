@@ -1,26 +1,12 @@
+import type { BookingCampaign } from "../../../types";
 /**
  * Pestaña de pitch y edición directa de la ficha del lead.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-unused-vars,
- @typescript-eslint/no-explicit-any
-*/
-import { Edit3, Sparkles, Upload, Clock, Calendar, Coins, Sliders, Layers, Copy, MessageCircle, Loader2, CheckCircle2, CalendarCheck, Handshake, ShieldAlert, Star, MessageSquare, Undo2, RefreshCw, RotateCcw } from "lucide-react";
-import { Input, Select, Button, Textarea, LinkButton } from "../../ui";
-import { LeadType, Lead } from "../../../types";
-import { ShowIcon } from "../../ui/ShowIcon";
-import { toIsoDateString } from "../../../utils/festivalDateFormat";
-import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from "../../../utils/bookingFollowup";
-import { QuickDealSimulator } from "../QuickDealSimulator";
-import { HolidayDateWarning } from "../../common/HolidayDateWarning";
-import { getCommercialDealSnippets } from "../../../utils/bookingTourContext";
-import { isStitchLight } from "./venueTheme";
-import { VenuePitchFeedbackPanel } from "./VenuePitchFeedbackPanel";
-import { VenuePitchComposer } from "./VenuePitchComposer";
-import { VenuePlaybookBanner } from "./VenuePlaybookBanner";
+ 
+import { Dispatch,SetStateAction } from "react";
+import { Lead } from "../../../types";
 import { VenueLeadInfoEditForm } from "./VenueLeadInfoEditForm";
-import React, { Dispatch, SetStateAction } from "react";
 
 /** Estado y callbacks que el contenedor inyecta a la sección. */
 export interface VenuePitchInfoSectionProps {
@@ -49,7 +35,7 @@ export interface VenuePitchInfoSectionProps {
   setShowWhatsAppModal: Dispatch<SetStateAction<boolean>>;
   handleApprovePitchDirectly: () => void;
   isCreatingDraft: boolean;
-  activeCampaign: any;
+  activeCampaign: BookingCampaign | null | undefined;
   handleRegeneratePitchWithFeedback: (targetProvider?: "gemini" | "deepseek") => Promise<void>;
   isRegeneratingPitch: boolean;
   editedPitch: string;
