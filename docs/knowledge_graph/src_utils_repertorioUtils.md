@@ -30,11 +30,14 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
+- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(from #service)*
+- [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/repertorioUtils.test.ts`
 - `src/utils/__tests__/songMarkedForMember.test.ts`
 

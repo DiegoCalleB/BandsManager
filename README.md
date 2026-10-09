@@ -1,5 +1,12 @@
 # BandManager.io
 
+[![CI](https://github.com/DiegoCalleB/BandsManager/actions/workflows/ci.yml/badge.svg)](https://github.com/DiegoCalleB/BandsManager/actions/workflows/ci.yml)
+[![Docs & API](https://github.com/DiegoCalleB/BandsManager/actions/workflows/docs.yml/badge.svg)](https://github.com/DiegoCalleB/BandsManager/actions/workflows/docs.yml)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x_Strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
+[![Zero-Trust Multi-Tenant](https://img.shields.io/badge/Architecture-Zero--Trust_Multi--Tenant-10b981)](#seguridad)
+[![AI Governance](https://img.shields.io/badge/AI_Governance-Human--in--the--Loop-f59e0b)](./AGENTS.md)
+
 El sistema operativo de una banda independiente: **encontrar salas, cerrar fechas, ensayar, tocar y cobrar desde un solo sitio**, con agentes de IA que hacen el trabajo repetitivo y una persona que aprueba lo importante. Pensado para grupos, solistas, monologuistas y cualquiera que tenga que buscar escenarios donde actuar. Es también el núcleo técnico de un Trabajo Fin de Máster sobre desarrollo de software asistido por IA agéntica (Máster de Desarrollo con IA, The Big School).
 
 > Las reglas de desarrollo (seguridad, multi-tenancy, agentes, estilo) viven en **[AGENTS.md](./AGENTS.md)**. Este README es la puerta de entrada; no las duplica.

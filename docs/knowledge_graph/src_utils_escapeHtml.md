@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[src_components_BandMap|src/components/BandMap.tsx]] *(from #frontend)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*
+- [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 
 ---
 

@@ -210,6 +210,7 @@ _Sin dependencias salientes directas._
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*
+- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(from #service)*
 - [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(from #service)*
 - [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(from #service)*
 - [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(from #service)*
@@ -267,6 +268,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_managerAlerts|src/utils/managerAlerts.ts]] *(from #service)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(from #service)*
 - [[src_utils_midiExport|src/utils/midiExport.ts]] *(from #service)*
+- [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[src_utils_roiBanda|src/utils/roiBanda.ts]] *(from #service)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
 - [[src_utils_setlistCompatibility|src/utils/setlistCompatibility.ts]] *(from #service)*
@@ -318,6 +320,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/mezclaStems.test.ts`
 - `src/utils/__tests__/midiExport.test.ts`
 - `src/utils/__tests__/pistasDeCancion.test.ts`
+- `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/separacionIris.test.ts`
 - `src/utils/__tests__/setlistCompatibility.test.ts`
 - `src/utils/__tests__/setlistOptimization.test.ts`

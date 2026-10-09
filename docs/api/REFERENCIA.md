@@ -125,12 +125,12 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/bands/metricas` | Sesión | — |  | [`server/routes/bandMusic.ts:155`](../../server/routes/bandMusic.ts#L155) |
-| `POST` | `/api/bands/metricas/actualizar` | Sesión | — |  | [`server/routes/bandMusic.ts:136`](../../server/routes/bandMusic.ts#L136) |
-| `GET` | `/api/bands/previews-availability` | Sesión | — |  | [`server/routes/bandMusic.ts:48`](../../server/routes/bandMusic.ts#L48) |
-| `POST` | `/api/bands/spotify-sweep` | Sesión | — |  | [`server/routes/bandMusic.ts:100`](../../server/routes/bandMusic.ts#L100) |
-| `GET` | `/api/bands/{id}/preview` | Sesión | — |  | [`server/routes/bandMusic.ts:28`](../../server/routes/bandMusic.ts#L28) |
-| `POST` | `/api/cron/metricas-mensual` | Sesión | — |  | [`server/routes/bandMusic.ts:183`](../../server/routes/bandMusic.ts#L183) |
+| `GET` | `/api/bands/metricas` | Sesión | — |  | [`server/routes/bandMusic.ts:177`](../../server/routes/bandMusic.ts#L177) |
+| `POST` | `/api/bands/metricas/actualizar` | Sesión | — |  | [`server/routes/bandMusic.ts:152`](../../server/routes/bandMusic.ts#L152) |
+| `GET` | `/api/bands/previews-availability` | Sesión | — |  | [`server/routes/bandMusic.ts:56`](../../server/routes/bandMusic.ts#L56) |
+| `POST` | `/api/bands/spotify-sweep` | Sesión | — |  | [`server/routes/bandMusic.ts:116`](../../server/routes/bandMusic.ts#L116) |
+| `GET` | `/api/bands/{id}/preview` | Sesión | — |  | [`server/routes/bandMusic.ts:36`](../../server/routes/bandMusic.ts#L36) |
+| `POST` | `/api/cron/metricas-mensual` | Sesión | — |  | [`server/routes/bandMusic.ts:205`](../../server/routes/bandMusic.ts#L205) |
 
 ### bands
 
@@ -138,25 +138,25 @@ Son las que un revisor de seguridad querrá mirar primero.
 |---|---|---|---|---|---|
 | `GET` | `/api/bands` | Sesión | — |  | [`server/routes/bands.ts:95`](../../server/routes/bands.ts#L95) |
 | `POST` | `/api/bands` | Sesión | — |  | [`server/routes/bands.ts:110`](../../server/routes/bands.ts#L110) |
-| `POST` | `/api/bands/ai-lookup` | Sesión | — |  | [`server/routes/bands.ts:293`](../../server/routes/bands.ts#L293) |
+| `POST` | `/api/bands/ai-lookup` | Sesión | — |  | [`server/routes/bands.ts:292`](../../server/routes/bands.ts#L292) |
 | `POST` | `/api/bands/ai-scout` | Sesión | — |  | [`server/routes/bands.ts:231`](../../server/routes/bands.ts#L231) |
-| `GET` | `/api/bands/alert-settings` | Sesión | — |  | [`server/routes/bands.ts:871`](../../server/routes/bands.ts#L871) |
-| `POST` | `/api/bands/alert-settings` | Sesión | — |  | [`server/routes/bands.ts:883`](../../server/routes/bands.ts#L883) |
-| `POST` | `/api/bands/analyze-tone` | Sesión | — |  | [`server/routes/bands.ts:357`](../../server/routes/bands.ts#L357) |
+| `GET` | `/api/bands/alert-settings` | Sesión | — |  | [`server/routes/bands.ts:870`](../../server/routes/bands.ts#L870) |
+| `POST` | `/api/bands/alert-settings` | Sesión | — |  | [`server/routes/bands.ts:882`](../../server/routes/bands.ts#L882) |
+| `POST` | `/api/bands/analyze-tone` | Sesión | — |  | [`server/routes/bands.ts:356`](../../server/routes/bands.ts#L356) |
 | `POST` | `/api/bands/bulk-delete` | Sesión | — |  | [`server/routes/bands.ts:171`](../../server/routes/bands.ts#L171) |
-| `POST` | `/api/bands/email-account` | Sesión | — |  | [`server/routes/bands.ts:745`](../../server/routes/bands.ts#L745) |
-| `GET` | `/api/bands/email-account/{bandId}` | Sesión | — |  | [`server/routes/bands.ts:729`](../../server/routes/bands.ts#L729) |
-| `POST` | `/api/bands/generate-logo` | Sesión | iaRateLimiter |  | [`server/routes/bands.ts:987`](../../server/routes/bands.ts#L987) |
-| `GET` | `/api/bands/print-settings` | Sesión | — |  | [`server/routes/bands.ts:897`](../../server/routes/bands.ts#L897) |
+| `POST` | `/api/bands/email-account` | Sesión | — |  | [`server/routes/bands.ts:744`](../../server/routes/bands.ts#L744) |
+| `GET` | `/api/bands/email-account/{bandId}` | Sesión | — |  | [`server/routes/bands.ts:728`](../../server/routes/bands.ts#L728) |
+| `POST` | `/api/bands/generate-logo` | Sesión | iaRateLimiter |  | [`server/routes/bands.ts:986`](../../server/routes/bands.ts#L986) |
+| `GET` | `/api/bands/print-settings` | Sesión | — |  | [`server/routes/bands.ts:896`](../../server/routes/bands.ts#L896) |
 | `PUT` | `/api/bands/print-settings` | Sesión | — |  | [`server/routes/bands.ts:140`](../../server/routes/bands.ts#L140) |
-| `POST` | `/api/bands/schedules` | Sesión | — |  | [`server/routes/bands.ts:702`](../../server/routes/bands.ts#L702) |
-| `GET` | `/api/bands/schedules/{bandId}` | Sesión | — |  | [`server/routes/bands.ts:686`](../../server/routes/bands.ts#L686) |
-| `POST` | `/api/bands/send-reminder` | Sesión | — |  | [`server/routes/bands.ts:783`](../../server/routes/bands.ts#L783) |
+| `POST` | `/api/bands/schedules` | Sesión | — |  | [`server/routes/bands.ts:701`](../../server/routes/bands.ts#L701) |
+| `GET` | `/api/bands/schedules/{bandId}` | Sesión | — |  | [`server/routes/bands.ts:685`](../../server/routes/bands.ts#L685) |
+| `POST` | `/api/bands/send-reminder` | Sesión | — |  | [`server/routes/bands.ts:782`](../../server/routes/bands.ts#L782) |
 | `POST` | `/api/bands/sync` | Sesión | — |  | [`server/routes/bands.ts:208`](../../server/routes/bands.ts#L208) |
-| `GET` | `/api/bands/tone-dna` | Sesión | — |  | [`server/routes/bands.ts:571`](../../server/routes/bands.ts#L571) |
-| `PATCH` | `/api/bands/tone-dna` | Sesión | — |  | [`server/routes/bands.ts:582`](../../server/routes/bands.ts#L582) |
-| `PATCH` | `/api/bands/tone-dna/learned-rules` | Sesión | — |  | [`server/routes/bands.ts:633`](../../server/routes/bands.ts#L633) |
-| `POST` | `/api/bands/trigger-alert-digest` | Sesión | — |  | [`server/routes/bands.ts:909`](../../server/routes/bands.ts#L909) |
+| `GET` | `/api/bands/tone-dna` | Sesión | — |  | [`server/routes/bands.ts:570`](../../server/routes/bands.ts#L570) |
+| `PATCH` | `/api/bands/tone-dna` | Sesión | — |  | [`server/routes/bands.ts:581`](../../server/routes/bands.ts#L581) |
+| `PATCH` | `/api/bands/tone-dna/learned-rules` | Sesión | — |  | [`server/routes/bands.ts:632`](../../server/routes/bands.ts#L632) |
+| `POST` | `/api/bands/trigger-alert-digest` | Sesión | — |  | [`server/routes/bands.ts:908`](../../server/routes/bands.ts#L908) |
 | `PUT` | `/api/bands/{id}` | Sesión | — |  | [`server/routes/bands.ts:151`](../../server/routes/bands.ts#L151) |
 | `DELETE` | `/api/bands/{id}` | Sesión | — |  | [`server/routes/bands.ts:192`](../../server/routes/bands.ts#L192) |
 | `GET` | `/api/response-strategies` | Sesión | — |  | [`server/routes/bands/responseStrategies.ts:50`](../../server/routes/bands/responseStrategies.ts#L50) |
