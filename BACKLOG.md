@@ -114,7 +114,15 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### 8. Hoja de Ruta de Excelencia Técnica TFM: Nivel Dios (Super Saiyan Arquitectónico)
 * **Qué:** Elevación de la arquitectura, observabilidad y experiencia de evaluación del proyecto al estándar más alto jamás presentado en el máster:
   1. *Fase 1: Desmantelamiento Quirúrgico de los 3 Monolitos "God Components" (Patrón Strangler Fig)*:
-     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas): Extracción de cálculo musical y compatibilidad tonal a `src/utils/` puro testeable, y desacoplamiento de modales hijos.
+     - `src/components/RepertorioSetlists.tsx` (~6.527 líneas iniciales -> **3.403 líneas actuales**, -3.124 líneas / >48% desacoplado):
+       - Extraídos componentes visuales puros con contratos Vitest y nodos Obsidian:
+         - `ActiveSetlistHeader.tsx` (cabecera interactiva y acciones del setlist)
+         - `SetlistItemsList.tsx` (lista interactiva de canciones y eventos con drag & drop)
+         - `RepertorioModalsContainer.tsx` (contenedor desacoplado de los 20 modales auxiliares)
+         - `EnergyMapCard.tsx` y `SetlistStatsSummaryBar.tsx` (mapa de energía, curva de BPM y estadísticas)
+         - `CatalogoGeneralView.tsx` (vista del catálogo unificado)
+         - `SetlistSongRow.tsx` y `SetlistShowItemRow.tsx` (filas desacopladas con accesibilidad móvil)
+         - `src/config/defaultRepertoire.ts`, `src/utils/repertorioPdf.ts`, `src/utils/stageSetlistHtml.ts` (lógica pura de hoja de escenario y semillas)
      - `src/components/SongStudioModal.tsx` (>6.000 líneas): Separación de paneles de grabación, stems, efectos y mezclador.
      - `server/routes/users.ts` (3.773 líneas): Modularización de rutas por dominio (auth, perfiles, uploads, preferencias).
   2. *Fase 2: Dashboard de Observabilidad y Telemetría de Agentes IA (AI Ops)*:
@@ -124,7 +132,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   4. *Fase 4: Comunicación de Impacto (Vídeo Loom 3 Min + Architecture Whitepaper)*:
      - Demostración audiovisual concisa del ciclo agéntico y documento ejecutivo de 5 páginas con diagramas C4 y ADRs.
 * **Por qué importa:** Convierte la arquitectura interna en un ejemplo académico de manual, elimina toda deuda técnica de componentes gigantes y permite al tribunal evaluar la plataforma completa en 30 segundos sin fricción.
-* **Estado:** Fase 1 en ejecución activa.
+* **Estado:** Fase 1 en ejecución activa (RepertorioSetlists.tsx desmantelado al 48%).
 
 ---
 

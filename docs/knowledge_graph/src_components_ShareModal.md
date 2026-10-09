@@ -27,6 +27,7 @@ Exporta: ShareModal.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 

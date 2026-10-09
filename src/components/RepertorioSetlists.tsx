@@ -100,6 +100,7 @@ import { RepertorioNavBar } from "./repertorio/RepertorioNavBar";
 import { SetlistAddBar } from "./repertorio/SetlistAddBar";
 import { ActiveSetlistHeader } from "./repertorio/ActiveSetlistHeader";
 import { SetlistItemsList } from "./repertorio/SetlistItemsList";
+import { RepertorioModalsContainer } from "./repertorio/RepertorioModalsContainer";
 import SongStudioModal from "./SongStudioModal";
 import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
@@ -3298,316 +3299,105 @@ export default function RepertorioSetlists({
         </div>
       )}
 
-      {/* MODAL: ADD / EDIT SONG */}
-      {/* key fuerza un remount por canción: SongModal se queda siempre montado (isOpen controla un
- `return null` interno, no un desmontaje), así que sin key su useState de notas por miembro
- (y duración/álbum) solo se inicializa una vez para toda la sesión con el primer editingSong
- que se vio (normalmente null) y nunca se resincroniza al abrir otra canción — ver notas del
- bug en SongModal.tsx: memberNotesState quedaba"congelado" y el guardado de notas por
- miembro sobrescribía siempre con ese valor obsoleto/vacío. */}
-      <SongModal
-        key={showSongModal ? editingSong?.id || "new-song" : "closed"}
-        isOpen={showSongModal}
-        bandMembers={bandRosterMembers}
+      <RepertorioModalsContainer
+        showSongModal={showSongModal}
+        setShowSongModal={setShowSongModal}
         editingSong={editingSong}
+        bandRosterMembers={bandRosterMembers}
         defaultAlbumForNewSong={defaultAlbumForNewSong}
         albumsList={albumsList}
         colors={colors}
-        onClose={() => setShowSongModal(false)}
-        onSave={handleSaveSong}
-      />
-
-      {/* MODAL: ASSIGN SETLIST TO CONCERT OR REHEARSAL */}
-      <AssignSetlistModal
+        handleSaveSong={handleSaveSong}
         assigningSetlist={assigningSetlist}
-        colors={colors}
+        setAssigningSetlist={setAssigningSetlist}
         concerts={concerts}
         rehearsals={rehearsals}
         selectedConcertToAssign={selectedConcertToAssign}
-        onSelectEvent={(id) => setSelectedConcertToAssign(id)}
-        onClose={() => setAssigningSetlist(null)}
-        onSave={handleAssignSetlistToConcert}
-      />
-
-      {/* MODAL: ADD OR EDIT NON-SONG SHOW ITEM OR BLOCK */}
-      <ShowItemModal
-        isOpen={showShowItemModal}
-        onClose={() => setShowShowItemModal(false)}
-        colors={colors}
+        setSelectedConcertToAssign={setSelectedConcertToAssign}
+        handleAssignSetlistToConcert={handleAssignSetlistToConcert}
+        showShowItemModal={showShowItemModal}
+        setShowShowItemModal={setShowShowItemModal}
         editingShowItem={editingShowItem}
         setEditingShowItem={setEditingShowItem}
         handleSaveShowItem={handleSaveShowItem}
-      />
-
-      {/* PDF Preview Modal */}
-      <PdfExportModal
-        bandMembers={bandRosterMembers}
-        bandLogoUrl={
-          isBakandeya
-            ? "/logo_bakandeya_bueno_sin_fondo.png"
-            : bandLogoUrl || ""
-        }
-        isOpen={showPdfPreview}
+        showPdfPreview={showPdfPreview}
+        setShowPdfPreview={setShowPdfPreview}
+        isBakandeya={isBakandeya}
+        bandLogoUrl={bandLogoUrl}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}
         songs={songs}
-        onClose={() => setShowPdfPreview(false)}
-        bandName={bName}
-        onUpdateSong={handleUpdateSongFromStudio}
-      />
-
-      {activeStudioSong && (
-        <SongStudioModal
-          song={activeStudioSong}
-          colors={colors}
-          onClose={() => {
-            setActiveStudioSong(null);
-            setActiveStudioOpenIris(false);
-          }}
-          onUpdateSong={handleUpdateSongFromStudio}
-          currentUser={currentUser}
-          currentUsername={currentUser?.name || currentUser?.username}
-          initialOpenIrisModal={activeStudioOpenIris}
-        />
-      )}
-
-      {/* Persistent Spotify Music Player is now rendered globally from App.tsx via GlobalPlayer component
- The local player state (activePlayerSong, playerQueueOverride) is still used for local queue management
- but dispatches to global PlayerContext for true persistence across modules. */}
-
-      {assignSongsModalData && assignSongsModalData.isOpen && (
-        <AssignSongsToAlbumModal
-          isOpen={assignSongsModalData.isOpen}
-          albumName={assignSongsModalData.albumName}
-          songs={songs}
-          colors={colors}
-          onClose={() => setAssignSongsModalData(null)}
-          onSaveAlbumSongs={handleSaveAlbumSongs}
-        />
-      )}
-
-      {setlistModalData && setlistModalData.isOpen && (
-        <SetlistModal
-          isOpen={setlistModalData.isOpen}
-          setlistToEdit={setlistModalData.setlistToEdit}
-          colors={colors}
-          onClose={() => setSetlistModalData(null)}
-          onSave={handleSaveSetlistModal}
-        />
-      )}
-
-      {isAddSongsModalOpen && activeSetlist && (
-        <AddSongsToSetlistModal
-          isOpen={isAddSongsModalOpen}
-          songs={songs}
-          existingSongIds={activeSetlist.items
-            .map((it) => it.songId)
-            .filter((id): id is string => Boolean(id))}
-          colors={colors}
-          onClose={() => setIsAddSongsModalOpen(false)}
-          onAddSongs={handleAddMultipleSongsToSetlist}
-        />
-      )}
-      {/* CHORDS AND SUBSTITUTE GUIDE VIEWER MODAL */}
-
-      {/* MEMBER NOTES MODAL */}
-      {activeMemberNotesSong && (
-        <MemberNotesModal
-          isOpen={Boolean(activeMemberNotesSong)}
-          song={activeMemberNotesSong}
-          colors={colors}
-          bandMembers={bandRosterMembers}
-          onClose={() => setActiveMemberNotesSong(null)}
-          onSaveSongNotes={handleUpdateSongFromStudio}
-        />
-      )}
-      {activeChordsSong && (
-        <Atril
-          cancion={activeChordsSong}
-          modo="Estudiar"
-          onClose={() => setActiveChordsSong(null)}
-          onUpdateSong={handleUpdateSongFromChords}
-        />
-      )}
-
-      {/* CONFIRM DELETE MODAL DIALOG */}
-      <ConfirmDeleteModal
-        data={confirmDeleteModal}
-        onClose={() => setConfirmDeleteModal(null)}
-      />
-
-      {/* CONFIRM DELETE ALBUM MODAL DIALOG */}
-      <ConfirmDeleteAlbumModal
-        data={deleteAlbumData}
-        onClose={() => setDeleteAlbumData(null)}
-        onUnassignSongs={handleUnassignAlbumSongs}
-        onDeleteAlbumAndSongs={handleDeleteAlbumAndSongs}
-      />
-
-      {/* SHARE MODAL */}
-      <ShareModal
-        isOpen={shareModalData.isOpen}
-        onClose={() =>
-          setShareModalData((prev) => ({ ...prev, isOpen: false }))
-        }
-        title={shareModalData.title}
-        subtitle={shareModalData.subtitle}
-        initialText={shareModalData.text}
-        itemType={shareModalData.itemType}
-      />
-
-      {/* SPOTIFY DISCOGRAPHY IMPORT MODAL */}
-      <SpotifyDiscographyModal
-        isOpen={isSpotifyModalOpen}
-        onClose={() => setIsSpotifyModalOpen(false)}
-        bandName={bName}
-        existingSongs={songs}
-        colors={colors}
-        onSongsImported={(updatedSongs) => {
-          setSongs(updatedSongs);
-        }}
-      />
-
-      {/* LIGHTWEIGHT AI CHORDS/LYRICS ANALYSIS STATUS BANNER */}
-      {statusBanner && (
-        <div
-          className={`fixed bottom-5 right-5 z-[9999] flex items-center gap-2.5 px-4 py-3 rounded-[var(--r-l)] text-xs font-sans max-w-sm ${
-            statusBanner.type === "success"
-              ? "bg-[var(--ok-soft)]/60 text-[var(--ok)]"
-              : statusBanner.type === "error"
-                ? "bg-[var(--alert-soft)]/60 text-[var(--alert)]"
-                : statusBanner.type === "warning"
-                  ? "bg-[var(--acc-soft)]  text-[var(--acc)]"
-                  : "bg-[var(--surface)] text-[var(--ink-2)]"
-          }`}
-        >
-          {statusBanner.type === "loading" && (
-            <span className="w-3.5 h-3.5 border-t-[var(--hair)] rounded-[var(--r-pill)] animate-spin shrink-0" />
-          )}
-          <span>{statusBanner.text}</span>
-        </div>
-      )}
-
-      {/* AI SETLIST ANALYSIS MODAL */}
-      <SetlistAIAnalysisModal
-        isOpen={showAIAnalysisModal}
-        onClose={() => {
-          setShowAIAnalysisModal(false);
-          setHighlightedSongIds([]);
-        }}
-        setlistId={activeSetlist?.id || ""}
-        setlistName={activeSetlist?.nombre}
-        initialAnalysis={aiAnalysisResult}
-        onAnalysisComplete={(analysis) => {
-          setAiAnalysisResult(analysis);
-          setAiAnalysisLoading(false);
-        }}
-        onHighlightSongs={setHighlightedSongIds}
+        bName={bName}
+        handleUpdateSongFromStudio={handleUpdateSongFromStudio}
+        activeStudioSong={activeStudioSong}
+        setActiveStudioSong={setActiveStudioSong}
+        activeStudioOpenIris={activeStudioOpenIris}
+        setActiveStudioOpenIris={setActiveStudioOpenIris}
+        currentUser={currentUser}
+        assignSongsModalData={assignSongsModalData}
+        setAssignSongsModalData={setAssignSongsModalData}
+        handleSaveAlbumSongs={handleSaveAlbumSongs}
+        setlistModalData={setlistModalData}
+        setSetlistModalData={setSetlistModalData}
+        handleSaveSetlistModal={handleSaveSetlistModal}
+        isAddSongsModalOpen={isAddSongsModalOpen}
+        setIsAddSongsModalOpen={setIsAddSongsModalOpen}
+        handleAddMultipleSongsToSetlist={handleAddMultipleSongsToSetlist}
+        activeMemberNotesSong={activeMemberNotesSong}
+        setActiveMemberNotesSong={setActiveMemberNotesSong}
+        activeChordsSong={activeChordsSong}
+        setActiveChordsSong={setActiveChordsSong}
+        handleUpdateSongFromChords={handleUpdateSongFromChords}
+        confirmDeleteModal={confirmDeleteModal}
+        setConfirmDeleteModal={setConfirmDeleteModal}
+        deleteAlbumData={deleteAlbumData}
+        setDeleteAlbumData={setDeleteAlbumData}
+        handleUnassignAlbumSongs={handleUnassignAlbumSongs}
+        handleDeleteAlbumAndSongs={handleDeleteAlbumAndSongs}
+        shareModalData={shareModalData}
+        setShareModalData={setShareModalData}
+        isSpotifyModalOpen={isSpotifyModalOpen}
+        setIsSpotifyModalOpen={setIsSpotifyModalOpen}
+        setSongs={setSongs}
+        statusBanner={statusBanner}
+        showAIAnalysisModal={showAIAnalysisModal}
+        setShowAIAnalysisModal={setShowAIAnalysisModal}
+        setHighlightedSongIds={setHighlightedSongIds}
         highlightedSongIds={highlightedSongIds}
+        aiAnalysisResult={aiAnalysisResult}
+        setAiAnalysisResult={setAiAnalysisResult}
+        setAiAnalysisLoading={setAiAnalysisLoading}
         chartData={chartData}
         yDomain={yDomain}
         zonasEnergia={ZONAS_ENERGIA}
-        warnings={energyAnalysis.warnings}
-        onReorder={reorderSetlistItems}
-        onEnergyChange={handleEnergyChartDrag}
-        canUndo={canUndoReorder}
-        onUndo={undoLastReorder}
+        energyAnalysis={energyAnalysis}
+        reorderSetlistItems={reorderSetlistItems}
+        handleEnergyChartDrag={handleEnergyChartDrag}
+        canUndoReorder={canUndoReorder}
+        undoLastReorder={undoLastReorder}
         undoSourceKey={undoSourceKey}
+        showPerfectSetlistModal={showPerfectSetlistModal}
+        setShowPerfectSetlistModal={setShowPerfectSetlistModal}
+        perfectSetlistLoading={perfectSetlistLoading}
+        perfectSetlistPlan={perfectSetlistPlan}
+        perfectSetlistError={perfectSetlistError}
+        handleGeneratePerfectSetlist={handleGeneratePerfectSetlist}
+        applyPerfectSetlistAction={applyPerfectSetlistAction}
+        showImportSetlistModal={showImportSetlistModal}
+        setShowImportSetlistModal={setShowImportSetlistModal}
+        handleSetlistImported={handleSetlistImported}
+        performanceSetlistId={performanceSetlistId}
+        setPerformanceSetlistId={setPerformanceSetlistId}
+        setlists={setlists}
+        performanceInitialMode={performanceInitialMode}
+        handleOpenStudioModal={handleOpenStudioModal}
+        transitionPreviewData={transitionPreviewData}
+        setTransitionPreviewData={setTransitionPreviewData}
+        handleOpenTransitionPreview={handleOpenTransitionPreview}
+        handleAddItemToSetlist={handleAddItemToSetlist}
+        isTutorialOpen={isTutorialOpen}
+        closeTutorial={closeTutorial}
       />
-
-      {/* PERFECT SETLIST PLAN MODAL */}
-      <PerfectSetlistModal
-        isOpen={showPerfectSetlistModal}
-        onClose={() => setShowPerfectSetlistModal(false)}
-        setlistName={activeSetlist?.nombre}
-        loading={perfectSetlistLoading}
-        plan={perfectSetlistPlan}
-        error={perfectSetlistError}
-        onGenerate={handleGeneratePerfectSetlist}
-        onApplyAction={applyPerfectSetlistAction}
-        canUndo={canUndoReorder}
-        onUndo={undoLastReorder}
-        undoSourceKey={undoSourceKey}
-        chartData={chartData}
-        yDomain={yDomain}
-        zonasEnergia={ZONAS_ENERGIA}
-        onReorder={reorderSetlistItems}
-        onEnergyChange={handleEnergyChartDrag}
-      />
-
-      {/* IMPORT SETLIST FROM PHOTO/PDF MODAL */}
-      <ImportSetlistModal
-        isOpen={showImportSetlistModal}
-        onClose={() => setShowImportSetlistModal(false)}
-        catalogSongs={songs}
-        onCreated={handleSetlistImported}
-      />
-
-      {/* SETLIST PERFORMANCE VIEW (CONCIERTO EN VIVO O MODO ENSAYO) */}
-      {performanceSetlistId && (
-        <SetlistPerformanceView
-          setlist={setlists.find((s) => s.id === performanceSetlistId)!}
-          songs={songs}
-          initialMode={performanceInitialMode}
-          onClose={() => setPerformanceSetlistId(null)}
-          onOpenStudioModal={(song) => handleOpenStudioModal(song)}
-          onUpdateSong={handleUpdateSongFromStudio}
-          currentUser={currentUser}
-        />
-      )}
-
-      {/* SONG TRANSITION PREVIEW MODAL (PROBAR UNIÓN Y ENLACE AUDITIVO ENTRE TEMAS) */}
-      {transitionPreviewData?.isOpen &&
-        transitionPreviewData.songA &&
-        transitionPreviewData.songB && (
-          <SongTransitionPreviewModal
-            isOpen={transitionPreviewData.isOpen}
-            onClose={() => setTransitionPreviewData(null)}
-            songA={transitionPreviewData.songA}
-            songB={transitionPreviewData.songB}
-            itemA={transitionPreviewData.itemA}
-            itemB={transitionPreviewData.itemB}
-            indexA={transitionPreviewData.indexA}
-            indexB={transitionPreviewData.indexB}
-            totalItemsCount={activeSetlist?.items?.length || 0}
-            onNavigateTransition={(newIdxA, newIdxB) => {
-              handleOpenTransitionPreview(newIdxA, newIdxB);
-            }}
-            onSwapSongs={(idxA, idxB) => {
-              reorderSetlistItems(idxA, idxB);
-              setTransitionPreviewData((prev) =>
-                prev
-                  ? {
-                      ...prev,
-                      songA: prev.songB,
-                      songB: prev.songA,
-                      itemA: prev.itemB,
-                      itemB: prev.itemA,
-                    }
-                  : null,
-              );
-            }}
-            onInsertInterludio={(afterItemId) => {
-              handleAddItemToSetlist(
-                undefined,
-                "chapa",
-                "Charla / Interludio",
-                1,
-                60,
-                "Transición hablada para modular tono o descanso",
-                afterItemId,
-              );
-            }}
-            onUpdateSong={handleUpdateSongFromStudio}
-          />
-        )}
-
-      {/* Tutorial Interactivo Paso a Paso */}
-      <ModuleTutorialModal
-        moduleId="repertorio"
-        isOpen={isTutorialOpen}
-        onClose={closeTutorial}
-      />
-    </div>
+      </div>
   );
 }

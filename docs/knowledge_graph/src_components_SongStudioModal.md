@@ -57,6 +57,7 @@ Exporta: getIdeaTracks, MoisesSeparationPreset, MoisesStemOption, MOISES_AVAILAB
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioMoisesStemsModal|src/components/song_studio/SongStudioMoisesStemsModal.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
