@@ -102,6 +102,7 @@ import { ActiveSetlistHeader } from "./repertorio/ActiveSetlistHeader";
 import { SetlistItemsList } from "./repertorio/SetlistItemsList";
 import { RepertorioModalsContainer } from "./repertorio/RepertorioModalsContainer";
 import { SetlistsTabContentView } from "./repertorio/SetlistsTabContentView";
+import { CatalogoTabContentView } from "./repertorio/CatalogoTabContentView";
 import SongStudioModal from "./SongStudioModal";
 import { Atril } from "./Atril";
 import { ShareModal } from "./ShareModal";
@@ -2435,91 +2436,54 @@ export default function RepertorioSetlists({
         />
       )}
 
-      {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO) */}
+      {/* VIEW 2: DISCOGRAFÍA & CATÁLOGO GENERAL DE TEMAS (UNIFICADO - Desacoplado en CatalogoTabContentView) */}
       {activeTab === "catalogo" && (
-        <div className="space-y-4" data-modulo="discografia">
-          {catalogoViewMode === "albumes" ? (
-            <DiscografiaView
-              songs={songs}
-              albumsList={albumsList}
-              colors={colors}
-              bandName={bName}
-              bandLogoUrl={bandLogoUrl}
-              setSongs={setSongs}
-              setSetlists={setSetlists}
-              toggleFavoriteSong={handleToggleFavorite}
-              activePlayerSong={activePlayerSong}
-              isPlayerPlaying={isPlayerPlaying}
-              onSelectSong={(song, autoPlay, queue) =>
-                selectPlayerSongWithQueue(song, autoPlay, queue || null)
-              }
-              onRequestDeleteAlbum={(albumName, songCount) =>
-                setDeleteAlbumData({ albumName, songCount })
-              }
-              onEditAlbum={(albumName) =>
-                setAssignSongsModalData({ isOpen: true, albumName })
-              }
-              onCreateAlbum={() =>
-                setAssignSongsModalData({ isOpen: true, albumName: "" })
-              }
-              onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
-              onOpenChords={(song) => setActiveChordsSong(song)}
-              onOpenStudio={(song) => handleOpenStudioModal(song)}
-              onEditSong={(song) => {
-                setEditingSong(song);
-                setShowSongModal(true);
-              }}
-              onDeleteSong={(songId) => handleDeleteSong(songId)}
-              onShareSong={(song) => handleShareSong(song)}
-            />
-          ) : (
-            <CatalogoGeneralView
-              songs={songs}
-              filteredSongs={filteredSongs}
-              albumsList={albumsList}
-              colors={colors}
-              bName={bName}
-              catalogAlbumFilter={catalogAlbumFilter}
-              setCatalogAlbumFilter={setCatalogAlbumFilter}
-              catalogStatusFilter={catalogStatusFilter}
-              setCatalogStatusFilter={setCatalogStatusFilter}
-              catalogSearch={catalogSearch}
-              groupByAlbum={groupByAlbum}
-              setGroupByAlbum={setGroupByAlbum}
-              showCatalogActionsMenu={showCatalogActionsMenu}
-              setShowCatalogActionsMenu={setShowCatalogActionsMenu}
-              handleNormalizeCatalogTitles={handleNormalizeCatalogTitles}
-              selectedCatalogIds={selectedCatalogIds}
-              setSelectedCatalogIds={setSelectedCatalogIds}
-              clearCatalogSelection={clearCatalogSelection}
-              toggleCatalogSelect={toggleCatalogSelect}
-              handleBulkAddSelectedToSetlist={handleBulkAddSelectedToSetlist}
-              handleBulkDeleteSongs={handleBulkDeleteSongs}
-              activePlayerSong={activePlayerSong}
-              isPlayerPlaying={isPlayerPlaying}
-              selectPlayerSongWithQueue={selectPlayerSongWithQueue}
-              onOpenNewSongModal={() => {
-                setEditingSong(null);
-                setShowSongModal(true);
-              }}
-              onEditSong={(song) => {
-                setEditingSong(song);
-                setShowSongModal(true);
-              }}
-              onDeleteSong={(songId) => handleDeleteSong(songId)}
-              onShareSong={(song) => handleShareSong(song)}
-              onOpenChords={(song) => setActiveChordsSong(song)}
-              onOpenMemberNotes={(song) => setActiveMemberNotesSong(song)}
-              onOpenStudio={(song, opts) => handleOpenStudioModal(song, opts)}
-              onUpdateSongFromStudio={handleUpdateSongFromStudio}
-              draggedCatalogSongId={draggedCatalogSongId}
-              setDraggedCatalogSongId={setDraggedCatalogSongId}
-              dragOverCatalogSongId={dragOverCatalogSongId}
-              setDragOverCatalogSongId={setDragOverCatalogSongId}
-              handleDropCatalogSong={handleDropCatalogSong}
-            />
-          )}
-        </div>
+        <CatalogoTabContentView
+          catalogoViewMode={catalogoViewMode}
+          songs={songs}
+          albumsList={albumsList}
+          colors={colors}
+          bName={bName}
+          bandLogoUrl={bandLogoUrl}
+          setSongs={setSongs}
+          setSetlists={setSetlists}
+          handleToggleFavorite={handleToggleFavorite}
+          activePlayerSong={activePlayerSong}
+          isPlayerPlaying={isPlayerPlaying}
+          selectPlayerSongWithQueue={selectPlayerSongWithQueue}
+          setDeleteAlbumData={setDeleteAlbumData}
+          setAssignSongsModalData={setAssignSongsModalData}
+          setActiveMemberNotesSong={setActiveMemberNotesSong}
+          setActiveChordsSong={setActiveChordsSong}
+          handleOpenStudioModal={handleOpenStudioModal}
+          setEditingSong={setEditingSong}
+          setShowSongModal={setShowSongModal}
+          handleDeleteSong={handleDeleteSong}
+          handleShareSong={handleShareSong}
+          filteredSongs={filteredSongs}
+          catalogAlbumFilter={catalogAlbumFilter}
+          setCatalogAlbumFilter={setCatalogAlbumFilter}
+          catalogStatusFilter={catalogStatusFilter}
+          setCatalogStatusFilter={setCatalogStatusFilter}
+          catalogSearch={catalogSearch}
+          groupByAlbum={groupByAlbum}
+          setGroupByAlbum={setGroupByAlbum}
+          showCatalogActionsMenu={showCatalogActionsMenu}
+          setShowCatalogActionsMenu={setShowCatalogActionsMenu}
+          handleNormalizeCatalogTitles={handleNormalizeCatalogTitles}
+          selectedCatalogIds={selectedCatalogIds}
+          setSelectedCatalogIds={setSelectedCatalogIds}
+          clearCatalogSelection={clearCatalogSelection}
+          toggleCatalogSelect={toggleCatalogSelect}
+          handleBulkAddSelectedToSetlist={handleBulkAddSelectedToSetlist}
+          handleBulkDeleteSongs={handleBulkDeleteSongs}
+          handleUpdateSongFromStudio={handleUpdateSongFromStudio}
+          draggedCatalogSongId={draggedCatalogSongId}
+          setDraggedCatalogSongId={setDraggedCatalogSongId}
+          dragOverCatalogSongId={dragOverCatalogSongId}
+          setDragOverCatalogSongId={setDragOverCatalogSongId}
+          handleDropCatalogSong={handleDropCatalogSong}
+        />
       )}
 
       <RepertorioModalsContainer

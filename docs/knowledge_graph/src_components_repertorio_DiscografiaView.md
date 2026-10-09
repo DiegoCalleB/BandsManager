@@ -38,6 +38,7 @@ Exporta: DiscografiaView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_CatalogoTabContentView|src/components/repertorio/CatalogoTabContentView.tsx]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
