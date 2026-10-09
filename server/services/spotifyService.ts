@@ -397,7 +397,7 @@ export async function searchSpotifyArtists(query: string) {
       // correcto se quedaba fuera del top y el enlace se daba por «no encontrado».
       const consultas = [`artist:"${cleanQ.replace(/"/g, "")}"`, cleanQ];
       for (const q of consultas) {
-        const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=artist&limit=20`;
+        const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(q)}&type=artist&limit=10`;
         const res = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` },
           signal: AbortSignal.timeout(6000)
