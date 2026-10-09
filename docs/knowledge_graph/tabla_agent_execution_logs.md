@@ -24,6 +24,10 @@ Tabla de Supabase `agent_execution_logs` (14 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 

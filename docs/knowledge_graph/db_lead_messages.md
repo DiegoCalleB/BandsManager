@@ -28,6 +28,8 @@ Registro histórico de mensajes enviados y recibidos por lead y sala.
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[server_db|server/db.ts]] *(from #db)*
 

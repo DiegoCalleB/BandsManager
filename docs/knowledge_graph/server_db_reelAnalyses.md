@@ -25,6 +25,7 @@ Exporta: ReelAnalysisRecord, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateRe
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 
 ---

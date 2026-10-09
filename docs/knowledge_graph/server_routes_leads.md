@@ -33,6 +33,10 @@ Agregador del dominio leads: monta los sub-routers de `./leads/` y reexporta
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*

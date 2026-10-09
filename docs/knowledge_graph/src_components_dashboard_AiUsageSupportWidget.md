@@ -4,7 +4,7 @@ title: "src/components/dashboard/AiUsageSupportWidget.tsx"
 layer: frontend
 domain: system
 file: "src/components/dashboard/AiUsageSupportWidget.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/dashboard/AiUsageSupportWidget.tsx

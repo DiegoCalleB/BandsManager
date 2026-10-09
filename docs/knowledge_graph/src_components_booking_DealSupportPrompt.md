@@ -4,7 +4,7 @@ title: "src/components/booking/DealSupportPrompt.tsx"
 layer: frontend
 domain: booking
 file: "src/components/booking/DealSupportPrompt.tsx"
-tags: ["frontend", "booking", "auto"]
+tags: ["frontend", "booking", "auto", "pantalla"]
 ---
 
 # 📌 src/components/booking/DealSupportPrompt.tsx

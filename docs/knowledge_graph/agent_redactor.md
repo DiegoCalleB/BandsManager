@@ -35,6 +35,7 @@ Redacta borradores de respuesta a salas. Nunca envía: el borrador pasa por apro
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*

@@ -23,6 +23,8 @@ Tabla de Supabase `stem_prediction_jobs` (17 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_services_stemPredictionReconciler|server/services/stemPredictionReconciler.ts]] *(from #service)*
 

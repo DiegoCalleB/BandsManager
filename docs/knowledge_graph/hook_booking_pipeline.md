@@ -26,6 +26,7 @@ Gestión del estado reactivo del pipeline de salas, filtros y transiciones de es
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 

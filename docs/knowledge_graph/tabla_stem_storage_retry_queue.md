@@ -23,6 +23,7 @@ Tabla de Supabase `stem_storage_retry_queue` (14 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_services_stemStorageRetryQueue|server/services/stemStorageRetryQueue.ts]] *(from #service)*
 

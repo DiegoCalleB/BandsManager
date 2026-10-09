@@ -4,7 +4,7 @@ title: "src/components/campaign/GlobalCampaignBar.tsx"
 layer: frontend
 domain: system
 file: "src/components/campaign/GlobalCampaignBar.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/campaign/GlobalCampaignBar.tsx

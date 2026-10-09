@@ -31,6 +31,7 @@ Exporta: useSeparacionIris.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 

@@ -25,6 +25,7 @@ Exporta: toursController.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_gira|Tour Manager]] *(from #feature)*
 - [[server_routes_tours|server/routes/tours.ts]] *(from #route)*
 
 ---

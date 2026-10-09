@@ -34,6 +34,9 @@ Descubrimiento de salas/festivales: búsqueda en Places, campañas masivas, extr
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 

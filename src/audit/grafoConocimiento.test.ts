@@ -23,6 +23,23 @@ describe('grafo de conocimiento (Obsidian)', () => {
     expect(fks.length).toBeGreaterThanOrEqual(1);
   });
 
+  it('cada función clave conecta pantalla o ruta con una tabla, y cada proveedor externo tiene quien lo use', () => {
+    const nodos = construirNodos();
+    const porId = new Map(nodos.map((n) => [n.id, n]));
+    const funciones = nodos.filter((n) => n.layer === 'feature');
+    expect(funciones.length).toBeGreaterThanOrEqual(12);
+    for (const fn of funciones) {
+      const capas = new Set(fn.linksTo.map((d) => porId.get(d)?.layer));
+      expect(capas.has('route'), `${fn.id} sin ninguna ruta`).toBe(true);
+      expect(capas.has('schema'), `${fn.id} sin ninguna tabla`).toBe(true);
+      expect(fn.linksTo.every((d) => porId.has(d)), `${fn.id} enlaza a un nodo inexistente`).toBe(true);
+    }
+    const consumidos = new Set(nodos.flatMap((n) => n.linksTo));
+    for (const ext of nodos.filter((n) => n.layer === 'external')) {
+      expect(consumidos.has(ext.id), `${ext.id} no lo usa ningún fichero`).toBe(true);
+    }
+  });
+
   it('docs/knowledge_graph está al día: ejecuta `npm run graph:sync`', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'grafo-'));
     try {

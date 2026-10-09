@@ -4,7 +4,7 @@ title: "src/components/BandCRM.tsx"
 layer: frontend
 domain: booking
 file: "src/components/BandCRM.tsx"
-tags: ["frontend", "booking", "auto"]
+tags: ["frontend", "booking", "auto", "pantalla"]
 ---
 
 # 📌 src/components/BandCRM.tsx

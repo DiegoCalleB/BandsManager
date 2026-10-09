@@ -4,7 +4,7 @@ title: "src/components/GlobalPlayer.tsx"
 layer: frontend
 domain: system
 file: "src/components/GlobalPlayer.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/GlobalPlayer.tsx

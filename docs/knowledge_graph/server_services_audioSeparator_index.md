@@ -18,6 +18,8 @@ Módulo sin exportaciones con nombre.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
+- [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[server_services_audioSeparator_AudioSeparatorFactory|server/services/audioSeparator/AudioSeparatorFactory.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(Layer: #service, Domain: #repertoire)*
@@ -28,6 +30,7 @@ Módulo sin exportaciones con nombre.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
 
 ---

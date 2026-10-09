@@ -25,6 +25,7 @@ Caché de separación de stems (`song_stems_cache`) en memoria y persistente, co
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
 
 ---

@@ -4,7 +4,7 @@ title: "src/components/SimplePromoLoginModal.tsx"
 layer: frontend
 domain: auth
 file: "src/components/SimplePromoLoginModal.tsx"
-tags: ["frontend", "auth", "auto"]
+tags: ["frontend", "auth", "auto", "pantalla"]
 ---
 
 # 📌 src/components/SimplePromoLoginModal.tsx

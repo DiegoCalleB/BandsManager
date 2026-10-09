@@ -24,6 +24,7 @@ Tabla de Supabase `payments` (10 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 
 ---

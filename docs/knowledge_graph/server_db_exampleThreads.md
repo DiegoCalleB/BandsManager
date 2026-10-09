@@ -25,6 +25,7 @@ Hilos de ejemplo (`pitch_example_threads`) que alimentan el tono del Redactor.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(from #route)*
 

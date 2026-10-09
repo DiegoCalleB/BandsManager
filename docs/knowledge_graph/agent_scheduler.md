@@ -31,6 +31,7 @@ Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orq
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_agent_schedule|Estado del Scheduler de agentes]] *(from #db)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 

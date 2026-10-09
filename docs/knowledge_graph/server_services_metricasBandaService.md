@@ -18,6 +18,7 @@ Captura mensual de métricas públicas de una banda: Spotify (seguidores, popula
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_metricasBanda|server/utils/metricasBanda.ts]] *(Layer: #service, Domain: #system)*
@@ -27,6 +28,7 @@ Captura mensual de métricas públicas de una banda: Spotify (seguidores, popula
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 
 ---

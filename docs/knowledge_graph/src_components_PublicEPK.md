@@ -4,7 +4,7 @@ title: "src/components/PublicEPK.tsx"
 layer: frontend
 domain: epk
 file: "src/components/PublicEPK.tsx"
-tags: ["frontend", "epk", "auto"]
+tags: ["frontend", "epk", "auto", "pantalla"]
 ---
 
 # 📌 src/components/PublicEPK.tsx
@@ -34,6 +34,7 @@ Exporta: PublicEPK.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_main|src/main.tsx]] *(from #service)*
 

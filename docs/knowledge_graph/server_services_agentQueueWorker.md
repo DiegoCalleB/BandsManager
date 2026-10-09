@@ -31,6 +31,7 @@ Worker Engine para la procesación distribuida de la cola de agentes de IA.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 
 ---
 

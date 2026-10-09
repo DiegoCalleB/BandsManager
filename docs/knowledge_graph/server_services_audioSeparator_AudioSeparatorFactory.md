@@ -18,6 +18,8 @@ Exporta: SupportedEngine, AudioSeparatorFactory.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
+- [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_audioSeparator_LalalAiService|server/services/audioSeparator/LalalAiService.ts]] *(Layer: #service, Domain: #repertoire)*

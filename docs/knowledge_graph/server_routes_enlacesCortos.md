@@ -33,6 +33,7 @@ Enlaces cortos con atribución. Dos routers:
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 
 ---

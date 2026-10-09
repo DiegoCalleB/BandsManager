@@ -24,6 +24,7 @@ Tabla de Supabase `setlist_shortcuts` (10 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 
 ---

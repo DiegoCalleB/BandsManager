@@ -33,6 +33,13 @@ Operaciones CRUD en Supabase PostgreSQL con scoping forzoso por bandId.
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*

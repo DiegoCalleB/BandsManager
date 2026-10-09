@@ -36,6 +36,9 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*

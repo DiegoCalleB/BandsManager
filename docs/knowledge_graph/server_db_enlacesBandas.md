@@ -24,6 +24,7 @@ Enlaces de bandas amigas (`enlaces_bandas_amigas`): lectura por lotes, escritura
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 

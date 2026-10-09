@@ -31,6 +31,7 @@ Páginas públicas indexables: /e/:slug (un concierto), /sitemap.xml y /robots.t
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 
 ---

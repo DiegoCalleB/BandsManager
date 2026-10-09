@@ -19,6 +19,7 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_stripe|Stripe]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
@@ -29,6 +30,7 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 

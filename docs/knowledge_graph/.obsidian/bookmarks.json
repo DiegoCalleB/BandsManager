@@ -1,6 +1,16 @@
 {
   "items": [
     {
+      "type": "graph",
+      "title": "Funciones clave y servicios",
+      "options": {
+        "search": "tag:#layer/feature OR tag:#layer/external",
+        "showTags": false,
+        "showOrphans": false,
+        "hideUnresolved": true
+      }
+    },
+    {
       "type": "group",
       "title": "Grafo por capa",
       "items": [

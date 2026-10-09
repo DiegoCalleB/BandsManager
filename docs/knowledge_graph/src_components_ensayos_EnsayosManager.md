@@ -4,7 +4,7 @@ title: "src/components/ensayos/EnsayosManager.tsx"
 layer: frontend
 domain: system
 file: "src/components/ensayos/EnsayosManager.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/ensayos/EnsayosManager.tsx
@@ -34,6 +34,7 @@ Exporta: EnsayosManager.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

@@ -24,6 +24,7 @@ TOUR LOGISTICS, ROUTE & FUEL CALCULATOR SERVICE
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_gira|Tour Manager]] *(from #feature)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 
 ---

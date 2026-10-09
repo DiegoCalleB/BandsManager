@@ -23,6 +23,7 @@ Tabla de Supabase `song_stems_cache` (17 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_stemsCache|server/db/stemsCache.ts]] *(from #db)*
 

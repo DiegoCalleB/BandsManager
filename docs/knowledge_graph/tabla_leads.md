@@ -26,6 +26,13 @@ Tabla de Supabase `leads` (65 columnas).
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[db_leads|Leads DB Handlers]] *(from #db)*
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*

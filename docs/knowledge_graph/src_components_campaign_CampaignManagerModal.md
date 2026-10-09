@@ -4,7 +4,7 @@ title: "src/components/campaign/CampaignManagerModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/campaign/CampaignManagerModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/campaign/CampaignManagerModal.tsx

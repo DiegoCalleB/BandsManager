@@ -9,6 +9,39 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 
 ---
 
+## ⭐ Funciones clave de la aplicación
+Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor externo. Abre una y expande sus conexiones.
+- [[fn_acceso_sesion|Acceso y sesión]] — Login (email o Google), sesión por cookie y multi-banda: de quién es cada petición.
+- [[fn_agentes_correo|Agentes de correo]] — Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
+- [[fn_asistente_ia|Asistente de IA (chat)]] — Chatbot con herramientas que lee y actúa sobre los datos de la banda.
+- [[fn_booking_crm|Booking CRM y pitch]] — Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y seguimiento.
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] — Bolos confirmados, calendario, página pública del concierto, QR y enlaces cortos.
+- [[fn_ensayos|Ensayos]] — Convocatorias, orden del día, acta y seguimiento del ensayo.
+- [[fn_fans_epk|Fans y EPK]] — Captación de fans, landing pública y dossier de prensa (EPK).
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] — Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
+- [[fn_gira|Tour Manager]] — Planificación de giras, logística y rutas entre bolos.
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] — Separación de pistas, mezcla, ideas de audio y descarga desde el estudio de canción.
+- [[fn_metricas_panel|Panel y métricas]] — Dashboard de la banda con métricas de Spotify, redes y actividad.
+- [[fn_reels_social|Reels y redes sociales]] — Generación de reels virales, publicaciones y plan de crecimiento.
+- [[fn_repertorio_setlists|Repertorio y setlists]] — Catálogo de canciones, setlists, atril, modo escenario y práctica.
+- [[fn_scout_salas|Búsqueda de salas y festivales]] — Descubrimiento de salas, eventos y contactos desde fuentes abiertas, mapas y redes.
+
+## 🌐 Servicios externos
+- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 8 ficheros lo usan
+- [[ext_fal|fal.ai]] — 7 ficheros lo usan
+- [[ext_ffmpeg|FFmpeg]] — 23 ficheros lo usan
+- [[ext_gemini|Gemini (Google GenAI)]] — 10 ficheros lo usan
+- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 11 ficheros lo usan
+- [[ext_replicate|Replicate]] — 9 ficheros lo usan
+- [[ext_resend|Resend]] — 6 ficheros lo usan
+- [[ext_sentry|Sentry]] — 2 ficheros lo usan
+- [[ext_spotify|Spotify]] — 10 ficheros lo usan
+- [[ext_stripe|Stripe]] — 3 ficheros lo usan
+- [[ext_supabase|Supabase (Postgres)]] — 2 ficheros lo usan
+- [[ext_supabase_storage|Supabase Storage]] — 10 ficheros lo usan
+
+---
+
 ## 🧭 Vista por Dominios Principales
 
 ### 🎯 1. Booking CRM & Agentes de IA
@@ -40,7 +73,7 @@ Este grafo de conocimiento interactivo mapea de forma determinista todas las cap
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-744 nodos: 16 agent · 40 db · 276 frontend · 39 hook · 42 route · 61 schema · 10 security · 260 service.
+770 nodos: 16 agent · 40 db · 12 external · 14 feature · 276 frontend · 39 hook · 42 route · 61 schema · 10 security · 260 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
@@ -48,22 +81,22 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_components_ui_index|src/components/ui/index.ts]] — 191 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 112 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 75 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 59 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
-- [[tabla_registered_bands|tabla registered_bands]] — 56 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 40 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
+- [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 36 ficheros dependen de él
 - [[server_db|server/db.ts]] — 35 ficheros dependen de él
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 31 ficheros dependen de él
-- [[server_db_bands|server/db/bands.ts]] — 25 ficheros dependen de él
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 32 ficheros dependen de él
+- [[server_routes_bands|server/routes/bands.ts]] — 28 ficheros dependen de él
+- [[ext_ffmpeg|FFmpeg]] — 23 ficheros dependen de él
 - [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 22 ficheros dependen de él
+- [[route_repertoire|Repertoire & Setlists Route]] — 21 ficheros dependen de él
+- [[tabla_leads|tabla leads]] — 19 ficheros dependen de él
 - [[server_utils|server/utils.ts]] — 18 ficheros dependen de él
-- [[route_repertoire|Repertoire & Setlists Route]] — 16 ficheros dependen de él
-- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] — 16 ficheros dependen de él
-- [[server_routes_bands|server/routes/bands.ts]] — 15 ficheros dependen de él
-- [[src_utils_cn|src/utils/cn.ts]] — 15 ficheros dependen de él
 
 ---
 

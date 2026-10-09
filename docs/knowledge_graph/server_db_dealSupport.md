@@ -27,6 +27,7 @@ Exporta: dbListSupportableDeals, dbDealHasSupport, dbRecordDealSupport, dbRecord
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
 

@@ -4,7 +4,7 @@ title: "src/components/UserProfileModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/UserProfileModal.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/UserProfileModal.tsx

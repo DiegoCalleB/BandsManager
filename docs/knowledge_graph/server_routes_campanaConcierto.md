@@ -38,6 +38,7 @@ Campaña de cuenta atrás de un concierto: texto de cada publicación con su enl
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 
 ---

@@ -29,6 +29,9 @@ Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*

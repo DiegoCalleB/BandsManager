@@ -25,6 +25,8 @@ Referidos entre bandas sobre `registered_bands` (ref_code, referido_por, referid
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*

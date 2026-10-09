@@ -25,6 +25,9 @@ Generación de emails simulados para la simulación de booking.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[src_components_booking_BookingSimulationModal|src/components/booking/BookingSimulationModal.tsx]] *(from #frontend)*
 - [[src_hooks_useNegotiationSimulation|src/hooks/useNegotiationSimulation.ts]] *(from #hook)*

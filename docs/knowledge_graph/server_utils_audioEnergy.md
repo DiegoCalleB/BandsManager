@@ -18,6 +18,7 @@ Curva de energía del audio para elegir highlights.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
 

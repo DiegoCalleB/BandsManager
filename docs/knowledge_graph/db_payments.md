@@ -27,6 +27,9 @@ Persistencia de pagos y suscripciones. Facturación desactivada en producción (
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*

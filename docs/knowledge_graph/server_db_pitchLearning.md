@@ -34,6 +34,8 @@ Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refi
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*

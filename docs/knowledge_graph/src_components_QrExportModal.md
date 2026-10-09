@@ -26,6 +26,7 @@ Exporta: QrExportModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
 
 ---

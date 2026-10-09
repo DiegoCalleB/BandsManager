@@ -20,6 +20,10 @@ AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Re
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
+- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
@@ -35,6 +39,8 @@ AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Re
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*

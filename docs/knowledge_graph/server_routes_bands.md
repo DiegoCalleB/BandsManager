@@ -39,6 +39,19 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_ensayos|Ensayos]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
+- [[fn_gira|Tour Manager]] *(from #feature)*
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
+- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*

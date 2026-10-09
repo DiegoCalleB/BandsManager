@@ -30,6 +30,7 @@ Letra y acordes del audio de UNA canción, sincronizados. Lo usan la ruta manual
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 

@@ -27,6 +27,7 @@ Tabla agent_schedule_state: cuándo toca cada agente (Scout, Lector) y su últim
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 
 ---

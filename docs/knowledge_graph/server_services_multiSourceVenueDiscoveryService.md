@@ -25,6 +25,7 @@ MULTI-SOURCE VENUE & FESTIVAL DISCOVERY SERVICE
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_services_similarBandsVenueMatcherService|server/services/similarBandsVenueMatcherService.ts]] *(from #service)*
 

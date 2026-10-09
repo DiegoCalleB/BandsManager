@@ -25,6 +25,9 @@ Contabilidad exacta de tokens consumidos por banda y modelo para control de cost
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_db|server/db.ts]] *(from #db)*

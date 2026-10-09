@@ -23,6 +23,7 @@ Tabla de Supabase `agent_jobs_queue` (15 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(from #agent)*
 

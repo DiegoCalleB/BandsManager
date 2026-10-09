@@ -26,6 +26,10 @@ Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomy
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*

@@ -18,11 +18,12 @@ Exporta: chatFunctionDeclarations, convertFunctionCallsToProposedActions.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 
 ---

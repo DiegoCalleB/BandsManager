@@ -35,6 +35,7 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(from #security)*

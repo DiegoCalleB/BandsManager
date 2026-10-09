@@ -32,6 +32,7 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
 - [[src_components_ensayos_GrabacionActaTab|src/components/ensayos/GrabacionActaTab.tsx]] *(from #frontend)*
+- [[src_components_epk_EPKPerfilBlock|src/components/epk/EPKPerfilBlock.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
 - [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*

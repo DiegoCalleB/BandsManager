@@ -28,6 +28,10 @@ Conciertos (`concerts`): lectura, upsert y borrado acotados por `bandId`.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*

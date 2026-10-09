@@ -28,6 +28,7 @@ Perfil público de una banda para las superficies sin sesión (página de concie
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*

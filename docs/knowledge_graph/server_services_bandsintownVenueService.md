@@ -24,6 +24,7 @@ Exporta: BandsintownVenueEvent, getVenuesFromBandsintown.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_services_similarBandsVenueMatcherService|server/services/similarBandsVenueMatcherService.ts]] *(from #service)*
 
 ---

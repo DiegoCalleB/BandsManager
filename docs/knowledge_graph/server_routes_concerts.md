@@ -28,6 +28,11 @@ Conciertos y ensayos: CRUD de `/concerts` y `/rehearsals`. Capa de
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
+- [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[src_components_calendar_useCalendarConflicts|src/components/calendar/useCalendarConflicts.ts]] *(from #frontend)*

@@ -37,6 +37,7 @@ Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el sche
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(from #security)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*

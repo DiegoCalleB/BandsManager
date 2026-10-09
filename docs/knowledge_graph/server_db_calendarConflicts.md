@@ -26,6 +26,7 @@ Soporte de datos para los avisos de choque de calendario: quién pertenece a cad
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 
 ---

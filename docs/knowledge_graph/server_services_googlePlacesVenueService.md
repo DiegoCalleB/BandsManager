@@ -24,6 +24,7 @@ GOOGLE PLACES & VENUE TECHNICAL INSPECTION SERVICE
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 
 ---

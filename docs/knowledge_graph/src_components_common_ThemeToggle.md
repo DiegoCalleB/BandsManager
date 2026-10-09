@@ -4,7 +4,7 @@ title: "src/components/common/ThemeToggle.tsx"
 layer: frontend
 domain: system
 file: "src/components/common/ThemeToggle.tsx"
-tags: ["frontend", "system", "auto"]
+tags: ["frontend", "system", "auto", "pantalla"]
 ---
 
 # 📌 src/components/common/ThemeToggle.tsx

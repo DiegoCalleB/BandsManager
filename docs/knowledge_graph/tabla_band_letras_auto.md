@@ -23,6 +23,9 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_ensayos|Ensayos]] *(from #feature)*
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 

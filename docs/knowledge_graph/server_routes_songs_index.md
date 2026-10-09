@@ -23,6 +23,7 @@ Router de `/songs`: monta los sub-routers de subida de estructura.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 
 ---

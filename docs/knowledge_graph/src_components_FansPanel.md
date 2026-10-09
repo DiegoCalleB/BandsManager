@@ -4,7 +4,7 @@ title: "src/components/FansPanel.tsx"
 layer: frontend
 domain: social
 file: "src/components/FansPanel.tsx"
-tags: ["frontend", "social", "auto"]
+tags: ["frontend", "social", "auto", "pantalla"]
 ---
 
 # 📌 src/components/FansPanel.tsx
@@ -47,6 +47,7 @@ Exporta: FansPanel.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 
 ---

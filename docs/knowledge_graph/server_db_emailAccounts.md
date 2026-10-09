@@ -25,6 +25,8 @@ Cuentas de email SMTP/IMAP por banda (`band_email_accounts`). `toSafeEmailAccoun
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 
