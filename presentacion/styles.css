@@ -838,3 +838,13 @@ body.scroll .feat h2 { font-size: 32px; } body.scroll .feat .lead { font-size: 1
 .feat .ft-shot.phone img { position: absolute; left: 0; top: 0; width: 100%; height: auto; object-fit: initial; animation: phpan 20s ease-in-out 1.2s infinite; }
 @keyframes phpan { 0%, 8% { transform: translateY(0); } 48%, 66% { transform: translateY(-1150px); } 100% { transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .feat .ft-shot.phone img { animation: none; } }
+
+.room .react { position: absolute !important; right: 60px; bottom: 30px; left: auto; max-width: 540px; font-size: 26px; z-index: 30 !important; background: linear-gradient(135deg, rgba(36,58,99,.98), rgba(52,40,98,.98)); border-color: rgba(255,214,150,.6); }
+.room .react img { width: 84px; height: 84px; border-color: #ffd596; }
+.room .react b { color: #ffd596; } .room .react .re2 b { color: #8fb6ff; }
+.room .react .re2 { font-size: 25px; }
+.rm-crowd { right: 700px !important; gap: 24px !important; } .rm-crowd img { width: 96px !important; height: 96px !important; } .rm-crowd li { font-size: 24px !important; gap: 10px !important; }
+.rm-tv { left: 520px !important; width: 860px !important; }
+.rm-crowd { left: 520px !important; right: auto !important; }
+.room .react { max-width: 470px !important; bottom: 84px !important; right: 50px !important; font-size: 24px !important; }
+.room .react .re2 { font-size: 23px !important; }
