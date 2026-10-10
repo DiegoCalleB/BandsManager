@@ -26,7 +26,7 @@ Integración con Spotify: estado, previsualización, búsqueda e importación de
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 
 ---

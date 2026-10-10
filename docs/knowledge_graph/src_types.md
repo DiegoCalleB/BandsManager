@@ -293,6 +293,21 @@ _Sin dependencias salientes directas._
 - [[src_components_onboarding_steps_StepMusicSetlist|src/components/onboarding/steps/StepMusicSetlist.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
 - [[src_components_onboarding_types|src/components/onboarding/types.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_epkLegacy|src/components/onboarding/wizard/epkLegacy.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useBioStep|src/components/onboarding/wizard/hooks/useBioStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useBookingAndAgentStep|src/components/onboarding/wizard/hooks/useBookingAndAgentStep.ts]] *(from #agent)*
+- [[src_components_onboarding_wizard_hooks_useEventsStep|src/components/onboarding/wizard/hooks/useEventsStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useFansPaymentsStep|src/components/onboarding/wizard/hooks/useFansPaymentsStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useIdentityStep|src/components/onboarding/wizard/hooks/useIdentityStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMembersStep|src/components/onboarding/wizard/hooks/useMembersStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useOnboardingWizardController|src/components/onboarding/wizard/hooks/useOnboardingWizardController.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_usePhotosStep|src/components/onboarding/wizard/hooks/usePhotosStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_usePressProofStep|src/components/onboarding/wizard/hooks/usePressProofStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useRiderStep|src/components/onboarding/wizard/hooks/useRiderStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useSocialsMerchStep|src/components/onboarding/wizard/hooks/useSocialsMerchStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useVideosStep|src/components/onboarding/wizard/hooks/useVideosStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useWizardSteps|src/components/onboarding/wizard/hooks/useWizardSteps.ts]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
@@ -519,6 +534,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
+- `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
 - `src/components/setlist_performance/__tests__/setlistPerformanceContracts.test.ts`

@@ -39,7 +39,7 @@ _Sin dependencias salientes directas._
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useWizardSteps|src/components/onboarding/wizard/hooks/useWizardSteps.ts]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*

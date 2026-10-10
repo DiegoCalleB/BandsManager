@@ -67,7 +67,7 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_epk_AILogoGeneratorModal|src/components/epk/AILogoGeneratorModal.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_reels_metrics_hooks_useContentItems|src/components/reels/metrics/hooks/useContentItems.ts]] *(from #frontend)*
 - [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*

@@ -64,7 +64,7 @@ _Sin dependencias salientes directas._
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_MetronomeModal|src/components/MetronomeModal.tsx]] *(from #frontend)*
 - [[src_components_notifications_NotificationSettingsModal|src/components/notifications/NotificationSettingsModal.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_OnboardingWizardView|src/components/onboarding/wizard/OnboardingWizardView.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSetlistModal|src/components/repertorio/AssignSetlistModal.tsx]] *(from #frontend)*

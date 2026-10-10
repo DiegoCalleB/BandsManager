@@ -247,7 +247,6 @@ BandManager UI Component Library
 - [[src_components_notifications_NotificationSettingsModal|src/components/notifications/NotificationSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_NotificationToastContainer|src/components/NotificationToastContainer.tsx]] *(from #frontend)*
 - [[src_components_onboarding_MusicianOnboardingModal|src/components/onboarding/MusicianOnboardingModal.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepAgentEmail|src/components/onboarding/steps/StepAgentEmail.tsx]] *(from #agent)*
 - [[src_components_onboarding_steps_StepBio|src/components/onboarding/steps/StepBio.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepBookingConditions|src/components/onboarding/steps/StepBookingConditions.tsx]] *(from #frontend)*
@@ -262,6 +261,8 @@ BandManager UI Component Library
 - [[src_components_onboarding_steps_StepRider|src/components/onboarding/steps/StepRider.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepSocialsMerch|src/components/onboarding/steps/StepSocialsMerch.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_WizardFooter|src/components/onboarding/wizard/WizardFooter.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_WizardHeader|src/components/onboarding/wizard/WizardHeader.tsx]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*

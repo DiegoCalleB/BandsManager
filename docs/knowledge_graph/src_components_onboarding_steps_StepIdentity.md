@@ -25,7 +25,7 @@ Exporta: StepIdentity.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_WizardStepsEarly|src/components/onboarding/wizard/WizardStepsEarly.tsx]] *(from #frontend)*
 
 ---
 

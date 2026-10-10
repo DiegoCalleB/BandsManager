@@ -36,7 +36,11 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_components_epk_EPKPerfilBlock|src/components/epk/EPKPerfilBlock.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useFansPaymentsStep|src/components/onboarding/wizard/hooks/useFansPaymentsStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useIdentityStep|src/components/onboarding/wizard/hooks/useIdentityStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_usePhotosStep|src/components/onboarding/wizard/hooks/usePhotosStep.ts]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useRiderStep|src/components/onboarding/wizard/hooks/useRiderStep.ts]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
