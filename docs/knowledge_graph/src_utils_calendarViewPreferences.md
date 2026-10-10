@@ -24,7 +24,7 @@ Exporta: CALENDAR_DEFAULT_MONTHS_KEY, CALENDAR_DEVICE_KEY_PREFIX, DeviceType, Ca
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarViewPrefs|src/components/calendar/hooks/useCalendarViewPrefs.ts]] *(from #frontend)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
 
 ---

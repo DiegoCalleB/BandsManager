@@ -1,0 +1,33 @@
+---
+id: src_components_calendar_views_PeriodNavigation
+title: "src/components/calendar/views/PeriodNavigation.tsx"
+layer: frontend
+domain: system
+file: "src/components/calendar/views/PeriodNavigation.tsx"
+tags: ["frontend", "system", "auto"]
+---
+
+# 📌 src/components/calendar/views/PeriodNavigation.tsx
+
+> **Ubicación:** `src/components/calendar/views/PeriodNavigation.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
+
+## 📖 Descripción
+Botones de mes anterior/siguiente/hoy y título del periodo.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_calendar_views_MonthNavigationBar|src/components/calendar/views/MonthNavigationBar.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

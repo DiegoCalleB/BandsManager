@@ -1,3 +1,4 @@
+import type { User } from "../../types";
 import {
   Rehearsal,
   Concert,
@@ -9,6 +10,42 @@ import {
   MerchBoloItem,
   MerchControlBolo,
 } from '../../types';
+
+/** Banda seleccionable en el calendario; incluye los alias de logo heredados de distintas APIs. */
+export interface CalendarBand {
+  band_id: string;
+  bandName: string;
+  id?: string;
+  name?: string;
+  nombre_banda?: string;
+  plan?: string;
+  logoUrl?: string;
+  logo_url?: string;
+  imagen_url?: string;
+  avatar_url?: string;
+}
+
+/** Usuario activo tal y como lo necesita el calendario. */
+export interface CalendarUser {
+  id?: string;
+  name?: string;
+  username?: string;
+  email?: string;
+  role?: string;
+  band_id?: string;
+  instrument?: string;
+  plan?: string;
+  is_admin?: boolean;
+  ui_preferences?: User["ui_preferences"];
+}
+
+/** Campos de banda que algunos endpoints añaden a conciertos y ensayos. */
+export interface BandTaggedEvent {
+  bandName?: string;
+  band_name?: string;
+  bandLogo?: string;
+  logoUrl?: string;
+}
 
 export interface CalendarViewProps {
   colors: ThemeColors;
@@ -28,35 +65,18 @@ export interface CalendarViewProps {
   currentBandId?: string;
   currentBandName?: string;
   currentBandLogo?: string;
-  availableBands?: Array<{
-    band_id: string;
-    bandName: string;
-    name?: string;
-    logoUrl?: string;
-    logo_url?: string;
-    imagen_url?: string;
-    avatar_url?: string;
-  }>;
+  availableBands?: CalendarBand[];
   bandUsers?: Array<{
     id: string;
     name: string;
     username?: string;
     role?: string;
     instrument?: string;
+    email?: string;
     band_id?: string;
     bandName?: string;
   }>;
-  currentUser?: {
-    id?: string;
-    name?: string;
-    username?: string;
-    email?: string;
-    role?: string;
-    band_id?: string;
-    instrument?: string;
-    plan?: string;
-    ui_preferences?: any;
-  };
+  currentUser?: CalendarUser;
   isPromoPlan?: boolean;
   onShowNotification?: (message: string, type?: 'success' | 'error' | 'info') => void;
 }

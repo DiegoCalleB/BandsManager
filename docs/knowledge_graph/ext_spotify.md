@@ -27,7 +27,6 @@ _Sin dependencias salientes directas._
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*

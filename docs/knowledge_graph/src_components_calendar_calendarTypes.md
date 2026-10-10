@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: CalendarViewProps, RunOfShowItem, GearItem, RoadbookInfo, BAND_COLOR_PALETTES, getDetailedDateInfo.
+Exporta: CalendarBand, CalendarUser, BandTaggedEvent, CalendarViewProps, RunOfShowItem, GearItem, RoadbookInfo, BAND_COLOR_PALETTES.
 
 ---
 
@@ -23,10 +23,21 @@ Exporta: CalendarViewProps, RunOfShowItem, GearItem, RoadbookInfo, BAND_COLOR_PA
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] *(from #frontend)*
 - [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
+- [[src_components_calendar_hooks_useBandMembers|src/components/calendar/hooks/useBandMembers.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarBands|src/components/calendar/hooks/useCalendarBands.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFeed|src/components/calendar/hooks/useCalendarFeed.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarViewPrefs|src/components/calendar/hooks/useCalendarViewPrefs.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventReminder|src/components/calendar/hooks/useEventReminder.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useEventShareActions|src/components/calendar/hooks/useEventShareActions.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useRunOfShowAndGear|src/components/calendar/hooks/useRunOfShowAndGear.ts]] *(from #frontend)*
 - [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
+- [[src_components_calendar_views_ConcertDetailCard|src/components/calendar/views/ConcertDetailCard.tsx]] *(from #frontend)*
+- [[src_components_calendar_views_RehearsalDetailCard|src/components/calendar/views/RehearsalDetailCard.tsx]] *(from #frontend)*
 - [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
 
 ---

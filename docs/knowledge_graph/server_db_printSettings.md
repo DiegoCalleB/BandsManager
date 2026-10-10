@@ -28,7 +28,6 @@ Ajustes de impresión del setlist por banda (`band_print_settings`).
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
-- [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 
 ---

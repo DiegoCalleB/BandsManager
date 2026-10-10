@@ -138,7 +138,7 @@ export async function setCalendarDefaultMonths(
 /**
  * Hidrata las preferencias locales desde los datos del usuario procedentes de Supabase.
  */
-export function syncCalendarPreferencesFromUser(user?: User | null): void {
+export function syncCalendarPreferencesFromUser(user?: Pick<User, 'ui_preferences'> | null): void {
   if (!user || !user.ui_preferences?.calendar_default_months || typeof localStorage === 'undefined') return;
 
   const prefs = user.ui_preferences.calendar_default_months;
