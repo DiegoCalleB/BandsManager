@@ -1,6 +1,10 @@
 # Voces de la presentación
 
-Cada mensaje del chat tiene una versión hablada (`data-say` en `index.html`) y cada personaje una voz (`tts` en `reparto.js`). Los audios se generan en local, con modelos neuronales libres y sin claves de API:
+Cada mensaje del chat tiene una versión hablada (`data-say` en `index.html`) y cada personaje una voz (`tts` en `reparto.js`). Hay dos familias de motores:
+
+- **ElevenLabs** (`motor: 'elevenlabs'`, de pago): voces castellanas naturales que actúan. Campos: `voz` (voice_id), `modelo` (por defecto `eleven_v3`), `estabilidad` (0 creativa · 0.5 natural · 1 estable) y `etiqueta` (indicación de actuación de v3, p. ej. `[excited]`, que no se escribe en la frase). Lee la clave de `$ELEVENLABS_API_KEY` y necesita red hacia `api.elevenlabs.io`; `--voces` lista las voces en español con su acento. Solo se pagan las frases nuevas o cambiadas (el guion entero son unos 14.000 caracteres).
+
+Y los locales, libres y sin claves de API:
 
 - **Kokoro** (multilingüe, castellano): `sid` 29 = em_alex, 53 = em_santa, 28 = ef_dora.
 - **Piper** (castellano de España): `es_ES-davefx-medium` y `es_ES-sharvard-medium` (sid 0 hombre, 1 mujer).

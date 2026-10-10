@@ -2,9 +2,9 @@
 """Genera las voces de la presentación (audio/voces/*.mp3 y audio/voces/manifest.json).
 
 Lee cada frase hablada de index.html (atributos data-who + data-say), la voz de cada personaje de
-reparto.js (campo `tts`) y sintetiza con modelos neuronales libres que corren en local:
-Kokoro (multilingüe) y Piper (castellano), vía sherpa-onnx. Después aplica tono, efecto
-(teléfono, radio, robot) y normaliza el volumen con ffmpeg.
+reparto.js (campo `tts`) y sintetiza con ElevenLabs (motor 'elevenlabs': voces castellanas naturales,
+de pago) o con modelos libres que corren en local: Kokoro (multilingüe) y Piper (castellano), vía
+sherpa-onnx. Después aplica tono, efecto (teléfono, radio, robot) y normaliza el volumen con ffmpeg.
 
 Solo regenera lo que ha cambiado: si cambias un músico, su voz o una frase, se rehacen esas frases
 y se borran los audios que ya no se usan.
@@ -14,6 +14,10 @@ Uso:
     python3 presentacion/tools/voces.py           # genera lo que falta
     python3 presentacion/tools/voces.py --qa      # además transcribe cada audio con Whisper y avisa si no se entiende
     python3 presentacion/tools/voces.py --todo    # lo rehace todo
+    python3 presentacion/tools/voces.py --voces   # lista voces de ElevenLabs en castellano para elegir
+
+ElevenLabs lee la clave de $ELEVENLABS_API_KEY (necesita acceso de red a api.elevenlabs.io). Solo se
+pagan las frases nuevas o cambiadas: el resto se reaprovecha.
 
 Los modelos se descargan solos la primera vez en ~/.cache/bandmanager-voces (o en $VOCES_MODELOS).
 """
@@ -27,7 +31,9 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import time
 import unicodedata
+import urllib.error
 import urllib.request
 from html.parser import HTMLParser
 
@@ -42,6 +48,7 @@ PAQUETES = {
     'es_ES-sharvard-medium': ('tts-models', 'vits-piper-es_ES-sharvard-medium'),
     'whisper': ('asr-models', 'sherpa-onnx-whisper-small'),
 }
+ELEVEN = 'https://api.elevenlabs.io/v1'
 VERSION = 2  # súbela si cambia el procesado de audio: obliga a regenerar todo
 
 
@@ -110,17 +117,45 @@ def limpiar(texto):
     return re.sub(r'\s+', ' ', t).strip()
 
 
+def eleven(ruta, metodo='GET', datos=None, intentos=4):
+    clave = os.environ.get('ELEVENLABS_API_KEY')
+    if not clave:
+        sys.exit('Falta ELEVENLABS_API_KEY en el entorno.')
+    req = urllib.request.Request(ELEVEN + ruta, method=metodo, data=json.dumps(datos).encode() if datos else None,
+                                 headers={'xi-api-key': clave, 'Content-Type': 'application/json'})
+    for i in range(intentos):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 500, 502, 503) and i < intentos - 1:
+                time.sleep(2 ** (i + 1))
+                continue
+            sys.exit(f'ElevenLabs {e.code}: {e.read().decode(errors="replace")[:300]}')
+
+
+def listar_voces():
+    """Voces de la biblioteca de ElevenLabs en español, con su acento, para elegir las de reparto.js."""
+    for v in json.loads(eleven('/voices'))['voices']:
+        print(f"mía      {v['voice_id']}  {v['name']}  {v.get('labels', {})}")
+    for pag in range(3):
+        r = json.loads(eleven(f'/shared-voices?page_size=100&language=es&page={pag}'))
+        for v in r['voices']:
+            print(f"pública  {v['voice_id']}  {v['public_owner_id']}  {v.get('accent')}  {v.get('gender')}  {v.get('age')}  "
+                  f"{v['name']} · {(v.get('description') or '')[:90]}")
+        if not r.get('has_more'):
+            break
+
+
 class Motores:
     def __init__(self):
-        import sherpa_onnx
-        self.so = sherpa_onnx
         self.cache = {}
 
     def get(self, tts):
         clave = tts['motor'] + ':' + tts.get('modelo', '')
         if clave in self.cache:
             return self.cache[clave]
-        so = self.so
+        import sherpa_onnx as so
         if tts['motor'] == 'kokoro':
             d = modelo('kokoro')
             cfg = so.OfflineTtsConfig(model=so.OfflineTtsModelConfig(kokoro=so.OfflineTtsKokoroModelConfig(
@@ -135,6 +170,16 @@ class Motores:
         return self.cache[clave]
 
     def wav(self, tts, texto, ruta):
+        if tts['motor'] == 'elevenlabs':
+            # etiqueta: indicación de actuación de eleven_v3, p. ej. «[excited]», que no se escribe en la frase
+            texto = (tts.get('etiqueta', '') + ' ' + texto).strip()
+            mp3 = eleven(f"/text-to-speech/{tts['voz']}?output_format=mp3_44100_128", 'POST', {
+                'text': texto, 'model_id': tts.get('modelo', 'eleven_v3'),
+                'voice_settings': {'stability': float(tts.get('estabilidad', 0.5)), 'similarity_boost': 0.75}})
+            with open(ruta + '.mp3', 'wb') as f:
+                f.write(mp3)
+            subprocess.check_call(['ffmpeg', '-y', '-loglevel', 'error', '-i', ruta + '.mp3', ruta])
+            return
         import soundfile as sf
         a = self.get(tts).generate(texto, sid=int(tts.get('sid', 0)), speed=float(tts.get('vel', 1.0)))
         sf.write(ruta, a.samples, a.sample_rate)
@@ -209,6 +254,8 @@ def norm(t):
 
 
 def main():
+    if '--voces' in sys.argv:
+        return listar_voces()
     qa = '--qa' in sys.argv
     todo = '--todo' in sys.argv
     R = leer_reparto()
