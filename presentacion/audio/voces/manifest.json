@@ -49,6 +49,16 @@
   "v": "9ebd2b469793",
   "who": "guitarra"
  },
+ "093a506e": {
+  "d": 3.24,
+  "e": "0972663100003679566226444355577610077558965373231299212321000086465139944210000",
+  "f": "093a506e.mp3",
+  "oido": "O me y la gasolina de la furgo y de mi coche, ¿quién",
+  "qa": 0.81,
+  "say": "Home, ¿y la gasolina de la furgo y de mi coche? ¿Quién la paga?",
+  "v": "b68796deac9c",
+  "who": "bateria"
+ },
  "0b105ebf": {
   "d": 4.18,
   "e": "089399633563232100004310663543631672461463321532941434210000000025369714523200201216546522979634411311",
@@ -199,6 +209,16 @@
   "v": "7297c1984ff3",
   "who": "bajo"
  },
+ "25651c3e": {
+  "d": 3.17,
+  "e": "01332367510000000288526697229859217456995147374966773771678557633444333212224",
+  "f": "25651c3e.mp3",
+  "oido": "Me no, y el break de batería que grabé el otro día en el mó",
+  "qa": 0.83,
+  "say": "[softly] Neno, ¿y el break de batería que grabé el otro día en el móvil?",
+  "v": "38e75dfe9646",
+  "who": "bateria"
+ },
  "28ed051e": {
   "d": 6.62,
   "e": "11321687555111376997123454389972355129457976459214413611577511765431243110266212563211100110011114675159679984168675127587656898966511267365111332111433134210101001",
@@ -339,6 +359,16 @@
   "v": "c6a93224bd4a",
   "who": "voz"
  },
+ "40370833": {
+  "d": 3.19,
+  "e": "066864584730597875119596454238979567453342466645310001442355638856237442463763",
+  "f": "40370833.mp3",
+  "oido": "¿Y la grabación entera del bolo de la riveira? ¿E",
+  "qa": 0.67,
+  "say": "¿Y la grabación entera del bolo de la Ribeira? ¿Eso no vale para nada?",
+  "v": "9f377d6ace2f",
+  "who": "guitarra"
+ },
  "411098e3": {
   "d": 3.48,
   "e": "0513942546211872100000019998310571351173443321799310000476432176683145201211112101111",
@@ -459,6 +489,16 @@
   "v": "241e596daee2",
   "who": "bajo"
  },
+ "5022b580": {
+  "d": 2.16,
+  "e": "0003651157279987998723585028332773983543135201442000",
+  "f": "5022b580.mp3",
+  "oido": "se acabó el audio perdido en el WhatsApp.",
+  "qa": 0.88,
+  "say": "[laughs] ¡Se acabó el audio perdido en el guasap!",
+  "v": "467094e68ff9",
+  "who": "guitarra"
+ },
  "50295dc8": {
   "d": 5.3,
   "e": "11253259688314962432111111111121286988999227651116744823664135554333211111111111576889889877667769874147720101333331257532211010110",
@@ -528,6 +568,16 @@
   "say": "¿Y hay temas sin tono ni be pe eme? Porque algunos yo los toco a sentimiento.",
   "v": "602bebe66bc8",
   "who": "guitarra"
+ },
+ "57b02ab3": {
+  "d": 3.53,
+  "e": "01110000000123678101542211110000000007684114243059466447755432126977999798532211000000",
+  "f": "57b02ab3.mp3",
+  "oido": "¡Merchan! ¡Pero si no tenemos boludo!",
+  "qa": 1.0,
+  "say": "[gasps] ¿Merchan? ¡Pero si no tenemos, boludo!",
+  "v": "429943bf8638",
+  "who": "voz"
  },
  "57e34f13": {
   "d": 4.94,
@@ -699,6 +749,16 @@
   "v": "76e72eb0d4c2",
   "who": "bajo"
  },
+ "6567c41b": {
+  "d": 2.21,
+  "e": "03688844554893856433322100011981169898997227922112110",
+  "f": "6567c41b.mp3",
+  "oido": "Ay, mi madriña, yo quiero la roja",
+  "qa": 0.86,
+  "say": "[excited] ¡Ai, mi madriña! ¡Yo quiero la roja!",
+  "v": "606453b93f86",
+  "who": "bateria"
+ },
  "66063fa3": {
   "d": 8.38,
   "e": "1115811189849738979979611558511233234552102797453111112555563288111654211367554232111001000010000029999977786667821355711534218983574210125633575104632110353115444541114532102452019964564211365203965644641110",
@@ -799,6 +859,16 @@
   "v": "793340df4968",
   "who": "voz"
  },
+ "7aa47063": {
+  "d": 5.86,
+  "e": "0048574125114899761111155441159118821251474661245851116566410236599527963113453114999579655411175321011111111113562117211854422344442111001010000",
+  "f": "7aa47063.mp3",
+  "oido": "Ahora sí chaval, camisetas y pegatinas con nuestro logo y el QR de los fans. Listas para imprimir.",
+  "qa": 1.0,
+  "say": "Ahora sí, chaval: camisetas y pegatinas con nuestro logo y el QR de los fans. Listas para imprimir.",
+  "v": "fb490d8b587f",
+  "who": "bajo"
+ },
  "7ae9636f": {
   "d": 7.34,
   "e": "21189512767998411100123115412956614641598572154563149976211111111141178893155127315776133138313321111143116883541577941159921101025968747424684123129776614976267754214111463421101110",
@@ -819,6 +889,36 @@
   "v": "fe98652b72b3",
   "who": "bajo"
  },
+ "7db198db": {
+  "d": 6.05,
+  "e": "10595154287421697531137612312511146531110000147531599522113995212762114110255555349721113621189644211100110103752356798569714675314420100000000000000",
+  "f": "7db198db.mp3",
+  "oido": "Va su canción y a su sección, intro, verso, estribillo o solo, con tu nombre tronco.",
+  "qa": 0.97,
+  "say": "Va a su canción y a su sección: intro, verso, estribillo o solo. Con tu nombre, tronco.",
+  "v": "1dbe4d16acd4",
+  "who": "bajo"
+ },
+ "7e64a9bd": {
+  "d": 3.1,
+  "e": "012688766664100016762179511469521016511564781076567899821379974676200443210",
+  "f": "7e64a9bd.mp3",
+  "oido": "Che, un set list que sube como un cohete.",
+  "qa": 0.82,
+  "say": "[amazed] ¡Ché, un setlist que sube como un cohete!",
+  "v": "7560a5b0d5ce",
+  "who": "voz"
+ },
+ "80a1e97c": {
+  "d": 4.87,
+  "e": "111682593971169217421488866764389418953211951341784115866743111101431834872267978758213454656751676514546632101011010000",
+  "f": "80a1e97c.mp3",
+  "oido": "Meter los coches que van en ruta con su consumo y te calcula la gasolina de cada parada.",
+  "qa": 0.94,
+  "say": "Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.",
+  "v": "79653ca03182",
+  "who": "bajo"
+ },
  "80eeb959": {
   "d": 8.23,
   "e": "226311584289511199510000037403720866995189996765136547845755720078211320000101321412431161196731451131135599941100347635412546555541012311000011113813931991186981127899766235441145315620211211465311010000",
@@ -837,6 +937,16 @@
   "qa": 0.85,
   "say": "Ves sus métricas del mes: los seguidores en Spótifai y los suscriptores en Yutub. Así sabes con quién te juntas.",
   "v": "0dff6a526db6",
+  "who": "bajo"
+ },
+ "82b4a778": {
+  "d": 6.1,
+  "e": "1124768961691146662158699866975321111111111112111112521761375157566611692146410029300771100211000000100110211137899215679115573013311210000000000010000",
+  "f": "82b4a778.mp3",
+  "oido": "le das optimizar orden y te propone el setlist perfecto. Tú decides si lo aplicas.",
+  "qa": 0.97,
+  "say": "Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.",
+  "v": "cb4ecbc4af05",
   "who": "bajo"
  },
  "8331d8c0": {
@@ -1019,6 +1129,16 @@
   "v": "31c742907133",
   "who": "bajo"
  },
+ "a166f37f": {
+  "d": 6.46,
+  "e": "1464119958851111276965295622751691043132159741461789777111642147566248881178378666311445530474354125410000100000003317926711889979951698692261179655521110101100",
+  "f": "a166f37f.mp3",
+  "oido": "Las ubes y la inteligencia artificial separan las canciones de lo que hablamos con el público y saca hasta la letra y los acordes.",
+  "qa": 0.88,
+  "say": "La subes, y la inteligencia artificial separa las canciones de lo que hablamos con el público. Y saca hasta la letra y los acordes.",
+  "v": "d8ae1feaed55",
+  "who": "bajo"
+ },
  "a617749f": {
   "d": 6.77,
   "e": "10493694268426632111111111111125997619921165955411557642378731556641110026562255961321114532110111111011589411992311198563154328433996466319526865451232114423311110000",
@@ -1038,6 +1158,16 @@
   "say": "[excited] ¡Se acabaron las sorpresas el día del bolo! ¡Por fin, home!",
   "v": "df0b7f890a5d",
   "who": "bateria"
+ },
+ "aa4fdaf7": {
+  "d": 1.87,
+  "e": "075117889921981963147546443007752631220321110",
+  "f": "aa4fdaf7.mp3",
+  "oido": "y si a mitad del bolo la curva",
+  "qa": 0.89,
+  "say": "[curious] ¿Y si a mitad del bolo la curva se cae?",
+  "v": "3e8d4377050a",
+  "who": "guitarra"
  },
  "ab989e2f": {
   "d": 7.06,
@@ -1077,6 +1207,16 @@
   "qa": 1.0,
   "say": "Alan. Voz y guitarra. Che, la cara bonita de la banda.",
   "v": "c056d4279666",
+  "who": "voz"
+ },
+ "ae552e62": {
+  "d": 4.99,
+  "e": "000097133300011110100069543168941104865543899946863210000000085456972101893104541235667445852100000000283111378644332100000",
+  "f": "ae552e62.mp3",
+  "oido": "Un disco en vivo, sin mis chistes malos, qué genio.",
+  "qa": 1.0,
+  "say": "[laughs] ¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!",
+  "v": "6f6d02c8867d",
   "who": "voz"
  },
  "b113c598": {
@@ -1147,6 +1287,16 @@
   "qa": 0.52,
   "say": "Y presumo, que pa eso soy de San Blas. En el rocanrol, presumir es medio trabajo.",
   "v": "091b4f33b2e9",
+  "who": "bajo"
+ },
+ "b6e1fc28": {
+  "d": 4.49,
+  "e": "01468961137996432111169994167588314766312544311114553211233457895123736611567721464686641343115521343114221000",
+  "f": "b6e1fc28.mp3",
+  "oido": "Mirad, chavales, cada tema tiene su energía y la app dibuja la curva del concierto ent",
+  "qa": 0.94,
+  "say": "Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.",
+  "v": "4d9a4cb977ca",
   "who": "bajo"
  },
  "b7fe9571": {
@@ -1488,5 +1638,15 @@
   "say": "¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación. ¡Pero esperad, que esto no ha hecho más que empezar!",
   "v": "f0f8a9c8ca20",
   "who": "bajo"
+ },
+ "ffd15ae0": {
+  "d": 2.16,
+  "e": "0686766769948821067159745479712645866713744445533210",
+  "f": "ffd15ae0.mp3",
+  "oido": "ni una discusión más en la gasolinera.",
+  "qa": 1.0,
+  "say": "[laughs] ¡Ni una discusión más en la gasolinera!",
+  "v": "e0b51008d57e",
+  "who": "guitarra"
  }
 }
