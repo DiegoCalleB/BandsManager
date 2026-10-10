@@ -27,7 +27,7 @@ Exporta: BulkLeadsActionBar.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[src_components_booking_crm_BulkActionsSection|src/components/booking/crm/BulkActionsSection.tsx]] *(from #frontend)*
 
 ---
 

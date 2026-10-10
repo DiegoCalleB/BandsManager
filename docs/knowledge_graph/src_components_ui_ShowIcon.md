@@ -34,6 +34,8 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_BoloConfirmadoSetlistModal|src/components/booking/BoloConfirmadoSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_booking_BookingFiltersPanel|src/components/booking/BookingFiltersPanel.tsx]] *(from #frontend)*
 - [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_ActiveFiltersBar|src/components/booking/crm/ActiveFiltersBar.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_RouteAnchorBanner|src/components/booking/crm/RouteAnchorBanner.tsx]] *(from #frontend)*
 - [[src_components_booking_ExcelImportModal|src/components/booking/ExcelImportModal.tsx]] *(from #frontend)*
 - [[src_components_booking_FastDealModal|src/components/booking/FastDealModal.tsx]] *(from #frontend)*
 - [[src_components_booking_GenerateAllTemplatesModal|src/components/booking/GenerateAllTemplatesModal.tsx]] *(from #frontend)*
@@ -180,7 +182,6 @@ _Sin dependencias salientes directas._
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 - [[src_components_WaveformTrack|src/components/WaveformTrack.tsx]] *(from #frontend)*
 - [[src_pages_PublicDealView|src/pages/PublicDealView.tsx]] *(from #frontend)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---

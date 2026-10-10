@@ -41,6 +41,7 @@ Tabla interactiva de salas con estados CRM y acciones masivas.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_crm_ListOrMapArea|src/components/booking/crm/ListOrMapArea.tsx]] *(from #frontend)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---

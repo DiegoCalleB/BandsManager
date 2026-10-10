@@ -45,6 +45,8 @@ export interface BookingCampaign {
   // sin entrada aquí siguen usando solo la plantilla general de su tipo.
   customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
   isActive: boolean;
+  /** Alias heredado de la API (snake_case) de `isActive`. */
+  is_active?: boolean;
   color?: string; // Hex color for badge styling (e.g.'var(--acc)', 'var(--acc)', '#06b6d4')
   created_at?: string;
 }

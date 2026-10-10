@@ -23,7 +23,7 @@ Exporta: useSavedFilters.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useCrmNavigation|src/components/booking/crm/hooks/useCrmNavigation.ts]] *(from #frontend)*
 
 ---
 
