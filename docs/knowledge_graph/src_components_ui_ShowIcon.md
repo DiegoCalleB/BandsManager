@@ -149,7 +149,8 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_live_concert_album_TrackTitleRow|src/components/repertorio/live_concert_album/TrackTitleRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_live_concert_album_YoutubeCookiesDialog|src/components/repertorio/live_concert_album/YoutubeCookiesDialog.tsx]] *(from #frontend)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_PdfControlPanel|src/components/repertorio/pdf_export/PdfControlPanel.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_SheetPager|src/components/repertorio/pdf_export/SheetPager.tsx]] *(from #frontend)*
 - [[src_components_repertorio_PerfectSetlistModal|src/components/repertorio/PerfectSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioNavBar|src/components/repertorio/RepertorioNavBar.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*

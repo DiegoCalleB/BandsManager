@@ -23,7 +23,11 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildRowHtmlFactory|src/components/repertorio/pdf_export/buildRowHtmlFactory.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintPreview|src/components/repertorio/pdf_export/hooks/usePrintPreview.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_printDocumentBuilder|src/components/repertorio/pdf_export/printDocumentBuilder.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_printLayout|src/components/repertorio/pdf_export/printLayout.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_SheetPreviewPane|src/components/repertorio/pdf_export/SheetPreviewPane.tsx]] *(from #frontend)*
 
 ---
 

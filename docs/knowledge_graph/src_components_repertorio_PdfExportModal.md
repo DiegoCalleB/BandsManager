@@ -13,30 +13,27 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: SetlistStylePreset, PdfExportModal.
+Modal de exportación del setlist a PDF/impresión: ajustes de diseño, vista previa paginada y hojas por miembro.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_pdf_export_PdfExportLayout|src/components/repertorio/pdf_export/PdfExportLayout.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_pdf_export_PdfExportProvider|src/components/repertorio/pdf_export/PdfExportProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_pdf_export_hooks_usePdfExportController|src/components/repertorio/pdf_export/hooks/usePdfExportController.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_pdf_export_printLayout|src/components/repertorio/pdf_export/printLayout.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_escapeHtml|src/utils/escapeHtml.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_printSettings|src/utils/printSettings.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_qrSvg|src/utils/qrSvg.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_setlistNoteText|src/utils/setlistNoteText.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_setlistPaginator|src/utils/setlistPaginator.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_textFit|src/utils/textFit.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/repertorio/pdf_export/__tests__/pdfExportContracts.test.ts`
 
 ---
 

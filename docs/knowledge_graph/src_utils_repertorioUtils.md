@@ -30,6 +30,15 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildHeaderFooter|src/components/repertorio/pdf_export/buildHeaderFooter.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildRowHtmlFactory|src/components/repertorio/pdf_export/buildRowHtmlFactory.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_useMemberSelection|src/components/repertorio/pdf_export/hooks/useMemberSelection.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePdfExportController|src/components/repertorio/pdf_export/hooks/usePdfExportController.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintMembers|src/components/repertorio/pdf_export/hooks/usePrintMembers.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintPreview|src/components/repertorio/pdf_export/hooks/usePrintPreview.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_useSongMarks|src/components/repertorio/pdf_export/hooks/useSongMarks.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_PdfExportContext|src/components/repertorio/pdf_export/PdfExportContext.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_printDocumentBuilder|src/components/repertorio/pdf_export/printDocumentBuilder.ts]] *(from #frontend)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistItemsList|src/components/repertorio/SetlistItemsList.tsx]] *(from #frontend)*
