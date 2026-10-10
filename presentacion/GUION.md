@@ -22,6 +22,7 @@ Pregunta que sostiene toda la presentación: **¿qué ha construido Iago y llega
 9. **Convergencia.** Backstage del festival · radio · chat espejo · «El bajista soy yo» · «Un sueño hecho realidad» · Gracias.
 
 ## Reglas
+- El reparto es intercambiable: todo nombre, rol y foto sale de `reparto.js` (ver AGENTS.md). Los chistes dependen del personaje; si cambia un músico, revisar los mensajes que lo mencionan.
 - Una idea por diapositiva; el chat explica y la pantalla demuestra.
 - Las reacciones son de sorpresa y alegría; el humor viene de las adivinanzas del grupo y de Iago quitándose mérito.
 - Cada foto de personaje sale como avatar y con su papel (manager de Os Herdeiros, voz de Master of Prompts).
