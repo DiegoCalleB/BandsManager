@@ -18,32 +18,35 @@
     .then(function (m) { manifest = m || {}; }).catch(function () { /* sin voces grabadas */ });
 
   var pref = store.get('deck_voces') !== 'off';
-  var audio = new Audio();
-  audio.preload = 'auto';
-  // Ritmo: las voces suenan un poco más rápidas y la siguiente frase arranca cuando a la anterior le queda un suspiro
-  var VEL = 1.12, SOLAPE = 0.5;
-  audio.preservesPitch = true;
+  // Dos reproductores que se turnan: así una frase puede empezar mientras la anterior todavía termina,
+  // como en una conversación real en la que la gente se pisa un poco
+  var pista = [new Audio(), new Audio()], turno = 0;
+  pista.forEach(function (a) { a.preload = 'auto'; a.preservesPitch = true; });
+  // Ritmo: voces un poco más rápidas; PISAR = cuánto se solapa con la anterior cuando cambia quien habla
+  var VEL = 1.12, PISAR = 0.28;
+  var retardo = function (el) { return el && el.matches('.dlg li') ? Math.min(420, 140 + (el.dataset.say || '').length * 1.3) : 0; };
   var run = 0, timer = 0, avisar = function () {};
 
   var enabled = function () { return pref && !!(window.DeckSound && window.DeckSound.enabled); };
 
   // Boca: el volumen de la voz (envolvente que guarda el generador, 25 por segundo) mueve el avatar.
   // Se pinta en --vu del que habla y de su diapositiva (el ecualizador de la radio también lo sigue).
-  var boca = 0;
-  function mover(el, e, casi) {
-    cancelAnimationFrame(boca);
+  // casi(): se llama cuando a la frase le quedan `antes` segundos reales, para preparar la siguiente
+  function mover(el, e, audio, casi, antes) {
+    cancelAnimationFrame(el._boca);
     var slide = el.closest('.slide');
     var paso = function () {
-      if (casi && audio.duration && audio.duration - audio.currentTime < SOLAPE * VEL) casi();
-      var v = e ? +(e.charAt(Math.floor(audio.currentTime * 25)) || 0) / 9 : 0.35 + 0.35 * Math.sin(Date.now() / 90) * Math.sin(Date.now() / 37);
+      if (casi && audio && audio.duration && (audio.duration - audio.currentTime) / VEL < antes) casi();
+      var t = audio ? audio.currentTime : 0;
+      var v = e ? +(e.charAt(Math.floor(t * 25)) || 0) / 9 : 0.35 + 0.35 * Math.sin(Date.now() / 90) * Math.sin(Date.now() / 37);
       el.style.setProperty('--vu', v.toFixed(2));
       if (slide) slide.style.setProperty('--vu', v.toFixed(2));
-      boca = requestAnimationFrame(paso);
+      el._boca = requestAnimationFrame(paso);
     };
     paso();
   }
   function callar(el) {
-    cancelAnimationFrame(boca);
+    cancelAnimationFrame(el._boca);
     el.style.removeProperty('--vu');
     var slide = el.closest('.slide'); if (slide) slide.style.removeProperty('--vu');
   }
@@ -98,23 +101,22 @@
     var f = slide && slide.querySelector('.foco'); if (f) { f.classList.remove('in'); delete f.dataset.who; }
   }
 
-  function hablar(el, fin) {
+  function hablar(el, fin, antes) {
     var who = el.dataset.who, say = el.dataset.say || '';
     var m = manifest[fnv(who + '|' + say)];
     var hecho = false, avanzado = false;
     var avanzar = function () { if (avanzado) return; avanzado = true; if (fin) fin(); };
     var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); avanzar(); };
-    // la frase anterior pudo quedar con la boca abierta si la siguiente arrancó antes de que acabara
-    document.querySelectorAll('.habla').forEach(function (e) { if (e !== el) { e.classList.remove('habla'); callar(e); } });
     el.classList.add('habla');
     dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
+      var audio = pista[turno]; turno = 1 - turno;
       audio.onended = acabar; audio.onerror = function () { leer(); };
       audio.src = 'audio/voces/' + m.f;
       audio.playbackRate = VEL;
-      audio.play().then(function () { mover(el, m.e || null, avanzar); }).catch(function () { leer(); });
+      audio.play().then(function () { mover(el, m.e || null, audio, avanzar, antes || 0); }).catch(function () { leer(); });
       return;
     }
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
@@ -137,10 +139,8 @@
   function stop() {
     run++;
     clearTimeout(timer);
-    audio.onended = null; audio.onerror = null;
-    try { audio.pause(); } catch (_) { /* nada que parar */ }
+    pista.forEach(function (a) { a.onended = null; a.onerror = null; try { a.pause(); } catch (_) { /* nada que parar */ } });
     try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (_) { /* sin síntesis */ }
-    cancelAnimationFrame(boca);
     document.querySelectorAll('.habla, .typing').forEach(function (e) { e.classList.remove('habla', 'typing'); callar(e); });
     document.querySelectorAll('.foco.in').forEach(function (f) { f.classList.remove('in'); delete f.dataset.who; });
   }
@@ -156,9 +156,11 @@
     var siguiente = function () {
       if (id !== run) return;
       if (i >= cola.length) { timer = setTimeout(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
-      var el = cola[i++];
+      var el = cola[i++], prox = cola[i];
       var luego = function () { if (id === run) timer = setTimeout(siguiente, 0); };
-      if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego); return; }
+      // La siguiente se prepara a tiempo para empezar justo al acabar esta, o pisándola un poco si habla otro
+      var antes = prox ? retardo(prox) / 1000 + (prox.dataset.who !== el.dataset.who ? PISAR : 0) : 0;
+      if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego, antes); return; }
       // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
       el.classList.add('typing');
       if (mostrar) mostrar(el);
@@ -166,8 +168,8 @@
         if (id !== run) return;
         el.classList.remove('typing');
         if (window.DeckSound && window.DeckSound.msg) window.DeckSound.msg(el.classList.contains('me'));
-        hablar(el, luego);
-      }, Math.min(420, 140 + (el.dataset.say || '').length * 1.3));
+        hablar(el, luego, antes);
+      }, retardo(el));
     };
     timer = setTimeout(siguiente, 200);
   }
