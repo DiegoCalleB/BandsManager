@@ -16,7 +16,7 @@ Uso:
     python3 presentacion/tools/voces.py --todo    # lo rehace todo
     python3 presentacion/tools/voces.py --voces   # lista voces de ElevenLabs en castellano para elegir
 
-ElevenLabs lee la clave de $ELEVENLABS_API_KEY (necesita acceso de red a api.elevenlabs.io). Solo se
+ElevenLabs lee la clave de $ELEVENLABS_API_KEY, o de un secreto de red del entorno (cabecera xi-api-key hacia api.elevenlabs.io). Solo se
 pagan las frases nuevas o cambiadas: el resto se reaprovecha.
 
 Los modelos se descargan solos la primera vez en ~/.cache/bandmanager-voces (o en $VOCES_MODELOS).
@@ -118,11 +118,12 @@ def limpiar(texto):
 
 
 def eleven(ruta, metodo='GET', datos=None, intentos=4):
-    clave = os.environ.get('ELEVENLABS_API_KEY')
-    if not clave:
-        sys.exit('Falta ELEVENLABS_API_KEY en el entorno.')
-    req = urllib.request.Request(ELEVEN + ruta, method=metodo, data=json.dumps(datos).encode() if datos else None,
-                                 headers={'xi-api-key': clave, 'Content-Type': 'application/json'})
+    # La clave puede venir en $ELEVENLABS_API_KEY o inyectada por el entorno (secreto de red con la cabecera
+    # xi-api-key hacia api.elevenlabs.io); en ese caso la petición va sin clave y la añade el proxy.
+    cab = {'Content-Type': 'application/json'}
+    if os.environ.get('ELEVENLABS_API_KEY'):
+        cab['xi-api-key'] = os.environ['ELEVENLABS_API_KEY']
+    req = urllib.request.Request(ELEVEN + ruta, method=metodo, data=json.dumps(datos).encode() if datos else None, headers=cab)
     for i in range(intentos):
         try:
             with urllib.request.urlopen(req, timeout=120) as r:
