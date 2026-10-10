@@ -32,7 +32,9 @@ Exporta: ToneAnalysisData, BandToneModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandCrmModalsHost|src/components/bandCRM/BandCrmModalsHost.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmUiState|src/components/bandCRM/hooks/useBandCrmUiState.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandToneAnalysis|src/components/bandCRM/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterLayout|src/components/reels_center/ReelsCenterLayout.tsx]] *(from #frontend)*

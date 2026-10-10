@@ -44,10 +44,14 @@ BandManager UI Component Library
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandCardsGrid|src/components/bandCRM/BandCardsGrid.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandCrmHeader|src/components/bandCRM/BandCrmHeader.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandPitchModal|src/components/bandCRM/BandPitchModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandsEmptyState|src/components/bandCRM/BandsEmptyState.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandsFilterBar|src/components/bandCRM/BandsFilterBar.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandsTable|src/components/bandCRM/BandsTable.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*

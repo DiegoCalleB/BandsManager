@@ -26,8 +26,8 @@ Audio Storage & Utility Helpers for BandManager
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_AlbumCover|src/components/AlbumCover.tsx]] *(from #frontend)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandForm|src/components/bandCRM/hooks/useBandForm.ts]] *(from #frontend)*
 - [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
 - [[src_components_booking_ChangeLeadImageModal|src/components/booking/ChangeLeadImageModal.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadFormsAndEnrichment|src/components/booking/crm/hooks/useLeadFormsAndEnrichment.ts]] *(from #frontend)*

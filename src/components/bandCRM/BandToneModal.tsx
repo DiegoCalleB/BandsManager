@@ -1,37 +1,31 @@
-import React, { useState } from "react";
-import { BandContact } from "../../types";
 import {
-  Sparkles,
-  X,
-  Check,
-  Copy,
-  MessageSquare,
-  Radio,
-  Flame,
-  MessageCircle,
-  HeartHandshake,
-  Pencil,
-  Save,
-  XCircle,
-  RefreshCw,
-  Brain,
-  GraduationCap,
-  MessageSquareText,
-  Building2,
-  Tent,
-  Disc3,
-  Users,
-  Briefcase,
-  Landmark,
+Brain,
+Check,
+Copy,
+Flame,
+GraduationCap,
+HeartHandshake,
+MessageCircle,
+MessageSquare,
+MessageSquareText,
+Pencil,
+Radio,
+RefreshCw,
+Save,
+Sparkles,
+X,
+XCircle
 } from "lucide-react";
-import { ModalPortal } from "../common/ModalPortal";
-import { PublicoSilhouette } from "../ui/PublicoSilhouette";
-import { apiFetch } from "../../utils/api";
+import React, { useState } from "react";
 import { api } from "../../services/api";
+import { BandContact } from "../../types";
+import { apiFetch } from "../../utils/api";
 import { ExampleThreadsSection } from "../booking/ExampleThreadsSection";
 import type { TemplateCategory } from "../booking/TemplateConfigSection";
-import { ShowIcon } from '../ui/ShowIcon';
+import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { PublicoSilhouette } from "../ui/PublicoSilhouette";
+import { ShowIcon } from '../ui/ShowIcon';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.

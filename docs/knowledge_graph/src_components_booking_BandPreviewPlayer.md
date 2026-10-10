@@ -26,7 +26,9 @@ Exporta: ColaBanda, BandPreviewPlayer.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandCrmModalsHost|src/components/bandCRM/BandCrmModalsHost.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandDerivedData|src/components/bandCRM/hooks/useBandDerivedData.ts]] *(from #frontend)*
 
 ---
 

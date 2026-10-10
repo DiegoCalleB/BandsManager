@@ -25,7 +25,7 @@ Exporta: BandMap.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandsMapView|src/components/bandCRM/BandsMapView.tsx]] *(from #frontend)*
 
 ---
 

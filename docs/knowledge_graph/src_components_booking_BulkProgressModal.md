@@ -24,7 +24,9 @@ Exporta: BulkProgressItem, BulkProgressModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BandCrmModalsHost|src/components/bandCRM/BandCrmModalsHost.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
 - [[src_components_booking_crm_BulkActionsSection|src/components/booking/crm/BulkActionsSection.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_CrmModalsHost|src/components/booking/crm/CrmModalsHost.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadSelectionAndTemplates|src/components/booking/crm/hooks/useLeadSelectionAndTemplates.ts]] *(from #frontend)*

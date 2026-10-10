@@ -31,6 +31,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0022](./0022-modularizacion-reels-metrics-view.md) | Modularización de ReelsMetricsView (2662 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0023](./0023-modularizacion-pdf-export-modal.md) | Modularización de PdfExportModal (2638 → ~60 líneas) con constructor de documento, hooks y vistas | Aceptada | nueva |
 | [0024](./0024-modularizacion-booking-crm.md) | Modularización de BookingCRM (2607 → ~75 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0025](./0025-modularizacion-band-crm.md) | Modularización de BandCRM (2216 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 
