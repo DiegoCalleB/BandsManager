@@ -122,9 +122,11 @@ BandManager UI Component Library
 - [[src_components_calendar_views_PeriodNavigation|src/components/calendar/views/PeriodNavigation.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotModeSwitcher|src/components/chatbot/ChatbotModeSwitcher.tsx]] *(from #frontend)*
+- [[src_components_chatbot_ChatInputForm|src/components/chatbot/ChatInputForm.tsx]] *(from #frontend)*
+- [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 - [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*
 - [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(from #frontend)*

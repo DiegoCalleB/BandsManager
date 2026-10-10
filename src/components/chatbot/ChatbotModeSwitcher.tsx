@@ -1,5 +1,5 @@
-import React from 'react';
 import { Sliders } from 'lucide-react';
+import React from 'react';
 import { Button } from '../ui';
 
 export interface ChatbotModeSwitcherProps {
@@ -15,7 +15,6 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
   onToggleAgents,
   isAdmin,
   onOpenAutonomyModal,
-  isStitchLight,
 }) => {
   return (
     <div

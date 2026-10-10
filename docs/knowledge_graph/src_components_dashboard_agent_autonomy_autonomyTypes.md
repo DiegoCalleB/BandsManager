@@ -23,6 +23,7 @@ Tipos y constantes de la configuración de autonomía de los agentes (zonas hora
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(from #frontend)*
 - [[src_components_dashboard_agent_autonomy_AgentAutonomyContext|src/components/dashboard/agent_autonomy/AgentAutonomyContext.ts]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_EconomicParamsSection|src/components/dashboard/agent_autonomy/EconomicParamsSection.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_hooks_useAgentAutonomyController|src/components/dashboard/agent_autonomy/hooks/useAgentAutonomyController.ts]] *(from #agent)*

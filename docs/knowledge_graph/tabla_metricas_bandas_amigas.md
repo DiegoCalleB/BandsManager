@@ -24,7 +24,6 @@ Tabla de Supabase `metricas_bandas_amigas` (11 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*

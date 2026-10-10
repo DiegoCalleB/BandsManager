@@ -52,7 +52,10 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueAgentWorkflowBanner|src/components/booking/venue_panel/VenueAgentWorkflowBanner.tsx]] *(from #agent)*
 - [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useAgentRuns|src/components/chatbot/hooks/useAgentRuns.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useAgentTriggerAction|src/components/chatbot/hooks/useAgentTriggerAction.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useLeadEmailActions|src/components/chatbot/hooks/useLeadEmailActions.ts]] *(from #frontend)*
 - [[src_components_dashboard_agent_autonomy_autonomyTypes|src/components/dashboard/agent_autonomy/autonomyTypes.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_hooks_useAutonomyAuditLogs|src/components/dashboard/agent_autonomy/hooks/useAutonomyAuditLogs.ts]] *(from #agent)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
