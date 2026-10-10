@@ -1,26 +1,25 @@
 ---
-id: src_components_calendar_ConcertBreakEvenCard
-title: "src/components/calendar/ConcertBreakEvenCard.tsx"
+id: src_components_calendar_logistics_RehearsalMeetingWidget
+title: "src/components/calendar/logistics/RehearsalMeetingWidget.tsx"
 layer: frontend
 domain: system
-file: "src/components/calendar/ConcertBreakEvenCard.tsx"
+file: "src/components/calendar/logistics/RehearsalMeetingWidget.tsx"
 tags: ["frontend", "system", "auto"]
 ---
 
-# 📌 src/components/calendar/ConcertBreakEvenCard.tsx
+# 📌 src/components/calendar/logistics/RehearsalMeetingWidget.tsx
 
-> **Ubicación:** `src/components/calendar/ConcertBreakEvenCard.tsx`  
+> **Ubicación:** `src/components/calendar/logistics/RehearsalMeetingWidget.tsx`  
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: ConcertBreakEvenCard.
+Exporta: RehearsalMeetingWidget.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_breakEvenCalculator|src/utils/breakEvenCalculator.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

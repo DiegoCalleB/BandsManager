@@ -136,7 +136,6 @@ BandManager UI Component Library
 - [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(from #frontend)*
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSyncModal|src/components/calendar/CalendarSyncModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_ClosingChecklistTab|src/components/calendar/event_detail/ClosingChecklistTab.tsx]] *(from #frontend)*
@@ -152,6 +151,14 @@ BandManager UI Component Library
 - [[src_components_calendar_event_detail_PostShowTab|src/components/calendar/event_detail/PostShowTab.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_TechnicalLogisticsTab|src/components/calendar/event_detail/TechnicalLogisticsTab.tsx]] *(from #frontend)*
 - [[src_components_calendar_EventWeatherCard|src/components/calendar/EventWeatherCard.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_ConcertQrWidget|src/components/calendar/logistics/ConcertQrWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventDetailPanel|src/components/calendar/logistics/EventDetailPanel.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventSetlistWidget|src/components/calendar/logistics/EventSetlistWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_FreeDayCampaigns|src/components/calendar/logistics/FreeDayCampaigns.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_GearChecklistTab|src/components/calendar/logistics/GearChecklistTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_LogisticsTabContent|src/components/calendar/logistics/LogisticsTabContent.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_RunOfShowTab|src/components/calendar/logistics/RunOfShowTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_UpcomingEventsList|src/components/calendar/logistics/UpcomingEventsList.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_BandFilterToggle|src/components/calendar/views/BandFilterToggle.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarSearchBar|src/components/calendar/views/CalendarSearchBar.tsx]] *(from #frontend)*

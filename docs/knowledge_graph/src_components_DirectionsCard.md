@@ -24,8 +24,9 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_panel_VenueContactRosterCards|src/components/booking/venue_panel/VenueContactRosterCards.tsx]] *(from #frontend)*
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_OverviewTab|src/components/calendar/event_detail/OverviewTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventCoreInfo|src/components/calendar/logistics/EventCoreInfo.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_UpcomingEventsList|src/components/calendar/logistics/UpcomingEventsList.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 
 ---

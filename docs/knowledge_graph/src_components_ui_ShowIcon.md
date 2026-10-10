@@ -79,7 +79,6 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_CalendarEditConcertModal|src/components/calendar/CalendarEditConcertModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(from #frontend)*
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
 - [[src_components_calendar_ConcertBreakEvenCard|src/components/calendar/ConcertBreakEvenCard.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_EventHeaderSection|src/components/calendar/event_detail/EventHeaderSection.tsx]] *(from #frontend)*
@@ -90,6 +89,12 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_event_detail_OverviewTab|src/components/calendar/event_detail/OverviewTab.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_PostShowTab|src/components/calendar/event_detail/PostShowTab.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_TechnicalLogisticsTab|src/components/calendar/event_detail/TechnicalLogisticsTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventCoreInfo|src/components/calendar/logistics/EventCoreInfo.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventDetailPanel|src/components/calendar/logistics/EventDetailPanel.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_FreeDayCampaigns|src/components/calendar/logistics/FreeDayCampaigns.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_LogisticsTabContent|src/components/calendar/logistics/LogisticsTabContent.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_RehearsalMeetingWidget|src/components/calendar/logistics/RehearsalMeetingWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_UpcomingEventsList|src/components/calendar/logistics/UpcomingEventsList.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarTitleBar|src/components/calendar/views/CalendarTitleBar.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_ConcertDetailCard|src/components/calendar/views/ConcertDetailCard.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_DayAgendaHeader|src/components/calendar/views/DayAgendaHeader.tsx]] *(from #frontend)*

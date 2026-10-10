@@ -25,6 +25,23 @@ Contexto del Calendario: reparte el estado y las acciones del controlador a las 
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_calendar_CalendarProvider|src/components/calendar/CalendarProvider.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_ClosingChecklistTab|src/components/calendar/logistics/ClosingChecklistTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_ConcertQrWidget|src/components/calendar/logistics/ConcertQrWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_ContactsTab|src/components/calendar/logistics/ContactsTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventCoreInfo|src/components/calendar/logistics/EventCoreInfo.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventDetailPanel|src/components/calendar/logistics/EventDetailPanel.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventSetlistWidget|src/components/calendar/logistics/EventSetlistWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventWeatherPanel|src/components/calendar/logistics/EventWeatherPanel.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_FreeDayCampaigns|src/components/calendar/logistics/FreeDayCampaigns.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_GearChecklistTab|src/components/calendar/logistics/GearChecklistTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_LogisticsSidebar|src/components/calendar/logistics/LogisticsSidebar.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_LogisticsSubtabsBar|src/components/calendar/logistics/LogisticsSubtabsBar.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_LogisticsTabContent|src/components/calendar/logistics/LogisticsTabContent.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_MerchTab|src/components/calendar/logistics/MerchTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_MultiDayEventSelector|src/components/calendar/logistics/MultiDayEventSelector.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_RehearsalMeetingWidget|src/components/calendar/logistics/RehearsalMeetingWidget.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_RunOfShowTab|src/components/calendar/logistics/RunOfShowTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_UpcomingEventsList|src/components/calendar/logistics/UpcomingEventsList.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_BandFilterToggle|src/components/calendar/views/BandFilterToggle.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarLayout|src/components/calendar/views/CalendarLayout.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*

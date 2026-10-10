@@ -25,9 +25,9 @@ Barra lateral de logística, modales de alta/edición/recordatorio/ficha y modo 
 - [[src_components_calendar_CalendarEditRehearsalModal|src/components/calendar/CalendarEditRehearsalModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_CalendarReminderModal|src/components/calendar/CalendarReminderModal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_CalendarSyncModal|src/components/calendar/CalendarSyncModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_calendarTheme|src/components/calendar/calendarTheme.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_logistics_LogisticsSidebar|src/components/calendar/logistics/LogisticsSidebar.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
