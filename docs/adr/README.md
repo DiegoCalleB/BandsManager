@@ -24,17 +24,18 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0015](./0015-modularizacion-repertorio-setlists.md) | Modularización de RepertorioSetlists (3403 → ~280 líneas) | Aceptada | nueva |
 | [0016](./0016-modularizacion-song-studio-modal.md) | Modularización de SongStudioModal (5500 → ~50 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 | [0017](./0017-modularizacion-live-concert-to-album-modal.md) | Modularización de LiveConcertToAlbumModal (3432 → ~50 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
-| [0018](./0018-modularizacion-reels-center.md) | Modularización de ReelsCenter (4155 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0018](./0018-modularizacion-reels-center.md) | Modularización de ReelsCenter (4155 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0019](./0019-modularizacion-calendar-view.md) | Modularización de CalendarView (3423 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0020](./0020-modularizacion-agent-autonomy-settings-modal.md) | Modularización de AgentAutonomySettingsModal (2786 → ~60 líneas) con hooks, contexto y pestañas | Aceptada | nueva |
 | [0021](./0021-modularizacion-chatbot.md) | Modularización de Chatbot (2675 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
-| [0022](./0022-modularizacion-reels-metrics-view.md) | Modularización de ReelsMetricsView (2662 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0022](./0022-modularizacion-reels-metrics-view.md) | Modularización de ReelsMetricsView (2662 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0023](./0023-modularizacion-pdf-export-modal.md) | Modularización de PdfExportModal (2638 → ~60 líneas) con constructor de documento, hooks y vistas | Aceptada | nueva |
 | [0024](./0024-modularizacion-booking-crm.md) | Modularización de BookingCRM (2607 → ~75 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0025](./0025-modularizacion-band-crm.md) | Modularización de BandCRM (2216 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0026](./0026-modularizacion-calendar-event-detail-modal.md) | Modularización de CalendarEventDetailModal (2142 → ~100 líneas) con controlador, contexto y vistas por pestaña | Aceptada | nueva |
 | [0027](./0027-ninguna-banda-privilegiada.md) | Ninguna banda es especial en el código (claves `bandmanager_*`, sin banda por defecto, `band-demo`, script de migración de ids) | Aceptada | nueva |
 | [0028](./0028-modularizacion-fans-landing.md) | Modularización de FansLanding (2106 → ~50 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0029](./0029-modularizacion-fans-panel.md) | Modularización de FansPanel (2051 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

@@ -27,7 +27,7 @@ Exporta: useModuleTutorial.
 - [[src_components_booking_crm_hooks_useCrmNavigation|src/components/booking/crm/hooks/useCrmNavigation.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFansPanelController|src/components/fans_panel/hooks/useFansPanelController.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useSongStudioController|src/components/song_studio/hooks/useSongStudioController.ts]] *(from #frontend)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 

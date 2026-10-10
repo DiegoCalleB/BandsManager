@@ -112,7 +112,7 @@ _Sin dependencias salientes directas._
 - [[src_components_epk_EPKPerfilBlock|src/components/epk/EPKPerfilBlock.tsx]] *(from #frontend)*
 - [[src_components_fans_FansCommunityView|src/components/fans/FansCommunityView.tsx]] *(from #frontend)*
 - [[src_components_fans_landing_SocialLinksTab|src/components/fans_landing/SocialLinksTab.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_QrAdvancedConfig|src/components/fans_panel/QrAdvancedConfig.tsx]] *(from #frontend)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*

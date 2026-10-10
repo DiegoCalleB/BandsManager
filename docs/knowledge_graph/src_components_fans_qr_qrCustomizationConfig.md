@@ -23,10 +23,10 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_fans_panel_hooks_useQrCustomization|src/components/fans_panel/hooks/useQrCustomization.ts]] *(from #frontend)*
 - [[src_components_fans_qr_CustomizableBandQr|src/components/fans/qr/CustomizableBandQr.tsx]] *(from #frontend)*
 - [[src_components_fans_qr_QrCustomizerControls|src/components/fans/qr/QrCustomizerControls.tsx]] *(from #frontend)*
 - [[src_components_fans_qr_QrMascots|src/components/fans/qr/QrMascots.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(from #frontend)*
 
 ---

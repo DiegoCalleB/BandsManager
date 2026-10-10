@@ -24,7 +24,7 @@ Exporta: CustomizableBandQrProps, CustomizableBandQr.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_QrPreviewCard|src/components/fans_panel/QrPreviewCard.tsx]] *(from #frontend)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(from #frontend)*
 
 ---

@@ -233,6 +233,14 @@ _Sin dependencias salientes directas._
 - [[src_components_fans_landing_hooks_useFanJoinForm|src/components/fans_landing/hooks/useFanJoinForm.ts]] *(from #frontend)*
 - [[src_components_fans_landing_hooks_useFanSignupSubmit|src/components/fans_landing/hooks/useFanSignupSubmit.ts]] *(from #frontend)*
 - [[src_components_fans_landing_hooks_useFansLandingController|src/components/fans_landing/hooks/useFansLandingController.ts]] *(from #frontend)*
+- [[src_components_fans_panel_FansAddModal|src/components/fans_panel/FansAddModal.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useCityChips|src/components/fans_panel/hooks/useCityChips.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFanIncentive|src/components/fans_panel/hooks/useFanIncentive.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFansFilters|src/components/fans_panel/hooks/useFansFilters.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useFansPanelController|src/components/fans_panel/hooks/useFansPanelController.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useManualFanForm|src/components/fans_panel/hooks/useManualFanForm.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrLink|src/components/fans_panel/hooks/useQrLink.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrSharing|src/components/fans_panel/hooks/useQrSharing.ts]] *(from #frontend)*
 - [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*

@@ -24,7 +24,7 @@ Exporta: getEspectroColors, THEMES.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_App|src/App.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansPanelBody|src/components/fans_panel/FansPanelBody.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 
 ---

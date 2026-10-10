@@ -25,7 +25,7 @@ Exporta: ModuleTutorialTrigger.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_crm_HeaderTitleAndActions|src/components/booking/crm/HeaderTitleAndActions.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarTitleBar|src/components/calendar/views/CalendarTitleBar.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansPanelHeader|src/components/fans_panel/FansPanelHeader.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioNavBar|src/components/repertorio/RepertorioNavBar.tsx]] *(from #frontend)*
 
 ---

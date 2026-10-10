@@ -30,7 +30,8 @@ _Sin dependencias salientes directas._
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_ensayos_GrabacionActaTab|src/components/ensayos/GrabacionActaTab.tsx]] *(from #frontend)*
 - [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansGridView|src/components/fans_panel/FansGridView.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansTableView|src/components/fans_panel/FansTableView.tsx]] *(from #frontend)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
 - [[src_components_reels_center_KanbanBoard|src/components/reels_center/KanbanBoard.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*

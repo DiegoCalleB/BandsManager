@@ -25,7 +25,7 @@ Exporta: FansCommunityView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansListTab|src/components/fans_panel/FansListTab.tsx]] *(from #frontend)*
 
 ---
 

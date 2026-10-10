@@ -24,7 +24,7 @@ Exporta: QrCustomizerControls.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansQrTab|src/components/fans_panel/FansQrTab.tsx]] *(from #frontend)*
 
 ---
 

@@ -25,7 +25,7 @@ Exporta: TabItem, TabsProps, Tabs.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_FansPanelBody|src/components/fans_panel/FansPanelBody.tsx]] *(from #frontend)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterLayout|src/components/reels_center/ReelsCenterLayout.tsx]] *(from #frontend)*
 - [[src_components_reels_metrics_MetricsLayout|src/components/reels/metrics/MetricsLayout.tsx]] *(from #frontend)*
