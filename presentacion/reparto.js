@@ -95,7 +95,9 @@
     var et = document.createElement('b'); et.textContent = m.nombre + ' · ' + m.rol;
     if (hora) { var i = document.createElement('i'); i.textContent = hora; et.appendChild(i); }
     b.appendChild(et);
-    while (li.firstChild) b.appendChild(li.firstChild); // el texto del mensaje (con su marcado) pasa a la burbuja
+    var txt = document.createElement('span'); txt.className = 'txt';
+    while (li.firstChild) txt.appendChild(li.firstChild); // el texto del mensaje (con su marcado) pasa a la burbuja
+    b.appendChild(txt);
     li.appendChild(av); li.appendChild(b);
   });
 })();

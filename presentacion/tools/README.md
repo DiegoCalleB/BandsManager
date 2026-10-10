@@ -20,4 +20,6 @@ Salida: `presentacion/audio/voces/<hash>.mp3` y `manifest.json`. El hash es de �
 
 **Escribir para el oído:** en `data-say` los números van en letra y los nombres extranjeros como suenan («Spótifai», «Yutub», «be pe eme»). `[pi]` mete un pitido de censura.
 
+**Boca:** el manifiesto guarda también la envolvente de volumen de cada frase (`e`, un dígito 0-9 cada 40 ms). `voces.js` la usa para que el avatar se mueva al ritmo de la voz, sin pasar el audio por Web Audio (así funciona también abriendo el HTML desde disco).
+
 **Si falta un audio:** `voces.js` usa la voz española del navegador o, si no hay, deja el tiempo de leer la frase.

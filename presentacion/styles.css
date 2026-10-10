@@ -1040,10 +1040,24 @@ body.scroll .sheet { table-layout: fixed; word-break: break-word; } body.scroll 
 
 /* Voces: quien habla se ilumina */
 .dlg li.habla .bub { box-shadow: 0 0 0 2px var(--c), 0 10px 40px rgba(0,0,0,.35); }
-.dlg li.habla .av { animation: hablaav 900ms ease-in-out infinite alternate; }
-@keyframes hablaav { from { box-shadow: 0 0 0 0 var(--c); } to { box-shadow: 0 0 0 9px rgba(255,255,255,0); } }
+.dlg li.habla .av { transform: scale(calc(1 + var(--vu, 0) * .16)) rotate(calc((var(--vu, 0) - .4) * 4deg)); box-shadow: 0 0 0 calc(3px + var(--vu, 0) * 11px) color-mix(in srgb, var(--c) 40%, transparent); transition: transform 70ms linear, box-shadow 70ms linear; }
 .cast figure.habla { outline: 4px solid #ffd596; outline-offset: -4px; transform: translateY(-6px); transition: transform 300ms var(--ease); }
 .act-msg.habla, .rm-say.habla, .react.habla { box-shadow: 0 0 0 2px #8fb6ff, 0 0 40px rgba(143,182,255,.35); }
 .sheet.habla { box-shadow: 0 0 0 3px #8be0a4, 0 0 50px rgba(139,224,164,.25); }
 .radio .head.habla { text-shadow: 0 0 30px rgba(255,179,106,.35); }
-@media (prefers-reduced-motion: reduce) { .dlg li.habla .av { animation: none; } }
+/* «Escribiendo…» antes de cada mensaje hablado */
+.dlg li.typing .txt { display: none; }
+.dlg li.typing .bub::after { content: ''; display: block; width: 66px; height: 22px; margin: 4px 0 2px;
+  background: radial-gradient(circle, rgba(255,255,255,.8) 5.5px, transparent 6.5px) 0 50% / 22px 22px repeat-x; animation: tecleo 900ms ease-in-out infinite; }
+@keyframes tecleo { 0%, 100% { opacity: .35; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+/* El reparto y la radio también siguen la voz */
+.cast figure.habla img { transform: scale(calc(1.02 + var(--vu, 0) * .05)); transition: transform 70ms linear; }
+.slide .radio .eq i { transform-origin: bottom; transform: scaleY(calc(.55 + var(--vu, .45) * .9)); }
+.act-msg.habla, .rm-say.habla { transform: scale(calc(1 + var(--vu, 0) * .015)); }
+/* Modo película (P): bandas de cine y fondo que se acerca despacio */
+body.pelicula #stage::before, body.pelicula #stage::after { content: ''; position: absolute; left: 0; right: 0; height: 54px; background: #000; z-index: 50; pointer-events: none; animation: banda 900ms var(--ease, ease) both; }
+body.pelicula #stage::before { top: 0; transform-origin: top; } body.pelicula #stage::after { bottom: 0; transform-origin: bottom; }
+@keyframes banda { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+body.pelicula .slide.active.scene:not(.dream) .scene-bg { animation: kenb 24s ease-out both; transform-origin: 60% 40%; }
+body.scroll.pelicula #stage::before, body.scroll.pelicula #stage::after { display: none; }
+@media (prefers-reduced-motion: reduce) { .dlg li.habla .av, .cast figure.habla img { transform: none; } .dlg li.typing .bub::after, body.pelicula .slide.active .scene-bg { animation: none; } }

@@ -329,7 +329,7 @@
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
       case 'm': case 'M': window.DeckSound && window.DeckSound.toggle(); break;
-      case 'p': case 'P': pelicula = !pelicula; if ($('#bPeli')) $('#bPeli').setAttribute('aria-pressed', String(pelicula)); if ($('#bPeli')) $('#bPeli').textContent = pelicula ? 'Película: sí' : 'Película'; if (pelicula) show(cur, false); else clearTimeout(pelTimer); break;
+      case 'p': case 'P': pelicula = !pelicula; document.body.classList.toggle('pelicula', pelicula); if ($('#bPeli')) $('#bPeli').setAttribute('aria-pressed', String(pelicula)); if ($('#bPeli')) $('#bPeli').textContent = pelicula ? 'Película: sí' : 'Película'; if (pelicula) show(cur, false); else clearTimeout(pelTimer); break;
       case 'v': case 'V': if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } break;
       case 'a': case 'A': toggleAnim(); break;
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;

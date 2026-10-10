@@ -24,17 +24,37 @@
 
   var enabled = function () { return pref && !!(window.DeckSound && window.DeckSound.enabled); };
 
+  // Boca: el volumen de la voz (envolvente que guarda el generador, 25 por segundo) mueve el avatar.
+  // Se pinta en --vu del que habla y de su diapositiva (el ecualizador de la radio también lo sigue).
+  var boca = 0;
+  function mover(el, e) {
+    cancelAnimationFrame(boca);
+    var slide = el.closest('.slide');
+    var paso = function () {
+      var v = e ? +(e.charAt(Math.floor(audio.currentTime * 25)) || 0) / 9 : 0.35 + 0.35 * Math.sin(Date.now() / 90) * Math.sin(Date.now() / 37);
+      el.style.setProperty('--vu', v.toFixed(2));
+      if (slide) slide.style.setProperty('--vu', v.toFixed(2));
+      boca = requestAnimationFrame(paso);
+    };
+    paso();
+  }
+  function callar(el) {
+    cancelAnimationFrame(boca);
+    el.style.removeProperty('--vu');
+    var slide = el.closest('.slide'); if (slide) slide.style.removeProperty('--vu');
+  }
+
   function hablar(el, fin) {
     var who = el.dataset.who, say = el.dataset.say || '';
     var m = manifest[fnv(who + '|' + say)];
     var hecho = false;
-    var acabar = function () { if (hecho) return; hecho = true; el.classList.remove('habla'); if (fin) fin(); };
+    var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); if (fin) fin(); };
     el.classList.add('habla');
-    var leer = function () { setTimeout(acabar, Math.max(1400, say.length * 55)); };
+    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(1400, say.length * 55)); };
     if (m) {
       audio.onended = acabar; audio.onerror = function () { leer(); };
       audio.src = 'audio/voces/' + m.f;
-      audio.play().catch(function () { leer(); });
+      audio.play().then(function () { mover(el, m.e || null); }).catch(function () { leer(); });
       return;
     }
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
@@ -46,6 +66,7 @@
       var t = (window.REPARTO && window.REPARTO[who] && window.REPARTO[who].tts) || {};
       u.pitch = Math.max(0, Math.min(2, 1 + (t.tono || 0) / 10));
       u.rate = t.vel || 1;
+      u.onstart = function () { mover(el, null); };
       u.onend = acabar; u.onerror = leer;
       speechSynthesis.speak(u);
       return;
@@ -59,7 +80,8 @@
     audio.onended = null; audio.onerror = null;
     try { audio.pause(); } catch (_) { /* nada que parar */ }
     try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (_) { /* sin síntesis */ }
-    document.querySelectorAll('.habla').forEach(function (e) { e.classList.remove('habla'); });
+    cancelAnimationFrame(boca);
+    document.querySelectorAll('.habla, .typing').forEach(function (e) { e.classList.remove('habla', 'typing'); callar(e); });
   }
 
   // Habla la diapositiva entera: cada frase se muestra (mostrar) justo cuando empieza a sonar
@@ -73,9 +95,17 @@
       if (id !== run) return;
       if (i >= cola.length) { if (alFinal) alFinal(); return; }
       var el = cola[i++];
+      var luego = function () { if (id === run) timer = setTimeout(siguiente, 280); };
+      if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego); return; }
+      // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
+      el.classList.add('typing');
       if (mostrar) mostrar(el);
-      if (window.DeckSound && window.DeckSound.msg && el.matches('.dlg li')) window.DeckSound.msg(el.classList.contains('me'));
-      hablar(el, function () { if (id === run) timer = setTimeout(siguiente, 280); });
+      timer = setTimeout(function () {
+        if (id !== run) return;
+        el.classList.remove('typing');
+        if (window.DeckSound && window.DeckSound.msg) window.DeckSound.msg(el.classList.contains('me'));
+        hablar(el, luego);
+      }, Math.min(1100, 420 + (el.dataset.say || '').length * 4));
     };
     timer = setTimeout(siguiente, 950);
   }
