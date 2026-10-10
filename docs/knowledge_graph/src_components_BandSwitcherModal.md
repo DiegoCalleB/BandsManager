@@ -4,7 +4,7 @@ title: "src/components/BandSwitcherModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/BandSwitcherModal.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/BandSwitcherModal.tsx
@@ -27,7 +27,7 @@ Selector de bandas del usuario: cambiar, ordenar, fijar principal, salir y crear
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_band_switcher_BandSwitcherContext|src/components/band_switcher/BandSwitcherContext.ts]] *(from #frontend)*
 
 ---

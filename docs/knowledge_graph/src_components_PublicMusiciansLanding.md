@@ -4,7 +4,7 @@ title: "src/components/PublicMusiciansLanding.tsx"
 layer: frontend
 domain: system
 file: "src/components/PublicMusiciansLanding.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/PublicMusiciansLanding.tsx
@@ -26,7 +26,7 @@ Exporta: PublicMusiciansLanding.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_main|src/main.tsx]] *(from #service)*
 
 ---

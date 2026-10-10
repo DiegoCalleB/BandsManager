@@ -4,7 +4,7 @@ title: "src/components/FansPanel.tsx"
 layer: frontend
 domain: social
 file: "src/components/FansPanel.tsx"
-tags: ["frontend", "social", "auto", "pantalla"]
+tags: ["frontend", "social", "auto"]
 ---
 
 # 📌 src/components/FansPanel.tsx
@@ -27,7 +27,7 @@ Panel de fans: métricas, listado, QR de la landing, incentivos y alta manual.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_fans_panel_FansPanelContext|src/components/fans_panel/FansPanelContext.ts]] *(from #frontend)*
 
 ---

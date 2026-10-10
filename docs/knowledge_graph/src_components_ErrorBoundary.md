@@ -4,7 +4,7 @@ title: "src/components/ErrorBoundary.tsx"
 layer: frontend
 domain: system
 file: "src/components/ErrorBoundary.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/ErrorBoundary.tsx
@@ -24,7 +24,7 @@ Exporta: ErrorBoundary.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
 - [[src_main|src/main.tsx]] *(from #service)*
 
 ---

@@ -23,6 +23,7 @@ Tipos del selector de bandas.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_app_hooks_useActiveBand|src/app/hooks/useActiveBand.ts]] *(from #service)*
 - [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandSwitcherController|src/components/band_switcher/hooks/useBandSwitcherController.ts]] *(from #frontend)*

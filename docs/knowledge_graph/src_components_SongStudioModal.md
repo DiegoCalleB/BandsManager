@@ -4,7 +4,7 @@ title: "src/components/SongStudioModal.tsx"
 layer: frontend
 domain: repertoire
 file: "src/components/SongStudioModal.tsx"
-tags: ["frontend", "repertoire", "auto", "pantalla"]
+tags: ["frontend", "repertoire", "auto"]
 ---
 
 # 📌 src/components/SongStudioModal.tsx
@@ -29,7 +29,7 @@ Punto de entrada de Song Studio. Solo cablea: el controlador compone el estado y
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 
 ---

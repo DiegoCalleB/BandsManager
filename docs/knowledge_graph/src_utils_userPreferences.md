@@ -25,7 +25,7 @@ Exporta: TUTORIAL_STORAGE_PREFIX, ONBOARDING_GLOBAL_KEY, PROFILE_WIZARD_GLOBAL_K
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_hooks_useActiveBand|src/app/hooks/useActiveBand.ts]] *(from #service)*
 - [[src_components_onboarding_MusicianOnboardingModal|src/components/onboarding/MusicianOnboardingModal.tsx]] *(from #frontend)*
 - [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*

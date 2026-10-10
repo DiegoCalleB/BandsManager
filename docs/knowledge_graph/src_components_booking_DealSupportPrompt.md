@@ -4,7 +4,7 @@ title: "src/components/booking/DealSupportPrompt.tsx"
 layer: frontend
 domain: booking
 file: "src/components/booking/DealSupportPrompt.tsx"
-tags: ["frontend", "booking", "auto", "pantalla"]
+tags: ["frontend", "booking", "auto"]
 ---
 
 # 📌 src/components/booking/DealSupportPrompt.tsx
@@ -24,7 +24,7 @@ Exporta: DealSupportPrompt.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*
 
 ---
 

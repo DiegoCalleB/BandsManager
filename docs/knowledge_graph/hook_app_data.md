@@ -26,7 +26,7 @@ Carga y sincronización global de datos de la banda autenticada.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_hooks_useAppController|src/app/hooks/useAppController.ts]] *(from #service)*
 
 ---
 

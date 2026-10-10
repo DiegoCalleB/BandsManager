@@ -4,7 +4,7 @@ title: "src/components/SaveErrorBanner.tsx"
 layer: frontend
 domain: system
 file: "src/components/SaveErrorBanner.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/SaveErrorBanner.tsx
@@ -24,7 +24,7 @@ Exporta: SaveErrorBanner.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*
 
 ---
 

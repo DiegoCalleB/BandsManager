@@ -4,7 +4,7 @@ title: "src/components/campaign/CampaignManagerModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/campaign/CampaignManagerModal.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/campaign/CampaignManagerModal.tsx
@@ -29,7 +29,7 @@ Exporta: CampaignManagerModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

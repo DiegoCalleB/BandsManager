@@ -4,7 +4,7 @@ title: "src/components/Chatbot.tsx"
 layer: frontend
 domain: system
 file: "src/components/Chatbot.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/Chatbot.tsx
@@ -27,7 +27,7 @@ Chat del asistente de la banda: conversa, propone acciones y lanza agentes con a
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 
 ---

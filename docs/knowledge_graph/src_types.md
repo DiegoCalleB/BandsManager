@@ -50,7 +50,14 @@ _Sin dependencias salientes directas._
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
+- [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*
+- [[src_app_hooks_useActiveBand|src/app/hooks/useActiveBand.ts]] *(from #service)*
+- [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
+- [[src_app_hooks_useAppTheme|src/app/hooks/useAppTheme.ts]] *(from #service)*
+- [[src_app_hooks_useGlobalStudio|src/app/hooks/useGlobalStudio.ts]] *(from #service)*
+- [[src_app_hooks_useNavState|src/app/hooks/useNavState.ts]] *(from #service)*
+- [[src_app_hooks_usePlanLimitGuards|src/app/hooks/usePlanLimitGuards.ts]] *(from #service)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*

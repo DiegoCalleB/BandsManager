@@ -4,7 +4,7 @@ title: "src/components/ui/index.ts"
 layer: frontend
 domain: system
 file: "src/components/ui/index.ts"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/ui/index.ts
@@ -42,7 +42,9 @@ BandManager UI Component Library
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
+- [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
+- [[src_app_MobileTopBar|src/app/MobileTopBar.tsx]] *(from #service)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandSettingsModal|src/components/band_switcher/BandSettingsModal.tsx]] *(from #frontend)*

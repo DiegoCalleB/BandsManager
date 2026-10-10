@@ -12,6 +12,8 @@ export interface SwitcherBand {
   logo_url?: string;
   imagen_url?: string;
   nombre_banda?: string;
+  id?: string;
+  name?: string;
   style?: string;
   plan?: string;
   is_main?: boolean;

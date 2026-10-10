@@ -4,7 +4,7 @@ title: "src/components/ui/Skeleton.tsx"
 layer: frontend
 domain: system
 file: "src/components/ui/Skeleton.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/ui/Skeleton.tsx
@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 
 ---

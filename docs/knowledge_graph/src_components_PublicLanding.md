@@ -4,7 +4,7 @@ title: "src/components/PublicLanding.tsx"
 layer: frontend
 domain: system
 file: "src/components/PublicLanding.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/PublicLanding.tsx
@@ -26,7 +26,7 @@ Exporta: PublicLanding.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

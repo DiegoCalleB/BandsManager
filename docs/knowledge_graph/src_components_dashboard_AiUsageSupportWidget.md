@@ -4,7 +4,7 @@ title: "src/components/dashboard/AiUsageSupportWidget.tsx"
 layer: frontend
 domain: system
 file: "src/components/dashboard/AiUsageSupportWidget.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/dashboard/AiUsageSupportWidget.tsx
@@ -23,7 +23,8 @@ Exporta: AiSupportWidget, AiUsageCard.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
+- [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 

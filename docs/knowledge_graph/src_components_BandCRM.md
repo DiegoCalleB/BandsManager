@@ -4,7 +4,7 @@ title: "src/components/BandCRM.tsx"
 layer: frontend
 domain: booking
 file: "src/components/BandCRM.tsx"
-tags: ["frontend", "booking", "auto", "pantalla"]
+tags: ["frontend", "booking", "auto"]
 ---
 
 # 📌 src/components/BandCRM.tsx
@@ -26,7 +26,7 @@ CRM de bandas aliadas: contactos, intercambio de fechas (swaps), pitches y tono 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_bandCRM_BandCrmContext|src/components/bandCRM/BandCrmContext.ts]] *(from #frontend)*
 
 ---

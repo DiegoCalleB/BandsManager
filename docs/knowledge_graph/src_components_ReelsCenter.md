@@ -4,7 +4,7 @@ title: "src/components/ReelsCenter.tsx"
 layer: frontend
 domain: social
 file: "src/components/ReelsCenter.tsx"
-tags: ["frontend", "social", "auto", "pantalla"]
+tags: ["frontend", "social", "auto"]
 ---
 
 # 📌 src/components/ReelsCenter.tsx
@@ -29,7 +29,7 @@ Centro de Reels: pipeline de contenido y analizador de vídeo con IA.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

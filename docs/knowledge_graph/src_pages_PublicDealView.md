@@ -4,7 +4,7 @@ title: "src/pages/PublicDealView.tsx"
 layer: frontend
 domain: system
 file: "src/pages/PublicDealView.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/pages/PublicDealView.tsx
@@ -23,7 +23,7 @@ Exporta: PublicDealView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

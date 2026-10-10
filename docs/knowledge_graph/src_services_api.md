@@ -40,7 +40,8 @@ Exporta: ApiError, getAuthHeaders, api.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
+- [[src_app_hooks_useAppTheme|src/app/hooks/useAppTheme.ts]] *(from #service)*
 - [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*

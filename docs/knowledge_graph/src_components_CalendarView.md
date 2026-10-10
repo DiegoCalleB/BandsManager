@@ -4,7 +4,7 @@ title: "src/components/CalendarView.tsx"
 layer: frontend
 domain: system
 file: "src/components/CalendarView.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/CalendarView.tsx
@@ -27,7 +27,7 @@ Calendario de la banda: conciertos, ensayos y reuniones con agenda, ficha y log�
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

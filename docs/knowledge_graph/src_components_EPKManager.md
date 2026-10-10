@@ -4,7 +4,7 @@ title: "src/components/EPKManager.tsx"
 layer: frontend
 domain: epk
 file: "src/components/EPKManager.tsx"
-tags: ["frontend", "epk", "auto", "pantalla"]
+tags: ["frontend", "epk", "auto"]
 ---
 
 # 📌 src/components/EPKManager.tsx
@@ -43,7 +43,7 @@ Exporta: EPKManager.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 
