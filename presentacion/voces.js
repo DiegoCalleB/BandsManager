@@ -20,6 +20,9 @@
   var pref = store.get('deck_voces') !== 'off';
   var audio = new Audio();
   audio.preload = 'auto';
+  // Ritmo: las voces suenan un poco más rápidas y la siguiente frase arranca cuando a la anterior le queda un suspiro
+  var VEL = 1.1, SOLAPE = 0.3;
+  audio.preservesPitch = true;
   var run = 0, timer = 0, avisar = function () {};
 
   var enabled = function () { return pref && !!(window.DeckSound && window.DeckSound.enabled); };
@@ -27,10 +30,11 @@
   // Boca: el volumen de la voz (envolvente que guarda el generador, 25 por segundo) mueve el avatar.
   // Se pinta en --vu del que habla y de su diapositiva (el ecualizador de la radio también lo sigue).
   var boca = 0;
-  function mover(el, e) {
+  function mover(el, e, casi) {
     cancelAnimationFrame(boca);
     var slide = el.closest('.slide');
     var paso = function () {
+      if (casi && audio.duration && audio.duration - audio.currentTime < SOLAPE * VEL) casi();
       var v = e ? +(e.charAt(Math.floor(audio.currentTime * 25)) || 0) / 9 : 0.35 + 0.35 * Math.sin(Date.now() / 90) * Math.sin(Date.now() / 37);
       el.style.setProperty('--vu', v.toFixed(2));
       if (slide) slide.style.setProperty('--vu', v.toFixed(2));
@@ -47,14 +51,18 @@
   function hablar(el, fin) {
     var who = el.dataset.who, say = el.dataset.say || '';
     var m = manifest[fnv(who + '|' + say)];
-    var hecho = false;
-    var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); if (fin) fin(); };
+    var hecho = false, avanzado = false;
+    var avanzar = function () { if (avanzado) return; avanzado = true; if (fin) fin(); };
+    var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); avanzar(); };
+    // la frase anterior pudo quedar con la boca abierta si la siguiente arrancó antes de que acabara
+    document.querySelectorAll('.habla').forEach(function (e) { if (e !== el) { e.classList.remove('habla'); callar(e); } });
     el.classList.add('habla');
-    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(1400, say.length * 55)); };
+    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
       audio.onended = acabar; audio.onerror = function () { leer(); };
       audio.src = 'audio/voces/' + m.f;
-      audio.play().then(function () { mover(el, m.e || null); }).catch(function () { leer(); });
+      audio.playbackRate = VEL;
+      audio.play().then(function () { mover(el, m.e || null, avanzar); }).catch(function () { leer(); });
       return;
     }
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
@@ -95,7 +103,7 @@
       if (id !== run) return;
       if (i >= cola.length) { if (alFinal) alFinal(); return; }
       var el = cola[i++];
-      var luego = function () { if (id === run) timer = setTimeout(siguiente, 280); };
+      var luego = function () { if (id === run) timer = setTimeout(siguiente, 40); };
       if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego); return; }
       // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
       el.classList.add('typing');
@@ -105,9 +113,9 @@
         el.classList.remove('typing');
         if (window.DeckSound && window.DeckSound.msg) window.DeckSound.msg(el.classList.contains('me'));
         hablar(el, luego);
-      }, Math.min(1100, 420 + (el.dataset.say || '').length * 4));
+      }, Math.min(650, 220 + (el.dataset.say || '').length * 2));
     };
-    timer = setTimeout(siguiente, 950);
+    timer = setTimeout(siguiente, 450);
   }
 
   function uno(el) { stop(); run++; hablar(el); }
