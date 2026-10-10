@@ -590,6 +590,7 @@ body.scroll #gate { display: none; }
 .tr-hint b { font-size: 27px; font-weight: 500; color: rgba(255,255,255,.88); letter-spacing: .01em; }
 .tr-hint span { font-size: 21px; color: rgba(255,255,255,.5); }
 .gate-btn.primary { color: #05070d; }
+#gatePeli { font-size: 26px; padding: 18px 38px; box-shadow: 0 0 40px color-mix(in srgb, var(--acc) 45%, transparent); }
 
 /* Cifras: el número arriba y la etiqueta debajo */
 .bs { flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }

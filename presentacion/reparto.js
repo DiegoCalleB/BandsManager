@@ -16,7 +16,8 @@
    Voces (`tts`): cada personaje habla con su voz. Los audios se generan con
    `python3 presentacion/tools/voces.py` (ver presentacion/tools/README.md) y van a `audio/voces/`.
    Si cambias un músico o su voz, vuelve a ejecutarlo: solo regenera las frases que han cambiado.
-   - motor: 'kokoro' (sid 29 em_alex, 53 em_santa, 28 ef_dora) o 'piper' (modelo es_ES-davefx-medium,
+   - motor: 'elevenlabs' (voces naturales de España; `voz` = voice_id de la biblioteca de ElevenLabs, `estabilidad`
+     0 muy expresiva · 1 monótona, `etiqueta` opcional de actuación como '[excited]'), o locales: 'kokoro' (sid 29 em_alex, 53 em_santa, 28 ef_dora) o 'piper' (modelo es_ES-davefx-medium,
      es_ES-sharvard-medium con sid 0 hombre / 1 mujer)
    - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno
 
@@ -27,26 +28,26 @@
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
-                tts: { motor: 'kokoro', sid: 29, tono: 0, vel: 1.0 } },
+                tts: { motor: 'elevenlabs', voz: '97uDgYCxMwY7BodSS4WM', estabilidad: 0.45 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
-                tts: { motor: 'kokoro', sid: 53, tono: 0, vel: 1.02 } },
+                tts: { motor: 'elevenlabs', voz: 'xH6DmlUWSqhSmFog5gxa', estabilidad: 0.35 } },
     voz:      { nombre: 'Xandre',  rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
                 mov: 'diva',
-                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: 1, vel: 1.0 } },
+                tts: { motor: 'elevenlabs', voz: 'WxS1WEvgNXJQOu1tpbLG', estabilidad: 0.3 } },
     guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
                 mov: 'cabeceo',
-                tts: { motor: 'piper', modelo: 'es_ES-davefx-medium', sid: 0, tono: 0, vel: 1.0 } },
+                tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
     manager:  { nombre: 'Manager', rol: 'Os Herdeiros do Código', cargo: 'Manager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
-                tts: { motor: 'kokoro', sid: 29, tono: -3, vel: 0.95, efecto: 'telefono' } },
+                tts: { motor: 'elevenlabs', voz: 'Zb72NBThGN2Rv3y1RSTT', estabilidad: 0.5, efecto: 'telefono' } },
     voz_mop:  { nombre: 'Master of Prompts', rol: 'voz', cargo: 'Voz de Master of Prompts', foto: 'img/personaje-cantante.jpg', color: '#ffb36a',
-                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: -3, vel: 0.97 } },
+                tts: { motor: 'elevenlabs', voz: 'WEpPZOD2xY23gV1z2GzQ', estabilidad: 0.4 } },
     ia_claude: { nombre: 'Claudio', rol: 'Claude Code', cargo: 'Asistente de IA', foto: null, color: '#f0a27c',
-                tts: { motor: 'piper', modelo: 'es_ES-davefx-medium', sid: 0, tono: 2, vel: 0.95, efecto: 'robot' } },
+                tts: { motor: 'elevenlabs', voz: 'OMWmRY8slGlr6mHJSqwy', estabilidad: 0.6 } },
     ia_gemini: { nombre: 'Guglio',  rol: 'Gemini',      cargo: 'Asistente de IA', foto: null, color: '#7fc0ff',
-                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: 3, vel: 1.05, efecto: 'robot' } },
+                tts: { motor: 'elevenlabs', voz: 'XyPIlDiohfZSbL4jAB2e', estabilidad: 0.6 } },
     locutor:  { nombre: 'Rock FM', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
-                tts: { motor: 'kokoro', sid: 53, tono: -1, vel: 1.04, efecto: 'radio' } },
+                tts: { motor: 'elevenlabs', voz: '4L2A19qwD3pMcNlt484F', estabilidad: 0.3, efecto: 'radio' } },
   };
 
   var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };

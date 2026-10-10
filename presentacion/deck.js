@@ -254,8 +254,9 @@
         show(cur, false);
       };
       $('#gateSound').onclick = () => go(true);
+      $('#gatePeli').onclick = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
       $('#gateSilent').onclick = () => go(false);
-      $('#gateSound').focus({ preventScroll: true });
+      $('#gatePeli').focus({ preventScroll: true });
     } else gate.remove();
   }
 
@@ -309,7 +310,7 @@
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (document.body.classList.contains('gate')) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); $('#gateSound').click(); }
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); $('#gatePeli').click(); }
       return;
     }
     if (e.target.tagName === 'VIDEO' && (e.key === ' ' || e.key === 'Enter')) return;

@@ -201,6 +201,9 @@ def procesar(entradas, tts, salida):
         filtros.append(f'rubberband=pitch={2 ** (st / 12):.5f}')
     if tts.get('efecto') in EFECTOS:
         filtros.append(EFECTOS[tts['efecto']])
+    # sin silencios al principio ni al final: las frases se encadenan sin huecos muertos
+    rec = 'silenceremove=start_periods=1:start_threshold=-48dB:start_silence=0.04'
+    filtros += [rec, 'areverse', rec, 'areverse']
     filtros.append('loudnorm=I=-16:TP=-1.5:LRA=11')
     cmd = ['ffmpeg', '-y', '-loglevel', 'error']
     for e in entradas:
