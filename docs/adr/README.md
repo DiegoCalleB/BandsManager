@@ -34,6 +34,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0025](./0025-modularizacion-band-crm.md) | Modularización de BandCRM (2216 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0026](./0026-modularizacion-calendar-event-detail-modal.md) | Modularización de CalendarEventDetailModal (2142 → ~100 líneas) con controlador, contexto y vistas por pestaña | Aceptada | nueva |
 | [0027](./0027-ninguna-banda-privilegiada.md) | Ninguna banda es especial en el código (claves `bandmanager_*`, sin banda por defecto, `band-demo`, script de migración de ids) | Aceptada | nueva |
+| [0028](./0028-modularizacion-fans-landing.md) | Modularización de FansLanding (2106 → ~50 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

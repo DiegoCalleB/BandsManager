@@ -194,8 +194,13 @@ BandManager UI Component Library
 - [[src_components_epk_EPKPrensaBlock|src/components/epk/EPKPrensaBlock.tsx]] *(from #frontend)*
 - [[src_components_ErrorBoundary|src/components/ErrorBoundary.tsx]] *(from #frontend)*
 - [[src_components_fans_FansCommunityView|src/components/fans/FansCommunityView.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingBody|src/components/fans_landing/FansLandingBody.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingSuccess|src/components/fans_landing/FansLandingSuccess.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_LandingTabSwitcher|src/components/fans_landing/LandingTabSwitcher.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_PrivacyPolicyModal|src/components/fans_landing/PrivacyPolicyModal.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_SignupFormTab|src/components/fans_landing/SignupFormTab.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_SocialLinksTab|src/components/fans_landing/SocialLinksTab.tsx]] *(from #frontend)*
 - [[src_components_fans_qr_QrCustomizerControls|src/components/fans/qr/QrCustomizerControls.tsx]] *(from #frontend)*
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*

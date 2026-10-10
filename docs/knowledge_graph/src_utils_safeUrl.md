@@ -23,7 +23,9 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingSuccess|src/components/fans_landing/FansLandingSuccess.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanPayments|src/components/fans_landing/hooks/useFanPayments.ts]] *(from #frontend)*
+- [[src_components_fans_landing_SocialLinksTab|src/components/fans_landing/SocialLinksTab.tsx]] *(from #frontend)*
 - [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
 - [[src_components_ui_InsigniaBandManager|src/components/ui/InsigniaBandManager.tsx]] *(from #frontend)*
 

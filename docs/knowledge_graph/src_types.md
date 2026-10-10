@@ -228,6 +228,11 @@ _Sin dependencias salientes directas._
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_fans_FansCommunityView|src/components/fans/FansCommunityView.tsx]] *(from #frontend)*
 - [[src_components_fans_FansDashboardView|src/components/fans/FansDashboardView.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanEngagement|src/components/fans_landing/hooks/useFanEngagement.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanJoinForm|src/components/fans_landing/hooks/useFanJoinForm.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanSignupSubmit|src/components/fans_landing/hooks/useFanSignupSubmit.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFansLandingController|src/components/fans_landing/hooks/useFansLandingController.ts]] *(from #frontend)*
 - [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*

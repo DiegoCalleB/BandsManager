@@ -23,6 +23,9 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_fans_landing_FanFormLanguageSwitcher|src/components/fans_landing/FanFormLanguageSwitcher.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanLanguage|src/components/fans_landing/hooks/useFanLanguage.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFansLandingController|src/components/fans_landing/hooks/useFansLandingController.ts]] *(from #frontend)*
 - [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
 - [[src_components_FansLandingPreviewModal|src/components/FansLandingPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*

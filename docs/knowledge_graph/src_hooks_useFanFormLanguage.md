@@ -23,7 +23,7 @@ Exporta: useFanFormLanguage.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanLanguage|src/components/fans_landing/hooks/useFanLanguage.ts]] *(from #frontend)*
 
 ---
 

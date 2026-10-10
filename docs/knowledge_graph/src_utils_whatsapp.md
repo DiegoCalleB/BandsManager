@@ -29,7 +29,8 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_hooks_useEventShareActions|src/components/calendar/hooks/useEventShareActions.ts]] *(from #frontend)*
 - [[src_components_calendar_useCalendarRoadbook|src/components/calendar/useCalendarRoadbook.ts]] *(from #frontend)*
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_BookingContactSection|src/components/fans_landing/BookingContactSection.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingSuccess|src/components/fans_landing/FansLandingSuccess.tsx]] *(from #frontend)*
 - [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 - [[src_utils_shareUtils|src/utils/shareUtils.ts]] *(from #service)*

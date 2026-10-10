@@ -23,7 +23,11 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_BookingContactSection|src/components/fans_landing/BookingContactSection.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FanIdentityHeader|src/components/fans_landing/FanIdentityHeader.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FansLandingSuccess|src/components/fans_landing/FansLandingSuccess.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_PrivacyPolicyModal|src/components/fans_landing/PrivacyPolicyModal.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_SocialLinksTab|src/components/fans_landing/SocialLinksTab.tsx]] *(from #frontend)*
 
 ---
 
