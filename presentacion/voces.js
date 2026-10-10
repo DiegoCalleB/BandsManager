@@ -89,7 +89,8 @@
     if (f.dataset.who === el.dataset.who && f.classList.contains('in')) return;
     f.classList.remove('in'); void f.offsetWidth; // reinicia la entrada si cambia el que habla
     f.dataset.who = el.dataset.who; f.dataset.mov = m.mov || 'calma';
-    f.style.cssText = '--c:' + m.color + ';--t:' + h.t + 'px;left:' + h.x + 'px;top:' + h.y + 'px';
+    // plano y contraplano: quien escribe desde su lado (yo) entra por la derecha, los demás por la izquierda
+    f.style.cssText = '--c:' + m.color + ';--t:' + h.t + 'px;left:' + h.x + 'px;top:' + h.y + 'px;--dx:' + (el.classList.contains('me') ? 160 : -160) + 'px';
     f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.nombre + ' · ' + m.rol;
     f.classList.add('in');
   }
@@ -106,6 +107,7 @@
     // la frase anterior pudo quedar con la boca abierta si la siguiente arrancó antes de que acabara
     document.querySelectorAll('.habla').forEach(function (e) { if (e !== el) { e.classList.remove('habla'); callar(e); } });
     el.classList.add('habla');
+    dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
