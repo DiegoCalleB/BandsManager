@@ -174,6 +174,8 @@ class Motores:
         if tts['motor'] == 'elevenlabs':
             # etiqueta: indicación de actuación de eleven_v3, p. ej. «[excited]», que no se escribe en la frase
             texto = (tts.get('etiqueta', '') + ' ' + texto).strip()
+            if tts.get('modelo', 'eleven_v3') == 'eleven_v3':
+                texto += ' [pause]'  # sin esto, v3 a veces se come la última palabra
             mp3 = eleven(f"/text-to-speech/{tts['voz']}?output_format=mp3_44100_128", 'POST', {
                 'text': texto, 'model_id': tts.get('modelo', 'eleven_v3'),
                 'voice_settings': {'stability': float(tts.get('estabilidad', 0.5)), 'similarity_boost': 0.75}})
@@ -275,7 +277,12 @@ def main():
             continue
         texto = sustituir(html.unescape(say), R)
         clave = fnv1a(who + '|' + texto)
-        firma = hashlib.sha1(json.dumps([VERSION, R[who]['tts'], limpiar(texto)], sort_keys=True).encode()).hexdigest()[:12]
+        # pron (reparto.js): cómo se pronuncia un nombre; la burbuja y la clave del audio siguen con el nombre escrito
+        habla = texto
+        for p_ in R.values():
+            if p_.get('pron'):
+                habla = re.sub(r'\b%s\b' % re.escape(p_['nombre']), p_['pron'], habla)
+        firma = hashlib.sha1(json.dumps([VERSION, R[who]['tts'], limpiar(habla)], sort_keys=True).encode()).hexdigest()[:12]
         fichero = f'{clave}.mp3'
         ruta = os.path.join(SALIDA, fichero)
         previo = viejo.get(clave)
@@ -287,7 +294,7 @@ def main():
         motores = motores or Motores()
         with tempfile.TemporaryDirectory() as tmp:
             entradas = []
-            for i, trozo in enumerate(limpiar(texto).split('[pi]')):
+            for i, trozo in enumerate(limpiar(habla).split('[pi]')):
                 if i:
                     b = os.path.join(tmp, f'pi{i}.wav'); pitido(b); entradas.append(b)
                 if trozo.strip():
@@ -298,7 +305,7 @@ def main():
         if qa:
             oido = oido or Oido()
             oido_txt = oido.oir(ruta)
-            ref = norm(texto.replace('[pi]', ''))
+            ref = norm(re.sub(r'\[[a-z ]+\]', '', texto))  # sin [pi] ni etiquetas de actuación
             nuevo[clave]['qa'] = round(difflib.SequenceMatcher(None, ref, norm(oido_txt)).ratio(), 2)
             nuevo[clave]['oido'] = oido_txt
         json.dump(nuevo, open(ruta_man, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, sort_keys=True)  # progreso parcial

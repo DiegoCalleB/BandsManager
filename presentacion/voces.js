@@ -94,7 +94,7 @@
     f.dataset.who = el.dataset.who; f.dataset.mov = m.mov || 'calma';
     // plano y contraplano: quien escribe desde su lado (yo) entra por la derecha, los demás por la izquierda
     f.style.cssText = '--c:' + m.color + ';--t:' + h.t + 'px;left:' + h.x + 'px;top:' + h.y + 'px;--dx:' + (el.classList.contains('me') ? 160 : -160) + 'px';
-    f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.nombre + ' · ' + m.rol;
+    f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.rol.length > 14 ? m.nombre : m.nombre + ' · ' + m.rol;
     f.classList.add('in');
   }
   function sinfoco(slide) {
@@ -122,7 +122,7 @@
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
     var v = 'speechSynthesis' in window && speechSynthesis.getVoices().filter(function (x) { return /^es(-|_)?ES/i.test(x.lang); })[0];
     if (v) { // respaldo: voz del navegador, con el tono y la velocidad del personaje
-      var u = new SpeechSynthesisUtterance(say.replace(/\[pi\]/g, '…'));
+      var u = new SpeechSynthesisUtterance(say.replace(/\[pi\]/g, '…').replace(/\[[a-z ]+\]/g, ''));
       u.lang = 'es-ES';
       u.voice = v;
       var t = (window.REPARTO && window.REPARTO[who] && window.REPARTO[who].tts) || {};

@@ -21,12 +21,14 @@
      es_ES-sharvard-medium con sid 0 hombre / 1 mujer)
    - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno
 
+   Pronunciación (`pron`): cómo debe decir la voz el nombre si no lo lee bien escrito (solo afecta al audio).
+
    Movimiento (`mov`): cómo se mueve el personaje cuando habla (su retrato sale en grande en un hueco libre de la
    diapositiva y se mueve al ritmo de su voz): 'bombo' (rebota, como un batería) · 'diva' (se balancea) ·
    'cabeceo' (headbang) · 'cool' (asiente tranquilo) · 'calma' (por defecto). Si cambia el músico, se cambia aquí. */
 (function () {
   var R = window.REPARTO = {
-    bajo:     { nombre: 'Iago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
+    bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
                 tts: { motor: 'elevenlabs', voz: '97uDgYCxMwY7BodSS4WM', estabilidad: 0.45 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
