@@ -26,3 +26,12 @@ Eso es privilegio por banda y por cuenta: lo contrario de un sistema multi-tenan
 ## Pendiente (fuera de este ADR)
 - El texto de marketing de `PublicTfmLanding.tsx` y `LandingChatWidget.tsx` cuenta el caso de uso real de esas bandas; no contiene lógica y está exento en el test de guarda. Decidir si se reescribe como caso genérico.
 - `server/state.ts` aún fuerza la cuenta `Admin` a la banda `band-vertice`: otra banda privilegiada por resolver.
+
+## Versionado: 3.0.0
+Junto con [0027](./0027-ninguna-banda-privilegiada.md), este cambio es **incompatible** según AGENTS.md §7 (una migración que exige intervención manual y quitar una funcionalidad), aunque sus commits llevaran el tipo `refactor`. Por eso la versión salta de `2.0.0` a `3.0.0` (`Release-As: 3.0.0` en el commit que lo marca).
+
+Qué rompe para quien ya despliega:
+- **Sesión:** `localStorage`, cookie e IndexedDB de audio pasan a `bandmanager_*` / `BandManagerAudioDB`; todos los usuarios inician sesión de nuevo una vez y se pierde la caché local de audio.
+- **Datos sin `band_id`:** ya no pertenecen a ninguna banda; la base de datos pierde los `DEFAULT` de `band_id` (migración `20261101_quitar_banda_por_defecto.sql`) y los ids antiguos se migran con `scripts/rename-band-id.ts`.
+- **Cuentas con trato especial:** ninguna cuenta recibe ya bandas, plan ni instrumento por defecto desde el código; su acceso depende solo de sus membresías.
+- **Instalación nueva:** arranca solo con `band-demo`.
