@@ -24,11 +24,12 @@ Exporta: BandDateAvailability, CityPerformanceHistory, CommercialDealType, Comme
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_leads_table_LeadDatesTableBadges|src/components/booking/leads_table/LeadDatesTableBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadSourcePills|src/components/booking/leads_table/LeadSourcePills.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueEmailsSection|src/components/booking/venue_panel/VenueEmailsSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenuePitchComposer|src/components/booking/venue_panel/VenuePitchComposer.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueScoutToolbar|src/components/booking/venue_panel/VenueScoutToolbar.tsx]] *(from #frontend)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---
 

@@ -24,6 +24,8 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_bandCRM_BandPitchModal|src/components/bandCRM/BandPitchModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowActions|src/components/booking/leads_table/LeadRowActions.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueContactRosterCards|src/components/booking/venue_panel/VenueContactRosterCards.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
@@ -34,7 +36,6 @@ _Sin dependencias salientes directas._
 - [[src_components_fans_panel_hooks_useQrSharing|src/components/fans_panel/hooks/useQrSharing.ts]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 - [[src_utils_shareUtils|src/utils/shareUtils.ts]] *(from #service)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---
 

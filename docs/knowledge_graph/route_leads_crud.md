@@ -53,12 +53,12 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 - [[src_components_booking_google_places_hooks_usePlaceEmailExtraction|src/components/booking/google_places/hooks/usePlaceEmailExtraction.ts]] *(from #frontend)*
 - [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_hooks_useEmailValidation|src/hooks/useEmailValidation.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

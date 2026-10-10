@@ -42,6 +42,14 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
 - [[src_components_booking_google_places_ScoutFilterBar|src/components/booking/google_places/ScoutFilterBar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardHeader|src/components/booking/leads_table/LeadCardHeader.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardIntelligence|src/components/booking/leads_table/LeadCardIntelligence.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesTableBadges|src/components/booking/leads_table/LeadDatesTableBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadIntentBadge|src/components/booking/leads_table/LeadIntentBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadSourcePills|src/components/booking/leads_table/LeadSourcePills.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTemperatureBadge|src/components/booking/leads_table/LeadTemperatureBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTipoBadge|src/components/booking/leads_table/LeadTipoBadge.tsx]] *(from #frontend)*
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
 - [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
 - [[src_components_booking_NegotiationSimulationModal|src/components/booking/NegotiationSimulationModal.tsx]] *(from #frontend)*
@@ -197,7 +205,6 @@ _Sin dependencias salientes directas._
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 - [[src_components_WaveformTrack|src/components/WaveformTrack.tsx]] *(from #frontend)*
 - [[src_pages_PublicDealView|src/pages/PublicDealView.tsx]] *(from #frontend)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---
 

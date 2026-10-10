@@ -119,6 +119,24 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_LeadAvatar|src/components/booking/LeadAvatar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadHealthBadge|src/components/booking/LeadHealthBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsTableController|src/components/booking/leads_table/hooks/useLeadsTableController.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCampaignDates|src/components/booking/leads_table/LeadCampaignDates.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardHeader|src/components/booking/leads_table/LeadCardHeader.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardIntelligence|src/components/booking/leads_table/LeadCardIntelligence.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardQualityBadges|src/components/booking/leads_table/LeadCardQualityBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesInfo|src/components/booking/leads_table/LeadDatesInfo.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesTableBadges|src/components/booking/leads_table/LeadDatesTableBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadGridCard|src/components/booking/leads_table/LeadGridCard.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadIntentBadge|src/components/booking/leads_table/LeadIntentBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_leadRadar|src/components/booking/leads_table/leadRadar.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowActions|src/components/booking/leads_table/LeadRowActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowContact|src/components/booking/leads_table/LeadRowContact.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadSourcePills|src/components/booking/leads_table/LeadSourcePills.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTableRow|src/components/booking/leads_table/LeadTableRow.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTemperatureBadge|src/components/booking/leads_table/LeadTemperatureBadge.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_venueProgrammingUrl|src/components/booking/leads_table/venueProgrammingUrl.ts]] *(from #frontend)*
 - [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(from #frontend)*
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
 - [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
@@ -498,6 +516,7 @@ _Sin dependencias salientes directas._
 - `src/audit/transcripcionMasiva.test.tsx`
 - `src/components/booking/__tests__/ExportLeadsModal.test.ts`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
+- `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`

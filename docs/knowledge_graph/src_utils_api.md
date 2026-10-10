@@ -54,6 +54,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_google_places_hooks_usePlaceEmailExtraction|src/components/booking/google_places/hooks/usePlaceEmailExtraction.ts]] *(from #frontend)*
 - [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
@@ -110,7 +111,6 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(from #service)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

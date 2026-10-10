@@ -23,8 +23,9 @@ Exporta: EmailDeliveryTicks.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_leads_table_LeadCardQualityBadges|src/components/booking/leads_table/LeadCardQualityBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTableRow|src/components/booking/leads_table/LeadTableRow.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---
 

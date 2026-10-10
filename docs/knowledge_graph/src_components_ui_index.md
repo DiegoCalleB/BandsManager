@@ -97,6 +97,10 @@ BandManager UI Component Library
 - [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
 - [[src_components_booking_google_places_ScoutFilterBar|src/components/booking/google_places/ScoutFilterBar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadDatesTableBadges|src/components/booking/leads_table/LeadDatesTableBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowActions|src/components/booking/leads_table/LeadRowActions.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadsTableView|src/components/booking/leads_table/LeadsTableView.tsx]] *(from #frontend)*
 - [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(from #frontend)*
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
 - [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
@@ -363,7 +367,6 @@ BandManager UI Component Library
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

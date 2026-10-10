@@ -23,9 +23,10 @@ Exporta: LeadTemperature, LeadHealthInfo, getLeadHealth, LeadHealthBadge.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_leads_table_LeadCardQualityBadges|src/components/booking/leads_table/LeadCardQualityBadges.tsx]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadTableRow|src/components/booking/leads_table/LeadTableRow.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueModalHeader|src/components/booking/venue_modal/VenueModalHeader.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueLeadHealthRow|src/components/booking/venue_panel/VenueLeadHealthRow.tsx]] *(from #frontend)*
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---
 

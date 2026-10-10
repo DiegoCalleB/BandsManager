@@ -24,7 +24,8 @@ Exporta: useEmailValidation, getEmailStatus, isBouncedLead.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadRowContact|src/components/booking/leads_table/LeadRowContact.tsx]] *(from #frontend)*
 
 ---
 

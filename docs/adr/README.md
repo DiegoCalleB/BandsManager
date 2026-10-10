@@ -42,6 +42,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0033](./0033-modularizacion-google-places-explorer.md) | Modularización de GooglePlacesExplorerModal.tsx (1872 → ~40 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 | [0034](./0034-modularizacion-setlist-performance-view.md) | Modularización de SetlistPerformanceView.tsx (1857 → ~30 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 | [0035](./0035-quitar-bandas-del-proyecto-de-ejemplo.md) | Quitar del código las bandas del antiguo proyecto de ejemplo (seed, cuenta privilegiada) | Aceptada | nueva |
+| [0036](./0036-modularizacion-leads-table.md) | Modularización de LeadsTable.tsx (1847 → ~90 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 
