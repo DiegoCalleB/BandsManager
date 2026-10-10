@@ -193,8 +193,6 @@
       if (el.querySelector('.act-char')) k.chime(at(1.5), 0.08);
     } else if (el.classList.contains('scene')) {
       k.whoosh(at(0.02), 0.7, 200, 2400, 0.1);
-      const n = el.querySelectorAll('.chat li').length;
-      for (let i = 0; i < n; i++) k.blip(at(0.7 + i * 0.55), i === n - 1 ? 520 : 760, 0.07);
       const rows = el.querySelectorAll('.sheet tbody tr').length;
       for (let i = 0; i < rows; i++) k.tick(at(0.8 + i * 0.28));
       if (el.querySelector('.cartel')) { k.riser(at(0.2), 1.1, 0.12); k.hit(at(1.3), 0.7); }
@@ -207,6 +205,10 @@
     } else {
       k.whoosh(at(0.02), 0.5, 320, 2800, 0.1);
     }
+    // Chat de la banda: un pitido por mensaje, a la vez que entra (820 ms entre mensajes)
+    const msgs = el.querySelectorAll('.dlg li, .chat li').length;
+    for (let i = 0; i < msgs; i++) k.blip(at(0.74 + i * 0.82), el.querySelectorAll('.dlg li')[i]?.classList.contains('me') ? 520 : 760, 0.07);
+    if (el.classList.contains('dream')) { [0.5, 1.7, 3.0].forEach((t, n) => k.chime(at(t), 0.1 - n * 0.015)); }
     if (el.querySelector('.react')) k.blip(at(2.6), 940, 0.07);
   }
 

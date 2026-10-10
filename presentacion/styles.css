@@ -882,3 +882,154 @@ body.scroll .tr-time { display: none; }
 .feat .ft-shot.phone.acuerdo img { animation: acpan 18s ease-in-out 1.2s infinite; }
 @keyframes acpan { 0%, 10% { transform: translateY(0); } 50%, 70% { transform: translateY(-1030px); } 100% { transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .feat .ft-shot.phone.acuerdo img { animation: none; } }
+
+/* ───────── Diálogos: la presentación se cuenta con el chat de la banda ───────── */
+.dlg { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; --av: 62px; }
+.dlg li { display: flex; align-items: flex-end; gap: 14px; max-width: 96%; align-self: flex-start; --c: #8fb6ff; }
+.dlg li.me { flex-direction: row-reverse; align-self: flex-end; }
+.dlg .av { flex: none; width: var(--av); height: var(--av); border-radius: 50%; object-fit: cover; object-position: 50% 20%; border: 3px solid var(--c); background: #10151f; display: grid; place-items: center; font-weight: 700; font-size: 28px; color: var(--c); }
+.dlg .bub { padding: 11px 22px 13px; border-radius: 24px 24px 24px 8px; background: #1b2230; font-size: 29px; line-height: 1.27; color: #fff; }
+.dlg li.me .bub { background: #243a63; border-radius: 24px 24px 8px 24px; }
+.dlg li.cold .bub { background: #2a1d1f; }
+.dlg .bub b { display: block; font-size: 19px; font-weight: 600; color: var(--c); margin-bottom: 3px; letter-spacing: .01em; }
+.dlg .bub b i { font-style: normal; font-weight: 400; color: rgba(255,255,255,.5); margin-left: 10px; }
+.dlg .bub em { font-style: normal; color: #ffd596; }
+.dlg li.iago { --c: #8fb6ff; } .dlg li.brais { --c: #ffd596; } .dlg li.xandre { --c: #ff9ec4; } .dlg li.alvaro { --c: #8be0a4; }
+.dlg li.manager { --c: #c9a6ff; } .dlg li.mop { --c: #ffb36a; } .dlg li.claudio { --c: #f0a27c; } .dlg li.guglio { --c: #7fc0ff; }
+.dlg li.claudio .av, .dlg li.guglio .av { background: #141a26; }
+/* Cada mensaje entra como en un chat: sube y se asienta, uno tras otro */
+.dlg li[data-a] { transform: translateY(20px) scale(.94); transform-origin: 0 100%; transition-delay: calc(var(--n, 0) * 820ms + var(--b, 240ms) + 260ms); transition-duration: 460ms, 560ms, 900ms; transition-timing-function: cubic-bezier(.2, 1.4, .4, 1); }
+.dlg li.me[data-a] { transform-origin: 100% 100%; }
+.dlg li[data-a].in { transform: none; }
+.slide.instant .dlg li[data-a] { transition: none !important; }
+.slide.scene .dlg { margin-top: 30px; max-width: 1180px; }
+.slide.scene .dlg .bub { font-size: 31px; }
+.slide.scene .dlg.tight { gap: 9px; margin-top: 20px; } .slide.scene .dlg.tight .bub { font-size: 27px; padding: 9px 20px 11px; } .slide.scene .dlg.tight { --av: 54px; }
+body.scroll .dlg .bub { font-size: 16px; padding: 8px 14px; } body.scroll .dlg { --av: 36px; gap: 8px; } body.scroll .dlg .bub b { font-size: 13px; } body.scroll .dlg .av { font-size: 16px; border-width: 2px; }
+
+/* Diapositivas de producto con diálogo: el chat manda, la pantalla es la prueba */
+.slide.feat.dl .ft-copy { left: 100px; top: 84px; width: 960px; }
+.feat.dl h2 { font-size: 62px; margin-top: 20px; max-width: 900px; }
+.feat.dl .dlg { margin-top: 26px; }
+.feat.dl .dlg .bub { font-size: 28px; }
+.feat.dl .ft-shot { right: 70px; top: 130px; width: 740px; height: 560px; }
+.feat.dl .ft-shot.tall { height: 760px; top: 110px; }
+.feat.dl .ft-shot.phone { right: 150px; top: 60px; width: 420px; height: 930px; }
+body.scroll .feat.dl h2 { font-size: 30px; }
+
+/* Hoja impresa de setlist (el resultado, sin la app) */
+.paperwrap { position: absolute; right: 70px; top: 60px; width: 760px; height: 960px; z-index: 3; }
+.paper { position: absolute; width: 600px; height: 850px; padding: 38px 42px; background: #fff; color: #111; border-radius: 6px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,.65), 0 0 0 1px rgba(0,0,0,.06); font-family: "Oswald", "Onest", sans-serif; }
+.paper.front { left: 80px; top: 70px; transform: rotate(-1.6deg); }
+.paper.back { left: 160px; top: 40px; transform: rotate(3.2deg); filter: brightness(.9); }
+.paper .wm { position: absolute; inset: 0; background: url(img/logo-hdc.png) center 56% / 82% no-repeat; opacity: .13; filter: grayscale(1) contrast(1.1); pointer-events: none; }
+.paper .ph { position: relative; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding-bottom: 7px; border-bottom: 3px solid #111; font-family: "Anton", sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+.paper .ph .band { font-size: 25px; } .paper .ph .set { font-size: 13px; color: #333; font-family: "Oswald", sans-serif; font-weight: 700; letter-spacing: .04em; } .paper .ph .who { font-size: 13px; text-align: right; font-family: "Oswald", sans-serif; font-weight: 700; }
+.paper .ph .who b { display: block; font-family: "Anton", sans-serif; font-size: 19px; font-weight: 400; }
+.paper ol { position: relative; list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 9px; }
+.paper li { position: relative; }
+.paper li .row { display: flex; align-items: baseline; gap: 10px; }
+.paper li .n { font-family: "Anton", sans-serif; font-size: 33px; line-height: 1; color: #111; min-width: 34px; }
+.paper li .t { font-family: "Anton", sans-serif; font-size: 36px; line-height: 1.02; text-transform: uppercase; color: #0b0b0b; letter-spacing: .005em; }
+.paper li .tag2 { margin-left: auto; flex: none; font-family: "Oswald", sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .06em; border: 2px solid #111; border-radius: 4px; padding: 1px 7px; align-self: center; white-space: nowrap; }
+.paper li .nt { display: block; margin: 0 0 0 44px; font-family: "Caveat", cursive; font-weight: 700; font-size: 25px; line-height: 1.05; color: #c2570c; }
+.paper li.blk { margin: 4px 0; padding: 9px 0; text-align: center; border-top: 2px dashed #888; border-bottom: 2px dashed #888; font-family: "Oswald", sans-serif; font-weight: 700; font-size: 17px; letter-spacing: .14em; text-transform: uppercase; color: #222; }
+.paper .pf { position: absolute; left: 42px; right: 42px; bottom: 22px; display: flex; justify-content: space-between; font-family: "Oswald", sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #777; }
+.paper.back .t { font-size: 31px; } .paper.back .n { font-size: 28px; }
+body.scroll .paperwrap { position: relative; right: auto; top: auto; width: 100%; height: 520px; margin-top: 16px; } body.scroll .paper { transform: scale(.55) !important; transform-origin: 0 0; left: 0 !important; top: 0 !important; }
+
+/* QR de la banda con su logo en el centro */
+.qrcard { position: absolute; z-index: 4; left: 1090px; top: 220px; width: 400px; padding: 26px 26px 20px; border-radius: 30px; background: #fff; color: #111; text-align: center; box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 80px rgba(96,165,250,.25); transform: rotate(-3deg); }
+.qrcard svg { display: block; width: 100%; height: auto; }
+.qrcard b { display: block; margin-top: 12px; font-size: 27px; font-weight: 600; letter-spacing: -.01em; }
+.qrcard span { font-size: 20px; color: #5a626e; }
+body.scroll .qrcard { position: relative; left: auto; top: auto; margin: 16px auto; width: 70%; transform: none; }
+
+/* ───────── Diálogos · piezas de apoyo ───────── */
+.paper .wm { inset: auto; left: 50%; top: 58%; width: 470px; height: 470px; transform: translate(-50%, -50%); border-radius: 50%; background: url(img/logo-hdc-hd.jpg) center / cover; opacity: .14; filter: grayscale(1) contrast(1.15); }
+.enrol.slim { margin-top: 24px; padding: 20px 32px; max-width: 1300px; } .enrol.slim .en-top { padding-bottom: 0; border: 0; } .enrol.slim .en-top b { font-size: 36px; } .enrol.slim .en-top span { font-size: 23px; } .enrol.slim .en-top .mono { width: 72px; height: 72px; font-size: 27px; }
+.enrol.slim + .dlg { margin-top: 22px; }
+.slide.scene.tech h2 { font-size: 60px; max-width: 1000px; margin-top: 20px; }
+.slide.scene.tech .dlg, .slide.scene.biz .dlg { max-width: 940px; margin-top: 26px; }
+.slide.scene.biz h2 { font-size: 64px; margin-top: 20px; }
+.slide.scene > .tech-vis, .slide.scene > .biz-cols { position: absolute; left: 1080px; top: 150px; width: 730px; z-index: 3; }
+.tech-vis .pn, .biz-col { background: #0f1420; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; padding: 24px 30px; margin-bottom: 20px; }
+.tech-vis .pn.mid { background: #243a63; border-color: rgba(143,182,255,.5); }
+.tech-vis .pn h3, .biz-col h3 { font-size: 29px; font-weight: 600; color: #8fb6ff; letter-spacing: -.01em; }
+.tech-vis .pn.mid h3 { color: #fff; }
+.tech-vis .pn p, .biz-col p { font-size: 24px; line-height: 1.32; color: rgba(255,255,255,.82); margin-top: 8px; }
+.chips2 { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 12px !important; }
+.chips2 span { padding: 7px 15px; border-radius: 999px; background: rgba(143,182,255,.14); border: 1px solid rgba(143,182,255,.35); font-size: 21px; color: #cfe0ff; }
+.tech-vis.mini { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; } .tech-vis.mini .pn { margin: 0; padding: 18px 22px; } .tech-vis.mini h3 { font-size: 24px; } .tech-vis.mini p { font-size: 20px; }
+pre.tech-vis { font-family: var(--mono); font-size: 25px; line-height: 1.55; background: #0f1420; border: 1px solid rgba(255,255,255,.14); border-radius: 24px; padding: 34px 40px; color: rgba(255,255,255,.82); white-space: pre-wrap; }
+pre.tech-vis b { color: #8fb6ff; font-weight: 500; }
+.slide.scene .steps { list-style: none; } .steps li { display: flex; gap: 18px; align-items: flex-start; padding: 16px 22px; margin-bottom: 12px; background: #0f1420; border: 1px solid rgba(255,255,255,.14); border-radius: 20px; }
+.steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #243a63; color: #cfe0ff; font-size: 21px; font-weight: 600; }
+.steps h3 { font-size: 26px; font-weight: 600; } .steps p { font-size: 20px; line-height: 1.3; color: rgba(255,255,255,.72); margin-top: 3px; }
+.biz-col .badge { display: inline-block; padding: 6px 16px; border-radius: 999px; background: rgba(79,199,184,.16); color: #7fe2d4; font-size: 20px; font-weight: 600; letter-spacing: .04em; margin-bottom: 12px; }
+.biz-col .badge.b2b { background: rgba(255,179,106,.16); color: #ffcf9a; }
+.graphbox { margin-top: 22px; width: 1430px; padding: 18px 26px; border-radius: 22px; background: rgba(10,14,22,.8); border: 1px solid rgba(255,255,255,.12); }
+.slide.scene.tech .scene-foot { position: absolute; left: 120px; right: 120px; bottom: 44px; margin: 0; }
+.slide.scene.reveal.dream h2 { font-size: 84px; }
+.slide.scene.reveal .sub3.dream-line { font-size: 66px; font-weight: 600; margin-top: 36px; color: #ffd596; text-shadow: 0 0 40px rgba(255,200,120,.35); }
+.slide.bigstats .dlg { position: relative; z-index: 2; margin-top: 18px; max-width: 1180px; } .slide.bigstats .dlg .bub { font-size: 26px; padding: 9px 20px 11px; } .slide.bigstats .dlg { --av: 52px; gap: 8px; }
+body.scroll .slide.scene > .tech-vis, body.scroll .slide.scene > .biz-cols { position: relative; left: auto; top: auto; width: 100%; margin-top: 16px; }
+body.scroll .slide.scene.tech .scene-foot { position: relative; left: auto; right: auto; bottom: auto; margin-top: 16px; }
+body.scroll .graphbox { width: 100%; }
+
+/* ───────── Ajustes tras la primera revisión ───────── */
+.paper li { color: #111; } .paper li .tag2 { color: #111; background: #fff; }
+.paper { width: 620px; padding: 36px 42px; }
+.paper .ph { flex-wrap: wrap; align-items: flex-end; row-gap: 2px; }
+.paper .ph .band { font-size: 30px; line-height: 1.05; white-space: nowrap; }
+.paper .ph .set { order: 3; flex: 1 0 100%; font-size: 13px; }
+.paper .ph .who { order: 2; }
+.paper ol { margin-top: 20px; gap: 14px; }
+.paper li .t { font-size: 37px; line-height: 1.12; }
+.paper li .n { font-size: 34px; }
+.paper li .nt { font-size: 27px; margin-top: 1px; }
+.paper li.blk { margin: 6px 0; padding: 10px 0; font-size: 18px; }
+.paper .wm { opacity: .07; }
+.paper.back .t { font-size: 32px; } .paper.back .ph .band { font-size: 26px; }
+.paperwrap { right: 60px; top: 50px; width: 790px; }
+.feat.dl .ft-shot { top: 160px; height: 640px; right: 70px; width: 760px; }
+.feat.dl .ft-shot.tall { top: 120px; height: 760px; }
+.qrcard { left: 900px; top: 270px; width: 380px; }
+.feat.dl .ft-shot.phone { right: 70px; }
+.slide.scene.tech h2 { max-width: 960px; }
+.slide.bigstats.dl h2 { font-size: 58px; margin-top: 20px; }
+.slide.bigstats.dl .bs-n { font-size: 150px; }
+.slide.bigstats.dl .bs-grid { margin-top: 16px; align-content: start; row-gap: 6px; }
+.tech-vis.graphbox { top: 120px; left: 1080px; width: 740px; padding: 12px 16px; background: rgba(10,14,22,.82); border: 1px solid rgba(255,255,255,.12); border-radius: 22px; margin: 0; }
+/* El sueño: fondo que se acerca despacio y la frase final llega la última, con brillo */
+.slide.dream .scene-bg { animation: kenb 16s ease-out both; transform-origin: 30% 40%; }
+@keyframes kenb { from { transform: scale(1); } to { transform: scale(1.12); } }
+.slide.dream .sub3.dream-line[data-a] { transition-delay: 2.8s; transition-duration: 1.8s; }
+.slide.dream .sub:not(.dream-line)[data-a] { transition-delay: 1.4s; transition-duration: 1.2s; }
+@media (prefers-reduced-motion: reduce) { .slide.dream .scene-bg { animation: none; } }
+.feat.dl .ft-shot.amigas { top: 150px; height: 628px; width: 760px; }
+.paper.front { transform: rotate(-1.6deg) scale(1.1); transform-origin: 50% 40%; }
+.paper ol { gap: 22px; }
+
+/* Móvil (modo scroll): el chat ocupa todo el ancho y la prueba va debajo */
+body.scroll .slide.feat.dl .ft-copy, body.scroll .slide.scene .dlg, body.scroll .slide.scene.tech .dlg, body.scroll .slide.scene.biz .dlg, body.scroll .slide.bigstats .dlg { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; max-width: 100% !important; }
+body.scroll .feat.dl .dlg .bub, body.scroll .slide.scene .dlg .bub, body.scroll .slide.scene.tech .dlg .bub, body.scroll .slide.scene.dlg.tight .bub, body.scroll .slide.bigstats .dlg .bub { font-size: 15px !important; padding: 8px 14px !important; }
+body.scroll .feat.dl h2, body.scroll .slide.scene.tech h2, body.scroll .slide.scene.biz h2, body.scroll .slide.bigstats.dl h2 { font-size: 26px !important; max-width: 100% !important; }
+body.scroll .feat.dl .ft-shot, body.scroll .feat.dl .ft-shot.tall, body.scroll .feat.dl .ft-shot.amigas, body.scroll .feat.dl .ft-shot.phone { position: relative !important; left: auto !important; right: auto !important; top: auto !important; width: 100% !important; height: auto !important; margin-top: 14px; }
+body.scroll .feat.dl .ft-shot.phone { width: 70% !important; margin-left: auto; margin-right: auto; }
+body.scroll .feat.dl .ft-shot.phone img { position: relative; animation: none; }
+body.scroll .qrcard { position: relative !important; left: auto !important; top: auto !important; width: 62% !important; margin: 16px auto !important; transform: none !important; }
+body.scroll .paperwrap { position: relative !important; right: auto !important; top: auto !important; width: 100% !important; height: 480px !important; overflow: hidden; }
+body.scroll .paper.front { left: 0 !important; top: 0 !important; transform: scale(.52) !important; transform-origin: 0 0 !important; }
+body.scroll .paper.back { display: none; }
+body.scroll .slide.scene > .tech-vis, body.scroll .slide.scene > .biz-cols { position: relative !important; left: auto !important; top: auto !important; width: 100% !important; margin-top: 14px !important; }
+body.scroll .tech-vis.mini { grid-template-columns: 1fr; }
+body.scroll .tech-vis .pn h3, body.scroll .biz-col h3 { font-size: 18px; } body.scroll .tech-vis .pn p, body.scroll .biz-col p, body.scroll .chips2 span, body.scroll .steps p { font-size: 14px; } body.scroll .steps h3 { font-size: 17px; }
+body.scroll .slide.scene .scene-foot { position: relative !important; left: auto !important; right: auto !important; bottom: auto !important; margin-top: 14px !important; font-size: 13px; }
+body.scroll .slide.scene.reveal .sub3.dream-line { font-size: 28px !important; margin-top: 16px; }
+body.scroll .slide.scene.reveal h2, body.scroll .slide.scene.reveal.dream h2 { font-size: 30px !important; }
+body.scroll .slide.scene .cartel { max-width: 100% !important; padding: 14px 18px !important; } body.scroll .slide.scene .cartel .l1 { font-size: 32px !important; } body.scroll .slide.scene .cartel .l2 { font-size: 16px !important; } body.scroll .slide.scene .cartel .fest { font-size: 14px !important; }
+body.scroll .slide.bigstats.dl .bs-n { font-size: 56px; }
+body.scroll .enrol.slim { padding: 12px 16px; } body.scroll .enrol.slim .en-top b { font-size: 18px; } body.scroll .enrol.slim .en-top span { font-size: 13px; } body.scroll .enrol.slim .en-top .mono { width: 44px; height: 44px; font-size: 16px; }
+body.scroll .slide.scene h2[style] { font-size: 28px !important; }
+body.scroll .tech-vis.graphbox { padding: 8px; }

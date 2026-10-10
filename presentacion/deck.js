@@ -145,6 +145,8 @@
     if (how === 'instant') { setIn(p.items, true, '0ms'); p.shown = p.steps.length; }
     else if (clicksOn()) { p.items.filter((it) => !tagsAndBrand.includes(it)).forEach((it) => it.el.classList.remove('in')); p.shown = 0; }
     else { setIn(p.items.filter((it) => !tagsAndBrand.includes(it)), true, '380ms'); p.shown = p.steps.length; }
+    // Chat: en automático cada mensaje entra tras el anterior; por clics, cada clic es un mensaje
+    $$('.dlg li', s).forEach((li, k) => li.style.setProperty('--n', how === 'instant' || clicksOn() ? 0 : k));
     paintHud();
   }
 
