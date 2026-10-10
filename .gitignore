@@ -27,6 +27,7 @@ supabase/.temp/
 !.claude/settings.json
 !.claude/skills/
 !.claude/hooks/
+!.claude/mods/
 
 # Salida de cada corrida de Playwright (e2e/) - informe HTML, trazas y capturas de fallos.
 playwright-report/
