@@ -23,7 +23,13 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandSettingsModal|src/components/band_switcher/BandSettingsModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandReorder|src/components/band_switcher/hooks/useBandReorder.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandSwitcherController|src/components/band_switcher/hooks/useBandSwitcherController.ts]] *(from #frontend)*
+- [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 
 ---

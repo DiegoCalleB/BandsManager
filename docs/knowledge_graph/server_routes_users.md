@@ -37,9 +37,9 @@ Usuarios y autenticación: registro, login Google verificado, invitaciones de mi
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
 - [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*

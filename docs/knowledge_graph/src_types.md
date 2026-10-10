@@ -52,6 +52,11 @@ _Sin dependencias salientes directas._
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandSwitcherController|src/components/band_switcher/hooks/useBandSwitcherController.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*
 - [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*

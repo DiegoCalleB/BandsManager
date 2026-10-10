@@ -41,9 +41,12 @@ Exporta: ApiError, getAuthHeaders, api.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*
+- [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
 - [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
 - [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(from #frontend)*

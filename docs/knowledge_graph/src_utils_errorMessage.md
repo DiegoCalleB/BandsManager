@@ -23,6 +23,9 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*
+- [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_BulkActionsSection|src/components/booking/crm/BulkActionsSection.tsx]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadEditing|src/components/booking/crm/hooks/useLeadEditing.ts]] *(from #frontend)*
 - [[src_components_booking_crm_hooks_useLeadScraping|src/components/booking/crm/hooks/useLeadScraping.ts]] *(from #frontend)*

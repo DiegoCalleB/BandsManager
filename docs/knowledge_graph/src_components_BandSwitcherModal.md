@@ -13,27 +13,22 @@ tags: ["frontend", "system", "auto", "pantalla"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: BandSwitcherModal.
+Selector de bandas del usuario: cambiar, ordenar, fijar principal, salir y crear.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
-- [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_band_switcher_BandSwitcherLayout|src/components/band_switcher/BandSwitcherLayout.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_band_switcher_BandSwitcherProvider|src/components/band_switcher/BandSwitcherProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_band_switcher_hooks_useBandSwitcherController|src/components/band_switcher/hooks/useBandSwitcherController.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_bandUtils|src/utils/bandUtils.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandSwitcherContext|src/components/band_switcher/BandSwitcherContext.ts]] *(from #frontend)*
 
 ---
 

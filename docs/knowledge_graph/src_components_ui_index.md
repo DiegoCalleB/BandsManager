@@ -44,6 +44,14 @@ BandManager UI Component Library
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_App|src/App.tsx]] *(from #frontend)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandSettingsModal|src/components/band_switcher/BandSettingsModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandSwitcherFooter|src/components/band_switcher/BandSwitcherFooter.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_BandSwitcherLayout|src/components/band_switcher/BandSwitcherLayout.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_CreateBandStepOne|src/components/band_switcher/CreateBandStepOne.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_CreateBandStepTwo|src/components/band_switcher/CreateBandStepTwo.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_DeleteBandModal|src/components/band_switcher/DeleteBandModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandCardsGrid|src/components/bandCRM/BandCardsGrid.tsx]] *(from #frontend)*
@@ -56,7 +64,6 @@ BandManager UI Component Library
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*
 - [[src_components_bands_BulkBandActionBar|src/components/bands/BulkBandActionBar.tsx]] *(from #frontend)*
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
 - [[src_components_booking_AgentQueueMonitorModal|src/components/booking/AgentQueueMonitorModal.tsx]] *(from #agent)*
 - [[src_components_booking_BandListenEmbed|src/components/booking/BandListenEmbed.tsx]] *(from #frontend)*
