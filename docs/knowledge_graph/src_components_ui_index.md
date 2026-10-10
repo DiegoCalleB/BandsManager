@@ -91,7 +91,11 @@ BandManager UI Component Library
 - [[src_components_booking_ExportLeadsModal|src/components/booking/ExportLeadsModal.tsx]] *(from #frontend)*
 - [[src_components_booking_FastDealModal|src/components/booking/FastDealModal.tsx]] *(from #frontend)*
 - [[src_components_booking_GenerateAllTemplatesModal|src/components/booking/GenerateAllTemplatesModal.tsx]] *(from #frontend)*
-- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_ExplorerHeader|src/components/booking/google_places/ExplorerHeader.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_PlaceDiscardedModal|src/components/booking/google_places/PlaceDiscardedModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_PlaceDiscardToast|src/components/booking/google_places/PlaceDiscardToast.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_ScoutFilterBar|src/components/booking/google_places/ScoutFilterBar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
 - [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(from #frontend)*
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*

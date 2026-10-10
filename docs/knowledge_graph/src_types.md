@@ -107,6 +107,14 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_ExportLeadsModal|src/components/booking/ExportLeadsModal.tsx]] *(from #frontend)*
 - [[src_components_booking_FastDealModal|src/components/booking/FastDealModal.tsx]] *(from #frontend)*
 - [[src_components_booking_GenerateAllTemplatesModal|src/components/booking/GenerateAllTemplatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useAlternativePlaceSources|src/components/booking/google_places/hooks/useAlternativePlaceSources.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useMassCampaignSearch|src/components/booking/google_places/hooks/useMassCampaignSearch.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceCrmImport|src/components/booking/google_places/hooks/usePlaceCrmImport.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceResults|src/components/booking/google_places/hooks/usePlaceResults.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useScoutFilters|src/components/booking/google_places/hooks/useScoutFilters.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_placesModel|src/components/booking/google_places/placesModel.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
 - [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadAvatar|src/components/booking/LeadAvatar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*

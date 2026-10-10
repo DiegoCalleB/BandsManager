@@ -24,7 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
-- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_PlaceDiscardedModal|src/components/booking/google_places/PlaceDiscardedModal.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueBitacoraSection|src/components/booking/venue_panel/VenueBitacoraSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueEmailsSection|src/components/booking/venue_panel/VenueEmailsSection.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*

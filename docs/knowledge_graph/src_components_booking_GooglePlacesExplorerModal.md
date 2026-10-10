@@ -13,24 +13,22 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Exporta: PlaceResult, DiscardedPlace, GooglePlacesExplorerModal.
+Explorador de lugares de Google Places para el CRM de booking.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_booking_google_places_GooglePlacesExplorerProvider|src/components/booking/google_places/GooglePlacesExplorerProvider.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_google_places_GooglePlacesExplorerView|src/components/booking/google_places/GooglePlacesExplorerView.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_google_places_hooks_useGooglePlacesExplorerController|src/components/booking/google_places/hooks/useGooglePlacesExplorerController.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_crm_CrmModalsHost|src/components/booking/crm/CrmModalsHost.tsx]] *(from #frontend)*
+- [[src_components_booking_google_places_GooglePlacesExplorerContext|src/components/booking/google_places/GooglePlacesExplorerContext.ts]] *(from #frontend)*
+- [[src_components_booking_google_places_hooks_useGooglePlacesExplorerController|src/components/booking/google_places/hooks/useGooglePlacesExplorerController.ts]] *(from #frontend)*
 
 ---
 
