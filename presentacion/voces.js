@@ -21,7 +21,7 @@
   var audio = new Audio();
   audio.preload = 'auto';
   // Ritmo: las voces suenan un poco más rápidas y la siguiente frase arranca cuando a la anterior le queda un suspiro
-  var VEL = 1.1, SOLAPE = 0.3;
+  var VEL = 1.12, SOLAPE = 0.5;
   audio.preservesPitch = true;
   var run = 0, timer = 0, avisar = function () {};
 
@@ -157,7 +157,7 @@
       if (id !== run) return;
       if (i >= cola.length) { timer = setTimeout(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
       var el = cola[i++];
-      var luego = function () { if (id === run) timer = setTimeout(siguiente, 40); };
+      var luego = function () { if (id === run) timer = setTimeout(siguiente, 0); };
       if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego); return; }
       // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
       el.classList.add('typing');
@@ -167,9 +167,9 @@
         el.classList.remove('typing');
         if (window.DeckSound && window.DeckSound.msg) window.DeckSound.msg(el.classList.contains('me'));
         hablar(el, luego);
-      }, Math.min(650, 220 + (el.dataset.say || '').length * 2));
+      }, Math.min(420, 140 + (el.dataset.say || '').length * 1.3));
     };
-    timer = setTimeout(siguiente, 450);
+    timer = setTimeout(siguiente, 200);
   }
 
   function uno(el) { stop(); run++; hablar(el); }
