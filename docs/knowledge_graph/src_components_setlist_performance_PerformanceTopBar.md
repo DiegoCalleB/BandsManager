@@ -1,0 +1,36 @@
+---
+id: src_components_setlist_performance_PerformanceTopBar
+title: "src/components/setlist_performance/PerformanceTopBar.tsx"
+layer: frontend
+domain: repertoire
+file: "src/components/setlist_performance/PerformanceTopBar.tsx"
+tags: ["frontend", "repertoire", "auto"]
+---
+
+# 📌 src/components/setlist_performance/PerformanceTopBar.tsx
+
+> **Ubicación:** `src/components/setlist_performance/PerformanceTopBar.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
+
+## 📖 Descripción
+Barra superior: título del tema, selector de modo, accesos y datos pasivos.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_setlist_performance_PerformanceMoreMenu|src/components/setlist_performance/PerformanceMoreMenu.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_setlist_performance_SetlistPerformanceStage|src/components/setlist_performance/SetlistPerformanceStage.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -324,7 +324,12 @@ BandManager UI Component Library
 - [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 - [[src_components_SaveErrorBanner|src/components/SaveErrorBanner.tsx]] *(from #frontend)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_ChordSheetPage|src/components/setlist_performance/ChordSheetPage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceEmptyState|src/components/setlist_performance/PerformanceEmptyState.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformancePage|src/components/setlist_performance/PerformancePage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceRehearsalBar|src/components/setlist_performance/PerformanceRehearsalBar.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceSongDrawer|src/components/setlist_performance/PerformanceSongDrawer.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceTopBar|src/components/setlist_performance/PerformanceTopBar.tsx]] *(from #frontend)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAddIdeaForm|src/components/song_studio/SongStudioAddIdeaForm.tsx]] *(from #frontend)*

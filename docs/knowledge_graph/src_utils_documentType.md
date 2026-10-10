@@ -23,7 +23,8 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useChordSheet|src/components/setlist_performance/hooks/useChordSheet.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_ScannedSheetPage|src/components/setlist_performance/ScannedSheetPage.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 
 ---

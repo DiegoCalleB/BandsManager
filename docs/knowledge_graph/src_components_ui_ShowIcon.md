@@ -170,7 +170,12 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_ChordSheetPage|src/components/setlist_performance/ChordSheetPage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceFooter|src/components/setlist_performance/PerformanceFooter.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceRestScreen|src/components/setlist_performance/PerformanceRestScreen.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceSongDrawer|src/components/setlist_performance/PerformanceSongDrawer.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceTopBar|src/components/setlist_performance/PerformanceTopBar.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_TeleprompterBlockPage|src/components/setlist_performance/TeleprompterBlockPage.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAddIdeaForm|src/components/song_studio/SongStudioAddIdeaForm.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAiComposerModal|src/components/song_studio/SongStudioAiComposerModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAiGeneratorModal|src/components/song_studio/SongStudioAiGeneratorModal.tsx]] *(from #frontend)*

@@ -28,7 +28,12 @@ Exporta: getSongIrisStemIdea, esIdeaIris, irisPrimero, hasIrisStems, getIdeaTrac
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePracticeLaunch|src/components/setlist_performance/hooks/usePracticeLaunch.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useSetlistNavigation|src/components/setlist_performance/hooks/useSetlistNavigation.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformancePracticePanel|src/components/setlist_performance/PerformancePracticePanel.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceRehearsalBar|src/components/setlist_performance/PerformanceRehearsalBar.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceSongDrawer|src/components/setlist_performance/PerformanceSongDrawer.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceTopBar|src/components/setlist_performance/PerformanceTopBar.tsx]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useIdeaPlaybackTracks|src/components/song_studio/hooks/useIdeaPlaybackTracks.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useMoisesStemsPanel|src/components/song_studio/hooks/useMoisesStemsPanel.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useSongIdeasCrud|src/components/song_studio/hooks/useSongIdeasCrud.ts]] *(from #frontend)*

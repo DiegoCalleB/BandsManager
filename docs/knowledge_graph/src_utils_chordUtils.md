@@ -30,7 +30,9 @@ _Sin dependencias salientes directas._
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistItemsList|src/components/repertorio/SetlistItemsList.tsx]] *(from #frontend)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_ChordSheetPage|src/components/setlist_performance/ChordSheetPage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useChordSheet|src/components/setlist_performance/hooks/useChordSheet.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePageTurning|src/components/setlist_performance/hooks/usePageTurning.ts]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*

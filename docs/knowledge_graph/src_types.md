@@ -352,6 +352,14 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useChordSheet|src/components/setlist_performance/hooks/useChordSheet.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePageTurning|src/components/setlist_performance/hooks/usePageTurning.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_usePracticeLaunch|src/components/setlist_performance/hooks/usePracticeLaunch.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useSetlistNavigation|src/components/setlist_performance/hooks/useSetlistNavigation.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_performanceModel|src/components/setlist_performance/performanceModel.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_ScannedSheetPage|src/components/setlist_performance/ScannedSheetPage.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_TeleprompterBlockPage|src/components/setlist_performance/TeleprompterBlockPage.tsx]] *(from #frontend)*
 - [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
@@ -495,6 +503,7 @@ _Sin dependencias salientes directas._
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
+- `src/components/setlist_performance/__tests__/setlistPerformanceContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`

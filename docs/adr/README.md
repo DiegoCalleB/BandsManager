@@ -40,6 +40,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0031](./0031-modularizacion-app.md) | Modularización de App.tsx (2814 → 24 líneas) con controlador, contexto, puerta de entrada y armazón | Aceptada | nueva |
 | [0032](./0032-modularizacion-tour-manager.md) | Modularización de TourManager.tsx (1918 → 71 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 | [0033](./0033-modularizacion-google-places-explorer.md) | Modularización de GooglePlacesExplorerModal.tsx (1872 → ~40 líneas) con controlador, contexto y vistas | Aceptada | nueva |
+| [0034](./0034-modularizacion-setlist-performance-view.md) | Modularización de SetlistPerformanceView.tsx (1857 → ~30 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

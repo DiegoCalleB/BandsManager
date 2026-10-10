@@ -1,8 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { IrisStudio } from '../components/chords/IrisStudio';
 import { MOTORES_IRIS } from '../utils/separacionIris';
+
+/** Código fuente del visor en directo: el contenedor más todos los módulos de `setlist_performance/` (tras la modularización, ADR 0034). */
+function leerConcierto(): string {
+  const dir = new URL('../components/setlist_performance/', import.meta.url);
+  const modulos = readdirSync(dir, { recursive: true, encoding: 'utf8' })
+    .filter((f) => /\.tsx?$/.test(f) && !f.includes('__tests__'))
+    .sort()
+    .map((f) => readFileSync(new URL(f, dir), 'utf8'));
+  return [readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8'), ...modulos].join('\n');
+}
+
 
 // El selector se abre con estado interno: en estático solo comprobamos que no se pinta cerrado.
 const selectorHtml = () => (renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio onSeparar={() => {}} />).includes('data-iris-motores') ? 'abierto' : '');
@@ -53,14 +64,14 @@ describe('Iris Studio en el Atril (Iris es una acción de la canción)', () => {
 
 describe('Iris no se ofrece dos veces', () => {
   it('el modo concierto no tiene botones «Separar con Iris»: ya existe «Studio» y la tarjeta del Atril', () => {
-    const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+    const concierto = leerConcierto();
     expect(concierto).not.toContain('Separar con Iris');
     expect(concierto).not.toContain('Separar pistas con Iris');
     expect(concierto).toContain('btn-stage-studio-mode');
   });
 
   it('«Modo Studio» solo está en el menú «⋮»: no hay botón suelto en la barra superior', () => {
-    const concierto = readFileSync(new URL('../components/SetlistPerformanceView.tsx', import.meta.url), 'utf8');
+    const concierto = leerConcierto();
     expect(concierto.indexOf('btn-stage-studio-mode')).toBeGreaterThan(concierto.indexOf('showMoreMenu && ('));
     expect(concierto).not.toContain('Quick action: Modo Studio');
   });

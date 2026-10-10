@@ -40,7 +40,7 @@ Exporta: PopoverAncla.
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAddBar|src/components/repertorio/SetlistAddBar.tsx]] *(from #frontend)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformanceMoreMenu|src/components/setlist_performance/PerformanceMoreMenu.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioIdeaHeader|src/components/song_studio/SongStudioIdeaHeader.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*

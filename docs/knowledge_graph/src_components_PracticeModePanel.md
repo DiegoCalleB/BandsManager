@@ -36,7 +36,7 @@ Exporta: PracticeModePanel.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_ensayos|Ensayos]] *(from #feature)*
-- [[src_components_SetlistPerformanceView|src/components/SetlistPerformanceView.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_PerformancePracticePanel|src/components/setlist_performance/PerformancePracticePanel.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(from #frontend)*
 
 ---
