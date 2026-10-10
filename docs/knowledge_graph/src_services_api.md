@@ -51,7 +51,8 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
 - [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useResponseStrategies|src/components/dashboard/agent_autonomy/hooks/useResponseStrategies.ts]] *(from #agent)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(from #frontend)*

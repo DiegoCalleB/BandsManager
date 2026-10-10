@@ -159,6 +159,9 @@ _Sin dependencias salientes directas._
 - [[src_components_common_ReliabilityBadge|src/components/common/ReliabilityBadge.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_agent_autonomy_AgentAutonomyContext|src/components/dashboard/agent_autonomy/AgentAutonomyContext.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAgentAutonomyController|src/components/dashboard/agent_autonomy/hooks/useAgentAutonomyController.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*

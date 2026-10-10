@@ -55,7 +55,7 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_AutonomyLayout|src/components/dashboard/agent_autonomy/AutonomyLayout.tsx]] *(from #agent)*
 - [[src_components_dashboard_EmailTemplatesModal|src/components/dashboard/EmailTemplatesModal.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ConvocarEnsayoModal|src/components/ensayos/ConvocarEnsayoModal.tsx]] *(from #frontend)*
 - [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*

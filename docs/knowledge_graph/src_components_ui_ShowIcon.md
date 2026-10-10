@@ -83,7 +83,12 @@ _Sin dependencias salientes directas._
 - [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(from #frontend)*
 - [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_AuditTab|src/components/dashboard/agent_autonomy/AuditTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_BestDaysCard|src/components/dashboard/agent_autonomy/BestDaysCard.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_EmailDispatchTab|src/components/dashboard/agent_autonomy/EmailDispatchTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_ResponseStrategiesTab|src/components/dashboard/agent_autonomy/ResponseStrategiesTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_SchedulePresetsBar|src/components/dashboard/agent_autonomy/SchedulePresetsBar.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_SenderScheduleSection|src/components/dashboard/agent_autonomy/SenderScheduleSection.tsx]] *(from #agent)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(from #frontend)*
 - [[src_components_dashboard_NeedsAttentionBanner|src/components/dashboard/NeedsAttentionBanner.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*

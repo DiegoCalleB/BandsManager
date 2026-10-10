@@ -53,7 +53,8 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[src_components_booking_venue_panel_VenueAgentWorkflowBanner|src/components/booking/venue_panel/VenueAgentWorkflowBanner.tsx]] *(from #agent)*
 - [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(from #frontend)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_autonomyTypes|src/components/dashboard/agent_autonomy/autonomyTypes.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyAuditLogs|src/components/dashboard/agent_autonomy/hooks/useAutonomyAuditLogs.ts]] *(from #agent)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---

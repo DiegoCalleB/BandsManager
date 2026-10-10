@@ -132,7 +132,15 @@ BandManager UI Component Library
 - [[src_components_common_NavItemButton|src/components/common/NavItemButton.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_AuditTab|src/components/dashboard/agent_autonomy/AuditTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_AutonomyFooter|src/components/dashboard/agent_autonomy/AutonomyFooter.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_AutonomyHeader|src/components/dashboard/agent_autonomy/AutonomyHeader.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_EconomicParamsSection|src/components/dashboard/agent_autonomy/EconomicParamsSection.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_EmailDispatchTab|src/components/dashboard/agent_autonomy/EmailDispatchTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_ResponseStrategiesTab|src/components/dashboard/agent_autonomy/ResponseStrategiesTab.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_SchedulePresetsBar|src/components/dashboard/agent_autonomy/SchedulePresetsBar.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_TimezoneSelector|src/components/dashboard/agent_autonomy/TimezoneSelector.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_ToneIdentityTab|src/components/dashboard/agent_autonomy/ToneIdentityTab.tsx]] *(from #agent)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_EmailTemplatesModal|src/components/dashboard/EmailTemplatesModal.tsx]] *(from #frontend)*

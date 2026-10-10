@@ -31,7 +31,6 @@ Tabla de Supabase `leads` (65 columnas).
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
-- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*

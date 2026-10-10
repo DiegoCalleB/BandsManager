@@ -26,6 +26,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0017](./0017-modularizacion-live-concert-to-album-modal.md) | Modularización de LiveConcertToAlbumModal (3432 → ~50 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0018](./0018-modularizacion-reels-center.md) | Modularización de ReelsCenter (4155 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0019](./0019-modularizacion-calendar-view.md) | Modularización de CalendarView (3423 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0020](./0020-modularizacion-agent-autonomy-settings-modal.md) | Modularización de AgentAutonomySettingsModal (2786 → ~60 líneas) con hooks, contexto y pestañas | Aceptada | nueva |
 
 ## Cómo añadir uno
 
