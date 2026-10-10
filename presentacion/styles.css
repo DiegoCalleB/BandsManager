@@ -1094,3 +1094,22 @@ body.scroll.pelicula #stage::before, body.scroll.pelicula #stage::after { displa
 body.pelicula:not(.scroll) #stage { background: #000; }
 body.pelicula:not(.scroll) .slide { scale: .9; }
 @media (prefers-reduced-motion: reduce) { .dlg li.habla .av, .cast figure.habla img { transform: none; } .dlg li.typing .bub::after, body.pelicula .slide.active .scene-bg, .foco.in, .foco img, .cast figure.habla img { animation: none !important; } .foco { translate: none; } }
+
+/* Títulos de crédito: el rollo sube despacio, como al final de una película */
+.slide.creditos { background: #000; padding: 0; overflow: hidden; align-items: center; color: #fff; }
+.creditos .rollo { width: 1100px; margin: 0 auto; text-align: center; transform: translateY(1080px); }
+.slide.creditos.active .rollo { animation: rollo 26s linear 600ms both; }
+@keyframes rollo { from { transform: translateY(1080px); } to { transform: translateY(calc(-100% - 40px)); } }
+.creditos .cr-pre { font-size: 30px; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.6); margin: 0; }
+.creditos .cr-titulo { font-family: Anton, Oswald, sans-serif; font-size: 150px; line-height: 1; margin: 18px 0 8px; letter-spacing: .02em; }
+.creditos .cr-sub { font-size: 32px; color: #ffd596; margin: 0 0 120px; font-style: italic; }
+.creditos h3 { font-size: 24px; letter-spacing: .28em; text-transform: uppercase; color: rgba(255,255,255,.55); font-weight: 500; margin: 90px 0 22px; }
+.creditos p { font-size: 36px; margin: 8px 0; }
+.creditos dl { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 40px; margin: 0; }
+.creditos dt { text-align: right; font-size: 38px; font-weight: 600; }
+.creditos dd { text-align: left; margin: 0; font-size: 34px; color: rgba(255,255,255,.72); }
+.creditos .cr-nombre { font-family: Anton, Oswald, sans-serif; font-size: 80px; letter-spacing: .03em; }
+.creditos .cr-nota { font-size: 28px; color: rgba(255,255,255,.55); font-style: italic; margin-top: 70px; }
+.creditos .cr-fin { font-family: Anton, Oswald, sans-serif; font-size: 64px; color: #ffd596; margin-top: 160px; }
+body.scroll .creditos .rollo { transform: none; animation: none; width: auto; padding: 40px 16px; }
+@media (prefers-reduced-motion: reduce) { .slide.creditos.active .rollo { animation: none; transform: none; } }

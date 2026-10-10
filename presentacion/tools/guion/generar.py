@@ -622,6 +622,51 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 # Gracias
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
+# Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
+add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="27000">
+  <div class="rollo">
+    <p class="cr-pre">Os Herdeiros do Código en</p>
+    <h2 class="cr-titulo">BandManager.io</h2>
+    <p class="cr-sub">Una película de rock, código y café</p>
+    <h3>Reparto</h3>
+    <dl>
+      <dt>{bajo}</dt><dd>{bajo:cargo} · el que nadie oye</dd>
+      <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras</dd>
+      <dt>{voz}</dt><dd>{voz:cargo} · la cara bonita</dd>
+      <dt>{guitarra}</dt><dd>{guitarra:cargo} · y las palabrotas</dd>
+      <dt>{manager}</dt><dd>Siempre al teléfono</dd>
+      <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
+      <dt>{ia_claude}</dt><dd>Claude Code · el que discute</dd>
+      <dt>{ia_gemini}</dt><dd>Gemini · el que también discute</dd>
+      <dt>{locutor}</dt><dd>En directo</dd>
+    </dl>
+    <h3>Escrita, programada y dirigida por</h3>
+    <p class="cr-nombre">Diego de la Calle</p>
+    <h3>Rodada en</h3>
+    <p>React · Vite · Express · TypeScript · Supabase · Railway</p>
+    <h3>Efectos especiales</h3>
+    <p>Claude Code · Gemini · Iris · Scout</p>
+    <h3>Voces</h3>
+    <p>ElevenLabs, con acento de aquí</p>
+    <h3>Música original</h3>
+    <p>Un riff de garaje en Mi, sintetizado línea a línea</p>
+    <h3>Con el apoyo de</h3>
+    <p>Brais Moure y The Big School · Máster de Desarrollo con IA</p>
+    <p class="cr-nota">Ningún bajista fue ignorado durante el rodaje. Bueno, casi.</p>
+    <p class="cr-nota">Todas las salas de esta historia acabaron contestando.</p>
+    <p class="cr-fin">Os Herdeiros do Código volverán.</p>
+  </div>
+</section>
+
+<section class="slide scene creditos-post" data-title="Escena post-créditos" data-transition="fade">
+  <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg);opacity:.35"></div>
+  <span class="tag">Escena post-créditos · Domingo, 03:12</span>
+  ''' + dlg(m('brais', '¿Ya se ha acabado la peli? 🍿', '03:12', say='[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?'),
+            m('iago', 'La app ya tiene un apartado para dividir gastos.', '03:12', say='[sighs] La app ya tiene un apartado para dividir gastos, Brais. Lo hice pensando en ti.'),
+            m('alvaro', '¡Pues que lo pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!')) + '''
+</section>
+''')
+
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
 html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),

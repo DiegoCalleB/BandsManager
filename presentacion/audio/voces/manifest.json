@@ -569,6 +569,16 @@
   "v": "b744af3c443c",
   "who": "bajo"
  },
+ "5e1d3558": {
+  "d": 4.9,
+  "e": "013445785100129971199899974147311798821867555343244324651003421155665200000001244441271274213433433101110000000000000000",
+  "f": "5e1d3558.mp3",
+  "oido": "La app ya tiene un apartado para dividir gastos Bryce. Lo hice pensando en ti.",
+  "qa": 0.93,
+  "say": "[sighs] La app ya tiene un apartado para dividir gastos, Brais. Lo hice pensando en ti.",
+  "v": "9a1f0b5f8688",
+  "who": "bajo"
+ },
  "5e6a90bd": {
   "d": 2.3,
   "e": "11498511999812764431112456775411144443321222124210145300",
@@ -939,6 +949,16 @@
   "v": "8f9542e9ecdb",
   "who": "bajo"
  },
+ "9446171a": {
+  "d": 6.46,
+  "e": "0116941120000111003398514825989999895189556310000000000024200886418635654322684453255530156400131100000000000000000000000000000000000000000000000000000000000000",
+  "f": "9446171a.mp3",
+  "oido": "Ya se ha acabado la peli y quién paga las birras de la fiesta.",
+  "qa": 1.0,
+  "say": "[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?",
+  "v": "7a6f97bb903f",
+  "who": "bateria"
+ },
  "97f27152": {
   "d": 4.54,
   "e": "0019211699522498511279899873246568765221412766741331144322111101111164114448521143673464754256555421123322222111",
@@ -1297,6 +1317,16 @@
   "qa": 1.0,
   "say": "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!",
   "v": "4916b40ec8d3",
+  "who": "guitarra"
+ },
+ "e7bba40d": {
+  "d": 3.0,
+  "e": "0461029685107963777652285511865117820560251267652110111389216732599773210",
+  "f": "e7bba40d.mp3",
+  "oido": "pues que las pague la inteligencia artificial Rock and Roll",
+  "qa": 0.78,
+  "say": "[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!",
+  "v": "fa4a8d671d95",
   "who": "guitarra"
  },
  "e8d27de4": {
