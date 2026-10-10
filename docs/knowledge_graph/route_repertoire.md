@@ -51,7 +51,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
 - [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*

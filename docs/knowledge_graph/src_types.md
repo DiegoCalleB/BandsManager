@@ -59,6 +59,11 @@ _Sin dependencias salientes directas._
 - [[src_app_hooks_useNavState|src/app/hooks/useNavState.ts]] *(from #service)*
 - [[src_app_hooks_usePlanLimitGuards|src/app/hooks/usePlanLimitGuards.ts]] *(from #service)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useChordAnalysis|src/components/atril/hooks/useChordAnalysis.ts]] *(from #frontend)*
 - [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandList|src/components/band_switcher/hooks/useBandList.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*

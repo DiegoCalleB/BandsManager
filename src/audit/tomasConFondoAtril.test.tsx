@@ -3,8 +3,9 @@ import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { TomasConFondo } from '../components/chords/TomasConFondo';
 import type { AudioTrack, SongAudioIdea } from '../types';
+import { leerAtril } from './leerAtril';
 
-const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+const atril = leerAtril();
 const stems = [
   { id: 'd', nombre: 'Batería', audioUrl: 'd' },
   { id: 'b', nombre: 'Bajo', audioUrl: 'b' },

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { bucleActivo, marcarExtremo, saltoDeBucle, SIN_BUCLE } from '../utils/bucleAB';
 import { ControlBucle } from '../components/chords/ControlBucle';
+import { leerAtril } from './leerAtril';
 
 const leer = (r: string) => readFileSync(new URL(r, import.meta.url), 'utf8');
 
@@ -23,7 +24,7 @@ describe('bucle A/B compartido', () => {
   });
 
   it('el Atril y el panel de práctica usan la misma lógica', () => {
-    expect(leer('../components/Atril.tsx')).toContain('useBucleAB(audioRef, audioUrl)');
+    expect(leerAtril()).toContain('useBucleAB(audioRef, audioUrl)');
     expect(leer('../components/PracticeModePanel.tsx')).toContain('saltoDeBucle(el.currentTime, loopA, loopB)');
     expect(leer('../hooks/useBucleAB.ts')).toContain("from '../utils/bucleAB'");
   });

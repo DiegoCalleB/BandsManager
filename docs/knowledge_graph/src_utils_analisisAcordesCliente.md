@@ -25,7 +25,7 @@ Exporta: analizarAcordesDelAudio, resumenAnalisisAcordes.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useChordAnalysis|src/components/atril/hooks/useChordAnalysis.ts]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 

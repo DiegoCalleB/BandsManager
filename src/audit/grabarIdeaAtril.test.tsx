@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { readFileSync } from 'node:fs';
 import React from 'react';
 import { GrabarIdea } from '../components/chords/GrabarIdea';
+import { leerAtril } from './leerAtril';
 
 const base = {
   segundos: 0, toma: null, offset: 0.12, error: null, guardando: false, disponible: true,
@@ -31,7 +32,7 @@ describe('Grabar idea en el Atril', () => {
   });
 
   it('el Atril solo ofrece grabar en modo Ensayar y guarda con crearIdeaDeAtril', () => {
-    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    const src = leerAtril();
     expect(src).toMatch(/modo === 'Ensayar' && \(\s*<GrabarIdea/);
     expect(src).toContain('crearIdeaDeAtril');
     expect(src).toContain('sobrePistas');
@@ -47,7 +48,7 @@ describe('Grabar idea en el Atril', () => {
 
 describe('Jamify y cejuela', () => {
   it('Jamify arranca activo y se analiza solo, sin aviso previo', () => {
-    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    const src = leerAtril();
     expect(src).toMatch(/showAnalisisAcordes, setShowAnalisisAcordes\] = useState<boolean>\(true\)/);
     expect(src).toContain('jamifyAutoIntentado');
     expect(src).toContain('"Acordes del audio"');

@@ -26,7 +26,7 @@ Exporta: MotorIris, EtapaIris, ProveedorErrorIris, ProgresoIris, nombreMotor, te
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_chords_IrisStudio|src/components/chords/IrisStudio.tsx]] *(from #frontend)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
 

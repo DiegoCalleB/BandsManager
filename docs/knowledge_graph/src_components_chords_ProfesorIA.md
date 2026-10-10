@@ -25,7 +25,7 @@ Exporta: ProfesorIA.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
 
 ---
 

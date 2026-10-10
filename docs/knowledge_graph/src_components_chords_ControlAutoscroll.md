@@ -23,7 +23,7 @@ Exporta: ControlAutoscroll.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 
 ---

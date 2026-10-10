@@ -24,7 +24,7 @@ Exporta: ModoEscucha, instrumentoDePista, pistaDelUsuario, pistasParaModo, Ajust
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_chords_MezclaPistas|src/components/chords/MezclaPistas.tsx]] *(from #frontend)*
 - [[src_components_chords_SelectorEscucha|src/components/chords/SelectorEscucha.tsx]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*

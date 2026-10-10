@@ -25,7 +25,8 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_services_profesorArmonia|server/services/profesorArmonia.ts]] *(from #service)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(from #frontend)*

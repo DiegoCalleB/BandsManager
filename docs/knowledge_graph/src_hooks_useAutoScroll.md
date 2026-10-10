@@ -23,7 +23,8 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
 - [[src_components_chords_ControlAutoscroll|src/components/chords/ControlAutoscroll.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 

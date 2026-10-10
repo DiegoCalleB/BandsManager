@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { acotarBpm, BPM_MIN, BPM_MAX } from '../hooks/useMetronomo';
+import { leerAtril } from './leerAtril';
 
 const leer = (p: string) => readFileSync(new URL(p, import.meta.url), 'utf8');
 
@@ -13,7 +14,7 @@ describe('Metrónomo en el Atril', () => {
   });
 
   it('el Atril usa el hook con el tempo de la canción y el control compartido', () => {
-    const atril = leer('../components/Atril.tsx');
+    const atril = leerAtril();
     expect(atril).toContain('useMetronomo(song.bpm || 120)');
     expect(atril).toContain('<ControlMetronomo metronomo={metronomo} />');
   });

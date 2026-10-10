@@ -40,7 +40,6 @@ AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Re
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*

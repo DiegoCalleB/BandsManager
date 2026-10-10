@@ -15,6 +15,7 @@ import {
   NavItemId,
 } from '../navGroups';
 import { PLANS } from '../../utils/planPermissions';
+import { leerAtril } from '../../audit/leerAtril';
 
 describe('navGroups config', () => {
   it('every id referenced by groups/pinned/flat lists exists in NAV_ITEMS', () => {
@@ -46,7 +47,7 @@ describe('navGroups config', () => {
   it('metrónomo y afinador no están en el menú: viven como botones del Atril', () => {
     expect(Object.keys(NAV_ITEMS)).not.toContain('metronome');
     expect(Object.keys(NAV_ITEMS)).not.toContain('tuner');
-    const atril = readFileSync(new URL('../../components/Atril.tsx', import.meta.url), 'utf8');
+    const atril = leerAtril();
     expect(atril).toContain('label="Metrónomo"');
     expect(atril).toContain('label="Afinador"');
   });

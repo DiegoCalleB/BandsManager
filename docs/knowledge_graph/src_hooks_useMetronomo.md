@@ -23,7 +23,7 @@ Exporta: Metronomo, BPM_MIN, BPM_MAX, acotarBpm, bpmDeToques, useMetronomo.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
 - [[src_components_chords_ControlMetronomo|src/components/chords/ControlMetronomo.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 

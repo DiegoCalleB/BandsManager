@@ -24,7 +24,6 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorFactory|server/services/audioSeparator/AudioSeparatorFactory.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*

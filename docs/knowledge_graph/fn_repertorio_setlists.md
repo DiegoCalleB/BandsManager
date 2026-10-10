@@ -19,14 +19,11 @@ Catálogo de canciones, setlists, atril, modo escenario y práctica.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
-- [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
-- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_songs_index|server/routes/songs/index.ts]] *(Layer: #route, Domain: #repertoire)*

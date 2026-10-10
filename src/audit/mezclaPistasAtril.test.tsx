@@ -3,8 +3,9 @@ import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MezclaPistas } from '../components/chords/MezclaPistas';
 import type { AudioTrack } from '../types';
+import { leerAtril } from './leerAtril';
 
-const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+const atril = leerAtril();
 const pistas = [
   { id: 'a', nombre: 'Bajo' },
   { id: 'b', nombre: 'Batería' },

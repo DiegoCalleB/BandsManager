@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_CreateBandStepTwo|src/components/band_switcher/CreateBandStepTwo.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*

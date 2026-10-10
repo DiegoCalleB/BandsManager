@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { IrisStudio } from '../components/chords/IrisStudio';
 import { MOTORES_IRIS } from '../utils/separacionIris';
+import { leerAtril } from './leerAtril';
 
 /** Código fuente del visor en directo: el contenedor más todos los módulos de `setlist_performance/` (tras la modularización, ADR 0034). */
 function leerConcierto(): string {
@@ -18,7 +19,7 @@ function leerConcierto(): string {
 // El selector se abre con estado interno: en estático solo comprobamos que no se pinta cerrado.
 const selectorHtml = () => (renderToStaticMarkup(<IrisStudio pistas={0} tieneAudio onSeparar={() => {}} />).includes('data-iris-motores') ? 'abierto' : '');
 
-const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+const atril = leerAtril();
 const repertorio = readFileSync(new URL('../components/RepertorioSetlists.tsx', import.meta.url), 'utf8');
 // Las tarjetas del catálogo viven en CatalogoGeneralView desde el desacople del monolito.
 const catalogoView = readFileSync(new URL('../components/repertorio/CatalogoGeneralView.tsx', import.meta.url), 'utf8');
@@ -79,7 +80,7 @@ describe('Iris no se ofrece dos veces', () => {
 
 describe('Atril en Estudiar: controles secundarios tras «Más»', () => {
   it('cifrado, diagramas y copiar solo salen siempre fuera de Estudiar', () => {
-    const atril = readFileSync(new URL('../components/Atril.tsx', import.meta.url), 'utf8');
+    const atril = leerAtril();
     expect(atril).toContain("(modo !== 'Estudiar' || masControles)");
   });
 });

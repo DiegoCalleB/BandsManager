@@ -24,6 +24,8 @@ Exporta: ModoAtril, AjustesModoAtril, ajustesDeModoAtril.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
 
 ---
 

@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useCatalogActions|src/components/repertorio/hooks/useCatalogActions.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useRepertorioPersistence|src/components/repertorio/hooks/useRepertorioPersistence.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useRepertorioPlaybackAndModals|src/components/repertorio/hooks/useRepertorioPlaybackAndModals.ts]] *(from #frontend)*
