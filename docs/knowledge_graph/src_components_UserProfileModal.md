@@ -13,31 +13,23 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: UserProfileModal.
+Perfil de usuario: datos personales, banda principal, plan, apariencia y bandas.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
-- [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
-- [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_user_profile_UserProfileProvider|src/components/user_profile/UserProfileProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_user_profile_UserProfileView|src/components/user_profile/UserProfileView.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_contrastText|src/utils/contrastText.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_temaEspectro|src/utils/temaEspectro.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_theme|src/utils/theme.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_typography|src/utils/typography.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
+- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
+- [[src_components_user_profile_UserProfileContext|src/components/user_profile/UserProfileContext.ts]] *(from #frontend)*
 
 ---
 

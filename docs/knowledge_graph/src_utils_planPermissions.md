@@ -42,7 +42,10 @@ _Sin dependencias salientes directas._
 - [[src_components_onboarding_wizard_hooks_useWizardSteps|src/components/onboarding/wizard/hooks/useWizardSteps.ts]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
 - [[src_components_PlanLimitModal|src/components/PlanLimitModal.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_BandCreateForm|src/components/user_profile/BandCreateForm.tsx]] *(from #frontend)*
+- [[src_components_user_profile_BandSelectionSection|src/components/user_profile/BandSelectionSection.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_usePlanSummary|src/components/user_profile/hooks/usePlanSummary.ts]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_utils_managerAlerts|src/utils/managerAlerts.ts]] *(from #service)*
 - [[src_utils_roiBanda|src/utils/roiBanda.ts]] *(from #service)*
 

@@ -442,6 +442,11 @@ _Sin dependencias salientes directas._
 - [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
 - [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_AppearanceSettings|src/components/user_profile/AppearanceSettings.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_usePlanSummary|src/components/user_profile/hooks/usePlanSummary.ts]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*

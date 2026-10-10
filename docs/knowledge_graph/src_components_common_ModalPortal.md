@@ -97,8 +97,9 @@ _Sin dependencias salientes directas._
 - [[src_components_tour_manager_TourDeleteModal|src/components/tour_manager/TourDeleteModal.tsx]] *(from #frontend)*
 - [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
+- [[src_components_user_profile_UserProfileView|src/components/user_profile/UserProfileView.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 
 ---
 

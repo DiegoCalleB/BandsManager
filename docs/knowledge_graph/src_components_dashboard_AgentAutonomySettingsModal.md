@@ -30,7 +30,7 @@ Modal de autonomía de agentes: modo de envío, líneas rojas, horarios, estrate
 - [[src_components_booking_crm_CrmModalsHost|src/components/booking/crm/CrmModalsHost.tsx]] *(from #frontend)*
 - [[src_components_chatbot_AutonomyModalHost|src/components/chatbot/AutonomyModalHost.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_UserProfileView|src/components/user_profile/UserProfileView.tsx]] *(from #frontend)*
 
 ---
 

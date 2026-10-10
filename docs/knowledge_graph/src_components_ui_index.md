@@ -373,8 +373,16 @@ BandManager UI Component Library
 - [[src_components_tour_manager_TourManagerHeader|src/components/tour_manager/TourManagerHeader.tsx]] *(from #frontend)*
 - [[src_components_tour_manager_TourStopsSection|src/components/tour_manager/TourStopsSection.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_BandCreateForm|src/components/user_profile/BandCreateForm.tsx]] *(from #frontend)*
+- [[src_components_user_profile_BandDeleteConfirm|src/components/user_profile/BandDeleteConfirm.tsx]] *(from #frontend)*
+- [[src_components_user_profile_BandLogoSection|src/components/user_profile/BandLogoSection.tsx]] *(from #frontend)*
+- [[src_components_user_profile_IdentityFields|src/components/user_profile/IdentityFields.tsx]] *(from #frontend)*
+- [[src_components_user_profile_PasswordSection|src/components/user_profile/PasswordSection.tsx]] *(from #frontend)*
+- [[src_components_user_profile_ProfileFooter|src/components/user_profile/ProfileFooter.tsx]] *(from #frontend)*
+- [[src_components_user_profile_ProfileHeader|src/components/user_profile/ProfileHeader.tsx]] *(from #frontend)*
+- [[src_components_user_profile_ProfilePlanSection|src/components/user_profile/ProfilePlanSection.tsx]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---

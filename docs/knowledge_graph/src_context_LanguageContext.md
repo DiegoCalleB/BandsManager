@@ -34,7 +34,8 @@ _Sin dependencias salientes directas._
 - [[src_components_onboarding_steps_StepLanguage|src/components/onboarding/steps/StepLanguage.tsx]] *(from #frontend)*
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
 - [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
+- [[src_components_user_profile_LanguageSelector|src/components/user_profile/LanguageSelector.tsx]] *(from #frontend)*
 - [[src_main|src/main.tsx]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
