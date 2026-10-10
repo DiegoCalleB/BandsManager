@@ -2,10 +2,6 @@
  * Análisis de acordes a partir del audio del tema.
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any,
- react-hooks/exhaustive-deps
-*/
 import { Dispatch,SetStateAction,useEffect,useRef } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { analizarAcordesDelAudio,resumenAnalisisAcordes } from "../../../utils/analisisAcordesCliente";
@@ -38,6 +34,7 @@ export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setI
   useEffect(() => {
     setCifradoTexto(song.cifradoTexto || "");
     setGuiaSustituto(song.guiaSustituto || {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- los setters de useState son estables; se resincroniza solo cuando cambia la canción
   }, [song.cifradoTexto, song.guiaSustituto]);
 
   // Detecta los acordes con tiempos directamente del audio (cálculo local, ~1 s, sin coste de IA).
@@ -65,6 +62,7 @@ export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setI
     jamifyAutoIntentado.current = song.id;
     handleAnalyzeChordsFromAudio();
      
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- se lanza una sola vez por canción (jamifyAutoIntentado); añadir el analizador lo repetiría
   }, [audioUrl, analisisAcordes, song.id]);
 
   return { handleAnalyzeChordsFromAudio };

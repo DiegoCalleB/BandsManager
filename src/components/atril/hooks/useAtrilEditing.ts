@@ -2,9 +2,6 @@
  * Edición del cifrado: corrección de acordes, generación con IA y guardado.
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- @typescript-eslint/no-explicit-any
-*/
 import { Dispatch,SetStateAction } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { apiFetch } from "../../../utils/api";

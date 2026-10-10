@@ -3,9 +3,6 @@ import type { AutoScroll } from "../../../hooks/useAutoScroll";
  * Armonía del cifrado: alineación con la letra, tiempos, acorde activo, funciones y vibración.
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- react-hooks/exhaustive-deps
-*/
 import { Dispatch,RefObject,SetStateAction,useEffect,useMemo,useRef,useState } from "react";
 import { useAcordesDeLaHoja } from "../../../hooks/useAcordesDeLaHoja";
 import { AnalisisAcordes,Song } from "../../../types";
@@ -78,6 +75,7 @@ export function useAtrilHarmony({ cifradoTexto, transpose, notation, analisisAco
   }, [acordeActivo, isPlayingAudio, processedText]);
 
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- el ref es estable; solo el cambio de pestaña devuelve el scroll arriba
   useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
 
   // Armonía (grados romanos y funciones): del audio si está analizado (con las correcciones de la banda)

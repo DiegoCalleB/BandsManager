@@ -2,10 +2,6 @@
  * Identidad del usuario: nombre, instrumento, color, banda principal y logo de la banda.
  * Extraído de UserProfileModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- react-hooks/set-state-in-effect,
- react-hooks/exhaustive-deps
-*/
 import React,{ Dispatch,SetStateAction,useEffect,useState } from "react";
 import type { EPKConfig, User } from "../../../types";
 import { apiFetch } from "../../../utils/api";
@@ -47,6 +43,7 @@ export function useProfileIdentity({ currentUser, epkConfig, availableBands, set
 
   useEffect(() => {
     if (currentUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- el formulario se resincroniza con el usuario que llega por props
       setName(currentUser.name || "");
       setInstrument(currentUser.instrument || "");
       setAvatarColor(currentUser.avatarColor || "var(--ok)");
@@ -60,10 +57,12 @@ export function useProfileIdentity({ currentUser, epkConfig, availableBands, set
     if (availableBands) {
       setLocalAvailableBands(availableBands);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- el setter de useState es estable; se resincroniza solo cuando cambian las bandas
   }, [availableBands]);
 
   useEffect(() => {
     if (epkConfig?.logoUrl) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- el formulario se resincroniza con el logo del EPK que llega por props
       setBandLogoUrl(epkConfig.logoUrl);
     }
   }, [epkConfig?.logoUrl]);

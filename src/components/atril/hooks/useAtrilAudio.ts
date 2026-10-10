@@ -3,9 +3,6 @@ import type { AjustesModoAtril } from "../../../utils/modosAtril";
  * Reproducción de audio del tema: stems, tomas, mezcla, bucle, grabación e ideas.
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- react-hooks/exhaustive-deps
-*/
 import React,{ Dispatch,SetStateAction,useEffect,useMemo,useRef,useState } from "react";
 import { useBucleAB } from "../../../hooks/useBucleAB";
 import { useGrabarIdea } from "../../../hooks/useGrabarIdea";
@@ -122,6 +119,7 @@ export function useAtrilAudio({ song, onUpdateSong, ajustes, transpose, setAiSuc
   useEffect(() => {
     return () => {
       if (audioRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- al desmontar se pausa el elemento de audio vigente en ese momento, no el del montaje
         audioRef.current.pause();
       }
     };
