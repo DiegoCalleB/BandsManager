@@ -124,7 +124,7 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_center_AutoPublishPanel|src/components/reels_center/AutoPublishPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(from #frontend)*
 - [[src_components_reels_center_VideoSourceSelector|src/components/reels_center/VideoSourceSelector.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_InstagramConnectionModal|src/components/reels/metrics/InstagramConnectionModal.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*

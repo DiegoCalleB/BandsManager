@@ -28,6 +28,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0019](./0019-modularizacion-calendar-view.md) | Modularización de CalendarView (3423 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0020](./0020-modularizacion-agent-autonomy-settings-modal.md) | Modularización de AgentAutonomySettingsModal (2786 → ~60 líneas) con hooks, contexto y pestañas | Aceptada | nueva |
 | [0021](./0021-modularizacion-chatbot.md) | Modularización de Chatbot (2675 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0022](./0022-modularizacion-reels-metrics-view.md) | Modularización de ReelsMetricsView (2662 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

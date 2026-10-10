@@ -66,7 +66,10 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
 - [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useContentItems|src/components/reels/metrics/hooks/useContentItems.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useInstagramConnection|src/components/reels/metrics/hooks/useInstagramConnection.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useScreenshotScan|src/components/reels/metrics/hooks/useScreenshotScan.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useRepertorioData|src/components/repertorio/hooks/useRepertorioData.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSetlistReordering|src/components/repertorio/hooks/useSetlistReordering.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*

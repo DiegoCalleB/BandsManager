@@ -977,6 +977,8 @@ export interface SocialMetric {
   id: string;
   band_id?: string;
   fecha: string;
+  /** Total de fans combinado; se calcula al fusionar el histórico en la vista de métricas. */
+  fans?: number;
   instagram: number;
   tiktok: number;
   youtube: number;

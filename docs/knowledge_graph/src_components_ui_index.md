@@ -223,7 +223,12 @@ BandManager UI Component Library
 - [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(from #frontend)*
 - [[src_components_reels_center_VideoInputArea|src/components/reels_center/VideoInputArea.tsx]] *(from #frontend)*
 - [[src_components_reels_center_VideoSourceSelector|src/components/reels_center/VideoSourceSelector.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_InstagramConnectionModal|src/components/reels/metrics/InstagramConnectionModal.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricFormCard|src/components/reels/metrics/MetricFormCard.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsChartSection|src/components/reels/metrics/MetricsChartSection.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsHistoryTable|src/components/reels/metrics/MetricsHistoryTable.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_PlatformsRadarHeader|src/components/reels/metrics/PlatformsRadarHeader.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_ScreenshotScanModal|src/components/reels/metrics/ScreenshotScanModal.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*

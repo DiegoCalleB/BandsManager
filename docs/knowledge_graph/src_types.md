@@ -228,6 +228,13 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_center_hooks_useSocialPublishing|src/components/reels_center/hooks/useSocialPublishing.ts]] *(from #frontend)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useContentItems|src/components/reels/metrics/hooks/useContentItems.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricForm|src/components/reels/metrics/hooks/useMetricForm.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricsChart|src/components/reels/metrics/hooks/useMetricsChart.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricsSummary|src/components/reels/metrics/hooks/useMetricsSummary.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useReelsMetricsController|src/components/reels/metrics/hooks/useReelsMetricsController.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_metricsTypes|src/components/reels/metrics/metricsTypes.ts]] *(from #frontend)*
 - [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
