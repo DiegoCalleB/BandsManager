@@ -34,3 +34,4 @@ test-results/
 
 # Sesión reutilizable de la suite visual (token, no se versiona)
 e2e/.auth/
+__pycache__/
