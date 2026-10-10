@@ -229,6 +229,7 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_live_concert_album_LiveConcertAlbumContext|src/components/repertorio/live_concert_album/LiveConcertAlbumContext.ts]] *(from #frontend)*
 - [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
@@ -383,6 +384,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
+- `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
