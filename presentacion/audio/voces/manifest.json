@@ -1,0 +1,1462 @@
+{
+ "044dc2e5": {
+  "d": 14.88,
+  "e": "0886659996218302289949864102411687411100588612777666522332100000515962189841478610388201766799887830148761295256116204862366553121100000041089595035983239944785110376786116876427821144322100003687539986696306758788478676835311175357206456881024651000000038984797512974799986410665695015114621267630374641138777656664321014411199479854885773167889466216204440110013200000",
+  "f": "044dc2e5.mp3",
+  "oido": "Manda un fichero Agents.md. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian. Ningún dato de una banda visible para otra. Ningún correo automático sin aprobación humana. Y cero errores nuevos de TypeScript.",
+  "qa": 0.93,
+  "say": "Manda un fichero: agents punto eme de. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian: ningún dato de una banda visible para otra, ningún correo automático sin aprobación humana, y cero errores nuevos de Taipscript.",
+  "v": "d843b6bb050c",
+  "who": "bajo"
+ },
+ "04db5f65": {
+  "d": 4.92,
+  "e": "0638876444696126766999951278219511757983016510640145642111000000000263587401894799401972383148779967307867527893122110000",
+  "f": "04db5f65.mp3",
+  "oido": "A ver, enseñanos eso que ni tú te crees, y rápido que se calienta la birra.",
+  "qa": 1.0,
+  "say": "A ver, enséñanos eso que ni tú te crees. Y rápido, que se calienta la birra.",
+  "v": "3fff72f1bafc",
+  "who": "bateria"
+ },
+ "05143c1d": {
+  "d": 7.2,
+  "e": "0000005966229935543798119851001213101332100000004523987855948210297567411683641423366410888753121133441024113321111110000019931698300598997148821001539410166337210033422211000000",
+  "f": "05143c1d.mp3",
+  "oido": "Ten con minutos chicos, el rider está en el camerino tal y como firmamos, agua toallas y las birras frías.",
+  "qa": 0.87,
+  "say": "Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Agua, toallas, y las birras frías.",
+  "v": "f4f7c28d8735",
+  "who": "manager"
+ },
+ "0733f9b1": {
+  "d": 6.14,
+  "e": "0622758622597686872101675536886117500149965689523894669937531599654320000046665445895115464243200001674137667766972106945775765998951346106840132111000",
+  "f": "0733f9b1.mp3",
+  "oido": "y si la sala nos cambia el cachel mismo día del bolo como la última vez que acabamos cobrando en croquetas",
+  "qa": 0.93,
+  "say": "¿Y si la sala nos cambia el caché el mismo día del bolo, como la última vez? Que acabamos cobrando en croquetas.",
+  "v": "b7e25ddf7785",
+  "who": "bateria"
+ },
+ "073a84aa": {
+  "d": 7.54,
+  "e": "575215898541000035342797332110001667776522886852652100001456862126713441146739962473100003653473115922574123312442256311110395412997579988662100026766731211110594216973112684149433476411",
+  "f": "073a84aa.mp3",
+  "oido": "Os leo herdeiros, me encanta, nosotros en vivo y vosotros en Santiago. Cartel doble, colegas. Esto es rock and roll.",
+  "qa": 0.84,
+  "say": "Os leo, Herdeiros. Me encanta: nosotros en Vigo, y vosotros en Santiago. ¡Cartel doble, colegas! ¡Esto es rocanrol!",
+  "v": "b6eada53ec14",
+  "who": "voz_mop"
+ },
+ "0882188b": {
+  "d": 6.53,
+  "e": "14962149832188210167896442100000013885423884331022100000003722974765669557668520483132114433432100000019941484378689368415945988620199449866883139638973324220000",
+  "f": "0882188b.mp3",
+  "oido": "Las cuentas claras, me encanta, y salen números positivos, por primera vez en la historia de esta banda.",
+  "qa": 1.0,
+  "say": "¡Las cuentas claras! ¡Me encanta! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!",
+  "v": "1d57b32781aa",
+  "who": "guitarra"
+ },
+ "0c718224": {
+  "d": 4.34,
+  "e": "09416978169776198587887741104994612761000589763132001000001895429888931174018885765300395378775388732653210",
+  "f": "0c718224.mp3",
+  "oido": "El cantante de Master of Prompets, guardado su cara que va a volver.",
+  "qa": 0.85,
+  "say": "El cantante de Máster of Prompts. Guardaos su cara, que va a volver.",
+  "v": "4b9a3244b0d7",
+  "who": "bajo"
+ },
+ "0e3bdd4a": {
+  "d": 3.98,
+  "e": "0967510787987776108930485795229947620077467732101221000001863177512147877774997875476752433210000",
+  "f": "0e3bdd4a.mp3",
+  "oido": "Pero tío y tú como sabes todo esto, te has leído un libro.",
+  "qa": 1.0,
+  "say": "Pero tío, ¿y tú cómo sabes todo esto? ¿Te has leído un libro?",
+  "v": "f9a25e015439",
+  "who": "bateria"
+ },
+ "0e8e4d44": {
+  "d": 5.9,
+  "e": "5957611474358942599652221100000002898735588611574499547632267568766876552148983367721025942101676873344355667764122110256568678479657942563111110",
+  "f": "0e8e4d44.mp3",
+  "oido": "Y las otras bandas siempre acabamos llamando a los mismos 3 colegas del móvil. Y uno ya ni toca.",
+  "qa": 0.95,
+  "say": "¿Y las otras bandas? Siempre acabamos llamando a los mismos tres colegas del móvil. Y uno ya ni toca.",
+  "v": "ac7b5664ed92",
+  "who": "voz"
+ },
+ "106b0b0b": {
+  "d": 7.92,
+  "e": "0412387865520486521197496147743995799884138757454205653113697300155300000002720542227920496871002651177205862279862159678656831037441027736632232210096015767773795796222259757355462045265532110000",
+  "f": "106b0b0b.mp3",
+  "oido": "O sea que le subes el vídeo entero del concierto y te saca los trocitos más virales para cada red, incluido mi solo de batería.",
+  "qa": 1.0,
+  "say": "¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería?",
+  "v": "c7536404f7a6",
+  "who": "bateria"
+ },
+ "1172b07c": {
+  "d": 5.38,
+  "e": "153145366115578510000178842100038724961658310379347277434421000371054357379215831059869557210393101210009941985326412843145210013100",
+  "f": "1172b07c.mp3",
+  "oido": "Y tú decides \"yao, nosotros proponemos y tú bebes cada respuesta\". Tú firmas el disco.",
+  "qa": 0.87,
+  "say": "Y tú decides, Iago. Nosotros proponemos, y tú revisas cada respuesta. Tú firmas el disco.",
+  "v": "e3c187c3e619",
+  "who": "ia_claude"
+ },
+ "1207fa1d": {
+  "d": 4.73,
+  "e": "04921899682104313863762364219539215721653573388212484331000004933955623521794100794102533684566411422135420472320000",
+  "f": "1207fa1d.mp3",
+  "oido": "y puedo escucharlas antes de proponerles nada, que yo no comparto escenario con cualquiera.",
+  "qa": 1.0,
+  "say": "¿Y puedo escucharlas antes de proponerles nada? Que yo no comparto escenario con cualquiera.",
+  "v": "fad8c5b26b02",
+  "who": "guitarra"
+ },
+ "1537c4f1": {
+  "d": 3.46,
+  "e": "0000257993269406689411498787216989404666531110000000001596310772177788841210476420000",
+  "f": "1537c4f1.mp3",
+  "oido": "Y esa comisión, ¿cuánto es? ¡Que te conozco!",
+  "qa": 1.0,
+  "say": "¿Y esa comisión cuánto es? Que te conozco.",
+  "v": "fec12ce44467",
+  "who": "bateria"
+ },
+ "1551c58a": {
+  "d": 3.98,
+  "e": "04679521998861159555166310596883114877522210019520274225321069676226346326998631351067510000000000",
+  "f": "1551c58a.mp3",
+  "oido": "Y la sala tiene que instalarse algo, porque el del faro todavía usa fax.",
+  "qa": 0.9,
+  "say": "¿Y la sala tiene que instalarse algo? Porque el de El Faro todavía usa fax.",
+  "v": "59f1a5da9aea",
+  "who": "guitarra"
+ },
+ "15b01bbc": {
+  "d": 8.11,
+  "e": "097575549611631184046466621241113997643102566301573255289961036999721873858201745677784776555345244233211077940496269627567751116986751116610376136116688886276520153100004699982157114566666556622122110",
+  "f": "15b01bbc.mp3",
+  "oido": "La banda se saca de la sesión en el servidor nunca de lo que manda el navegador. Y lo que llega de las salas se trata como un dato, nunca como una orden.",
+  "qa": 1.0,
+  "say": "La banda se saca de la sesión, en el servidor, nunca de lo que manda el navegador. Y lo que llega de las salas se trata como un dato, nunca como una orden.",
+  "v": "59bb12dd5217",
+  "who": "bajo"
+ },
+ "177398c6": {
+  "d": 2.3,
+  "e": "0898899968863017586210486783101766566311136542012110000",
+  "f": "177398c6.mp3",
+  "oido": "y ahora que nos conozca más gente.",
+  "qa": 1.0,
+  "say": "Y ahora, ¡que nos conozca más gente!",
+  "v": "bc58d048a799",
+  "who": "bajo"
+ },
+ "1853f39e": {
+  "d": 11.09,
+  "e": "05169878960556798301561159467238620056154129751672146109974066651117774137799368676311456876157105686215897411775401116886432100015501663454165311794742652444332110039998824899932288424599768667997675127750362261151159524667733420487769982865109943594015412751112755412342211",
+  "f": "1853f39e.mp3",
+  "oido": "Es el mapa de nuestro código, 776 módulos y más de 3.000 conexiones sacadas del código real. Claudio y Google lo leen antes de tocar nada para no romper lo que ya suena bien.",
+  "qa": 0.85,
+  "say": "Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya suena bien.",
+  "v": "e4170df11bde",
+  "who": "bajo"
+ },
+ "1c9d85ab": {
+  "d": 5.14,
+  "e": "0968722530277899972148435731006944878984687776653861100035589710039959810957401410017847958304655311179787313301751001111100000",
+  "f": "1c9d85ab.mp3",
+  "oido": "Pero si tu nunca has programado nada que no fuera para tu curro de promociones de coches.",
+  "qa": 1.0,
+  "say": "¡Pero si tú nunca has programado nada que no fuera para tu curro de promociones de coches!",
+  "v": "e5a194778499",
+  "who": "bateria"
+ },
+ "1ca03c6f": {
+  "d": 5.5,
+  "e": "000038987799311565530000000019788899422798610666411100000000018978878411576876542110000000007410687973138622987766946621006872443220000",
+  "f": "1ca03c6f.mp3",
+  "oido": "Mi hoja, con mis notas, solo las mías, esto es de banda de estadio.",
+  "qa": 1.0,
+  "say": "¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio!",
+  "v": "ec806c53356c",
+  "who": "bateria"
+ },
+ "214905d4": {
+  "d": 3.17,
+  "e": "00399553322100219961016768158512211002455751079478559756514866556548644111100",
+  "f": "214905d4.mp3",
+  "oido": "Sander, voz y guitarra, la cara bonita de la banda.",
+  "qa": 0.9,
+  "say": "Xandre. Voz y guitarra. La cara bonita de la banda.",
+  "v": "f00ddd0c34d1",
+  "who": "voz"
+ },
+ "2227fa8e": {
+  "d": 8.28,
+  "e": "0000197116751496137977652787543211000059376369711019950066410005788853797998338888989503936625984432000001598751007884255300394677502644510232110000000000039687636973676431016997636862563620387411013210000",
+  "f": "2227fa8e.mp3",
+  "oido": "Esa es la idea. Hay varias capas y ninguna es la única barrera si una falla queda otra detrás. ¿Cómo llevar cuerdas de repuesto?",
+  "qa": 1.0,
+  "say": "Esa es la idea. Hay varias capas, y ninguna es la única barrera: si una falla, queda otra detrás. Como llevar cuerdas de repuesto.",
+  "v": "0bdb0f1f7872",
+  "who": "bajo"
+ },
+ "26c93b83": {
+  "d": 3.29,
+  "e": "79683168421137755661100035775211104665175114982102210035542114546754897899355210",
+  "f": "26c93b83.mp3",
+  "oido": "Eres un genio y hago. El bajista, el que nadie mira.",
+  "qa": 0.86,
+  "say": "¡Eres un genio, Iago! ¡El bajista! ¡El que nadie mira!",
+  "v": "5f1defac8e96",
+  "who": "voz"
+ },
+ "28ed051e": {
+  "d": 7.54,
+  "e": "081698896111176768641000048877539987787217971099546788883581074066034662047776212311102662001332110000000495611973668767631100036998779511587278765599973757411169526511035542113754201111",
+  "f": "28ed051e.mp3",
+  "oido": "Y para las giras, mi idea es meterle algo tipo Tri-Count o Splitwise, para que Bryce no nos haga el lío de las birras como siempre.",
+  "qa": 0.87,
+  "say": "Y para las giras, mi idea es meterle algo tipo Traicaunt o Splitguais. Para que Brais no nos haga el lío de las birras como siempre.",
+  "v": "e37e3a4ae765",
+  "who": "bajo"
+ },
+ "2db40766": {
+  "d": 5.57,
+  "e": "00001677624599862265104976211587566434321000000000797621498753468887476216831003432000002979998632978511111488665210078567873554214642000",
+  "f": "2db40766.mp3",
+  "oido": "Dadme hasta el sábado, confiado en el bajista, por una vez en la historia del rock.",
+  "qa": 0.94,
+  "say": "Dadme hasta el sábado. Confiad en el bajista. Por una vez en la historia del rock.",
+  "v": "f14098100f50",
+  "who": "bajo"
+ },
+ "2dbe8590": {
+  "d": 4.13,
+  "e": "06896253100855799620067422993147620597756636743110000031564386316865433000000003961147675477764331000",
+  "f": "2dbe8590.mp3",
+  "oido": "o ha descubierto Gugel Calendar. ¡Sajajal! ¡Rocanrol!",
+  "qa": 0.86,
+  "say": "O ha descubierto Gúgel Calendar. ¡Jajajá! ¡Rocanrol!",
+  "v": "3777a38f125d",
+  "who": "bateria"
+ },
+ "2e0a0063": {
+  "d": 5.83,
+  "e": "058499997059761129986542004787745621182057465674399821100000485671274677996445525742117775652014104541111000000000008864115978730597310275542000",
+  "f": "2e0a0063.mp3",
+  "oido": "Tuve una canción e ir y separa la voz, la batería, el bajo y las guitarras. Pista a pista.",
+  "qa": 0.86,
+  "say": "Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras. Pista a pista.",
+  "v": "5eb9334e21f0",
+  "who": "bajo"
+ },
+ "2f86ea5c": {
+  "d": 5.06,
+  "e": "00001676647874103975676411577526625321000019516710599636983114678788136962665454100003832797769883145521276552114642211000000",
+  "f": "2f86ea5c.mp3",
+  "oido": "Dale al play Álvaro. Los acordes y la letra van siguiendo la canción solos.",
+  "qa": 1.0,
+  "say": "Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.",
+  "v": "bc5433f90b3f",
+  "who": "bajo"
+ },
+ "30d19eab": {
+  "d": 3.0,
+  "e": "1983179411471198325752213333222100000155423968948941231242132027311322110",
+  "f": "30d19eab.mp3",
+  "oido": "Yo estoy flipando en colores, en colores y con distorsión.",
+  "qa": 1.0,
+  "say": "Yo estoy flipando en colores. En colores y con distorsión.",
+  "v": "5d4d99774db9",
+  "who": "guitarra"
+ },
+ "3a1b7e3c": {
+  "d": 4.49,
+  "e": "59525632210000079218968424736510022100015872119966841000000014621029931100000002779921059585235531432100000000",
+  "f": "3a1b7e3c.mp3",
+  "oido": "Álvaro, guitarra solista, los solos, los riffs y las palabras brotas.",
+  "qa": 0.76,
+  "say": "Álvaro. Guitarra solista. Los solos, los rifs, y las palabrotas.",
+  "v": "820027048b6b",
+  "who": "guitarra"
+ },
+ "3b5d1e06": {
+  "d": 7.58,
+  "e": "09722898767763882116668214311676511354200000473239937665299566972114666545114444144210087951119976664111583107610384677669613858621048564100799476410000028311698989510271256344553221110000",
+  "f": "3b5d1e06.mp3",
+  "oido": "los managers y las agencias que llevan varias bandas a la vez y las salas, los festivales y las productoras que son los que programan.",
+  "qa": 0.96,
+  "say": "Los mánayers y las agencias, que llevan varias bandas a la vez. Y las salas, los festivales y las productoras, que son los que programan.",
+  "v": "f3d586caef46",
+  "who": "bajo"
+ },
+ "3b6499b7": {
+  "d": 2.71,
+  "e": "057393199354268333210103341285211731001000697782296159852114310000",
+  "f": "3b6499b7.mp3",
+  "oido": "y de que vivimos entonces de los aplausos.",
+  "qa": 1.0,
+  "say": "¿Y de qué vivimos, entonces? ¿De los aplausos?",
+  "v": "e6d3507aa212",
+  "who": "guitarra"
+ },
+ "3b97dbae": {
+  "d": 3.02,
+  "e": "0351102996995100014110299445210000000551005633311143666223333100221000000",
+  "f": "3b97dbae.mp3",
+  "oido": "¡Espera, espera! Esto no será un muisés.",
+  "qa": 0.86,
+  "say": "¡Espera, espera! ¿Esto no será un Moisés?",
+  "v": "912b4885c8e1",
+  "who": "guitarra"
+ },
+ "3c30041c": {
+  "d": 4.97,
+  "e": "45531106974554210057999851153110028952135456542111106699763864434212963125555678324731000153148653365136344104787874211110",
+  "f": "3c30041c.mp3",
+  "oido": "En serio, creo que estoy soñando, que alguien me pase el micro, que tengo que decir algo.",
+  "qa": 1.0,
+  "say": "En serio. Creo que estoy soñando. Que alguien me pase el micro, que tengo que decir algo.",
+  "v": "390292f37b3d",
+  "who": "voz"
+ },
+ "3ce09a67": {
+  "d": 4.44,
+  "e": "4983117863210123397335981149854653111100653100696100017892166113534413596247954421065457667688941034455121110",
+  "f": "3ce09a67.mp3",
+  "oido": "Por fin, del rojo al verde. Esto hay que celebrarlo encima de un escenario.",
+  "qa": 1.0,
+  "say": "¡Por fin! ¡Del rojo al verde! ¡Esto hay que celebrarlo encima de un escenario!",
+  "v": "e746303ce7c8",
+  "who": "voz"
+ },
+ "3d642d7b": {
+  "d": 5.21,
+  "e": "00001888643677663000000001971114889422249878879884788411000000259986776325967321110000059687548947978749982285105522258953210000",
+  "f": "3d642d7b.mp3",
+  "oido": "Pues yeh, que fue solo una vez. Bueno dos, pero eran de importación.",
+  "qa": 0.88,
+  "say": "¡Oye! ¡Que fue solo una vez! Bueno, dos. ¡Pero eran de importación!",
+  "v": "ba212dd28539",
+  "who": "bateria"
+ },
+ "411098e3": {
+  "d": 4.22,
+  "e": "0000772001785699876222486432100000399498850039634851396847843386552100045111787797115312779712121110000",
+  "f": "411098e3.mp3",
+  "oido": "¿Y cómo les va? ¿Llevan público de verdad o solo a sus madres?",
+  "qa": 1.0,
+  "say": "¿Y cómo les va? ¿Llevan público de verdad, o solo a sus madres?",
+  "v": "80edda05bef7",
+  "who": "bateria"
+ },
+ "437dc81d": {
+  "d": 4.18,
+  "e": "199963343597431006975885558511345455321100571146444531357764467521244555564794784210254344445553211110",
+  "f": "437dc81d.mp3",
+  "oido": "¿Cuál era el tono de la primera? Que con los nervios se me olvida hasta mi nombre.",
+  "qa": 1.0,
+  "say": "¿Cuál era el tono de la primera? Que con los nervios se me olvida hasta mi nombre.",
+  "v": "df4ed3e8a776",
+  "who": "voz"
+ },
+ "483aacdf": {
+  "d": 10.78,
+  "e": "000003991099661079301982008678988657776652365422110000068693663195017765611397666972102843867897884277752110000489662059785830274113202543121000000000026961098779316766410000888861198897694449765100000177311630597589710487897305601677486883016667536301555432121110000",
+  "f": "483aacdf.mp3",
+  "oido": "Yo tampoco tenía ni idea, pero desde que hice el Master de Mure Deb, lo entiendo casi todo. Flipante, aunque la verdad, casi todo esto lo ha tocado mi colega Claudio.",
+  "qa": 0.97,
+  "say": "Yo tampoco tenía ni idea. Pero desde que hice el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.",
+  "v": "bb0cd0b3f36e",
+  "who": "bajo"
+ },
+ "4927a666": {
+  "d": 8.02,
+  "e": "084202969411232017631397410111188730000000296578119388465982164311995885333762101637500003752101100000000066599969956310128962862138847210068632210000000003334498731155015975695221146113620231100000",
+  "f": "4927a666.mp3",
+  "oido": "Os conocí por \"Date Swap\", cuando todavía cantaba en \"Master of Prompets\". Ahora os llevo yo los bolos, y no se cobra en croquetas.",
+  "qa": 0.88,
+  "say": "Os conocí por Deit Suap, cuando todavía cantaba en Máster of Prompts. Ahora os llevo yo los bolos. Y no se cobra en croquetas.",
+  "v": "593e01359607",
+  "who": "manager"
+ },
+ "4b49374c": {
+  "d": 4.54,
+  "e": "059547794159985312432145864753334672144373484146210152113962862144117977641383443210012100000175974522232100000",
+  "f": "4b49374c.mp3",
+  "oido": "Seguro que ha encontrado una base de datos con todas las alas de Galicia. Lo veo venir.",
+  "qa": 0.94,
+  "say": "Seguro que ha encontrado una base de datos con todas las salas de Galicia. Lo veo venir.",
+  "v": "8daa592bb2d6",
+  "who": "guitarra"
+ },
+ "4cbcba04": {
+  "d": 2.38,
+  "e": "0598952361147721039515955774233216951068744355663111110000",
+  "f": "4cbcba04.mp3",
+  "oido": "y la se triste, cada uno ya está en la hoja",
+  "qa": 0.82,
+  "say": "Y la setlist de cada uno ya está en la hoja.",
+  "v": "877cd193c845",
+  "who": "guitarra"
+ },
+ "4e1c15e7": {
+  "d": 6.96,
+  "e": "0497498999865851174038448663000004530009876777997377106655776532100112887988774100386676414664545200255311103993119698322799501586211037698511376589779737665111155432210000",
+  "f": "4e1c15e7.mp3",
+  "oido": "Cada uno elige que ve el tono o el BPM, solo en los temas donde lo quiere. Y hasta los bloques como el saludo a Bilaxuan.",
+  "qa": 0.89,
+  "say": "Cada uno elige qué ve: el tono o el be pe eme, solo en los temas donde lo quiere. Y hasta los bloques, como el saludo a Vilaxoán.",
+  "v": "77ddba1ec2c3",
+  "who": "bajo"
+ },
+ "4e4c7ca6": {
+  "d": 3.22,
+  "e": "085159975117785111697127635975587127521118946532211000003961046565377764321000",
+  "f": "4e4c7ca6.mp3",
+  "oido": "Entonces ensayamos el sábado. Rock and roll.",
+  "qa": 0.67,
+  "say": "Entonces, ensayamos el sábado. ¡Rocanrol!",
+  "v": "84a182ab05d8",
+  "who": "bateria"
+ },
+ "4e8de70a": {
+  "d": 7.18,
+  "e": "0346611698513852044311599311000294089605720049849676111884674200034312210000016305930399411297583751459974649721242024563110000110000017205437869522227611386211220297412321000000",
+  "f": "4e8de70a.mp3",
+  "oido": "Chicos, noticias, ha contestado la sala El Faro. El 14 de noviembre es nuestro. Afinad esas guitarras.",
+  "qa": 0.94,
+  "say": "Chicos, noticias: ha contestado la sala El Faro. El catorce de noviembre es nuestro. ¡Afinad esas guitarras!",
+  "v": "2a2157789c4d",
+  "who": "manager"
+ },
+ "4ea31685": {
+  "d": 4.56,
+  "e": "0000025736756694110152238789895285276447831289874147632764453100110000000006779985994129832058611178541034320000",
+  "f": "4ea31685.mp3",
+  "oido": "Chavales, así no llegamos ni al bar de abajo. Y mira que está cerca.",
+  "qa": 1.0,
+  "say": "Chavales, así no llegamos ni al bar de abajo. Y mira que está cerca.",
+  "v": "3f7bb49bfa00",
+  "who": "bateria"
+ },
+ "4ed266e6": {
+  "d": 4.85,
+  "e": "00003883112398885100000007851951199669931114851029777887201134321000018656311299548997327751116856767313577633123210000",
+  "f": "4ed266e6.mp3",
+  "oido": "Ed Show, empezamos esta noche, va a ser mi disco más largo.",
+  "qa": 0.87,
+  "say": "Hecho. Empezamos esta noche. Va a ser mi disco más largo.",
+  "v": "545f6d0e4ab1",
+  "who": "bajo"
+ },
+ "4fa61c07": {
+  "d": 8.93,
+  "e": "00000399631158888610002956888751007777778931687521277761078520026621102998730000004945861129511697797327899847831006535521166201121000000000001894677988821598744887511100000295871186799996111794387637666202850011243210000",
+  "f": "4fa61c07.mp3",
+  "oido": "Y además tenemos una gente, el Scout, que busca salas nuevas por nosotros. Como un ojeador, pero que no se bebe el catché.",
+  "qa": 0.81,
+  "say": "Casi. Y además tenemos un agente, el Scaut, que busca salas nuevas por nosotros. Como un ojeador. Pero que no se bebe el caché.",
+  "v": "074ba358621c",
+  "who": "bajo"
+ },
+ "50295dc8": {
+  "d": 6.29,
+  "e": "09616797898411761046974100000015311797688988789411643531002677137216442027736555433211001978876699972694778732776649457203575311102556553102566442121000000",
+  "f": "50295dc8.mp3",
+  "oido": "Imprimo el setlist y sale una hoja distinta para cada uno, con el logo de la banda detrás como los grandes.",
+  "qa": 1.0,
+  "say": "Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes.",
+  "v": "c5d79cb68b12",
+  "who": "bajo"
+ },
+ "51c499d1": {
+  "d": 8.98,
+  "e": "000018979867307989536888400102977626642000000000000098218876551197211107898411683188721111567301211000003912993687322389954692059679426741159730244211048978518775117874168610341351127876211198797338865866553115632111100000",
+  "f": "51c499d1.mp3",
+  "oido": "Delante react con beats. Detrás express y type scriper. Tupábeis guarda todos los datos y la inteligencia artificial solo vive en los bordes.",
+  "qa": 0.8,
+  "say": "Delante, Riact con Vit. Detrás, Express y Taipscript. Supabeis guarda todos los datos, y la inteligencia artificial solo vive en los bordes.",
+  "v": "65644135325e",
+  "who": "bajo"
+ },
+ "52c9f538": {
+  "d": 4.06,
+  "e": "0566951197117754110000000029774499337352104946720331000000005985101955698658427445311955645844210000",
+  "f": "52c9f538.mp3",
+  "oido": "y eso que es, un plato de esparetis o el cableado de mi pedalera?",
+  "qa": 0.93,
+  "say": "¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?",
+  "v": "418af3cda612",
+  "who": "guitarra"
+ },
+ "57044181": {
+  "d": 3.91,
+  "e": "039961784531134305763432455498117763221000498311665124555510039997672102951267211211122222201100",
+  "f": "57044181.mp3",
+  "oido": "y hay temas sin tono ni BPM, porque algunos yo los toco a sentimiento.",
+  "qa": 0.87,
+  "say": "¿Y hay temas sin tono ni be pe eme? Porque algunos yo los toco a sentimiento.",
+  "v": "39bc9b64920d",
+  "who": "guitarra"
+ },
+ "576efcfb": {
+  "d": 4.54,
+  "e": "000027985775677763111000000006840599798822366411677621138977413333100000000178311007796965246210278995364331000",
+  "f": "576efcfb.mp3",
+  "oido": "Mi menor, en tu hoja como siempre, respira estrella.",
+  "qa": 1.0,
+  "say": "Mi menor. En tu hoja, como siempre. Respira, estrella.",
+  "v": "06b92291435c",
+  "who": "bajo"
+ },
+ "57e34f13": {
+  "d": 5.35,
+  "e": "047213699489549748443110100001669658941593894126431189410688310000000026410075368443216469399567855721245415237515922873762224322210",
+  "f": "57e34f13.mp3",
+  "oido": "y si lo vendemos, además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo.",
+  "qa": 1.0,
+  "say": "¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo.",
+  "v": "8244707cacf7",
+  "who": "guitarra"
+ },
+ "57fd1ef1": {
+  "d": 11.66,
+  "e": "00001597898620048501595676632477525321000005213795102856514994983376211498776215304610046378865431103411775353049866831164113998861397897386210585743662235421110000001971197499834821117664688620275379976620000005789201888537821188861004789764102611556777201667857936986213745453231044311110",
+  "f": "57fd1ef1.mp3",
+  "oido": "Con un poco de ayuda, aquí están todas las salas y festivales y cada conversación con ellos queda guardada. Se acabó buscar en el correo como quien busca la pua que se le ha caído dentro de la guitarra.",
+  "qa": 1.0,
+  "say": "Con un poco de ayuda. Aquí están todas las salas y festivales, y cada conversación con ellos queda guardada. Se acabó buscar en el correo como quien busca la púa que se le ha caído dentro de la guitarra.",
+  "v": "6cb5e02a08c0",
+  "who": "bajo"
+ },
+ "588c1bde": {
+  "d": 5.81,
+  "e": "02427554334210446113116725762123112636962158314414422210000000005456544520436655212211410243200000000056249548985889621599699289956984512210000",
+  "f": "588c1bde.mp3",
+  "oido": "y llevamos tres ensayos sin saber que tocamos. Cada uno trae sus setlis. Así no hay solo que aguante.",
+  "qa": 0.89,
+  "say": "Y llevamos tres ensayos sin saber qué tocamos. Cada uno trae su setlist. ¡Así no hay solo que aguante!",
+  "v": "7d667b3db149",
+  "who": "guitarra"
+ },
+ "59569281": {
+  "d": 3.84,
+  "e": "0389921047589213978766994247941465301145543210000008878311275246768740067754678556685122210000",
+  "f": "59569281.mp3",
+  "oido": "Pues como si me hablas en chino o en heavy metal noruego.",
+  "qa": 0.92,
+  "say": "Pues como si me hablas en chino. O en jevi metal noruego.",
+  "v": "7246fca377d7",
+  "who": "bateria"
+ },
+ "5a4a8d3e": {
+  "d": 7.78,
+  "e": "000038721599888852111000076982001993751003974676687763210076740163136211763987721179867621145555631168455541211005852117999930696763787677427565432110000000000596210177974237987898205653110000",
+  "f": "5a4a8d3e.mp3",
+  "oido": "Eso es, y los puedes programar para que se suban solos a la mejor hora. Tú solo también, Bryce. Los tres minutos.",
+  "qa": 0.95,
+  "say": "¡Eso es! Y los puedes programar para que se suban solos a la mejor hora. Tu solo también, Brais. Los tres minutos.",
+  "v": "7c71851345ce",
+  "who": "bajo"
+ },
+ "5bec9b23": {
+  "d": 5.9,
+  "e": "05015982006978920387777225610563103753653389997654335521177411005521027595029772049403641026635554322110000047899898411179986106655107763232210000",
+  "f": "5bec9b23.mp3",
+  "oido": "Aquí está lo que entra por cada bolo, los gastos y lo que le toca a cada uno. En una sola pantalla.",
+  "qa": 1.0,
+  "say": "Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno. En una sola pantalla.",
+  "v": "112641ec2fd0",
+  "who": "bajo"
+ },
+ "5cbf389b": {
+  "d": 3.02,
+  "e": "00004785112999365664320000159989985110177586100572145103984773565643443110",
+  "f": "5cbf389b.mp3",
+  "oido": "En serio, creáis que esto se puede vender.",
+  "qa": 0.88,
+  "say": "¿En serio? ¿Creéis que esto se puede vender?",
+  "v": "4d6e60e4daeb",
+  "who": "bajo"
+ },
+ "5d3e4e50": {
+  "d": 5.71,
+  "e": "049987885235996117935947211159741122985643111000018688659997378650494176364378466661025764110043210000000000199310677783188878610896421110000",
+  "f": "5d3e4e50.mp3",
+  "oido": "Bueno y un juego de Scroll Challenge que murió antes de llegar a la Play Store. Descansa en paz.",
+  "qa": 0.74,
+  "say": "Bueno, y un juego de scrol chálench, que murió antes de llegar a la Pley Stor. Descanse en paz.",
+  "v": "23f99ff41e5a",
+  "who": "bajo"
+ },
+ "5e6a90bd": {
+  "d": 2.52,
+  "e": "8999526956861144541331005856863541039638535421144124100001000",
+  "f": "5e6a90bd.mp3",
+  "oido": "alguien ha contestado a la sala del 14.",
+  "qa": 0.88,
+  "say": "¿Alguien ha contestado a la sala del catorce?",
+  "v": "5af8d3f080dc",
+  "who": "voz"
+ },
+ "5e890e5c": {
+  "d": 5.81,
+  "e": "11268613997499751003739992135752012100002699642795598313621013210111004432498533747610000018733443333102442000077444564322974126356232112553000",
+  "f": "5e890e5c.mp3",
+  "oido": "Yo pongo las ideas locas, Claudio las discute y luego discutimos los dos como un grupo de verdad.",
+  "qa": 1.0,
+  "say": "Yo pongo las ideas locas. Claudio las discute. Y luego discutimos los dos. Como un grupo de verdad.",
+  "v": "2d5ea184015d",
+  "who": "ia_gemini"
+ },
+ "5fbb0309": {
+  "d": 8.04,
+  "e": "0994139413995110874139762049967214764116888641159920347521101776208830057655554202210000000000016967930069950276300876633433100000511885623797579964544210037511761173005984998200730256411155432110000",
+  "f": "5fbb0309.mp3",
+  "oido": "Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga y quien programa, hace que todo esto funcione.",
+  "qa": 1.0,
+  "say": "Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga. Y quien programa, hace que todo esto funcione.",
+  "v": "3798500a4920",
+  "who": "bajo"
+ },
+ "6280848d": {
+  "d": 10.97,
+  "e": "00002697642113993797112787654321000007318984640273198751119897778311000036730386254019778889610455302784641035321110000006964059938311139875431004861697413885285116755899411231148750147346200555896758564115413663111000000018847899538977761578301756689731364235873222110000",
+  "f": "6280848d.mp3",
+  "oido": "más de 2000 y se ejecutan solos en cada comit en cada push y en producción un control de salud y centro y vigilando los errores como un roadie que nunca duerme.",
+  "qa": 0.88,
+  "say": "Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.",
+  "v": "a47ffa234298",
+  "who": "bajo"
+ },
+ "62f180e5": {
+  "d": 7.25,
+  "e": "00001158676551205951069662007966951672136211059604931576564358511574464005543111000004986982387210761127999621001631169766676146820583089572143002977763157762102710455543121000000",
+  "f": "62f180e5.mp3",
+  "oido": "Seguido, nos conectamos a su Spotify y a su YouTube. Le das a escuchar y suena un trocito de sus temas más populares.",
+  "qa": 0.87,
+  "say": "Sí. Nos conectamos a su Spótifai y a su Yutub. Le das a escuchar, y suena un trocito de sus temas más populares.",
+  "v": "e45506517149",
+  "who": "bajo"
+ },
+ "639a544e": {
+  "d": 4.82,
+  "e": "06336202798783588732993579920479266875344442000388676678884665200232100000003976569622876545984973486861875464232100000",
+  "f": "639a544e.mp3",
+  "oido": "y si Claudio y Google programan, ¿quién manda aquí? ¿Quién es el líder de la banda?",
+  "qa": 0.94,
+  "say": "Y si Claudio y Guglio programan, ¿quién manda aquí? ¿Quién es el líder de la banda?",
+  "v": "7feb0966bf50",
+  "who": "bateria"
+ },
+ "66063fa3": {
+  "d": 8.09,
+  "e": "09610069951983298587537731168777110575118878410147995253100026776632694014776554555222100000001873899998898872157660576206663266310001577239950067631045212833277311277655530078726776587301583665244321",
+  "f": "66063fa3.mp3",
+  "oido": "Los puntos dorados son las funciones clave, como el \"booking\" o \"iris\". Cada una enlaza la pantalla, la ruta, el servicio, la tabla y el proveedor.",
+  "qa": 0.96,
+  "say": "Los puntos dorados son las funciones clave, como el buquin o Iris. Cada una enlaza la pantalla, la ruta, el servicio, la tabla y el proveedor.",
+  "v": "1a8b0e83e19b",
+  "who": "bajo"
+ },
+ "6809c55e": {
+  "d": 6.29,
+  "e": "27999733851047310066953476652100011110035666579610541175156442019968535531126651044100049748732441257945666641100059756325841102597310101421110000697354100",
+  "f": "6809c55e.mp3",
+  "oido": "Y hago, esto es la hostia. Lo necesitan todos los grupos, todos los managers, todas las productoras, todos.",
+  "qa": 0.86,
+  "say": "Iago, esto es la hostia. Lo necesitan todos los grupos, todos los mánayers, todas las productoras. ¡Todos!",
+  "v": "df57e016f1be",
+  "who": "voz"
+ },
+ "6ba3f936": {
+  "d": 4.49,
+  "e": "19585116998311013541197861279821696883135465427974101586621442465232100000025892137129621544674896224435420000",
+  "f": "6ba3f936.mp3",
+  "oido": "Pero se ha escrito a tres alas mientras yo hacinaba. Y eso que ha fino rápido.",
+  "qa": 0.71,
+  "say": "¡Pero si ha escrito a tres salas mientras yo afinaba! ¡Y eso que afino rápido!",
+  "v": "ff2c2a5ca039",
+  "who": "guitarra"
+ },
+ "6eecc824": {
+  "d": 2.47,
+  "e": "069768996976884249987765200139611474100761263014644544432210",
+  "f": "6eecc824.mp3",
+  "oido": "y ahora lo bueno lo que os toca a cada uno.",
+  "qa": 1.0,
+  "say": "Y ahora, lo bueno: lo que os toca a cada uno.",
+  "v": "182dfa2258ca",
+  "who": "bajo"
+ },
+ "721dfb66": {
+  "d": 13.03,
+  "e": "000011983019999887520000998796631118673149830166739993146788510274561452007862322110069674116788840295697788621147865995358961026611563699776311374556640135210049503741002641000110000000886218610696583115857856774100001149846988597103974388423885025421105466611665214422321000002721963101868776112866998389664277411133210000",
+  "f": "721dfb66.mp3",
+  "oido": "Si, tío, un moisés metido en nuestro repertorio y encima podemos grabar nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas, pero lo conseguí y por fin se oye el bajo.",
+  "qa": 1.0,
+  "say": "¡Sí, tío! Un Moisés metido en nuestro repertorio. Y encima podemos grabar nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas, pero lo conseguí. ¡Y por fin se oye el bajo!",
+  "v": "ca418b5987a2",
+  "who": "bajo"
+ },
+ "75959f3c": {
+  "d": 5.04,
+  "e": "0000178787797657647885111677631134310000017877884333979536653110000005599995211877664111799601858987667831276763365310000000",
+  "f": "75959f3c.mp3",
+  "oido": "Mañana a las 11. Traed birras, frías brais no como la última vez.",
+  "qa": 0.92,
+  "say": "Mañana a las once. Traed birras. Frías, Brais, no como la última vez.",
+  "v": "a247af6cfaf1",
+  "who": "bajo"
+ },
+ "75b26d03": {
+  "d": 5.71,
+  "e": "041688821078969302999367531111156310057867752115411574797633752156620762000684100000018994029745931692165112965668578478857665213653221000000",
+  "f": "75b26d03.mp3",
+  "oido": "Aquí las tengo todas, su estilo, su ciudad, el contacto y el público que suelen llevar a los bolos.",
+  "qa": 1.0,
+  "say": "Aquí las tengo todas: su estilo, su ciudad, el contacto, y el público que suelen llevar a los bolos.",
+  "v": "1fc3c72cb844",
+  "who": "bajo"
+ },
+ "7706384d": {
+  "d": 3.38,
+  "e": "00001496557411028611786318846977634321000000000599396641276214978675587734433210000",
+  "f": "7706384d.mp3",
+  "oido": "Ya está confirmada. Mirad el calendario.",
+  "qa": 1.0,
+  "say": "Ya está confirmada. Mirad el calendario.",
+  "v": "b21b457ba87a",
+  "who": "bajo"
+ },
+ "77599433": {
+  "d": 5.11,
+  "e": "072119851977620158219613966677349941156541000289984861135511018851007657721254227653221000000157871197797448966677510443110000",
+  "f": "77599433.mp3",
+  "oido": "Os cuento la estrategia de negocio y me decís que os parece vale. Sin tirarme latas.",
+  "qa": 1.0,
+  "say": "Os cuento la estrategia de negocio, y me decís qué os parece, ¿vale? Sin tirarme latas.",
+  "v": "babd06389cd7",
+  "who": "bajo"
+ },
+ "7764314b": {
+  "d": 7.34,
+  "e": "0000095971057769861078437862248204835653211000015961087388998666888756754312774521272262067625553100397401599311777425861066205422154321000000187998879963201579737964754238941000000",
+  "f": "7764314b.mp3",
+  "oido": "Pero tío, te vas a forrar. Ya te veo en Miami en descapotable con traje y gafas de sol, como una estrella del rock.",
+  "qa": 1.0,
+  "say": "¡Pero tío, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol. ¡Como una estrella del rock!",
+  "v": "e34a63e16bf5",
+  "who": "bateria"
+ },
+ "793f975f": {
+  "d": 4.03,
+  "e": "000039977994104866775310000000034116789999401888328940296787774111100463238874117520365644432100000",
+  "f": "793f975f.mp3",
+  "oido": "la ultima y creo que es lo que mas os va a sorprender",
+  "qa": 0.85,
+  "say": "Lo último. Y creo que es lo que más os va a sorprender.",
+  "v": "fdd0c1030cd8",
+  "who": "bajo"
+ },
+ "7ae9636f": {
+  "d": 9.48,
+  "e": "0000047531159953779876631110000051146972102876879516665113876347741126475212688643210000000411763451058302496117979511630057300113322100265107987247217669986521178863100000039999939761295861162028656665105988830776664115210035412110000",
+  "f": "7ae9636f.mp3",
+  "oido": "Casi Bryce, aquí están los ensayos y los bolos y cada fecha tiene su ficha, el tiempo que va a hacer y el aviso de si cae en puente o en festivo.",
+  "qa": 0.97,
+  "say": "Casi, Brais. Aquí están los ensayos y los bolos. Y cada fecha tiene su ficha: el tiempo que va a hacer, y el aviso de si cae en puente o en festivo.",
+  "v": "5031fccff36e",
+  "who": "bajo"
+ },
+ "7be8c972": {
+  "d": 2.28,
+  "e": "0310799412561089776567610276797398112441178664222100000",
+  "f": "7be8c972.mp3",
+  "oido": "Estoy flipando, colega flipando.",
+  "qa": 1.0,
+  "say": "¡Estoy flipando, colega! ¡Flipando!",
+  "v": "92a426b562b6",
+  "who": "bateria"
+ },
+ "7ca8e41d": {
+  "d": 3.24,
+  "e": "0000267965951029640299641156311000000000772101497664176565202562077411543220000",
+  "f": "7ca8e41d.mp3",
+  "oido": "Vamos por partes Os cuento la estrategia",
+  "qa": 1.0,
+  "say": "Vamos por partes. Os cuento la estrategia.",
+  "v": "42aaf704b121",
+  "who": "bajo"
+ },
+ "80eeb959": {
+  "d": 10.39,
+  "e": "000028620299974338874111167652011000029605951099874987773269376566721566458872576225411008610124311000000485159323820084037557514763134113645876621047998736951366554555411001110000007930696117995103865541101569866984100378961866511798721777410441241115543211",
+  "f": "80eeb959.mp3",
+  "oido": "Esto es \"Date Swap\". Le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La propuesta la escribe la Inteligencia Artificial.",
+  "qa": 0.93,
+  "say": "Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.",
+  "v": "b6efdb1defff",
+  "who": "bajo"
+ },
+ "8193675e": {
+  "d": 7.08,
+  "e": "0797111762698403621962375568765211000001487116846949994731576411008713720686543769611361014610018856512655225410433111000000531477212999399310587511696784185216997511442100000",
+  "f": "8193675e.mp3",
+  "oido": "ves sus métricas del mes, los seguidores en Spotify y los suscriptores en YouTube. Así sabes con quién te juntas.",
+  "qa": 0.9,
+  "say": "Ves sus métricas del mes: los seguidores en Spótifai y los suscriptores en Yutub. Así sabes con quién te juntas.",
+  "v": "30078ee964e5",
+  "who": "bajo"
+ },
+ "81ba23ec": {
+  "d": 6.29,
+  "e": "02296118992114887779988775631137882149777556610354321007869597119784147668875731369752595100000576996427984661015699873016786277761014642651125333101110000",
+  "f": "81ba23ec.mp3",
+  "oido": "Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me creo que haya hecho yo solito.",
+  "qa": 0.95,
+  "say": "Chicos, mañana a las once en el local. Tengo que enseñaros algo que ni yo me creo que haya hecho yo solito.",
+  "v": "aac40a2859c6",
+  "who": "bajo"
+ },
+ "81c1fe31": {
+  "d": 3.48,
+  "e": "0000097112981089785489766752656554311100000000014976398376477788731001576662014321000",
+  "f": "81c1fe31.mp3",
+  "oido": "Eso también, Bryce. Ya llegaremos tranqui.",
+  "qa": 0.83,
+  "say": "Eso también, Brais. Ya llegaremos. Tranqui.",
+  "v": "224edc097265",
+  "who": "bajo"
+ },
+ "8331d8c0": {
+  "d": 3.96,
+  "e": "5896343220000157525520000059776363135119414624631012100059515994893115885897541684158523632000000",
+  "f": "8331d8c0.mp3",
+  "oido": "pero y hago cuando has hecho todo esto si tienes cubo y dos hijas",
+  "qa": 0.81,
+  "say": "Pero, Iago, ¿cuándo has hecho todo esto? ¡Si tienes curro y dos hijas!",
+  "v": "1f35368b6a37",
+  "who": "guitarra"
+ },
+ "842498e9": {
+  "d": 3.38,
+  "e": "47412658520000045310495226877972159724520343245204432110188789999846743115424532100",
+  "f": "842498e9.mp3",
+  "oido": "O sea, que tú solo aprietas el botón, como el de un pedal.",
+  "qa": 1.0,
+  "say": "O sea, que tú solo aprietas el botón. Como el de un pedal.",
+  "v": "99354c4e3345",
+  "who": "voz"
+ },
+ "84caf79f": {
+  "d": 14.11,
+  "e": "000018983399972158740068854541110000037305797898577521028796116311362113976514953267557465410265311575145116653221000000017864102940398510027977647520000038861495989868976405977201867849861164247744654114610473112101110000018217937999859973003899710940286788316687311397886601564573048651115895200551000016413521017995366303734640364033102551111100000",
+  "f": "84caf79f.mp3",
+  "oido": "De dos motores, el primero una suscripción por banda con cinco planes. Ya está construida aunque de momento la tengo apagada a propósito. El segundo una pequeña comisión de cada concierto que se cierra por la plataforma.",
+  "qa": 1.0,
+  "say": "De dos motores. El primero, una suscripción por banda, con cinco planes. Ya está construida, aunque de momento la tengo apagada a propósito. El segundo, una pequeña comisión de cada concierto que se cierra por la plataforma.",
+  "v": "08ed2cb3b08e",
+  "who": "bajo"
+ },
+ "86d5e7aa": {
+  "d": 3.96,
+  "e": "0797569957752138711483257988844039935782369501768777526656464134432211000003897998973101476531000",
+  "f": "86d5e7aa.mp3",
+  "oido": "Y ahora lo que viene, probarlo con una banda real. La nuestra",
+  "qa": 1.0,
+  "say": "Y ahora, lo que viene: probarlo con una banda real. La nuestra.",
+  "v": "2805322a4f3f",
+  "who": "bajo"
+ },
+ "877dff53": {
+  "d": 17.18,
+  "e": "03799989831118776999632137204864431110000000008520788984248951015730376687643210000033599969402510397322442353335107758720752015636997994171142101998997206962597651169587107403877699886336222624841226652005851221014893246323124341119642005433489963686111002896798966887796795200689418688978610003777213679636888830000058402576887243200000024126397665885998612576886256766359410056564112101221100000126966997731876898665421100000",
+  "f": "877dff53.mp3",
+  "oido": "Buenos días, rockeros. Esto es Rock FM. Abanda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest. Gracias a su bajista, Iago y a BandManager.io, la increíble app que ha creado y que va a revolucionar la industria musical. ¡Sube el volumen!",
+  "qa": 0.88,
+  "say": "Buenos días, rockeros. Esto es Rock efe eme. La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrécshon Fest, gracias a su bajista, Iago, y a band mánayer punto io: la increíble app que ha creado, y que va a revolucionar la industria musical. ¡Sube el volumen!",
+  "v": "6ac2dde1d504",
+  "who": "locutor"
+ },
+ "886eaa19": {
+  "d": 5.47,
+  "e": "364279558414621255398210462117866123333565134210001551029947712630165354359767621126621001211000079941116987526721431331283139642111000",
+  "f": "886eaa19.mp3",
+  "oido": "y dile que te busques alas en vivo, que quiero tocar allí en las fiestas, con fuego artificiales.",
+  "qa": 0.78,
+  "say": "¡Y dile que te busque salas en Vigo, que quiero tocar allí en las fiestas! ¡Con fuegos artificiales!",
+  "v": "ca0c25375c8d",
+  "who": "voz"
+ },
+ "891765ab": {
+  "d": 6.53,
+  "e": "00000289995961494224885320000495025867976676621149788213758764555311001000298816981670283358866862587468832018538898300682156636202410588643100594976654323432211",
+  "f": "891765ab.mp3",
+  "oido": "Claro que sí, lo probamos, lo mejoramos y en cuanto termines el Master de Marketing Digital Gira Mundial.",
+  "qa": 1.0,
+  "say": "¡Claro que sí! Lo probamos, lo mejoramos, y en cuanto termines el máster de Marketing Digital, ¡gira mundial!",
+  "v": "587f2b850f8a",
+  "who": "bateria"
+ },
+ "89583b84": {
+  "d": 6.94,
+  "e": "0000388311239989510004316855644531095721766389615510163007668547410000179868894489835863014530018993568755652128946983174531106875531011541025540165553034441110343111000000",
+  "f": "89583b84.mp3",
+  "oido": "Ed Show, y con la lista de pendientes que tengo, no me aburro el cobro los vídeos de los fans el \"Try Count\" de las giras.",
+  "qa": 0.88,
+  "say": "Hecho. Y con la lista de pendientes que tengo, no me aburro: el cobro, los vídeos de los fans, el Traicaunt de las giras.",
+  "v": "9c4e2067330f",
+  "who": "bajo"
+ },
+ "89b3ebdc": {
+  "d": 4.03,
+  "e": "353116431169587299313559757775115966975213853721000110000144589778521194214767698783125358831121111",
+  "f": "89b3ebdc.mp3",
+  "oido": "Y por qué ir iba a querer una sala a usar esto, si no nos cogen ni el teléfono",
+  "qa": 0.94,
+  "say": "¿Y por qué iba a querer una sala usar esto? Si no nos cogen ni el teléfono.",
+  "v": "ba5eff1d62f4",
+  "who": "voz"
+ },
+ "8b90fc0b": {
+  "d": 4.94,
+  "e": "0000262039999721598355226971176511977656548732110000000005998498768612963104863210000000011888898636832277577882443321000",
+  "f": "8b90fc0b.mp3",
+  "oido": "Esto es lo de Gugel Calendar. Mira a hacerte. Soy un visionario.",
+  "qa": 0.87,
+  "say": "¡Esto es lo de Gúgel Calendar! ¡Mira, acerté! ¡Soy un visionario!",
+  "v": "aa7028060411",
+  "who": "bateria"
+ },
+ "8ed6e1e8": {
+  "d": 9.24,
+  "e": "0000089752785110005630695275015677776303432000002850187102975421488422576565993158585137896117204761110441139987666411475101221000000069628899895013970651185426656745421572119859941261078761066325667887586577746412443443210000000",
+  "f": "8ed6e1e8.mp3",
+  "oido": "Hay dos tipos de cliente. P'tucy, las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda de 0 a 79 euros al mes.",
+  "qa": 0.81,
+  "say": "Hay dos tipos de cliente. Be tu ci: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes.",
+  "v": "729c8e4241ee",
+  "who": "bajo"
+ },
+ "8f4d8451": {
+  "d": 7.39,
+  "e": "077510016869866367987995385599385562104555752100000487865301883878950366207774304655577310194366774201840257536202410688636554253111100332100000089997520475311295168211689504543110000",
+  "f": "8f4d8451.mp3",
+  "oido": "Ah, se me había olvidado de ciros que me acabo de apuntar al Master de Marketing Digital de la Big School. Una pasta que flipas",
+  "qa": 0.9,
+  "say": "Ah, se me había olvidado deciros que me acabo de apuntar al máster de Marketing Digital de la Big Scul. Una pasta que flipas.",
+  "v": "d5ba9475d5e4",
+  "who": "bajo"
+ },
+ "927eb3a6": {
+  "d": 6.24,
+  "e": "0796972159678672762114886556200016677642641006523565322110351587799772118987511775129821016630592259511777307777999788243110169610036555655432431111110000",
+  "f": "927eb3a6.mp3",
+  "oido": "Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.",
+  "qa": 1.0,
+  "say": "Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.",
+  "v": "abfa20459769",
+  "who": "bajo"
+ },
+ "97f27152": {
+  "d": 5.06,
+  "e": "48421025332156510898454554312455596579721000023202996559512621562211100000000267611575598556326945764139978754212574332211110",
+  "f": "97f27152.mp3",
+  "oido": "por fin sé cuando ensayamos y cuando tocamos. Se acabó llegar al bolo en Chandal.",
+  "qa": 1.0,
+  "say": "¡Por fin sé cuándo ensayamos y cuándo tocamos! Se acabó llegar al bolo en chándal.",
+  "v": "104729537ea0",
+  "who": "voz"
+ },
+ "9c341935": {
+  "d": 6.24,
+  "e": "1996221001614615736644315211621793643653123211799924652013234214320298210873245227521674841145334553432421662774234532341000005319952100165436963100000000",
+  "f": "9c341935.mp3",
+  "oido": "¿Cómo que si ponemos este código, el QR en el concierto, la gente de Oskanea y nos siguen redes? Así, sin más.",
+  "qa": 0.78,
+  "say": "¿Cómo? ¿Que si ponemos este código, el cú-erre, en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?",
+  "v": "ebc20773fbff",
+  "who": "guitarra"
+ },
+ "9d26aa08": {
+  "d": 7.01,
+  "e": "79673139768751035441341000695467659988455201883594453201431252100011002877873110002599398546542125303642125887445216997973642694124452687745552102423575320000123346321110000",
+  "f": "9d26aa08.mp3",
+  "oido": "Alguien ha contestado ya a la sala del 14. Una estrella del rock and roll no puede vivir mirando el correo. Chavales.",
+  "qa": 0.86,
+  "say": "¿Alguien ha contestado ya a la sala del catorce? Una estrella del rocanrol no puede vivir mirando el correo, chavales.",
+  "v": "bd5c88950d7a",
+  "who": "voz"
+ },
+ "9f2590b1": {
+  "d": 2.42,
+  "e": "04511386202499453100598941563345359422231100015853112100000",
+  "f": "9f2590b1.mp3",
+  "oido": "y si el proyecto es en milagro y hago.",
+  "qa": 0.71,
+  "say": "¿Y si el proyecto es el milagro, Iago?",
+  "v": "b8d47dc831b6",
+  "who": "ia_claude"
+ },
+ "a0134e13": {
+  "d": 5.47,
+  "e": "099478415998301279611018751126998763698742377323343221000000000688999951122872166210576543100000000289711127761169876218721068743210000",
+  "f": "a0134e13.mp3",
+  "oido": "por las noches con Claudio y Google y mucho café, muchísimo café.",
+  "qa": 0.92,
+  "say": "Por las noches, con Claudio y Guglio. Y mucho café. Muchísimo café.",
+  "v": "4a5000d60964",
+  "who": "bajo"
+ },
+ "a12ad783": {
+  "d": 8.26,
+  "e": "0797951888711994378217511499569577257740572352018975686520000048400123543037401227986322476675584611656534432210000007873851697851102689501454310000388207820751499713888988598731101388621651068641022210000",
+  "f": "a12ad783.mp3",
+  "oido": "Por eso el acuerdo se cierra desde la plataforma, fecha, caché, raider y camerino. Todo por escrito, croquetas incluidas si hace falta.",
+  "qa": 1.0,
+  "say": "Por eso el acuerdo se cierra desde la plataforma: fecha, caché, ráider y camerino. Todo por escrito. Croquetas incluidas, si hace falta.",
+  "v": "d58efb7bed83",
+  "who": "bajo"
+ },
+ "a2e5af69": {
+  "d": 1.7,
+  "e": "2279410044014443110002449941349610023321",
+  "f": "a2e5af69.mp3",
+  "oido": "Y esto que es más magia.",
+  "qa": 1.0,
+  "say": "¿Y esto qué es? ¿Más magia?",
+  "v": "fe4f14bf5a91",
+  "who": "voz"
+ },
+ "a5d77f76": {
+  "d": 3.96,
+  "e": "0000693279611199997765200000686886269205855479976531000574116679993774126776356402452542111110000",
+  "f": "a5d77f76.mp3",
+  "oido": "y presumo que en el rock and roll presumir es medio trabajo.",
+  "qa": 0.82,
+  "say": "Y presumo. Que en el rocanrol, presumir es medio trabajo.",
+  "v": "504b9d71ba26",
+  "who": "bajo"
+ },
+ "a617749f": {
+  "d": 7.63,
+  "e": "000001993597541677663268765421110000588995059710106998472128889664028625301766678940010149764046389411101665431100048988988971000299648631386541864057886339773059403767752551154421144211110",
+  "f": "a617749f.mp3",
+  "oido": "Se rompe el build. Hay un test que lo vigila en cada comit 22 skis y uno ok que avisa en cuanto alguien toca algo sensible.",
+  "qa": 0.77,
+  "say": "Se rompe el bild. Hay un test que lo vigila en cada commit, veintidós skills, y un hook que avisa en cuanto alguien toca algo sensible.",
+  "v": "b001f8f287fe",
+  "who": "bajo"
+ },
+ "a9320709": {
+  "d": 4.06,
+  "e": "442100887597310004311004956952000341100465122100069210997989821584114410254210386743962177610003210",
+  "f": "a9320709.mp3",
+  "oido": "Estera, estera, espera. Esto lo has hecho tú, el bajista.",
+  "qa": 0.8,
+  "say": "Espera, espera, espera. ¿Esto lo has hecho tú? ¿El bajista?",
+  "v": "1d4b553124db",
+  "who": "voz"
+ },
+ "aa27b122": {
+  "d": 6.7,
+  "e": "000029300799921232855674488766663354211000009633399996049961199842001676762158107520018846777998856353115630112110000000000295489765322224799779786116848731133100000",
+  "f": "aa27b122.mp3",
+  "oido": "Esto es Band Manager. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas.",
+  "qa": 0.95,
+  "say": "Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas.",
+  "v": "71515fd67d52",
+  "who": "bajo"
+ },
+ "ab989e2f": {
+  "d": 6.91,
+  "e": "395765214356310000003999310392389762653699315435641035314776211198454211563221000263108746762289849514985368877521000000165104976335622899411774311787377368411377531000000",
+  "f": "ab989e2f.mp3",
+  "oido": "Te lo tío, te has copiado de ultima itita, pelízcame, esto no puede ser real, esto es mejor que un solo de Slav.",
+  "qa": 0.76,
+  "say": "¡Pero tío! ¡Te has copiado de Últimeit Guitar! ¡Pellízcame! ¡Esto no puede ser real! ¡Esto es mejor que un solo de Eslash!",
+  "v": "39898843b567",
+  "who": "guitarra"
+ },
+ "ac8c0b9b": {
+  "d": 6.36,
+  "e": "0896886688762019752396666302987343321000000395993189235930067104655564110015116946677955421475117712762256555432210000000000297695005896786137411178652220000",
+  "f": "ac8c0b9b.mp3",
+  "oido": "De momento voluntaria, si vosotros tocáis y cobráis nosotros ganamos. Como tiene que ser.",
+  "qa": 1.0,
+  "say": "De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos. Como tiene que ser.",
+  "v": "bf632639a571",
+  "who": "bajo"
+ },
+ "ad8355c7": {
+  "d": 6.24,
+  "e": "0698854621477469842699931112389930274100655520055677631122210000042188649711693139731689857973755303521058762105511189993138821663356666531552025444311111",
+  "f": "ad8355c7.mp3",
+  "oido": "Ya he dejado dos grupos por esto mismo y con vosotros no me va a pasar que sois mis hermanos de escenario.",
+  "qa": 1.0,
+  "say": "Ya he dejado dos grupos por esto mismo. Y con vosotros no me va a pasar, que sois mis hermanos de escenario.",
+  "v": "15518dedaeac",
+  "who": "bajo"
+ },
+ "b36122a2": {
+  "d": 3.22,
+  "e": "000004998779931116874111000000004987322018762006742599218948621466799323220000",
+  "f": "b36122a2.mp3",
+  "oido": "que listos más que el técnico de sonido.",
+  "qa": 1.0,
+  "say": "¡Qué listos! Más que el técnico de sonido.",
+  "v": "59bc7038195d",
+  "who": "bateria"
+ },
+ "b36a9de5": {
+  "d": 6.94,
+  "e": "000022778986876210000856621883778665786788520079359731541126304964776135752662000121000003994286565696884155111630285236777755666312221000001765349996589712851116763221000",
+  "f": "b36a9de5.mp3",
+  "oido": "Vale, para acabar el Master necesito un proyecto. Mi banda necesita un milagro, y yo un café.",
+  "qa": 1.0,
+  "say": "Vale. Para acabar el máster necesito un proyecto. Mi banda necesita un milagro. Y yo, un café.",
+  "v": "9c415d5f3cf7",
+  "who": "bajo"
+ },
+ "b36e5574": {
+  "d": 10.87,
+  "e": "000029921168995046311148663443210000532963893139849887378667848641007830476311101865652118998950597502841006713653166224414651222100000003412998447520485246898889967887610465416841676761034124211454211008999510595887752100588400598999878840117666664110665134112432110000",
+  "f": "b36e5574.mp3",
+  "oido": "Es una pasada, es el dossier de la banda, fotos, formación y contacto para contratarnos, y se edita en un momento desde la aplicación. Pero esperad que esto no ha hecho más que empezar.",
+  "qa": 1.0,
+  "say": "¡Es una pasada! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación. ¡Pero esperad, que esto no ha hecho más que empezar!",
+  "v": "f436e7a2a02e",
+  "who": "bajo"
+ },
+ "b3b18907": {
+  "d": 6.96,
+  "e": "0000297129997305997410466542000005730099116977355119983365410000394968838778877211786651157433652343210000006979411159766235876216855731285116227206768787661007764122100000",
+  "f": "b3b18907.mp3",
+  "oido": "Es una parte, tu toca la guitarra, que de lo demás me encargo yo. Como siempre, el bajo sujetándolo todo.",
+  "qa": 1.0,
+  "say": "Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.",
+  "v": "2bc376d559f9",
+  "who": "bajo"
+ },
+ "b3de0a8d": {
+  "d": 5.93,
+  "e": "57667756966402544521007956767941187696103311111007742118974314777531186218867723764110111001239976887410003454202893278778575453799841264420266210",
+  "f": "b3de0a8d.mp3",
+  "oido": "y la mía con el tono de cada tema. Por fin se en qué tono canto. Bueno, ¿en qué tono debería cantar?",
+  "qa": 1.0,
+  "say": "Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.",
+  "v": "04c99a20ca31",
+  "who": "voz"
+ },
+ "b52edca1": {
+  "d": 3.5,
+  "e": "04678996982394764872185285259875531000000795794374212310001985783584225310000244432100",
+  "f": "b52edca1.mp3",
+  "oido": "Una base de datos de salas. Te lo dije, te lo dije, tío.",
+  "qa": 1.0,
+  "say": "¡Una base de datos de salas! ¡Te lo dije! ¡Te lo dije, tío!",
+  "v": "a6343dd50eeb",
+  "who": "guitarra"
+ },
+ "b7fe9571": {
+  "d": 3.22,
+  "e": "069964630077767631006604953798713593057475127841299888721175779751101132110000",
+  "f": "b7fe9571.mp3",
+  "oido": "Vale, pero y por dentro cómo funciona este monstruo.",
+  "qa": 1.0,
+  "say": "Vale, pero, ¿y por dentro cómo funciona este monstruo?",
+  "v": "44581c79f79e",
+  "who": "bateria"
+ },
+ "bb398484": {
+  "d": 3.96,
+  "e": "0793008999521188952768304989712673566565322210000000003510576996496016468889565567568311389633211",
+  "f": "bb398484.mp3",
+  "oido": "Cartel doble con otra banda. Esto no lo tenían ni los Rolling.",
+  "qa": 0.92,
+  "say": "¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolin!",
+  "v": "bb806ee57bea",
+  "who": "bateria"
+ },
+ "bf807172": {
+  "d": 3.53,
+  "e": "45212962146585102899314421110099731058799511862564246314893100477417975763104652311000",
+  "f": "bf807172.mp3",
+  "oido": "y si se la saltan, ¿por qué nosotros nos las saltamos todas?",
+  "qa": 0.78,
+  "say": "¿Y si se las saltan? Porque nosotros nos las saltamos todas.",
+  "v": "dc318e086d99",
+  "who": "voz"
+ },
+ "c3b426f2": {
+  "d": 3.91,
+  "e": "058941029773287511764212993177412966554275772110023200000000037411597784211776667753000055320000",
+  "f": "c3b426f2.mp3",
+  "oido": "Pues yo dije, Gugel Calendar, que conste enacta.",
+  "qa": 0.78,
+  "say": "Pues yo dije Gúgel Calendar, eh. Que conste en acta.",
+  "v": "076de55b03af",
+  "who": "bateria"
+ },
+ "c60ae9fd": {
+  "d": 6.86,
+  "e": "06137412768412788511675110001599314965799557832783003856514873043100598576443111375221100000067799736752148852214678983332100000000039999527999421035774210168620335320000",
+  "f": "c60ae9fd.mp3",
+  "oido": "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. 1, 2, 3, 4.",
+  "qa": 0.78,
+  "say": "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. ¡Un, dos, tres, cuatro!",
+  "v": "17b4f0272916",
+  "who": "bateria"
+ },
+ "c695c01e": {
+  "d": 5.45,
+  "e": "05226524856368565459776665620000667742102565289679536537873699426442111554211000000795117899422696587313779878423978652100655432210000",
+  "f": "c695c01e.mp3",
+  "oido": "Y si se le va la mano y le escribe una burrada al de la sala, porque eso es más de mi estilo.",
+  "qa": 1.0,
+  "say": "¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.",
+  "v": "04839f8c3593",
+  "who": "bateria"
+ },
+ "c7655792": {
+  "d": 9.82,
+  "e": "099599732854567885651118923564005654221000000197499102997788865685017667645687666333211567954452058656558500000063008514896210384831137541126539865641139731566778485444531443111100000096229966289310058844885105996587961146778875326642112210000",
+  "f": "c7655792.mp3",
+  "oido": "Pero va a merecer la pena. Cuando esté en Miami con mi Lambo, iré gritando, estos másteres han sido el mejor dinero de mi vida. Mejor gastado que el de mi primer bajo.",
+  "qa": 1.0,
+  "say": "Pero va a merecer la pena. Cuando esté en Miami con mi Lambo, iré gritando: ¡estos másteres han sido el mejor dinero de mi vida! ¡Mejor gastado que el de mi primer bajo!",
+  "v": "4bcb8e6f76ab",
+  "who": "bajo"
+ },
+ "c8b116b6": {
+  "d": 5.11,
+  "e": "199653210232671159846631006997310001469975799466103310003210001564202410346978841100020002310386445555410044377554441278425410",
+  "f": "c8b116b6.mp3",
+  "oido": "¿Cómo? ¿De qué va? ¿Qué es? No me hagas esto. Que el que crea expectación en esta banda soy yo",
+  "qa": 1.0,
+  "say": "¿Cómo? ¿De qué va? ¿Qué es? No me hagas esto, que el que crea expectación en esta banda soy yo.",
+  "v": "3ebd4d75fc0b",
+  "who": "voz"
+ },
+ "d2799f61": {
+  "d": 10.25,
+  "e": "00004510586245201994697787521112898987676311762022321000000498716968216876119720151152116986668841101478468203776522689549677662765663542047699983685000475300375342113322110000005869985389877536775100000167436579931259666798314652056662431101554201210000",
+  "f": "d2799f61.mp3",
+  "oido": "Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda y lo adapta a cada sala. Como un buen ríf, cada noche el mismo pero distinto.",
+  "qa": 1.0,
+  "say": "Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.",
+  "v": "70e5554b8d33",
+  "who": "bajo"
+ },
+ "d5f59624": {
+  "d": 1.8,
+  "e": "0156972189327621895119227435545125115521110",
+  "f": "d5f59624.mp3",
+  "oido": "Y eso es lo que hace que no nos a",
+  "qa": 0.9,
+  "say": "¿Y eso es lo que hace que no nos hackeen?",
+  "v": "2036990853e1",
+  "who": "guitarra"
+ },
+ "d68c318d": {
+  "d": 3.6,
+  "e": "2445463995100167533100144799732877454479868825572004321000595531362058889975764200022110",
+  "f": "d68c318d.mp3",
+  "oido": "Mi voz sola nunca me había oído así, canto como un ángel.",
+  "qa": 1.0,
+  "say": "¡Mi voz sola! ¡Nunca me había oído así! ¡Canto como un ángel!",
+  "v": "0ff442b05736",
+  "who": "voz"
+ },
+ "d9f8e9e0": {
+  "d": 10.87,
+  "e": "212983387599354342136412512432210000024334433211004311001565584100572101310003753861102741001210001279883167531000441134246210274100231000487871261135851001483117964102972364103425542112511433106937934421000000000596473257415632100000078310998547999349932885499975210000",
+  "f": "d9f8e9e0.mp3",
+  "oido": "Así llevábamos el butín en un excel, sin respuesta, sin respuesta, leíto y sin respuesta. Y la setlist versión 7 final, definitiva 2. ¿Cuál es la buena? Esto no es rock'n'roll.",
+  "qa": 0.81,
+  "say": "Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y la setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!",
+  "v": "e1e3a0fe8695",
+  "who": "guitarra"
+ },
+ "d9fa7522": {
+  "d": 5.45,
+  "e": "00000878932499821019853597106762135443321000000001299852794079888879731486310873100566321100000179867889421048832117652057567433220000",
+  "f": "d9fa7522.mp3",
+  "oido": "Pero si está guapísima, salgo con mi mejor perfil, ¿qué me estás contando?",
+  "qa": 1.0,
+  "say": "¡Pero si está guapísima! ¡Salgo con mi mejor perfil! ¿Qué me estás contando?",
+  "v": "bf7d7dbac2ae",
+  "who": "bateria"
+ },
+ "db10cd30": {
+  "d": 3.14,
+  "e": "1894464311784446534782773463244323210000026962198215537998259212312422210000",
+  "f": "db10cd30.mp3",
+  "oido": "Yo no entiendo nada de nada, y eso que leo partituras.",
+  "qa": 1.0,
+  "say": "Yo no entiendo nada de nada. Y eso que leo partituras.",
+  "v": "f4634f3cd013",
+  "who": "guitarra"
+ },
+ "e5d4d21f": {
+  "d": 5.09,
+  "e": "00004777783676532000000000498699825885699877666963101651142046236774201655542167631211000006779973379725621262049610564321000",
+  "f": "e5d4d21f.mp3",
+  "oido": "Nada, solo abrir un enlace y firmar con el dedo y le llega su copia.",
+  "qa": 1.0,
+  "say": "Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia.",
+  "v": "3df7f8b076f8",
+  "who": "bajo"
+ },
+ "e69f1cbe": {
+  "d": 5.42,
+  "e": "00000199962457657842111687657117547753211000000000593037558985520279875238720125432100000000169873029522863299659788311276722432110000",
+  "f": "e69f1cbe.mp3",
+  "oido": "Soy Bryce a la batería, el que marca el ritmo y el que se bebe las birras.",
+  "qa": 0.94,
+  "say": "Soy Brais, a la batería. El que marca el ritmo. Y el que se bebe las birras.",
+  "v": "af9c536b77ab",
+  "who": "bateria"
+ },
+ "e705c00f": {
+  "d": 3.62,
+  "e": "03675458864577865210000002631083139937647731016698387310494367841331694793116822531000000",
+  "f": "e705c00f.mp3",
+  "oido": "Madre mía, esto tiene más pruebas que la época del covid.",
+  "qa": 0.96,
+  "say": "¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!",
+  "v": "8354cb992aa4",
+  "who": "guitarra"
+ },
+ "e8d27de4": {
+  "d": 5.83,
+  "e": "000056532398941113888646988631443100000697116988843855211465430000472159795101396886662038611475678547865786412211000000000572105988899765521000",
+  "f": "e8d27de4.mp3",
+  "oido": "Y yo soy Yago, toco el bajo, ese instrumento que nadie oye. Hasta hoy.",
+  "qa": 0.93,
+  "say": "Y yo soy Iago. Toco el bajo. Ese instrumento que nadie oye. Hasta hoy.",
+  "v": "a725e34564c7",
+  "who": "bajo"
+ },
+ "e9000c2f": {
+  "d": 4.68,
+  "e": "0711069968753541100899466420178720288311498786655664111221000007828734659866789885126777410357834867525205425432110",
+  "f": "e9000c2f.mp3",
+  "oido": "Espera, espera que esto es solo la intro. Todavía no ha entrado la batería.",
+  "qa": 1.0,
+  "say": "Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!",
+  "v": "12d58945f4a4",
+  "who": "bajo"
+ },
+ "eaf060a3": {
+  "d": 3.48,
+  "e": "0000095861018878999610087837852225878522322000000000485796221278897992048647754211000",
+  "f": "eaf060a3.mp3",
+  "oido": "Pero tú no paras y hago, eres un no parar.",
+  "qa": 0.84,
+  "say": "¡Pero tú no paras, Iago! ¡Eres un no parar!",
+  "v": "108a75a1434f",
+  "who": "bateria"
+ },
+ "ec2e4f61": {
+  "d": 8.76,
+  "e": "0698114969930383599998311599577731677767559888630565684041184743567864110464457872006634454420000084000019940000352254102422111019939513942158776662119895486215721878857773561168897407564116876117741032032114432110000",
+  "f": "ec2e4f61.mp3",
+  "oido": "Pues se me ocurrió hacer un generador automático de Rails para Instagram, TikTok y YouTube. Todo personalizado y generado con inteligencia artificial.",
+  "qa": 0.91,
+  "say": "Pues se me ocurrió hacer un generador automático de reels para Instagram, TikTok y Yutub. Todo personalizado, y generado con inteligencia artificial.",
+  "v": "2cf24ead3598",
+  "who": "bajo"
+ },
+ "ecb20b97": {
+  "d": 2.83,
+  "e": "082492189768710069469302856788711278621886576985322331103653221000000",
+  "f": "ecb20b97.mp3",
+  "oido": "Empezamos por lo que más nos dolía las salas.",
+  "qa": 1.0,
+  "say": "Empezamos por lo que más nos dolía: las salas.",
+  "v": "b7f5fbf3224f",
+  "who": "bajo"
+ },
+ "ed98f190": {
+  "d": 4.13,
+  "e": "04037730387399842101541100059999676114865401773465578775334544674113856301866369724661024114211232211",
+  "f": "ed98f190.mp3",
+  "oido": "y con todo esto, ni el mejor hacker del mundo nos va a tumbar la aplicación.",
+  "qa": 1.0,
+  "say": "Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?",
+  "v": "a934984fca18",
+  "who": "bateria"
+ },
+ "eda5846d": {
+  "d": 3.6,
+  "e": "4453145102210000011111111101998984751052444411235533432100000089748969836939644873100000",
+  "f": "eda5846d.mp3",
+  "oido": "que co... que ahora tenemos una web. ¿Cómo los de Verraz?",
+  "qa": 0.87,
+  "say": "¿Pero qué co [pi]? ¿Que ahora tenemos una web? ¡Como los de verdad!",
+  "v": "2df95790044f",
+  "who": "guitarra"
+ },
+ "f17cc9cc": {
+  "d": 8.69,
+  "e": "00001286677521104309764796512966777113497257511777666776850176535566772321018640499537841379951012243221103875665620455535764567311011697357210039201256641149976662100000001595620579966777741015556773554244321000000",
+  "f": "f17cc9cc.mp3",
+  "oido": "Sí, y también pueden echarnos una mano con dinero, comprarnos Merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.",
+  "qa": 1.0,
+  "say": "¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan, cuando lo tengamos, ver los próximos bolos, y entrar en nuestra nueva web.",
+  "v": "d27643e6f6d9",
+  "who": "bajo"
+ },
+ "f6ae1b59": {
+  "d": 5.71,
+  "e": "000001879765515723971018621001799763498676105972005832663045555424544311110000057139743497756973101227950015983794278666447763044014322100000",
+  "f": "f6ae1b59.mp3",
+  "oido": "Si me hago rico, una buena parte va para la banda. Los herdeiros, dos códigos, lo va a petar.",
+  "qa": 0.84,
+  "say": "Si me hago rico, una buena parte va para la banda. ¡Os Herdeiros do Código lo va a petar!",
+  "v": "4f69bec96de7",
+  "who": "bajo"
+ },
+ "f7efa35b": {
+  "d": 2.18,
+  "e": "23101699655531341001001799545568521006765401332133100",
+  "f": "f7efa35b.mp3",
+  "oido": "Y quien es ese? Tiene más pelo que yo.",
+  "qa": 1.0,
+  "say": "¿Y quién es ese? ¿Tiene más pelo que yo?",
+  "v": "9ae501242c64",
+  "who": "voz"
+ },
+ "fbbeddbd": {
+  "d": 3.29,
+  "e": "02981167487478889821494200479511574115652388994665313896322100994211876966653100",
+  "f": "fbbeddbd.mp3",
+  "oido": "Se acabaron las sorpresas el día del bolo. Por fin.",
+  "qa": 1.0,
+  "say": "¡Se acabaron las sorpresas el día del bolo! ¡Por fin!",
+  "v": "086e83511174",
+  "who": "bateria"
+ },
+ "fe891e69": {
+  "d": 3.43,
+  "e": "000049932887710199638885321000000000742861167656894111797357930692177466786432110000",
+  "f": "fe891e69.mp3",
+  "oido": "Y Betulbi, eso que es un grupo coreano.",
+  "qa": 0.78,
+  "say": "¿Y be tu bi? ¿Eso qué es, un grupo coreano?",
+  "v": "9ba07b545abf",
+  "who": "bateria"
+ }
+}
