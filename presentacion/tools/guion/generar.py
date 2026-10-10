@@ -662,7 +662,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
   <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg);opacity:.35"></div>
   <span class="tag">Escena post-créditos · Domingo, 03:12</span>
   ''' + dlg(m('brais', '¿Ya se ha acabado la peli? 🍿', '03:12', say='[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?'),
-            m('iago', 'La app ya tiene un apartado para dividir gastos.', '03:12', say='[sighs] La app ya tiene un apartado para dividir gastos, Brais. Lo hice pensando en ti.'),
+            m('iago', 'Dividir gastos está en mi lista de pendientes.', '03:12', say='[sighs] Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.'),
             m('alvaro', '¡Pues que lo pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!')) + '''
 </section>
 ''')

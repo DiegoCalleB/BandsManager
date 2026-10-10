@@ -29,6 +29,25 @@
     var v = document.createElement('div'); v.id = 'vineta'; v.setAttribute('aria-hidden', 'true'); stage.appendChild(v);
   }
 
+  // Subtítulos (tecla C, de «captions»): en modo película el chat no se ve, así que se puede leer abajo lo que dice quien habla
+  var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
+  if (stage) stage.appendChild(sub);
+  var subtitular = function () {
+    var li = document.querySelector('.slide.active .dlg li.habla');
+    var txt = li && li.querySelector('.txt'), nom = li && window.REPARTO && window.REPARTO[li.dataset.who];
+    if (!txt) { if (sub.classList.contains('on')) sub.classList.remove('on'); return; }
+    sub.style.setProperty('--c', nom ? nom.color : '#ffd596');
+    sub.innerHTML = ''; var b = document.createElement('b'); b.textContent = nom ? nom.nombre : ''; sub.appendChild(b);
+    sub.appendChild(document.createTextNode(txt.textContent));
+    sub.classList.add('on');
+  };
+  addEventListener('voz', subtitular);
+  new MutationObserver(function () { if (sub.classList.contains('on') && !document.querySelector('.slide.active .dlg li.habla')) sub.classList.remove('on'); })
+    .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+  addEventListener('keydown', function (e) {
+    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(e.target.tagName)) body.classList.toggle('subs');
+  });
+
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });
   addEventListener('voz', despertar);
   document.addEventListener('visibilitychange', function () { if (document.hidden) bgm.pause(); else despertar(); });
