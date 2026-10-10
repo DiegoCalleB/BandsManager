@@ -18,16 +18,24 @@
    Si cambias un músico o su voz, vuelve a ejecutarlo: solo regenera las frases que han cambiado.
    - motor: 'kokoro' (sid 29 em_alex, 53 em_santa, 28 ef_dora) o 'piper' (modelo es_ES-davefx-medium,
      es_ES-sharvard-medium con sid 0 hombre / 1 mujer)
-   - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno */
+   - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno
+
+   Movimiento (`mov`): cómo se mueve el personaje cuando habla (su retrato sale en grande en un hueco libre de la
+   diapositiva y se mueve al ritmo de su voz): 'bombo' (rebota, como un batería) · 'diva' (se balancea) ·
+   'cabeceo' (headbang) · 'cool' (asiente tranquilo) · 'calma' (por defecto). Si cambia el músico, se cambia aquí. */
 (function () {
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
+                mov: 'cool',
                 tts: { motor: 'kokoro', sid: 29, tono: 0, vel: 1.0 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
+                mov: 'bombo',
                 tts: { motor: 'kokoro', sid: 53, tono: 0, vel: 1.02 } },
     voz:      { nombre: 'Xandre',  rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
+                mov: 'diva',
                 tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: 1, vel: 1.0 } },
     guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
+                mov: 'cabeceo',
                 tts: { motor: 'piper', modelo: 'es_ES-davefx-medium', sid: 0, tono: 0, vel: 1.0 } },
     manager:  { nombre: 'Manager', rol: 'Os Herdeiros do Código', cargo: 'Manager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
                 tts: { motor: 'kokoro', sid: 29, tono: -3, vel: 0.95, efecto: 'telefono' } },
@@ -79,6 +87,11 @@
   // 2) Fotos del reparto
   document.querySelectorAll('img[data-foto]').forEach(function (img) {
     var m = R[img.dataset.foto]; if (m && m.foto) img.src = m.foto;
+  });
+
+  // Cada elemento hablado lleva el movimiento de su personaje (lo usa styles.css)
+  document.querySelectorAll('[data-who]').forEach(function (el) {
+    var m = R[el.dataset.who]; if (m && m.mov) el.dataset.mov = m.mov;
   });
 
   // 3) Mensajes de chat: <li data-who="clave">texto</li> → avatar + burbuja con «Nombre · rol»

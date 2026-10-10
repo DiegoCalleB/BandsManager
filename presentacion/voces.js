@@ -48,6 +48,55 @@
     var slide = el.closest('.slide'); if (slide) slide.style.removeProperty('--vu');
   }
 
+  // Plató: el que habla en el chat sale en grande en un hueco libre de la diapositiva y se mueve a su manera.
+  // El hueco se busca midiendo lo que hay en pantalla: así no tapa texto aunque cambie el guion o el reparto.
+  var OBST = 'li, h1, h2, h3, p, img, figure, svg, video, canvas, table, pre, .tag, .sheet, .ft-shot, .qrcard, .cartel, .paperwrap, ' +
+    '.bs-grid, .biz-cols, .tech-vis, .scene-foot, .bs-foot, .fin-crowd, .enrol, .act-msg, .rm-say, .react';
+  function hueco(slide) {
+    if (slide._hueco !== undefined) return slide._hueco;
+    var st = slide.getBoundingClientRect(), k = st.width / 1920 || 1, obs = [];
+    slide.querySelectorAll(OBST).forEach(function (e) {
+      if (e.closest('.foco, .scene-bg, .hero-bg, [class*="-bg"]')) return;
+      var r = e.getBoundingClientRect();
+      var o = { x: (r.left - st.left) / k, y: (r.top - st.top) / k, w: r.width / k, h: r.height / k };
+      if (o.w < 4 || o.h < 4 || o.w * o.h > 1920 * 1080 * 0.6) return;
+      obs.push(o);
+    });
+    var libre = function (x, y, t) {
+      return obs.every(function (o) { return x + t + 24 < o.x || x - 24 > o.x + o.w || y + t + 24 + 40 < o.y || y - 24 > o.y + o.h; });
+    };
+    slide._hueco = null;
+    [230, 190, 150, 120].some(function (t) {
+      for (var y = 1080 - 78 - t - 40; y >= 280; y -= 30) {
+        for (var x = 1920 - 70 - t; x >= 60; x -= 30) {
+          if (libre(x, y, t)) { slide._hueco = { x: x, y: y, t: t }; return true; }
+        }
+      }
+      return false;
+    });
+    return slide._hueco;
+  }
+  function foco(el) {
+    var slide = el.closest('.slide'), m = window.REPARTO && window.REPARTO[el.dataset.who];
+    if (!slide || document.body.classList.contains('scroll')) return;
+    var h = m && m.foto && hueco(slide);
+    var f = slide.querySelector('.foco');
+    if (!h) { if (f) f.classList.remove('in'); return; }
+    if (!f) {
+      f = document.createElement('div'); f.className = 'foco'; f.setAttribute('aria-hidden', 'true');
+      f.innerHTML = '<img alt=""><b></b>'; slide.appendChild(f);
+    }
+    if (f.dataset.who === el.dataset.who && f.classList.contains('in')) return;
+    f.classList.remove('in'); void f.offsetWidth; // reinicia la entrada si cambia el que habla
+    f.dataset.who = el.dataset.who; f.dataset.mov = m.mov || 'calma';
+    f.style.cssText = '--c:' + m.color + ';--t:' + h.t + 'px;left:' + h.x + 'px;top:' + h.y + 'px';
+    f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.nombre + ' · ' + m.rol;
+    f.classList.add('in');
+  }
+  function sinfoco(slide) {
+    var f = slide && slide.querySelector('.foco'); if (f) { f.classList.remove('in'); delete f.dataset.who; }
+  }
+
   function hablar(el, fin) {
     var who = el.dataset.who, say = el.dataset.say || '';
     var m = manifest[fnv(who + '|' + say)];
@@ -57,6 +106,7 @@
     // la frase anterior pudo quedar con la boca abierta si la siguiente arrancó antes de que acabara
     document.querySelectorAll('.habla').forEach(function (e) { if (e !== el) { e.classList.remove('habla'); callar(e); } });
     el.classList.add('habla');
+    if (el.matches('.dlg li')) foco(el);
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
       audio.onended = acabar; audio.onerror = function () { leer(); };
@@ -90,18 +140,20 @@
     try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (_) { /* sin síntesis */ }
     cancelAnimationFrame(boca);
     document.querySelectorAll('.habla, .typing').forEach(function (e) { e.classList.remove('habla', 'typing'); callar(e); });
+    document.querySelectorAll('.foco.in').forEach(function (f) { f.classList.remove('in'); delete f.dataset.who; });
   }
 
   // Habla la diapositiva entera: cada frase se muestra (mostrar) justo cuando empieza a sonar
   function play(slide, mostrar, filtro, alFinal) {
     stop();
     var id = ++run;
+    slide._hueco = undefined; // se vuelve a medir el hueco libre (puede haber cambiado el tamaño de la ventana)
     var cola = Array.prototype.slice.call(slide.querySelectorAll('[data-who][data-say]'));
     if (filtro) cola = cola.filter(filtro);
     var i = 0;
     var siguiente = function () {
       if (id !== run) return;
-      if (i >= cola.length) { if (alFinal) alFinal(); return; }
+      if (i >= cola.length) { timer = setTimeout(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
       var el = cola[i++];
       var luego = function () { if (id === run) timer = setTimeout(siguiente, 40); };
       if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego); return; }
