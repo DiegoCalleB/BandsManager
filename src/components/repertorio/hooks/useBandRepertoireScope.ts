@@ -1,11 +1,10 @@
 import type { User } from "../../../types";
 /**
- * Aislamiento por banda de los datos de plantilla: identidad normalizada de la banda, roster real y saneado de canciones y setlists de ejemplo ajenos.
+ * Identidad normalizada de la banda, roster real y saneado estructural de canciones y setlists.
  * Extraído de RepertorioSetlists.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
  
 import React,{ useMemo } from "react";
-import { BAKANDEYA_DEMO_MEMBERS } from "../../../config/defaultRepertoire";
 import { Setlist,Song } from "../../../types";
 import { BandMemberOption,resolveBandMembers } from "../../../utils/repertorioUtils";
 
@@ -16,61 +15,27 @@ export interface BandRepertoireScopeParams {
 }
 
 /**
- * Aislamiento por banda de los datos de plantilla: identidad normalizada de la banda, roster real y saneado de canciones y setlists de ejemplo ajenos.
+ * Identidad normalizada de la banda, roster real y saneado estructural de canciones y setlists.
  * @param params Estado y callbacks del contenedor ({@link BandRepertoireScopeParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
 export function useBandRepertoireScope({ bandId, bandUsers }: BandRepertoireScopeParams) {
   const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
-  const isBakandeya = cleanBand === "bakandeya";
-  const isMasterOfPrompts = cleanBand === "master-of-prompts";
 
-  // Plantilla de Bakandeya solo para la propia Bakandeya; el resto de bandas ven a sus
-  // miembros reales (bandUsers, ya filtrados por banda en el servidor) y nunca el roster
-  // de otra banda — este mismo bug (ver MemberNotesModal/PdfExportModal/SongModal más abajo)
-  // hacía que cualquier banda viera hardcodeados los músicos de Bakandeya en"Repertorios".
-  const bandRosterMembers: BandMemberOption[] = useMemo(() => {
-    if (isBakandeya) return BAKANDEYA_DEMO_MEMBERS;
-    return resolveBandMembers(bandUsers);
-  }, [isBakandeya, bandUsers]);
+  // El roster sale siempre de los miembros reales de la banda (bandUsers, ya filtrados por
+  // banda en el servidor): ninguna banda lleva una plantilla de músicos embebida.
+  const bandRosterMembers: BandMemberOption[] = useMemo(() => resolveBandMembers(bandUsers), [bandUsers]);
 
-  // Helper to filter out template songs for non-Bakandeya bands
+  // El servidor ya aísla canciones y setlists por banda; aquí solo se descartan entradas mal formadas.
   const sanitizeBandSongs = React.useCallback(
-    (rawList: Song[]): Song[] => {
-      if (!Array.isArray(rawList)) return [];
-      if (isBakandeya) return rawList;
-      return rawList.filter((s) => {
-        if (!s || typeof s !== "object") return false;
-        const sId = (s.id || "").toLowerCase();
-        if (sId.startsWith("mop-song-") && isMasterOfPrompts) return true;
-        if (sId.startsWith("sample-track-")) return true;
-        if (
-          sId.startsWith("song-cm-") ||
-          /^song-[1-8]$/.test(sId) ||
-          sId.startsWith("live_song_")
-        ) {
-          return false;
-        }
-        return true;
-      });
-    },
-    [isBakandeya, isMasterOfPrompts],
+    (rawList: Song[]): Song[] => (Array.isArray(rawList) ? rawList.filter((s) => s && typeof s === "object") : []),
+    [],
   );
 
   const sanitizeBandSetlists = React.useCallback(
-    (rawList: Setlist[]): Setlist[] => {
-      if (!Array.isArray(rawList)) return [];
-      if (isBakandeya) return rawList;
-      return rawList.filter((sl) => {
-        if (!sl || typeof sl !== "object") return false;
-        const slId = (sl.id || "").toLowerCase();
-        if (slId.startsWith("setlist-sample-")) return true;
-        if (slId === "setlist-1" || slId === "setlist-2") return false;
-        return true;
-      });
-    },
-    [isBakandeya],
+    (rawList: Setlist[]): Setlist[] => (Array.isArray(rawList) ? rawList.filter((sl) => sl && typeof sl === "object") : []),
+    [],
   );
 
-  return { cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists, bandRosterMembers };
+  return { cleanBand, sanitizeBandSongs, sanitizeBandSetlists, bandRosterMembers };
 }

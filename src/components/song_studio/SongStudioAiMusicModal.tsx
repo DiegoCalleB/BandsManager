@@ -57,7 +57,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
           lyrics:
             song?.notasInternas ||
             song?.titulo ||
-            "Bakandeya independent spirit",
+            "Independent spirit",
         }),
       });
 

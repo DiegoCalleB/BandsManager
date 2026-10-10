@@ -496,7 +496,7 @@ app.get("/api/state", async (req, res) => {
   try {
     const user = getUserFromRequest(req, loadState);
     // Antes, sin sesión válida (o con sesión pero sin banda asignada), esta ruta devolvía en
-    // silencio los datos reales de Bakandeya (leads, conciertos, fans con datos RGPD, etc.) a
+    // silencio los datos reales de otra banda (leads, conciertos, fans con datos RGPD, etc.) a
     // cualquiera. Es la ruta que alimenta toda la app: hay que exigir sesión y banda de verdad.
     if (!user) {
       return res.status(401).json({ error: "No autorizado. Inicia sesión para continuar." });

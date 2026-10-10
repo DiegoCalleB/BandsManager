@@ -27,5 +27,5 @@ Se mantiene el contrato público (`AgentAutonomySettingsModal`, `DAYS_OF_WEEK` y
 - El efecto de carga de auditoría y el de carga de configuración llevan un `eslint-disable-next-line react-hooks/set-state-in-effect` justificado.
 
 ## Defectos preexistentes detectados y NO corregidos
-- `useAutonomyConfig` guarda la configuración en `localStorage` con la clave `bakandeya_agent_autonomy`, sin `band_id` (AGENTS.md §2.5). La leen otros módulos mediante el evento `autonomy-settings-changed`, así que no se cambia sin migrarlos; el test de seguridad lo registra como excepción única.
+- `useAutonomyConfig` guarda la configuración en `localStorage` con la clave `bandmanager_agent_autonomy`, sin `band_id` (AGENTS.md §2.5). La leen otros módulos mediante el evento `autonomy-settings-changed`, así que no se cambia sin migrarlos; el test de seguridad lo registra como excepción única.
 - `useAutonomyAuditLogs` llama a `/api/agent-logs?band_id=…` con `fetch` directo y el id desde el cliente; el servidor debe resolver la banda con `getTargetBandId` e ignorar el parámetro (AGENTS.md §2.1).

@@ -330,7 +330,7 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
       }
 
       // 1. Persist Autonomy
-      localStorage.setItem("bakandeya_agent_autonomy", JSON.stringify(config));
+      localStorage.setItem("bandmanager_agent_autonomy", JSON.stringify(config));
       window.dispatchEvent(new Event("autonomy-settings-changed"));
       await api.updateAutonomyConfig({
         ...config,

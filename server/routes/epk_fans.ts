@@ -9,7 +9,6 @@ import {
   requireAuth,
   getEpkConfigForBand,
   getAutonomyConfigForBand,
-  BAKANDEYA_BAND_ID,
 } from '../state.js';
 import { EPKConfig, Fan } from '../../src/types.js';
 import {
@@ -198,10 +197,7 @@ router.put('/epk', requireAuth, async (req, res) => {
       state.epkConfigsByBand[k] = newEpkConfig;
     });
 
-    if (
-      cleanUserBandId === 'bakandeya' ||
-      (user?.band_id && cleanBandId(user.band_id) === cleanUserBandId)
-    ) {
+    if (user?.band_id && cleanBandId(user.band_id) === cleanUserBandId) {
       state.epkConfig = newEpkConfig;
     }
 
@@ -455,12 +451,6 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
         };
       }
     }
-    if (cleanBandId === 'bakandeya' && state.epkConfig) {
-      state.epkConfig = {
-        ...state.epkConfig,
-        traducciones: traduccionesActualizadas,
-      };
-    }
     saveState(state);
 
     console.log(`[EPK traducir] ${bandId} -> ${idioma} (hash ${hashActual})`);
@@ -490,8 +480,7 @@ router.get('/public/epk', async (req, res) => {
     }
     const rawBandId = decodeBandId(rawParam);
     const cleanBandId = rawBandId.toLowerCase().replace(/^(band|reg)-/, '');
-    const reqBandId =
-      cleanBandId === 'bakandeya' ? BAKANDEYA_BAND_ID : `band-${cleanBandId}`;
+    const reqBandId = `band-${cleanBandId}`;
 
     // Auto-registrar telemetría de visita al EPK si viene asociado a un lead. SOLO con token
     // firmado (el de los enlaces de los correos): antes bastaba un `?leadId=` cualquiera para
@@ -557,7 +546,6 @@ router.get('/public/epk', async (req, res) => {
 
           const { invalidateBandStateCache } = await import('../db/sync.js');
           invalidateBandStateCache(leadToUpdate.band_id);
-          invalidateBandStateCache('bakandeya');
         }
       } catch (visitErr) {
         console.warn('Error al registrar visita al EPK para lead:', targetLeadId, visitErr);
@@ -642,9 +630,7 @@ router.get('/public/epk', async (req, res) => {
         const sBand = (s.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
-        return (
-          sBand === cleanBandId || (!s.band_id && cleanBandId === 'bakandeya')
-        );
+        return sBand === cleanBandId;
       });
     }
 

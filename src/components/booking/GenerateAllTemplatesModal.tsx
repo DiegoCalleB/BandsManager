@@ -193,7 +193,7 @@ export function GenerateAllTemplatesModal({
               placeholder={
                 isCampaign
                   ? 'Ejemplo: Presentación de nuevo disco con escenografía de directo especial. Queremos cerrar fines de semana en salas medianas y festivales de otoño. Ofrecemos formato completo con 4 músicos y opción de colaborar con bandas locales para compartir gastos de sala.'
-                  : 'Ejemplo: Somos Bakandeya, directo de música mestizaje con loop station, electrónica vocal, violín solista, handpan y percusión reciclada. 4 miembros en escena, energía de festival y formato live performance...'
+                  : 'Ejemplo: Somos [nombre de la banda], directo de música mestizaje con loop station, electrónica vocal, violín solista, handpan y percusión reciclada. 4 miembros en escena, energía de festival y formato live performance...'
               }
             />
           </div>

@@ -22,7 +22,7 @@ vi.mock('../../state.js', () => ({
     users: [
       { name: 'Paco', instrument: 'Guitarra', band_id: 'band-ruta-66' },
       { name: 'Ana', instrument: 'Batería', band_id: 'band-ruta-66' },
-      { name: 'Raúl', instrument: 'Violín', band_id: 'band-bakandeya' },
+      { name: 'Raúl', instrument: 'Violín', band_id: 'band-ejemplo' },
     ],
     bands: [],
   }),
@@ -262,7 +262,7 @@ describe('POST /api/analyze-video-highlights', () => {
     expect(prompt).toContain('Guitarra, Batería');
     // El violinista es de otra banda: no puede aparecer en el contexto de esta.
     expect(prompt).not.toContain('Violín');
-    expect(prompt).not.toContain('Bakandeya');
+    expect(prompt).not.toContain('Banda Ejemplo');
   });
 
   it('usa la duración real del vídeo, no la duración deseada del clip', async () => {

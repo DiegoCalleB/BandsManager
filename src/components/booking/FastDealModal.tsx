@@ -96,7 +96,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
     // Fetch existing deal if any
     const fetchExistingDeal = async () => {
       try {
-        const token = localStorage.getItem('bakandeya_token');
+        const token = localStorage.getItem('bandmanager_token');
         const res = await fetch(`/api/deals/lead/${lead.id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
@@ -143,7 +143,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
     setErrorMsg(null);
 
     try {
-      const token = localStorage.getItem('bakandeya_token');
+      const token = localStorage.getItem('bandmanager_token');
       const res = await fetch('/api/deals', {
         method: 'POST',
         headers: {

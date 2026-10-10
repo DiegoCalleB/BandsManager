@@ -45,7 +45,7 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('bakandeya_token');
+      const token = localStorage.getItem('bandmanager_token');
       const activeBandId = currentUser?.band_id || '';
       const response = await fetch('/api/chat', {
         method: 'POST',

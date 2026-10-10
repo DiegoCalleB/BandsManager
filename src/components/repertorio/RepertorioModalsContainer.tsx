@@ -58,7 +58,6 @@ export interface RepertorioModalsContainerProps {
   // PdfExportModal
   showPdfPreview: boolean;
   setShowPdfPreview: (show: boolean) => void;
-  isBakandeya: boolean;
   bandLogoUrl?: string;
   activeSetlist: Setlist | null;
   activeSetlistMetrics: any;
@@ -204,7 +203,6 @@ export const RepertorioModalsContainer: React.FC<RepertorioModalsContainerProps>
   handleSaveShowItem,
   showPdfPreview,
   setShowPdfPreview,
-  isBakandeya,
   bandLogoUrl,
   activeSetlist,
   activeSetlistMetrics,
@@ -320,11 +318,7 @@ export const RepertorioModalsContainer: React.FC<RepertorioModalsContainerProps>
       {/* PDF Preview Modal */}
       <PdfExportModal
         bandMembers={bandRosterMembers}
-        bandLogoUrl={
-          isBakandeya
-            ? "/logo_bakandeya_bueno_sin_fondo.png"
-            : bandLogoUrl || ""
-        }
+        bandLogoUrl={bandLogoUrl || ""}
         isOpen={showPdfPreview}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}

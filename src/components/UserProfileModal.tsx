@@ -277,7 +277,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
+          localStorage.setItem("bandmanager_user", JSON.stringify(res.user));
           onUpdateUser(res.user as User);
         }
         if (res.availableBands && Array.isArray(res.availableBands)) {
@@ -347,7 +347,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
       const res = await api.leaveBand(targetBandId);
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
+          localStorage.setItem("bandmanager_user", JSON.stringify(res.user));
           onUpdateUser(res.user as User);
           setSelectedMainBandId(
             res.user.main_band_id || res.user.band_id || "",
@@ -401,7 +401,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("bakandeya_token");
+      const token = localStorage.getItem("bandmanager_token");
       if (
         selectedMainBandId &&
         selectedMainBandId !==
@@ -1027,7 +1027,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 ) : (
                   <div className="flex items-center justify-between p-2 rounded-[var(--r-s)] bg-[var(--surface)]">
                     <span className="text-xs font-bold text-[var(--ink)]">
-                      {activeBandName || currentUser.bandName || "BAKANDEYA"}
+                      {activeBandName || currentUser.bandName || "Banda"}
                     </span>
                     <span className="text-micro font-sans text-[var(--acc)]">
                       Principal
@@ -1647,7 +1647,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                                       plan: plan.id,
                                     };
                                     localStorage.setItem(
-                                      "bakandeya_user",
+                                      "bandmanager_user",
                                       JSON.stringify(updatedUser),
                                     );
                                     if (onUpdateUser)

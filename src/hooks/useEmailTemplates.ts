@@ -260,7 +260,7 @@ Oficina de Producción — {bandName}`);
         const countNote =
           data.feedbackCountUsed > 0
             ? `Aplicado aprendizaje de ${data.feedbackCountUsed} valoraciones previas del mánager.`
-            : 'Refrescada con pautas de estilo de Bakandeya.';
+            : 'Refrescada con pautas de estilo de la banda.';
         const ratingsAppliedNote =
           templateToneRating > 0 || templateContentRating > 0
             ? ` (Estrellitas aplicadas: Tono ${templateToneRating || '-'}/5, Contenido ${templateContentRating || '-'}/5)`

@@ -460,7 +460,7 @@ describe('formatReplyFewShotForPrompt', () => {
 describe('buildIndexableSubjectLine - Formato de asunto B2B indexable', () => {
   it('genera formato estándar [FECHA/RANGO] - [CIUDAD] - [BANDA] ([GÉNERO / REF]) para cold outreach', () => {
     const dna = {
-      bandName: 'Bakandeya',
+      bandName: 'Banda Ejemplo',
       genero: 'Balkan Ska Fusion',
       artistasReferencia: 'Gogol Bordello, Emir Kusturica',
     } as any;
@@ -475,12 +475,12 @@ describe('buildIndexableSubjectLine - Formato de asunto B2B indexable', () => {
     };
 
     const asunto = buildIndexableSubjectLine({ bandDna: dna, lead, activeCampaign });
-    expect(asunto).toBe('[14/11 o 21/11] - Madrid - Bakandeya (Balkan Ska Fusion / ref: Gogol Bordello)');
+    expect(asunto).toBe('[14/11 o 21/11] - Madrid - Banda Ejemplo (Balkan Ska Fusion / ref: Gogol Bordello)');
   });
 
   it('genera formato de respuesta Re: cuando isRespuesta es true', () => {
     const dna = {
-      bandName: 'Bakandeya',
+      bandName: 'Banda Ejemplo',
     } as any;
 
     const lead = {
@@ -489,18 +489,18 @@ describe('buildIndexableSubjectLine - Formato de asunto B2B indexable', () => {
     };
 
     const asunto = buildIndexableSubjectLine({ bandDna: dna, lead, isRespuesta: true });
-    expect(asunto).toBe('Re: Concierto Bakandeya en Sala Capitol');
+    expect(asunto).toBe('Re: Concierto Banda Ejemplo en Sala Capitol');
   });
 });
 
 describe('buildAdvancingSystemPrompt - Fase 4 Advancing y Producción', () => {
   it('genera prompt estructurado de logística y producción con horarios y rider', () => {
     const dna = {
-      bandName: 'Bakandeya',
+      bandName: 'Banda Ejemplo',
       numMusicos: 6,
       instrumentacion: 'Violín, bajo, sintes, batería, voz',
       montajeRapido: 'Montaje en 30 minutos',
-      epkUrl: 'https://bandmanager.io/epk/bakandeya',
+      epkUrl: 'https://bandmanager.io/epk/ejemplo',
     } as any;
 
     const lead = {
@@ -530,7 +530,7 @@ describe('buildAdvancingSystemPrompt - Fase 4 Advancing y Producción', () => {
 describe('buildEnhancedPitchSystemPrompt - Reglas Anti-Detección y Anti-AI Slop', () => {
   it('incluye prohibición de guiones largos, burstiness y lista negra expandida', () => {
     const dna = {
-      bandName: 'Bakandeya',
+      bandName: 'Banda Ejemplo',
       genero: 'Mestizaje Balkan',
       artistasReferencia: 'La Pegatina, Gogol Bordello',
     } as any;

@@ -177,9 +177,6 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     epkData?.bandName ||
     epkData?.registeredBand?.nombre_banda ||
     dict.bandaPorDefecto;
-  const isBakandeya =
-    (epkData?.bandId || "").includes("bakandeya") ||
-    bandName.toLowerCase().includes("bakandeya");
 
   // Etiquetas fijas de la interfaz. El nombre de la banda y el año siempre están disponibles
   // como variables, así que cualquier cadena del diccionario puede usar {bandName} y {year}.
@@ -200,8 +197,8 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
   }
 
   const config: EPKConfig = epkData?.epkConfig || {
-    biografia: isBakandeya ? t("bioPorDefectoBakandeya") : t("bioPorDefecto"),
-    logoUrl: isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : "",
+    biografia: t("bioPorDefecto"),
+    logoUrl: "",
     bandPhotos: [],
     riderTecnico: t("riderPorDefecto"),
     enlacesRedes: {},
@@ -209,9 +206,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
     temasDestacadosIds: [],
   };
 
-  const displayLogo =
-    config.logoUrl ||
-    (isBakandeya ? "/logo_bakandeya_bueno_sin_fondo.png" : null);
+  const displayLogo = config.logoUrl || null;
 
   // El endpoint público devuelve los temas tal cual salen de Supabase (snake_case), pero el
   // resto de la app usa camelCase. Sin normalizar,'albumDisco' salía undefined y caía al
@@ -226,7 +221,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
 
   // Un enlace de artista/álbum de Spotify se puede incrustar cambiando la ruta por /embed/.
   // Se exigen los 22 caracteres del ID real: si no, un enlace de relleno como
-  //'/artist/bakandeya' generaba un iframe que no carga y dejaba un hueco vacío en la página.
+  //'/artist/mi-banda' generaba un iframe que no carga y dejaba un hueco vacío en la página.
   const spotifyEmbedUrl = (() => {
     const raw = config.enlacesRedes?.spotify || "";
     const match = raw.match(
@@ -1199,10 +1194,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
           <p
             className={`mt-6 ${styles.heroSubtitle} text-base sm:text-xl max-w-2xl leading-snug`}
           >
-            {contenido.textoPie ||
-              (isBakandeya
-                ? t("lemaPorDefectoBakandeya")
-                : t("lemaPorDefecto"))}
+            {contenido.textoPie || t("lemaPorDefecto")}
           </p>
 
           {config.enlacesRedes && (

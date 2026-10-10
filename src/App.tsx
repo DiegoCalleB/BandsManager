@@ -271,9 +271,9 @@ export default function App() {
     useState<boolean>(false);
 
   // Antes, sin banda activa (cuenta nueva sin banda asignada todavía, o un estado transitorio),
-  // se caía en'band-bakandeya' en silencio y la app operaba -en lectura y escritura- sobre los
+  // se caía en una banda por defecto en silencio y la app operaba -en lectura y escritura- sobre los
   // datos reales de esa banda. Sin id de banda, cleanActiveBandId queda vacío (no coincide con
-  //'bakandeya') y el resto de componentes deben tratarlo como "sin banda seleccionada".
+  // ninguna banda) y el resto de componentes deben tratarlo como "sin banda seleccionada".
   const currentActiveBandId = currentUser?.band_id || "";
   const cleanActiveBandId = currentActiveBandId.replace(/^(band|reg)-/, "");
   const activeBandFromList = (availableBands || []).find(
@@ -786,7 +786,7 @@ export default function App() {
 
   // Active Theme State
   const [currentTheme, setCurrentTheme] = useState<ThemeName>(() => {
-    const saved = localStorage.getItem("bakandeya_theme") as ThemeName;
+    const saved = localStorage.getItem("bandmanager_theme") as ThemeName;
     // Un tema guardado que ya no existe (p. ej. las paletas analog/legato/spectrum que llegaron a
     // estar en main) cae al por defecto en vez de dejar `colors` sin definir.
     if (!saved || saved === ("stitch_light" as any) || !(saved in THEMES)) {
@@ -892,7 +892,7 @@ export default function App() {
   // Persist Theme Selection - sincroniza tanto currentTheme como data-theme
   const handleThemeChange = (theme: ThemeName) => {
     setCurrentTheme(theme);
-    localStorage.setItem("bakandeya_theme", theme);
+    localStorage.setItem("bandmanager_theme", theme);
     // Actualiza data-theme para que Espectro sepa qué tema usar
     const resolvedTheme = theme === "classic" ? "classic" : "light";
     document.documentElement.setAttribute("data-theme", resolvedTheme);
@@ -914,13 +914,7 @@ export default function App() {
 
   const activeBandConcerts = React.useMemo(() => {
     return concerts.filter((c) => {
-      if (!c.band_id && !c.bandName)
-        return isSameBand(
-          currentActiveBandId,
-          "band-bakandeya",
-          "",
-          currentActiveBandName,
-        );
+      if (!c.band_id && !c.bandName) return false;
       return isSameBand(
         c.band_id,
         currentActiveBandId,
@@ -932,13 +926,7 @@ export default function App() {
 
   const activeBandRehearsals = React.useMemo(() => {
     return rehearsals.filter((r) => {
-      if (!r.band_id && !r.bandName)
-        return isSameBand(
-          currentActiveBandId,
-          "band-bakandeya",
-          "",
-          currentActiveBandName,
-        );
+      if (!r.band_id && !r.bandName) return false;
       return isSameBand(
         r.band_id,
         currentActiveBandId,
@@ -1158,8 +1146,8 @@ export default function App() {
       (navigator as unknown as { standalone?: boolean }).standalone === true;
     const yaRegistrado =
       localStorage.getItem("bandmanager_registered_user") === "true" ||
-      localStorage.getItem("bakandeya_remember_me") === "true" ||
-      Boolean(localStorage.getItem("bakandeya_user"));
+      localStorage.getItem("bandmanager_remember_me") === "true" ||
+      Boolean(localStorage.getItem("bandmanager_user"));
     return !raiz || !!search || !!hash || instalada || yaRegistrado;
   });
 
@@ -1170,8 +1158,8 @@ export default function App() {
       if (p === "/" || p === "/index.html") {
         const yaRegistrado =
           localStorage.getItem("bandmanager_registered_user") === "true" ||
-          localStorage.getItem("bakandeya_remember_me") === "true" ||
-          Boolean(localStorage.getItem("bakandeya_user"));
+          localStorage.getItem("bandmanager_remember_me") === "true" ||
+          Boolean(localStorage.getItem("bandmanager_user"));
         if (!yaRegistrado) {
           setVerLogin(false);
         }
@@ -2561,7 +2549,7 @@ export default function App() {
               onClose={() => setShowUserProfileModal(false)}
               onUpdateUser={(updated) => {
                 setCurrentUser(updated);
-                localStorage.setItem("bakandeya_user", JSON.stringify(updated));
+                localStorage.setItem("bandmanager_user", JSON.stringify(updated));
                 fetchState();
               }}
               isAdmin={isAdmin}

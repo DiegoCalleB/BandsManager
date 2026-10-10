@@ -88,6 +88,7 @@ import { hasModuleAccess } from '../../utils/planPermissions';
 import { openWhatsAppChat, getWhatsAppUrl, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Select, Textarea } from '../ui';
+import { escapeHtml } from '../../utils/escapeHtml';
 
 export interface CalendarSidebarLogisticsProps {
   colors: ThemeColors;
@@ -1111,7 +1112,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
                 const currentRb = allRoadbooks[selectedDateKey] || {
                   contactoPromotor: 'Manuel (Producción)',
                   telefonoPromotor: '+34 654 321 987',
-                  tecnicoSonido: 'FOH Bakandeya',
+                  tecnicoSonido: 'FOH',
                   hotelNombre: 'Hotel de Gira',
                   hotelDireccion: selectedConcert?.ciudad || 'Por confirmar',
                   cateringInfo: 'Cena tras prueba de sonido',
@@ -1191,7 +1192,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  <!DOCTYPE html>
  <html>
  <head>
- <title>Hoja de Ruta Bakandeya - ${selectedConcert ? selectedConcert.sala : 'Concierto'}</title>
+ <title>Hoja de Ruta - ${selectedConcert ? selectedConcert.sala : 'Concierto'}</title>
  <style>
  body { font-family: system-ui, -apple-system, sans-serif; margin: 30px; color: #111; line-height: 1.5; }
  h1 { font-size: 22px; margin: 0; text-transform:; color: #d97706; }
@@ -1209,7 +1210,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  <body>
  <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #f59e0b; padding-bottom:12px; margin-bottom:20px;">
  <div>
- <h1>Bakandeya — Hoja de Ruta de Gira</h1>
+ <h1>${escapeHtml(activeBandName)} — Hoja de Ruta de Gira</h1>
  <h2>${selectedConcert ? `${selectedConcert.sala} (${selectedConcert.ciudad})` : selectedEventTitle}</h2>
  </div>
  <div>
@@ -1276,7 +1277,7 @@ export function CalendarSidebarLogistics(props: CalendarSidebarLogisticsProps) {
  </div>
 
  <div class="footer">
- Documento Oficial de Gira • Generado por Bakandeya Band CRM
+ Documento Oficial de Gira • Generado por BandManager
  </div>
 
  <script>

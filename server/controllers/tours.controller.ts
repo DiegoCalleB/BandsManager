@@ -6,7 +6,7 @@ import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
 export const toursController = {
   async getTours(req: Request, res: Response) {
     // Las 4 rutas de este controller están detrás de requireAuth, así que band_id nunca debería
-    // faltar; si falta es un bug de sesión, no un caso a tolerar cayendo en band-bakandeya.
+    // faltar; si falta es un bug de sesión, no un caso a tolerar cayendo en una banda por defecto.
     const userBandId = (req as any).user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });

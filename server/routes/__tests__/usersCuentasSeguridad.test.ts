@@ -42,7 +42,7 @@ beforeEach(() => {
     users: [
       { id: 'u-atacante', username: 'mala', email: 'mala@x.com', role: 'leader', band_id: 'band-mala', passwordHash: 'h', salt: 's' },
       { id: 'u-victima', username: 'victima', email: 'v@x.com', role: 'leader', band_id: 'band-victima', passwordHash: 'hv', salt: 'sv' },
-      { id: 'u-admin', username: 'admin', email: 'admin@bandmanager.ai', role: 'admin', band_id: 'band-bakandeya', passwordHash: 'ha', salt: 'sa' },
+      { id: 'u-admin', username: 'admin', email: 'admin@bandmanager.ai', role: 'admin', band_id: 'band-ejemplo', passwordHash: 'ha', salt: 'sa' },
       { id: 'u-miembro', username: 'miembro', email: 'm@x.com', role: 'member', band_id: 'band-mala', activacion_pendiente: true, passwordHash: 'hm', salt: 'sm' },
     ],
     userBands: [{ id: 'ub-1', user_id: 'u-miembro', band_id: 'band-mala', role: 'member' }],
@@ -104,7 +104,7 @@ describe('plan de pago gratis', () => {
   });
 
   it('el admin de la plataforma sí puede (soporte, sobre sí mismo)', async () => {
-    const admin = { id: 'u-admin', username: 'admin', role: 'admin', band_id: 'band-bakandeya', allowedBandIds: [] };
+    const admin = { id: 'u-admin', username: 'admin', role: 'admin', band_id: 'band-ejemplo', allowedBandIds: [] };
     const r = await put('u-admin', { plan: 'de_gira', band_id: 'band-mala' }, admin);
     expect(r.code).toBeUndefined();
     expect(estado.registeredBands.find((b: any) => b.band_id === 'band-mala').plan).toBe('de_gira');

@@ -36,7 +36,7 @@ export function getDaysSinceContact(lead: Lead): number {
  * Genera una plantilla de seguimiento ultra-concisa (<50 palabras),
  * educada, cercana y profesional (The Gentle Nudge).
  */
-export function generateFollowupTemplate(lead: Lead, bandName: string = 'Bakandeya'): string {
+export function generateFollowupTemplate(lead: Lead, bandName: string = 'la banda'): string {
   const contactName = lead.contacto_nombre ? ` ${lead.contacto_nombre.trim()}` : '';
   const venue = lead.nombre_sala;
   return `Hola${contactName},\n\nTe escribí la semana pasada para consultar vuestra disponibilidad para la gira de ${bandName} en ${venue}.\n\nSeguimos cerrando fechas de la ruta por la zona y nos encantaría saber si tenéis algún hueco para incluir vuestra sala en la gira.\n\n¿Te viene bien que lo revisemos?\n\n¡Un abrazo!\nEquipo ${bandName}`;

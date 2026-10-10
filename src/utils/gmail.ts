@@ -26,8 +26,8 @@ provider.setCustomParameters({ prompt: 'select_account' });
 let isSigningIn = false;
 let cachedAccessToken: string | null = null;
 
-const STORAGE_TOKEN_KEY = 'bakandeya_gmail_token';
-const STORAGE_TOKEN_EXP_KEY = 'bakandeya_gmail_token_exp';
+const STORAGE_TOKEN_KEY = 'bandmanager_gmail_token';
+const STORAGE_TOKEN_EXP_KEY = 'bandmanager_gmail_token_exp';
 
 // Save token to localStorage for persistence across reloads/sessions
 const saveTokenToStorage = (token: string) => {
@@ -341,7 +341,7 @@ export function buildRawMimeMessage(
   }
   const subjectB64 = btoa(binarySubject);
 
-  const boundary = `====_Bakandeya_Boundary_${Date.now()}_====`;
+  const boundary = `====_BandManager_Boundary_${Date.now()}_====`;
 
   let rawMime = '';
 

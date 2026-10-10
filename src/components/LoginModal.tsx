@@ -92,14 +92,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
   // --- Remember Me State ---
   const [rememberMe, setRememberMe] = useState(() => {
-    return localStorage.getItem("bakandeya_remember_me") !== "false";
+    return localStorage.getItem("bandmanager_remember_me") !== "false";
   });
 
   // On mount, prefill username and emails if stored in localStorage
   useEffect(() => {
     const savedUser =
-      localStorage.getItem("bakandeya_remembered_username") ||
-      localStorage.getItem("bakandeya_last_login_email");
+      localStorage.getItem("bandmanager_remembered_username") ||
+      localStorage.getItem("bandmanager_last_login_email");
     if (savedUser) {
       setUsername(savedUser);
       setRegEmail(savedUser);
@@ -221,7 +221,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       if (data.token) {
-        localStorage.setItem("bakandeya_token", data.token);
+        localStorage.setItem("bandmanager_token", data.token);
         guardarCookieDeSesion(data.token);
       }
 
@@ -258,17 +258,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       // Handle Remember Me preference
-      localStorage.setItem("bakandeya_last_login_email", username.trim());
+      localStorage.setItem("bandmanager_last_login_email", username.trim());
       if (rememberMe) {
-        localStorage.setItem("bakandeya_remembered_username", username.trim());
-        localStorage.setItem("bakandeya_remember_me", "true");
+        localStorage.setItem("bandmanager_remembered_username", username.trim());
+        localStorage.setItem("bandmanager_remember_me", "true");
       } else {
-        localStorage.removeItem("bakandeya_remembered_username");
-        localStorage.setItem("bakandeya_remember_me", "false");
+        localStorage.removeItem("bandmanager_remembered_username");
+        localStorage.setItem("bandmanager_remember_me", "false");
       }
 
       if (data.token) {
-        localStorage.setItem("bakandeya_token", data.token);
+        localStorage.setItem("bandmanager_token", data.token);
         guardarCookieDeSesion(data.token);
       }
 
@@ -417,7 +417,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       if (data.token) {
-        localStorage.setItem("bakandeya_token", data.token);
+        localStorage.setItem("bandmanager_token", data.token);
         guardarCookieDeSesion(data.token);
       }
 
@@ -471,7 +471,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.token) {
-          localStorage.setItem("bakandeya_token", data.token);
+          localStorage.setItem("bandmanager_token", data.token);
           guardarCookieDeSesion(data.token);
           onLoginSuccess(data.user, data.token, data.availableBands);
           return;

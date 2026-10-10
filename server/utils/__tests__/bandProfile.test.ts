@@ -53,7 +53,7 @@ describe('baseHashtags', () => {
   });
 
   it('quita tildes y caracteres raros', () => {
-    expect(baseHashtags({ name: 'Bakandeya!'})[0]).toBe('#Bakandeya');
+    expect(baseHashtags({ name: 'Banda Ejemplo!'})[0]).toBe('#BandaEjemplo');
     expect(baseHashtags({ name: 'Música Rara' })[0]).toBe('#MusicaRara');
   });
 
@@ -129,7 +129,7 @@ describe('loadBandProfile', () => {
     users: [
       { name: 'Paco', instrument: 'Guitarra', band_id: 'band-ruta-66' },
       { name: 'Fer', instrument: 'Batería', band_id: 'band-ruta-66' },
-      { name: 'Otro', instrument: 'Violín', band_id: 'band-bakandeya' },
+      { name: 'Otro', instrument: 'Violín', band_id: 'band-ejemplo' },
     ],
     bands: [
       {

@@ -6,7 +6,6 @@
  react-hooks/exhaustive-deps
 */
 import { Dispatch,SetStateAction,useEffect } from "react";
-import { DEFAULT_SETLISTS,DEFAULT_SONGS } from "../../../config/defaultRepertoire";
 import { SAMPLER_SETLISTS,SAMPLER_SONGS } from "../../../config/sampleRepertoire";
 import { Setlist,SetlistShortcut,Song } from "../../../types";
 import { saveSetlistsToLocalStorageSafely,saveSongsToLocalStorageSafely } from "../../../utils/audioStorage";
@@ -20,7 +19,6 @@ export interface RepertorioPersistenceParams {
   bandId: string;
   cleanBand: string;
   sanitizeBandSongs: (rawList: Song[]) => Song[];
-  isBakandeya: boolean;
   sanitizeBandSetlists: (rawList: Setlist[]) => Setlist[];
   setSetlists: Dispatch<SetStateAction<Setlist[]>>;
   setActiveSetlistId: Dispatch<SetStateAction<string>>;
@@ -33,7 +31,7 @@ export interface RepertorioPersistenceParams {
  * @param params Estado y callbacks del contenedor ({@link RepertorioPersistenceParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, sanitizeBandSongs, isBakandeya, sanitizeBandSetlists, setSetlists, setActiveSetlistId, setlists, setCustomShortcuts }: RepertorioPersistenceParams) {
+export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, sanitizeBandSongs, sanitizeBandSetlists, setSetlists, setActiveSetlistId, setlists, setCustomShortcuts }: RepertorioPersistenceParams) {
   const toggleFavoriteSong = (songId: string) => {
     const target = songs.find((s) => s.id === songId);
     if (!target) return;
@@ -60,7 +58,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
   // Save changes to localStorage and Backend API
   const getHeaders = () => {
     const token =
-      localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+      localStorage.getItem("bandmanager_token") || localStorage.getItem("token") || "";
     const effectiveBandId = bandId || cleanBand;
     return {
       "Content-Type": "application/json",
@@ -81,9 +79,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
       setSongs(
         sanitizedS.length > 0
           ? sanitizedS
-          : isBakandeya
-            ? DEFAULT_SONGS
-            : SAMPLER_SONGS,
+          : SAMPLER_SONGS,
       );
 
       const savedSt = localStorage.getItem(keySt);
@@ -92,20 +88,18 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
       setSetlists(
         sanitizedSt.length > 0
           ? sanitizedSt
-          : isBakandeya
-            ? DEFAULT_SETLISTS
-            : SAMPLER_SETLISTS,
+          : SAMPLER_SETLISTS,
       );
       if (sanitizedSt.length > 0) {
         setActiveSetlistId(sanitizedSt[0].id);
       } else {
         setActiveSetlistId(
-          isBakandeya ? "setlist-1" : SAMPLER_SETLISTS[0]?.id || "",
+          SAMPLER_SETLISTS[0]?.id || "",
         );
       }
     } catch {
-      setSongs(isBakandeya ? DEFAULT_SONGS : SAMPLER_SONGS);
-      setSetlists(isBakandeya ? DEFAULT_SETLISTS : SAMPLER_SETLISTS);
+      setSongs(SAMPLER_SONGS);
+      setSetlists(SAMPLER_SETLISTS);
     }
 
     const fetchRepertorio = async () => {
@@ -124,9 +118,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
             setSongs(
               sanitized.length > 0
                 ? sanitized
-                : isBakandeya
-                  ? DEFAULT_SONGS
-                  : SAMPLER_SONGS,
+          : SAMPLER_SONGS,
             );
           }
         }
@@ -138,9 +130,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
             const finalSetlists =
               sanitized.length > 0
                 ? sanitized
-                : isBakandeya
-                  ? DEFAULT_SETLISTS
-                  : SAMPLER_SETLISTS;
+          : SAMPLER_SETLISTS;
             setSetlists(finalSetlists);
             if (finalSetlists.length > 0) {
               setActiveSetlistId((prev) =>
@@ -191,7 +181,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
     return () => {
       isCancelled = true;
     };
-  }, [bandId, cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists]);
+  }, [bandId, cleanBand, sanitizeBandSongs, sanitizeBandSetlists]);
 
   // Reintenta ediciones de setlist pendientes en cuanto el navegador recupera conexión, sin
   // esperar a que el usuario cierre y reabra la pestaña (que es cuando fetchRepertorio corre).

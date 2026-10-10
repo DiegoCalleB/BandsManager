@@ -85,21 +85,21 @@ export default function RepertorioSetlists({
     closeTutorial,
   } = useModuleTutorial("repertorio");
 
-  const { cleanBand, isBakandeya, sanitizeBandSongs, sanitizeBandSetlists, bandRosterMembers } = useBandRepertoireScope({ bandId, bandUsers });
+  const { cleanBand, sanitizeBandSongs, sanitizeBandSetlists, bandRosterMembers } = useBandRepertoireScope({ bandId, bandUsers });
 
   // Navigation tab inside module
   const [showPdfPreview, setShowPdfPreview] = useState(false);
   const { activeTab, catalogoViewMode, setCatalogoViewMode, handleTabChange } =
     useRepertorioTabs(view, onNavigate);
 
-  const { setlists, songs, setSongs, setSetlists } = useRepertorioData({ cleanBand, isBakandeya });
+  const { setlists, songs, setSongs, setSetlists } = useRepertorioData({ cleanBand });
 
   const { activeSetlist, setActiveSetlistId, setCustomShortcuts, newShortcutLabel, newShortcutIcon, setNewShortcutLabel, setNewShortcutIcon, setIsAddingShortcut, activeSetlistId, setPerformanceInitialMode, setPerformanceSetlistId, customShortcuts, isAddingShortcut, performanceSetlistId, performanceInitialMode } = useActiveSetlistState({ setlists });
   const [newShortcutMinutes, setNewShortcutMinutes] = useState<number>(1);
 
   const { handleSelectPlayerSong, setCurrentSong, setPlayerSongs, setPlayerIsPlaying, setIsPlayerPlaying, activePlayerSong, setActivePlayerSong, albumsList, handleShareSetlist, playerCurrentSong, isPlayerPlaying, handleShareSong, filteredSongs, catalogAlbumFilter, setCatalogAlbumFilter, catalogStatusFilter, setCatalogStatusFilter, catalogSearch, groupByAlbum, setGroupByAlbum, shareModalData, setShareModalData } = useRepertorioPlayers({ songs, bName, activeSetlist });
 
-  const { getHeaders, toggleFavoriteSong } = useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, sanitizeBandSongs, isBakandeya, sanitizeBandSetlists, setSetlists, setActiveSetlistId, setlists, setCustomShortcuts });
+  const { getHeaders, toggleFavoriteSong } = useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, sanitizeBandSongs, sanitizeBandSetlists, setSetlists, setActiveSetlistId, setlists, setCustomShortcuts });
 
   const { syncSetlistToBackend, activeSetlistMetrics } = useSetlistSync({ getHeaders, bandId, activeSetlist, songs });
 
@@ -195,7 +195,6 @@ export default function RepertorioSetlists({
         handleSaveShowItem={handleSaveShowItem}
         showPdfPreview={showPdfPreview}
         setShowPdfPreview={setShowPdfPreview}
-        isBakandeya={isBakandeya}
         bandLogoUrl={bandLogoUrl}
         activeSetlist={activeSetlist}
         activeSetlistMetrics={activeSetlistMetrics}

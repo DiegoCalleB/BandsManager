@@ -849,7 +849,7 @@ router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (re
 
     // Helper to process a sub-batch of max 4 items
     const processBatch = async (batch: any[]) => {
-      const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de Bakandeya.
+      const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de la banda.
 Tu misión es investigar y extraer el CORREO ELECTRÓNICO OFICIAL DE CONTACTO O BOOKING y el USUARIO DE INSTAGRAM REAL para cada una de las siguientes entidades en España:
 
 ${JSON.stringify(batch.map((p: any) => ({

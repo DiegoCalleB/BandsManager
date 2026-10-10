@@ -57,7 +57,7 @@ describe('detectarCambiosDePlano', () => {
 
 describe('detectarTipoContenido', () => {
   it('reconoce conciertos', () => {
-    expect(detectarTipoContenido('Bakandeya - Directo en Sala X')).toBe('concierto');
+    expect(detectarTipoContenido('Banda Ejemplo - Directo en Sala X')).toBe('concierto');
     expect(detectarTipoContenido('Live at the festival 2026')).toBe('concierto');
     expect(detectarTipoContenido('Bolo en Sevilla')).toBe('concierto');
   });

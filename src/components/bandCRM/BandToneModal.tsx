@@ -840,7 +840,7 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
                     >
                       <span className="font-mono font-bold text-[var(--acc)] flex items-center gap-1 text-micro">
                         <Flame className="w-3 h-3" /> Punto de Conexión con
-                        Bakandeya
+                        la banda
                       </span>
                       <p className="font-sans leading-relaxed text-xs">
                         {toneData.puntos_fuertes_para_conectar ||

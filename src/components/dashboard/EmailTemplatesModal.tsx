@@ -114,7 +114,7 @@ Saludos,
 export const EmailTemplatesModal: React.FC<EmailTemplatesModalProps> = ({
   isOpen,
   onClose,
-  bandName = "Bakandeya",
+  bandName = "Tu Banda",
 }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] =

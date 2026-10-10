@@ -433,7 +433,6 @@ export function ExcelImportModal({
             lower.startsWith("re:") ||
             lower.startsWith("fw:") ||
             lower.startsWith("¡buenas") ||
-            lower.includes("bakandeya") ||
             lower === "0" ||
             lower === "null"
           )

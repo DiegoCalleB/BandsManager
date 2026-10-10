@@ -85,14 +85,14 @@ export const INITIAL_LEADS: Lead[] = [
     estado: "pendiente_aprobacion",
     pitch_generado: `Hola equipo de booking de Sala Apolo,
 
-Somos Bakandeya, un proyecto de fusión con un directo demoledor donde combinamos ska, reggae, ritmos balcánicos y rock con sintetizadores electrónicos. Hemos estado siguiendo la programación de los miércoles de "Apolo Club" y los conciertos de fusión de fin de semana, y creemos que nuestra propuesta encaja al 100% con vuestro público habitual.
+Somos Banda Demo, un proyecto de fusión con un directo demoledor donde combinamos ska, reggae, ritmos balcánicos y rock con sintetizadores electrónicos. Hemos estado siguiendo la programación de los miércoles de "Apolo Club" y los conciertos de fusión de fin de semana, y creemos que nuestra propuesta encaja al 100% con vuestro público habitual.
 
-Tenemos base en Madrid/Sevilla y disponibilidad de fechas para la gira de otoño (octubre-noviembre). Os dejamos nuestro dossier con los directos grabados en festivales este verano: https://youtube.com/bakandeya_live
+Tenemos base en Madrid/Sevilla y disponibilidad de fechas para la gira de otoño (octubre-noviembre). Os dejamos nuestro dossier con los directos grabados en festivales este verano: https://youtube.com/banda_demo_live
 
 ¿Cómo veis una fecha compartida o un directo en viernes/sábado?
 
 Un abrazo,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas:
       "Sala emblemática de Barcelona. Ideal para la presentación oficial del disco. El Scout AI detectó que tienen un hueco libre el 14 de Noviembre.",
   },
@@ -110,16 +110,16 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Estimado programador de Ochoymedio,
 
-Nos ponemos en contacto desde la oficina de Bakandeya. Sabemos que Ochoymedio es el templo del indie y la fusión más fresca de la capital. Nuestro sonido mezcla rock enérgico, ska festivo y electrónica analógica, creando una fiesta que asegura la venta de barra y un ambiente espectacular.
+Nos ponemos en contacto desde la oficina de Banda Demo. Sabemos que Ochoymedio es el templo del indie y la fusión más fresca de la capital. Nuestro sonido mezcla rock enérgico, ska festivo y electrónica analógica, creando una fiesta que asegura la venta de barra y un ambiente espectacular.
 
 Acabamos de llenar la sala Copérnico en Madrid y queremos dar el salto a Ochoymedio para nuestro próximo concierto de presentación de single en Noviembre.
 
-Podéis escuchar nuestro directo aquí: https://spotify.com/bakandeya
+Podéis escuchar nuestro directo aquí: https://spotify.com/banda-demo
 
 ¿Cuándo podríamos hablar para valorar una fecha para otoño?
 
 Saludos cordiales,
-Equipo Bakandeya`,
+Equipo Banda Demo`,
     notas: "Contacto prioritario en Madrid.",
   },
   {
@@ -136,16 +136,16 @@ Equipo Bakandeya`,
     estado: "pendiente_aprobacion",
     pitch_generado: `Hola gente de Sala El Tren,
 
-Os escribimos de parte de Bakandeya, banda de ska-reggae-electrónica. Sabemos que El Tren es el espacio de referencia para el mestizaje y los ritmos rotos en Granada. Nuestro directo tiene un componente electrónico muy potente apoyado por un violín virtuoso y percusión potente que hace que nadie pare de bailar.
+Os escribimos de parte de Banda Demo, banda de ska-reggae-electrónica. Sabemos que El Tren es el espacio de referencia para el mestizaje y los ritmos rotos en Granada. Nuestro directo tiene un componente electrónico muy potente apoyado por un violín virtuoso y percusión potente que hace que nadie pare de bailar.
 
 Queremos bajar a Andalucía en Noviembre y Granada es parada obligatoria. Nos gustaría proponer un directo para el viernes 20 de Noviembre, o bien sumarnos a alguna noche temática que tengáis planeada.
 
-Os dejamos nuestro último directo en el Festival de Cabo de Plata: https://youtube.com/bakandeya_live
+Os dejamos nuestro último directo en el Festival de Cabo de Plata: https://youtube.com/banda_demo_live
 
 ¿Tenéis disponibilidad en esa quincena de noviembre?
 
 Salud y música,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas:
       "Granada siempre responde genial a la fusión y el reggae. Pitch adaptado destacando el Cabo de Plata.",
   },
@@ -163,16 +163,16 @@ Bakandeya Agent Manager IA`,
     estado: "interesado",
     pitch_generado: `Estimada organización de Viña Rock,
 
-Esperamos que estéis preparando una gran edición. Os escribimos para presentar la candidatura de Bakandeya para el escenario de Mestizaje/Reggae.
+Esperamos que estéis preparando una gran edición. Os escribimos para presentar la candidatura de Banda Demo para el escenario de Mestizaje/Reggae.
 
-Bakandeya es un terremoto en directo, combinando ska-rock combativo con violín virtuoso, percusión y electrónica de vanguardia. Somos la banda perfecta para abrir la tarde o mantener el fuego en la madrugada con ritmos de baile sin tregua.
+Banda Demo es un terremoto en directo, combinando ska-rock combativo con violín virtuoso, percusión y electrónica de vanguardia. Somos la banda perfecta para abrir la tarde o mantener el fuego en la madrugada con ritmos de baile sin tregua.
 
-Aquí tenéis nuestro videoclip oficial y resumen de gira: https://youtube.com/bakandeya_gira
+Aquí tenéis nuestro videoclip oficial y resumen de gira: https://youtube.com/banda_demo_gira
 
 Agradecemos vuestra atención y nos encantaría formar parte del cartel este año.
 
 Atentamente,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-15",
     fecha_ultima_respuesta: "2026-07-08",
     notas:
@@ -182,19 +182,19 @@ Bakandeya Agent Manager IA`,
         id: "em-vina-1",
         fecha: "2026-06-15 11:15",
         remitente: "banda",
-        remitente_nombre: "Bakandeya Agent Manager IA",
-        asunto: "Candidatura Bakandeya - Viña Rock 2026",
+        remitente_nombre: "Banda Demo Agent Manager IA",
+        asunto: "Candidatura Banda Demo - Viña Rock 2026",
         mensaje:
-          "Estimada organización de Viña Rock,\n\nEsperamos que estéis preparando una gran edición. Os escribimos para presentar la candidatura de Bakandeya para el escenario de Mestizaje/Reggae...\n\nAquí tenéis nuestro videoclip oficial: https://youtube.com/bakandeya_gira",
+          "Estimada organización de Viña Rock,\n\nEsperamos que estéis preparando una gran edición. Os escribimos para presentar la candidatura de Banda Demo para el escenario de Mestizaje/Reggae...\n\nAquí tenéis nuestro videoclip oficial: https://youtube.com/banda_demo_gira",
       },
       {
         id: "em-vina-2",
         fecha: "2026-07-08 18:20",
         remitente: "sala",
         remitente_nombre: "Producción Artística (Viña Rock)",
-        asunto: "RE: Candidatura Bakandeya - Viña Rock 2026",
+        asunto: "RE: Candidatura Banda Demo - Viña Rock 2026",
         mensaje:
-          "Hola equipo de Bakandeya, ¿cómo va eso? Hemos estado revisando el directo y nos mola mucho esa combinación de violín con sintes, suena cañón y muy fresco para el escenario de Mestizaje. Querríamos saber qué disponibilidad tenéis para el viernes 1 de Mayo por la tarde, y cuál sería vuestra propuesta de caché incluyendo transportes desde Madrid/Sevilla. ¡Un saludo!",
+          "Hola equipo de Banda Demo, ¿cómo va eso? Hemos estado revisando el directo y nos mola mucho esa combinación de violín con sintes, suena cañón y muy fresco para el escenario de Mestizaje. Querríamos saber qué disponibilidad tenéis para el viernes 1 de Mayo por la tarde, y cuál sería vuestra propuesta de caché incluyendo transportes desde Madrid/Sevilla. ¡Un saludo!",
       },
     ],
   },
@@ -212,16 +212,16 @@ Bakandeya Agent Manager IA`,
     estado: "esperando_respuesta",
     pitch_generado: `Hola equipo de Cabo de Plata,
 
-Volvemos a la carga tras nuestro exitoso paso por el escenario secundario en la pasada edición. Bakandeya ha madurado el directo, incorporando nuevos sintetizadores analógicos y ritmos afro-beat mezclados con el ska-rock habitual.
+Volvemos a la carga tras nuestro exitoso paso por el escenario secundario en la pasada edición. Banda Demo ha madurado el directo, incorporando nuevos sintetizadores analógicos y ritmos afro-beat mezclados con el ska-rock habitual.
 
 Queremos postularnos para un slot nocturno en el escenario secundario o apertura de tarde en el principal. Garantizamos público entregado y un show que es pura adrenalina.
 
-Dossier y música: https://spotify.com/bakandeya
+Dossier y música: https://spotify.com/banda-demo
 
 Quedamos a vuestra disposición para enviaros una propuesta económica detallada.
 
 Saludos festivos,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-07-01",
     notas:
       "Mail enviado el 1 de julio. Sin respuesta de momento. El Lector de Bandeja monitoriza la bandeja de entrada.",
@@ -240,7 +240,7 @@ Bakandeya Agent Manager IA`,
     estado: "negociando",
     pitch_generado: `Hola programadores de Razzmatazz,
 
-Contacto de la oficina de Bakandeya. Queremos proponer una fecha para nuestra gira de presentación "Fusión Sintética" en Razzmatazz 2 para el mes de Diciembre.
+Contacto de la oficina de Banda Demo. Queremos proponer una fecha para nuestra gira de presentación "Fusión Sintética" en Razzmatazz 2 para el mes de Diciembre.
 
 Nuestra fusión de ska instrumental clásico con bases electrónicas potentes encaja como anillo al dedo con el perfil de vuestra sala 2. Ofrecemos una noche de baile total, con el respaldo de nuestra fanbase en Cataluña (tenemos unos 15.000 oyentes mensuales en el área de Barcelona).
 
@@ -249,7 +249,7 @@ Dossier interactivo: https://bandmanager.io/epk
 ¿Cómo tenéis las fechas libres para los fines de semana de Diciembre?
 
 Un saludo,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-20",
     fecha_ultima_respuesta: "2026-07-05",
     notas:
@@ -259,17 +259,17 @@ Bakandeya Agent Manager IA`,
         id: "em-razz-1",
         fecha: "2026-06-20 10:00",
         remitente: "banda",
-        remitente_nombre: "Bakandeya Agent Manager IA",
-        asunto: "Gira Bakandeya - Propuesta Sala 2 Razzmatazz",
+        remitente_nombre: "Banda Demo Agent Manager IA",
+        asunto: "Gira Banda Demo - Propuesta Sala 2 Razzmatazz",
         mensaje:
-          'Hola programadores de Razzmatazz,\n\nContacto de la oficina de Bakandeya. Queremos proponer una fecha para nuestra gira de presentación "Fusión Sintética" en Razzmatazz 2 para el mes de Diciembre...\n\n¿Cómo tenéis el calendario?',
+          'Hola programadores de Razzmatazz,\n\nContacto de la oficina de Banda Demo. Queremos proponer una fecha para nuestra gira de presentación "Fusión Sintética" en Razzmatazz 2 para el mes de Diciembre...\n\n¿Cómo tenéis el calendario?',
       },
       {
         id: "em-razz-2",
         fecha: "2026-07-05 13:10",
         remitente: "sala",
         remitente_nombre: "Xavi (Booking Razzmatazz)",
-        asunto: "RE: Gira Bakandeya - Propuesta Sala 2 Razzmatazz",
+        asunto: "RE: Gira Banda Demo - Propuesta Sala 2 Razzmatazz",
         mensaje:
           "Buenas, disculpad la tardanza. Nos cuadra la propuesta de balkan/ska/electrónica para una de nuestras noches temáticas de mestizaje en diciembre. Nos queda libre el sábado 5 de Diciembre. En cuanto a condiciones, solemos proponer un alquiler básico de sala de 600€ + gastos técnicos y vosotros os quedáis con el 100% de la taquilla, o bien ir a comisión de taquilla 70/30 (a vuestro favor) sin coste fijo de alquiler, pero con un mínimo de 150 entradas vendidas para cubrir gastos. Decidnos qué opción preferís.",
       },
@@ -290,18 +290,18 @@ Bakandeya Agent Manager IA`,
     estado: "pendiente_aprobacion",
     pitch_generado: `Estimados técnicos del Área de Juventud y Festejos del Excmo. Ayuntamiento de Burgos,
 
-Les escribimos para presentar la propuesta musical de Bakandeya de cara a las fiestas patronales de San Pedro y San Pablo, o para los ciclos de música de otoño al aire libre.
+Les escribimos para presentar la propuesta musical de Banda Demo de cara a las fiestas patronales de San Pedro y San Pablo, o para los ciclos de música de otoño al aire libre.
 
-Bakandeya es una banda de fusión fresca y bailable con sede en España, compuesta por 6 músicos profesionales. Nuestro espectáculo combina la potencia del ska instrumental y el reggae con toques electrónicos contemporáneos, siendo un concierto de carácter sumamente festivo, familiar y participativo, ideal para plazas públicas y eventos municipales.
+Banda Demo es una banda de fusión fresca y bailable con sede en España, compuesta por 6 músicos profesionales. Nuestro espectáculo combina la potencia del ska instrumental y el reggae con toques electrónicos contemporáneos, siendo un concierto de carácter sumamente festivo, familiar y participativo, ideal para plazas públicas y eventos municipales.
 
 Hemos actuado en festivales nacionales de prestigio y garantizamos un directo dinámico de 90 minutos con un equipamiento técnico óptimo.
 
-Vídeo presentación en directo: https://youtube.com/bakandeya_live
+Vídeo presentación en directo: https://youtube.com/banda_demo_live
 
 Quedamos a su disposición para remitirles nuestro dossier técnico (Rider) y propuesta presupuestaria formal.
 
 Cordialmente,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas:
       "Interesante para conseguir bolos municipales bien remunerados. Hay que vigilar el plazo de solicitud del ayuntamiento.",
   },
@@ -319,16 +319,16 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Hola programadores de Sala REM,
 
-Somos Bakandeya, banda que cruza ska-reggae-rock con bases de música electrónica analógica. Llevamos un directo enérgico que está moviendo mucho en redes.
+Somos Banda Demo, banda que cruza ska-reggae-rock con bases de música electrónica analógica. Llevamos un directo enérgico que está moviendo mucho en redes.
 
 Queremos visitar Murcia este otoño, y sabemos que Sala REM es el espacio ideal por acústica, ubicación y público fiel. Nuestra propuesta encaja muy bien con vuestras noches de mestizaje y electrónica alternativa.
 
-Directo y temas: https://spotify.com/bakandeya
+Directo y temas: https://spotify.com/banda-demo
 
 ¿Tenéis algún hueco libre para viernes/sábado en noviembre?
 
 Un saludo,
-Equipo Bakandeya`,
+Equipo Banda Demo`,
     notas: "Murcia es una plaza excelente para el indie-fusión de salas.",
   },
   {
@@ -345,16 +345,16 @@ Equipo Bakandeya`,
     estado: "negociando",
     pitch_generado: `Kaixo! Hola equipo de Kafe Antzokia,
 
-Os escribimos de parte de Bakandeya, banda de ska, reggae y electrónica con directos muy potentes en festivales. 
+Os escribimos de parte de Banda Demo, banda de ska, reggae y electrónica con directos muy potentes en festivales. 
 
 Sabemos que el Antzoki es el corazón del ska y mestizaje en Bilbao y nos encantaría presentar nuestro nuevo repertorio allí en otoño. Nos gustaría proponer una fecha compartida con alguna banda local de ska de Euskadi para asegurar un llenazo total y una noche de fiesta memorable.
 
-Vídeo en directo: https://youtube.com/bakandeya_live
+Vídeo en directo: https://youtube.com/banda_demo_live
 
 ¿Cómo tenéis el calendario para los meses de Octubre o Noviembre?
 
 Eskerrik asko, un saludo!
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-18",
     fecha_ultima_respuesta: "2026-07-06",
     notas:
@@ -374,16 +374,16 @@ Bakandeya Agent Manager IA`,
     estado: "no_interesado",
     pitch_generado: `Hola amigos de Sala Capitol,
 
-Presentamos a Bakandeya, banda de fusión ska-reggae-electrónica que está girando a nivel nacional. Nos gustaría proponer una fecha para nuestra gira en Santiago de Compostela durante noviembre.
+Presentamos a Banda Demo, banda de fusión ska-reggae-electrónica que está girando a nivel nacional. Nos gustaría proponer una fecha para nuestra gira en Santiago de Compostela durante noviembre.
 
 Llevamos un show cargado de energía que combina violín virtuoso, percusión potente, sintetizadores ácidos y guitarras ska rockeras.
 
-Os dejamos nuestro Spotify: https://spotify.com/bakandeya
+Os dejamos nuestro Spotify: https://spotify.com/banda-demo
 
 ¿Disponéis de fechas para bolos de fin de semana en noviembre?
 
 Un abrazo,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-10",
     fecha_ultima_respuesta: "2026-06-15",
     notas:
@@ -404,16 +404,16 @@ Bakandeya Agent Manager IA`,
     estado: "interesado",
     pitch_generado: `Estimada dirección artística del Festival Pirineos Sur,
 
-Nos complace presentarles la propuesta musical de Bakandeya de cara a su escenario flotante del Auditorio natural de Lanuza.
+Nos complace presentarles la propuesta musical de Banda Demo de cara a su escenario flotante del Auditorio natural de Lanuza.
 
-Bakandeya ofrece una fusión sin precedentes de ska instrumental, reggae africano y electrónica analógica europea, logrando un sonido multicultural que encaja a la perfección con la filosofía del festival. Nuestro show invita a la danza y el encuentro a través del ritmo.
+Banda Demo ofrece una fusión sin precedentes de ska instrumental, reggae africano y electrónica analógica europea, logrando un sonido multicultural que encaja a la perfección con la filosofía del festival. Nuestro show invita a la danza y el encuentro a través del ritmo.
 
 EPK y dossier: https://bandmanager.io/epk
 
 Esperamos que nuestra propuesta sea de su agrado para complementar las noches de fusión.
 
 Cordialmente,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-05",
     fecha_ultima_respuesta: "2026-07-02",
     notas:
@@ -433,16 +433,16 @@ Bakandeya Agent Manager IA`,
     estado: "aprobado",
     pitch_generado: `Hola equipo de Sala Custom,
 
-Os escribimos de parte de Bakandeya, proyecto andaluz de ska-reggae con base electrónica. Tras haber llenado salas medianas en Sevilla, queremos dar el salto a un aforo mayor como el vuestro para la presentación de nuestro disco.
+Os escribimos de parte de Banda Demo, proyecto andaluz de ska-reggae con base electrónica. Tras haber llenado salas medianas en Sevilla, queremos dar el salto a un aforo mayor como el vuestro para la presentación de nuestro disco.
 
 Ofrecemos un directo muy bailable con violín, percusión y sintetizadores que pone a saltar a toda la sala de principio a fin.
 
-Nuestros datos de directo: https://youtube.com/bakandeya_live
+Nuestros datos de directo: https://youtube.com/banda_demo_live
 
 ¿Cómo tenéis las fechas los fines de semana de Noviembre/Diciembre para un concierto propio en taquilla o alquiler?
 
 Abrazos,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas:
       "Pitch aprobado por Diego. Pasado al estado APROBADO. El agente Enviador lo enviará en su próximo ciclo cron de esta tarde.",
   },
@@ -461,16 +461,16 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Estimados técnicos de festejos del Ayuntamiento de Logroño,
 
-Presentamos la propuesta de Bakandeya para los escenarios musicales y plazas durante las fiestas de San Mateo en Septiembre u eventos culturales de otoño.
+Presentamos la propuesta de Banda Demo para los escenarios musicales y plazas durante las fiestas de San Mateo en Septiembre u eventos culturales de otoño.
 
-Bakandeya combina ritmos festivos como el ska y reggae con toques electrónicos muy dinámicos, ofreciendo un espectáculo bailable de alta calidad y apto para todos los públicos.
+Banda Demo combina ritmos festivos como el ska y reggae con toques electrónicos muy dinámicos, ofreciendo un espectáculo bailable de alta calidad y apto para todos los públicos.
 
-Vídeo promocional: https://youtube.com/bakandeya_promo
+Vídeo promocional: https://youtube.com/banda_demo_promo
 
 Agradecemos su tiempo para evaluar nuestra propuesta.
 
 Saludos cordiales,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Interesante bolo de plaza pública.",
   },
   {
@@ -487,14 +487,14 @@ Bakandeya Agent Manager IA`,
     estado: "negociando",
     pitch_generado: `Estimados compañeros de la Hebe,
 
-Somos Bakandeya, banda que fusiona balkan-ska, reggae, violín enérgico, percusión reciclada y electrónica. Conocemos de sobra la trayectoria histórica de la Hebe apoyando la música en directo de raíz y el rock más canalla en Vallekas. Creemos que nuestro show de ska/reggae con toques electrónicos es ideal para vuestro público.
+Somos Banda Demo, banda que fusiona balkan-ska, reggae, violín enérgico, percusión reciclada y electrónica. Conocemos de sobra la trayectoria histórica de la Hebe apoyando la música en directo de raíz y el rock más canalla en Vallekas. Creemos que nuestro show de ska/reggae con toques electrónicos es ideal para vuestro público.
 
 Tenemos fechas abiertas para otoño y nos encantaría montar un buen jaleo en vuestro escenario.
 
-Os dejamos nuestro dossier interactivo y vídeos en directo: https://youtube.com/bakandeya_live
+Os dejamos nuestro dossier interactivo y vídeos en directo: https://youtube.com/banda_demo_live
 
 Un saludo,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-07-01",
     fecha_ultima_respuesta: "2026-07-03",
     notas:
@@ -504,17 +504,17 @@ Bakandeya Agent Manager IA`,
         id: "em-hebe-1",
         fecha: "2026-07-01 12:30",
         remitente: "banda",
-        remitente_nombre: "Bakandeya Agent Manager IA",
-        asunto: "Propuesta de concierto: Bakandeya en Vallekas",
+        remitente_nombre: "Banda Demo Agent Manager IA",
+        asunto: "Propuesta de concierto: Banda Demo en Vallekas",
         mensaje:
-          "¡Hola! Os escribimos para presentar a Bakandeya, banda de balkan-ska y reggae electrónico. Nos encantaría tocar en la mítica Sala Hebe en otoño. Nuestro directo es pura energía con violín, loops y percusión reciclada, asegurando baile y fiesta de principio a fin.",
+          "¡Hola! Os escribimos para presentar a Banda Demo, banda de balkan-ska y reggae electrónico. Nos encantaría tocar en la mítica Sala Hebe en otoño. Nuestro directo es pura energía con violín, loops y percusión reciclada, asegurando baile y fiesta de principio a fin.",
       },
       {
         id: "em-hebe-2",
         fecha: "2026-07-03 16:45",
         remitente: "sala",
         remitente_nombre: "Kike (Programación Sala Hebe)",
-        asunto: "RE: Propuesta de concierto: Bakandeya en Vallekas",
+        asunto: "RE: Propuesta de concierto: Banda Demo en Vallekas",
         mensaje:
           "Hola, gracias por escribir. Nos gusta la propuesta y ese rollo de violín con electrónica puede sonar de lujo en Vallekas. Para otoño tenemos el viernes 13 de Noviembre libre. Nosotros solemos ir a taquilla con un reparto del 60% para la banda y 40% para la sala, con una entrada recomendada de 8€. ¿Cómo lo veis? ¿Tenéis alguna banda local de Vallekas con la que compartir fecha?",
       },
@@ -534,16 +534,16 @@ Bakandeya Agent Manager IA`,
     estado: "interesado",
     pitch_generado: `Hola equipo de programación de Sala Villanos,
 
-Nos ponemos en contacto de parte de Bakandeya, proyecto de fusión balkan-ska, reggae, violín y electrónica. Sabemos que la Sala Villanos (antigua Sala Caracol) es el templo de la fusión internacional y los sonidos del mundo en Madrid.
+Nos ponemos en contacto de parte de Banda Demo, proyecto de fusión balkan-ska, reggae, violín y electrónica. Sabemos que la Sala Villanos (antigua Sala Caracol) es el templo de la fusión internacional y los sonidos del mundo en Madrid.
 
 Nuestro directo reúne violín virtuoso, percusión iraní/azerbaiyana, sintetizadores analógicos, guitarra y bajo, creando una atmósfera de fiesta de alta calidad técnica.
 
-Dossier y música: https://spotify.com/bakandeya
+Dossier y música: https://spotify.com/banda-demo
 
 ¿Tenéis disponibilidad de fechas para la temporada de otoño en noviembre?
 
 Saludos cordiales,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-28",
     fecha_ultima_respuesta: "2026-07-12",
     notas:
@@ -553,17 +553,17 @@ Bakandeya Agent Manager IA`,
         id: "em-villanos-1",
         fecha: "2026-06-28 11:00",
         remitente: "banda",
-        remitente_nombre: "Bakandeya Agent Manager IA",
-        asunto: "Propuesta de concierto Bakandeya - Sala Villanos Madrid",
+        remitente_nombre: "Banda Demo Agent Manager IA",
+        asunto: "Propuesta de concierto Banda Demo - Sala Villanos Madrid",
         mensaje:
-          "Hola equipo de programación de Sala Villanos, os presentamos Bakandeya, proyecto de fusión balkan-ska, reggae, violín y electrónica...",
+          "Hola equipo de programación de Sala Villanos, os presentamos Banda Demo, proyecto de fusión balkan-ska, reggae, violín y electrónica...",
       },
       {
         id: "em-villanos-2",
         fecha: "2026-07-12 14:10",
         remitente: "sala",
         remitente_nombre: "Programación Artística (Sala Villanos)",
-        asunto: "RE: Propuesta de concierto Bakandeya - Sala Villanos Madrid",
+        asunto: "RE: Propuesta de concierto Banda Demo - Sala Villanos Madrid",
         mensaje:
           "Buenas, conocemos la propuesta y nos parece un proyecto potentísimo con un directo impecable. Nos encajaría para la segunda mitad de noviembre dentro de nuestra programación de fusión y world music. ¿Tenéis estimación de caché o preferencia de acuerdo en taquilla?",
       },
@@ -584,16 +584,16 @@ Bakandeya Agent Manager IA`,
     direccion: "Calle Parauta, 25, 29006 Málaga",
     pitch_generado: `Hola equipo de Sala Trinchera,
 
-Os escribimos desde la oficina de Bakandeya. Sabemos que la Trinchera es la sala de referencia del rock, mestizaje y ska en Málaga.
+Os escribimos desde la oficina de Banda Demo. Sabemos que la Trinchera es la sala de referencia del rock, mestizaje y ska en Málaga.
 
 Tras el llenazo de nuestro anterior concierto en Málaga, queremos proponer una nueva fecha de presentación para la temporada de otoño/invierno.
 
-Dossier y directo: https://spotify.com/bakandeya
+Dossier y directo: https://spotify.com/banda-demo
 
 ¿Cómo tenéis la agenda para los viernes de Noviembre?
 
 Un abrazo festivo,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_envio: "2026-06-25",
     fecha_ultima_respuesta: "2026-07-04",
     notas:
@@ -614,18 +614,18 @@ Bakandeya Agent Manager IA`,
     estado: "interesado",
     pitch_generado: `¡Buenas chavales de Vallekas Ska & Roots!
 
-Os escribimos desde Bakandeya, banda de balkan-ska, violín enérgico y electrónica de Madrid/Sevilla. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
+Os escribimos desde Banda Demo, banda de balkan-ska, violín enérgico y electrónica de Madrid/Sevilla. Nos mola mucho vuestro proyecto y creemos que nuestros estilos conectan genial en directo.
 
 Queremos proponer un INTERCAMBIO DE FECHAS / CO-BOOKING para esta temporada:
 1. Os invitamos a tocar con nosotros en nuestra fecha en Madrid compartiendo cartel y taquilla al 50%.
 2. Nos coordinamos para ir juntos a una sala mediana (aforo 300-500) para petarlo sumando ambas aficiones.
 
-Podéis escuchar lo que hacemos aquí: https://youtube.com/bakandeya_live
+Podéis escuchar lo que hacemos aquí: https://youtube.com/banda_demo_live
 
 ¿Cómo lo veis? ¿Hablamos por WhatsApp esta semana?
 
 ¡Un abrazo!
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_ultima_respuesta: "2026-07-10",
     notas:
       "Banda con potente arraigo en Madrid. Muy receptivos a montar un doble cartel en la Sala Hebe o Copérnico.",
@@ -636,9 +636,9 @@ Bakandeya Agent Manager IA`,
         remitente: "sala",
         remitente_nombre: "Vallekas Ska (Management)",
         asunto:
-          "RE: Propuesta de concierto compartido e intercambio de fechas: Bakandeya x Vallekas Ska",
+          "RE: Propuesta de concierto compartido e intercambio de fechas: Banda Demo x Vallekas Ska",
         mensaje:
-          "¡Aúpa Bakandeya! Nos parece una idea brutal. Nosotros llenamos unos 200 en Vallekas y con vuestro violín y sintes montamos una noche balkan-ska de locos. Contad con nosotros para noviembre.",
+          "¡Aúpa Banda Demo! Nos parece una idea brutal. Nosotros llenamos unos 200 en Vallekas y con vuestro violín y sintes montamos una noche balkan-ska de locos. Contad con nosotros para noviembre.",
       },
     ],
   },
@@ -657,7 +657,7 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `¡Hola equipo de Balkan Boom!
 
-Os escribimos desde Bakandeya. Seguimos vuestra trayectoria en Barcelona y nos parece que tenéis un directo potentísimo de brass y ritmos del este.
+Os escribimos desde Banda Demo. Seguimos vuestra trayectoria en Barcelona y nos parece que tenéis un directo potentísimo de brass y ritmos del este.
 
 Queremos proponer un INTERCAMBIO DE CIUDADES (Date Swap 2026):
 - Barcelona: Tocamos con vosotros en Barcelona en vuestra sala habitual (Razzmatazz 3 / Salamandra).
@@ -665,12 +665,12 @@ Queremos proponer un INTERCAMBIO DE CIUDADES (Date Swap 2026):
 
 Compartimos gastos de furgoneta y backline para abaratar costes de viaje.
 
-Escuchad nuestro directo: https://youtube.com/bakandeya_live
+Escuchad nuestro directo: https://youtube.com/banda_demo_live
 
 ¿Tenéis disponibilidad para otoño?
 
 Salud y fiesta,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Banda ideal para intercambio de ciudades en Cataluña.",
   },
   {
@@ -689,16 +689,16 @@ Bakandeya Agent Manager IA`,
     estado: "pendiente_aprobacion",
     pitch_generado: `Hola equipo de redacción de Mondosonoro,
 
-Nos ponemos en contacto desde la oficina de Bakandeya para presentar la nota de prensa de nuestro próximo lanzamiento y gira nacional 2026.
+Nos ponemos en contacto desde la oficina de Banda Demo para presentar la nota de prensa de nuestro próximo lanzamiento y gira nacional 2026.
 
-Bakandeya es una propuesta que refresca el panorama de la música de raíz fusionando el ska bailable con violín solista virtuosístico, percusiones analógicas y sintetizadores ácidos.
+Banda Demo es una propuesta que refresca el panorama de la música de raíz fusionando el ska bailable con violín solista virtuosístico, percusiones analógicas y sintetizadores ácidos.
 
-Remitimos dossier de prensa, fotos promocionales en alta resolución y enlace al adelanto exclusivo del nuevo videoclip: https://youtube.com/bakandeya_live
+Remitimos dossier de prensa, fotos promocionales en alta resolución y enlace al adelanto exclusivo del nuevo videoclip: https://youtube.com/banda_demo_live
 
 Estaríamos encantados de coordinar una entrevista o reseña del single.
 
 Muchas gracias por vuestra atención,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Medio de prensa musical nacional de referencia.",
   },
   {
@@ -717,14 +717,14 @@ Bakandeya Agent Manager IA`,
     estado: "interesado",
     pitch_generado: `Hola equipo de Radio 3,
 
-Os saludamos desde Bakandeya. Les hacemos llegar nuestro dossier con motivo del lanzamiento de nuestro nuevo trabajo de ska/reggae con electrónica analógica.
+Os saludamos desde Banda Demo. Les hacemos llegar nuestro dossier con motivo del lanzamiento de nuestro nuevo trabajo de ska/reggae con electrónica analógica.
 
 Nos ponemos a vuestra disposición para tocar en acústico en los estudios de Prado del Rey o realizar una entrevista telefónica sobre el concepto sonoro del violín solista y las percusiones recicladas.
 
 Audio en calidad broadcast y bio: https://bandmanager.io/epk
 
 Atentamente,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     fecha_ultima_respuesta: "2026-07-09",
     notas:
       "Interesados en ponernos en rotación nocturna y hacer una breve entrevista acústica.",
@@ -744,16 +744,16 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Hola equipo de programación de Industrial Copera,
 
-Os contactamos desde Bakandeya para proponer una fecha de Live Performance & Clubbing en Granada: un show de electro-balkan live con violín distorsionado, synth bass analógico y batería de ritmos potentes.
+Os contactamos desde Banda Demo para proponer una fecha de Live Performance & Clubbing en Granada: un show de electro-balkan live con violín distorsionado, synth bass analógico y batería de ritmos potentes.
 
 Diseñado para horario nocturno/discoteca, manteniendo la pista llena con bpm progresivos y energía orgánica.
 
-Vídeo promocional y sesión en directo: https://youtube.com/bakandeya_live
+Vídeo promocional y sesión en directo: https://youtube.com/banda_demo_live
 
 ¿Tenéis disponibilidad para incorporar un live set en vuestra agenda nocturna?
 
 Saludos cordiales,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Icono del clubbing y música electrónica en Andalucía.",
   },
   {
@@ -772,21 +772,21 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Estimado equipo de Propaganda Pel Fet,
 
-Nos dirigimos a vuestra agencia para presentar la propuesta artística de Bakandeya con vista a posibles colaboraciones, coproducciones de fechas o integración en vuestro roster de gira 2026.
+Nos dirigimos a vuestra agencia para presentar la propuesta artística de Banda Demo con vista a posibles colaboraciones, coproducciones de fechas o integración en vuestro roster de gira 2026.
 
-Bakandeya es un proyecto de alta potencia que combina ska-reggae, violín solista y sintetizadores analógicos, ofreciendo un directo bailable con logística muy ágil.
+Banda Demo es un proyecto de alta potencia que combina ska-reggae, violín solista y sintetizadores analógicos, ofreciendo un directo bailable con logística muy ágil.
 
-Dossier y vídeo resumen: https://youtube.com/bakandeya_live
+Dossier y vídeo resumen: https://youtube.com/banda_demo_live
 
 Quedamos a vuestra disposición para agendar una breve llamada.
 
 Atentamente,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Agencia especializada en ska, mestizaje y ritmos festivos.",
   },
   {
     id: "lead-siroco",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     nombre_sala: "Siroco",
     ciudad: "Madrid",
     region: "Madrid",
@@ -802,14 +802,14 @@ Bakandeya Agent Manager IA`,
     estado: "nuevo",
     pitch_generado: `Hola equipo de programación de Sala Siroco,
 
-Os contactamos desde Bakandeya para presentar nuestra propuesta de directo en vuestra emblemática sala de Malasaña. Combinamos bases electrónicas analógicas, violín eléctrico y percusiones con una energía arrolladora ideal para el público de Siroco.
+Os contactamos desde Banda Demo para presentar nuestra propuesta de directo en vuestra emblemática sala de Malasaña. Combinamos bases electrónicas analógicas, violín eléctrico y percusiones con una energía arrolladora ideal para el público de Siroco.
 
 Dossier y música: https://bandmanager.io/epk
 
 ¿Tendríais fecha disponible para programar un showcase o concierto este trimestre?
 
 Saludos cordiales,
-Bakandeya Agent Manager IA`,
+Banda Demo Agent Manager IA`,
     notas: "Sala mítica de conciertos y clubbing en Malasaña, Madrid.",
     icono: "🏛️",
     es_favorito: true,
@@ -830,8 +830,8 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
     notas:
       "Ensayo general. Importante repasar el setlist de verano y cuadrar las nuevas intros con los loops de Jon y el violín de R-violin. Filgue traerá las nuevas percusiones recicladas.",
     estado: "programado",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "reh-2",
@@ -842,8 +842,8 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
     notas:
       'Ensayo seccional de bases rítmicas y percusión reciclada para pulir la transición con el hang pan de elyar en el tema "Ska Brutal".',
     estado: "programado",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "reh-3",
@@ -854,8 +854,8 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
     notas:
       "Ensayo de post-gira de primavera. Se grabaron las maquetas de los tres nuevos temas con loops y violín acústico.",
     estado: "completado",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "reh-4",
@@ -898,8 +898,8 @@ export const INITIAL_CONCERTS: Concert[] = [
     notas:
       "Recibido el 50% de anticipo (2.250€). El resto se cobra por transferencia a los 15 días del festival. Alojamiento y catering incluidos en zona VIP.",
     tipo: "festival",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "con-alt-1",
@@ -915,8 +915,8 @@ export const INITIAL_CONCERTS: Concert[] = [
     notas:
       "Concierto co-headliner de Tarraco Ska Sound con entrada vendida casi al 100%.",
     tipo: "sala",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "con-2",
@@ -932,8 +932,8 @@ export const INITIAL_CONCERTS: Concert[] = [
     notas:
       "Bolo gestionado con el Ayuntamiento. Factura emitida, pendiente de cobro tras la actuación.",
     tipo: "ayuntamiento",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "con-alt-2",
@@ -964,8 +964,8 @@ export const INITIAL_CONCERTS: Concert[] = [
     estado_pago: "pendiente",
     notas: "Concierto propio de taquilla.",
     tipo: "sala",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "con-alt-3",
@@ -978,10 +978,10 @@ export const INITIAL_CONCERTS: Concert[] = [
     aforo_total: 1200,
     contrato_firmado: true,
     estado_pago: "anticipo",
-    notas: "Concierto de Bakandeya en Apolo 1.",
+    notas: "Concierto de Banda Demo en Apolo 1.",
     tipo: "sala",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "con-4",
@@ -996,8 +996,8 @@ export const INITIAL_CONCERTS: Concert[] = [
     estado_pago: "pagado",
     notas: "Llenazo absoluto en Málaga.",
     tipo: "sala",
-    band_id: "band-bakandeya",
-    bandName: "Bakandeya",
+    band_id: "band-demo",
+    bandName: "Banda Demo",
   },
   {
     id: "mop-cnc-1",
@@ -1076,7 +1076,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     fecha: "2026-07-10",
     plataforma: "Instagram",
     contenido:
-      "🔥 ¡CALENTANDO MOTORES PARA EL CABO DE PLATA! 🔥\n\nSolo faltan 8 días para subirnos al Escenario Tierra. ¿Quién se viene a bailar ska-electrónico al atardecer? Os tenemos preparado un show que va a derretir la arena de Barbate. \n\n#Bakandeya #CaboDePlata #SkaReggae #FestejoMusical #Sintetizadores #ViolinBalkan",
+      "🔥 ¡CALENTANDO MOTORES PARA EL CABO DE PLATA! 🔥\n\nSolo faltan 8 días para subirnos al Escenario Tierra. ¿Quién se viene a bailar ska-electrónico al atardecer? Os tenemos preparado un show que va a derretir la arena de Barbate. \n\n#Banda Demo #CaboDePlata #SkaReggae #FestejoMusical #Sintetizadores #ViolinBalkan",
     estado: "borrador",
     responsable: "Filgue",
   },
@@ -1094,7 +1094,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     fecha: "2026-07-06",
     plataforma: "Instagram",
     contenido:
-      "📸 Resumen fotográfico de lo que fue el conciertazo de Málaga en Sala Trinchera. El sur nunca falla. ¡Gracias infinitas por el sold out y por sudar la camiseta con nosotros! \n\nPróxima parada: Cabo de Plata, ¡vamos con todo! \n\n#SoldOut #Bakandeya #Trinchera #Malaga #ConciertoDirecto",
+      "📸 Resumen fotográfico de lo que fue el conciertazo de Málaga en Sala Trinchera. El sur nunca falla. ¡Gracias infinitas por el sold out y por sudar la camiseta con nosotros! \n\nPróxima parada: Cabo de Plata, ¡vamos con todo! \n\n#SoldOut #Banda Demo #Trinchera #Malaga #ConciertoDirecto",
     estado: "publicado",
     responsable: "Diego",
   },
@@ -1112,7 +1112,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     fecha: "2026-07-16 20:30",
     plataforma: "Instagram",
     contenido:
-      "¡Así cerramos cada encuentro! 🎺✨ La energía en el escenario es innegociable. ¿Nos vemos en el próximo concierto? ¡Déjanos tu ciudad en comentarios! #Bakandeya #SkaBocado #LiveMusic #FiestaBalcánica",
+      "¡Así cerramos cada encuentro! 🎺✨ La energía en el escenario es innegociable. ¿Nos vemos en el próximo concierto? ¡Déjanos tu ciudad en comentarios! #Banda Demo #SkaBocado #LiveMusic #FiestaBalcánica",
     estado: "aprobado",
     responsable: "Diego",
   },
@@ -1121,7 +1121,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     fecha: "2026-07-16 20:30",
     plataforma: "Instagram",
     contenido:
-      "Cuando el ska balcánico se junta con el violín endiablado... ¡explota la cabeza! 🤯 Siente el poder del bajo y los sintes. Dinos: ¿del 1 al 10 cuánto te apetece bailar esto hoy? 👇🎉 #Bakandeya #BalkanSka #ViolinEnVivo #SkaFusión #MusicaIndie #ConciertosEspaña",
+      "Cuando el ska balcánico se junta con el violín endiablado... ¡explota la cabeza! 🤯 Siente el poder del bajo y los sintes. Dinos: ¿del 1 al 10 cuánto te apetece bailar esto hoy? 👇🎉 #Banda Demo #BalkanSka #ViolinEnVivo #SkaFusión #MusicaIndie #ConciertosEspaña",
     estado: "aprobado",
     responsable: "Diego",
   },
@@ -1130,7 +1130,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     fecha: "2026-08-01 20:30",
     plataforma: "Instagram",
     contenido:
-      "Imposible quedarse quieto cuando el ritmo de BAKANDEYA acelera. 🚀 Violín virtuoso, percusión reciclada y una base de guitarra y bajo arrolladora. 🔊 ¡Sube el volumen!",
+      "Imposible quedarse quieto cuando el ritmo de BANDA DEMO acelera. 🚀 Violín virtuoso, percusión reciclada y una base de guitarra y bajo arrolladora. 🔊 ¡Sube el volumen!",
     estado: "aprobado",
     responsable: "Jon",
   },
@@ -1240,7 +1240,7 @@ export const INITIAL_MESSAGES: Message[] = [
   },
   {
     id: "msg-4",
-    remitente: "Bakandeya Agent Manager IA",
+    remitente: "Banda Demo Agent Manager IA",
     mensaje:
       "Hecho, ya incluí los cambios en las notas. Recordad que este sábado 11 tenemos ensayo general a las 18:00 en Rock Palace. ¡Viene la banda al completo!",
     fecha: "2026-07-09T11:40:00",
@@ -1250,7 +1250,7 @@ export const INITIAL_MESSAGES: Message[] = [
     id: "msg-5",
     remitente: "Filgue",
     mensaje:
-      "Yo llevaré el bajo de repuesto y las pegatinas nuevas de Bakandeya para meter en los pedidos del merchan.",
+      "Yo llevaré el bajo de repuesto y las pegatinas nuevas de Banda Demo para meter en los pedidos del merchan.",
     fecha: "2026-07-09T12:00:00",
     leido: false,
   },
@@ -1293,7 +1293,7 @@ export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
     tiktok: 50,
     youtube: 15,
     spotify: 0,
-    notas: "Campaña de presentación del proyecto Bakandeya.",
+    notas: "Campaña de presentación del proyecto Banda Demo.",
   },
   {
     id: "met-5-1786104842629",
@@ -1492,24 +1492,24 @@ export const INITIAL_USERS = [
     role: "leader" as const,
     instrument: "Mánager / Booking (Oficina)",
     avatarColor: "#06b6d4",
-    initialPassword: "bakandeya2026",
+    initialPassword: "demo2026",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
     id: "user-jose",
     username: "jose",
-    email: "jose@bakandeya.com",
+    email: "jose@banda-demo.example",
     name: "Jose",
     role: "leader" as const,
     instrument: "Percusión, Showman y Admin",
     avatarColor: "var(--ok)",
-    initialPassword: "bakandeya2026",
+    initialPassword: "demo2026",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
     id: "user-jon",
     username: "jon",
-    email: "jon@bakandeya.com",
+    email: "jon@banda-demo.example",
     name: "Jon",
     role: "member" as const,
     instrument: "Cantante, Loops y Percusión",
@@ -1520,7 +1520,7 @@ export const INITIAL_USERS = [
   {
     id: "user-elyar",
     username: "elyar",
-    email: "elyar@bakandeya.com",
+    email: "elyar@banda-demo.example",
     name: "Elyar",
     role: "member" as const,
     instrument: "Handpan y Percusión",
@@ -1531,7 +1531,7 @@ export const INITIAL_USERS = [
   {
     id: "user-raul",
     username: "raul",
-    email: "raul@bakandeya.com",
+    email: "raul@banda-demo.example",
     name: "Raúl",
     role: "member" as const,
     instrument: "Violín",
@@ -1545,7 +1545,7 @@ export const INITIAL_SONGS = [
   ...HERDEIROS_SONGS,
   {
     id: "song-cm-1",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Intro (Live Casa México)",
     duracion: "1:30",
     duracionSegundos: 90,
@@ -1563,7 +1563,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-cm-2",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Tema1 (Live Casa México)",
     duracion: "3:45",
     duracionSegundos: 225,
@@ -1580,7 +1580,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-cm-3",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Reggae Rock Style",
     duracion: "4:10",
     duracionSegundos: 250,
@@ -1597,7 +1597,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-cm-4",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Ska",
     duracion: "3:20",
     duracionSegundos: 200,
@@ -1614,7 +1614,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-cm-5",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Llorona",
     duracion: "4:30",
     duracionSegundos: 270,
@@ -1631,7 +1631,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-1",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Brisa y Cacharros",
     duracion: "3:30",
     duracionSegundos: 210,
@@ -1651,7 +1651,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-2",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Fuego en la Sala",
     duracion: "4:12",
     duracionSegundos: 252,
@@ -1670,7 +1670,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-3",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Noches de Garaje",
     duracion: "3:45",
     duracionSegundos: 225,
@@ -1688,7 +1688,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-4",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Ska del Norte",
     duracion: "3:15",
     duracionSegundos: 195,
@@ -1707,7 +1707,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-5",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Canto a la Sombra",
     duracion: "5:10",
     duracionSegundos: 310,
@@ -1726,7 +1726,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-6",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Gira Sin Fin",
     duracion: "4:05",
     duracionSegundos: 245,
@@ -1743,7 +1743,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-7",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Mánager Fantasma",
     duracion: "3:50",
     duracionSegundos: 230,
@@ -1762,7 +1762,7 @@ export const INITIAL_SONGS = [
   },
   {
     id: "song-8",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     titulo: "Maldita Dulzura (Cover)",
     duracion: "3:40",
     duracionSegundos: 220,
@@ -1786,7 +1786,7 @@ export const INITIAL_SETLISTS = [
   ...MOP_SETLISTS,
   {
     id: "setlist-1",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     nombre: "Festival Directo Caña 45 min",
     descripcion:
       "Repertorio de máxima energía para festivales y horarios reducidos",
@@ -1848,7 +1848,7 @@ export const INITIAL_SETLISTS = [
   },
   {
     id: "setlist-2",
-    band_id: "band-bakandeya",
+    band_id: "band-demo",
     nombre: "Concierto Sala Larga 75 min",
     descripcion:
       "Setlist completo con temas del disco, covers y bloque acústico",
@@ -1896,7 +1896,7 @@ export const INITIAL_BANDS: any[] = [
     spotify_youtube: "https://open.spotify.com/artist/lasenoratomasa",
     aforo_promedio: 800,
     notas_colaboracion:
-      "Colegas de festis. Dispuestos a compartir fecha en Sala Apolo (BCN) e invitar a Bakandeya, intercambio con Sala Caracol (Madrid).",
+      "Colegas de festis. Dispuestos a compartir fecha en Sala Apolo (BCN) e invitar a Banda Demo, intercambio con Sala Caracol (Madrid).",
     ciudad_origen_swap: "Barcelona",
   },
   {
@@ -1930,7 +1930,7 @@ export const INITIAL_BANDS: any[] = [
     spotify_youtube: "https://open.spotify.com/artist/balkanparadise",
     aforo_promedio: 1200,
     notas_colaboracion:
-      "¡Concierto agendado! Bakandeya abre su fecha especial en Sala Razzmatazz 2 el 14 de Noviembre de 2026.",
+      "¡Concierto agendado! Banda Demo abre su fecha especial en Sala Razzmatazz 2 el 14 de Noviembre de 2026.",
     ciudad_origen_swap: "Barcelona",
   },
 ];

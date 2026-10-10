@@ -157,7 +157,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1313",
+        "x-source": "server/routes/agent.ts:1312",
         "x-autenticacion": "middleware"
       }
     },
@@ -192,7 +192,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1242",
+        "x-source": "server/routes/agent.ts:1241",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -225,7 +225,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1266",
+        "x-source": "server/routes/agent.ts:1265",
         "x-autenticacion": "middleware"
       }
     },
@@ -400,7 +400,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1053",
+        "x-source": "server/routes/agent.ts:1052",
         "x-autenticacion": "middleware"
       }
     },
@@ -443,7 +443,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1122",
+        "x-source": "server/routes/agent.ts:1121",
         "x-autenticacion": "middleware"
       }
     },
@@ -478,7 +478,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1014",
+        "x-source": "server/routes/agent.ts:1013",
         "x-autenticacion": "middleware"
       }
     },
@@ -813,7 +813,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:146",
+        "x-source": "server/routes/tracking.ts:144",
         "x-autenticacion": "ninguna"
       }
     },
@@ -830,7 +830,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:259",
+        "x-source": "server/routes/tracking.ts:255",
         "x-autenticacion": "ninguna"
       }
     },
@@ -864,7 +864,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:329",
+        "x-source": "server/routes/tracking.ts:323",
         "x-autenticacion": "ninguna"
       }
     },
@@ -920,7 +920,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:869",
+        "x-source": "server/routes/users.ts:863",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -946,7 +946,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:813",
+        "x-source": "server/routes/users.ts:807",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "loginRateLimiter"
@@ -987,7 +987,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:983",
+        "x-source": "server/routes/users.ts:977",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1003,7 +1003,7 @@
           "users"
         ],
         "operationId": "postApiAuthLogin",
-        "description": "Crea una sesión de 30 días y la devuelve en el cuerpo y en la cookie `bakandeya_token`. La cookie **no es HttpOnly a propósito** (el cliente también guarda el token en localStorage; migrar a solo cookie está en `BACKLOG.md`). Limitado por `loginRateLimiter`.",
+        "description": "Crea una sesión de 30 días y la devuelve en el cuerpo y en la cookie `bandmanager_token`. La cookie **no es HttpOnly a propósito** (el cliente también guarda el token en localStorage; migrar a solo cookie está en `BACKLOG.md`). Limitado por `loginRateLimiter`.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -1077,7 +1077,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:1357",
+        "x-source": "server/routes/users.ts:1351",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1145,7 +1145,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/users.ts:2251",
+        "x-source": "server/routes/users.ts:2241",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1183,7 +1183,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:1893",
+        "x-source": "server/routes/users.ts:1887",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1222,7 +1222,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:511",
+        "x-source": "server/routes/users.ts:505",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1248,7 +1248,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:1726",
+        "x-source": "server/routes/users.ts:1720",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "secreto compartido"
@@ -1274,7 +1274,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users.ts:1539",
+        "x-source": "server/routes/users.ts:1533",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "loginRateLimiter"
@@ -1312,7 +1312,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2037",
+        "x-source": "server/routes/users.ts:2031",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1350,7 +1350,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:1849",
+        "x-source": "server/routes/users.ts:1843",
         "x-autenticacion": "middleware"
       }
     },
@@ -1385,7 +1385,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:54",
+        "x-source": "server/routes/epk_fans.ts:53",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1418,7 +1418,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:72",
+        "x-source": "server/routes/epk_fans.ts:71",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1450,7 +1450,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:105",
+        "x-source": "server/routes/epk_fans.ts:104",
         "x-autenticacion": "middleware"
       }
     },
@@ -1873,7 +1873,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2540",
+        "x-source": "server/routes/users.ts:2528",
         "x-autenticacion": "middleware"
       }
     },
@@ -2399,7 +2399,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2540",
+        "x-source": "server/routes/users.ts:2528",
         "x-autenticacion": "middleware"
       }
     },
@@ -2534,7 +2534,7 @@
           "leads"
         ],
         "operationId": "postApiBatchEnrichCampaign",
-        "description": "Comentario en el código: POST /api/leads/batch-enrich-campaign Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos) para todos los leads filtrados por la campaña activa de la banda (por ejemplo \"Bakandeya\").",
+        "description": "Comentario en el código: POST /api/leads/batch-enrich-campaign Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos) para todos los leads filtrados por la campaña activa de la banda.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -3800,7 +3800,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2627",
+        "x-source": "server/routes/users.ts:2614",
         "x-autenticacion": "middleware"
       }
     },
@@ -4284,7 +4284,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:141",
+        "x-source": "server/routes/epk_fans.ts:140",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4317,7 +4317,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:161",
+        "x-source": "server/routes/epk_fans.ts:160",
         "x-autenticacion": "middleware"
       }
     },
@@ -4352,7 +4352,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1084",
+        "x-source": "server/routes/epk_fans.ts:1070",
         "x-autenticacion": "middleware"
       }
     },
@@ -4387,7 +4387,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:241",
+        "x-source": "server/routes/epk_fans.ts:237",
         "x-autenticacion": "middleware"
       }
     },
@@ -4606,7 +4606,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:778",
+        "x-source": "server/routes/epk_fans.ts:764",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -4639,7 +4639,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:797",
+        "x-source": "server/routes/epk_fans.ts:783",
         "x-autenticacion": "middleware"
       }
     },
@@ -4682,7 +4682,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:835",
+        "x-source": "server/routes/epk_fans.ts:821",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -4723,7 +4723,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:868",
+        "x-source": "server/routes/epk_fans.ts:854",
         "x-autenticacion": "middleware"
       }
     },
@@ -5192,7 +5192,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:970",
+        "x-source": "server/routes/agent.ts:969",
         "x-autenticacion": "middleware"
       }
     },
@@ -5473,7 +5473,7 @@
           "leads"
         ],
         "operationId": "postApiLeadsBatchEnrichCampaign",
-        "description": "Comentario en el código: POST /api/leads/batch-enrich-campaign Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos) para todos los leads filtrados por la campaña activa de la banda (por ejemplo \"Bakandeya\").",
+        "description": "Comentario en el código: POST /api/leads/batch-enrich-campaign Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos) para todos los leads filtrados por la campaña activa de la banda.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -5533,7 +5533,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:335",
+        "x-source": "server/routes/leads/crud.ts:334",
         "x-autenticacion": "middleware"
       }
     },
@@ -6219,7 +6219,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:360",
+        "x-source": "server/routes/leads/crud.ts:359",
         "x-autenticacion": "middleware"
       }
     },
@@ -7206,7 +7206,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2834",
+        "x-source": "server/routes/users.ts:2821",
         "x-autenticacion": "middleware"
       }
     },
@@ -7950,7 +7950,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1199",
+        "x-source": "server/routes/epk_fans.ts:1185",
         "x-autenticacion": "middleware"
       }
     },
@@ -8631,7 +8631,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:477",
+        "x-source": "server/routes/epk_fans.ts:467",
         "x-autenticacion": "ninguna"
       }
     },
@@ -8683,7 +8683,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:882",
+        "x-source": "server/routes/epk_fans.ts:868",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -8782,7 +8782,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1132",
+        "x-source": "server/routes/epk_fans.ts:1118",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -8805,7 +8805,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:993",
+        "x-source": "server/routes/epk_fans.ts:979",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9057,7 +9057,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:807",
+        "x-source": "server/routes/users.ts:801",
         "x-handler": "handleGetRegisteredBands",
         "x-autenticacion": "middleware"
       }
@@ -9215,7 +9215,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/agent.ts:1216",
+        "x-source": "server/routes/agent.ts:1215",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9395,7 +9395,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2381",
+        "x-source": "server/routes/users.ts:2369",
         "x-autenticacion": "middleware"
       }
     },
@@ -9430,7 +9430,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2266",
+        "x-source": "server/routes/users.ts:2256",
         "x-autenticacion": "middleware"
       }
     },
@@ -10677,7 +10677,7 @@
           "spotify"
         ],
         "operationId": "getApiSpotifyArtistDiscography",
-        "description": "Comentario en el código: GET /api/spotify/artist-discography?query=Bakandeya Fetches the entire discography (all albums, singles, tracks, preview audio) of an artist.",
+        "description": "Comentario en el código: GET /api/spotify/artist-discography?query=Banda+Demo Fetches the entire discography (all albums, singles, tracks, preview audio) of an artist.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -10747,7 +10747,7 @@
           "spotify"
         ],
         "operationId": "getApiSpotifyPreview",
-        "description": "Comentario en el código: GET /api/spotify/preview?artist=Bakandeya&track=Clandestino Resolves high-quality 30-second audio stream URL for any track.",
+        "description": "Comentario en el código: GET /api/spotify/preview?artist=Banda+Demo&track=Tema Resolves high-quality 30-second audio stream URL for any track.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -10782,7 +10782,7 @@
           "spotify"
         ],
         "operationId": "getApiSpotifySearch",
-        "description": "Comentario en el código: GET /api/spotify/search?q=Bakandeya Searches artists or resolves artist URL on Spotify.",
+        "description": "Comentario en el código: GET /api/spotify/search?q=Banda+Demo Searches artists or resolves artist URL on Spotify.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -11470,7 +11470,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:146",
+        "x-source": "server/routes/tracking.ts:144",
         "x-autenticacion": "ninguna"
       }
     },
@@ -11487,7 +11487,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:259",
+        "x-source": "server/routes/tracking.ts:255",
         "x-autenticacion": "ninguna"
       }
     },
@@ -11521,7 +11521,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/tracking.ts:329",
+        "x-source": "server/routes/tracking.ts:323",
         "x-autenticacion": "ninguna"
       }
     },
@@ -11593,7 +11593,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:111",
+        "x-source": "server/routes/agent.ts:110",
         "x-autenticacion": "middleware"
       }
     },
@@ -11628,7 +11628,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2508",
+        "x-source": "server/routes/users.ts:2496",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -11661,7 +11661,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2436",
+        "x-source": "server/routes/users.ts:2424",
         "x-autenticacion": "middleware"
       }
     },
@@ -11730,7 +11730,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2540",
+        "x-source": "server/routes/users.ts:2528",
         "x-autenticacion": "middleware"
       }
     },
@@ -11905,7 +11905,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:3200",
+        "x-source": "server/routes/users.ts:3183",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -11941,7 +11941,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users.ts:3243",
+        "x-source": "server/routes/users.ts:3226",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -11980,7 +11980,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users.ts:3115",
+        "x-source": "server/routes/users.ts:3098",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -12016,7 +12016,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2627",
+        "x-source": "server/routes/users.ts:2614",
         "x-autenticacion": "middleware"
       }
     },
@@ -12058,7 +12058,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2834",
+        "x-source": "server/routes/users.ts:2821",
         "x-autenticacion": "middleware"
       }
     },
@@ -12092,7 +12092,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:808",
+        "x-source": "server/routes/users.ts:802",
         "x-handler": "handleGetRegisteredBands",
         "x-autenticacion": "middleware"
       }
@@ -12128,7 +12128,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2381",
+        "x-source": "server/routes/users.ts:2369",
         "x-autenticacion": "middleware"
       }
     },
@@ -12163,7 +12163,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2266",
+        "x-source": "server/routes/users.ts:2256",
         "x-autenticacion": "middleware"
       }
     },
@@ -12198,7 +12198,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2508",
+        "x-source": "server/routes/users.ts:2496",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -12231,7 +12231,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2436",
+        "x-source": "server/routes/users.ts:2424",
         "x-autenticacion": "middleware"
       }
     },
@@ -12266,7 +12266,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:2540",
+        "x-source": "server/routes/users.ts:2528",
         "x-autenticacion": "middleware"
       }
     },
@@ -12309,7 +12309,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users.ts:3425",
+        "x-source": "server/routes/users.ts:3408",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -12353,7 +12353,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users.ts:3638",
+        "x-source": "server/routes/users.ts:3621",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -12429,7 +12429,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/tracking.ts:466",
+        "x-source": "server/routes/tracking.ts:458",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma webhook"
@@ -13477,7 +13477,7 @@
       "cookieAuth": {
         "type": "apiKey",
         "in": "cookie",
-        "name": "bakandeya_token",
+        "name": "bandmanager_token",
         "description": "Mismo token de sesión, en cookie."
       },
       "authTokenHeader": {

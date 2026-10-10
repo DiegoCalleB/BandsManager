@@ -40,7 +40,7 @@ export function useReelsCenterController({ bandName, instagramHandle, hasAnySoci
     "pipeline",
   );
 
-  // Esta pantalla estaba llena de"Bakandeya" a pelo, así que cualquier otra banda veía por
+  // Esta pantalla estaba llena del nombre de una banda a pelo, así que cualquier otra banda veía por
   // todas partes el nombre de la banda del fundador en vez del suyo.
   const nombreBanda = (bandName || "").trim() || "tu banda";
 

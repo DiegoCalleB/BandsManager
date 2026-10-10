@@ -298,7 +298,7 @@ Para evitar promesas falsas o alucinaciones técnicas que comprometan la reputac
 * **Si la banda TIENE Equipo Tradicional (monitores de cuña/amplis):** El Agente conmuta automáticamente a la palanca de *"setup ágil de 30 minutos con linetime optimizado y prueba rápida sin complicaciones"*.
 
 ### 3. Reglas de Oro Anti-Alucinación
-* El Agente respeta las restricciones declaradas por la banda (ej: *"Bakandeya no tiene sección de vientos"*).
+* El Agente respeta las restricciones declaradas por la banda (ej: *"La banda no tiene sección de vientos"*).
 * Toda propuesta técnica en el correo debe poder ser cumplida al 100% el día del concierto por los músicos de la banda.
 
 ---

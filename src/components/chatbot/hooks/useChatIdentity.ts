@@ -39,7 +39,7 @@ export function useChatIdentity({ userRole, currentUser, activeBandName }: ChatI
 
     if (
       lowerRaw === lowerBandDisplay ||
-      ['repercusion', 'bakandeya', 'admin', 'user', 'guest', 'leader', 'member', 'banda', 'equipo'].includes(lowerRaw) ||
+      ['repercusion', 'admin', 'user', 'guest', 'leader', 'member', 'banda', 'equipo'].includes(lowerRaw) ||
       lowerRaw.startsWith('band-') ||
       lowerRaw.startsWith('reg-')
     ) {
@@ -49,7 +49,7 @@ export function useChatIdentity({ userRole, currentUser, activeBandName }: ChatI
     return firstName || 'equipo';
   })();
 
-  const storageKey = `bakandeya_chat_messages_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`;
+  const storageKey = `bandmanager_chat_messages_${currentUser?.id || 'guest'}_${currentUser?.band_id || 'default'}`;
 
   const cleanLegacyText = (text: string) => {
     if (!text) return text;

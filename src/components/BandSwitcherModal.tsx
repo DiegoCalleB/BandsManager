@@ -204,7 +204,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
       const res = await api.leaveBand(bandId);
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
+          localStorage.setItem("bandmanager_user", JSON.stringify(res.user));
           if (res.user.band_id && onSwitchBand) {
             await onSwitchBand(res.user.band_id);
           }
@@ -232,7 +232,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
           const resData = await response.json();
           if (resData?.user) {
             localStorage.setItem(
-              "bakandeya_user",
+              "bandmanager_user",
               JSON.stringify(resData.user),
             );
             if (resData.user.band_id && onSwitchBand) {
@@ -311,7 +311,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
       if (res && res.success) {
         if (res.user) {
-          localStorage.setItem("bakandeya_user", JSON.stringify(res.user));
+          localStorage.setItem("bandmanager_user", JSON.stringify(res.user));
         }
         if (onSwitchBand && res.band_id) {
           await onSwitchBand(res.band_id);
@@ -470,9 +470,6 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
         ) {
           logo = epkConfig.logoUrl;
         }
-        if (!logo && clean === "bakandeya") {
-          logo = "/logo_bakandeya_bueno_sin_fondo.png";
-        }
         if (!bandListMap.has(clean)) {
           bandListMap.set(clean, {
             band_id: bid,
@@ -492,13 +489,10 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
 
   // Ensure active band is present
   if (!bandListMap.has(activeClean)) {
-    let logo = customLogos[activeClean] || epkConfig?.logoUrl || "";
-    if (!logo && activeClean === "bakandeya") {
-      logo = "/logo_bakandeya_bueno_sin_fondo.png";
-    }
+    const logo = customLogos[activeClean] || epkConfig?.logoUrl || "";
     bandListMap.set(activeClean, {
       band_id: currentActiveBandId,
-      bandName: currentUser?.bandName || currentUser?.name || "BAKANDEYA",
+      bandName: currentUser?.bandName || currentUser?.name || "Banda",
       role: currentUser?.role || "leader",
       logoUrl: logo,
       plan: currentUser?.plan || "ensayo",
@@ -1166,7 +1160,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                         type="text"
                         value={newBandName}
                         onChange={(e) => setNewBandName(e.target.value)}
-                        placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑, Bakandeya…"
+                        placeholder="Ej: Los Nocturnos, KoЯn, 𝕭𝖑𝖆𝖈𝖐 𝕸𝖊𝖙𝖆𝖑…"
                         required
                         autoFocus
                         className="w-full"
@@ -1885,7 +1879,7 @@ export const BandSwitcherModal: React.FC<BandSwitcherModalProps> = ({
                                             plan: plan.id,
                                           };
                                           localStorage.setItem(
-                                            "bakandeya_user",
+                                            "bandmanager_user",
                                             JSON.stringify(updatedUser),
                                           );
                                         }

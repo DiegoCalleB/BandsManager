@@ -528,7 +528,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     const campaignId = campaignData.id || `camp-${Date.now()}`;
     const fullCampaign: BookingCampaign = {
       id: campaignId,
-      band_id: campaignData.band_id || bandId || 'bakandeya',
+      band_id: campaignData.band_id || bandId || '',
       name: campaignData.name || 'Nueva Campaña',
       targetCities: campaignData.targetCities || [],
       minCapacity: Number(campaignData.minCapacity || 0),

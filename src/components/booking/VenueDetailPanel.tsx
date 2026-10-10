@@ -346,6 +346,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
           }
           isStitchLight={isStitchLight}
           onOpenRoadbookModal={onOpenRoadbookModal}
+          bandName={bandName}
         />
       )}
 

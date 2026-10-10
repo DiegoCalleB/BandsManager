@@ -73,11 +73,11 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1182 nodos: 49 agent · 40 db · 12 external · 14 feature · 649 frontend · 40 hook · 42 route · 61 schema · 10 security · 265 service.
+1183 nodos: 49 agent · 40 db · 12 external · 14 feature · 649 frontend · 40 hook · 42 route · 61 schema · 10 security · 266 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 419 ficheros dependen de él
+- [[src_types|src/types.ts]] — 418 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 286 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 166 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 85 ficheros dependen de él
@@ -95,7 +95,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] — 28 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 28 ficheros dependen de él
-- [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] — 26 ficheros dependen de él
+- [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] — 25 ficheros dependen de él
 - [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] — 24 ficheros dependen de él
 
 ---

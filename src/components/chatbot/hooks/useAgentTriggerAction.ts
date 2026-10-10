@@ -26,11 +26,11 @@ export interface AgentTriggerActionParams {
 export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMessages, setMessages, setActiveRun, leads }: AgentTriggerActionParams) {
   const applyAgentTrigger = async (msgId: string, actionIndex: number, action: ProposedAction) => {
     try {
-      const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token') || '';
-      const pat = localStorage.getItem('bakandeya_github_pat') || '';
-      const owner = localStorage.getItem('bakandeya_github_owner') || '';
-      const repo = localStorage.getItem('bakandeya_github_repo') || '';
-      const ref = localStorage.getItem('bakandeya_github_ref') || 'main';
+      const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token') || '';
+      const pat = localStorage.getItem('bandmanager_github_pat') || '';
+      const owner = localStorage.getItem('bandmanager_github_owner') || '';
+      const repo = localStorage.getItem('bandmanager_github_repo') || '';
+      const ref = localStorage.getItem('bandmanager_github_ref') || 'main';
 
       const customHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
 
@@ -86,7 +86,7 @@ export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMess
       }
 
       if (data.detectedRef) {
-        localStorage.setItem('bakandeya_github_ref', data.detectedRef);
+        localStorage.setItem('bandmanager_github_ref', data.detectedRef);
         window.dispatchEvent(new Event('github-ref-updated'));
       }
 

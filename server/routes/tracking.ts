@@ -130,8 +130,6 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
       } catch (_) {}
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
       console.log(`[Telemetría] 👁️ Apertura #${openCount} registrada para lead ${lead.id} (${lead.nombre_sala}) vía ${clientLabel}`);
     }
   } catch (err: any) {
@@ -243,8 +241,6 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
       } catch (_) {}
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
       console.log(`[Telemetría] 🎯 Clic en ${accionBoton} registrado para lead ${lead.id} (${lead.nombre_sala})`);
     }
   } catch (err: any) {
@@ -312,8 +308,6 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
       } catch (_) {}
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
       console.log(`[Telemetría EPK] 🎯 ${cleanAction} registrada para lead ${lead.id} (${lead.nombre_sala}): ${cleanDetails}`);
     }
   } catch (err: any) {
@@ -346,7 +340,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       const bandToQuery = String(lead?.band_id || targetBandId || "");
       if (idSeguro(bandToQuery)) {
         const sinPrefijo = bandToQuery.replace(/^(band|reg)-/, "");
-        // Sin alternativa a la banda de Bakandeya: antes una banda sin Dossier redirigía al ajeno.
+        // Sin alternativa a la de otra banda: antes una banda sin Dossier redirigía al ajeno.
         const { data: epkData } = await sb
           .from("epk_configs")
           .select("dossier_pdf_url")
@@ -448,8 +442,6 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       }
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
       console.log(`[Telemetría PDF] 📥 Apertura #${pdfOpenCount} de Dossier PDF registrada para lead ${lead.id} (${lead.nombre_sala})${emailIdLabel}`);
     }
   } catch (err: any) {
@@ -561,8 +553,6 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
         .eq("id", lead.id);
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
 
     } else if (eventType === "email.clicked") {
       const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier")).length + 1;
@@ -586,8 +576,6 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
         .eq("id", lead.id);
 
       invalidateBandStateCache(lead.band_id);
-      invalidateBandStateCache("band-bakandeya");
-      invalidateBandStateCache("bakandeya");
     }
   } catch (e: any) {
     console.warn("[Resend Webhook] Error procesando evento:", e?.message || e);

@@ -107,7 +107,7 @@ export function useLeadFormsAndEnrichment({ currentBandId, setEditedLeadInfo, se
 
   const [manualEmailSubject, setManualEmailSubject] = useState('');
 
-  const [manualEmailSender] = useState('Bakandeya Agent Manager IA');
+  const [manualEmailSender] = useState('Agent Manager IA');
 
   const [, setManualEmailStatus] = useState('');
 

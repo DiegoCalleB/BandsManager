@@ -265,20 +265,14 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
   // Sincronizar y reiniciar datos de la banda cuando se abre el modal o cambia la banda/epkConfig
   useEffect(() => {
     if (isOpen) {
-      const cleanActive = (activeBandId || "")
-        .replace(/^(band|reg)-/, "")
-        .toLowerCase();
-      const isBakandeyaBand = cleanActive === "bakandeya";
-
       const resolvedName =
-        (bandName && bandName !== "Banda" && bandName !== "BAKANDEYA"
+        (bandName && bandName !== "Banda"
           ? bandName
           : "") ||
         (currentUser?.bandName && currentUser.bandName !== "Banda"
           ? currentUser.bandName
           : "") ||
         (epkConfig?.contactoBooking?.nombre &&
-        !epkConfig.contactoBooking.nombre.toLowerCase().includes("bakandeya") &&
         epkConfig.contactoBooking.nombre.toLowerCase() !== "banda"
           ? epkConfig.contactoBooking.nombre
           : "") ||
@@ -310,31 +304,16 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
         Array.isArray(epkConfig.miembros) &&
         epkConfig.miembros.length > 0
       ) {
-        const tieneBakandeya =
-          !isBakandeyaBand &&
-          epkConfig.miembros.some(
-            (m) =>
-              String(m.nombre || "")
-                .toLowerCase()
-                .includes("filgue") ||
-              String(m.nombre || "")
-                .toLowerCase()
-                .includes("bakandeya"),
-          );
-        if (!tieneBakandeya) {
-          setMembers(
-            epkConfig.miembros.map((m, idx) => ({
-              id: m.id || `m_${idx}_${Date.now()}`,
-              name: m.nombre,
-              role: m.rol || "Músico",
-              email: "",
-              instagram: m.instagram || "",
-              isLeader: idx === 0,
-            })),
-          );
-        } else {
-          setMembers([defaultLeaderMember]);
-        }
+        setMembers(
+          epkConfig.miembros.map((m, idx) => ({
+            id: m.id || `m_${idx}_${Date.now()}`,
+            name: m.nombre,
+            role: m.rol || "Músico",
+            email: "",
+            instagram: m.instagram || "",
+            isLeader: idx === 0,
+          })),
+        );
       } else {
         // Para una nueva banda sin miembros configurados en su epkConfig, resetear siempre al líder actual,
         // evitando arrastrar el nombre del primer miembro o de la banda previa
@@ -360,14 +339,7 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
       );
 
       if (epkConfig?.biografia) {
-        if (
-          isBakandeyaBand ||
-          !epkConfig.biografia.toLowerCase().includes("bakandeya")
-        ) {
-          setBio(epkConfig.biografia);
-        } else {
-          setBio("");
-        }
+        setBio(epkConfig.biografia);
       } else {
         setBio("");
       }
@@ -401,15 +373,13 @@ export const OnboardingWizardModal: React.FC<OnboardingWizardModalProps> = ({
 
       setPhotos(epkConfig?.bandPhotos || (epkConfig as any)?.fotos || []);
       setPressQuotes(
-        !isBakandeyaBand &&
-          Array.isArray((epkConfig as any)?.resenasPrensa?.citas)
+        Array.isArray((epkConfig as any)?.resenasPrensa?.citas)
           ? (epkConfig as any).resenasPrensa.citas
           : [],
       );
 
       const bookingName =
         epkConfig?.contactoBooking?.nombre &&
-        !epkConfig.contactoBooking.nombre.toLowerCase().includes("bakandeya") &&
         epkConfig.contactoBooking.nombre.toLowerCase() !== "banda"
           ? epkConfig.contactoBooking.nombre
           : resolvedName ||

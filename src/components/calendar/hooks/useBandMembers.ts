@@ -23,7 +23,7 @@ export function useBandMembers({ activeBandId, currentUser, bandUsers }: BandMem
   const [selectedBandIdForNewEvent, setSelectedBandIdForNewEvent] = useState(activeBandId);
 
   // Effective band members list for Convocatoria filtered by target band of the event
-  // Antes esto era la formación real de Bakandeya (Diego, Filgue, Batería, Teclados) y se usaba
+  // Antes esto era la formación real de una banda concreta y se usaba
   // como lista por defecto de"miembros" para CUALQUIER banda sin integrantes cargados todavía:
   // cualquier banda nueva programando su primer ensayo veía a los compañeros de banda de Diego
   // como asistentes seleccionables. Sin datos reales, el único miembro real disponible es quien
@@ -48,7 +48,6 @@ export function useBandMembers({ activeBandId, currentUser, bandUsers }: BandMem
       .replace(/^(band|reg)-/, '')
       .replace(/-\d+$/, '')
       .toLowerCase();
-    const targetIsBakandeya = targetClean === 'bakandeya';
 
     if (bandUsers && bandUsers.length > 0) {
       const filtered = bandUsers.filter((u) => {
@@ -57,9 +56,7 @@ export function useBandMembers({ activeBandId, currentUser, bandUsers }: BandMem
           .replace(/-\d+$/, '')
           .toLowerCase();
         const uBandName = (u.bandName || '').toLowerCase();
-        return targetIsBakandeya
-          ? !u.band_id || uClean === 'bakandeya' || uClean === ''
-          : uClean === targetClean || uBandName.includes(targetClean);
+        return uClean === targetClean || uBandName.includes(targetClean);
       });
 
       const list = filtered.length > 0 ? filtered : bandUsers;

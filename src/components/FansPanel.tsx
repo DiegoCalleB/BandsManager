@@ -150,13 +150,8 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   const effectiveBandName =
     currentBandName ||
     epkConfig?.contactoBooking?.nombre ||
-    (currentBandId?.includes("bakandeya") ? "Bakandeya" : "Tu Banda");
-  const effectiveBandLogo =
-    currentBandLogo ||
-    epkConfig?.logoUrl ||
-    (effectiveBandName.toLowerCase().includes("bakandeya")
-      ? "/logo_bakandeya_bueno_sin_fondo.png"
-      : "");
+    "Tu Banda";
+  const effectiveBandLogo = currentBandLogo || epkConfig?.logoUrl || "";
   const cleanBandId =
     (currentBandId || "").toLowerCase().replace(/^(band|reg)-/, "") || "banda";
   const {
@@ -229,7 +224,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       return epkConfig.ciudadesConfig;
     }
     try {
-      const saved = localStorage.getItem("bakandeya_custom_cities");
+      const saved = localStorage.getItem("bandmanager_custom_cities");
       return saved
         ? JSON.parse(saved)
         : [
@@ -286,7 +281,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
       setCustomCityChips(updated);
       try {
         localStorage.setItem(
-          "bakandeya_custom_cities",
+          "bandmanager_custom_cities",
           JSON.stringify(updated),
         );
       } catch {}
@@ -304,7 +299,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
     const updated = customCityChips.filter((c) => c !== cityToRemove);
     setCustomCityChips(updated);
     try {
-      localStorage.setItem("bakandeya_custom_cities", JSON.stringify(updated));
+      localStorage.setItem("bandmanager_custom_cities", JSON.stringify(updated));
     } catch {}
     if (selectedCityFilter === cityToRemove) {
       setSelectedCityFilter("");
@@ -315,7 +310,7 @@ export const FansPanel: React.FC<FansPanelProps> = ({
   };
 
   // Incentive state. Antes, mientras una banda no configuraba su propio incentivo, este
-  // formulario mostraba (y podía llegar a guardar) un enlace de descarga real de Bakandeya y un
+  // formulario mostraba (y podía llegar a guardar) un enlace de descarga real de otra banda y un
   // código de descuento con su nombre — datos inventados de una banda concreta colándose como
   //"valor por defecto" en el panel de cualquier otra.
   const [incentivo, setIncentivo] = useState(

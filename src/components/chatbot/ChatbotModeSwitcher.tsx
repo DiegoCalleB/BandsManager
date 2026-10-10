@@ -59,7 +59,7 @@ export const ChatbotModeSwitcher: React.FC<ChatbotModeSwitcherProps> = ({
           onClick={() => {
             const nextVal = !agentsEnabled;
             onToggleAgents(nextVal);
-            localStorage.setItem('bakandeya_agents_enabled', String(nextVal));
+            localStorage.setItem('bandmanager_agents_enabled', String(nextVal));
           }}
           className="items-center gap-1.5 shrink-0"
           title={agentsEnabled ? 'Desactivar motor de agentes de Supabase y usar solo Gemini' : 'Activar motor de agentes en Supabase'}

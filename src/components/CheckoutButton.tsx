@@ -41,14 +41,14 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
 
       if (!effectiveEmail || !effectiveBandId) {
         try {
-          const storedUser = localStorage.getItem('bakandeya_user');
+          const storedUser = localStorage.getItem('bandmanager_user');
           if (storedUser) {
             const parsed = JSON.parse(storedUser);
             if (!effectiveEmail && parsed.email) effectiveEmail = parsed.email;
             if (!effectiveBandId && parsed.band_id) effectiveBandId = parsed.band_id;
           }
           if (!effectiveBandId) {
-            const activeBandId = localStorage.getItem('bakandeya_active_band_id');
+            const activeBandId = localStorage.getItem('bandmanager_active_band_id');
             if (activeBandId) effectiveBandId = activeBandId;
           }
         } catch (e) {

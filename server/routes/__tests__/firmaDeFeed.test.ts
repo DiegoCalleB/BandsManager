@@ -18,16 +18,16 @@ afterEach(() => {
 
 describe('firmaDeFeed', () => {
   it('cada banda tiene su firma, y no se adivina desde la de otra', () => {
-    const bakandeya = firmaDeFeed('band-bakandeya');
+    const ejemplo = firmaDeFeed('band-ejemplo');
     const laVanda = firmaDeFeed('band-la-vanda');
-    expect(bakandeya).toMatch(/^[0-9a-f]{32}$/);
-    expect(bakandeya).not.toBe(laVanda);
+    expect(ejemplo).toMatch(/^[0-9a-f]{32}$/);
+    expect(ejemplo).not.toBe(laVanda);
   });
 
   it('la misma banda da siempre la misma firma', () => {
     // Importa: la URL del calendario queda guardada en el cliente de calendario del usuario y
     // tiene que seguir funcionando entre reinicios del servidor.
-    expect(firmaDeFeed('band-bakandeya')).toBe(firmaDeFeed('band-bakandeya'));
+    expect(firmaDeFeed('band-ejemplo')).toBe(firmaDeFeed('band-ejemplo'));
   });
 
   it('el orden de la lista de bandas no cambia la firma', () => {
@@ -35,13 +35,13 @@ describe('firmaDeFeed', () => {
   });
 
   it('cambiar el secreto invalida todas las firmas de golpe', () => {
-    const antes = firmaDeFeed('band-bakandeya');
+    const antes = firmaDeFeed('band-ejemplo');
     process.env.CALENDAR_FEED_SECRET = 'otro-secreto';
-    expect(firmaDeFeed('band-bakandeya')).not.toBe(antes);
+    expect(firmaDeFeed('band-ejemplo')).not.toBe(antes);
   });
 
   it('sin secreto configurado no hay firma, y la ruta responde 503', () => {
     delete process.env.CALENDAR_FEED_SECRET;
-    expect(firmaDeFeed('band-bakandeya')).toBeNull();
+    expect(firmaDeFeed('band-ejemplo')).toBeNull();
   });
 });

@@ -76,7 +76,7 @@ export function useBandCrmData({ bandName, currentBandId, leads }: BandCrmDataPa
 
   useEffect(() => {
     const token =
-      localStorage.getItem("bakandeya_token") || localStorage.getItem("token");
+      localStorage.getItem("bandmanager_token") || localStorage.getItem("token");
     if (token) {
       fetchBands();
     }

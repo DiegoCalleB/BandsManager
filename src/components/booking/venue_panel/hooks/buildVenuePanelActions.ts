@@ -68,7 +68,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
     const providerToUse = targetProvider || selectedAiModel;
     try {
       const token =
-        localStorage.getItem("bakandeya_token") ||
+        localStorage.getItem("bandmanager_token") ||
         localStorage.getItem("token") ||
         "";
       const headers: Record<string, string> = {
@@ -149,7 +149,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
     setIsRevertingPitch(true);
     try {
       const token =
-        localStorage.getItem("bakandeya_token") ||
+        localStorage.getItem("bandmanager_token") ||
         localStorage.getItem("token") ||
         "";
       const headers: Record<string, string> = {

@@ -649,7 +649,7 @@ CREATE POLICY "Permitir acceso total al backend" ON reel_analyses FOR ALL USING 
 -- server/db/campaigns.ts prueba primero la tabla "campaigns" y solo cae a "booking_campaigns"
 -- si esa falla. En producción existía una tabla "campaigns" creada a mano con id/band_id como
 -- uuid y start_date/end_date NOT NULL sin default -tipos incompatibles con lo que este código
--- manda (band_id como texto tipo "bakandeya", sin fechas de inicio/fin)-, así que CADA guardado
+-- manda (band_id como texto tipo "mi-banda", sin fechas de inicio/fin)-, así que CADA guardado
 -- fallaba en silencio y la app devolvía un objeto simulado como si se hubiera guardado. Este es
 -- el esquema real y corregido (ver migración fix_campaigns_table_schema).
 CREATE TABLE IF NOT EXISTS campaigns (
@@ -883,7 +883,7 @@ CREATE POLICY "Permitir acceso total al backend" ON pitch_example_threads FOR AL
 -- server/routes/repertorio.ts, server/db/repertoire.ts, src/components/RepertorioSetlists.tsx.
 -- Los "Rápidos" del editor de repertorio (Presentación, Chapa, BIS...) eran botones fijos en
 -- el propio componente y uno de ellos ("Solo Filgue") nombraba directamente a un músico de
--- Bakandeya, apareciendo así en el repertorio de cualquier otra banda. Esta tabla permite que
+-- otra banda, apareciendo así en el repertorio de cualquier otra banda. Esta tabla permite que
 -- cada banda cree sus propios accesos rápidos (icono + etiqueta + texto/duración del ítem que
 -- se inserta) sin tocar código.
 CREATE TABLE IF NOT EXISTS setlist_shortcuts (

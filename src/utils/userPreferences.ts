@@ -85,7 +85,7 @@ export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
 
   // 3. Comprobación en usuario en caché de localStorage
   try {
-    const cachedUserStr = localStorage.getItem('bakandeya_user');
+    const cachedUserStr = localStorage.getItem('bandmanager_user');
     if (cachedUserStr) {
       const parsed = JSON.parse(cachedUserStr);
       if (parsed?.ui_preferences?.tutorials_seen?.includes(moduleId)) {
@@ -115,7 +115,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   let currentTutorials: string[] = [];
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bakandeya_user');
+      const cachedUserStr = localStorage.getItem('bandmanager_user');
       if (cachedUserStr) {
         const user = JSON.parse(cachedUserStr);
         const currentPrefs = user.ui_preferences || {};
@@ -127,7 +127,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
           ...currentPrefs,
           tutorials_seen: currentTutorials,
         };
-        localStorage.setItem('bakandeya_user', JSON.stringify(user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
     } catch {}
   }
@@ -135,14 +135,14 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   // 3. Persistir en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
           tutorials_seen: currentTutorials.length > 0 ? currentTutorials : [moduleId],
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }
@@ -225,7 +225,7 @@ export async function markOnboardingCompleted(
 
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bakandeya_user');
+      const cachedUserStr = localStorage.getItem('bandmanager_user');
       if (cachedUserStr) {
         const user = JSON.parse(cachedUserStr);
         const currentPrefs = user.ui_preferences || {};
@@ -245,7 +245,7 @@ export async function markOnboardingCompleted(
           onboarding_completed_bands: updatedOnboardingBands,
           profile_wizard_completed_bands: updatedWizardBands,
         };
-        localStorage.setItem('bakandeya_user', JSON.stringify(user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
     } catch {}
   }
@@ -253,7 +253,7 @@ export async function markOnboardingCompleted(
   // 3. Sincronizar en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
@@ -264,7 +264,7 @@ export async function markOnboardingCompleted(
             clean && !updatedWizardBands.includes(clean) ? [...updatedWizardBands, clean] : updatedWizardBands,
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }

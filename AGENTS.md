@@ -95,10 +95,10 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 **Regla fundamental: localStorage NUNCA debe persistir datos específicos de banda sin `band_id` explícito en la clave.**
 
 1. **Qué SÍ va en localStorage (seguro, multi-tenant):**
-   * Tokens de autenticación (`bakandeya_token`, con expiración)
-   * Usuario autenticado (`bakandeya_user`, con banda_id adentro del objeto)
-   * Preferencias de UI (`bakandeya_theme`, `bakandeya_language`, `bakandeya_font`)
-   * Filtros y vistas guardadas por el usuario (scoped a sessionStorage si es genérico; `bakandeya_saved_crm_filters` si lleva band_id implícito)
+   * Tokens de autenticación (`bandmanager_token`, con expiración)
+   * Usuario autenticado (`bandmanager_user`, con banda_id adentro del objeto)
+   * Preferencias de UI (`bandmanager_theme`, `bandmanager_language`, `bandmanager_font`)
+   * Filtros y vistas guardadas por el usuario (scoped a sessionStorage si es genérico; `bandmanager_saved_crm_filters` si lleva band_id implícito)
 
 2. **Qué NO va en localStorage (prohibido sin banda_id explícito):**
    * Canciones, setlists, álbumes de banda → **React state + API** (band_id validado server-side via `getTargetBandId`)
@@ -108,7 +108,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 3. **Patrón Seguro (Implementado):**
    ```
    // ✗ PROHIBIDO (datos de banda sin band_id en clave)
-   localStorage.setItem('bakandeya_songs', JSON.stringify(songs));
+   localStorage.setItem('bandmanager_songs', JSON.stringify(songs));
    
    // ✓ PERMITIDO (datos de banda obtenidos via API con band_id validado)
    const [songs, setSongs] = useState([]);

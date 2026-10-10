@@ -18,7 +18,6 @@ Carga inicial y por API de canciones y setlists, saneados por banda sin mezclar 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

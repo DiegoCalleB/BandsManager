@@ -1,6 +1,6 @@
 /**
  * Band ID Hashing & Token Utility (Server-side)
- * Ofusca ids internos de banda (p. ej. 'band-bakandeya') en tokens de URL cortos y limpios para
+ * Ofusca ids internos de banda (p. ej. 'band-demo') en tokens de URL cortos y limpios para
  * las páginas públicas de EPK y fans.
  *
  * ⚠️ NO ES UN SECRETO NI UN CONTROL DE ACCESO. Es un XOR con una constante que está en el código
@@ -56,7 +56,7 @@ export function decodeBandId(tokenOrId: string): string {
     }
   }
 
-  // Backward compatibility: If plain string passed (e.g. 'band-bakandeya' or 'bakandeya')
+  // Backward compatibility: If plain string passed (e.g. 'band-demo' or 'demo')
   return str;
 }
 

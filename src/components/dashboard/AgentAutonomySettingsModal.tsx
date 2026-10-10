@@ -42,7 +42,7 @@ export const AgentAutonomySettingsModal: React.FC<AgentAutonomySettingsModalProp
   isOpen,
   onClose,
   bandName = "Tu Banda",
-  bandId = "band-bakandeya",
+  bandId = "",
   currentUser,
   initialConfig,
   onSaveConfig,

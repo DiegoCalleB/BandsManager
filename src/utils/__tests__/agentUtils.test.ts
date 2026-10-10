@@ -19,8 +19,8 @@ describe('agentUtils', () => {
   });
 
   it('builds press release prompt correctly', () => {
-    const prompt = buildPressReleasePrompt('Bakandeya', 'Cacharros', '2025-09-01', 'Ska', 'Videoclip grabado en directo');
-    expect(prompt).toContain('Bakandeya');
+    const prompt = buildPressReleasePrompt('Banda Demo', 'Cacharros', '2025-09-01', 'Ska', 'Videoclip grabado en directo');
+    expect(prompt).toContain('Banda Demo');
     expect(prompt).toContain('Cacharros');
     expect(prompt).toContain('Nota de Prensa');
   });

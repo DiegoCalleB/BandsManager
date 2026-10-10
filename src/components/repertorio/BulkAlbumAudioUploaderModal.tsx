@@ -369,7 +369,7 @@ export function BulkAlbumAudioUploaderModal({
     stopPreview();
     setFeedbackMsg(null);
 
-    const token = localStorage.getItem("bakandeya_token");
+    const token = localStorage.getItem("bandmanager_token");
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

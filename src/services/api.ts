@@ -26,10 +26,10 @@ export class ApiError extends Error {
 }
 
 export function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+  const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token');
   let activeBandId = '';
   try {
-    const userStr = localStorage.getItem('bakandeya_user');
+    const userStr = localStorage.getItem('bandmanager_user');
     if (userStr) {
       const u = JSON.parse(userStr);
       if (u?.band_id) activeBandId = u.band_id;

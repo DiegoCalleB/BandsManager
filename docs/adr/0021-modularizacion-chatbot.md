@@ -29,7 +29,7 @@ Se mantiene el contrato público (`export default Chatbot` y los tipos `ChatMess
 - Tres `eslint-disable-next-line` justificados: restauración del historial al cambiar de banda (`set-state-in-effect`) y ids de leads simulados de la demo (`purity`).
 
 ## Defectos preexistentes detectados y NO corregidos
-- **Secretos en el cliente:** `useAgentRuns` lee `bakandeya_github_pat` (token de GitHub) de `localStorage` para consultar los workflows. Un PAT no debería vivir en el navegador; la consulta debería hacerla el servidor.
-- **Claves sin `band_id`:** `bakandeya_agents_enabled`, `bakandeya_agent_autonomy` y `bakandeya_github_ref` se guardan sin `band_id` (AGENTS.md §2.5). El historial sí usa `bakandeya_chat_messages_{userId}_{bandId}`. El test de seguridad limita las escrituras a esa lista.
+- **Secretos en el cliente:** `useAgentRuns` lee `bandmanager_github_pat` (token de GitHub) de `localStorage` para consultar los workflows. Un PAT no debería vivir en el navegador; la consulta debería hacerla el servidor.
+- **Claves sin `band_id`:** `bandmanager_agents_enabled`, `bandmanager_agent_autonomy` y `bandmanager_github_ref` se guardan sin `band_id` (AGENTS.md §2.5). El historial sí usa `bandmanager_chat_messages_{userId}_{bandId}`. El test de seguridad limita las escrituras a esa lista.
 - `api.createLead` está tipado como `Promise<Lead>` pero el chat lee `res.lead`; se mantiene con un cast local hasta aclarar el contrato.
 - `ProposedAction.params` y el estado de ejecución se tipan ahora, pero `/api/agent-runs` se consulta con `fetch` directo y el cliente envía parámetros de región; el servidor debe resolver la banda con `getTargetBandId`.

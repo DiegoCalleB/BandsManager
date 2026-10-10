@@ -40,7 +40,7 @@ describe('dbUpsertEpkConfig: merge de miembros por id', () => {
   // Bug real: guardar el EPK desde un formulario que solo gestiona nombre/rol/instagram (sin
   // foto/bio) borraba esos campos en TODOS los miembros existentes, porque el array se
   // reemplazaba entero en vez de mezclarse por id. Pasó de verdad con los 4 integrantes de
-  // Bakandeya.
+  // Banda Ejemplo.
   it('preserva foto/bio de un miembro existente cuando el payload entrante no los trae', async () => {
     selectResult = {
       data: {

@@ -691,9 +691,9 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
   }
 
   // 2. Seamless Universal Music API Fallback (Deezer + iTunes)
-  // Nota: antes, si no se resolvía ningún nombre de artista, se buscaba literalmente "Bakandeya"
-  // en Deezer/iTunes, así que una banda distinta sin nombre resuelto podía acabar viendo (o
-  // importando) la discografía del fundador. Sin nombre resuelto, no hay nada que buscar.
+  // Nota: antes, si no se resolvía ningún nombre de artista, se buscaba un nombre fijo
+  // en Deezer/iTunes, así que una banda sin nombre resuelto podía acabar viendo (o importando)
+  // la discografía de otra. Sin nombre resuelto, no hay nada que buscar.
   const artistQuery = (resolvedArtistName || (parsed.type === "query" ? parsed.value : "")).trim();
 
   if (artistQuery) {

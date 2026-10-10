@@ -127,7 +127,7 @@ function clasificarAutenticacion(intermedios, textoDelHandler) {
   if (textoDelHandler === null) return { tipo: "desconocida", marcas: [] };
   const marcas = [];
   if (/getUserFromRequest\(/.test(textoDelHandler)) marcas.push("getUserFromRequest");
-  if (/headers\.authorization|bakandeya_token|ACTIVE_SESSIONS\[/.test(textoDelHandler)) marcas.push("lee el token de sesión");
+  if (/headers\.authorization|bandmanager_token|ACTIVE_SESSIONS\[/.test(textoDelHandler)) marcas.push("lee el token de sesión");
   if (/firmaCoincide|firmaDeFeed/.test(textoDelHandler)) marcas.push("firma HMAC en la URL");
   if (/stripe-signature|constructEvent\(/.test(textoDelHandler)) marcas.push("firma Stripe");
   if (/svix|webhook-signature|verifyWebhook/i.test(textoDelHandler)) marcas.push("firma webhook");
@@ -347,7 +347,7 @@ const documento = {
   components: fusionar({
     securitySchemes: {
       bearerAuth: { type: "http", scheme: "bearer", description: "Token de sesión en `Authorization: Bearer <token>`. Las sesiones duran 30 días." },
-      cookieAuth: { type: "apiKey", in: "cookie", name: "bakandeya_token", description: "Mismo token de sesión, en cookie." },
+      cookieAuth: { type: "apiKey", in: "cookie", name: "bandmanager_token", description: "Mismo token de sesión, en cookie." },
       authTokenHeader: { type: "apiKey", in: "header", name: "x-auth-token", description: "Mismo token de sesión, en cabecera." },
       cronSecret: { type: "apiKey", in: "header", name: "x-cron-secret", description: "Secreto compartido (`CRON_SECRET`) para tareas programadas." },
     },

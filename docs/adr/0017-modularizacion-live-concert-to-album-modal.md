@@ -30,7 +30,7 @@ Los tests viven en `live_concert_album/__tests__/` (formato de tiempo, contratos
 
 ## Defectos preexistentes detectados y NO corregidos
 - `playingTrackUrl` nunca se actualiza (`setPlayingTrackUrl` no se usaba): el indicador «reproduciendo» de la fila no llega a activarse.
-- `uploadFileBinary` lee `bakandeya_user` de `localStorage` para enviar `x-band-id`; el servidor debe seguir resolviendo la banda con `getTargetBandId` e ignorar esa cabecera (AGENTS.md §2.1).
+- `uploadFileBinary` lee `bandmanager_user` de `localStorage` para enviar `x-band-id`; el servidor debe seguir resolviendo la banda con `getTargetBandId` e ignorar esa cabecera (AGENTS.md §2.1).
 - Se envía `tipoFormato: "directo"`, valor que no existe en la unión `Setlist["tipoFormato"]`; `ConcertSetlistDraft` lo modela como `string` para no cambiar el payload.
 - `DiscografiaView` aún tipa `prev: any[]` al recibir el setlist.
 

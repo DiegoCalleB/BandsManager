@@ -70,7 +70,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   const [announcements, setAnnouncements] = useState<BandAnnouncement[]>(() => {
     try {
       const saved = localStorage.getItem(
-        `bakandeya_community_announcements_${effectiveBandName}`,
+        `bandmanager_community_announcements_${effectiveBandName}`,
       );
       if (saved) return JSON.parse(saved);
     } catch {}
@@ -166,7 +166,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
       });
       try {
         localStorage.setItem(
-          `bakandeya_community_announcements_${effectiveBandName}`,
+          `bandmanager_community_announcements_${effectiveBandName}`,
           JSON.stringify(updated),
         );
       } catch {}
@@ -192,7 +192,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
     setAnnouncements(updated);
     try {
       localStorage.setItem(
-        `bakandeya_community_announcements_${effectiveBandName}`,
+        `bandmanager_community_announcements_${effectiveBandName}`,
         JSON.stringify(updated),
       );
     } catch {}

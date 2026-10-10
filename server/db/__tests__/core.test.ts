@@ -7,8 +7,8 @@ describe('cleanBandId: filtro de tenant de la capa de datos', () => {
     expect(cleanBandId( '  band-la-vanda  ')).toBe('band-la-vanda');
   });
 
-  it('lanza en vez de caer en band-bakandeya cuando falta el bandId', () => {
-    // Antes: un bandId vacío devolvía "band-bakandeya" en silencio, así que un bug o una ruta
+  it('lanza en vez de caer en band-ejemplo cuando falta el bandId', () => {
+    // Antes: un bandId vacío devolvía "band-ejemplo" en silencio, así que un bug o una ruta
     // nueva que se olvidara de pasarlo acababa leyendo o escribiendo en la banda insignia.
     expect(() => cleanBandId(undefined)).toThrow();
     expect(() => cleanBandId('')).toThrow();

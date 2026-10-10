@@ -61,9 +61,9 @@ describe('chatbot: static safety rules (AGENTS.md §2)', () => {
   // o configuración heredada sin band_id, documentada como deuda conocida.
   const ALLOWED_STORAGE_KEYS = new Set([
     'storageKey',
-    'bakandeya_agents_enabled',
-    'bakandeya_agent_autonomy',
-    'bakandeya_github_ref',
+    'bandmanager_agents_enabled',
+    'bandmanager_agent_autonomy',
+    'bandmanager_github_ref',
   ]);
 
   it('only writes allow-listed localStorage keys (AGENTS.md §2.5)', () => {
@@ -77,6 +77,6 @@ describe('chatbot: static safety rules (AGENTS.md §2)', () => {
 
   it('keeps the chat history key scoped by user and band', () => {
     const identity = entries.find(([path]) => path.endsWith('useChatIdentity.ts'))?.[1] ?? '';
-    expect(identity).toMatch(/bakandeya_chat_messages_\$\{currentUser\?\.id[^`]*band_id/);
+    expect(identity).toMatch(/bandmanager_chat_messages_\$\{currentUser\?\.id[^`]*band_id/);
   });
 });

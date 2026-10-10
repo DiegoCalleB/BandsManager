@@ -20,9 +20,9 @@ describe('instrumentoDelUsuario', () => {
   });
   it('lee el perfil guardado y tolera basura', () => {
     expect(instrumentoDelUsuario()).toBeNull();
-    localStorage.setItem('bakandeya_user', JSON.stringify({ instrument: 'Bajista' }));
+    localStorage.setItem('bandmanager_user', JSON.stringify({ instrument: 'Bajista' }));
     expect(instrumentoDelUsuario()).toBe('bajo');
-    localStorage.setItem('bakandeya_user', '{no json');
+    localStorage.setItem('bandmanager_user', '{no json');
     expect(instrumentoDelUsuario()).toBeNull();
   });
 });

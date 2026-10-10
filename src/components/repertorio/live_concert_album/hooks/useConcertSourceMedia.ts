@@ -39,10 +39,10 @@ export function useConcertSourceMedia({ setErrorMessage, setAnalysisStatus }: Co
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks fit easily inside Cloud Run / proxy limits
 
     const token =
-      localStorage.getItem("bakandeya_token") || localStorage.getItem("token");
+      localStorage.getItem("bandmanager_token") || localStorage.getItem("token");
     let activeBandId = "";
     try {
-      const userStr = localStorage.getItem("bakandeya_user");
+      const userStr = localStorage.getItem("bandmanager_user");
       if (userStr) activeBandId = JSON.parse(userStr)?.band_id || "";
     } catch {
       // localStorage no disponible: se envía la petición sin cabecera de banda explícita

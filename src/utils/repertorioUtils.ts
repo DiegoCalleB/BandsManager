@@ -148,7 +148,7 @@ export interface BandMemberOption {
 
 // Fallback genérico usado por resolveBandMembers cuando una banda todavía no tiene
 // miembros/usuarios cargados: nombres de puesto, no de una persona real, para no filtrar la
-// formación de Bakandeya (banda de demo de la propia app) al resto de bandas (ver el mismo
+// formación de otra banda al resto de bandas (ver el mismo
 // bug ya corregido para "accesos rápidos" en RepertorioSetlists.tsx).
 export const DEFAULT_BAND_MEMBERS: BandMemberOption[] = [
   {

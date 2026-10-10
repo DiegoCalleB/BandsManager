@@ -18,7 +18,7 @@ test('sin sesión, la raíz muestra el login, no el panel', async ({ page }) => 
 test('login con un usuario semilla lleva al panel de la banda', async ({ page }) => {
   await page.goto('/');
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
-  await page.getByPlaceholder('Contraseña').fill('bakandeya2026');
+  await page.getByPlaceholder('Contraseña').fill('demo2026');
   await page.getByRole('button', { name: 'Entrar a mi cuenta' }).click();
 
   await expect(page.locator(SELECTOR_PANEL_AUTENTICADO).first()).toBeVisible({ timeout: 15_000 });

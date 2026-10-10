@@ -14,7 +14,7 @@ vi.mock('../../db.js', () => ({
 }));
 
 vi.mock('../../state.js', () => ({
-  BAKANDEYA_BAND_ID: 'band-bakandeya'
+  DEMO_BAND_ID: 'band-demo'
 }));
 
 const enviarEmailMock = vi.fn();

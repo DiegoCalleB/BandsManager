@@ -105,7 +105,7 @@
     },
     "POST /api/auth/login": {
       "summary": "Iniciar sesión",
-      "description": "Crea una sesión de 30 días y la devuelve en el cuerpo y en la cookie `bakandeya_token`. La cookie **no es HttpOnly a propósito** (el cliente también guarda el token en localStorage; migrar a solo cookie está en `BACKLOG.md`). Limitado por `loginRateLimiter`.",
+      "description": "Crea una sesión de 30 días y la devuelve en el cuerpo y en la cookie `bandmanager_token`. La cookie **no es HttpOnly a propósito** (el cliente también guarda el token en localStorage; migrar a solo cookie está en `BACKLOG.md`). Limitado por `loginRateLimiter`.",
       "requestBody": {
         "required": true,
         "content": {

@@ -230,7 +230,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     if (isPreview && previewView === "success") {
       // La previsualización debe reflejar lo que el fan verá de verdad: si la banda no ha
       // rellenado descarga/cupón en el apartado QR, aquí tampoco se inventan (antes se colaban
-      // los valores de Bakandeya y la banda creía tener un incentivo configurado).
+      // los valores de otra banda y la banda creía tener un incentivo configurado).
       const inc = previewConfig?.incentivoFans || {
         mensajeAgradecimiento:
           "¡Gracias por unirte a nuestra comunidad oficial!",
@@ -379,10 +379,10 @@ export const FansLanding: React.FC<FansLandingProps> = ({
 
   useEffect(() => {
     if (isPreview && previewConfig) {
-      // Sin esto, resolvedBandId se quedaba en el valor inicial'band-bakandeya' durante toda
+      // Sin esto, resolvedBandId se quedaba en el valor inicial por defecto durante toda
       // la previsualización (el resto de estado sí se pisa con los datos de la banda real más
       // abajo) — y el enlace al Dossier/EPK, que se construye a partir de resolvedBandId, llevaba
-      // a cualquier banda que abriera"Previsualizar Formulario" al EPK público de Bakandeya.
+      // a cualquier banda que abriera"Previsualizar Formulario" al EPK público de otra banda.
       if (initialBandId) setResolvedBandId(initialBandId);
       if (initialBandName) setBandName(initialBandName);
       if (initialBandLogo || previewConfig.logoUrl) {
@@ -444,7 +444,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     let storedBandLogo = "";
     try {
       const storedUser =
-        localStorage.getItem("bakandeya_user") ||
+        localStorage.getItem("bandmanager_user") ||
         localStorage.getItem("band_manager_user") ||
         localStorage.getItem("band_manager_current_user");
       if (storedUser) {
@@ -470,13 +470,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
     setResolvedBandId(targetBandId);
 
     // Initial fallback name & logo
-    if (cleanId === "bakandeya") {
-      setBandName("Bakandeya");
-      setLogoUrl("/logo_bakandeya.jpg");
-      setSocialLinks(undefined);
-      setContactoBooking(null);
-      setMiembros([]);
-    } else if (queryBand) {
+    if (queryBand) {
       const formatted = cleanId
         .split("-")
         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
@@ -486,14 +480,11 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       setSocialLinks(undefined);
       setContactoBooking(null);
       setMiembros([]);
-    } else if (
-      initialBandName &&
-      !initialBandName.toLowerCase().includes("bakandeya")
-    ) {
+    } else if (initialBandName) {
       setBandName(initialBandName);
       if (initialBandLogo) setLogoUrl(initialBandLogo);
       setMiembros([]);
-    } else if (storedBandName && cleanId !== "bakandeya") {
+    } else if (storedBandName) {
       setBandName(storedBandName);
       if (storedBandLogo) setLogoUrl(storedBandLogo);
       setMiembros([]);
@@ -523,9 +514,6 @@ export const FansLanding: React.FC<FansLandingProps> = ({
           if (data.bandName) setBandName(data.bandName);
           if (data.logoUrl || data.epkConfig?.logoUrl) {
             setLogoUrl(data.logoUrl || data.epkConfig.logoUrl);
-            setImgError(false);
-          } else if (cleanId === "bakandeya") {
-            setLogoUrl("/logo_bakandeya.jpg");
             setImgError(false);
           } else {
             setLogoUrl(null);
@@ -656,7 +644,7 @@ export const FansLanding: React.FC<FansLandingProps> = ({
       slug = pathParts[1];
     } else if (
       pathParts.length === 1 &&
-      !["unete", "fans", "directo", "bakandeya", "app"].includes(pathParts[0])
+      !["unete", "fans", "directo", "app"].includes(pathParts[0])
     ) {
       slug = pathParts[0];
     }

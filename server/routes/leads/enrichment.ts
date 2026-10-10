@@ -938,7 +938,7 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
 /**
  * POST /api/leads/batch-enrich-campaign
  * Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos)
- * para todos los leads filtrados por la campaña activa de la banda (por ejemplo "Bakandeya").
+ * para todos los leads filtrados por la campaña activa de la banda.
  */
 router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireAuth, async (req, res) => {
   try {

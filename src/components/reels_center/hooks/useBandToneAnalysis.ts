@@ -72,7 +72,7 @@ export function useBandToneAnalysis({ instagramHandle, hasAnySocialLink, bandNam
     }
   };
 
-  // Antes esto analizaba siempre @bakandeya en Instagram, sin importar qué banda estuviera
+  // Antes esto analizaba siempre una cuenta fija de Instagram, sin importar qué banda estuviera
   // usando la app: el botón"Analizar tono de voz" de CUALQUIER banda escaneaba la cuenta de
   // Instagram del fundador en vez de la suya propia.
   const handleAnalyzeBandTone = async () => {

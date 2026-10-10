@@ -25,6 +25,7 @@ interface DealAndLogisticsCopilotProps {
   latestIncomingMessage?: string;
   isStitchLight?: boolean;
   onOpenRoadbookModal?: (lead: Lead) => void;
+  bandName?: string;
 }
 
 export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = ({
@@ -32,6 +33,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
   latestIncomingMessage,
   isStitchLight = false,
   onOpenRoadbookModal,
+  bandName = 'Tu banda',
 }) => {
   // --- SUB-SECCIÓN 1: P&L & VIABILIDAD LOGÍSTICA ---
   const [bandOriginCity, setBandOriginCity] = useState<string>('Madrid');
@@ -75,8 +77,8 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
         label: 'A la espera de respuesta',
         color: 'text-[var(--ink-2)] bg-[var(--sunken)]/60 ',
         tactic: 'Envía un primer pitch conciso con vídeo de directo, enlace al rider y propuesta de 2 fechas alternativas.',
-        suggestedSubject: `Propuesta concierto Bakandeya en ${lead.nombre_sala}`,
-        suggestedDraft: `Hola equipo de ${lead.nombre_sala},\n\nNos encantaría presentar en vuestra sala nuestro directo (fusión orgánica de violín acústico, sintetizadores analógicos y grooves de baile). Os dejamos nuestro EPK y vídeo en vivo:\nhttps://bandmanager.io/epk\n\n¿Tenéis disponibilidad para un viernes o sábado durante los próximos meses?\n\nUn saludo,\nEquipo Bakandeya`,
+        suggestedSubject: `Propuesta concierto ${bandName} en ${lead.nombre_sala}`,
+        suggestedDraft: `Hola equipo de ${lead.nombre_sala},\n\nNos encantaría presentar en vuestra sala nuestro directo (fusión orgánica de violín acústico, sintetizadores analógicos y grooves de baile). Os dejamos nuestro EPK y vídeo en vivo:\nhttps://bandmanager.io/epk\n\n¿Tenéis disponibilidad para un viernes o sábado durante los próximos meses?\n\nUn saludo,\nEquipo ${bandName}`,
       };
     }
 
@@ -133,7 +135,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       label: 'Conversación en curso',
       color: 'text-[var(--ink)] bg-[var(--acc)]/10 ',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
-      suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
+      suggestedSubject: `Re: Detalles concierto ${bandName} en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
     };
   }, [latestIncomingMessage, lead.ultimo_mensaje_recibido, lead.nombre_sala]);
@@ -143,7 +145,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
   const [copiedContract, setCopiedContract] = useState(false);
 
   const roadbookMarkdown = `🗺️ HOJA DE RUTA (ROADBOOK) & RUN OF SHOW
-Banda: Bakandeya
+Banda: ${bandName}
 Evento: Concierto en ${lead.nombre_sala} (${lead.ciudad})
 Dirección: ${lead.direccion || lead.ciudad || 'Por confirmar'}
 Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${lead.telefono || lead.email_contacto || 'n/d'})
@@ -164,7 +166,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 • Dietas y Alojamiento: ~${hotelCost + dietsCost} €`;
 
   const miniContractSummary = `📄 RESUMEN DE ACUERDO DE ACTUACIÓN
-• Artista: Bakandeya
+• Artista: ${bandName}
 • Organizador / Sala: ${lead.nombre_sala} (${lead.direccion || lead.ciudad})
 • Régimen Económico: ${dealType === 'cache' ? `Caché fijo de ${guaranteedCache} €` : `${bandSplitPercent}% de taquilla íntegra (Entrada: ${ticketPrice} €)`}
 • Rider Técnico: 3 cajas de inyección directa activas (D.I.), monitores o envíos IEM, PA adecuada al aforo (${venueCapacity} pax).

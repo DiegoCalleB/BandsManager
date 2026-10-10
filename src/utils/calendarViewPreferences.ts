@@ -1,8 +1,8 @@
 import { api } from '../services/api';
 import { User } from '../types';
 
-export const CALENDAR_DEFAULT_MONTHS_KEY = 'bakandeya_calendar_default_months';
-export const CALENDAR_DEVICE_KEY_PREFIX = 'bakandeya_calendar_months_';
+export const CALENDAR_DEFAULT_MONTHS_KEY = 'bandmanager_calendar_default_months';
+export const CALENDAR_DEVICE_KEY_PREFIX = 'bandmanager_calendar_months_';
 
 export type DeviceType = 'mobile' | 'desktop';
 export type CalendarMonthsView = '1' | '2';
@@ -38,7 +38,7 @@ export function getCalendarDefaultMonths(deviceType?: DeviceType): CalendarMonth
     }
 
     // 2. Comprobar en el usuario guardado en localStorage (proveniente de Supabase)
-    const storedUserStr = localStorage.getItem('bakandeya_user');
+    const storedUserStr = localStorage.getItem('bandmanager_user');
     if (storedUserStr) {
       try {
         const user = JSON.parse(storedUserStr);
@@ -88,7 +88,7 @@ export async function setCalendarDefaultMonths(
       }
 
       // Actualizar optimísticamente el usuario en caché local
-      const storedUserStr = localStorage.getItem('bakandeya_user');
+      const storedUserStr = localStorage.getItem('bandmanager_user');
       if (storedUserStr) {
         try {
           const user = JSON.parse(storedUserStr);
@@ -101,7 +101,7 @@ export async function setCalendarDefaultMonths(
               [targetDevice]: mode,
             },
           };
-          localStorage.setItem('bakandeya_user', JSON.stringify(user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(user));
         } catch {
           // Error no bloqueante
         }
@@ -114,7 +114,7 @@ export async function setCalendarDefaultMonths(
   // Sincronizar en Supabase si hay sesión y está habilitado
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_token') || localStorage.getItem('token') : null;
 
       if (token) {
         const response = await api.saveUiPreferences({
@@ -123,7 +123,7 @@ export async function setCalendarDefaultMonths(
           },
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }

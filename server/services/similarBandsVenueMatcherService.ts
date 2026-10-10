@@ -2,7 +2,7 @@
  * SIMILAR BANDS VENUE MATCHER SERVICE ("Efecto Espejo" / Setlist.fm & Spotify Similar Artists)
  * 
  * Descubre salas y festivales analizando dónde han tocado bandas similares del mismo género
- * o nivel (ej: Bakandeya -> Mestizaje, Afrobeat, Reggae, World Music, Fusion).
+ * o nivel (ej: una banda de mestizaje -> Mestizaje, Afrobeat, Reggae, World Music, Fusion).
  */
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";

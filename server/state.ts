@@ -43,7 +43,7 @@ const INITIAL_RUN_OF_SHOW: Record<string, any[]> = {
     { id: 'ros-3', time: '18:15', activity: 'Prueba de sonido (Soundcheck de violín, sintes y bases)', done: true },
     { id: 'ros-4', time: '19:30', activity: 'Cena de la banda / Catering', done: false },
     { id: 'ros-5', time: '21:00', activity: 'Apertura de puertas', done: false },
-    { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo de Bakandeya! 🎻💥', done: false },
+    { id: 'ros-6', time: '21:30', activity: 'SHOWTIME: ¡Comienza el bolo! 🎻💥', done: false },
     { id: 'ros-7', time: '23:30', activity: 'Merchandising, firmas y recogida de equipo', done: false },
   ],
   '2026-07-15': [
@@ -57,7 +57,7 @@ const INITIAL_GEAR_CHECKLISTS: Record<string, any[]> = {
   '2026-07-23': [
     { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
     { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
-    { id: 'gear-3', label: 'Banderola de Escenario Bakandeya', checked: false },
+    { id: 'gear-3', label: 'Banderola de Escenario', checked: false },
     { id: 'gear-4', label: 'Merchandising (Camisetas, Pegatinas, CDs)', checked: false },
     { id: 'gear-5', label: 'Cables Jack / XLR de recambio', checked: true },
     { id: 'gear-6', label: 'DI-Box estéreo para teclados', checked: false },
@@ -65,23 +65,23 @@ const INITIAL_GEAR_CHECKLISTS: Record<string, any[]> = {
 };
 
 const DEFAULT_EPK_CONFIG = {
-  biografia: "Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
-  logoUrl: "/logo_bakandeya.jpg",
+  biografia: "Banda Demo es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Banda Demo ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
+  logoUrl: "/logo_demo.jpg",
   bandPhotos: [
-    "/logo_bakandeya.jpg"
+    "/logo_demo.jpg"
   ],
   riderTecnico: "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
   enlacesRedes: {
     spotify: "",
-    youtube: "https://youtube.com/@bakandeya_oficial",
-    instagram: "https://instagram.com/bakandeya_oficial",
-    tiktok: "https://tiktok.com/@bakandeya_oficial",
+    youtube: "https://youtube.com/@banda_demo",
+    instagram: "https://instagram.com/banda_demo",
+    tiktok: "https://tiktok.com/@banda_demo",
     appleMusic: "",
-    bandcamp: "https://bakandeya.bandcamp.com",
+    bandcamp: "https://banda-demo.bandcamp.com",
     website: "https://bandmanager.io",
     whatsapp: "+34612345678",
-    facebook: "https://facebook.com/bakandeyaoficial",
-    twitter: "https://x.com/bakandeya_band"
+    facebook: "https://facebook.com/bandademo",
+    twitter: "https://x.com/banda_demo"
   },
   contactoBooking: {
     nombre: "Booking & Management",
@@ -112,11 +112,11 @@ const DEFAULT_EPK_CONFIG = {
     adjuntarDossierPorDefecto: true,
     redesSociales: {
       spotify: "",
-      youtube: "https://youtube.com/@bakandeya_oficial",
-      instagram: "https://instagram.com/bakandeya_oficial",
-      tiktok: "https://tiktok.com/@bakandeya_oficial",
+      youtube: "https://youtube.com/@banda_demo",
+      instagram: "https://instagram.com/banda_demo",
+      tiktok: "https://tiktok.com/@banda_demo",
       appleMusic: "",
-      bandcamp: "https://bakandeya.bandcamp.com",
+      bandcamp: "https://banda-demo.bandcamp.com",
       website: "https://bandmanager.io",
       whatsapp: "+34612345678"
     }
@@ -192,25 +192,26 @@ const INITIAL_FANS = [
   }
 ];
 
-export const BAKANDEYA_BAND_ID = "band-bakandeya";
+/** Banda de ejemplo con la que arranca una instalación nueva; no tiene ningún trato especial. */
+export const DEMO_BAND_ID = "band-demo";
 
-export const BAKANDEYA_REGISTERED_BAND = {
-  id: "reg-bakandeya",
-  band_id: BAKANDEYA_BAND_ID,
+export const DEMO_REGISTERED_BAND = {
+  id: "reg-demo",
+  band_id: DEMO_BAND_ID,
   user_id: "user-diego",
   fecha_registro: "2026-01-01T10:00:00.000Z",
-  nombre_banda: "Bakandeya",
+  nombre_banda: "Banda Demo",
   email: "diego.delacalleb@gmail.com",
   plan: "pro",
   contacto_nombre: "Diego de la Calle",
   estilo_musical: "Mestizaje / Ska-Rock / Reggae / Electrónica",
   localizacion: "Madrid / Sevilla (España)",
   telefono: "+34 612 345 678",
-  instagram: "@bakandeya_oficial",
-  spotify_youtube: "https://open.spotify.com/artist/bakandeya",
+  instagram: "@banda_demo",
+  spotify_youtube: "https://open.spotify.com/artist/banda-demo",
   aforo_promedio: 500,
   estado_cuenta: "activo",
-  notas: "Banda oficial de la plataforma Bakandeya"
+  notas: "Banda de ejemplo de la plataforma"
 };
 
 const VERTICE_REGISTERED_BAND = {
@@ -269,24 +270,27 @@ export const HERDEIROS_REGISTERED_BAND = {
   notas: "Banda rock bravú galaica de Brais Moure"
 };
 
-export function ensureBakandeyaBandId(state: any): boolean {
+const SEED_COLLECTIONS = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
+
+/** Asigna la banda de ejemplo a los datos semilla de una instalación nueva (que no traen band_id). */
+function stampSeedBand(state: any): void {
+  const stamp = (items: any) => {
+    if (!Array.isArray(items)) return;
+    for (const item of items) if (!item.band_id) item.band_id = DEMO_BAND_ID;
+  };
+  for (const key of SEED_COLLECTIONS) stamp(state[key]);
+  for (const group of [state.runOfShow, state.gearChecklists]) {
+    if (group) for (const key of Object.keys(group)) stamp(group[key]);
+  }
+}
+
+export function ensureSeedBands(state: any): boolean {
   let changed = false;
 
   if (!state.registeredBands || !Array.isArray(state.registeredBands)) {
-    state.registeredBands = [BAKANDEYA_REGISTERED_BAND, VERTICE_REGISTERED_BAND, HERDEIROS_REGISTERED_BAND, MASTER_OF_PROMPTS_REGISTERED_BAND];
+    state.registeredBands = [DEMO_REGISTERED_BAND, VERTICE_REGISTERED_BAND, HERDEIROS_REGISTERED_BAND, MASTER_OF_PROMPTS_REGISTERED_BAND];
     changed = true;
   } else {
-    const existingBakandeya = state.registeredBands.find(
-      (b: any) => b.band_id === BAKANDEYA_BAND_ID || String(b.nombre_banda || "").toLowerCase() === "bakandeya"
-    );
-    if (!existingBakandeya) {
-      state.registeredBands.unshift(BAKANDEYA_REGISTERED_BAND);
-      changed = true;
-    } else if (existingBakandeya.band_id !== BAKANDEYA_BAND_ID) {
-      existingBakandeya.band_id = BAKANDEYA_BAND_ID;
-      changed = true;
-    }
-
     const existingVertice = state.registeredBands.find(
       (b: any) => b.band_id === "band-vertice" || b.band_id === "vertice" || b.id === "reg-vertice" || String(b.nombre_banda || "").toLowerCase() === "vertice" || String(b.nombre_banda || "").toLowerCase() === "vértice"
     );
@@ -317,9 +321,9 @@ export function ensureBakandeyaBandId(state: any): boolean {
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
     for (const b of state.registeredBands) {
-      if (b.nombre_banda && b.nombre_banda.toLowerCase() !== "bakandeya" && b.nombre_banda.toLowerCase() !== "vértice" && b.nombre_banda.toLowerCase() !== "vertice") {
+      if (b.nombre_banda && b.nombre_banda.toLowerCase() !== "vértice" && b.nombre_banda.toLowerCase() !== "vertice") {
         const cleanSlug = slugify(b.nombre_banda);
-        if (cleanSlug && (b.band_id === BAKANDEYA_BAND_ID || b.band_id.startsWith("user-"))) {
+        if (cleanSlug && b.band_id.startsWith("user-")) {
           b.band_id = `band-${cleanSlug}`;
           changed = true;
         }
@@ -328,7 +332,6 @@ export function ensureBakandeyaBandId(state: any): boolean {
   }
 
   if (state.users && Array.isArray(state.users)) {
-    const initialSeedUserIds = new Set(['user-jose', 'user-diego', 'user-jon', 'user-elyar', 'user-raul']);
     for (const u of state.users) {
       if (u.id === 'user-admin' || u.username?.toLowerCase() === 'admin') {
         const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
@@ -365,29 +368,6 @@ export function ensureBakandeyaBandId(state: any): boolean {
           u.bandName = 'Os Herdeiros do Código';
           u.main_band_id = 'band-os-herdeiros-do-codigo';
           u.instrument = 'Batería';
-          changed = true;
-        }
-      } else if (initialSeedUserIds.has(u.id)) {
-        // Estos 5 ids son las cuentas fundadoras de Bakandeya (incluido user-diego, la cuenta real
-        // que usa la app). Antes esto forzaba SIEMPRE band_id de vuelta a Bakandeya en cada
-        // loadState() -y loadState() se llama en casi cada petición-, así que un cambio de banda
-        // válido hecho con /auth/switch-band o /users/create-band se deshacía solo en la
-        // siguientísima petición: era imposible que estas cuentas se quedaran en ninguna otra
-        // banda (STOMP, SWINDIGENTES...) aunque la tuvieran legítimamente vinculada en userBands.
-        // Ahora solo se repara si band_id falta o apunta a una banda a la que el usuario ya no
-        // tiene acceso real, en vez de pisar siempre un cambio de banda que sigue siendo válido.
-        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
-        const uEmailSeed = (u.email || u.username || '').toLowerCase();
-        const hasValidAccess =
-          cleanCurrent === 'bakandeya' ||
-          (state.userBands || []).some((ub: any) => ub.user_id === u.id && (ub.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent) ||
-          (state.registeredBands || []).some((b: any) =>
-            (b.user_id === u.id || (uEmailSeed && b.email?.toLowerCase() === uEmailSeed)) &&
-            ((b.band_id || '').replace(/^(band|reg)-/, '') === cleanCurrent || (b.id || '').replace(/^(band|reg)-/, '') === cleanCurrent)
-          );
-        if (!u.band_id || !hasValidAccess) {
-          u.band_id = BAKANDEYA_BAND_ID;
-          u.bandName = "Bakandeya";
           changed = true;
         }
       } else {
@@ -429,18 +409,8 @@ export function ensureBakandeyaBandId(state: any): boolean {
     changed = true;
   }
 
-  // Purge any accidental Bakandeya link for user-mouredev
-  const beforeLen = state.userBands.length;
-  state.userBands = state.userBands.filter((ub: any) => {
-    const isMoure = ub.user_id === 'user-mouredev' || (ub.email && String(ub.email).toLowerCase().includes('mouredev'));
-    const isBak = (ub.band_id || '').replace(/^(band|reg)-/, '') === 'bakandeya';
-    return !(isMoure && isBak);
-  });
-  if (state.userBands.length !== beforeLen) changed = true;
-
   // Ensure all current users have their active bands in userBands. Un usuario sin band_id
-  // todavía (cuenta nueva sin banda asignada) no tiene banda activa que registrar aquí: antes se
-  // le daba de alta en silencio como miembro de band-bakandeya.
+  // todavía (cuenta nueva sin banda asignada) no tiene banda activa que registrar aquí.
   if (state.users && Array.isArray(state.users)) {
     state.users.forEach((u: any) => {
       if (!u.band_id) return;
@@ -489,14 +459,9 @@ export function ensureBakandeyaBandId(state: any): boolean {
     });
   }
 
-  const collections = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
-  for (const colKey of collections) {
+  for (const colKey of SEED_COLLECTIONS) {
     if (state[colKey] && Array.isArray(state[colKey])) {
       for (const item of state[colKey]) {
-        if (!item.band_id) {
-          item.band_id = BAKANDEYA_BAND_ID;
-          changed = true;
-        }
         if (colKey === 'leads' && item.hilo_emails && Array.isArray(item.hilo_emails)) {
           for (const msg of item.hilo_emails) {
             if (!msg.band_id) {
@@ -509,39 +474,10 @@ export function ensureBakandeyaBandId(state: any): boolean {
     }
   }
 
-  if (state.runOfShow) {
-    for (const key of Object.keys(state.runOfShow)) {
-      if (Array.isArray(state.runOfShow[key])) {
-        for (const item of state.runOfShow[key]) {
-          if (!item.band_id) {
-            item.band_id = BAKANDEYA_BAND_ID;
-            changed = true;
-          }
-        }
-      }
-    }
-  }
-
-  if (state.gearChecklists) {
-    for (const key of Object.keys(state.gearChecklists)) {
-      if (Array.isArray(state.gearChecklists[key])) {
-        for (const item of state.gearChecklists[key]) {
-          if (!item.band_id) {
-            item.band_id = BAKANDEYA_BAND_ID;
-            changed = true;
-          }
-        }
-      }
-    }
-  }
-
   if (!state.epkConfigsByBand) {
     state.epkConfigsByBand = {
-      [BAKANDEYA_BAND_ID]: state.epkConfig || DEFAULT_EPK_CONFIG
+      [DEMO_BAND_ID]: state.epkConfig || DEFAULT_EPK_CONFIG
     };
-    changed = true;
-  } else if (!state.epkConfigsByBand[BAKANDEYA_BAND_ID] && state.epkConfig) {
-    state.epkConfigsByBand[BAKANDEYA_BAND_ID] = state.epkConfig;
     changed = true;
   }
 
@@ -840,8 +776,8 @@ export function getDefaultEpkConfig(bandName: string = "Tu Banda", email?: strin
 
 export function getEpkConfigForBand(state: any, bandId: string, bandName: string = "Tu Banda", email?: string): any {
   if (!bandId || typeof bandId !== 'string' || !bandId.trim()) {
-    // Antes, un bandId vacío devolvía en silencio el EPK real de Bakandeya (email, teléfono y
-    // logo del fundador) a cualquier llamador que se olvidara de pasar la banda. Mejor fallar alto.
+    // Antes, un bandId vacío devolvía en silencio el EPK real de otra banda (email, teléfono y
+    // logo) a cualquier llamador que se olvidara de pasar la banda. Mejor fallar alto.
     throw new Error("getEpkConfigForBand: se requiere un band_id válido; no hay banda por defecto.");
   }
   if (!state.epkConfigsByBand) {
@@ -942,7 +878,7 @@ export function loadState(): any {
 
       if (!state.autonomyConfigsByBand) {
         state.autonomyConfigsByBand = {
-          [BAKANDEYA_BAND_ID]: DEFAULT_AUTONOMY_CONFIG
+          [DEMO_BAND_ID]: DEFAULT_AUTONOMY_CONFIG
         };
         changed = true;
       }
@@ -1066,7 +1002,7 @@ export function loadState(): any {
         });
       }
       
-      if (ensureBakandeyaBandId(state)) {
+      if (ensureSeedBands(state)) {
         changed = true;
       }
 
@@ -1089,7 +1025,7 @@ export function loadState(): any {
   }
   
   const defaultState = {
-    registeredBands: [BAKANDEYA_REGISTERED_BAND],
+    registeredBands: [DEMO_REGISTERED_BAND],
     epkConfig: DEFAULT_EPK_CONFIG,
     fans: INITIAL_FANS,
     leads: INITIAL_LEADS,
@@ -1118,12 +1054,13 @@ export function loadState(): any {
         passwordHash: hash,
         salt: salt,
         createdAt: u.createdAt,
-        band_id: BAKANDEYA_BAND_ID,
-        bandName: "Bakandeya"
+        band_id: DEMO_BAND_ID,
+        bandName: "Banda Demo"
       };
     })
   };
-  ensureBakandeyaBandId(defaultState);
+  stampSeedBand(defaultState);
+  ensureSeedBands(defaultState);
   ensureUniqueIdsInState(defaultState);
   saveState(defaultState);
   inMemoryStateCache = defaultState;

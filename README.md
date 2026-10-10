@@ -392,7 +392,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 ### Construido pero a medias
 
 - **Facturación con Stripe:** el flujo existe y tiene tests, pero está desactivado a propósito y hay arreglos pendientes (idempotencia, cancelación al cambiar de plan, descuento de créditos en servidor) que hay que cerrar **antes** de reactivarlo. Detalle en [BACKLOG.md](./BACKLOG.md).
-- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = Bakandeya»): limpiado en parte; queda una migración de datos antes de poder borrar el resto.
+- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = banda por defecto»): limpiado; queda solo el caso especial de la cuenta de Brais Moure (ver BACKLOG.md).
 - **Diseño:** el sistema Espectro está aplicado en bloque; faltan primitivas (`Tabs`, `IconButton`) y envolver en portal unos 35 modales que se recortan en móvil.
 
 ### Solo especificado (aún no se ha escrito código)

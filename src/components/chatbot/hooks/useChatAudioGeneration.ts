@@ -69,7 +69,7 @@ export function useChatAudioGeneration({ currentUser, cleanUserName }: ChatAudio
   const melodicIdeaAudioRef = useRef(melodicIdeaAudio);
 
   const buildBandAuthHeaders = (): Record<string, string> => {
-    const token = localStorage.getItem('bakandeya_token');
+    const token = localStorage.getItem('bandmanager_token');
     const activeBandId = currentUser?.band_id || '';
     return {
       'Content-Type': 'application/json',

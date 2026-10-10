@@ -15,13 +15,13 @@ export function useAgentRuns() {
 
   // Switch mode between Python GitHub Agents vs Direct Gemini AI
   const [agentsEnabled, setAgentsEnabled] = useState<boolean>(() => {
-    const saved = localStorage.getItem('bakandeya_agents_enabled');
+    const saved = localStorage.getItem('bandmanager_agents_enabled');
     return saved !== null ? saved === 'true' : false; // Default to false (Gemini Direct Mode)
   });
 
   const [autonomyConfig, setAutonomyConfig] = useState<ChatAutonomyConfig>(() => {
     try {
-      const saved = localStorage.getItem('bakandeya_agent_autonomy');
+      const saved = localStorage.getItem('bandmanager_agent_autonomy');
       if (saved) return JSON.parse(saved) as ChatAutonomyConfig;
     } catch (e) {
       console.error(e);
@@ -40,13 +40,13 @@ export function useAgentRuns() {
   const [activeRun, setActiveRun] = useState<ActiveAgentRun | null>(null);
 
   useEffect(() => {
-    localStorage.setItem('bakandeya_agents_enabled', String(agentsEnabled));
+    localStorage.setItem('bandmanager_agents_enabled', String(agentsEnabled));
   }, [agentsEnabled]);
 
   useEffect(() => {
     const handleAutonomyChange = () => {
       try {
-        const saved = localStorage.getItem('bakandeya_agent_autonomy');
+        const saved = localStorage.getItem('bandmanager_agent_autonomy');
         if (saved) setAutonomyConfig(JSON.parse(saved));
       } catch (e) {
         console.error(e);
@@ -64,7 +64,7 @@ export function useAgentRuns() {
         if (isMounted && cfg && cfg.dispatchLevel) {
           setAutonomyConfig(cfg);
           try {
-            localStorage.setItem('bakandeya_agent_autonomy', JSON.stringify(cfg));
+            localStorage.setItem('bandmanager_agent_autonomy', JSON.stringify(cfg));
           } catch {
             // Ignorado a propósito: es un efecto secundario opcional (evento de actualización, dictado o limpieza).
           }
@@ -106,10 +106,10 @@ export function useAgentRuns() {
       }
 
       try {
-        const token = localStorage.getItem('bakandeya_token');
-        const pat = localStorage.getItem('bakandeya_github_pat') || '';
-        const owner = localStorage.getItem('bakandeya_github_owner') || '';
-        const repo = localStorage.getItem('bakandeya_github_repo') || '';
+        const token = localStorage.getItem('bandmanager_token');
+        const pat = localStorage.getItem('bandmanager_github_pat') || '';
+        const owner = localStorage.getItem('bandmanager_github_owner') || '';
+        const repo = localStorage.getItem('bandmanager_github_repo') || '';
 
         const headers: Record<string, string> = {};
         if (token) {

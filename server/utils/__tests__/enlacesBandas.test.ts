@@ -26,9 +26,9 @@ describe("clasificarEnlaceUnico", () => {
 
 describe("normalizarInstagram", () => {
   it("convierte @usuario en URL y respeta las URL", () => {
-    expect(normalizarInstagram("@bakandeya")).toBe("https://instagram.com/bakandeya");
-    expect(normalizarInstagram("bakandeya")).toBe("https://instagram.com/bakandeya");
-    expect(normalizarInstagram("https://www.instagram.com/bakandeya/")).toBe("https://www.instagram.com/bakandeya/");
+    expect(normalizarInstagram("@ejemplo")).toBe("https://instagram.com/ejemplo");
+    expect(normalizarInstagram("ejemplo")).toBe("https://instagram.com/ejemplo");
+    expect(normalizarInstagram("https://www.instagram.com/ejemplo/")).toBe("https://www.instagram.com/ejemplo/");
     expect(normalizarInstagram("")).toBe("");
   });
 });

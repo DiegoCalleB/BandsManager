@@ -16,7 +16,7 @@ export function useCityChips(
       return epkConfig.ciudadesConfig;
     }
     try {
-      const saved = localStorage.getItem('bakandeya_custom_cities');
+      const saved = localStorage.getItem('bandmanager_custom_cities');
       return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
     } catch {
       return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
@@ -71,7 +71,7 @@ export function useCityChips(
       const updated = [...customCityChips, formatted];
       setCustomCityChips(updated);
       try {
-        localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
+        localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
       } catch {}
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
@@ -87,7 +87,7 @@ export function useCityChips(
     const updated = customCityChips.filter((c) => c !== cityToRemove);
     setCustomCityChips(updated);
     try {
-      localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
+      localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
     } catch {}
     if (selectedCityFilter === cityToRemove) {
       setSelectedCityFilter('');

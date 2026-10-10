@@ -25,7 +25,7 @@ export function elegirNombreBanda(
 
   const contacto = typeof epkConfig?.contactoBooking?.nombre === 'string' ? epkConfig.contactoBooking.nombre.trim() : '';
   const limpio = bandId.replace(/^(band|reg)-/i, '').toLowerCase();
-  // El nombre de contacto por defecto repite el id de la banda («bakandeya»): no es un nombre.
+  // El nombre de contacto por defecto repite el id de la banda («mi-banda»): no es un nombre.
   if (contacto && !GENERICOS.has(contacto.toLowerCase()) && !contacto.toLowerCase().includes(limpio)) return contacto;
 
   return humanizarBandId(bandId) || 'Banda';

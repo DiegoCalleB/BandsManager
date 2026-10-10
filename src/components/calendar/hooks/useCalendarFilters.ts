@@ -37,7 +37,7 @@ export function useCalendarFilters({ concerts, filterBandMode, isSameBandId, act
     let list = concerts;
     if (filterBandMode === 'active') {
       list = concerts.filter((c) => {
-        if (!c.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+        if (!c.band_id) return false;
         return isSameBandId(c.band_id, activeBandId);
       });
     }
@@ -62,7 +62,7 @@ export function useCalendarFilters({ concerts, filterBandMode, isSameBandId, act
   const activeBandConcerts = React.useMemo(() => {
     return concerts
       .filter((c) => {
-        if (!c.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+        if (!c.band_id) return false;
         return isSameBandId(c.band_id, activeBandId);
       })
       .filter(matchesConvocatoria);
@@ -71,7 +71,7 @@ export function useCalendarFilters({ concerts, filterBandMode, isSameBandId, act
   const activeBandRehearsals = React.useMemo(() => {
     return rehearsals
       .filter((r) => {
-        if (!r.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+        if (!r.band_id) return false;
         return isSameBandId(r.band_id, activeBandId);
       })
       .filter(matchesConvocatoria);
@@ -97,7 +97,7 @@ export function useCalendarFilters({ concerts, filterBandMode, isSameBandId, act
     let list = rehearsals;
     if (filterBandMode === 'active') {
       list = rehearsals.filter((r) => {
-        if (!r.band_id) return isSameBandId(activeBandId, 'band-bakandeya');
+        if (!r.band_id) return false;
         return isSameBandId(r.band_id, activeBandId);
       });
     }

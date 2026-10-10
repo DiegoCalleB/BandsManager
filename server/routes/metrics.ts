@@ -114,8 +114,8 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
 
     // Sin enlaces propios configurados, no hay nada que escanear: scrapeChannelMetrics ya
     // gestiona URLs vacías devolviendo 0 para esa plataforma. Antes se caía a los perfiles
-    // reales de Bakandeya, así que "Escanear Métricas Reales" en una banda sin redes aún
-    // configuradas guardaba los seguidores de Bakandeya como si fueran suyos.
+    // reales de otra banda, así que "Escanear Métricas Reales" en una banda sin redes aún
+    // configuradas guardaba los seguidores de otra banda como si fueran suyos.
     const bandName = band?.nombre_banda || "";
     const ytUrl = epk?.enlacesRedes?.youtube || band?.spotify_youtube || "";
     const igUrl = epk?.enlacesRedes?.instagram || band?.instagram || "";
@@ -200,8 +200,8 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
 // Nota: existía aquí un endpoint /metrics/cron-snapshot (singular, legacy pre-multi-tenant) que
 // nadie llama ya (superado por cron-snapshot-all de abajo) y que, al no tener sesión de usuario
 // en las llamadas de cron reales, operaba siempre sobre "band-1" con los enlaces de redes de
-// Bakandeya como último fallback: cualquier disparo automático habría guardado los seguidores
-// reales de Bakandeya como snapshot de esa banda. Se elimina en vez de arreglarlo porque ya no
+// otra banda como último fallback: cualquier disparo automático habría guardado los seguidores
+// reales de otra banda como snapshot de esa banda. Se elimina en vez de arreglarlo porque ya no
 // tiene ningún llamante y el reemplazo multi-banda de abajo es el correcto.
 
 // Automated daily snapshot endpoint for ALL bands using the Social Radar Agent

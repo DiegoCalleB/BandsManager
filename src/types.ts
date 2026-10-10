@@ -1327,7 +1327,7 @@ export interface Song {
   analisisAcordes?: AnalisisAcordes; // Acordes con tiempos detectados del audio (Chordify propio)
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
   estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
-  estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
+  estructuraDocumentoNombre?: string; // Original filename (e.g., "mi-banda-estructura.pdf")
   estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
   speechTranscription?: string; // Audio/speech transcription from live cutting
   // Puntos CUE y detección automática de inicio/fin de música real (para saltar

@@ -25,21 +25,21 @@ Son las que un revisor de seguridad querrá mirar primero.
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
 | `POST` | `/api/ai-stem-separation/fal-webhook` | Pública | — |  | [`server/routes/ai_music.ts:2472`](../../server/routes/ai_music.ts#L2472) |
-| `GET` | `/api/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:146`](../../server/routes/tracking.ts#L146) |
-| `POST` | `/api/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
+| `GET` | `/api/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:144`](../../server/routes/tracking.ts#L144) |
+| `POST` | `/api/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:255`](../../server/routes/tracking.ts#L255) |
 | `GET` | `/api/api/tracking/open` | Pública | — |  | [`server/routes/tracking.ts:51`](../../server/routes/tracking.ts#L51) |
-| `GET` | `/api/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:329`](../../server/routes/tracking.ts#L329) |
+| `GET` | `/api/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:323`](../../server/routes/tracking.ts#L323) |
 | `POST` | `/api/api/webhooks/replicate-stems` | Firma o secreto | — |  | [`server/routes/ai_music.ts:4099`](../../server/routes/ai_music.ts#L4099) |
-| `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users.ts:869`](../../server/routes/users.ts#L869) |
-| `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users.ts:813`](../../server/routes/users.ts#L813) |
-| `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users.ts:983`](../../server/routes/users.ts#L983) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users.ts:1357`](../../server/routes/users.ts#L1357) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users.ts:2251`](../../server/routes/users.ts#L2251) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:1893`](../../server/routes/users.ts#L1893) |
-| `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users.ts:511`](../../server/routes/users.ts#L511) |
-| `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users.ts:1726`](../../server/routes/users.ts#L1726) |
-| `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users.ts:1539`](../../server/routes/users.ts#L1539) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:2037`](../../server/routes/users.ts#L2037) |
+| `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users.ts:863`](../../server/routes/users.ts#L863) |
+| `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users.ts:807`](../../server/routes/users.ts#L807) |
+| `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users.ts:977`](../../server/routes/users.ts#L977) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users.ts:1351`](../../server/routes/users.ts#L1351) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users.ts:2241`](../../server/routes/users.ts#L2241) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:1887`](../../server/routes/users.ts#L1887) |
+| `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users.ts:505`](../../server/routes/users.ts#L505) |
+| `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users.ts:1720`](../../server/routes/users.ts#L1720) |
+| `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users.ts:1533`](../../server/routes/users.ts#L1533) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:2031`](../../server/routes/users.ts#L2031) |
 | `POST` | `/api/billing/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:973`](../../server/routes/billing.ts#L973) |
 | `GET` | `/api/calendar.ics` | Firma o secreto | — |  | [`server/routes/concerts.ts:432`](../../server/routes/concerts.ts#L432) |
 | `GET` | `/api/download-excel` | Sesión (comprobada en el handler) | — |  | [`server.ts:254`](../../server.ts#L254) |
@@ -48,21 +48,21 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:209`](../../server/routes/deals.ts#L209) |
 | `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:434`](../../server/routes/deals.ts#L434) |
 | `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:288`](../../server/routes/deals.ts#L288) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:477`](../../server/routes/epk_fans.ts#L477) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:882`](../../server/routes/epk_fans.ts#L882) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:467`](../../server/routes/epk_fans.ts#L467) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:868`](../../server/routes/epk_fans.ts#L868) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1132`](../../server/routes/epk_fans.ts#L1132) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:993`](../../server/routes/epk_fans.ts#L993) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1118`](../../server/routes/epk_fans.ts#L1118) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/api/spotify/status` | Pública | — |  | [`server/routes/spotify.ts:19`](../../server/routes/spotify.ts#L19) |
 | `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:495`](../../server.ts#L495) |
 | `POST` | `/api/stripe/webhook` | Firma o secreto | — |  | [`server/routes/billing.ts:974`](../../server/routes/billing.ts#L974) |
-| `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:146`](../../server/routes/tracking.ts#L146) |
-| `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
+| `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:144`](../../server/routes/tracking.ts#L144) |
+| `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:255`](../../server/routes/tracking.ts#L255) |
 | `GET` | `/api/tracking/open` | Pública | — |  | [`server/routes/tracking.ts:51`](../../server/routes/tracking.ts#L51) |
-| `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:329`](../../server/routes/tracking.ts#L329) |
+| `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:323`](../../server/routes/tracking.ts#L323) |
 | `POST` | `/api/webhooks/replicate-stems` | Firma o secreto | — |  | [`server/routes/ai_music.ts:4099`](../../server/routes/ai_music.ts#L4099) |
-| `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:466`](../../server/routes/tracking.ts#L466) |
+| `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:458`](../../server/routes/tracking.ts#L458) |
 | `GET` | `/e/{slug}` | Pública | publicoRateLimiter |  | [`server/routes/paginaConcierto.ts:39`](../../server/routes/paginaConcierto.ts#L39) |
 | `GET` | `/health` | Pública | — |  | [`server.ts:165`](../../server.ts#L165) |
 | `GET` | `/privacy` | Pública | — |  | [`server.ts:179`](../../server.ts#L179) |
@@ -88,15 +88,15 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/admin/agent-funnel` | Sesión | — |  | [`server/routes/agent.ts:1313`](../../server/routes/agent.ts#L1313) |
-| `GET` | `/api/agent-logs` | Sesión | — |  | [`server/routes/agent.ts:1242`](../../server/routes/agent.ts#L1242) |
-| `POST` | `/api/agent-logs` | Sesión | — |  | [`server/routes/agent.ts:1266`](../../server/routes/agent.ts#L1266) |
-| `GET` | `/api/agent-runs` | Sesión | — |  | [`server/routes/agent.ts:1053`](../../server/routes/agent.ts#L1053) |
-| `GET` | `/api/agent-runs/{runId}/jobs` | Sesión | — |  | [`server/routes/agent.ts:1122`](../../server/routes/agent.ts#L1122) |
-| `POST` | `/api/agents/test-intel` | Sesión | — |  | [`server/routes/agent.ts:1014`](../../server/routes/agent.ts#L1014) |
-| `POST` | `/api/internal/agents/responder-hilo` | Sesión | — |  | [`server/routes/agent.ts:970`](../../server/routes/agent.ts#L970) |
-| `POST` | `/api/reset` | Sesión + líder | — |  | [`server/routes/agent.ts:1216`](../../server/routes/agent.ts#L1216) |
-| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:111`](../../server/routes/agent.ts#L111) |
+| `GET` | `/api/admin/agent-funnel` | Sesión | — |  | [`server/routes/agent.ts:1312`](../../server/routes/agent.ts#L1312) |
+| `GET` | `/api/agent-logs` | Sesión | — |  | [`server/routes/agent.ts:1241`](../../server/routes/agent.ts#L1241) |
+| `POST` | `/api/agent-logs` | Sesión | — |  | [`server/routes/agent.ts:1265`](../../server/routes/agent.ts#L1265) |
+| `GET` | `/api/agent-runs` | Sesión | — |  | [`server/routes/agent.ts:1052`](../../server/routes/agent.ts#L1052) |
+| `GET` | `/api/agent-runs/{runId}/jobs` | Sesión | — |  | [`server/routes/agent.ts:1121`](../../server/routes/agent.ts#L1121) |
+| `POST` | `/api/agents/test-intel` | Sesión | — |  | [`server/routes/agent.ts:1013`](../../server/routes/agent.ts#L1013) |
+| `POST` | `/api/internal/agents/responder-hilo` | Sesión | — |  | [`server/routes/agent.ts:969`](../../server/routes/agent.ts#L969) |
+| `POST` | `/api/reset` | Sesión + líder | — |  | [`server/routes/agent.ts:1215`](../../server/routes/agent.ts#L1215) |
+| `POST` | `/api/trigger-agent` | Sesión | — |  | [`server/routes/agent.ts:110`](../../server/routes/agent.ts#L110) |
 
 ### agentQueue
 
@@ -285,22 +285,22 @@ EPK público de la banda y registro de fans con consentimiento RGPD.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:54`](../../server/routes/epk_fans.ts#L54) |
-| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:72`](../../server/routes/epk_fans.ts#L72) |
-| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:105`](../../server/routes/epk_fans.ts#L105) |
-| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:141`](../../server/routes/epk_fans.ts#L141) |
-| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:161`](../../server/routes/epk_fans.ts#L161) |
-| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1084`](../../server/routes/epk_fans.ts#L1084) |
-| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:241`](../../server/routes/epk_fans.ts#L241) |
-| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:778`](../../server/routes/epk_fans.ts#L778) |
-| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:797`](../../server/routes/epk_fans.ts#L797) |
-| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:835`](../../server/routes/epk_fans.ts#L835) |
-| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:868`](../../server/routes/epk_fans.ts#L868) |
-| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1199`](../../server/routes/epk_fans.ts#L1199) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:477`](../../server/routes/epk_fans.ts#L477) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:882`](../../server/routes/epk_fans.ts#L882) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1132`](../../server/routes/epk_fans.ts#L1132) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:993`](../../server/routes/epk_fans.ts#L993) |
+| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:53`](../../server/routes/epk_fans.ts#L53) |
+| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:71`](../../server/routes/epk_fans.ts#L71) |
+| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:104`](../../server/routes/epk_fans.ts#L104) |
+| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:140`](../../server/routes/epk_fans.ts#L140) |
+| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:160`](../../server/routes/epk_fans.ts#L160) |
+| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1070`](../../server/routes/epk_fans.ts#L1070) |
+| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:237`](../../server/routes/epk_fans.ts#L237) |
+| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:764`](../../server/routes/epk_fans.ts#L764) |
+| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:783`](../../server/routes/epk_fans.ts#L783) |
+| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:821`](../../server/routes/epk_fans.ts#L821) |
+| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:854`](../../server/routes/epk_fans.ts#L854) |
+| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1185`](../../server/routes/epk_fans.ts#L1185) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:467`](../../server/routes/epk_fans.ts#L467) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:868`](../../server/routes/epk_fans.ts#L868) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1118`](../../server/routes/epk_fans.ts#L1118) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
 
 ### gmailOAuth
 
@@ -334,7 +334,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/leads/ai-lookup` | Sesión | — |  | [`server/routes/leads/enrichment.ts:216`](../../server/routes/leads/enrichment.ts#L216) |
 | `POST` | `/api/leads/audit-pitch` | Sesión | — |  | [`server/routes/leads/pitch.ts:20`](../../server/routes/leads/pitch.ts#L20) |
 | `POST` | `/api/leads/batch-enrich-campaign` | Sesión | — |  | [`server/routes/leads/enrichment.ts:943`](../../server/routes/leads/enrichment.ts#L943) |
-| `POST` | `/api/leads/bulk-delete` | Sesión | — |  | [`server/routes/leads/crud.ts:335`](../../server/routes/leads/crud.ts#L335) |
+| `POST` | `/api/leads/bulk-delete` | Sesión | — |  | [`server/routes/leads/crud.ts:334`](../../server/routes/leads/crud.ts#L334) |
 | `POST` | `/api/leads/campaign-mass-search` | Sesión | — |  | [`server/routes/leads/places.ts:407`](../../server/routes/leads/places.ts#L407) |
 | `POST` | `/api/leads/detect-all-dates` | Sesión | — |  | [`server/routes/leads/enrichment.ts:867`](../../server/routes/leads/enrichment.ts#L867) |
 | `POST` | `/api/leads/enrich-addresses` | Sesión | — |  | [`server/routes/leads/enrichment.ts:612`](../../server/routes/leads/enrichment.ts#L612) |
@@ -350,7 +350,7 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 | `POST` | `/api/leads/train-tone-dna` | Sesión | — |  | [`server/routes/leads/pitch.ts:162`](../../server/routes/leads/pitch.ts#L162) |
 | `GET` | `/api/leads/{id}` | Sesión | — | ★ | [`server/routes/leads/crud.ts:97`](../../server/routes/leads/crud.ts#L97) |
 | `PUT` | `/api/leads/{id}` | Sesión | — | ★ | [`server/routes/leads/crud.ts:130`](../../server/routes/leads/crud.ts#L130) |
-| `DELETE` | `/api/leads/{id}` | Sesión | — |  | [`server/routes/leads/crud.ts:360`](../../server/routes/leads/crud.ts#L360) |
+| `DELETE` | `/api/leads/{id}` | Sesión | — |  | [`server/routes/leads/crud.ts:359`](../../server/routes/leads/crud.ts#L359) |
 | `POST` | `/api/leads/{id}/analyze-sentiment` | Sesión | — |  | [`server/routes/leads/reply.ts:73`](../../server/routes/leads/reply.ts#L73) |
 | `POST` | `/api/leads/{id}/calculate-break-even` | Sesión | — |  | [`server/routes/leads/enrichment.ts:1497`](../../server/routes/leads/enrichment.ts#L1497) |
 | `POST` | `/api/leads/{id}/detect-dates` | Sesión | — |  | [`server/routes/leads/enrichment.ts:817`](../../server/routes/leads/enrichment.ts#L817) |
@@ -539,15 +539,15 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:146`](../../server/routes/tracking.ts#L146) |
-| `POST` | `/api/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
+| `GET` | `/api/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:144`](../../server/routes/tracking.ts#L144) |
+| `POST` | `/api/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:255`](../../server/routes/tracking.ts#L255) |
 | `GET` | `/api/api/tracking/open` | Pública | — |  | [`server/routes/tracking.ts:51`](../../server/routes/tracking.ts#L51) |
-| `GET` | `/api/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:329`](../../server/routes/tracking.ts#L329) |
-| `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:146`](../../server/routes/tracking.ts#L146) |
-| `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:259`](../../server/routes/tracking.ts#L259) |
+| `GET` | `/api/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:323`](../../server/routes/tracking.ts#L323) |
+| `GET` | `/api/tracking/click` | Pública | — |  | [`server/routes/tracking.ts:144`](../../server/routes/tracking.ts#L144) |
+| `POST` | `/api/tracking/interaction` | Pública | — |  | [`server/routes/tracking.ts:255`](../../server/routes/tracking.ts#L255) |
 | `GET` | `/api/tracking/open` | Pública | — |  | [`server/routes/tracking.ts:51`](../../server/routes/tracking.ts#L51) |
-| `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:329`](../../server/routes/tracking.ts#L329) |
-| `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:466`](../../server/routes/tracking.ts#L466) |
+| `GET` | `/api/tracking/pdf` | Pública | — |  | [`server/routes/tracking.ts:323`](../../server/routes/tracking.ts#L323) |
+| `POST` | `/api/webhooks/resend` | Firma o secreto | publicoRateLimiter |  | [`server/routes/tracking.ts:458`](../../server/routes/tracking.ts#L458) |
 
 ### transposeRoute
 
@@ -572,46 +572,46 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users.ts:869`](../../server/routes/users.ts#L869) |
-| `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users.ts:813`](../../server/routes/users.ts#L813) |
-| `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users.ts:983`](../../server/routes/users.ts#L983) |
-| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users.ts:1357`](../../server/routes/users.ts#L1357) |
-| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users.ts:2251`](../../server/routes/users.ts#L2251) |
-| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:1893`](../../server/routes/users.ts#L1893) |
-| `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users.ts:511`](../../server/routes/users.ts#L511) |
-| `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users.ts:1726`](../../server/routes/users.ts#L1726) |
-| `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users.ts:1539`](../../server/routes/users.ts#L1539) |
-| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:2037`](../../server/routes/users.ts#L2037) |
-| `POST` | `/api/auth/test-email` | Sesión | — |  | [`server/routes/users.ts:1849`](../../server/routes/users.ts#L1849) |
-| `POST` | `/api/bands/logo` | Sesión | — |  | [`server/routes/users.ts:2540`](../../server/routes/users.ts#L2540) |
-| `POST` | `/api/bands/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2540`](../../server/routes/users.ts#L2540) |
-| `POST` | `/api/create-band` | Sesión | — |  | [`server/routes/users.ts:2627`](../../server/routes/users.ts#L2627) |
-| `DELETE` | `/api/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users.ts:2834`](../../server/routes/users.ts#L2834) |
-| `GET` | `/api/registered-bands` | Sesión | — |  | [`server/routes/users.ts:807`](../../server/routes/users.ts#L807) |
-| `POST` | `/api/set-band-order` | Sesión | — |  | [`server/routes/users.ts:2381`](../../server/routes/users.ts#L2381) |
-| `POST` | `/api/set-main-band` | Sesión | — |  | [`server/routes/users.ts:2266`](../../server/routes/users.ts#L2266) |
-| `GET` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2508`](../../server/routes/users.ts#L2508) |
-| `POST` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2436`](../../server/routes/users.ts#L2436) |
-| `POST` | `/api/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2540`](../../server/routes/users.ts#L2540) |
-| `GET` | `/api/users` | Sesión | — |  | [`server/routes/users.ts:3200`](../../server/routes/users.ts#L3200) |
-| `POST` | `/api/users` | Sesión + líder | — |  | [`server/routes/users.ts:3243`](../../server/routes/users.ts#L3243) |
-| `POST` | `/api/users/associate` | Sesión + líder | — |  | [`server/routes/users.ts:3115`](../../server/routes/users.ts#L3115) |
-| `POST` | `/api/users/create-band` | Sesión | — |  | [`server/routes/users.ts:2627`](../../server/routes/users.ts#L2627) |
-| `DELETE` | `/api/users/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users.ts:2834`](../../server/routes/users.ts#L2834) |
-| `GET` | `/api/users/registered-bands` | Sesión | — |  | [`server/routes/users.ts:808`](../../server/routes/users.ts#L808) |
-| `POST` | `/api/users/set-band-order` | Sesión | — |  | [`server/routes/users.ts:2381`](../../server/routes/users.ts#L2381) |
-| `POST` | `/api/users/set-main-band` | Sesión | — |  | [`server/routes/users.ts:2266`](../../server/routes/users.ts#L2266) |
-| `GET` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2508`](../../server/routes/users.ts#L2508) |
-| `POST` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2436`](../../server/routes/users.ts#L2436) |
-| `POST` | `/api/users/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2540`](../../server/routes/users.ts#L2540) |
-| `PUT` | `/api/users/{id}` | Sesión | — |  | [`server/routes/users.ts:3425`](../../server/routes/users.ts#L3425) |
-| `DELETE` | `/api/users/{id}` | Sesión + líder | — |  | [`server/routes/users.ts:3638`](../../server/routes/users.ts#L3638) |
+| `POST` | `/api/auth/activate-member` | Sesión opcional | loginRateLimiter |  | [`server/routes/users.ts:863`](../../server/routes/users.ts#L863) |
+| `POST` | `/api/auth/check-invitation` | Pública | loginRateLimiter |  | [`server/routes/users.ts:807`](../../server/routes/users.ts#L807) |
+| `POST` | `/api/auth/google` | Sesión (comprobada en el handler) | loginRateLimiter |  | [`server/routes/users.ts:977`](../../server/routes/users.ts#L977) |
+| `POST` | `/api/auth/login` | Sesión (comprobada en el handler) | loginRateLimiter | ★ | [`server/routes/users.ts:1351`](../../server/routes/users.ts#L1351) |
+| `POST` | `/api/auth/logout` | Sesión opcional | — |  | [`server/routes/users.ts:2241`](../../server/routes/users.ts#L2241) |
+| `GET` | `/api/auth/me` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:1887`](../../server/routes/users.ts#L1887) |
+| `POST` | `/api/auth/register` | Sesión opcional | registroRateLimiter |  | [`server/routes/users.ts:505`](../../server/routes/users.ts#L505) |
+| `POST` | `/api/auth/reset-password/confirm` | Firma o secreto | loginRateLimiter |  | [`server/routes/users.ts:1720`](../../server/routes/users.ts#L1720) |
+| `POST` | `/api/auth/reset-password/request` | Pública | loginRateLimiter |  | [`server/routes/users.ts:1533`](../../server/routes/users.ts#L1533) |
+| `POST` | `/api/auth/switch-band` | Sesión (comprobada en el handler) | — |  | [`server/routes/users.ts:2031`](../../server/routes/users.ts#L2031) |
+| `POST` | `/api/auth/test-email` | Sesión | — |  | [`server/routes/users.ts:1843`](../../server/routes/users.ts#L1843) |
+| `POST` | `/api/bands/logo` | Sesión | — |  | [`server/routes/users.ts:2528`](../../server/routes/users.ts#L2528) |
+| `POST` | `/api/bands/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2528`](../../server/routes/users.ts#L2528) |
+| `POST` | `/api/create-band` | Sesión | — |  | [`server/routes/users.ts:2614`](../../server/routes/users.ts#L2614) |
+| `DELETE` | `/api/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users.ts:2821`](../../server/routes/users.ts#L2821) |
+| `GET` | `/api/registered-bands` | Sesión | — |  | [`server/routes/users.ts:801`](../../server/routes/users.ts#L801) |
+| `POST` | `/api/set-band-order` | Sesión | — |  | [`server/routes/users.ts:2369`](../../server/routes/users.ts#L2369) |
+| `POST` | `/api/set-main-band` | Sesión | — |  | [`server/routes/users.ts:2256`](../../server/routes/users.ts#L2256) |
+| `GET` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2496`](../../server/routes/users.ts#L2496) |
+| `POST` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2424`](../../server/routes/users.ts#L2424) |
+| `POST` | `/api/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2528`](../../server/routes/users.ts#L2528) |
+| `GET` | `/api/users` | Sesión | — |  | [`server/routes/users.ts:3183`](../../server/routes/users.ts#L3183) |
+| `POST` | `/api/users` | Sesión + líder | — |  | [`server/routes/users.ts:3226`](../../server/routes/users.ts#L3226) |
+| `POST` | `/api/users/associate` | Sesión + líder | — |  | [`server/routes/users.ts:3098`](../../server/routes/users.ts#L3098) |
+| `POST` | `/api/users/create-band` | Sesión | — |  | [`server/routes/users.ts:2614`](../../server/routes/users.ts#L2614) |
+| `DELETE` | `/api/users/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users.ts:2821`](../../server/routes/users.ts#L2821) |
+| `GET` | `/api/users/registered-bands` | Sesión | — |  | [`server/routes/users.ts:802`](../../server/routes/users.ts#L802) |
+| `POST` | `/api/users/set-band-order` | Sesión | — |  | [`server/routes/users.ts:2369`](../../server/routes/users.ts#L2369) |
+| `POST` | `/api/users/set-main-band` | Sesión | — |  | [`server/routes/users.ts:2256`](../../server/routes/users.ts#L2256) |
+| `GET` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2496`](../../server/routes/users.ts#L2496) |
+| `POST` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users.ts:2424`](../../server/routes/users.ts#L2424) |
+| `POST` | `/api/users/upload-logo` | Sesión | — |  | [`server/routes/users.ts:2528`](../../server/routes/users.ts#L2528) |
+| `PUT` | `/api/users/{id}` | Sesión | — |  | [`server/routes/users.ts:3408`](../../server/routes/users.ts#L3408) |
+| `DELETE` | `/api/users/{id}` | Sesión + líder | — |  | [`server/routes/users.ts:3621`](../../server/routes/users.ts#L3621) |
 
 ## Avisos del análisis estático
 
 Declaradas dos veces (Express usa la primera; la segunda es código muerto):
 
-- POST /api/users/upload-logo (server/routes/users.ts:2540 y server/routes/users.ts:3045)
+- POST /api/users/upload-logo (server/routes/users.ts:2528 y server/routes/users.ts:3032)
 - POST /api/templates/preview (server/routes/leads/templates.ts:144 y server/routes/leads/templates.ts:449)
 
 - Sin rutas sombreadas.

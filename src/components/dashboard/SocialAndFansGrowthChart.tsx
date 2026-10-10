@@ -76,7 +76,7 @@ export const SocialAndFansGrowthChart: React.FC<
   fans = [],
   epkConfig,
   colors,
-  bandName = "Bakandeya",
+  bandName = "Tu Banda",
   bandId,
   onNavigate,
 }) => {

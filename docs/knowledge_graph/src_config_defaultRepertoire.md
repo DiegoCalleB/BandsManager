@@ -13,20 +13,16 @@ tags: ["service", "repertoire", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: BAKANDEYA_DEMO_MEMBERS, SHOW_ITEM_TYPES, TRANSPARENT_DRAG_IMAGE, DEFAULT_SONGS, DEFAULT_SETLISTS.
+Constantes de UI del repertorio (tipos de ítem de show e imagen de arrastre).
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] *(Layer: #service, Domain: #system)*
+_Sin dependencias salientes directas._
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_repertorio_hooks_useBandRepertoireScope|src/components/repertorio/hooks/useBandRepertoireScope.ts]] *(from #frontend)*
-- [[src_components_repertorio_hooks_useRepertorioData|src/components/repertorio/hooks/useRepertorioData.ts]] *(from #frontend)*
-- [[src_components_repertorio_hooks_useRepertorioPersistence|src/components/repertorio/hooks/useRepertorioPersistence.ts]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*

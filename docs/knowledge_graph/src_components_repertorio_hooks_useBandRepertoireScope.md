@@ -18,7 +18,6 @@ Exporta: BandRepertoireScopeParams, useBandRepertoireScope.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] *(Layer: #service, Domain: #system)*
 
