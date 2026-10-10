@@ -435,8 +435,8 @@
   <span class="tag">Cómo lo hacemos · A quién</span>
   <h2>A quién se lo vendemos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">B2C</span><h3>Bandas y músicos</h3><p>Quien toca paga: una cuota por banda, de 0 a 79 € al mes.</p></div>
-    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Managers, agencias, salas, festivales y productoras</h3><p>Los managers llevan varias bandas a la vez. Las salas y productoras programan.</p></div>
+    <div class="biz-col"><span class="badge">B2C</span><h3>Bandas y músicos</h3><p>Una cuota por banda, de 0 a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Managers, agencias, salas, festivales y productoras</h3><p>Los que llevan varias bandas y los que programan</p></div>
   </div>
   <ul class="dlg tight">
       <li data-who="bajo">Dos tipos de cliente. B2C: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda.</li>
@@ -452,8 +452,8 @@
   <span class="tag">Cómo lo hacemos · El dinero</span>
   <h2>Y de qué vivimos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Cinco planes, de 0 a 79 € al mes. La banda paga y todos sus miembros comparten espacio e IA.</p></div>
-    <div class="biz-col"><span class="badge b2b">Voluntaria, de momento</span><h3>Pequeña comisión por concierto</h3><p>Nos llevamos una pequeña comisión de cada concierto que se cierra a través de la plataforma.</p></div>
+    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Cinco planes, de 0 a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge b2b">Voluntaria, de momento</span><h3>Pequeña comisión por concierto</h3><p>De los conciertos que se cierran por la plataforma</p></div>
   </div>
   <ul class="dlg tight">
       <li data-who="guitarra">¿Y de qué vivimos, entonces?</li>
@@ -488,7 +488,7 @@
     <div class="pn mid"><h3>Backend · Express 4 + TypeScript</h3><p class="chips2"><span>44 ficheros de rutas</span><span>Scout · Enviador · Lector</span><span>Cola y planificador</span><span>Aislamiento por banda</span></p></div>
     <div class="pn"><h3>Servicios</h3><p class="chips2"><span>Supabase</span><span>Gemini</span><span>Gmail OAuth2 · IMAP</span><span>Stripe · Resend</span><span>Railway · Sentry</span></p></div>
   </div>
-  <p class="scene-foot">Supabase es la única fuente de verdad. Cada integración se desactiva sola si falta su clave: sin <span class="mono">.env</span> la app arranca igual.</p>
+  <p class="scene-foot">Supabase, única fuente de verdad. Cada integración se desactiva sola si falta su clave.</p>
 </section>
 
 <section class="slide scene tech" data-title="El mapa que lee la IA" data-transition="zoom">
@@ -1285,7 +1285,7 @@
 <text x="251" y="410" font-size="16" font-weight="600" font-family="Onest, system-ui, sans-serif" fill="#fff" text-anchor="start" style="paint-order:stroke;stroke:#05070d;stroke-width:5px">Finanzas, merchan y planes</text>
 <text x="292" y="242" font-size="16" font-weight="600" font-family="Onest, system-ui, sans-serif" fill="#fff" text-anchor="start" style="paint-order:stroke;stroke:#05070d;stroke-width:5px">Estudio de canción e Iris (stems)</text>
 </svg></div>
-  <p class="scene-foot">Azul, interfaz · verde, servicios y agentes · rojo, seguridad · naranja, proveedores externos. Se regenera con <span class="mono">npm run graph:sync</span>.</p>
+  <p class="scene-foot">Azul, interfaz · verde, servicios y agentes · rojo, seguridad · naranja, proveedores. <span class="mono">npm run graph:sync</span></p>
 </section>
 
 <section class="slide scene tech" data-title="Cómo se construyó con IA" data-transition="rise">
@@ -1325,12 +1325,12 @@
       <li data-who="bajo">Una parte. Tú toca la guitarra, que de lo demás me encargo yo.</li>
     </ul>
   <div class="tech-vis mini">
-    <div class="pn"><h3>Aislamiento por banda</h3><p>Un test estático lo vigila en cada CI.</p></div>
-    <div class="pn"><h3>Inyección de prompt</h3><p>El texto externo se sanea y la última barrera es una persona.</p></div>
-    <div class="pn"><h3>SSRF y abuso</h3><p>Cada fetch valida la IP; límites de ritmo en login, IA y pagos.</p></div>
-    <div class="pn"><h3>Autenticación</h3><p>PBKDF2-SHA512, Google verificado en servidor, sesiones que caducan.</p></div>
-    <div class="pn"><h3>Obra del músico</h3><p>Maquetas y stems en una ruta por banda, sin URLs predecibles.</p></div>
-    <div class="pn"><h3>Errores</h3><p>Panel propio y Sentry, con la versión que lo produjo.</p></div>
+    <div class="pn"><h3>Aislamiento por banda</h3><p>Test estático en cada CI</p></div>
+    <div class="pn"><h3>Inyección de prompt</h3><p>Texto externo saneado</p></div>
+    <div class="pn"><h3>SSRF y abuso</h3><p>IP validada y límites de ritmo</p></div>
+    <div class="pn"><h3>Autenticación</h3><p>PBKDF2-SHA512 y sesiones que caducan</p></div>
+    <div class="pn"><h3>Obra del músico</h3><p>Una ruta por banda, sin URLs predecibles</p></div>
+    <div class="pn"><h3>Errores</h3><p>Panel propio y Sentry</p></div>
   </div>
 </section>
 
@@ -1368,11 +1368,11 @@
       <li data-who="bajo">Hecho. Y con la lista de pendientes que ya tengo, no me voy a aburrir.</li>
     </ul>
   <ol class="tech-vis steps">
-    <li><b>1</b><div><h3>Probarlo con una banda real</h3><p>El flujo entero con una sala: lead, aprobación, borrador en Gmail y respuesta.</p></div></li>
-    <li><b>2</b><div><h3>Reactivar el cobro</h3><p>Cerrar la facturación y abrir los planes de pago.</p></div></li>
-    <li><b>3</b><div><h3>Vídeos de fans por QR</h3><p>El público sube su clip del directo: materia prima para los reels.</p></div></li>
-    <li><b>4</b><div><h3>El Tricount de las giras</h3><p>Cuentas de la gira entre todos, sin líos.</p></div></li>
-    <li><b>5</b><div><h3>Darlo a conocer</h3><p>Con el máster de Marketing Digital con IA.</p></div></li>
+    <li><b>1</b><div><h3>Probarlo con una banda real</h3><p>Lead, aprobación, borrador en Gmail y respuesta</p></div></li>
+    <li><b>2</b><div><h3>Reactivar el cobro</h3><p>Facturación y planes de pago</p></div></li>
+    <li><b>3</b><div><h3>Vídeos de fans por QR</h3><p>El público sube su clip del directo</p></div></li>
+    <li><b>4</b><div><h3>El Tricount de las giras</h3><p>Cuentas de la gira entre todos</p></div></li>
+    <li><b>5</b><div><h3>Darlo a conocer</h3><p>Máster de Marketing Digital con IA</p></div></li>
   </ol>
 </section>
 
