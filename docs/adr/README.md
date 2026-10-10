@@ -38,6 +38,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0029](./0029-modularizacion-fans-panel.md) | Modularización de FansPanel (2051 → ~70 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0030](./0030-modularizacion-band-switcher-modal.md) | Modularización de BandSwitcherModal (1937 → ~40 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 | [0031](./0031-modularizacion-app.md) | Modularización de App.tsx (2814 → 24 líneas) con controlador, contexto, puerta de entrada y armazón | Aceptada | nueva |
+| [0032](./0032-modularizacion-tour-manager.md) | Modularización de TourManager.tsx (1918 → 71 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

@@ -94,7 +94,8 @@ _Sin dependencias salientes directas._
 - [[src_components_song_studio_SongStudioIrisSheet|src/components/song_studio/SongStudioIrisSheet.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioLayout|src/components/song_studio/SongStudioLayout.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
-- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourDeleteModal|src/components/tour_manager/TourDeleteModal.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*

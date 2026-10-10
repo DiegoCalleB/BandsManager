@@ -344,7 +344,13 @@ BandManager UI Component Library
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
-- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourCardsGrid|src/components/tour_manager/TourCardsGrid.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourConvocatoriaSection|src/components/tour_manager/TourConvocatoriaSection.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourDeleteModal|src/components/tour_manager/TourDeleteModal.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourFleetSection|src/components/tour_manager/TourFleetSection.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourManagerHeader|src/components/tour_manager/TourManagerHeader.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourStopsSection|src/components/tour_manager/TourStopsSection.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*

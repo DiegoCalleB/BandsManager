@@ -13,24 +13,23 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: TourManager.
+Gestor de giras: vehículos, dietas, paradas, convocados y volcado a calendario y finanzas.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_common_HolidayDateWarning|src/components/common/HolidayDateWarning.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_app_appViews|src/app/appViews.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_tour_manager_TourManagerProvider|src/components/tour_manager/TourManagerProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_tour_manager_TourManagerView|src/components/tour_manager/TourManagerView.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_tour_manager_hooks_useTourManagerController|src/components/tour_manager/hooks/useTourManagerController.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_tourUtils|src/utils/tourUtils.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_gira|Tour Manager]] *(from #feature)*
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
+- [[src_components_tour_manager_TourManagerContext|src/components/tour_manager/TourManagerContext.ts]] *(from #frontend)*
 
 ---
 

@@ -29,7 +29,8 @@ Exporta: HolidayDateWarning.
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
 - [[src_components_calendar_event_detail_HolidayWarningSection|src/components/calendar/event_detail/HolidayWarningSection.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
-- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourCardsGrid|src/components/tour_manager/TourCardsGrid.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourStopsSection|src/components/tour_manager/TourStopsSection.tsx]] *(from #frontend)*
 
 ---
 

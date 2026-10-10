@@ -386,6 +386,11 @@ _Sin dependencias salientes directas._
 - [[src_components_song_studio_trackColors|src/components/song_studio/trackColors.ts]] *(from #frontend)*
 - [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourForm|src/components/tour_manager/hooks/useTourForm.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourManagerController|src/components/tour_manager/hooks/useTourManagerController.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourModal|src/components/tour_manager/hooks/useTourModal.ts]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourSave|src/components/tour_manager/hooks/useTourSave.ts]] *(from #frontend)*
+- [[src_components_tour_manager_TourEditModal|src/components/tour_manager/TourEditModal.tsx]] *(from #frontend)*
 - [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*

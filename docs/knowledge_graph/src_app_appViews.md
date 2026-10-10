@@ -28,6 +28,7 @@ _Sin dependencias salientes directas._
 - [[src_app_MobileBottomTabBar|src/app/MobileBottomTabBar.tsx]] *(from #service)*
 - [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
 - [[src_app_MobileGroupSheet|src/app/MobileGroupSheet.tsx]] *(from #service)*
+- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
 
 ---
 

@@ -184,7 +184,9 @@ _Sin dependencias salientes directas._
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
-- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourConvocatoriaSection|src/components/tour_manager/TourConvocatoriaSection.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourFleetSection|src/components/tour_manager/TourFleetSection.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_TourSyncOptions|src/components/tour_manager/TourSyncOptions.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 - [[src_components_WaveformTrack|src/components/WaveformTrack.tsx]] *(from #frontend)*
 - [[src_pages_PublicDealView|src/pages/PublicDealView.tsx]] *(from #frontend)*
