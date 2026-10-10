@@ -9,33 +9,33 @@ SAY = [
  ('Llevamos tres ensayos sin saber', 'Y llevamos tres ensayos sin saber qué tocamos. Cada uno trae su setlist. ¡Así no hay solo que aguante!'),
  ('Así no llegamos a ningún lado', 'Rapaces, así no llegamos ni al bar de abajo. Y mira que está cerca.'),
  ('Ya he dejado dos grupos por esto', 'Ya he dejado dos grupos por esto mismo. Y con vosotros no me va a pasar, que sois mis hermanos de escenario.'),
- ('Dadme hasta el sábado', 'Dadme hasta el sábado. Confiad en el bajista. [sighs] Por una vez en la historia del rock.'),
+ ('Dadme hasta el sábado', 'Dadme hasta el sábado, chavales. Confiad en el bajista. [sighs] Por una vez en la historia del rock.'),
  # Prólogo · el portátil
  ('Para acabar el máster necesito', 'Vale. Para acabar el máster necesito un proyecto. Mi banda necesita un milagro. Y yo, un café.'),
  ('¿Y si el proyecto es el milagro?', '¿Y si el proyecto es el milagro, {bajo}?'),
  ('Yo pongo las ideas locas', 'Yo pongo las ideas locas. {ia_claude} las discute. Y luego discutimos los dos. Como un grupo de verdad.'),
  ('Y tú decides', 'Y tú decides, {bajo}. Nosotros proponemos, y tú revisas cada respuesta. Tú firmas el disco.'),
- ('Hecho. Empezamos esta noche', 'Hecho. Empezamos esta noche. Va a ser mi disco más largo.'),
+ ('Hecho, tronco. Empezamos esta noche', 'Hecho, tronco. Empezamos esta noche. Va a ser mi disco más largo.'),
  # Prólogo · viernes
- ('Chicos, mañana a las 11', 'Chicos, mañana a las once en el local. Tengo que enseñaros algo que ni yo me creo que haya hecho yo solito.'),
+ ('Chicos, mañana a las 11', 'Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis, tronco. Ni yo me creo que lo haya hecho yo solito.'),
  ('¿De qué va? ¿Qué es??', '¿Cómo? ¿De qué va? ¿Qué es? No me hagás esto, che, que el que genera expectativa en esta banda soy yo.'),
  ('Seguro que ha encontrado una base de datos', 'Seguro que ha encontrado una base de datos con todas las salas de Galicia. Lo veo venir.'),
  ('O ha descubierto Google Calendar', 'O ha descubierto Gúgel Calendar. [laughs] ¡Rocanrol!'),
- ('Mañana a las 11. Traed unas birras', 'Mañana a las once. Traed birras. Frías, {bateria}, no como la última vez.'),
+ ('Mañana a las 11. Traed unas birras', 'Mañana a las once. Traed birras. Fresquitas, {bateria}, no como la última vez, que vaya tela.'),
  # Cap. 1 · salas
  ('¡¿Esto lo has hecho tú?!', '[gasps] Pará, pará, pará. ¿Esto lo hiciste vos? ¿El bajista?'),
  ('Con ayuda. Aquí tengo las salas', 'Con un poco de ayuda. Aquí están todas las salas y festivales, y cada conversación con ellos queda guardada. Se acabó buscar en el correo como quien busca la púa que se le ha caído dentro de la guitarra.'),
  ('¡Una base de datos de salas!', '[shouts] ¡Una base de datos de salas! ¡Te lo dije! ¡Te lo dije, tío!'),
  ('Casi. Y hay un agente, el Scout', 'Casi. Y además tenemos un agente, el Scaut, que busca salas nuevas por nosotros. Como un ojeador. Pero que no se bebe el caché.'),
  ('Pues yo dije Google Calendar', '[mischievously] Pues yo dije Gúgel Calendar, eh. Que conste en acta.'),
- ('Eso también. Ya llegamos', 'Eso también, {bateria}. Ya llegaremos. Tranqui.'),
+ ('Eso también. Ya llegamos', 'Eso también, {bateria}. Ya llegaremos. Tranqui, tronco, tranqui.'),
  # Cap. 1 · correos
  ('¡Me ha escrito a tres salas', '¡Pero si ha escrito a tres salas mientras yo afinaba! ¡Y eso que afino rápido!'),
  ('Cada correo suena a nosotros', 'Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.'),
  ('¿Y si se le va la mano', '¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.'),
  ('Por eso nada sale sin mi visto bueno', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
  ('O sea, que tú solo aprietas el botón', 'O sea que vos solo apretás el botón. Como el de un pedal.'),
- ('Y presumo', 'Y presumo. Que en el rocanrol, presumir es medio trabajo.'),
+ ('Y presumo', 'Y presumo, que pa eso soy de San Blas. En el rocanrol, presumir es medio trabajo.'),
  # Cap. 1 · Date Swap
  ('Propongo a otra banda cambiar fecha', 'Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.'),
  ('Os leo. Me encanta', 'Os leo, Herdeiros. Me encanta: nosotros en Vigo, y vosotros en Santiago. ¡Cartel doble, colegas! ¡Esto es rocanrol!'),
@@ -69,7 +69,7 @@ SAY = [
  ('Dale al play, ', 'Dale al play, {guitarra}. Los acordes y la letra van siguiendo la canción solos.'),
  ('¡Pero tío! ¡Te has copiado de Ultimate Guitar!', '¡Pero tío! ¡Te has copiado de Últimeit Guitar! ¡Pellízcame! ¡Esto no puede ser real! ¡Esto es mejor que un solo de Eslash!'),
  ('¡Estoy flipando!', '[laughs] ¡Estoy flipando, neno! ¡Flipando en colores!'),
- ('Espera, espera, que esto es solo el principio', 'Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!'),
+ ('Espera, espera, que esto es solo el principio', 'Espera, espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!'),
  # Cap. 2 · Iris
  ('Subo una canción y Iris separa', 'Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras. Pista a pista.'),
  ('¡Mi voz sola!', '[dramatically] ¡Mi voz sola! ¡Nunca me había escuchado así! ¡Canto como un ángel, boludo!'),
@@ -82,7 +82,7 @@ SAY = [
  # Cap. 3 · dossier
  ('¡¿Qué co******?!', '¿Pero qué co [pi]? ¿Que ahora tenemos una web? ¡Como los de verdad!'),
  ('¡Pero si está guapísima!', '[gasps] ¡Pero si está guapísima! ¡Salgo con mi mejor perfil! ¿Qué me estás contando?'),
- ('¡Es una pasada! Es el dossier', '¡Es una pasada! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación. ¡Pero esperad, que esto no ha hecho más que empezar!'),
+ ('¡Es una pasada, tronco! Es el dossier', '¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación. ¡Pero esperad, que esto no ha hecho más que empezar!'),
  ('Estoy flipando en colores', 'Yo estoy flipando en colores. En colores y con distorsión.'),
  # Cap. 3 · QR
  ('¿Cómo…? ¿Que si ponemos este QR', '¿Cómo? ¿Que si ponemos este código, el cú-erre, en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?'),
@@ -107,9 +107,9 @@ SAY = [
  # Esto lo necesitan todos
  ('Iago, ¡esto es la hostia!', '[gasps] {bajo}, esto es una locura total. Lo necesitan todos los grupos, todos los mánayers, todas las productoras. ¡Todos!'),
  ('¿Y si lo vendemos?', '¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo.'),
- ('¿En serio? ¿Creéis que esto lo podemos vender?', '¿En serio? ¿Creéis que esto se puede vender?'),
+ ('¿En serio? ¿Creéis que esto lo podemos vender?', '¿En serio, tronco? ¿Creéis que esto se puede vender?'),
  ('¡Pero tío, te vas a forrar!', '[laughs] ¡Pero tío, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol. ¡Como una estrella del rock!'),
- ('Si me hago rico', 'Si me hago rico, una buena parte va para la banda. ¡Os Herdeiros do Código lo va a petar!'),
+ ('Si me hago rico', 'Si me hago rico, una buena parte va para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'),
  # Cap. 5 · marketing
  ('Pero tío… ¿y tú cómo sabes todo esto?', 'Pero home, ¿y tú cómo sabes todo esto? ¿Te has leído un libro?'),
  ('Ahh, se me había olvidado', 'Ah, se me había olvidado deciros que me acabo de apuntar al máster de Marketing Digital de la Big Scul. Una pasta que flipas.'),
@@ -131,7 +131,7 @@ SAY = [
  ('Delante, React con Vite', 'Delante, Riact con Vit. Detrás, Express y Taipscript. Supabeis guarda todos los datos, y la inteligencia artificial solo vive en los bordes.'),
  ('Pues como si me hablas en chino', 'Pues como si me hablas en chino. O en jevi metal noruego.'),
  ('Yo no entiendo nada', 'Yo no entiendo nada de nada. Y eso que leo partituras.'),
- ('Yo tampoco tenía ni idea', 'Yo tampoco tenía ni idea. Pero desde que hice el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega {ia_claude}.'),
+ ('Yo tampoco tenía ni idea', 'Yo tampoco tenía ni pajolera idea. Pero desde que hice el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega {ia_claude}.'),
  # Cap. 6 · mapa
  ('¿Y eso qué es? ¿Un plato de espaguetis?', '¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?'),
  ('Es el mapa de nuestro código', 'Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. {ia_claude} y {ia_gemini} lo leen antes de tocar nada, para no romper lo que ya suena bien.'),
@@ -162,7 +162,7 @@ SAY = [
  ('Em, en tu hoja, como siempre', 'Mi menor. En tu hoja, como siempre. [softly] Respira, estrella.'),
  ('Hace seis meses no sabíamos', 'Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. [shouts] ¡Un, dos, tres, cuatro!'),
  # Otro jueves (espejo)
- ('Ya está confirmada. Mirad el calendario', 'Ya está confirmada. Mirad el calendario.'),
+ ('Cerrao y bien cerrao', 'Cerrao y bien cerrao, chaval. Mirad el calendario.'),
  ('Y la setlist de cada uno ya está', 'Y la setlist de cada uno ya está en la hoja.'),
  ('Entonces ensayamos el sábado', 'Entonces, ensayamos el sábado. ¡Rocanrol!'),
 ]
@@ -179,9 +179,9 @@ EXTRA_SAY = {
  'cast_bateria': 'Soy {bateria}, a la {bateria:rol}. El que marca el ritmo. Y el que se bebe las birras.',
  'cast_voz': '{voz}. {voz:cargo}. Che, la cara bonita de la banda.',
  'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos, los rifs, y las palabrotas.',
- 'cast_bajo': 'Y yo soy {bajo}. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
+ 'cast_bajo': 'Y yo soy {bajo}, de San Blas de toda la vida. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
  'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y la setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
- 'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas.',
+ 'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas, chavales, que esto mola mazo.',
  'react': 'A ver, neno, enséñanos eso que ni tú te crees. Y rápido, que se calienta la birra.',
  'radio': 'Buenos días, rockeros. Esto es Rock efe eme. La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrécshon Fest, gracias a su bajista, {bajo}, y a band mánayer punto io: la increíble app que ha creado, y que va a revolucionar la industria musical. ¡Sube el volumen!',
  'otro_jueves': '¿Alguien ha contestado a la sala del catorce?',

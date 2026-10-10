@@ -30,7 +30,7 @@
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
-                tts: { motor: 'elevenlabs', voz: '97uDgYCxMwY7BodSS4WM', estabilidad: 0.45 } },
+                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', estabilidad: 0 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
                 tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0 } },

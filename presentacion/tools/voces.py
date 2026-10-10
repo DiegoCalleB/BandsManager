@@ -117,6 +117,10 @@ def limpiar(texto):
     return re.sub(r'\s+', ' ', t).strip()
 
 
+class SinCreditos(Exception):
+    """ElevenLabs sin créditos: las frases que faltan se quedan con su audio anterior."""
+
+
 def eleven(ruta, metodo='GET', datos=None, intentos=4):
     # La clave puede venir en $ELEVENLABS_API_KEY o inyectada por el entorno (secreto de red con la cabecera
     # xi-api-key hacia api.elevenlabs.io); en ese caso la petición va sin clave y la añade el proxy.
@@ -132,7 +136,10 @@ def eleven(ruta, metodo='GET', datos=None, intentos=4):
             if e.code in (429, 500, 502, 503) and i < intentos - 1:
                 time.sleep(2 ** (i + 1))
                 continue
-            sys.exit(f'ElevenLabs {e.code}: {e.read().decode(errors="replace")[:300]}')
+            cuerpo = e.read().decode(errors="replace")[:300]
+            if 'quota' in cuerpo:
+                raise SinCreditos(cuerpo)
+            sys.exit(f'ElevenLabs {e.code}: {cuerpo}')
 
 
 def listar_voces():
@@ -216,7 +223,28 @@ def procesar(entradas, tts, salida):
     cmd += ['-filter_complex', cadena, '-map', '[o]', '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', '56k', salida]
     subprocess.check_call(cmd)
     igualar(salida)
+    recortar_cola(salida)
     return float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', salida]))
+
+
+def recortar_cola(mp3, umbral=-40, margen=0.15):
+    """Fuera el silencio con ruido del final (el [pause] de v3 deja hasta 4 s): si no, la siguiente frase espera."""
+    o = subprocess.run(['ffmpeg', '-hide_banner', '-i', mp3, '-af', f'silencedetect=n={umbral}dB:d=0.5', '-f', 'null', '-'],
+                       capture_output=True, text=True).stderr
+    dur = float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', mp3]))
+    inicios = [float(x) for x in re.findall(r'silence_start: ([\d.]+)', o)]
+    finales = re.findall(r'silence_end: ([\d.]+)', o)
+    # solo si el último silencio llega hasta el final del audio
+    if not inicios or len(finales) >= len(inicios) and float(finales[-1]) < dur - 0.4:
+        return False
+    corte = inicios[-1] + margen
+    if dur - corte < 0.3:
+        return False
+    tmp = mp3 + '.tmp.mp3'
+    subprocess.check_call(['ffmpeg', '-y', '-loglevel', 'error', '-i', mp3, '-t', f'{corte:.3f}', '-af', 'afade=t=out:st=%.3f:d=0.1' % (corte - 0.1),
+                           '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', '56k', tmp])
+    os.replace(tmp, mp3)
+    return True
 
 
 def igualar(mp3, objetivo=-16.0):
@@ -283,7 +311,7 @@ def main():
     os.makedirs(SALIDA, exist_ok=True)
     ruta_man = os.path.join(SALIDA, 'manifest.json')
     viejo = json.load(open(ruta_man, encoding='utf-8')) if os.path.exists(ruta_man) else {}
-    nuevo, motores, oido = {}, None, None
+    nuevo, motores, oido, agotado = {}, None, None, False
     for who, say in p.frases:
         if who not in R or 'tts' not in R[who]:
             print(f'⚠ {who} no tiene voz en reparto.js', file=sys.stderr)
@@ -305,14 +333,26 @@ def main():
                 previo['e'] = envolvente(ruta)
             continue
         motores = motores or Motores()
-        with tempfile.TemporaryDirectory() as tmp:
-            entradas = []
-            for i, trozo in enumerate(limpiar(habla).split('[pi]')):
-                if i:
-                    b = os.path.join(tmp, f'pi{i}.wav'); pitido(b); entradas.append(b)
-                if trozo.strip():
-                    w = os.path.join(tmp, f'{i}.wav'); motores.wav(R[who]['tts'], trozo.strip(), w); entradas.append(w)
-            dur = procesar(entradas, R[who]['tts'], ruta)
+        try:
+            if agotado:
+                raise SinCreditos()
+            with tempfile.TemporaryDirectory() as tmp:
+                entradas = []
+                for i, trozo in enumerate(limpiar(habla).split('[pi]')):
+                    if i:
+                        b = os.path.join(tmp, f'pi{i}.wav'); pitido(b); entradas.append(b)
+                    if trozo.strip():
+                        w = os.path.join(tmp, f'{i}.wav'); motores.wav(R[who]['tts'], trozo.strip(), w); entradas.append(w)
+                dur = procesar(entradas, R[who]['tts'], ruta)
+        except SinCreditos:
+            if not agotado:
+                print('⚠ ElevenLabs sin créditos: lo que falta conserva su audio anterior', file=sys.stderr)
+            agotado = True
+            if previo and os.path.exists(ruta):
+                nuevo[clave] = previo
+            else:
+                print(f'✗ sin audio: {who} · {texto[:70]}', file=sys.stderr)
+            continue
         nuevo[clave] = {'f': fichero, 'd': round(dur, 2), 'v': firma, 'who': who, 'say': texto, 'e': envolvente(ruta)}
         print(f'✓ {who:9} {dur:5.1f}s  {texto[:70]}', flush=True)
         if qa:

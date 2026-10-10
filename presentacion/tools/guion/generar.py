@@ -181,7 +181,7 @@ add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-
        m('claudio', '¿Y si el proyecto es el milagro?'),
        m('guglio', 'Yo pongo las ideas locas. Claudio las discute.'),
        m('claudio', 'Y tú decides, Iago. Revisamos cada respuesta.'),
-       m('iago', 'Hecho. Empezamos esta noche.'), cls='tight')}
+       m('iago', 'Hecho, tronco. Empezamos esta noche.'), cls='tight')}
   <p class="scene-foot"><b>Y esta parte es cierta:</b> esta presentación es el TFM de ese máster.</p>
 </section>
 ''')
@@ -344,7 +344,7 @@ TAG3 = 'Sábado · 12:20 · Que te conozcan'
 add(feat('El dossier de la banda', TAG3, 'El dossier de la banda.',
          [m('alvaro', '¡¿Qué co******?! ¿Que ahora tenemos una web?!'),
           m('brais', '¡Pero si está guapísima! ¡¿Qué me estás contando?!'),
-          m('iago', '¡Es una pasada! Es el dossier de la banda: fotos, formación y contacto de booking, y es súper sencillo de editar desde la aplicación. ¡Pero esperad, que aún quedan muchas más cosas!'),
+          m('iago', '¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto de booking, y es súper sencillo de editar desde la aplicación. ¡Pero esperad, que aún quedan muchas más cosas!'),
           m('alvaro', 'Estoy flipando en colores…')],
          shot_img('img/d-h-dossier.jpg')))
 
@@ -396,7 +396,7 @@ add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', '
               m('alvaro', '¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo. 💸'),
               m('iago', '¿En serio? ¿Creéis que esto lo podemos vender?'),
               m('brais', '¡Pero tío, te vas a forrar! Ya te estoy imaginando en Miami, con tu descapotable y de traje.'),
-              m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar!'), cls='tight'), tr='zoom'))
+              m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
 add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 6 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
@@ -595,7 +595,7 @@ add(f'''<section class="slide scene" data-title="En la radio" data-transition="f
 
 add(scene('Otro jueves, 23:47', 'Otro jueves · 23:47', 'El grupo seguía existiendo.', 'img/concierto-2.jpg',
           dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', '23:47', say=EXTRA_SAY['otro_jueves']),
-              m('iago', 'Ya está confirmada. Mirad el calendario. ✅', '23:48'),
+              m('iago', 'Cerrao y bien cerrao, chaval. Mirad el calendario. ✅', '23:48'),
               m('alvaro', 'Y la setlist de cada uno ya está en la hoja.', '23:49'),
               m('brais', 'Entonces ensayamos el sábado. 🥁', '23:51'))))
 
