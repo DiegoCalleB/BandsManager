@@ -13,28 +13,16 @@ tags: ["frontend", "social", "auto", "pantalla"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Exporta: YoutubeVideoMeta, ReelsCenter.
+Centro de Reels: pipeline de contenido y analizador de vídeo con IA.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
-- [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
-- [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(Layer: #frontend, Domain: #social)*
-- [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(Layer: #frontend, Domain: #social)*
-- [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_reels_center_ReelsCenterLayout|src/components/reels_center/ReelsCenterLayout.tsx]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_ReelsCenterProvider|src/components/reels_center/ReelsCenterProvider.tsx]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useReelsCenterController|src/components/reels_center/hooks/useReelsCenterController.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_reelsUtils|src/utils/reelsUtils.ts]] *(Layer: #service, Domain: #social)*
 
 ---
@@ -42,6 +30,11 @@ Exporta: YoutubeVideoMeta, ReelsCenter.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[src_App|src/App.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/reels_center/__tests__/reelsCenterContracts.test.ts`
 
 ---
 

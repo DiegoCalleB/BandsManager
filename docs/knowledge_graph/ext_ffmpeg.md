@@ -42,7 +42,8 @@ _Sin dependencias salientes directas._
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(from #service)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(from #frontend)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
 
 ---

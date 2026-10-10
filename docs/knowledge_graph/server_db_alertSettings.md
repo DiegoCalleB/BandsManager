@@ -28,7 +28,6 @@ Ajustes de alertas por banda (`band_alert_settings`).
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 

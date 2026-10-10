@@ -18,24 +18,12 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
-- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
-- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
-- [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
-- [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
-- [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
-- [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*

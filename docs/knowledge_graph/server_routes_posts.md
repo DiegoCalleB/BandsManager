@@ -30,7 +30,9 @@ Publicaciones sociales y cuentas conectadas de la banda.
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useReelsSync|src/components/reels_center/hooks/useReelsSync.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useSocialPublishing|src/components/reels_center/hooks/useSocialPublishing.ts]] *(from #frontend)*
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---

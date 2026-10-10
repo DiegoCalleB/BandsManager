@@ -28,7 +28,6 @@ Endpoints para configurar estrategias de respuesta condicionales por banda
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 

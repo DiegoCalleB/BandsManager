@@ -36,10 +36,9 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
 
 ---
 

@@ -2359,10 +2359,6 @@ export default function App() {
                     posts={posts}
                     onAddPost={handleAddPost}
                     onUpdatePost={handleUpdatePost}
-                    metrics={metrics}
-                    onAddMetric={handleAddMetric}
-                    onUpdateMetric={handleUpdateMetric}
-                    onDeleteMetric={handleDeleteMetric}
                     bandName={currentActiveBandName}
                     instagramHandle={
                       (epkConfig?.enlacesRedes?.instagram || "")

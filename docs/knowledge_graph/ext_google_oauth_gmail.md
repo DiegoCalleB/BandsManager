@@ -28,7 +28,6 @@ _Sin dependencias salientes directas._
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(from #service)*
 - [[server_utils_googleVerify|server/utils/googleVerify.ts]] *(from #service)*

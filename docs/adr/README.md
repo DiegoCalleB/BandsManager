@@ -24,6 +24,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0015](./0015-modularizacion-repertorio-setlists.md) | Modularización de RepertorioSetlists (3403 → ~280 líneas) | Aceptada | nueva |
 | [0016](./0016-modularizacion-song-studio-modal.md) | Modularización de SongStudioModal (5500 → ~50 líneas) con controlador, contexto y vistas | Aceptada | nueva |
 | [0017](./0017-modularizacion-live-concert-to-album-modal.md) | Modularización de LiveConcertToAlbumModal (3432 → ~50 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
+| [0018](./0018-modularizacion-reels-center.md) | Modularización de ReelsCenter (4155 → ~55 líneas) con hooks por subdominio, contexto y vistas | Aceptada | nueva |
 
 ## Cómo añadir uno
 

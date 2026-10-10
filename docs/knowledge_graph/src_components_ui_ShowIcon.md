@@ -111,12 +111,15 @@ _Sin dependencias salientes directas._
 - [[src_components_PublicFanCapture|src/components/PublicFanCapture.tsx]] *(from #frontend)*
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
 - [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
+- [[src_components_reels_center_AnalysisProgress|src/components/reels_center/AnalysisProgress.tsx]] *(from #frontend)*
+- [[src_components_reels_center_AutoPublishPanel|src/components/reels_center/AutoPublishPanel.tsx]] *(from #frontend)*
+- [[src_components_reels_center_SoulWriterCard|src/components/reels_center/SoulWriterCard.tsx]] *(from #frontend)*
+- [[src_components_reels_center_VideoSourceSelector|src/components/reels_center/VideoSourceSelector.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsTheaterModal|src/components/reels/ReelsTheaterModal.tsx]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
 - [[src_components_reels_ViralGrowthStudio|src/components/reels/ViralGrowthStudio.tsx]] *(from #frontend)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
 - [[src_components_repertorio_CatalogoGeneralView|src/components/repertorio/CatalogoGeneralView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
