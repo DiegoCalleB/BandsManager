@@ -215,7 +215,20 @@ def procesar(entradas, tts, salida):
     cadena += ''.join(f'[a{i}]' for i in range(n)) + f'concat=n={n}:v=0:a=1[c];[c]{",".join(filtros)}[o]'
     cmd += ['-filter_complex', cadena, '-map', '[o]', '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', '56k', salida]
     subprocess.check_call(cmd)
+    igualar(salida)
     return float(subprocess.check_output(['ffprobe', '-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', salida]))
+
+
+def igualar(mp3, objetivo=-16.0):
+    """Segunda pasada de volumen: loudnorm falla en frases cortas, así que se mide y se corrige la ganancia."""
+    o = subprocess.run(['ffmpeg', '-hide_banner', '-i', mp3, '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    i = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', o)[-1])
+    if abs(i - objetivo) < 1:
+        return
+    tmp = mp3 + '.tmp.mp3'
+    subprocess.check_call(['ffmpeg', '-y', '-loglevel', 'error', '-i', mp3, '-af', f'volume={objetivo - i:.2f}dB,alimiter=limit=0.89',
+                           '-ac', '1', '-ar', '24000', '-c:a', 'libmp3lame', '-b:a', '56k', tmp])
+    os.replace(tmp, mp3)
 
 
 def pitido(ruta):
