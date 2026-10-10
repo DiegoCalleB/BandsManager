@@ -29,23 +29,30 @@
     var v = document.createElement('div'); v.id = 'vineta'; v.setAttribute('aria-hidden', 'true'); stage.appendChild(v);
   }
 
-  // Subtítulos (tecla C, de «captions»): en modo película el chat no se ve, así que se puede leer abajo lo que dice quien habla
+  // Subtítulos: en modo película el chat no se ve, así que lo que dice cada uno sale abajo, con su cara, como en el cine.
+  // Salen solos; la tecla C (de «captions») los quita y los pone.
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
+  var hablando = function () { return document.querySelector('.slide.active [data-who].habla'); };
   var subtitular = function () {
-    var li = document.querySelector('.slide.active .dlg li.habla');
-    var txt = li && li.querySelector('.txt'), nom = li && window.REPARTO && window.REPARTO[li.dataset.who];
-    if (!txt) { if (sub.classList.contains('on')) sub.classList.remove('on'); return; }
+    var el = hablando(), nom = el && window.REPARTO && window.REPARTO[el.dataset.who];
+    var txt = el && el.querySelector('.txt');
+    // en el chat, el texto de la burbuja; en el resto (portadas, reparto…), lo que dice, sin las etiquetas de actuación
+    var frase = txt ? txt.textContent : el ? (el.dataset.say || '').replace(/\[pi\]/g, '…').replace(/\[[a-z ]+\]\s*/g, '') : '';
+    if (!frase.trim()) { if (sub.classList.contains('on')) sub.classList.remove('on'); return; }
     sub.style.setProperty('--c', nom ? nom.color : '#ffd596');
-    sub.innerHTML = ''; var b = document.createElement('b'); b.textContent = nom ? nom.nombre : ''; sub.appendChild(b);
-    sub.appendChild(document.createTextNode(txt.textContent));
+    sub.innerHTML = '';
+    if (nom && nom.foto) { var i = document.createElement('img'); i.src = nom.foto; i.alt = ''; sub.appendChild(i); }
+    var t = document.createElement('span'), b = document.createElement('b');
+    b.textContent = nom ? nom.nombre : ''; t.appendChild(b); t.appendChild(document.createTextNode(frase.trim()));
+    sub.appendChild(t);
     sub.classList.add('on');
   };
   addEventListener('voz', subtitular);
-  new MutationObserver(function () { if (sub.classList.contains('on') && !document.querySelector('.slide.active .dlg li.habla')) sub.classList.remove('on'); })
+  new MutationObserver(function () { if (sub.classList.contains('on') && !hablando()) sub.classList.remove('on'); })
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
   addEventListener('keydown', function (e) {
-    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(e.target.tagName)) body.classList.toggle('subs');
+    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(e.target.tagName)) body.classList.toggle('nosubs');
   });
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });
