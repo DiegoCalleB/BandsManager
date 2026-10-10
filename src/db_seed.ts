@@ -10,67 +10,9 @@ import {
   Song,
   Setlist,
 } from "./types";
-import {
-  HERDEIROS_BAND_ID,
-  MASTER_OF_PROMPTS_BAND_ID,
-  HERDEIROS_LEADS,
-  HERDEIROS_BANDS,
-  HERDEIROS_SONGS,
-  HERDEIROS_SETLISTS,
-  HERDEIROS_CONCERTS,
-  HERDEIROS_REHEARSALS,
-  HERDEIROS_TOURS,
-  HERDEIROS_PAYMENTS,
-  HERDEIROS_FANS,
-  HERDEIROS_POSTS,
-  HERDEIROS_METRICS,
-  HERDEIROS_EPK_CONFIG,
-  MOP_LEADS,
-  MOP_BANDS,
-  MOP_SONGS,
-  MOP_SETLISTS,
-  MOP_CONCERTS,
-  MOP_REHEARSALS,
-  MOP_TOURS,
-  MOP_PAYMENTS,
-  MOP_FANS,
-  MOP_POSTS,
-  MOP_METRICS,
-  MASTER_OF_PROMPTS_EPK_CONFIG,
-} from "./data/mouredevBandsSeed.js";
 
-export {
-  HERDEIROS_BAND_ID,
-  MASTER_OF_PROMPTS_BAND_ID,
-  HERDEIROS_LEADS,
-  HERDEIROS_BANDS,
-  HERDEIROS_SONGS,
-  HERDEIROS_SETLISTS,
-  HERDEIROS_CONCERTS,
-  HERDEIROS_REHEARSALS,
-  HERDEIROS_TOURS,
-  HERDEIROS_PAYMENTS,
-  HERDEIROS_FANS,
-  HERDEIROS_POSTS,
-  HERDEIROS_METRICS,
-  HERDEIROS_EPK_CONFIG,
-  MOP_LEADS,
-  MOP_BANDS,
-  MOP_SONGS,
-  MOP_SETLISTS,
-  MOP_CONCERTS,
-  MOP_REHEARSALS,
-  MOP_TOURS,
-  MOP_PAYMENTS,
-  MOP_FANS,
-  MOP_POSTS,
-  MOP_METRICS,
-  MASTER_OF_PROMPTS_EPK_CONFIG,
-};
 
 export const INITIAL_LEADS: Lead[] = [
-  ...HERDEIROS_LEADS,
-  ...MOP_LEADS,
   {
     id: "lead-1",
     nombre_sala: "Apolo",
@@ -819,8 +761,6 @@ Banda Demo Agent Manager IA`,
 ];
 
 export const INITIAL_REHEARSALS: Rehearsal[] = [
-  ...HERDEIROS_REHEARSALS,
-  ...MOP_REHEARSALS,
   {
     id: "reh-1",
     fecha: "2026-07-11",
@@ -882,8 +822,6 @@ export const INITIAL_REHEARSALS: Rehearsal[] = [
 ];
 
 export const INITIAL_CONCERTS: Concert[] = [
-  ...HERDEIROS_CONCERTS,
-  ...MOP_CONCERTS,
   {
     id: "con-1",
     fecha: "2026-07-18",
@@ -999,78 +937,9 @@ export const INITIAL_CONCERTS: Concert[] = [
     band_id: "band-demo",
     bandName: "Banda Demo",
   },
-  {
-    id: "mop-cnc-1",
-    fecha: "2026-07-03",
-    ciudad: "Viveiro (Lugo)",
-    sala: "Resurrection Fest (Ritual Stage)",
-    direccion: "Campo de Fútbol de Celeiro, 27863 Viveiro, Lugo",
-    cache: 8000,
-    aforo_vendido: 18000,
-    aforo_total: 25000,
-    contrato_firmado: true,
-    estado_pago: "anticipo",
-    notas:
-      "Descarga de Thrash Metal galaico en el festival de metal más importante del país. Anticipo recibido.",
-    tipo: "festival",
-    band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-  },
-  {
-    id: "mop-cnc-2",
-    fecha: "2026-09-18",
-    ciudad: "A Coruña",
-    sala: "Sala Mardi Gras",
-    direccion: "Rúa Travesía da Torre, 8, 15002 A Coruña",
-    cache: 2200,
-    aforo_vendido: 220,
-    aforo_total: 220,
-    contrato_firmado: true,
-    estado_pago: "anticipo",
-    notas: "Sold-out en el templo del rock coruñés. Inicio de la gira gallega.",
-    tipo: "sala",
-    band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-  },
-  {
-    id: "mop-cnc-3",
-    fecha: "2026-10-09",
-    ciudad: "Santiago de Compostela",
-    sala: "Sala Malatesta",
-    direccion: "Rúa de San Lourenzo, 51, 15705 Santiago de Compostela",
-    cache: 2800,
-    aforo_vendido: 450,
-    aforo_total: 500,
-    contrato_firmado: true,
-    estado_pago: "pendiente",
-    notas:
-      "Directo con sonido atronador ante la comunidad universitaria y devs de Santiago.",
-    tipo: "sala",
-    band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-  },
-  {
-    id: "mop-cnc-4",
-    fecha: "2026-11-14",
-    ciudad: "A Coruña",
-    sala: "Garufa Club",
-    direccion: "Rúa Riazor, 5, 15004 A Coruña",
-    cache: 3000,
-    aforo_vendido: 350,
-    aforo_total: 350,
-    contrato_firmado: true,
-    estado_pago: "anticipo",
-    notas:
-      "Concierto especial de otoño en casa. (Conflicto de disponibilidad multi-banda para Brais Moure).",
-    tipo: "sala",
-    band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-  },
 ];
 
 export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
-  ...HERDEIROS_POSTS,
-  ...MOP_POSTS,
   {
     id: "post-1",
     fecha: "2026-07-10",
@@ -1137,8 +1006,6 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
 ];
 
 export const INITIAL_PAYMENTS: Payment[] = [
-  ...HERDEIROS_PAYMENTS,
-  ...MOP_PAYMENTS,
   {
     id: "pay-1",
     tipo: "ingreso",
@@ -1257,8 +1124,6 @@ export const INITIAL_MESSAGES: Message[] = [
 ];
 
 export const INITIAL_SOCIAL_METRICS: SocialMetric[] = [
-  ...HERDEIROS_METRICS,
-  ...MOP_METRICS,
   {
     id: "metric-1",
     fecha: "2025-03-01",
@@ -1380,94 +1245,6 @@ export const INITIAL_USERS = [
     instrument: "Batería",
     avatarColor: "#3b82f6",
     initialPassword: "mouredev2026",
-    band_id: "band-os-herdeiros-do-codigo",
-    main_band_id: "band-os-herdeiros-do-codigo",
-    bandName: "Os Herdeiros do Código",
-    plan: "cabeza_de_cartel",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-hdc-xandre",
-    username: "xandre",
-    email: "xandre@herdeiros.dev",
-    name: "Xandre",
-    role: "member" as const,
-    instrument: "Voz / Guitarra",
-    avatarColor: "#f59e0b",
-    initialPassword: "xandre",
-    band_id: "band-os-herdeiros-do-codigo",
-    main_band_id: "band-os-herdeiros-do-codigo",
-    bandName: "Os Herdeiros do Código",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-hdc-alvaro",
-    username: "alvaro",
-    email: "alvaro@herdeiros.dev",
-    name: "Álvaro",
-    role: "member" as const,
-    instrument: "Guitarra Solista",
-    avatarColor: "#ef4444",
-    initialPassword: "alvaro",
-    band_id: "band-os-herdeiros-do-codigo",
-    main_band_id: "band-os-herdeiros-do-codigo",
-    bandName: "Os Herdeiros do Código",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-hdc-iago",
-    username: "iago",
-    email: "iago@herdeiros.dev",
-    name: "Iago",
-    role: "member" as const,
-    instrument: "Bajo",
-    avatarColor: "#10b981",
-    initialPassword: "iago",
-    band_id: "band-os-herdeiros-do-codigo",
-    main_band_id: "band-os-herdeiros-do-codigo",
-    bandName: "Os Herdeiros do Código",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-mop-james",
-    username: "james_hetfield",
-    email: "james@masterofprompts.dev",
-    name: "James Hetfield-Couto",
-    role: "member" as const,
-    instrument: "Voz Principal & Guitarra Rítmica (Downpicking)",
-    avatarColor: "#eab308",
-    initialPassword: "mop2026",
-    band_id: "band-master-of-prompts",
-    main_band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-mop-kirk",
-    username: "kirk_hammett",
-    email: "kirk@masterofprompts.dev",
-    name: "Kirk Hammett-García",
-    role: "member" as const,
-    instrument: "Guitarra Solista & Wah-Wah",
-    avatarColor: "#f59e0b",
-    initialPassword: "mop2026",
-    band_id: "band-master-of-prompts",
-    main_band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
-    createdAt: "2026-01-01T10:00:00.000Z",
-  },
-  {
-    id: "user-mop-cliff",
-    username: "cliff_burton",
-    email: "cliff@masterofprompts.dev",
-    name: "Cliff Burton-López",
-    role: "member" as const,
-    instrument: "Bajo Fuzz / Distorsión",
-    avatarColor: "#ef4444",
-    initialPassword: "mop2026",
-    band_id: "band-master-of-prompts",
-    main_band_id: "band-master-of-prompts",
-    bandName: "Master of Prompts",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1542,7 +1319,6 @@ export const INITIAL_USERS = [
 ];
 
 export const INITIAL_SONGS = [
-  ...HERDEIROS_SONGS,
   {
     id: "song-cm-1",
     band_id: "band-demo",
@@ -1778,12 +1554,9 @@ export const INITIAL_SONGS = [
     audioUrl: "/audio/samples/sample_05_cierre_triunfal.mp3",
     notasInternas: "Versión acelerada adaptada a vientos y ritmo ska-rock.",
   },
-  ...MOP_SONGS,
 ];
 
 export const INITIAL_SETLISTS = [
-  ...HERDEIROS_SETLISTS,
-  ...MOP_SETLISTS,
   {
     id: "setlist-1",
     band_id: "band-demo",
@@ -1880,8 +1653,6 @@ export const INITIAL_SETLISTS = [
 ];
 
 export const INITIAL_BANDS: any[] = [
-  ...HERDEIROS_BANDS,
-  ...MOP_BANDS,
   {
     id: "band-1",
     nombre_banda: "La Señora Tomasa",
@@ -1936,8 +1707,6 @@ export const INITIAL_BANDS: any[] = [
 ];
 
 export const INITIAL_TOURS: Tour[] = [
-  ...HERDEIROS_TOURS,
-  ...MOP_TOURS,
   {
     id: "tour-1",
     nombre: "Gira Primavera Peninsular 2026",

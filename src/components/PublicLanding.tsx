@@ -441,7 +441,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <div className="order-1 lg:order-2 lg:col-span-5">
                 <div className="inline-flex items-center gap-2 rounded-[var(--r-pill)] bg-[var(--acc)]/10 px-3 py-1 text-xs font-semibold text-[var(--ink)] mb-4">
                   <QrCode className="size-3.5" />
-                  {es ? 'QR y Captación de Fans' : 'QR & Fan Acquisition'}
+                  {es ? 'QR y Captación de Fans' : 'QR y Fan Acquisition'}
                 </div>
                 <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl mb-5">
                   {es

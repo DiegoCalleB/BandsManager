@@ -13,9 +13,9 @@ const ROOT = process.cwd();
 const dry = process.argv.includes('--dry');
 const show = process.argv.includes('--show');
 const files = execSync("git ls-files ':(glob)src/**/*.tsx' ':(glob)src/**/*.ts'", { cwd: ROOT }).toString().split('\n')
-  .filter((f) => f && !/(__tests__|\.test\.|db_seed|mouredevBandsSeed|\/i18n\/|\.d\.ts|epkTranslations)/.test(f));
+  .filter((f) => f && !/(__tests__|\.test\.|db_seed|\/i18n\/|\.d\.ts|epkTranslations)/.test(f));
 
-const PROPER = new Set(['Google','Calendar','Gmail','Outlook','Spotify','Places','Gemini','YouTube','Instagram','TikTok','WhatsApp','Stripe','Revolut','PayPal','Bizum','BandManager','Supabase','Ko-fi','Excel','Meta','Cubase','Zoom','Notion','Studio','Reels','Stories','Bandcamp','SoundCloud','Facebook','Twitter','Telegram','Drive','Maps','Airbnb','Tone','DNA','Hook','Doctor','Pro','Plus','Apple','Mac','Mail','Windows','Android','Linux','Chrome','Safari','Firefox','Logic','Ableton','Reaper','Repercusion','Buskers','Ruta','Master','Prompts','Herdeiros','Código']);
+const PROPER = new Set(['Google','Calendar','Gmail','Outlook','Spotify','Places','Gemini','YouTube','Instagram','TikTok','WhatsApp','Stripe','Revolut','PayPal','Bizum','BandManager','Supabase','Ko-fi','Excel','Meta','Cubase','Zoom','Notion','Studio','Reels','Stories','Bandcamp','SoundCloud','Facebook','Twitter','Telegram','Drive','Maps','Airbnb','Tone','DNA','Hook','Doctor','Pro','Plus','Apple','Mac','Mail','Windows','Android','Linux','Chrome','Safari','Firefox','Logic','Ableton','Reaper','Repercusion','Buskers','Ruta','Código']);
 const KEEP_AMP = /(Rock & Roll|R&B|Q&A|AT&T|B&B)/;
 const ATTR = new Set(['title', 'aria-label']);
 

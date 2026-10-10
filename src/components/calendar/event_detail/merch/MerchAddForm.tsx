@@ -30,7 +30,7 @@ export function MerchAddForm() {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold text-[var(--acc)] flex items-center gap-1.5">
-                <Plus className="w-3.5 h-3.5" /> Nuevo Artículo de Merchandising para este Concierto
+                <Plus className="w-3.5 h-3.5" /> Nuevo artículo de merchandising para este concierto
               </span>
               <button
                 type="button"

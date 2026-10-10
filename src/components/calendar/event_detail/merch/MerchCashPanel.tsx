@@ -174,7 +174,7 @@ export function MerchCashPanel() {
         {/* Observaciones y Notas del Puesto de Merch */}
         <div>
           <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">
-            Notas del Puesto de Merchandising / Incidencias
+            Notas del puesto de merchandising / incidencias
           </label>
           <Textarea
             rows={2}

@@ -2,34 +2,6 @@ import fs from "fs";
 import path from "path";
 import express from "express";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES, INITIAL_SOCIAL_METRICS, INITIAL_USERS, INITIAL_SONGS, INITIAL_SETLISTS, INITIAL_BANDS, INITIAL_TOURS } from "../src/db_seed.js";
-import {
-  HERDEIROS_BAND_ID,
-  MASTER_OF_PROMPTS_BAND_ID,
-  HERDEIROS_LEADS,
-  HERDEIROS_BANDS,
-  HERDEIROS_SONGS,
-  HERDEIROS_SETLISTS,
-  HERDEIROS_CONCERTS,
-  HERDEIROS_REHEARSALS,
-  HERDEIROS_TOURS,
-  HERDEIROS_PAYMENTS,
-  HERDEIROS_FANS,
-  HERDEIROS_POSTS,
-  HERDEIROS_METRICS,
-  HERDEIROS_EPK_CONFIG,
-  MOP_LEADS,
-  MOP_BANDS,
-  MOP_SONGS,
-  MOP_SETLISTS,
-  MOP_CONCERTS,
-  MOP_REHEARSALS,
-  MOP_TOURS,
-  MOP_PAYMENTS,
-  MOP_FANS,
-  MOP_POSTS,
-  MOP_METRICS,
-  MASTER_OF_PROMPTS_EPK_CONFIG
-} from "../src/data/mouredevBandsSeed.js";
 import { ACTIVE_SESSIONS, hashPassword, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware, createCronOrAuthMiddleware } from "./auth.js";
 import { generateUniqueSlugId, slugify } from "./utils/slug.js";
 import { ensureCategoryTemplatesInState } from "./promptsManager.js";
@@ -226,50 +198,6 @@ const VERTICE_REGISTERED_BAND = {
   notas: "Banda principal asignada a usuario Admin"
 };
 
-export { MASTER_OF_PROMPTS_BAND_ID, HERDEIROS_BAND_ID, MASTER_OF_PROMPTS_EPK_CONFIG };
-
-export const MASTER_OF_PROMPTS_REGISTERED_BAND = {
-  id: "reg-master-of-prompts",
-  band_id: MASTER_OF_PROMPTS_BAND_ID,
-  user_id: "user-mouredev",
-  fecha_registro: "2026-01-01T10:00:00.000Z",
-  nombre_banda: "Master of Prompts",
-  email: "mouredev@gmail.com",
-  plan: "cabeza_de_cartel",
-  contacto_nombre: "Brais Moure",
-  estilo_musical: "Thrash Metal Galaico / Heavy Dev / AI Metal",
-  localizacion: "A Coruña (Galicia, España)",
-  telefono: "+34 688 101 010",
-  instagram: "@mouredev",
-  spotify_youtube: "https://youtube.com/@mouredev",
-  aforo_promedio: 1500,
-  estado_cuenta: "activo",
-  logoUrl: "",
-  logo_url: "",
-  imagen_url: "",
-  notas: "Banda seria estilo Metallica con temática de ingeniería de software e Inteligencia Artificial."
-};
-
-export const HERDEIROS_REGISTERED_BAND = {
-  id: "reg-os-herdeiros-do-codigo",
-  band_id: HERDEIROS_BAND_ID,
-  user_id: "user-mouredev",
-  fecha_registro: "2026-01-01T10:00:00.000Z",
-  nombre_banda: "Os Herdeiros do Código",
-  email: "mouredev@gmail.com",
-  plan: "cabeza_de_cartel",
-  contacto_nombre: "Brais Moure",
-  estilo_musical: "Rock Bravú / Punk-Rock Galaico",
-  localizacion: "A Coruña (Galicia, España)",
-  telefono: "+34 688 101 010",
-  instagram: "@mouredev",
-  aforo_promedio: 400,
-  estado_cuenta: "activo",
-  logoUrl: "",
-  logo_url: "",
-  notas: "Banda rock bravú galaica de Brais Moure"
-};
-
 const SEED_COLLECTIONS = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
 
 /** Asigna la banda de ejemplo a los datos semilla de una instalación nueva (que no traen band_id). */
@@ -288,7 +216,7 @@ export function ensureSeedBands(state: any): boolean {
   let changed = false;
 
   if (!state.registeredBands || !Array.isArray(state.registeredBands)) {
-    state.registeredBands = [DEMO_REGISTERED_BAND, VERTICE_REGISTERED_BAND, HERDEIROS_REGISTERED_BAND, MASTER_OF_PROMPTS_REGISTERED_BAND];
+    state.registeredBands = [DEMO_REGISTERED_BAND, VERTICE_REGISTERED_BAND];
     changed = true;
   } else {
     const existingVertice = state.registeredBands.find(
@@ -302,21 +230,6 @@ export function ensureSeedBands(state: any): boolean {
       changed = true;
     }
 
-    const existingHerdeiros = state.registeredBands.find(
-      (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'os-herdeiros-do-codigo'
-    );
-    if (!existingHerdeiros && !process.env.SUPABASE_URL) {
-      state.registeredBands.push(HERDEIROS_REGISTERED_BAND);
-      changed = true;
-    }
-
-    const existingMop = state.registeredBands.find(
-      (b: any) => (b.band_id || '').replace(/^(band|reg)-/, '') === 'master-of-prompts'
-    );
-    if (!existingMop && !process.env.SUPABASE_URL) {
-      state.registeredBands.push(MASTER_OF_PROMPTS_REGISTERED_BAND);
-      changed = true;
-    }
   }
 
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
@@ -339,35 +252,6 @@ export function ensureSeedBands(state: any): boolean {
           u.band_id = 'band-vertice';
           u.bandName = 'Vértice';
           u.main_band_id = 'band-vertice';
-          changed = true;
-        }
-      } else if (
-        u.id === 'user-mouredev' ||
-        u.username?.toLowerCase() === 'mouredev' ||
-        u.username?.toLowerCase() === 'braismouredev' ||
-        u.email?.toLowerCase().includes('mouredev') ||
-        u.email?.toLowerCase().includes('braismouredev')
-      ) {
-        const cleanCurrent = (u.band_id || '').replace(/^(band|reg)-/, '');
-        if (cleanCurrent === 'master-of-prompts') {
-          if (u.band_id !== 'band-master-of-prompts' || !u.bandName || !u.instrument) {
-            u.band_id = 'band-master-of-prompts';
-            u.bandName = u.bandName || 'Master of Prompts';
-            u.instrument = u.instrument || 'Batería';
-            changed = true;
-          }
-        } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
-          if (u.band_id !== 'band-os-herdeiros-do-codigo' || !u.bandName || !u.instrument) {
-            u.band_id = 'band-os-herdeiros-do-codigo';
-            u.bandName = u.bandName || 'Os Herdeiros do Código';
-            u.instrument = u.instrument || 'Batería';
-            changed = true;
-          }
-        } else {
-          u.band_id = 'band-os-herdeiros-do-codigo';
-          u.bandName = 'Os Herdeiros do Código';
-          u.main_band_id = 'band-os-herdeiros-do-codigo';
-          u.instrument = 'Batería';
           changed = true;
         }
       } else {
@@ -494,13 +378,6 @@ export function ensureSeedBands(state: any): boolean {
   }
 
   return changed;
-}
-
-export function ensureMouredevBandsData(_state: any): boolean {
-  // Los datos de MoureDev (Os Herdeiros do Código y Master of Prompts)
-  // ya están 100% migrados y persisten directamente en Supabase PostgreSQL.
-  // Desconectado para permitir edición completa desde la UI sin sobreescrituras estáticas.
-  return false;
 }
 
 export function ensureValidUserEmails(state: any): boolean {

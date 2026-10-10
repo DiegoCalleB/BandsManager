@@ -1,4 +1,3 @@
-import { esCuentaDeBrais } from './utils/cuentaBrais.js';
 import express from "express";
 import crypto from "crypto";
 import { normalizePlan } from "./db/core.js";
@@ -97,27 +96,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
-  const isBraisMoureUser = esCuentaDeBrais({ id: foundUser.id, email: userEmail });
-
-  if (isBraisMoureUser) {
-    // Valores por defecto, no forzados: si Brais edita su banda/instrumento, se respeta.
-    foundUser.instrument = foundUser.instrument || 'Batería';
-    addBandIdAndVariants('band-os-herdeiros-do-codigo');
-    addBandIdAndVariants('band-master-of-prompts');
-
-    const cleanUserCurrent = (foundUser.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
-    if (cleanUserCurrent === 'master-of-prompts') {
-      foundUser.band_id = 'band-master-of-prompts';
-      foundUser.bandName = foundUser.bandName || 'Master of Prompts';
-    } else if (cleanUserCurrent === 'os-herdeiros-do-codigo') {
-      foundUser.band_id = 'band-os-herdeiros-do-codigo';
-      foundUser.bandName = foundUser.bandName || 'Os Herdeiros do Código';
-    } else if (!foundUser.band_id) {
-      foundUser.band_id = 'band-master-of-prompts';
-      foundUser.bandName = 'Master of Prompts';
-    }
-  }
-
   if (foundUser.role === 'admin') {
     addBandIdAndVariants('vertice');
   }
@@ -180,9 +158,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     activeBandId = 'band-vertice';
   }
 
-  if (isBraisMoureUser && !activeBandId) {
-    activeBandId = foundUser.band_id || 'band-master-of-prompts';
-  }
 
   if (!activeBandId) return null;
 

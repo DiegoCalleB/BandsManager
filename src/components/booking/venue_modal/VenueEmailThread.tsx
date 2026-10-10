@@ -436,7 +436,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
           <div className="flex items-center gap-2">
             <Zap className="w-4 h-4 text-[var(--acc)]" />
             <span className="text-xs font-bold font-sans text-[var(--ink)]">
-              Telemetría de Lectura & Aperturas
+              Telemetría de lectura y aperturas
             </span>
           </div>
           <span className="text-micro font-mono text-[var(--ink-2)]">
@@ -575,7 +575,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
           <div className="pt-2.5 border-t border-[var(--hair)] space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-micro font-bold uppercase tracking-wider text-slate-400">
-                <ShowIcon inline emoji="🎯" />Botones & Acciones Detectadas ({interaccionesBotones.length})
+                <ShowIcon inline emoji="🎯" />Botones y Acciones Detectadas ({interaccionesBotones.length})
               </span>
               <span className="text-[10px] text-emerald-400 font-mono font-medium">
                 En vivo
@@ -908,7 +908,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
                             className="items-center gap-1.5 cursor-pointer shadow-xs"
                           >
                             <Send className="w-3 h-3" />
-                            <span>Redactar Réplica / Ver Contrapropuesta IA</span>
+                            <span>Redactar réplica / ver contrapropuesta IA</span>
                           </Button>
                         </div>
                       )}

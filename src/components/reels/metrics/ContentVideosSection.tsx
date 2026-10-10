@@ -23,7 +23,7 @@ export function ContentVideosSection() {
               className={`text-xs font-bold font-display flex items-center gap-1.5 ${"text-[var(--acc)]"}`}
             >
               <Video className="w-3.5 h-3.5 text-[var(--ok)]" /> Monitoreo
-              de Views y Contenidos Indexados
+              de views y contenidos indexados
             </h3>
             <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">
               Vídeos y lanzamientos extraídos en vivo desde los canales

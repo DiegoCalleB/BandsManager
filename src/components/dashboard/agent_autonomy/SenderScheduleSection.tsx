@@ -23,7 +23,7 @@ export function SenderScheduleSection() {
             <Send className="w-4 h-4 text-[var(--acc)]" />
             <div>
               <h4 className="text-xs font-sans font-bold text-[var(--ink)]">
-                Agente Enviador (Días y Horas de Envío de Pitches)
+                Agente enviador (días y horas de envío de pitches)
               </h4>
               <p className="text-micro text-[var(--ink-2)]">
                 Días y horas permitidas para despachar correos

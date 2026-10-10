@@ -78,7 +78,7 @@ describe('planificarCampana', () => {
 });
 
 describe('textos', () => {
-  const datos: DatosPieza = { banda: 'Os Herdeiros', sala: 'Sala Capitol', ciudad: 'Santiago', fecha: '2026-10-16', enlace: 'https://bandmanager.io/r/abcdefg' };
+  const datos: DatosPieza = { banda: 'Banda Ejemplo', sala: 'Sala Capitol', ciudad: 'Santiago', fecha: '2026-10-16', enlace: 'https://bandmanager.io/r/abcdefg' };
 
   it('cada hito tiene dos variantes distintas con el enlace dentro', () => {
     for (const id of ['anuncio', 'recordatorio', 'ultima_llamada', 'dia_d'] as const) {
@@ -121,7 +121,7 @@ describe('textos', () => {
 
 describe('hashtagsCampana', () => {
   it('genera hasta tres etiquetas seguras', () => {
-    expect(hashtagsCampana('A Coruña', 'Os Herdeiros do Código')).toEqual(['#musicaendirecto', '#acoruna', '#osherdeirosdocodigo']);
+    expect(hashtagsCampana('A Coruña', 'Banda Ejemplo')).toEqual(['#musicaendirecto', '#acoruna', '#bandaejemplo']);
   });
   it('no mete caracteres peligrosos ni etiquetas vacías', () => {
     expect(hashtagsCampana('', '<script>alert(1)</script>')).toEqual(['#musicaendirecto', '#scriptalert1script']);

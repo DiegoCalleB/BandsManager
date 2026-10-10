@@ -194,13 +194,10 @@ export async function buildAvailableBandsForUser(
     const formattedFallback = cleanId
       ? cleanId.charAt(0).toUpperCase() + cleanId.slice(1)
       : 'Banda';
-    let bandName =
+    const bandName =
       bandInfo?.nombre_banda ||
       (ub.band_id === targetUser.band_id ? targetUser.bandName : null) ||
       formattedFallback;
-    if (cleanCheck === 'master-of-prompts') bandName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bandName = 'Os Herdeiros do Código';
     const resolvedPlan = normalizePlan(
       bandInfo?.plan ||
         getPlanForBand(
@@ -233,11 +230,7 @@ export async function buildAvailableBandsForUser(
     if (seenCleanBandIds.has(cleanId)) return;
     seenCleanBandIds.add(cleanId);
 
-    const cleanCheck = cleanId.toLowerCase().trim();
-    let bName = b.nombre_banda || 'Banda';
-    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bName = 'Os Herdeiros do Código';
+    const bName = b.nombre_banda || 'Banda';
 
     availableBands.push({
       band_id: bid,
@@ -264,11 +257,7 @@ export async function buildAvailableBandsForUser(
       if (seenCleanBandIds.has(cleanId)) return;
       seenCleanBandIds.add(cleanId);
 
-      const cleanCheck = cleanId.toLowerCase().trim();
-      let bName = u.bandName || u.name || 'Banda';
-      if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-      else if (cleanCheck === 'os-herdeiros-do-codigo')
-        bName = 'Os Herdeiros do Código';
+      const bName = u.bandName || u.name || 'Banda';
 
       availableBands.push({
         band_id: u.band_id,
@@ -288,11 +277,7 @@ export async function buildAvailableBandsForUser(
   const cleanCurrent = cleanBandId(currentBid);
   if (!seenCleanBandIds.has(cleanCurrent)) {
     seenCleanBandIds.add(cleanCurrent);
-    const cleanCheck = cleanCurrent.toLowerCase().trim();
-    let bName = targetUser.bandName || targetUser.name || 'Banda';
-    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bName = 'Os Herdeiros do Código';
+    const bName = targetUser.bandName || targetUser.name || 'Banda';
 
     availableBands.push({
       band_id: currentBid,
@@ -376,72 +361,10 @@ export async function buildAvailableBandsForUser(
     return 0;
   });
 
-  const isBraisMoure = esCuentaDeBrais({ id: targetUser.id, email: userEmail });
-
-  if (isBraisMoure) {
-    targetUser.instrument = targetUser.instrument || 'Batería';
-    const cleanCurrentBand = cleanBandId(targetUser.band_id);
-    const effectivePlan = normalizePlan(targetUser.plan || 'cabeza_de_cartel');
-    const visibleBands = [...availableBands];
-
-    // Master of Prompts
-    if (
-      !visibleBands.some(
-        (b) => cleanBandId(b.band_id) === 'master-of-prompts'
-      )
-    ) {
-      visibleBands.unshift({
-        band_id: 'band-master-of-prompts',
-        bandName: 'Master of Prompts',
-        nombre_banda: 'Master of Prompts',
-        role: 'leader',
-        userId: targetUser.id,
-        plan: 'cabeza_de_cartel',
-        logoUrl: '',
-        is_main: cleanCurrentBand === 'master-of-prompts',
-      });
-    } else {
-      visibleBands.forEach((b) => {
-        if (cleanBandId(b.band_id) === 'master-of-prompts') {
-          b.band_id = 'band-master-of-prompts';
-          b.is_main = cleanCurrentBand === 'master-of-prompts';
-        }
-      });
-    }
-
-    // Os Herdeiros do Código
-    if (
-      !visibleBands.some(
-        (b) => cleanBandId(b.band_id) === 'os-herdeiros-do-codigo'
-      )
-    ) {
-      visibleBands.push({
-        band_id: 'band-os-herdeiros-do-codigo',
-        bandName: 'Os Herdeiros do Código',
-        nombre_banda: 'Os Herdeiros do Código',
-        role: 'leader',
-        userId: targetUser.id,
-        plan: 'cabeza_de_cartel',
-        logoUrl: '',
-        is_main: cleanCurrentBand === 'os-herdeiros-do-codigo',
-      });
-    } else {
-      visibleBands.forEach((b) => {
-        if (cleanBandId(b.band_id) === 'os-herdeiros-do-codigo') {
-          b.band_id = 'band-os-herdeiros-do-codigo';
-          b.is_main = cleanCurrentBand === 'os-herdeiros-do-codigo';
-        }
-      });
-    }
-
-    return visibleBands;
-  }
-
   return availableBands;
 }
 import { loginRateLimiter, registroRateLimiter } from '../middleware/rateLimiter.js';
 import { verificarAccessTokenDeGoogle } from '../utils/googleVerify.js';
-import { esCuentaDeBrais } from '../utils/cuentaBrais.js';
 import {
   getTargetBandId,
   puedeEscribirEnBanda,
@@ -1949,28 +1872,6 @@ router.get('/auth/me', async (req, res) => {
     }
   }
 
-  const isBraisUser =
-    user.id === 'user-mouredev' ||
-    user.username?.toLowerCase() === 'mouredev' ||
-    user.username?.toLowerCase() === 'braismouredev' ||
-    esCuentaDeBrais(user);
-
-  if (isBraisUser) {
-    user.instrument = user.instrument || 'Batería';
-    user.plan = normalizePlan(user.plan || 'cabeza_de_cartel');
-    const cleanCurrent = cleanBandId(user.band_id);
-    if (cleanCurrent === 'master-of-prompts') {
-      user.band_id = 'band-master-of-prompts';
-      user.bandName = user.bandName || 'Master of Prompts';
-    } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
-      user.band_id = 'band-os-herdeiros-do-codigo';
-      user.bandName = user.bandName || 'Os Herdeiros do Código';
-    } else if (!user.band_id) {
-      user.band_id = 'band-master-of-prompts';
-      user.bandName = 'Master of Prompts';
-    }
-  }
-
   // Set/Refresh 30-day session cookie
   if (token) {
     res.cookie('bandmanager_token', token, {
@@ -2162,14 +2063,9 @@ router.post('/auth/switch-band', async (req, res) => {
       );
     });
 
-  let resolvedName = bandInfo
+  const resolvedName = bandInfo
     ? bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name
     : targetUser.bandName || 'Banda';
-  if (cleanTargetBand === 'master-of-prompts') {
-    resolvedName = 'Master of Prompts';
-  } else if (cleanTargetBand === 'os-herdeiros-do-codigo') {
-    resolvedName = 'Os Herdeiros do Código';
-  }
   const resolvedPlan = normalizePlan(
     bandInfo?.plan || targetUser.plan || 'ensayo'
   );

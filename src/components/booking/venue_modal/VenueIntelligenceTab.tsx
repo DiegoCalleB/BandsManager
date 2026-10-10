@@ -27,7 +27,7 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[var(--acc)]" />
             <h4 className="text-xs font-bold font-sans uppercase tracking-wider text-[var(--ink)]">
-              Radar de Fechas Libres (Wegow & Ticketing)
+              Radar de fechas libres (wegow y ticketing)
             </h4>
           </div>
           {wegowOk && (
@@ -77,7 +77,7 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
         <div className="flex items-center gap-2">
           <Calculator className="w-4 h-4 text-[var(--ok)]" />
           <h4 className="text-xs font-bold font-sans uppercase tracking-wider text-[var(--ink)]">
-            Simulador de Bolo & Punto de Equilibrio (P&L)
+            Simulador de bolo y punto de equilibrio (P&L)
           </h4>
         </div>
         <p className="text-xs text-[var(--ink-2)]">

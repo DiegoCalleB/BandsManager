@@ -73,7 +73,7 @@ export function baseUrlPublica(env: Record<string, string | undefined> = process
 
 const PATRON_ID = /^[A-Za-z0-9_.:@-]{1,160}$/;
 
-/** `os-herdeiros-sala-capitol-2026-10-16--cnc-hdc-1`: legible para el humano y para Google, el id va al final. */
+/** `banda-ejemplo-sala-capitol-2026-10-16--cnc-1`: legible para el humano y para Google, el id va al final. */
 export function slugConcierto(bandaNombre: string, c: { id: string; sala: string; fecha: string }): string {
   const legible = slugify(`${bandaNombre} ${c.sala}`).slice(0, 80).replace(/-+$/, '');
   return `${legible || 'concierto'}-${c.fecha}--${c.id}`;

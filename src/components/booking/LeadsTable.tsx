@@ -265,7 +265,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer bg-[var(--ok)] text-[var(--on-ok)]"
-              title="Wegow API verificado - Clic para ver cartelera en Wegow"
+              title="Wegow API verificado - clic para ver cartelera en wegow"
             >
               <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
               Wegow: ✓ OK
@@ -280,7 +280,7 @@ export const LeadsTable: React.FC<LeadsTableProps> = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded hover:opacity-80 transition-opacity cursor-pointer bg-[var(--ink)] text-[var(--bg)]"
-              title="Bandsintown verificado - Clic para ver en Bandsintown"
+              title="Bandsintown verificado - clic para ver en bandsintown"
             >
               <span className="w-1.5 h-1.5 rounded-[var(--r-pill)] bg-current"></span>
               Bandsintown: ✓ OK

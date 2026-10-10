@@ -437,7 +437,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[var(--acc)]" />
                 <p className="text-xs font-bold font-mono uppercase tracking-wider">
-                  Rider Técnico & Dossier PDF
+                  Rider Técnico y Dossier PDF
                 </p>
               </div>
               {safeUrl(config.dossierPdfUrl) && (

@@ -14,7 +14,7 @@ vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: 
 vi.mock('../../services/perfilPublicoBanda.js', () => ({
   obtenerPerfilPublicoBandaCacheado: async (bandId: string) => ({
     bandId,
-    nombre: bandId === 'band-a' ? 'Os Herdeiros' : 'Otra Banda',
+    nombre: bandId === 'band-a' ? 'Banda Ejemplo' : 'Otra Banda',
     logoUrl: 'https://cdn.example.com/logo.png',
     mostrarInsignia: bandId === 'band-a',
     refCode: bandId === 'band-a' ? 'ABCD2345' : null,
@@ -50,7 +50,7 @@ async function pedir(slug: string) {
 }
 
 const FUTURO = '2099-10-16';
-const SLUG_C1 = `os-herdeiros-capitol-${FUTURO}--c1`;
+const SLUG_C1 = `banda-ejemplo-capitol-${FUTURO}--c1`;
 
 beforeEach(() => {
   _vaciarCacheSitemap();
@@ -71,7 +71,7 @@ describe('GET /e/:slug', () => {
     expect(res.code).toBe(200);
     expect(res.cabeceras['Content-Type']).toContain('text/html');
     expect(res.cabeceras['Cache-Control']).toContain('s-maxage');
-    expect(res.body).toContain('<title>Os Herdeiros en Capitol (Santiago)');
+    expect(res.body).toContain('<title>Banda Ejemplo en Capitol (Santiago)');
     expect(res.body).toContain(`<link rel="canonical" href="${BASE}/e/${SLUG_C1}">`);
     expect(res.body).toContain('application/ld+json');
     expect(res.body).toContain('index,follow');
@@ -137,7 +137,7 @@ describe('GET /e/:slug', () => {
   });
 
   it('un concierto pasado se sirve pero no se indexa y no vende entradas', async () => {
-    const res = await pedir('os-herdeiros-antigua-2020-01-01--c4');
+    const res = await pedir('banda-ejemplo-antigua-2020-01-01--c4');
     expect(res.code).toBe(200);
     expect(res.body).toContain('noindex,follow');
     expect(res.body).toContain('Este concierto ya ha pasado.');

@@ -18,7 +18,6 @@ Exporta: INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

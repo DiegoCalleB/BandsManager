@@ -136,7 +136,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   : 'text-[var(--ink-2)]'
               }`}
             >
-              Ficha & Contacto
+              Ficha y Contacto
             </button>
             <button
               type="button"
@@ -147,7 +147,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   : 'text-[var(--ink-2)]'
               }`}
             >
-              Propuesta & Correos
+              Propuesta y Correos
             </button>
           </div>
 
@@ -219,7 +219,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   }`}
                 >
                   <Compass className="w-3.5 h-3.5" />
-                  <span>Radar & P&L</span>
+                  <span>Radar y P&L</span>
                 </button>
 
                 <button
@@ -245,7 +245,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                     type="button"
                     onClick={() => setIsDealModalOpen(true)}
                     className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-m)] bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-500 border border-emerald-500/30 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
-                    title="Generar Hoja de Acuerdo y Enlace 1-Click para la Sala"
+                    title="Generar hoja de acuerdo y enlace 1-Click para la sala"
                   >
                     <Zap className="w-3.5 h-3.5 fill-current" />
                     <span>Cerrar Bolo 1-Click</span>

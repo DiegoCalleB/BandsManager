@@ -19,7 +19,6 @@ Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, getUserFro
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
-- [[server_utils_cuentaBrais|server/utils/cuentaBrais.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

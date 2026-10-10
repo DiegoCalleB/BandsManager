@@ -224,7 +224,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-bold text-base text-[var(--ink)] font-display">
-                    Cerrar Acuerdo de Bolo
+                    Cerrar acuerdo de bolo
                   </h3>
                   <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[var(--acc)]/10 text-[var(--acc)] font-bold">
                     1-Click
@@ -349,7 +349,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   >
                     <option value="efectivo"><ShowIcon inline emoji="💵" />Efectivo al terminar (sobre)</option>
                     <option value="transferencia"><ShowIcon inline emoji="🏦" />Transferencia / Bizum</option>
-                    <option value="pago_diferido_ayto"><ShowIcon inline emoji="🏛️" />Pago Diferido (Ayuntamiento / 60d)</option>
+                    <option value="pago_diferido_ayto"><ShowIcon inline emoji="🏛️" />Pago diferido (ayuntamiento / 60d)</option>
                   </select>
                 </div>
               </div>
@@ -446,7 +446,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   className="rounded border-[var(--hair)] text-[var(--acc)] focus:ring-[var(--acc)] w-4 h-4 cursor-pointer"
                 />
                 <span className="text-xs font-bold text-[var(--ink)]">
-                  Incluir Rider Técnico y Ficha de Canales de la Banda
+                  Incluir rider técnico y ficha de canales de la banda
                 </span>
               </label>
               <p className="text-[11px] text-[var(--ink-2)] pl-6">
@@ -495,7 +495,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                 ) : (
                   <>
                     <Zap className="w-4 h-4 fill-current" />
-                    <span>Generar Enlace 1-Click para la Sala</span>
+                    <span>Generar enlace 1-Click para la sala</span>
                   </>
                 )}
               </Button>
@@ -520,7 +520,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-bold text-indigo-500 uppercase tracking-wide flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
-                      Enlace AI Studio (Pruebas y Demo)
+                      Enlace AI Studio (pruebas y demo)
                     </span>
                     <span className="text-[10px] text-[var(--ink-2)]">Para probar y firmar ahora</span>
                   </div>
@@ -600,7 +600,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                     className="w-full py-2.5 rounded-[var(--r-s)] bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 text-center transition-colors cursor-pointer shadow-xs"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span>Enviar Propuesta por WhatsApp a la Sala</span>
+                    <span>Enviar propuesta por whatsApp a la sala</span>
                   </a>
                 </div>
               </div>
@@ -614,7 +614,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
           <div className="p-3.5 border-t border-[var(--hair)] bg-[var(--sunken)]/60 flex items-center justify-between text-[11px] text-[var(--ink-2)]">
             <div className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Sello Criptográfico SHA-256 e Inmutabilidad eIDAS</span>
+              <span>Sello criptográfico SHA-256 e inmutabilidad eIDAS</span>
             </div>
             <button
               onClick={onClose}

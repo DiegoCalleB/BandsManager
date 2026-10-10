@@ -29,7 +29,7 @@ export function VenueQuickActionBar({ setShowFastDealModal, setShowWhatsAppModal
             type="button"
             onClick={() => setShowFastDealModal(true)}
             className="py-2.5 px-3 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-500 border border-emerald-500/30 rounded-[var(--r-m)] font-bold text-xs flex items-center justify-center gap-2 transition-ui cursor-pointer group shadow-2xs"
-            title="Generar Hoja de Acuerdo y Enlace 1-Click para la Sala"
+            title="Generar hoja de acuerdo y enlace 1-Click para la sala"
           >
             <Zap className="w-4 h-4 fill-current shrink-0 text-emerald-500" />
             <span>Cerrar Bolo 1-Click</span>

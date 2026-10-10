@@ -31,7 +31,7 @@ export function SongStudioOverdubDrawer({ isAddingTrack, idea }: SongStudioOverd
           <div className="flex items-center justify-between">
             <span className="text-xs font-sans font-bold text-[var(--ink-2)] flex items-center gap-1.5">
               <Radio className="w-4 h-4 text-[var(--ink-2)]" />
-              Añadir Nueva Pista (Overdub / Superponer Audio)
+              Añadir nueva pista (overdub / superponer audio)
             </span>
             <IconButton
               label="Cerrar"
