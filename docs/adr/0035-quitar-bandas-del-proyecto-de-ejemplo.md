@@ -1,6 +1,6 @@
 # ADR: Quitar del código las bandas del antiguo proyecto de ejemplo
 
-**Estado:** aceptada · **Contexto:** continuación de [0027](./0027-quitar-banda-por-defecto.md); ninguna banda es especial en el código
+**Estado:** aceptada · **Contexto:** continuación de [0027](./0027-ninguna-banda-privilegiada.md); ninguna banda es especial en el código
 
 ## Problema
 Dos bandas reales del proyecto de ejemplo seguían incrustadas en el código como casos especiales:
