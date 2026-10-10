@@ -47,6 +47,22 @@ export interface BandTaggedEvent {
   logoUrl?: string;
 }
 
+/** Evento de la línea temporal de la ficha: concierto o ensayo con su fecha. */
+export interface ChronologicalEvent {
+  id: string;
+  fecha: string;
+  kind: 'concert' | 'rehearsal';
+  data: Concert | Rehearsal;
+}
+
+/** Identidad visual de una banda (nombre, iniciales, logo y paleta) para las cabeceras de evento. */
+export interface BandIdentity {
+  name: string;
+  initials?: string;
+  logoUrl?: string;
+  palette?: { bg: string; badge: string; dot: string; accent: string };
+}
+
 export interface CalendarViewProps {
   colors: ThemeColors;
   rehearsals: Rehearsal[];

@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: CalendarBand, CalendarUser, BandTaggedEvent, CalendarViewProps, RunOfShowItem, GearItem, RoadbookInfo, BAND_COLOR_PALETTES.
+Exporta: CalendarBand, CalendarUser, BandTaggedEvent, ChronologicalEvent, BandIdentity, CalendarViewProps, RunOfShowItem, GearItem.
 
 ---
 
@@ -27,6 +27,7 @@ Exporta: CalendarBand, CalendarUser, BandTaggedEvent, CalendarViewProps, RunOfSh
 - [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_hooks_useEventDetailController|src/components/calendar/event_detail/hooks/useEventDetailController.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useBandMembers|src/components/calendar/hooks/useBandMembers.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarBands|src/components/calendar/hooks/useCalendarBands.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*

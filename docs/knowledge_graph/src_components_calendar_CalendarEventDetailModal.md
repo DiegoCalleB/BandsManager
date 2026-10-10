@@ -13,28 +13,22 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: CalendarEventDetailModalProps, CalendarEventDetailModal.
+Ficha emergente de un evento del calendario (concierto o ensayo): resumen, logística, contactos,
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_calendar_AnimatedWeatherIcon|src/components/calendar/AnimatedWeatherIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_calendar_EventWeatherCard|src/components/calendar/EventWeatherCard.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_calendar_calendarTypes|src/components/calendar/calendarTypes.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_HolidayDateWarning|src/components/common/HolidayDateWarning.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_event_detail_EventDetailLayout|src/components/calendar/event_detail/EventDetailLayout.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_event_detail_EventDetailProvider|src/components/calendar/event_detail/EventDetailProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_event_detail_hooks_useEventDetailController|src/components/calendar/event_detail/hooks/useEventDetailController.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_weatherService|src/services/weatherService.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_calendar_event_detail_EventDetailContext|src/components/calendar/event_detail/EventDetailContext.ts]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 
 ---

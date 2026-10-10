@@ -23,8 +23,8 @@ Exporta: WeatherIconType, AnimatedWeatherIcon, CalendarWeatherBadge.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_EventHeaderSection|src/components/calendar/event_detail/EventHeaderSection.tsx]] *(from #frontend)*
 - [[src_components_calendar_EventWeatherCard|src/components/calendar/EventWeatherCard.tsx]] *(from #frontend)*
 
 ---

@@ -26,7 +26,7 @@ Exporta: PopoverAncla.
 - [[src_components_bands_BulkBandActionBar|src/components/bands/BulkBandActionBar.tsx]] *(from #frontend)*
 - [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueModalHeader|src/components/booking/venue_modal/VenueModalHeader.tsx]] *(from #frontend)*
-- [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_EventHeaderSection|src/components/calendar/event_detail/EventHeaderSection.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_CalendarTitleBar|src/components/calendar/views/CalendarTitleBar.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_ViewSwitchers|src/components/calendar/views/ViewSwitchers.tsx]] *(from #frontend)*
 - [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(from #frontend)*

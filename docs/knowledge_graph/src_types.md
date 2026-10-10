@@ -149,6 +149,9 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_calendarTypes|src/components/calendar/calendarTypes.ts]] *(from #frontend)*
 - [[src_components_calendar_CalendarViewsContainer|src/components/calendar/CalendarViewsContainer.tsx]] *(from #frontend)*
 - [[src_components_calendar_ConcertBreakEvenCard|src/components/calendar/ConcertBreakEvenCard.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_ClosingChecklistTab|src/components/calendar/event_detail/ClosingChecklistTab.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_hooks_useEventDetailController|src/components/calendar/event_detail/hooks/useEventDetailController.ts]] *(from #frontend)*
+- [[src_components_calendar_event_detail_merch_merchCategories|src/components/calendar/event_detail/merch/merchCategories.tsx]] *(from #frontend)*
 - [[src_components_calendar_hooks_useBandMembers|src/components/calendar/hooks/useBandMembers.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarBands|src/components/calendar/hooks/useCalendarBands.ts]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*
