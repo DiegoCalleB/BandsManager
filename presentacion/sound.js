@@ -206,7 +206,7 @@
       k.whoosh(at(0.02), 0.5, 320, 2800, 0.1);
     }
     // Chat de la banda: un pitido por mensaje, a la vez que entra (820 ms entre mensajes)
-    const msgs = el.querySelectorAll('.dlg li, .chat li').length;
+    const msgs = window.DeckVoces && window.DeckVoces.enabled() ? 0 : el.querySelectorAll('.dlg li, .chat li').length;
     for (let i = 0; i < msgs; i++) k.blip(at(0.74 + i * 0.82), el.querySelectorAll('.dlg li')[i]?.classList.contains('me') ? 520 : 760, 0.07);
     if (el.classList.contains('dream')) { [0.5, 1.7, 3.0].forEach((t, n) => k.chime(at(t), 0.1 - n * 0.015)); }
     if (el.querySelector('.react')) k.blip(at(2.6), 940, 0.07);
@@ -230,6 +230,8 @@
       onChange(on);
     },
     tick() { if (enabled && ensure()) kit(ctx, newScene()).tick(ctx.currentTime + 0.01, 0.07); },
+    // Pitido suave al entrar cada mensaje cuando hablan las voces (sin cortar el sonido de la diapositiva)
+    msg(me) { if (enabled && ensure()) kit(ctx, scene || newScene()).blip(ctx.currentTime + 0.01, me ? 520 : 760, 0.045); },
     toggle() {
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }

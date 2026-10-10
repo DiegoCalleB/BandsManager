@@ -11,17 +11,34 @@
    Las claves son papeles (bajo, bateria, voz, guitarra), no nombres, para que sobrevivan a un cambio de músico.
    Los chistes del guion dependen de la personalidad de cada personaje: si entra alguien nuevo, revisar los
    mensajes que lo mencionan. El nombre «Brais» de The Big School by Brais Moure es el del profesor, no el del batería:
-   no pasa por aquí. */
+   no pasa por aquí.
+
+   Voces (`tts`): cada personaje habla con su voz. Los audios se generan con
+   `python3 presentacion/tools/voces.py` (ver presentacion/tools/README.md) y van a `audio/voces/`.
+   Si cambias un músico o su voz, vuelve a ejecutarlo: solo regenera las frases que han cambiado.
+   - motor: 'kokoro' (sid 29 em_alex, 53 em_santa, 28 ef_dora) o 'piper' (modelo es_ES-davefx-medium,
+     es_ES-sharvard-medium con sid 0 hombre / 1 mujer)
+   - tono: semitonos (+ agudo, − grave) · vel: velocidad · efecto: 'telefono' | 'radio' | 'robot' | ninguno */
 (function () {
   var R = window.REPARTO = {
-    bajo:     { nombre: 'Iago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true },
-    bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596' },
-    voz:      { nombre: 'Xandre',  rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4' },
-    guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4' },
-    manager:  { nombre: 'Manager', rol: 'Os Herdeiros do Código', cargo: 'Manager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff' },
-    voz_mop:  { nombre: 'Master of Prompts', rol: 'voz', cargo: 'Voz de Master of Prompts', foto: 'img/personaje-cantante.jpg', color: '#ffb36a' },
-    ia_claude: { nombre: 'Claudio', rol: 'Claude Code', cargo: 'Asistente de IA', foto: null, color: '#f0a27c' },
-    ia_gemini: { nombre: 'Guglio',  rol: 'Gemini',      cargo: 'Asistente de IA', foto: null, color: '#7fc0ff' },
+    bajo:     { nombre: 'Iago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
+                tts: { motor: 'kokoro', sid: 29, tono: 0, vel: 1.0 } },
+    bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
+                tts: { motor: 'kokoro', sid: 53, tono: 0, vel: 1.02 } },
+    voz:      { nombre: 'Xandre',  rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
+                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: 1, vel: 1.0 } },
+    guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
+                tts: { motor: 'piper', modelo: 'es_ES-davefx-medium', sid: 0, tono: 0, vel: 1.0 } },
+    manager:  { nombre: 'Manager', rol: 'Os Herdeiros do Código', cargo: 'Manager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
+                tts: { motor: 'kokoro', sid: 29, tono: -3, vel: 0.95, efecto: 'telefono' } },
+    voz_mop:  { nombre: 'Master of Prompts', rol: 'voz', cargo: 'Voz de Master of Prompts', foto: 'img/personaje-cantante.jpg', color: '#ffb36a',
+                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: -3, vel: 0.97 } },
+    ia_claude: { nombre: 'Claudio', rol: 'Claude Code', cargo: 'Asistente de IA', foto: null, color: '#f0a27c',
+                tts: { motor: 'piper', modelo: 'es_ES-davefx-medium', sid: 0, tono: 2, vel: 0.95, efecto: 'robot' } },
+    ia_gemini: { nombre: 'Guglio',  rol: 'Gemini',      cargo: 'Asistente de IA', foto: null, color: '#7fc0ff',
+                tts: { motor: 'piper', modelo: 'es_ES-sharvard-medium', sid: 0, tono: 3, vel: 1.05, efecto: 'robot' } },
+    locutor:  { nombre: 'Rock FM', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
+                tts: { motor: 'kokoro', sid: 53, tono: -1, vel: 1.04, efecto: 'radio' } },
   };
 
   var cap = function (s) { return s.charAt(0).toUpperCase() + s.slice(1); };
@@ -40,6 +57,9 @@
     });
   };
 
+  window.REPARTO_TEXTO = sustituir;
+  if (typeof document === 'undefined') return; // en Node (generador de voces) solo hacen falta los datos
+
   // 1) Textos y atributos con {clave}
   var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
     acceptNode: function (n) {
@@ -50,8 +70,8 @@
   var nodos = [], n;
   while ((n = walker.nextNode())) nodos.push(n);
   nodos.forEach(function (t) { t.nodeValue = sustituir(t.nodeValue); });
-  document.querySelectorAll('[alt],[title],[aria-label],[data-title]').forEach(function (el) {
-    ['alt', 'title', 'aria-label', 'data-title'].forEach(function (a) {
+  document.querySelectorAll('[alt],[title],[aria-label],[data-title],[data-say]').forEach(function (el) {
+    ['alt', 'title', 'aria-label', 'data-title', 'data-say'].forEach(function (a) {
       var v = el.getAttribute(a); if (v && v.indexOf('{') >= 0) el.setAttribute(a, sustituir(v));
     });
   });

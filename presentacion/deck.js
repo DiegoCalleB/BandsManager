@@ -144,7 +144,16 @@
     setIn(tagsAndBrand, true, how === 'instant' ? '0ms' : '60ms');
     if (how === 'instant') { setIn(p.items, true, '0ms'); p.shown = p.steps.length; }
     else if (clicksOn()) { p.items.filter((it) => !tagsAndBrand.includes(it)).forEach((it) => it.el.classList.remove('in')); p.shown = 0; }
-    else { setIn(p.items.filter((it) => !tagsAndBrand.includes(it)), true, '380ms'); p.shown = p.steps.length; }
+    else {
+      // Con voces, los mensajes del chat no entran en cascada: aparecen cuando su personaje empieza a hablar
+      const voces = window.DeckVoces && window.DeckVoces.enabled() && !isScroll();
+      setIn(p.items.filter((it) => !tagsAndBrand.includes(it) && !(voces && it.el.matches('.dlg li'))), true, '380ms');
+      p.shown = p.steps.length;
+      const conVoz = voces && s.querySelector('[data-who][data-say]');
+      if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null, () => seguirPelicula(1700));
+      else if (i === cur) seguirPelicula(durPelicula(s) + (s.querySelectorAll('.dlg li').length * 820));
+    }
+    if (how !== 'instant' && clicksOn() && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.play(s, null, (el) => !el.matches('.dlg li'));
     // Chat: en automático cada mensaje entra tras el anterior; por clics, cada clic es un mensaje
     $$('.dlg li', s).forEach((li, k) => li.style.setProperty('--n', how === 'instant' || clicksOn() ? 0 : k));
     paintHud();
@@ -169,6 +178,8 @@
     p.steps[p.shown].forEach((it, k) => it.el.style.setProperty('--i', k));
     p.shown += 1; paintHud();
     if (window.DeckSound) window.DeckSound.tick();
+    const habla = p.steps[p.shown - 1].map((it) => it.el).find((el) => el.matches('[data-say]'));
+    if (habla && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.uno(habla);
     return true;
   }
   function stepBack() {
@@ -190,10 +201,16 @@
   }
 
   let delayedVideoTimer = 0;
+  // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
+  let pelicula = false, pelTimer = 0;
+  const durPelicula = (s) => +(s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
+  const seguirPelicula = (ms) => { clearTimeout(pelTimer); if (pelicula && cur < N - 1) pelTimer = setTimeout(() => show(cur + 1), ms); };
   let soundStarted = false;
 
   function show(i, push = true, how = 'play') {
     document.querySelectorAll('video').forEach((v) => v.pause());
+    if (window.DeckVoces) window.DeckVoces.stop();
+    clearTimeout(pelTimer);
     const prev = cur;
     cur = Math.max(0, Math.min(N - 1, i));
     slides.forEach((s, n) => {
@@ -312,6 +329,8 @@
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
       case 'm': case 'M': window.DeckSound && window.DeckSound.toggle(); break;
+      case 'p': case 'P': pelicula = !pelicula; if ($('#bPeli')) $('#bPeli').setAttribute('aria-pressed', String(pelicula)); if ($('#bPeli')) $('#bPeli').textContent = pelicula ? 'Película: sí' : 'Película'; if (pelicula) show(cur, false); else clearTimeout(pelTimer); break;
+      case 'v': case 'V': if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } break;
       case 'a': case 'A': toggleAnim(); break;
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;
     }
@@ -321,7 +340,11 @@
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;
   $('#bAnim').onclick = toggleAnim;
   $('#bSound').onclick = () => window.DeckSound && window.DeckSound.toggle();
-  if (window.DeckSound) window.DeckSound.onChange((on) => { const b = $('#bSound'); b.textContent = on ? 'Sonido: sí' : 'Sonido'; b.setAttribute('aria-pressed', String(on)); });
+  if (window.DeckSound) window.DeckSound.onChange((on) => { const b = $('#bSound'); b.textContent = on ? 'Sonido: sí' : 'Sonido'; b.setAttribute('aria-pressed', String(on)); if (!on && window.DeckVoces) window.DeckVoces.stop(); });
+  const pintaVoces = () => { const b = $('#bVoces'); if (b && window.DeckVoces) { b.textContent = window.DeckVoces.pref ? 'Voces: sí' : 'Voces: no'; b.setAttribute('aria-pressed', String(window.DeckVoces.pref)); } };
+  if (window.DeckVoces) { window.DeckVoces.onChange(pintaVoces); pintaVoces(); }
+  if ($('#bPeli')) $('#bPeli').onclick = () => dispatchEvent(new KeyboardEvent('keydown', { key: 'p' }));
+  if ($('#bVoces')) $('#bVoces').onclick = () => { if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } };
   $('#bScroll').onclick = () => { setScroll(true); show(cur, false); };
 
   let tx = 0, ty = 0;

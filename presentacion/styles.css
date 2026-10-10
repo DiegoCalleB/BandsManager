@@ -1037,3 +1037,13 @@ body.scroll .sheet { width: 100% !important; font-size: 13px !important; } body.
 body.scroll .rm-tv { left: auto !important; width: 100% !important; } body.scroll .rm-crowd { left: auto !important; right: auto !important; flex-wrap: wrap; }
 body.scroll .feat.dl .ft-shot.phone { height: 520px !important; overflow: hidden; } body.scroll .feat.dl .ft-shot.phone img { position: absolute !important; width: 100% !important; height: auto !important; }
 body.scroll .sheet { table-layout: fixed; word-break: break-word; } body.scroll .sheet th, body.scroll .sheet td { font-size: 11.5px !important; padding: 6px 6px !important; }
+
+/* Voces: quien habla se ilumina */
+.dlg li.habla .bub { box-shadow: 0 0 0 2px var(--c), 0 10px 40px rgba(0,0,0,.35); }
+.dlg li.habla .av { animation: hablaav 900ms ease-in-out infinite alternate; }
+@keyframes hablaav { from { box-shadow: 0 0 0 0 var(--c); } to { box-shadow: 0 0 0 9px rgba(255,255,255,0); } }
+.cast figure.habla { outline: 4px solid #ffd596; outline-offset: -4px; transform: translateY(-6px); transition: transform 300ms var(--ease); }
+.act-msg.habla, .rm-say.habla, .react.habla { box-shadow: 0 0 0 2px #8fb6ff, 0 0 40px rgba(143,182,255,.35); }
+.sheet.habla { box-shadow: 0 0 0 3px #8be0a4, 0 0 50px rgba(139,224,164,.25); }
+.radio .head.habla { text-shadow: 0 0 30px rgba(255,179,106,.35); }
+@media (prefers-reduced-motion: reduce) { .dlg li.habla .av { animation: none; } }
