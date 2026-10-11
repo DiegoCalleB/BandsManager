@@ -5,6 +5,7 @@
  *
  *   python3 -m http.server 8099 --directory presentacion &        # el deck servido
  *   node presentacion/tools/grabar_pelicula.mjs [salida.mp4] [--max SEGUNDOS]
+ *   GATE=gateCorto (el corte de 5 min) · RES=1080 (copia de entrega a 1920x1080, CRF 20)
  *
  * Cómo funciona (el Chromium de Playwright no tiene salida de audio ni reproduce H.264):
  *  - Vídeo: recordVideo de Playwright a 1280x720.
@@ -26,7 +27,9 @@ const WEBM = process.env.WEBM_DIR || '/tmp/claude-0/webm';
 const tmp = fs.mkdtempSync('/tmp/grabar-');
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--autoplay-policy=no-user-gesture-required'] });
-const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, recordVideo: { dir: tmp, size: { width: 1280, height: 720 } } });
+// RES=1080 para la copia de entrega (1920x1080, más calidad y más peso); por defecto 1280x720, ligera para enviarla
+const [W, H] = process.env.RES === '1080' ? [1920, 1080] : [1280, 720];
+const ctx = await browser.newContext({ viewport: { width: W, height: H }, recordVideo: { dir: tmp, size: { width: W, height: H } } });
 const t0 = Date.now(); // el vídeo empieza al crear la página
 const page = await ctx.newPage();
 const t1 = Date.now();
@@ -102,5 +105,5 @@ fs.writeFileSync(path.join(tmp, 'eventos.json'), JSON.stringify({ off, audio: da
 datos.taps.forEach((t, i) => fs.writeFileSync(path.join(tmp, `tap${i}.webm`), Buffer.from(t.b64, 'base64')));
 fs.writeFileSync(path.join(tmp, 'taps.json'), JSON.stringify(datos.taps.map((t, i) => ({ f: `tap${i}.webm`, t: t.t }))));
 const aqui = path.dirname(new URL(import.meta.url).pathname);
-execFileSync('python3', [path.join(aqui, 'mezclar_pelicula.py'), tmp, path.resolve(aqui, '..'), video, salida], { stdio: 'inherit' });
+execFileSync('python3', [path.join(aqui, 'mezclar_pelicula.py'), tmp, path.resolve(aqui, '..'), video, salida], { stdio: 'inherit', env: { ...process.env, CRF: process.env.CRF || (W === 1920 ? '20' : '30') } });
 console.log('→', salida);
