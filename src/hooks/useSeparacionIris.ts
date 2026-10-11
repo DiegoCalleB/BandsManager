@@ -65,11 +65,15 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
   const motorRef = useRef(motor);
   const pistasRef = useRef(pistasElegidas);
   const alTerminarRef = useRef(alTerminarIdea);
-  songRef.current = song;
-  onUpdateSongRef.current = onUpdateSong;
-  motorRef.current = motor;
-  pistasRef.current = pistasElegidas;
-  alTerminarRef.current = alTerminarIdea;
+  // Se actualizan tras cada render confirmado: `separar` las lee siempre en un handler o callback
+  // asíncrono, nunca durante el render.
+  useEffect(() => {
+    songRef.current = song;
+    onUpdateSongRef.current = onUpdateSong;
+    motorRef.current = motor;
+    pistasRef.current = pistasElegidas;
+    alTerminarRef.current = alTerminarIdea;
+  });
 
   const cancelar = useCallback(() => {
     if (abortRef.current) {

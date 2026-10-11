@@ -69,8 +69,11 @@ export const PublicDealView: React.FC = () => {
     return pathParts[1] || pathParts[0] || '';
   }, []);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [cargando, setLoading] = useState(true);
+  const [errorCarga, setError] = useState<string | null>(null);
+  // Sin token no hay nada que pedir: el aviso y el fin de la carga se derivan, no se guardan.
+  const loading = token ? cargando : false;
+  const error = token ? errorCarga : 'Enlace inválido o sin token de concierto';
   const [deal, setDeal] = useState<DealData | null>(null);
 
   // Form State for Signature
@@ -95,11 +98,7 @@ export const PublicDealView: React.FC = () => {
 
   // Fetch Deal Data
   useEffect(() => {
-    if (!token) {
-      setError('Enlace inválido o sin token de concierto');
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
 
     const fetchDeal = async () => {
       try {

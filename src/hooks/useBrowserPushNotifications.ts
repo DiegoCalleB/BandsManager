@@ -4,7 +4,6 @@ import {
   BrowserNotificationConfig,
   NotificationHistoryItem,
   NotificationPermissionStatus,
-  DEFAULT_NOTIFICATION_CONFIG,
 } from '../types/browserNotifications';
 import {
   getBrowserNotificationPermission,
@@ -38,10 +37,10 @@ export function useBrowserPushNotifications({
   onSelectLead,
   isLoggedIn = true,
 }: UseBrowserPushNotificationsProps = {}) {
-  const [isSupported, setIsSupported] = useState<boolean>(true);
-  const [permission, setPermission] = useState<NotificationPermissionStatus>('default');
-  const [config, setConfig] = useState<BrowserNotificationConfig>(DEFAULT_NOTIFICATION_CONFIG);
-  const [history, setHistory] = useState<NotificationHistoryItem[]>([]);
+  const [isSupported] = useState<boolean>(isBrowserNotificationSupported);
+  const [permission, setPermission] = useState<NotificationPermissionStatus>(getBrowserNotificationPermission);
+  const [config, setConfig] = useState<BrowserNotificationConfig>(loadNotificationConfig);
+  const [history, setHistory] = useState<NotificationHistoryItem[]>(loadNotificationHistory);
 
   // Previous snapshots to detect delta changes
   const prevLeadsMapRef = useRef<Map<string, { estado: string; ultimo_mensaje?: string; fecha_actualizacion?: string }>>(new Map());
@@ -49,13 +48,8 @@ export function useBrowserPushNotifications({
   const isInitialLeadsLoadRef = useRef<boolean>(true);
   const isInitialMessagesLoadRef = useRef<boolean>(true);
 
-  // Initialize state on mount
+  // Se mantiene sincronizado con los cambios de configuración e historial emitidos por el servicio.
   useEffect(() => {
-    setIsSupported(isBrowserNotificationSupported());
-    setPermission(getBrowserNotificationPermission());
-    setConfig(loadNotificationConfig());
-    setHistory(loadNotificationHistory());
-
     const handleConfigUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<BrowserNotificationConfig>;
       if (customEvent.detail) {

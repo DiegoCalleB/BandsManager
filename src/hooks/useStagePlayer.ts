@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Setlist, Song } from '../types';
 import { getAudioContextClass } from '../components/song_studio/audioContext';
 import { resolveAudioUrl } from '../utils/audioStorage';
@@ -11,7 +11,6 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
   const [stageIsPlaying, setStageIsPlaying] = useState<boolean>(false);
   const [stageAutoplayNext, setStageAutoplayNext] = useState<boolean>(true);
   const [stageCurrentTime, setStageCurrentTime] = useState<number>(0);
-  const [stageItemDuration, setStageItemDuration] = useState<number>(210);
   const [stageResolvedUrl, setStageResolvedUrl] = useState<string>('');
   // Fundido real entre canciones consecutivas — desactivado por defecto: el corte duro de siempre
   // no cambia para nadie hasta que se active explícitamente desde Modo Escenario.
@@ -67,66 +66,57 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stagePlayingIndex]);
 
-  // Effect when active playing index changes in Stage Mode (Modo Escenario)
-  useEffect(() => {
-    if (stagePlayingIndex === null || !activeSetlist || !activeSetlist.items[stagePlayingIndex]) {
-      setStageResolvedUrl('');
-      setStageCurrentTime(0);
-      return;
-    }
-
-    const item = activeSetlist.items[stagePlayingIndex];
-
-    let rawUrl = '';
-    let durationSec = 180;
-
+  // Audio y duración del ítem activo: se derivan al renderizar (no hace falta estado ni efecto).
+  const itemActivo = useMemo(() => {
+    const item = stagePlayingIndex === null ? undefined : activeSetlist?.items[stagePlayingIndex];
+    if (!item) return null;
     if (item.tipoItem === 'cancion' && item.songId) {
       const song = songs.find((s) => s.id === item.songId);
-      if (song) {
-        rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || song.audioUrl || '';
-        durationSec = song.duracionSegundos || parseMmSsToSeconds(song.duracion) || 210;
-      }
-    } else {
-      rawUrl = item.audioUrl || '';
-      durationSec = item.duracionEstimadaSegundos ?? (item.duracionEstimadaMinutos || 2) * 60;
+      return {
+        rawUrl: song ? song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || song.audioUrl || '' : '',
+        durationSec: song ? song.duracionSegundos || parseMmSsToSeconds(song.duracion) || 210 : 180,
+      };
     }
+    return {
+      rawUrl: item.audioUrl || '',
+      durationSec: item.duracionEstimadaSegundos ?? (item.duracionEstimadaMinutos || 2) * 60,
+    };
+  }, [stagePlayingIndex, activeSetlist, songs, parseMmSsToSeconds]);
+  const rawUrl = itemActivo?.rawUrl ?? '';
+  const stageItemDuration = itemActivo ? (itemActivo.durationSec > 0 ? itemActivo.durationSec : 120) : 210;
 
-    setStageItemDuration(durationSec > 0 ? durationSec : 120);
-
-    if (pendingCrossfadePromotionRef.current) {
-      // El audio de este índice ya está sonando (arrancó durante el fundido cruzado) — solo se
-      // actualiza la duración de arriba y el estado "Audio Real" para la UI, sin recargar ni
-      // relanzar la reproducción (eso reiniciaría la pista que ya viene sonando del fundido).
-      pendingCrossfadePromotionRef.current = false;
-      setStageCurrentTime(0);
-      if (rawUrl) {
-        resolveAudioUrl(rawUrl)
-          .then((resolved) => setStageResolvedUrl(resolved))
-          .catch(() => setStageResolvedUrl(''));
-      } else {
-        setStageResolvedUrl('');
-      }
-      return;
-    }
-
+  // Ajuste de estado al renderizar: cualquier cambio de índice, setlist o canciones reinicia el reloj,
+  // y un ítem sin audio no puede conservar la url resuelta del anterior.
+  const [claveCarga, setClaveCarga] = useState({ stagePlayingIndex, activeSetlist, songs });
+  if (claveCarga.stagePlayingIndex !== stagePlayingIndex || claveCarga.activeSetlist !== activeSetlist || claveCarga.songs !== songs) {
+    setClaveCarga({ stagePlayingIndex, activeSetlist, songs });
     setStageCurrentTime(0);
+  }
+  if (!rawUrl && stageResolvedUrl !== '') setStageResolvedUrl('');
 
-    if (rawUrl) {
-      resolveAudioUrl(rawUrl)
-        .then((resolved) => {
-          setStageResolvedUrl(resolved);
-          const activeEl = getActiveAudioEl();
-          if (activeEl) {
-            activeEl.src = resolved;
-            if (stageIsPlaying) {
-              activeEl.play().catch(console.warn);
-            }
+  // Resuelve el audio del ítem activo y lo carga en el reproductor.
+  useEffect(() => {
+    if (!itemActivo) return;
+    // El audio de un ítem promocionado por un fundido cruzado ya está sonando (arrancó durante el
+    // fundido): solo se actualiza la url para la UI, sin recargar ni relanzar la reproducción
+    // (eso reiniciaría la pista que ya viene sonando del fundido).
+    const yaSonando = pendingCrossfadePromotionRef.current;
+    pendingCrossfadePromotionRef.current = false;
+    if (!rawUrl) return;
+
+    resolveAudioUrl(rawUrl)
+      .then((resolved) => {
+        setStageResolvedUrl(resolved);
+        if (yaSonando) return;
+        const activeEl = getActiveAudioEl();
+        if (activeEl) {
+          activeEl.src = resolved;
+          if (stageIsPlaying) {
+            activeEl.play().catch(console.warn);
           }
-        })
-        .catch(() => setStageResolvedUrl(''));
-    } else {
-      setStageResolvedUrl('');
-    }
+        }
+      })
+      .catch(() => setStageResolvedUrl(''));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stagePlayingIndex, activeSetlist, songs]);
 
