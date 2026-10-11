@@ -1417,3 +1417,22 @@ body.scroll .giro-reloj .gr-c, body.scroll .giro-reloj .gr-reloj, body.scroll .g
 body.scroll .slide.mis-bandas { min-height: 900px; }
 body.scroll .mis-bandas .mb-foto { position: relative; opacity: 1; height: 600px; }
 @media (prefers-reduced-motion: reduce) { .slide.mis-bandas.active * { animation-duration: 1ms !important; } }
+
+/* ───────── Acabado de cine (modo película): nada que recuerde a una diapositiva ───────── */
+body.pelicula:not(.scroll) #prog { display: none; }
+/* La hora y el lugar, como sobreimpresión de cine: sin píldora, en versalitas espaciadas y escrita letra a letra */
+body.pelicula:not(.scroll) .slide:not(.trailer):not(.act) > .tag, body.pelicula:not(.scroll) .slide .ft-copy > .tag {
+  background: none; border: 0; box-shadow: none; padding: 0; color: rgba(255,255,255,.86);
+  font: 600 22px/1.2 Onest, sans-serif; letter-spacing: .34em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .slide > .tag::before, body.pelicula:not(.scroll) .ft-copy > .tag::before { display: none; }
+body.pelicula:not(.scroll) .slide.active:not(.trailer):not(.act) > .tag, body.pelicula:not(.scroll) .slide.active .ft-copy > .tag {
+  animation: sobreimp 1400ms steps(28) 400ms both; }
+@keyframes sobreimp { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+/* El titular entra, se lee y se va: la pantalla de la app se queda sola y la cámara sube hacia ella */
+body.pelicula:not(.scroll) .slide.feat.active .ft-copy h2 { animation: titular 4200ms ease-in-out 200ms both; }
+@keyframes titular { 0% { opacity: 0; filter: blur(8px); } 14%, 70% { opacity: 1; filter: none; } 100% { opacity: 0; filter: blur(6px); translate: 0 -10px; } }
+body.pelicula:not(.scroll) .slide.feat.active .ft-shot:not(.phone):not(.alto) { animation: subecam 1600ms cubic-bezier(.4, 0, .2, 1) 3600ms both; }
+@keyframes subecam { to { translate: 0 -120px; scale: 1.07; } }
+@media (prefers-reduced-motion: reduce) { body.pelicula .slide.active .tag, body.pelicula .slide.feat.active .ft-copy h2, body.pelicula .slide.feat.active .ft-shot { animation: none !important; } }
+body.pelicula:not(.scroll) .slide.feat.active .ft-copy > .tag { animation: sobreimp 1400ms steps(28) 400ms both, vetetag 700ms ease-in 3800ms forwards; }
+@keyframes vetetag { to { opacity: 0; } }
