@@ -26,7 +26,7 @@ Autor: [@DiegoCalleB](https://github.com/DiegoCalleB). Este repositorio es el n�
   </tr>
 </table>
 
-*Capturas de la banda de demo ficticia (Ruta 66), generadas por script.*
+*Capturas de la banda de ejemplo ficticia «Banda Demo», generadas con `scripts/landing/capturar-landing.mjs`.*
 
 ### Qué mirar para comprobar qué
 

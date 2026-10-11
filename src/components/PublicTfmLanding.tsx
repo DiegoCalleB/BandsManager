@@ -397,7 +397,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
             </div>
             <div className="lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="bandas" movil="m-bandas" alt="Selector multibanda con Os Herdeiros do Código y Master of Prompts" />
+                <Captura nombre="bandas" movil="m-bandas" alt="Selector multibanda: cambiar de proyecto con un toque" />
               </div>
             </div>
           </div>
@@ -405,7 +405,7 @@ export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) 
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
             <div className="order-2 lg:order-1 lg:col-span-7">
               <div className="rounded-[var(--r-xl)] bg-[var(--sunken)] p-2 sm:p-3">
-                <Captura nombre="repertorio" movil="m-repertorio" alt="Setlist con mapa de energía de Master of Prompts" />
+                <Captura nombre="repertorio" movil="m-repertorio" alt="Setlist con mapa de energía" />
               </div>
             </div>
             <div className="order-1 lg:order-2 lg:col-span-5">

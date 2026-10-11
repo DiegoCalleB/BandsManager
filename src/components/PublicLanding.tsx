@@ -350,7 +350,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <div className="rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
                 <Captura
                   nombre="hojas"
-                  movil="miembros"
+                  movil="m-hojas"
                   alt="Setlists personalizados por músico en BandManager"
                 />
               </div>
