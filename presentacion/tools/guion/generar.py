@@ -84,7 +84,7 @@ P = {
 
 
 ROLE = {'iago': 'bajo', 'brais': 'bateria', 'xandre': 'voz', 'alvaro': 'guitarra', 'manager': 'manager',
-        'mop': 'voz_mop', 'claudio': 'ia_claude', 'guglio': 'ia_gemini'}
+        'mop': 'voz_mop', 'claudio': 'ia_claude', 'guglio': 'ia_gemini', 'sello': 'sello'}
 
 
 exec(open(os.path.join(AQUI, 'guion_hablado.py'), encoding='utf-8').read())
@@ -154,6 +154,11 @@ def shot_vid(src, poster, cls='', pos='50% 0'):
     return f'<div class="ft-shot{" " + cls if cls else ""}"><video data-ambient muted loop playsinline preload="auto" poster="{poster}" style="object-position:{pos}"><source src="{src}" type="video/mp4"></video></div>'
 
 
+def shot_vid_sync(src, poster, cls=''):
+    """Vídeo que no arranca solo: lo lanza la línea del chat con clase «sync» (ver voces.js)."""
+    return f'<div class="ft-shot{" " + cls if cls else ""}"><video data-sync muted playsinline preload="auto" poster="{poster}"><source src="{src}" type="video/mp4"></video></div>'
+
+
 S = []
 add = S.append
 
@@ -167,6 +172,16 @@ add(scene('Prólogo · Jueves, 23:47', 'Prólogo · Os Herdeiros do Código', 'U
               m('brais', 'Así no llegamos a ningún lado.', '23:58', 'cold'),
               m('iago', 'Ya he dejado dos grupos por esto y no quiero que me vuelva a pasar.', '00:01'),
               m('iago', 'Dadme hasta el sábado.', '00:03'))))
+
+add(scene('Prólogo · La llamada', 'Prólogo · Jueves · 00:09', 'Y entonces, sonó el teléfono.', 'img/concierto-1.jpg',
+          '<div class="callcard"><i class="cc-ico" aria-hidden="true">☎</i><div><small>Llamada entrante · 00:09</small><b>Discos Cuarzo</b><span>Sr. Peláez</span></div></div>' +
+          dlg(m('sello', 'Herdeiros, os escribí hace tres meses y nadie contestó. Os ofrezco contrato: gestiono yo, me quedo el 30 % y los másteres son míos.', '00:09',
+                say='[calmly] Herdeiros, os escribí hace tres meses, y nadie contestó. Os ofrezco contrato. Yo gestiono, me quedo el treinta por ciento, y los másteres, naturalmente, son míos.'),
+              m('xandre', '¿Los másteres? ¿Nuestras canciones? ¡Ni de broma!', '00:10', say='[shouts] ¿Los másteres? ¿Nuestras canciones? ¡Ni de broma, che!'),
+              m('alvaro', 'Es que el correo… se nos pierde.', '00:10', say='[sighs] Es que el correo… se nos pierde, tío.'),
+              m('sello', 'Sin datos no hay contrato. Pensadlo.', '00:11', say='Sin datos, no hay contrato. Pensadlo.'),
+              m('iago', 'No firméis nada. Las canciones son nuestras, y los datos también. El sábado os lo demuestro.', '00:12',
+                say='[firmly] No firméis nada, chavales. Las canciones son nuestras. Y los datos, también. El sábado os lo demuestro.'), cls='tight'), tr='zoom'))
 
 add(excel + '\n')
 
@@ -191,7 +206,9 @@ add(scene('Prólogo · El sábado en el local', 'Prólogo · Viernes · 22:10', 
               m('xandre', '¿De qué va? ¿Qué es??', '22:14'),
               m('alvaro', 'Seguro que ha encontrado una base de datos con todas las salas de Galicia.', '22:19'),
               m('brais', 'O ha descubierto Google Calendar. 🤣', '22:31'),
-              m('iago', 'Mañana a las 11. Traed unas birras y os cuento. 🍻', '22:33'))))
+              m('iago', 'Mañana a las 11. Traed unas birras y os cuento. 🍻', '22:33'),
+              m('alvaro', 'Y ojo: mañana a las 14:00 cierran el cartel del Resurrección Fest. Si no mandamos nada, no tocamos.', '22:40',
+                say='[worried] Y ojo: mañana a las dos cierran el cartel del Resurrección Fest. Si no mandamos nada, no tocamos.'))))
 
 add(room + '\n')
 
@@ -229,6 +246,15 @@ add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
           m('xandre', '¿Y quién es ese?'),
           m('iago', 'El cantante de Master of Prompts. Ya veréis lo que da de sí.')],
          shot_img('img/d-h-swap.jpg')))
+
+add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
+         [m('brais', 'Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?', say='[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?'),
+          m('iago', 'Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.', say='Claro, {bateria}. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas.'),
+          m('alvaro', '¿Y cómo cambias de una banda a otra?', say='¿Y cómo cambias de una banda a otra?'),
+          m('iago', 'Como de perfil en una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como de perfil en una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
+          m('xandre', '¡Cambió todo! ¡El logo, el calendario, hasta las salas!', say='[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!'),
+          m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla del contrato.')],
+         shot_vid_sync('video/v-perfiles.mp4', 'video/v-perfiles.jpg')))
 
 add(feat('Bandas amigas', TAG1, 'Bandas amigas, a la escucha.',
          [m('xandre', '¿Y las otras bandas? Siempre acabamos con los mismos contactos en el móvil.'),
@@ -601,7 +627,10 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
   {dlg(m('iago', 'Y ahora, lo que viene: probarlo con una banda real. La nuestra.'),
        m('brais', '¡Claro que sí! Lo probamos, mejoramos todo lo que haga falta y, en cuanto termines el máster de Marketing Digital, lo lanzamos al mundo entero.'),
        m('xandre', '¡Y dile que te busque salas en Vigo, que tengo ganas de tocar allí en las fiestas!'),
-       m('iago', 'Hecho. Y con la lista de pendientes que ya tengo, no me voy a aburrir.'), cls='tight')}
+       m('iago', 'Hecho. Y con la lista de pendientes que ya tengo, no me voy a aburrir.'),
+       m('alvaro', '¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!', say='[gasps] ¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!'),
+       m('iago', 'Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.', say='Tres veces en una hora. Eso es que están leyendo. [softly] Y el cartel cierra… ahora.'), cls='tight')}
+  <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Resurrección Fest ha abierto tu dossier</b><span>3 veces en la última hora</span></div></div>
   <ol class="tech-vis steps">
     <li><b>1</b><div><h3>Probarlo con una banda real</h3><p>Lead, aprobación, borrador en Gmail y respuesta</p></div></li>
     <li><b>2</b><div><h3>Reactivar el cobro</h3><p>Facturación y planes de pago</p></div></li>
@@ -623,6 +652,9 @@ add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transi
     <div class="l2" style="font-size:36px">Escenario principal · Viveiro</div>
   </div>
   {dlg(m('manager', 'Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.'),
+       m('sello', 'Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 % y los másteres.', say='Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento, y los másteres.'),
+       m('iago', 'Gracias, Peláez. Pero los másteres son nuestros. Y la gestión, también.', say='[softly] Gracias, Peláez. Pero los másteres son nuestros. Y la gestión, también.'),
+       m('manager', 'Y los datos. ¡A tocar!', say='Y los datos. ¡Y ahora, a tocar!'),
        m('xandre', '¿Tengo el tono de la primera?'),
        m('iago', 'Em, en tu hoja, como siempre.'),
        m('brais', 'Hace seis meses no sabíamos ni quién contestaba a las salas.'), cls='tight')}

@@ -42,6 +42,8 @@
                 tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
     manager:  { nombre: 'Manager', rol: 'Os Herdeiros do Código', cargo: 'Manager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
                 tts: { motor: 'elevenlabs', voz: 'Zb72NBThGN2Rv3y1RSTT', estabilidad: 0.5, efecto: 'telefono' } },
+    sello:    { nombre: 'Peláez', rol: 'Discos Cuarzo', cargo: 'Discográfica', foto: 'img/personaje-sello.jpg', color: '#d6ae5c',
+                tts: { motor: 'elevenlabs', voz: 'ewZshglVwjWcMIuBYCCS', estabilidad: 0.5, efecto: 'telefono' } },
     voz_mop:  { nombre: 'Master of Prompts', rol: 'voz', cargo: 'Voz de Master of Prompts', foto: 'img/personaje-cantante.jpg', color: '#ffb36a',
                 tts: { motor: 'elevenlabs', voz: 'WEpPZOD2xY23gV1z2GzQ', estabilidad: 0.4 } },
     ia_claude: { nombre: 'Claudio', rol: 'Claude Code', cargo: 'Asistente de IA', foto: null, color: '#f0a27c',

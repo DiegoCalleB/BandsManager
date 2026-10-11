@@ -189,6 +189,31 @@
   var oculto = 0;
   var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!nf.classList.contains('menu') && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
   addEventListener('mousemove', function () { if (body.classList.contains('pelicula')) despierta(); });
+  // Reloj de cuenta atrás (Nolan): el sábado el Resurrección Fest cierra el cartel a las 14:00 y cada plano marca la hora
+  var reloj = document.createElement('div'); reloj.id = 'reloj'; reloj.setAttribute('aria-hidden', 'true');
+  reloj.innerHTML = '<small>CIERRE DEL CARTEL · RESURRECCIÓN FEST</small><span></span>';
+  if (stage) stage.appendChild(reloj);
+  var relojT0 = 0, relojRest = 0;
+  var pintarReloj = function () {
+    if (!relojT0) return;
+    var seg = Math.max(0, relojRest - Math.floor((Date.now() - relojT0) / 1000));
+    var h = Math.floor(seg / 3600), m = Math.floor(seg / 60) % 60, s2 = seg % 60;
+    reloj.querySelector('span').textContent = '-' + ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ':' + ('0' + s2).slice(-2);
+    reloj.classList.toggle('fin', seg === 0);
+  };
+  var ajustarReloj = function () {
+    var sl = document.querySelector('.slide.active'), tag = sl && sl.querySelector('.tag');
+    var mt = tag && /S[áa]bado[^0-9]{1,5}(\d{1,2}):(\d{2})/.exec(tag.textContent);
+    var txt = (tag ? tag.textContent : '') + ' ' + (sl ? sl.dataset.title || '' : '');
+    var fuera = /Seis meses|Domingo|Otro jueves|Fin de la historia|Prólogo|Gracias|Créditos|Escena post/.test(txt) && !mt;
+    if (mt && /Seis meses/.test(tag.textContent)) fuera = true;
+    if (fuera || (!mt && !relojT0)) { reloj.classList.remove('on', 'fin'); relojT0 = 0; return; }
+    if (!mt) return; // plano sin hora (capítulos, negocio…): el reloj sigue corriendo
+    relojRest = Math.max(0, (14 * 60 - (+mt[1] * 60 + +mt[2])) * 60); relojT0 = Date.now(); reloj.classList.add('on'); pintarReloj();
+  };
+  setInterval(pintarReloj, 1000);
+  addEventListener('hashchange', function () { setTimeout(ajustarReloj, 40); });
+
   // La cámara recorre la captura (de arriba abajo) durante lo que dura la escena, para que se vea entera
   var camara = function () {
     var sl = document.querySelector('.slide.active');

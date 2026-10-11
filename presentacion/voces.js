@@ -110,6 +110,11 @@
     el.classList.add('habla'); el._t0 = performance.now(); el._dur = m ? m.d / VEL * 1000 : Math.max(900, say.length * 42);
     dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
+    // línea con clase «sync»: arranca desde el principio el vídeo de la diapositiva (data-sync) para que lo que se ve cuadre con lo que se dice
+    if (el.classList.contains('sync')) {
+      var vs = el.closest('.slide') && el.closest('.slide').querySelector('video[data-sync]');
+      if (vs) { vs.currentTime = 0; var pp = vs.play(); if (pp && pp.catch) pp.catch(function () { /* sin gesto: se queda el cartel */ }); }
+    }
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
       var audio = pista[turno]; turno = 1 - turno;
