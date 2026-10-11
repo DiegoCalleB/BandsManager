@@ -16,7 +16,7 @@ import {
   Setlist,
   Song,
 } from "../types";
-import { usePlayer } from "../context/PlayerContext";
+import { usePlayer } from "../context/playerContextValue";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
 import "../utils/api";

@@ -8,9 +8,7 @@ export function useMezclaGuardada(songId: string | number) {
 
   // Si el Atril cambia de canción, recarga lo guardado de esa.
   const actual = mezcla.clave === clave ? mezcla.valor : cargar(clave);
-  useEffect(() => {
-    if (mezcla.clave !== clave) setMezcla({ clave, valor: actual });
-  }, [clave, mezcla.clave, actual]);
+  if (mezcla.clave !== clave) setMezcla({ clave, valor: actual });
 
   useEffect(() => {
     if (mezcla.clave !== clave) return;

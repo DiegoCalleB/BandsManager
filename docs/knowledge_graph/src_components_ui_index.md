@@ -38,6 +38,7 @@ BandManager UI Component Library
 - [[src_components_ui_Skeleton|src/components/ui/Skeleton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Switch|src/components/ui/Switch.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_variantes|src/components/ui/variantes.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---
 

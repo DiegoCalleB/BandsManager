@@ -123,6 +123,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadAvatar|src/components/booking/LeadAvatar.tsx]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
+- [[src_components_booking_leadHealth|src/components/booking/leadHealth.ts]] *(from #frontend)*
 - [[src_components_booking_LeadHealthBadge|src/components/booking/LeadHealthBadge.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsBatchDateScan|src/components/booking/leads_table/hooks/useLeadsBatchDateScan.ts]] *(from #frontend)*
 - [[src_components_booking_leads_table_hooks_useLeadsTableController|src/components/booking/leads_table/hooks/useLeadsTableController.ts]] *(from #frontend)*
@@ -459,6 +460,7 @@ _Sin dependencias salientes directas._
 - [[src_components_VenueMap|src/components/VenueMap.tsx]] *(from #frontend)*
 - [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(from #service)*
 - [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(from #service)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(from #service)*
 - [[src_db_seed|src/db_seed.ts]] *(from #service)*
 - [[src_hooks_useAccompanimentGenerator|src/hooks/useAccompanimentGenerator.ts]] *(from #hook)*
 - [[src_hooks_useAudioPlayer|src/hooks/useAudioPlayer.ts]] *(from #hook)*

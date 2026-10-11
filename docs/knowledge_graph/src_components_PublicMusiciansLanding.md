@@ -28,7 +28,7 @@ Exporta: PublicMusiciansLanding.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
-- [[src_main|src/main.tsx]] *(from #service)*
+- [[src_app_rutasPublicasLazy|src/app/rutasPublicasLazy.tsx]] *(from #service)*
 
 ---
 

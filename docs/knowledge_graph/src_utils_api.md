@@ -71,7 +71,7 @@ Exporta: ApiRequestError, getActiveBandId, apiFetchRaw, apiFetch, safeJsonFetch.
 - [[src_components_calendar_useCalendarConflicts|src/components/calendar/useCalendarConflicts.ts]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useLeadEmailActions|src/components/chatbot/hooks/useLeadEmailActions.ts]] *(from #frontend)*
-- [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*
+- [[src_components_chords_progresoOido|src/components/chords/progresoOido.ts]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*

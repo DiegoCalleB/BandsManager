@@ -29,6 +29,7 @@ Exporta: VistaAcorde, NotasParaDibujar, notasParaDibujar, CUERDAS_BAJO, RolBajo,
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
 

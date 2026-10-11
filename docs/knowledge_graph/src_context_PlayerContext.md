@@ -13,21 +13,18 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: PlayerProvider, usePlayer.
+Exporta: PlayerProvider.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_AppShell|src/app/AppShell.tsx]] *(from #service)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
-- [[src_components_GlobalPlayer|src/components/GlobalPlayer.tsx]] *(from #frontend)*
-- [[src_components_repertorio_hooks_useRepertorioPlayers|src/components/repertorio/hooks/useRepertorioPlayers.ts]] *(from #frontend)*
-- [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
 
 ---
 

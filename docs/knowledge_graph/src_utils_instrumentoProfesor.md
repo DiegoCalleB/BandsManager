@@ -24,8 +24,8 @@ Exporta: InstrumentoProfesor, instrumentoDesdeTexto, instrumentoDelUsuario.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
-- [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(from #frontend)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(from #frontend)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(from #service)*
 
 ---

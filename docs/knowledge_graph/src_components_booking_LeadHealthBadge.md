@@ -13,11 +13,12 @@ tags: ["frontend", "booking", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Exporta: LeadTemperature, LeadHealthInfo, getLeadHealth, LeadHealthBadge.
+Exporta: LeadHealthBadge.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_booking_leadHealth|src/components/booking/leadHealth.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

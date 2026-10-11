@@ -18,7 +18,7 @@ Estado base del Atril: pestañas, notación, transposición, cifrado, paneles y 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_hooks_useAutoScroll|src/hooks/useAutoScroll.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useMetronomo|src/hooks/useMetronomo.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

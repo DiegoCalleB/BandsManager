@@ -32,6 +32,7 @@ Exporta: Metronomo, BPM_MIN, BPM_MAX, acotarBpm, bpmDeToques, useMetronomo.
 ## 🧪 Tests que lo cubren
 - `src/audit/metronomoAtril.test.tsx`
 - `src/audit/metronomoUnico.test.tsx`
+- `src/hooks/__tests__/hooksSinEfectosEnCascada.behavior.test.ts`
 
 ---
 

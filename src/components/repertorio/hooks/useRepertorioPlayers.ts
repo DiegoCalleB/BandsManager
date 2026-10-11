@@ -5,7 +5,7 @@
 /* eslint-disable
  @typescript-eslint/no-unused-vars
 */
-import { usePlayer } from "../../../context/PlayerContext";
+import { usePlayer } from "../../../context/playerContextValue";
 import { useAudioPlayer } from "../../../hooks/useAudioPlayer";
 import { useCatalogFilters } from "../../../hooks/useCatalogFilters";
 import { useShareModal } from "../../../hooks/useShareModal";

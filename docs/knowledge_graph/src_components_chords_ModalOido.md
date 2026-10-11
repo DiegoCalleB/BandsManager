@@ -13,14 +13,13 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: EtapaOido, ProgresoOido, useProgresoOido, pctVisible, ModalOido.
+Exporta: ModalOido.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
+- [[src_components_chords_progresoOido|src/components/chords/progresoOido.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -49,9 +49,7 @@ interface RepertorioSetlistsProps {
 
 import { SHOW_ITEM_TYPES } from "../config/defaultRepertoire";
 
-export { SHOW_ITEM_TYPES };
 
-export { formatSecondsToMmSs };
 
 
 export default function RepertorioSetlists({

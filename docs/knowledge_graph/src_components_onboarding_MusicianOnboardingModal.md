@@ -19,7 +19,7 @@ Exporta: MusicianOnboardingModal.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 - [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(Layer: #service, Domain: #system)*
 

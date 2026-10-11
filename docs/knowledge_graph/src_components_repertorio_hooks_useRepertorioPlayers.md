@@ -18,7 +18,7 @@ Agrupa los hooks de compartir, filtros de catálogo, reproductor persistente y r
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(Layer: #service, Domain: #system)*
 - [[src_hooks_useAudioPlayer|src/hooks/useAudioPlayer.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useCatalogFilters|src/hooks/useCatalogFilters.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useShareModal|src/hooks/useShareModal.ts]] *(Layer: #hook, Domain: #system)*

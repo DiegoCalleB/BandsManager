@@ -7,7 +7,7 @@ import {
   Song,
   ThemeColors,
 } from "../../types";
-import { formatTime } from "./EnsayoCronometro";
+import { formatTime } from "./formatTime";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';

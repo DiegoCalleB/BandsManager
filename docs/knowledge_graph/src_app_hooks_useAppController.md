@@ -27,7 +27,7 @@ Controlador de la aplicación: sesión, datos, banda activa, navegación, tema y
 - [[src_app_hooks_useNavState|src/app/hooks/useNavState.ts]] *(Layer: #service, Domain: #system)*
 - [[src_app_hooks_usePlanLimitGuards|src/app/hooks/usePlanLimitGuards.ts]] *(Layer: #service, Domain: #system)*
 - [[src_app_hooks_useShellState|src/app/hooks/useShellState.ts]] *(Layer: #service, Domain: #system)*
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 - [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(Layer: #security, Domain: #auth)*
 

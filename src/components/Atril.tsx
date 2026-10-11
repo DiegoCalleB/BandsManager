@@ -8,7 +8,6 @@ import { AtrilProvider } from "./atril/AtrilProvider";
 import { AtrilView } from "./atril/AtrilView";
 import { useAtrilController } from "./atril/hooks/useAtrilController";
 
-export { renderFormattedChordSheet } from "./atril/chordSheetRender";
 
 export interface AtrilProps {
   cancion: Song;

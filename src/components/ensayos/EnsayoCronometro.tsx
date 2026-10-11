@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, Clock, AlertCircle } from "lucide-react";
 import { ThemeColors } from "../../types";
 import { Button, IconButton } from '../ui';
+import { formatTime } from './formatTime';
 
 interface EnsayoCronometroProps {
   totalEstimatedMin?: number;
@@ -9,16 +10,6 @@ interface EnsayoCronometroProps {
   onTimeUpdate?: (elapsedSeg: number) => void;
   colors?: ThemeColors;
   isCompact?: boolean;
-}
-
-export function formatTime(seconds: number): string {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  if (hrs > 0) {
-    return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  }
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
 }
 
 export function EnsayoCronometro({

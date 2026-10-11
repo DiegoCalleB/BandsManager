@@ -57,7 +57,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
   const [inicioBucle, setInicioBucle] = useState<number | null>(null);
   const [bucle, setBucle] = useState<RangoBucle | null>(null);
   const bucleRef = useRef<RangoBucle | null>(null);
-  bucleRef.current = bucle;
+  useEffect(() => { bucleRef.current = bucle; }, [bucle]);
   // Corrección manual
   const [corrigiendo, setCorrigiendo] = useState(false);
   const [editando, setEditando] = useState<number | null>(null);

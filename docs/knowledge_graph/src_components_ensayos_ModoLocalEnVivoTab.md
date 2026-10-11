@@ -19,11 +19,12 @@ Exporta: ModoLocalEnVivoTab.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_Atril|src/components/Atril.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlAutoscroll|src/components/chords/ControlAutoscroll.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_ensayos_BotonesEvaluacion|src/components/ensayos/BotonesEvaluacion.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ensayos_EnsayoCronometro|src/components/ensayos/EnsayoCronometro.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ensayos_formatTime|src/components/ensayos/formatTime.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(Layer: #hook, Domain: #system)*

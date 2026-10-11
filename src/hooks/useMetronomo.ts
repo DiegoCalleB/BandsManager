@@ -38,11 +38,15 @@ export function useMetronomo(bpmInicial = 120, pulsosPorCompas = 4): Metronomo {
   const ctxRef = useRef<AudioContext | null>(null);
   const toquesRef = useRef<number[]>([]);
 
-  // Si la canción cambia de tempo, el metrónomo la sigue.
-  useEffect(() => { setBpmEstado(acotarBpm(bpmInicial)); }, [bpmInicial]);
+  // Si la canción cambia de tempo, el metrónomo la sigue (ajuste en render, sin efecto).
+  const [bpmInicialPrevio, setBpmInicialPrevio] = useState(bpmInicial);
+  if (bpmInicial !== bpmInicialPrevio) {
+    setBpmInicialPrevio(bpmInicial);
+    setBpmEstado(acotarBpm(bpmInicial));
+  }
 
   useEffect(() => {
-    if (!activo) { setPulso(0); return; }
+    if (!activo) return;
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!Ctx) return;
     if (!ctxRef.current) ctxRef.current = new Ctx();
@@ -64,7 +68,7 @@ export function useMetronomo(bpmInicial = 120, pulsosPorCompas = 4): Metronomo {
   useEffect(() => () => { void ctxRef.current?.close?.(); ctxRef.current = null; }, []);
 
   const setBpm = useCallback((v: number) => setBpmEstado(acotarBpm(v)), []);
-  const alternar = useCallback(() => setActivo((a) => !a), []);
+  const alternar = useCallback(() => { setPulso(0); setActivo((a) => !a); }, []);
   const tocarTempo = useCallback(() => {
     const ahora = performance.now();
     const toques = toquesRef.current;
@@ -75,5 +79,6 @@ export function useMetronomo(bpmInicial = 120, pulsosPorCompas = 4): Metronomo {
     const nuevo = bpmDeToques(toques);
     if (nuevo != null) setBpmEstado(nuevo);
   }, []);
-  return { activo, bpm, pulso, setBpm, alternar, tocarTempo };
+  // Parado no hay pulso en curso: se muestra el primero.
+  return { activo, bpm, pulso: activo ? pulso : 0, setBpm, alternar, tocarTempo };
 }

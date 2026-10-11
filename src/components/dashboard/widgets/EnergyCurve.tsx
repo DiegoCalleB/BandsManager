@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { monotonePath } from "../../repertorio/EnergyChart";
+import { monotonePath } from "../../../utils/curve";
 
 export interface EnergyCurvePoint {
   num: number;

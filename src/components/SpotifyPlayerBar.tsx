@@ -8,7 +8,7 @@ import { isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../context/playerContextValue';
 import { Button, IconButton, Select } from './ui';
 
 interface SpotifyPlayerBarProps {

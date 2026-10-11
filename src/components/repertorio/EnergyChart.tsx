@@ -109,7 +109,6 @@ interface EnergyChartProps {
   belowChartSlot?: React.ReactNode;
 }
 
-export { monotonePath } from "../../utils/curve";
 import { monotonePath } from "../../utils/curve";
 
 /**

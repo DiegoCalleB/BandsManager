@@ -6,7 +6,8 @@ const SILENT_AUDIO_URI =
 import { Song, Setlist, SetlistItem } from "../../types";
 import { Printer, Music, Mic, Radio, SkipBack, SkipForward, Play, Pause, Repeat, Heart, Footprints, FileText, WifiOff, Check } from "lucide-react";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
-import { SHOW_ITEM_TYPES, formatSecondsToMmSs } from "../RepertorioSetlists";
+import { SHOW_ITEM_TYPES } from "../../config/defaultRepertoire";
+import { formatSecondsToMmSs } from "../../utils/stageTimeFormat";
 import { cacheActiveStageSetlist } from "../../utils/stageOfflineCache";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { Button, Select } from '../ui';

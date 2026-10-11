@@ -19,7 +19,7 @@ eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

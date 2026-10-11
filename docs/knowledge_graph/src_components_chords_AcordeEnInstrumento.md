@@ -13,22 +13,20 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: TecladoAcorde, BajoAcorde, ETIQUETA_VISTA, SelectorVistaAcorde, useVistaAcordes, CajaAcorde.
+Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, CajaAcorde.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_atril_hooks_useAtrilState|src/components/atril/hooks/useAtrilState.ts]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
-- [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 
 ---
 

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import { useAtril } from '../AtrilContext';
-import { renderFormattedChordSheet as reexportado } from '../../Atril';
 import { renderFormattedChordSheet } from '../chordSheetRender';
 
 const hookSources = import.meta.glob('../hooks/*.ts', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
@@ -25,8 +24,10 @@ describe('Atril: contracts after modularization', () => {
     expect(mod.default).toContain('export function Atril(');
   });
 
-  it('keeps renderFormattedChordSheet importable from the Atril module', () => {
-    expect(reexportado).toBe(renderFormattedChordSheet);
+  it('Atril.tsx exporta solo componentes (el render de la hoja vive en chordSheetRender)', async () => {
+    const mod = (await import('../../Atril?raw')) as { default: string };
+    expect(mod.default).not.toContain('renderFormattedChordSheet');
+    expect(typeof renderFormattedChordSheet).toBe('function');
   });
 
   it.each(Object.entries(hookSources))('%s exports at least one hook', (_path, source) => {

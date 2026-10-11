@@ -1,15 +1,15 @@
 ---
 id: src_config_navGroups
-title: "src/config/navGroups.tsx"
+title: "src/config/navGroups.ts"
 layer: service
 domain: system
-file: "src/config/navGroups.tsx"
+file: "src/config/navGroups.ts"
 tags: ["service", "system", "auto"]
 ---
 
-# 📌 src/config/navGroups.tsx
+# 📌 src/config/navGroups.ts
 
-> **Ubicación:** `src/config/navGroups.tsx`  
+> **Ubicación:** `src/config/navGroups.ts`  
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción

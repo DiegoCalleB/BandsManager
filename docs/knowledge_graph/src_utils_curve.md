@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_dashboard_widgets_EnergyCurve|src/components/dashboard/widgets/EnergyCurve.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
 - [[src_components_ui_CurveSeries|src/components/ui/CurveSeries.tsx]] *(from #frontend)*
 

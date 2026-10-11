@@ -20,7 +20,7 @@ Exporta: SpotifyPlayerBar.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(Layer: #service, Domain: #system)*
 - [[src_hooks_useTonePitchShift|src/hooks/useTonePitchShift.ts]] *(Layer: #hook, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*

@@ -8,7 +8,7 @@ import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { useMetronomo } from "../../../hooks/useMetronomo";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { ajustesDeModoAtril,ModoAtril } from "../../../utils/modosAtril";
-import { useVistaAcordes } from "../../chords/AcordeEnInstrumento";
+import { useVistaAcordes } from "../../chords/useVistaAcordes";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AtrilStateParams {

@@ -55,7 +55,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
-- [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*
+- [[src_components_chords_progresoOido|src/components/chords/progresoOido.ts]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*

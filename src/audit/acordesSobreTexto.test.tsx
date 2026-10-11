@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { renderFormattedChordSheet } from '../components/Atril';
+import { renderFormattedChordSheet } from '../components/atril/chordSheetRender';
 
 const html = (texto: string, sync?: any) => renderToStaticMarkup(<div>{renderFormattedChordSheet(texto, undefined, sync)}</div>);
 

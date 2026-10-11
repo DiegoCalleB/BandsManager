@@ -1,7 +1,7 @@
 import './utils/domTranslatePatch';
 import { initFrontendErrorTracking } from './utils/errorTracking';
 import { instalarAvisoDeGuardados } from './utils/saveErrors';
-import { StrictMode, Suspense, lazy } from 'react';
+import { StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -10,6 +10,7 @@ import '@fontsource-variable/onest';
 import './index.css';
 import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
 import { capturarReferidoDeLaUrl } from './utils/referido';
+import { LoadingFallback, PublicEPK, PublicMusiciansLanding } from './app/rutasPublicasLazy';
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
@@ -27,27 +28,6 @@ escucharSistema(leerPreferenciaEspectro);
 
 // Invitación de otra banda (?ref=): se guarda 30 días y se atribuye cuando la persona tenga cuenta.
 capturarReferidoDeLaUrl();
-
-// Rutas públicas (/epk, /musicos) se cargan bajo demanda
-const PublicEPK = lazy(() => import('./components/PublicEPK'));
-const PublicMusiciansLanding = lazy(() => import('./components/PublicMusiciansLanding'));
-
-const LoadingFallback = () => (
-  <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: '9999px',
-        boxShadow: 'inset 0 0 0 3px rgba(var(--ink-rgb, 42, 46, 53), 0.15), inset 0 0 0 3px var(--acc)',
-        animation: 'spin 0.8s linear infinite',
-      }}
-    />
-    <style>{`
-  @keyframes spin { to { transform: rotate(360deg); } }
- `}</style>
-  </div>
-);
 
 // Rutas públicas accesibles sin autenticación
 const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
