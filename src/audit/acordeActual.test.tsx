@@ -7,7 +7,8 @@ const base = { contexto: new Map(), vista: 'guitarra' as const, onVista: () => {
 
 describe('AcordeActual', () => {
   it('sin acorde invita a darle al play; con acorde dibuja su diagrama y el siguiente', () => {
-    expect(renderToStaticMarkup(<AcordeActual sonando={null} {...base} />)).toContain('Dale al play');
+    expect(renderToStaticMarkup(<AcordeActual sonando={null} onToggle={() => {}} {...base} />)).toContain('Dale al play');
+    expect(renderToStaticMarkup(<AcordeActual sonando={null} {...base} />)).toContain('Con audio');
     const h = renderToStaticMarkup(<AcordeActual sonando="Am" siguiente="G" {...base} />);
     expect(h).toContain('Am');
     expect(h).toContain('Siguiente');

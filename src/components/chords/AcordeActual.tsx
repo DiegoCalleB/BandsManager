@@ -68,7 +68,7 @@ export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, co
             ))}
           </div>
         ) : (
-          <p className="text-xs font-sans text-[var(--ink-2)] flex-1">Dale al play o toca un acorde: aquí verás cómo se toca el que suena.</p>
+          <p className="text-xs font-sans text-[var(--ink-2)] flex-1">{onToggle ? 'Dale al play' : 'Con audio'}: aquí verás cómo se toca el acorde que suena.</p>
         )}
         <button
           type="button"

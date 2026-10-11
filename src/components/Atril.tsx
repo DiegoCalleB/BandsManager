@@ -779,7 +779,7 @@ export function Atril({
             {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
-                <div className="flex items-center gap-2 bg-[var(--acc)]/10 px-3 py-1 rounded-[var(--r-s)] w-full sm:w-auto">
+                <div className={`${audioUrl ? "flex" : "hidden"} items-center gap-2 bg-[var(--acc)]/10 px-3 py-1 rounded-[var(--r-s)] w-full sm:w-auto`}>
                   {audioUrl ? (
                     <>
                       <IconButton
@@ -810,11 +810,7 @@ export function Atril({
                         {formatAudioTime(audioDuration)}
                       </span>
                     </>
-                  ) : (
-                    <span className="text-micro text-[var(--ink-2)] italic">
-                      Sin audio
-                    </span>
-                  )}
+                  ) : null}
                 </div>
 
                 {modo === 'Ensayar' && (
@@ -1064,6 +1060,7 @@ export function Atril({
                   {/* THE CHORD SHEET DISPLAY */}
                   {armonia && (
                     <SelectorArmonia
+                      compacto
                       estilo={estiloArmonia}
                       onCambio={cambiarEstiloArmonia}
                       resumen={`${armonia.tonalidad.nombre.replace("m", " menor").replace(/^([A-G]#?)$/, "$1 mayor")} · ${armonia.modo.nombre}${armonia.tonalidadEstimada ? " (estimado)" : ""}`}
