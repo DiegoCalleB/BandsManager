@@ -79,6 +79,11 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/superficieUsersAiMusic.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -52,6 +52,7 @@ AI Music & Sound Studio: generación de pistas/jingles, separación de stems (Re
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/auditoriaSeguridadPR2.test.ts`
 - `server/routes/__tests__/roformerStems.test.ts`
+- `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 
 ---
 

@@ -34,6 +34,7 @@ Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, getUserFro
 - `server/__tests__/auth_bandas.test.ts`
 - `server/routes/__tests__/adminPassword.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
+- `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 - `server/routes/__tests__/usersCuentasSeguridad.test.ts`
 
 ---

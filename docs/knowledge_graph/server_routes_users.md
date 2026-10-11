@@ -55,6 +55,7 @@ Usuarios y autenticación: registro, login Google verificado, invitaciones de mi
 - `server/routes/__tests__/buildAvailableBandsForUser.test.ts`
 - `server/routes/__tests__/invitacionMiembros.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
+- `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 - `server/routes/__tests__/usersCuentasSeguridad.test.ts`
 
 ---
