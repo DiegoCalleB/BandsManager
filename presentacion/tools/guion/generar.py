@@ -89,7 +89,7 @@ P = {
 }
 
 
-ROLE = {'iago': 'bajo', 'brais': 'bateria', 'xandre': 'voz', 'alvaro': 'guitarra', 'manager': 'manager',
+ROLE = {'diego': 'diego', 'iago': 'bajo', 'brais': 'bateria', 'xandre': 'voz', 'alvaro': 'guitarra', 'manager': 'manager',
         'mop': 'voz_mop', 'claudio': 'ia_claude', 'guglio': 'ia_gemini', 'sello': 'sello'}
 
 
@@ -843,17 +843,17 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
 ''')
 
 # El reto: para Brais Moure de verdad (no el batería de la historia). Toca muy bien en casa; le falta el escenario. La pantalla la dirige direccion.py
-add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-transition="zoom">
+add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-vent-vivo="En directo · el portátil de Diego de la Calle, el bajista de verdad" data-transition="zoom">
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
-    {dlg(m('iago', 'Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.',
+    {dlg(m('diego', 'Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.',
            say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad.'),
-         m('iago', 'Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.',
+         m('diego', 'Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.',
            say='Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.'),
-         m('iago', 'Así que te hemos preparado el setlist del primer ensayo de la banda que estoy montando: metal, con letras de coña sobre programar.',
+         m('diego', 'Así que te hemos preparado el setlist del primer ensayo de la banda que estoy montando: metal, con letras de coña sobre programar.',
            say='Así que te hemos preparado el sétlist del primer ensayo de la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.'),
          m('alvaro', '¡Psychosocket! ¡Freak on a Branch! ¡Eso hay que tocarlo!', say='[excited] ¡Sáicosóket! ¡Frík on a Bránch! ¡Eso hay que tocarlo, tío!'),
          m('xandre', '¡Che, y Fear of the Deadline, que esa la cantamos todos!', say='[laughs] ¡Che, y Fíar of de Dédlain, que esa la cantamos todos!'),
-         m('iago', 'Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso y… enviado.',
+         m('diego', 'Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso y… enviado.',
            say='Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso, y… enviado.'))}
   </div>
   <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El setlist del primer ensayo de la banda de Diego, con la hoja de batería para Brais Moure"></div>
@@ -864,9 +864,9 @@ add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="E
 # La invitación: el correo llega a la bandeja de Brais. La voz de Diego, sin bromas. El cursor se queda sobre «Aceptar»: la decisión es suya
 add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" data-title="La invitación" data-vent-tab="Recibidos · Brais Moure" data-vent-url="correo" data-vent-vivo="Mientras tanto, en el portátil de Brais…" data-transition="fade">
   <div class="ft-copy"><span class="tag">Fin de la historia · La invitación</span><h2>Te guardamos el sitio.</h2>
-    {dlg(m('iago', 'Brais… yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] {bateria}… yo había dejado de tocar. Este máster me devolvió las ganas.'),
-         m('iago', 'Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.', say='[softly] Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.'),
-         m('iago', 'La batería es tuya. Solo tienes que decir que sí.', say='[softly] La batería es tuya. Solo tienes que decir que sí.'))}
+    {dlg(m('diego', 'Brais… yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] {bateria}… yo había dejado de tocar. Este máster me devolvió las ganas.'),
+         m('diego', 'Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.', say='[softly] Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.'),
+         m('diego', 'La batería es tuya. Solo tienes que decir que sí.', say='[softly] La batería es tuya. Solo tienes que decir que sí.'))}
   </div>
   <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El correo de Diego en la bandeja de Brais, con el botón para aceptar la invitación"></div>
 </section>

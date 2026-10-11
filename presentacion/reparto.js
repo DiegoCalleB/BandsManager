@@ -50,6 +50,10 @@
                 tts: { motor: 'elevenlabs', voz: 'OMWmRY8slGlr6mHJSqwy', estabilidad: 0.6 } },
     ia_gemini: { nombre: 'Guglio',  rol: 'Gemini',      cargo: 'Asistente de IA', foto: 'img/logo-gemini.svg', color: '#7fc0ff',
                 tts: { motor: 'elevenlabs', voz: 'XyPIlDiohfZSbL4jAB2e', estabilidad: 0.6 } },
+    // Diego de la Calle, el bajista de verdad (el giro: Iago era él). Habla él, no el personaje, en «El reto» y «La invitación»
+    diego:    { nombre: 'Diego', rol: 'bajo', cargo: 'El bajista de verdad', foto: 'img/diego-bajista.jpg', color: '#ffcf6b',
+                mov: 'calma',
+                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', estabilidad: 0.45 } },
     locutor:  { nombre: 'Rock FM', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
                 tts: { motor: 'elevenlabs', voz: '4L2A19qwD3pMcNlt484F', estabilidad: 0.3, efecto: 'radio' } },
   };

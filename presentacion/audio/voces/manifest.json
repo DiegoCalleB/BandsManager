@@ -1,13 +1,4 @@
 {
- "0168b168": {
-  "d": 6.26,
-  "e": "11158989958999841111101011366348731231000000000000137719989645788217610541117835411000000056343114310000000024444555233541000000000000000000000000000000000",
-  "f": "0168b168.mp3",
-  "h": "90fd4379",
-  "say": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti. El de verdad.",
-  "v": "4b763f84fab4",
-  "who": "bajo"
- },
  "02f0f657": {
   "d": 1.92,
   "e": "0165543110000000034650864443335582544329995210",
@@ -129,15 +120,6 @@
   "say": "[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería? ¡Ai, mi madriña!",
   "v": "bf82017f9dc9",
   "who": "bateria"
- },
- "0d2fc671": {
-  "d": 5.98,
-  "e": "111188778921575379118589991119547799981443331100001002356764552210000000000004455652794462711783158532211000001133552178443101323222210111000010011",
-  "f": "0d2fc671.mp3",
-  "h": "ce5fb9f2",
-  "say": "Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.",
-  "v": "2028b7a66ff1",
-  "who": "bajo"
  },
  "0db9cf2c": {
   "d": 2.86,
@@ -265,15 +247,6 @@
   "qa": 0.86,
   "say": "Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya suena bien.",
   "v": "9621e996cfd2",
-  "who": "bajo"
- },
- "1872e2ba": {
-  "d": 2.93,
-  "e": "21167862367952169887311212111111176941889511785223216411431100011101111",
-  "f": "1872e2ba.mp3",
-  "h": "d56322a1",
-  "say": "[softly] La batería es tuya. Solo tienes que decir que sí.",
-  "v": "4c416d10ed56",
   "who": "bajo"
  },
  "18aec830": {
@@ -544,6 +517,15 @@
   "v": "11e14207df0f",
   "who": "bajo"
  },
+ "43f2922a": {
+  "d": 6.1,
+  "e": "0111899951498414798861169129621145999389834645799951531111011211011378583149831889867753269899712421111111011011145683315877216668755421110001100110000",
+  "f": "43f2922a.mp3",
+  "h": "2bd71138",
+  "say": "[softly] Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.",
+  "v": "c0abd13934b7",
+  "who": "diego"
+ },
  "45cae31f": {
   "d": 4.7,
   "e": "0688521169998755420000014953569951158663277765255410000067115761194135101621595457641056444784993766541265666322210",
@@ -554,6 +536,15 @@
   "say": "[excited] ¡Por fin! ¡Del rojo al verde! ¡Esto hay que festejarlo arriba de un escenario!",
   "v": "e32ddb2c65b2",
   "who": "voz"
+ },
+ "48216b99": {
+  "d": 5.83,
+  "e": "111777678687318632799227983761353464211112456711895541111000000010014877799889556488111442288784531895113211244321001010110100010235458995740000",
+  "f": "48216b99.mp3",
+  "h": "cca3cd50",
+  "say": "Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso, y… enviado.",
+  "v": "117a7a523e7c",
+  "who": "diego"
  },
  "48866272": {
   "d": 3.79,
@@ -730,15 +721,6 @@
   "v": "ea635988fdb3",
   "who": "bateria"
  },
- "568a23e9": {
-  "d": 6.31,
-  "e": "111667569757914961389911779696125355531010013355116954311111000010024656689978945759951126311012667945510894003321000000001244443100101000002454477744210000",
-  "f": "568a23e9.mp3",
-  "h": "cf9f5d8b",
-  "say": "Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso, y… enviado.",
-  "v": "8ca2a1ae965b",
-  "who": "bajo"
- },
  "57b02ab3": {
   "d": 3.53,
   "e": "01110000000123678101542211110000000007684114243059466447755432126977999798532211000000",
@@ -826,6 +808,15 @@
   "say": "Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno. En una sola pantalla.",
   "v": "4f2da57015c8",
   "who": "bajo"
+ },
+ "5becdb2d": {
+  "d": 6.41,
+  "e": "025777763111111111111111101111111111011100110154499957999794114989876214313661111000101000000000001000000000002310579996111956876977863577763227643210000000000",
+  "f": "5becdb2d.mp3",
+  "h": "247afb13",
+  "say": "[softly] Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
+  "v": "2de8582f9f63",
+  "who": "diego"
  },
  "5dfb6df2": {
   "d": 7.01,
@@ -964,15 +955,6 @@
   "qa": 0.96,
   "say": "Los puntos dorados son las funciones clave, como el buquin o Iris. Cada una enlaza la pantalla, la ruta, el servicio, la tabla y el proveedor.",
   "v": "ac71b2bb49b9",
-  "who": "bajo"
- },
- "686a9c3d": {
-  "d": 6.82,
-  "e": "111548865311111111111111111111111111111111101229987998493137568786126114651111011010110111010000010000000000000031017999411485985774886698775325553210000000000000000000",
-  "f": "686a9c3d.mp3",
-  "h": "870d46a4",
-  "say": "[softly] Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
-  "v": "096e5439ca2f",
   "who": "bajo"
  },
  "6c038bec": {
@@ -1261,6 +1243,15 @@
   "v": "469563de96b0",
   "who": "bajo"
  },
+ "818af4ca": {
+  "d": 3.07,
+  "e": "023358784266898211398477311111111111111117895179962139941472127114642111111",
+  "f": "818af4ca.mp3",
+  "h": "17f078e9",
+  "say": "[softly] La batería es tuya. Solo tienes que decir que sí.",
+  "v": "a1316f4a9c9f",
+  "who": "diego"
+ },
  "8193675e": {
   "d": 6.14,
   "e": "01395145256612441993263345431111110113821463558998114451111971141159633548211311134111998412443451025410001110111131133149794115521453152126661331111011",
@@ -1359,15 +1350,6 @@
   "qa": 0.92,
   "say": "Y ahora, lo que viene: probarlo con una banda real. La nuestra.",
   "v": "39648cb37204",
-  "who": "bajo"
- },
- "8749aeda": {
-  "d": 6.22,
-  "e": "1111899962583147778414921761134899489446456666233110000000000000010167988218941586855675215665531121100000000000000002535643139644113345533110000000000000",
-  "f": "8749aeda.mp3",
-  "h": "7562a4e7",
-  "say": "[softly] Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.",
-  "v": "e1adbb0a6045",
   "who": "bajo"
  },
  "877dff53": {
@@ -1503,6 +1485,15 @@
   "v": "cc9d4b0f2ad7",
   "who": "bateria"
  },
+ "9b2b97b8": {
+  "d": 5.09,
+  "e": "00135569899559962100000016765446300210000000023671695975359841047200441002321110000000004533103410000000002432323225510000000",
+  "f": "9b2b97b8.mp3",
+  "h": "322935c7",
+  "say": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti. El de verdad.",
+  "v": "0b5645632144",
+  "who": "diego"
+ },
  "9c341935": {
   "d": 6.43,
   "e": "027458610000142161045665622830282089758359952000574200036599966653212455303532159830066410264159731969820155467776654442157285436953951000015311577116434587300",
@@ -1524,15 +1515,6 @@
   "say": "¿Y si el proyecto es el milagro, Iago?",
   "v": "fbb647670395",
   "who": "ia_claude"
- },
- "9f3b7f81": {
-  "d": 10.87,
-  "e": "123114195177741149238687995211881345412741255675541138649876674675463121116544442143222211100001000355108954310000000014511897561197321100164114436621135321100011469969666667467542100000114312699336994110000042114997332110000000000019999815973872396765237676237677666762",
-  "f": "9f3b7f81.mp3",
-  "h": "6955ee70",
-  "say": "Así que te hemos preparado el sétlist del primer ensayo de la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.",
-  "v": "dd4a62f4325e",
-  "who": "bajo"
  },
  "a0134e13": {
   "d": 4.68,
@@ -1952,6 +1934,15 @@
   "v": "212596e72b14",
   "who": "bateria"
  },
+ "cf4f8411": {
+  "d": 10.15,
+  "e": "142143492777611391198979751148124551167213567675311465996656565435212102433322133232210100003672499553100001013441599563169631001641114436511134310035663655455574564321003111467613666210002101399622211000000000059999848943931997773146786157766744543211",
+  "f": "cf4f8411.mp3",
+  "h": "60653dba",
+  "say": "Así que te hemos preparado el sétlist del primer ensayo de la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.",
+  "v": "f82ecda78dcb",
+  "who": "diego"
+ },
  "d0cfc052": {
   "d": 3.6,
   "e": "0017830295119920126543200005960268572797666311001000561174102500840269972445203443632110",
@@ -2268,6 +2259,15 @@
   "say": "[laughs] ¡Pero tío, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol. ¡Como una estrella del rock!",
   "v": "f1f5c4201a44",
   "who": "bateria"
+ },
+ "fd258ba1": {
+  "d": 6.17,
+  "e": "11026685583027537912979995112945689996143334210000000000003456664453211000000000000556453169353471594167753231000000134683179663114343223110000000000000",
+  "f": "fd258ba1.mp3",
+  "h": "30a8fbef",
+  "say": "Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.",
+  "v": "b3a3dd12e3f4",
+  "who": "diego"
  },
  "fda5e9c0": {
   "d": 9.67,
