@@ -229,8 +229,8 @@ add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
           m('iago', 'Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.'),
           m('brais', 'Pues yo dije Google Calendar.'),
           m('iago', 'Eso también. Ya llegamos.'),
-          m('iago', 'Y en el mapa ves dónde está cada sala y cada festival.', say='Y mirad el mapa, chavales: cada sala y cada festival, en su sitio. Le das, y se abre su ficha.')],
-         shot_vid('video/v-mapa.mp4', 'video/v-mapa.jpg')))
+          m('iago', 'Y todas, en el mapa, por toda la península.', cls='sync', say='Y todas, en el mapa. Por toda la península.')],
+         shot_vid_sync('video/v-mapa-peninsula.mp4', 'img/d-h-booking.jpg')))
 
 add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
          [m('alvaro', '¡Me ha escrito a tres salas mientras hablábamos!'),
@@ -367,6 +367,14 @@ add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
           m('iago', 'Espera, espera, que esto es solo el principio. ¡Vais a flipar!')],
          shot_vid('video/atril.mp4', 'img/atril-poster.jpg'), grupo='musica'))
 
+add(feat('El profesor de armonía', TAG2, 'El profesor de armonía.',
+         [m('alvaro', '¿Y si no sé qué escala tocar encima?', say='[curious] ¿Y si no sé qué escala tocar encima de los acordes?'),
+          m('iago', 'Para eso está el profesor de armonía: lee los acordes de la canción y te explica cómo funciona.', say='Para eso está el profesor de armonía. Lee los acordes de la canción, y te explica cómo funciona.'),
+          m('iago', 'Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar y cómo componer encima.', say='Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar. Y cómo componer encima.'),
+          m('alvaro', '¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!', say='[amazed] ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!'),
+          m('iago', 'Eso sí: lo marca como idea. Los datos los calcula el código; la IA solo los explica.', say='Eso sí: lo marca como idea. Los datos los calcula el código. La inteligencia artificial solo los explica.')],
+         shot_vid('video/v-profesor.mp4', 'video/v-profesor.jpg'), grupo='musica'))
+
 add(feat('Iris separa los instrumentos', TAG2, 'Cada instrumento, por separado.',
          [m('iago', 'Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.'),
           m('xandre', '¡Mi voz sola! ¡Nunca me había oído así!'),
@@ -387,6 +395,13 @@ add(feat('Calendario de la banda', TAG2, 'Ensayos y bolos, en un calendario.',
           m('iago', 'Casi, Brais. Aquí están los ensayos y los bolos, y cada fecha tiene su ficha con la meteo y el aviso de puente o festivo.'),
           m('xandre', '¡Por fin sé cuándo ensayamos y cuándo tocamos!')],
          shot_img('img/d-h-calendario.jpg'), grupo='musica'))
+
+add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.',
+         [m('brais', '¿Y si me cuadran dos ensayos a la vez, uno con cada banda?', say='[worried] Oye… ¿y si me cuadran dos ensayos a la vez? Uno con cada banda.'),
+          m('iago', 'El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', cls='sync', say='El calendario te avisa. Si dos eventos se pisan, si no da tiempo de llegar de un sitio a otro, o si vas justo para montar.'),
+          m('brais', '¡Ai, mi madriña! ¡Me ha salvado el miércoles!', say='[amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles!'),
+          m('iago', 'Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.', say='Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.')],
+         shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
 
 # ───────── Capítulo 3 · Que te conozcan ─────────
 add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 6 · Que te conozcan', 'Que nos conozcan.',
