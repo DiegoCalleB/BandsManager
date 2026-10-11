@@ -22,9 +22,11 @@ export function EnsayoCronometro({
   const [isActive, setIsActive] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
-  useEffect(() => {
+  const [prevInitialElapsed, setPrevInitialElapsed] = useState(initialElapsedSeg);
+  if (prevInitialElapsed !== initialElapsedSeg) {
+    setPrevInitialElapsed(initialElapsedSeg);
     setSeconds(initialElapsedSeg);
-  }, [initialElapsedSeg]);
+  }
 
   useEffect(() => {
     if (isActive) {

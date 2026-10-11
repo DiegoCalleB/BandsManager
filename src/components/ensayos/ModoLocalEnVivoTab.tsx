@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useEffectEvent, useRef, useMemo } from "react";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
 import { useAutoScroll } from "../../hooks/useAutoScroll";
 import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
@@ -143,31 +143,32 @@ export function ModoLocalEnVivoTab({
   };
 
   // Keyboard navigation (pedals, arrows, space)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
-        return;
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
+      return;
 
-      const accion = accionDeTecla(e.key);
-      if (accion === "adelante") {
-        if (activeIndex < agenda.length - 1) {
-          e.preventDefault();
-          irSiguiente();
-        }
-      } else if (accion === "atras") {
-        if (activeIndex > 0) {
-          e.preventDefault();
-          irAnterior();
-        }
-      } else if (accion === "espacio" && viewMode === "atril") {
+    const accion = accionDeTecla(e.key);
+    if (accion === "adelante") {
+      if (activeIndex < agenda.length - 1) {
         e.preventDefault();
-        autoScroll.alternar();
+        irSiguiente();
       }
-    };
+    } else if (accion === "atras") {
+      if (activeIndex > 0) {
+        e.preventDefault();
+        irAnterior();
+      }
+    } else if (accion === "espacio" && viewMode === "atril") {
+      e.preventDefault();
+      autoScroll.alternar();
+    }
+  });
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, agenda.length, viewMode]);
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => handleKeyDown(e);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   // Font sizes classes for Atril mode
   const FONT_SIZE_CLASSES = [
@@ -181,10 +182,13 @@ export function ModoLocalEnVivoTab({
   useWakeLock(isFullscreen || isTrackTimerActive);
 
   // Al cambiar de pista se reinicia la transposición y se para el autoscroll
-  useEffect(() => {
+  const claveDePista = `${activeIndex}|${currentSong?.bpm}`;
+  const [prevClaveDePista, setPrevClaveDePista] = useState(claveDePista);
+  if (prevClaveDePista !== claveDePista) {
+    setPrevClaveDePista(claveDePista);
     setTranspose(0);
     autoScroll.setActivo(false);
-  }, [activeIndex, currentSong?.bpm]);
+  }
 
   // Current chord text
   // Sin cifrado guardado se muestra vacío: antes caía en una letra

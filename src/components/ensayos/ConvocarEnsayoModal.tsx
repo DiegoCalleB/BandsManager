@@ -26,7 +26,7 @@ export function ConvocarEnsayoModal({
 }: ConvocarEnsayoModalProps) {
   const isEditing = Boolean(initialRehearsal);
 
-  const [fecha, setFecha] = useState(initialRehearsal?.fecha || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]);
+  const [fecha, setFecha] = useState(() => initialRehearsal?.fecha || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]);
   const [hora, setHora] = useState(initialRehearsal?.hora || '19:30');
   const [horaFin, setHoraFin] = useState(initialRehearsal?.horaFin || '21:30');
   const [lugar, setLugar] = useState(initialRehearsal?.lugar || 'Local de Ensayo');

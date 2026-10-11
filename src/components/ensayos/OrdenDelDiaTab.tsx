@@ -76,6 +76,10 @@ if (TRANSPARENT_DRAG_IMAGE) {
     "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBTAA7";
 }
 
+/** Id único de un ítem de agenda (a nivel de módulo: solo se invoca desde handlers). */
+const idAgenda = (clave: string, aleatorio = false) =>
+  `ag-${clave}-${Date.now()}${aleatorio ? `-${Math.random().toString(36).substring(2, 5)}` : ""}`;
+
 export function OrdenDelDiaTab({
   rehearsal,
   onUpdateRehearsal,
@@ -83,7 +87,7 @@ export function OrdenDelDiaTab({
   setlists = [],
   onGoToLiveMode
 }: OrdenDelDiaTabProps) {
-  const agenda = rehearsal.agenda || [];
+  const agenda = useMemo(() => rehearsal.agenda || [], [rehearsal.agenda]);
   const objetivos = rehearsal.objetivos || [];
 
   // Modales
@@ -328,7 +332,7 @@ export function OrdenDelDiaTab({
 
     if (replace || agenda.length === 0) {
       items.push({
-        id: `ag-warmup-${Date.now()}`,
+        id: idAgenda('warmup'),
         tipo: "calentamiento",
         titulo: "Calentamiento & Prueba de Sonido",
         duracionEstimadaMin: 15,
@@ -340,7 +344,7 @@ export function OrdenDelDiaTab({
       if (it.tipoItem === "cancion" || it.songId) {
         const s = songs.find((x) => x.id === it.songId);
         items.push({
-          id: `ag-st-${idx}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+          id: idAgenda(`st-${idx}`, true),
           tipo: "cancion",
           titulo: s?.titulo || it.tituloCustom || "Canción",
           songId: it.songId,
@@ -352,7 +356,7 @@ export function OrdenDelDiaTab({
         });
       } else {
         items.push({
-          id: `ag-pausa-${idx}-${Date.now()}`,
+          id: idAgenda(`pausa-${idx}`),
           tipo: "pausa",
           titulo: it.tituloCustom || "Pausa / Intermedio",
           duracionEstimadaMin: 10,
@@ -362,7 +366,7 @@ export function OrdenDelDiaTab({
 
     if (replace || agenda.length === 0) {
       items.push({
-        id: `ag-outro-${Date.now()}`,
+        id: idAgenda('outro'),
         tipo: "outro",
         titulo: "Repaso Final & Valoración",
         duracionEstimadaMin: 10,
