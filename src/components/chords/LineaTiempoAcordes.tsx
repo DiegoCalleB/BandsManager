@@ -53,6 +53,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
+  const [detalles, setDetalles] = useState(false);
   const [modoBucle, setModoBucle] = useState<ModoBucle>('off');
   const [inicioBucle, setInicioBucle] = useState<number | null>(null);
   const [bucle, setBucle] = useState<RangoBucle | null>(null);
@@ -209,11 +210,11 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           </button>
           <button
             type="button"
-            onClick={() => (corregidos > 0 ? setConfirmarReanalisis(true) : onReanalizar())}
-            disabled={isAnalyzing}
-            className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
+            onClick={() => setDetalles((v) => !v)}
+            aria-expanded={detalles}
+            className={`cursor-pointer ${detalles ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
           >
-            {isAnalyzing ? 'Analizando…' : 'Reanalizar'}
+            Detalles
           </button>
           <button type="button" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">
             <X className="w-4 h-4" />
@@ -221,8 +222,8 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         </span>
       </div>
 
-      {/* Ahora (aro con cuenta atrás) / siguiente */}
-      {(() => {
+      {/* Ahora (aro con cuenta atrás) / siguiente: detalle, el resumen vive en la barra fija */}
+      {detalles && (() => {
         const tramo = actual >= 0 ? segmentos[actual] : null;
         const { progreso, restante } = tramo ? progresoDeTramo(tramo.t0, tramo.t1, tiempo) : { progreso: 0, restante: 0 };
         const sigue = siguiente >= 0 ? segmentos[siguiente] : null;
@@ -273,7 +274,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         );
       })()}
 
-      {cuadricula && (
+      {detalles && cuadricula && (
         <RegletaCompases cuadricula={cuadricula} posicion={posicion} nombre={nombre} seguir={isPlaying} onIr={(t) => ir(t)} />
       )}
 
@@ -284,7 +285,11 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {/* Estado de la fusión con el cifrado escrito */}
+      {detalles && (
       <div className="flex flex-wrap items-center gap-2 text-micro text-[var(--ink-2)]">
+        <button type="button" onClick={() => (corregidos > 0 ? setConfirmarReanalisis(true) : onReanalizar())} disabled={isAnalyzing} className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer font-bold">
+          {isAnalyzing ? 'Analizando…' : 'Reanalizar'}
+        </button>
         {sincronizacion === null ? (
           <span>El cifrado no tiene acordes entre corchetes [Am] que sincronizar con el audio.</span>
         ) : sincronizacion.usable ? (
@@ -309,6 +314,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           </span>
         )}
       </div>
+      )}
 
       {confirmarReanalisis && (
         <div className="flex flex-wrap items-center gap-2 p-2 rounded-[var(--r-s)] bg-[var(--acc-soft)] text-[var(--ink)]">
@@ -386,7 +392,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
               i === actual
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]'
                 : seg.acorde === 'N'
-                  ? 'bg-transparent text-[var(--ink-2)] border border-dashed border-[var(--hair)]'
+                  ? 'bg-transparent text-[var(--ink-3)] opacity-60'
                   : i === siguiente
                     ? `${claseReposo(i)} ring-1 ring-[var(--acc)]`
                     : seg.confianza < 0.4
@@ -395,7 +401,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             } ${enBucle(i) || editando === i ? 'outline outline-2 outline-[var(--ok)]' : ''} ${inicioBucle === i && modoBucle === 'elegirFin' ? 'outline outline-2 outline-[var(--ok)]' : ''}`}
           >
             <span className="block text-micro opacity-70">{formatearTiempo(seg.t0)}</span>
-            <span className="block font-bold font-mono">
+            <span className="block font-bold">
               {(() => {
                 const t = textoDeAcorde(nombre(seg.acorde), (armonia?.porTramo[i]?.grado ? gradoVisible(armonia.porTramo[i].grado, estilo) : undefined), estilo?.mostrar ?? 'nombre');
                 return <>{t.principal}{t.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{t.secundario}</sup>}{seg.editado ? '*' : ''}</>;
@@ -404,9 +410,9 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           </button>
         ))}
       </div>
-      <p className="text-micro text-[var(--ink-2)]">
+      {detalles && <p className="text-micro text-[var(--ink-2)]">
         Detección automática (75-85 % en triadas): revísala de oído. «—» = sin acorde claro; tenue = poco fiable. Toca un tramo para saltar a él.
-      </p>
+      </p>}
     </div>
   );
 };

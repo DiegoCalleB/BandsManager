@@ -83,7 +83,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
             {tonicaNombre}{tonalidad.menor ? ' menor' : ' mayor'} · {modo.nombre}
           </div>
           <p className="text-[var(--ink-2)]">{modo.rasgo}.</p>
-          {armonia.tonalidadEstimada && (
+          {ext && armonia.tonalidadEstimada && (
             <p className="text-xs text-[var(--ink-2)] mt-1">Tonalidad deducida de los acordes: si la ficha de la canción tiene otra, anótala y el análisis la usará.</p>
           )}
         </div>
@@ -94,8 +94,8 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
             <span>Cambia de tono: {analisis.tonalidades.map((t) => acorde(t.tonalidad)).join(' → ')}</span>
           )}
         </div>
-        {/* Reparto de funciones */}
-        <div>
+        {/* Reparto de funciones: detalle, solo en la explicación extendida */}
+        {ext && <div>
           <div className="flex h-7 rounded-[var(--r-pill)] overflow-hidden" role="img" aria-label="Reparto del tiempo por función armónica">
             {ORDEN.filter((f) => armonia.funciones[f] > 0.005).map((f) => (
               <span
@@ -115,7 +115,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
               <span key={f}><b className="font-bold text-[var(--ink)]">{LETRA_FUNCION[f]}</b> {NOMBRE_FUNCION[f]}</span>
             ))}
           </div>
-        </div>
+        </div>}
         {armonia.bucle && (
           <p className="text-[var(--ink)]">
             Bucle de la canción: <b className="font-bold">{armonia.bucle.grados.map(grado).join(' – ')}</b>
@@ -130,10 +130,10 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
       </section>
 
       {/* 2. Mapa de la canción (bloques) */}
-      {bloques.length > 0 && (
+      {ext && bloques.length > 0 && (
         <section className="space-y-2" aria-label="Mapa de la canción">
           <h3 className="font-bold text-[var(--ink)]">Mapa de la canción</h3>
-          {ext && <p className="text-xs text-[var(--ink-2)]">Los bloques con la misma progresión comparten letra: es lo que se repite de verdad, no una estructura inventada.</p>}
+          <p className="text-xs text-[var(--ink-2)]">Los bloques con la misma progresión comparten letra: es lo que se repite de verdad, no una estructura inventada.</p>
           <div className="grid gap-2 sm:grid-cols-2">
             {bloques.map((b) => (
               <div key={b.letra} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3">
