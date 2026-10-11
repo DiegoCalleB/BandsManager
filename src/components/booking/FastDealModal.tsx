@@ -26,6 +26,9 @@ interface FastDealModalProps {
   onDealConfirmed?: () => void;
 }
 
+/** Fecha de evento sugerida: dentro de un mes. */
+const fechaPorDefecto = () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
 export const FastDealModal: React.FC<FastDealModalProps> = ({
   isOpen,
   onClose,
@@ -62,21 +65,25 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
   const [copiedOfficial, setCopiedOfficial] = useState(false);
   const [copiedAiStudio, setCopiedAiStudio] = useState(false);
 
+  // Al abrir (o cambiar de lead) se vuelve a los valores por defecto. Se ajusta en el propio render
+  // —patrón de React— y no en un efecto; la consulta del acuerdo existente sigue en el efecto.
+  const sesion = isOpen && lead ? lead.id : null;
+  const [sesionPrevia, setSesionPrevia] = useState<string | null>(null);
+  if (sesion !== sesionPrevia) {
+    setSesionPrevia(sesion);
+    if (sesion && lead) {
+      setErrorMsg(null);
+      setCopiedOfficial(false);
+      setCopiedAiStudio(false);
+      setFechaEvento(lead.fecha_envio?.slice(0, 10) || fechaPorDefecto());
+      setCacheBase(lead.cache_habitual || 500);
+    }
+  }
+
   // Pre-fill when opening
   useEffect(() => {
     if (!isOpen || !lead) return;
-
-    setErrorMsg(null);
-    setCopiedOfficial(false);
-    setCopiedAiStudio(false);
-
-    // Initial date pre-fill: next month or from lead notes/context
-    const today = new Date();
-    const futureDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const defaultDateStr = futureDate.toISOString().slice(0, 10);
-
-    setFechaEvento(lead.fecha_envio?.slice(0, 10) || defaultDateStr);
-    setCacheBase(lead.cache_habitual || 500);
+    const defaultDateStr = fechaPorDefecto();
 
     // Fetch existing deal if any
     const fetchExistingDeal = async () => {

@@ -31,10 +31,12 @@ export function ShareModal({
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Sync state if initialText changes while modal opens
-  React.useEffect(() => {
+  const [textoInicialPrevio, setTextoInicialPrevio] = useState(initialText);
+  if (initialText !== textoInicialPrevio) {
+    setTextoInicialPrevio(initialText);
     setText(initialText);
     setCopied(false);
-  }, [initialText]);
+  }
 
   if (!isOpen) return null;
 

@@ -36,7 +36,10 @@ export function ExampleThreadsSection({
   category
 }: ExampleThreadsSectionProps) {
   const [threads, setThreads] = useState<ExampleThread[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // Categoría cuyos hilos ya llegaron: mientras no coincida con la actual, se está cargando.
+  const [cargadaCategoria, setCargadaCategoria] = useState<string | null>(null);
+  const [recargando, setRecargando] = useState(false);
+  const isLoading = recargando || cargadaCategoria !== category;
   const [isSaving, setIsSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -50,25 +53,31 @@ export function ExampleThreadsSection({
   ]);
   const [error, setError] = useState<string | null>(null);
 
-  const loadThreads = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await apiFetch(
-        `/api/example-threads?category=${encodeURIComponent(category)}`,
-      );
-      if (res.success) setThreads(res.threads || []);
-    } catch (err) {
-      console.warn("No se pudieron cargar los hilos de ejemplo:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [category]);
-
-  useEffect(() => {
-    loadThreads();
+  // Al cambiar de categoría se cierra el formulario y se limpia el error (ajuste en render).
+  const [categoriaPrevia, setCategoriaPrevia] = useState(category);
+  if (category !== categoriaPrevia) {
+    setCategoriaPrevia(category);
     setShowForm(false);
     setError(null);
-  }, [loadThreads]);
+  }
+
+  const pedirHilos = useCallback(
+    () => apiFetch(`/api/example-threads?category=${encodeURIComponent(category)}`)
+      .then((res) => { if (res.success) setThreads(res.threads || []); })
+      .catch((err) => { console.warn("No se pudieron cargar los hilos de ejemplo:", err); })
+      .finally(() => { setCargadaCategoria(category); setRecargando(false); }),
+    [category],
+  );
+
+  /** Recarga la lista (tras guardar o borrar un hilo). */
+  const loadThreads = useCallback(async () => {
+    setRecargando(true);
+    await pedirHilos();
+  }, [pedirHilos]);
+
+  useEffect(() => {
+    void pedirHilos();
+  }, [pedirHilos]);
 
   const resetForm = () => {
     setEditingId(null);

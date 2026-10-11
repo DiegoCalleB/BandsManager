@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Lead } from '../../types';
 import { Camera } from 'lucide-react';
 
@@ -11,11 +11,10 @@ interface LeadAvatarProps {
 }
 
 export const LeadAvatar: React.FC<LeadAvatarProps> = ({ lead, size = 'sm', onClick, showCameraHover = true, className = '' }) => {
-  const [imgError, setImgError] = useState(false);
-
-  useEffect(() => {
-    setImgError(false);
-  }, [lead.id, lead.imagen_url]);
+  // La imagen que falló se recuerda por lead+url: al cambiar cualquiera de los dos vuelve a intentarse.
+  const claveImagen = `${lead.id}|${lead.imagen_url ?? ''}`;
+  const [claveFallida, setClaveFallida] = useState<string | null>(null);
+  const imgError = claveFallida === claveImagen;
 
   // Clean raw image URL: convert icon.horse URLs to Google Favicon API
   let imgUrl: string | null = lead.imagen_url && lead.imagen_url.trim() !== '' ? lead.imagen_url : null;
@@ -86,7 +85,7 @@ export const LeadAvatar: React.FC<LeadAvatarProps> = ({ lead, size = 'sm', onCli
           src={imgUrl}
           alt={lead.nombre_sala || 'Logo'}
           className={`${imgSize} object-contain bg-[var(--bg)]/90 shrink-0 transition-opacity group-hover/avatar:opacity-60`}
-          onError={() => setImgError(true)}
+          onError={() => setClaveFallida(claveImagen)}
         />
       ) : (
         <div

@@ -23,17 +23,18 @@ export const AlbumCover: React.FC<AlbumCoverProps> = ({
   showPlayButton = false,
   className = ''
 }) => {
-  const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
   const targetUrl = url || coverUrl || '';
+  // Se guarda para qué URL se resolvió: si cambia la portada, la anterior deja de valer sin efecto de reseteo.
+  const [resuelta, setResuelta] = useState<{ para: string; url: string | null }>({ para: '', url: null });
+  const resolvedUrl = targetUrl && resuelta.para === targetUrl ? resuelta.url : null;
 
   useEffect(() => {
-    if (targetUrl) {
-      resolveAudioUrl(targetUrl)
-        .then((res) => setResolvedUrl(res))
-        .catch(() => setResolvedUrl(null));
-    } else {
-      setResolvedUrl(null);
-    }
+    if (!targetUrl) return;
+    let vivo = true;
+    resolveAudioUrl(targetUrl)
+      .then((res) => { if (vivo) setResuelta({ para: targetUrl, url: res }); })
+      .catch(() => { if (vivo) setResuelta({ para: targetUrl, url: null }); });
+    return () => { vivo = false; };
   }, [targetUrl]);
 
   return (

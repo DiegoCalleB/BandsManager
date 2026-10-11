@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, MessageCircle, Copy, Check, ExternalLink, Smartphone, Calendar, BookOpen, AlertTriangle, RotateCcw } from 'lucide-react';
 import { Lead } from '../../types';
 import {
@@ -43,17 +43,19 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
   // Fechas libres disponibles del radar
   const detectedDates = lead.fechas_libres_detectadas || [];
 
-  useEffect(() => {
-    if (isOpen && lead) {
-      const bestPhone = lead.telefono_movil || lead.telefono || lead.telefono_fijo || '';
-      setTargetPhone(bestPhone);
-      const initialMsg = formatLeadPitchForWhatsApp(lead, bandName, detectedDates);
-      setMessage(initialMsg);
+  // Al abrir (o cambiar de lead) se recalcula teléfono y mensaje; ajuste en render, sin efecto.
+  const sesion = isOpen && lead ? lead.id : null;
+  const [sesionPrevia, setSesionPrevia] = useState<string | null>(null);
+  if (sesion !== sesionPrevia) {
+    setSesionPrevia(sesion);
+    if (sesion) {
+      setTargetPhone(lead.telefono_movil || lead.telefono || lead.telefono_fijo || '');
+      setMessage(formatLeadPitchForWhatsApp(lead, bandName, detectedDates));
       setCopied(false);
       setInteractionLogged(false);
       setIsEditingPhone(false);
     }
-  }, [isOpen, lead.id]);
+  }
 
   if (!isOpen) return null;
 
