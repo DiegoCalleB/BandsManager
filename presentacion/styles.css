@@ -1220,16 +1220,16 @@ body.pelicula:not(.scroll) .bs-grid span, body.pelicula:not(.scroll) .slide.bigs
 .nx-top { position: absolute; top: 44px; left: 64px; right: 64px; display: flex; align-items: baseline; gap: 14px; z-index: 2; }
 .nx-logo { font: 400 46px/1 Anton, Oswald, Impact, sans-serif; color: #e50914; letter-spacing: .06em; }
 .nx-orig { font: 600 18px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .5em; color: rgba(255,255,255,.75); }
-.nx-hero { position: relative; z-index: 2; padding: 0 64px 90px; max-width: 980px; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
+.nx-hero { position: relative; z-index: 2; padding: 0 64px min(90px, 7vh); max-width: 1120px; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
 .nx-sello { font-size: 20px; letter-spacing: .32em; font-weight: 700; color: rgba(255,255,255,.8); display: flex; align-items: center; gap: 12px; }
 .nx-sello i { font: 400 34px/1 Anton, Impact, sans-serif; color: #e50914; font-style: normal; letter-spacing: 0; }
-.nx-titulo { font: 400 clamp(64px, 11vw, 180px)/.92 Anton, Oswald, Impact, sans-serif; letter-spacing: .01em; margin: 16px 0 18px; text-transform: uppercase; text-shadow: 0 8px 40px rgba(0,0,0,.7); }
+.nx-titulo { font: 400 clamp(56px, min(11vw, 13vh), 180px)/.92 Anton, Oswald, Impact, sans-serif; letter-spacing: .01em; margin: 16px 0 18px; text-transform: uppercase; text-shadow: 0 8px 40px rgba(0,0,0,.7); }
 .nx-meta { display: flex; align-items: center; gap: 16px; font-size: 22px; color: rgba(255,255,255,.85); font-weight: 600; flex-wrap: wrap; }
 .nx-meta span { display: inline-block; }
 .nx-edad { border: 1px solid rgba(255,255,255,.7); padding: 0 8px; font-size: 18px; }
 .nx-cc { border: 1px solid rgba(255,255,255,.7); padding: 0 6px; font-size: 16px; border-radius: 3px; }
 .nx-gen { font-size: 22px; margin: 14px 0 0; color: #fff; font-weight: 600; }
-.nx-sin { font-size: 24px; line-height: 1.45; margin: 14px 0 0; max-width: 780px; color: rgba(255,255,255,.88); text-shadow: 0 2px 12px #000; }
+.nx-sin { font-size: min(24px, 3vh); line-height: 1.45; margin: 14px 0 0; max-width: 780px; color: rgba(255,255,255,.88); text-shadow: 0 2px 12px #000; }
 #gate .gate-btns { justify-content: flex-start; margin-top: 28px; }
 #gate .gate-btn { font-weight: 700; border-radius: 6px; padding: 16px 30px; background: rgba(109,109,110,.7); border: 0; color: #fff; }
 #gate .gate-btn.primary, #gatePeli { background: #fff; color: #000; font-size: 26px; padding: 16px 44px; box-shadow: none; }
@@ -1544,3 +1544,12 @@ body.pelicula:not(.scroll) .vent-vivo i { background: #3d8bff; animation: none; 
 body.pelicula.compartiendo:not(.scroll) .slide.feat > .ft-shot:not(.phone):not(.alto) { left: 170px; right: 170px; }
 body.pelicula.compartiendo:not(.scroll) .slide.feat.active > .ft-shot:not(.phone):not(.alto) { animation-name: subetele; }
 @keyframes subetele { to { translate: 0 -120px; scale: 1.03; } }
+
+/* Película completa: los créditos sin los bloques que ya cuenta el capítulo 5 (en la presentación salen enteros) */
+body.pelicula .cr-extra { display: none; }
+body.pelicula:not(.corte) .slide.creditos.active .rollo { animation-duration: 48s; }
+/* Pantalla de entrada en pantallas bajas (proyectores de 1280x720 o 1366x768): todo un poco más pequeño para que no pise la cabecera */
+@media (max-height: 800px) and (min-width: 801px) {
+  .nx-top { top: 28px; } .nx-logo { font-size: 36px; } .nx-sello { font-size: 16px; } .nx-meta, .nx-gen { font-size: 18px; }
+  #gate .gate-btns { margin-top: 20px; } #gate .gate-btn { font-size: 18px; padding: 12px 24px; } #gate .gate-btn.primary, #gatePeli { font-size: 21px; padding: 12px 34px; }
+}

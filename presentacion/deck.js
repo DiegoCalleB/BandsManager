@@ -218,12 +218,14 @@
   let delayedVideoTimer = 0;
   // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
   let pelicula = false, pelTimer = 0;
-  const durPelicula = (s) => +((corte && s.dataset.durCorto) || s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
+  const durPelicula = (s) => +((corte && s.dataset.durCorto) || (pelicula && s.dataset.durPeli) || s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
   let pausado = false; // reproductor de cine.js: pausa la película sin salir de ella
   // Corte de 5 minutos: las diapositivas con data-corto forman una lista más corta (?corte o el botón de la entrada)
   let corte = new URLSearchParams(location.search).has('corte');
   const idxCorte = slides.map((s, i) => (s.hasAttribute('data-corto') ? i : -1)).filter((i) => i >= 0);
-  const lista = () => (corte && idxCorte.length ? idxCorte : slides.map((_, i) => i));
+  // El anexo (data-anexo) va al final de la presentación, para las preguntas: la película se lo salta
+  const idxPeli = slides.map((s, i) => (s.hasAttribute('data-anexo') ? -1 : i)).filter((i) => i >= 0);
+  const lista = () => (corte && idxCorte.length ? idxCorte : pelicula ? idxPeli : slides.map((_, i) => i));
   const proximo = (i) => { const k = lista().find((x) => x > i); return k === undefined ? null : k; };
   const anterior = (i) => { const l = lista().filter((x) => x < i); return l.length ? l[l.length - 1] : null; };
   // ───────── Línea de tiempo (reproductor de cine.js): duración estimada de cada escena, posición y saltos ─────────

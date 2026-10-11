@@ -34,8 +34,6 @@ SAY = [
  ('Cada correo suena a nosotros', 'Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.'),
  ('¿Y si se le va la mano', '¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.'),
  ('Por eso nada sale sin mi visto bueno', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
- ('O sea, que tú solo aprietas el botón', 'O sea que vos solo apretás el botón. Como el de un pedal.'),
- ('Y presumo', 'Y presumo, que pa eso soy de San Blas. En el rocanrol, presumir es medio trabajo.'),
  # Cap. 1 · Date Swap
  ('Propongo a otra banda cambiar fecha', 'Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.'),
  ('Os leo. Me encanta', 'Os leo, Herdeiros. Me encanta: nosotros en Vigo, y vosotros en Santiago. ¡Cartel doble, colegas! ¡Esto es rocanrol!'),
@@ -63,8 +61,6 @@ SAY = [
  ('Imprimo el setlist', 'Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes.'),
  ('¡Mi hoja! ¡Con mis notas', '[excited] ¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio, carallo!'),
  ('Y yo con el tono de cada tema', 'Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.'),
- ('¿Y hay temas sin tono ni BPM?', '¿Y hay temas sin tono ni be pe eme? Porque algunos yo los toco a sentimiento.'),
- ('Cada uno elige qué ve', 'Cada uno elige qué ve: el tono o el be pe eme, solo en los temas donde lo quiere. Y hasta los bloques, como el saludo a Vilaxoán.'),
  # Cap. 2 · acordes
  ('Dale al play, ', 'Dale al play, {guitarra}. Los acordes y la letra van siguiendo la canción solos.'),
  ('¡Pero tío! ¡Te has copiado de Ultimate Guitar!', '¡Pero tío! ¡Te has copiado de Últimeit Guitar! ¡Pellízcame! ¡Esto no puede ser real! ¡Esto es mejor que un solo de Eslash!'),
@@ -100,8 +96,6 @@ SAY = [
  ('¡Oye!', '[laughs nervously] ¡Oye! ¡Que fue solo una vez! Bueno, dos. ¡Pero eran de importación!'),
  # Lo han visto todo
  ('¡¿Pero cuándo has hecho esto?!', 'Pero, {bajo}, ¿cuándo has hecho todo esto? ¡Si tienes curro y dos hijas!'),
- ('¡Pero si tú nunca has programado', '[amazed] ¡Pero si tú nunca has programado nada que no fuera para tu curro de promociones de coches!'),
- ('Solo un juego de scroll challenge', '[sighs] Bueno, y un juego de scrol chálench, que murió antes de llegar a la Pley Stor. Descanse en paz.'),
  ('¡Eres un genio, ', '[gasps] ¡Sos un genio, {bajo}! ¡El bajista! ¡El que nadie mira, boludo!'),
  ('Por las noches, con ', 'Por las noches, con {ia_claude} y {ia_gemini}. Y mucho café. Muchísimo café.'),
  # Esto lo necesitan todos
@@ -153,9 +147,6 @@ SAY = [
  ('Y se ejecutan solos', 'Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.'),
  # Cap. 6 · lo que viene
  ('Y ahora, lo que viene', 'Y ahora, lo que viene: probarlo con una banda real. La nuestra.'),
- ('¡Claro que sí! Lo probamos', '¡Claro que sí! Lo probamos, lo mejoramos, y en cuanto termines el máster de Marketing Digital, ¡gira mundial!'),
- ('¡Y dile que te busque salas en Vigo', '[excited] ¡Y decile que te busque salas en Vigo, que quiero tocar allí en las fiestas! ¡Con fuegos artificiales!'),
- ('Hecho. Y con la lista de pendientes', 'Hecho. Y con la lista de pendientes que tengo, no me aburro: el cobro, los vídeos de los fans, el Traicaunt de las giras.'),
  # Festival
  ('Cinco minutos, chicos', 'Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Agua, toallas, y las birras frías.'),
  ('¿Tengo el tono de la primera?', '¿Cuál era el tono de la primera? Que con los nervios me olvido hasta de mi nombre, che.'),
@@ -172,7 +163,6 @@ ACT_SAY = {
  '¡Y ahora, que nos conozca': 'Y ahora, ¡que nos conozca más gente!',
  'Lo último.': 'Lo último. Y creo que es lo que más os va a sorprender.',
  'Vamos por partes': 'Vamos por partes. Os cuento la estrategia.',
- 'Vale, pero': 'Vale, pero, ¿y por dentro cómo funciona este monstruo?',
 }
 # Frases fuera de los chats: reparto, Excel, sala de ensayo, reacción y radio
 EXTRA_SAY = {

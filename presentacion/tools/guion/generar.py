@@ -222,7 +222,7 @@ add(scene('Prólogo · Viernes, 22:10', 'Prólogo · Viernes · 22:10', 'Iago ti
 add(room + '\n')
 
 # ───────── Capítulo 1 · Conseguir el bolo ─────────
-add(act('Capítulo 1 · Conseguir el bolo', 'I', 'Capítulo 1 de 6 · Conseguir el bolo', 'Primero, las salas.',
+add(act('Capítulo 1 · Conseguir el bolo', 'I', 'Capítulo 1 de 5 · Conseguir el bolo', 'Primero, las salas.',
         'Buscar, escribir y cerrar fechas sin perseguir a nadie.', 'iago',
         'Empezamos por lo que más nos dolía: las salas.', 1, 'img/concierto-2.jpg'))
 
@@ -243,9 +243,7 @@ add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
           m('brais', '¿Y si se le va la mano y escribe una burrada?'),
           m('iago', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
           m('alvaro', '¿Y cómo sabemos si lo han leído?', say='[curious] ¿Y cómo sabemos si lo han leído de verdad?'),
-          m('iago', 'Se puede entrenar a la IA con estrellas, y te avisa cuando abren el correo, el dossier o entran en nuestras redes.', say='Y a la IA la puedes entrenar: le das estrellas a cada correo, y aprende cómo hablas. Y te avisa cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.'),
-          m('xandre', 'O sea, que tú solo aprietas el botón.'),
-          m('iago', 'Y presumo. 😅')],
+          m('iago', 'Se puede entrenar a la IA con estrellas, y te avisa cuando abren el correo, el dossier o entran en nuestras redes.', say='Y a la IA la puedes entrenar: le das estrellas a cada correo, y aprende cómo hablas. Y te avisa cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.')],
          shot_img('img/d-h-pitch.jpg')))
 
 add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
@@ -301,7 +299,7 @@ add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala
             m('manager', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.'), cls='tight')))
 
 # ───────── Capítulo 2 · Antes del concierto ─────────
-add(act('Capítulo 2 · Antes del concierto', 'II', 'Capítulo 2 de 6 · Antes del concierto', 'Ahora, la música.',
+add(act('Capítulo 2 · Antes del concierto', 'II', 'Capítulo 2 de 5 · Antes del concierto', 'Ahora, la música.',
         'Cada uno con lo suyo, sin repartir hojas ni perder acordes.', 'iago',
         'Ahora lo bueno: lo que os toca a cada uno.', 2, 'img/concierto-1.jpg'))
 
@@ -349,9 +347,7 @@ add(f'''<section class="slide feat dl" data-grupo="musica" data-title="Una hoja 
   <div class="ft-copy"><span class="tag">{TAG2}</span><h2>Cada músico, su hoja.</h2>
     {dlg(m('iago', 'Imprimo el setlist y sale una hoja distinta para cada uno. Con el logo de la banda detrás.'),
          m('brais', '¡Mi hoja! ¡Con mis notas, solo mías!'),
-         m('xandre', 'Y yo con el tono de cada tema. ¡Por fin sé en qué canto!'),
-         m('alvaro', '¿Y hay temas sin tono ni BPM?'),
-         m('iago', 'Cada uno elige qué ve: el tono o el BPM solo en los temas donde lo quiere. Y hasta los bloques, como el saludo.'))}
+         m('xandre', 'Y yo con el tono de cada tema. ¡Por fin sé en qué canto!'))}
   </div>
   <div class="paperwrap" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>
 </section>
@@ -416,7 +412,7 @@ add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.'
          shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
 
 # ───────── Capítulo 3 · Que te conozcan ─────────
-add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 6 · Que te conozcan', 'Que nos conozcan.',
+add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 5 · Que te conozcan', 'Que nos conozcan.',
         'Un dossier, un QR y un vídeo para que la gente nos siga.', 'iago',
         '¡Y ahora, que nos conozca más gente! 🌍', 3, 'img/concierto-3.jpg'))
 
@@ -460,7 +456,7 @@ add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
          shot_img('img/d-h-concierto-disco.jpg')))
 
 # ───────── Capítulo 4 · Después del concierto ─────────
-add(act('Capítulo 4 · Después del concierto', 'IV', 'Capítulo 4 de 6 · Después del concierto', 'Y al final, las cuentas.',
+add(act('Capítulo 4 · Después del concierto', 'IV', 'Capítulo 4 de 5 · Después del concierto', 'Y al final, las cuentas.',
         'Cuánto entra, cuánto sale y cuánto queda para la banda.', 'iago',
         'Lo último. Y creo que lo que más os va a sorprender.', 4, 'img/concierto-1.jpg'))
 
@@ -480,8 +476,6 @@ add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del conci
 
 add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han visto todo.', 'img/concierto-1.jpg',
           dlg(m('alvaro', '¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas! 🤯'),
-              m('brais', '¡Pero si tú nunca has programado nada que no fuera para tu trabajo de promociones de coches!'),
-              m('iago', 'Solo un juego de scroll challenge que estaba muerto antes de llegar a la Play Store. 😅'),
               m('xandre', '¡Eres un genio, Iago! 🙌'),
               m('iago', 'Por las noches, con Claudio y Guglio.'), cls='tight') + '''
   <ul class="fin-crowd">
@@ -512,8 +506,8 @@ add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', '
               m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
-add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 6 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
-        'A quién se lo vendemos y cómo ganamos dinero.', 'iago',
+add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 5 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
+        'De qué vivimos, y cómo está hecho por dentro.', 'iago',
         'Vamos por partes. Os cuento mi estrategia.', 5, 'img/concierto-1.jpg'))
 
 add(f'''<section class="slide scene" data-title="Para darlo a conocer" data-transition="rise">
@@ -564,17 +558,14 @@ add(f'''<section class="slide scene biz" data-title="Cómo ganamos dinero" data-
 </section>
 ''')
 
-# ───────── Capítulo 6 · Por dentro ─────────
-add(act('Capítulo 6 · Por dentro', 'VI', 'Capítulo 6 de 6 · Por dentro', 'Y por dentro, ¿cómo está hecho?',
-        'La técnica que lo sostiene.', 'brais',
-        'Vale, pero… ¿y por dentro cómo funciona todo esto?', 6, 'img/concierto-3.jpg'))
-
+# Por dentro (antes, el capítulo 6; ahora va dentro del 5)
 TAGT = 'Sábado · 13:40 · Por dentro'
 add(f'''<section class="slide scene tech" data-title="Arquitectura" data-transition="zoom">
   <div class="scene-bg" style="--bg-img:url(img/concierto-2.jpg)"></div>
   <span class="tag">{TAGT}</span>
   <h2>Un monolito sensato.</h2>
-  {dlg(m('iago', 'Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.'),
+  {dlg(m('brais', 'Vale, pero… ¿y por dentro cómo funciona todo esto?', say='Vale, pero, ¿y por dentro cómo funciona este monstruo?'),
+       m('iago', 'Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.'),
        m('brais', 'Pues como si me hablas en chino.'),
        m('alvaro', 'Yo no entiendo nada…'),
        m('iago', 'Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Estoy flipando! Aunque casi todo esto lo ha hecho mi amigo Claudio.'), cls='tight')}
@@ -669,9 +660,6 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
   <span class="tag">Sábado · 14:00 · Lo que viene</span>
   <h2>De máster a banda real.</h2>
   {dlg(m('iago', 'Y ahora, lo que viene: probarlo con una banda real. La nuestra.'),
-       m('brais', '¡Claro que sí! Lo probamos, mejoramos todo lo que haga falta y, en cuanto termines el máster de Marketing Digital, lo lanzamos al mundo entero.'),
-       m('xandre', '¡Y dile que te busque salas en Vigo, que tengo ganas de tocar allí en las fiestas!'),
-       m('iago', 'Hecho. Y con la lista de pendientes que ya tengo, no me voy a aburrir.'),
        m('alvaro', '¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!', say='[gasps] ¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!'),
        m('iago', 'Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.', say='Tres veces en una hora. Eso es que están leyendo. [softly] Y el cartel cierra… ahora.'), cls='tight')}
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Resurrección Fest ha abierto tu dossier</b><span>3 veces en la última hora</span></div></div>
@@ -680,7 +668,7 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
     <li><b>2</b><div><h3>Reactivar el cobro</h3><p>Facturación y planes de pago</p></div></li>
     <li><b>3</b><div><h3>Vídeos de fans por QR</h3><p>El público sube su clip del directo</p></div></li>
     <li><b>4</b><div><h3>El Tricount de las giras</h3><p>Cuentas de la gira entre todos</p></div></li>
-    <li><b>5</b><div><h3>Darlo a conocer</h3><p>Máster de Marketing Digital con IA</p></div></li>
+    <li><b>5</b><div><h3>Darlo a conocer</h3><p>Marketing digital, con IA</p></div></li>
   </ol>
 </section>
 ''')
@@ -809,6 +797,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     <h3>Escrita, programada y dirigida por</h3>
     <p class="cr-nombre">Diego de la Calle</p>
     <div class="solo-largo">
+    <div class="cr-extra">
     <h2 class="cr-seccion">Los que aparecen en BandManager.io</h2>
     <h3>Los que tocan</h3>
     <dl class="cr-dl">
@@ -831,6 +820,8 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Donantes</dt><dd>Apoyan a la banda con Stripe</dd>
       <dt>Músicos en lista de espera</dt><dd>Los próximos Herdeiros</dd>
     </dl>
+    </div>
+    <h2 class="cr-seccion">Departamentos técnicos</h2>
     <h3>Los agentes</h3>
     <dl class="cr-dl">
       <dt>Scout</dt><dd>Busca salas nuevas y las enriquece</dd>
@@ -841,7 +832,6 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Iris</dt><dd>Separa las pistas de cada canción</dd>
       <dt>Profesor de armonía</dt><dd>Explica los acordes</dd>
     </dl>
-    <h2 class="cr-seccion">Departamentos técnicos</h2>
     <h3>Inteligencia artificial</h3>
     <dl class="cr-dl">
       <dt>Gemini 2.5 Flash</dt><dd>Pitches, chat y análisis</dd>
@@ -863,6 +853,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>OpenStreetMap · ArcGIS · Leaflet</dt><dd>El mapa de salas</dd>
       <dt>Open-Meteo</dt><dd>El tiempo de cada bolo</dd>
     </dl>
+    <div class="cr-extra">
     <h3>Comunicaciones</h3>
     <dl class="cr-dl">
       <dt>Gmail API</dt><dd>Borradores y bandeja de entrada</dd>
@@ -870,6 +861,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Resend</dt><dd>Correos de la plataforma</dd>
       <dt>Web Push</dt><dd>Avisos en el móvil</dd>
     </dl>
+    </div>
     <h3>Dinero, datos y nube</h3>
     <dl class="cr-dl">
       <dt>Stripe</dt><dd>Planes y donaciones</dd>
@@ -878,6 +870,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Railway</dt><dd>Donde vive la aplicación</dd>
       <dt>Sentry</dt><dd>Vigila los errores</dd>
     </dl>
+    <div class="cr-extra">
     <h3>Rodada en</h3>
     <dl class="cr-dl">
       <dt>React 19 · Vite · Tailwind</dt><dd>Lo que ves</dd>
@@ -889,6 +882,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Vitest · Playwright</dt><dd>Más de dos mil pruebas</dd>
       <dt>ESLint · Husky · GitHub Actions</dt><dd>Nadie sube nada roto</dd>
     </dl>
+    </div>
     </div>
     <h2 class="cr-seccion">Cómo se hizo esta película</h2>
     <dl class="cr-dl">
@@ -919,6 +913,20 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
 </section>
 ''')
 
+# Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
+# al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
+ANEXO = ['Bandas amigas', 'La curva de energía', 'El profesor de armonía', 'Las ideas, en su sitio', 'La ficha del bolo',
+         'Merchan en un minuto', 'Del concierto al disco', 'La gira, con gasolina y todo', 'Para darlo a conocer',
+         'A quién se lo vendemos', 'El mapa que lee la IA']
+fuera = []
+for t in ANEXO:
+    k = [i for i, x in enumerate(S) if x.lstrip().startswith('<section') and f'data-title="{t}"' in x]
+    assert len(k) == 1, ('anexo', t, k)
+    fuera.append(S[k[0]].replace(f'data-title="{t}"', f'data-title="{t}" data-anexo', 1))
+    S[k[0]] = ''
+S[:] = [x for x in S if x] + [scene('Anexo', 'Anexo · Para las preguntas', 'Lo que no cupo en la película.', 'img/concierto-2.jpg',
+                                     '<p class="scene-foot">Más funciones de BandManager, por si el tribunal quiere verlas.</p>').replace(
+                                         'data-title="Anexo"', 'data-title="Anexo" data-anexo', 1)] + fuera
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
 html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
@@ -934,6 +942,8 @@ for t in CORTO:
     assert n == 1, (t, n)
     html = html.replace(f'data-title="{t}"', f'data-title="{t}" data-corto', 1)
 html = html.replace('data-title="Créditos" data-corto', 'data-title="Créditos" data-corto data-dur-corto="33000"', 1)
+# en la película completa, sin los bloques .cr-extra: 48 s de rollo (styles.css), a la misma velocidad que en el corte
+html = html.replace('data-dur="82000"', 'data-dur="82000" data-dur-peli="50000"', 1)
 html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="19500"', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
@@ -972,13 +982,13 @@ CORTES = {
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
-    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'rampa', 'El profesor de armonía': 'l',
-    'Iris separa los instrumentos': 'rampa', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
+    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
+    'Iris separa los instrumentos': 'l', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
     'Choques en el calendario': 'l', 'El dossier de la banda': 'rampa', 'Un QR y el público se hace fan': 'j', 'Merchan en un minuto': 'rampa',
-    'Del directo al reel': 'j', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',
+    'Del directo al reel': 'rampa', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',
     'Lo han visto todo': 'golpe', 'Las noches': 'l', 'Y mucho más': 'rampa', 'Esto lo necesitan todos': 'j',
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
-    'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'rampa', 'Seguridad': 'j', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
+    'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
