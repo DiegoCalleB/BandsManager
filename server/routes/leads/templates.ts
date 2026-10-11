@@ -165,7 +165,7 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     };
 
     // Build band DNA with the current template settings (not saved)
-    const bandDna = getBandDnaProfile(state, bandId, syntheticLead as any);
+    const bandDna = getBandDnaProfile(state, bandId, syntheticLead);
     // Override with the current unsaved template values
     bandDna.categoryTemplateGuidelines = guidelines;
     bandDna.categoryTemplateBody = body;
@@ -181,7 +181,7 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     const systemPrompt = buildEnhancedPitchSystemPrompt(
       bandDna,
       globalMemory,
-      syntheticLead as any,
+      syntheticLead,
       undefined,
       bandMinCache,
       negotiationStartCacheByType

@@ -219,7 +219,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
 
     saveState(state);
 
-    dbUpsertLead(lead, bandId).catch((err: any) => {
+    dbUpsertLead(lead, bandId).catch((err: unknown) => {
       console.warn("Async Supabase update for regenerated reply failed:", err);
     });
 
@@ -237,7 +237,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
         texto_aprobado: newPitchText,
         tipo_accion: "regenerado_respuesta_con_feedback",
         resultado_respuesta: "pendiente"
-      }).catch((err: any) => console.warn("Notice dbRecordPitchHumanEdit (respuesta):", err));
+      }).catch((err: unknown) => console.warn("Notice dbRecordPitchHumanEdit (respuesta):", err));
     }
 
     res.json({

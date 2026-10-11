@@ -5,6 +5,7 @@ import express from "express";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
+import type { PaginatedLeadsResult } from "../../db/leads.js";
 import { dbGetLeads, dbGetLeadsPaginated, dbGetLeadById, dbUpsertLead, dbDeleteLead, dbBulkDeleteLeads, dbCheckDeletedLead, dbGetLeadMessages, dbGetActiveCampaign } from "../../db.js";
 import { getAvailableAIProviders } from "../../ai.js";
 import { autoEnrichLead, extractFestivalDates } from "../../auto_enrichment.js";
@@ -47,8 +48,8 @@ router.get("/leads", requireAuth, async (req, res) => {
     const sortBy = req.query.sortBy as string | undefined;
     const sortOrder = (req.query.sortOrder as "asc" | "desc") || undefined;
 
-    let leadsList: any[] = [];
-    let pagination: any = undefined;
+    let leadsList: Lead[] = [];
+    let pagination: PaginatedLeadsResult['pagination'] | undefined = undefined;
 
     if (page !== undefined || limit !== undefined || estado || search || ciudad || sortBy) {
       const paginated = await dbGetLeadsPaginated(userBandId, { page, limit, estado, search, ciudad, sortBy, sortOrder });
@@ -64,7 +65,7 @@ router.get("/leads", requireAuth, async (req, res) => {
       leadsList = filterLeadsByActiveCampaign(leadsList, activeCampaign);
     }
 
-    const leads = leadsList.map((l: any) => {
+    const leads = leadsList.map((l) => {
       let img = l.imagen_url || '';
       let web = l.website || '';
 
@@ -206,8 +207,8 @@ router.post("/leads", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
 
     const newLead: Lead = req.body;
-    if (!(newLead as any).band_id) {
-      (newLead as any).band_id = userBandId;
+    if (!newLead.band_id) {
+      newLead.band_id = userBandId;
     }
 
     // Auto-correct lead type if a venue or festival name was wrongly classified as "medio" or "productora"
@@ -232,10 +233,10 @@ router.post("/leads", requireAuth, async (req, res) => {
     const isMedio = String(newLead.tipo || '').toLowerCase().includes('medio')
       || String(newLead.tipo || '').toLowerCase().includes('prensa')
       || String(newLead.tipo || '').toLowerCase().includes('radio');
-    const existingLeads = await dbGetLeads(userBandId);
+    const existingLeads: Lead[] = await dbGetLeads(userBandId);
     const currentCount = isMedio
-      ? existingLeads.filter((l: any) => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
-      : existingLeads.filter((l: any) => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
+      ? existingLeads.filter((l) => String(l.tipo || '').toLowerCase().includes('medio') || String(l.tipo || '').toLowerCase().includes('radio') || String(l.tipo || '').toLowerCase().includes('prensa')).length
+      : existingLeads.filter((l) => !String(l.tipo || '').toLowerCase().includes('medio') && !String(l.tipo || '').toLowerCase().includes('radio') && !String(l.tipo || '').toLowerCase().includes('prensa')).length;
     const limitCheck = checkRecordLimit(userPlan, isMedio ? 'medios' : 'leads', currentCount);
     if (!limitCheck.allowed) {
       return res.status(403).json({ error: limitCheck.message, codigo: "limite_plan_alcanzado" });
@@ -269,7 +270,7 @@ router.post("/leads", requireAuth, async (req, res) => {
           // Fallback síncrono a extractFestivalDates con timeout de 3.5s
           const festInfo = await Promise.race([
             extractFestivalDates(newLead),
-            new Promise<any>(resolve => setTimeout(() => resolve({}), 3500))
+            new Promise<Awaited<ReturnType<typeof extractFestivalDates>>>(resolve => setTimeout(() => resolve({}), 3500))
           ]);
           if (festInfo && festInfo.startDate) {
             newLead.festival_start_date = festInfo.startDate;
@@ -286,7 +287,7 @@ router.post("/leads", requireAuth, async (req, res) => {
     }
     
     // Check if this venue was previously deleted
-    const venueName = (newLead as any).nombre_sala || '';
+    const venueName = newLead.nombre_sala || '';
     let warningMsg = null;
     if (venueName) {
       const deletedMatch = await dbCheckDeletedLead(venueName, userBandId);

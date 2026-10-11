@@ -1,7 +1,7 @@
 // Importación de leads desde Excel (`/import-excel`).
 
 import express, { Request, Response } from "express";
-import { Lead } from "../../../src/types.js";
+import { Lead, LeadStatus } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
@@ -126,7 +126,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
           direccion: (rawLead.direccion || "").trim(),
           aforo: !isNaN(parsedAforo) && parsedAforo > 0 ? parsedAforo : (resolvedType === 'sala' ? 250 : 0),
           genero: (rawLead.genero || (resolvedType === 'ayuntamiento' ? 'Fiestas Patronales / Cultura' : 'Música en Directo / Variado')).trim(),
-          tipo: resolvedType as any,
+          tipo: resolvedType,
           email_contacto: (rawLead.email_contacto || rawLead.email || "").trim(),
           telefono: String(rawLead.telefono || rawLead.telefono_movil || rawLead.telefono_fijo || "").trim(),
           telefono_movil: String(rawLead.telefono_movil || "").trim(),
@@ -135,7 +135,8 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
           website: (rawLead.website || "").trim(),
           contacto_nombre: (rawLead.contacto_nombre || rawLead.contacto || "").trim(),
           fuente: sourceName,
-          estado: (rawLead.estado || "nuevo").toLowerCase().trim() as any,
+          // El estado del archivo se guarda tal cual (sin validar contra LeadStatus), como siempre.
+          estado: (rawLead.estado || "nuevo").toLowerCase().trim() as LeadStatus,
           pitch_generado: (rawLead.pitch_generado || "").trim(),
           notas: (rawLead.notas || `Importado desde archivo Excel / CSV el ${nowStr}.`).trim(),
           icono: rawLead.icono || defaultIcon,

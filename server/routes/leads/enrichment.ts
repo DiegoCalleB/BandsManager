@@ -29,6 +29,7 @@ import { detectLocalEventsAndClashes } from "../../services/localEventsClashServ
 import { findLocalPressAndMedia } from "../../services/localPressMediaService.js";
 import { findLocalBandPartners } from "../../services/localBandPartnersService.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import type { ContactoConConfianzaIA, FichaSalaIA, LugarNominatim, RespuestaBusquedaPlaces, RespuestaIA } from './tiposScout.js';
 
 const router = express.Router();
 
@@ -218,7 +219,8 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
   const { ciudad, leadId } = req.body;
   let nombre_sala = req.body.nombre_sala || req.body.nombre || req.body.nombreSala || req.body.name || req.body.sala_o_medio;
 
-  let existingLead: any = null;
+  // Los leads legados pueden traer el nombre o el email con otros alias.
+  let existingLead: (Lead & { nombre?: string; nombreSala?: string; name?: string; email?: string }) | null | undefined = null;
   if (leadId) {
     const state = loadState();
     existingLead = state.leads?.find((l) => l.id === leadId);
@@ -254,7 +256,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
         })
       });
 
-      const v1Data: any = await v1Res.json();
+      const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
       if (v1Res.ok && Array.isArray(v1Data.places) && v1Data.places.length > 0) {
         const topPlace = v1Data.places[0];
         const placeName = topPlace.displayName?.text || "";
@@ -280,7 +282,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
   }
 
   const client = getAiClient();
-  let parsed: any = {};
+  let parsed: FichaSalaIA = {};
 
   if (client) {
     const prompt = `Busca información pública y el logotipo oficial sobre la sala, festival o medio de comunicación "${nombre_sala}" ${ciudad ? `en ${ciudad}` : ''} en España. Utiliza Google Search para encontrar su web oficial y la URL directa de imagen de su logotipo o isotipo oficial.
@@ -402,7 +404,7 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
     // `state.leads` es una caché global con leads de VARIAS bandas: filtrar siempre por la banda
     // de la sesión. Antes, un id (o un nombre de sala) de otra banda presente en la caché se
     // enriquecía y se devolvía entero.
-    const delaBanda = (l: any) => mismaBanda(l?.band_id, userBandId);
+    const delaBanda = (l: Pick<Lead, 'band_id'> | null | undefined) => mismaBanda(l?.band_id, userBandId);
     if (leadId) {
       lead = state.leads?.find((l) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
     } else if (name) {
@@ -559,7 +561,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
   "source_info": "Resumen técnico de los hallazgos de búsqueda"
 }`;
 
-    let response: any;
+    let response: RespuestaIA;
     try {
       response = await generateContentWithFallback(client, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -583,7 +585,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
     }
 
     const textResult = response?.text || "";
-    let parsedData: any = {};
+    let parsedData: ContactoConConfianzaIA = {};
     try {
       parsedData = safeParseJson(textResult);
     } catch (e) {
@@ -697,7 +699,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
               headers: { 'User-Agent': 'BandManagerApp/1.0 (info@bandmanager.io)' }
             });
             if (geoRes.ok) {
-              const geoData: any = await geoRes.json();
+              const geoData = (await geoRes.json()) as LugarNominatim[];
               if (Array.isArray(geoData) && geoData.length > 0 && geoData[0].display_name) {
                 const parts = geoData[0].display_name.split(',');
                 if (parts.length >= 2) {
@@ -831,8 +833,8 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
     }
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
-    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+    const activeCampaign = campaigns.find(c => c.isActive);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText;
 
     const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", campaignTargetDates, lead.website);
     
@@ -894,8 +896,8 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
     }
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
-    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+    const activeCampaign = campaigns.find(c => c.isActive);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText;
 
     const updatedLeads: Lead[] = [];
     let totalFreeDates = 0;
@@ -956,11 +958,11 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
     const { campaignId, forceAll = false } = req.body || {};
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    const targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive || (c as any).is_active) || campaigns[0];
+    const targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive) || campaigns[0];
 
-    const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText || (targetCampaign as any)?.target_dates || (targetCampaign as any)?.target_dates_text;
+    const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText;
 
-    const allLeads = await dbGetLeads(targetBandId);
+    const allLeads: Lead[] = await dbGetLeads(targetBandId);
     if (!allLeads || allLeads.length === 0) {
       return res.status(400).json({ success: false, error: "No hay leads registrados para esta banda." });
     }
@@ -972,7 +974,7 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
       const campIdStr = String(targetCampaign.id);
 
       campaignLeads = allLeads.filter(l => {
-        if ((l as any).campaign_id === targetCampaign.id || (l as any).campaign_id === campIdStr) return true;
+        if (l.campaign_id === targetCampaign.id || l.campaign_id === campIdStr) return true;
         if (l.campaña_asociada && l.campaña_asociada.toLowerCase().trim() === campNameNorm) return true;
         // Si el lead no tiene campaña explícita pero hay una campaña activa, se incluye en el proceso
         return !l.campaña_asociada;

@@ -15,6 +15,7 @@ import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscov
 import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
 import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import type { CandidatoCruzado, CandidatoScout, ContactoExtraido, LeadConocido, RespuestaBusquedaPlaces, RespuestaIA, RespuestaScoutIA } from "./tiposScout.js";
 
 const router = express.Router();
 
@@ -88,10 +89,10 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
           })
         });
 
-        const v1Data: any = await v1Res.json();
+        const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
         if (v1Res.ok && Array.isArray(v1Data.places) && v1Data.places.length > 0) {
           const v1Places = v1Data.places
-            .filter((place: any) => {
+            .filter((place) => {
               // Strictly filter out permanently closed or temporarily closed venues
               const status = place.businessStatus || "OPERATIONAL";
               if (status === "CLOSED_PERMANENTLY" || status === "CLOSED_TEMPORARILY") {
@@ -101,7 +102,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
               return true;
             })
             .slice(0, limit)
-            .map((place: any) => {
+            .map((place) => {
             const addressParts = (place.formattedAddress || "").split(",");
             const extractedCity = ciudad || (addressParts.length >= 2 ? addressParts[addressParts.length - 2].trim().replace(/\d{5}\s*/, '') : "España");
 
@@ -359,7 +360,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
   ]
 }`;
 
-    let response: any;
+    let response: RespuestaIA;
     try {
       response = await generateContentWithFallback(aiClient, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -380,9 +381,9 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
     }
 
     const textResult = response?.text || "{}";
-    const parsed = safeParseJson(textResult);
+    const parsed: RespuestaScoutIA = safeParseJson(textResult);
     const rawResults = Array.isArray(parsed?.results) ? parsed.results : [];
-    const results = rawResults.slice(0, limit).map((r: any) => {
+    const results = rawResults.slice(0, limit).map((r) => {
       let img = r.imagen_url || "";
       const domain = getDomainFromUrl(r.website || "");
       if (!img && domain) {
@@ -438,12 +439,13 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
         try {
           const activeCamp = await dbGetActiveCampaign(userBandId);
           if (activeCamp) {
-            const cities = activeCamp.targetCities || (activeCamp as any).target_cities;
+            // dbGetActiveCampaign ya normaliza los alias snake_case (target_cities, min_capacity...).
+            const cities = activeCamp.targetCities;
             targetCities = Array.isArray(cities) && cities.length > 0
               ? cities 
-              : [(activeCamp as any).ciudad || "Madrid"];
-            if (minCapacity === undefined) minCapacity = activeCamp.minCapacity ?? (activeCamp as any).min_capacity;
-            if (maxCapacity === undefined) maxCapacity = activeCamp.maxCapacity ?? (activeCamp as any).max_capacity;
+              : ["Madrid"];
+            if (minCapacity === undefined) minCapacity = activeCamp.minCapacity;
+            if (maxCapacity === undefined) maxCapacity = activeCamp.maxCapacity;
             if (!campaignName) campaignName = activeCamp.name;
           }
         } catch (e) {
@@ -467,7 +469,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
     console.log(`[Campaign Mass Search] Iniciando prospección masiva para banda "${bandName}" (${resolvedGenre}) en campaña "${campaignName || 'Activa'}" - Ciudades: ${targetCities.join(', ')} (Aforo: ${minCap}-${maxCap === Infinity ? '∞' : maxCap}) [Categorías: ${activeTipos.join(', ')}]`);
 
     // 1. CARGA DE LEADS EXISTENTES PARA DEDUPLICACIÓN CONTRA SUPABASE Y ESTADO
-    let existingLeads: any[] = [];
+    let existingLeads: LeadConocido[] = [];
     if (userBandId) {
       try {
         existingLeads = await dbGetLeads(userBandId);
@@ -475,13 +477,13 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
         console.warn("[Campaign Mass Search] Error consultando leads existentes:", e);
       }
     }
-    const allKnownLeads = [...existingLeads, ...(state.leads || [])];
+    const allKnownLeads: LeadConocido[] = [...existingLeads, ...(state.leads || [])];
 
     // Índices de coincidencia rápida
-    const existingMap = new Map<string, any>();
+    const existingMap = new Map<string, LeadConocido>();
     const existingPlaceIds = new Set<string>();
-    const existingDomains = new Map<string, any>();
-    const existingPhones = new Map<string, any>();
+    const existingDomains = new Map<string, LeadConocido>();
+    const existingPhones = new Map<string, LeadConocido>();
 
     for (const lead of allKnownLeads) {
       if (!lead.nombre_sala) continue;
@@ -505,7 +507,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
     }
 
     // 2. EJECUCIÓN MULTI-CONSULTA PARA CADA CIUDAD DE LA CAMPAÑA
-    const discoveredRaw: any[] = [];
+    const discoveredRaw: CandidatoScout[] = [];
     const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
 
     for (const city of targetCities) {
@@ -568,7 +570,7 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
                 pageSize: Math.min(limit, 10)
               })
             });
-            const v1Data: any = await v1Res.json();
+            const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
             if (v1Res.ok && Array.isArray(v1Data.places)) {
               for (const place of v1Data.places) {
                 const status = place.businessStatus || "OPERATIONAL";
@@ -664,7 +666,7 @@ Responde estrictamente con un JSON con la estructura:
   "results": [ ... ]
 }`;
 
-          let response: any;
+          let response: RespuestaIA;
           try {
             response = await generateContentWithFallback(aiClient, {
               contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
@@ -684,7 +686,7 @@ Responde estrictamente con un JSON con la estructura:
           }
 
           const textRes = response?.text || "{}";
-          const parsedRes = safeParseJson(textRes);
+          const parsedRes: RespuestaScoutIA = safeParseJson(textRes);
           if (Array.isArray(parsedRes?.results)) {
             for (const r of parsedRes.results) {
               let img = r.imagen_url || "";
@@ -713,7 +715,7 @@ Responde estrictamente con un JSON con la estructura:
     }
 
     // 3. FUSIÓN INTRA-LOTE Y DEDUPLICACIÓN CONTRA SUPABASE
-    const unifiedPool = new Map<string, any>();
+    const unifiedPool = new Map<string, CandidatoCruzado>();
 
     for (const raw of discoveredRaw) {
       if (!raw.nombre_sala || raw.nombre_sala.trim().length < 2) continue;
@@ -738,7 +740,7 @@ Responde estrictamente con un JSON con la estructura:
       if (isDeleted) continue;
 
       // Verificación contra CRM de Supabase
-      let matchedExisting: any = null;
+      let matchedExisting: LeadConocido | null | undefined = null;
       if (raw.place_id && existingPlaceIds.has(raw.place_id)) {
         matchedExisting = allKnownLeads.find(l => l.place_id === raw.place_id);
       }
@@ -845,11 +847,11 @@ router.post(["/extract-emails", "/leads/extract-emails"], requireAuth, async (re
     console.log(`[Email Extractor] Procesando extracción de email para ${places.length} salas...`);
 
     // Helper to process a sub-batch of max 4 items
-    const processBatch = async (batch: any[]) => {
+    const processBatch = async (batch: CandidatoScout[]): Promise<ContactoExtraido[]> => {
       const prompt = `Eres el Agente Especialista en Extracción de Contactos Directos de la banda.
 Tu misión es investigar y extraer el CORREO ELECTRÓNICO OFICIAL DE CONTACTO O BOOKING y el USUARIO DE INSTAGRAM REAL para cada una de las siguientes entidades en España:
 
-${JSON.stringify(batch.map((p: any) => ({
+${JSON.stringify(batch.map((p) => ({
   id: p.place_id || p.id || p.nombre_sala,
   nombre_sala: p.nombre_sala,
   ciudad: p.ciudad || "",
@@ -884,7 +886,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
 }`;
 
       try {
-        let response: any;
+        let response: RespuestaIA;
         try {
           response = await generateContentWithFallback(aiClient, {
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -906,7 +908,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
         }
 
         const textResult = response?.text || "{}";
-        const parsed = safeParseJson(textResult);
+        const parsed: RespuestaScoutIA = safeParseJson(textResult);
         return Array.isArray(parsed?.extracted) ? parsed.extracted : [];
       } catch (errCapturado) {
         const err = comoErrorCapturado(errCapturado);
@@ -925,12 +927,12 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
 
     // Split places into chunks of 3 for fast, reliable search execution without timeouts
     const CHUNK_SIZE = 3;
-    const chunks: any[][] = [];
+    const chunks: CandidatoScout[][] = [];
     for (let i = 0; i < places.length; i += CHUNK_SIZE) {
       chunks.push(places.slice(i, i + CHUNK_SIZE));
     }
 
-    const allExtracted: any[] = [];
+    const allExtracted: ContactoExtraido[] = [];
     for (const chunk of chunks) {
       const result = await processBatch(chunk);
       allExtracted.push(...result);
@@ -939,7 +941,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
     return res.json({
       success: true,
       totalProcessed: places.length,
-      extractedCount: allExtracted.filter((e: any) => e.email_contacto && e.email_contacto.trim() !== "").length,
+      extractedCount: allExtracted.filter((e) => e.email_contacto && e.email_contacto.trim() !== "").length,
       extracted: allExtracted
     });
   } catch (errorCapturado) {
@@ -1060,7 +1062,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
           direccion: rawLead.direccion || "",
           aforo: Number(rawLead.aforo) || 0,
           genero: rawLead.genero || "Música en Directo / Mestizaje",
-          tipo: resolvedType as any,
+          tipo: resolvedType,
           email_contacto: rawLead.email_contacto || "",
           telefono: rawPhone || telMovil || telFijo || "",
           telefono_movil: telMovil,

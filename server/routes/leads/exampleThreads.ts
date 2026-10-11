@@ -9,13 +9,20 @@ import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
-function limpiarMensajes(mensajes: any): ExampleThreadMessage[] {
+/** Mensaje tal como llega en el cuerpo de la petición: sin validar. */
+interface MensajeRecibido {
+  rol?: unknown;
+  texto?: unknown;
+  orden?: unknown;
+}
+
+function limpiarMensajes(mensajes: unknown): ExampleThreadMessage[] {
   if (!Array.isArray(mensajes)) return [];
-  return mensajes
-    .map((m: any, idx: number): ExampleThreadMessage => ({
+  return (mensajes as MensajeRecibido[])
+    .map((m, idx): ExampleThreadMessage => ({
       rol: m.rol === "sala" ? "sala" : "banda",
       texto: String(m.texto || "").trim(),
-      orden: Number.isFinite(m.orden) ? m.orden : idx
+      orden: typeof m.orden === "number" && Number.isFinite(m.orden) ? m.orden : idx
     }))
     .filter((m: ExampleThreadMessage) => m.texto);
 }
