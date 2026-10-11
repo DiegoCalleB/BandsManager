@@ -2,8 +2,8 @@ import { chromium } from 'playwright-core';
 import { fileURLToPath } from 'url';
 const aqui = (f) => fileURLToPath(new URL(f, import.meta.url));
 const S = [
- ['s1', '<div class="c"><b style="color:#d6ae5c">PELÁEZ · DISCOS CUARZO</b>«Yo gestiono, me quedo el 30 % y los másteres, naturalmente, son míos.»</div>'],
- ['s2', '<div class="c"><b style="color:#8fb6ff">IAGO · BAJO</b>«No firméis nada. Las canciones son nuestras. Y los datos, también.»</div>'],
+ ['s1', '<div class="c"><b style="color:#d6ae5c">PELÁEZ · DISCOS CUARZO</b>«Yo os llevo los bolos, me quedo el 30&nbsp;% y el repertorio lo decido yo.»</div>'],
+ ['s2', '<div class="c"><b style="color:#8fb6ff">IAGO · BAJO</b>«No firméis nada. Las canciones son nuestras.»</div>'],
  ['s3', '<div class="g">Y AHORA, A TOCAR.</div>'],
 ];
 const H = ['h3', '<div class="h">Y AHORA, A TOCAR.</div>'];

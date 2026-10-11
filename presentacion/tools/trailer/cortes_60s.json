@@ -1,104 +1,18 @@
 [
- {
-  "ini": 0.2,
-  "fin": 3.3,
-  "exacto": true,
-  "paso": "corte"
- },
- {
-  "ini": 217.85,
-  "fin": 222.2,
-  "exacto": true,
-  "paso": "negro"
- },
- {
-  "ini": 224.35,
-  "fin": 231.9,
-  "exacto": true,
-  "paso": "corte"
- },
- {
-  "ini": 18.6,
-  "fin": 21.45,
-  "exacto": true,
-  "paso": "negro"
- },
- {
-  "ini": 49.1,
-  "fin": 58.45,
-  "exacto": true,
-  "paso": "corte"
- },
- {
-  "ini": 63.4,
-  "fin": 68.9,
-  "exacto": true,
-  "paso": "corte"
- },
- {
-  "ini": 74.4,
-  "fin": 76.7,
-  "exacto": true,
-  "paso": "fundido"
- },
- {
-  "ini": 102.0,
-  "fin": 103.4,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 150.5,
-  "fin": 151.9,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 165.0,
-  "fin": 166.4,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 192.0,
-  "fin": 193.4,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 204.65,
-  "fin": 211.55,
-  "exacto": true,
-  "paso": "negro"
- },
- {
-  "ini": 251.35,
-  "fin": 257.5,
-  "exacto": true,
-  "paso": "corte"
- },
- {
-  "ini": 302.0,
-  "fin": 306.8,
-  "exacto": true,
-  "paso": "negro"
- },
- {
-  "ini": 324.2,
-  "fin": 328.0,
-  "exacto": true,
-  "paso": "negro",
-  "rotulo": "h3.png"
- },
- {
-  "ini": 340.7,
-  "fin": 343.4,
-  "exacto": true,
-  "voz": false,
-  "paso": "negro"
- }
+ {"ini": 0.2, "fin": 3.3, "exacto": true, "paso": "corte"},
+ {"ini": 223.15, "fin": 227.4, "exacto": true, "paso": "negro"},
+ {"ini": 229.5, "fin": 235.9, "exacto": true, "paso": "corte"},
+ {"ini": 18.85, "fin": 21.45, "exacto": true, "paso": "negro"},
+ {"ini": 49.75, "fin": 60.95, "exacto": true, "paso": "corte"},
+ {"ini": 65.0, "fin": 71.95, "exacto": true, "paso": "corte"},
+ {"ini": 77.85, "fin": 80.3, "exacto": true, "paso": "fundido"},
+ {"ini": 105.0, "fin": 106.4, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 154.6, "fin": 156.0, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 169.0, "fin": 170.4, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 197.2, "fin": 198.6, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 209.35, "fin": 216.15, "exacto": true, "paso": "negro"},
+ {"ini": 256.05, "fin": 263.0, "exacto": true, "paso": "corte"},
+ {"ini": 308.0, "fin": 312.8, "exacto": true, "paso": "negro"},
+ {"ini": 330.5, "fin": 334.5, "exacto": true, "paso": "negro"},
+ {"ini": 344.7, "fin": 347.4, "exacto": true, "voz": false, "paso": "negro"}
 ]
