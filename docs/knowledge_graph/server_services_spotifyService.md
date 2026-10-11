@@ -13,13 +13,14 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: SpotifyTrackData, SpotifyAlbumData, SpotifyArtistDiscography, artistaSpotifyExiste, getSpotifyAccessToken, extractSpotifyArtistId, searchSpotifyArtists, resolverUrlSpotifyDeBanda.
+Exporta: SpotifyTrackData, SpotifyAlbumData, ArtistaResumen, SpotifyArtistDiscography, artistaSpotifyExiste, getSpotifyAccessToken, extractSpotifyArtistId, searchSpotifyArtists.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_services_tiposSpotify|server/services/tiposSpotify.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_spotifyMatch|server/utils/spotifyMatch.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

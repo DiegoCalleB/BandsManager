@@ -30,14 +30,14 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 4 ficheros lo usan
 - [[ext_fal|fal.ai]] — 9 ficheros lo usan
 - [[ext_ffmpeg|FFmpeg]] — 27 ficheros lo usan
-- [[ext_gemini|Gemini (Google GenAI)]] — 8 ficheros lo usan
+- [[ext_gemini|Gemini (Google GenAI)]] — 9 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
 - [[ext_resend|Resend]] — 4 ficheros lo usan
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
 - [[ext_stripe|Stripe]] — 3 ficheros lo usan
-- [[ext_supabase|Supabase (Postgres)]] — 2 ficheros lo usan
+- [[ext_supabase|Supabase (Postgres)]] — 3 ficheros lo usan
 - [[ext_supabase_storage|Supabase Storage]] — 8 ficheros lo usan
 
 ---
@@ -73,11 +73,11 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1501 nodos: 51 agent · 40 db · 12 external · 14 feature · 902 frontend · 41 hook · 74 route · 61 schema · 10 security · 296 service.
+1509 nodos: 51 agent · 40 db · 12 external · 14 feature · 907 frontend · 41 hook · 74 route · 61 schema · 10 security · 299 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 515 ficheros dependen de él
+- [[src_types|src/types.ts]] — 531 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 349 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 160 ficheros dependen de él

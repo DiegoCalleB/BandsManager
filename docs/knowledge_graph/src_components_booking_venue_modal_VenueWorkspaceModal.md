@@ -28,6 +28,7 @@ Exporta: VenueWorkspaceModal.
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_venue_modal_types|src/components/booking/venue_modal/types.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

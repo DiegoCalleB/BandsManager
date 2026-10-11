@@ -13,7 +13,7 @@ tags: ["frontend", "social", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Exporta: FansDashboardViewProps, FansDashboardView.
+Exporta: PuntoCrecimientoFans, OrigenFans, FansDashboardViewProps, FansDashboardView.
 
 ---
 

@@ -3,7 +3,7 @@
  * Extraído de AgentAutonomySettingsModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import type { User } from "../../../../types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useEffectEvent } from "react";
 import { api } from "../../../../services/api";
 import { BandSchedule } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
@@ -101,10 +101,10 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
   }, [isOpen, bandId, currentUser]);
 
   // Load existing configuration from server
-  useEffect(() => {
+  // El efecto se dispara solo por [isOpen, bandId, currentUser?.band_id]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarIsOpen = useEffectEvent(() => {
     if (!isOpen) return;
     let isMounted = true;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- marca la carga al abrir el modal
     setIsLoading(true);
     setStatusFeedback(null);
 
@@ -256,6 +256,10 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
     return () => {
       isMounted = false;
     };
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- marca la carga al abrir el modal
+    return alCambiarIsOpen();
   }, [isOpen, bandId, currentUser?.band_id]);
 
   // Toggle Hour & Day Handlers

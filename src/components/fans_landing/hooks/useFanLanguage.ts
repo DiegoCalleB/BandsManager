@@ -2,7 +2,7 @@
  * Idioma del formulario público, idiomas ofrecidos y traducción.
  * Extraído de FansLanding.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { useEffect,useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { useFanFormLanguage } from "../../../hooks/useFanFormLanguage";
 import { FAN_FORM_LANGUAGES,FAN_FORM_TRANSLATIONS,FanFormLanguage,idiomasDisponiblesParaConcierto,interpolate } from "../../../i18n/fansTranslations";
 
@@ -45,14 +45,18 @@ export function useFanLanguage({ isPreview, previewLanguage }: FanLanguageParams
   );
 
   // Sincronizar idioma si se proporciona en modo preview
-  useEffect(() => {
+  // El efecto se dispara solo por [isPreview, previewLanguage]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarIsPreview = useEffectEvent(() => {
     if (isPreview && previewLanguage && previewLanguage !== language) {
       setLanguage(previewLanguage);
     }
     if (isPreview && previewLanguage && previewLanguage !== conciertoLanguage) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- el modo previsualización sincroniza el estado con las props de la app anfitriona
       setConciertoLanguage(previewLanguage);
     }
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- el modo previsualización sincroniza el estado con las props de la app anfitriona
+    return alCambiarIsPreview();
   }, [isPreview, previewLanguage]);
 
   const dict = FAN_FORM_TRANSLATIONS[language];

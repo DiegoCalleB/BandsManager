@@ -24,6 +24,7 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
+- [[server_auth|server/auth.ts]] *(from #security)*
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
 
 ---

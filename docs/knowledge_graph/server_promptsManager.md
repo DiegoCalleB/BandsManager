@@ -19,6 +19,7 @@ Exporta: getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt, Temp
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_utils_promptGuidelines|server/utils/promptGuidelines.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

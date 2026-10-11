@@ -4,7 +4,7 @@
  */
 import type { BookingCampaign } from "../../../types";
 import type { BandAiProposal, BandAiLookupResponse } from "../bandCrmTypes";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useEffectEvent } from "react";
 import { BandRelationshipStatus } from "../../../types";
 import { apiFetch } from "../../../utils/api";
 import { uploadFileToServer } from "../../../utils/audioStorage";
@@ -57,7 +57,8 @@ export function useBandForm({ setActiveCampaign, currentBandId }: BandFormParams
 
   const [isScoutModalOpen, setIsScoutModalOpen] = useState(false);
 
-  useEffect(() => {
+  // El efecto se dispara solo por []; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarMontar = useEffectEvent(() => {
     const saved = localStorage.getItem("bandmanager_active_campaign");
     if (saved) {
       try {
@@ -66,6 +67,9 @@ export function useBandForm({ setActiveCampaign, currentBandId }: BandFormParams
         // Campaña guardada ilegible: se ignora y se parte sin campaña activa.
       }
     }
+  });
+  useEffect(() => {
+    return alCambiarMontar();
   }, []);
 
   const handleLogoUpload = async (file: File) => {

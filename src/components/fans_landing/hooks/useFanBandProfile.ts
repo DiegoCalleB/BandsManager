@@ -2,7 +2,7 @@
  * Carga del perfil público de la banda (identidad, redes, pagos, miembros, próximos conciertos).
  * Extraído de FansLanding.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch,SetStateAction,useEffect,useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useEffectEvent } from "react";
 import { BandMember,Concert,EPKConfig } from "../../../types";
 import { decodeBandIdClient } from "../../../utils/bandHash";
 import { sanitizeConcertDisplayName } from "../../../utils/fanUtils";
@@ -71,13 +71,13 @@ export function useFanBandProfile({ isPreview, previewConfig, previewConcert, pr
     subtitulo?: string;
   } | null>(null);
 
-  useEffect(() => {
+  // El efecto se dispara solo por [initialBandId, initialBandName, initialBandLogo]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarInitialBandId = useEffectEvent(() => {
     if (isPreview && previewConfig) {
       // Sin esto, resolvedBandId se quedaba en el valor inicial por defecto durante toda
       // la previsualización (el resto de estado sí se pisa con los datos de la banda real más
       // abajo) — y el enlace al Dossier/EPK, que se construye a partir de resolvedBandId, llevaba
       // a cualquier banda que abriera"Previsualizar Formulario" al EPK público de otra banda.
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- el modo previsualización sincroniza el estado con las props de la app anfitriona
       if (initialBandId) setResolvedBandId(initialBandId);
       if (initialBandName) setBandName(initialBandName);
       if (initialBandLogo || previewConfig.logoUrl) {
@@ -321,6 +321,10 @@ export function useFanBandProfile({ isPreview, previewConfig, previewConcert, pr
       .catch((err) => {
         console.warn("Could not fetch EPK data for fans landing:", err);
       });
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- el modo previsualización sincroniza el estado con las props de la app anfitriona
+    return alCambiarInitialBandId();
   }, [initialBandId, initialBandName, initialBandLogo]);
 
   return { setImgError, bandName, resolvedBandId, audioPreviewConfig, donacionRevolut, socialLinks, contactoBooking, logoUrl, imgError, miembros, upcomingConcerts };

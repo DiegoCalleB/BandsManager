@@ -25,6 +25,7 @@ Contratos del chat del asistente: acciones propuestas y mensajes.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatContext|src/components/chatbot/ChatContext.ts]] *(from #frontend)*
 - [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*

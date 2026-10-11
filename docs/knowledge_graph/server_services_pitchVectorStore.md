@@ -18,6 +18,7 @@ PITCH VECTOR STORE — RAG VECTORIAL & FEW-SHOT DINÁMICO CON PGVECTOR
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*

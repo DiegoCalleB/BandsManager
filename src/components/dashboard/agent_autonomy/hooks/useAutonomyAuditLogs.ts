@@ -3,7 +3,7 @@
  * Extraído de AgentAutonomySettingsModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import type { AuditLogEntry } from "../autonomyTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AutonomyAuditLogsParams {
@@ -80,11 +80,15 @@ export function useAutonomyAuditLogs({ bandId, activeTab }: AutonomyAuditLogsPar
     document.body.removeChild(link);
   };
 
-  useEffect(() => {
+  // El efecto se dispara solo por [activeTab, bandId]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarActiveTab = useEffectEvent(() => {
     if (activeTab === "audit_logs") {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- recarga el registro al abrir la pestaña de auditoría
       loadAuditLogs();
     }
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- recarga el registro al abrir la pestaña de auditoría
+    return alCambiarActiveTab();
   }, [activeTab, bandId]);
 
   return { auditLogs, handleExportAuditLogsCSV, loadAuditLogs, loadingAuditLogs, setAuditAgentFilter, auditAgentFilter };

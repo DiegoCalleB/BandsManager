@@ -19,6 +19,7 @@ Exporta: chatFunctionDeclarations, convertFunctionCallsToProposedActions.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---
 

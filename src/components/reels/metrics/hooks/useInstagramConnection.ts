@@ -3,7 +3,7 @@
  * Extraído de ReelsMetricsView.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import type { InstagramStatus } from "../metricsTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { api } from "../../../../services/api";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -49,10 +49,14 @@ export function useInstagramConnection({ loadContentItems, onScanRealMetrics }: 
     }
   };
 
-  useEffect(() => {
+  // El efecto se dispara solo por []; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarMontar = useEffectEvent(() => {
     loadContentItems();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- consulta el estado de Instagram al montar la vista
     loadIgStatus();
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- consulta el estado de Instagram al montar la vista
+    return alCambiarMontar();
   }, []);
 
   const handleConnectIgToken = async () => {

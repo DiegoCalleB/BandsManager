@@ -2,7 +2,7 @@
  * Vista actual, navegación, notificaciones y sección del CRM.
  * Extraído de App.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch,SetStateAction,useCallback,useEffect,useState } from "react";
+import { Dispatch,SetStateAction,useCallback,useEffect,useEffectEvent,useState } from "react";
 import { findNavGroupIdForItem } from "../../config/navGroups";
 import type { SupportedLanguage } from "../../context/LanguageContext";
 import { useBrowserPushNotifications } from "../../hooks/useBrowserPushNotifications";
@@ -29,33 +29,37 @@ export interface AppNavigationParams {
   currentActiveBandId: string;
 }
 
+/** Vistas a las que se puede entrar por URL o por la vista guardada. */
+const VALID_VIEWS: MainView[] = [
+  "resumen",
+  "booking",
+  "medios",
+  "management",
+  "bandas",
+  "calendario",
+  "ensayos",
+  "reels",
+  "repertorio",
+  "catalogo",
+  "discografia",
+  "finanzas",
+  "chat",
+  "giras",
+  "merchan",
+  "epk",
+  "fans",
+  "planes",
+];
+
 /**
  * Vista actual, navegación, notificaciones y sección del CRM.
  * @param params Estado y callbacks del contenedor ({@link AppNavigationParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
 export function useAppNavigation({ language, refreshTranslation, isLoggedIn, currentActiveBandPlan, isAdmin, setShowUserProfileModal, isPromoPlan, setIsMobileMenuOpen, setOpenNavGroupIds, leads, messages, currentActiveBandId }: AppNavigationParams) {
-  // Active View State mapping directly to the Stitch Design doc
-  const VALID_VIEWS: MainView[] = [
-    "resumen",
-    "booking",
-    "medios",
-    "management",
-    "bandas",
-    "calendario",
-    "ensayos",
-    "reels",
-    "repertorio",
-    "catalogo",
-    "discografia",
-    "finanzas",
-    "chat",
-    "giras",
-    "merchan",
-    "epk",
-    "fans",
-    "planes",
-  ];
+
+  // Refresca la traducción al cambiar de vista sin que un `refreshTranslation` nuevo relance el efecto.
+  const alCambiarVista = useEffectEvent(() => refreshTranslation());
 
   const CURRENT_VIEW_STORAGE_KEY = "bandmanager_current_view";
 
@@ -135,7 +139,7 @@ export function useAppNavigation({ language, refreshTranslation, isLoggedIn, cur
       // Ignorado a propósito: perder la persistencia de la vista no debe romper la navegación.
     }
     if (language !== "es") {
-      refreshTranslation();
+      alCambiarVista();
     }
   }, [currentView, language]);
 
@@ -299,7 +303,7 @@ export function useAppNavigation({ language, refreshTranslation, isLoggedIn, cur
         statusFilter: "todos",
       }));
     },
-    [],
+    [setOpenNavGroupIds],
   );
 
   // Redirect non-admins away from finanzas if they end up there

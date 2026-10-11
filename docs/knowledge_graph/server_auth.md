@@ -13,12 +13,13 @@ tags: ["security", "auth", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/auth`
 
 ## 📖 Descripción
-Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, UsuarioDeSesion, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware.
+Exporta: EstadoDeSesion, ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, UsuarioDeSesion, getUserFromRequest, createAuthMiddleware.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

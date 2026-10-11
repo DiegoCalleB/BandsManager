@@ -2,7 +2,7 @@
  * Estado de los agentes autónomos, su configuración y el seguimiento de la ejecución activa.
  * Extraído de Chatbot.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { api } from "../../../services/api";
 import type { ActiveAgentRun, AgentRunStep, ChatAutonomyConfig, RemoteAgentRun } from "../chatTypes";
 import { leerTokenDeSesion } from '../../../services/sesionLocal';
@@ -79,7 +79,8 @@ export function useAgentRuns() {
     };
   }, []);
 
-  useEffect(() => {
+  // El efecto se dispara solo por [activeRun?.id, activeRun?.status, activeRun?.isDemo]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarActiveRun = useEffectEvent(() => {
     if (!activeRun || activeRun.status === 'completed' || activeRun.status === 'error') return;
 
     let attempts = 0;
@@ -213,6 +214,9 @@ export function useAgentRuns() {
     const intervalId = setInterval(pollStatus, 6000);
 
     return () => clearInterval(intervalId);
+  });
+  useEffect(() => {
+    return alCambiarActiveRun();
   }, [activeRun?.id, activeRun?.status, activeRun?.isDemo]);
 
   return { agentsEnabled, autonomyConfig, setActiveRun, setIsAutonomyModalOpen, setAgentsEnabled, activeRun, isAutonomyModalOpen };

@@ -25,6 +25,7 @@ Letra y acordes del audio de UNA canción, sincronizados. Lo usan la ruta manual
 - [[server_utils_bloqueoOido|server/utils/bloqueoOido.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_progresoOido|server/utils/progresoOido.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 

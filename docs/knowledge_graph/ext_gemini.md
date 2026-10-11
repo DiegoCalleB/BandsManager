@@ -31,6 +31,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_ai_music_generacionMusical|server/routes/ai_music/generacionMusical.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
+- [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 
 ---
 
