@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Users, UserPlus, Key, Trash2, Shield, Music, X, Check, AlertCircle, Link2, Upload, ImageIcon, Loader2 } from "lucide-react";
 import { User, UserRole } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
@@ -43,11 +43,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
   const [localLogo, setLocalLogo] = useState<string>(bandLogoUrl || "");
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
-  useEffect(() => {
-    if (bandLogoUrl) {
-      setLocalLogo(bandLogoUrl);
-    }
-  }, [bandLogoUrl]);
+  const [bandLogoUrlPrevio, setBandLogoUrlPrevio] = useState(bandLogoUrl);
+  if (bandLogoUrl !== bandLogoUrlPrevio) {
+    setBandLogoUrlPrevio(bandLogoUrl);
+    if (bandLogoUrl) setLocalLogo(bandLogoUrl);
+  }
 
   const handleUploadLogoLocal = async (file: File) => {
     setIsUploadingLogo(true);

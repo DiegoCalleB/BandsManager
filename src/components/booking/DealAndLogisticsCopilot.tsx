@@ -121,7 +121,7 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       suggestedSubject: `Re: Detalles concierto ${bandName} en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
     };
-  }, [latestIncomingMessage, lead.ultimo_mensaje_recibido, lead.nombre_sala]);
+  }, [latestIncomingMessage, lead.ultimo_mensaje_recibido, lead.nombre_sala, bandName]);
 
   // --- SUB-SECCIÓN 3: GENERADOR DE HOJA DE RUTA (ROADBOOK) & CONTRATO ---
   const [copiedRoadbook, setCopiedRoadbook] = useState(false);

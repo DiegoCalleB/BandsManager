@@ -38,11 +38,11 @@ export function MetronomeModal({
   const currentBeatRef = useRef<number>(0);
 
   // Update initial BPM when prop changes
-  useEffect(() => {
-    if (initialBpm && initialBpm > 0) {
-      setBpm(initialBpm);
-    }
-  }, [initialBpm]);
+  const [initialBpmPrevio, setInitialBpmPrevio] = useState(initialBpm);
+  if (initialBpm !== initialBpmPrevio) {
+    setInitialBpmPrevio(initialBpm);
+    if (initialBpm && initialBpm > 0) setBpm(initialBpm);
+  }
 
   // Handle selected song BPM sync
   const handleSelectSong = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -149,20 +149,21 @@ export function MetronomeModal({
     }
   };
 
-  // Stop metronome on modal close & suspend AudioContext to conserve battery
+  // Al cerrar el modal el metrónomo se para (estado derivado durante el render)...
+  if (!isOpen && isPlaying) {
+    setIsPlaying(false);
+    setCurrentBeat(0);
+  }
+
+  // ...y se libera el temporizador y se suspende el AudioContext para ahorrar batería
   useEffect(() => {
-    if (!isOpen) {
-      if (isPlaying) {
-        if (timerWorkerRef.current) {
-          clearInterval(timerWorkerRef.current);
-          timerWorkerRef.current = null;
-        }
-        setIsPlaying(false);
-        setCurrentBeat(0);
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state === "running") {
-        audioCtxRef.current.suspend().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
-      }
+    if (isOpen) return;
+    if (timerWorkerRef.current) {
+      clearInterval(timerWorkerRef.current);
+      timerWorkerRef.current = null;
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state === "running") {
+      audioCtxRef.current.suspend().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     }
   }, [isOpen]);
 

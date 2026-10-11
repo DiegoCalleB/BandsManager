@@ -5,13 +5,26 @@ import { ShowIcon } from './ui/ShowIcon';
 import { Input } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 
+/** Origen de la captura leído de la URL (?concertId, ?concertName, ?band_id). */
+function leerOrigenDeLaUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const concertId = params.get("concertId") || params.get("cId") || "";
+  const cName = params.get("concertName") || params.get("cName") || "";
+  const bandId = params.get("band_id") || params.get("band") || "";
+  const concertName = cName ? sanitizeConcertDisplayName(cName) : "";
+  return { concertId, concertName, bandId };
+}
+
 export const PublicFanCapture: React.FC = () => {
+  const [origen] = useState(leerOrigenDeLaUrl);
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [ciudad, setCiudad] = useState("");
-  const [comoConocio, setComoConocio] = useState("");
-  const [conciertoOrigenId, setConciertoOrigenId] = useState("");
-  const [conciertoOrigenNombre, setConciertoOrigenNombre] = useState("");
+  const [comoConocio, setComoConocio] = useState(
+    origen.concertName ? `Concierto: ${origen.concertName}` : "En directo / Concierto",
+  );
+  const [conciertoOrigenId] = useState(origen.concertId);
+  const [conciertoOrigenNombre] = useState(origen.concertName);
   const [consentimientoRGPD, setConsentimientoRGPD] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -24,20 +37,7 @@ export const PublicFanCapture: React.FC = () => {
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cId = params.get("concertId") || params.get("cId") || "";
-    const cName = params.get("concertName") || params.get("cName") || "";
-    const bandId = params.get("band_id") || params.get("band") || "";
-
-    if (cId) setConciertoOrigenId(cId);
-    if (cName) {
-      const sanitizedName = sanitizeConcertDisplayName(cName);
-      setConciertoOrigenNombre(sanitizedName);
-      setComoConocio(`Concierto: ${sanitizedName}`);
-    } else {
-      setComoConocio("En directo / Concierto");
-    }
-
+    const { bandId } = origen;
     fetch(
       `/api/public/epk${bandId ? `?band_id=${encodeURIComponent(bandId)}` : ""}`,
     )
@@ -51,7 +51,7 @@ export const PublicFanCapture: React.FC = () => {
         }
       })
       .catch(() => { /* sin datos de la banda la captura sigue con nombre y logo genéricos */ });
-  }, []);
+  }, [origen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

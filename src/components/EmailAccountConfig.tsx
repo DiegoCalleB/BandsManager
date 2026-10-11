@@ -57,6 +57,25 @@ const PROVIDER_PRESETS: Record<
   },
 };
 
+// El callback del servidor (server/routes/gmailOAuth.ts) vuelve con ?gmail_oauth=conectado|error.
+function feedbackInicialGmailOAuth(): { type: "success" | "error"; message: string } | null {
+  const params = new URLSearchParams(window.location.search);
+  const resultado = params.get("gmail_oauth");
+  if (!resultado) return null;
+  if (resultado === "conectado") {
+    return {
+      type: "success",
+      message:
+        "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
+    };
+  }
+  const motivo = params.get("motivo") || "error_desconocido";
+  return {
+    type: "error",
+    message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
+  };
+}
+
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   bandId,
 }) => {
@@ -93,7 +112,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{
     type: "success" | "error";
     message: string;
-  } | null>(null);
+  } | null>(feedbackInicialGmailOAuth);
 
   useEffect(() => {
     if (!bandId) return;
@@ -124,21 +143,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     if (!resultado) return;
 
     if (resultado === "conectado") {
-      setGmailOAuthFeedback({
-        type: "success",
-        message:
-          "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
-      });
       api
         .getGmailOAuthStatus()
         .then((data) => setGmailOAuthStatus(data || { connected: false }))
         .catch(() => { /* el aviso de conexión ya se mostró; el estado se refresca al reabrir */ });
-    } else {
-      const motivo = params.get("motivo") || "error_desconocido";
-      setGmailOAuthFeedback({
-        type: "error",
-        message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
-      });
     }
     setTimeout(() => setGmailOAuthFeedback(null), 6000);
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { Lead, BookingCampaign } from "../../types";
 import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
@@ -76,7 +76,66 @@ export const MultiModelPitchComparatorModal: React.FC<
   const [appliedSuccess, setAppliedSuccess] = useState<string | null>(null);
   const [volumeScale, setVolumeScale] = useState<"1" | "100" | "1000">("1");
 
-  // Load providers on mount
+  const handleToggleProvider = (id: string) => {
+    setSelectedProviders((prev) => {
+      if (prev.includes(id)) {
+        if (prev.length === 1) return prev; // keep at least one
+        return prev.filter((p) => p !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
+  // Petición de propuestas: no toca estado hasta que responde el servidor
+  const ejecutarComparacion = () =>
+    api
+      .generateMultiPitch(lead.id, {
+        comentario: customComment || undefined,
+        providers: selectedProviders,
+        activeCampaign,
+      })
+      .then((res) => {
+        if (res.success && res.proposals) {
+          setProposals(res.proposals);
+        }
+      })
+      .catch((errCapturado) => {
+        const err = comoErrorCapturado(errCapturado);
+        console.error("Error generating multi-model pitch:", err);
+        alert(
+          `Error al generar propuestas con los modelos seleccionados: ${err.message || "Verifica la conexión"}`,
+        );
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+  const handleRunComparison = () => {
+    setIsLoading(true);
+    setAppliedSuccess(null);
+    setSelectedProposalIndex(null);
+    return ejecutarComparacion();
+  };
+
+  // Al abrir (o cambiar de lead) sin propuestas, el estado de carga se fija durante el render
+  const claveApertura = isOpen ? lead.id : null;
+  const [claveAperturaPrevia, setClaveAperturaPrevia] = useState<string | null>(null);
+  if (claveApertura !== claveAperturaPrevia) {
+    setClaveAperturaPrevia(claveApertura);
+    if (claveApertura !== null && proposals.length === 0) {
+      setIsLoading(true);
+      setAppliedSuccess(null);
+      setSelectedProposalIndex(null);
+    }
+  }
+
+  // Carga los proveedores al abrir y lanza la comparación inicial si aún no hay propuestas.
+  // `useEffectEvent` lee los valores actuales sin que el efecto se re-ejecute al cambiarlos.
+  const lanzarComparacionInicial = useEffectEvent(() => {
+    if (proposals.length === 0) ejecutarComparacion();
+  });
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -91,48 +150,9 @@ export const MultiModelPitchComparatorModal: React.FC<
         console.warn("Error fetching AI providers:", err);
       });
 
-    // Run initial parallel comparison if no proposals yet
-    if (proposals.length === 0) {
-      handleRunComparison();
-    }
+    lanzarComparacionInicial();
   }, [isOpen, lead.id]);
 
-  const handleToggleProvider = (id: string) => {
-    setSelectedProviders((prev) => {
-      if (prev.includes(id)) {
-        if (prev.length === 1) return prev; // keep at least one
-        return prev.filter((p) => p !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-
-  const handleRunComparison = async () => {
-    setIsLoading(true);
-    setAppliedSuccess(null);
-    setSelectedProposalIndex(null);
-
-    try {
-      const res = await api.generateMultiPitch(lead.id, {
-        comentario: customComment || undefined,
-        providers: selectedProviders,
-        activeCampaign,
-      });
-
-      if (res.success && res.proposals) {
-        setProposals(res.proposals);
-      }
-    } catch (errCapturado) {
-      const err = comoErrorCapturado(errCapturado);
-      console.error("Error generating multi-model pitch:", err);
-      alert(
-        `Error al generar propuestas con los modelos seleccionados: ${err.message || "Verifica la conexión"}`,
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleCopyText = (text: string, index: number) => {
     navigator.clipboard.writeText(text);

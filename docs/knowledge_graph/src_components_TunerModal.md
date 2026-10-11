@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: PresetString, TunerPreset, TunerPresets, TunerModal.
+Exporta: TunerModal.
 
 ---
 
@@ -22,6 +22,7 @@ Exporta: PresetString, TunerPreset, TunerPresets, TunerModal.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_tunerPresets|src/utils/tunerPresets.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

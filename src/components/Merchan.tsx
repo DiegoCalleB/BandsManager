@@ -4,6 +4,7 @@ import { ThemeColors, ThemeName, Song } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { api } from "../services/api";
+import { useDisenosMerchan } from "../hooks/useDisenosMerchan";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
 
@@ -18,16 +19,18 @@ const ResolvedBgImage: React.FC<{
   style?: React.CSSProperties;
   onClick?: () => void;
 }> = ({ url, className, style, onClick }) => {
-  const [resolved, setResolved] = useState<string | null>(null);
+  const [resuelta, setResuelta] = useState<string | null>(null);
   useEffect(() => {
-    if (url) {
-      resolveAudioUrl(url)
-        .then((res) => setResolved(res))
-        .catch(() => setResolved(null));
-    } else {
-      setResolved(null);
-    }
+    if (!url) return;
+    let vigente = true;
+    resolveAudioUrl(url)
+      .then((res) => vigente && setResuelta(res))
+      .catch(() => vigente && setResuelta(null));
+    return () => {
+      vigente = false;
+    };
   }, [url]);
+  const resolved = url ? resuelta : null;
 
   return (
     <div
@@ -144,20 +147,7 @@ export default function Merchan({
   const [shirtColor, setShirtColor] = useState("var(--ink)");
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedDesigns, setGeneratedDesigns] = useState<
-    {
-      id: string;
-      type: string;
-      url: string;
-      processedUrl?: string;
-      bg: string;
-      text: string;
-      assetType: string;
-      shirtColor?: string;
-      qrUrl?: string;
-      date: string;
-    }[]
-  >([]);
+  const [generatedDesigns, setGeneratedDesigns] = useDisenosMerchan(cleanBand);
 
   const [albums, setAlbums] = useState<{ name: string; url: string }[]>([]);
 
@@ -238,24 +228,6 @@ export default function Merchan({
       isSubscribed = false;
     };
   }, [cleanBand]);
-
-  // Galería de diseños generados, cacheada por banda (misma convención que el resto del módulo
-  // de repertorio: ver `band_songs_${cleanBand}` arriba) para que una banda nunca vea los diseños
-  // de merchandising de otra.
-  useEffect(() => {
-    try {
-      const key = `merchan_designs_${cleanBand || "default"}`;
-      const saved = localStorage.getItem(key);
-      setGeneratedDesigns(saved ? JSON.parse(saved) : []);
-    } catch {
-      setGeneratedDesigns([]);
-    }
-  }, [cleanBand]);
-
-  useEffect(() => {
-    const key = `merchan_designs_${cleanBand || "default"}`;
-    localStorage.setItem(key, JSON.stringify(generatedDesigns));
-  }, [generatedDesigns, cleanBand]);
 
   const handleDelete = (id: string) => {
     setGeneratedDesigns((prev) => prev.filter((d) => d.id !== id));

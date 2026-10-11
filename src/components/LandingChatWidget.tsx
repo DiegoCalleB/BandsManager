@@ -8,7 +8,7 @@
  * Sin backend. Sin API. Cero latencia y cero coste.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '../context/idioma';
 import { Button } from './ui';
@@ -233,24 +233,23 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Mostrar saludo al abrir por primera vez
-  useEffect(() => {
-    if (open && messages.length === 0) {
-      setMessages([{ from: 'bot', text: c.greet }]);
-      setUnread(false);
-    }
-  }, [open, messages.length, c.greet]);
-
-  // Resetear mensajes cuando cambia el idioma o el modo
-  useEffect(() => {
+  // Resetear mensajes cuando cambia el idioma o el modo (ajuste de estado durante el render)
+  const claveContenido = `${language}|${mode}`;
+  const [claveVista, setClaveVista] = useState(claveContenido);
+  if (claveVista !== claveContenido) {
+    setClaveVista(claveContenido);
     setMessages([]);
     setAnswered(false);
-  }, [language, mode]);
+  }
+
+  // El saludo se deriva: al abrir por primera vez (sin mensajes) se muestra el saludo del bot
+  const saludo = useMemo<ChatMessage[]>(() => [{ from: 'bot', text: c.greet }], [c.greet]);
+  const visibleMessages = open && messages.length === 0 ? saludo : messages;
 
   // Scroll automático al último mensaje
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [visibleMessages]);
 
   // Cerrar con Escape
   useEffect(() => {
@@ -270,7 +269,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
 
   const handleQuestion = (q: QuickQuestion) => {
     setMessages((prev) => [
-      ...prev,
+      ...(prev.length === 0 ? saludo : prev),
       { from: 'user', text: q.label },
       { from: 'bot', text: q.answer },
     ]);
@@ -324,7 +323,7 @@ export const LandingChatWidget: React.FC<LandingChatWidgetProps> = ({ onEntrar, 
 
           {/* Mensajes */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((msg, i) => (
+            {visibleMessages.map((msg, i) => (
               <div
                 key={i}
                 className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}

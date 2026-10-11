@@ -38,11 +38,12 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   const [mobileViewSection, setMobileViewSection] = useState<'profile' | 'action'>('action');
 
   // Sync initial tab when selectedLead changes
-  useEffect(() => {
-    if (initialTab) {
-      setActiveTab(initialTab);
-    }
-  }, [selectedLead?.id, initialTab]);
+  const claveTabInicial = `${initialTab}:${selectedLead?.id ?? ''}`;
+  const [claveTabPrevia, setClaveTabPrevia] = useState(claveTabInicial);
+  if (claveTabPrevia !== claveTabInicial) {
+    setClaveTabPrevia(claveTabInicial);
+    if (initialTab) setActiveTab(initialTab);
+  }
 
   // Current lead index within the active filtered leads list
   const currentIndex = selectedLead ? leads.findIndex((l) => l.id === selectedLead.id) : -1;

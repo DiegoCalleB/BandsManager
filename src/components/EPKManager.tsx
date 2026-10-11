@@ -152,27 +152,25 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
   // por prop, se piden al backend igual que hace RepertorioSetlists.
   const [songsCargadas, setSongsCargadas] = useState<Song[]>([]);
-  const [, setErrorSongs] = useState<string | null>(null);
   const songs: Song[] = songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
 
   const activeBandId = currentUser?.band_id || '';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const baseDefaults = EMPTY_EPK_CONFIG;
 
   const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('epk');
 
   const [config, setConfig] = useState<EPKConfig>(() => {
     const initialRedes = {
-      ...baseDefaults.enlacesRedes,
+      ...EMPTY_EPK_CONFIG.enlacesRedes,
       ...(epkConfig?.firmaEmail?.redesSociales || {}),
       ...(epkConfig?.enlacesRedes || {}),
     };
     return {
-      ...baseDefaults,
+      ...EMPTY_EPK_CONFIG,
       ...(epkConfig || {}),
       enlacesRedes: initialRedes,
       firmaEmail: {
-        ...baseDefaults.firmaEmail,
+        ...EMPTY_EPK_CONFIG.firmaEmail,
         ...(epkConfig?.firmaEmail || {}),
         redesSociales: initialRedes,
       },
@@ -182,7 +180,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   React.useEffect(() => {
     if (songsProp && songsProp.length > 0) return;
     let cancelado = false;
-    setErrorSongs(null);
     api
       .getSongs()
       .then((data) => {
@@ -190,7 +187,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       })
       .catch((err) => {
         console.warn('No se pudo cargar el repertorio para el EPK:', err);
-        if (!cancelado) setErrorSongs('No se pudo cargar tu repertorio. Recarga la página o inténtalo en unos minutos.');
       });
     return () => {
       cancelado = true;
@@ -208,36 +204,37 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       const incoming = JSON.stringify(epkConfig);
       if (incoming === ultimoEpkServidorRef.current) return;
       ultimoEpkServidorRef.current = incoming;
-      const mergedRedes = {
-        ...baseDefaults.enlacesRedes,
-        ...(config.enlacesRedes || {}),
-        ...(epkConfig.firmaEmail?.redesSociales || {}),
-        ...(epkConfig.enlacesRedes || {}),
-      };
       const mergedContacto = {
-        ...baseDefaults.contactoBooking,
+        ...EMPTY_EPK_CONFIG.contactoBooking,
         ...(epkConfig.contactoBooking || {}),
       };
-      const mergedFirma = {
-        ...baseDefaults.firmaEmail,
-        ...(epkConfig.firmaEmail || {}),
-        redesSociales: mergedRedes,
-      };
-      if (!mergedFirma.telefono && mergedContacto.telefono) {
-        mergedFirma.telefono = mergedContacto.telefono;
-      }
-      if (!mergedFirma.email && mergedContacto.email) {
-        mergedFirma.email = mergedContacto.email;
-      }
-
-      setConfig((prev) => ({
-        ...prev,
-        ...epkConfig,
-        logoUrl: epkConfig.logoUrl || prev.logoUrl || '',
-        contactoBooking: mergedContacto,
-        enlacesRedes: mergedRedes,
-        firmaEmail: mergedFirma,
-      }));
+      setConfig((prev) => {
+        const mergedRedes = {
+          ...EMPTY_EPK_CONFIG.enlacesRedes,
+          ...(prev.enlacesRedes || {}),
+          ...(epkConfig.firmaEmail?.redesSociales || {}),
+          ...(epkConfig.enlacesRedes || {}),
+        };
+        const mergedFirma = {
+          ...EMPTY_EPK_CONFIG.firmaEmail,
+          ...(epkConfig.firmaEmail || {}),
+          redesSociales: mergedRedes,
+        };
+        if (!mergedFirma.telefono && mergedContacto.telefono) {
+          mergedFirma.telefono = mergedContacto.telefono;
+        }
+        if (!mergedFirma.email && mergedContacto.email) {
+          mergedFirma.email = mergedContacto.email;
+        }
+        return {
+          ...prev,
+          ...epkConfig,
+          logoUrl: epkConfig.logoUrl || prev.logoUrl || '',
+          contactoBooking: mergedContacto,
+          enlacesRedes: mergedRedes,
+          firmaEmail: mergedFirma,
+        };
+      });
     }
   }, [epkConfig]);
 
