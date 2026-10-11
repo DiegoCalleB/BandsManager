@@ -464,6 +464,14 @@ add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han v
     <li><img src="img/miembro-iago.jpg" alt="Iago"><span>Iago</span></li>
   </ul>''', tr='zoom'))
 
+add(scene('Las noches', 'Sábado, 13:02 · El local de ensayo', 'Casi siempre, de noche.', 'img/concierto-1.jpg',
+          '<div class="noche-reloj" aria-hidden="true"><b>02:47</b><span>la hora a la que Iago seguía programando</span></div>' +
+          dlg(m('iago', 'Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.', '02:47',
+                say='[softly] Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.'),
+              m('brais', 'Tío… no teníamos ni idea.', '02:48', say='[softly] Tío… no teníamos ni idea.'),
+              m('alvaro', 'Y nosotros, quejándonos de las birras.', '02:48', say='[sighs] Y nosotros, quejándonos de las birras.'),
+              m('xandre', 'Gracias, Iago. De verdad.', '02:49', say='[softly] Gracias, {bajo}. De verdad.'), cls='tight'), cls='noches', tr='fade'))
+
 add(feat('Y mucho más', 'Sábado · 13:00 · Y mucho más', 'Y mucho más.',
          [m('iago', 'Y hay más: ensayos, armonías, eventos, reels, dossier…', say='Y esto no acaba aquí, chavales: ensayos, armonías, eventos, reels, el dossier… Todo en la misma app.'),
           m('brais', '¡Pero si no le falta de nada! 🤯', say='[gasps] ¡Ai, mi madriña! ¡Pero si no le falta de nada!')],
@@ -665,6 +673,7 @@ add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transi
        m('manager', 'Y los datos. ¡A tocar!', say='Y los datos. ¡Y ahora, a tocar!'),
        m('xandre', '¿Tengo el tono de la primera?'),
        m('iago', 'Em, en tu hoja, como siempre.'),
+       m('iago', 'Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.', say='[softly] Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.'),
        m('brais', 'Hace seis meses no sabíamos ni quién contestaba a las salas.'), cls='tight')}
 </section>
 ''')

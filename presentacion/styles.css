@@ -1303,3 +1303,13 @@ body.pelicula:not(.scroll) .slide.slide > .callcard { top: 280px; }
 
 /* plano y contraplano: Iago a la derecha y los demás a la izquierda (salvo si hay una tabla a la izquierda) */
 body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-post):not(:has(> .ia-duo)):not(:has(table)) > .foco.foco[data-lado="izq"] { left: 120px !important; right: auto !important; }
+
+/* ── Las noches: la escena más íntima, en cálido y a media luz ── */
+.slide.noches .scene-bg { filter: sepia(.55) saturate(.8) brightness(.72); }
+.slide.noches { background: #0a0705; }
+.slide.slide > .noche-reloj { position: absolute; left: 204px; top: 360px; z-index: 3; }
+.noche-reloj b { display: block; font: 700 220px/1 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .02em; color: #ffd596; text-shadow: 0 0 60px rgba(255,170,80,.45); animation: respira 4s ease-in-out infinite; }
+.noche-reloj span { display: block; margin-top: 8px; font-size: 32px; color: rgba(255,226,190,.75); }
+@keyframes respira { 50% { opacity: .78; } }
+@media (prefers-reduced-motion: reduce) { .noche-reloj b { animation: none; } }
+body.scroll .slide.slide > .noche-reloj { position: relative; left: auto; top: auto; margin: 10px 0; } body.scroll .noche-reloj b { font-size: 64px; }

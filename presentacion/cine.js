@@ -207,6 +207,7 @@
     var txt = (tag ? tag.textContent : '') + ' ' + (sl ? sl.dataset.title || '' : '');
     var fuera = /Seis meses|Domingo|Otro jueves|Fin de la historia|Prólogo|Gracias|Créditos|Escena post/.test(txt) && !mt;
     if (mt && /Seis meses/.test(tag.textContent)) fuera = true;
+    if (sl && sl.classList.contains('noches')) { reloj.classList.remove('on'); return; } // la escena íntima va sin cuenta atrás; el reloj sigue corriendo debajo
     if (fuera || (!mt && !relojT0)) { reloj.classList.remove('on', 'fin'); relojT0 = 0; return; }
     if (!mt) return; // plano sin hora (capítulos, negocio…): el reloj sigue corriendo
     relojRest = Math.max(0, (14 * 60 - (+mt[1] * 60 + +mt[2])) * 60); relojT0 = Date.now(); reloj.classList.add('on'); pintarReloj();
