@@ -1,0 +1,103 @@
+[
+ {
+  "ini": 0.2,
+  "fin": 3.3,
+  "exacto": true,
+  "paso": "corte"
+ },
+ {
+  "ini": 217.85,
+  "fin": 222.2,
+  "exacto": true,
+  "paso": "negro"
+ },
+ {
+  "ini": 224.35,
+  "fin": 231.9,
+  "exacto": true,
+  "paso": "corte"
+ },
+ {
+  "ini": 18.6,
+  "fin": 21.45,
+  "exacto": true,
+  "paso": "negro"
+ },
+ {
+  "ini": 49.1,
+  "fin": 58.45,
+  "exacto": true,
+  "paso": "corte"
+ },
+ {
+  "ini": 63.4,
+  "fin": 68.9,
+  "exacto": true,
+  "paso": "corte"
+ },
+ {
+  "ini": 74.4,
+  "fin": 76.7,
+  "exacto": true,
+  "paso": "fundido"
+ },
+ {
+  "ini": 102.0,
+  "fin": 103.4,
+  "exacto": true,
+  "voz": false,
+  "paso": "rampa"
+ },
+ {
+  "ini": 150.5,
+  "fin": 151.9,
+  "exacto": true,
+  "voz": false,
+  "paso": "rampa"
+ },
+ {
+  "ini": 165.0,
+  "fin": 166.4,
+  "exacto": true,
+  "voz": false,
+  "paso": "rampa"
+ },
+ {
+  "ini": 192.0,
+  "fin": 193.4,
+  "exacto": true,
+  "voz": false,
+  "paso": "rampa"
+ },
+ {
+  "ini": 204.65,
+  "fin": 211.55,
+  "exacto": true,
+  "paso": "negro"
+ },
+ {
+  "ini": 251.35,
+  "fin": 257.5,
+  "exacto": true,
+  "paso": "corte"
+ },
+ {
+  "ini": 302.0,
+  "fin": 306.8,
+  "exacto": true,
+  "paso": "negro"
+ },
+ {
+  "ini": 324.2,
+  "fin": 328.0,
+  "exacto": true,
+  "paso": "negro"
+ },
+ {
+  "ini": 340.7,
+  "fin": 343.4,
+  "exacto": true,
+  "voz": false,
+  "paso": "negro"
+ }
+]
