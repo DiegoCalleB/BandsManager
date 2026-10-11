@@ -17,7 +17,7 @@ import {
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
-import type { AnalisisAcordes, AudioTrack, Song, SongAudioIdea, StemsMeta } from "../../src/types.js";
+import type { AnalisisAcordes, AudioTrack, SongAudioIdea, StemsMeta } from "../../src/types.js";
 import type { EntradaAtajo, EntradaSetlist, ErrorPostgrest, FilaSong, SongMapeada } from "./tiposRepertorio.js";
 
 /**

@@ -33,7 +33,7 @@ export async function enrichMissingAudioSongsForBand(
   }
 
   // Filtrar canciones que no tienen archivo de audio o son versiones sin bpm/tono contrastado
-  const songsToEnrich = songs.filter((s: any) => {
+  const songsToEnrich = songs.filter((s) => {
     const hasAudio = Boolean(s.audioPrincipalUrl || s.audioUrl);
     // Si no tiene audio, o si tiene audio por defecto/mock y está marcada como versión o sin análisis
     return !hasAudio || s.esVersionCovers;
