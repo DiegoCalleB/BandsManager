@@ -1476,3 +1476,6 @@ body.pelicula:not(.scroll) .slide.scene.active > :is(.tech-vis, .biz-cols) > :is
 :is(.tech-vis, .biz-cols) > :nth-child(2) { --k: 1; } :is(.tech-vis, .biz-cols) > :nth-child(3) { --k: 2; }
 :is(.tech-vis, .biz-cols) > :nth-child(4) { --k: 3; } :is(.tech-vis, .biz-cols) > :nth-child(5) { --k: 4; } :is(.tech-vis, .biz-cols) > :nth-child(6) { --k: 5; }
 @media (prefers-reduced-motion: reduce) { body.pelicula .slide.scene.active > :is(.tech-vis, .biz-cols), body.pelicula .slide.scene.active > :is(.tech-vis, .biz-cols) > * { animation: none !important; } }
+/* Los vídeos verticales (Iris, ideas): cuando se va el titular, la cámara sube y se acerca más, para que la app llene el plano */
+body.pelicula:not(.scroll) .slide.feat.active .ft-shot.alto { animation: subealto 1600ms cubic-bezier(.4, 0, .2, 1) 3600ms both; transform-origin: 50% 0; }
+@keyframes subealto { to { translate: -50% -150px; scale: 1.2; } }
