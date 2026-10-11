@@ -7,13 +7,18 @@
   // Va por WebAudio: así baja de volumen cuando alguien habla (ducking) y la grabación del MP4 la recoge tal cual.
   // Los BPM coinciden con tools/musica.py: el montaje usa el pulso para que el golpe de cada rampa caiga a tiempo.
   var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200 };
-  var ALTO = 0.2, BAJO = 0.07, raf = 0, body = document.body;
+  var ALTO = 0.2, BAJO = 0.07, raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
     try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch (e) { ac = null; return false; }
   };
-  ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () { crearAudio(); if (ac && ac.state === 'suspended') ac.resume(); }, true); });
+  ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () {
+    crearAudio(); if (ac && ac.state === 'suspended') ac.resume();
+    // las cuatro piezas se «tocan» dentro del gesto (en silencio): Safari no deja empezar a sonar un audio fuera de un clic
+    if (!pistas.__listas) { pistas.__listas = true; Object.keys(MUSICA).forEach(function (n) { var p = pista(n), pr = p.a.play(); if (pr && pr.then) pr.then(function () { if (!p.v) p.a.pause(); }).catch(function () { /* nada */ }); }); }
+    if (window.DeckVoces && window.DeckVoces.desbloquear) window.DeckVoces.desbloquear();
+  }, true); });
   var pista = function (n) {
     if (pistas[n]) return pistas[n];
     var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = true; a.preload = 'auto'; a.dataset.tap = '1';
@@ -37,12 +42,12 @@
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
-      if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol));
+      if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
       if (p.v > 0 && p.a.paused) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
     });
-    if (master) master.gain.value = vol;
+    if (master) master.gain.value = vol * volGlobal;
     if (!vivo && o === 0 && vol === 0) { raf = 0; return; }
     raf = requestAnimationFrame(paso);
   }
@@ -150,79 +155,159 @@
   };
 
   // ── Reproductor estilo Netflix (en modo película) ──
-  // Barra abajo que aparece al mover el ratón: play/pausa, escena anterior/siguiente, sonido, título,
-  // progreso con los capítulos, subtítulos (como «Audio y subtítulos») y pantalla completa.
+  // Barra abajo que aparece al mover el ratón: tiempo real de la película (transcurrido y restante) con los capítulos,
+  // play/pausa, −15 s / +15 s, volumen, siguiente escena, capítulos, audio y subtítulos, velocidad y pantalla completa.
+  // Además, como en Netflix: «Saltar intro» y «Saltar créditos», el icono que salta en el centro y las teclas de siempre.
   var ico = {
     play: '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg>',
     pausa: '<svg viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>',
-    atras: '<svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12z"/></svg>',
-    alante: '<svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM4 5v14l10.5-7z"/></svg>',
-    sonido: '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4.5v15L7 15H3zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9h4l5-4.5v15L7 15H3z"/></svg>',
+    menos: '<svg viewBox="0 0 24 24"><path d="M12 4.5a7.5 7.5 0 1 1-7.3 9.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 1.5v6l-4-3z"/><text x="12" y="16.2" font-size="7.4" font-weight="700" text-anchor="middle" font-family="Arial">15</text></svg>',
+    mas: '<svg viewBox="0 0 24 24"><path d="M12 4.5a7.5 7.5 0 1 0 7.3 9.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 1.5v6l4-3z"/><text x="12" y="16.2" font-size="7.4" font-weight="700" text-anchor="middle" font-family="Arial">15</text></svg>',
+    sonido: '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4.5v15L7 15H3z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
     mudo: '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4.5v15L7 15H3z"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    sig: '<svg viewBox="0 0 24 24"><path d="M4 5v14l11-7zM17 5h3v14h-3z"/></svg>',
+    caps: '<svg viewBox="0 0 24 24"><path d="M3 5h3v3H3zM8 5.5h13v2H8zM3 10.5h3v3H3zM8 11h13v2H8zM3 16h3v3H3zM8 16.5h13v2H8z"/></svg>',
     subs: '<svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 13h5M13 13h5M6 16h8M16 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    vel: '<svg viewBox="0 0 24 24"><path d="M12 5a9 9 0 0 0-9 9h2a7 7 0 0 1 14 0h2a9 9 0 0 0-9-9z"/><path d="M12 14l4.5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="14" r="1.8"/></svg>',
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
   nf.innerHTML = '<div class="nf-top"><span class="nf-n">B</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
-    '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Escena" tabindex="0"><div class="nf-lleno"></div><div class="nf-bola"></div><div class="nf-caps"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
-    '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button><button class="nf-b" data-nf="atras" aria-label="Escena anterior">' + ico.atras + '</button>' +
-    '<button class="nf-b" data-nf="alante" aria-label="Escena siguiente">' + ico.alante + '</button><button class="nf-b" data-nf="sonido" aria-label="Sonido"></button>' +
-    '<span class="nf-titulo"></span><button class="nf-b" data-nf="subs" aria-label="Audio y subtítulos" aria-haspopup="true">' + ico.subs + '</button>' +
+    '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Tiempo de la película" tabindex="0"><div class="nf-buffer"></div><div class="nf-lleno"></div><div class="nf-caps"></div><div class="nf-bola"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
+    '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button>' +
+    '<button class="nf-b" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button>' +
+    '<button class="nf-b" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button>' +
+    '<div class="nf-vol"><button class="nf-b" data-nf="sonido" aria-label="Silenciar"></button><input class="nf-vr" type="range" min="0" max="100" value="100" aria-label="Volumen"></div>' +
+    '<span class="nf-titulo"></span>' +
+    '<button class="nf-b" data-nf="sig" aria-label="Siguiente escena">' + ico.sig + '</button>' +
+    '<button class="nf-b" data-nf="caps" aria-label="Capítulos" aria-haspopup="true">' + ico.caps + '</button>' +
+    '<button class="nf-b" data-nf="subs" aria-label="Audio y subtítulos" aria-haspopup="true">' + ico.subs + '</button>' +
+    '<button class="nf-b" data-nf="vel" aria-label="Velocidad de reproducción" aria-haspopup="true">' + ico.vel + '</button>' +
     '<button class="nf-b" data-nf="fs" aria-label="Pantalla completa">' + ico.fs + '</button></div>' +
-    '<div class="nf-menu" role="menu"><div><h4>Audio</h4><p class="on">Español (original)</p></div><div><h4>Subtítulos</h4>' +
+    '<div class="nf-menu nf-m-subs" role="menu"><div><h4>Audio</h4><p class="on">Español (original)</p></div><div><h4>Subtítulos</h4>' +
     '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p></div></div>' +
+    '<div class="nf-menu nf-m-vel" role="menu"><div><h4>Velocidad de reproducción</h4><div class="nf-vels">' +
+    [0.75, 1, 1.25, 1.5].map(function (v) { return '<p role="menuitemradio" data-v="' + v + '">' + String(v).replace('.', ',') + '×' + (v === 1 ? ' (normal)' : '') + '</p>'; }).join('') + '</div></div></div>' +
+    '<div class="nf-menu nf-m-caps" role="menu"><div><h4>Os Herdeiros do Código</h4><ol class="nf-lista"></ol></div></div>' +
+    '<button class="nf-saltar" type="button"></button>' +
+    '<div class="nf-flash" aria-hidden="true"></div>' +
     '<div class="nf-pausa" aria-hidden="true"><small>Estás viendo</small><b>BandManager.io</b><span class="nf-pcap"></span><em>Os Herdeiros do Código</em></div>';
   if (stage) stage.appendChild(nf);
+  // el botón de saltar va fuera de la barra: se ve aunque los controles estén escondidos
+  var saltarBtn = nf.querySelector('.nf-saltar'); if (stage) stage.appendChild(saltarBtn);
+  saltarBtn.addEventListener('click', function () { var d = D(); if (d) d.show(+saltarBtn.dataset.i); });
   var $n = function (q) { return nf.querySelector(q); };
   var D = function () { return window.Deck; };
+  var mmss = function (s) { s = Math.max(0, Math.round(s)); var h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ':' + ('0' + m).slice(-2) : m) + ':' + ('0' + x).slice(-2); };
+  var titulo = function (i) { var d = D(); return d && d.slides[i] ? d.slides[i].dataset.title || '' : ''; };
+  // Capítulos de la lista: el prólogo, cada capítulo (diapositiva .act) y el final
   var capitulos = function () {
     var d = D(); if (!d) return [];
-    return d.slides.map(function (s, i) { return { i: i, t: s.dataset.title || '', act: s.classList.contains('act') }; });
+    var L = d.lista(), out = [], t = 0;
+    L.forEach(function (i, k) {
+      var s = d.slides[i], nombre = null;
+      if (k === 0) nombre = 'Prólogo';
+      else if (s.classList.contains('act')) nombre = s.dataset.title;
+      else if (/^El festival/.test(s.dataset.title || '')) nombre = 'Seis meses después';
+      if (nombre) out.push({ i: i, t: t, nombre: nombre });
+      t += d.durEscena(i);
+    });
+    return out;
+  };
+  var capActual = function () { var d = D(), c = capitulos(); if (!d) return null; var L = d.lista(), pos = L.indexOf(d.cur); return c.filter(function (x) { return L.indexOf(x.i) <= pos; }).pop() || null; };
+  var vol = 1, velocidad = 1;
+  try { vol = Math.max(0, Math.min(1, +(localStorage.getItem('bm_vol') || 1))); } catch (e) { /* por defecto, al máximo */ }
+  var aplicarVol = function () {
+    if (window.DeckVoces && window.DeckVoces.volumen) window.DeckVoces.volumen(vol);
+    if (window.DeckSound && window.DeckSound.volumen) window.DeckSound.volumen(vol);
+    volGlobal = vol; $n('.nf-vr').value = Math.round(vol * 100);
+    try { localStorage.setItem('bm_vol', String(vol)); } catch (e) { /* da igual */ }
   };
   var pintarMenu = function () {
     nf.querySelectorAll('.nf-menu [data-s]').forEach(function (p) { p.classList.toggle('on', (p.dataset.s === 'es') === subsOn); p.setAttribute('aria-checked', String((p.dataset.s === 'es') === subsOn)); });
+    nf.querySelectorAll('.nf-menu [data-v]').forEach(function (p) { p.classList.toggle('on', +p.dataset.v === velocidad); });
     $n('[data-nf="subs"]').classList.toggle('activo', subsOn);
+    var d = D(), lista = $n('.nf-lista'), ca = capActual(); lista.textContent = '';
+    capitulos().forEach(function (c, k) {
+      var li = document.createElement('li'); li.dataset.i = c.i; li.classList.toggle('on', !!ca && ca.i === c.i);
+      li.innerHTML = '<b>' + (k + 1) + '</b><span></span><em>' + mmss(c.t) + '</em>'; li.querySelector('span').textContent = c.nombre.replace(/^Capítulo \d+ · /, '');
+      lista.appendChild(li);
+    });
+  };
+  // «Saltar intro» en el tráiler y el reparto; «Saltar créditos» en los créditos (a la escena post-créditos)
+  var salto = function () {
+    var d = D(); if (!d) return null; var t = titulo(d.cur);
+    var idx = function (n) { return d.slides.findIndex(function (s) { return s.dataset.title === n; }); };
+    if (t === 'Tráiler' || t === 'Prólogo · La banda') { var j = idx('Prólogo · Jueves, 23:47'); return j > d.cur ? { txt: 'Saltar intro', i: j } : null; }
+    if (t === 'Créditos') { var p = idx('Escena post-créditos'); return p > d.cur ? { txt: 'Saltar créditos', i: p } : null; }
+    return null;
   };
   var pintar = function () {
-    var d = D(); if (!d) return;
-    var caps = capitulos(), cap = caps.filter(function (c) { return c.act && c.i <= d.cur; }).pop();
-    var L = d.lista(), pos = Math.max(0, L.indexOf(d.cur)), pct = L.length > 1 ? pos / (L.length - 1) * 100 : 0;
+    var d = D(); if (!d || !d.total) return;
+    var tot = d.total(), t = Math.min(tot, d.tiempo()), pct = tot ? t / tot * 100 : 0;
     $n('.nf-lleno').style.width = pct + '%'; $n('.nf-bola').style.left = pct + '%';
-    $n('.nf-cuenta').textContent = (pos + 1) + ' / ' + L.length;
-    $n('.nf-titulo').innerHTML = '<b>BandManager.io</b> ' + (cap ? cap.t.replace(/·.*/, '').trim() : 'Prólogo') + ' <span>' + (caps[d.cur] ? caps[d.cur].t : '') + '</span>';
-    $n('.nf-cap').textContent = cap ? cap.t : '';
-    $n('.nf-pcap').textContent = (cap ? cap.t + ' · ' : '') + (caps[d.cur] ? caps[d.cur].t : '');
+    $n('.nf-buffer').style.width = Math.min(100, pct + 6) + '%';
+    $n('.nf-cuenta').textContent = '-' + mmss(tot - t);
+    var ca = capActual();
+    var esc = titulo(d.cur), pre = ca && esc.indexOf(ca.nombre) !== 0 && esc.indexOf(ca.nombre.replace(/ ·.*/, '')) !== 0 ? ca.nombre + ' · ' : '';
+    $n('.nf-titulo').innerHTML = '<b>BandManager.io</b> <span></span>'; $n('.nf-titulo span').textContent = pre + esc;
+    $n('.nf-cap').textContent = ca ? ca.nombre : '';
+    $n('.nf-pcap').textContent = pre + esc;
     $n('[data-nf="play"]').innerHTML = d.pausado ? ico.play : ico.pausa;
     $n('[data-nf="play"]').setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa');
-    var son = !!(window.DeckSound && window.DeckSound.enabled);
+    var son = !!(window.DeckSound && window.DeckSound.enabled) && vol > 0;
     $n('[data-nf="sonido"]').innerHTML = son ? ico.sonido : ico.mudo;
-    $n('.nf-caps').textContent = '';
-    L.forEach(function (i, k) { if (caps[i].act && k) { var t = document.createElement('i'); t.style.left = (k / (L.length - 1) * 100) + '%'; $n('.nf-caps').appendChild(t); } });
+    $n('[data-nf="sig"]').disabled = d.proximo(d.cur) === null;
+    var marcas = capitulos().map(function (c) { return tot ? (c.t / tot * 100).toFixed(2) : 0; }).join(',');
+    if ($n('.nf-caps').dataset.m !== marcas) {
+      $n('.nf-caps').dataset.m = marcas; $n('.nf-caps').textContent = '';
+      marcas.split(',').slice(1).forEach(function (x) { var i = document.createElement('i'); i.style.left = x + '%'; $n('.nf-caps').appendChild(i); });
+    }
+    var sl = salto(), b = saltarBtn;
+    b.classList.toggle('on', !!sl && body.classList.contains('pelicula')); if (sl) { b.textContent = sl.txt; b.dataset.i = sl.i; }
   };
+  // El icono que salta un momento en el centro, como en Netflix
+  var flash = function (svg, txt) { var f = $n('.nf-flash'); f.innerHTML = svg + (txt ? '<b>' + txt + '</b>' : ''); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); };
+  var saltar = function (seg) { var d = D(); if (!d) return; d.irA(Math.max(0, Math.min(d.total() - 0.5, d.tiempo() + seg))); flash(seg < 0 ? ico.menos : ico.mas); setTimeout(pintar, 60); };
+  var cerrarMenus = function () { nf.classList.remove('menu', 'menu-vel', 'menu-caps'); };
   var acciones = {
-    play: function () { var d = D(); if (d) d.pausar(!d.pausado); },
-    atras: function () { var d = D(), a = d && d.anterior(d.cur); if (a !== null && a !== undefined) d.show(a); },
-    alante: function () { var d = D(), a = d && d.proximo(d.cur); if (a !== null && a !== undefined) d.show(a); },
-    sonido: function () { if (window.DeckSound) window.DeckSound.toggle(); setTimeout(pintar, 50); },
-    subs: function () { nf.classList.toggle('menu'); },
+    play: function () { var d = D(); if (!d) return; d.pausar(!d.pausado); flash(d.pausado ? ico.pausa : ico.play); },
+    menos: function () { saltar(-15); },
+    mas: function () { saltar(15); },
+    sig: function () { var d = D(), a = d && d.proximo(d.cur); if (a !== null && a !== undefined) d.show(a); },
+    sonido: function () {
+      if (window.DeckSound && !window.DeckSound.enabled) { window.DeckSound.toggle(); if (!vol) vol = 1; }
+      else vol = vol > 0 ? 0 : (+nf.dataset.volPrev || 1);
+      if (vol) nf.dataset.volPrev = vol; aplicarVol();
+    },
+    subs: function () { var on = nf.classList.contains('menu'); cerrarMenus(); if (!on) nf.classList.add('menu'); },
+    vel: function () { var on = nf.classList.contains('menu-vel'); cerrarMenus(); if (!on) nf.classList.add('menu-vel'); },
+    caps: function () { var on = nf.classList.contains('menu-caps'); cerrarMenus(); if (!on) { pintarMenu(); nf.classList.add('menu-caps'); } },
     fs: function () { var r = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : r.requestFullscreen && r.requestFullscreen()); }
   };
   nf.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-nf]'), s = e.target.closest('[data-s]');
-    if (s) { ponerSubs(s.dataset.s === 'es'); nf.classList.remove('menu'); return; }
-    if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); despierta(); }
+    var b = e.target.closest('[data-nf]'), s = e.target.closest('[data-s]'), v = e.target.closest('[data-v]'), c = e.target.closest('.nf-lista li');
+    if (s) { ponerSubs(s.dataset.s === 'es'); cerrarMenus(); return; }
+    if (v) { velocidad = +v.dataset.v; if (window.DeckVoces && window.DeckVoces.velocidad) window.DeckVoces.velocidad(velocidad); pintarMenu(); cerrarMenus(); flash(ico.vel, String(velocidad).replace('.', ',') + '×'); return; }
+    if (c) { var d = D(); cerrarMenus(); if (d) d.show(+c.dataset.i); return; }
+    if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); pintarMenu(); despierta(); }
   });
+  $n('.nf-vr').addEventListener('input', function (e) { vol = +e.target.value / 100; if (vol && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); pintar(); });
   var prog = $n('.nf-prog');
-  var escenaEn = function (e) { var r = prog.getBoundingClientRect(), d = D(), L = d.lista(); return L[Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (L.length - 1))]; };
-  prog.addEventListener('click', function (e) { var d = D(); if (d) d.show(escenaEn(e)); });
+  var tiempoEn = function (e) { var r = prog.getBoundingClientRect(), d = D(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (d ? d.total() : 0); };
+  var escenaEnTiempo = function (seg) { var d = D(), t = 0, L = d.lista(); for (var k = 0; k < L.length; k++) { t += d.durEscena(L[k]); if (seg < t) return L[k]; } return L[L.length - 1]; };
+  prog.addEventListener('click', function (e) { var d = D(); if (d) { d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
   prog.addEventListener('mousemove', function (e) {
-    var d = D(); if (!d) return; var i = escenaEn(e), L = d.lista(), tip = $n('.nf-tip');
-    tip.textContent = (L.indexOf(i) + 1) + ' · ' + (d.slides[i].dataset.title || ''); tip.style.left = (L.indexOf(i) / Math.max(1, L.length - 1) * 100) + '%';
+    var d = D(); if (!d) return; var seg = tiempoEn(e), tip = $n('.nf-tip'), r = prog.getBoundingClientRect();
+    tip.textContent = mmss(seg) + ' · ' + titulo(escenaEnTiempo(seg)); tip.style.left = ((e.clientX - r.left) / r.width * 100) + '%';
   });
-  // Se esconde a los 2,5 s sin mover el ratón, como en Netflix (en pausa se queda)
+  prog.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); saltar(e.key === 'ArrowLeft' ? -15 : 15); } });
+  setInterval(function () { if (body.classList.contains('pelicula') && !body.classList.contains('scroll')) pintar(); }, 250);
+  // Se esconde a los 2,5 s sin mover el ratón, como en Netflix (en pausa o con un menú abierto se queda)
   var oculto = 0;
-  var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!nf.classList.contains('menu') && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
+  var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!/menu/.test(nf.className) && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
   addEventListener('mousemove', function () { if (body.classList.contains('pelicula')) despierta(); });
+  addEventListener('touchstart', function () { if (body.classList.contains('pelicula')) despierta(); }, { passive: true });
   // Reloj de cuenta atrás (Nolan): el sábado el Resurrección Fest cierra el cartel a las 14:00 y cada plano marca la hora
   var reloj = document.createElement('div'); reloj.id = 'reloj'; reloj.setAttribute('aria-hidden', 'true');
   reloj.innerHTML = '<small>CIERRE DEL CARTEL · RESURRECCIÓN FEST</small><span></span>';
@@ -262,14 +347,25 @@
   addEventListener('hashchange', pintar);
   addEventListener('deckpausa', function () { pintar(); despierta(); });
   addEventListener('voz', pintar);
-  // Teclas de Netflix en modo película: espacio o K pausa; C, subtítulos (la tecla de siempre)
+  // Teclas de Netflix en modo película: espacio o K pausa · ← / J −15 s · → / L +15 s · ↑ ↓ volumen · M silencio ·
+  // N siguiente escena · S saltar intro o créditos · F pantalla completa · C subtítulos · Esc cierra los menús
   addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA/.test(e.target.tagName) || body.classList.contains('gate')) return;
     if ((e.key === 'c' || e.key === 'C')) { ponerSubs(!subsOn); despierta(); return; }
     if (!body.classList.contains('pelicula') || body.classList.contains('scroll')) return;
-    if (e.key === ' ' || e.key === 'k' || e.key === 'K') { e.preventDefault(); e.stopImmediatePropagation(); acciones.play(); pintar(); despierta(); }
+    var k = e.key, hecho = true;
+    if (k === ' ' || k === 'k' || k === 'K' || k === 'Enter') acciones.play();
+    else if (k === 'ArrowLeft' || k === 'j' || k === 'J') saltar(-15);
+    else if (k === 'ArrowRight' || k === 'l' || k === 'L') saltar(15);
+    else if (k === 'ArrowUp' || k === 'ArrowDown') { vol = Math.max(0, Math.min(1, Math.round((vol + (k === 'ArrowUp' ? 0.1 : -0.1)) * 10) / 10)); if (vol && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); flash(vol ? ico.sonido : ico.mudo, Math.round(vol * 100) + ' %'); }
+    else if (k === 'm' || k === 'M') { acciones.sonido(); flash(vol ? ico.sonido : ico.mudo); }
+    else if (k === 'n' || k === 'N') acciones.sig();
+    else if ((k === 's' || k === 'S') && salto()) { var d = D(); d.show(salto().i); }
+    else if (k === 'Escape' && /menu/.test(nf.className)) cerrarMenus();
+    else hecho = false;
+    if (hecho) { e.preventDefault(); e.stopImmediatePropagation(); pintar(); despierta(); }
   }, true);
-  ponerSubs(subsOn);
+  ponerSubs(subsOn); aplicarVol();
   setTimeout(pintar, 0); addEventListener('load', pintar);
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });

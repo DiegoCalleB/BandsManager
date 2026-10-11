@@ -1436,3 +1436,32 @@ body.pelicula:not(.scroll) .slide.feat.active .ft-shot:not(.phone):not(.alto) { 
 @media (prefers-reduced-motion: reduce) { body.pelicula .slide.active .tag, body.pelicula .slide.feat.active .ft-copy h2, body.pelicula .slide.feat.active .ft-shot { animation: none !important; } }
 body.pelicula:not(.scroll) .slide.feat.active .ft-copy > .tag { animation: sobreimp 1400ms steps(28) 400ms both, vetetag 700ms ease-in 3800ms forwards; }
 @keyframes vetetag { to { opacity: 0; } }
+
+/* Reproductor: controles nuevos (−15/+15 s, volumen, siguiente, capítulos, velocidad, saltar intro, icono central) */
+.nf-buffer { position: absolute; inset: 0 auto 0 0; background: rgba(255,255,255,.22); }
+.nf-bola { z-index: 2; }
+.nf-vol { display: flex; align-items: center; gap: 4px; }
+.nf-vr { width: 0; opacity: 0; transition: width 200ms, opacity 200ms; accent-color: #e50914; height: 6px; cursor: pointer; }
+.nf-vol:hover .nf-vr, .nf-vr:focus { width: 150px; opacity: 1; }
+.nf-b:disabled { opacity: .35; cursor: default; transform: none; }
+.nf-b svg text { fill: currentColor; }
+#nf.menu .nf-m-subs, #nf.menu-vel .nf-m-vel, #nf.menu-caps .nf-m-caps { display: flex; }
+#nf.menu-vel, #nf.menu-caps { opacity: 1; } #nf.menu-vel > *, #nf.menu-caps > * { pointer-events: auto; }
+.nf-m-vel .nf-vels { display: flex; gap: 34px; } .nf-m-vel p { padding-left: 34px; }
+.nf-m-caps { max-height: 620px; overflow: auto; min-width: 640px; }
+.nf-lista { list-style: none; margin: 0; padding: 0; }
+.nf-lista li { display: grid; grid-template-columns: 50px 1fr auto; gap: 18px; align-items: center; padding: 16px 18px; border-radius: 4px; cursor: pointer; color: rgba(255,255,255,.75); }
+.nf-lista li:hover { background: rgba(255,255,255,.1); color: #fff; }
+.nf-lista li.on { background: rgba(255,255,255,.16); color: #fff; }
+.nf-lista b { font-size: 34px; color: rgba(255,255,255,.5); } .nf-lista em { font-style: normal; color: rgba(255,255,255,.55); font-variant-numeric: tabular-nums; }
+/* «Saltar intro» y «Saltar créditos»: siempre a la vista en su escena, abajo a la derecha, como en Netflix */
+.nf-saltar { position: absolute; z-index: 61; right: 70px; bottom: 210px; display: none; padding: 18px 40px; font: 700 28px/1 'Helvetica Neue', Arial, sans-serif;
+  color: #fff; background: rgba(42,42,42,.72); border: 2px solid rgba(255,255,255,.75); border-radius: 6px; cursor: pointer; pointer-events: auto !important; }
+body.pelicula:not(.scroll) .nf-saltar.on { display: block; }
+.nf-saltar:hover { background: #fff; color: #000; }
+/* Icono central que salta un momento (pausa, ±15 s, volumen, velocidad) */
+.nf-flash { position: absolute; left: 50%; top: 50%; z-index: 3; translate: -50% -50%; display: grid; place-items: center; gap: 6px; width: 170px; height: 170px;
+  border-radius: 50%; background: rgba(0,0,0,.5); opacity: 0; pointer-events: none !important; }
+.nf-flash svg { width: 84px; height: 84px; fill: #fff; } .nf-flash b { font-size: 24px; margin-top: -10px; }
+.nf-flash.on { animation: nfflash 700ms ease-out both; }
+@keyframes nfflash { 0% { opacity: 0; scale: .7; } 20% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1.25; } }

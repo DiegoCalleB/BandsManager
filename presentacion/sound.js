@@ -24,7 +24,7 @@
   function chain(c) {
     const comp = c.createDynamicsCompressor();
     comp.threshold.value = -16; comp.knee.value = 12; comp.ratio.value = 3.5; comp.attack.value = 0.004; comp.release.value = 0.2;
-    const master = c.createGain(); master.gain.value = 0.85;
+    const master = c.createGain(); master.gain.value = 0.85 * (c.__vol === undefined ? 1 : c.__vol); c.__master = master;
     const dry = c.createGain(); dry.gain.value = 0.82;
     const verb = c.createConvolver(); verb.buffer = impulse(c);
     const wet = c.createGain(); wet.gain.value = 0.28;
@@ -246,14 +246,14 @@
     return ev;
   }
 
-  let ctx = null, input = null, scene = null, enabled = false, curEl = null, curStart = 0, onChange = () => {};
+  let vol = 1, ctx = null, input = null, scene = null, enabled = false, curEl = null, curStart = 0, onChange = () => {};
   try { enabled = localStorage.getItem(KEY) !== 'off'; } catch (e) { enabled = true; }
 
   function ensure() {
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
-    ctx = new AC(); input = chain(ctx);
+    ctx = new AC(); ctx.__vol = vol; input = chain(ctx);
     return true;
   }
 
@@ -325,6 +325,7 @@
       document.body.classList.toggle('sound-on', on);
       onChange(on);
     },
+    volumen(v) { vol = v; if (ctx) { ctx.__vol = v; if (ctx.__master) ctx.__master.gain.value = 0.85 * v; } },
     tick() { /* sin clic: los pasos por clics van en silencio */ },
     // Rampa de velocidad: suena antes del corte (en ms), para que el golpe caiga justo cuando cambia el plano
     rampa(ms) { if (enabled && ensure()) kit(ctx, input).rampa(ctx.currentTime + ms / 1000, Math.min(0.6, ms / 1000), 0.2); },

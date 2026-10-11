@@ -20,10 +20,13 @@
   var pref = store.get('deck_voces') !== 'off';
   // Dos reproductores que se turnan: así una frase puede empezar mientras la anterior todavía termina,
   // como en una conversación real en la que la gente se pisa un poco
-  var pista = [new Audio(), new Audio()], turno = 0;
+  // Tres reproductores fijos (no se crean nuevos a mitad de película: Safari no deja sonar audios nuevos sin un clic)
+  var pista = [new Audio(), new Audio(), new Audio()], turno = 0;
   pista.forEach(function (a) { a.preload = 'auto'; a.preservesPitch = true; });
+  var volumen = 1, vel = 1; // los cambia el reproductor (volumen y velocidad)
+  var libre = function () { for (var k = 0; k < pista.length; k++) { var a = pista[(turno + k) % pista.length]; if (!a._colgando) { turno = (turno + k + 1) % pista.length; return a; } } return pista[0]; };
   // Ritmo: voces un poco más rápidas; PISAR = cuánto se solapa con la anterior cuando cambia quien habla
-  var VEL = 1.12, PISAR = 0.28;
+  var BASE = 1.12, VEL = BASE, PISAR = 0.28;
   var retardo = function (el) { return el && el.matches('.dlg li') ? Math.min(420, 140 + (el.dataset.say || '').length * 1.3) : 0; };
   var run = 0, timer = 0, avisar = function () {};
 
@@ -117,7 +120,7 @@
     }
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
-      var audio = pista[turno]; turno = 1 - turno; audio._el = el;
+      var audio = libre(); audio._el = el; audio.volume = volumen;
       audio.onended = acabar; audio.onerror = function () { leer(); };
       audio.src = 'audio/voces/' + m.f + '?v=' + (m.h || m.v || ''); // el nombre del mp3 sale del texto: el ?v= evita servir de la caché un audio viejo
       audio.playbackRate = VEL;
@@ -144,7 +147,7 @@
   function stop() {
     run++;
     clearTimeout(timer);
-    pista.forEach(function (a) { a.onended = null; a.onerror = null; try { a.pause(); } catch (_) { /* nada que parar */ } });
+    pista.forEach(function (a) { if (a._colgando) return; a.onended = null; a.onerror = null; try { a.pause(); } catch (_) { /* nada que parar */ } });
     try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (_) { /* sin síntesis */ }
     document.querySelectorAll('.habla, .typing').forEach(function (e) { e.classList.remove('habla', 'typing'); callar(e); });
     document.querySelectorAll('.foco.in').forEach(function (f) { f.classList.remove('in'); delete f.dataset.who; });
@@ -153,14 +156,14 @@
   // Corte en L: la frase que está sonando se suelta y termina sola sobre el plano siguiente (stop() ya no la corta)
   var colgando = 0;
   function soltar() {
-    pista.forEach(function (a, k) {
+    pista.forEach(function (a) {
       if (a.paused || a.ended || !a._el) return;
       var el = a._el;
       el.classList.remove('habla'); el.classList.add('habla-l');
-      a.onended = function () { el.classList.remove('habla-l'); callar(el); };
+      a._colgando = true;
+      a.onended = function () { a._colgando = false; el.classList.remove('habla-l'); callar(el); };
       a.onerror = a.onended;
       colgando = Math.max(colgando, performance.now() + ((a.duration || 0) - a.currentTime) / VEL * 1000);
-      var n = new Audio(); n.preload = 'auto'; n.preservesPitch = true; pista[k] = n;
     });
   }
 
@@ -172,7 +175,8 @@
     slide._hueco = undefined; // se vuelve a medir el hueco libre (puede haber cambiado el tamaño de la ventana)
     var cola = Array.prototype.slice.call(slide.querySelectorAll('[data-who][data-say]'));
     if (filtro) cola = cola.filter(filtro);
-    var i = 0;
+    var i = Math.max(0, Math.min(cola.length, (opts && opts.desde) || 0));
+    for (var k0 = 0; k0 < i; k0++) if (mostrar) mostrar(cola[k0]);
     var siguiente = function () {
       if (id !== run) return;
       if (i >= cola.length) { timer = setTimeout(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
@@ -199,6 +203,21 @@
   window.DeckVoces = {
     enabled: enabled, play: play, stop: stop, uno: uno, soltar: soltar,
     // segundos que dura lo que dicen los personajes de una diapositiva (para repartir una animación de cámara)
+    // duración hablada de cada frase de una diapositiva, en segundos y en orden (para la barra de tiempo del reproductor)
+    lineas: function (slide) {
+      return Array.prototype.map.call(slide.querySelectorAll('[data-who][data-say]'), function (el) {
+        var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)];
+        return (m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.042)) + retardo(el) / 1000;
+      });
+    },
+    get listo() { return Object.keys(manifest).length > 0; },
+    // Dentro del clic de «Reproducir»: Safari solo deja sonar después los audios que se han tocado en un gesto
+    desbloquear: function () {
+      var silencio = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=';
+      pista.forEach(function (a) { if (a.src) return; a.src = silencio; var pr = a.play(); if (pr && pr.then) pr.then(function () { a.pause(); }).catch(function () { /* nada */ }); });
+    },
+    volumen: function (v) { volumen = v; pista.forEach(function (a) { a.volume = v; }); },
+    velocidad: function (f) { vel = f; VEL = BASE * f; pista.forEach(function (a) { if (!a.paused) a.playbackRate = VEL; }); },
     duracion: function (slide) {
       var t = 0;
       slide.querySelectorAll('[data-who][data-say]').forEach(function (el) {
