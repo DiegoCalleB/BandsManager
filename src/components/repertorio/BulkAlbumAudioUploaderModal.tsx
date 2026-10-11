@@ -38,6 +38,12 @@ interface UploadMatchItem {
   esAproximado?: boolean;
 }
 
+/** Id único en el cliente: `prefijo_<ms>[_<indice>]_<4 caracteres aleatorios>`. Solo se llama desde handlers. */
+function idUnico(prefijo: string, indice?: number): string {
+  const sufijo = Math.random().toString(36).substring(2, 6);
+  return indice === undefined ? `${prefijo}_${Date.now()}_${sufijo}` : `${prefijo}_${Date.now()}_${indice}_${sufijo}`;
+}
+
 export function BulkAlbumAudioUploaderModal({
   isOpen,
   onClose,
@@ -406,7 +412,7 @@ export function BulkAlbumAudioUploaderModal({
         if (isCreatingBrandNewAlbum || !item.matchedSongId) {
           // CREATE NEW SONG IN DATABASE
           const newSong: Song = {
-            id: `song_bulk_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 6)}`,
+            id: idUnico("song_bulk", i),
             titulo: item.title || `Pista ${i + 1}`,
             artista: bandId,
             album: finalAlbumTitle,
@@ -422,7 +428,7 @@ export function BulkAlbumAudioUploaderModal({
             tonalidad: "Am",
             audioIdeas: [
               {
-                id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                id: idUnico("idea_master"),
                 titulo: "Audio Máster Completo (Estudio)",
                 seccion: "general",
                 audioUrl: uploadedUrl,
@@ -485,7 +491,7 @@ export function BulkAlbumAudioUploaderModal({
               portadaUrl: uploadedCoverUrl || targetSong.portadaUrl,
               audioIdeas: [
                 {
-                  id: `idea_master_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+                  id: idUnico("idea_master"),
                   titulo: "Audio Máster Completo (Estudio)",
                   seccion: "general",
                   audioUrl: uploadedUrl,

@@ -11,6 +11,7 @@ import { formatSecondsToMmSs } from "../../utils/stageTimeFormat";
 import { cacheActiveStageSetlist } from "../../utils/stageOfflineCache";
 import { formatSongTitle } from "../../utils/formatSongTitle";
 import { Button, Select } from '../ui';
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 
 interface EscenarioViewProps {
   activeSetlist: Setlist | null;
@@ -57,11 +58,13 @@ const StageMetronomeDot: React.FC<{ isPlaying: boolean; bpm: number }> =
   React.memo(({ isPlaying, bpm }) => {
     const [tick, setTick] = useState(false);
 
+    // Al parar (o sin BPM válido) el punto vuelve a apagado, durante el render y no en un efecto.
+    useReajusteAlCambiar([isPlaying, bpm] as const, () => {
+      if (!isPlaying || !bpm || bpm <= 0) setTick(false);
+    });
+
     useEffect(() => {
-      if (!isPlaying || !bpm || bpm <= 0) {
-        setTick(false);
-        return;
-      }
+      if (!isPlaying || !bpm || bpm <= 0) return;
       const intervalMs = (60 / bpm) * 1000;
       const interval = setInterval(
         () => {
@@ -170,6 +173,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
   useEffect(() => {
     if (activeSetlist && songs.length > 0) {
       const success = cacheActiveStageSetlist(activeSetlist, songs);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- el resultado de escribir en el almacenamiento offline (efecto externo) solo existe tras ejecutarlo en este efecto
       setIsCached(success);
     }
   }, [activeSetlist, songs]);

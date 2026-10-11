@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
 import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -31,7 +32,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   const [key, setKey] = useState('');
   const [tempo, setTempo] = useState<number | ''>(120);
 
-  useEffect(() => {
+  useReajusteAlCambiar([editingShowItem, isOpen] as const, () => {
     // Se lee de los campos reales de SetlistItem (ver showItemForm.ts).
     const form = formDesdeSetlistItem(editingShowItem);
     setTitle(form.title);
@@ -41,7 +42,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
     setKey(form.key);
     setTuning('');
     setTempo(120);
-  }, [editingShowItem, isOpen]);
+  });
 
   if (!isOpen) return null;
 

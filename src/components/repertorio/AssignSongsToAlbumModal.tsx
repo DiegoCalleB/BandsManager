@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
 import { X, Search, Plus, Check, Disc3, Upload, Loader2 } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
@@ -39,7 +40,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
   const [description, setDescription] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen, albumName, songs] as const, () => {
     if (isOpen) {
       setCustomAlbumName(albumName);
       const matching = songs.filter((s) => (s.albumDisco || 'Singles / Sin Disco') === albumName || s.albumDisco === albumName);
@@ -50,7 +51,7 @@ export function AssignSongsToAlbumModal({ isOpen, albumName, songs, colors, onCl
       const existingYear = conAnio.find((s) => s.albumYear || s.album_year)?.albumYear || conAnio.find((s) => s.album_year)?.album_year;
       if (existingYear) setAlbumYear(existingYear);
     }
-  }, [isOpen, albumName, songs]);
+  });
 
   if (!isOpen) return null;
 

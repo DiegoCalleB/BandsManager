@@ -14,6 +14,7 @@ import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
 import { comoErrorCapturado } from '../../utils/errorCapturado';
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -103,13 +104,12 @@ export function SetlistAIAnalysisModal({
 
   // Al abrir, si ya hay un análisis guardado para este setlist, mostrarlo directamente en vez
   // de forzar al usuario a pulsar"Iniciar Análisis IA" solo para ver lo que ya se calculó.
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen, setlistId] as const, () => {
     if (isOpen) {
       setAnalysis(initialAnalysis ?? null);
       setError(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, setlistId]);
+  });
 
   // Copia local de las sugerencias que SÍ se reajusta tras cada"Aplicar" — aplicar una sugerencia
   // cambia el orden real del setlist, y las demás sugerencias pendientes seguían apuntando a la
@@ -131,12 +131,12 @@ export function SetlistAIAnalysisModal({
     invalidIndices: Set<number>;
   } | null>(null);
 
-  useEffect(() => {
+  useReajusteAlCambiar([analysis] as const, () => {
     setLiveSuggestions(analysis ? analysis.suggestions : null);
     setAppliedSuggestionIndices(new Set());
     setInvalidSuggestionIndices(new Set());
     setPreApplySnapshot(null);
-  }, [analysis]);
+  });
 
   const handleApplySuggestion = (idx: number) => {
     if (!liveSuggestions || !onReorder) return;
@@ -207,9 +207,9 @@ export function SetlistAIAnalysisModal({
     originY: number;
   } | null>(null);
 
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen] as const, () => {
     if (!isOpen) setDragOffset({ x: 0, y: 0 });
-  }, [isOpen]);
+  });
 
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {

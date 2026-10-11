@@ -1,5 +1,5 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Song, ThemeColors, Setlist } from "../../types";
 import { Disc, Disc3, Play, Pause, Trash2, Edit3, Plus, Clock, ChevronDown, ChevronUp, Layers, Scissors, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from "lucide-react";
 import { AlbumCover } from "../AlbumCover";
@@ -18,6 +18,7 @@ import { ShowIcon } from "../ui/ShowIcon";
 import { ActionMenu, Button, IconButton, Input } from "../ui";
 import { resumirTranscripcion } from "../../utils/transcripcionMasiva";
 import { colaActiva, useColaLetras } from "../../hooks/useColaLetras";
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 
 interface DiscografiaViewProps {
   songs: Song[];
@@ -505,9 +506,9 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   };
   const cola = useColaLetras(recargarCancionesConLetra);
   const colaEnMarcha = colaActiva(cola.resumen);
-  useEffect(() => {
-    if (colaEnMarcha) setColaVista(true);
-  }, [colaEnMarcha]);
+  useReajusteAlCambiar([colaEnMarcha] as const, ([enMarcha]) => {
+    if (enMarcha) setColaVista(true);
+  });
   const titulosDe = (ids: string[]) =>
     ids.map((id) => safeSongs.find((s) => s.id === id)?.titulo || id).join(", ");
 

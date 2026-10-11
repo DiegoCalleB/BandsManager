@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useSyncExternalStore } from "react";
 import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import { ShowIcon } from "../ui/ShowIcon";
 import { titlesMatch } from "../../utils/songTitleMatch";
@@ -111,6 +111,14 @@ interface EnergyChartProps {
 
 import { monotonePath } from "../../utils/curve";
 
+const CONSULTA_PUNTERO_FINO = "(hover: hover) and (pointer: fine)";
+const suscribirPunteroFino = (avisar: () => void) => {
+  const mq = window.matchMedia(CONSULTA_PUNTERO_FINO);
+  mq.addEventListener("change", avisar);
+  return () => mq.removeEventListener("change", avisar);
+};
+const punteroFinoAhora = () => window.matchMedia(CONSULTA_PUNTERO_FINO).matches;
+
 /**
  * El Mapa de Energía del show, extraído a un componente reutilizable para poder mostrarlo tanto
  * en el editor de setlist como (en tamaño reducido) dentro del modal de Análisis IA — así las
@@ -212,14 +220,7 @@ export function EnergyChart({
   // táctil: es justo el "se queda pegado tapando el gráfico" que forzó a sacar el detalle del
   // tooltip flotante en primer lugar (ver comentario de arriba). En PC no estorba porque
   // desaparece solo al mover el ratón fuera.
-  const [isPointerFine, setIsPointerFine] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setIsPointerFine(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setIsPointerFine(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const isPointerFine = useSyncExternalStore(suscribirPunteroFino, punteroFinoAhora, () => false);
   const draggingFromIndexRef = useRef<number | null>(null);
   const activePointerIdRef = useRef<number | null>(null);
   const dragStartClientXRef = useRef<number | null>(null);
@@ -312,6 +313,14 @@ export function EnergyChart({
   };
   const [tip, setTip] = useState<{ i: number; left: number } | null>(null);
 
+  // Datos del gesto recién iniciado. `startDrag` solo toca estado; el efecto de debajo los vuelca
+  // a los refs que leen los listeners de window (los refs no se tocan durante el render).
+  const [dragInicio, setDragInicio] = useState<{
+    fromIndex: number;
+    clientX: number;
+    clientY: number;
+    pointerId: number;
+  } | null>(null);
   const startDrag = (
     fromIndex: number,
     clientX: number,
@@ -319,13 +328,7 @@ export function EnergyChart({
     pointerId: number,
     pointerType: string,
   ) => {
-    draggingFromIndexRef.current = fromIndex;
-    dragStartClientXRef.current = clientX;
-    dragStartClientYRef.current = clientY;
-    dragAxisRef.current = null;
-    dragStartScoreRef.current = null;
-    activePointerIdRef.current = pointerId;
-    liveEnergyScoreRef.current = null;
+    setDragInicio({ fromIndex, clientX, clientY, pointerId });
     setDraggingFromIndex(fromIndex);
     setHoverIndex(fromIndex);
     setDragAxis(null);
@@ -333,6 +336,17 @@ export function EnergyChart({
     setDragPointerPos(null);
     setDragPointerType(pointerType);
   };
+
+  useEffect(() => {
+    if (!dragInicio) return;
+    draggingFromIndexRef.current = dragInicio.fromIndex;
+    dragStartClientXRef.current = dragInicio.clientX;
+    dragStartClientYRef.current = dragInicio.clientY;
+    dragAxisRef.current = null;
+    dragStartScoreRef.current = null;
+    activePointerIdRef.current = dragInicio.pointerId;
+    liveEnergyScoreRef.current = null;
+  }, [dragInicio]);
 
   useEffect(() => {
     if (draggingFromIndex === null) return;
@@ -516,7 +530,7 @@ export function EnergyChart({
           (() => {
             const info = getEnergyInfo(liveEnergyScore);
             const isTouch = dragPointerType === "touch";
-            const containerWidth = containerRef.current?.clientWidth ?? 300;
+            const containerWidth = width || 300;
             const sideGap = 20;
             const placeOnLeft = dragPointerPos.x > containerWidth * 0.6;
             return (

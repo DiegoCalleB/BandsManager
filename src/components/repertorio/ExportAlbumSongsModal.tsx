@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 import JSZip from "jszip";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song, ThemeColors } from "../../types";
@@ -50,13 +51,13 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   const [zipError, setZipError] = useState<string | null>(null);
 
   // Sync selected album when albumName prop changes
-  useEffect(() => {
+  useReajusteAlCambiar([albumName, isOpen] as const, () => {
     if (albumName) {
       setSelectedAlbum(albumName);
     } else {
       setSelectedAlbum("all");
     }
-  }, [albumName, isOpen]);
+  });
 
   // Filter songs by selected album
   const targetSongs = useMemo(() => {

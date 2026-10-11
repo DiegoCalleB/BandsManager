@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
 import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
@@ -17,7 +18,7 @@ export function SetlistModal({ isOpen, setlistToEdit, onClose, onSave }: Setlist
   const [descripcion, setDescripcion] = useState('');
   const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');
 
-  useEffect(() => {
+  useReajusteAlCambiar([setlistToEdit] as const, () => {
     if (setlistToEdit) {
       setNombre(setlistToEdit.nombre || '');
       setDescripcion(setlistToEdit.descripcion || '');
@@ -27,7 +28,7 @@ export function SetlistModal({ isOpen, setlistToEdit, onClose, onSave }: Setlist
       setDescripcion('Repertorio optimizado para directo de alta energía');
       setTipoFormato('festival');
     }
-  }, [setlistToEdit]);
+  });
 
   if (!isOpen) return null;
 
