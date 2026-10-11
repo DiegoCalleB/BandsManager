@@ -1,6 +1,6 @@
 import { Check, Copy, MessageCircle, Repeat, Send, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { BandContact } from '../../types';
+import { BandContact, BookingCampaign } from '../../types';
 import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../utils/whatsapp';
 import { ModalPortal } from '../common/ModalPortal';
 import { IconButton, Input } from '../ui';
@@ -9,7 +9,7 @@ interface BandPitchModalProps {
   isOpen: boolean;
   onClose: () => void;
   band: BandContact | null;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   myBandName: string;
   proposedCity: string;
   setProposedCity: (val: string) => void;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
-import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
+import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion, ThemeColors, ThemeName } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { EPK_LANGUAGES } from '../i18n/epkTranslations';
 import { IDIOMA_ORIGEN } from '../utils/epkTraducciones';
@@ -22,12 +22,24 @@ import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 
+/** Miembro tal y como puede llegar de filas antiguas, con la foto en `foto_url` (snake_case). */
+type MiembroConAlias = BandMember & { foto_url?: string };
+
+/**
+ * Lo que devuelve de verdad `PUT /api/epk` (`server/routes/epk_fans.ts`): la fila releída tras
+ * guardar. `api.updateEpkConfig` la declara como `EPKConfig`, por eso se reinterpreta aquí.
+ */
+interface RespuestaGuardadoEpk {
+  success?: boolean;
+  epkConfig?: Partial<EPKConfig>;
+}
+
 interface EPKManagerProps {
   epkConfig?: Partial<EPKConfig>;
   songs?: Song[];
   onSave?: (newConfig: EPKConfig) => void;
-  colors?: any;
-  currentTheme?: any;
+  colors?: ThemeColors;
+  currentTheme?: ThemeName;
   currentUser?: User;
   isPromoPlan?: boolean;
 }
@@ -264,7 +276,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         },
       };
 
-      const respuesta: any = await api.updateEpkConfig(payload);
+      const respuesta = (await api.updateEpkConfig(payload)) as unknown as RespuestaGuardadoEpk;
 
       // El servidor devuelve la fila leída de la BD tras guardar. Si algún campo enviado no
       // coincide, el 200 era engañoso (la BD no cambió): se avisa en vez de dar por bueno el guardado.
@@ -470,7 +482,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const miembros: BandMember[] = (config.miembros || []).map((m, idx) => ({
     ...m,
     id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
-    fotoUrl: m.fotoUrl || (m as any).foto_url || '',
+    fotoUrl: m.fotoUrl || (m as MiembroConAlias).foto_url || '',
   }));
 
   const actualizarMiembros = (updater: (prevList: BandMember[]) => BandMember[]) => {
@@ -478,7 +490,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       const currentList: BandMember[] = (prev.miembros || []).map((m, idx) => ({
         ...m,
         id: m.id || `m-${idx + 1}-${(m.nombre || '').replace(/\s+/g, '-').toLowerCase() || 'item'}`,
-        fotoUrl: m.fotoUrl || (m as any).foto_url || '',
+        fotoUrl: m.fotoUrl || (m as MiembroConAlias).foto_url || '',
       }));
       const nuevos = updater(currentList);
       return {
@@ -592,11 +604,11 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
     );
   };
 
-  const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string) => {
+  const editarDatoContratacion = (campo: keyof DatosContratacion, valor: string | boolean) => {
     setConfig((prev) => {
-      const datos = { ...(prev.datosContratacion || {}) } as any;
+      const datos: Record<string, unknown> = { ...(prev.datosContratacion || {}) };
       datos[campo] = campo === 'numMusicos' ? (valor === '' ? undefined : Number(valor)) : valor;
-      return { ...prev, datosContratacion: datos };
+      return { ...prev, datosContratacion: datos as DatosContratacion };
     });
   };
 

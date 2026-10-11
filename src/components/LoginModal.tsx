@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, Zap, Shield, KeyRound, ArrowLeft, CheckCircle2 } from "lucide-react";
-import { User as UserType } from "../types";
+import { User as UserType, BandaDisponible } from "../types";
 import { signInWithGoogleIdentity } from "../utils/googleAuth";
 import { guardarCookieDeSesion } from "../utils/sessionCookie";
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
@@ -11,7 +11,7 @@ import { Button, IconButton, Input, LinkButton } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface LoginModalProps {
-  onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
+  onLoginSuccess: (user: UserType, token: string, bandsList?: BandaDisponible[]) => void;
 }
 
 type ViewState = "login" | "register" | "plans" | "activate" | "reset-password";
@@ -25,12 +25,21 @@ const LOGIN_POSTER = "/login-animation-poster.jpg";
 // tienen), por eso el chequeo es"opt-out": si no existe o no se puede leer, se asume conexión
 // buena y se intenta el vídeo igualmente - degradar solo cuando hay evidencia real de que la
 // red va mal (2G/slow-2g o modo Ahorro de Datos activado).
+/** Lo que se lee de la Network Information API (con los prefijos de navegadores antiguos). */
+interface InfoConexion {
+  saveData?: boolean;
+  effectiveType?: string;
+}
+type NavigatorConConexion = Navigator & {
+  connection?: InfoConexion;
+  mozConnection?: InfoConexion;
+  webkitConnection?: InfoConexion;
+};
+
 function tieneConexionMala(): boolean {
   try {
-    const conn =
-      (navigator as any).connection ||
-      (navigator as any).mozConnection ||
-      (navigator as any).webkitConnection;
+    const nav = navigator as NavigatorConConexion;
+    const conn = nav.connection || nav.mozConnection || nav.webkitConnection;
     if (!conn) return false;
     if (conn.saveData) return true;
     return conn.effectiveType === "slow-2g" || conn.effectiveType === "2g";

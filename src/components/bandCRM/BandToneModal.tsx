@@ -92,6 +92,13 @@ export interface ToneAnalysisData {
 }
 
 /** Borrador de edición manual: los campos de lista se editan como texto y se parten al guardar. */
+/** Respuesta de `PATCH /api/bands/tone-dna`. */
+interface RespuestaGuardarTono {
+  success?: boolean;
+  data?: ToneAnalysisData;
+  error?: string;
+}
+
 interface ToneDraft {
   tono_comunicacion: string;
   tratamiento_habitual: string;
@@ -310,12 +317,12 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
         puntos_fuertes_para_conectar: draft.puntos_fuertes_para_conectar.trim(),
         recomendacion_pitch: draft.recomendacion_pitch.trim(),
       };
-      const res = await apiFetch("/api/bands/tone-dna", {
+      const res = await apiFetch<RespuestaGuardarTono>("/api/bands/tone-dna", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cambios),
       });
-      const json = res as any;
+      const json = res;
       if (json?.success && json.data) {
         onSaved?.(json.data);
         setIsEditing(false);

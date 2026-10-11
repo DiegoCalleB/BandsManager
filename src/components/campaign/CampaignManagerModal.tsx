@@ -7,6 +7,17 @@ import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Textarea } from '../ui';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
+import type { NavigationOptions } from '../Dashboard';
+
+/** Opciones con las que el gestor de campañas navega (además de las comunes, filtros de campaña). */
+type OpcionesNavegacionCampana = NavigationOptions & { campaignFilter?: string; campaignCities?: string[] };
+
+/** Respuesta de `POST /api/templates/generate-all`: una plantilla por categoría de lead. */
+interface RespuestaGenerarPlantillas {
+  success?: boolean;
+  generatedResults?: Partial<Record<PitchTemplateCategory, { body?: string }>>;
+  error?: string;
+}
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -37,7 +48,7 @@ interface CampaignManagerModalProps {
   onSetActiveCampaign: (
     idOrCampaign: string | BookingCampaign | null,
   ) => Promise<void>;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: OpcionesNavegacionCampana) => void;
 }
 
 export function CampaignManagerModal({
@@ -82,7 +93,7 @@ export function CampaignManagerModal({
     setIsGeneratingAllTemplates(true);
     setTemplateGenerationFeedback(null);
     try {
-      const data = await apiFetch<any>("/api/templates/generate-all", {
+      const data = await apiFetch<RespuestaGenerarPlantillas>("/api/templates/generate-all", {
         method: "POST",
         body: JSON.stringify({
           baseProposal,

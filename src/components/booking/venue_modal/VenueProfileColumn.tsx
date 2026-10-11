@@ -6,6 +6,9 @@ import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
+/** Lead con la fecha de evento que guardaban versiones antiguas del CRM. */
+type LeadConFechaLegacy = Lead & { fecha_posible_evento?: string };
+
 interface VenueProfileColumnProps {
   lead: Lead;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
@@ -87,7 +90,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
 
   // Tour Date Conflict Check
   const conflictCheck = checkBandDateConflict(
-    (lead as any).fecha_posible_evento || lead.fechas_propuestas_sala?.[0] || lead.fechas_libres_detectadas?.[0],
+    (lead as LeadConFechaLegacy).fecha_posible_evento || lead.fechas_propuestas_sala?.[0] || lead.fechas_libres_detectadas?.[0],
     concerts,
     lead.ciudad
   );

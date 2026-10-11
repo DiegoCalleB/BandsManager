@@ -276,7 +276,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const markersGroup = useRef<any>(null);
+  const markersGroup = useRef<L.MarkerClusterGroup | null>(null);
 
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("streets");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
@@ -306,12 +306,12 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       tileLayerRef.current = layer;
 
-      const clusterGroup = (L as any).markerClusterGroup({
+      const clusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         maxClusterRadius: 50,
-        iconCreateFunction: (cluster: any) => {
+        iconCreateFunction: (cluster) => {
           const count = cluster.getChildCount();
           const size = 42;
           const bgColor = "var(--acc)";

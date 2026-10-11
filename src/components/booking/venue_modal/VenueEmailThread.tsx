@@ -1,12 +1,25 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Mail, Clock, Send, Sparkles, RefreshCw, Eye, MousePointerClick, ArrowUpDown, Copy, Check, Building2, User, ChevronDown, ChevronUp, ExternalLink, Zap, Download } from 'lucide-react';
-import { Lead } from '../../../types';
+import { Lead, EmailMessage, InteractionLog } from '../../../types';
 import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../../utils/bookingFollowup';
 import { Button } from '../../ui';
 import { ShowIcon } from '../../ui/ShowIcon';
 import { EmailDeliveryTicks } from '../EmailDeliveryTicks';
 import { apiFetch } from '../../../utils/api';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
+
+/**
+ * Mensaje del hilo tal y como llega de `lead_messages` o de los campos antiguos del lead: no
+ * siempre trae todos los campos de {@link EmailMessage}, y los de Gmail añaden su id propio.
+ */
+type MensajeHilo = Omit<Partial<EmailMessage>, 'remitente'> & {
+  /** En BD es TEXT libre ('sala', 'banda' y, en filas antiguas, 'promotor'). */
+  remitente?: string;
+  gmail_message_id?: string;
+};
+
+/** Lead con los arrays de mensajes de versiones anteriores a `lead_messages`. */
+type LeadConHiloLegacy = Lead & { mensajes?: MensajeHilo[]; email_thread?: MensajeHilo[] };
 
 interface VenueEmailThreadProps {
   lead: Lead;
@@ -24,7 +37,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   const needsFollowup = isLeadNeedsFollowup(lead);
   const daysSince = getDaysSinceContact(lead);
 
-  const [dbMessages, setDbMessages] = useState<any[]>([]);
+  const [dbMessages, setDbMessages] = useState<MensajeHilo[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
@@ -37,7 +50,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     if (!lead?.id) return;
     try {
       setLoadingMessages(true);
-      const res = await apiFetch(`/api/leads/${lead.id}/messages`);
+      const res = await apiFetch<{ success?: boolean; messages?: MensajeHilo[] }>(`/api/leads/${lead.id}/messages`);
       if (res?.success && Array.isArray(res.messages)) {
         setDbMessages(res.messages);
       }
@@ -53,10 +66,10 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   }, [fetchMessages]);
 
   // Combine lead.mensajes with dbMessages
-  const rawMessages: any[] = useMemo(() => {
+  const rawMessages: MensajeHilo[] = useMemo(() => {
     return dbMessages.length > 0
       ? dbMessages
-      : (lead as any).mensajes || (lead as any).email_thread || [];
+      : (lead as LeadConHiloLegacy).mensajes || (lead as LeadConHiloLegacy).email_thread || [];
   }, [dbMessages, lead]);
 
   // Sort messages (Newest first by default)
@@ -164,7 +177,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     }
   };
 
-  const formatTelemetryItem = (item: any) => {
+  const formatTelemetryItem = (item: Partial<InteractionLog>) => {
     const notas = String(item.notas || '');
     const res = String(item.resultado || '');
     const id = String(item.id || '');
@@ -308,7 +321,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   /**
    * Calcula la telemetría específica vinculada a cada mensaje individual del hilo
    */
-  const getMessageTelemetry = (msg: any, msgIndex: number) => {
+  const getMessageTelemetry = (msg: MensajeHilo, msgIndex: number) => {
     if (msg.remitente !== 'banda') return null;
     const historial = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
     const msgTime = msg.fecha ? new Date(msg.fecha).getTime() : 0;

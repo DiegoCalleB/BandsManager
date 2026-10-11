@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Send, CheckCircle2, Copy, Edit3, Star, MessageCircle, Loader2, Check, Layers, AlertCircle, Clock, Mail, Save } from 'lucide-react';
-import { Lead } from '../../../types';
+import { Lead, LeadStatus, BookingCampaign } from '../../../types';
 import { Button, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import { MultiModelPitchComparatorModal } from '../MultiModelPitchComparatorModal';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
+/** Resultado por lead que devuelve `POST /api/trigger-agent` para el agente enviador. */
+interface ResultadoEnviador {
+  id?: string;
+  status?: string;
+  estado_nuevo?: LeadStatus;
+  error?: string;
+}
+
 interface VenuePitchWorkspaceProps {
   lead: Lead;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
   onOpenWhatsAppModal: () => void;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   bandName?: string;
 }
 
@@ -112,7 +120,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
 
     // Step 2: Trigger agent dispatcher
     try {
-      const res = await apiFetch('/api/trigger-agent', {
+      const res = await apiFetch<{ results?: ResultadoEnviador[]; message?: string }>('/api/trigger-agent', {
         method: 'POST',
         body: JSON.stringify({
           agentName: 'enviador',
@@ -121,7 +129,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       });
 
       const leadResult = Array.isArray(res.results)
-        ? res.results.find((r: any) => r.id === lead.id)
+        ? res.results.find((r) => r.id === lead.id)
         : null;
 
       if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {

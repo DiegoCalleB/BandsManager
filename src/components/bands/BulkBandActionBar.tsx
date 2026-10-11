@@ -2,7 +2,7 @@ import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { BandRelationshipStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
-import { CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Download, Trash2, Star, CheckCircle2, Repeat, Clock, Users, ShieldAlert } from "lucide-react";
+import { CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Download, Trash2, Star, CheckCircle2, Repeat, Clock, Users, ShieldAlert, type LucideIcon } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, LinkButton } from '../ui';
 
@@ -23,7 +23,7 @@ const BAND_STATUS_OPTIONS: {
   status: BandRelationshipStatus;
   label: string;
   color: string;
-  icon: any;
+  icon: LucideIcon;
 }[] = [
   {
     status: "sin_contactar",

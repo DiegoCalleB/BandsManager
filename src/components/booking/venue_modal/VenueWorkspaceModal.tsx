@@ -10,6 +10,10 @@ import { VenueBitacoraTab } from './VenueBitacoraTab';
 import { WhatsAppPreviewModal } from '../WhatsAppPreviewModal';
 import { FastDealModal } from '../FastDealModal';
 import { VenueModalTab, VenueModalProps } from './types';
+import type { Lead } from '../../../types';
+
+/** Lead con los arrays de mensajes anteriores a `lead_messages` (solo se cuentan). */
+type LeadConHiloLegacy = Lead & { mensajes?: unknown[]; email_thread?: unknown[] };
 
 export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   isOpen,
@@ -88,7 +92,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
 
   if (!isOpen || !selectedLead) return null;
 
-  const messagesCount = (selectedLead as any).mensajes?.length || (selectedLead as any).email_thread?.length || 0;
+  const messagesCount = (selectedLead as LeadConHiloLegacy).mensajes?.length || (selectedLead as LeadConHiloLegacy).email_thread?.length || 0;
   const bitacoraCount = selectedLead.historial_contacto?.length || 0;
 
   return (

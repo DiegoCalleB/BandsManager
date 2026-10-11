@@ -73,7 +73,7 @@ export function AIBandScoutModal({
     setSelectedBands(new Set());
 
     try {
-      const response = await apiFetch("/api/bands/ai-scout", {
+      const response = await apiFetch<{ bands?: Partial<BandContact>[] }>("/api/bands/ai-scout", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ city, genre, count }),
@@ -81,7 +81,7 @@ export function AIBandScoutModal({
       if (response && response.bands) {
   setResults(response.bands);
   // Auto-select all by default
-  setSelectedBands(new Set(response.bands.map((_: any, i: number) => i)));
+  setSelectedBands(new Set(response.bands.map((_, i) => i)));
       }
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);

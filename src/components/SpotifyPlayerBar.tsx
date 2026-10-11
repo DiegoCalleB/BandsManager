@@ -27,20 +27,36 @@ interface SpotifyPlayerBarProps {
   transposeSemitones?: number;
 }
 
+/**
+ * Canción tal y como puede llegar al reproductor: con los alias snake_case de filas antiguas y,
+ * si viene de un setlist, con la tonalidad deseada del ítem.
+ */
+type CancionReproducible = Song & {
+  tonalidadDeseada?: string;
+  audio_principal_url?: string;
+  audio_url?: string;
+  audio?: string;
+  url?: string;
+  fileUrl?: string;
+  file_url?: string;
+  audio_ideas?: { audioUrl?: string; audio_url?: string }[];
+};
+
 function getRawAudioUrl(song: Song | null | undefined): string {
   if (!song) return '';
+  const c: CancionReproducible = song;
   return (
-    song.audioPrincipalUrl ||
-    (song as any).audio_principal_url ||
-    song.audioUrl ||
-    (song as any).audio_url ||
-    (song as any).audio ||
-    (song as any).url ||
-    (song as any).fileUrl ||
-    (song as any).file_url ||
-    (song.audioIdeas && song.audioIdeas[0]?.audioUrl) ||
-    (song as any).audio_ideas?.[0]?.audioUrl ||
-    (song as any).audio_ideas?.[0]?.audio_url ||
+    c.audioPrincipalUrl ||
+    c.audio_principal_url ||
+    c.audioUrl ||
+    c.audio_url ||
+    c.audio ||
+    c.url ||
+    c.fileUrl ||
+    c.file_url ||
+    (c.audioIdeas && c.audioIdeas[0]?.audioUrl) ||
+    c.audio_ideas?.[0]?.audioUrl ||
+    c.audio_ideas?.[0]?.audio_url ||
     ''
   );
 }
@@ -78,11 +94,11 @@ export default function SpotifyPlayerBar({
     if (typeof propTransposeSemitones === 'number' && propTransposeSemitones !== 0) {
       return propTransposeSemitones;
     }
-    if (song?.tonalidad && (song as any)?.tonalidadDeseada) {
-      return getSemitoneDifference(song.tonalidad, (song as any).tonalidadDeseada) ?? 0;
+    if (song?.tonalidad && (song as CancionReproducible | null)?.tonalidadDeseada) {
+      return getSemitoneDifference(song.tonalidad, (song as CancionReproducible | null).tonalidadDeseada) ?? 0;
     }
     return 0;
-  }, [propTransposeSemitones, song?.id, song?.tonalidad, (song as any)?.tonalidadDeseada]);
+  }, [propTransposeSemitones, song?.id, song?.tonalidad, (song as CancionReproducible | null)?.tonalidadDeseada]);
 
   const [transposeSemitones, setTransposeSemitones] = useState<number>(calculatedSemitones);
 
@@ -109,7 +125,7 @@ export default function SpotifyPlayerBar({
   // Spotify Pedalboard C++ DSP on server is used for audio transposition instead of Web Audio phase vocoders
 
   // Audio Synth fallback for songs without custom audio file
-  const synthIntervalRef = useRef<any>(null);
+  const synthIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const [activeAudioUrl, setActiveAudioUrl] = useState<string>('');
@@ -331,7 +347,7 @@ export default function SpotifyPlayerBar({
         // Simple subtle click synth sound for practice
         try {
           if (!audioCtxRef.current) {
-            audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+            audioCtxRef.current = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
           }
           if (audioCtxRef.current.state === 'suspended') {
             audioCtxRef.current.resume();

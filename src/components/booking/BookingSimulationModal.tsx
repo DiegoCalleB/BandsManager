@@ -30,7 +30,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
-      const res = await apiFetch('/api/generate-simulated-email', {
+      const res = await apiFetch<{ message?: string }>('/api/generate-simulated-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -43,7 +43,7 @@ export const BookingSimulationModal: React.FC<BookingSimulationModalProps> = ({ 
       });
       // apiFetch devuelve el JSON ya parseado (y lanza si la respuesta no fue 2xx),
       // así que no hay Response que interrogar con .ok / .json().
-      const data = res as any;
+      const data = res;
       if (data?.message) {
         setSimulationMessage(data.message);
         setSimulationGenerated(true);

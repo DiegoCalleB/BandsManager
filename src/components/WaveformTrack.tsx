@@ -148,7 +148,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
     })();
 
     // Helper time formatter & duration checks
-    const isFiniteNum = (val: any): val is number =>
+    const isFiniteNum = (val: unknown): val is number =>
       typeof val === "number" && !isNaN(val) && isFinite(val) && val > 0;
 
     const formatSecs = (secs: number) => {
@@ -271,7 +271,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
           }
         };
 
-        const handleError = (err: any) => {
+        const handleError = (err: unknown) => {
           console.warn("WaveSurfer error loading track:", err);
           if (!isCancelled) {
             setLoadError(true);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Concert } from '../../types';
+import { Concert, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
 import { Music, Trash2 } from 'lucide-react';
@@ -15,7 +15,7 @@ interface CalendarEditConcertModalProps {
   onUpdateConcert: (id: string, updatedFields: Partial<Concert>) => void;
   onDeleteConcert?: (id: string) => void;
   setSyncSuccessMessage?: (msg: string) => void;
-  availableSetlists?: any[];
+  availableSetlists?: Setlist[];
 }
 
 export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> = ({
@@ -160,7 +160,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado de pago</label>
                 <Select size="sm" aria-label="Estado de pago"
                   value={editDraft.estado_pago}
-                  onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as any } : prev))}
+                  onChange={(e) => setEditDraft((prev) => (prev ? { ...prev, estado_pago: e.target.value as Concert['estado_pago'] } : prev))}
                   wrapperClassName="w-full"
                 >
                   <option value="pendiente">Pendiente</option>
@@ -183,7 +183,7 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
                 wrapperClassName="w-full"
               >
                 <option value="">-- Sin repertorio asignado --</option>
-                {availableSetlists.map((s: any) => (
+                {availableSetlists.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.nombre} {s.tipoFormato ? `(${s.tipoFormato.replace('_', ' ')})` : ''} • {s.items?.length ?? 0} temas
                   </option>

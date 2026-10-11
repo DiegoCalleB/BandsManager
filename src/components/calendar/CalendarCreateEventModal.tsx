@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Concert, Rehearsal } from '../../types';
+import { Concert, Rehearsal, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Input, Select, Textarea } from '../ui';
@@ -16,7 +16,7 @@ interface CalendarCreateEventModalProps {
   onAddRehearsal?: (rehearsal: Rehearsal) => void;
   onAddConcert?: (concert: Concert) => void;
   setSyncSuccessMessage?: (msg: string) => void;
-  availableSetlists?: any[];
+  availableSetlists?: Setlist[];
 }
 
 export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> = ({
@@ -412,7 +412,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     <option value="">Sin repertorio específico</option>
                     {availableSetlists.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre || s.title}
+                        {s.nombre}
                       </option>
                     ))}
                   </Select>
@@ -525,7 +525,7 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
                     <option value="">Seleccionar repertorio…</option>
                     {availableSetlists.map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.nombre || s.title}
+                        {s.nombre}
                       </option>
                     ))}
                   </Select>

@@ -346,7 +346,7 @@ export default function PracticeModePanel({
   const resyncMetronomeAt = useCallback(
     (atTime: number, anchorOverride?: number) => {
       if (!metronomeCtxRef.current) {
-        metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        metronomeCtxRef.current = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
       }
       const ctx = metronomeCtxRef.current;
       if (ctx.state === 'suspended') ctx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });

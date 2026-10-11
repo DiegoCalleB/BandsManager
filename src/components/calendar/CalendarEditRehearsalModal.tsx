@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rehearsal } from '../../types';
+import { Rehearsal, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Music, Trash2 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -14,7 +14,7 @@ interface CalendarEditRehearsalModalProps {
   onUpdateRehearsal: (id: string, updatedFields: Partial<Rehearsal>) => void;
   onDeleteRehearsal?: (id: string) => void;
   setSyncSuccessMessage?: (msg: string) => void;
-  availableSetlists?: any[];
+  availableSetlists?: Setlist[];
 }
 
 export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProps> = ({
@@ -160,7 +160,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
                   wrapperClassName="w-full"
                 >
                   <option value="">-- Sin repertorio específico --</option>
-                  {availableSetlists.map((s: any) => (
+                  {availableSetlists.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.nombre} • {s.items?.length ?? 0} temas
                     </option>
@@ -173,7 +173,7 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
               <label className="block text-micro font-mono text-[var(--ink-2)] mb-1">Estado</label>
               <Select size="sm" aria-label="Estado"
                 value={editRehearsalDraft.estado}
-                onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as any } : prev))}
+                onChange={(e) => setEditRehearsalDraft((prev) => (prev ? { ...prev, estado: e.target.value as Rehearsal['estado'] } : prev))}
                 wrapperClassName="w-full"
               >
                 <option value="programado">Programado</option>

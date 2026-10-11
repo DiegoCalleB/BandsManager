@@ -17,7 +17,7 @@ export const PublicFanCapture: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [, setIncentivoData] = useState<any>(null);
+  const [, setIncentivoData] = useState<unknown>(null);
   const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({
     name: "",
     logoUrl: "",

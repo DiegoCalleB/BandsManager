@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Image as ImageIcon, Shirt, Tag, QrCode, Download, RefreshCw, Wand2, Type, Upload, Trash2, Scissors, Layers, Plus, Gift, PackageCheck, MapPin, CheckCircle2, X, ArrowRight, Palette, Phone, User, Building } from "lucide-react";
-import { ThemeColors, ThemeName } from "../types";
+import { ThemeColors, ThemeName, Song } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { api } from "../services/api";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
+
+/** Canción con la portada también en `portada_url`, como en copias locales antiguas. */
+type CancionConPortada = Song & { portada_url?: string };
+/** Cómo se quita el fondo del diseño subido. */
+type ModoQuitarFondo = "none" | "white" | "black";
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -128,7 +133,7 @@ export default function Merchan({
     "logo",
   );
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
-  const [removeBgMode, setRemoveBgMode] = useState<"none" | "white" | "black">(
+  const [removeBgMode, setRemoveBgMode] = useState<ModoQuitarFondo>(
     "white",
   );
   const [isUploading, setIsUploading] = useState(false);
@@ -177,9 +182,9 @@ export default function Merchan({
     const fetchAlbums = async () => {
       try {
         const res = await api.getSongs();
-        const songs = res?.songs || [];
+        const songs: CancionConPortada[] = res?.songs || [];
         const albumsMap = new Map<string, string>();
-        songs.forEach((s: any) => {
+        songs.forEach((s) => {
           const album = s.albumDisco || s.album;
           const cover = s.portadaUrl || s.portada_url;
           if (album && cover && String(cover).trim() !== "") {
@@ -204,9 +209,9 @@ export default function Merchan({
         const key = `band_songs_${cleanBand || "default"}`;
         const saved = localStorage.getItem(key);
         if (saved && isSubscribed) {
-          const songs = JSON.parse(saved);
+          const songs: CancionConPortada[] = JSON.parse(saved);
           const albumsMap = new Map<string, string>();
-          songs.forEach((s: any) => {
+          songs.forEach((s) => {
             const album = s.albumDisco || s.album;
             const cover = s.portadaUrl || s.portada_url;
             if (album && cover && cover !== "") {
@@ -584,7 +589,7 @@ export default function Merchan({
               ].map((m) => (
                 <button
                   key={m.id}
-                  onClick={() => setRemoveBgMode(m.id as any)}
+                  onClick={() => setRemoveBgMode(m.id as ModoQuitarFondo)}
                   className={`py-1.5 px-1 rounded text-micro font-sans font-bold transition ${
                     removeBgMode === m.id
                       ? "bg-[var(--ink)] text-[var(--bg)]"

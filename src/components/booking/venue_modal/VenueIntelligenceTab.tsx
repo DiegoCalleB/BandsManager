@@ -14,7 +14,7 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
   onUpdateLead
 }) => {
   const fechasLibres = lead.fechas_libres_detectadas || [];
-  const wegowOk = (lead as any).radar_wegow_status === 'ok';
+  const wegowOk = lead.radar_wegow_status === 'ok';
 
   return (
     <div className="flex flex-col h-full overflow-y-auto no-scrollbar p-4 sm:p-6 space-y-5">

@@ -15,7 +15,10 @@ import {
   SocialPost,
   Setlist,
   Song,
+  User,
 } from "../types";
+import type { MainView } from "../app/appViews";
+import type { SwitcherBand } from "./band_switcher/bandSwitcherTypes";
 import { usePlayer } from "../context/playerContextValue";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
@@ -66,10 +69,10 @@ interface DashboardProps {
   onAddLead: (lead: Lead) => void;
   metrics?: SocialMetric[];
   concerts?: Concert[];
-  currentUser?: any;
+  currentUser?: User;
   bandName?: string;
   currentBandId?: string;
-  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
+  availableBands?: SwitcherBand[];
   rehearsals?: Rehearsal[];
   onAddRehearsal?: (rehearsal: Rehearsal) => void;
   bandUsers?: Array<{ id: string; name: string; instrument?: string }>;
@@ -80,7 +83,7 @@ interface DashboardProps {
   payments?: Payment[];
   setlists?: Setlist[];
   songs?: Song[];
-  onNavigate?: (view: any, options?: NavigationOptions) => void;
+  onNavigate?: (view: MainView, options?: NavigationOptions) => void;
   onOpenProfileModal?: () => void;
   isPromoPlan?: boolean;
 }
@@ -135,9 +138,9 @@ export default function Dashboard({
         availableBands &&
         availableBands.find(
           (b) =>
-            (b.band_id === currentBandId || (b as any).id === currentBandId) &&
-            (normalizePlan((b as any).plan) === "promo" ||
-              normalizePlan((b as any).plan) === "promo_plus"),
+            (b.band_id === currentBandId || b.id === currentBandId) &&
+            (normalizePlan(b.plan) === "promo" ||
+              normalizePlan(b.plan) === "promo_plus"),
         ),
       ));
 
@@ -248,7 +251,7 @@ export default function Dashboard({
     if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
     const match = (availableBands || []).find(
       (b) =>
-        isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId),
+        isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId),
     );
     return (
       match?.bandName ||
@@ -743,11 +746,9 @@ export default function Dashboard({
         isOpen={isAlertSettingsOpen}
         onClose={() => setIsAlertSettingsOpen(false)}
         userPlan={currentUser?.plan || "de_gira"}
-        isLeaderOrManager={
-          currentUser?.rol === "leader" ||
-          currentUser?.rol === "manager" ||
-          true
-        }
+        // Antes `currentUser?.rol === "leader" || … || true`: `rol` no existe en User y la
+        // expresión siempre valía true. Se deja explícito, mismo comportamiento.
+        isLeaderOrManager
         userEmail={currentUser?.email || ""}
         bandId={currentBandId || currentUser?.band_id || "active-band"}
       />

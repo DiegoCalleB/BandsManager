@@ -685,7 +685,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const markersGroup = useRef<any>(null);
+  const markersGroup = useRef<L.MarkerClusterGroup | null>(null);
 
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("streets");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
@@ -720,13 +720,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       tileLayerRef.current = layer;
 
       // Marker Cluster Group (Agrupación por zonas como Celeritas / Google Maps)
-      const clusterGroup = (L as any).markerClusterGroup({
+      const clusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         removeOutsideVisibleBounds: true,
         maxClusterRadius: 50,
-        iconCreateFunction: (cluster: any) => {
+        iconCreateFunction: (cluster) => {
           const count = cluster.getChildCount();
           let size = 38;
           let bgColor = "var(--acc)";
@@ -918,7 +918,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       // Badge color based on status (Google Maps style vibrant pins)
       let pinColor = "#e11d48"; // Rose/Red default
-      if (lead.estado === "aprobado" || lead.estado === ("confirmado" as any))
+      if (lead.estado === "aprobado" || lead.estado === "confirmado")
         pinColor = "var(--ok)"; // Green
       else if (lead.estado === "pendiente_aprobacion")
         pinColor = "var(--acc)"; // Amber

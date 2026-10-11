@@ -315,7 +315,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       mediaStreamRef.current = stream;
 
       const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
+        window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
       if (!AudioCtx) {
         setMicError("El navegador no soporta Web Audio API.");
         return;
@@ -412,7 +412,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
     try {
       const ctx = new (
-        window.AudioContext || (window as any).webkitAudioContext
+        window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
       )();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();

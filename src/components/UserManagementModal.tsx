@@ -127,7 +127,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const data = await apiFetch<any>("/api/users", {
+      const data = await apiFetch<Partial<User>>("/api/users", {
         method: "POST",
         body: JSON.stringify({
           username: newUsername.trim(),
@@ -169,7 +169,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const data = await apiFetch<any>("/api/users/associate", {
+      const data = await apiFetch<Partial<User>>("/api/users/associate", {
         method: "POST",
         body: JSON.stringify({
           email: assocEmail.trim(),
@@ -231,7 +231,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     setSuccessMsg(null);
 
     try {
-      const data = await apiFetch<any>(`/api/users/${userId}`, {
+      const data = await apiFetch<Partial<User>>(`/api/users/${userId}`, {
         method: "PUT",
         body: JSON.stringify({ newPassword: changePasswordValue.trim() }),
       });

@@ -37,6 +37,18 @@ export interface BandTaggedEvent {
   logoUrl?: string;
 }
 
+/** Concierto o ensayo con los alias que añaden algunos endpoints (banda, hora suelta, `isPosible`). */
+export type EventoConAlias = BandTaggedEvent & { hora?: string; isPosible?: boolean };
+
+/** Pestañas de la ficha de evento. */
+export type FichaEventoTab = 'resumen' | 'tecnica' | 'contactos' | 'merchan' | 'postshow' | 'cierre';
+
+/** Opciones de navegación que el calendario pasa a otras vistas (fans, booking). */
+export interface CalendarNavigationOptions {
+  concertId?: string;
+  campaignFilter?: string;
+}
+
 /** Evento de la línea temporal de la ficha: concierto o ensayo con su fecha. */
 export interface ChronologicalEvent {
   id: string;
@@ -59,7 +71,7 @@ export interface CalendarViewProps {
   concerts: Concert[];
   campaigns?: BookingCampaign[];
   activeCampaign?: BookingCampaign | null;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: CalendarNavigationOptions) => void;
   onUpdateRehearsal: (id: string, updatedFields: Partial<Rehearsal>) => void;
   onUpdateConcert: (id: string, updatedFields: Partial<Concert>) => void;
   onDeleteRehearsal?: (id: string) => void;

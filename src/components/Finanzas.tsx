@@ -4,6 +4,8 @@ import {
   Payment,
   Concert,
   ConcertExpenseBreakdown,
+  Tour,
+  User,
 } from "../types";
 import { TrendingUp, TrendingDown, DollarSign, Plus, Search, X, CheckCircle2, AlertCircle, RefreshCw, Calendar, FileText, Calculator, Edit3 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
@@ -16,6 +18,17 @@ import { Button, Input, Select, Textarea } from './ui';
 import { formatEur } from '../utils/formatMoney';
 import { Tabs } from "./ui/Tabs";
 import { comoErrorCapturado } from '../utils/errorCapturado';
+/** Filtro por tipo de movimiento del listado. */
+type FiltroTipo = "todos" | "ingreso" | "gasto";
+/** Filtro por estado de pago del listado. */
+type FiltroEstado = "todos" | "pendiente" | "pagado";
+/** Respuesta de `POST /api/payments/sync`. */
+interface RespuestaSyncFinanzas {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
 interface FinanzasProps {
   colors: ThemeColors;
   payments: Payment[];
@@ -29,8 +42,8 @@ interface FinanzasProps {
     id: string,
     updatedFields: Partial<Concert>,
   ) => Promise<void>;
-  tours?: any[];
-  bandUsers?: any[];
+  tours?: Tour[];
+  bandUsers?: User[];
 }
 
 export default function Finanzas({
@@ -57,13 +70,11 @@ export default function Finanzas({
 
   // Search & Filter State
   const [searchTerm, setSearchTerm] = useState("");
-  const [typeFilter, setTypeFilter] = useState<"todos" | "ingreso" | "gasto">(
+  const [typeFilter, setTypeFilter] = useState<FiltroTipo>(
     "todos",
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("todos");
-  const [statusFilter, setStatusFilter] = useState<
-    "todos" | "pendiente" | "pagado"
-  >("todos");
+  const [statusFilter, setStatusFilter] = useState<FiltroEstado>("todos");
 
   // Form State for Add Transaction
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -78,7 +89,7 @@ export default function Finanzas({
     setSyncSuccess("");
     setSyncError("");
     try {
-      const data = await apiFetch<any>("/api/payments/sync", {
+      const data = await apiFetch<RespuestaSyncFinanzas>("/api/payments/sync", {
         method: "POST",
       });
       if (data?.success) {
@@ -812,7 +823,7 @@ export default function Finanzas({
                 <Select
                   size="sm"
                   value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value as any)}
+                  onChange={(e) => setTypeFilter(e.target.value as FiltroTipo)}
                 >
                   <option value="todos">Tipo: Todos</option>
                   <option value="ingreso">Ingreso (+)</option>
@@ -837,7 +848,7 @@ export default function Finanzas({
                 <Select
                   size="sm"
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as any)}
+                  onChange={(e) => setStatusFilter(e.target.value as FiltroEstado)}
                 >
                   <option value="todos">Estado: Todos</option>
                   <option value="pendiente">Pendiente</option>

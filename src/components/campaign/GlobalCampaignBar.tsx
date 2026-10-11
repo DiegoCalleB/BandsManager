@@ -4,13 +4,14 @@ import { leadMatchesCampaign } from "../../utils/campaignMatch";
 import { Calendar, MapPin, Users, X, Settings2, Building2, ChevronDown, ChevronUp, Flame } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton } from '../ui';
+import type { NavigationOptions } from '../Dashboard';
 
 interface GlobalCampaignBarProps {
   campaign: BookingCampaign;
   allLeads?: Lead[];
   onOpenManager: () => void;
   onDeactivate: () => void;
-  onNavigate: (view: string, options?: any) => void;
+  onNavigate: (view: string, options?: NavigationOptions & { campaignFilter?: string; campaignCities?: string[] }) => void;
   currentView: string;
 }
 

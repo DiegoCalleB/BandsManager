@@ -75,7 +75,7 @@ export const VenueBitacoraTab: React.FC<VenueBitacoraTabProps> = ({ lead, onUpda
               <Select
                 size="sm"
                 value={tipo}
-                onChange={(e) => setTipo(e.target.value as any)}
+                onChange={(e) => setTipo(e.target.value as CanalInteraccion)}
                 wrapperClassName="w-full text-xs"
               >
                 <option value="Llamada">Llamada telefónica</option>

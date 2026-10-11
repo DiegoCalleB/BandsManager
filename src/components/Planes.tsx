@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, Check, X, ShieldCheck, Crown, Star, Layers, Building2, Video, Coins, Bot, Truck, ChevronDown, ChevronUp, Gift, ExternalLink, CreditCard, AlertTriangle, Calendar, Lock, Loader2 } from "lucide-react";
+import { Sparkles, Check, X, ShieldCheck, Crown, Star, Layers, Building2, Video, Coins, Bot, Truck, ChevronDown, ChevronUp, Gift, ExternalLink, CreditCard, AlertTriangle, Calendar, Lock, Loader2, type LucideIcon } from "lucide-react";
 import { ThemeColors, User } from "../types";
 import { CheckoutButton } from "./CheckoutButton";
 import { api } from "../services/api";
@@ -167,7 +167,7 @@ const PLANS_DATA: PlanCardData[] = [
 
 interface ComparisonSection {
   title: string;
-  icon: any;
+  icon: LucideIcon;
   items: {
     name: string;
     description?: string;

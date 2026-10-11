@@ -8,6 +8,9 @@ import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
 
+/** Fila cruda de la hoja: cabecera → valor de celda (texto, número, booleano o vacío). */
+type FilaExcel = Record<string, unknown>;
+
 interface ExcelImportModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -52,7 +55,7 @@ interface ParsedRow {
   notas: string;
   isDuplicate: boolean;
   selected: boolean;
-  originalData: Record<string, any>;
+  originalData: FilaExcel;
 }
 
 const CATEGORY_OPTIONS: { id: LeadType; label: string; icon: string }[] = [
@@ -79,7 +82,7 @@ export function ExcelImportModal({
   const [selectedSheet, setSelectedSheet] = useState<string>("");
   const [workbook, setWorkbook] = useState<XLSX.WorkBook | null>(null);
   const [rawHeaders, setRawHeaders] = useState<string[]>([]);
-  const [rawRows, setRawRows] = useState<Record<string, any>[]>([]);
+  const [rawRows, setRawRows] = useState<FilaExcel[]>([]);
 
   // Mapping
   const [mapping, setMapping] = useState<ColumnMapping>({
@@ -313,7 +316,7 @@ export function ExcelImportModal({
     const ws = wb.Sheets[sheetName];
     if (!ws) return;
 
-    const data: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, {
+    const data = XLSX.utils.sheet_to_json<FilaExcel>(ws, {
       defval: "",
     });
     if (data.length === 0) {

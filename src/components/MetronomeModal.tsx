@@ -126,7 +126,7 @@ export function MetronomeModal({
       // Start audio context
       if (!audioCtxRef.current) {
         audioCtxRef.current = new (
-          window.AudioContext || (window as any).webkitAudioContext
+          window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
         )();
       }
       if (audioCtxRef.current.state === "suspended") {

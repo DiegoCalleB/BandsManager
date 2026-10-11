@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Lead } from "../../types";
+import { Lead, BookingCampaign } from "../../types";
 import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { X, Sparkles, CheckCircle2, Copy, RefreshCw, Loader2, Layers, ArrowRight, ShieldCheck, Check, AlertCircle, Coins, Calculator } from "lucide-react";
@@ -12,7 +12,7 @@ interface MultiModelPitchComparatorModalProps {
   onClose: () => void;
   lead: Lead;
   onSelectProposal: (text: string, providerName: string) => void;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
 }
 
 interface CostEstimateInfo {
