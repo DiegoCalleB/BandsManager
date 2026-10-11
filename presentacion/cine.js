@@ -73,6 +73,7 @@
     if (sub.innerHTML !== html) sub.innerHTML = html;
   };
   setInterval(function () { if (subsOn && body.classList.contains('pelicula')) pintarSubs(); }, 150);
+  addEventListener('voz', function () { if (subsOn) pintarSubs(); }); // sin esperar al siguiente tic: el nombre sale con la primera palabra
   var raf2 = 0;
   new MutationObserver(function () { if (!raf2) raf2 = requestAnimationFrame(function () { raf2 = 0; pintarSubs(); }); })
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
