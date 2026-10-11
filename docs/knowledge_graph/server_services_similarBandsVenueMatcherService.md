@@ -21,6 +21,7 @@ SIMILAR BANDS VENUE MATCHER SERVICE ("Efecto Espejo" / Setlist.fm & Spotify Simi
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

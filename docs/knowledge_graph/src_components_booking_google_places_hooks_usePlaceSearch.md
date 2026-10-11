@@ -22,6 +22,7 @@ Exporta: PlaceSearchParams, usePlaceSearch.
 - [[src_components_booking_google_places_hooks_useAlternativePlaceSources|src/components/booking/google_places/hooks/useAlternativePlaceSources.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_google_places_hooks_useMassCampaignSearch|src/components/booking/google_places/hooks/useMassCampaignSearch.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_google_places_placesModel|src/components/booking/google_places/placesModel.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 

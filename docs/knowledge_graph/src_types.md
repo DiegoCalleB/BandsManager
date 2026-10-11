@@ -76,6 +76,7 @@ _Sin dependencias salientes directas._
 - [[server_services_tiposLeadCorreo|server/services/tiposLeadCorreo.ts]] *(from #service)*
 - [[server_stateTypes|server/stateTypes.ts]] *(from #service)*
 - [[server_tiposAutoEnrichment|server/tiposAutoEnrichment.ts]] *(from #service)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
@@ -188,6 +189,7 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_QuickDealSimulator|src/components/booking/QuickDealSimulator.tsx]] *(from #frontend)*
 - [[src_components_booking_RoadbookContractModal|src/components/booking/RoadbookContractModal.tsx]] *(from #frontend)*
 - [[src_components_booking_TemplateConfigSection|src/components/booking/TemplateConfigSection.tsx]] *(from #frontend)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(from #frontend)*
 - [[src_components_booking_venue_modal_types|src/components/booking/venue_modal/types.ts]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueBitacoraTab|src/components/booking/venue_modal/VenueBitacoraTab.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
@@ -594,6 +596,7 @@ _Sin dependencias salientes directas._
 - `src/audit/tomasConFondoAtril.test.tsx`
 - `src/audit/transcripcionMasiva.test.tsx`
 - `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`
+- `src/components/booking/__tests__/CRMContactEnricherModal.test.tsx`
 - `src/components/booking/__tests__/ExportLeadsModal.test.ts`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`

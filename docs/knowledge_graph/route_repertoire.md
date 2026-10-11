@@ -30,6 +30,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_profesorArmonia|server/services/profesorArmonia.ts]] *(Layer: #service, Domain: #system)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandStyleContext|server/utils/bandStyleContext.ts]] *(Layer: #service, Domain: #system)*
@@ -41,6 +42,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_setlistFeedback|server/utils/setlistFeedback.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_valoresIA|server/utils/valoresIA.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*

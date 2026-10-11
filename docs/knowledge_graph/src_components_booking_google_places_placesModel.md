@@ -32,11 +32,13 @@ Modelo del explorador de lugares: tipos, categorías, ciudades rápidas y descar
 - [[src_components_booking_google_places_hooks_usePlaceSearch|src/components/booking/google_places/hooks/usePlaceSearch.ts]] *(from #frontend)*
 - [[src_components_booking_google_places_PlacesResultsList|src/components/booking/google_places/PlacesResultsList.tsx]] *(from #frontend)*
 - [[src_components_booking_google_places_ScoutFilterBar|src/components/booking/google_places/ScoutFilterBar.tsx]] *(from #frontend)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(from #frontend)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `src/components/booking/google_places/__tests__/googlePlacesExplorerContracts.test.ts`
+- `src/components/booking/google_places/__tests__/radarCultural.test.ts`
 
 ---
 

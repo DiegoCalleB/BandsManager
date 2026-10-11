@@ -20,6 +20,7 @@ Exporta: VenueProfileColumn.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
