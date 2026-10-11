@@ -1,4 +1,5 @@
 import { comoErrorCapturado } from './errorCapturado';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 /**
  * Utility for ultra-low latency & clean audio capture, WebAudio DSP filtering,
  * and background noise/speaker bleed suppression for multitrack recording.
@@ -22,7 +23,7 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
   const useAutoGain = options?.autoGainControl ?? false;
 
   try {
-    const audioConstraints: any = {
+    const audioConstraints: MediaTrackConstraints = {
       echoCancellation: useEchoCancellation,
       noiseSuppression: useNoiseSuppression,
       autoGainControl: useAutoGain,
@@ -63,7 +64,7 @@ export interface CleanPipelineResult {
 }
 
 export const createCleanAudioRecordingPipeline = (rawStream: MediaStream, existingCtx?: AudioContext | null): CleanPipelineResult => {
-  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+  const AudioCtxClass = getAudioContextClass();
   const audioCtx = existingCtx || new AudioCtxClass();
 
   if (audioCtx.state === 'suspended') {
@@ -133,7 +134,7 @@ export const trimAudioBlobLatency = async (audioBlob: Blob, latencyMs: number = 
   if (latencyMs <= 0) return audioBlob;
   try {
     const arrayBuffer = await audioBlob.arrayBuffer();
-    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const tempCtx = new (getAudioContextClass())();
     const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
     tempCtx.close();
 
@@ -210,7 +211,7 @@ export const cleanAudioBlobOffline = async (audioBlob: Blob, latencyTrimMs: numb
     }
 
     const arrayBuffer = await inputBlob.arrayBuffer();
-    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const tempCtx = new (getAudioContextClass())();
     const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
     tempCtx.close();
 
@@ -317,8 +318,8 @@ function writeString(view: DataView, offset: number, string: string) {
 
 export const getSystemAudioLatencyMs = (audioContext?: AudioContext | null): number => {
   if (!audioContext) return 0;
-  const outputLatencySecs = (audioContext as any).outputLatency || 0;
-  const baseLatencySecs = (audioContext as any).baseLatency || 0;
+  const outputLatencySecs = audioContext.outputLatency || 0;
+  const baseLatencySecs = audioContext.baseLatency || 0;
   return Math.round((outputLatencySecs + baseLatencySecs) * 1000);
 };
 
@@ -329,7 +330,7 @@ export const getSystemAudioLatencyMs = (audioContext?: AudioContext | null): num
  */
 export const autoDetectAudioLatencyOffset = async (masterAudioUrl: string, recordedBlob: Blob): Promise<number> => {
   try {
-    const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const tempCtx = new (getAudioContextClass())();
 
     // 1. Fetch & decode Master Audio
     const masterRes = await fetch(masterAudioUrl);
@@ -456,7 +457,7 @@ export const exportMasterMixAudioBlob = async (
     throw new Error('No hay pistas activas para mezclar.');
   }
 
-  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const tempCtx = new (getAudioContextClass())();
 
   // 1. Fetch and decode all track audio buffers
   const decodedTrackBuffers: { buffer: AudioBuffer; input: MasterMixTrackInput }[] = [];
@@ -588,7 +589,7 @@ export const computeAutoBalanceVolumes = async (
   tracks: AutoBalanceTrackInput[],
   resolveUrlFn?: (url: string) => Promise<string>
 ): Promise<Record<string, number>> => {
-  const tempCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  const tempCtx = new (getAudioContextClass())();
   const rmsById: Record<string, number> = {};
 
   try {

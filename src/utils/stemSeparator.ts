@@ -9,6 +9,7 @@
  */
 
 import { getAudioArrayBufferFromUrl } from './audioStorage';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 
 export interface IsolatedStemResult {
   instrument: string;
@@ -29,7 +30,7 @@ export async function separateAudioIntoStems(audioUrl: string, targetInstruments
     const arrayBuffer = await getAudioArrayBufferFromUrl(audioUrl);
 
     // 2. Decode raw PCM audio buffer
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioCtx = getAudioContextClass();
     const tempCtx = new AudioCtx();
     const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
 

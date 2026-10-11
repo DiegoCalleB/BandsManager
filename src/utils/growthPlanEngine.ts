@@ -34,6 +34,9 @@ export interface ChannelRecommendation {
   }[];
 }
 
+/** Idea de contenido viral de un canal. */
+type ConceptoViral = ChannelRecommendation["viralConcepts"][number];
+
 export interface GrowthPlan {
   bandName: string;
   generatedAt: string;
@@ -95,7 +98,7 @@ export function getDeterministicGrowthPlan(
   let igSchedule: string;
   let igActions: ActionItem[];
   let igDonts: string[];
-  let igViralConcepts: any[];
+  let igViralConcepts: ConceptoViral[];
 
   if (tier === "garage_debut") {
     igStage = "Fase Debut (0 - 500)";
@@ -289,7 +292,7 @@ export function getDeterministicGrowthPlan(
   let tkSchedule: string;
   let tkActions: ActionItem[];
   let tkDonts: string[];
-  let tkViralConcepts: any[];
+  let tkViralConcepts: ConceptoViral[];
 
   if (tkCount < 1000) {
     tkStage = "Fase de Descubrimiento (0 - 1K)";
@@ -402,7 +405,7 @@ export function getDeterministicGrowthPlan(
   let ytSchedule: string;
   let ytActions: ActionItem[];
   let ytDonts: string[];
-  let ytViralConcepts: any[];
+  let ytViralConcepts: ConceptoViral[];
 
   if (ytSubs < 1000) {
     ytStage = "Tracción de Catálogo & Shorts (0 - 1K)";
@@ -530,7 +533,7 @@ export function getDeterministicGrowthPlan(
   let spSchedule: string;
   let spActions: ActionItem[];
   let spDonts: string[];
-  let spViralConcepts: any[];
+  let spViralConcepts: ConceptoViral[];
 
   if (!hasSpotifyProfile || spCount < 1000) {
     spObjective = hasSpotifyProfile

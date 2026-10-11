@@ -5,6 +5,7 @@ import {
   NotificationHistoryItem,
   NotificationPermissionStatus,
 } from '../types/browserNotifications';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 
 const CONFIG_STORAGE_KEY = 'bandmanager_notification_config_v1';
 const HISTORY_STORAGE_KEY = 'bandmanager_notification_history_v1';
@@ -131,7 +132,7 @@ export function addNotificationToHistory(item: Omit<NotificationHistoryItem, 'id
 export function playNotificationChime(): void {
   if (typeof window === 'undefined') return;
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = getAudioContextClass();
     if (!AudioContextClass) return;
     const ctx = new AudioContextClass();
 

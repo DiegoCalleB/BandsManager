@@ -24,7 +24,9 @@ export function isLeadNeedsFollowup(lead: Lead): boolean {
  * Devuelve el número de días transcurridos desde el último contacto con el lead.
  */
 export function getDaysSinceContact(lead: Lead): number {
-  const dateStr = lead.fecha_envio || (lead as any).updated_at || (lead as any).created_at;
+  // updated_at/created_at no están en Lead, pero las filas de Supabase sin mapear los traen.
+  const conMarcas: Lead & { updated_at?: string; created_at?: string } = lead;
+  const dateStr = conMarcas.fecha_envio || conMarcas.updated_at || conMarcas.created_at;
   if (!dateStr) return 8; // Si está en espera pero sin fecha explícita, se asume pendiente
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return 8;

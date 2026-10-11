@@ -1,4 +1,5 @@
 // Song & Setlist calculation utilities
+import type { CancionConNotas, MiembroDeBandaLike, NotaDeMiembro } from './tiposRepertorio';
 
 export interface SongLike {
   id: string;
@@ -187,7 +188,7 @@ export const DEFAULT_BAND_MEMBERS: BandMemberOption[] = [
  * Returns clean band member list from users or fallback defaults, plus any custom members found in song notes
  */
 export function resolveBandMembers(
-  users?: any[],
+  users?: MiembroDeBandaLike[],
   extraNotes?: Record<string, string>,
 ): BandMemberOption[] {
   const memberMap = new Map<string, BandMemberOption>();
@@ -236,7 +237,7 @@ export function resolveBandMembers(
  * Retrieves the specific note for a member on a given song
  */
 export function getSongMemberNote(
-  song?: any,
+  song?: CancionConNotas,
   memberKey?: string,
   memberName?: string,
 ): string {
@@ -251,7 +252,7 @@ export function getSongMemberNote(
   // Check in notasPorMiembro array if exists
   if (Array.isArray(song.notasPorMiembro)) {
     const cleanMemberName = (memberName || "").toLowerCase().trim();
-    const found = song.notasPorMiembro.find((n: any) => {
+    const found = song.notasPorMiembro.find((n) => {
       if (memberKey && (n.userId === memberKey || n.id === memberKey))
         return true;
       if (!n.memberName) return false;
@@ -300,13 +301,13 @@ export const READINESS_LEVELS: {
 
 /** Nivel de preparación de UN miembro concreto con una canción (null = todavía no ha opinado). */
 export function getMemberReadiness(
-  song?: any,
+  song?: CancionConNotas,
   memberKey?: string,
   memberName?: string,
 ): ReadinessLevel | null {
   if (!song || !Array.isArray(song.notasPorMiembro)) return null;
   const found = song.notasPorMiembro.find(
-    (n: any) =>
+    (n) =>
       (memberKey && n.userId === memberKey) ||
       (memberName &&
         n.memberName &&
@@ -315,29 +316,29 @@ export function getMemberReadiness(
   return found?.estadoPreparacion || null;
 }
 
-function findMemberNote(song: any, memberKey?: string, memberName?: string): any | undefined {
+function findMemberNote(song: CancionConNotas | undefined, memberKey?: string, memberName?: string): NotaDeMiembro | undefined {
   if (!song || !Array.isArray(song.notasPorMiembro)) return undefined;
   return song.notasPorMiembro.find(
-    (n: any) =>
+    (n) =>
       (memberKey && n.userId === memberKey) ||
       (memberName && n.memberName && n.memberName.toLowerCase() === memberName.toLowerCase()),
   );
 }
 
 /** ¿Este miembro quiere ver la tonalidad de esta canción en su hoja? */
-export function isSongTonoMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+export function isSongTonoMarkedForMember(song?: CancionConNotas, memberKey?: string, memberName?: string): boolean {
   return findMemberNote(song, memberKey, memberName)?.mostrarTono === true;
 }
 
 /** ¿Este miembro quiere ver el BPM? Las marcas antiguas (solo `mostrarTono`) cubrían tono y BPM,
  * así que sin `mostrarBpm` explícito se hereda de `mostrarTono`. */
-export function isSongBpmMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+export function isSongBpmMarkedForMember(song?: CancionConNotas, memberKey?: string, memberName?: string): boolean {
   const n = findMemberNote(song, memberKey, memberName);
   return (n?.mostrarBpm ?? n?.mostrarTono) === true;
 }
 
 /** ¿Este miembro marcó esta canción para ver tono y/o BPM en su hoja impresa? */
-export function isSongMarkedForMember(song?: any, memberKey?: string, memberName?: string): boolean {
+export function isSongMarkedForMember(song?: CancionConNotas, memberKey?: string, memberName?: string): boolean {
   return (
     isSongTonoMarkedForMember(song, memberKey, memberName) ||
     isSongBpmMarkedForMember(song, memberKey, memberName)
@@ -346,7 +347,7 @@ export function isSongMarkedForMember(song?: any, memberKey?: string, memberName
 
 /** Devuelve la canción con las marcas "ver tono" y "ver BPM" de ese miembro puestas o quitadas,
  * sin tocar nota ni nivel de preparación. No muta; si no hay cambio devuelve la misma canción. */
-export function withSongFlagsForMember<T extends { notasPorMiembro?: any[] }>(
+export function withSongFlagsForMember<T extends { notasPorMiembro?: NotaDeMiembro[] }>(
   song: T,
   memberKey: string | undefined,
   memberName: string,
@@ -357,7 +358,7 @@ export function withSongFlagsForMember<T extends { notasPorMiembro?: any[] }>(
     isSongBpmMarkedForMember(song, memberKey, memberName) === flags.bpm
   )
     return song;
-  const list: any[] = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
+  const list: NotaDeMiembro[] = Array.isArray(song.notasPorMiembro) ? [...song.notasPorMiembro] : [];
   const idx = list.findIndex(
     (n) =>
       (memberKey && n.userId === memberKey) ||
@@ -369,7 +370,7 @@ export function withSongFlagsForMember<T extends { notasPorMiembro?: any[] }>(
       ? list[idx]
       : { userId: memberKey, memberName, nota: "", updatedAt: new Date().toISOString() };
   const { mostrarTono: _t, mostrarBpm: _b, ...rest } = base;
-  const next: any = { ...rest };
+  const next: NotaDeMiembro = { ...rest };
   if (flags.tono) next.mostrarTono = true;
   if (flags.bpm) next.mostrarBpm = true;
   else if (flags.tono) next.mostrarBpm = false;
@@ -379,7 +380,7 @@ export function withSongFlagsForMember<T extends { notasPorMiembro?: any[] }>(
 }
 
 /** Atajo: marca/desmarca tono y BPM a la vez. */
-export function withSongMarkedForMember<T extends { notasPorMiembro?: any[] }>(
+export function withSongMarkedForMember<T extends { notasPorMiembro?: NotaDeMiembro[] }>(
   song: T,
   memberKey: string | undefined,
   memberName: string,
@@ -392,16 +393,16 @@ export function withSongMarkedForMember<T extends { notasPorMiembro?: any[] }>(
  * sin tocar la nota de texto libre que ya tuviera. Quien llama debe guardar el resultado (p.ej.
  * onUpdateSong({ ...song, notasPorMiembro: nuevoArray })) — esta función no muta nada. */
 export function withMemberReadiness(
-  song: any,
+  song: CancionConNotas | undefined,
   memberKey: string | undefined,
   memberName: string,
   estado: ReadinessLevel,
-): any[] {
-  const existing: any[] = Array.isArray(song?.notasPorMiembro)
+): NotaDeMiembro[] {
+  const existing: NotaDeMiembro[] = Array.isArray(song?.notasPorMiembro)
     ? [...song.notasPorMiembro]
     : [];
   const idx = existing.findIndex(
-    (n: any) =>
+    (n) =>
       (memberKey && n.userId === memberKey) ||
       (!memberKey &&
         n.memberName &&
@@ -428,7 +429,8 @@ export function withMemberReadiness(
 /** Resumen agregado de preparación de la banda para una canción: cuántos miembros han marcado
  * cada nivel, sobre el total de miembros de la banda (no solo los que ya opinaron). */
 export function getReadinessSummary(
-  song: any,
+  // Solo se cuenta `estadoPreparacion`: vale con notas a medio construir (sin texto).
+  song: { notasPorMiembro?: Pick<NotaDeMiembro, 'estadoPreparacion'>[] } | undefined,
   totalMembers: number,
 ): {
   lista: number;
@@ -437,7 +439,7 @@ export function getReadinessSummary(
   sinOpinar: number;
   total: number;
 } {
-  const notas: any[] = Array.isArray(song?.notasPorMiembro)
+  const notas: Pick<NotaDeMiembro, 'estadoPreparacion'>[] = Array.isArray(song?.notasPorMiembro)
     ? song.notasPorMiembro
     : [];
   const lista = notas.filter((n) => n.estadoPreparacion === "lista").length;

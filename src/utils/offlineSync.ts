@@ -4,13 +4,15 @@
 // la app vuelve a montarse con conexión, un fetch normal traería la versión VIEJA del servidor
 // y pisaría el cambio que solo vivía en local. Esta cola se vacía antes de confiar en ese fetch.
 
+import type { Setlist } from '../types';
+
 const PENDING_KEY_PREFIX = 'pending_setlist_sync_';
 
 function keyFor(bandId?: string): string {
   return PENDING_KEY_PREFIX + (bandId || 'default');
 }
 
-export function queuePendingSetlistSync(bandId: string | undefined, setlist: { id: string }): void {
+export function queuePendingSetlistSync(bandId: string | undefined, setlist: Setlist): void {
   try {
     const key = keyFor(bandId);
     const raw = localStorage.getItem(key);
@@ -36,11 +38,13 @@ export function clearPendingSetlistSync(bandId: string | undefined, setlistId: s
   }
 }
 
-export function getPendingSetlistSyncs(bandId: string | undefined): any[] {
+/** Los setlists encolados por {@link queuePendingSetlistSync}, uno por id. */
+export function getPendingSetlistSyncs(bandId: string | undefined): Setlist[] {
   try {
     const raw = localStorage.getItem(keyFor(bandId));
     if (!raw) return [];
-    return Object.values(JSON.parse(raw));
+    const pendientes: Record<string, Setlist> = JSON.parse(raw);
+    return Object.values(pendientes);
   } catch {
     return [];
   }

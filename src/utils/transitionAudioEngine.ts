@@ -1,4 +1,4 @@
-import { Song } from "../types";
+import { Song, SongAudioIdea } from "../types";
 import {
   parseTonalidad,
   evaluarTransicionArmonica,
@@ -567,9 +567,27 @@ export function diagnoseTransition(
   };
 }
 
+/**
+ * Canción tal como puede llegar de filas sin mapear, importaciones o reproductores externos: cada
+ * origen nombra el audio a su manera. Los alias se comprueban con `typeof` antes de usarse.
+ */
+type CancionConAliasDeAudio = Song & {
+  audio_principal_url?: unknown;
+  audio_url?: unknown;
+  audio?: unknown;
+  fileUrl?: unknown;
+  file_url?: unknown;
+  url?: unknown;
+  demoAudioUrl?: unknown;
+  backingTrackUrl?: unknown;
+  previewUrl?: unknown;
+  streamUrl?: unknown;
+  audio_ideas?: { audioUrl?: string; audio_url?: string }[];
+};
+
 export function resolveSongAudioUrl(song: Song | null | undefined): string {
   if (!song) return "";
-  const s = song as any;
+  const s: CancionConAliasDeAudio = song;
   if (song.audioPrincipalUrl && typeof song.audioPrincipalUrl === "string")
     return song.audioPrincipalUrl;
   if (s.audio_principal_url && typeof s.audio_principal_url === "string")
@@ -602,7 +620,8 @@ export function resolveSongAudioUrl(song: Song | null | undefined): string {
   ) {
     for (const idea of song.audioIdeas) {
       if (idea?.audioUrl) return idea.audioUrl;
-      if ((idea as any)?.audio_url) return (idea as any).audio_url;
+      const ideaConAlias: SongAudioIdea & { audio_url?: string } = idea;
+      if (ideaConAlias?.audio_url) return ideaConAlias.audio_url;
     }
   }
   if (

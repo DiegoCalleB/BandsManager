@@ -1,4 +1,20 @@
-import { EPKConfig, BandMember, EPKVideo, EPKContenidoTraducido } from '../types';
+import { EPKConfig, BandMember, EPKVideo, EPKContenidoTraducido, DatosContratacion } from '../types';
+
+/**
+ * Bloques de cifras de impacto y reseñas de prensa: se leen si el EPK los trae, aunque todavía no
+ * forman parte de {@link EPKConfig}.
+ */
+interface BloquesExtraEpk {
+  cifrasImpacto?: { items?: { id?: string; etiqueta?: string }[] };
+  prensaResenas?: { subtitulo?: string; resenas?: { id?: string; cita?: string; tipo?: string }[] };
+}
+
+/** Traducción con los textos de esos bloques extra, indexados por `id` como miembros y vídeos. */
+interface TraduccionConExtras extends EPKContenidoTraducido {
+  cifras?: Record<string, { etiqueta?: string }>;
+  prensaSubtitulo?: string;
+  resenas?: Record<string, { cita?: string; tipo?: string }>;
+}
 
 /**
  * Utilidades compartidas (servidor y navegador) para el EPK multiidioma.
@@ -37,9 +53,10 @@ export interface TextosTraducibles {
 export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | undefined): TextosTraducibles {
   const miembros = (config?.miembros || []) as BandMember[];
   const videos = (config?.videos || []) as EPKVideo[];
-  const datos: any = config?.datosContratacion || {};
-  const cifras = (config as any)?.cifrasImpacto?.items || [];
-  const resenas = (config as any)?.prensaResenas?.resenas || [];
+  const datos: DatosContratacion = config?.datosContratacion || {};
+  const extras: Partial<EPKConfig> & BloquesExtraEpk = config || {};
+  const cifras = extras.cifrasImpacto?.items || [];
+  const resenas = extras.prensaResenas?.resenas || [];
 
   const datosTraducibles = {} as Record<ClaveDatoTraducible, string>;
   for (const clave of CLAVES_DATOS_TRADUCIBLES) {
@@ -63,7 +80,7 @@ export function recopilarTextosTraducibles(config: Partial<EPKConfig> | null | u
       .filter((c) => c?.id && (c.etiqueta || '').trim())
       .map((c) => ({ id: c.id, etiqueta: c.etiqueta || '' }))
       .sort((a, b) => a.id.localeCompare(b.id)),
-    prensaSubtitulo: (config as any)?.prensaResenas?.subtitulo || '',
+    prensaSubtitulo: extras.prensaResenas?.subtitulo || '',
     resenas: resenas
       .filter((r) => r?.id && ((r.cita || '').trim() || (r.tipo || '').trim()))
       .map((r) => ({ id: r.id, cita: r.cita || '', tipo: r.tipo || '' }))
@@ -144,12 +161,13 @@ export interface ResolutorEpk {
  * aviso de "está vieja" es cosa de la banda, en el gestor, no del visitante.
  */
 export function resolverContenidoEpk(config: Partial<EPKConfig> | null | undefined, idioma: string): ResolutorEpk {
-  const tr: EPKContenidoTraducido = (idioma && idioma !== IDIOMA_ORIGEN && config?.traducciones?.[idioma]) || {};
+  const tr: TraduccionConExtras = (idioma && idioma !== IDIOMA_ORIGEN && config?.traducciones?.[idioma]) || {};
+  const extras: Partial<EPKConfig> & BloquesExtraEpk = config || {};
 
   const usar = (traducido: string | undefined, original: string | undefined): string =>
     traducido && traducido.trim() ? traducido : original || '';
 
-  const datos: any = config?.datosContratacion || {};
+  const datos: DatosContratacion = config?.datosContratacion || {};
 
   return {
     biografia: usar(tr.biografia, config?.biografia),
@@ -159,9 +177,9 @@ export function resolverContenidoEpk(config: Partial<EPKConfig> | null | undefin
     bioMiembro: (m) => usar(tr.miembros?.[m?.id]?.bio, m?.bio),
     tituloVideo: (v) => usar(tr.videos?.[v?.id]?.titulo, v?.titulo),
     dato: (clave) => usar(tr.datosContratacion?.[clave], datos[clave] === undefined || datos[clave] === null ? '' : String(datos[clave])),
-    cifraEtiqueta: (id, defaultVal) => usar((tr as any)?.cifras?.[id]?.etiqueta, defaultVal),
-    prensaSubtitulo: usar((tr as any)?.prensaSubtitulo, (config as any)?.prensaResenas?.subtitulo),
-    resenaCita: (id, defaultVal) => usar((tr as any)?.resenas?.[id]?.cita, defaultVal),
-    resenaTipo: (id, defaultVal) => usar((tr as any)?.resenas?.[id]?.tipo, defaultVal),
+    cifraEtiqueta: (id, defaultVal) => usar(tr.cifras?.[id]?.etiqueta, defaultVal),
+    prensaSubtitulo: usar(tr.prensaSubtitulo, extras.prensaResenas?.subtitulo),
+    resenaCita: (id, defaultVal) => usar(tr.resenas?.[id]?.cita, defaultVal),
+    resenaTipo: (id, defaultVal) => usar(tr.resenas?.[id]?.tipo, defaultVal),
   };
 }

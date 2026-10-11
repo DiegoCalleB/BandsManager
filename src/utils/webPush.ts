@@ -30,13 +30,15 @@ export async function triggerNativeMobileNotification(
       try {
         const registration = await navigator.serviceWorker.ready;
         if (registration && registration.showNotification) {
-          await registration.showNotification(title, {
+          // `vibrate` lo admiten los navegadores móviles, pero ya no está en los tipos del DOM.
+          const opciones: NotificationOptions & { vibrate?: number[] } = {
             body,
             icon,
             badge: '/icon-192.png',
             tag,
             vibrate: [200, 100, 200],
-          } as any);
+          };
+          await registration.showNotification(title, opciones);
           return { success: true, status: 'Notificación enviada al móvil / PWA' };
         }
       } catch (swErr) {

@@ -188,15 +188,36 @@ function decodeBase64Url(str: string): string {
   }
 }
 
+/** Cabecera de un mensaje de la API de Gmail. */
+interface CabeceraGmail {
+  name: string;
+  value: string;
+}
+
+/** Parte (MIME) de un mensaje de la API de Gmail: `payload` y sus `parts` anidadas. */
+interface ParteMensajeGmail {
+  mimeType?: string;
+  headers?: CabeceraGmail[];
+  body?: { data?: string; size?: number };
+  parts?: ParteMensajeGmail[];
+}
+
+/** Mensaje que devuelve la API de Gmail al crear un borrador. */
+interface MensajeGmail {
+  id: string;
+  threadId?: string;
+  labelIds?: string[];
+}
+
 // Extract headers from message
-function getHeader(headers: any[], name: string): string {
+function getHeader(headers: CabeceraGmail[] | undefined, name: string): string {
   if (!headers) return '';
   const header = headers.find((h) => h.name.toLowerCase() === name.toLowerCase());
   return header ? header.value : '';
 }
 
 // Extract message body
-function getMessageBody(payload: any): string {
+function getMessageBody(payload: ParteMensajeGmail): string {
   if (payload.body && payload.body.data) {
     return decodeBase64Url(payload.body.data);
   }
@@ -400,7 +421,7 @@ export const createGmailDraft = async (
   token?: string | null,
   isHtml: boolean = true,
   attachments: EmailAttachment[] = []
-): Promise<{ id: string; message: any }> => {
+): Promise<{ id: string; message: MensajeGmail }> => {
   let activeToken = token || (await getAccessToken());
   if (!activeToken) {
     const authRes = await googleSignIn();

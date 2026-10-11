@@ -21,8 +21,11 @@ import {
   sendTestBrowserNotification,
 } from '../services/browserNotificationService';
 
+/** Lead vigilado: `ultimo_contacto` y `fecha_actualizacion` no están en {@link Lead}, pero se leen si la fila los trae. */
+type LeadVigilado = Lead & { ultimo_contacto?: string; fecha_actualizacion?: string };
+
 interface UseBrowserPushNotificationsProps {
-  leads?: Lead[];
+  leads?: LeadVigilado[];
   messages?: Message[];
   onSelectLead?: (leadId: string) => void;
   isLoggedIn?: boolean;
@@ -153,8 +156,8 @@ export function useBrowserPushNotifications({
         if (lead && lead.id) {
           initialMap.set(lead.id, {
             estado: lead.estado || 'nuevo',
-            ultimo_mensaje: (lead as any).ultimo_mensaje_recibido || (lead as any).ultimo_contacto,
-            fecha_actualizacion: (lead as any).fecha_actualizacion,
+            ultimo_mensaje: lead.ultimo_mensaje_recibido || lead.ultimo_contacto,
+            fecha_actualizacion: lead.fecha_actualizacion,
           });
         }
       });
@@ -170,13 +173,13 @@ export function useBrowserPushNotifications({
       if (!lead || !lead.id) return;
       const leadId = lead.id;
       const currentStatus = lead.estado || 'nuevo';
-      const currentMsg = (lead as any).ultimo_mensaje_recibido || (lead as any).ultimo_contacto;
+      const currentMsg = lead.ultimo_mensaje_recibido || lead.ultimo_contacto;
       const leadName = lead.nombre_sala || 'Sala sin nombre';
 
       currentMap.set(leadId, {
         estado: currentStatus,
         ultimo_mensaje: currentMsg,
-        fecha_actualizacion: (lead as any).fecha_actualizacion,
+        fecha_actualizacion: lead.fecha_actualizacion,
       });
 
       const prevData = prevMap.get(leadId);

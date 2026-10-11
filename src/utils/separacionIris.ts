@@ -1,4 +1,5 @@
 import type { AudioTrack, Song, SongAudioIdea, StemsMeta } from '../types';
+import type { DatosErrorSeparacion, ErrorSeparacionCapturado } from './tiposSeparacionIris';
 
 /**
  * Lógica PURA de la separación de pistas con Iris (sin React, sin red): qué se le dice al usuario en
@@ -383,8 +384,8 @@ export function esErrorDeRed(err: unknown): boolean {
  * Traduce lo que haya lanzado la separación (red, Fal, Replicate, Gemini, FFmpeg, Supabase...) a un
  * título, mensaje y consejo para el usuario. Es la misma clasificación de siempre, ahora probada.
  */
-export function describirErrorSeparacion(err: any, motor: MotorIris): ErrorIris {
-  const data = err?.data || {};
+export function describirErrorSeparacion(err: ErrorSeparacionCapturado | null | undefined, motor: MotorIris): ErrorIris {
+  const data: DatosErrorSeparacion = err?.data || {};
   const errMsg = String(data.message || data.error || err?.message || '');
 
   const esRed =

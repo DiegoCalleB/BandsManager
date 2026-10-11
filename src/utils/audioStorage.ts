@@ -6,7 +6,8 @@
  */
 
 import { getAuthHeaders } from '../services/api';
-import { comoErrorCapturado } from './errorCapturado';
+import { comoErrorCapturado, type ErrorCapturado } from './errorCapturado';
+import type { AudioTrack, Setlist, SetlistItem, Song, SongAudioIdea } from '../types';
 
 const DB_NAME = 'BandManagerAudioDB';
 const STORE_NAME = 'audio_files';
@@ -116,7 +117,7 @@ function openAudioDB(): Promise<IDBDatabase> {
  */
 async function executeIDBOperation<T>(mode: IDBTransactionMode, op: (store: IDBObjectStore) => Promise<T>): Promise<T> {
   let attempts = 0;
-  let lastError: any = null;
+  let lastError: ErrorCapturado | null = null;
 
   while (attempts < 3) {
     attempts++;
@@ -465,9 +466,9 @@ export async function resolveAudioUrl(url: string): Promise<string> {
  * preventing'Setting the value exceeded the quota' errors.
  */
 /** Pasa a IndexedDB las pistas con audio inline (data:/blob:) y deja la referencia `indexeddb:`. */
-async function sanearPistas(pistas: any[] | undefined): Promise<any[]> {
+async function sanearPistas(pistas: AudioTrack[] | undefined): Promise<AudioTrack[]> {
   return Promise.all(
-    (pistas || []).map(async (pista: any) => {
+    (pistas || []).map(async (pista) => {
       let trackUrl = pista.audioUrl || '';
       if (trackUrl.startsWith('data:audio') || trackUrl.startsWith('blob:')) {
         const key = `audio_track_${pista.id || Date.now()}`;
@@ -484,7 +485,7 @@ async function sanearPistas(pistas: any[] | undefined): Promise<any[]> {
   );
 }
 
-export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: string): Promise<void> {
+export async function saveSongsToLocalStorageSafely(songs: Song[], bandId?: string): Promise<void> {
   if (!songs || !Array.isArray(songs)) return;
 
   try {
@@ -517,7 +518,7 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
 
         // Process audio ideas and multitrack pistas
         const sanitizedIdeas = await Promise.all(
-          (song.audioIdeas || []).map(async (idea: any) => {
+          (song.audioIdeas || []).map(async (idea: SongAudioIdea) => {
             let ideaUrl = idea.audioUrl || '';
             if (ideaUrl.startsWith('data:audio') || ideaUrl.startsWith('blob:')) {
               const key = `audio_idea_${idea.id || Date.now()}`;
@@ -569,14 +570,14 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
  * Safely saves the setlists array to localStorage by moving large speech audio data URLs
  * to IndexedDB.
  */
-export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?: string): Promise<void> {
+export async function saveSetlistsToLocalStorageSafely(setlists: Setlist[], bandId?: string): Promise<void> {
   if (!setlists || !Array.isArray(setlists)) return;
 
   try {
     const sanitizedSetlists = await Promise.all(
       setlists.map(async (setlist) => {
         const sanitizedItems = await Promise.all(
-          (setlist.items || []).map(async (item: any) => {
+          (setlist.items || []).map(async (item: SetlistItem) => {
             let itemAudioUrl = item.audioUrl || '';
             if (itemAudioUrl.startsWith('data:audio') && itemAudioUrl.length > 10000) {
               const key = `audio_setlist_item_${item.id}`;

@@ -1,4 +1,5 @@
 import { Song } from '../types';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 import { resolveSongAudioUrl } from './transitionAudioEngine';
 import { resolveAudioUrl } from './audioStorage';
 
@@ -290,7 +291,7 @@ export async function detectAudioCuesFromUrl(
   const arrayBuffer = await response.arrayBuffer();
 
   // Decodificar con AudioContext
-  const ctx = audioCtx || new (window.AudioContext || (window as any).webkitAudioContext)();
+  const ctx = audioCtx || new (getAudioContextClass())();
   const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
 
   const analysis = detectAudioCuesFromBuffer(audioBuffer, options);

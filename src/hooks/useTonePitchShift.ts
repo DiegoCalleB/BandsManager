@@ -37,7 +37,9 @@ export async function aplicarTono(audioElement: HTMLMediaElement, semitones: num
     // Get or create MediaElementAudioSourceNode once for this HTMLAudioElement
     let sourceNode = mediaElementSourceMap.get(audioElement);
     if (!sourceNode) {
-      const createSource = rawCtx.createMediaElementSource || (rawCtx as any).createMediaElementAudioSource;
+      // Alias legado de algunos navegadores antiguos; no está en los tipos del DOM.
+      const ctxLegado = rawCtx as AudioContext & { createMediaElementAudioSource?: AudioContext['createMediaElementSource'] };
+      const createSource = rawCtx.createMediaElementSource || ctxLegado.createMediaElementAudioSource;
       sourceNode = createSource.call(rawCtx, audioElement);
       mediaElementSourceMap.set(audioElement, sourceNode);
     }

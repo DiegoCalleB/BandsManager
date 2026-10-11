@@ -25,6 +25,7 @@ import {
   type ProgresoIris,
 } from '../utils/separacionIris';
 import { comoErrorCapturado } from '../utils/errorCapturado';
+import type { RespuestaSeparacion } from '../utils/tiposSeparacionIris';
 
 interface Opciones {
   song: Song;
@@ -149,13 +150,13 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
       );
 
       const lanzar = () =>
-        apiFetch('/api/ai-stem-separation', {
+        apiFetch<RespuestaSeparacion>('/api/ai-stem-separation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...peticion, audioUrl: sendableAudioUrl }),
         });
 
-      let kickoff: any;
+      let kickoff: RespuestaSeparacion;
       try {
         kickoff = await lanzar();
       } catch (kickoffErrCapturado) {
@@ -190,9 +191,9 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
             prev ? { ...prev, stage: 'demucs', currentStepText: textoFaseEspera(engineToUse, segundos) } : null
           );
 
-          let statusRes: any = null;
+          let statusRes: RespuestaSeparacion | null = null;
           try {
-            statusRes = await apiFetch(
+            statusRes = await apiFetch<RespuestaSeparacion>(
               `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
             );
             fallosDeRedSeguidos = 0;

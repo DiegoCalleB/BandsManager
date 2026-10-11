@@ -486,6 +486,19 @@ export interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+/** Lo que el widget de Google Translate cuelga de `window` (script externo, sin tipos propios). */
+interface VentanaConTraductor {
+  googleTranslateElementInit?: () => void;
+  google?: {
+    translate?: {
+      TranslateElement?: new (
+        opciones: { pageLanguage: string; includedLanguages: string; autoDisplay: boolean },
+        idElemento: string,
+      ) => unknown;
+    };
+  };
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<SupportedLanguage>(() => {
     const saved = localStorage.getItem('bandmanager_language') as SupportedLanguage;
@@ -622,9 +635,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return;
 
     // Callback for Google Translate
-    (window as any).googleTranslateElementInit = () => {
-      if ((window as any).google?.translate?.TranslateElement) {
-        new (window as any).google.translate.TranslateElement(
+    const ventana = window as Window & VentanaConTraductor;
+    ventana.googleTranslateElementInit = () => {
+      const TranslateElement = ventana.google?.translate?.TranslateElement;
+      if (TranslateElement) {
+        new TranslateElement(
           {
             pageLanguage: 'es',
             includedLanguages: 'es,en,ca,gl,eu,fr,de,it,pt',

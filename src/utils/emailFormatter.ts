@@ -266,11 +266,11 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 
   // Modern Clipboard API with rich text/html
   try {
-    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && (window as any).ClipboardItem) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && window.ClipboardItem) {
       const htmlBlob = new Blob([html], { type: 'text/html' });
       const textBlob = new Blob([plainText], { type: 'text/plain' });
       await navigator.clipboard.write([
-        new (window as any).ClipboardItem({
+        new window.ClipboardItem({
           'text/html': htmlBlob,
           'text/plain': textBlob,
         }),

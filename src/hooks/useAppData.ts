@@ -89,16 +89,23 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     });
   };
 
-  const parseSafeList = (val: any): string[] => {
+  // Cada elemento puede ser un texto o un objeto {name|nombre} (filas antiguas guardadas como JSON).
+  const textoDeElemento = (x: unknown): string => {
+    if (typeof x === 'string') return x;
+    const conNombre = x as { name?: string; nombre?: string } | null | undefined;
+    return conNombre?.name || conNombre?.nombre || String(x);
+  };
+
+  const parseSafeList = (val: unknown): string[] => {
     if (!val) return [];
-    if (Array.isArray(val)) return val.map((x) => (typeof x === 'string' ? x : x?.name || x?.nombre || String(x))).filter(Boolean);
+    if (Array.isArray(val)) return (val as unknown[]).map(textoDeElemento).filter(Boolean);
     if (typeof val === 'string' && val.trim()) {
       const trimmed = val.trim();
       if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
         try {
-          const parsed = JSON.parse(trimmed);
+          const parsed: unknown = JSON.parse(trimmed);
           if (Array.isArray(parsed))
-            return parsed.map((x) => (typeof x === 'string' ? x : x?.name || x?.nombre || String(x))).filter(Boolean);
+            return (parsed as unknown[]).map(textoDeElemento).filter(Boolean);
         } catch { /* texto no JSON: se trata como lista separada por comas */ }
       }
       return trimmed
@@ -109,7 +116,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     return [];
   };
 
-  const normalizeRehearsal = (r: any): Rehearsal => {
+  const normalizeRehearsal = (r: Rehearsal): Rehearsal => {
     if (!r) return r;
     return {
       ...r,
@@ -119,7 +126,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     };
   };
 
-  const normalizeConcert = (c: any): Concert => {
+  const normalizeConcert = (c: Concert): Concert => {
     if (!c) return c;
     return {
       ...c,
@@ -148,8 +155,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       // (o la de la caché de localStorage, compartida entre bandas): "cero campañas" nunca se
       // distinguía de "todavía no ha llegado la respuesta". Ahora se sincroniza siempre con lo que
       // devuelva el servidor, incluida la lista vacía.
-      if (Array.isArray((data as any).campaigns)) {
-        const fetchedCampaigns = (data as any).campaigns as BookingCampaign[];
+      if (Array.isArray(data.campaigns)) {
+        const fetchedCampaigns = data.campaigns;
         setCampaigns(fetchedCampaigns);
         localStorage.setItem('bandmanager_campaigns', JSON.stringify(fetchedCampaigns));
         const active = fetchedCampaigns.find((c: BookingCampaign) => c.isActive) || null;
@@ -205,7 +212,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   }, [fetchState]);
 
   // REST API UPDATE OPERATIONS
-  const handleUpdateEpkConfig = async (newConfig: any) => {
+  const handleUpdateEpkConfig = async (newConfig: Partial<EPKConfig> & { bandId?: string }) => {
     setEpkConfig((prev) => ({ ...prev, ...newConfig }));
     const resolvedBandId = newConfig?.bandId || bandId;
     if (!resolvedBandId) {
@@ -309,8 +316,9 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const handleAddLead = async (newLead: Lead) => {
     setLeads((prev) => dedupeById([...prev.filter((l) => l.id !== newLead.id), newLead]));
     try {
-      const res: any = await api.createLead(newLead);
-      const serverLead = res?.lead || (res?.id ? res : null);
+      // createLead está tipado como Lead, pero el servidor responde { success, lead, warning }.
+      const res: Partial<Lead> & { lead?: Lead; warning?: string | null } = await api.createLead(newLead);
+      const serverLead = res?.lead || (res?.id ? (res as Lead) : null);
       if (serverLead) {
         setLeads((prev) => dedupeById([...prev.filter((l) => l.id !== newLead.id && l.id !== serverLead.id), serverLead]));
       }

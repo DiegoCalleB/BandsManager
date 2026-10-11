@@ -11,9 +11,9 @@ import { leerTokenDeSesion, leerBandaActiva } from '../services/sesionLocal';
 
 export class ApiRequestError extends Error {
   status: number;
-  data: any;
+  data: unknown;
 
-  constructor(message: string, status: number, data?: any) {
+  constructor(message: string, status: number, data?: unknown) {
     super(message);
     this.name = 'ApiRequestError';
     this.status = status;
@@ -77,7 +77,7 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
   }
 }
 
-export async function safeJsonFetch<T = any>(res: Response, fallbackValue: T = {} as T): Promise<T> {
+export async function safeJsonFetch<T = unknown>(res: Response, fallbackValue: T = {} as T): Promise<T> {
   const contentType = res.headers.get('content-type');
   if (!contentType || !contentType.includes('application/json')) {
     const text = await res.text().catch(() => '');

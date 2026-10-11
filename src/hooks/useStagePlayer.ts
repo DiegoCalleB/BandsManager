@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Setlist, Song } from '../types';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 
@@ -26,7 +27,7 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
   const activeSlotRef = useRef<'A' | 'B'>('A');
   const [, forceActiveSlotRender] = useState(0);
 
-  const stageSynthIntervalRef = useRef<any>(null);
+  const stageSynthIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stageAudioCtxRef = useRef<AudioContext | null>(null);
 
   const crossfadeRafRef = useRef<number | null>(null);
@@ -82,7 +83,7 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
     if (item.tipoItem === 'cancion' && item.songId) {
       const song = songs.find((s) => s.id === item.songId);
       if (song) {
-        rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || (song as any).audioUrl || '';
+        rawUrl = song.audioPrincipalUrl || (song.audioIdeas && song.audioIdeas[0]?.audioUrl) || song.audioUrl || '';
         durationSec = song.duracionSegundos || parseMmSsToSeconds(song.duracion) || 210;
       }
     } else {
@@ -151,7 +152,7 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
         // Subtle beat tone for simulation
         try {
           if (!stageAudioCtxRef.current) {
-            stageAudioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+            stageAudioCtxRef.current = new (getAudioContextClass())();
           }
           if (stageAudioCtxRef.current.state === 'suspended') {
             stageAudioCtxRef.current.resume();

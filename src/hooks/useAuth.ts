@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from '../types';
+import { BandaDisponible, User } from '../types';
 import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
@@ -7,6 +7,12 @@ import { atribuirReferidoPendiente } from '../utils/referido';
 import { atribuirReferido } from '../utils/promocionApi';
 import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
 import { comoErrorCapturado } from '../utils/errorCapturado';
+
+/**
+ * Banda de la lista de bandas disponibles. Además de {@link BandaDisponible}, las listas que llegan
+ * de otros orígenes (o guardadas en `localStorage` por versiones anteriores) pueden traer `id`/`name`.
+ */
+export type BandaDeLaSesion = BandaDisponible & { id?: string; name?: string };
 
 /** Sesión del usuario: estado persistido en `localStorage` (`bandmanager_user`), login y logout. */
 export function useAuth() {
@@ -31,7 +37,7 @@ export function useAuth() {
     return !!leerTokenDeSesion() || localStorage.getItem('bandmanager_logged_in') === 'true';
   });
 
-  const [availableBands, setAvailableBands] = useState<any[]>(() => {
+  const [availableBands, setAvailableBands] = useState<BandaDeLaSesion[]>(() => {
     try {
       const savedBands = localStorage.getItem('bandmanager_available_bands');
       return savedBands ? JSON.parse(savedBands) : [];
@@ -166,7 +172,7 @@ export function useAuth() {
   }, [isLoggedIn, authToken]);
 
   const handleLoginSuccess = useCallback(
-    (user: User, token: string, bandsList?: any[]) => {
+    (user: User, token: string, bandsList?: BandaDeLaSesion[]) => {
       // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login.
       // Antes, si no había ninguna banda preferida, se caía en una banda por defecto en silencio: una
       // cuenta nueva sin banda todavía asignada entraba viendo los datos reales de esa banda. Sin
@@ -191,7 +197,7 @@ export function useAuth() {
       if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
         const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
         const match = bandsList.find(
-          (b: any) =>
+          (b) =>
             b.band_id === normalizedBandId ||
             b.id === normalizedBandId ||
             (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanPref) ||
