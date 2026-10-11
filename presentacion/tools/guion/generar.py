@@ -761,7 +761,7 @@ if FOTOS:
                      f'''<figcaption><b>{f.get('texto', '')}</b>{('<span>' + f['logro'] + '</span>') if f.get('logro') else ''}</figcaption></figure>'''
                      for t0, d, f in pasos)
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
-        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.6) * 1000)}">
+        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.6) * 1000)}" data-fin=".mb-fin">
   <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
   {cuerpo}
   <p class="mb-fin" style="--t:{t:.2f}s">Y siempre, el bajo.</p>
@@ -770,7 +770,7 @@ else:
     S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
 
 # El giro final (Nolan): el reloj de toda la película no contaba para el festival
-add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500">
+add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500" data-fin=".gr-ask">
   <span class="tag" style="opacity:0">Fin de la historia · El reloj</span>
   <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECCIÓN FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>

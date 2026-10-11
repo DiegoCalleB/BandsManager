@@ -158,7 +158,15 @@
       if (i === cur) inicioEscena = performance.now() - (conVoz ? sumaLineas(s, desde) * 1000 : 0);
       if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null,
         () => seguirPelicula(Math.max(nxL ? 0 : 450, (+s.dataset.min || 0) - (Date.now() - t0))), { cola: nxL ? 0.8 : 0, desde });
-      else if (i === cur) seguirPelicula(durPelicula(s) + (s.querySelectorAll('.dlg li').length * 820));
+      else if (i === cur && s.dataset.fin && s.querySelector(s.dataset.fin)) {
+        // escena de animación (data-fin = el último elemento que se anima): sigue cuando termina esa animación, aunque el
+        // navegador vaya cargado y las animaciones arranquen tarde (al grabar el MP4); el tiempo fijo solo es el límite
+        const ult = s.querySelector(s.dataset.fin), tope = durPelicula(s) + 4000;
+        let hecho = false;
+        const seguir = () => { if (hecho || cur !== i) return; hecho = true; ult.removeEventListener('animationend', seguir); seguirPelicula(1300); };
+        ult.addEventListener('animationend', seguir);
+        clearTimeout(pelTimer); pelTimer = setTimeout(seguir, tope);
+      } else if (i === cur) seguirPelicula(durPelicula(s) + (s.querySelectorAll('.dlg li').length * 820));
     }
     if (how !== 'instant' && clicksOn() && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.play(s, null, (el) => !el.matches('.dlg li'));
     // Chat: en automático cada mensaje entra tras el anterior; por clics, cada clic es un mensaje
