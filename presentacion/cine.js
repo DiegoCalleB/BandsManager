@@ -10,7 +10,7 @@
   var activo = function () {
     return body.classList.contains('pelicula') && !body.classList.contains('scroll') && !!(window.DeckSound && window.DeckSound.enabled);
   };
-  var objetivo = function () { return !activo() ? 0 : document.querySelector('.habla') ? BAJO : ALTO; };
+  var objetivo = function () { return !activo() || body.classList.contains('pausado') ? 0 : document.querySelector('.habla') ? BAJO : ALTO; };
 
   // El volumen persigue al objetivo con suavidad: baja cuando habla alguien y sube entre frases
   function paso() {
@@ -29,31 +29,146 @@
     var v = document.createElement('div'); v.id = 'vineta'; v.setAttribute('aria-hidden', 'true'); stage.appendChild(v);
   }
 
-  // Subtítulos: en modo película el chat no se ve, así que lo que dice cada uno sale abajo, con su cara, como en el cine.
-  // Salen solos; la tecla C (de «captions») los quita y los pone.
+  // ── Subtítulos estilo Netflix ──
+  // Siguen a lo que se oye: salen mientras suena cada frase (con dos a la vez, dos líneas con guion, como en el cine)
+  // y dicen lo que dice la voz, escrito bien (el guion hablado escribe algunas marcas como suenan).
+  var ESCRITO = [[/Band Mánayer/g, 'BandManager'], [/mánayers/gi, 'mánagers'], [/Mánayer/g, 'Manager'], [/Spótifai/g, 'Spotify'], [/Yutub/g, 'YouTube'],
+    [/Taipscript/g, 'TypeScript'], [/Riact/g, 'React'], [/\bVit\b/g, 'Vite'], [/Supabeis/g, 'Supabase'], [/Séntri/g, 'Sentry'], [/\bbild\b/g, 'build'],
+    [/Traicaunt/g, 'Tricount'], [/Splitguais/g, 'Splitwise'], [/Scaut/g, 'Scout'], [/Deit Suap/g, 'Date Swap'], [/buquin/g, 'booking'],
+    [/ráider/g, 'rider'], [/Resurrécshon/g, 'Resurrection'], [/Big Scul/g, 'Big School'], [/Mure Dev/g, 'MoureDev'], [/Gúgel/g, 'Google'],
+    [/Pley Stor/g, 'Play Store'], [/scrol chálench/gi, 'Scroll Challenge'], [/Últimeit Guitar/g, 'Ultimate Guitar'], [/Eslash/g, 'Slash'],
+    [/guasap/gi, 'WhatsApp'], [/efe eme/g, 'FM'], [/agents punto eme de/gi, 'AGENTS.md'], [/punto io/g, '.io'], [/[Bb]e tu ci/g, 'B2C'],
+    [/[Bb]e tu bi/g, 'B2B'], [/be pe eme/gi, 'BPM'], [/Máster of Prompts/g, 'Master of Prompts'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
+  var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
+  var SUBS_KEY = 'bm_subs', subsOn = false;
+  try { subsOn = localStorage.getItem(SUBS_KEY) === 'es'; } catch (e) { /* sin almacenamiento: desactivados */ }
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
-  var hablando = function () { return document.querySelector('.slide.active [data-who].habla'); };
-  var subtitular = function () {
-    var el = hablando(), nom = el && window.REPARTO && window.REPARTO[el.dataset.who];
-    var txt = el && el.querySelector('.txt');
-    // en el chat, el texto de la burbuja; en el resto (portadas, reparto…), lo que dice, sin las etiquetas de actuación
-    var frase = txt ? txt.textContent : el ? (el.dataset.say || '').replace(/\[pi\]/g, '…').replace(/\[[a-z ]+\]\s*/g, '') : '';
-    if (!frase.trim()) { if (sub.classList.contains('on')) sub.classList.remove('on'); return; }
-    sub.style.setProperty('--c', nom ? nom.color : '#ffd596');
-    sub.innerHTML = '';
-    if (nom && nom.foto) { var i = document.createElement('img'); i.src = nom.foto; i.alt = ''; sub.appendChild(i); }
-    var t = document.createElement('span'), b = document.createElement('b');
-    b.textContent = nom ? nom.nombre : ''; t.appendChild(b); t.appendChild(document.createTextNode(frase.trim()));
-    sub.appendChild(t);
-    sub.classList.add('on');
+  // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
+  var trozos = function (t, max) {
+    var partes = t.match(/[^.!?…;:]+[.!?…;:]*["»”]?\s*/g) || [t], out = [], acc = '';
+    partes.forEach(function (p) {
+      if ((acc + p).length <= max || !acc) acc += p; else { out.push(acc.trim()); acc = p; }
+      while (acc.length > max * 1.15) { var c = acc.lastIndexOf(', ', max); if (c < max * 0.4) c = acc.lastIndexOf(' ', max); out.push(acc.slice(0, c + 1).trim()); acc = acc.slice(c + 1); }
+    });
+    if (acc.trim()) out.push(acc.trim());
+    return out;
   };
-  addEventListener('voz', subtitular);
-  new MutationObserver(function () { if (sub.classList.contains('on') && !hablando()) sub.classList.remove('on'); })
+  var pintarSubs = function () {
+    var hablan = Array.prototype.slice.call(document.querySelectorAll('.slide.active [data-who].habla')).slice(-2);
+    if (!hablan.length) { if (sub.childNodes.length) sub.textContent = ''; return; }
+    var html = hablan.map(function (el) {
+      var nom = window.REPARTO && window.REPARTO[el.dataset.who];
+      var frase = escrito(el.dataset.say || ''); if (!frase) return '';
+      var ts = el._trozos && el._fr === frase ? el._trozos : (el._fr = frase, el._trozos = trozos(frase, hablan.length > 1 ? 52 : 84));
+      // el trozo que toca: reparte la duración del audio según lo largo que es cada trozo
+      var total = ts.join('').length, pasado = el._dur ? (performance.now() - el._t0) / el._dur * total : 0, k = 0, suma = 0;
+      for (; k < ts.length - 1; k++) { suma += ts[k].length; if (pasado < suma) break; }
+      var p = document.createElement('p');
+      if (hablan.length > 1) p.appendChild(document.createTextNode('- '));
+      if (nom) { var b = document.createElement('b'); b.style.color = nom.color; b.textContent = nom.nombre.toUpperCase() + ': '; p.appendChild(b); }
+      p.appendChild(document.createTextNode(ts[k]));
+      return p.outerHTML;
+    }).join('');
+    if (sub.innerHTML !== html) sub.innerHTML = html;
+  };
+  setInterval(function () { if (subsOn && body.classList.contains('pelicula')) pintarSubs(); }, 150);
+  var raf2 = 0;
+  new MutationObserver(function () { if (!raf2) raf2 = requestAnimationFrame(function () { raf2 = 0; pintarSubs(); }); })
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
-  addEventListener('keydown', function (e) {
-    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !/INPUT|TEXTAREA/.test(e.target.tagName)) body.classList.toggle('nosubs');
+  var ponerSubs = function (on) {
+    subsOn = on; body.classList.toggle('subs', on);
+    try { localStorage.setItem(SUBS_KEY, on ? 'es' : 'off'); } catch (e) { /* da igual */ }
+    pintarMenu();
+  };
+
+  // ── Reproductor estilo Netflix (en modo película) ──
+  // Barra abajo que aparece al mover el ratón: play/pausa, escena anterior/siguiente, sonido, título,
+  // progreso con los capítulos, subtítulos (como «Audio y subtítulos») y pantalla completa.
+  var ico = {
+    play: '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg>',
+    pausa: '<svg viewBox="0 0 24 24"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>',
+    atras: '<svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM20 5v14L9.5 12z"/></svg>',
+    alante: '<svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM4 5v14l10.5-7z"/></svg>',
+    sonido: '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4.5v15L7 15H3zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9h4l5-4.5v15L7 15H3z"/></svg>',
+    mudo: '<svg viewBox="0 0 24 24"><path d="M3 9h4l5-4.5v15L7 15H3z"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    subs: '<svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 13h5M13 13h5M6 16h8M16 16h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
+  };
+  var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
+    '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Escena" tabindex="0"><div class="nf-lleno"></div><div class="nf-bola"></div><div class="nf-caps"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
+    '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button><button class="nf-b" data-nf="atras" aria-label="Escena anterior">' + ico.atras + '</button>' +
+    '<button class="nf-b" data-nf="alante" aria-label="Escena siguiente">' + ico.alante + '</button><button class="nf-b" data-nf="sonido" aria-label="Sonido"></button>' +
+    '<span class="nf-titulo"></span><button class="nf-b" data-nf="subs" aria-label="Audio y subtítulos" aria-haspopup="true">' + ico.subs + '</button>' +
+    '<button class="nf-b" data-nf="fs" aria-label="Pantalla completa">' + ico.fs + '</button></div>' +
+    '<div class="nf-menu" role="menu"><div><h4>Audio</h4><p class="on">Español (original)</p></div><div><h4>Subtítulos</h4>' +
+    '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p></div></div>' +
+    '<div class="nf-pausa" aria-hidden="true"><small>Estás viendo</small><b>BandManager.io</b><span class="nf-pcap"></span><em>Os Herdeiros do Código</em></div>';
+  if (stage) stage.appendChild(nf);
+  var $n = function (q) { return nf.querySelector(q); };
+  var D = function () { return window.Deck; };
+  var capitulos = function () {
+    var d = D(); if (!d) return [];
+    return d.slides.map(function (s, i) { return { i: i, t: s.dataset.title || '', act: s.classList.contains('act') }; });
+  };
+  var pintarMenu = function () {
+    nf.querySelectorAll('.nf-menu [data-s]').forEach(function (p) { p.classList.toggle('on', (p.dataset.s === 'es') === subsOn); p.setAttribute('aria-checked', String((p.dataset.s === 'es') === subsOn)); });
+    $n('[data-nf="subs"]').classList.toggle('activo', subsOn);
+  };
+  var pintar = function () {
+    var d = D(); if (!d) return;
+    var caps = capitulos(), cap = caps.filter(function (c) { return c.act && c.i <= d.cur; }).pop();
+    var pct = d.N > 1 ? d.cur / (d.N - 1) * 100 : 0;
+    $n('.nf-lleno').style.width = pct + '%'; $n('.nf-bola').style.left = pct + '%';
+    $n('.nf-cuenta').textContent = (d.cur + 1) + ' / ' + d.N;
+    $n('.nf-titulo').innerHTML = '<b>BandManager.io</b> ' + (cap ? cap.t.replace(/·.*/, '').trim() : 'Prólogo') + ' <span>' + (caps[d.cur] ? caps[d.cur].t : '') + '</span>';
+    $n('.nf-cap').textContent = cap ? cap.t : '';
+    $n('.nf-pcap').textContent = (cap ? cap.t + ' · ' : '') + (caps[d.cur] ? caps[d.cur].t : '');
+    $n('[data-nf="play"]').innerHTML = d.pausado ? ico.play : ico.pausa;
+    $n('[data-nf="play"]').setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa');
+    var son = !!(window.DeckSound && window.DeckSound.enabled);
+    $n('[data-nf="sonido"]').innerHTML = son ? ico.sonido : ico.mudo;
+    if (!$n('.nf-caps').childNodes.length) {
+      caps.forEach(function (c) { if (c.act && c.i) { var t = document.createElement('i'); t.style.left = (c.i / (d.N - 1) * 100) + '%'; $n('.nf-caps').appendChild(t); } });
+    }
+  };
+  var acciones = {
+    play: function () { var d = D(); if (d) d.pausar(!d.pausado); },
+    atras: function () { var d = D(); if (d) d.show(Math.max(0, d.cur - 1)); },
+    alante: function () { var d = D(); if (d) d.show(Math.min(d.N - 1, d.cur + 1)); },
+    sonido: function () { if (window.DeckSound) window.DeckSound.toggle(); setTimeout(pintar, 50); },
+    subs: function () { nf.classList.toggle('menu'); },
+    fs: function () { var r = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : r.requestFullscreen && r.requestFullscreen()); }
+  };
+  nf.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-nf]'), s = e.target.closest('[data-s]');
+    if (s) { ponerSubs(s.dataset.s === 'es'); nf.classList.remove('menu'); return; }
+    if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); despierta(); }
   });
+  var prog = $n('.nf-prog');
+  var escenaEn = function (e) { var r = prog.getBoundingClientRect(), d = D(); return Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (d.N - 1)); };
+  prog.addEventListener('click', function (e) { var d = D(); if (d) d.show(escenaEn(e)); });
+  prog.addEventListener('mousemove', function (e) {
+    var d = D(); if (!d) return; var i = escenaEn(e), tip = $n('.nf-tip');
+    tip.textContent = (i + 1) + ' · ' + (d.slides[i].dataset.title || ''); tip.style.left = (i / (d.N - 1) * 100) + '%';
+  });
+  // Se esconde a los 2,5 s sin mover el ratón, como en Netflix (en pausa se queda)
+  var oculto = 0;
+  var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!nf.classList.contains('menu') && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
+  addEventListener('mousemove', function () { if (body.classList.contains('pelicula')) despierta(); });
+  addEventListener('hashchange', pintar);
+  addEventListener('deckpausa', function () { pintar(); despierta(); });
+  addEventListener('voz', pintar);
+  // Teclas de Netflix en modo película: espacio o K pausa; C, subtítulos (la tecla de siempre)
+  addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA/.test(e.target.tagName) || body.classList.contains('gate')) return;
+    if ((e.key === 'c' || e.key === 'C')) { ponerSubs(!subsOn); despierta(); return; }
+    if (!body.classList.contains('pelicula') || body.classList.contains('scroll')) return;
+    if (e.key === ' ' || e.key === 'k' || e.key === 'K') { e.preventDefault(); e.stopImmediatePropagation(); acciones.play(); pintar(); despierta(); }
+  }, true);
+  ponerSubs(subsOn);
+  setTimeout(pintar, 0); addEventListener('load', pintar);
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });
   addEventListener('voz', despertar);

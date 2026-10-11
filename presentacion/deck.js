@@ -206,10 +206,18 @@
   // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
   let pelicula = false, pelTimer = 0;
   const durPelicula = (s) => +(s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
-  const seguirPelicula = (ms) => { clearTimeout(pelTimer); if (pelicula && cur < N - 1) pelTimer = setTimeout(() => show(cur + 1), ms); };
+  let pausado = false; // reproductor de cine.js: pausa la película sin salir de ella
+  const seguirPelicula = (ms) => { clearTimeout(pelTimer); if (pelicula && !pausado && cur < N - 1) pelTimer = setTimeout(() => show(cur + 1), ms); };
+  const pausar = (on) => {
+    pausado = !!on; document.body.classList.toggle('pausado', pausado);
+    if (pausado) { clearTimeout(pelTimer); if (window.DeckVoces) window.DeckVoces.stop(); document.querySelectorAll('video').forEach((v) => v.pause()); }
+    else show(cur, false);
+    dispatchEvent(new Event('deckpausa'));
+  };
   let soundStarted = false;
 
   function show(i, push = true, how = 'play') {
+    if (pausado) { pausado = false; document.body.classList.remove('pausado'); dispatchEvent(new Event('deckpausa')); }
     document.querySelectorAll('video').forEach((v) => v.pause());
     if (window.DeckVoces) window.DeckVoces.stop();
     clearTimeout(pelTimer);
@@ -338,6 +346,8 @@
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;
     }
   });
+  // Para el reproductor estilo Netflix (cine.js)
+  window.Deck = { get cur() { return cur; }, N, slides, show: (i) => show(i), next, prev, pausar, get pausado() { return pausado; }, get pelicula() { return pelicula; } };
   $('#edgeL').onclick = prev; $('#edgeR').onclick = next;
   $('#bPrev').onclick = prev; $('#bNext').onclick = next; $('#aL').onclick = prev; $('#aR').onclick = next;
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;

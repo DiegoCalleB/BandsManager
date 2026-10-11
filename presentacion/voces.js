@@ -107,7 +107,7 @@
     var hecho = false, avanzado = false;
     var avanzar = function () { if (avanzado) return; avanzado = true; if (fin) fin(); };
     var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); avanzar(); };
-    el.classList.add('habla');
+    el.classList.add('habla'); el._t0 = performance.now(); el._dur = m ? m.d / VEL * 1000 : Math.max(900, say.length * 42);
     dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };

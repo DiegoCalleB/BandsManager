@@ -1119,32 +1119,67 @@ body.pelicula:not(.scroll) .slide .dlg { display: none; }
 body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) { left: 400px; right: 70px; top: 250px; bottom: 80px; width: auto; height: auto; }
 body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) img { object-position: 50% 0; }
 body.pelicula:not(.scroll) .feat h2 { max-width: 1700px; }
-/* Subtítulos (salen solos; tecla C los quita): la cara y la frase de quien habla, abajo y centrada, como en el cine */
-#subtitulo { position: absolute; left: 50%; bottom: 56px; translate: -50% 0; z-index: 46; max-width: 1500px; padding: 10px 28px 10px 10px; border-radius: 60px;
-  display: flex; align-items: center; gap: 20px; background: rgba(0,0,0,.78); border: 2px solid color-mix(in srgb, var(--c, #ffd596) 55%, transparent);
-  color: #fff; font-size: 32px; line-height: 1.28; text-align: left; pointer-events: none; opacity: 0; translate: -50% 12px; transition: opacity 220ms, translate 220ms; }
-#subtitulo img { width: 92px; height: 92px; border-radius: 50%; object-fit: cover; flex: none; border: 3px solid var(--c, #ffd596);
-  box-shadow: 0 0 0 0 var(--c, #ffd596); animation: subhabla 1.1s ease-in-out infinite; }
-@keyframes subhabla { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--c, #ffd596) 30%, transparent); } }
-#subtitulo b { display: block; color: var(--c, #ffd596); font-size: 22px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-body.pelicula:not(.nosubs) #subtitulo.on { opacity: 1; translate: -50% 0; }
+/* Subtítulos estilo Netflix (se activan en el menú de subtítulos del reproductor o con C): texto blanco con sombra, sin caja */
+#subtitulo { position: absolute; left: 50%; bottom: 70px; translate: -50% 0; z-index: 46; width: 1240px; text-align: center; pointer-events: none;
+  color: #fff; font: 600 38px/1.28 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif; text-shadow: 0 0 6px #000, 0 2px 4px #000, 0 0 2px #000; display: none; }
+#subtitulo p { margin: 0 0 4px; }
+#subtitulo b { font-weight: 700; font-size: .78em; letter-spacing: .02em; }
+body.pelicula.subs:not(.scroll) #subtitulo { display: block; }
+body.nf-ver #subtitulo { bottom: 210px; transition: bottom 200ms; }
 body.scroll #subtitulo { display: none; }
-/* Con los subtítulos puestos, la cara ya va en ellos: en las pantallas de la app, la app ocupa todo el plano */
-body.pelicula:not(.scroll):not(.nosubs) .feat > .foco { display: none; }
-body.pelicula:not(.scroll):not(.nosubs) .feat .ft-shot:not(.phone) { left: 90px; right: 90px; top: 230px; bottom: 190px; }
-body.pelicula:not(.scroll):not(.nosubs) .feat .ft-shot.phone { bottom: 190px; }
-@media (prefers-reduced-motion: reduce) { #subtitulo img { animation: none; } }
 /* En las diapositivas de la app, quien habla tiene su sitio fijo a la izquierda de la captura */
 body.pelicula:not(.scroll) .feat > .foco { --t: 270px !important; left: 64px !important; top: auto !important; bottom: 120px; }
-/* En las escenas ya sale en grande quien habla: el subtítulo no repite la cara */
-#stage:has(.slide.active:not(.feat) .foco.in) #subtitulo img { display: none; }
-#stage:has(.slide.active:not(.feat) .foco.in) #subtitulo { padding-left: 28px; }
+
 /* Vídeos de la app usándose: se ven enteros (el cursor de Iago no se sale del plano); los de una ventana, en vertical */
 .feat .ft-shot video { object-position: 50% 0; }
 .feat .ft-shot.alto video { object-fit: contain; }
 body.pelicula:not(.scroll) .feat .ft-shot video { object-fit: contain; }
-body.pelicula:not(.scroll):not(.nosubs) .feat .ft-shot.alto { left: 50%; right: auto; width: 620px; translate: -50% 0; }
+body.pelicula:not(.scroll) .feat .ft-shot.alto { left: 760px; right: auto; width: 720px; }
 /* Las capturas fijas no se quedan quietas: la cámara se acerca despacio, como si Iago las fuera enseñando */
 body.pelicula:not(.scroll) .feat.active .ft-shot:not(.phone) img { transform-origin: 30% 20%; animation: kenburns 22s ease-in-out both; }
 @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-2%, -1%); } }
 @media (prefers-reduced-motion: reduce) { body.pelicula .feat.active .ft-shot img { animation: none; } }
+
+/* ── Reproductor estilo Netflix (modo película) ── */
+#nf { position: absolute; inset: 0; z-index: 60; pointer-events: none; opacity: 0; transition: opacity 300ms; color: #fff; font-family: 'Helvetica Neue', Arial, sans-serif; display: none; }
+body.pelicula:not(.scroll) #nf { display: block; }
+#nf.ver, body.pausado #nf { opacity: 1; }
+#nf.ver > *, body.pausado #nf > * { pointer-events: auto; }
+#nf::before { content: ''; position: absolute; inset: auto 0 0 0; height: 300px; background: linear-gradient(to top, rgba(0,0,0,.92), transparent); pointer-events: none; }
+#nf::after { content: ''; position: absolute; inset: 0 0 auto 0; height: 160px; background: linear-gradient(to bottom, rgba(0,0,0,.7), transparent); pointer-events: none; }
+.nf-top { position: absolute; top: 40px; left: 60px; z-index: 1; display: flex; align-items: center; gap: 18px; font-size: 26px; }
+.nf-n { font: 900 54px/1 'Bebas Neue', Anton, Impact, sans-serif; color: #e50914; letter-spacing: -.02em; }
+.nf-serie { font-weight: 700; } .nf-cap { color: rgba(255,255,255,.7); }
+.nf-bar { position: absolute; left: 60px; right: 60px; bottom: 118px; display: flex; align-items: center; gap: 22px; z-index: 1; }
+.nf-prog { position: relative; flex: 1; height: 7px; background: rgba(255,255,255,.3); cursor: pointer; transition: height 120ms; }
+.nf-prog:hover { height: 11px; }
+.nf-lleno { position: absolute; inset: 0 auto 0 0; background: #e50914; }
+.nf-bola { position: absolute; top: 50%; width: 24px; height: 24px; border-radius: 50%; background: #e50914; translate: -50% -50%; }
+.nf-caps i { position: absolute; top: 0; bottom: 0; width: 4px; background: rgba(0,0,0,.75); translate: -50% 0; }
+.nf-tip { position: absolute; bottom: 26px; translate: -50% 0; background: rgba(20,20,20,.95); padding: 8px 14px; border-radius: 4px; font-size: 20px; white-space: nowrap; opacity: 0; pointer-events: none; }
+.nf-prog:hover .nf-tip { opacity: 1; }
+.nf-cuenta { font-size: 24px; min-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
+.nf-ctrl { position: absolute; left: 44px; right: 44px; bottom: 30px; display: flex; align-items: center; gap: 14px; z-index: 1; }
+.nf-b { width: 70px; height: 70px; display: grid; place-items: center; background: none; border: 0; color: #fff; cursor: pointer; border-radius: 50%; transition: transform 120ms; padding: 0; }
+.nf-b svg { width: 46px; height: 46px; fill: currentColor; }
+.nf-b:hover { transform: scale(1.18); } .nf-b:focus-visible { outline: 2px solid #fff; }
+.nf-b.activo { color: #fff; } .nf-b.activo svg rect { fill: rgba(255,255,255,.18); }
+.nf-titulo { flex: 1; text-align: center; font-size: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nf-titulo b { font-weight: 700; } .nf-titulo span { color: rgba(255,255,255,.65); margin-left: 6px; }
+.nf-menu { position: absolute; right: 120px; bottom: 120px; z-index: 2; display: none; gap: 60px; padding: 30px 48px; background: rgba(38,38,38,.97); border-radius: 6px; font-size: 26px; box-shadow: 0 10px 40px rgba(0,0,0,.6); }
+#nf.menu .nf-menu { display: flex; }
+.nf-menu h4 { margin: 0 0 16px; font-size: 30px; }
+.nf-menu p { margin: 0; padding: 10px 0 10px 40px; color: rgba(255,255,255,.65); cursor: pointer; position: relative; }
+.nf-menu p:hover { color: #fff; }
+.nf-menu p.on { color: #fff; } .nf-menu p.on::before { content: '✓'; position: absolute; left: 4px; }
+/* En pausa, como Netflix: se oscurece y sale qué estás viendo */
+.nf-pausa { position: absolute; left: 120px; top: 320px; z-index: 1; display: none; max-width: 1000px; pointer-events: none; }
+body.pausado .nf-pausa { display: block; }
+body.pausado #stage .slide.active { filter: brightness(.45); transition: filter 400ms; }
+.nf-pausa small { display: block; font-size: 26px; color: rgba(255,255,255,.7); }
+.nf-pausa b { display: block; font-size: 84px; margin: 6px 0 12px; }
+.nf-pausa span { display: block; font-size: 32px; } .nf-pausa em { display: block; margin-top: 18px; font-size: 24px; color: rgba(255,255,255,.65); font-style: normal; }
+/* El HUD de la presentación sobra mientras se ve la película */
+body.pelicula:not(.scroll) #hud { opacity: 0; pointer-events: none; }
+body.pelicula.nf-ver { cursor: default; } body.pelicula:not(.nf-ver):not(.pausado) { cursor: none; }
+body.pelicula:not(.scroll) #edgeL, body.pelicula:not(.scroll) #edgeR, body.pelicula:not(.scroll) #aL, body.pelicula:not(.scroll) #aR { display: none; }
