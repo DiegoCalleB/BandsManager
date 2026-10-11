@@ -229,7 +229,7 @@ add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
           m('iago', 'Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.'),
           m('brais', 'Pues yo dije Google Calendar.'),
           m('iago', 'Eso también. Ya llegamos.'),
-          m('iago', 'Y todas, en el mapa, por toda la península.', cls='sync', say='Y todas, en el mapa. Por toda la península.')],
+          m('iago', 'Y todas, en el mapa, por toda España.', cls='sync', say='Y todas, en el mapa. Por toda España.')],
          shot_vid_sync('video/v-mapa-peninsula.mp4', 'img/d-h-booking.jpg')))
 
 add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
@@ -398,8 +398,8 @@ add(feat('Calendario de la banda', TAG2, 'Ensayos y bolos, en un calendario.',
 
 add(feat('La ficha del bolo', TAG2, 'Cada bolo, con su ficha.',
          [m('xandre', '¿Y esto? ¿También sabe qué tiempo hará en el bolo?', say='[amazed] ¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo?'),
-          m('iago', 'Cada bolo tiene su ficha: el tiempo, el aviso si cae en puente y la ciudad se vacía, cuánto os queda limpio, la logística, el rider, los contactos y el merchan.', cls='sync',
-            say='Cada bolo tiene su ficha. El tiempo que va a hacer. El aviso si cae en puente, y la ciudad se vacía. Cuánto os queda limpio. Y la logística, el rider, los contactos, el merchan… Todo, en un clic.'),
+          m('iago', 'Cada bolo tiene su ficha: el aviso de puente, el tiempo, la logística, el rider, los contactos, el merchan y cuánto os queda limpio.', cls='sync',
+            say='Cada bolo tiene su ficha. El aviso si cae en puente, y la ciudad se vacía. El tiempo que va a hacer. La logística, el rider, los contactos, el merchan… Y cuánto os queda limpio. Todo, en un clic.'),
           m('brais', 'Y yo sin enterarme del puente. 🤦', say='[laughs] Y yo, sin enterarme nunca del puente.')],
          shot_vid_sync('video/v-concierto.mp4', 'img/d-h-evento.jpg'), grupo='musica'))
 
