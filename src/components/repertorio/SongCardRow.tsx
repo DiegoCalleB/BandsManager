@@ -7,10 +7,6 @@ import { Play, Star, FileText, Users, Headphones, Edit3, Trash2, Share2, Externa
 import { hasIrisStems } from '../../utils/irisTracks';
 import { Button, IconButton, MenuItem } from '../ui';
 
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
-
 export interface SongCardRowProps {
   song: Song;
   index: number;
@@ -133,7 +129,6 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
     (song.duracionSegundos
       ? `${Math.floor(song.duracionSegundos / 60)}:${String(Math.floor(song.duracionSegundos % 60)).padStart(2, '0')}`
       : '—');
-  const hasMemberNotes = song.notasMiembros && Object.values(song.notasMiembros).some((v) => typeof v === 'string' && v.trim().length > 0);
   const ideasCount = (song.audioIdeas || []).length;
   const isDriveAudio = (song.audioPrincipalUrl || '').includes('drive.google.com');
 

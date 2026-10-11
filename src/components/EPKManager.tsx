@@ -234,7 +234,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeBlock, setActiveBlock] = useState<EPKBlockId>('perfil');
   const [, setSaving] = useState(false);
-  const [previewDonationMethod, setPreviewDonationMethod] = useState<'revolut' | 'paypal'>('revolut');
 
   const healthStats = computeEPKHealth(config);
   const { prev: prevBlockMeta, next: nextBlockMeta } = getBlockNavigation(activeBlock);
@@ -662,18 +661,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         },
       };
     });
-  };
-
-  const toggleHighlightedSong = (songId: string) => {
-    const current = config.temasDestacadosIds || [];
-    if (current.includes(songId)) {
-      setConfig({
-        ...config,
-        temasDestacadosIds: current.filter((id) => id !== songId),
-      });
-    } else {
-      setConfig({ ...config, temasDestacadosIds: [...current, songId] });
-    }
   };
 
   return (

@@ -131,10 +131,6 @@ export const GUITAR_CHORD_DATABASE: Record<string, GuitarChordShape> = {
   Sibm: { name: 'Sibm', frets: [-1, 1, 3, 3, 2, 1], baseFret: 1 },
 };
 
-// Regex to identify root note at start of chord token
-// Order Spanish multi-char root notes first (Sol#, Sol, Do#, Do, Re#, Re, Fa#, Fa, La#, La, Sib, Si, Mi)
-const ROOT_NOTE_REGEX = /^(Sol#|Solb|Sol|Do#|Dom|Do|Re#|Reb|Rem|Re|Fa#|Fam|Fa|La#|Lab|Lam|La|Sib|Sim|Si|Mib|Mim|Mi|[A-G][#b]?)/i;
-
 // Sufijos de acorde reconocidos. Sin esta lista, "root + lo que sea" (el `.*` que había antes)
 // aceptaba cualquier palabra que empezara por una nota como acorde válido: "Get", "Fire",
 // "Baby", "Come"... todas arrancan por A-G y colaban como acordes en letras en inglés. Esta

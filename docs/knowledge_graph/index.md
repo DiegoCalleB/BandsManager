@@ -82,7 +82,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 90 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
-- [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
+- [[tabla_registered_bands|tabla registered_bands]] — 68 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 63 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él

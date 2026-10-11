@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, ChevronDown, Music2, QrCode, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
@@ -59,8 +59,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage, t } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [fotoError, setFotoError] = useState(false);
-  const [email, setEmail] = useState('');
-  const emailRef = useRef<HTMLInputElement>(null);
 
   const es = language === 'es';
 

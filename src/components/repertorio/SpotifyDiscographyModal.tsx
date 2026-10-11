@@ -67,7 +67,6 @@ export const SpotifyDiscographyModal: React.FC<
   onSongsImported
 }) => {
   const [searchQuery, setSearchQuery] = useState(bandName);
-  const [isSearching, setIsSearching] = useState(false);
   const [isFetchingDiscography, setIsFetchingDiscography] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -119,7 +118,7 @@ export const SpotifyDiscographyModal: React.FC<
 
   const togglePlayTrackPreview = async (
     track: SpotifyTrack,
-    albumName?: string,
+    _albumName?: string,
   ) => {
     if (playingTrackId === track.id) {
       stopAudioPreview();
@@ -653,7 +652,6 @@ export const SpotifyDiscographyModal: React.FC<
 
                           {album.tracks.map((track) => {
                             const isPlaying = playingTrackId === track.id;
-                            const hasPreview = Boolean(track.previewUrl);
 
                             return (
                               <div

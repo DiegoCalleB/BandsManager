@@ -4,10 +4,6 @@ import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
 import { Button, IconButton, LinkButton } from '../../ui';
 
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
-
 export interface CalendarWidgetProps {
   concerts: Concert[];
   rehearsals: Rehearsal[];
@@ -193,13 +189,6 @@ export function CalendarWidget({
     month: "long",
     year: "numeric",
   });
-
-  const cardContainerBg = "bg-[var(--sunken)] ";
-  const subCardBg = "bg-[var(--sunken)] text-[var(--ink)] hover:brightness-95";
-  const textTitleColor = "text-[var(--ink)]";
-  const textSubColor = "text-[var(--ink-2)]";
-  const dividerColor = "border-[var(--hair)]";
-  const accentColor = "text-[var(--acc)]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-ui space-y-4">

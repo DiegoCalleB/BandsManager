@@ -32,7 +32,7 @@ function loadGisScript(): Promise<void> {
       gisScriptLoaded = true;
       resolve();
     };
-    script.onerror = (err) => {
+    script.onerror = () => {
       gisScriptPromise = null;
       reject(new Error('No se pudo cargar el script de Google Identity Services.'));
     };

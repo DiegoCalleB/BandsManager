@@ -15,10 +15,6 @@ import { EnergyCurve } from "./EnergyCurve";
 import { api } from "../../../services/api";
 import { Select } from '../../ui';
 
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
-
 export interface ChartWidgetProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
   isStitchLight?: boolean;

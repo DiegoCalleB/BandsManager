@@ -393,10 +393,6 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
   const hasClickedEpk = epkClicks > 0;
 
-  const pdfOpens = isSent && latestMsgTelemetry
-    ? latestMsgTelemetry.pdfOpens
-    : 0;
-
   const lastOpenDate = isSent && latestMsgTelemetry?.lastActivity
     ? latestMsgTelemetry.lastActivity
     : undefined;
@@ -699,7 +695,6 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
             const senderDisplayName = isFromVenue
               ? msg.remitente_nombre || lead.nombre_sala || 'Programador de Sala'
               : bandName || 'Tu Banda / Productora';
-            const senderInitial = senderDisplayName.charAt(0).toUpperCase();
 
             return (
               <div

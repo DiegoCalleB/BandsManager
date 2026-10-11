@@ -6,7 +6,7 @@ import { asignarInvitacion, invitacionPendiente } from '../../utils/invitacion.j
 import { hashPassword, getSafeUsers } from '../../auth.js';
 import { loadState, saveState, requireAuth, requireLeader } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbUpsertUserBand } from '../../db.js';
-import { sendMemberInvitationEmail, getProductionAppUrl } from '../../services/transactionalEmail.js';
+import { sendMemberInvitationEmail } from '../../services/transactionalEmail.js';
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from '../../utils/bandAccess.js';
 import { generateUniqueSlugId } from '../../utils/slug.js';
 
@@ -299,7 +299,6 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
 
   // Enviar email de invitación al nuevo miembro si tiene email válido
   if (cleanEmail && cleanEmail.includes('@')) {
-    const appUrl = getProductionAppUrl(process.env.APP_URL);
     const bandInfo = (state.registeredBands || []).find(
       (b: any) => b.band_id === targetBandId || b.id === targetBandId
     );

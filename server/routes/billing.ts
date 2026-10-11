@@ -414,8 +414,6 @@ export async function handleInvoicePaid(bandId: string, customerEmail?: string, 
     activePlan = foundBand.plan_pendiente;
   }
 
-  const credits = PLAN_CREDITS[activePlan] || 800;
-
   return applyPlanUpgrade(bandId, activePlan, customerEmail, {
     stripeCustomerId: invoice?.customer as string,
     stripeSubscriptionId: (invoice as any)?.subscription as string,

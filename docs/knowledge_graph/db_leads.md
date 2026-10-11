@@ -38,7 +38,6 @@ Operaciones CRUD en Supabase PostgreSQL con scoping forzoso por bandId.
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
-- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*

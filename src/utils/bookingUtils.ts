@@ -100,7 +100,7 @@ export const VENUE_ADDRESS_DATABASE: Record<string, string> = {
   'fundación don juan de borbón': 'Plaza de San Martín, 4, 40001 Segovia',
 };
 
-export function autoDetectVenueAddress(nombreSala: string, ciudad: string): string {
+export function autoDetectVenueAddress(nombreSala: string, _ciudad: string): string {
   if (!nombreSala) return '';
   const cleanName = nombreSala.toLowerCase().trim();
   for (const [key, addr] of Object.entries(VENUE_ADDRESS_DATABASE)) {

@@ -235,15 +235,3 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
   return resState;
 }
 
-// ----------------------------------------------------
-// BAND SCHEDULES (Smart Gate - Python agent triggers)
-// ----------------------------------------------------
-const inMemorySchedules: Record<string, {
-  band_id: string;
-  timezone: string;
-  horas_lector: number[];
-  horas_enviador: number[];
-  dias_enviador: number[];
-  dias_lector: number[];
-}> = {};
-

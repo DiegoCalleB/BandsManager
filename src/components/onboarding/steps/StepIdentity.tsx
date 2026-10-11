@@ -4,7 +4,7 @@ import {
   BAND_FONT_OPTIONS,
   getFontFamilyById,
 } from "../../../config/bandFonts";
-import { useLanguage } from "../../../context/LanguageContext";
+import "../../../context/LanguageContext";
 import { Button, Input } from '../../ui';
 
 interface StepIdentityProps {
@@ -43,7 +43,6 @@ export const StepIdentity: React.FC<StepIdentityProps> = ({
   commonGenres
 }) => {
   const logoInputRef = useRef<HTMLInputElement | null>(null);
-  const { language: currentAppLang } = useLanguage();
 
   const previewName = localBandName.trim() || "Nombre de la Banda";
   const selectedFontFamily = getFontFamilyById(fontStyle);

@@ -88,9 +88,6 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
   const tkCount = latestMetric?.tiktok_followers || latestMetric?.tiktok || 0;
   const ytSubs =
     latestMetric?.youtube_subscribers || latestMetric?.youtube || 0;
-  const ytViews = latestMetric?.youtube_total_views || 0;
-  const spListeners =
-    latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0;
 
   return (
     <div className="space-y-6">

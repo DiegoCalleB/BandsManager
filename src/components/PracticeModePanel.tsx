@@ -32,8 +32,6 @@ import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
 import { programarClic } from '../utils/clicMetronomo';
 
-const TRANSPOSE_SEMITONE_OPTIONS = [6, 5, 4, 3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
-
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
  * el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
  * pistas a la vez, y los hooks no se pueden llamar dentro de un .map(), así que cada pista tiene
@@ -501,13 +499,6 @@ export default function PracticeModePanel({
 
   const handleSeekBarChange = (val: number) => {
     seekAll(val);
-  };
-
-  const markLoopA = () => setLoopA(currentTime);
-  const markLoopB = () => setLoopB(currentTime);
-  const clearLoop = () => {
-    setLoopA(null);
-    setLoopB(null);
   };
 
   const handleExport = async (mode: 'sin-mi-pista' | 'solo-mi-pista' | 'mezcla-actual') => {

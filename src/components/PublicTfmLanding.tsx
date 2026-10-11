@@ -1,5 +1,5 @@
 import { ShowIcon } from './ui/ShowIcon';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, Star } from 'lucide-react';
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
@@ -58,19 +58,12 @@ const Captura: React.FC<{
 export const PublicTfmLanding: React.FC<PublicTfmLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [email, setEmail] = useState('');
-  const emailRef = useRef<HTMLInputElement>(null);
 
   const es = language === 'es';
 
   useEffect(() => {
     document.title = 'BandManager.io · Demostración TFM';
   }, []);
-
-  const handleCta = (e: React.FormEvent) => {
-    e.preventDefault();
-    onEntrar();
-  };
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value as SupportedLanguage);

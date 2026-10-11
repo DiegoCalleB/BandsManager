@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { X, Copy, CheckCircle2, AlertTriangle, Trash2, Merge, Sparkles, MapPin, Mail, Phone, Globe, ShieldCheck } from "lucide-react";
 import { Lead } from "../../types";
-import { findDuplicateLeads, DuplicateGroup, mergeTwoLeads, calculateLeadCompletenessScore } from "../../utils/duplicateLeads";
+import { findDuplicateLeads, DuplicateGroup, mergeTwoLeads } from "../../utils/duplicateLeads";
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
@@ -44,12 +44,6 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
       return g.matchReason === selectedFilter;
     });
   }, [rawGroups, ignoredGroupIds, selectedFilter]);
-
-  const totalInvolvedLeads = useMemo(() => {
-    const ids = new Set<string>();
-    duplicateGroups.forEach((g) => g.leads.forEach((l) => ids.add(l.id)));
-    return ids.size;
-  }, [duplicateGroups]);
 
   if (!isOpen) return null;
 
@@ -392,7 +386,6 @@ export const LeadDuplicatesModal: React.FC<LeadDuplicatesModalProps> = ({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {group.leads.map((lead) => {
                       const isSuggested = lead.id === group.suggestedKeepId;
-                      const score = calculateLeadCompletenessScore(lead);
 
                       return (
                         <div

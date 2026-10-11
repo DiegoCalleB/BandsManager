@@ -50,7 +50,6 @@ export function GrabacionActaTab({
   // AI Generation State
   const [isGeneratingActa, setIsGeneratingActa] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [deberesInput, setDeberesInput] = useState("");
 
   // Clean up recording timer
   useEffect(() => {
@@ -201,7 +200,6 @@ export function GrabacionActaTab({
     // Synthesize data from the rehearsal
     setTimeout(() => {
       const agenda = rehearsal.agenda || [];
-      const objetivos = rehearsal.objetivos || [];
 
       const bordadas = agenda
         .filter((a) => a.evaluacion === "bordada")

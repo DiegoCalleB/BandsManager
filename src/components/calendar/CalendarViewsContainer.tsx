@@ -162,7 +162,6 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
             const hasConcert = dayConcerts.length > 0;
             const hasRehearsal = dayRehearsals.length > 0;
             const hasCampaign = dayCampaigns.length > 0;
-            const activeDateCampaign = dayCampaigns.find((c) => c.isActive) || dayCampaigns[0];
             const dayEvents: Array<Concert | Rehearsal> = [...dayConcerts, ...dayRehearsals];
             const dayWeatherAlerts = dayConcerts.flatMap((c) => getCachedEventWeatherAlerts(c.ciudad, formattedDate));
             const primaryAlert = dayWeatherAlerts[0];

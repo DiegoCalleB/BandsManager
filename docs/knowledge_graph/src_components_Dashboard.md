@@ -18,7 +18,6 @@ Exporta: NavigationOptions, Dashboard.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*

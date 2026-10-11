@@ -35,7 +35,7 @@ function getDomainFromUrl(url: string): string | null {
   } catch { return null; }
 }
 
-async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], email?: string, nombreBanda?: string): Promise<{ logo: string; workingWebsite: string } | null> {
+async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], _email?: string, _nombreBanda?: string): Promise<{ logo: string; workingWebsite: string } | null> {
   const candidateUrls: string[] = [];
   for (const site of candidateWebsites) {
     if (site && !isBadDirectoryUrl(site)) {
@@ -995,7 +995,6 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req: any,
 
     const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || epk?.nombreBanda || req.user?.bandName || req.user?.name || "Banda";
     const bandGenre = genre || epk?.genero || bandInfo?.genero || "Rock / Indie";
-    const bandBio = epk?.biografia || "";
 
     const selectedStyle = style || "modern_emblem";
     const styleDescriptions: Record<string, string> = {

@@ -102,6 +102,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
   // Beat drop flash effect
   const isBeatDropActive = Boolean(beatDropFx && (simulatedTime % 4 < 0.25 || simulatedTime % 7 < 0.3));
+  // Smart Pan: el encuadre vertical recorre suavemente el plano horizontal (±20 px en un ciclo de 10 s).
   const panOffset = smartPan ? Math.sin((simulatedTime / 10) * 2 * Math.PI) * 20 : 0;
   
   const currentHighlight = highlights[selectedHighlightIndex];
@@ -276,7 +277,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                     className={`absolute w-[280%] h-full pointer-events-none opacity-95 transition-ui duration-300 ease-out ${
                       previewFraming === 'left' ? 'left-0' : previewFraming === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
                     }`}
-                    style={{ border: 0 }}
+                    style={{ border: 0, transform: panOffset ? `translateX(${panOffset}px)` : undefined }}
                     allow="autoplay; encrypted-media"
                     title="Highlight clip video player"
                   />

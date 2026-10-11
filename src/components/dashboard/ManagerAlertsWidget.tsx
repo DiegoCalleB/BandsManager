@@ -251,7 +251,6 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
             ) : (
               (isCompactView ? filteredAlerts.slice(0, 2) : filteredAlerts).map((alert) => {
                 const isUrgent = alert.severity === 'urgent';
-                const isWarning = alert.severity === 'warning';
                 const isRead = readIds.includes(alert.id);
 
                 const cardBg = isRead

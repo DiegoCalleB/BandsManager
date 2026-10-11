@@ -8,7 +8,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import { Song, Setlist, SetlistItem } from "../../types";
-import { getAuthHeaders } from "../../services/api";
+import "../../services/api";
 import { apiFetch, apiFetchRaw } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input, Select } from '../ui';
@@ -166,7 +166,6 @@ export function ImportSetlistModal({
     setCreating(true);
     setError(null);
     try {
-      const authHeaders = getAuthHeaders() as Record<string, string>;
       const newSongs: Song[] = [];
       const items: SetlistItem[] = [];
 

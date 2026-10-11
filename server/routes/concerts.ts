@@ -435,7 +435,6 @@ router.get("/calendar.ics", async (req, res) => {
     if (!bandIdQuery) {
       return res.status(400).type("text/plain").send("Falta el identificador de banda en la petición.");
     }
-    const userQuery = (req.query.user_id as string) || "";
 
     const firmaEsperada = firmaDeFeed(bandIdQuery);
     if (!firmaEsperada) {

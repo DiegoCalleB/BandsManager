@@ -87,7 +87,6 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
   const email = firma?.email || booking?.email || defaultEmail;
 
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
-  const cleanBandId = (params.bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
   const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
   const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';

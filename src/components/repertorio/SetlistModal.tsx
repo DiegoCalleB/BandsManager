@@ -4,10 +4,6 @@ import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
-
 interface SetlistModalProps {
   isOpen: boolean;
   setlistToEdit: Setlist | null;

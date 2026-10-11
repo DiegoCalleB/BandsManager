@@ -26,7 +26,6 @@ _Sin dependencias salientes directas._
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[fn_ensayos|Ensayos]] *(from #feature)*
@@ -44,7 +43,6 @@ _Sin dependencias salientes directas._
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
 - [[server_db_users|server/db/users.ts]] *(from #db)*
-- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*

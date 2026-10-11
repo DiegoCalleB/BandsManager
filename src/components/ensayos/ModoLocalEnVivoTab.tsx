@@ -78,8 +78,6 @@ export function ModoLocalEnVivoTab({
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
-  const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
-    useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
   const autoScroll = useAutoScroll(atrilScrollRef, 1, viewMode === "atril");

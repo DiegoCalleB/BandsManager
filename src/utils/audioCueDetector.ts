@@ -92,7 +92,6 @@ export function detectAudioCuesFromFloatChannel(
   const frameTimeSec = new Float32Array(totalFrames);
 
   let globalMaxRms = 0;
-  let globalSumRms = 0;
 
   for (let f = 0; f < totalFrames; f++) {
     const offset = f * hopSize;
@@ -115,13 +114,11 @@ export function detectAudioCuesFromFloatChannel(
     frameTimeSec[f] = (offset + frameSize / 2) / sampleRate;
 
     if (rms > globalMaxRms) globalMaxRms = rms;
-    globalSumRms += rms;
   }
 
   // Calcular suelo de ruido de fondo (percentil 10 de energía)
   const sortedRms = Array.from(frameRms).sort((a, b) => a - b);
   const noiseFloor = sortedRms[Math.floor(sortedRms.length * 0.1)] || 0.0001;
-  const avgRms = globalSumRms / totalFrames;
 
   // Umbral dinámico para considerar sonido musical
   const minLinearFromDb = Math.pow(10, minSilenceDb / 20);

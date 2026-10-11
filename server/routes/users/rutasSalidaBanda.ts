@@ -32,7 +32,6 @@ router.delete(
         (req as any).user?.email ||
         ''
       ).toLowerCase();
-      const userUsername = (user?.username || '').toLowerCase();
 
       // 1. Remove relationship from state.userBands
       if (state.userBands && Array.isArray(state.userBands)) {

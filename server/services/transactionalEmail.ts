@@ -711,7 +711,6 @@ export async function sendWelcomeEmail(toEmail: string, userName: string, bandNa
 
 
 export async function sendPasswordResetEmail(toEmail: string, code: string): Promise<{ success: boolean; id?: string; error?: string }> {
-  const appUrl = getProductionAppUrl(process.env.APP_URL);
   const html = `<!DOCTYPE html>
 <html lang="es">
 <head>

@@ -77,7 +77,6 @@ export function buildServerEmailHtml(params: {
   const telefono = firma.telefono || booking.telefono || '';
   const email = firma.email || booking.email || '';
 
-  const dossierPdfName = epkConfig?.dossierPdfName || epkConfig?.dossier_pdf_name || `Dossier ${bandName}.pdf`;
   const logoUrl = epkConfig?.logoUrl || epkConfig?.logo_url || '';
 
   const appBaseUrl =

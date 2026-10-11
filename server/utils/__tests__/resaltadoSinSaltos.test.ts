@@ -14,13 +14,12 @@ const ACORDES = ['E', 'G', 'A', 'D', 'Bm', 'F#m', 'C#m', 'B'];
 function caso() {
   const segs: any[] = [];
   let t = 0;
-  let prev = '';
   while (t < 60) {
     let a = ACORDES[Math.floor(az() * ACORDES.length)];
     if (az() < 0.1) a = 'N';
     const d = 0.45 + az() * 2.5;
     segs.push({ t0: t, t1: t + d, acorde: a, confianza: 1 });
-    t += d; prev = a;
+    t += d;
   }
   const lineas: any[] = [];
   let u = 1;
@@ -36,7 +35,7 @@ function caso() {
 }
 
 it('en 100 canciones aleatorias el resaltado pasa por TODOS los acordes del cifrado (ninguno se salta)', () => {
-  let casos = 0, conSalto = 0, acordesTotal = 0, saltados = 0, sinPareja = 0, ejemplo = '';
+  let casos = 0, conSalto = 0, saltados = 0, sinPareja = 0, ejemplo = '';
   for (let k = 0; k < 100; k++) {
     const { segs, lineas } = caso();
     const cif = construirCifradoSincronizado(lineas, segs);
@@ -48,7 +47,6 @@ it('en 100 canciones aleatorias el resaltado pasa por TODOS los acordes del cifr
     const tiempos = tiemposDeAcordes(al, segs);
     for (let t = 0; t < 75; t += 0.02) vistos.add(acordeActivoPorTiempo(tiempos, t));
     const falt = texto.map((_, i) => i).filter((i) => !vistos.has(i));
-    acordesTotal += texto.length;
     saltados += falt.length;
     sinPareja += al.pares.filter((p) => p.segmento === null).length;
     if (falt.length) { conSalto++; if (!ejemplo) ejemplo = `texto=${texto.join(' ')} faltan=${falt.join(',')} pares=${al.pares.map((p) => p.segmento).join(',')} | audio=${segs.map((s, i) => i + ':' + s.acorde).join(' ')}`; }

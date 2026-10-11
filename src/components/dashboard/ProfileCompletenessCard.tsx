@@ -172,7 +172,6 @@ export const ProfileCompletenessCard: React.FC<
       (l) => l.email_contacto && l.email_contacto.includes("@"),
     );
     const hasSongs = storedSongsCount > 0;
-    const hasAgenda = concerts.length > 0 || rehearsals.length > 0;
     const hasMetrics = metrics.length > 0;
     const hasFans =
       fans.length > 0 ||

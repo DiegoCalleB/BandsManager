@@ -50,7 +50,6 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(from #security)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[src_components_booking_AddLeadModal|src/components/booking/AddLeadModal.tsx]] *(from #frontend)*
@@ -63,7 +62,6 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 

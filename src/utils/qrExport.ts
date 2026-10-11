@@ -128,7 +128,7 @@ export async function downloadQrAsHighResPng(options: QrExportOptions): Promise<
   if (options.logoUrl) {
     try {
       const dataUrl = await urlToDataUrl(options.logoUrl);
-      logoImg = await new Promise((res, rej) => {
+      logoImg = await new Promise((res) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => res(img);

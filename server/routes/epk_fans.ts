@@ -1074,12 +1074,6 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
       (req.query.concert_id as string) || (req.query.concertId as string);
 
     let supabaseStats: Record<string, number> = {};
-    let concertBreakdown: Array<{
-      concert_id: string;
-      concert_date: string;
-      button_type: string;
-      count: number;
-    }> = [];
 
     try {
       const { getSupabase } = await import('../db.js');

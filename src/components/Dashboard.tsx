@@ -19,7 +19,7 @@ import {
 import { usePlayer } from "../context/PlayerContext";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
-import { apiFetch } from "../utils/api";
+import "../utils/api";
 import { AddLeadModal } from "./dashboard/AddLeadModal";
 import { ProfileCompletenessCard } from "./dashboard/ProfileCompletenessCard";
 import { EmailTemplatesModal } from "./dashboard/EmailTemplatesModal";
@@ -85,31 +85,6 @@ interface DashboardProps {
   isPromoPlan?: boolean;
 }
 
-const isMedio = (l?: Lead | null) => {
-  if (!l || !l.tipo) return false;
-  const s = String(l.tipo).trim().toLowerCase();
-  return (
-    s.includes("medio") ||
-    s.includes("radio") ||
-    s.includes("prensa") ||
-    s.includes("tv") ||
-    s.includes("podc")
-  );
-};
-
-const isManagement = (l?: Lead | null) => {
-  if (!l || !l.tipo) return false;
-  const s = String(l.tipo).trim().toLowerCase();
-  return [
-    "agencia",
-    "manager",
-    "productora",
-    "sello",
-    "promotora",
-    "management",
-  ].some((t) => s.includes(t));
-};
-
 export default function Dashboard({
   leads,
   colors,
@@ -134,9 +109,6 @@ export default function Dashboard({
   isPromoPlan: isPromoPlanProp,
 }: DashboardProps) {
   const { setSongs: setPlayerSongs } = usePlayer();
-  const [searchTerm] = useState("");
-  const [cityFilter] = useState("todos");
-  const [genreFilter] = useState("todos");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isQuickRehearsalOpen, setIsQuickRehearsalOpen] = useState(false);
@@ -149,7 +121,6 @@ export default function Dashboard({
   const [viewDensityMode, setViewDensityMode] = useState<"clean" | "full">(
     "clean",
   );
-  const [, setSyncLoading] = useState(false);
 
   // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
   const [agendaFilterMode, setAgendaFilterMode] = useState<"active" | "all">(
@@ -170,23 +141,6 @@ export default function Dashboard({
         ),
       ));
 
-  // Scraper states
-  const [, setIsScraping] = useState(false);
-  const [, setScrapingStatus] = useState("");
-  const [scrapedData, setScrapedData] = useState<{
-    email_contacto: string;
-    telefono: string;
-    website?: string;
-    instagram: string;
-    contacto_nombre?: string;
-    aforo?: number | null;
-    region?: string;
-    genero?: string;
-    contexto_extra?: string;
-    source_info: string;
-  } | null>(null);
-  const [, setScrapingError] = useState<string | null>(null);
-
   // Add new lead form states
   const [newSala, setNewSala] = useState("");
   const [newCiudad, setNewCiudad] = useState("");
@@ -198,7 +152,6 @@ export default function Dashboard({
   const [newInstagram, setNewInstagram] = useState("");
   const [newNotas, setNewNotas] = useState("");
 
-  const [songsCount, setSongsCount] = React.useState(0);
   const [setlists, setSetlists] = React.useState<Setlist[]>([]);
   const [songs, setSongs] = React.useState<Song[]>([]);
 
@@ -214,7 +167,6 @@ export default function Dashboard({
         if (isMounted) {
           if (songsRes?.songs && Array.isArray(songsRes.songs)) {
             setSongs(songsRes.songs);
-            setSongsCount(songsRes.songs.length);
             setPlayerSongs(songsRes.songs);
           }
           if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
@@ -224,7 +176,6 @@ export default function Dashboard({
       } catch (err) {
         console.error("Failed to load repertorio data:", err);
         if (isMounted) {
-          setSongsCount(0);
           setSongs([]);
           setSetlists([]);
           setPlayerSongs([]);
@@ -236,116 +187,6 @@ export default function Dashboard({
       isMounted = false;
     };
   }, [currentBandId, setPlayerSongs]);
-
-  const storedSongsCount = songsCount;
-
-  // Handle Sync simulation
-  const handleForceSync = () => {
-    setSyncLoading(true);
-    setTimeout(() => {
-      setSyncLoading(false);
-    }, 1200);
-  };
-
-  const handleScrapeContact = async (lead: Lead) => {
-    setIsScraping(true);
-    setScrapingError(null);
-    setScrapedData(null);
-
-    const steps = [
-      "Conectando con el Agente Scout...",
-      "Buscando perfiles oficiales en la web...",
-      "Extrayendo datos de Instagram y directorios...",
-      "Buscando datos de aforo y estilo musical...",
-      "Filtrando y validando emails de booking...",
-      "Consolidando resultados...",
-    ];
-
-    let currentStep = 0;
-    setScrapingStatus(steps[0]);
-
-    const interval = setInterval(() => {
-      currentStep++;
-      if (currentStep < steps.length) {
-        setScrapingStatus(steps[currentStep]);
-      }
-    }, 1000);
-
-    try {
-      const resData = await apiFetch<any>("/api/scrape-contact", {
-        method: "POST",
-        body: JSON.stringify({
-          leadId: lead.id,
-          nombre_sala: lead.nombre_sala,
-          ciudad: lead.ciudad,
-          region: lead.region,
-        }),
-      });
-
-      clearInterval(interval);
-
-      if (resData?.success && resData?.data) {
-        setScrapedData(resData.data);
-      } else {
-        throw new Error(
-          resData?.error || "No se pudieron extraer datos de contacto.",
-        );
-      }
-    } catch (err: any) {
-      clearInterval(interval);
-      setScrapingError(err.message || "Error en el proceso de raspado.");
-    } finally {
-      setIsScraping(false);
-    }
-  };
-
-  const getScrapedVal = (field: any) =>
-    typeof field === "object" && field !== null ? field.valor : field;
-  const getScrapedConf = (field: any) =>
-    typeof field === "object" && field !== null
-      ? field.confianza || "baja"
-      : "alta";
-
-  const handleApplyScrapedData = (lead: Lead) => {
-    if (!scrapedData) return;
-    const today = new Date().toISOString().split("T")[0];
-    const sourceSummary =
-      typeof scrapedData.source_info === "string"
-        ? scrapedData.source_info
-        : "Scout Scraper Grounding";
-    const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas || ""}`;
-
-    const emailVal = getScrapedVal(scrapedData.email_contacto);
-    const telVal = getScrapedVal(scrapedData.telefono);
-    const webVal = getScrapedVal(scrapedData.website);
-    const instaVal = getScrapedVal(scrapedData.instagram);
-    const contactoVal = getScrapedVal(scrapedData.contacto_nombre);
-    const aforoVal = getScrapedVal(scrapedData.aforo);
-    const regionVal = getScrapedVal(scrapedData.region);
-    const generoVal = getScrapedVal(scrapedData.genero);
-    const contextoVal = getScrapedVal(scrapedData.contexto_extra);
-
-    const updatedFields: Partial<Lead> = {
-      email_contacto: emailVal || lead.email_contacto,
-      telefono: telVal || lead.telefono,
-      website: webVal || lead.website,
-      instagram: instaVal || lead.instagram,
-      contacto_nombre: contactoVal || lead.contacto_nombre,
-      aforo:
-        aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : lead.aforo,
-      region: regionVal || lead.region,
-      genero: generoVal || lead.genero,
-      contexto_extra:
-        contextoVal && typeof contextoVal === "string" && contextoVal.trim()
-          ? contextoVal.trim()
-          : lead.contexto_extra,
-      notas: updatedNotes,
-    };
-
-    onUpdateLead(lead.id, updatedFields);
-    setSelectedLead((prev) => (prev ? { ...prev, ...updatedFields } : null));
-    setScrapedData(null);
-  };
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -382,85 +223,11 @@ export default function Dashboard({
     setNewNotas("");
   };
 
-  // Unique cities and genres for filters
-  const cities = Array.from(new Set(leads.map((l) => l.ciudad))).filter(
-    Boolean,
-  );
-  const genres = Array.from(new Set(leads.map((l) => l.genero))).filter(
-    Boolean,
-  );
-
-  // Filter leads for search/scraper table
-  const filteredLeads = leads.filter((lead) => {
-    const matchesSearch =
-      lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = cityFilter === "todos" || lead.ciudad === cityFilter;
-    const matchesGenre = genreFilter === "todos" || lead.genero === genreFilter;
-    return matchesSearch && matchesCity && matchesGenre;
-  });
-
-  const isLightTheme =
-    (typeof document !== "undefined" &&
-      document.documentElement.dataset.theme === "light") ||
-    colors.mode === "light" ||
-    colors.name?.toLowerCase().includes("light") ||
-    colors.name?.toLowerCase().includes("claro") ||
-    colors.bg.includes("f8fafc") ||
-    colors.bg.includes("white") ||
-    colors.bg.includes("neutral-50") ||
-    false;
-  const subCardBg = "bg-[var(--bg)]/80 text-[var(--ink)]";
-  const textTitle = "text-[var(--ink)]";
-  const textSub = "text-[var(--ink-2)]";
-  const textMuted = "text-[var(--ink-2)]";
-
-  // Calculate real metrics from leads
-  const isMedio = (l: Lead) => {
-    if (!l.tipo) return false;
-    const s = String(l.tipo).trim().toLowerCase();
-    return (
-      s.includes("medio") ||
-      s.includes("radio") ||
-      s.includes("prensa") ||
-      s.includes("tv") ||
-      s.includes("podc")
-    );
-  };
-
-  const pendingApprovalCount = leads.filter(
-    (l) =>
-      l.estado === "pendiente_aprobacion" ||
-      (l.pitch_generado && l.estado === "nuevo"),
-  ).length;
-  const sentCount = leads.filter(
-    (l) => l.estado === "esperando_respuesta",
-  ).length;
-  const interestedCount = leads.filter(
-    (l) => l.estado === "interesado" || l.estado === "negociando",
-  ).length;
-  const approvedCount = leads.filter((l) => l.estado === "aprobado").length;
-  const mediosCount = leads.filter((l) => isMedio(l)).length;
-
   const now = new Date();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   const activeBandId = currentBandId || currentUser?.band_id || "";
   const activeBandName = bandName || currentUser?.bandName || "Tu Banda";
-
-  const activeBandConcerts = React.useMemo(() => {
-    return concerts.filter((c) => {
-      if (!c.band_id) return false;
-      return isSameBandId(c.band_id, activeBandId);
-    });
-  }, [concerts, activeBandId]);
-
-  const activeBandRehearsals = React.useMemo(() => {
-    return rehearsals.filter((r) => {
-      if (!r.band_id) return false;
-      return isSameBandId(r.band_id, activeBandId);
-    });
-  }, [rehearsals, activeBandId]);
 
   // Filter concerts & rehearsals based on agendaFilterMode
   const filteredConcerts = concerts.filter((c) => {
@@ -489,11 +256,6 @@ export default function Dashboard({
       "Banda"
     );
   };
-
-  const hasMultipleBands =
-    (availableBands && availableBands.length > 1) ||
-    concerts.some((c) => c.band_id && !isSameBandId(c.band_id, activeBandId)) ||
-    rehearsals.some((r) => r.band_id && !isSameBandId(r.band_id, activeBandId));
 
   // Build upcoming agenda dates
   const upcomingEvents: Array<{
@@ -598,16 +360,6 @@ export default function Dashboard({
   // caché de 3.500€) copiados de la banda insignia. Una agenda vacía es simplemente una agenda
   // vacía: no se inventan conciertos que no existen.
   upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
-
-  // Calculate urgent leads that need response or approval
-  const urgentRepliesNeeded = leads.filter(
-    (l) => l.estado === "interesado" || l.estado === "negociando",
-  );
-  const urgentApprovalsNeeded = leads.filter(
-    (l) =>
-      l.estado === "pendiente_aprobacion" ||
-      (l.pitch_generado && l.estado === "nuevo"),
-  );
 
 
   // Generate intelligent industry alerts and booking milestones, strictly bound to user plan permissions

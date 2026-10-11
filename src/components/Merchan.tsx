@@ -110,7 +110,6 @@ export default function Merchan({
   bandName,
   bandLogoUrl
 }: MerchanProps) {
-  const isDemo = false;
 
   const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
   const displayBandName = bandName || "Tu Banda";
@@ -161,8 +160,6 @@ export default function Merchan({
   const [hasGiftPending, setHasGiftPending] = useState(true);
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimStep, setClaimStep] = useState<"form" | "success">("form");
-  const [selectedGiftDesignId, setSelectedGiftDesignId] =
-    useState<string>("default-logo");
   // El formulario de envío del regalo empezaba precargado con el nombre, la dirección real y el
   // teléfono del fundador: cualquier banda que reclamase su pack de pegatinas sin fijarse en el
   // formulario acababa enviando el regalo a su casa en vez de a la suya propia.

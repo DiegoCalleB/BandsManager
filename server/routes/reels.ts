@@ -1160,7 +1160,8 @@ Responde ÚNICAMENTE con JSON válido:
  */
 router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
   try {
-    const bandId = getTargetBandId(req);
+    // Sin datos de banda en esta ruta, pero exige banda activa en la sesión (falla con 500 si falta).
+    getTargetBandId(req);
     const { 
       hookText = "", 
       copyText = "", 

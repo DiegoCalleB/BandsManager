@@ -39,7 +39,6 @@ router.post(
 
       // 2. Update local state registeredBands
       if (!state.registeredBands) state.registeredBands = [];
-      let foundReg = false;
       state.registeredBands.forEach((b: any) => {
         const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
         if (
@@ -49,7 +48,6 @@ router.post(
         ) {
           b.logo_url = logoUrl.trim();
           b.imagen_url = logoUrl.trim();
-          foundReg = true;
         }
       });
 

@@ -183,7 +183,6 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   const tieneTecnicoSonidoPropio = bandConfig?.datosContratacion?.tieneTecnicoSonidoPropio === true;
   const transportePropio = bandConfig?.datosContratacion?.transportePropio === true;
   const hospedajeRequerido = bandConfig?.datosContratacion?.hospedajeRequerido === true;
-  const modoFacturacion = bandConfig?.datosContratacion?.facturacion || 'Cooperativa / Facturación estándar';
 
   const duracionDirecto = bandConfig?.datosContratacion?.duracionDirecto || "75 a 90 minutos de show continuo sin pausas";
 
@@ -440,10 +439,6 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const customTemplates = activeCampaign.customPitchTemplates || activeCampaign.custom_pitch_templates || {};
     const cTemplate = customTemplates[categoryKey] || '';
     const cNotes = activeCampaign.notes || '';
-    const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
-    const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
-    // Removed capInfo - avoid mentioning capacity in pitch unless explicitly needed
-    const capInfo = '';
 
     const campaignToneRules = activeCampaign.campaignToneRules || activeCampaign.campaign_tone_rules;
     let campaignToneSection = "";
@@ -951,8 +946,6 @@ export function generateSmartDnaPitchFallback(params: {
   const salaNombre = lead?.nombre_sala || "la sala";
   const ciudad = lead?.ciudad || "";
   const ciudadStr = ciudad ? ` (${ciudad})` : "";
-  const aforo = lead?.aforo ? Number(lead.aforo) : 0;
-  const aforoStr = aforo > 0 ? ` para aforos de unas ${aforo} personas` : "";
   const customNote = params.customInstruction ? `\n[Ajuste solicitado por el mánager: "${params.customInstruction.trim()}"]\n` : "";
 
   const campDatesText = activeCampaign?.targetDatesText || (Array.isArray(activeCampaign?.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign?.target_dates) ? activeCampaign.target_dates.join(', ') : ''));

@@ -39,7 +39,6 @@ function isMatchRelevant(searchedName: string, foundName: string): boolean {
   const stopWords = new Set(['sala', 'de', 'del', 'la', 'el', 'los', 'las', 'san', 'santa', 'club', 'bar', 'festival', 'teatro', 'espacio', 'conciertos', 'musica', 'live']);
   
   const sWords = sNorm.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
-  const fWords = fNorm.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
 
   if (sWords.length === 0) {
     return fNorm.includes(sNorm) || sNorm.includes(fNorm);

@@ -17,7 +17,6 @@ export const PublicFanCapture: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [, setIncentivoData] = useState<any>(null);
-  const [, setCopiedCode] = useState(false);
   const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({
     name: "",
     logoUrl: "",
@@ -101,12 +100,6 @@ export const PublicFanCapture: React.FC = () => {
       setLoading(false);
       setErrorMsg("No se pudo conectar con el servidor. Inténtalo de nuevo.");
     }
-  };
-
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   return (

@@ -268,29 +268,6 @@ export function SetlistAIAnalysisModal({
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
   };
 
-  /** Convierte el SVG del gráfico a PNG (dibujándolo en un <canvas>) para compartir como archivo de imagen — la Web Share API y WhatsApp entienden PNG universalmente, no todos los destinos aceptan SVG. Resuelve null si no hay gráfico o el navegador bloquea el canvas (raro, pero posible en algunos navegadores muy restrictivos). */
-  const getChartPngBlob = (): Promise<Blob | null> => {
-    return new Promise((resolve) => {
-      const svgDataUrl = getChartSvgDataUrl();
-      if (!svgDataUrl) return resolve(null);
-      const img = new Image();
-      img.onload = () => {
-        const scale = 2; // más nítido al compartir/imprimir que el tamaño real en pantalla
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return resolve(null);
-        ctx.fillStyle = "#0a0a0a";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => resolve(blob), "image/png");
-      };
-      img.onerror = () => resolve(null);
-      img.src = svgDataUrl;
-    });
-  };
-
   const handleAnalyze = async () => {
     setLoading(true);
     setError(null);

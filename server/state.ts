@@ -470,7 +470,6 @@ export function ensureUniqueIdsInState(state: any): boolean {
           const rlugar = (item.lugar || item.titulo || '').trim().toLowerCase();
           key = rfecha && rlugar ? `rehearsal:${rfecha}:${rlugar}:${bid}` : (item.id || `rehearsal-${idx}`);
         } else if (colKey === 'posts') {
-          const pfecha = (item.fecha || '').trim();
           const ptitle = (item.titulo || item.caption || '').trim().toLowerCase();
           key = ptitle ? `post:${ptitle}:${bid}` : (item.id || `post-${idx}`);
         } else if (colKey === 'payments') {

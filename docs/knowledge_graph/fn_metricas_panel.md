@@ -18,12 +18,8 @@ Dashboard de la banda con métricas de Spotify, redes y actividad.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
-- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
-- [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_leads_helpers|server/routes/leads/helpers.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(Layer: #service, Domain: #system)*

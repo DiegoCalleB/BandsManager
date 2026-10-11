@@ -89,7 +89,7 @@ const INTENT_LABELS: Record<IntentCategory, string> = {
 export function analyzeSentimentHeuristic(
   messageText: string,
   languageCode = "es",
-  context?: VenueContext
+  _context?: VenueContext
 ): MessageSentimentAnalysis {
   const t = (messageText || "").toLowerCase();
   const resType = detectResponseType(messageText, languageCode);

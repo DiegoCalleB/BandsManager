@@ -815,10 +815,6 @@ export const VenueMap: React.FC<VenueMapProps> = ({
 
       // Calculate base coords using smart dictionary & fuzzy location resolver
       leads.forEach((lead, index) => {
-        const fullKey = `${lead.nombre_sala}-${lead.ciudad}`
-          .toLowerCase()
-          .trim();
-
         // Instantly resolve accurate local venue/district/city coordinates
         const resolved = resolveLeadCoordinates(lead, index);
         newCoords[lead.id] = resolved;

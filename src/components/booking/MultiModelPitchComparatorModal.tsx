@@ -74,7 +74,6 @@ export const MultiModelPitchComparatorModal: React.FC<
   >(null);
   const [appliedSuccess, setAppliedSuccess] = useState<string | null>(null);
   const [volumeScale, setVolumeScale] = useState<"1" | "100" | "1000">("1");
-  const [showCostBreakdown, setShowCostBreakdown] = useState(true);
 
   // Load providers on mount
   useEffect(() => {
@@ -436,7 +435,6 @@ export const MultiModelPitchComparatorModal: React.FC<
                   }
 
                   const isDeepSeek = prop.provider === "deepseek";
-                  const isGemini = prop.provider === "gemini";
 
                   return (
                     <div

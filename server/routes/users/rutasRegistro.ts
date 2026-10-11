@@ -109,7 +109,6 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
   existingIds.add(regId);
 
   let userToUse: any;
-  let isNewUserCreated = false;
 
   if (isExistingUser) {
     userToUse = existingUsersWithEmail[0];
@@ -161,7 +160,6 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
     };
 
     state.users.push(userToUse);
-    isNewUserCreated = true;
   }
 
   // Generate session token

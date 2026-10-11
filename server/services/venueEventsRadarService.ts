@@ -368,7 +368,6 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
     // Obtener rango ISO de las fechas objetivo de campaña
     const targetIsoDates = candidates.map(c => c.isoDate).filter(f => /^\d{4}-\d{2}-\d{2}$/.test(f)).sort();
     const minTargetIso = targetIsoDates.length > 0 ? targetIsoDates[0] : undefined;
-    const maxTargetIso = targetIsoDates.length > 0 ? targetIsoDates[targetIsoDates.length - 1] : undefined;
 
     // Calcular disponibilidad en los candidatos
     const freeDatesLabels: string[] = [];

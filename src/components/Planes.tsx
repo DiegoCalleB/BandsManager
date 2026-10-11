@@ -364,7 +364,6 @@ export const Planes: React.FC<PlanesProps> = ({
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
     "monthly",
   );
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [isOpeningPortal, setIsOpeningPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<

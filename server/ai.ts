@@ -403,21 +403,6 @@ export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): 
   return links;
 }
 
-function formatPitchLinksBlock(
-  links: PitchLinks | undefined,
-  header: string,
-  labels: { spotify: string; youtube: string; epk: string }
-): string {
-  const lines: string[] = [];
-  if (links?.spotify) lines.push(`• ${labels.spotify}: ${links.spotify}`);
-  if (links?.youtube) lines.push(`• ${labels.youtube}: ${links.youtube}`);
-  if (links?.epk) lines.push(`• ${labels.epk}: ${links.epk}`);
-  // Sin enlaces reales, no se menciona la sección: es mejor omitirla que rellenarla con URLs
-  // inventadas que no llevan a ningún sitio.
-  if (lines.length === 0) return "";
-  return `\n\n${header}\n${lines.join("\n")}`;
-}
-
 export function generateSmartLocalPitchFallback(params: {
   prompt: string;
   systemPrompt?: string;

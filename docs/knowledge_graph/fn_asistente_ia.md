@@ -40,7 +40,6 @@ Chatbot con herramientas que lee y actúa sobre los datos de la banda.
 - [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
-- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 

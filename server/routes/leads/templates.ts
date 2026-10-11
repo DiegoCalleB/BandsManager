@@ -153,7 +153,6 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     }
 
     const state = loadState();
-    const { bandName, bandBio } = resolveBandNameAndBio(state, bandId);
 
     // Create a synthetic lead representative of this category
     const categoryToType: Record<string, string> = {

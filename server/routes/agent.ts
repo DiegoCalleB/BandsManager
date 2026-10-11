@@ -249,20 +249,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         });
       }
 
-      let bandInfo = 'la banda (estilo musical sin especificar)';
       let activeCampaign: any = null;
-      try {
-        const { data: bandData } = await sb
-          .from('registered_bands')
-          .select('*')
-          .eq('band_id', targetBandId)
-          .maybeSingle();
-        if (bandData) {
-          bandInfo = `${bandData.nombre_banda} - Estilo: ${bandData.estilo_musical || 'Mestizaje / Rock'} - Bio: ${bandData.biografia_corta || 'Banda en gira'}`;
-        }
-      } catch {
-        // fallback
-      }
 
       try {
         const { data: campData } = await sb
@@ -413,8 +400,6 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       const targetLoc = params?.ciudad || params?.region || 'Huelva';
       const tipo = params?.tipo || 'sala';
       const limit = Math.max(2, Math.min(10, Number(params?.limit) || 4));
-      const aforoMin = params?.aforoMin ? Number(params.aforoMin) : null;
-      const aforoMax = params?.aforoMax ? Number(params.aforoMax) : null;
       const state = loadState();
       const bandDna = getBandDnaProfile(state, targetBandId);
       const generoBanda =

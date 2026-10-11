@@ -66,21 +66,6 @@ export default function Finanzas({
 
   // Form State for Add Transaction
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [tipo] = useState<"ingreso" | "gasto">("ingreso");
-  const [categoria] = useState<
-    | "concierto"
-    | "merchandising"
-    | "subvencion"
-    | "transporte"
-    | "alojamiento"
-    | "comida"
-    | "promo"
-    | "otros"
-  >("concierto");
-  const [concepto, setConcepto] = useState("");
-  const [importe, setImporte] = useState("");
-  const [fecha, setFecha] = useState(new Date().toISOString().split("T")[0]);
-  const [estado, setEstado] = useState<"pendiente" | "pagado">("pagado");
 
   // Sync state
   const [isSyncing, setIsSyncing] = useState(false);
@@ -109,30 +94,6 @@ export default function Finanzas({
     } finally {
       setIsSyncing(false);
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!concepto || !importe) return;
-
-    const newPayment: Payment = {
-      id: "pay-" + Date.now(),
-      tipo,
-      categoria,
-      concepto,
-      importe: parseFloat(importe) || 0,
-      fecha,
-      estado,
-    };
-
-    await onAddPayment(newPayment);
-    setIsAddOpen(false);
-
-    // Reset form
-    setConcepto("");
-    setImporte("");
-    setFecha(new Date().toISOString().split("T")[0]);
-    setEstado("pagado");
   };
 
   const handleToggleEstado = async (payment: Payment) => {
@@ -164,18 +125,8 @@ export default function Finanzas({
   });
 
   const categories = Array.from(new Set(payments.map((p) => p.categoria)));
-
-  const isLightTheme =
-    (typeof document !== "undefined" &&
-      document.documentElement.dataset.theme === "light") ||
-    colors.name?.toLowerCase().includes("light") ||
-    colors.bg.includes("f8fafc") ||
-    colors.bg.includes("white") ||
-    colors.bg.includes("neutral-50") ||
-    false;
   const textTitle = "text-[var(--ink)]";
   const textSub = "text-[var(--ink-2)]";
-  const textMuted = "text-[var(--ink-2)]";
   const cardBorder = "";
 
   return (

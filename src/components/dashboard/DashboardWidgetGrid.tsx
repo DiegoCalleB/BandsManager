@@ -91,19 +91,16 @@ export function DashboardWidgetGrid({
   isEditMode: externalEditMode,
   setIsEditMode: externalSetIsEditMode,
   viewDensityMode: externalDensityMode,
-  setViewDensityMode: externalSetViewDensityMode
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
 
   // Internal fallback state if props not passed
-  const [internalDensityMode, setInternalDensityMode] = useState<
+  const [internalDensityMode] = useState<
     "clean" | "full"
   >("clean");
   const [internalEditMode, setInternalEditMode] = useState(false);
 
   const viewDensityMode = externalDensityMode ?? internalDensityMode;
-  const setViewDensityMode =
-    externalSetViewDensityMode ?? setInternalDensityMode;
 
   const isEditMode = externalEditMode ?? internalEditMode;
   const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
