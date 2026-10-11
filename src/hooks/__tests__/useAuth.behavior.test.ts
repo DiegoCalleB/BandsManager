@@ -26,6 +26,7 @@ describe('useAuth', () => {
   beforeEach(() => {
     localStorage.clear();
     verifyMe.mockReset();
+    verifyMe.mockResolvedValue({});
     logout.mockReset();
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   });
@@ -92,6 +93,13 @@ describe('useAuth', () => {
       window.dispatchEvent(new CustomEvent('bm:ui-preferences-saved', { detail: { orden: 'a' } }));
     });
     expect((result.current.currentUser as User & { ui_preferences?: Record<string, string> }).ui_preferences).toEqual({ orden: 'a' });
+  });
+
+  it('login sin banda preferida y con lista de bandas no rompe', () => {
+    const { result } = renderHook(() => useAuth());
+    act(() => result.current.handleLoginSuccess(usuario({ band_id: undefined }), 'tk', [{ band_id: 'band-7', bandName: 'Siete' } as never]));
+    expect(result.current.isLoggedIn).toBe(true);
+    expect(result.current.currentUser?.band_id).toBeUndefined();
   });
 
   it('login normaliza la banda preferida y persiste la sesión', () => {

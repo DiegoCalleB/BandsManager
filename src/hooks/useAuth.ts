@@ -195,7 +195,7 @@ export function useAuth() {
       };
 
       // If availableBands list is provided, synchronize band name & plan with the active main band
-      if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
+      if (normalizedBandId && bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
         const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
         const match = bandsList.find(
           (b) =>
