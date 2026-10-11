@@ -28,7 +28,7 @@ _Sin dependencias salientes directas._
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[server_ai|server/ai.ts]] *(from #service)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_generacionMusical|server/routes/ai_music/generacionMusical.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
 

@@ -4,7 +4,7 @@ import {
   AudioSeparatorResult,
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
-import { ensurePublicAudioUrl } from '../../routes/ai_music.js';
+import { ensurePublicAudioUrl } from '../../routes/ai_music/audioPublico.js';
 
 /**
  * Adaptador para Fal.ai (fal-ai/demucs) en GPU A100.

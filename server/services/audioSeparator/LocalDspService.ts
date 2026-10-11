@@ -4,7 +4,7 @@ import {
   AudioSeparatorResult,
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
-import { processServerStemsFfmpeg } from '../../routes/ai_music.js';
+import { processServerStemsFfmpeg } from '../../routes/ai_music/motorFfmpeg.js';
 
 /**
  * Adaptador para el motor local de filtrado espectral DSP con FFmpeg (100% gratuito e ilimitado).

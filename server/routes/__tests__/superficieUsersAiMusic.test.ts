@@ -93,7 +93,7 @@ const PUBLICAS = new Set([
   '/auth/me',
   '/auth/switch-band',
   '/auth/logout',
-  // Webhooks de proveedores: se autentican por firma, no por sesión.
+  // Webhooks de proveedores: Replicate valida la firma HMAC; el de Fal.ai solo registra el aviso.
   '/ai-stem-separation/fal-webhook',
   '/webhooks/replicate-stems',
   '/api/webhooks/replicate-stems',
@@ -123,8 +123,12 @@ describe('superficie de users y ai_music', () => {
     expect(inventario(usersRouter)).toEqual(RUTAS_USERS);
   });
 
-  it('ai_music expone exactamente sus rutas, en el mismo orden', () => {
-    expect(inventario(aiMusicRouter)).toEqual(RUTAS_AI_MUSIC);
+  // En ai_music todas las rutas son literales distintos: el orden de montaje de sus sub-routers no
+  // cambia qué handler atiende cada petición. En users sí importa (POST /users/upload-logo está
+  // declarada dos veces y gana la primera), por eso allí se compara el orden.
+  it('ai_music expone exactamente sus rutas', () => {
+    expect([...inventario(aiMusicRouter)].sort()).toEqual([...RUTAS_AI_MUSIC].sort());
+    expect(new Set(RUTAS_AI_MUSIC).size).toBe(RUTAS_AI_MUSIC.length);
   });
 
   it.each([

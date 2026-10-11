@@ -31,7 +31,7 @@ Contabilidad exacta de tokens consumidos por banda y modelo para control de cost
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_db|server/db.ts]] *(from #db)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 
 ---

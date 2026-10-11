@@ -28,11 +28,11 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🌐 Servicios externos
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 4 ficheros lo usan
-- [[ext_fal|fal.ai]] — 6 ficheros lo usan
-- [[ext_ffmpeg|FFmpeg]] — 22 ficheros lo usan
+- [[ext_fal|fal.ai]] — 8 ficheros lo usan
+- [[ext_ffmpeg|FFmpeg]] — 27 ficheros lo usan
 - [[ext_gemini|Gemini (Google GenAI)]] — 8 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
-- [[ext_replicate|Replicate]] — 9 ficheros lo usan
+- [[ext_replicate|Replicate]] — 11 ficheros lo usan
 - [[ext_resend|Resend]] — 4 ficheros lo usan
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
@@ -73,7 +73,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1454 nodos: 51 agent · 40 db · 12 external · 14 feature · 896 frontend · 40 hook · 42 route · 61 schema · 10 security · 288 service.
+1472 nodos: 51 agent · 40 db · 12 external · 14 feature · 896 frontend · 40 hook · 60 route · 61 schema · 10 security · 288 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
@@ -84,11 +84,11 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
 - [[server_db_core|server/db/core.ts]] — 56 ficheros dependen de él
-- [[db_state_sync|In-Memory State & Supabase Sync]] — 49 ficheros dependen de él
+- [[db_state_sync|In-Memory State & Supabase Sync]] — 51 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 46 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 38 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 40 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[server_db|server/db.ts]] — 35 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 33 ficheros dependen de él

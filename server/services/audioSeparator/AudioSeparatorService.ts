@@ -3,7 +3,7 @@ import path from 'path';
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
 import { descargarBufferSeguro } from '../../utils/ssrfGuard.js';
 import { stemStorageRetryManager } from '../stemStorageRetryQueue.js';
-import { transcodeBufferToMp3 } from '../../routes/ai_music.js';
+import { transcodeBufferToMp3 } from '../../routes/ai_music/cacheStems.js';
 
 export interface AudioSeparatorOptions {
   bandId?: string;

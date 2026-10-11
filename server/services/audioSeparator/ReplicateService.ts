@@ -4,7 +4,8 @@ import {
   AudioSeparatorResult,
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
-import { processDemucsStems, processMdx23Stems } from '../../routes/ai_music.js';
+import { processDemucsStems } from '../../routes/ai_music/motorDemucs.js';
+import { processMdx23Stems } from '../../routes/ai_music/motorMdx23.js';
 
 /**
  * Adaptador concreto para los modelos de separación en Replicate (HT-Demucs v4 y MVSEP-MDX23).

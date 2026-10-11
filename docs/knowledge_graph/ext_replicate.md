@@ -26,7 +26,9 @@ _Sin dependencias salientes directas._
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_generacionMusical|server/routes/ai_music/generacionMusical.ts]] *(from #route)*
+- [[server_routes_ai_music_motorDemucs|server/routes/ai_music/motorDemucs.ts]] *(from #route)*
+- [[server_routes_ai_music_motorMdx23|server/routes/ai_music/motorMdx23.ts]] *(from #route)*
 - [[server_services_audioSeparator_AudioSeparatorFactory|server/services/audioSeparator/AudioSeparatorFactory.ts]] *(from #service)*
 - [[server_services_audioSeparator_index|server/services/audioSeparator/index.ts]] *(from #service)*
 - [[server_services_audioSeparator_ReplicateService|server/services/audioSeparator/ReplicateService.ts]] *(from #service)*

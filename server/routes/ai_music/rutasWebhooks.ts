@@ -1,0 +1,113 @@
+/**
+ * Webhooks de los proveedores de stems. Replicate se autentica por firma HMAC (y es idempotente); el de
+ * Fal.ai solo registra la notificación y no actúa sobre ella: los resultados se recogen por polling.
+ */
+import express from 'express';
+import { verifyReplicateWebhook, isPredictionWebhookProcessed, recordPredictionJob } from '../../services/stemPredictionReconciler.js';
+
+const router = express.Router();
+
+/**
+ * Endpoint de Webhook para recibir resultados asíncronos de Fal.ai (Inference Webhooks)
+ */
+router.post('/ai-stem-separation/fal-webhook', async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log(
+      `[Fal.ai Webhook] 🔔 Notificación de inferencia recibida de Fal.ai: Request ID=${payload?.request_id}, Status=${payload?.status}`
+    );
+    res.status(200).json({ received: true });
+  } catch (err: any) {
+    console.error('[Fal.ai Webhook] Error al procesar webhook de Fal.ai:', err);
+    res.status(200).json({ received: true, error: err?.message });
+  }
+});
+
+/**
+ * Webhook para recepcion asincrona de predicciones de Replicate con firma HMAC e idempotencia
+ */
+router.post(
+  ['/webhooks/replicate-stems', '/api/webhooks/replicate-stems'],
+  async (req, res) => {
+    try {
+      const webhookHeaders = {
+        id: (req.headers['webhook-id'] || req.headers['webhook_id']) as
+          | string
+          | undefined,
+        timestamp: (req.headers['webhook-timestamp'] ||
+          req.headers['webhook_timestamp']) as string | undefined,
+        signature: (req.headers['webhook-signature'] ||
+          req.headers['webhook_signature'] ||
+          req.headers['replicate-signature']) as string | undefined,
+      };
+      const webhookSecret = process.env.REPLICATE_WEBHOOK_SECRET;
+
+      // 1. Fail-closed: si el secreto no está configurado, rechazar inmediatamente con 401
+      if (!webhookSecret) {
+        console.error(
+          '[Replicate Webhook] ❌ REPLICATE_WEBHOOK_SECRET no configurado — rechazando webhook por seguridad.'
+        );
+        return res.status(401).json({
+          error: 'REPLICATE_WEBHOOK_SECRET no configurado en el servidor',
+          reason: 'secret_not_configured',
+        });
+      }
+
+      const rawBody =
+        (req as any).rawBody ||
+        (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+      const verification = verifyReplicateWebhook(
+        rawBody,
+        webhookHeaders,
+        webhookSecret
+      );
+      if (!verification.valid) {
+        console.warn(
+          `[Stem Webhook] ❌ Firma HMAC inválida en webhook de Replicate: ${verification.reason}`
+        );
+        return res
+          .status(401)
+          .json({ error: 'Firma HMAC inválida', reason: verification.reason });
+      }
+
+      const prediction = req.body;
+      const predictionId = prediction?.id;
+
+      if (!predictionId) {
+        return res.status(400).json({ error: 'ID de predicción ausente' });
+      }
+
+      // 2. Comprobación de idempotencia por prediction_id
+      const alreadyProcessed = await isPredictionWebhookProcessed(predictionId);
+      if (alreadyProcessed) {
+        console.log(
+          `[Stem Webhook] ⚡ Webhook ${predictionId} ya procesado anteriormente (Idempotencia).`
+        );
+        return res.json({ status: 'already_processed', id: predictionId });
+      }
+
+      // 3. Registrar el trabajo y su estado en Supabase
+      await recordPredictionJob({
+        id: predictionId,
+        status: prediction.status || 'processing',
+        provider: 'replicate',
+        webhook_received_at: new Date().toISOString(),
+        webhook_signature_verified: !!webhookSecret,
+        result_stems_map: prediction.output || null,
+        error_message: prediction.error || null,
+      });
+
+      console.log(
+        `[Stem Webhook] ✅ Webhook ${predictionId} procesado exitosamente con estado: ${prediction.status}`
+      );
+      return res.json({ status: 'processed', id: predictionId });
+    } catch (err: any) {
+      console.error('[Stem Webhook] Error procesando webhook:', err);
+      return res
+        .status(500)
+        .json({ error: err?.message || 'Error procesando webhook' });
+    }
+  }
+);
+
+export default router;

@@ -29,7 +29,12 @@ _Sin dependencias salientes directas._
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(from #security)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(from #route)*
+- [[server_routes_ai_music_diagnosticos|server/routes/ai_music/diagnosticos.ts]] *(from #route)*
+- [[server_routes_ai_music_diagnosticosInfra|server/routes/ai_music/diagnosticosInfra.ts]] *(from #route)*
+- [[server_routes_ai_music_ffmpegConfigurado|server/routes/ai_music/ffmpegConfigurado.ts]] *(from #route)*
+- [[server_routes_ai_music_motorFfmpeg|server/routes/ai_music/motorFfmpeg.ts]] *(from #route)*
+- [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
