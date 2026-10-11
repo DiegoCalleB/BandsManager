@@ -17,7 +17,8 @@ export const Raiz: React.FC = () => (
     defaultProps={{ ensayo: 'ensayo-completa', ventanas: [], destellos: [], borrosa: true } as Props}
     calculateMetadata={async ({ props }) => {
       const n: Notas = await fetch(staticFile(`${props.ensayo}/notas.json`)).then((r) => r.json());
-      const { ventanas, destellos } = calcular(n);
+      const dir = await fetch(staticFile('direccion.json')).then((x) => x.json()).catch(() => ({}));
+      const { ventanas, destellos } = calcular(n, dir);
       return { durationInFrames: Math.floor(((n.fin - n.t0) / 1000) * FPS), props: { ...props, ventanas, destellos } };
     }}
   />

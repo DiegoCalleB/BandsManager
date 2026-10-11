@@ -37,6 +37,7 @@ cast = section('Prólogo · La banda')
 excel = section('Prólogo · La hoja de cálculo')
 room = section('Prólogo · Sábado, 11:00 en el local')
 import glob
+import sys
 def build_graph():
     n = {}; e = set()
     for f in glob.glob(os.path.join(AQUI, '..', '..', '..', 'docs', 'knowledge_graph', '*.md')):
@@ -1039,8 +1040,14 @@ for i, x in enumerate(S):
     S[i] = x[:k] + '  ' + ficha + x[k:]
 assert _nf == len(FICHAS), _nf
 
+# Dirección de pantalla (tools/guion/direccion.py): cámara, resaltes, rótulos y cursor en las capturas fijas
+sys.path.insert(0, AQUI)
+import direccion
+direccion.aplicar(S)
+import json as _json
+_json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<div id="barras" aria-hidden="true"><i></i><i></i></div>\n<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)

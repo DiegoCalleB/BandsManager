@@ -303,6 +303,11 @@
     if (el.classList.contains('giro-reloj')) giroScore(k, at);
     // El correo llega a la sala: golpe grave al enviar, al llegar, al abrir, en el botón del dossier y en el aviso (solo graves)
     if (el.classList.contains('mailscene')) [[4.0, 0.36], [6.0, 0.3], [8.0, 0.22], [11.6, 0.26], [18.8, 0.3]].forEach(([t, g]) => k.thump(at(t), g));
+    // Nolan: el tic-tac del reloj bajo las pantallas dirigidas (madera grave, un golpe por segundo, el segundo más hondo cada cuatro)
+    if (el.classList.contains('dirigida')) for (let q = 1; q < 40; q++) k.toc(at(q), q % 4 === 0 ? 0.075 : 0.05);
+    // Pantallas dirigidas: un golpe grave suave con cada rótulo (solo graves)
+    if (el.dataset.golpes) el.dataset.golpes.split(',').forEach((t) => { k.thump(at(+t), 0.32); k.hit && k.hit(at(+t), 0.12); });
+    if (el.classList.contains('dirigida')) el.querySelectorAll('.dr-lab').forEach((l) => k.thump(at((parseFloat(l.style.getPropertyValue('--t')) || 0) + 0.1), 0.2));
     // Mis bandas: un golpe grave con cada foto y un boom al final
     if (el.classList.contains('mis-bandas')) {
       el.querySelectorAll('.mb-foto').forEach((f) => { const t0 = at(parseFloat(f.style.getPropertyValue('--t')) || 0); if (f.classList.contains('gran')) k.boom(t0, 0.55, 2.4); else k.thump(t0, 0.42); });

@@ -9,12 +9,20 @@ export type Notas = {
 // duración (s) de cada animación rápida del deck (styles.css): rampa de velocidad, golpe de cámara y golpe de voz
 const RAPIDAS: Record<string, number> = { acelera: 0.56, frena: 0.82, golpe: 0.38, golpevoz: 0.62 };
 
-export const calcular = (n: Notas) => {
+// movimientos de cámara de cada escena dirigida (public/direccion.json, lo escribe tools/guion/generar.py)
+export type Direccion = Record<string, [number, number, boolean][]>;
+
+export const calcular = (n: Notas, dir: Direccion = {}) => {
   const aSeg = (ms: number) => (ms - n.t0) / 1000;
   const v: [number, number][] = [];
   for (const a of n.anims) {
     const d = RAPIDAS[a.n];
     if (d) v.push([aSeg(a.s + n.reloj) - 0.08, aSeg(a.s + n.reloj) + d + 0.08]);
+  }
+  // golpes de cámara y derivas de las pantallas dirigidas: desenfoque durante cada movimiento
+  for (const a of n.anims) {
+    const mov = dir[a.n];
+    if (mov) for (const [ini, fin] of mov) v.push([aSeg(a.s + n.reloj) + ini - 0.06, aSeg(a.s + n.reloj) + fin + 0.06]);
   }
   v.sort((x, y) => x[0] - y[0]);
   const ventanas: [number, number][] = [];
