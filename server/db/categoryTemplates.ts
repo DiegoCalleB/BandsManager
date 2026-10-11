@@ -11,7 +11,29 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
  * sobrevivían a un redeploy.
  */
 
-function normalizeFromDb(row: any): CategoryTemplateConfig {
+/**
+ * Fila de `category_pitch_templates`. Admite también los nombres en camelCase con los que se
+ * guardaron algunas filas antiguas.
+ */
+interface FilaCategoryTemplate {
+  category?: string;
+  title?: string;
+  subject?: string;
+  body?: string;
+  guidelines?: string;
+  tone_rating?: number | string;
+  toneRating?: number | string;
+  content_rating?: number | string;
+  contentRating?: number | string;
+  custom_instruction?: string;
+  customInstruction?: string;
+  feedback_logs?: unknown;
+  feedbackLogs?: unknown;
+  updated_at?: string;
+  updatedAt?: string;
+}
+
+function normalizeFromDb(row: FilaCategoryTemplate): CategoryTemplateConfig {
   const category = String(row.category || "salas");
   const fallback = DEFAULT_CATEGORY_TEMPLATES[category];
   return {
@@ -23,7 +45,8 @@ function normalizeFromDb(row: any): CategoryTemplateConfig {
     toneRating: Number(row.tone_rating ?? row.toneRating ?? 5),
     contentRating: Number(row.content_rating ?? row.contentRating ?? 5),
     customInstruction: row.custom_instruction || row.customInstruction || "",
-    feedbackLogs: Array.isArray(row.feedback_logs) ? row.feedback_logs : (Array.isArray(row.feedbackLogs) ? row.feedbackLogs : []),
+    // Se confía en la forma de cada entrada del log: lo escribe siempre este mismo servidor.
+    feedbackLogs: (Array.isArray(row.feedback_logs) ? row.feedback_logs : (Array.isArray(row.feedbackLogs) ? row.feedbackLogs : [])) as CategoryTemplateConfig['feedbackLogs'],
     updatedAt: row.updated_at || row.updatedAt || new Date().toISOString()
   };
 }
@@ -43,7 +66,7 @@ export async function dbGetCategoryTemplates(bandId: string): Promise<Record<str
       console.warn("Supabase category_pitch_templates query warning:", error.message);
       return result;
     }
-    for (const row of data || []) {
+    for (const row of (data || []) as FilaCategoryTemplate[]) {
       if (row.category) result[row.category] = normalizeFromDb(row);
     }
     return result;

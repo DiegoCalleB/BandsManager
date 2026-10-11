@@ -4,8 +4,52 @@ import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { mergeWithExisting } from './mergeWithExisting.js';
+import type { Rehearsal } from '../../src/types.js';
 
-function parseSafeArray(val: any): string[] {
+/**
+ * Fila de `rehearsals` (snake_case). Las listas se tipan `unknown` porque las filas antiguas las
+ * guardaban también como texto: pasan por `parseSafeArray` antes de usarse.
+ */
+interface FilaEnsayo {
+  id?: string;
+  band_id?: string;
+  band_name?: string;
+  fecha?: string;
+  hora?: string;
+  hora_fin?: string | null;
+  lugar?: string;
+  tipo_evento?: string;
+  asunto?: string;
+  enlace_reunion?: string;
+  asistentes?: unknown;
+  notas?: string;
+  estado?: string;
+  setlist_id?: string | null;
+  convocatoria_tipo?: string;
+  convocados_ids?: unknown;
+  convocados_nombres?: unknown;
+  agenda?: unknown[];
+  objetivos?: unknown[];
+  duracion_estimada_min?: number;
+  duracion_real_seg?: number;
+  cronometro_estado?: unknown;
+  acta?: unknown;
+  grabaciones?: unknown[];
+  rating_general?: number | null;
+  temperatura_local?: string | null;
+}
+
+/** Ensayo para guardar: el de la app (camelCase) o con las columnas en snake_case. */
+export type EntradaEnsayo = Partial<Rehearsal> &
+  FilaEnsayo & {
+    convocadosIds?: string[];
+    convocadosNombres?: string[];
+    tipoEvento?: string;
+    enlaceReunion?: string;
+    convocatoriaTipo?: string;
+  };
+
+function parseSafeArray(val: unknown): string[] {
   if (!val) return [];
   if (Array.isArray(val))
     return val
@@ -89,13 +133,13 @@ export async function dbGetRehearsals(bandId: string | string[]) {
   }));
 }
 
-export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
+export async function dbUpsertRehearsal(rehearsal: EntradaEnsayo, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
   let finalRehearsalId = rehearsal.id;
-  let existingRehearsal: any = null;
+  let existingRehearsal: FilaEnsayo | null = null;
   if (finalRehearsalId) {
     // Ver nota equivalente en dbUpsertConcert: un id que no pertenece a la banda del usuario no se
     // reutiliza nunca (evita sobrescribir/robar el ensayo de otra banda por coincidencia de id).
@@ -154,7 +198,7 @@ export async function dbUpsertRehearsal(rehearsal: any, bandId: string) {
       merged.temperatura_local || merged.temperaturaLocal || null,
   };
 
-  const currentPayload: Record<string, any> = { ...payload };
+  const currentPayload = { ...payload };
   const res = await escrituraTolerante('rehearsals', currentPayload, (p) =>
     sb.from('rehearsals').upsert(p).select().single()
   );

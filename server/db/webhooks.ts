@@ -26,7 +26,7 @@ export async function dbIsWebhookEventProcessed(eventId: string): Promise<boolea
   return false;
 }
 
-export async function dbRecordWebhookEvent(eventId: string, eventType: string, payload?: any): Promise<void> {
+export async function dbRecordWebhookEvent(eventId: string, eventType: string, payload?: unknown): Promise<void> {
   if (!eventId) return;
   inMemoryWebhookEvents.add(eventId);
 

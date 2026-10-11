@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { CustomAlertRule } from "../../src/types.js";
 
 export interface DbAlertSettingsConfig {
   band_id: string;
@@ -10,7 +11,7 @@ export interface DbAlertSettingsConfig {
   digest_frequency: string;
   recipient_email?: string;
   recipient_role?: string;
-  rules: any[];
+  rules: CustomAlertRule[];
   updated_at?: string;
 }
 

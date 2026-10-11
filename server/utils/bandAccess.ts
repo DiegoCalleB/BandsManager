@@ -1,6 +1,9 @@
 import type express from "express";
 import { isValidEmail } from "./email.js";
 
+/** Los dos alias con los que el cuerpo de una petición puede nombrar la banda (sin validar). */
+type CuerpoConBanda = { bandId?: unknown; band_id?: unknown } | null | undefined;
+
 /**
  * Resuelve sobre qué banda opera una petición, respetando a qué bandas pertenece el usuario.
  *
@@ -23,8 +26,8 @@ export function getTargetBandId(req: express.Request): string {
     req.headers["x-active-band-id"] ||
     req.query.band_id ||
     req.query.bandId ||
-    (req.body as any)?.bandId ||
-    (req.body as any)?.band_id
+    (req.body as CuerpoConBanda)?.bandId ||
+    (req.body as CuerpoConBanda)?.band_id
   ) as string | undefined;
 
   if (headerBandId && typeof headerBandId === "string" && headerBandId.trim() && user) {
@@ -58,8 +61,8 @@ export function bandaSolicitada(req: express.Request): string | undefined {
     req.headers["x-active-band-id"] ||
     req.query.band_id ||
     req.query.bandId ||
-    (req.body as any)?.bandId ||
-    (req.body as any)?.band_id
+    (req.body as CuerpoConBanda)?.bandId ||
+    (req.body as CuerpoConBanda)?.band_id
   ) as string | undefined;
   const limpio = typeof bruto === "string" ? bruto.trim() : "";
   return limpio || undefined;
@@ -87,7 +90,7 @@ export function puedeEscribirEnBanda(req: express.Request, bandId: string): bool
  * Va aparte de `bandaSolicitada` porque el band_id viaja anidado dentro de `params`, donde los
  * helpers de arriba no miran.
  */
-export function bandaDelAgente(req: express.Request, params: any): string | null {
+export function bandaDelAgente(req: express.Request, params: { band_id?: unknown } | null | undefined): string | null {
   const user = req.user;
   const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
 

@@ -2,6 +2,59 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { Fan } from "../../src/types.js";
+
+/** Fan para guardar: el de la app, admitiendo también los nombres de columna en snake_case. */
+export type EntradaFan = Partial<Fan> & {
+  como_conocio?: string;
+  concierto_origen_id?: string;
+  concierto_origen_nombre?: string;
+  fecha_captura?: string;
+  consentimiento_rgpd?: boolean;
+  cancion_favorita?: string;
+};
+
+/** Fila de `fans`. Las tres últimas columnas son opcionales: el reintento las quita si faltan. */
+interface FilaFan {
+  id: string;
+  band_id: string;
+  nombre: string;
+  email: string;
+  ciudad: string;
+  como_conocio: string;
+  concierto_origen_id: string | null;
+  concierto_origen_nombre: string;
+  fecha_captura: string;
+  consentimiento_rgpd: boolean;
+  mensaje?: string;
+  cancion_favorita?: string;
+  instagram?: string;
+}
+
+/** Alta en la lista de espera de músicos (formulario público), en camelCase o snake_case. */
+export interface EntradaMusicoEnEspera {
+  id?: string;
+  nombreBanda?: string;
+  nombre_banda?: string;
+  nombreContacto?: string;
+  nombre_contacto?: string;
+  email?: string;
+  instagram?: string;
+  telefono?: string;
+  ciudad?: string;
+  genero?: string;
+  enlaceMusica?: string;
+  enlace_musica?: string;
+  interesPrincipal?: string;
+  interes_principal?: string;
+  notas?: string;
+  idioma?: string;
+  bandaOrigen?: string;
+  banda_origen?: string;
+  conciertoOrigen?: string;
+  concierto_origen?: string;
+  created_at?: string;
+}
 
 export async function dbGetFans(bandId: string) {
   const sb = getSupabase();
@@ -27,7 +80,7 @@ export async function dbGetFans(bandId: string) {
   }));
 }
 
-export async function dbUpsertFan(fan: any, bandId: string) {
+export async function dbUpsertFan(fan: EntradaFan, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza. En las rutas con sesión es req.user.band_id; en el
   // alta pública por QR (/api/public/fans) la propia ruta ya resuelve targetBandId desde la URL
@@ -49,7 +102,7 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     }
   }
 
-  const payload: any = {
+  const payload: FilaFan = {
     id: finalFanId || `fan-${Date.now()}`,
     band_id: targetBandId,
     nombre: fan.nombre || "",
@@ -105,7 +158,7 @@ export async function dbDeleteFan(id: string, bandId: string) {
 
 // --- MUSICIANS WAITLIST ---
 
-export async function dbUpsertMusicianWaitlist(item: any) {
+export async function dbUpsertMusicianWaitlist(item: EntradaMusicoEnEspera) {
   const sb = getSupabase();
   const payload = {
     id: item.id || `musician-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,

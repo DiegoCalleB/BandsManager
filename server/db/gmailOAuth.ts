@@ -81,7 +81,9 @@ export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {
 // devolverlo nunca. Misma razón y mismo patrón que toSafeEmailAccountResponse en
 // emailAccounts.ts - función pura y exportada aparte para poder verificarlo con un test
 // unitario sin montar Express.
-export function toSafeGmailOAuthResponse(account: BandGmailOAuthAccount | null): { connected: boolean; [key: string]: any } {
+export function toSafeGmailOAuthResponse(
+  account: BandGmailOAuthAccount | null
+): { connected: boolean } & Partial<Omit<BandGmailOAuthAccount, 'refresh_token'>> {
   if (!account) {
     return { connected: false };
   }

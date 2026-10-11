@@ -12,7 +12,15 @@ import { registrarColumnaOmitida } from '../utils/guardadoParcial.js';
 
 const MAX_REINTENTOS = 12;
 
-export function columnaAusenteDe(error: any, tabla: string): string | null {
+/** Error de una escritura en PostgREST (compatible con `PostgrestError` de supabase-js). */
+export interface ErrorDeEscritura {
+  message: string;
+  code?: string;
+  details?: string;
+  hint?: string;
+}
+
+export function columnaAusenteDe(error: { message?: string } | null | undefined, tabla: string): string | null {
   const mensaje = String(error?.message || '');
   const m = mensaje.match(/Could not find the '([^']+)' column of '([^']+)'/);
   if (!m || m[2] !== tabla) return null;
@@ -21,7 +29,7 @@ export function columnaAusenteDe(error: any, tabla: string): string | null {
 
 export interface ResultadoTolerante<T> {
   data: T | null;
-  error: any;
+  error: ErrorDeEscritura | null;
   /** Columnas que hubo que quitar para poder guardar. */
   omitidas: string[];
 }
@@ -31,18 +39,19 @@ export interface ResultadoTolerante<T> {
  * @param payload   fila (o filas) a escribir; no se modifica
  * @param escribir  función que hace la escritura con el payload recibido
  */
-export async function escrituraTolerante<T = any>(
+export async function escrituraTolerante<T = unknown, P extends object = Record<string, unknown>>(
   tabla: string,
-  payload: Record<string, any> | Array<Record<string, any>>,
-  escribir: (payload: any) => PromiseLike<{ data: T | null; error: any }>
+  payload: P | P[],
+  escribir: (payload: P | P[]) => PromiseLike<{ data: T | null; error: ErrorDeEscritura | null }>
 ): Promise<ResultadoTolerante<T>> {
-  const actual: any = Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload };
+  const actual: P | P[] = Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload };
   const omitidas: string[] = [];
 
   for (let intento = 0; ; intento++) {
     const { data, error } = await escribir(actual);
     const faltante = error ? columnaAusenteDe(error, tabla) : null;
-    const filas: Array<Record<string, any>> = Array.isArray(actual) ? actual : [actual];
+    // Vista por nombre de columna de las mismas filas (son copias propias: se pueden mutar).
+    const filas = (Array.isArray(actual) ? actual : [actual]) as Array<Record<string, unknown>>;
     const estaEnPayload = faltante !== null && filas.some((f) => faltante in f);
     if (!faltante || !estaEnPayload || intento >= MAX_REINTENTOS) return { data, error, omitidas };
 

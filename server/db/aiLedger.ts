@@ -35,8 +35,9 @@ function scheduleAutoFlush() {
       console.warn("[AI Ledger Buffer] Error en auto-flush dferido:", err?.message || err);
     });
   }, BATCH_FLUSH_INTERVAL_MS);
+  // En Node el temporizador es un objeto con unref(); en otros entornos puede ser un número.
   if (typeof flushTimer === "object" && flushTimer && "unref" in flushTimer) {
-    (flushTimer as any).unref();
+    flushTimer.unref();
   }
 }
 

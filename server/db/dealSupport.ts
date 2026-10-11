@@ -10,7 +10,7 @@ import type { DealData } from './deals.js';
  * que un fallo aquí nunca bloquee el cobro ni el webhook de Stripe.
  */
 
-function tablaAusente(error: any): boolean {
+function tablaAusente(error: { code?: string; message?: string } | null | undefined): boolean {
   const msg = String(error?.message || '');
   return (
     error?.code === '42P01' ||

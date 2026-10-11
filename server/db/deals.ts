@@ -10,6 +10,7 @@ import { dbUpsertLead, dbGetLeadById } from './leads.js';
 import { invalidateBandStateCache } from './sync.js';
 import { loadState, saveState } from '../state.js';
 import { normalizarApoyoPorcentaje } from '../utils/dealSupport.js';
+import type { Concert } from '../../src/types.js';
 
 export interface DealData {
   id?: string;
@@ -78,7 +79,7 @@ function tablaDeals() {
   return getSupabase().from('concert_deals');
 }
 
-function fallo(error: any, accion: string): never {
+function fallo(error: { code?: string; message?: string }, accion: string): never {
   const msg = String(error?.message || error || '');
   // 42P01 = tabla inexistente (Postgres); PGRST205 = tabla fuera del schema cache (PostgREST)
   if (error?.code === '42P01' || error?.code === 'PGRST205' || /concert_deals/.test(msg) && /not find|does not exist/i.test(msg)) {
@@ -255,7 +256,7 @@ export async function dbUpsertDeal(
 
   // Si a la BD le falta alguna columna (p. ej. apoyo_porcentaje sin su migración) el acuerdo se
   // guarda igualmente sin ella, y queda avisado como guardado parcial (tolerantWrite.ts).
-  const { data, error } = await escrituraTolerante<DealData>('concert_deals', payload, (p) =>
+  const { data, error } = await escrituraTolerante<DealData, DealData>('concert_deals', payload, (p) =>
     tablaDeals().upsert(p, { onConflict: 'id' }).select('*').maybeSingle()
   );
   if (error) fallo(error, 'guardar el');
@@ -337,12 +338,12 @@ export async function dbSignDeal(
       sala: deal.lugar_sala,
       cache: Number(deal.total_acordado ?? deal.cache_base ?? 0),
       contrato_firmado: true,
-      estado_pago: 'pendiente',
+      estado_pago: 'pendiente' as const,
       notas: `Acuerdo 1-Click firmado por ${updatedDeal.nombre_firmante} (${updatedDeal.cargo_firmante}). Hash SHA-256: ${(updatedDeal.contrato_sha256 || '').slice(0, 16)}... Horario: Llegada ${deal.hora_llegada || '18:30'} / Show ${deal.hora_concierto || '21:30'}. Hospitalidad: ${deal.hospitalidad_notas || 'Estándar'}.`,
-      tipo: 'sala'
+      tipo: 'sala' as const
     };
 
-    let savedConcert: any = null;
+    let savedConcert: Partial<Concert> | null = null;
     try {
       savedConcert = await dbUpsertConcert(concertPayload, targetBandId);
     } catch (upsertErr) {
@@ -367,10 +368,13 @@ export async function dbSignDeal(
       if (state && Array.isArray(state.concerts)) {
         const itemToSave = savedConcert || concertPayload;
         const idx = state.concerts.findIndex((c) => c.id === createdConcertId || (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala));
+        // Si Supabase falló, lo que entra es el payload mínimo (sin aforos): la agenda local ya lo
+        // toleraba así y la auto-sanación de GET /deals lo completa en la siguiente carga.
+        const conciertoLocal = itemToSave as Concert;
         if (idx !== -1) {
-          state.concerts[idx] = itemToSave as any;
+          state.concerts[idx] = conciertoLocal;
         } else {
-          state.concerts.push(itemToSave as any);
+          state.concerts.push(conciertoLocal);
         }
         saveState(state);
       }

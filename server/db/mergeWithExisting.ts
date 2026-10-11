@@ -13,11 +13,13 @@ const toCamel = (key: string) =>
  * valor VIEJO — editar los gastos de un concierto desde Finanzas no guardaba nada. Tampoco
  * cuenta como "mandado" un `undefined` explícito: si lo contara, el spread pisaría el valor
  * existente con `undefined` y volvería el reseteo silencioso a []/{} que esto evita.
+ *
+ * El resultado tiene a lo sumo los campos de las dos entradas, y cualquiera puede faltar.
  */
-export function mergeWithExisting<T extends Record<string, any>>(
-  existing: Record<string, any> | null | undefined,
+export function mergeWithExisting<E extends object, T extends object>(
+  existing: E | null | undefined,
   incoming: T
-): Record<string, any> {
+): Partial<E> & Partial<T> {
   const sent = Object.fromEntries(
     Object.entries(incoming || {}).filter(([, v]) => v !== undefined)
   );
@@ -26,5 +28,6 @@ export function mergeWithExisting<T extends Record<string, any>>(
       ([k]) => !(k in sent) && !(toCamel(k) in sent)
     )
   );
-  return { ...kept, ...sent };
+  // Object.fromEntries pierde el tipo de las claves; el objeto solo contiene claves de E o de T.
+  return { ...kept, ...sent } as Partial<E> & Partial<T>;
 }
