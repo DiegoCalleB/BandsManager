@@ -40,6 +40,8 @@ await page.route(/\/video\/[^/]+\.mp4$/, async (r) => {
 });
 await page.addInitScript(() => {
   try { localStorage.setItem('bm_subs', 'es'); } catch (e) { /* sin almacenamiento */ }
+  // en la grabación sobran los botones de «Saltar intro» y «Saltar créditos»
+  document.addEventListener('DOMContentLoaded', () => document.documentElement.classList.add('grabando'));
   window.__audio = []; window.__taps = [];
   const play = HTMLMediaElement.prototype.play;
   HTMLMediaElement.prototype.play = function () {
@@ -101,9 +103,11 @@ await browser.close();
 const video = fs.readdirSync(tmp).filter((f) => f.endsWith('.webm')).map((f) => path.join(tmp, f))[0];
 // el vídeo empieza (t0) unos instantes antes que el contexto de la página (t1); performance.now() cuenta desde la navegación
 const off = (t1 - t0) / 1000 + 0.15;
+// el MP4 empieza al pulsar «Reproducir» (justo con el logotipo), sin la pantalla de entrada
+const inicio = Math.max(0, (tClick - t0) / 1000 + 0.1);
 fs.writeFileSync(path.join(tmp, 'eventos.json'), JSON.stringify({ off, audio: datos.audio, ahora: datos.ahora }));
 datos.taps.forEach((t, i) => fs.writeFileSync(path.join(tmp, `tap${i}.webm`), Buffer.from(t.b64, 'base64')));
 fs.writeFileSync(path.join(tmp, 'taps.json'), JSON.stringify(datos.taps.map((t, i) => ({ f: `tap${i}.webm`, t: t.t }))));
 const aqui = path.dirname(new URL(import.meta.url).pathname);
-execFileSync('python3', [path.join(aqui, 'mezclar_pelicula.py'), tmp, path.resolve(aqui, '..'), video, salida], { stdio: 'inherit', env: { ...process.env, CRF: process.env.CRF || (W === 1920 ? '20' : '30') } });
+execFileSync('python3', [path.join(aqui, 'mezclar_pelicula.py'), tmp, path.resolve(aqui, '..'), video, salida], { stdio: 'inherit', env: { ...process.env, INICIO: String(inicio), CRF: process.env.CRF || (W === 1920 ? '20' : '30') } });
 console.log('→', salida);
