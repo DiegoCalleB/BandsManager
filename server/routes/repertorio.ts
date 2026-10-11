@@ -48,6 +48,7 @@ import { parseSetlistFromFile } from "../utils/setlistImport.js";
 import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Part } from '@google/genai';
 
 // Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
 // descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
@@ -149,7 +150,7 @@ router.post("/songs", requireAuth, async (req, res) => {
     }
     const userBandId = getTargetBandId(req);
     const isAdmin = req.user?.role === "admin";
-    (newSong as any).band_id = userBandId;
+    newSong.band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     }
@@ -209,17 +210,23 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
 // Peticiones idénticas a la vez (subida masiva + apertura del visor, dos pestañas, un reintento del
 // móvil…): la segunda NO falla con un 409 que el usuario ve como «no se pudo guardar»; espera al
 // análisis en marcha y recibe el mismo resultado.
-const analisisAcordesPromesas = new Map<string, Promise<{ status: number; body: any }>>();
+/** Respuesta HTTP de un análisis de acordes: código y cuerpo JSON. */
+interface ResultadoAnalisisAcordes {
+  status: number;
+  body: Record<string, unknown>;
+}
 
-async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir: boolean, alAvanzar?: (etapa: string, detalle: string) => void): Promise<{ status: number; body: any }> {
+const analisisAcordesPromesas = new Map<string, Promise<ResultadoAnalisisAcordes>>();
+
+async function ejecutarAnalisisAcordes(id: string, userBandId: string, sobrescribir: boolean, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisisAcordes> {
   // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
   // un fichero ajeno a la banda ni pasar una ruta arbitraria.
-  const songs = await dbGetSongs(userBandId);
-  const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+  const songs: Song[] = await dbGetSongs(userBandId);
+  const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
   if (!song) return { status: 404, body: { error: "Canción no encontrada." } };
 
   // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
-  const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
+  const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s) => s.editado).length;
   if (corregidos > 0 && !sobrescribir) {
     return { status: 409, body: { error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos } };
   }
@@ -244,7 +251,8 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     iniciarProgreso(clave, "acordes");
     promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true, (e, d) => avanzarProgreso(clave, e, d))
       .then((r) => { terminarProgreso(clave, r.status === 200 ? undefined : String(r.body?.error || "No se pudo analizar")); return r; })
-      .catch((err: any) => {
+      .catch((errCapturado): ResultadoAnalisisAcordes => {
+        const err = comoErrorCapturado(errCapturado);
         terminarProgreso(clave, err?.message || "No se pudieron analizar los acordes del audio.");
         console.error("Error analizando acordes del audio:", err);
         return { status: 500, body: { error: err?.message || "No se pudieron analizar los acordes del audio." } };
@@ -326,12 +334,12 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
     const validacion = validarSegmentos(req.body?.segmentos);
     if ("error" in validacion) return res.status(400).json({ error: validacion.error });
 
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    const songs: Song[] = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
 
-    const segmentos = (validacion as { segmentos: any[] }).segmentos;
+    const segmentos = (validacion as Exclude<typeof validacion, { error: string }>).segmentos;
     const analisis = construirAnalisisCorregido(song.analisisAcordes, segmentos, new Date().toISOString());
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
@@ -353,20 +361,20 @@ router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
     const nivel: Nivel = NIVELES.includes(req.body?.nivel) ? req.body.nivel : "intermedio";
     const instrumento: Instrumento = INSTRUMENTOS.includes(req.body?.instrumento) ? req.body.instrumento : "guitarra";
 
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    const songs: Song[] = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     const analisis = song.analisisAcordes;
     if (!analisis?.segmentos?.length) {
       return res.status(409).json({ error: "Primero analiza los acordes del audio: el profesor explica la armonía calculada, no la inventa." });
     }
 
-    const armonia = analizarArmonia(analisis.segmentos.map((s: any) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde })), song.tonalidad);
+    const armonia = analizarArmonia(analisis.segmentos.map((s) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde })), song.tonalidad);
     if (!armonia) return res.status(422).json({ error: "Hay muy pocos acordes para explicar la armonía de esta canción." });
     const hechos = construirHechos(armonia, {
       bpm: analisis.pulso?.bpm ?? song.bpm,
       cambiosDeTono: Array.isArray(analisis.tonalidades) && analisis.tonalidades.length > 1
-        ? analisis.tonalidades.slice(1).map((t: any) => ({ desde: Math.round(t.t0), tonalidad: t.tonalidad }))
+        ? analisis.tonalidades.slice(1).map((t) => ({ desde: Math.round(t.t0), tonalidad: t.tonalidad }))
         : undefined,
     });
     const huella = huellaDeHechos(hechos, nivel, instrumento);
@@ -456,7 +464,7 @@ router.post("/setlists", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El nombre del repertorio es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    (newSetlist as any).band_id = userBandId;
+    newSetlist.band_id = userBandId;
     if (!newSetlist.id) {
       newSetlist.id = `setlist-${Date.now()}`;
     }
@@ -564,11 +572,11 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
     }
 
     // La canción guardada manda: su cifrado actual, su pista de voz y los acordes ya detectados.
-    let cancion: any = null;
+    let cancion: Song | null = null;
     if (songId) {
       try {
-        const songs = await dbGetSongs(getTargetBandId(req));
-        cancion = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        const songs: Song[] = await dbGetSongs(getTargetBandId(req));
+        cancion = Array.isArray(songs) ? songs.find((s) => s.id === songId) : null;
       } catch {
         cancion = null;
       }
@@ -585,7 +593,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
-    let generatedGuide: any = null;
+    let generatedGuide: Song['guiaSustituto'] | null = null;
     let esAproximado = false;
     let letraConfianza: "alta" | "media" | "baja" | "sin_letra" = "baja";
     // La única fuente válida es el audio real. Sin audio no hay nada que transcribir, y pedirle a
@@ -594,7 +602,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     // Audio de la mezcla (acordes y estructura) y, si Iris separó la voz, pista de voz aislada
     // (la letra se oye mucho mejor sin guitarras ni batería).
-    const urlVoz = pistasDeCancion(cancion as any)
+    const urlVoz = pistasDeCancion(cancion)
       .find((p) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
     const [snippetMezcla, snippetVoz] = await Promise.all([
       audioUrl ? getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
@@ -613,9 +621,9 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     try {
       const acordesDetectados = (cancion?.analisisAcordes?.segmentos ?? [])
-        .filter((sg: any) => sg.acorde !== "N")
+        .filter((sg) => sg.acorde !== "N")
         .slice(0, 160)
-        .map((sg: any) => `${Math.floor(sg.t0 / 60)}:${String(Math.floor(sg.t0 % 60)).padStart(2, "0")} ${sg.acorde}`)
+        .map((sg) => `${Math.floor(sg.t0 / 60)}:${String(Math.floor(sg.t0 % 60)).padStart(2, "0")} ${sg.acorde}`)
         .join(", ");
 
       const prompt = `Eres un transcriptor musical. Tu trabajo es TRANSCRIBIR lo que suena en el audio adjunto, no componer ni recordar.
@@ -646,7 +654,7 @@ Responde ÚNICAMENTE con JSON válido:
 }
 "letraConfianza": "alta" solo si entiendes casi todo; "media" si hay huecos [?]; "baja" si dudas de buena parte; "sin_letra" si no hay voz inteligible.`;
 
-      const partes: any[] = [];
+      const partes: Part[] = [];
       for (const ruta of [snippetVoz, snippetMezcla]) {
         if (ruta && fs.existsSync(ruta)) {
           partes.push({ inlineData: { mimeType: "audio/mp3", data: fs.readFileSync(ruta).toString("base64") } });
@@ -698,8 +706,8 @@ Responde ÚNICAMENTE con JSON válido:
     if (songId) {
       const userBandId = getTargetBandId(req);
       try {
-        const songs = await dbGetSongs(userBandId);
-        const song = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        const songs: Song[] = await dbGetSongs(userBandId);
+        const song = Array.isArray(songs) ? songs.find((s) => s.id === songId) : null;
         if (song) {
           await dbUpsertSong(
             { ...song, cifradoTexto: generatedChords, guiaSustituto: generatedGuide },
@@ -822,8 +830,8 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     const { setlistId } = req.params;
 
     // Obtener el setlist desde la base de datos
-    const allSetlists = await dbGetSetlists(userBandId);
-    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    const allSetlists: Setlist[] = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s) => s.id === setlistId);
     if (!setlist) {
       return res.status(404).json({ error: "Setlist no encontrado" });
     }
@@ -845,7 +853,7 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     const analysis = await analyzeSetlistWithAI(setlistSongs, bandContext);
 
     // Crear firma del setlist para detectar cambios
-    const setlistSignature = setlist.items.map((item: any) => item.id).join('|');
+    const setlistSignature = setlist.items.map((item) => item.id).join('|');
     const analysisWithSignature = { ...analysis, setlist_signature: setlistSignature };
 
     // Crear objeto actualizado del setlist con análisis guardado
@@ -878,8 +886,8 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
     const { setlistId } = req.params;
     const { feedback } = req.body || {};
 
-    const allSetlists = await dbGetSetlists(userBandId);
-    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    const allSetlists: Setlist[] = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s) => s.id === setlistId);
     if (!setlist) {
       return res.status(404).json({ error: "Setlist no encontrado" });
     }
@@ -926,8 +934,8 @@ function findMatchingSong(detectedTitle: string, catalog: Song[]): Song | null {
 // resuelto (o no) contra el catálogo real de la banda — el frontend hace de aquí una pantalla de
 // revisión antes de crear nada; esta ruta NUNCA escribe en setlists ni en songs por su cuenta.
 router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res, next) => {
-  importUpload.single("file")(req, res, (err: any) => {
-    if (err) return res.status(400).json({ success: false, error: err.message || "Archivo no válido" });
+  importUpload.single("file")(req, res, (err?: unknown) => {
+    if (err) return res.status(400).json({ success: false, error: comoErrorCapturado(err).message || "Archivo no válido" });
     next();
   });
 }, async (req, res) => {
