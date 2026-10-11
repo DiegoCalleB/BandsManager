@@ -749,6 +749,8 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 _hj = os.path.join(AQUI, '..', '..', 'img', 'historia', 'historia.json')
 FOTOS = [f for f in (json.load(open(_hj, encoding='utf-8')) if os.path.exists(_hj) else [])
          if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto']))]
+if [f for f in FOTOS if f.get('provisional')]:
+    print('OJO: «Mis bandas» lleva fotos y textos inventados (provisional: true en img/historia/historia.json). Cámbialos por los reales antes de entregar.')
 if FOTOS:
     # 0,6 s por foto (el pulso de «Cabalga o Lóstrego»); las cuatro últimas, a la mitad: la rampa del final
     pasos, t = [], 0.4
