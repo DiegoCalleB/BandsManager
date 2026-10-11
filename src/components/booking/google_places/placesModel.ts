@@ -95,19 +95,46 @@ export interface MultiSourceVenueItem {
   fuentes_verificadas?: string[];
 }
 
-/** Convocatoria devuelta por el radar cultural público. */
-export interface CulturalOpportunityItem {
-  entidad_o_evento: string;
-  tipo?: string;
-  municipio?: string;
-  provincia?: string;
-  telefono?: string;
-  url_registro?: string;
-  programa_o_ciclo?: string;
-  requisitos_o_perfil?: string;
-  plazo_presentacion?: string;
+/** Convocatoria pública que devuelve `POST /api/leads/public-cultural-radar` en `leads_publicos`. */
+export interface OportunidadCultural {
+  entidad_publica: string;
+  ciudad: string;
+  provincia: string;
+  comunidad_autonoma: string;
+  evento_o_ciclo: string;
+  tecnico_cultura_contacto?: string;
   email_contacto?: string;
-  fuente_datos?: string;
+  telefono_oficial?: string;
+  presupuesto_estimado_categoria?: string;
+  ventana_presentacion_dossier?: string;
+  requisitos_contratacion?: string;
+  fuente: string;
+  fiabilidad: string;
+}
+
+/**
+ * Convierte una convocatoria del radar cultural en un resultado del explorador.
+ * @param op Convocatoria tal como la devuelve el servidor.
+ * @param idx Posición en la lista (para un `place_id` estable dentro de la búsqueda).
+ * @param regionConsultada Región buscada, usada si la convocatoria no trae ciudad ni provincia.
+ * @param generoBanda Género de la banda; si está vacío se muestra "Cultural".
+ */
+export function oportunidadCulturalAPlace(op: OportunidadCultural, idx: number, regionConsultada: string, generoBanda: string): PlaceResult {
+  return {
+    place_id: `cultural-${Date.now()}-${idx}`,
+    nombre_sala: op.entidad_publica,
+    ciudad: op.ciudad || regionConsultada,
+    region: op.provincia || regionConsultada,
+    direccion: op.ciudad || "",
+    telefono: op.telefono_oficial || "",
+    website: "",
+    tipo: /ayuntamiento/i.test(op.entidad_publica) ? "ayuntamiento" : "sala",
+    genero: generoBanda || "Cultural",
+    descripcion: `${op.evento_o_ciclo || ""} · ${op.requisitos_contratacion || ""} (${op.ventana_presentacion_dossier || "Convocatoria"})`,
+    email_contacto: op.email_contacto || "",
+    contacto_nombre: op.tecnico_cultura_contacto || "",
+    fuente: `Radar Cultural Público (${op.fuente || "Datos Abiertos & Municipios"})`,
+  };
 }
 
 export const QUICK_CITIES = [
