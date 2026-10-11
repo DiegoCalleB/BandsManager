@@ -386,6 +386,10 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionCues|src/components/repertorio/song_transition/hooks/useTransitionCues.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionPlayback|src/components/repertorio/song_transition/hooks/useTransitionPlayback.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionSources|src/components/repertorio/song_transition/hooks/useTransitionSources.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_types|src/components/repertorio/song_transition/types.ts]] *(from #frontend)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
@@ -547,6 +551,7 @@ _Sin dependencias salientes directas._
 - `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
+- `src/components/repertorio/song_transition/__tests__/songTransitionContracts.test.ts`
 - `src/components/setlist_performance/__tests__/setlistPerformanceContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`

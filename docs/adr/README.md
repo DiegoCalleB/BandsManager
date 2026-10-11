@@ -47,6 +47,7 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0038](./0038-modularizacion-onboarding-wizard.md) | Modularización de OnboardingWizardModal.tsx (1736 → 52 líneas): un hook por paso, controlador, contexto y vistas | Aceptada | nueva |
 | [0039](./0039-modularizacion-user-profile-modal.md) | Modularización de UserProfileModal.tsx (1721 → 57 líneas): hooks, contexto y vistas por sección | Aceptada | nueva |
 | [0040](./0040-modularizacion-atril.md) | Modularización de Atril.tsx (1688 → 37 líneas): hooks por dominio, contexto y vistas por zona | Aceptada | nueva |
+| [0041](./0041-modularizacion-song-transition-preview.md) | Modularización de SongTransitionPreviewModal (1596 → 58 líneas) y rules-of-hooks a cero en CI | Aceptada | nueva |
 
 ## Cómo añadir uno
 

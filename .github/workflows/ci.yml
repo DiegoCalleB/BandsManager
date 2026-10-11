@@ -82,21 +82,13 @@ jobs:
           echo "Total hallazgos de eslint: $TOTAL"
           echo "Violaciones de rules-of-hooks (hooks condicionales/tras return - cuentan cambia entre renders): $HOOKS_ROTOS"
 
-          # Ratchet, NO tolerancia cero (2026-09-17): el comentario anterior decía "recuento
-          # real 2026-09-03: 0" y exigía 0 - pero una reauditoría encontró 43 violaciones reales,
-          # todas concentradas en un único archivo (src/components/repertorio/
-          # SongTransitionPreviewModal.tsx: `if (!isOpen || !songA || !songB) return null;` antes
-          # de ~44 hooks). Es un bug real (orden de hooks cambia entre abrir/cerrar el modal), no
-          # falso positivo - pero arreglarlo bien exige revisar que ninguno de esos hooks dispare
-          # efectos secundarios (detección de audio, llamadas a API) cuando el modal está cerrado,
-          # y probarlo en navegador antes de mergear (ver AGENTS.md, "UI o frontend" en las
-          # instrucciones de sesión). No se aplica aquí a ciegas. Baseline = deuda real conocida,
-          # concentrada y trackeada - baja este número en cuanto se arregle ese archivo, nunca lo
-          # subas sin justificar por qué, y si aparece en un archivo NUEVO trátalo como el bug real
-          # que es, no como más margen del ratchet.
-          HOOKS_BASELINE=43
+          # Tolerancia cero (2026-10-11): las 43 violaciones conocidas estaban todas en
+          # SongTransitionPreviewModal.tsx (`return null` antes de ~44 hooks). Se arreglaron
+          # separando la guarda de apertura del cuerpo con hooks (ADR 0041) y probándolo en
+          # navegador. Una violación nueva es un bug real: el orden de hooks cambia entre renders.
+          HOOKS_BASELINE=0
           if [ "$HOOKS_ROTOS" -gt "$HOOKS_BASELINE" ]; then
-            echo "::error::Hay $HOOKS_ROTOS violaciones de react-hooks/rules-of-hooks (baseline conocido: $HOOKS_BASELINE, todas en SongTransitionPreviewModal.tsx). Si son nuevas en OTRO archivo, es un bug real de verdad - arréglalo, no subas el baseline."
+            echo "::error::Hay $HOOKS_ROTOS violaciones de react-hooks/rules-of-hooks (debe ser 0). Es un bug real: el orden de hooks cambia entre renders. Arréglalo, no subas el baseline."
             exit 1
           fi
 
@@ -112,9 +104,9 @@ jobs:
           # llegara a ejecutarse; al arreglarlo salió a la luz que main ya llevaba ~5500 hallazgos, así
           # que 3757 era un número caducado y no una regresión de este cambio. Sigue siendo un ratchet:
           # el valor nuevo solo debe BAJAR cuando se reduzca la deuda, y no subirse sin justificarlo.
-          # 2026-10-11: baseline bajado de 5525 a 4070, el recuento exacto tras la modularización de
-          # Atril, LeadsTable y el resto de monolitos. Sin margen: cada limpieza lo vuelve a bajar.
-          BASELINE=4070
+          # 2026-10-11: baseline bajado de 5525 a 4014, el recuento exacto tras la modularización de
+          # Atril, LeadsTable, SongTransitionPreviewModal y el resto de monolitos. Sin margen: cada limpieza lo vuelve a bajar.
+          BASELINE=4014
           if [ "$TOTAL" -gt "$BASELINE" ]; then
             echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
             exit 1
