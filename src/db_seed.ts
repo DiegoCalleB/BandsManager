@@ -1270,6 +1270,9 @@ export const INITIAL_USERS = [
     instrument: "Mánager / Booking (Oficina)",
     avatarColor: "#06b6d4",
     initialPassword: "demo2026",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1281,6 +1284,9 @@ export const INITIAL_USERS = [
     instrument: "Percusión, Showman y Admin",
     avatarColor: "var(--ok)",
     initialPassword: "demo2026",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1292,6 +1298,9 @@ export const INITIAL_USERS = [
     instrument: "Cantante, Loops y Percusión",
     avatarColor: "#ec4899",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1303,6 +1312,9 @@ export const INITIAL_USERS = [
     instrument: "Handpan y Percusión",
     avatarColor: "var(--acc)",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1314,6 +1326,9 @@ export const INITIAL_USERS = [
     instrument: "Violín",
     avatarColor: "var(--acc)",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
 ];

@@ -44,8 +44,10 @@ export function useMemberSelection({ resolvedMembers, selectedMemberId, printMod
           ];
 
   // Preview page member
+  // Una banda sin miembros cargados deja `membersToExport` vacío en «todos los miembros»: se cae al
+  // músico por defecto para que la vista previa (y las marcas por miembro) nunca reciban `undefined`.
   const currentPreviewMember =
-    membersToExport[previewPageIndex] || membersToExport[0];
+    membersToExport[previewPageIndex] || membersToExport[0] || selectedMember;
 
   return { currentPreviewMember, previewPageIndex, membersToExport, setPreviewPageIndex };
 }

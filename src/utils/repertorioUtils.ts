@@ -226,6 +226,9 @@ export function resolveBandMembers(
     });
   }
 
+  // Una banda sin miembros cargados (cuenta recién creada, o sin conexión con la base de datos)
+  // usa los puestos genéricos: sin ellos la impresión del setlist salía vacía («0 músicos»).
+  if (memberMap.size === 0) return DEFAULT_BAND_MEMBERS;
   return Array.from(memberMap.values());
 }
 

@@ -931,8 +931,11 @@ export function loadState(): any {
         passwordHash: hash,
         salt: salt,
         createdAt: u.createdAt,
-        band_id: DEMO_BAND_ID,
-        bandName: "Banda Demo"
+        // Cada usuario semilla trae su propia banda (src/db_seed.ts): ninguna cuenta se mete en la
+        // banda de ejemplo solo por existir.
+        band_id: u.band_id,
+        main_band_id: u.main_band_id,
+        bandName: u.bandName
       };
     })
   };

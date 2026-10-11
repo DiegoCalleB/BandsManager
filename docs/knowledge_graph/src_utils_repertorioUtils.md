@@ -54,6 +54,7 @@ _Sin dependencias salientes directas._
 ## 🧪 Tests que lo cubren
 - `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/repertorioUtils.test.ts`
+- `src/utils/__tests__/resolveBandMembers.test.ts`
 - `src/utils/__tests__/songMarkedForMember.test.ts`
 
 ---
