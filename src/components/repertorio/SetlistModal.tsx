@@ -83,7 +83,7 @@ export function SetlistModal({ isOpen, setlistToEdit, onClose, onSave }: Setlist
               <label className="block text-[var(--ink-2)] font-semibold mb-1">Formato de concierto</label>
               <Select aria-label="Formato de concierto"
                 value={tipoFormato}
-                onChange={(e) => setTipoFormato(e.target.value as any)}
+                onChange={(e) => setTipoFormato(e.target.value as Setlist['tipoFormato'])}
                 wrapperClassName="w-full"
               >
                 <option value="festival">Festival (45-60m caña directa)</option>

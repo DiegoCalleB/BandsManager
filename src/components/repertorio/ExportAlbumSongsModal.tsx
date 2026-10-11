@@ -84,7 +84,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   // Count songs with actual downloadable audio
   const songsWithAudio = useMemo(() => {
     return targetSongs.filter((s) =>
-      Boolean(s.audioPrincipalUrl || (s as any).audioUrl),
+      Boolean(s.audioPrincipalUrl || s.audioUrl),
     );
   }, [targetSongs]);
 
@@ -154,7 +154,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       }
 
       if (includeAudioUrls) {
-        const audio = song.audioPrincipalUrl || (song as any).audioUrl;
+        const audio = song.audioPrincipalUrl || song.audioUrl;
         if (audio) {
           lines.push(`   Audio: ${audio}`);
         }
@@ -201,7 +201,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       ];
 
       if (includeAudioUrls) {
-        const audio = song.audioPrincipalUrl || (song as any).audioUrl || "";
+        const audio = song.audioPrincipalUrl || song.audioUrl || "";
         row.push(audio);
       }
 
@@ -228,7 +228,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         durationSec =
           (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
       }
-      const audio = song.audioPrincipalUrl || (song as any).audioUrl || "";
+      const audio = song.audioPrincipalUrl || song.audioUrl || "";
       const artist = song.artista || bandName;
       lines.push(`#EXTINF:${durationSec},${artist} - ${song.titulo}`);
       lines.push(audio || `# (Sin archivo audio subido para ${song.titulo})`);
@@ -256,7 +256,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         tonalidad: s.tonalidad,
         bpm: s.bpm,
         tipo: s.tipo,
-        audioUrl: s.audioPrincipalUrl || (s as any).audioUrl || null,
+        audioUrl: s.audioPrincipalUrl || s.audioUrl || null,
         portadaUrl: s.portadaUrl || null,
         cifradoTexto: includeChords ? s.cifradoTexto || null : undefined,
       })),
@@ -369,7 +369,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       // 5. Fetch and add audio MP3/WAV files
       const audioTargets = targetSongs
         .map((s, idx) => {
-          const audioUrl = s.audioPrincipalUrl || (s as any).audioUrl;
+          const audioUrl = s.audioPrincipalUrl || s.audioUrl;
           return { song: s, trackIndex: idx + 1, audioUrl };
         })
         .filter((t) => Boolean(t.audioUrl));

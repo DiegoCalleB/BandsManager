@@ -432,7 +432,7 @@ export function BulkAlbumAudioUploaderModal({
             ],
           };
 
-          const savedData = await apiFetch<any>("/api/songs", {
+          const savedData = await apiFetch<{ song?: Song }>("/api/songs", {
             method: "POST",
             body: JSON.stringify(newSong),
           });
@@ -498,7 +498,7 @@ export function BulkAlbumAudioUploaderModal({
               ],
             };
 
-            const savedData = await apiFetch<any>(
+            const savedData = await apiFetch<{ song?: Song }>(
               `/api/songs/${encodeURIComponent(updatedSong.id)}`,
               {
                 method: "PUT",

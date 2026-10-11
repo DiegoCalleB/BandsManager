@@ -1,6 +1,6 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useEffect, useState } from "react";
-import { Song, ThemeColors } from "../../types";
+import { Song, ThemeColors, Setlist } from "../../types";
 import { Disc, Disc3, Play, Pause, Trash2, Edit3, Plus, Clock, ChevronDown, ChevronUp, Layers, Scissors, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from "lucide-react";
 import { AlbumCover } from "../AlbumCover";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
@@ -26,7 +26,7 @@ interface DiscografiaViewProps {
   bandName?: string;
   bandLogoUrl?: string;
   setSongs: React.Dispatch<React.SetStateAction<Song[]>>;
-  setSetlists?: React.Dispatch<React.SetStateAction<any[]>>;
+  setSetlists?: React.Dispatch<React.SetStateAction<Setlist[]>>;
   toggleFavoriteSong: (id: string) => void;
   activePlayerSong?: Song | null;
   isPlayerPlaying?: boolean;
@@ -385,7 +385,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
   // separado, esas canciones nunca volverían a aparecer como pendientes aunque el botón se
   // pulse mil veces.
   const songsPendingDynamicsAnalysis = safeSongs.filter((s) => {
-    const audio = s.audioPrincipalUrl || (s as any).audioUrl;
+    const audio = s.audioPrincipalUrl || s.audioUrl;
     return (
       Boolean(audio) &&
       (!s.energiaVariacionCalculadaEn ||
@@ -413,7 +413,7 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
     const trabajador = async () => {
       while (siguiente < pending.length) {
         const song = pending[siguiente++];
-        const audio = song.audioPrincipalUrl || (song as any).audioUrl;
+        const audio = song.audioPrincipalUrl || song.audioUrl;
         try {
           const result = await apiFetch<{
             variacionDetectada: number;
@@ -1215,8 +1215,10 @@ export const DiscografiaView: React.FC<DiscografiaViewProps> = ({
           onSaveAlbumToCatalog={handleSaveLiveConcertAlbum}
           onSaveSetlist={(newSetlist) => {
             if (setSetlists) {
-              setSetlists((prev: any[]) => [
-                newSetlist,
+              // El borrador del concierto se guarda en /api/setlists con la forma de un Setlist; sus
+              // ítems llegan sin tipar desde el motor de cortes, de ahí la conversión puntual.
+              setSetlists((prev) => [
+                newSetlist as unknown as Setlist,
                 ...(Array.isArray(prev) ? prev : []),
               ]);
             }

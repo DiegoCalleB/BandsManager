@@ -1,10 +1,11 @@
 import React from "react";
 import { Button, IconButton } from "../ui";
 import { PopoverAncla } from "../ui/PopoverAncla";
-import { EnergyChart, EnergyChartPoint } from "./EnergyChart";
+import { EnergyChart, EnergyChartPoint, EnergyChartZone } from "./EnergyChart";
+import type { Analysis } from "./SetlistAIAnalysisModal";
 import { ShowIcon } from "../ui/ShowIcon";
 import { SugerenciaChapa } from "../../utils/setlistCompatibility";
-import { getEnergyInfo } from "../../utils/energyPacingUtils";
+import { getEnergyInfo, SetlistEnergyAnalysis } from "../../utils/energyPacingUtils";
 import {
   TrendingUp,
   Undo2,
@@ -24,14 +25,10 @@ import {
 
 export interface EnergyMapCardProps {
   setlistKey: string;
-  energyAnalysis: {
-    points: any[];
-    warnings: any[];
-    profileLabel: string;
-  };
+  energyAnalysis: Pick<SetlistEnergyAnalysis, "points" | "warnings" | "profileLabel">;
   chartData: EnergyChartPoint[];
   yDomain: [number, number];
-  zonasEnergia: any[];
+  zonasEnergia: EnergyChartZone[];
   canUndoReorder: boolean;
   undoLastReorder: () => void;
   showEnergyMap: boolean;
@@ -66,7 +63,7 @@ export interface EnergyMapCardProps {
   handleEnergyChartDrag: (point: EnergyChartPoint, newScore: number) => void;
   showHeuristicWarnings: boolean;
   setShowHeuristicWarnings: React.Dispatch<React.SetStateAction<boolean>>;
-  aiAnalysisResult: any | null;
+  aiAnalysisResult: Analysis | null;
   setShowAIAnalysisModal: (val: boolean) => void;
   titlesMatch: (title: string, list: string[]) => boolean;
 }
@@ -785,7 +782,7 @@ export const EnergyMapCard: React.FC<EnergyMapCardProps> = ({
               </div>
               {aiAnalysisResult.suggestions?.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {aiAnalysisResult.suggestions.map((s: any, i: number) => {
+                  {aiAnalysisResult.suggestions.map((s, i) => {
                     const songsToHighlight: string[] =
                       s.songs_involved && s.songs_involved.length > 0
                         ? s.songs_involved

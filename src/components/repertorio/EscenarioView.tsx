@@ -268,7 +268,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
  mientras el otro ya reproduce la siguiente desde cero — ver useStagePlayer.ts. Cuando el
  fundido está desactivado, el segundo simplemente no se usa nunca. */}
       <audio
-        ref={stageAudioRef as any}
+        ref={stageAudioRef}
         src={SILENT_AUDIO_URI}
         preload="none"
         onError={(e) => e.preventDefault()}
@@ -278,7 +278,7 @@ export const EscenarioView: React.FC<EscenarioViewProps> = ({
         }
       />
       <audio
-        ref={stageAudioRefB as any}
+        ref={stageAudioRefB}
         src={SILENT_AUDIO_URI}
         preload="none"
         onError={(e) => e.preventDefault()}

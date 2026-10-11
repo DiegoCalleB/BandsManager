@@ -45,7 +45,7 @@ export function SongModal({
     const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum || '';
     return albumsList.includes(albumVal) ? '' : albumVal;
   });
-  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
+  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || editingSong?.audioUrl || '');
   const [audioFileName, setAudioFileName] = useState<string>('');
 
   // Determine if advanced section should start open (e.g. if editing a song with extra data)
