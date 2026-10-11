@@ -37,10 +37,12 @@ export function RepertorioEnergyChartWidget({
   setlists: providedSetlists,
   songs: providedSongs,
 }: ChartWidgetProps) {
-  const [setlistsList, setSetlistsList] = useState<Setlist[]>(
-    providedSetlists || [],
-  );
-  const [songsList, setSongsList] = useState<Song[]>(providedSongs || []);
+  // Datos propios: solo se rellenan cuando NADIE pasa las props (ver comentario del efecto).
+  const [fetchedSetlists, setFetchedSetlists] = useState<Setlist[]>([]);
+  const [fetchedSongs, setFetchedSongs] = useState<Song[]>([]);
+  const propsProvided = providedSetlists !== undefined || providedSongs !== undefined;
+  const setlistsList = propsProvided ? providedSetlists || [] : fetchedSetlists;
+  const songsList = propsProvided ? providedSongs || [] : fetchedSongs;
   const [selectedRepertorioId, setSelectedRepertorioId] =
     useState<string>("all");
 
@@ -53,11 +55,7 @@ export function RepertorioEnergyChartWidget({
   // El fetch propio queda solo para cuando NADIE pasa estas props (undefined de verdad, p.ej.
   // este widget usado aislado, sin Dashboard.tsx de por medio).
   useEffect(() => {
-    if (providedSetlists !== undefined || providedSongs !== undefined) {
-      setSetlistsList(providedSetlists || []);
-      setSongsList(providedSongs || []);
-      return;
-    }
+    if (propsProvided) return;
 
     const loadData = async () => {
       try {
@@ -65,15 +63,15 @@ export function RepertorioEnergyChartWidget({
           api.getSetlists(),
           api.getSongs(),
         ]);
-        setSetlistsList(setlistsRes?.setlists || []);
-        setSongsList(songsRes?.songs || []);
+        setFetchedSetlists(setlistsRes?.setlists || []);
+        setFetchedSongs(songsRes?.songs || []);
       } catch (err) {
         console.error("[Dashboard] Error fetching setlists/songs:", err);
       }
     };
 
     loadData();
-  }, [providedSetlists, providedSongs]);
+  }, [propsProvided]);
 
   // Prepare chart data for active setlist or fallback demo setlist
   let chartData: Array<{

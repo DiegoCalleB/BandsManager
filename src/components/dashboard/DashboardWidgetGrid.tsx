@@ -74,6 +74,9 @@ export interface DashboardWidgetGridProps {
   setViewDensityMode?: React.Dispatch<React.SetStateAction<"clean" | "full">>;
 }
 
+/** Id único de un widget recién añadido (a nivel de módulo: se llama solo desde handlers). */
+const nuevoIdWidget = (type: WidgetType) => `${type}-${Date.now()}`;
+
 export function DashboardWidgetGrid({
   currentUser,
   concerts,
@@ -112,11 +115,6 @@ export function DashboardWidgetGrid({
     | DashboardWidgetConfig[]
     | undefined;
 
-  // true si la carga inicial tuvo que quitar algún widget duplicado — dispara un guardado
-  // silencioso una vez montado, para que la limpieza no se pierda en la próxima carga (ver
-  // debajo del todo de este componente).
-  const hadDuplicatesOnLoadRef = React.useRef(false);
-
   // Quita lo que el plan no permite y los tipos duplicados. Un tipo de widget solo puede estar
   // una vez en el panel — de guardados anteriores pueden quedar duplicados ("Añadir Otro" lo
   // permitía a propósito): se mantiene la primera aparición de cada tipo, en el orden guardado.
@@ -137,15 +135,16 @@ export function DashboardWidgetGrid({
     return { deduped, hadDuplicates: deduped.length !== withModuleAccess.length };
   };
 
-  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
-    const initial =
+  // `hadDuplicates` es true si la carga inicial tuvo que quitar algún widget duplicado — dispara
+  // un guardado silencioso una vez montado, para que la limpieza no se pierda en la próxima carga.
+  const [initialLayout] = useState(() =>
+    sanitizeLayout(
       Array.isArray(savedWidgets) && savedWidgets.length > 0
         ? savedWidgets
-        : DEFAULT_DASHBOARD_WIDGETS;
-    const { deduped, hadDuplicates } = sanitizeLayout(initial);
-    if (hadDuplicates) hadDuplicatesOnLoadRef.current = true;
-    return deduped;
-  });
+        : DEFAULT_DASHBOARD_WIDGETS,
+    ),
+  );
+  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(initialLayout.deduped);
 
   // true en cuanto el panel es del usuario (ya guardado antes, o tocado en esta sesión): la vista
   // «Esencial» solo recorta el panel por defecto. Antes recortaba también lo que el usuario había
@@ -172,7 +171,9 @@ export function DashboardWidgetGrid({
   // vuelo (y por tanto sin el último cambio) no debe deshacerlo.
   const hasSavedRef = React.useRef(false);
   const widgetsRef = React.useRef(widgets);
-  widgetsRef.current = widgets;
+  React.useEffect(() => {
+    widgetsRef.current = widgets;
+  }, [widgets]);
 
   // Sync to database — y al usuario en caché (estado de la app + localStorage), para que al salir
   // del dashboard y volver, o al recargar antes de que la sesión se refresque, no reaparezca el
@@ -233,8 +234,8 @@ export function DashboardWidgetGrid({
   // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
   // que el usuario tocara algo manualmente.
   React.useEffect(() => {
-    if (hadDuplicatesOnLoadRef.current) {
-      hadDuplicatesOnLoadRef.current = false;
+    if (initialLayout.hadDuplicates) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- persistir la limpieza inicial en el servidor al montar; los setState son los del indicador de guardado de saveLayoutToDb
       saveLayoutToDb(widgets);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -375,7 +376,7 @@ export function DashboardWidgetGrid({
     if (widgets.some((w) => w.type === type && w.visible)) return;
 
     const newWidget: DashboardWidgetConfig = {
-      id: `${type}-${Date.now()}`,
+      id: nuevoIdWidget(type),
       type,
       title: meta.title,
       wSpan: meta.defaultWSpan,

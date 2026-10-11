@@ -44,8 +44,6 @@ export const ProfileCompletenessCard: React.FC<
 > = ({
   epkConfig,
   leads = [],
-  concerts = [],
-  rehearsals = [],
   metrics = [],
   fans = [],
   bandName = "Tu Banda",
@@ -59,7 +57,6 @@ export const ProfileCompletenessCard: React.FC<
   const [hasScheduleConfigured, setHasScheduleConfigured] = useState(false);
   const [hasEmailAccountConnected, setHasEmailAccountConnected] =
     useState(false);
-  const [hasMinCacheConfigured, setHasMinCacheConfigured] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -116,20 +113,13 @@ export const ProfileCompletenessCard: React.FC<
     };
   }, [currentUser]);
 
-  useEffect(() => {
-    // Check if autonomy config / min cache is configured
-    const autonomy = (currentUser as UsuarioConExtras | null | undefined)?.autonomy_config;
-    if (
+  // Autonomía / caché mínimo configurado: se deriva del usuario, sin estado ni efecto.
+  const autonomy = (currentUser as UsuarioConExtras | null | undefined)?.autonomy_config;
+  const hasMinCacheConfigured =
+    Boolean(
       autonomy?.minCacheByType &&
-      Object.values(autonomy.minCacheByType).some((v) => Number(v) > 0)
-    ) {
-      setHasMinCacheConfigured(true);
-    } else if (autonomy?.min_cache && Number(autonomy.min_cache) > 0) {
-      setHasMinCacheConfigured(true);
-    } else {
-      setHasMinCacheConfigured(false);
-    }
-  }, [currentUser]);
+        Object.values(autonomy.minCacheByType).some((v) => Number(v) > 0),
+    ) || Boolean(autonomy?.min_cache && Number(autonomy.min_cache) > 0);
 
   const [storedSongsCount, setStoredSongsCount] = useState(0);
 
@@ -302,8 +292,6 @@ export const ProfileCompletenessCard: React.FC<
     epkConfig,
     leads,
     storedSongsCount,
-    concerts,
-    rehearsals,
     metrics,
     fans,
     hasScheduleConfigured,
