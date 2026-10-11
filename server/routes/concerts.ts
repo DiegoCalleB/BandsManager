@@ -25,6 +25,7 @@ import {
 } from "../db.js";
 import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calendarConflictService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { CancionDeFeed, ConciertoDeFeed, EnsayoDeFeed, MaterialFeed, PuntoRunOfShowFeed, SalaDeFeed, SetlistDeFeed, TemaDeSetlistFeed } from './tiposCalendarioIcs.js';
 
 const router = express.Router();
 
@@ -78,9 +79,9 @@ router.put("/rehearsals/:id", requireAuth, async (req, res) => {
     const state = loadState();
     const idx = state.rehearsals?.findIndex((r: Rehearsal) => r.id === id) ?? -1;
     if (idx !== -1) {
-      state.rehearsals[idx] = saved as any;
+      state.rehearsals[idx] = saved;
     } else if (state.rehearsals) {
-      state.rehearsals.push(saved as any);
+      state.rehearsals.push(saved);
     }
     saveState(state);
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
@@ -98,12 +99,12 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const newRehearsal: Rehearsal = req.body;
-    (newRehearsal as any).band_id = userBandId;
+    newRehearsal.band_id = userBandId;
     const saved = await dbUpsertRehearsal(newRehearsal, userBandId);
     
     const state = loadState();
     if (state.rehearsals) {
-      state.rehearsals.push(saved as any);
+      state.rehearsals.push(saved);
     }
     saveState(state);
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
@@ -126,7 +127,7 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
     const { id } = req.params;
     const state = loadState();
     const rehearsal = state.rehearsals?.find((r: Rehearsal) => r.id === id);
-    const targetBand = (rehearsal as any)?.band_id || userBandId;
+    const targetBand = rehearsal?.band_id || userBandId;
 
     if (targetBand && !puedeEscribirEnBanda(req, targetBand)) {
       return res.status(403).json({ error: "No puedes eliminar un ensayo de otra banda." });
@@ -161,9 +162,9 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
     const state = loadState();
     const idx = state.concerts?.findIndex((c: Concert) => c.id === id) ?? -1;
     if (idx !== -1) {
-      state.concerts[idx] = saved as any;
+      state.concerts[idx] = saved;
     } else if (state.concerts) {
-      state.concerts.push(saved as any);
+      state.concerts.push(saved);
     }
     saveState(state);
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
@@ -181,12 +182,12 @@ router.post("/concerts", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const newConcert: Concert = req.body;
-    (newConcert as any).band_id = userBandId;
+    newConcert.band_id = userBandId;
     const saved = await dbUpsertConcert(newConcert, userBandId);
 
     const state = loadState();
     if (state.concerts) {
-      state.concerts.push(saved as any);
+      state.concerts.push(saved);
     }
     saveState(state);
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
@@ -209,7 +210,7 @@ router.delete("/concerts/:id", requireAuth, async (req, res) => {
     const { id } = req.params;
     const state = loadState();
     const concert = state.concerts?.find((c: Concert) => c.id === id);
-    const targetBand = (concert as any)?.band_id || userBandId;
+    const targetBand = concert?.band_id || userBandId;
 
     if (targetBand && !puedeEscribirEnBanda(req, targetBand)) {
       return res.status(403).json({ error: "No puedes eliminar un concierto de otra banda." });
@@ -353,7 +354,7 @@ router.post("/payments", requireAuth, requireLeader, async (req, res) => {
   const saved = await dbUpsertPayment(newPayment, userBandId);
 
   const state = loadState();
-  state.payments.push(saved as any);
+  state.payments.push(saved);
   saveState(state);
   
   res.json({ success: true, payment: saved });
@@ -369,9 +370,9 @@ router.put("/payments/:id", requireAuth, requireLeader, async (req, res) => {
   const state = loadState();
   const idx = state.payments.findIndex((p: Payment) => p.id === id);
   if (idx !== -1) {
-    state.payments[idx] = saved as any;
+    state.payments[idx] = saved;
   } else {
-    state.payments.push(saved as any);
+    state.payments.push(saved);
   }
   saveState(state);
   
@@ -465,8 +466,8 @@ router.get("/calendar.ics", async (req, res) => {
       bandIds = [bandIdQuery];
     }
 
-    let concerts: any[] = [];
-    let rehearsals: any[] = [];
+    let concerts: ConciertoDeFeed[] = [];
+    let rehearsals: EnsayoDeFeed[] = [];
     try {
       concerts = await dbGetConcerts(bandIds.length > 1 ? bandIds : bandIds[0]);
     } catch (e) {
@@ -495,11 +496,11 @@ router.get("/calendar.ics", async (req, res) => {
     }
 
     // Fetch context data across bands: Run of show, Gear checklists, Setlists, Songs and Leads (venues)
-    const runOfShowMap: Record<string, any[]> = {};
-    const gearMap: Record<string, any[]> = {};
-    const setlistsMap: Record<string, any> = {};
-    const songsMap: Record<string, any> = {};
-    const venuesMap: Record<string, any> = {};
+    const runOfShowMap: Record<string, PuntoRunOfShowFeed[]> = {};
+    const gearMap: Record<string, MaterialFeed[]> = {};
+    const setlistsMap: Record<string, SetlistDeFeed> = {};
+    const songsMap: Record<string, CancionDeFeed> = {};
+    const venuesMap: Record<string, SalaDeFeed> = {};
 
     for (const bId of bandIds) {
       try {
@@ -520,21 +521,21 @@ router.get("/calendar.ics", async (req, res) => {
 
       try {
         const sls = await dbGetSetlists(bId);
-        (sls || []).forEach((sl: any) => {
+        (sls || []).forEach((sl: SetlistDeFeed) => {
           if (sl.id) setlistsMap[sl.id] = sl;
         });
       } catch (err) { console.warn("[Conciertos] Fallo leyendo los setlists de la banda:", err); }
 
       try {
         const sngs = await dbGetSongs(bId);
-        (sngs || []).forEach((s: any) => {
+        (sngs || []).forEach((s: CancionDeFeed) => {
           if (s.id) songsMap[s.id] = s;
         });
       } catch (err) { console.warn("[Conciertos] Fallo leyendo los temas de la banda:", err); }
 
       try {
         const lds = await dbGetLeads(bId);
-        (lds || []).forEach((l: any) => {
+        (lds || []).forEach((l: SalaDeFeed) => {
           if (l.nombre_sala) {
             venuesMap[l.nombre_sala.toLowerCase().trim()] = l;
           }
@@ -607,7 +608,7 @@ router.get("/calendar.ics", async (req, res) => {
     ];
 
     // Add Concerts with rich details
-    concerts.forEach((c: any) => {
+    concerts.forEach((c) => {
       const start = parseToYmd(c.fecha || "");
       if (!start) return;
       const end = getNextDayYmd(start);
@@ -647,7 +648,7 @@ router.get("/calendar.ics", async (req, res) => {
       if (rosItems.length > 0) {
         descLines.push(`----------------------------------------`);
         descLines.push(`⏱️ ESCALETA / HORARIOS (RUN OF SHOW):`);
-        rosItems.forEach((it: any) => {
+        rosItems.forEach((it) => {
           descLines.push(`• ${it.time || "--:--"} - ${it.activity || "Actividad"} ${it.done ? "✓" : ""}`);
         });
       }
@@ -661,7 +662,7 @@ router.get("/calendar.ics", async (req, res) => {
           descLines.push(`Duración aprox: ${assignedSetlist.duracion_total_estimada_minutos} min`);
         }
         if (Array.isArray(assignedSetlist.items) && assignedSetlist.items.length > 0) {
-          assignedSetlist.items.forEach((item: any, idx: number) => {
+          assignedSetlist.items.forEach((item: TemaDeSetlistFeed, idx: number) => {
             const song = item.song_id ? songsMap[item.song_id] : (item.id ? songsMap[item.id] : null);
             const title = song?.titulo || item.titulo || item.nombre || `Tema ${idx + 1}`;
             const keyInfo = song?.tonalidad ? ` (${song.tonalidad})` : (item.tonalidad ? ` (${item.tonalidad})` : "");
@@ -676,7 +677,7 @@ router.get("/calendar.ics", async (req, res) => {
       if (gearItems.length > 0) {
         descLines.push(`----------------------------------------`);
         descLines.push(`🧰 CHECKLIST DE MATERIAL & BACKLINE:`);
-        gearItems.forEach((it: any) => {
+        gearItems.forEach((it) => {
           descLines.push(`[${it.packed ? "X" : " "}] ${it.item || "Instrumento"} (${it.responsible || "Banda"})`);
         });
       }
@@ -731,7 +732,7 @@ router.get("/calendar.ics", async (req, res) => {
     });
 
     // Add Rehearsals with rich details
-    rehearsals.forEach((r: any) => {
+    rehearsals.forEach((r) => {
       const start = parseToYmd(r.fecha || "");
       if (!start) return;
       const end = getNextDayYmd(start);
@@ -750,7 +751,7 @@ router.get("/calendar.ics", async (req, res) => {
         descLines.push(`----------------------------------------`);
         descLines.push(`🎵 REPERTORIO A ENSAYAR: ${assignedSetlist.nombre || "Setlist"}`);
         if (Array.isArray(assignedSetlist.items) && assignedSetlist.items.length > 0) {
-          assignedSetlist.items.forEach((item: any, idx: number) => {
+          assignedSetlist.items.forEach((item: TemaDeSetlistFeed, idx: number) => {
             const song = item.song_id ? songsMap[item.song_id] : (item.id ? songsMap[item.id] : null);
             const title = song?.titulo || item.titulo || item.nombre || `Tema ${idx + 1}`;
             descLines.push(`${idx + 1}. ${title}`);
