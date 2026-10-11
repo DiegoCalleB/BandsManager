@@ -1399,3 +1399,21 @@ body.scroll .giro-reloj .gr-c, body.scroll .giro-reloj .gr-reloj, body.scroll .g
 @keyframes trrew { 0% { opacity: 0; } 8%, 90% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes trrewimg { 0% { opacity: 1; translate: 0 -3%; } 100% { opacity: 0; translate: 0 3%; } }
 @media (prefers-reduced-motion: reduce) { .tr-rewind { display: none; } }
+
+/* Mis bandas: fotos reales de Diego, una por pulso, tras «El bajista soy yo» */
+.slide.mis-bandas { background: #000; padding: 0; overflow: hidden; color: #fff; }
+.mis-bandas .mb-foto { position: absolute; inset: 0; margin: 0; opacity: 0; }
+.mis-bandas .mb-foto img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.06) saturate(.9); }
+.mis-bandas .mb-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.7) 0%, transparent 40%); }
+.mis-bandas figcaption { position: absolute; left: 110px; bottom: 110px; z-index: 2; }
+.mis-bandas figcaption b { display: block; font: 600 54px/1.1 Oswald, Onest, sans-serif; letter-spacing: .03em; text-transform: uppercase; }
+.mis-bandas figcaption span { display: block; margin-top: 8px; font: 500 32px/1.2 Onest, sans-serif; color: #ffb37a; }
+.slide.mis-bandas.active .mb-foto { animation: mbfoto calc(var(--d) + 120ms) linear var(--t) both; }
+.slide.mis-bandas.active .mb-foto img { animation: mbzoom calc(var(--d) + 120ms) linear var(--t) both; }
+@keyframes mbfoto { 0% { opacity: 0; } 8%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes mbzoom { from { scale: 1.12; } to { scale: 1.02; } }
+.mis-bandas .mb-fin { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; font: 600 96px/1 Oswald, Onest, sans-serif; text-transform: uppercase; letter-spacing: .05em; opacity: 0; }
+.slide.mis-bandas.active .mb-fin { animation: grask 1.6s ease-out var(--t) both; }
+body.scroll .slide.mis-bandas { min-height: 900px; }
+body.scroll .mis-bandas .mb-foto { position: relative; opacity: 1; height: 600px; }
+@media (prefers-reduced-motion: reduce) { .slide.mis-bandas.active * { animation-duration: 1ms !important; } }

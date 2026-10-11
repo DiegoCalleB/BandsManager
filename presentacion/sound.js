@@ -301,6 +301,11 @@
     if (el.classList.contains('reveal')) k.boom(at(0.5), 0.6, 2.6);
     if (el.classList.contains('dream')) k.braam(at(0.5), 3.2, 0.07);
     if (el.classList.contains('giro-reloj')) giroScore(k, at);
+    // Mis bandas: un golpe grave con cada foto y un boom al final
+    if (el.classList.contains('mis-bandas')) {
+      el.querySelectorAll('.mb-foto').forEach((f) => k.thump(at(parseFloat(f.style.getPropertyValue('--t')) || 0), 0.42));
+      const fin = el.querySelector('.mb-fin'); if (fin) k.boom(at(parseFloat(fin.style.getPropertyValue('--t')) || 0), 0.6, 2.6);
+    }
   }
 
   window.DeckSound = {

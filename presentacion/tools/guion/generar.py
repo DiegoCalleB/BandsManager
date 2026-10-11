@@ -731,6 +731,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
   <p class="sub sub2">Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.</p>
 </section>
 
+<!--MIS-BANDAS-->
 <section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
@@ -740,6 +741,29 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
 </section>
 ''')
+
+# Mis bandas (de verdad): fotos reales de Diego en img/historia/, en el orden de img/historia/historia.json
+# [{"foto": "big-band-2015.jpg", "texto": "Big Band · 2015", "logro": "Primer concierto"}…]. Sin fotos, la escena no sale.
+_hj = os.path.join(AQUI, '..', '..', 'img', 'historia', 'historia.json')
+FOTOS = [f for f in (json.load(open(_hj, encoding='utf-8')) if os.path.exists(_hj) else [])
+         if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto']))]
+if FOTOS:
+    # 0,6 s por foto (el pulso de «Cabalga o Lóstrego»); las cuatro últimas, a la mitad: la rampa del final
+    pasos, t = [], 0.4
+    for k, f in enumerate(FOTOS):
+        d = 0.6 if k < len(FOTOS) - 4 else 0.3
+        pasos.append((t, d, f)); t += d
+    cuerpo = ''.join(f'''<figure class="mb-foto" style="--t:{t0:.2f}s;--d:{d:.2f}s"><img src="img/historia/{f['foto']}" alt="{f.get('texto', '')}">'''
+                     f'''<figcaption><b>{f.get('texto', '')}</b>{('<span>' + f['logro'] + '</span>') if f.get('logro') else ''}</figcaption></figure>'''
+                     for t0, d, f in pasos)
+    S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
+        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.6) * 1000)}">
+  <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
+  {cuerpo}
+  <p class="mb-fin" style="--t:{t:.2f}s">Y siempre, el bajo.</p>
+</section>''')
+else:
+    S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
 
 # El giro final (Nolan): el reloj de toda la película no contaba para el festival
 add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500">
@@ -899,6 +923,8 @@ for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'v
 CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
          'Un sueño hecho realidad', 'El reloj', 'Gracias', 'Créditos']
+if FOTOS:
+    CORTO.insert(CORTO.index('Un sueño hecho realidad'), 'Mis bandas')
 for t in CORTO:
     n = html.count(f'data-title="{t}"')
     assert n == 1, (t, n)
@@ -950,14 +976,14 @@ CORTES = {
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
     'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'rampa', 'Seguridad': 'j', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
-    'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
+    'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'El reloj': '-', 'Gracias': 'lostrego',
+          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
-    if t.startswith('Capítulo'):
+    if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):
         continue
     assert html.count(f'data-title="{t}"') == 1, ('corte', t)
 for t in [x for x in re.findall(r'data-title="([^"]+)"', html) if x.startswith('Capítulo')]:

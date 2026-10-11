@@ -311,7 +311,7 @@
     if (tipo === 'j' && voces && slides[cur].querySelector('[data-who][data-say]')) {
       // Corte en J: primero se oye al que habla y, un instante después, se le ve
       reveal(cur, how);
-      cambioVoz = () => { removeEventListener('voz', cambioVoz); cambioVoz = null; cambioT = setTimeout(() => cambiar(false), 650); };
+      cambioVoz = () => { removeEventListener('voz', cambioVoz); cambioVoz = null; clearTimeout(cambioT); cambioT = setTimeout(() => cambiar(false), 650); };
       addEventListener('voz', cambioVoz);
       cambioT = setTimeout(() => cambiar(false), 2400);
     } else cambiar(true);
