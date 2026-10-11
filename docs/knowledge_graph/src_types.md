@@ -26,6 +26,10 @@ _Sin dependencias salientes directas._
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[db_leads|Leads DB Handlers]] *(from #db)*
+- [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
+- [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
@@ -34,6 +38,20 @@ _Sin dependencias salientes directas._
 - [[server|server.ts]] *(from #route)*
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
+- [[server_db_alertSettings|server/db/alertSettings.ts]] *(from #db)*
+- [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
+- [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
+- [[server_db_deals|server/db/deals.ts]] *(from #db)*
+- [[server_db_fans|server/db/fans.ts]] *(from #db)*
+- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
+- [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
+- [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
+- [[server_db_social|server/db/social.ts]] *(from #db)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(from #db)*
+- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(from #db)*
+- [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(from #db)*
+- [[server_db_tours|server/db/tours.ts]] *(from #db)*
+- [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_promptsManager|server/promptsManager.ts]] *(from #service)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
@@ -59,12 +77,16 @@ _Sin dependencias salientes directas._
 - [[server_stateTypes|server/stateTypes.ts]] *(from #service)*
 - [[server_tiposAutoEnrichment|server/tiposAutoEnrichment.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
+- [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
+- [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
+- [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 - [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
 - [[src_app_AppModalsHost|src/app/AppModalsHost.tsx]] *(from #service)*

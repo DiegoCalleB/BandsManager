@@ -80,7 +80,7 @@ router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
 router.post("/metrics/sync", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   try {
-    const dbMetrics: SocialMetric[] = await dbGetSocialMetrics(userBandId);
+    const dbMetrics = (await dbGetSocialMetrics(userBandId)) as SocialMetric[];
     const state = loadState();
     state.metrics = dbMetrics;
     saveState(state);

@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Tabla de Supabase `lead_messages` (22 columnas).
+Tabla de Supabase `lead_messages` (27 columnas).
 
 ---
 
@@ -58,8 +58,13 @@ Tabla de Supabase `lead_messages` (22 columnas).
 - `sugerencia_estrategia`
 - `analisis_ia`
 - `leido`
+- `fechas_propuestas`
+- `condiciones_economicas`
+- `requisitos_tecnicos`
+- `accion_sugerida`
+- `estrategia_playbook`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

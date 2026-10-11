@@ -21,8 +21,10 @@ Exporta: BandDnaProfile, isCampaignActive, resolveMinCacheByType, getBandDnaProf
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_promptGuidelines|server/utils/promptGuidelines.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

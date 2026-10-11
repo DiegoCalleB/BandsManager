@@ -18,7 +18,9 @@ Perfil de banda para los prompts de IA.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_reelFeedback|server/utils/reelFeedback.ts]] *(Layer: #service, Domain: #social)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

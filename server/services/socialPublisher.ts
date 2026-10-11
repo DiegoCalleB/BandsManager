@@ -43,7 +43,7 @@ export async function publishSocialPostNow(postId: string, bandId: string): Prom
       publishedUrl = `https://youtube.com/shorts/${publishedId}`;
     }
 
-    const updatedPost = {
+    const updatedPost: Partial<SocialPost> = {
       ...post,
       estado: "publicado",
       published_id: publishedId,

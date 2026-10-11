@@ -41,7 +41,7 @@ export interface PuntoRunOfShowFeed {
 
 /** Elemento de la lista de material de un día. */
 export interface MaterialFeed {
-  packed?: boolean;
-  item?: string;
-  responsible?: string;
+  /** Columnas de `gear_checklists`: texto del elemento y si ya está cargado. */
+  label?: string;
+  checked?: boolean;
 }

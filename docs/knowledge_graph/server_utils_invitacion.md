@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: asignarInvitacion, invitacionPendiente, tokenInvitacionValido, limpiarInvitacion.
+Exporta: UsuarioInvitable, asignarInvitacion, invitacionPendiente, tokenInvitacionValido, limpiarInvitacion.
 
 ---
 

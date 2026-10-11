@@ -20,10 +20,14 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

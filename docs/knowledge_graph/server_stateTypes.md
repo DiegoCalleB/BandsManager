@@ -25,6 +25,8 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[server_auth|server/auth.ts]] *(from #security)*
+- [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
@@ -38,6 +40,8 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 - [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
+- [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
 
 ---
 

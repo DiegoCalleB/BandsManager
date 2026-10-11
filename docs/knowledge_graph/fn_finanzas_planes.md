@@ -26,6 +26,7 @@ Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_deals|server/db/deals.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_billing|server/routes/billing.ts]] *(Layer: #route, Domain: #finances)*

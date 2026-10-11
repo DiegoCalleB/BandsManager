@@ -21,6 +21,8 @@ Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_user_bands|tabla user_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*

@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Tabla de Supabase `social_posts` (9 columnas).
+Tabla de Supabase `social_posts` (20 columnas).
 
 ---
 
@@ -38,8 +38,19 @@ Tabla de Supabase `social_posts` (9 columnas).
 - `responsable`
 - `created_at`
 - `updated_at`
+- `hora_programada`
+- `video_url`
+- `thumbnail_url`
+- `media_type`
+- `auto_publish`
+- `published_id`
+- `published_at`
+- `publish_error`
+- `account_handle`
+- `hashtags`
+- `metrics`
 
-**Definida en:** `supabase_schema.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

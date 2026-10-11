@@ -13,7 +13,7 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomyConfig.
+Exporta: ResponseStrategy, AutonomyConfig, CachePorTipo, EntradaAutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomyConfig.
 
 ---
 
@@ -27,6 +27,7 @@ Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomy
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
@@ -34,6 +35,7 @@ Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomy
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
 
 ---
 

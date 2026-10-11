@@ -47,6 +47,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tours|server/db/tours.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*

@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: parseFlexibleDate, datesOverlap, filterLeadsByActiveCampaign, formatFestivalDateRange.
+Exporta: parseFlexibleDate, datesOverlap, CampanaConFechas, LeadConFechasDeFestival, filterLeadsByActiveCampaign, formatFestivalDateRange.
 
 ---
 

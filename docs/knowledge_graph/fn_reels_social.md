@@ -23,6 +23,7 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*

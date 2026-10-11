@@ -678,7 +678,7 @@ router.get("/calendar.ics", async (req, res) => {
         descLines.push(`----------------------------------------`);
         descLines.push(`🧰 CHECKLIST DE MATERIAL & BACKLINE:`);
         gearItems.forEach((it) => {
-          descLines.push(`[${it.packed ? "X" : " "}] ${it.item || "Instrumento"} (${it.responsible || "Banda"})`);
+          descLines.push(`[${it.checked ? "X" : " "}] ${it.label || "Instrumento"}`);
         });
       }
 

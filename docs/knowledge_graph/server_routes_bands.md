@@ -53,6 +53,7 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(from #db)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*

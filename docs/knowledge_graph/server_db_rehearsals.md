@@ -22,6 +22,7 @@ Ensayos (`rehearsals`): lectura, upsert y borrado acotados por `bandId`.
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 
 ---

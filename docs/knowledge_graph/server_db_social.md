@@ -20,6 +20,7 @@ Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_band_social_accounts|tabla band_social_accounts]] *(Layer: #schema, Domain: #social)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
@@ -36,6 +37,11 @@ Redes y contenido social: publicaciones, métricas, cuentas conectadas y piezas 
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/db/__tests__/socialContentViews.test.ts`
 
 ---
 

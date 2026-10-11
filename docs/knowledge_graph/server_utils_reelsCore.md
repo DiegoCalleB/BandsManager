@@ -24,6 +24,7 @@ Núcleo puro del generador de Reels: parseo de tiempos, saneado de lo que devuel
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
+- [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 
 ---

@@ -28,7 +28,9 @@ Motor de análisis de sentimiento, intención y temperatura comercial para el Ag
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[db_lead_messages|Lead Messages & Thread DB]] *(from #db)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 
 ---
 

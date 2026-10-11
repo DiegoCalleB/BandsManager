@@ -27,6 +27,7 @@ Exporta: EstadoDeSesion, ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeU
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
+- [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
 - [[server_routes_users_rutasInvitacion|server/routes/users/rutasInvitacion.ts]] *(from #route)*

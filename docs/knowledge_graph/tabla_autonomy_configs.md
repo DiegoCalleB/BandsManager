@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `autonomy_configs` (17 columnas).
+Tabla de Supabase `autonomy_configs` (18 columnas).
 
 ---
 
@@ -46,8 +46,9 @@ Tabla de Supabase `autonomy_configs` (17 columnas).
 - `updated_at`
 - `negotiation_start_cache_by_type`
 - `response_strategies`
+- `min_cache_by_type`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migration_agent_sender_emails.sql`, `supabase/migration_negotiation_start_cache.sql`, `supabase/migration_response_strategies.sql`, `supabase/migrations/20260927_add_mark_as_read_in_inbox_to_autonomy_configs.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_agent_sender_emails.sql`, `supabase/migration_negotiation_start_cache.sql`, `supabase/migration_response_strategies.sql`, `supabase/migrations/20260927_add_mark_as_read_in_inbox_to_autonomy_configs.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

@@ -22,6 +22,7 @@ Descubrimiento de salas, eventos y contactos desde fuentes abiertas, mapas y red
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(Layer: #service, Domain: #booking)*
