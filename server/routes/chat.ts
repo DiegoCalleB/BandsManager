@@ -3,7 +3,7 @@
 
 import express from "express";
 import { KNOWN_LOCATIONS, CANONICAL_LOCATION_MAP, getRegionForCity } from "../../src/constants/regions.js";
-import { Lead, Rehearsal, Concert } from "../../src/types.js";
+import { Lead, Rehearsal, Concert, Message } from "../../src/types.js";
 import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
@@ -16,6 +16,8 @@ import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { AccionPropuesta, CancionParaChat, MensajeHistorialChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
+
 
 const router = express.Router();
 
@@ -80,7 +82,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       desc = "Disparar el agente de Python Lector para revisar tu bandeja de correo en busca de respuestas de salas.";
     }
 
-    const triggerParams: Record<string, any> = {};
+    const triggerParams: ParametrosAgenteChat = {};
 
     if (agentName === "Scout Descubridor" || agentName === "Scout") {
       let detectedRegion: string;
@@ -164,7 +166,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     setTimeout(() => {
       const lowerMsg = message.toLowerCase();
       let reply = "¡Hola! Estoy funcionando en modo simulación (sin clave GEMINI_API_KEY). Puedo responderte de manera estática.\n\n";
-      const proposedActions: any[] = [];
+      const proposedActions: AccionPropuesta[] = [];
       
       if (lowerMsg.includes("madrid") || lowerMsg.includes("pendiente")) {
         const pendingMadrid = state.leads.filter((l: Lead) => l.ciudad.toLowerCase().includes("madrid") || l.estado === "pendiente_aprobacion");
@@ -192,7 +194,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         }
       } else if (lowerMsg.includes("reggae") || lowerMsg.includes("ska")) {
         const userBandId = userReq.band_id;
-        const matchBandLocal = (item: any) => {
+        const matchBandLocal = (item: Parameters<typeof bandaDe>[0]) => {
           if (!item) return false;
           const bid = bandaDe(item);
           return bid === userBandId;
@@ -201,7 +203,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         reply += `Tienes actualmente **${count} salas** especializadas en Ska/Reggae en la base de datos (por ejemplo, *Kafe Antzokia* en Bilbao, *Sala El Tren* en Granada y *Viña Rock*).`;
       } else {
         const userBandId = userReq.band_id;
-        const matchBandLocal = (item: any) => {
+        const matchBandLocal = (item: Parameters<typeof bandaDe>[0]) => {
           if (!item) return false;
           const bid = bandaDe(item);
           return bid === userBandId;
@@ -219,7 +221,7 @@ router.post("/chat", requireAuth, async (req, res) => {
 
   try {
     const userBandId = userReq.band_id;
-    const matchBand = (item: any) => {
+    const matchBand = (item: Parameters<typeof bandaDe>[0]) => {
       if (!item) return false;
       const bid = bandaDe(item);
       return bid === userBandId;
@@ -234,7 +236,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       dbGetSetlists(userBandId).catch(() => [])
     ]);
 
-    const stateSummary: any = {
+    const stateSummary: Record<string, unknown> = {
       leads: state.leads.filter(matchBand).map((l: Lead) => ({
         id: l.id,
         nombre_sala: l.nombre_sala,
@@ -275,8 +277,8 @@ router.post("/chat", requireAuth, async (req, res) => {
         presupuestoLogistica: t.presupuestoLogistica,
         stops: t.stops
       })),
-      songs: songsFromDb.map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
-      setlists: setlistsFromDb.map((st: any) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
+      songs: (songsFromDb as CancionParaChat[]).map((s) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
+      setlists: (setlistsFromDb as SetlistParaChat[]).map((st) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
       fansCount: (state.fans || []).filter(matchBand).length,
       rehearsals: (state.rehearsals || []).filter(matchBand),
       concerts: (state.concerts || []).filter(matchBand).map((c: Concert) => ({
@@ -288,7 +290,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         contrato_firmado: c.contrato_firmado,
         estado_pago: c.estado_pago
       })),
-      recentMessages: (state.messages || []).filter(matchBand).slice(-5)
+      recentMessages: (state.messages || []).filter((m) => matchBand(m as Message & { band_id?: string })).slice(-5)
     };
 
     const bandIdForEpk = userReq.band_id;
@@ -452,10 +454,10 @@ REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un conciert
 Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como una lista vacía [].
 Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.`;
 
-    const contents: any[] = [];
+    const contents: TurnoChat[] = [];
     
     if (chatHistory && chatHistory.length > 0) {
-      chatHistory.forEach((h: any) => {
+      (chatHistory as MensajeHistorialChat[]).forEach((h) => {
         const role = h.sender === 'user' ? 'user' : 'model';
         if (contents.length === 0 && role === 'model') return;
 
@@ -499,8 +501,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       }
     }
 
-    let response: any = null;
-    let lastError: any = null;
+    let response: VistaRespuestaIA | null = null;
+    let lastError: ErrorDeFailover | null = null;
 
     try {
       response = await generateContentWithFallback(client, {
@@ -553,7 +555,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
                  `Por favor, inténtalo de nuevo en unos instantes o comprueba tu conexión y configuración de claves.`;
       }
 
-      const proposedActions: any[] = [];
+      const proposedActions: AccionPropuesta[] = [];
       const lowerMsg = (message || "").toLowerCase();
 
       const pendingLeads = state.leads.filter((l: Lead) => l.estado === "pendiente_aprobacion");
@@ -603,12 +605,12 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     }
 
     let textResult = "";
-    let nativeProposedActions: any[] = [];
+    let nativeProposedActions: AccionPropuesta[] = [];
 
     // 1. Extraer Function Calls nativas del SDK si están presentes
     try {
       const functionCalls = response.functionCalls || 
-        response.candidates?.[0]?.content?.parts?.filter((p: any) => p.functionCall)?.map((p: any) => p.functionCall);
+        response.candidates?.[0]?.content?.parts?.filter((p) => p.functionCall)?.map((p) => p.functionCall);
       if (Array.isArray(functionCalls) && functionCalls.length > 0) {
         nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls);
       }
@@ -621,14 +623,14 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       textResult = response.text || "";
     } catch {
       try {
-        const textParts = response.candidates?.[0]?.content?.parts?.filter((p: any) => p.text)?.map((p: any) => p.text);
+        const textParts = response.candidates?.[0]?.content?.parts?.filter((p) => p.text)?.map((p) => p.text);
         textResult = textParts ? textParts.join("\n\n") : "";
       } catch {
         textResult = "";
       }
     }
 
-    let parsed: any;
+    let parsed: { text: string; proposedActions: AccionPropuesta[] };
 
     if (nativeProposedActions.length > 0) {
       // Si el modelo invocó herramientas nativas, usamos su texto o un mensaje de cortesía si solo emitió tool calls
