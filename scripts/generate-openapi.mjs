@@ -474,6 +474,12 @@ if (duplicadas.length) console.warn(`[openapi] ${duplicadas.length} declaracione
 if (noResueltas.length) console.warn(`[openapi] ${noResueltas.length} casos no resueltos:\n  - ${noResueltas.join("\n  - ")}`);
 
 if (MODO_CHECK) {
+  // Una ruta declarada dos veces es código muerto (Express atiende la primera): hubo dos así sin
+  // que nadie lo viera (upload-logo y templates/preview). Ahora rompe el check.
+  if (duplicadas.length) {
+    console.error(`[openapi] Hay ${duplicadas.length} rutas declaradas dos veces: borra la que no se usa.`);
+    process.exit(1);
+  }
   // Los números de línea (x-source, #L12, fichero.ts:12) cambian con cualquier edición del fichero y no son
   // contrato: se ignoran, para que mover una ruta o añadir un comentario no ponga el CI en rojo.
   const sinLineas = (t) => t.replace(/(\.tsx?):\d+/g, "$1:N").replace(/#L\d+/g, "#LN");

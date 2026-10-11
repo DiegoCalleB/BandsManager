@@ -39,21 +39,6 @@ import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
-// Lead sintético representativo de cada categoría, usado solo para la simulación de "Probar
-// Prompt": no se guarda ni se envía nada, es únicamente para dar contexto realista al prompt.
-const CATEGORY_PREVIEW_LEAD: Record<
-  string,
-  { tipo: string; nombre_sala: string }
-> = {
-  salas: { tipo: 'sala', nombre_sala: 'Sala Ejemplo' },
-  festivales: { tipo: 'festival', nombre_sala: 'Festival Ejemplo' },
-  discotecas: { tipo: 'discoteca', nombre_sala: 'Discoteca Ejemplo' },
-  medios: { tipo: 'medio', nombre_sala: 'Medio Ejemplo' },
-  grupos: { tipo: 'grupo', nombre_sala: 'Banda Ejemplo' },
-  managements: { tipo: 'management', nombre_sala: 'Agencia Ejemplo' },
-  ayuntamientos: { tipo: 'ayuntamiento', nombre_sala: 'Ayuntamiento Ejemplo' },
-};
-
 router.get('/templates', requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
@@ -444,66 +429,6 @@ router.post('/templates/generate-all', requireAuth, async (req, res) => {
         success: false,
         error: error?.message || 'Error al generar las 7 plantillas con IA.',
       });
-  }
-});
-
-// Genera una simulación REAL (no texto fijo) de cómo redactaría el Redactor un primer contacto
-// para esta categoría, usando las guidelines que hay en pantalla en ese momento (sin necesidad
-// de guardarlas antes). Usa el mismo ADN de banda y el mismo prompt que la generación real de
-// pitches (server/routes/leads/pitch.ts), solo que con un lead sintético de la categoría en vez
-// de uno real, para que el mánager pueda previsualizar el efecto de sus pautas antes de guardar.
-router.post('/templates/preview', requireAuth, async (req, res) => {
-  try {
-    const bandId = getTargetBandId(req);
-    const { category, subject, body, guidelines } = req.body;
-
-    const previewLeadBase = CATEGORY_PREVIEW_LEAD[category];
-    if (!previewLeadBase) {
-      return res
-        .status(400)
-        .json({ success: false, error: 'Categoría de plantilla no válida.' });
-    }
-
-    const state = loadState();
-    const previewLead = { ...previewLeadBase, ciudad: 'Madrid', aforo: 300 };
-    const bandDna = getBandDnaProfile(state, bandId, previewLead);
-
-    const current = (await dbGetCategoryTemplates(bandId))[category];
-    bandDna.categoryTemplateTitle = current?.title;
-    bandDna.categoryTemplateGuidelines = guidelines ?? current?.guidelines;
-
-    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(
-      bandDna,
-      globalMemory,
-      previewLead,
-      undefined,
-      autonomyConfig?.minCacheByType,
-      autonomyConfig?.negotiationStartCacheByType
-    );
-
-    const prompt = `Redacta una propuesta comercial y artística de concierto para "${previewLead.nombre_sala}" en ${previewLead.ciudad} (Tipo: ${previewLead.tipo}, Aforo: ${previewLead.aforo}).
-${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"${body}"` : ''}`;
-
-    const result = await generateUnifiedAI({
-      prompt,
-      systemPrompt,
-      provider: 'gemini',
-    });
-
-    res.json({
-      success: true,
-      subject: subject || `Propuesta de concierto: ${bandDna.bandName}`,
-      body: result.text.trim(),
-    });
-  } catch (errorCapturado) {
-    const error = comoErrorCapturado(errorCapturado);
-    console.error('Error in POST /api/templates/preview:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al simular la plantilla con IA.',
-    });
   }
 });
 
