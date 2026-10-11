@@ -1,10 +1,17 @@
 // Horario comercial de la banda (`band_schedules`).
 
 import { getSupabase } from "./core.js";
+import type { BandSchedule } from "../../src/types.js";
 
-const inMemorySchedules: Record<string, any> = {};
+/** Horario ya resuelto: los días siempre vienen rellenos (con los valores recomendados si faltan). */
+type HorarioBanda = Omit<BandSchedule, "dias_enviador" | "dias_lector" | "updated_at"> & {
+  dias_enviador: number[];
+  dias_lector: number[];
+};
 
-function getMemoryFallbackSchedule(cleanId: string) {
+const inMemorySchedules: Record<string, HorarioBanda> = {};
+
+function getMemoryFallbackSchedule(cleanId: string): HorarioBanda {
   if (inMemorySchedules[cleanId]) {
     return inMemorySchedules[cleanId];
   }
@@ -40,13 +47,13 @@ export async function dbGetBandSchedule(bandId: string) {
       return getMemoryFallbackSchedule(cleanId);
     }
 
-    const schedule = {
+    const schedule: HorarioBanda = {
       band_id: data.band_id,
       timezone: data.timezone || 'Europe/Madrid',
-      horas_lector: Array.isArray(data.horas_lector) ? data.horas_lector.map((n: any) => Number(n)) : [8, 12, 16, 20],
-      horas_enviador: Array.isArray(data.horas_enviador) ? data.horas_enviador.map((n: any) => Number(n)) : [9, 10, 11, 12, 13],
-      dias_enviador: Array.isArray(data.dias_enviador) ? data.dias_enviador.map((n: any) => Number(n)) : [2, 3, 4],
-      dias_lector: Array.isArray(data.dias_lector) ? data.dias_lector.map((n: any) => Number(n)) : [1, 2, 3, 4, 5, 6, 7]
+      horas_lector: Array.isArray(data.horas_lector) ? data.horas_lector.map((n: unknown) => Number(n)) : [8, 12, 16, 20],
+      horas_enviador: Array.isArray(data.horas_enviador) ? data.horas_enviador.map((n: unknown) => Number(n)) : [9, 10, 11, 12, 13],
+      dias_enviador: Array.isArray(data.dias_enviador) ? data.dias_enviador.map((n: unknown) => Number(n)) : [2, 3, 4],
+      dias_lector: Array.isArray(data.dias_lector) ? data.dias_lector.map((n: unknown) => Number(n)) : [1, 2, 3, 4, 5, 6, 7]
     };
     inMemorySchedules[cleanId] = schedule;
     return schedule;
@@ -75,7 +82,7 @@ export async function dbUpsertBandSchedule(schedule: {
   const diasEnviadorClean = (schedule.dias_enviador || [2, 3, 4]).map((d) => Math.floor(Number(d))).filter((d) => !isNaN(d) && d >= 1 && d <= 7);
   const diasLectorClean = (schedule.dias_lector || [1, 2, 3, 4, 5, 6, 7]).map((d) => Math.floor(Number(d))).filter((d) => !isNaN(d) && d >= 1 && d <= 7);
 
-  const payload = {
+  const payload: HorarioBanda = {
     band_id: cleanId,
     timezone: schedule.timezone || 'Europe/Madrid',
     horas_lector: horasLectorClean,

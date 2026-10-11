@@ -7,6 +7,8 @@ import { dbUpdateBandDnaExpresion } from "./bands.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { autoIndexPitchOnSuccess } from "../services/pitchVectorStore.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { PitchLearningExample } from '../../src/types.js';
+import type { ExampleThreadMessage } from './exampleThreads.js';
 
 export interface PitchHumanEditRecord {
   id: string;
@@ -117,7 +119,7 @@ export async function dbRecordPitchHumanEdit(record: {
  * 2. Ejemplos aprobados por el humano para el mismo tipo de recinto (sala, festival, medio).
  * 3. Ejemplos recientes de la misma banda.
  */
-export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: any, maxExamples = 3): Promise<Array<{
+export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: { tipo?: string }, maxExamples = 3): Promise<Array<{
   nombre_sala: string;
   tipo_entidad: string;
   ciudad: string;
@@ -143,10 +145,10 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
         .limit(10);
 
       for (const thread of threads || []) {
-        const mensajes = Array.isArray(thread.mensajes) ? thread.mensajes : [];
+        const mensajes: ExampleThreadMessage[] = Array.isArray(thread.mensajes) ? thread.mensajes : [];
         const primerMensajeBanda = mensajes
-          .filter((m: any) => m.rol === "banda")
-          .sort((a: any, b: any) => (a.orden ?? 0) - (b.orden ?? 0))[0];
+          .filter((m) => m.rol === "banda")
+          .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0))[0];
         if (!primerMensajeBanda?.texto) continue;
 
         let score = 6; // ya está garantizado que coincide la categoría, por construcción
@@ -180,7 +182,7 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
       // +10 si tuvo respuesta positiva
       // +5 si coincide el tipo de entidad (sala, medio, etc.)
       // +3 si fue corregido y validado por el humano
-      const scoredLearning = (dbExamples || []).map((ex: any) => {
+      const scoredLearning = ((dbExamples || []) as PitchLearningExample[]).map((ex) => {
         let score = 0;
         if (ex.resultado_respuesta === "positiva") score += 10;
         if (currentLead?.tipo && ex.tipo_entidad && currentLead.tipo.toLowerCase() === ex.tipo_entidad.toLowerCase()) score += 5;
