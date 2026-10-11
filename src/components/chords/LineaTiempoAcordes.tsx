@@ -230,6 +230,8 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         const hastaSiguiente = sigue ? Math.max(0, sigue.t0 - tiempo) : null;
         return (
           <div className="flex items-center gap-4 flex-wrap">
+            {/* En móvil el acorde de ahora y el siguiente ya están en la barra fija: no se repiten */}
+            <div className="hidden sm:contents">
             <AroAcorde
               etiqueta="Ahora"
               nombre={tramo ? nombre(tramo.acorde) : '·'}
@@ -245,6 +247,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
               tamano={60}
               tenue
             />
+            </div>
             <div className="min-w-0 flex-1 space-y-1">
               {cuadricula && posicion ? (
                 <>

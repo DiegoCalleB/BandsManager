@@ -872,8 +872,8 @@ export function Atril({
                   )}
                 </div>
 
-                <ControlAutoscroll auto={autoScroll} />
                 <div className={masControles ? 'contents' : 'hidden sm:contents'}>
+                  <ControlAutoscroll auto={autoScroll} />
                   <ControlMetronomo metronomo={metronomo} />
                 </div>
 
