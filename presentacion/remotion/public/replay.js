@@ -4,6 +4,7 @@
    Uso: await Replay.listo; await Replay.ir(segundos) */
 (function () {
   'use strict';
+  const E = new URLSearchParams(location.search).get('e') || 'ensayo-completa';
   let N = null, foto = null, i = 0, ultimo = -1, porId = new Map(), animas = new Map(), medios = new Map();
 
   const indexar = (raiz) => {
@@ -86,7 +87,7 @@
   window.Replay = {
     ir,
     listo: (async () => {
-      [N, foto] = await Promise.all([fetch('ensayo/notas.json').then((r) => r.json()), fetch('ensayo/foto.html').then((r) => r.text())]);
+      [N, foto] = await Promise.all([fetch(E + '/notas.json').then((r) => r.json()), fetch(E + '/foto.html').then((r) => r.text())]);
       // inicio de cada animación en el reloj de la página (startTime va en el reloj de las animaciones)
       for (const a of N.anims) {
         const k = a.id + '|' + a.ps + '|' + a.n;

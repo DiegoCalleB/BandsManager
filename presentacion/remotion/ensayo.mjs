@@ -7,14 +7,15 @@
  *
  *   python3 -m http.server 8099 --directory presentacion &
  *   node presentacion/remotion/ensayo.mjs [--corte] [--max SEGUNDOS]
- * Deja en public/ensayo/: foto.html (la página al empezar), notas.json y las derivaciones de WebAudio (música y efectos).
+ * Deja en public/ensayo-corte/ (o ensayo-completa/): foto.html (la página al empezar), notas.json y las derivaciones de WebAudio (música y efectos).
  */
 import { chromium } from 'playwright-core';
 import fs from 'fs';
 import path from 'path';
 
 const aqui = path.dirname(new URL(import.meta.url).pathname);
-const dest = path.join(aqui, 'public', 'ensayo');
+const corteArg = process.argv.includes('--corte');
+const dest = path.join(aqui, 'public', corteArg ? 'ensayo-corte' : 'ensayo-completa');
 const DECK = process.env.DECK_URL || 'http://localhost:8099/';
 const WEBM = process.env.WEBM_DIR || '/tmp/claude-0/webm';
 const corte = process.argv.includes('--corte');

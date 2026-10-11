@@ -1,6 +1,6 @@
 node_modules/
 # lo que genera cada ensayo y los enlaces a los recursos del deck
-public/ensayo/
+public/ensayo-*/
 public/styles.css
 public/img
 public/video

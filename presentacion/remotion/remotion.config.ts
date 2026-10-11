@@ -5,3 +5,5 @@ Config.setBrowserExecutable(process.env.REMOTION_CHROME || '/opt/pw-browsers/chr
 Config.setCodec('h264');
 Config.setCrf(18);
 Config.setPixelFormat('yuv420p');
+// El primer fotograma de cada pestaña carga y reproduce todas las notas hasta ese instante: puede tardar
+Config.setDelayRenderTimeoutInMilliseconds(240000);
