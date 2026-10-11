@@ -150,7 +150,7 @@ export async function runEnviadorAgent(opts: {
   let epkConfig: any = null;
   try {
     epkConfig = await dbGetEpkConfig(opts.bandId);
-  } catch (e) {
+  } catch {
     // Non-blocking fallback
   }
 
@@ -165,7 +165,7 @@ export async function runEnviadorAgent(opts: {
     const autonomyConfig: any = await dbGetAutonomyConfig(opts.bandId);
     if (autonomyConfig?.dispatchMode === "direct_send") dispatchMode = "direct_send";
     if (autonomyConfig?.dispatchLevel) dispatchLevel = String(autonomyConfig.dispatchLevel);
-  } catch (e) {
+  } catch {
     // Sin configuración de autonomía guardada todavía: se queda en el modo seguro por defecto.
   }
   // Envío real solo si las TRES cosas lo permiten: la plataforma, el modo y el nivel de autonomía.
@@ -237,7 +237,7 @@ export async function runEnviadorAgent(opts: {
         lead,
         isRespuesta
       });
-    } catch (e) {
+    } catch {
       // Fallback silencioso si falla la resolución de ADN
     }
 

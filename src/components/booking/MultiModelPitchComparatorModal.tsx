@@ -2,24 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Lead } from "../../types";
 import { api } from "../../services/api";
 import { ModalPortal } from "../common/ModalPortal";
-import {
-  X,
-  Sparkles,
-  Zap,
-  CheckCircle2,
-  Copy,
-  RefreshCw,
-  Loader2,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
-  Check,
-  AlertCircle,
-  Coins,
-  TrendingDown,
-  Calculator,
-  HelpCircle,
-} from "lucide-react";
+import { X, Sparkles, CheckCircle2, Copy, RefreshCw, Loader2, Layers, ArrowRight, ShieldCheck, Check, AlertCircle, Coins, Calculator } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input } from '../ui';
 

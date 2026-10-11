@@ -1,4 +1,4 @@
-import { Song, SetlistItem } from "../../src/types.js";
+import { Song } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
 import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext.js";

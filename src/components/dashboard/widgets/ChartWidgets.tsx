@@ -315,8 +315,7 @@ export function RepertorioEnergyChartWidget({
 export function BookingFunnelChartWidget({
   leads = [],
   onNavigate,
-  heightMode = "normal",
-  isStitchLight = false,
+  heightMode = "normal"
 }: ChartWidgetProps) {
   const counts = {
     nuevo: leads.filter((l) => l.estado === "nuevo").length,
@@ -540,8 +539,7 @@ export function FinancesChartWidget({
 export function SocialFansGrowthWidget({
   fans = [],
   onNavigate,
-  heightMode = "normal",
-  isStitchLight = false,
+  heightMode = "normal"
 }: ChartWidgetProps) {
   const fansCount = fans.length;
   // Acumulado real de fans por mes de captura (últimos 6 meses). Nada inventado.

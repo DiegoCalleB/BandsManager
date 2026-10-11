@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  Wand2,
-  X,
-  RefreshCw,
-  Play,
-  Download,
-  Music,
-  Radio,
-} from "lucide-react";
+import { Wand2, X, RefreshCw, Download, Music, Radio } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { apiFetch } from "../../utils/api";

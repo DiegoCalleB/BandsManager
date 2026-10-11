@@ -19,7 +19,6 @@ Exporta: StemPredictionJob, ReplicateWebhookHeaders, verifyReplicateWebhook, ver
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
-- [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[tabla_stem_prediction_jobs|tabla stem_prediction_jobs]] *(Layer: #schema, Domain: #repertoire)*
 

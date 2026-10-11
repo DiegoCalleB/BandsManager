@@ -212,7 +212,7 @@ export const api = {
         } else if (typeof window !== 'undefined') {
           window.location.href = res.url;
         }
-      } catch (e) {
+      } catch {
         if (typeof window !== 'undefined') {
           window.location.href = res.url;
         }

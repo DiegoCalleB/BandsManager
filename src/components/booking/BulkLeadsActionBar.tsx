@@ -1,6 +1,6 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
-import { Lead, LeadStatus } from "../../types";
+import { LeadStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import {
   CheckSquare,

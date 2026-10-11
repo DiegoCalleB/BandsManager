@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Register new band & user
 router.post('/auth/register', registroRateLimiter, async (req, res) => {
-  const { bandName, email, password, plan, leaderName } = req.body;
+  const { bandName, email, password, leaderName } = req.body;
 
   if (!bandName || !email || !password) {
     return res
@@ -49,7 +49,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
       });
       ensureValidUserEmails(state);
     }
-  } catch (err) {
+  } catch {
     // Non-blocking
   }
   ensureValidUserEmails(state);

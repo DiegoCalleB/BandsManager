@@ -117,7 +117,7 @@ interface LeadHealthBadgeProps {
   size?: 'sm' | 'md';
 }
 
-export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({ lead, showDescription = false, size = 'md' }) => {
+export const LeadHealthBadge: React.FC<LeadHealthBadgeProps> = ({ lead, showDescription = false }) => {
   const health = getLeadHealth(lead);
 
   return (

@@ -1,5 +1,5 @@
 import { PopoverAncla } from './ui/PopoverAncla';
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   Lead,
   LeadType,
@@ -16,19 +16,14 @@ import {
   Setlist,
   Song,
 } from "../types";
-import { useLanguage } from "../context/LanguageContext";
 import { usePlayer } from "../context/PlayerContext";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
 import { apiFetch } from "../utils/api";
-import DirectionsCard from "./DirectionsCard";
-import { PublicoSilhouette } from "./ui/PublicoSilhouette";
 import { AddLeadModal } from "./dashboard/AddLeadModal";
 import { ProfileCompletenessCard } from "./dashboard/ProfileCompletenessCard";
-import { AiSupportWidget, AiUsageCard } from "./dashboard/AiUsageSupportWidget";
 import { EmailTemplatesModal } from "./dashboard/EmailTemplatesModal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
-import { SocialAndFansGrowthChart } from "./dashboard/SocialAndFansGrowthChart";
 import { DashboardWidgetGrid } from "./dashboard/DashboardWidgetGrid";
 import { NeedsAttentionBanner } from "./dashboard/NeedsAttentionBanner";
 import { ConvocarEnsayoModal } from "./ensayos/ConvocarEnsayoModal";
@@ -51,53 +46,8 @@ import {
   leadStatusBadgeClass,
   leadStatusLabel,
 } from "../utils/leadStatusPresentation";
-import { normalizePlan, hasModuleAccess } from "../utils/planPermissions";
-import {
-  Search,
-  MapPin,
-  Music,
-  Mic,
-  DoorClosed,
-  Globe,
-  Phone,
-  Instagram,
-  Plus,
-  X,
-  Calendar,
-  AlertCircle,
-  Sparkles,
-  Loader2,
-  Check,
-  RefreshCw,
-  Database,
-  Bot,
-  Activity,
-  ArrowRight,
-  CheckCircle2,
-  Radio,
-  Building2,
-  Clock,
-  CheckCircle,
-  Hourglass,
-  Send,
-  Users,
-  ShieldCheck,
-  Play,
-  Navigation,
-  FileText,
-  BookOpen,
-  Disc3,
-  Truck,
-  Heart,
-  Info,
-  Copy,
-  Sliders,
-  Gift,
-  Crown,
-  QrCode,
-  Settings,
-  Eye,
-} from "lucide-react";
+import { normalizePlan } from "../utils/planPermissions";
+import { Plus, X, Building2, Disc3, Sliders, Settings, Eye } from "lucide-react";
 import { Button, IconButton, MenuItem } from './ui';
 
 export type NavigationOptions = {
@@ -184,9 +134,9 @@ export default function Dashboard({
   isPromoPlan: isPromoPlanProp,
 }: DashboardProps) {
   const { setSongs: setPlayerSongs } = usePlayer();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [cityFilter, setCityFilter] = useState("todos");
-  const [genreFilter, setGenreFilter] = useState("todos");
+  const [searchTerm] = useState("");
+  const [cityFilter] = useState("todos");
+  const [genreFilter] = useState("todos");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isQuickRehearsalOpen, setIsQuickRehearsalOpen] = useState(false);
@@ -199,7 +149,7 @@ export default function Dashboard({
   const [viewDensityMode, setViewDensityMode] = useState<"clean" | "full">(
     "clean",
   );
-  const [syncLoading, setSyncLoading] = useState(false);
+  const [, setSyncLoading] = useState(false);
 
   // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
   const [agendaFilterMode, setAgendaFilterMode] = useState<"active" | "all">(
@@ -221,8 +171,8 @@ export default function Dashboard({
       ));
 
   // Scraper states
-  const [isScraping, setIsScraping] = useState(false);
-  const [scrapingStatus, setScrapingStatus] = useState("");
+  const [, setIsScraping] = useState(false);
+  const [, setScrapingStatus] = useState("");
   const [scrapedData, setScrapedData] = useState<{
     email_contacto: string;
     telefono: string;
@@ -235,7 +185,7 @@ export default function Dashboard({
     contexto_extra?: string;
     source_info: string;
   } | null>(null);
-  const [scrapingError, setScrapingError] = useState<string | null>(null);
+  const [, setScrapingError] = useState<string | null>(null);
 
   // Add new lead form states
   const [newSala, setNewSala] = useState("");

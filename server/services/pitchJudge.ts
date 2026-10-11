@@ -30,7 +30,7 @@ export async function evaluateAndRefinePitch(params: {
   minCacheThreshold?: number;
   skipRefinement?: boolean;
 }): Promise<JudgeEvaluation> {
-  const { pitchText, leadName, leadCategory, city, bandName, minCacheThreshold, skipRefinement = false } = params;
+  const { pitchText, leadName, leadCategory, city, minCacheThreshold, skipRefinement = false } = params;
 
   // 1. Auditoría heurística determinista (0ms)
   const audit = auditPitchQuality(pitchText, leadCategory);

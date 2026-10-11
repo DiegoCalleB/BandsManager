@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Sparkles, Clock, Users } from "lucide-react";
+import { FileText, Sparkles } from "lucide-react";
 import { Button, Input, Textarea } from '../../ui';
 
 interface StepBioProps {

@@ -74,8 +74,8 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
     typeof window !== "undefined" ? window.innerWidth >= 768 : true,
   );
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-  const [targetFound, setTargetFound] = useState(false);
-  const [isHighlighting, setIsHighlighting] = useState(false);
+  const [, setTargetFound] = useState(false);
+  const [, setIsHighlighting] = useState(false);
 
   // Monitor window size to adapt between desktop floating mode and full-screen mobile
   useEffect(() => {
@@ -117,7 +117,7 @@ export const ModuleTutorialModal: React.FC<ModuleTutorialModalProps> = ({
             el = found;
             break;
           }
-        } catch (err) {
+        } catch {
           // Ignore invalid selectors safely
         }
       }

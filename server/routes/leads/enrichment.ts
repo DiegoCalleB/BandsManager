@@ -214,7 +214,7 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
 // Custom simulation endpoint to generate custom venue or band negotiation emails using Gemini
 
 router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
-  const { ciudad, tipo, leadId } = req.body;
+  const { ciudad, leadId } = req.body;
   let nombre_sala = req.body.nombre_sala || req.body.nombre || req.body.nombreSala || req.body.name || req.body.sala_o_medio;
 
   let existingLead: any = null;
@@ -310,7 +310,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
         } else {
           parsed = JSON.parse(text);
         }
-      } catch (_) {
+      } catch {
         parsed = {};
       }
 
@@ -392,7 +392,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const { leadId, name, city, force } = req.body;
+    const { leadId, name } = req.body;
     
     let lead: Lead | undefined;
     const state = loadState();
@@ -497,7 +497,7 @@ router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
 });
 
 router.post("/scrape-contact", requireAuth, async (req, res) => {
-  const { leadId, nombre_sala, ciudad, region } = req.body;
+  const { nombre_sala, ciudad, region } = req.body;
   if (!nombre_sala) {
     return res.status(400).json({ error: "Falta el nombre de la sala." });
   }
@@ -701,7 +701,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
                 }
               }
             }
-          } catch (e) {
+          } catch {
             // ignore network error for single item
           }
         }

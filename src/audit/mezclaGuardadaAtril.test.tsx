@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { claveMezclaAtril, leerMezcla, MEZCLA_VACIA, serializarMezcla } from '../utils/mezclaGuardada';
 import { ControlVelocidad } from '../components/chords/ControlVelocidad';

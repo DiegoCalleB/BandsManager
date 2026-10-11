@@ -28,7 +28,7 @@ export function verifyPassword(password: string, hash: string, salt: string) {
     if (hash.length === verifyHash1k.length && crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(verifyHash1k))) {
       return true;
     }
-  } catch (e) {
+  } catch {
     return false;
   }
 

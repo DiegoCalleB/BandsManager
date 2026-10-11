@@ -1,39 +1,10 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useEffect, useState } from "react";
 import { Song, ThemeColors } from "../../types";
-import {
-  Disc,
-  Disc3,
-  Star,
-  Play,
-  Pause,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Edit3,
-  Plus,
-  Music,
-  Clock,
-  ChevronDown,
-  ChevronUp,
-  Layers,
-  Scissors,
-  Sparkles,
-  Users,
-  FolderUp,
-  FileText,
-  Headphones,
-  Loader2,
-  Search,
-  X,
-  Download,
-} from "lucide-react";
+import { Disc, Disc3, Play, Pause, Trash2, Edit3, Plus, Clock, ChevronDown, ChevronUp, Layers, Scissors, FolderUp, FileText, Headphones, Loader2, Search, X, Download } from "lucide-react";
 import { AlbumCover } from "../AlbumCover";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
-import {
-  uploadFileToServer,
-  saveSongsToLocalStorageSafely,
-} from "../../utils/audioStorage";
+import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { apiFetch } from "../../utils/api";
 import {
   LiveConcertToAlbumModal,

@@ -19,7 +19,7 @@
 
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
-import { DB_SILENCIO, type PuntoEnergia } from "./audioEnergy.js";
+import { type PuntoEnergia } from "./audioEnergy.js";
 
 /** Cómo está grabado el material, que cambia por completo qué hace viral a un fragmento. */
 export type TipoContenido = "concierto" | "videoclip" | "ensayo" | "otro";

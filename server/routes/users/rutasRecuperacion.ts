@@ -50,7 +50,7 @@ router.post(
         ensureValidUserEmails(state);
         saveState(state);
       }
-    } catch (err) {
+    } catch {
       // Continue with memory state if database call fails
     }
 
@@ -158,7 +158,7 @@ router.post(
     for (const u of matchingUsers) {
       try {
         await dbUpsertUser(u);
-      } catch (e) {
+      } catch {
         // Non-blocking
       }
     }
@@ -245,7 +245,7 @@ router.post(
         ensureValidUserEmails(state);
         saveState(state);
       }
-    } catch (err) {
+    } catch {
       // Continue
     }
 

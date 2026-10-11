@@ -79,7 +79,7 @@ export function invalidarCachePorEscritura(invalidar: (bandId: string) => void =
       if (res.statusCode >= 400) return;
       try {
         for (const id of bandasDeLaPeticion(req)) invalidar(id);
-      } catch (_) {
+      } catch {
         /* una caché no invalidada nunca debe romper una respuesta ya enviada */
       }
     });

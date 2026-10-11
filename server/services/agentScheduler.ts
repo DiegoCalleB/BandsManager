@@ -119,7 +119,7 @@ async function tick() {
       let schedule;
       try {
         schedule = await dbGetBandSchedule(bandId);
-      } catch (e) {
+      } catch {
         continue;
       }
 

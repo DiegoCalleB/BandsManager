@@ -13,7 +13,7 @@
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { dbGetBandGmailOAuth } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
-import { classifyGmailError, isBounceMessage } from "../utils/emailDeliveryTracker.js";
+import { classifyGmailError } from "../utils/emailDeliveryTracker.js";
 
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
@@ -237,7 +237,7 @@ export async function comprobarBorradorEnviadoConDetalle(bandId: string, draftId
     const to = headers?.find((h) => h.name.toLowerCase() === "to")?.value;
     const subject = headers?.find((h) => h.name.toLowerCase() === "subject")?.value;
     cuerpo = JSON.stringify({ draftId: data?.id, messageId, threadId: data?.message?.threadId, to, subject });
-  } catch (e) {
+  } catch {
     cuerpo = "no se pudo parsear el cuerpo de la respuesta";
   }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Music, Share2, Trash2, Info, Star } from "lucide-react";
+import { Music, Share2, Trash2, Info } from "lucide-react";
 import {
   EPKConfig,
   Song,

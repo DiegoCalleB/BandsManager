@@ -26,7 +26,7 @@ interface SongStudioStructureUploadModalProps {
 
 export const SongStudioStructureUploadModal: React.FC<
   SongStudioStructureUploadModalProps
-> = ({ song, isOpen, onClose, onUpdateSong, currentUsername = "Usuario" }) => {
+> = ({ song, isOpen, onClose, onUpdateSong }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);

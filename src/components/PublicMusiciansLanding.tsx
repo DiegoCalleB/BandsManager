@@ -1,23 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Music,
-  Sparkles,
-  QrCode,
-  FileText,
-  Rocket,
-  CheckCircle2,
-  ArrowLeft,
-  Check,
-  Loader2,
-  MessageSquare,
-  Users,
-  Radio,
-  ExternalLink,
-  ShieldCheck,
-  ChevronDown,
-  ChevronUp,
-  Sliders,
-} from "lucide-react";
+import { Music, Sparkles, QrCode, FileText, Rocket, CheckCircle2, ArrowLeft, Loader2, Users, Radio, ExternalLink, ShieldCheck, ChevronDown, ChevronUp, Sliders } from "lucide-react";
 import {
   FanFormLanguage,
   DEFAULT_FAN_FORM_LANGUAGE,

@@ -13,8 +13,7 @@ interface ReliabilityBadgeProps {
 export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
   item,
   size = "md",
-  showDetails = false,
-  className = "",
+  className = ""
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const { score, details } = calculateLeadReliability(item);

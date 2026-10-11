@@ -135,7 +135,7 @@ router.get('/users', requireAuth, async (req, res) => {
       return res.json(getSafeUsers(mergedUsers));
     }
     res.json(getSafeUsers(bandUsers));
-  } catch (_) {
+  } catch {
     res.json(getSafeUsers(bandUsers));
   }
 });

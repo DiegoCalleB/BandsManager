@@ -1,27 +1,9 @@
 import React from "react";
-import {
-  ArrowUp,
-  ArrowDown,
-  Eye,
-  EyeOff,
-  RotateCcw,
-  Sparkles,
-  ExternalLink,
-  Check,
-  Music,
-  Briefcase,
-  Layers,
-  Palette,
-} from "lucide-react";
+import { ArrowUp, ArrowDown, Eye, EyeOff, RotateCcw, ExternalLink, Check, Music, Briefcase, Layers, Palette } from "lucide-react";
 import { EPKConfig, EPKSectionId, EPKTemplateId } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
-import {
-  EPK_TEMPLATES,
-  EPK_SECTIONS_META,
-  DEFAULT_EPK_SECTIONS_ORDER,
-  getAllSectionsWithVisibility,
-} from "./epkTemplates";
+import { EPK_TEMPLATES, DEFAULT_EPK_SECTIONS_ORDER, getAllSectionsWithVisibility } from "./epkTemplates";
 
 interface EPKPlantillasBlockProps {
   config: Partial<EPKConfig>;

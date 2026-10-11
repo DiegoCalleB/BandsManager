@@ -289,7 +289,7 @@ export async function buildAvailableBandsForUser(
         b.logoUrl = logosMap[clean];
       }
     });
-  } catch (_) {
+  } catch {
     // Non-blocking: si Supabase falla aquí, se queda con lo que ya había resuelto getLogoForBand.
   }
 

@@ -1,9 +1,5 @@
 import React from 'react';
-import { 
-  X, Volume2, VolumeX, AlertCircle, Clock, ChevronLeft, ChevronRight,
-  Film, CheckCircle2, Check, RefreshCw, ExternalLink, RotateCcw,
-  Sparkles, Share2, Flame, Music
-} from 'lucide-react';
+import { X, Volume2, VolumeX, AlertCircle, Clock, ChevronLeft, ChevronRight, Film, CheckCircle2, Check, RefreshCw, ExternalLink, Sparkles, Share2, Flame, Music } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -81,7 +77,6 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
   onClose,
   nombreBanda,
   instagramHandle,
-  bandName,
   selectedPlatform,
   setSelectedPlatform,
   phoneDuration,
@@ -91,16 +86,11 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
   renderedClipUrl,
   renderedSubUrl,
   renderedBurnedSubs,
-  renderedClipSize,
-  renderedStoredPermanently,
-  sinTranscripcionReal,
   subtitleCues,
   currentSubtitleText,
   setCurrentSubtitleText,
-  wordOffsets,
   isPreviewMuted,
   setIsPreviewMuted,
-  showSafeZone,
   ytLoopCount,
   setYtLoopCount,
   simulatedTime,
@@ -119,23 +109,16 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
   setCropMode,
   burnSubtitles,
   setBurnSubtitles,
-  karaokeSubtitles,
-  setKaraokeSubtitles,
   isCuttingVideo,
   cuttingProgressText,
-  cuttingError,
   handleCutPhysicalVideo,
   handleAdjustCrop,
-  setDraggingBoundary,
   scheduledDate,
   setScheduledDate,
   scheduledTime,
   setScheduledTime,
-  optimalTime,
   isScheduling,
   schedulingSuccess,
-  scheduleErrors,
-  scheduleWarnings,
   handleSchedulePost,
   platformIcons
 }) => {

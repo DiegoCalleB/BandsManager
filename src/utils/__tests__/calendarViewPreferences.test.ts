@@ -1,13 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import {
-  CALENDAR_DEFAULT_MONTHS_KEY,
-  CALENDAR_DEVICE_KEY_PREFIX,
-  getCalendarDefaultMonths,
-  setCalendarDefaultMonths,
-  isTwoMonthsDefault,
-  getAllDevicePreferences,
-  syncCalendarPreferencesFromUser,
-} from '../calendarViewPreferences';
+import { CALENDAR_DEVICE_KEY_PREFIX, getCalendarDefaultMonths, setCalendarDefaultMonths, getAllDevicePreferences, syncCalendarPreferencesFromUser } from '../calendarViewPreferences';
 
 describe('calendarViewPreferences: Configuración de vista 1M vs 2M en el calendario diferenciada por dispositivo', () => {
   let storage: Record<string, string> = {};

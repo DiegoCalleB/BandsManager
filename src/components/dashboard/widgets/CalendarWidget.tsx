@@ -1,18 +1,5 @@
 import React, { useState } from "react";
-import {
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  List,
-  Grid,
-  CalendarDays,
-  ArrowRight,
-  Music,
-  Users,
-  MapPin,
-  Clock,
-  Sparkles,
-} from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Users, MapPin } from "lucide-react";
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
 import { Button, IconButton, LinkButton } from '../../ui';
@@ -46,8 +33,7 @@ export function CalendarWidget({
   viewMode: initialViewMode = "list",
   onChangeViewMode,
   filterType: initialFilterType = "all",
-  onChangeFilterType,
-  isEditMode = false,
+  onChangeFilterType
 }: CalendarWidgetProps) {
   const [internalViewMode, setInternalViewMode] =
     useState<CalendarWidgetViewMode>(initialViewMode);

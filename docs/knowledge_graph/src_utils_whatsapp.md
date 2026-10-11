@@ -26,7 +26,6 @@ _Sin dependencias salientes directas._
 - [[src_components_bandCRM_BandPitchModal|src/components/bandCRM/BandPitchModal.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadCardActions|src/components/booking/leads_table/LeadCardActions.tsx]] *(from #frontend)*
 - [[src_components_booking_leads_table_LeadRowActions|src/components/booking/leads_table/LeadRowActions.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueContactRosterCards|src/components/booking/venue_panel/VenueContactRosterCards.tsx]] *(from #frontend)*
 - [[src_components_calendar_hooks_useEventShareActions|src/components/calendar/hooks/useEventShareActions.ts]] *(from #frontend)*
 - [[src_components_calendar_logistics_ContactsTab|src/components/calendar/logistics/ContactsTab.tsx]] *(from #frontend)*

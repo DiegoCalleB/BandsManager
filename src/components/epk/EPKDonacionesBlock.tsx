@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Heart,
-  Eye,
-  Lock as LockIcon,
-  Copy,
-  Languages,
-  AlertCircle,
-  Info,
-  ExternalLink,
-  Sparkles,
-  Loader2,
-} from "lucide-react";
+import { Heart, Eye, Lock as LockIcon, Languages, AlertCircle, Info, ExternalLink, Sparkles, Loader2 } from "lucide-react";
 import { EPKConfig, BandMember } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
 import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";

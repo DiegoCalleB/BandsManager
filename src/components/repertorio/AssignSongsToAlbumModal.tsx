@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Search, Plus, Check, Disc3, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { X, Search, Plus, Check, Disc3, Upload, Loader2 } from 'lucide-react';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
 import { uploadFileToServer } from '../../utils/audioStorage';

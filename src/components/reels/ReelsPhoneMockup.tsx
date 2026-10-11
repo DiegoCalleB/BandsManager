@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Play, Heart, MessageCircle, Bookmark, Share2, Disc, 
-  Gauge, Volume2, VolumeX, Maximize2,
-  Music, Upload, CheckCircle2, UserPlus
-} from 'lucide-react';
+import { Heart, MessageCircle, Share2, Disc, Gauge, Volume2, VolumeX, Maximize2, Music, Upload, CheckCircle2, UserPlus } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './ViralGrowthStudio';
 import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
@@ -88,12 +84,10 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
   selectedHighlightIndex,
   videoMeta,
   isSeamlessLoop,
-  isPunchInZoom,
   beatDropFx,
   smartPan,
   activeSubtitleStyle,
   showSpotifyBadge,
-  showRetentionProgressBar,
   showTourSticker,
   tourStickerText,
   uploadProgress,

@@ -25,7 +25,6 @@ Exporta: AiSupportWidget, AiUsageCard.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
 - [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 
 ---

@@ -2,7 +2,7 @@ import React from 'react';
 import { Concert } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { HolidayDateWarning } from '../common/HolidayDateWarning';
-import { Music, MapPin, Ticket, Flame, Trash2 } from 'lucide-react';
+import { Music, Trash2 } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Input, Select, Textarea } from '../ui';
 
@@ -23,11 +23,10 @@ export const CalendarEditConcertModal: React.FC<CalendarEditConcertModalProps> =
   setViewingConcert,
   editDraft,
   setEditDraft,
-  isStitchLight = false,
   onUpdateConcert,
   onDeleteConcert,
   setSyncSuccessMessage,
-  availableSetlists = [],
+  availableSetlists = []
 }) => {
   if (!viewingConcert || !editDraft) return null;
 

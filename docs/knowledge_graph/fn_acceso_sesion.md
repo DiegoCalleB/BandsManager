@@ -19,7 +19,6 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
-- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
@@ -27,7 +26,6 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*

@@ -1,16 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { programarClic } from "../utils/clicMetronomo";
-import {
-  X,
-  Play,
-  Pause,
-  Disc,
-  Zap,
-  Volume2,
-  VolumeX,
-  Music,
-  Clock,
-} from "lucide-react";
+import { X, Play, Pause, Zap, Music, Clock } from "lucide-react";
 import { Song, ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { ShowIcon } from './ui/ShowIcon';
@@ -28,15 +18,14 @@ export function MetronomeModal({
   isOpen,
   onClose,
   songs = [],
-  colors,
-  initialBpm = 120,
+  initialBpm = 120
 }: MetronomeModalProps) {
   const [bpm, setBpm] = useState<number>(initialBpm);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [timeSignature, setTimeSignature] = useState<number>(4); // Beats per bar: 4 = 4/4, 3 = 3/4, 6 = 6/8, 2 = 2/4
   const [currentBeat, setCurrentBeat] = useState<number>(0);
-  const [volume, setVolume] = useState<number>(0.8);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [volume] = useState<number>(0.8);
+  const [isMuted] = useState<boolean>(false);
   const [selectedSongId, setSelectedSongId] = useState<string>("");
 
   // Tap tempo state

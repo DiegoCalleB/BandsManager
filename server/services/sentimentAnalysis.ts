@@ -8,7 +8,7 @@
 
 import { generateUnifiedAI } from "../ai.js";
 import { sanitizeExternalText } from "../utils/promptSafety.js";
-import { detectResponseType, getNegotiationKeywords, matchesKeyword } from "./replyDrafting.js";
+import { detectResponseType } from "./replyDrafting.js";
 
 export type SentimentLevel = "muy_positivo" | "positivo" | "neutral" | "cauteloso" | "rechazo" | "negativo";
 export type LeadTemperature = "caliente" | "templado" | "frio";

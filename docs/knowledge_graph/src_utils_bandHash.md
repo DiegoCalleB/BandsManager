@@ -23,7 +23,6 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_booking_FastDealModal|src/components/booking/FastDealModal.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
 - [[src_components_fans_panel_hooks_useQrLink|src/components/fans_panel/hooks/useQrLink.ts]] *(from #frontend)*

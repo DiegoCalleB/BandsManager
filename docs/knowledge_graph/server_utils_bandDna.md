@@ -30,8 +30,6 @@ Exporta: BandDnaProfile, isCampaignActive, resolveMinCacheByType, getBandDnaProf
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
-- [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
-- [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*

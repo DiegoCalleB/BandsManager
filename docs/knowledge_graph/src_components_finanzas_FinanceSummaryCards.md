@@ -25,7 +25,7 @@ Exporta: FinanceSummaryCards.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

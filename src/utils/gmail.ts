@@ -50,7 +50,7 @@ const getStoredToken = (): string | null => {
       cachedAccessToken = token;
       return token;
     }
-  } catch (e) {
+  } catch {
     // ignore storage errors
   }
   return null;
@@ -177,10 +177,10 @@ function decodeBase64Url(str: string): string {
         .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
         .join('')
     );
-  } catch (e) {
+  } catch {
     try {
       return atob(base64);
-    } catch (err) {
+    } catch {
       return '';
     }
   }
@@ -274,7 +274,7 @@ export const fetchGmailThreadsForEmail = async (email: string, token: string): P
         try {
           const parsedDate = new Date(dateHeader);
           fechaFormatted = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')} ${String(parsedDate.getHours()).padStart(2, '0')}:${String(parsedDate.getMinutes()).padStart(2, '0')}`;
-        } catch (e) {
+        } catch {
           fechaFormatted = dateHeader;
         }
       } else {

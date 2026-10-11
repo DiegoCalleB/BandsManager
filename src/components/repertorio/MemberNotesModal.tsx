@@ -31,10 +31,9 @@ interface MemberNotesModalProps {
 export function MemberNotesModal({
   isOpen,
   song,
-  colors,
   bandMembers = [],
   onClose,
-  onSaveSongNotes,
+  onSaveSongNotes
 }: MemberNotesModalProps) {
   const resolvedMembers = resolveBandMembers(bandMembers, song?.notasMiembros);
 

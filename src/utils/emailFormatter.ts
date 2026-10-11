@@ -1,5 +1,5 @@
 import { EPKConfig, Lead } from '../types';
-import { EpkLanguage, DEFAULT_EPK_LANGUAGE, idiomaEpkParaLead } from '../i18n/epkTranslations';
+import { EpkLanguage, DEFAULT_EPK_LANGUAGE } from '../i18n/epkTranslations';
 
 export interface EmailAttachment {
   filename: string;

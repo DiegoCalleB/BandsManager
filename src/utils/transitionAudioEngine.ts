@@ -1,4 +1,4 @@
-import { Song, SetlistItem } from "../types";
+import { Song } from "../types";
 import {
   parseTonalidad,
   evaluarTransicionArmonica,

@@ -21,7 +21,7 @@ import {
   getRecommendedWordRange
 } from "../utils/promptSafety.js";
 import { findCorridorForCity } from "../../src/utils/tourRouting.js";
-import { findSemanticallySimilarPitches, checkNegativePatternSimilarity } from "./pitchVectorStore.js";
+import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
 import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
 import { getBandOperationalContext } from "./agentIntelligence.js";

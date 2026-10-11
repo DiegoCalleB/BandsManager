@@ -129,7 +129,7 @@ export async function dbUpsertMusicianWaitlist(item: any) {
     if (!error && data) {
       return data;
     }
-  } catch (err) {
+  } catch {
     // Si la tabla musicians_waitlist no existe en Supabase todavía, guardamos como lead especial
   }
 

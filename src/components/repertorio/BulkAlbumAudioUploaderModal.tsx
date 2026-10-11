@@ -1,21 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  X,
-  Upload,
-  Music,
-  CheckCircle2,
-  AlertCircle,
-  Play,
-  Pause,
-  RefreshCw,
-  FileAudio,
-  FolderUp,
-  ArrowRight,
-  Disc3,
-  Check,
-  Image as ImageIcon,
-  Plus,
-} from "lucide-react";
+import { X, Upload, CheckCircle2, AlertCircle, Play, Pause, RefreshCw, FileAudio, FolderUp, Disc3, Check, Image as ImageIcon } from "lucide-react";
 import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { uploadFileToServer } from "../../utils/audioStorage";
@@ -57,10 +41,9 @@ export function BulkAlbumAudioUploaderModal({
   onClose,
   albumName: initialAlbumName = "",
   albumSongs = [],
-  colors,
   bandId,
   isNewAlbumMode = false,
-  onSaveUpdatedSongs,
+  onSaveUpdatedSongs
 }: BulkAlbumAudioUploaderModalProps) {
   const [currentAlbumName, setCurrentAlbumName] = useState<string>(
     initialAlbumName || "",

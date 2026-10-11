@@ -1,15 +1,4 @@
-import {
-  Lead,
-  Rehearsal,
-  Concert,
-  SocialPost,
-  Payment,
-  Message,
-  SocialMetric,
-  Tour,
-  Song,
-  Setlist,
-} from "./types";
+import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, Tour } from "./types";
 
 
 export const INITIAL_LEADS: Lead[] = [

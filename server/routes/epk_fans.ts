@@ -58,7 +58,7 @@ router.get('/autonomy', requireAuth, async (req, res) => {
     if (dbAutonomy) {
       return res.json(dbAutonomy);
     }
-  } catch (e) {
+  } catch {
     // Keep local state fallback
   }
 
@@ -147,7 +147,7 @@ router.get('/epk', requireAuth, async (req, res) => {
     if (dbEpk) {
       return res.json(dbEpk);
     }
-  } catch (e) {
+  } catch {
     // Fallback
   }
 
@@ -261,7 +261,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
     let config: any = null;
     try {
       config = await dbGetEpkConfig(bandId);
-    } catch (e) {
+    } catch {
       // Sin Supabase se cae al estado local, igual que el resto de rutas del EPK.
     }
     if (!config) {
@@ -769,7 +769,7 @@ router.get('/fans', requireAuth, async (req, res) => {
     state.fans = fans as any;
     saveState(state);
     res.json(fans);
-  } catch (err) {
+  } catch {
     const state = loadState();
     res.json(
       (state.fans || []).filter(
@@ -949,7 +949,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
     let epkConf: any = null;
     try {
       epkConf = await dbGetEpkConfig(targetBandId);
-    } catch (e) {
+    } catch {
       // Fallback abajo
     }
     if (!epkConf) {
@@ -1030,7 +1030,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
         user_agent: userAgent,
         referer: referer,
       });
-    } catch (sbErr: any) {
+    } catch {
       // Non-blocking: cae a estado en memoria
     }
 
@@ -1109,7 +1109,7 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
     const mergedClicks = { ...localClicks, ...supabaseStats };
 
     res.json({ success: true, clicks: mergedClicks, band_id: targetBandId });
-  } catch (err: any) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener estadísticas de clicks.' });
   }
 });

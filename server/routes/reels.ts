@@ -192,7 +192,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
           fuente: "oembed"
         });
       }
-    } catch (e) {
+    } catch {
       /* oEmbed caído o vídeo privado: seguimos con ytdl-core */
     }
   }
@@ -252,7 +252,7 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
           }))
           .filter((t: TranscriptItem) => t.text);
       }
-    } catch (e) {
+    } catch {
       /* siguiente idioma */
     }
   }
@@ -317,7 +317,7 @@ async function limpiarClipsAntiguos(): Promise<void> {
       try {
         const info = await fs.promises.stat(completo);
         if (ahora - info.mtimeMs > CLIP_TTL_MS) await fs.promises.unlink(completo);
-      } catch (e) {
+      } catch {
         /* fichero en uso o ya borrado */
       }
     }

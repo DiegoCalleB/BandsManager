@@ -3,14 +3,7 @@
 // AGENTS.md §3.
 
 import express from 'express';
-import { getRegionForCity } from '../../src/constants/regions.js';
-import {
-  prepararLeadsDescubiertos,
-  limpiarCampoContacto,
-  determinarCorredorGira,
-  clasificarAforoRecinto,
-  calcularAfinidadMusical,
-} from '../utils/scoutLeads.js';
+import { prepararLeadsDescubiertos, determinarCorredorGira, clasificarAforoRecinto, calcularAfinidadMusical } from '../utils/scoutLeads.js';
 import {
   INITIAL_LEADS,
   INITIAL_REHEARSALS,
@@ -19,21 +12,9 @@ import {
   INITIAL_PAYMENTS,
   INITIAL_MESSAGES,
 } from '../../src/db_seed.js';
-import {
-  loadState,
-  saveState,
-  requireAuth,
-  requireLeader,
-  requireCronOrAuth,
-  getAutonomyConfigForBand,
-  getEpkConfigForBand,
-} from '../state.js';
+import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand } from '../state.js';
 import { dbUpsertLead, dbCheckDeletedLead, getSupabase } from '../db.js';
-import {
-  getAiClient,
-  generateContentWithFallback,
-  buildPitchLinksFromEpkConfig,
-} from '../ai.js';
+import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { formatGlobalPitchFeedbackForPrompt } from './leads.js';
 import {
   runEnviadorAgent,
@@ -57,10 +38,7 @@ import {
   formatFestivalDates,
 } from '../utils/spanishFestivalsDB.js';
 import { normalizeVenueName } from './leads/places.js';
-import {
-  searchVenuesWithSerper,
-  enrichVenueDetailsWithSerper,
-} from '../services/venueIntelligenceService.js';
+import { searchVenuesWithSerper } from '../services/venueIntelligenceService.js';
 import {
   dbGetRegisteredBands,
   dbGetLeads,
@@ -282,7 +260,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         if (bandData) {
           bandInfo = `${bandData.nombre_banda} - Estilo: ${bandData.estilo_musical || 'Mestizaje / Rock'} - Bio: ${bandData.biografia_corta || 'Banda en gira'}`;
         }
-      } catch (e) {
+      } catch {
         // fallback
       }
 
@@ -304,7 +282,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
             .maybeSingle();
           if (fallbackCamp) activeCampaign = fallbackCamp;
         }
-      } catch (e) {
+      } catch {
         // fallback
       }
 
@@ -666,7 +644,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
                 tools: [{ googleSearch: {} }],
               },
             });
-          } catch (searchErr) {
+          } catch {
             response = await generateContentWithFallback(ai, {
               contents: [{ role: 'user', parts: [{ text: prompt }] }],
               config: { responseMimeType: 'application/json' },
@@ -689,7 +667,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
             } else {
               parsedData = JSON.parse(cleanedText);
             }
-          } catch (_) {
+          } catch {
             if (Array.isArray(cleanedText))
               parsedData = { results: cleanedText };
           }

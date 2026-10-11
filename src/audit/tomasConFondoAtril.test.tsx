@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { TomasConFondo } from '../components/chords/TomasConFondo';
 import type { AudioTrack, SongAudioIdea } from '../types';

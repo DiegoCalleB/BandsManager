@@ -1,23 +1,8 @@
 import React from "react";
-import {
-  Calendar,
-  BookOpen,
-  Disc3,
-  ArrowRight,
-  X,
-  CheckCircle2,
-  Music2,
-  ShieldCheck,
-  Globe,
-  Check,
-} from "lucide-react";
+import { Calendar, BookOpen, Disc3, ArrowRight, X, ShieldCheck } from "lucide-react";
 import { NavItemId } from "../../config/navGroups";
 import { markOnboardingCompleted } from "../../utils/userPreferences";
-import {
-  useLanguage,
-  SUPPORTED_LANGUAGES,
-  SupportedLanguage,
-} from "../../context/LanguageContext";
+import { useLanguage, SUPPORTED_LANGUAGES } from "../../context/LanguageContext";
 import { IconButton } from '../ui';
 
 interface MusicianOnboardingModalProps {

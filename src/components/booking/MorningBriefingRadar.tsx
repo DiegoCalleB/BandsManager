@@ -1,33 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { Tabs } from '../ui/Tabs';
 import { Lead, Concert, Tour } from '../../types';
-import {
-  findTourRoutingOpportunities,
-  findCorridorForCity,
-  areCitiesLogisticallyCompatible,
-  SPANISH_TOUR_CORRIDORS,
-} from '../../utils/tourRouting';
-import {
-  Sparkles,
-  Flame,
-  AlertCircle,
-  Clock,
-  Compass,
-  MapPin,
-  TrendingUp,
-  Send,
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  ArrowRight,
-  Printer,
-  FileText,
-  DollarSign,
-  Fuel,
-  Users,
-  ChevronRight,
-  Briefcase,
-} from 'lucide-react';
+import { findTourRoutingOpportunities, findCorridorForCity, areCitiesLogisticallyCompatible } from '../../utils/tourRouting';
+import { Sparkles, Flame, AlertCircle, Clock, Compass, MapPin, TrendingUp, Send, CheckCircle2, ChevronDown, ChevronUp, FileText, DollarSign, ChevronRight } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Select } from '../ui';
 
@@ -45,12 +20,9 @@ interface MorningBriefingRadarProps {
 export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
   leads,
   concerts = [],
-  tours = [],
   onSelectLead,
-  onApproveLead,
   onOpenRoadbookModal,
-  isStitchLight = false,
-  bandName = 'la banda',
+  bandName = 'la banda'
 }) => {
   // Estado de expansión del briefing (por defecto plegado para no ocupar espacio, persistido en localStorage)
   const [isExpanded, setIsExpanded] = useState<boolean>(() => {
@@ -335,7 +307,7 @@ export const MorningBriefingRadar: React.FC<MorningBriefingRadarProps> = ({
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {priorityItems.all.map(({ lead, priorityType, tagLabel, tagColor, isDraft, hasDateConflict }) => (
+                  {priorityItems.all.map(({ lead, tagLabel, tagColor, hasDateConflict }) => (
                     <div
                       key={lead.id}
                       className="bg-[var(--sunken)] p-3.5 rounded-[var(--r-m)] transition-ui flex flex-col justify-between space-y-3 group hover:brightness-95"

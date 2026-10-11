@@ -1,7 +1,6 @@
 import { getAiClient, generateContentWithFallback } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
-import { detectPitchLanguage } from "./utils/leadLanguage.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
@@ -85,7 +84,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch {
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -99,7 +98,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     if (jsonStart !== -1 && jsonEnd !== -1) {
       try {
         data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
-      } catch (_) { data = {}; }
+      } catch { data = {}; }
     }
 
     let rawStart = data.festival_start_date || data.startDate || data.start_date;
@@ -157,7 +156,7 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       urlsToTry.push(`${origin}/geral`);
       urlsToTry.push(`${origin}/contact-us`);
     }
-  } catch (e) {
+  } catch {
     // Ignore URL parse error
   }
 
@@ -224,7 +223,7 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       }
 
       if (results.email) break; // Found main contact email, stop crawling subpages
-    } catch (err) {
+    } catch {
       // Ignore timeout or fetch error on subpage
     }
   }
@@ -487,7 +486,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (searchErr: any) {
+        } catch {
           console.warn(`[AutoEnrich Gemini] Google Search no disponible, reintentando con conocimiento Gemini...`);
           response = await generateContentWithFallback(client, {
             contents: prompt

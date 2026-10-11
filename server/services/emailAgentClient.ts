@@ -147,7 +147,7 @@ export async function crearBorrador(bandId: string, params: { to: string; subjec
     await client.logout();
     return { draftPath: drafts.path };
   } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     // Nunca se cae hacia atrás a enviar: si no se pudo dejar el borrador, no ha salido nada.
     throw new EmailAgentError(`No se pudo crear el borrador para '${bandId}': ${err.message || err}`, "api_error");
   }
@@ -191,7 +191,7 @@ export async function leerNoLeidos(bandId: string, maxResults = 10): Promise<Arr
     }
     await client.logout();
   } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     throw new EmailAgentError(`No se pudo leer la bandeja de '${bandId}': ${err.message || err}`, "api_error");
   }
 
@@ -280,7 +280,7 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): 
     }
     await client.logout();
   } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     const details = err.responseText || err.responseStatus || err.description || (err.authenticationFailed ? "Fallo de autenticación IMAP: contraseña o contraseña de aplicación incorrecta" : "") || err.message || String(err);
     throw new EmailAgentError(`No se pudo leer las respuestas entrantes de '${bandId}': ${details}`, "api_error");
   }
@@ -314,7 +314,7 @@ export async function marcarComoLeido(bandId: string, uids: number[]): Promise<v
     }
     await client.logout();
   } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     throw new EmailAgentError(`No se pudieron marcar como leídos los mensajes de '${bandId}': ${err.message || err}`, "api_error");
   }
 }

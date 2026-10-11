@@ -1,18 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  X,
-  MessageCircle,
-  Copy,
-  Check,
-  ExternalLink,
-  Phone,
-  Smartphone,
-  Calendar,
-  Clock,
-  BookOpen,
-  AlertTriangle,
-  RotateCcw,
-} from 'lucide-react';
+import { X, MessageCircle, Copy, Check, ExternalLink, Smartphone, Calendar, BookOpen, AlertTriangle, RotateCcw } from 'lucide-react';
 import { Lead } from '../../types';
 import {
   cleanPhoneForWhatsApp,
@@ -40,9 +27,8 @@ export const WhatsAppPreviewModal: React.FC<WhatsAppPreviewModalProps> = ({
   onClose,
   lead,
   bandName = 'Nuestra Banda',
-  isStitchLight = false,
   onLogInteraction,
-  onUpdateLeadPhone,
+  onUpdateLeadPhone
 }) => {
   // Inicialización de teléfono seleccionado (prioridad: telefono_movil -> telefono -> telefono_fijo)
   const initialPhone = lead.telefono_movil || lead.telefono || lead.telefono_fijo || '';

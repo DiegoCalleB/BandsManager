@@ -1,4 +1,4 @@
-import { SocialMetric, EPKConfig } from '../types';
+import { SocialMetric } from '../types';
 
 export type BandTier =
   | 'garage_debut' // 0 - 500 followers / <1k views

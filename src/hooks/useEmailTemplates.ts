@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { getAuthHeaders } from '../services/api';
 import { apiFetch } from '../utils/api';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';

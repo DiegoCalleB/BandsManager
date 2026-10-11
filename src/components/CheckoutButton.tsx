@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, CreditCard, Loader2 } from 'lucide-react';
+import { CreditCard, Loader2 } from 'lucide-react';
 import { ThemeColors } from '../types';
 import { api } from '../services/api';
 
@@ -19,8 +19,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   bandId,
   userEmail,
   className = '',
-  children,
-  colors,
+  children
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -51,7 +50,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
             const activeBandId = localStorage.getItem('bandmanager_active_band_id');
             if (activeBandId) effectiveBandId = activeBandId;
           }
-        } catch (e) {
+        } catch {
           // ignore parsing error
         }
       }

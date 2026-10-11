@@ -1,20 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
-import {
-  NAV_ITEMS,
-  NAV_GROUPS,
-  NAV_GROUPS_MOBILE,
-  NAV_GROUPS_DESKTOP,
-  NAV_PINNED_TOP_IDS,
-  NAV_PINNED_BOTTOM_IDS,
-  FLAT_NAV_ORDER_IDS,
-  TOP_TABS_ORDER_IDS,
-  MIN_MODULES_FOR_GROUPED_NAV,
-  shouldGroupNavForPlan,
-  findNavGroupIdForItem,
-  NavItemId,
-} from '../navGroups';
-import { PLANS } from '../../utils/planPermissions';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_MOBILE, NAV_GROUPS_DESKTOP, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from '../navGroups';
 import { leerAtril } from '../../audit/leerAtril';
 
 describe('navGroups config', () => {

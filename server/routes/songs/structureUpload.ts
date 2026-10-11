@@ -2,14 +2,12 @@
 
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
 import { requireAuth } from '../../state.js';
 import { getTargetBandId, puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { getSupabaseClient, getBucketName } from '../upload.js';
 import { getAiClient, TIMEOUT_IA_LARGO_MS, generateContentWithFallback, GEMINI_MODEL } from '../../ai.js';
 import { getSupabase } from '../../db/core.js';
 import { dbUpsertSong } from '../../db/repertoire.js';
-import { Song } from '../../../src/types.js';
 
 const router = express.Router();
 

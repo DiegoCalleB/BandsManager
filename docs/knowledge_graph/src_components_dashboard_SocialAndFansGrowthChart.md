@@ -27,7 +27,7 @@ Exporta: TimePeriod, TIME_PERIOD_OPTIONS, SocialAndFansGrowthChart.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

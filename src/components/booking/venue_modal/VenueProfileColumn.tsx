@@ -1,33 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Smartphone,
-  Phone,
-  PhoneCall,
-  Mail,
-  Instagram,
-  MapPin,
-  Globe,
-  Sparkles,
-  Calendar,
-  DollarSign,
-  Percent,
-  Edit3,
-  Save,
-  Undo2,
-  Compass,
-  TrendingUp,
-  Loader2,
-  ExternalLink,
-  MessageCircle,
-  Clock,
-  ShieldCheck,
-  AlertTriangle,
-} from 'lucide-react';
-import { Lead, LeadType, Concert } from '../../../types';
-import { getWhatsAppUrl, openWhatsAppChat, WHATSAPP_WINDOW_NAME } from '../../../utils/whatsapp';
+import { Smartphone, Phone, Mail, Instagram, MapPin, Globe, Sparkles, Edit3, Save, Undo2, TrendingUp, Loader2, ExternalLink, MessageCircle, AlertTriangle } from 'lucide-react';
+import { Lead, Concert } from '../../../types';
 import { checkBandDateConflict } from '../../../utils/bookingTourContext';
-import { Button, IconButton, Input, Select, Textarea } from '../../ui';
-import { ShowIcon } from '../../ui/ShowIcon';
+import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 
 interface VenueProfileColumnProps {
@@ -43,10 +18,9 @@ interface VenueProfileColumnProps {
 export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
   lead,
   onUpdateLead,
-  onFilterByRouteCity,
   bandName,
   concerts = [],
-  onOpenWhatsAppModal,
+  onOpenWhatsAppModal
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editFormData, setEditFormData] = useState<Partial<Lead>>({ ...lead });

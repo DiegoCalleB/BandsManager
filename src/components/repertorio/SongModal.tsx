@@ -27,13 +27,12 @@ interface SongModalProps {
 export function SongModal({
   isOpen,
   editingSong,
-  colors,
   onClose,
   onSave,
   albumsList = [],
   defaultAlbum = '',
   defaultAlbumForNewSong = '',
-  bandMembers = [],
+  bandMembers = []
 }: SongModalProps) {
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
   const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);

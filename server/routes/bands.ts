@@ -6,10 +6,8 @@ import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
 import { getSupabase } from "../db/core.js";
 import { dbGetBandContacts, dbUpsertBandContact, dbDeleteBandContact, dbBulkDeleteBandContacts, dbGetBandSchedule, dbUpsertBandSchedule, dbGetBandEmailAccount, dbUpsertBandEmailAccount, toSafeEmailAccountResponse, dbUpdateBandDnaExpresion, dbGetRegisteredBandById, dbGetEpkConfig } from "../db.js";
-import { enviarEmail } from "../services/emailAgentClient.js";
-import { tieneGmailOAuthConectado, enviarEmailGmailApi } from "../services/gmailApiClient.js";
 import { sendTransactionalEmail } from "../services/transactionalEmail.js";
-import { buildServerEmailHtml, buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
+import { buildBandNotificationEmailHtml } from "../utils/emailTemplate.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
@@ -34,7 +32,7 @@ function isBadDirectoryUrl(url: string): boolean {
 function getDomainFromUrl(url: string): string | null {
   try {
     return new URL(url).hostname.replace('www.', '');
-  } catch (_) { return null; }
+  } catch { return null; }
 }
 
 async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], email?: string, nombreBanda?: string): Promise<{ logo: string; workingWebsite: string } | null> {
@@ -290,7 +288,7 @@ Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin f
 });
 
 router.post("/bands/ai-lookup", requireAuth, async (req, res) => {
-  const { nombre_banda, localizacion, bandId } = req.body;
+  const { nombre_banda, localizacion } = req.body;
   if (!nombre_banda) {
     return res.status(400).json({ error: "Nombre de banda requerido" });
   }
@@ -986,7 +984,7 @@ router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: an
 router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req: any, res: any) => {
   try {
     const bandId = getTargetBandId(req);
-    const { style, customPrompt, genre, colors } = req.body || {};
+    const { style, customPrompt, genre } = req.body || {};
 
     const state = loadState();
     const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);

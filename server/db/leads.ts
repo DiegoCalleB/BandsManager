@@ -707,7 +707,7 @@ export async function dbCheckDeletedLead(nombreSala: string, bandId: string) {
       .ilike('nombre_sala', `%${nombreSala.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -723,7 +723,7 @@ export async function dbCheckDeletedBand(nombreBanda: string, bandId: string) {
       .ilike('nombre_banda', `%${nombreBanda.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

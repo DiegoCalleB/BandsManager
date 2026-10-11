@@ -1,30 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  Mail,
-  Clock,
-  Send,
-  Sparkles,
-  RefreshCw,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  MousePointerClick,
-  ArrowUpDown,
-  Copy,
-  Check,
-  Building2,
-  User,
-  Flame,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  ShieldCheck,
-  Zap,
-  Download,
-} from 'lucide-react';
-import { Lead, EmailMessage } from '../../../types';
+import { Mail, Clock, Send, Sparkles, RefreshCw, Eye, MousePointerClick, ArrowUpDown, Copy, Check, Building2, User, ChevronDown, ChevronUp, ExternalLink, Zap, Download } from 'lucide-react';
+import { Lead } from '../../../types';
 import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../../utils/bookingFollowup';
-import { Button, IconButton } from '../../ui';
+import { Button } from '../../ui';
 import { ShowIcon } from '../../ui/ShowIcon';
 import { EmailDeliveryTicks } from '../EmailDeliveryTicks';
 import { apiFetch } from '../../../utils/api';
@@ -179,7 +157,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
         hour: '2-digit',
         minute: '2-digit',
       });
-    } catch (_) {
+    } catch {
       return dateStr;
     }
   };

@@ -1,6 +1,6 @@
 // Horario comercial de la banda (`band_schedules`).
 
-import { getSupabase, cleanBandId } from "./core.js";
+import { getSupabase } from "./core.js";
 
 const inMemorySchedules: Record<string, any> = {};
 

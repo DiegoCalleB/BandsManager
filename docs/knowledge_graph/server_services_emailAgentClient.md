@@ -30,7 +30,6 @@ Cliente de email del lado del servidor, agnóstico de proveedor, para envío/lec
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
-- [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(from #service)*
 

@@ -23,7 +23,6 @@ Aprendizaje del Redactor: ediciones humanas de pitches, ejemplos few-shot y refi
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(Layer: #service, Domain: #booking)*
-- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_campaign_pitch_training|tabla campaign_pitch_training]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*

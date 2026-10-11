@@ -22,11 +22,9 @@ export const CustomizableBandQr: React.FC<CustomizableBandQrProps> = ({
   config,
   bandName = 'Nuestra Banda',
   bandLogoUrl,
-  concertTitle,
-  dateCity,
   id = 'custom-band-qr-svg',
   className = '',
-  showFrame = true,
+  showFrame = true
 }) => {
   // 1. Generar la matriz QR con nivel de corrección alto 'H' (recupera hasta un 30% del código)
   const qrMatrix = useMemo(() => {

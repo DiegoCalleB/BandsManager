@@ -5,29 +5,8 @@ import {
   Concert,
   ConcertExpenseBreakdown,
 } from "../types";
-import {
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Plus,
-  Filter,
-  Search,
-  X,
-  CheckCircle2,
-  AlertCircle,
-  RefreshCw,
-  Trash2,
-  Calendar,
-  FileText,
-  Check,
-  ArrowRight,
-  Calculator,
-  Edit3,
-  AlertTriangle,
-  ShieldCheck,
-} from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Plus, Search, X, CheckCircle2, AlertCircle, RefreshCw, Calendar, FileText, Calculator, Edit3 } from "lucide-react";
 import { PublicoSilhouette } from "./ui/PublicoSilhouette";
-import { FinanceSummaryCards } from "./finanzas/FinanceSummaryCards";
 import { AddTransactionModal } from "./finanzas/AddTransactionModal";
 import { calculateFinancialSummary } from "../utils/financeUtils";
 import { apiFetch } from "../utils/api";
@@ -87,8 +66,8 @@ export default function Finanzas({
 
   // Form State for Add Transaction
   const [isAddOpen, setIsAddOpen] = useState(false);
-  const [tipo, setTipo] = useState<"ingreso" | "gasto">("ingreso");
-  const [categoria, setCategoria] = useState<
+  const [tipo] = useState<"ingreso" | "gasto">("ingreso");
+  const [categoria] = useState<
     | "concierto"
     | "merchandising"
     | "subvencion"

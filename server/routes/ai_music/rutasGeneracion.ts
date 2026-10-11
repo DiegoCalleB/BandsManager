@@ -128,11 +128,10 @@ router.post(
         key,
         style,
         genero,
-        lyrics,
         contextPrompt,
         targetDurationSec,
         sourceAudioUrl,
-        songHash,
+        songHash
       } = req.body;
 
       const requestedInst = instrument || 'Guitarra Solista';

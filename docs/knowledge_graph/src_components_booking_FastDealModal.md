@@ -24,7 +24,6 @@ Exporta: FastDealModal.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_bandHash|src/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

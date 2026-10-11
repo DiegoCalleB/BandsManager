@@ -31,7 +31,7 @@ export function safeParseJson(text: string): any {
 
   try {
     return JSON.parse(cleanText);
-  } catch (_err) {
+  } catch {
     let sanitized = "";
     let inString = false;
     let escaped = false;

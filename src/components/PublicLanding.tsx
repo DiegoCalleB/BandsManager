@@ -1,25 +1,6 @@
-import { ShowIcon } from './ui/ShowIcon';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Globe,
-  Guitar,
-  Headphones,
-  Music2,
-  QrCode,
-  Rocket,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-  Star,
-  Truck,
-  Users,
-  Wallet,
-  Zap,
-} from 'lucide-react';
-import { Button, Card } from './ui';
+import { ArrowRight, ChevronDown, Music2, QrCode, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
 import { LandingChatWidget } from './LandingChatWidget';
 

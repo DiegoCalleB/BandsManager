@@ -25,7 +25,6 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_hooks_useAppController|src/app/hooks/useAppController.ts]] *(from #service)*
 - [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_finanzas_FinanceSummaryCards|src/components/finanzas/FinanceSummaryCards.tsx]] *(from #frontend)*
 - [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*

@@ -22,7 +22,7 @@ router.get("/posts", requireAuth, async (req, res) => {
   try {
     const posts = await dbGetSocialPosts(userBandId);
     res.json(posts);
-  } catch (err) {
+  } catch {
     const state = loadState();
     res.json((state.posts || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
   }

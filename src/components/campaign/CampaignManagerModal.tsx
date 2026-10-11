@@ -1,29 +1,7 @@
 import React, { useState } from "react";
 import { BookingCampaign, PitchTemplateCategory } from "../../types";
 import { HolidayDateWarning } from "../common/HolidayDateWarning";
-import {
-  Target,
-  Calendar,
-  MapPin,
-  Users,
-  Plus,
-  X,
-  Check,
-  Trash2,
-  Edit3,
-  ChevronRight,
-  Compass,
-  ArrowRight,
-  ShieldCheck,
-  Flame,
-  Wand2,
-  Building2,
-  Tent,
-  Disc3,
-  Radio,
-  Briefcase,
-  Landmark,
-} from "lucide-react";
+import { Target, Calendar, MapPin, Users, Plus, X, Check, Trash2, Edit3, Compass, ShieldCheck, Flame, Wand2, Building2, Tent, Disc3, Radio, Briefcase, Landmark } from "lucide-react";
 import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';

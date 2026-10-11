@@ -155,7 +155,7 @@
   }
 
   let ctx = null, input = null, scene = null, enabled = false, curEl = null, curStart = 0, onChange = () => {};
-  try { enabled = localStorage.getItem(KEY) !== 'off'; } catch (e) { enabled = true; }
+  try { enabled = localStorage.getItem(KEY) !== 'off'; } catch { enabled = true; }
 
   function ensure() {
     if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
@@ -169,7 +169,7 @@
     if (scene) {
       const old = scene, now = ctx.currentTime;
       old.gain.cancelScheduledValues(now); old.gain.setValueAtTime(old.gain.value, now); old.gain.linearRampToValueAtTime(0.0001, now + 0.25);
-      setTimeout(() => { try { old.disconnect(); } catch (e) { /* ya desconectada */ } }, 600);
+      setTimeout(() => { try { old.disconnect(); } catch { /* ya desconectada */ } }, 600);
     }
     scene = ctx.createGain(); scene.gain.value = 1; scene.connect(input);
     return scene;
@@ -223,14 +223,14 @@
       if (on) ensure();
       if (enabled === on) return;
       enabled = on;
-      try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }
+      try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch { /* sin almacenamiento */ }
       document.body.classList.toggle('sound-on', on);
       onChange(on);
     },
     tick() { if (enabled && ensure()) kit(ctx, newScene()).tick(ctx.currentTime + 0.01, 0.07); },
     toggle() {
       enabled = !enabled;
-      try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }
+      try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch { /* sin almacenamiento */ }
       document.body.classList.toggle('sound-on', enabled);
       if (enabled && ensure() && curEl) {
         play(curEl, curEl.classList.contains('trailer') ? (performance.now() - curStart) / 1000 : 0);

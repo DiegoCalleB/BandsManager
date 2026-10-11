@@ -352,7 +352,7 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (igErr) {
+    } catch {
       // Graceful ignore
     }
   }
@@ -393,7 +393,7 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (tkErr) {
+    } catch {
       // Graceful ignore
     }
   }

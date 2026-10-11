@@ -1,15 +1,5 @@
 import type { User } from "../../types";
-import {
-  Rehearsal,
-  Concert,
-  ThemeColors,
-  BookingCampaign,
-  KeyContactItem,
-  TechnicalLogistics,
-  CierreMaterialItem,
-  MerchBoloItem,
-  MerchControlBolo,
-} from '../../types';
+import { Rehearsal, Concert, ThemeColors, BookingCampaign, KeyContactItem, TechnicalLogistics, CierreMaterialItem, MerchControlBolo } from '../../types';
 
 /** Banda seleccionable en el calendario; incluye los alias de logo heredados de distintas APIs. */
 export interface CalendarBand {

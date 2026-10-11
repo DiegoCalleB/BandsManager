@@ -408,19 +408,18 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
   try {
     const userBandId = (req as any).user?.band_id;
     const state = loadState();
-    let { 
-      targetCities, 
-      minCapacity, 
-      maxCapacity, 
+    let {
+      targetCities,
+      minCapacity,
+      maxCapacity,
       targetDates,
       targetDatesText,
-      tipos, 
-      campaignName, 
-      campaignId, 
-      limitPerCity, 
-      bandGenre, 
-      genero, 
-      bandStyle 
+      tipos,
+      campaignName,
+      limitPerCity,
+      bandGenre,
+      genero,
+      bandStyle
     } = req.body;
 
     // Obtener ADN de la banda para conocer su género y estilo por defecto si no se indica

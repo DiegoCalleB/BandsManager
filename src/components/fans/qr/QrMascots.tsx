@@ -20,9 +20,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
   bandLogoUrl,
   bandName = 'Banda',
   size = 100,
-  primaryColor = '#6366f1',
-  secondaryColor = '#ec4899',
-  shape = 'squircle',
+  shape = 'squircle'
 }) => {
   if (mascot === 'none') return null;
 

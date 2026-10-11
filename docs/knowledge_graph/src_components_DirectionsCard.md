@@ -27,7 +27,6 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_event_detail_OverviewTab|src/components/calendar/event_detail/OverviewTab.tsx]] *(from #frontend)*
 - [[src_components_calendar_logistics_EventCoreInfo|src/components/calendar/logistics/EventCoreInfo.tsx]] *(from #frontend)*
 - [[src_components_calendar_logistics_UpcomingEventsList|src/components/calendar/logistics/UpcomingEventsList.tsx]] *(from #frontend)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 
 ---
 

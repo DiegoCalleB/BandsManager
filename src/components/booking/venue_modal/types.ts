@@ -1,4 +1,4 @@
-import { Lead, LeadStatus, LeadType, Concert, EmailMessage, InteractionLog } from '../../../types';
+import { Lead, LeadStatus, Concert } from '../../../types';
 
 export interface VenueModalProps {
   isOpen: boolean;

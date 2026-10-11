@@ -1,17 +1,6 @@
 import { ShowIcon } from './ui/ShowIcon';
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Layers,
-  Rocket,
-  ShieldCheck,
-  Sliders,
-  Sparkles,
-  Star,
-  Video,
-} from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, Star } from 'lucide-react';
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
 import { LandingChatWidget } from './LandingChatWidget';

@@ -1,31 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Image as ImageIcon,
-  Shirt,
-  Tag,
-  QrCode,
-  Download,
-  RefreshCw,
-  Wand2,
-  Type,
-  Upload,
-  Trash2,
-  Scissors,
-  Layers,
-  Plus,
-  Gift,
-  PackageCheck,
-  MapPin,
-  CheckCircle2,
-  X,
-  ArrowRight,
-  Truck,
-  Clock,
-  Palette,
-  Phone,
-  User,
-  Building,
-} from "lucide-react";
+import { Image as ImageIcon, Shirt, Tag, QrCode, Download, RefreshCw, Wand2, Type, Upload, Trash2, Scissors, Layers, Plus, Gift, PackageCheck, MapPin, CheckCircle2, X, ArrowRight, Palette, Phone, User, Building } from "lucide-react";
 import { ThemeColors, ThemeName } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
@@ -132,11 +106,9 @@ interface MerchanProps {
 }
 
 export default function Merchan({
-  colors,
-  currentTheme,
   bandId,
   bandName,
-  bandLogoUrl,
+  bandLogoUrl
 }: MerchanProps) {
   const isDemo = false;
 
@@ -227,7 +199,7 @@ export default function Merchan({
           setAlbums(loadedAlbums);
           return;
         }
-      } catch (_) {
+      } catch {
         // Fallback local
       }
 

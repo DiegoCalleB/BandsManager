@@ -22,11 +22,10 @@ export const CalendarEditRehearsalModal: React.FC<CalendarEditRehearsalModalProp
   setViewingRehearsal,
   editRehearsalDraft,
   setEditRehearsalDraft,
-  isStitchLight = false,
   onUpdateRehearsal,
   onDeleteRehearsal,
   setSyncSuccessMessage,
-  availableSetlists = [],
+  availableSetlists = []
 }) => {
   if (!viewingRehearsal || !editRehearsalDraft) return null;
 

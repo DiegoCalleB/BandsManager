@@ -31,7 +31,6 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
-- [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 
 ---

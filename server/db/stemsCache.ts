@@ -405,7 +405,7 @@ export async function markStemsSeparationFailed(
     if (error) {
       console.error(`[STEM_CACHE_MARK_FAILED_ALERT] 🚨 No se pudo marcar como fallido ${cacheKey} en Supabase: ${error.code || ''} ${error.message}`);
     }
-  } catch (e) {
+  } catch {
     // Ignorar error al marcar fallo
   }
 }

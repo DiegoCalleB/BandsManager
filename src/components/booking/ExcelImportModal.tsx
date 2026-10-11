@@ -1,23 +1,6 @@
 import React, { useState, useRef } from "react";
 import * as XLSX from "xlsx";
-import {
-  FileSpreadsheet,
-  Upload,
-  CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  ArrowLeft,
-  X,
-  Download,
-  Info,
-  Building2,
-  Trash2,
-  RefreshCw,
-  Eye,
-  Check,
-  Search,
-  Filter,
-} from "lucide-react";
+import { FileSpreadsheet, Upload, CheckCircle2, AlertTriangle, ArrowRight, ArrowLeft, X, Download, Info, Building2, Trash2, RefreshCw, Check, Search, Filter } from "lucide-react";
 import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
@@ -124,7 +107,7 @@ export function ExcelImportModal({
   const [defaultCategory, setDefaultCategory] = useState<LeadType>("sala");
 
   // Loading & statuses
-  const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
+  const [, setIsProcessingFile] = useState<boolean>(false);
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const [importStatusMsg, setImportStatusMsg] = useState<string>("");
   const [searchPreview, setSearchPreview] = useState<string>("");

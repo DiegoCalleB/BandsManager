@@ -199,7 +199,7 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
           values = extracted;
           break;
         }
-      } catch (subErr: any) {
+      } catch {
         // Continue to fallback model or deterministic fallback
       }
     }

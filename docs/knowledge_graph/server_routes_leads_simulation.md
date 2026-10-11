@@ -20,7 +20,6 @@ Generación de emails simulados para la simulación de booking.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

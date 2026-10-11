@@ -1,33 +1,5 @@
 import React, { useState } from "react";
-import {
-  Settings,
-  Plus,
-  RotateCcw,
-  Save,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Maximize2,
-  Minimize2,
-  Eye,
-  Check,
-  Calendar,
-  Building2,
-  Music,
-  DollarSign,
-  Users,
-  BookOpen,
-  Bot,
-  Truck,
-  LayoutGrid,
-  X,
-  GripVertical,
-  Zap,
-  TrendingUp,
-  Info,
-  Smartphone,
-  Monitor,
-} from "lucide-react";
+import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Maximize2, Check, LayoutGrid, X, GripVertical, Info, Monitor } from "lucide-react";
 import {
   DashboardWidgetConfig,
   DEFAULT_DASHBOARD_WIDGETS,
@@ -106,7 +78,6 @@ export function DashboardWidgetGrid({
   leads,
   tours = [],
   fans = [],
-  posts = [],
   payments = [],
   setlists = [],
   songs = [],
@@ -119,7 +90,7 @@ export function DashboardWidgetGrid({
   isEditMode: externalEditMode,
   setIsEditMode: externalSetIsEditMode,
   viewDensityMode: externalDensityMode,
-  setViewDensityMode: externalSetViewDensityMode,
+  setViewDensityMode: externalSetViewDensityMode
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
 
@@ -188,7 +159,7 @@ export function DashboardWidgetGrid({
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [isSaving, setIsSaving] = useState(false);
+  const [, setIsSaving] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
 
   // Drag and drop state

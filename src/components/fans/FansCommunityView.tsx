@@ -1,29 +1,5 @@
 import React, { useState } from "react";
-import {
-  Heart,
-  Flame,
-  Sparkles,
-  MessageCircle,
-  Send,
-  Plus,
-  Trash2,
-  MapPin,
-  Calendar,
-  Music,
-  Instagram,
-  Award,
-  ExternalLink,
-  Check,
-  Share2,
-  Mail,
-  Filter,
-  Search,
-  ShieldCheck,
-  UserCheck,
-  Megaphone,
-  Pin,
-  Star,
-} from "lucide-react";
+import { Flame, MessageCircle, Send, Plus, Trash2, MapPin, Calendar, Music, Instagram, Award, Mail, ShieldCheck, Megaphone, Pin, Star } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -57,14 +33,12 @@ interface FansCommunityViewProps {
 
 export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   fans = [],
-  concerts = [],
   effectiveBandName,
   effectiveBandLogo,
-  colors,
   onUpdateFan,
   onDeleteFan,
   onOpenAddModal,
-  selectedCityFilter,
+  selectedCityFilter
 }) => {
   // Local announcements from the band
   const [announcements, setAnnouncements] = useState<BandAnnouncement[]>(() => {

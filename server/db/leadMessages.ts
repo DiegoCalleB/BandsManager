@@ -59,7 +59,7 @@ export async function dbLeadMessageExists(id: string): Promise<boolean> {
     const sb = getSupabase();
     const { data } = await sb.from("lead_messages").select("id").eq("id", id).maybeSingle();
     return !!data;
-  } catch (err) {
+  } catch {
     return false;
   }
 }

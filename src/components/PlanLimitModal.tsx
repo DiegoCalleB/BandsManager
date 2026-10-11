@@ -7,12 +7,7 @@ import {
   ExternalLink,
   ArrowRight,
 } from "lucide-react";
-import {
-  PlanDefinition,
-  getPlanDefinition,
-  normalizePlan,
-  getPlanLimits,
-} from "../utils/planPermissions";
+import { getPlanDefinition, normalizePlan } from "../utils/planPermissions";
 import { CheckoutButton } from "./CheckoutButton";
 import { User } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
@@ -33,11 +28,10 @@ export const PlanLimitModal: React.FC<PlanLimitModalProps> = ({
   onClose,
   onNavigateToPlanes,
   currentUser,
-  activeBandName,
   resourceType,
-  currentCount,
+  currentCount
 }) => {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
+  const [billingPeriod] = useState<"monthly" | "annual">(
     "monthly",
   );
 

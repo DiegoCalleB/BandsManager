@@ -1,5 +1,5 @@
 import { dbGetConcerts, dbGetUsers, dbGetUserBands } from "../db.js";
-import { Concert, Lead } from "../../src/types.js";
+import { Concert } from "../../src/types.js";
 import { getAiClient } from "../ai.js";
 import { Type } from "@google/genai";
 import { loadState } from "../state.js";
@@ -65,7 +65,7 @@ async function getMemberCrossBandConflicts(currentBandId: string): Promise<Membe
             otherBands.push({ id: ub.band_id, name: bName });
           }
         }
-      } catch (err) {
+      } catch {
         // Fallback silencioso
       }
 
@@ -104,7 +104,7 @@ async function getMemberCrossBandConflicts(currentBandId: string): Promise<Membe
               ciudad
             });
           }
-        } catch (_) {
+        } catch {
           // Continuar con siguientes bandas
         }
       }

@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Sparkles,
-  Heart,
-  CheckCircle2,
-  Download,
-  Copy,
-  Check,
-  ShieldCheck,
-  Mail,
-  User,
-  MapPin,
-  Music,
-} from "lucide-react";
+import { Sparkles, Heart, CheckCircle2, ShieldCheck, Mail, User, MapPin, Music } from "lucide-react";
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
 import { ShowIcon } from './ui/ShowIcon';
 import { Input } from './ui';
@@ -28,8 +16,8 @@ export const PublicFanCapture: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [incentivoData, setIncentivoData] = useState<any>(null);
-  const [copiedCode, setCopiedCode] = useState(false);
+  const [, setIncentivoData] = useState<any>(null);
+  const [, setCopiedCode] = useState(false);
   const [bandInfo, setBandInfo] = useState<{ name: string; logoUrl: string }>({
     name: "",
     logoUrl: "",

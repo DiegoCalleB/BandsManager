@@ -9,30 +9,7 @@ import {
   Tour,
   User,
 } from "../../types";
-import {
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  ArrowRight,
-  ShieldCheck,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Bot,
-  FileText,
-  Disc3,
-  Calendar,
-  Activity,
-  Heart,
-  Truck,
-  X,
-  BookOpen,
-  Layers,
-  Sliders,
-  Clock,
-  Mail,
-  Key,
-} from "lucide-react";
+import { CheckCircle2, AlertCircle, HelpCircle, ChevronDown, ChevronUp, Bot, FileText, Disc3, X, Sliders, Mail } from "lucide-react";
 import { api } from "../../services/api";
 import { Button, IconButton } from '../ui';
 
@@ -60,12 +37,11 @@ export const ProfileCompletenessCard: React.FC<
   rehearsals = [],
   metrics = [],
   fans = [],
-  tours = [],
   bandName = "Tu Banda",
   currentUser,
   onNavigate,
   onOpenAutonomyModal,
-  onOpenProfileModal,
+  onOpenProfileModal
 }) => {
   const [showAuditModal, setShowAuditModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);

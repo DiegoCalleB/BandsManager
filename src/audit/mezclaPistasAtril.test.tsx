@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MezclaPistas } from '../components/chords/MezclaPistas';
 import type { AudioTrack } from '../types';

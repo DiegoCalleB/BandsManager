@@ -17,7 +17,7 @@ export function useAuth() {
         return parsed;
       }
       return null;
-    } catch (e) {
+    } catch {
       return null;
     }
   });
@@ -34,7 +34,7 @@ export function useAuth() {
     try {
       const savedBands = localStorage.getItem('bandmanager_available_bands');
       return savedBands ? JSON.parse(savedBands) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });

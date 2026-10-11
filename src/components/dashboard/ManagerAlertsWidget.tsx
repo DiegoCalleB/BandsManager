@@ -1,29 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ManagerAlert, AlertAction } from '../../utils/managerAlerts';
-import {
-  Sparkles,
-  Calendar,
-  ArrowRight,
-  X,
-  AlertCircle,
-  CheckCircle2,
-  Megaphone,
-  Bell,
-  ShieldAlert,
-  Sliders,
-  Check,
-  Eye,
-  EyeOff,
-  Trash2,
-  Filter,
-  RefreshCw,
-  Mail,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Plus,
-  Search,
-} from 'lucide-react';
+import { Calendar, ArrowRight, X, Bell, Check, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '../ui';
 
 interface ManagerAlertsWidgetProps {
@@ -37,9 +14,7 @@ interface ManagerAlertsWidgetProps {
 export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
   alerts,
   onExecuteAction,
-  onOpenSettings,
-  bandId = 'band-active',
-  isStitchLight = false,
+  bandId = 'band-active'
 }) => {
   const readStorageKey = `manager_alerts_read_${bandId}`;
   const dismissedStorageKey = `manager_alerts_dismissed_${bandId}`;
@@ -48,7 +23,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
     try {
       const saved = localStorage.getItem(readStorageKey);
       return saved ? JSON.parse(saved) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
@@ -57,7 +32,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
     try {
       const saved = localStorage.getItem(dismissedStorageKey);
       return saved ? JSON.parse(saved) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
@@ -69,7 +44,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
   useEffect(() => {
     try {
       localStorage.setItem(readStorageKey, JSON.stringify(readIds));
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, [readIds, readStorageKey]);
@@ -77,7 +52,7 @@ export const ManagerAlertsWidget: React.FC<ManagerAlertsWidgetProps> = ({
   useEffect(() => {
     try {
       localStorage.setItem(dismissedStorageKey, JSON.stringify(dismissedIds));
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, [dismissedIds, dismissedStorageKey]);

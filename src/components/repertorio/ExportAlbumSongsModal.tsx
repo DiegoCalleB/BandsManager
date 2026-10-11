@@ -2,28 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import JSZip from "jszip";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song, ThemeColors } from "../../types";
-import {
-  Download,
-  Copy,
-  Check,
-  X,
-  FileSpreadsheet,
-  Music,
-  FileText,
-  Code,
-  Printer,
-  Sparkles,
-  Disc3,
-  Clock,
-  Layers,
-  Share2,
-  Info,
-  Archive,
-  Loader2,
-  AlertCircle,
-  FileCheck,
-} from "lucide-react";
-import { ShowIcon } from '../ui/ShowIcon';
+import { Download, Copy, Check, X, FileSpreadsheet, Music, FileText, Code, Printer, Archive, Loader2, AlertCircle } from "lucide-react";
 import { IconButton, Select } from '../ui';
 
 interface ExportAlbumSongsModalProps {
@@ -46,8 +25,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   songs = [],
   albumsList = [],
   bandName = "Banda",
-  colors,
-  onExportAsSetlistPdf,
+  onExportAsSetlistPdf
 }) => {
   const [selectedAlbum, setSelectedAlbum] = useState<string>(
     albumName || "all",

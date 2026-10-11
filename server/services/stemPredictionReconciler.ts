@@ -1,6 +1,5 @@
 import crypto from "crypto";
 import { getSupabase } from "../db/core.js";
-import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
 
 export interface StemPredictionJob {
   id: string;
@@ -119,7 +118,7 @@ export async function isPredictionWebhookProcessed(predictionId: string): Promis
       processedWebhookIds.add(predictionId);
       return true;
     }
-  } catch (e) {
+  } catch {
     // Si la tabla aún no existe, fallback a memoria
   }
 

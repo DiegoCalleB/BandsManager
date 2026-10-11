@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Layers, Check } from 'lucide-react';
 import { Setlist, ThemeColors } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
@@ -17,7 +16,7 @@ interface SetlistModalProps {
   onSave: (setlistData: { id?: string; nombre: string; descripcion: string; tipoFormato: Setlist['tipoFormato'] }) => void;
 }
 
-export function SetlistModal({ isOpen, setlistToEdit, colors, onClose, onSave }: SetlistModalProps) {
+export function SetlistModal({ isOpen, setlistToEdit, onClose, onSave }: SetlistModalProps) {
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tipoFormato, setTipoFormato] = useState<Setlist['tipoFormato']>('festival');

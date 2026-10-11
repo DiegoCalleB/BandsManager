@@ -28,7 +28,6 @@ interface CalendarReminderModalProps {
 export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
   isOpen,
   onClose,
-  isStitchLight = false,
   selectedConcert,
   selectedRehearsal,
   selectedDate,
@@ -43,7 +42,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
   reminderSending,
   reminderSuccessMsg,
   reminderErrorMsg,
-  handleSendEventReminder,
+  handleSendEventReminder
 }) => {
   if (!isOpen) return null;
 

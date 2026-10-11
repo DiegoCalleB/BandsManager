@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchEventWeather, detectWeatherAlerts, getCachedEventWeatherAlerts, WeatherAlert } from '../weatherService';
+import { fetchEventWeather, detectWeatherAlerts, getCachedEventWeatherAlerts } from '../weatherService';
 
 describe('weatherService', () => {
   beforeEach(() => {

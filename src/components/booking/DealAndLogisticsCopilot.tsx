@@ -1,23 +1,7 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import { calculateLeadScore, findCorridorForCity } from '../../utils/tourRouting';
-import {
-  Calculator,
-  Compass,
-  FileText,
-  DollarSign,
-  TrendingUp,
-  MapPin,
-  Fuel,
-  Users,
-  ShieldCheck,
-  Check,
-  Copy,
-  ExternalLink,
-  ChevronRight,
-  AlertTriangle,
-  Sparkles,
-} from 'lucide-react';
+import { findCorridorForCity } from '../../utils/tourRouting';
+import { Calculator, Compass, FileText, TrendingUp, MapPin, ShieldCheck, Check, Copy, Sparkles } from 'lucide-react';
 import { Button, Input, Select } from '../ui';
 
 interface DealAndLogisticsCopilotProps {
@@ -31,21 +15,20 @@ interface DealAndLogisticsCopilotProps {
 export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = ({
   lead,
   latestIncomingMessage,
-  isStitchLight = false,
   onOpenRoadbookModal,
-  bandName = 'Tu banda',
+  bandName = 'Tu banda'
 }) => {
   // --- SUB-SECCIÓN 1: P&L & VIABILIDAD LOGÍSTICA ---
-  const [bandOriginCity, setBandOriginCity] = useState<string>('Madrid');
+  const [bandOriginCity] = useState<string>('Madrid');
   const [ticketPrice, setTicketPrice] = useState<number>(10);
   const [guaranteedCache, setGuaranteedCache] = useState<number>(0);
   const [dealType, setDealType] = useState<'cache' | 'taquilla' | 'mixto'>('taquilla');
-  const [bandSplitPercent, setBandSplitPercent] = useState<number>(80);
+  const [bandSplitPercent] = useState<number>(80);
   const [vanKmEstimated, setVanKmEstimated] = useState<number>(350);
   const [hotelCost, setHotelCost] = useState<number>(120);
   const [dietsCost, setDietsCost] = useState<number>(80);
-  const [fuelPriceEurL, setFuelPriceEurL] = useState<number>(1.55);
-  const [vanConsumptionL100km, setVanConsumptionL100km] = useState<number>(9.5);
+  const [fuelPriceEurL] = useState<number>(1.55);
+  const [vanConsumptionL100km] = useState<number>(9.5);
 
   // Estimación de combustible ida y vuelta
   const estimatedFuelExpense = Math.round(((vanKmEstimated * 2) / 100) * vanConsumptionL100km * fuelPriceEurL);

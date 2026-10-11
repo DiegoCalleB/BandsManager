@@ -4,7 +4,7 @@
 import express from "express";
 import { SocialMetric } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth } from "../state.js";
-import { dbGetSocialMetrics, dbUpsertSocialMetric, dbDeleteSocialMetric, dbGetRegisteredBandById, dbGetEpkConfig, dbUpsertEpkConfig, dbGetRegisteredBands, dbGetSocialContentItems, dbUpsertSocialContentItem } from "../db.js";
+import { dbGetSocialMetrics, dbUpsertSocialMetric, dbDeleteSocialMetric, dbGetRegisteredBandById, dbGetEpkConfig, dbUpsertEpkConfig, dbGetSocialContentItems, dbUpsertSocialContentItem } from "../db.js";
 import { getAiClient, generateContentWithFallback, GEMINI_MODEL } from "../ai.js";
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.get("/metrics", requireAuth, async (req, res) => {
   try {
     const dbMetrics = await dbGetSocialMetrics(userBandId);
     res.json(dbMetrics);
-  } catch (err) {
+  } catch {
     const state = loadState();
     res.json((state.metrics || []).filter((m: any) => m.band_id === userBandId || m.bandId === userBandId));
   }
@@ -174,7 +174,7 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
             views_count: isNaN(v.views) ? 0 : v.views,
             published_at: v.date
           }, userBandId);
-        } catch (itemErr) {
+        } catch {
           // ignore item upsert err
         }
       }

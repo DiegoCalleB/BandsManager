@@ -51,7 +51,7 @@ router.get('/auth/me', async (req, res) => {
         }
       });
     }
-  } catch (e) {
+  } catch {
     // Non-blocking fallback to state.registeredBands
   }
 
@@ -151,7 +151,7 @@ router.post('/auth/switch-band', async (req, res) => {
     if (Array.isArray(freshRegBands) && freshRegBands.length > 0) {
       state.registeredBands = freshRegBands;
     }
-  } catch (e) {
+  } catch {
     // Non-blocking
   }
 

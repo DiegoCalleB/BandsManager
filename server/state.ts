@@ -956,7 +956,7 @@ export function saveState(state: any) {
     fs.writeFileSync(tmpFile, content, "utf-8");
     try {
       fs.renameSync(tmpFile, DATA_FILE);
-    } catch (renameErr) {
+    } catch {
       // Fallback si rename falla entre montajes o permisos de disco
       fs.writeFileSync(DATA_FILE, content, "utf-8");
       if (fs.existsSync(tmpFile)) {

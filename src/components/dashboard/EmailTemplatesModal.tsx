@@ -1,16 +1,5 @@
 import React, { useState } from "react";
-import {
-  FileText,
-  Copy,
-  Check,
-  X,
-  Send,
-  Radio,
-  Building2,
-  RefreshCw,
-  MessageSquareCode,
-  HelpCircle,
-} from "lucide-react";
+import { FileText, Copy, Check, X, Radio, Building2, RefreshCw, MessageSquareCode } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton } from '../ui';
 

@@ -2,7 +2,6 @@
 // del Tone DNA.
 
 import { getSupabase, cleanBandId } from "./core.js";
-import { getBandDnaProfile } from "../utils/bandDna.js";
 import { generateUnifiedAI } from "../ai.js";
 import { dbUpdateBandDnaExpresion } from "./bands.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";

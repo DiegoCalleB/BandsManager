@@ -1,9 +1,7 @@
 import React from 'react';
-import { Calendar, Compass, DollarSign, Calculator, TrendingUp, Sparkles, ExternalLink } from 'lucide-react';
+import { Calendar, Calculator, ExternalLink } from 'lucide-react';
 import { Lead } from '../../../types';
 import { QuickDealSimulator } from '../QuickDealSimulator';
-import { DealAndLogisticsCopilot } from '../DealAndLogisticsCopilot';
-import { ShowIcon } from '../../ui/ShowIcon';
 
 interface VenueIntelligenceTabProps {
   lead: Lead;
@@ -13,8 +11,7 @@ interface VenueIntelligenceTabProps {
 
 export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
   lead,
-  onUpdateLead,
-  bandName,
+  onUpdateLead
 }) => {
   const fechasLibres = lead.fechas_libres_detectadas || [];
   const wegowOk = (lead as any).radar_wegow_status === 'ok';

@@ -1,23 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Mic,
-  Square,
-  Play,
-  Pause,
-  Trash2,
-  Sparkles,
-  Share2,
-  Copy,
-  Check,
-  Upload,
-  FileAudio,
-  Music,
-  ListChecks,
-  MessageSquare,
-  AlertCircle,
-  RefreshCw,
-  Send,
-} from "lucide-react";
+import { Mic, Square, Trash2, Sparkles, Copy, Check, Upload, FileAudio, RefreshCw } from "lucide-react";
 import {
   Rehearsal,
   RehearsalRecording,
@@ -40,9 +22,7 @@ interface GrabacionActaTabProps {
 
 export function GrabacionActaTab({
   rehearsal,
-  onUpdateRehearsal,
-  songs = [],
-  colors,
+  onUpdateRehearsal
 }: GrabacionActaTabProps) {
   const recordings = rehearsal.grabaciones || [];
   const acta = rehearsal.acta || null;

@@ -2,15 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { Lead } from "../types";
-import {
-  MapPin,
-  Navigation,
-  Eye,
-  Check,
-  Loader2,
-  RefreshCw,
-  Layers,
-} from "lucide-react";
+import { MapPin, Navigation, Check, Loader2, Layers } from "lucide-react";
 import { escapeHtml } from "../utils/escapeHtml";
 
 interface VenueMapProps {
@@ -702,7 +694,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
     Record<string, [number, number]>
   >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
-  const [geocodedCount, setGeocodedCount] = useState<number>(0);
+  const [, setGeocodedCount] = useState<number>(0);
 
   // Initialize Map with Marker Clustering
   useEffect(() => {
@@ -1216,7 +1208,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
               marker.openPopup();
             }
           });
-        } catch (e) {
+        } catch {
           leafletMap.current.setView(
             pos,
             Math.max(leafletMap.current.getZoom(), 15),

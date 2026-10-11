@@ -618,11 +618,11 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     // 2. Extraer texto conversacional
     try {
       textResult = response.text || "";
-    } catch (_) {
+    } catch {
       try {
         const textParts = response.candidates?.[0]?.content?.parts?.filter((p: any) => p.text)?.map((p: any) => p.text);
         textResult = textParts ? textParts.join("\n\n") : "";
-      } catch (__) {
+      } catch {
         textResult = "";
       }
     }

@@ -1,27 +1,6 @@
 import React from 'react';
-import {
-  Calendar,
-  Mic,
-  Clock,
-  MapPin,
-  CheckSquare,
-  Sparkles,
-  ChevronRight,
-  Plus,
-  Trash2,
-  Edit,
-  Ticket,
-  Target,
-  Guitar,
-  Handshake,
-  Drum,
-  AlertTriangle,
-  Eye,
-  Users,
-  List,
-  CheckCircle2,
-} from 'lucide-react';
-import { Concert, Rehearsal, BookingCampaign, ThemeColors } from '../../types';
+import { Calendar, Clock, ChevronRight, Plus, Edit, Target, Guitar, Handshake, Drum, AlertTriangle, List, CheckCircle2 } from 'lucide-react';
+import { Concert, Rehearsal, BookingCampaign } from '../../types';
 import { RoadbookInfo } from './calendarTypes';
 import { CalendarWeatherBadge } from './AnimatedWeatherIcon';
 import { WeatherAlert } from '../../services/weatherService';
@@ -91,17 +70,13 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
   const {
     calendarViewMode,
     calendarSearchTerm,
-    viewDate,
     selectedDate,
     setSelectedDate,
     selectedEventId,
     setSelectedEventId,
     handleSelectEvent,
     realToday,
-    isStitchLight,
-    textTitle,
     textSub,
-    textMuted,
     monthNames,
     weekdays,
     currentYear,
@@ -115,20 +90,10 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
     getCachedEventWeatherAlerts,
     setShowCreateModal,
     setShowEventFichaModal,
-    setModalActiveTab,
     setViewingConcert,
     setViewingRehearsal,
-    onDeleteConcert,
-    onDeleteRehearsal,
-    onNavigate,
-    allRoadbooks,
-    getDefaultRoadbook,
     filteredConcerts,
-    filteredRehearsals,
-    concerts,
-    rehearsals,
-    isPromoPlan,
-    onShowNotification,
+    filteredRehearsals
   } = props;
 
   const fullWeekdays = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];

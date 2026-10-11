@@ -44,7 +44,7 @@ interface AiSupportWidgetProps {
 }
 
 /** CTA de apoyo económico a BandManager.io. Independiente de la tarjeta de consumo de IA. */
-export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant, isStitchLight = false }) => {
+export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => {
   const owedEur = useAiDebtEur();
   const costeLabel = owedEur === null ? '—' : `${owedEur.toFixed(2).replace('.', ',')} €`;
 

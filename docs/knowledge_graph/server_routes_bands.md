@@ -29,8 +29,6 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
-- [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
-- [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*

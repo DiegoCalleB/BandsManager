@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  DollarSign,
-  MapPin,
-  Mail,
-  Phone,
-  User,
-  Check,
-  Car,
-  Hotel,
-} from "lucide-react";
+import { DollarSign, Check, Car, Hotel } from "lucide-react";
 import { Input } from '../../ui';
 
 interface StepBookingConditionsProps {

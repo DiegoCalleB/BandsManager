@@ -28,7 +28,7 @@ export function getActiveBandId(): string {
       const u = JSON.parse(userStr);
       if (u?.band_id) return String(u.band_id);
     }
-  } catch (e) {
+  } catch {
     /* localStorage con JSON corrupto: seguimos sin banda explícita */
   }
   return '';

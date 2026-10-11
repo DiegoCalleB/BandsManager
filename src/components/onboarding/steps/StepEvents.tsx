@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, Plus, Trash2, MapPin, Ticket, Clock } from "lucide-react";
+import { Calendar, Plus, Trash2 } from "lucide-react";
 import { QuickEventItem } from "../types";
 import { ShowIcon } from '../../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../../ui';
@@ -42,8 +42,6 @@ export const StepEvents: React.FC<StepEventsProps> = ({
   setNewEventType,
   newEventDate,
   setNewEventDate,
-  newEventTime,
-  setNewEventTime,
   newEventCity,
   setNewEventCity,
   newEventVenue,
@@ -52,8 +50,6 @@ export const StepEvents: React.FC<StepEventsProps> = ({
   setNewEventTicketUrl,
   newEventAttendancePropia = 0,
   setNewEventAttendancePropia,
-  newEventAttendanceOtras = 0,
-  setNewEventAttendanceOtras,
   newEventSharedBands = "",
   setNewEventSharedBands,
   newEventPostShowReview = "",
@@ -61,7 +57,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
   newEventIsMilestone = false,
   setNewEventIsMilestone,
   onAddEvent,
-  onRemoveEvent,
+  onRemoveEvent
 }) => {
   return (
     <div className="space-y-6 animate-in fade-in duration-200">

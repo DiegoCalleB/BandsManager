@@ -1,29 +1,7 @@
 import React, { useState, useMemo } from "react";
-import {
-  X,
-  Copy,
-  CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  Trash2,
-  Merge,
-  Sparkles,
-  MapPin,
-  Mail,
-  Phone,
-  Globe,
-  ExternalLink,
-  ShieldCheck,
-  Check,
-} from "lucide-react";
+import { X, Copy, CheckCircle2, AlertTriangle, Trash2, Merge, Sparkles, MapPin, Mail, Phone, Globe, ShieldCheck } from "lucide-react";
 import { Lead } from "../../types";
-import {
-  findDuplicateLeads,
-  DuplicateGroup,
-  DuplicateMatchReason,
-  mergeTwoLeads,
-  calculateLeadCompletenessScore,
-} from "../../utils/duplicateLeads";
+import { findDuplicateLeads, DuplicateGroup, mergeTwoLeads, calculateLeadCompletenessScore } from "../../utils/duplicateLeads";
 import { ModalPortal } from "../common/ModalPortal";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';

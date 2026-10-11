@@ -70,7 +70,7 @@ export async function findVenuesBySimilarArtists(params: {
           });
         }
       });
-    } catch (e) {
+    } catch {
       // Continuar si falla
     }
 
@@ -92,7 +92,7 @@ export async function findVenuesBySimilarArtists(params: {
           });
         }
       });
-    } catch (e) {
+    } catch {
       // Continuar con radar IA si no hay clave
     }
   }

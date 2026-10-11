@@ -1,22 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Lock,
-  User,
-  Eye,
-  EyeOff,
-  AlertCircle,
-  Mail,
-  Music,
-  Check,
-  ArrowRight,
-  Zap,
-  Star,
-  Shield,
-  Chrome,
-  KeyRound,
-  ArrowLeft,
-  CheckCircle2,
-} from "lucide-react";
+import { Lock, User, Eye, EyeOff, AlertCircle, Mail, Music, Check, Zap, Shield, KeyRound, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { User as UserType } from "../types";
 import { signInWithGoogleIdentity } from "../utils/googleAuth";
 import { guardarCookieDeSesion } from "../utils/sessionCookie";

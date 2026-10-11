@@ -100,10 +100,9 @@ export default function PracticeModePanel({
   idea,
   tracks,
   currentUser,
-  glareMode,
   onClose,
   onOpenStudio,
-  onApplyAsMainChords,
+  onApplyAsMainChords
 }: PracticeModePanelProps) {
   const storageKey = useMemo(() => buildStorageKey(song, idea, currentUser), [song, idea, currentUser]);
 
@@ -111,7 +110,7 @@ export default function PracticeModePanel({
   const [speed, setSpeed] = useState(1);
   const [loopA, setLoopA] = useState<number | null>(null);
   const [loopB, setLoopB] = useState<number | null>(null);
-  const [activeSmartSectionId, setActiveSmartSectionId] = useState<string | null>(null);
+  const [, setActiveSmartSectionId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);

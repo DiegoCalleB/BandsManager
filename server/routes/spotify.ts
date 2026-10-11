@@ -2,13 +2,7 @@
 
 import express from "express";
 import { requireAuth, loadState, saveState } from "../state.js";
-import {
-  searchSpotifyArtists,
-  getArtistCompleteDiscography,
-  bulkImportSpotifyDiscographyToBand,
-  extractSpotifyArtistId,
-  findAudioPreview
-} from "../services/spotifyService.js";
+import { searchSpotifyArtists, getArtistCompleteDiscography, bulkImportSpotifyDiscographyToBand, findAudioPreview } from "../services/spotifyService.js";
 
 const router = express.Router();
 

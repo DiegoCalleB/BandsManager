@@ -54,7 +54,6 @@ _Sin dependencias salientes directas._
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/referidos.test.ts`
 - `src/components/onboarding/__tests__/onboardingPlanGating.test.ts`
-- `src/config/__tests__/navGroups.test.ts`
 - `src/utils/__tests__/documentacionPlanes.test.ts`
 - `src/utils/__tests__/planPermissions.test.ts`
 - `src/utils/__tests__/roiBanda.test.ts`

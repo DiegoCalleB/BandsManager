@@ -2,22 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertSettingsConfig, CustomAlertRule } from '../../types';
 import { hasModuleAccess } from '../../utils/planPermissions';
 import { apiFetch } from '../../utils/api';
-import {
-  X,
-  Bell,
-  Mail,
-  ShieldCheck,
-  Sliders,
-  CheckCircle2,
-  Lock,
-  Sparkles,
-  Calendar,
-  Clock,
-  AlertTriangle,
-  Users,
-  Save,
-  Check,
-} from 'lucide-react';
+import { X, Bell, Mail, ShieldCheck, Sliders, Lock, Sparkles, Clock, Save, Check } from 'lucide-react';
 import { Button, IconButton, Input } from '../ui';
 
 interface AlertSettingsModalProps {
@@ -107,10 +92,9 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
   isOpen,
   onClose,
   userPlan = 'de_gira',
-  isLeaderOrManager = true,
   userEmail = '',
   bandId = 'band-active',
-  onSaveConfig,
+  onSaveConfig
 }) => {
   const [activeTab, setActiveTab] = useState<'rules' | 'channels' | 'plan'>('rules');
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -121,7 +105,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     try {
       const saved = localStorage.getItem(storageKey);
       if (saved) return JSON.parse(saved);
-    } catch (e) {
+    } catch {
       // fallback to default
     }
     return {
@@ -151,7 +135,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
             rules: s.rules && s.rules.length > 0 ? s.rules : prev.rules,
           }));
         }
-      } catch (e) {
+      } catch {
         // Fallback silently to localStorage
       }
     };

@@ -258,7 +258,7 @@ router.get("/logistics", requireAuth, async (req, res) => {
     const runOfShow = await dbGetRunOfShow(userBandId);
     const gearChecklists = await dbGetGearChecklists(userBandId);
     res.json({ runOfShow: runOfShow || {}, gearChecklists: gearChecklists || {} });
-  } catch (err) {
+  } catch {
     try {
       const state = loadState();
       res.json({
@@ -331,7 +331,7 @@ router.get("/payments", requireAuth, requireLeader, async (req, res) => {
   try {
     const dbPayments = await dbGetPayments(userBandId);
     res.json(dbPayments);
-  } catch (err) {
+  } catch {
     const state = loadState();
     res.json((state.payments || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
   }

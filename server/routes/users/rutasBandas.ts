@@ -105,11 +105,10 @@ router.post(
       const user_id = (req as any).user.id;
       const {
         bandName,
-        plan,
         estilo_musical,
         localizacion,
         leaderName,
-        contacto_nombre,
+        contacto_nombre
       } = req.body;
 
       if (!bandName || !bandName.trim()) {

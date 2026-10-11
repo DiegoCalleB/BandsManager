@@ -35,10 +35,8 @@ _Sin dependencias salientes directas._
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_leads_import|server/routes/leads/import.ts]] *(from #route)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
-- [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
-- [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
@@ -156,7 +154,6 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_venue_modal_VenueModalHeader|src/components/booking/venue_modal/VenueModalHeader.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenueWorkspaceModal|src/components/booking/venue_modal/VenueWorkspaceModal.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_apiResponses|src/components/booking/venue_panel/apiResponses.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_useVenueEnrichment|src/components/booking/venue_panel/hooks/useVenueEnrichment.ts]] *(from #frontend)*
@@ -297,7 +294,6 @@ _Sin dependencias salientes directas._
 - [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepMusicSetlist|src/components/onboarding/steps/StepMusicSetlist.tsx]] *(from #frontend)*
 - [[src_components_onboarding_steps_StepVideos|src/components/onboarding/steps/StepVideos.tsx]] *(from #frontend)*
-- [[src_components_onboarding_types|src/components/onboarding/types.ts]] *(from #frontend)*
 - [[src_components_onboarding_wizard_epkLegacy|src/components/onboarding/wizard/epkLegacy.ts]] *(from #frontend)*
 - [[src_components_onboarding_wizard_hooks_useBioStep|src/components/onboarding/wizard/hooks/useBioStep.ts]] *(from #frontend)*
 - [[src_components_onboarding_wizard_hooks_useBookingAndAgentStep|src/components/onboarding/wizard/hooks/useBookingAndAgentStep.ts]] *(from #agent)*

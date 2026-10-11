@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  Sparkles, Flame, Zap, Repeat, Eye, MessageSquare, 
-  Layers, Smile, Check, ArrowRight, Star,
-  Smartphone, BarChart2, Lightbulb, Shield, Shuffle,
-  ZoomIn, Music, Radio, Ticket, PlaySquare,
-  Stethoscope, MessageSquareQuote, CheckCheck, TrendingUp, AlertTriangle, Bot, Copy
-} from 'lucide-react';
+import { Sparkles, Flame, Zap, Repeat, Layers, Smile, Check, ArrowRight, Smartphone, Shield, Shuffle, ZoomIn, Music, Radio, Ticket, Stethoscope, MessageSquareQuote, CheckCheck, TrendingUp, AlertTriangle, Copy } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';

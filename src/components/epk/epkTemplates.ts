@@ -1,20 +1,4 @@
-import {
-  BarChart3,
-  Briefcase,
-  Video,
-  Users,
-  FileText,
-  Quote,
-  Music,
-  Image as ImageIcon,
-  Headphones,
-  Calendar,
-  Sparkles,
-  Palette,
-  Flame,
-  Disc,
-  Feather,
-} from "lucide-react";
+import { BarChart3, Briefcase, Video, Users, FileText, Quote, Music, Image as ImageIcon, Headphones, Calendar, Sparkles, Flame, Disc, Feather } from "lucide-react";
 import { EPKSectionId, EPKTemplateId, EPKConfig } from "../../types";
 
 export interface EPKTemplateMeta {

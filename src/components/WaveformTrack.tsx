@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useRef, useState, forwardRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 import {
   resolveAudioUrl,
@@ -302,7 +296,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
           if (ws) {
             try {
               ws.destroy();
-            } catch (e) {
+            } catch {
               // ignore destroy errors
             }
           }
@@ -322,7 +316,7 @@ const WaveformTrack = forwardRef<HTMLAudioElement, WaveformTrackProps>(
             waveColor: color + "40",
             progressColor: color,
           });
-        } catch (e) {
+        } catch {
           // ignore if setOptions not supported
         }
       }

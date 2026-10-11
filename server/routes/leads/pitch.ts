@@ -2,15 +2,9 @@
 // Directrices de redacción: AGENTS.md §3.
 
 import express from "express";
-import { loadState, saveState, requireAuth, getAutonomyConfigForBand } from "../../state.js";
-import { dbGetLeadById, dbUpsertLead, dbGetCategoryTemplates, dbRecordCampaignPitchTraining } from "../../db.js";
-import { generateUnifiedAI, generateMultiModelProposals, buildPitchLinksFromEpkConfig } from "../../ai.js";
-import { formatGlobalPitchFeedbackForPrompt } from "./feedback.js";
-import { detectPitchLanguage } from "../../utils/leadLanguage.js";
-import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback, isCampaignActive } from "../../utils/bandDna.js";
-import { dbGetDynamicFewShotExamples, formatFewShotExamplesForPrompt, refineAllToneDnaCategoriesForBand, dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
-import { sanitizeExternalText } from "../../utils/promptSafety.js";
-import { findCorridorForCity } from "../../../src/utils/tourRouting.js";
+import { loadState, saveState, requireAuth } from "../../state.js";
+import { dbGetLeadById, dbUpsertLead } from "../../db.js";
+import { refineAllToneDnaCategoriesForBand } from "../../db/pitchLearning.js";
 import { PitchEngine } from "../../services/pitchEngine.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 

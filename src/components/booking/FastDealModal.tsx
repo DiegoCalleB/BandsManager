@@ -1,25 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Lead } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { getPublicDealUrl } from '../../utils/bandHash';
-import {
-  X,
-  Zap,
-  Check,
-  Copy,
-  ExternalLink,
-  MessageCircle,
-  Calendar,
-  Clock,
-  Euro,
-  FileCheck,
-  Shield,
-  ShieldCheck,
-  Loader2,
-  Sparkles,
-  Info
-} from 'lucide-react';
-import { Button, Input } from '../ui';
+import { X, Zap, Check, Copy, ExternalLink, MessageCircle, Calendar, Euro, FileCheck, Shield, ShieldCheck, Loader2, Sparkles } from 'lucide-react';
+import { Button } from '../ui';
 import { ShowIcon } from '../ui/ShowIcon';
 
 /** % que viene marcado por defecto y opciones rápidas. El importe real lo calcula el servidor. */
@@ -124,7 +107,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
             setDealGenerated(null);
           }
         }
-      } catch (_) {
+      } catch {
         setDealGenerated(null);
       }
     };

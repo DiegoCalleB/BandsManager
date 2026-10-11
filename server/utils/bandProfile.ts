@@ -295,7 +295,7 @@ export async function loadBandProfile(
   let state: any = null;
   try {
     state = deps.getState();
-  } catch (e) {
+  } catch {
     state = null;
   }
 

@@ -110,11 +110,11 @@ export function extractJsonObject(raw?: string | null): any | null {
   const intentar = (candidato: string): any | null => {
     try {
       return JSON.parse(candidato);
-    } catch (e) {
+    } catch {
       try {
         // Comas colgantes antes de } o ], el fallo más común del modelo.
         return JSON.parse(candidato.replace(/,\s*([}\]])/g, "$1"));
-      } catch (e2) {
+      } catch {
         return null;
       }
     }

@@ -63,7 +63,7 @@ export function loadNotificationConfig(): BrowserNotificationConfig {
         leadDiscovered: parsed.events?.leadDiscovered ?? true,
       },
     };
-  } catch (e) {
+  } catch {
     return DEFAULT_NOTIFICATION_CONFIG;
   }
 }
@@ -90,7 +90,7 @@ export function loadNotificationHistory(): NotificationHistoryItem[] {
     const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
     if (!raw) return [];
     return JSON.parse(raw);
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -173,7 +173,7 @@ export function playNotificationChime(): void {
     setTimeout(() => {
       ctx.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     }, 500);
-  } catch (err) {
+  } catch {
     // Audio context may be restricted by autoplay policy until user gesture
   }
 }

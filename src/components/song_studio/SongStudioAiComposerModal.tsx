@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, X, Wand2, Music, Check, User, Mic, FileText, Plus, Disc } from 'lucide-react';
+import { Sparkles, X, Wand2, Plus } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { Song, SongAudioIdea } from '../../types';
 import { apiFetch } from '../../utils/api';

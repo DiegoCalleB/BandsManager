@@ -25,8 +25,6 @@ Detecta en qué idioma debería escribirse el pitch de booking para un lead,
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_lector|Lector Agent (Listener)]] *(from #agent)*
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
-- [[agent_scout|Scout Discovery Agent]] *(from #agent)*
-- [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 

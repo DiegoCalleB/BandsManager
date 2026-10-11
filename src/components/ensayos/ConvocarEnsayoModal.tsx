@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  Disc3,
-  FileText,
-  CheckSquare,
-  Plus,
-  Sparkles,
-  SlidersHorizontal,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+import { X, Calendar, MapPin, Users, Disc3, Plus, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { Rehearsal, ThemeColors, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -33,11 +19,10 @@ export function ConvocarEnsayoModal({
   isOpen,
   onClose,
   onSave,
-  colors,
   setlists = [],
   bandUsers = [],
   currentBandId,
-  initialRehearsal,
+  initialRehearsal
 }: ConvocarEnsayoModalProps) {
   const isEditing = Boolean(initialRehearsal);
 

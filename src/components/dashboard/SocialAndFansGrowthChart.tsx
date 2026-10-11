@@ -1,26 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { ThemeColors, SocialMetric, Fan, EPKConfig } from "../../types";
-import {
-  Instagram,
-  Youtube,
-  Video,
-  Music2,
-  Heart,
-  TrendingUp,
-  Users,
-  Radio,
-  RefreshCw,
-  SlidersHorizontal,
-  ArrowUpRight,
-  CheckCircle2,
-  ShieldCheck,
-  Sparkles,
-  ExternalLink,
-  Activity,
-  QrCode,
-  Calendar,
-  Clock,
-} from "lucide-react";
+import { Instagram, Youtube, Video, Music2, Heart, TrendingUp, Users, RefreshCw, SlidersHorizontal, ArrowUpRight, CheckCircle2, ShieldCheck, ExternalLink, Activity, Calendar } from "lucide-react";
 import { CurveSeries } from "../ui/CurveSeries";
 import { ChannelChip } from "../ui/ChannelChip";
 import { CANAL_COLOR, type Canal } from "../../utils/canalColor";
@@ -75,10 +55,8 @@ export const SocialAndFansGrowthChart: React.FC<
   metrics = [],
   fans = [],
   epkConfig,
-  colors,
-  bandName = "Tu Banda",
   bandId,
-  onNavigate,
+  onNavigate
 }) => {
   // Detection of configured / active networks (only display networks that have a profile entered or metrics registered)
   const hasInstagram = useMemo(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, Clock, Zap, AlertCircle } from "lucide-react";
+import { Play, Pause, RotateCcw, Clock, AlertCircle } from "lucide-react";
 import { ThemeColors } from "../../types";
 import { Button, IconButton } from '../ui';
 
@@ -25,8 +25,7 @@ export function EnsayoCronometro({
   totalEstimatedMin = 120,
   initialElapsedSeg = 0,
   onTimeUpdate,
-  colors,
-  isCompact = false,
+  isCompact = false
 }: EnsayoCronometroProps) {
   const [seconds, setSeconds] = useState(initialElapsedSeg);
   const [isActive, setIsActive] = useState(false);

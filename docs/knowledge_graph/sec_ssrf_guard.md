@@ -38,7 +38,6 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(from #service)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
-- [[server_services_stemPredictionReconciler|server/services/stemPredictionReconciler.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 

@@ -19,7 +19,7 @@ export const toursController = {
       saveState(state);
 
       res.json({ tours });
-    } catch (error: any) {
+    } catch {
       const state = loadState();
       res.json({ tours: (state.tours || []).filter((t: any) => t.band_id === userBandId || t.bandId === userBandId) });
     }

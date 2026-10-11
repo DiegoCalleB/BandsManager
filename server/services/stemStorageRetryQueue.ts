@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import { uploadBufferToSupabase } from "../utils/storage.js";
 import { getSupabase } from "../db/core.js";
 
@@ -154,7 +153,7 @@ class StemStorageRetryManager {
             if (fs.existsSync(item.filePath)) {
               fs.unlinkSync(item.filePath);
             }
-          } catch (e) {
+          } catch {
             // Ignorar fallo de borrado local
           }
           continue;

@@ -1,32 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Plus,
-  Disc3,
-  Clock,
-  CheckSquare,
-  Square,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Sparkles,
-  Coffee,
-  Play,
-  Music,
-  Flame,
-  Edit3,
-  CheckCircle2,
-  AlertCircle,
-  X,
-  Layers,
-  Volume2,
-  ListOrdered,
-  GripVertical,
-  Search,
-  Star,
-  Undo2,
-  FolderInput,
-  FlameKindling,
-} from "lucide-react";
+import { Plus, Disc3, Clock, CheckSquare, Square, Trash2, ArrowUp, ArrowDown, Play, CheckCircle2, X, Layers, ListOrdered, GripVertical, Search, Star, Undo2, FolderInput } from "lucide-react";
 import {
   Rehearsal,
   RehearsalAgendaItem,
@@ -108,9 +81,7 @@ export function OrdenDelDiaTab({
   onUpdateRehearsal,
   songs = [],
   setlists = [],
-  nextConcert,
-  colors,
-  onGoToLiveMode,
+  onGoToLiveMode
 }: OrdenDelDiaTabProps) {
   const agenda = rehearsal.agenda || [];
   const objetivos = rehearsal.objetivos || [];

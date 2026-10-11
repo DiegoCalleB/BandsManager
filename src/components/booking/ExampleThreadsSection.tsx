@@ -32,8 +32,7 @@ const RESULTADO_LABEL: Record<string, string> = {
 };
 
 export function ExampleThreadsSection({
-  category,
-  textSub,
+  category
 }: ExampleThreadsSectionProps) {
   const [threads, setThreads] = useState<ExampleThread[]>([]);
   const [isLoading, setIsLoading] = useState(false);

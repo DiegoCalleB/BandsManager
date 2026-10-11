@@ -18,11 +18,10 @@ interface AlbumCoverProps {
 export const AlbumCover: React.FC<AlbumCoverProps> = ({
   url,
   coverUrl,
-  onUpload,
   onPlay,
   isPlaying = false,
   showPlayButton = false,
-  className = '',
+  className = ''
 }) => {
   const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
   const targetUrl = url || coverUrl || '';

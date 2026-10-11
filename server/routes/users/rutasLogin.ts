@@ -57,7 +57,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       });
       saveState(state);
     }
-  } catch (err) {
+  } catch {
     // Continue with memory state if database call fails
   }
 

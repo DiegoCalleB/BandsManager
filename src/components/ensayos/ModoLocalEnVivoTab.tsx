@@ -5,50 +5,13 @@ import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
 import { useVistaAcordes } from "../chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "../chords/DrawerDiagramas";
 import { useAcordesDeLaHoja } from "../../hooks/useAcordesDeLaHoja";
-import {
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  Disc3,
-  Clock,
-  Sparkles,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  AlertCircle,
-  RotateCcw,
-  ThumbsUp,
-  Flame,
-  Music,
-  Maximize2,
-  Minimize2,
-  FileText,
-  CheckSquare,
-  List,
-  BookOpen,
-  Sliders,
-  Type,
-  ArrowDown,
-  Edit3,
-  X,
-  Eye,
-} from "lucide-react";
-import {
-  Rehearsal,
-  RehearsalAgendaItem,
-  Song,
-  ThemeColors,
-  SongSubstituteGuide,
-} from "../../types";
+import { ChevronLeft, ChevronRight, Disc3, Clock, Volume2, VolumeX, Flame, Music, Maximize2, Minimize2, BookOpen, Edit3 } from "lucide-react";
+import { Rehearsal, Song, ThemeColors } from "../../types";
 import { formatTime } from "./EnsayoCronometro";
-import {
-  processChordText,
-  transposeChordToken,
-} from "../../utils/chordUtils";
+import { processChordText } from "../../utils/chordUtils";
 import { Atril, renderFormattedChordSheet } from "../Atril";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton } from '../ui';
+import { Button } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
 import { useNavegacionItems } from "../../hooks/useNavegacionItems";
 import { useSeguimientoEnsayo } from "../../hooks/useSeguimientoEnsayo";
@@ -69,8 +32,7 @@ export function ModoLocalEnVivoTab({
   rehearsal,
   onUpdateRehearsal,
   songs = [],
-  colors,
-  onUpdateSong,
+  onUpdateSong
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
   const {

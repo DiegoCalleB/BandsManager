@@ -5,18 +5,17 @@ import express from "express";
 import path from "path";
 import { createHash } from "crypto";
 import fs from "fs";
-import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS, GEMINI_MODEL } from "../ai.js";
-import { loadState, saveState, requireAuth } from "../state.js";
+import { requireAuth } from "../state.js";
 // Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
 // descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
-import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../utils/youtubeSource.js";
+import { ejecutar, banderasAntiBot, COOKIES_FILE } from "../utils/youtubeSource.js";
 // uploadToSupabaseIfAvailable vivía aquí; ahora la comparte también el generador de Reels,
 // para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
 import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
-import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO, PuntoEnergia } from "../utils/audioEnergy.js";
+import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO } from "../utils/audioEnergy.js";
 import { esUrlExternaSegura, descargarBufferSeguro } from "../utils/ssrfGuard.js";
 
 if (ffmpegStatic) {
@@ -487,7 +486,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
         videoDuration = metadata.duration || videoDuration;
         rawDescription = metadata.description || "";
         chapters = metadata.chapters || [];
-      } catch (err: any) {
+      } catch {
         console.warn(`[Concert Analyzer] yt-dlp metadata dump notice: YouTube bot check active. Using web scraper fallback...`);
         youtubeBlocked = true;
         try {
@@ -538,7 +537,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
         console.log(`[Concert Analyzer] Downloading temporary audio for silence detection...`);
         try {
           await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-x", "--audio-format", "mp3", "-o", mediaForSilence, urlVideo]);
-        } catch (dlErr: any) {
+        } catch {
           console.log(`[Concert Analyzer] yt-dlp quick audio download notice (using fallback).`);
         }
       }
@@ -792,7 +791,7 @@ router.post("/process", requireAuth, async (req, res) => {
         if (fs.existsSync(tempMaster) && fs.statSync(tempMaster).size > 0) {
           localMasterMedia = tempMaster;
         }
-      } catch (dlErr: any) {
+      } catch {
         console.log(`[Concert Slicer] Video download notice, trying audio extraction instead.`);
         const tempAudioMaster = path.join(outputDir, "master_concert.mp3");
         try {
@@ -800,7 +799,7 @@ router.post("/process", requireAuth, async (req, res) => {
           if (fs.existsSync(tempAudioMaster) && fs.statSync(tempAudioMaster).size > 0) {
             localMasterMedia = tempAudioMaster;
           }
-        } catch (audioErr: any) {
+        } catch {
           console.warn("[Concert Slicer] Direct YouTube download restricted by YouTube bot verification (using synthesized master fallback).");
         }
       }
@@ -1198,7 +1197,7 @@ export async function getAudioSnippetPath(params: {
           return snippetPath;
         }
       }
-    } catch (err: any) {
+    } catch {
       console.log("[Snippet Helper] Direct stream extract notice (using fallback).");
     }
 
@@ -1210,7 +1209,7 @@ export async function getAudioSnippetPath(params: {
       console.log(`[Snippet Helper] Downloading master audio for fallback...`);
       try {
         await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "--ffmpeg-location", String(ffmpegStatic), "-x", "--audio-format", "mp3", "-o", cachedMaster, urlVideo]);
-      } catch (dlErr: any) {
+      } catch {
         console.log("[Snippet Helper] Master download notice (using fallback).");
       }
     }
@@ -1221,7 +1220,7 @@ export async function getAudioSnippetPath(params: {
         if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
           return snippetPath;
         }
-      } catch (err: any) {
+      } catch {
         console.log("[Snippet Helper] Cached master slice notice.");
       }
     }

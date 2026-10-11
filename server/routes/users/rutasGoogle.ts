@@ -63,7 +63,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
       });
       saveState(state);
     }
-  } catch (err) {
+  } catch {
     // Continue with state
   }
 

@@ -1,21 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Building2,
-  Music,
-  DollarSign,
-  Users,
-  BookOpen,
-  Bot,
-  Truck,
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  AlertCircle,
-  Sparkles,
-  QrCode,
-  Disc3,
-  ShieldCheck,
-} from 'lucide-react';
+import React from 'react';
+import { Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, QrCode, Disc3 } from 'lucide-react';
 import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
 import { api } from '../../../services/api';
 import { Onda } from '../../ui/Onda';
@@ -153,7 +137,7 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 }
 
 /* 3. FINANCES WIDGET */
-export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
+export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps) {
   const totalCache = concerts.reduce((acc, c) => acc + (Number(c.cache) || 0), 0);
 
   return (
@@ -196,7 +180,7 @@ export function FinancesWidget({ concerts = [], onNavigate, isStitchLight = fals
 }
 
 /* 4. SOCIAL & FANS WIDGET */
-export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
+export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
@@ -239,7 +223,7 @@ export function SocialFansWidget({ fans = [], onNavigate, isStitchLight = false 
 }
 
 /* 5. EPK DOSSIER WIDGET */
-export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }: ModuleWidgetProps) {
+export function EpkStatusWidget({ onNavigate }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">
@@ -282,7 +266,7 @@ export function EpkStatusWidget({ epkConfig, onNavigate, isStitchLight = false }
 }
 
 /* 6. AI AGENT WIDGET */
-export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLight = false }: ModuleWidgetProps) {
+export function AiAgentWidget({ leads = [], onNavigate }: ModuleWidgetProps) {
   const pendingApprovals = leads.filter((l) => l.estado === 'pendiente_aprobacion').length;
 
   return (
@@ -320,7 +304,7 @@ export function AiAgentWidget({ leads = [], currentUser, onNavigate, isStitchLig
 }
 
 /* 7. TOUR LOGISTICS WIDGET */
-export function TourStatusWidget({ tours = [], onNavigate, isStitchLight = false }: ModuleWidgetProps) {
+export function TourStatusWidget({ tours = [], onNavigate }: ModuleWidgetProps) {
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
       <div className="flex items-center justify-between pb-3">

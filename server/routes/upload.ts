@@ -351,7 +351,7 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   const testPath = `diagnostics/test-${Date.now()}.png`;
 
   try {
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(bucketName)
       .upload(testPath, testBuffer, { contentType: "image/png", upsert: true });
 
@@ -640,7 +640,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
 // Route for Chunked File Upload (bypasses 32MB single request limit for 1GB+ files)
 router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req: any, res: any) => {
   try {
-    const { uploadId, chunkIndex, totalChunks, filename, folder } = req.body || {};
+    const { uploadId, chunkIndex, totalChunks, filename } = req.body || {};
     if (!uploadId || chunkIndex === undefined || !totalChunks || !filename) {
       return res.status(400).json({ error: "Missing required chunk metadata (uploadId, chunkIndex, totalChunks, filename)" });
     }

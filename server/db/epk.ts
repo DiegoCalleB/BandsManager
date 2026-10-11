@@ -1,7 +1,7 @@
 // Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
 
 import { escrituraTolerante } from './tolerantWrite.js';
-import { getSupabase, cleanBandId } from './core.js';
+import { getSupabase } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { invalidateBandStateCache } from './sync.js';
 
@@ -157,7 +157,7 @@ export async function dbGetEpkLogosMap(
         result[clean] = row.logo_url.trim();
       }
     });
-  } catch (_) {
+  } catch {
     // Non-blocking: si falla, el llamador se queda con el resto de fallbacks que ya tenía.
   }
 
@@ -192,7 +192,7 @@ export async function dbGetEpkLogosMap(
           if (clean && !result[clean]) result[clean] = logo;
         });
       });
-    } catch (_) {
+    } catch {
       // Non-blocking
     }
   }
@@ -211,7 +211,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   let existing: any = null;
   try {
     existing = await dbGetEpkConfig(bandIdToUse);
-  } catch (err) {
+  } catch {
     // Non-blocking
   }
 
@@ -468,7 +468,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
       if (insertRes.data) {
         data = insertRes.data;
       }
-    } catch (_) {
+    } catch {
       // Non-blocking
     }
   }
@@ -490,7 +490,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
         .from('registered_bands')
         .update(regUpdates)
         .eq('band_id', bandIdToUse);
-    } catch (regErr) {
+    } catch {
       // Non-blocking
     }
   }
@@ -500,7 +500,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
     if (targetBandId && targetBandId !== bandIdToUse) {
       invalidateBandStateCache(targetBandId);
     }
-  } catch (_) {
+  } catch {
     // Non-blocking
   }
 

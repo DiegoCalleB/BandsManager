@@ -11,7 +11,7 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
 import { pistasDeCancion } from "../../src/utils/irisTracks.js";
-import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
+import { getAudioSnippetPath } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
 import { ejecutarLetraSincronizada } from "../services/letraCancion.js";
 import { resumenCola, encolarLetras, cancelarCola, dbSetLetrasAuto } from "../services/colaLetras.js";
@@ -537,7 +537,7 @@ router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
 // POST generate AI chord sheet and substitute guide
 router.post("/generate-song-chords", requireAuth, async (req, res) => {
   try {
-    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista, audioUrl, sobrescribir } = req.body;
+    const { songId, titulo, tonalidad, bpm, esVersionCovers, artista, audioUrl, sobrescribir } = req.body;
 
     if (!titulo) {
       return res.status(400).json({ error: "El título de la canción es requerido." });

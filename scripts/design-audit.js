@@ -285,7 +285,7 @@ async function main() {
     console.log('🔧 Applying automatic fixes...\n');
     try {
       execSync('npm run design:fix', { stdio: 'inherit' });
-    } catch (e) {
+    } catch {
       console.error('Fix script failed');
       process.exit(1);
     }

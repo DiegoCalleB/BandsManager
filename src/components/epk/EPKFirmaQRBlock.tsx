@@ -1,21 +1,5 @@
 import React, { useState } from "react";
-import {
-  AtSign,
-  Mail,
-  Music,
-  FileDown,
-  QrCode,
-  Copy,
-  ExternalLink,
-  Check,
-  Share2,
-  FileText,
-  Code,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Info,
-} from "lucide-react";
+import { AtSign, Mail, Music, QrCode, Copy, ExternalLink, Check, Share2, FileText, Code, HelpCircle, ChevronDown, ChevronUp } from "lucide-react";
 import QRCode from "react-qr-code";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
@@ -306,7 +290,7 @@ export const EPKFirmaQRBlock: React.FC<EPKFirmaQRBlockProps> = ({
             </div>
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
               {Object.entries(config.enlacesRedes || {})
-                .filter(([_, url]) => Boolean(url && String(url).trim()))
+                .filter(([, url]) => Boolean(url && String(url).trim()))
                 .map(([key]) => {
                   const platform = UNIFIED_PLATFORMS.find((p) => p.key === key);
                   return (

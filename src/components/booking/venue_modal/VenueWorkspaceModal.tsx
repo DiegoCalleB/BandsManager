@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Sparkles, Mail, Compass, History, Building2, Zap } from 'lucide-react';
-import { Lead, LeadStatus, Concert } from '../../../types';
+import { Sparkles, Mail, Compass, History, Zap } from 'lucide-react';
 import { ModalPortal } from '../../common/ModalPortal';
 import { VenueModalHeader } from './VenueModalHeader';
 import { VenueProfileColumn } from './VenueProfileColumn';
@@ -20,20 +19,14 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   onSelectLead,
   onUpdateLead,
   onDeleteLead,
-  getStatusBadgeClass,
-  getStatusLabel,
   getStatusDotColor,
   normalizeStatus,
-  normalizeType,
   autoDetectVenueAddress,
-  sectionTab,
   activeCampaign,
-  onLeadLogoUpload,
-  isUploadingLeadLogo,
   initialTab = 'pitch',
   onFilterByRouteCity,
   bandName,
-  concerts = [],
+  concerts = []
 }) => {
   const [activeTab, setActiveTab] = useState<VenueModalTab>(initialTab);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);

@@ -1,26 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Sparkles,
-  Send,
-  CheckCircle2,
-  Copy,
-  Edit3,
-  RotateCcw,
-  Star,
-  MessageCircle,
-  Loader2,
-  Check,
-  Layers,
-  ChevronDown,
-  AlertCircle,
-  Clock,
-  Mail,
-  Save,
-  Undo2,
-} from 'lucide-react';
+import { Sparkles, Send, CheckCircle2, Copy, Edit3, Star, MessageCircle, Loader2, Check, Layers, AlertCircle, Clock, Mail, Save } from 'lucide-react';
 import { Lead } from '../../../types';
-import { Button, IconButton, Textarea, Select } from '../../ui';
-import { ShowIcon } from '../../ui/ShowIcon';
+import { Button, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import { MultiModelPitchComparatorModal } from '../MultiModelPitchComparatorModal';
 
@@ -36,8 +17,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
   lead,
   onUpdateLead,
   onOpenWhatsAppModal,
-  activeCampaign,
-  bandName,
+  activeCampaign
 }) => {
   const [editedPitch, setEditedPitch] = useState(lead.pitch_generado || '');
   const [isEditingText, setIsEditingText] = useState(false);

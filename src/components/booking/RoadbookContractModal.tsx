@@ -1,26 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Lead, Concert } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import {
-  X,
-  Printer,
-  Copy,
-  Check,
-  FileText,
-  MapPin,
-  Calendar,
-  Clock,
-  Phone,
-  ShieldCheck,
-  Share2,
-  Sparkles,
-  Car,
-  Fuel,
-  Music,
-  ExternalLink,
-  ChevronRight,
-  Info,
-} from 'lucide-react';
+import { X, Printer, Copy, Check, FileText, MapPin, Clock, ShieldCheck, Share2, Info } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
 
@@ -39,9 +20,7 @@ export const RoadbookContractModal: React.FC<RoadbookContractModalProps> = ({
   onClose,
   lead: initialLead,
   leads = [],
-  concerts = [],
-  bandName = 'Tu banda',
-  isStitchLight = false,
+  bandName = 'Tu banda'
 }) => {
   const [selectedLeadId, setSelectedLeadId] = useState<string>(initialLead?.id || '');
   const [activeTab, setActiveTab] = useState<'roadbook' | 'contract' | 'weblink'>('roadbook');
@@ -66,17 +45,17 @@ export const RoadbookContractModal: React.FC<RoadbookContractModalProps> = ({
   const [ticketPrice, setTicketPrice] = useState<number>(12);
   const [cacheAmount, setCacheAmount] = useState<number>(600);
   const [splitPercent, setSplitPercent] = useState<number>(80);
-  const [originCity, setOriginCity] = useState<string>('Madrid');
-  const [travelDistanceKm, setTravelDistanceKm] = useState<number>(320);
+  const [originCity] = useState<string>('Madrid');
+  const [travelDistanceKm] = useState<number>(320);
 
   // Horarios de operaciones
   const [departureTime, setDepartureTime] = useState('15:30');
-  const [arrivalTime, setArrivalTime] = useState('18:00');
+  const [arrivalTime] = useState('18:00');
   const [soundcheckTime, setSoundcheckTime] = useState('19:00');
-  const [dinnerTime, setDinnerTime] = useState('20:45');
-  const [doorsTime, setDoorsTime] = useState('21:30');
+  const [dinnerTime] = useState('20:45');
+  const [doorsTime] = useState('21:30');
   const [showTime, setShowTime] = useState('22:15');
-  const [curfewTime, setCurfewTime] = useState('00:30');
+  const [curfewTime] = useState('00:30');
 
   if (!isOpen || !currentLead) return null;
 

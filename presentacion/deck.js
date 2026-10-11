@@ -6,8 +6,8 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const root = document.documentElement;
   const store = {
-    get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch (_) { /* sin almacenamiento */ } },
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* sin almacenamiento */ } },
   };
 
   // Tema: oscuro por defecto, salvo que se haya elegido uno antes (tecla T)
@@ -35,7 +35,7 @@
           v.style.cssText = 'width:100%;height:100%;border-radius:24px;background:#000';
           host.appendChild(v); ok = true;
         }
-      } catch (_) { /* sin vídeo */ }
+      } catch { /* sin vídeo */ }
     }
     if (!ok) vs.remove();
   }

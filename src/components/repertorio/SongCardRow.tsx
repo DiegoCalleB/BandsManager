@@ -3,27 +3,7 @@ import { posicionMenu } from '../../utils/posicionMenu';
 import { createPortal } from 'react-dom';
 import { Song, ThemeColors } from '../../types';
 import { formatSongTitle } from '../../utils/formatSongTitle';
-import {
-  Play,
-  Pause,
-  Star,
-  FileText,
-  Users,
-  Headphones,
-  Edit3,
-  Trash2,
-  Share2,
-  ExternalLink,
-  MoreVertical,
-  ArrowUp,
-  ArrowDown,
-  Volume2,
-  Music,
-  Check,
-  GripVertical,
-  Sparkles,
-  Cpu,
-} from 'lucide-react';
+import { Play, Star, FileText, Users, Headphones, Edit3, Trash2, Share2, ExternalLink, MoreVertical, ArrowUp, ArrowDown, Volume2, Music, GripVertical, Sparkles } from 'lucide-react';
 import { hasIrisStems } from '../../utils/irisTracks';
 import { Button, IconButton, MenuItem } from '../ui';
 
@@ -99,8 +79,7 @@ export const SongCardRow: React.FC<SongCardRowProps> = ({
   onDrop,
   onDragEnd,
   isDragging = false,
-  isDragOver = false,
-  colors,
+  isDragOver = false
 }) => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);

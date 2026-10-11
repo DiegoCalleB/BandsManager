@@ -291,7 +291,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (_err) {
+    } catch {
       response = await generateContentWithFallback(client, { contents: prompt });
     }
 

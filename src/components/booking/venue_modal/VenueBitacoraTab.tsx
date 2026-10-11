@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { History, Plus, Trash2, PhoneCall, MessageCircle, Calendar, CheckCircle2 } from 'lucide-react';
+import { History, Plus, Trash2 } from 'lucide-react';
 import { Lead, InteractionLog } from '../../../types';
-import { Button, Input, Select, Textarea } from '../../ui';
+import { Button, Select, Textarea } from '../../ui';
 
 interface VenueBitacoraTabProps {
   lead: Lead;

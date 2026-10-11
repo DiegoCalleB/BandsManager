@@ -1,5 +1,5 @@
 import { detectPitchLanguage } from "./leadLanguage.js";
-import { formatGlobalPitchFeedbackForPrompt, mapLeadTipoToTemplateCategory } from "../promptsManager.js";
+import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { sanitizeExternalText } from "./promptSafety.js";
 import { getCoreAntiAiRulesPrompt } from "./promptGuidelines.js";
 

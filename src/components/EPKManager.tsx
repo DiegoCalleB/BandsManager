@@ -3,10 +3,10 @@ import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { EPKConfig, Song, User, BandMember, EPKVideo, DatosContratacion } from '../types';
 import { uploadFileToServer } from '../utils/audioStorage';
 import { EPK_LANGUAGES } from '../i18n/epkTranslations';
-import { IDIOMA_ORIGEN, traduccionDesactualizada, tieneTraduccion } from '../utils/epkTraducciones';
+import { IDIOMA_ORIGEN } from '../utils/epkTraducciones';
 import { api } from '../services/api';
 import { FansLandingPreviewModal } from './FansLandingPreviewModal';
-import { EPKBlockId, EPK_BLOCKS, computeEPKHealth, getBlockNavigation } from './epk/epkBlocks';
+import { EPKBlockId, computeEPKHealth, getBlockNavigation } from './epk/epkBlocks';
 import { EPKHeader } from './epk/EPKHeader';
 import { EPKPerfilBlock } from './epk/EPKPerfilBlock';
 import { EPKArchivosBlock } from './epk/EPKArchivosBlock';
@@ -139,7 +139,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   // destacados se quedaba siempre vacío y no se podía marcar ninguna canción. Si no llegan
   // por prop, se piden al backend igual que hace RepertorioSetlists.
   const [songsCargadas, setSongsCargadas] = useState<Song[]>([]);
-  const [errorSongs, setErrorSongs] = useState<string | null>(null);
+  const [, setErrorSongs] = useState<string | null>(null);
   const songs: Song[] = songsProp && songsProp.length > 0 ? songsProp : songsCargadas;
 
   const activeBandId = currentUser?.band_id || '';
@@ -233,7 +233,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
   const [copiedPublicUrl, setCopiedPublicUrl] = useState(false);
   const [showFansPreviewModal, setShowFansPreviewModal] = useState(false);
   const [activeBlock, setActiveBlock] = useState<EPKBlockId>('perfil');
-  const [saving, setSaving] = useState(false);
+  const [, setSaving] = useState(false);
   const [previewDonationMethod, setPreviewDonationMethod] = useState<'revolut' | 'paypal'>('revolut');
 
   const healthStats = computeEPKHealth(config);

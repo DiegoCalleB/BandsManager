@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
+import { X, Sparkles, CheckCircle2, Loader2, Mail, Phone, Instagram } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton } from '../ui';
@@ -76,7 +76,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
               });
             }
           }
-        } catch (err) {
+        } catch {
           console.warn(`No se pudo enriquecer ${lead.nombre_sala}`);
         }
         setProcessedCount(i + 1);
@@ -84,7 +84,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
 
       setEnrichedResults(enrichedList);
       setStatusMessage(`Enriquecimiento finalizado. Se han procesado ${enrichedList.length} contactos.`);
-    } catch (e: any) {
+    } catch {
       setStatusMessage('Hubo un error durante el proceso de enriquecimiento.');
     } finally {
       setIsProcessing(false);

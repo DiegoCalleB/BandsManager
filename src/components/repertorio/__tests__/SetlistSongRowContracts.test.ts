@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import React from 'react';
 import { SetlistSongRow } from '../SetlistSongRow';
 
 describe('SetlistSongRow Component Contract', () => {

@@ -1,21 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Activity,
-  RefreshCw,
-  CheckCircle2,
-  Clock,
-  AlertTriangle,
-  Play,
-  Trash2,
-  X,
-  Bot,
-  ShieldCheck,
-  Zap,
-  Cpu,
-  Server,
-  Check,
-  ArrowRight,
-} from 'lucide-react';
+import { Activity, RefreshCw, CheckCircle2, Clock, AlertTriangle, Trash2, X, Bot, ShieldCheck, Cpu, Server, Check } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -47,12 +31,12 @@ interface AgentQueueMonitorModalProps {
   bandName?: string;
 }
 
-export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ isOpen, onClose, bandName }) => {
+export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState<QueueStats>({ pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
   const [recentJobs, setRecentJobs] = useState<QueueJobItem[]>([]);
-  const [workerOnline, setWorkerOnline] = useState(true);
+  const [, setWorkerOnline] = useState(true);
   const [isPruning, setIsPruning] = useState(false);
   const [pruneSuccessMsg, setPruneSuccessMsg] = useState<string | null>(null);
 

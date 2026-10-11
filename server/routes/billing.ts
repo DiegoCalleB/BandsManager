@@ -101,7 +101,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
         return bandConfig.contactoBooking.email.trim().toLowerCase();
       }
     }
-  } catch (err) {
+  } catch {
     // Ignore lookup errors
   }
   return undefined;
@@ -457,7 +457,7 @@ export function urlDeVueltaSegura(req: express.Request, returnUrl?: unknown): st
   try {
     const destino = new URL(returnUrl);
     if (destino.origin === new URL(origen).origin) return returnUrl;
-  } catch (e) {
+  } catch {
     // URL no parseable: se ignora y se vuelve al origen conocido.
   }
   return origen;

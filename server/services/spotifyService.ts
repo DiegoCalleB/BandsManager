@@ -143,7 +143,7 @@ export async function getSpotifyAccessToken(): Promise<string | null> {
         return data.accessToken;
       }
     }
-  } catch (webErr: any) {
+  } catch {
     // Non-fatal, fallback to SSR scraping or Universal API
   }
 
@@ -542,7 +542,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
           resolvedArtistName = rawTitle;
         }
       }
-    } catch (oeErr) {
+    } catch {
       // Non-fatal
     }
   }

@@ -2,23 +2,7 @@ import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
 import { BandRelationshipStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
-import {
-  CheckSquare,
-  MinusSquare,
-  Square,
-  X,
-  ChevronDown,
-  Sparkles,
-  Download,
-  Trash2,
-  Star,
-  CheckCircle2,
-  Repeat,
-  Clock,
-  ArrowRight,
-  Users,
-  ShieldAlert,
-} from "lucide-react";
+import { CheckSquare, MinusSquare, Square, X, ChevronDown, Sparkles, Download, Trash2, Star, CheckCircle2, Repeat, Clock, Users, ShieldAlert } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, LinkButton } from '../ui';
 

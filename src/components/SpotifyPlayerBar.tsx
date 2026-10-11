@@ -3,29 +3,10 @@ import { ShowIcon } from './ui/ShowIcon';
 
 const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
 import { Song, ThemeColors } from '../types';
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Repeat,
-  Volume2,
-  VolumeX,
-  ExternalLink,
-  Disc,
-  Sliders,
-  X,
-  Flame,
-  Music,
-  Sparkles,
-  FileText,
-  ChevronUp,
-  ChevronDown,
-} from 'lucide-react';
-import { parseGoogleDriveAudioUrl, isGoogleDriveUrl, resolveAudioUrl, fileToBase64 } from '../utils/audioStorage';
+import { Play, Pause, SkipBack, SkipForward, Repeat, Volume2, VolumeX, Disc, Sliders, X, Sparkles, FileText, ChevronUp, ChevronDown } from 'lucide-react';
+import { isGoogleDriveUrl, resolveAudioUrl } from '../utils/audioStorage';
 import { CROSSFADE_SECONDS, computeCrossfadeGains, shouldCrossfade } from '../utils/crossfade';
 import { transposeChordToken, getSemitoneDifference } from '../utils/chordUtils';
-import { api } from '../services/api';
 import { useTonePitchShift } from '../hooks/useTonePitchShift';
 import { usePlayer } from '../context/PlayerContext';
 import { Button, IconButton, Select } from './ui';
@@ -67,7 +48,6 @@ function getRawAudioUrl(song: Song | null | undefined): string {
 export default function SpotifyPlayerBar({
   song,
   songs,
-  colors,
   onSelectSong,
   onOpenStudio,
   onOpenIris,
@@ -76,7 +56,7 @@ export default function SpotifyPlayerBar({
   autoPlay = false,
   playSignal = 0,
   onIsPlayingChange,
-  transposeSemitones: propTransposeSemitones = 0,
+  transposeSemitones: propTransposeSemitones = 0
 }: SpotifyPlayerBarProps) {
   const { setCurrentTime: setContextCurrentTime, setDuration: setContextDuration } = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -159,7 +139,7 @@ export default function SpotifyPlayerBar({
     }
   };
 
-  const [isTransposingAudio, setIsTransposingAudio] = useState(false);
+  const [isTransposingAudio] = useState(false);
 
   // Trasposición nativa en tiempo real en el navegador (Tone.js / Web Audio API)
   useTonePitchShift({

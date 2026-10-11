@@ -1,26 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Song, ThemeColors } from "../../types";
-import {
-  Music,
-  Disc,
-  Search,
-  Check,
-  X,
-  ExternalLink,
-  Play,
-  Pause,
-  Sparkles,
-  CheckSquare,
-  Square,
-  Layers,
-  RefreshCw,
-  AlertCircle,
-  Radio,
-  ListMusic,
-  ChevronDown,
-  ChevronUp,
-  ShieldCheck,
-} from "lucide-react";
+import { Disc, Search, X, ExternalLink, Play, Pause, Sparkles, CheckSquare, Square, RefreshCw, AlertCircle, Radio, ChevronDown, ChevronUp, ShieldCheck } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
@@ -84,9 +64,7 @@ export const SpotifyDiscographyModal: React.FC<
   isOpen,
   onClose,
   bandName = "",
-  existingSongs = [],
-  colors,
-  onSongsImported,
+  onSongsImported
 }) => {
   const [searchQuery, setSearchQuery] = useState(bandName);
   const [isSearching, setIsSearching] = useState(false);
@@ -188,7 +166,7 @@ export const SpotifyDiscographyModal: React.FC<
       audio.play().catch(() => setPlayingTrackId(null));
       audioPreviewRef.current = audio;
       setPlayingTrackId(track.id);
-    } catch (e) {
+    } catch {
       setPlayingTrackId(null);
     }
   };
