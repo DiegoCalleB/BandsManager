@@ -58,7 +58,7 @@ export function parseTimeToSeconds(timeStr?: string): number {
 }
 
 /** Acepta "0:15 - 0:45", "0:15-0:45", "00:00:15 → 00:00:45" y variantes con espacios raros. */
-export function parseRange(rangeStr?: string): { start: number; end: number } {
+export function parseRange(rangeStr?: unknown): { start: number; end: number } {
   if (!rangeStr) return { start: 0, end: 0 };
   const normalizado = String(rangeStr).replace(/[–—→>]+/g, "-");
   const partes = normalizado.split("-");
@@ -100,14 +100,14 @@ export function formatAssTime(seconds: number): string {
  * o comas colgantes. `JSON.parse` a pelo sobre eso reventaba el análisis y la ruta caía al
  * fallback genérico aunque la IA hubiera respondido bien.
  */
-export function extractJsonObject(raw?: string | null): any | null {
+export function extractJsonObject(raw?: string | null): Record<string, unknown> | null {
   if (!raw) return null;
   let texto = String(raw).trim();
 
   // Vallas markdown, abiertas o cerradas.
   texto = texto.replace(/^```(?:json|JSON)?\s*/m, "").replace(/```\s*$/m, "").trim();
 
-  const intentar = (candidato: string): any | null => {
+  const intentar = (candidato: string): unknown => {
     try {
       return JSON.parse(candidato);
     } catch {
@@ -121,7 +121,8 @@ export function extractJsonObject(raw?: string | null): any | null {
   };
 
   const directo = intentar(texto);
-  if (directo && typeof directo === "object") return directo;
+  // Un objeto o un array: el llamador mira solo las claves que espera y valida cada valor.
+  if (directo && typeof directo === "object") return directo as Record<string, unknown>;
 
   // Recorte por llaves/corchetes equilibrados, ignorando los que van dentro de strings.
   for (const [abre, cierra] of [["{", "}"], ["[", "]"]] as const) {
@@ -141,7 +142,7 @@ export function extractJsonObject(raw?: string | null): any | null {
         profundidad--;
         if (profundidad === 0) {
           const recortado = intentar(texto.substring(inicio, i + 1));
-          if (recortado && typeof recortado === "object") return recortado;
+          if (recortado && typeof recortado === "object") return recortado as Record<string, unknown>;
           break;
         }
       }
@@ -153,14 +154,14 @@ export function extractJsonObject(raw?: string | null): any | null {
 
 /* ------------------------------------------------ saneado de los highlights */
 
-function aTexto(v: any, porDefecto = ""): string {
+function aTexto(v: unknown, porDefecto = ""): string {
   if (v === null || v === undefined) return porDefecto;
   if (Array.isArray(v)) return v.map((x) => String(x)).join(" ");
   const s = String(v).trim();
   return s || porDefecto;
 }
 
-function aHashtags(v: any, porDefecto: string[]): string[] {
+function aHashtags(v: unknown, porDefecto: string[]): string[] {
   const bruto = Array.isArray(v) ? v : typeof v === "string" ? v.split(/[\s,]+/) : [];
   const salida: string[] = [];
   for (const item of bruto) {
@@ -172,6 +173,12 @@ function aHashtags(v: any, porDefecto: string[]): string[] {
     if (salida.length >= 12) break;
   }
   return salida.length ? salida : porDefecto;
+}
+
+type LengthCategory = NonNullable<NormalizedHighlight['lengthCategory']>;
+
+function esLengthCategory(v: unknown): v is LengthCategory {
+  return v === 'micro_hook' || v === 'hit_moment' || v === 'story_bts';
 }
 
 export interface NormalizeOptions {
@@ -192,18 +199,20 @@ export interface NormalizeOptions {
  * Sin esto, un rango alucinado como "12:30 - 13:00" en un vídeo de 3 minutos llegaba tal cual
  * a ffmpeg y el recorte salía vacío.
  */
-export function normalizeHighlights(rawList: any, options: NormalizeOptions): NormalizedHighlight[] {
+export function normalizeHighlights(rawList: unknown, options: NormalizeOptions): NormalizedHighlight[] {
   const videoDuration = Math.max(1, Math.floor(Number(options.videoDuration) || 0));
   const target = Math.max(5, Math.min(90, Math.floor(Number(options.targetDuration) || 30)));
   const minDur = Math.max(3, Math.floor(options.minDuration ?? Math.min(8, target)));
   const maxDur = Math.max(minDur, Math.floor(options.maxDuration ?? Math.min(videoDuration, Math.round(target * 1.5))));
   const defaults = options.defaultHashtags && options.defaultHashtags.length ? options.defaultHashtags : ["#MusicaEnDirecto"];
 
-  const lista = Array.isArray(rawList) ? rawList : [];
+  const lista: unknown[] = Array.isArray(rawList) ? rawList : [];
   const salida: NormalizedHighlight[] = [];
 
-  lista.forEach((item: any, idx: number) => {
-    if (!item || typeof item !== "object") return;
+  lista.forEach((bruto, idx) => {
+    if (!bruto || typeof bruto !== "object") return;
+    // Objeto suelto de la IA: cada campo se convierte y valida abajo.
+    const item = bruto as Record<string, unknown>;
 
     // Preferimos los segundos numéricos; el rango en texto es el respaldo.
     let start = Number(item.startSec ?? item.start_sec ?? item.start);
@@ -249,8 +258,11 @@ export function normalizeHighlights(rawList: any, options: NormalizeOptions): No
       : 80;
 
     const durClip = end - start;
-    const cat: 'micro_hook' | 'hit_moment' | 'story_bts' = 
-      item.lengthCategory || (durClip <= 16 ? 'micro_hook' : durClip <= 36 ? 'hit_moment' : 'story_bts');
+    // La categoría del modelo solo se respeta si es una de las tres conocidas; si no (o falta),
+    // se deduce de la duración real del clip.
+    const cat: LengthCategory = esLengthCategory(item.lengthCategory)
+      ? item.lengthCategory
+      : durClip <= 16 ? 'micro_hook' : durClip <= 36 ? 'hit_moment' : 'story_bts';
 
     const recommended = aTexto(item.recommendedCopy || item.copy || item.caption, "");
     const viral = aTexto(item.copyViral || recommended, recommended);
