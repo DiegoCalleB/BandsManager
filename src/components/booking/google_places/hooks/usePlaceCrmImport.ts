@@ -7,6 +7,7 @@ import { errorMessage } from "../placesModel";
 import { Dispatch,SetStateAction,useState } from "react";
 import { Lead } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
+import type { RespuestaImportarLeads } from "../../tiposRespuestasApi";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface PlaceCrmImportParams {
@@ -34,7 +35,7 @@ export function usePlaceCrmImport({ places, setImportSuccessMsg, onImportLeads, 
     setImportSuccessMsg("");
 
     try {
-      const res = await apiFetch("/api/leads/import-places", {
+      const res = await apiFetch<RespuestaImportarLeads>("/api/leads/import-places", {
         method: "POST",
         body: JSON.stringify({
           leads: selectedPlaces,

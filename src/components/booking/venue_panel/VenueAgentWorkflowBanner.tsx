@@ -10,6 +10,7 @@ import { CheckCircle2,Loader2,Send,Sparkles } from "lucide-react";
 import { Dispatch,SetStateAction } from "react";
 import { Lead,LeadStatus } from "../../../types";
 import { apiFetch } from "../../../utils/api";
+import type { TriggerAgentResponse } from "./venuePanelTypes";
 import { Button } from "../../ui";
 import { ShowIcon } from "../../ui/ShowIcon";
 
@@ -133,7 +134,7 @@ export function VenueAgentWorkflowBanner({ selectedLead, normalizeStatus, isRepl
                     setIsCreatingDraft(true);
                     setDraftError(null);
                     try {
-                      const data = await apiFetch("/api/trigger-agent", {
+                      const data = await apiFetch<TriggerAgentResponse>("/api/trigger-agent", {
                         method: "POST",
                         body: JSON.stringify({
                           agentName: "enviador",
@@ -144,9 +145,7 @@ export function VenueAgentWorkflowBanner({ selectedLead, normalizeStatus, isRepl
                         }),
                       });
                       const leadResult = Array.isArray(data.results)
-                        ? data.results.find(
-                            (r: { id: string }) => r.id === selectedLead.id,
-                          )
+                        ? data.results.find((r) => r.id === selectedLead.id)
                         : null;
                       if (
                         leadResult?.status === "borrador" ||

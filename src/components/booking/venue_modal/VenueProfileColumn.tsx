@@ -4,6 +4,7 @@ import { Lead, Concert } from '../../../types';
 import { checkBandDateConflict } from '../../../utils/bookingTourContext';
 import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
+import type { RespuestaEnriquecerLead } from '../tiposRespuestasApi';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
 /** Lead con la fecha de evento que guardaban versiones antiguas del CRM. */
@@ -52,7 +53,7 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
     setIsEnrichingScout(true);
     setScoutMsg('Agente Scout consultando web y bases públicas...');
     try {
-      const res = await apiFetch(`/api/leads/enrich-lead`, {
+      const res = await apiFetch<RespuestaEnriquecerLead>(`/api/leads/enrich-lead`, {
         method: 'POST',
         body: JSON.stringify({
           leadId: lead.id,

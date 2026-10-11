@@ -3,6 +3,7 @@ import * as XLSX from "xlsx";
 import { FileSpreadsheet, Upload, CheckCircle2, AlertTriangle, ArrowRight, ArrowLeft, X, Download, Info, Building2, Trash2, RefreshCw, Check, Search, Filter } from "lucide-react";
 import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
+import type { RespuestaImportarLeads } from "./tiposRespuestasApi";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
@@ -650,7 +651,7 @@ export function ExcelImportModal({
         estado: "nuevo",
       }));
 
-      const res = await apiFetch("/api/leads/import-excel", {
+      const res = await apiFetch<RespuestaImportarLeads>("/api/leads/import-excel", {
         method: "POST",
         body: JSON.stringify({
           leads: leadsPayload,
@@ -667,7 +668,7 @@ export function ExcelImportModal({
           res.leads.length > 0
         ) {
           const leadsToEnrich = res.leads.filter(
-            (l: Lead) => !l.email_contacto || l.email_contacto.trim() === "",
+            (l) => !l.email_contacto || l.email_contacto.trim() === "",
           );
           if (leadsToEnrich.length > 0) {
             setImportStatusMsg(
@@ -677,7 +678,7 @@ export function ExcelImportModal({
               await apiFetch("/api/leads/extract-emails", {
                 method: "POST",
                 body: JSON.stringify({
-                  places: leadsToEnrich.slice(0, 10).map((l: Lead) => ({
+                  places: leadsToEnrich.slice(0, 10).map((l) => ({
                     place_id: l.id,
                     nombre_sala: l.nombre_sala,
                     ciudad: l.ciudad,

@@ -4,26 +4,7 @@ import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
-
-interface QueueJobItem {
-  id: string;
-  agent_type: string;
-  status: string;
-  attempts: number;
-  error_message?: string;
-  scheduled_at: string;
-  completed_at?: string;
-  created_at: string;
-  duration_ms?: number;
-}
-
-interface QueueStats {
-  pending: number;
-  processing: number;
-  completed: number;
-  failed: number;
-  total: number;
-}
+import type { EstadisticasColaAgentes, RespuestaMetricasCola, RespuestaPodarCola, TrabajoColaAgentes } from './tiposRespuestasApi';
 
 interface AgentQueueMonitorModalProps {
   isOpen: boolean;
@@ -34,8 +15,8 @@ interface AgentQueueMonitorModalProps {
 export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [stats, setStats] = useState<QueueStats>({ pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
-  const [recentJobs, setRecentJobs] = useState<QueueJobItem[]>([]);
+  const [stats, setStats] = useState<EstadisticasColaAgentes>({ pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
+  const [recentJobs, setRecentJobs] = useState<TrabajoColaAgentes[]>([]);
   const [, setWorkerOnline] = useState(true);
   const [isPruning, setIsPruning] = useState(false);
   const [pruneSuccessMsg, setPruneSuccessMsg] = useState<string | null>(null);
@@ -43,7 +24,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
   const fetchMetrics = async (isManual = false) => {
     if (isManual) setRefreshing(true);
     try {
-      const data = await apiFetch('/api/agent-queue/metrics');
+      const data = await apiFetch<RespuestaMetricasCola>('/api/agent-queue/metrics');
       if (data && data.success) {
         setStats(data.stats || { pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
         setRecentJobs(data.recentJobs || []);
@@ -70,7 +51,7 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
     setIsPruning(true);
     setPruneSuccessMsg(null);
     try {
-      const data = await apiFetch('/api/agent-queue/prune', {
+      const data = await apiFetch<RespuestaPodarCola>('/api/agent-queue/prune', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completedDays: 0, failedDays: 30 }), // Poda inmediata de completados

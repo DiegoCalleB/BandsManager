@@ -6,6 +6,8 @@ import { Button } from '../../ui';
 import { ShowIcon } from '../../ui/ShowIcon';
 import { EmailDeliveryTicks } from '../EmailDeliveryTicks';
 import { apiFetch } from '../../../utils/api';
+import type { TriggerAgentResponse } from '../venue_panel/venuePanelTypes';
+import type { RespuestaLeadPorId } from '../tiposRespuestasApi';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
 /**
@@ -110,7 +112,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     setIsSyncing(true);
     setSyncFeedback(null);
     try {
-      const res = await apiFetch('/api/trigger-agent', {
+      const res = await apiFetch<TriggerAgentResponse>('/api/trigger-agent', {
         method: 'POST',
         body: JSON.stringify({
           agentName: 'lector',
@@ -120,7 +122,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
       await fetchMessages();
 
-      const updatedLeadRes = await apiFetch(`/api/leads/${lead.id}`).catch(() => null);
+      const updatedLeadRes = await apiFetch<RespuestaLeadPorId>(`/api/leads/${lead.id}`).catch(() => null);
       if (updatedLeadRes?.lead) {
         onUpdateLead(lead.id, updatedLeadRes.lead);
       }

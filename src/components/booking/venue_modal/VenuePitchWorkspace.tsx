@@ -3,6 +3,7 @@ import { Sparkles, Send, CheckCircle2, Copy, Edit3, Star, MessageCircle, Loader2
 import { Lead, LeadStatus, BookingCampaign } from '../../../types';
 import { Button, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
+import type { RespuestaRegenerarPitch } from '../tiposRespuestasApi';
 import { MultiModelPitchComparatorModal } from '../MultiModelPitchComparatorModal';
 import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
@@ -67,7 +68,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
         ? `/api/leads/${lead.id}/regenerate-reply`
         : `/api/leads/${lead.id}/regenerate-pitch`;
 
-      const res = await apiFetch(endpoint, {
+      const res = await apiFetch<RespuestaRegenerarPitch>(endpoint, {
         method: 'POST',
         body: JSON.stringify({
           tono_rating: toneRating || undefined,

@@ -19,6 +19,14 @@ interface ExampleThread {
   created_at: string;
 }
 
+/** Respuesta de `/api/example-threads` (listado: `threads`; alta y edición: `thread`). */
+interface RespuestaHilosEjemplo {
+  success?: boolean;
+  threads?: ExampleThread[];
+  thread?: ExampleThread;
+  error?: string;
+}
+
 interface ExampleThreadsSectionProps {
   /** Heredado de main: Espectro resuelve el tema en tokens, así que se acepta y se ignora. */
   isStitchLight?: boolean;
@@ -62,7 +70,7 @@ export function ExampleThreadsSection({
   }
 
   const pedirHilos = useCallback(
-    () => apiFetch(`/api/example-threads?category=${encodeURIComponent(category)}`)
+    () => apiFetch<RespuestaHilosEjemplo>(`/api/example-threads?category=${encodeURIComponent(category)}`)
       .then((res) => { if (res.success) setThreads(res.threads || []); })
       .catch((err) => { console.warn("No se pudieron cargar los hilos de ejemplo:", err); })
       .finally(() => { setCargadaCategoria(category); setRecargando(false); }),
@@ -147,7 +155,7 @@ export function ExampleThreadsSection({
     setIsSaving(true);
     try {
       const res = editingId
-        ? await apiFetch(`/api/example-threads/${editingId}`, {
+        ? await apiFetch<RespuestaHilosEjemplo>(`/api/example-threads/${editingId}`, {
             method: "PUT",
             body: JSON.stringify({
               titulo,
@@ -155,7 +163,7 @@ export function ExampleThreadsSection({
               resultado,
             }),
           })
-        : await apiFetch("/api/example-threads", {
+        : await apiFetch<RespuestaHilosEjemplo>("/api/example-threads", {
             method: "POST",
             body: JSON.stringify({
               category,

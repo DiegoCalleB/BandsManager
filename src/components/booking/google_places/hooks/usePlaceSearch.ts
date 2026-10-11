@@ -9,6 +9,7 @@ import { useMassCampaignSearch } from "./useMassCampaignSearch";
 import { Dispatch,SetStateAction,useState } from "react";
 import { BookingCampaign,Lead,LeadType } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
+import type { RespuestaBuscarSalas } from "../../tiposRespuestasApi";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface PlaceSearchParams {
@@ -72,7 +73,7 @@ export function usePlaceSearch({ selectedCity, selectedType, searchQuery, setSea
     setDiscardToast("");
 
     try {
-      const res = await apiFetch("/api/leads/places-search", {
+      const res = await apiFetch<RespuestaBuscarSalas>("/api/leads/places-search", {
         method: "POST",
         body: JSON.stringify({
           query: q,

@@ -6,6 +6,7 @@ import { errorMessage } from "../placesModel";
 import { Dispatch,SetStateAction,useState } from "react";
 import { BookingCampaign,Lead } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
+import type { RespuestaBusquedaMasiva } from "../../tiposRespuestasApi";
 import { getStoredDiscarded,PlaceResult } from "../placesModel";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -57,7 +58,7 @@ export function useMassCampaignSearch({ setSearchError, setImportSuccessMsg, set
                 "Bilbao",
               ];
 
-      const res = await apiFetch("/api/leads/campaign-mass-search", {
+      const res = await apiFetch<RespuestaBusquedaMasiva>("/api/leads/campaign-mass-search", {
         method: "POST",
         body: JSON.stringify({
           targetCities: citiesToSearch,

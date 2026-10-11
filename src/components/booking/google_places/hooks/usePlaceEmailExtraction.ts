@@ -6,6 +6,7 @@ import { errorMessage } from "../placesModel";
  */
 import { Dispatch,SetStateAction,useState } from "react";
 import { apiFetch } from "../../../../utils/api";
+import type { ContactoExtraidoSala, RespuestaExtraerEmails } from "../../tiposRespuestasApi";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface PlaceEmailExtractionParams {
@@ -34,7 +35,7 @@ export function usePlaceEmailExtraction({ places, setPlaces, setExtractStatus }:
     );
 
     try {
-      const res = await apiFetch("/api/leads/extract-emails", {
+      const res = await apiFetch<RespuestaExtraerEmails>("/api/leads/extract-emails", {
         method: "POST",
         body: JSON.stringify({
           places: [
@@ -101,7 +102,7 @@ export function usePlaceEmailExtraction({ places, setPlaces, setExtractStatus }:
         );
 
         try {
-          const res = await apiFetch("/api/leads/extract-emails", {
+          const res = await apiFetch<RespuestaExtraerEmails>("/api/leads/extract-emails", {
             method: "POST",
             body: JSON.stringify({
               places: chunk.map((p) => ({
@@ -114,8 +115,8 @@ export function usePlaceEmailExtraction({ places, setPlaces, setExtractStatus }:
           });
 
           if (res.success && Array.isArray(res.extracted)) {
-            const emailMap = new Map<string, Partial<PlaceResult> & { id?: string }>();
-            res.extracted.forEach((item: Partial<PlaceResult> & { id?: string }) => {
+            const emailMap = new Map<string, ContactoExtraidoSala>();
+            res.extracted.forEach((item) => {
               if (item.id) emailMap.set(item.id, item);
               if (item.nombre_sala)
                 emailMap.set(item.nombre_sala.toLowerCase().trim(), item);
