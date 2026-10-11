@@ -178,8 +178,8 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     <div className="px-4 py-2.5 bg-[var(--sunken)] text-xs font-sans space-y-2">
       <div className="flex items-center justify-between gap-2">
         <span className="font-bold text-[var(--ink)] min-w-0 truncate">
-          Acordes del audio
-          <span className="font-normal text-[var(--ink-2)]">
+          Acordes<span className="hidden sm:inline"> del audio</span>
+          <span className="hidden sm:inline font-normal text-[var(--ink-2)]">
             {' '}· {analisis.fuente === 'instrumental' ? 'pista instrumental' : analisis.fuente === 'armonia' ? 'stems de armonía (Iris)' : 'mezcla completa'}
             {(() => {
               // Con cambios de tono se muestra la tonalidad del tramo que suena y cuándo cambia.
