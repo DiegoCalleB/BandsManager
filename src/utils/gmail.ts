@@ -138,12 +138,12 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
       throw new Error(
-        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.', { cause: error }
+        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.', { cause: errorCapturado }
       );
     }
 
     if (errCode === 'auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
-      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.', { cause: error });
+      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.', { cause: errorCapturado });
     }
 
     console.error('Error al iniciar sesión con Google:', error);

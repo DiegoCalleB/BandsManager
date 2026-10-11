@@ -43,7 +43,7 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
         .includes('permission denied');
 
     if (isPermissionError) {
-      throw new Error('Permiso de micrófono denegado por el usuario o navegador.', { cause: err });
+      throw new Error('Permiso de micrófono denegado por el usuario o navegador.', { cause: errCapturado });
     }
 
     console.warn('Audio constraints rejected, falling back to standard audio stream:', err);
