@@ -54,12 +54,13 @@ export function useAuth() {
   }, []);
 
   // Silent session refresh function
-  const refreshSession = useCallback(async () => {
+  // Encadenada con `.then`/`.catch` (en vez de async/await) para que las actualizaciones de estado
+  // queden en callbacks asíncronos y no cuenten como setState síncrono al llamarla desde un efecto.
+  const refreshSession = useCallback((): Promise<void> => {
     const tokenToUse = authToken || leerTokenDeSesion();
-    if (!tokenToUse) return;
+    if (!tokenToUse) return Promise.resolve();
 
-    try {
-      const data = await api.verifyMe();
+    return api.verifyMe().then((data) => {
       if (data && data.user) {
         setCurrentUser(data.user);
         setAvailableBands(data.availableBands || []);
@@ -75,7 +76,7 @@ export function useAuth() {
         }
         setIsLoggedIn(true);
       }
-    } catch (errCapturado) {
+    }).catch((errCapturado: unknown) => {
       const err = comoErrorCapturado(errCapturado);
       console.warn('Silent session refresh skipped or offline:', err?.message || err);
       // Un 401 real solo puede venir de una respuesta del servidor, así que nunca coincide con
@@ -110,7 +111,7 @@ export function useAuth() {
       }
       // Online pero con un fallo no-401 (500, CORS, timeout...): no forzamos el cierre de sesión
       // por un error transitorio del servidor, pero tampoco lo ocultamos (ver console.warn arriba).
-    }
+    });
   }, [authToken, syncSessionCookie]);
 
   // Las preferencias de interfaz (p. ej. la disposición del dashboard) se guardan desde los
