@@ -107,3 +107,5 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 - **Cambio de perfil:** la diapositiva «Cambio de perfil» usa `video/v-perfiles.mp4` con `shot_vid_sync`: el vídeo no arranca solo, lo lanza la línea con `cls='sync'` (voces.js).
 - Los audios se piden con `?v=<huella del mp3>` (campo `h` del manifest) para que la caché no mezcle voces viejas con nuevas: `voces.py` lo recalcula al final.
 - Entrada tipo plataforma de cine + logotipo animado (`#ident`, cine.js) con su sonido sintetizado; créditos largos (~80 s) en generar.py.
+- **Exportar la película a MP4** (copia a prueba de wifi y de navegador): con el deck servido en :8099, `node presentacion/tools/grabar_pelicula.mjs salida.mp4`. Graba la pantalla con Playwright, mezcla voces y música con `mezclar_pelicula.py` (música con ducking) y recoge los sonidos de WebAudio. Los `.mp4` de `video/` deben tener su copia `.webm` en `$WEBM_DIR` (el Chromium de Playwright no reproduce H.264). Son ~55 MB: no se commitea.
+
