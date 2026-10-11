@@ -793,7 +793,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
-  <h2>Y ya estamos montando un grupo. Nos falta batería…</h2>
+  <h2>Y ya estamos montando un grupo de metal. Nos falta batería…</h2>
   <p class="sub">Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.</p>
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
 </section>
@@ -842,22 +842,31 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
 </section>
 ''')
 
-# El reto: la banda que está montando Diego busca batería… y Brais tiene una (la pantalla la dirige direccion.py)
+# El reto: la banda de tributo metal que está montando Diego busca batería… y Brais tiene una (la pantalla la dirige direccion.py)
 add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-transition="zoom">
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
-    {dlg(m('iago', 'Y ahora, Brais, un reto. ¿Te acuerdas de la banda que estamos montando? Pues nos falta batería. Y tú tienes una de verdad.',
-           say='Y ahora, {bateria}, un reto. ¿Te acuerdas de la banda que estamos montando? Pues nos falta batería. Y tú tienes una de verdad.'),
+    {dlg(m('iago', 'Y ahora, Brais, un reto. Te hemos visto en vídeo dándole a tu batería electrónica. Y a la banda que estamos montando le falta batería.',
+           say='Y ahora, {bateria}, un reto. Te hemos visto en vídeo dándole a tu batería electrónica. Y a la banda que estamos montando le falta batería.'),
          m('brais', '¿Yo? ¿Y qué tocáis?', say='[surprised] ¿Yo? ¿Y qué tocáis?'),
-         m('iago', 'Temazos: Metallica, Pink Floyd y muchos más. Ya está todo en BandManager: el repertorio y tu hueco a la batería.',
-           say='Temazos. Metallica, Pink Floyd, y muchos más. Ya está todo en Band Mánayer: el repertorio, y tu hueco a la batería.'),
-         m('alvaro', '¡Enter Sandman con el profe a la batería! ¡Eso hay que verlo!', say='[excited] ¡Énter Sándman con el profe a la batería! ¡Eso hay que verlo!'),
-         m('iago', 'Te mando la invitación ahora mismo. Solo tienes que aceptarla.', say='Te mando la invitación ahora mismo. Solo tienes que aceptarla.'),
-         m('xandre', '¡Che, que no se lo piense mucho, que el Comfortably Numb no se toca solo!', say='[laughs] ¡Che, que no se lo piense mucho, que el Cómfortabli Nam no se toca solo!'),
-         m('brais', '¿Metallica y Pink Floyd…? ¿A qué hora es el ensayo?', say='[mischievously] ¿Metallica y Pink Floyd…? ¿A qué hora es el ensayo?'),
-         m('iago', 'El sábado, a las once. Ya está en el calendario. Trae las baquetas.', say='El sábado, a las once. Ya está en el calendario. [softly] Trae las baquetas.'))}
+         m('iago', 'Metal: tributo a Metallica, AC/DC e Iron Maiden. Pero con letras de coña sobre programar aplicaciones.',
+           say='Metal. Tributo a Metálica, Áci Dici, y ÁironMéiden. Pero con letras de coña sobre programar aplicaciones.'),
+         m('alvaro', '¡Highway to Deploy! ¡Master of Pull Requests!', say='[excited] ¡Jáiguei tu Diplói! ¡Máster of Pul Ricuests!'),
+         m('xandre', '¡Che, y Fear of the Deadline, que esa la cantamos todos!', say='[laughs] ¡Che, y Fíar of de Dédlain, que esa la cantamos todos!'),
+         m('iago', 'Así que le escribimos. La IA lo redacta, yo lo repaso y… enviado.', say='Así que le escribimos. La IA lo redacta, yo lo repaso, y… enviado.'))}
   </div>
-  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="La banda de Diego, en BandManager, invita a Brais a la batería"></div>
-  <aside class="ficha" aria-hidden="true"><i>🥁</i><b>El reto</b><p>Brais: a nuestra banda le falta batería. Y tú tienes una.</p><span>Metallica</span><span>Pink Floyd</span><span>Y muchos más</span></aside>
+  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="Desde BandManager, la banda de Diego le escribe a Brais para que toque la batería"></div>
+  <aside class="ficha" aria-hidden="true"><i>🥁</i><b>El reto</b><p>Brais: a nuestra banda de tributo metal le falta batería. Y tú tienes una.</p><span>Metallica</span><span>AC/DC</span><span>Iron Maiden</span></aside>
+</section>
+''')
+
+# La invitación: el correo llega a la bandeja de Brais. La voz de Diego, sin bromas. El cursor se queda sobre «Aceptar»: la decisión es suya
+add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" data-title="La invitación" data-vent-tab="Recibidos · Brais Moure" data-vent-url="correo" data-vent-vivo="Mientras tanto, en el portátil de Brais…" data-transition="fade">
+  <div class="ft-copy"><span class="tag">Fin de la historia · La invitación</span><h2>Te guardamos el sitio.</h2>
+    {dlg(m('iago', 'Brais… yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] {bateria}… yo había dejado de tocar. Este máster me devolvió las ganas.'),
+         m('iago', 'Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.', say='[softly] Tú nos enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.'),
+         m('iago', 'La batería es tuya. Solo tienes que decir que sí.', say='[softly] La batería es tuya. Solo tienes que decir que sí.'))}
+  </div>
+  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El correo de Diego en la bandeja de Brais, con el botón para aceptar la invitación"></div>
 </section>
 ''')
 
@@ -1077,7 +1086,7 @@ for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'v
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
 CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'El correo llega a la sala', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
-         'Un sueño hecho realidad', 'El reloj', 'El reto', 'Gracias', 'Créditos']
+         'Un sueño hecho realidad', 'El reloj', 'El reto', 'La invitación', 'Gracias', 'Créditos']
 if FOTOS:
     CORTO.insert(CORTO.index('Un sueño hecho realidad'), 'Mis bandas')
 for t in CORTO:
@@ -1133,11 +1142,11 @@ CORTES = {
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
     'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
-    'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
+    'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'El reto': 'tema', 'Gracias': 'lostrego',
+          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'noches', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

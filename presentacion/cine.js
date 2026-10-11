@@ -110,7 +110,8 @@
     [/Pley Stor/g, 'Play Store'], [/scrol chálench/gi, 'Scroll Challenge'], [/Últimeit Guitar/g, 'Ultimate Guitar'], [/Eslash/g, 'Slash'],
     [/guasap/gi, 'WhatsApp'], [/efe eme/g, 'FM'], [/agents punto eme de/gi, 'AGENTS.md'], [/punto io/g, '.io'], [/[Bb]e tu ci/g, 'B2C'],
     [/[Bb]e tu bi/g, 'B2B'], [/be pe eme/gi, 'BPM'], [/Máster of Prompts/g, 'Master of Prompts'], [/\bpdf\b/g, 'PDF'], [/el cú-erre/g, 'el QR'], [/\bRolin\b/g, 'Rolling'],
-    [/jevi metal/g, 'heavy metal'], [/\brifs\b/g, 'riffs'], [/\brif\b/g, 'riff'], [/Moisés/g, 'Moises'], [/Ché/g, 'Che'], [/Énter Sándman/g, 'Enter Sandman'], [/Cómfortabli Nam/g, 'Comfortably Numb'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
+    [/jevi metal/g, 'heavy metal'], [/\brifs\b/g, 'riffs'], [/\brif\b/g, 'riff'], [/Moisés/g, 'Moises'], [/Ché/g, 'Che'], [/Metálica/g, 'Metallica'], [/Áci Dici/g, 'AC/DC'], [/ÁironMéiden/g, 'Iron Maiden'], [/Jáiguei tu Diplói/g, 'Highway to Deploy'],
+    [/Máster of Pul Ricuests/g, 'Master of Pull Requests'], [/Fíar of de Dédlain/g, 'Fear of the Deadline'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
   var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
   var SUBS_KEY = 'bm_subs', subsOn = false;
   try { subsOn = localStorage.getItem(SUBS_KEY) === 'es'; } catch (e) { /* sin almacenamiento: desactivados */ }
@@ -351,6 +352,11 @@
     b.innerHTML = '<span class="vent-p"><i></i><i></i><i></i></span><span class="vent-tab"><b>BM</b><em></em></span>' +
       '<span class="vent-url"><i>🔒</i>bandmanager.io</span><span class="vent-reloj"></span><span class="vent-vivo"><i></i>En la tele del local · portátil de <b></b></span>';
     b.querySelector('em').textContent = t + ' · BandManager';
+    // otra pantalla que no es la de Iago (La invitación: el correo de Brais)
+    if (sl.dataset.ventTab) b.querySelector('em').textContent = sl.dataset.ventTab.replace(/\{(\w+)\}/g, function (m, w) { return window.REPARTO && window.REPARTO[w] ? window.REPARTO[w].nombre : m; });
+    if (sl.dataset.ventUrl) b.querySelector('.vent-url').lastChild.textContent = sl.dataset.ventUrl;
+    var nombres = function (x) { return x.replace(/\{(\w+)\}/g, function (m, w) { return window.REPARTO && window.REPARTO[w] ? window.REPARTO[w].nombre : m; }); };
+    if (sl.dataset.ventVivo) b.querySelector('.vent-vivo').innerHTML = '<i></i>' + nombres(sl.dataset.ventVivo);
     sh.insertBefore(b, sh.firstChild);
     if (sh.querySelector('img') && !sh.querySelector('video')) { var c = document.createElement('i'); c.className = 'raton'; c.setAttribute('aria-hidden', 'true'); sh.appendChild(c); }
   });
