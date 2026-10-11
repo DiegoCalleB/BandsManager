@@ -453,6 +453,8 @@ add(f'''<section class="slide scene" data-title="Para darlo a conocer" data-tran
   </div>
   {dlg(m('brais', 'Pero tío… ¿y tú cómo sabes todo esto?'),
        m('iago', 'Ahh, se me había olvidado deciros que me acabo de apuntar al máster de Marketing Digital de la Big School. Es una pasta que flipas.'),
+       m('iago', 'Aunque, con lo bien que ha quedado este TFM, igual me dan una beca. A ver si Paula lo ve y me lo regala. 🤣', say='[laughs] Aunque, mirad, con lo guapo que ha quedado este proyecto, igual me dan una beca. A ver si Paula lo ve, y me lo regala.'),
+       m('brais', '¡Tú sueña, tú sueña!', say='[laughs] ¡Sueña, neno, sueña!'),
        m('iago', 'Pero creo que va a merecer la pena. Cuando esté en Miami con mi Lambo, iré gritando: «¡Estos másteres han sido el dinero mejor invertido de mi vida!»'),
        m('brais', '¡Pero tú no paras, Iago!'),
        m('iago', 'Os cuento mi estrategia de negocio y me decís qué os parece, ¿vale?'), cls='tight')}

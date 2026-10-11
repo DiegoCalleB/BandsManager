@@ -799,6 +799,16 @@
   "v": "48c324b96636",
   "who": "guitarra"
  },
+ "6c038bec": {
+  "d": 5.86,
+  "e": "111227542264444776211275674499818619716865563109524736911117556555997665765554348812521000000000003459411731997886664789732334557436358431000000",
+  "f": "6c038bec.mp3",
+  "oido": "Aunque mirad con lo guapo que ha quedado este proyecto, igual me dan una beca. A ver si Paula lo ve y me lo regala.",
+  "qa": 1.0,
+  "say": "[laughs] Aunque, mirad, con lo guapo que ha quedado este proyecto, igual me dan una beca. A ver si Paula lo ve, y me lo regala.",
+  "v": "04bbe0f3ba24",
+  "who": "bajo"
+ },
  "6eecc824": {
   "d": 2.71,
   "e": "222677996952221148966965311111111495283116717618766654431111110000",
@@ -1108,6 +1118,16 @@
   "say": "[gasps] ¡Sos un genio, Iago! ¡El bajista! ¡El que nadie mira, boludo!",
   "v": "1ec5c500fbf3",
   "who": "voz"
+ },
+ "9619758b": {
+  "d": 1.85,
+  "e": "01142001111999511221233211110012238941111100",
+  "f": "9619758b.mp3",
+  "oido": "sueña neno, sueña",
+  "qa": 1.0,
+  "say": "[laughs] ¡Sueña, neno, sueña!",
+  "v": "cc9d4b0f2ad7",
+  "who": "bateria"
  },
  "9b2d3d79": {
   "d": 6.02,
