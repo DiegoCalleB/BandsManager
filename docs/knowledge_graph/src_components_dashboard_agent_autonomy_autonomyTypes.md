@@ -34,6 +34,7 @@ Tipos y constantes de la configuración de autonomía de los agentes (zonas hora
 - [[src_components_dashboard_agent_autonomy_SenderScheduleSection|src/components/dashboard/agent_autonomy/SenderScheduleSection.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_TimezoneSelector|src/components/dashboard/agent_autonomy/TimezoneSelector.tsx]] *(from #agent)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
 
 ---
 

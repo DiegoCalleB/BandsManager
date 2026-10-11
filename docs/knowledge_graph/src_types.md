@@ -481,12 +481,14 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useStudioShareModal|src/hooks/useStudioShareModal.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(from #service)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
+- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_bandGrowthTiers|src/utils/bandGrowthTiers.ts]] *(from #service)*
 - [[src_utils_bookingFollowup|src/utils/bookingFollowup.ts]] *(from #service)*
 - [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(from #service)*
@@ -516,6 +518,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_managerAlerts|src/utils/managerAlerts.ts]] *(from #service)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(from #service)*
 - [[src_utils_midiExport|src/utils/midiExport.ts]] *(from #service)*
+- [[src_utils_offlineSync|src/utils/offlineSync.ts]] *(from #service)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
 - [[src_utils_roiBanda|src/utils/roiBanda.ts]] *(from #service)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
@@ -525,6 +528,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_sheetsUtils|src/utils/sheetsUtils.ts]] *(from #service)*
 - [[src_utils_stageOfflineCache|src/utils/stageOfflineCache.ts]] *(from #service)*
 - [[src_utils_theme|src/utils/theme.ts]] *(from #service)*
+- [[src_utils_tiposRepertorio|src/utils/tiposRepertorio.ts]] *(from #service)*
 - [[src_utils_tourRouting|src/utils/tourRouting.ts]] *(from #service)*
 - [[src_utils_transcripcionMasiva|src/utils/transcripcionMasiva.ts]] *(from #service)*
 - [[src_utils_transitionAudioEngine|src/utils/transitionAudioEngine.ts]] *(from #service)*

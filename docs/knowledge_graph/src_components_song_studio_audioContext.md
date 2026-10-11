@@ -26,6 +26,12 @@ _Sin dependencias salientes directas._
 - [[src_components_song_studio_hooks_useStudioPlaybackEngine|src/components/song_studio/hooks/useStudioPlaybackEngine.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useTrackAudioDsp|src/components/song_studio/hooks/useTrackAudioDsp.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useTrackOverdub|src/components/song_studio/hooks/useTrackOverdub.ts]] *(from #frontend)*
+- [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
+- [[src_services_browserNotificationService|src/services/browserNotificationService.ts]] *(from #service)*
+- [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
+- [[src_utils_audioLatency|src/utils/audioLatency.ts]] *(from #service)*
+- [[src_utils_stemSeparator|src/utils/stemSeparator.ts]] *(from #service)*
+- [[src_utils_transitionSynthesizer|src/utils/transitionSynthesizer.ts]] *(from #service)*
 
 ---
 

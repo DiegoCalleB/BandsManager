@@ -32,6 +32,7 @@ Métricas de la banda y de redes: CRUD, sincronización y métricas reales
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
 
 ---
 

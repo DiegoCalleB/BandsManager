@@ -18,6 +18,7 @@ Exporta: StudioAudioStreamOptions, getLowLatencyAudioStream, CleanPipelineResult
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_song_studio_audioContext|src/components/song_studio/audioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

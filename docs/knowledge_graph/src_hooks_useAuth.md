@@ -13,7 +13,7 @@ tags: ["security", "auth", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/auth`
 
 ## 📖 Descripción
-Exporta: useAuth.
+Exporta: BandaDeLaSesion, useAuth.
 
 ---
 

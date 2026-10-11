@@ -35,6 +35,7 @@ Exporta: Analysis, SetlistAIAnalysisModal.
 - [[src_components_repertorio_hooks_useRepertorioViewState|src/components/repertorio/hooks/useRepertorioViewState.ts]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

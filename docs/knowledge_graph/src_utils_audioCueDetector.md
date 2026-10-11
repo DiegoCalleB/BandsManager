@@ -18,6 +18,7 @@ Exporta: CueDetectionOptions, AudioCueAnalysis, detectAudioCuesFromFloatChannel,
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_song_studio_audioContext|src/components/song_studio/audioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_transitionAudioEngine|src/utils/transitionAudioEngine.ts]] *(Layer: #service, Domain: #repertoire)*

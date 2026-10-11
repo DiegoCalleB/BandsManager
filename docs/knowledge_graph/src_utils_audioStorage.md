@@ -20,6 +20,7 @@ Audio Storage & Utility Helpers for BandManager
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

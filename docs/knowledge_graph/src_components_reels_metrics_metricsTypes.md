@@ -26,6 +26,7 @@ Tipos de la vista de métricas sociales.
 - [[src_components_reels_metrics_hooks_useInstagramConnection|src/components/reels/metrics/hooks/useInstagramConnection.ts]] *(from #frontend)*
 - [[src_components_reels_metrics_hooks_useMetricsChart|src/components/reels/metrics/hooks/useMetricsChart.ts]] *(from #frontend)*
 - [[src_components_reels_metrics_hooks_useScreenshotScan|src/components/reels/metrics/hooks/useScreenshotScan.ts]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

@@ -32,6 +32,7 @@ POST /ai-stem-separation: separa un tema en stems (voz, batería, bajo…) con e
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(from #hook)*
+- [[src_utils_tiposSeparacionIris|src/utils/tiposSeparacionIris.ts]] *(from #service)*
 
 ---
 

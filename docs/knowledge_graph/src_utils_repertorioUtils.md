@@ -18,7 +18,7 @@ Song & Setlist calculation utilities
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_tiposRepertorio|src/utils/tiposRepertorio.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

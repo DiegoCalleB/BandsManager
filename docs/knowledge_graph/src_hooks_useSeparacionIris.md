@@ -29,6 +29,7 @@ Exporta: useSeparacionIris.
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_stemSeparator|src/utils/stemSeparator.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_tiposSeparacionIris|src/utils/tiposSeparacionIris.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---
 

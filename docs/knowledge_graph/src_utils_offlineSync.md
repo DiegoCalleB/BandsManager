@@ -18,7 +18,7 @@ Cola mínima de reintento para ediciones de setlist hechas sin conexión (típic
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
