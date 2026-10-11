@@ -41,10 +41,20 @@ export interface ResultadoTolerante<T> {
  */
 export async function escrituraTolerante<T = unknown, P extends object = Record<string, unknown>>(
   tabla: string,
+  payload: P,
+  escribir: (payload: P) => PromiseLike<{ data: T | null; error: ErrorDeEscritura | null }>
+): Promise<ResultadoTolerante<T>>;
+export async function escrituraTolerante<T = unknown, P extends object = Record<string, unknown>>(
+  tabla: string,
+  payload: P[],
+  escribir: (payload: P[]) => PromiseLike<{ data: T | null; error: ErrorDeEscritura | null }>
+): Promise<ResultadoTolerante<T>>;
+export async function escrituraTolerante<T, P extends object>(
+  tabla: string,
   payload: P | P[],
-  escribir: (payload: P | P[]) => PromiseLike<{ data: T | null; error: ErrorDeEscritura | null }>
+  escribir: (payload: P & P[]) => PromiseLike<{ data: T | null; error: ErrorDeEscritura | null }>
 ): Promise<ResultadoTolerante<T>> {
-  const actual: P | P[] = Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload };
+  const actual = (Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload }) as P & P[];
   const omitidas: string[] = [];
 
   for (let intento = 0; ; intento++) {
