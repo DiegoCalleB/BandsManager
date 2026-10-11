@@ -201,7 +201,7 @@ add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-
   {dlg(m('iago', 'Para acabar el máster necesito un proyecto. Y mi banda necesita un milagro.'),
        m('claudio', '¿Y si el proyecto es el milagro?'),
        m('guglio', 'Yo pongo las ideas locas. Claudio las discute.'),
-       m('claudio', 'Y tú decides, Iago. Revisamos cada respuesta.'),
+       m('claudio', 'Y tú decides, Iago. Nosotros proponemos y tú revisas cada respuesta.'),
        m('iago', 'Hecho, tronco. Empezamos esta noche.'), cls='tight')}
   <div class="ia-duo">
     <div class="ia-card ia-claude"><img src="img/logo-claude.svg" alt="Claude"><div><b>Claudio</b><span>Claude Code</span><em>el que discute</em><i class="ia-pt" aria-hidden="true"><u></u><u></u><u></u></i></div></div>
@@ -212,13 +212,13 @@ add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-
 ''')
 
 add(scene('Prólogo · Viernes, 22:10', 'Prólogo · Viernes · 22:10', 'Iago tiene algo que enseñar.', 'img/concierto-1.jpg',
-          dlg(m('iago', 'Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me creo que haya hecho solo. 🤯', '22:10'),
-              m('xandre', '¿De qué va? ¿Qué es??', '22:14'),
+          dlg(m('iago', 'Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me lo creo. 🤯', '22:10'),
+              m('xandre', '¿De qué va? ¿Qué es?', '22:14'),
               m('alvaro', 'Seguro que ha encontrado una base de datos con todas las salas de Galicia.', '22:19'),
               m('brais', 'O ha descubierto Google Calendar. 🤣', '22:31'),
               m('iago', 'Mañana a las 11. Traed unas birras y os cuento. 🍻', '22:33'),
-              m('alvaro', 'Y ojo: mañana a las 14:00 cierran el cartel del Resurrección Fest. Si no mandamos nada, no tocamos.', '22:40',
-                say='[worried] Y ojo: mañana a las dos cierran el cartel del Resurrección Fest. Si no mandamos nada, no tocamos.'))))
+              m('alvaro', 'Y ojo: mañana a las 14:00 cierran el cartel del Resurrection Fest. Si no mandamos nada, no tocamos.', '22:40',
+                say='[worried] Y ojo: mañana a las dos cierran el cartel del Resurrection Fest. Si no mandamos nada, no tocamos.'))))
 
 add(room + '\n')
 
@@ -234,17 +234,17 @@ add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
           m('alvaro', '¡Una base de datos de salas! ¡Te lo dije!'),
           m('iago', 'Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.'),
           m('brais', 'Pues yo dije Google Calendar.'),
-          m('iago', 'Eso también. Ya llegamos.'),
-          m('iago', 'Y todas, en el mapa, por toda España.', cls='sync', say='Y todas, en el mapa. Por toda España.')],
+          m('iago', 'Eso también. Ya llegaremos.'),
+          m('iago', 'Y todas, en el mapa de toda España.', cls='sync', say='Y todas, en el mapa de toda España.')],
          shot_vid_sync('video/v-mapa-peninsula.mp4', 'img/d-h-booking.jpg')))
 
 add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
-         [m('alvaro', '¡Ha escrito a tres salas y al Resurrección Fest mientras hablábamos!'),
-          m('iago', 'Cada correo suena a nosotros: lo redacta la IA con el estilo de la banda y de la sala.'),
+         [m('alvaro', '¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba!'),
+          m('iago', 'Cada correo suena a nosotros: la IA lo escribe con el estilo de la banda y lo adapta a cada sala.'),
           m('brais', '¿Y si se le va la mano y escribe una burrada?'),
           m('iago', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
           m('alvaro', '¿Y cómo sabemos si lo han leído?', say='[curious] ¿Y cómo sabemos si lo han leído de verdad?'),
-          m('iago', 'Se puede entrenar a la IA con estrellas, y te avisa cuando abren el correo, el dossier o entran en nuestras redes.', say='Y a la IA la puedes entrenar: le das estrellas a cada correo, y aprende cómo hablas. Y te avisa cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.')],
+          m('iago', 'Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes. Y a la IA la entrenas con estrellas: aprende cómo hablamos.', say='Porque la app te avisa: cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes. Y a la IA la entrenas con estrellas: aprende cómo hablamos.')],
          shot_img('img/d-h-pitch.jpg')))
 
 MAIL_HTML = """<div class="ms" aria-hidden="true">
@@ -303,7 +303,7 @@ _it = [m('iago', 'Lo repasas, lo apruebas y le das a enviar.'),
        m('alvaro', '¿Y cómo le llega a la sala?'),
        m('iago', 'Así: en su bandeja de entrada, con vuestro logo y el botón al dossier.'),
        m('brais', '¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!'),
-       m('iago', 'Con tu firma, tu cargo y tus redes. Y cuando abren el dossier, la app te avisa.'),
+       m('iago', 'Con tu firma, tu cargo y tus redes. Y el dossier, a un clic.'),
        m('xandre', '¡Y yo sin saber ni firmar un correo!')]
 add(f'''<section class="slide feat dl mailscene" data-grupo="promocion" data-title="El correo llega a la sala" data-transition="rise" data-fin=".ms-fin">
   <div class="ft-copy"><span class="tag">{TAG1}</span><h2>Y así le llega a la sala.</h2>
@@ -314,24 +314,24 @@ add(f'''<section class="slide feat dl mailscene" data-grupo="promocion" data-tit
 ''')
 
 add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
-         [m('iago', 'Propongo a otra banda cambiar fecha: yo toco en su ciudad y ellos en la mía. La IA redacta la propuesta.'),
-          m('mop', 'Os leo. Me encanta: nosotros en Vigo y vosotros en Santiago. ¡Cartel doble!'),
-          m('brais', '¡Cartel doble con otra banda! ¡Esto no lo tiene nadie!'),
+         [m('iago', 'Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.'),
+          m('mop', 'Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!'),
+          m('brais', '¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolling!'),
           m('xandre', '¿Y quién es ese?'),
-          m('iago', 'El cantante de Master of Prompts. Ya veréis lo que da de sí.'),
+          m('iago', 'El cantante de Master of Prompts. Guardaos su cara, que va a volver.'),
           m('mop', 'Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?', say='[laughs] Y oye, {bateria}: nos falta batería. ¿Te vienes a Máster of Prompts?'),
           m('brais', '¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.', say='[gasps] ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.'),
           m('xandre', '¡Traidor! ¡Nos deja por unos metaleros!', say='[dramatically] ¡Traidor! ¡Nos deja por unos metaleros, che!')],
          shot_img('img/d-h-swap.jpg')))
 
 add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
-         [m('iago', 'Tranquilos: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.', say='Tranquilo, {voz}: {bateria} puede tocar en las dos bandas, y sin liarse. Mirad su cuenta.'),
+         [m('iago', 'Tranquilo, Xandre: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.', say='Tranquilo, {voz}: {bateria} puede tocar en las dos bandas, y sin liarse. Mirad su cuenta.'),
           m('brais', 'Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?', say='[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?'),
           m('iago', 'Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.', say='Claro, {bateria}. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas.'),
           m('alvaro', '¿Y cómo cambias de una banda a otra?', say='¿Y cómo cambias de una banda a otra?'),
           m('iago', 'Como de perfil en una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como de perfil en una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
           m('xandre', '¡Cambió todo! ¡El logo, el calendario, hasta las salas!', say='[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!'),
-          m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla del contrato.')],
+          m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa.')],
          shot_vid_sync('video/v-perfiles.mp4', 'video/v-perfiles.jpg')))
 
 add(feat('Bandas amigas', TAG1, 'Bandas amigas, a la escucha.',
@@ -347,7 +347,7 @@ add(feat('El acuerdo, firmado desde BandManager', TAG1, 'Un acuerdo firmado, sin
          [m('brais', '¿Y si la sala nos cambia el caché el mismo día del bolo?'),
           m('iago', 'Por eso el acuerdo se cierra desde la plataforma: fecha, caché, rider y camerino, por escrito.'),
           m('alvaro', '¿Y la sala tiene que instalarse algo?'),
-          m('iago', 'Solo abrir un enlace y firmar. Y le llega copia.'),
+          m('iago', 'Nada: solo abrir un enlace y firmar con el dedo. Y le llega su copia.'),
           m('brais', '¡Se acabaron las sorpresas el día del bolo!')],
          '<div class="ft-shot phone acuerdo"><img src="img/md-h-acuerdo.jpg" alt="Hoja de acuerdo de la sala con la firma"></div>'))
 
@@ -361,8 +361,8 @@ add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala
       <tr><td>Sala El Faro</td><td>02 may</td><td class="yes">«Nos encaja el 14»</td><td class="yes">14 nov</td></tr>
     </tbody>
   </table>
-  ''' + dlg(m('manager', 'Chicos, soy el mánager de Master of Prompts. Os ha contestado la Sala El Faro: os encaja el 14 de noviembre.'),
-            m('xandre', '¡¡Por fin!! ¡Del rojo al verde!'),
+  ''' + dlg(m('manager', 'Chicos, soy el mánager de Master of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!'),
+            m('xandre', '¡Por fin! ¡Del rojo al verde!'),
             m('manager', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.'), cls='tight')))
 
 # ───────── Capítulo 2 · Antes del concierto ─────────
@@ -413,8 +413,8 @@ back = paper('back', 'Xandre · Voz', [
 add(f'''<section class="slide feat dl" data-grupo="musica" data-title="Una hoja para cada músico" data-transition="rise">
   <div class="ft-copy"><span class="tag">{TAG2}</span><h2>Cada músico, su hoja.</h2>
     {dlg(m('iago', 'Imprimo el setlist y sale una hoja distinta para cada uno. Con el logo de la banda detrás.'),
-         m('brais', '¡Mi hoja! ¡Con mis notas, solo mías!'),
-         m('xandre', 'Y yo con el tono de cada tema. ¡Por fin sé en qué canto!'))}
+         m('brais', '¡Mi hoja! ¡Con mis notas! ¡Solo las mías!'),
+         m('xandre', 'Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!'))}
   </div>
   <div class="paperwrap" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>
 </section>
@@ -429,10 +429,10 @@ add(feat('La curva de energía', TAG2, 'La curva de energía.',
          shot_vid('video/v-energia.mp4', 'video/v-energia.jpg'), grupo='musica'))
 
 add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
-         [m('iago', 'Dale al play, Álvaro. Los acordes y la letra siguen la canción solos.'),
-          m('alvaro', '¡Pero tío! ¡Te has copiado de Ultimate Guitar! ¡¡Pellízcame!! ¡Esto no puede ser real, esto es un sueño!'),
-          m('brais', '¡Estoy flipando!'),
-          m('iago', 'Espera, espera, que esto es solo el principio. ¡Vais a flipar!')],
+         [m('iago', 'Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.'),
+          m('alvaro', '¡Pero tío! ¡Te has copiado de Ultimate Guitar! ¡Pellízcame! ¡Esto es mejor que un solo de Slash!'),
+          m('brais', '¡Estoy flipando, neno!'),
+          m('iago', 'Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!')],
          shot_vid('video/atril.mp4', 'img/atril-poster.jpg'), grupo='musica'))
 
 add(feat('El profesor de armonía', TAG2, 'El profesor de armonía.',
@@ -447,8 +447,8 @@ add(feat('Iris separa los instrumentos', TAG2, 'Cada instrumento, por separado.'
          [m('iago', 'Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.'),
           m('xandre', '¡Mi voz sola! ¡Nunca me había oído así!'),
           m('alvaro', '¡Parece un Cubase! ¡Y cada pista de un color del arcoíris! 🌈', say='[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!'),
-          m('alvaro', '¡Espera, espera! ¡¿Esto no será un Moisés?!'),
-          m('iago', '¡Sí, tío! Un Moisés integrado en nuestro repertorio, para subir nuestras ideas sobre nuestras propias pistas. Me ha costado lo suyo, pero al final lo conseguí. ¡Yo tampoco me lo creo, jajaja!')],
+          m('alvaro', '¡Espera, espera! ¿Esto no será un Moises?'),
+          m('iago', '¡Sí, tío! Un Moises metido en nuestro repertorio. Y encima grabamos nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas. ¡Y por fin se oye el bajo!')],
          shot_vid('video/v-iris.mp4', 'video/v-iris.jpg', cls='alto'), grupo='musica'))
 
 add(feat('Las ideas, en su sitio', TAG2, 'Las ideas, en su sitio.',
@@ -472,8 +472,8 @@ add(feat('La ficha del bolo', TAG2, 'Cada bolo, con su ficha.',
          shot_vid_sync('video/v-concierto.mp4', 'img/d-h-evento.jpg'), grupo='musica'))
 
 add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.',
-         [m('brais', '¿Y si me cuadran dos ensayos a la vez, uno con cada banda?', say='[worried] Oye… ¿y si me cuadran dos ensayos a la vez? Uno con cada banda.'),
-          m('iago', 'El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', cls='sync', say='El calendario te avisa. Si dos eventos se pisan, si no da tiempo de llegar de un sitio a otro, o si vas justo para montar.'),
+         [m('brais', 'Oye… ¿y si me coinciden dos ensayos a la vez, uno con cada banda?', say='[worried] Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.'),
+          m('iago', 'El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', cls='sync', say='El calendario te avisa. Si dos eventos se pisan, si no da tiempo a llegar de un sitio a otro, o si vas justo para montar.'),
           m('brais', '¡Ai, mi madriña! ¡Me ha salvado el miércoles!', say='[amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles!'),
           m('iago', 'Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.', say='Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.')],
          shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
@@ -485,18 +485,18 @@ add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 5 · Que te con
 
 TAG3 = 'Sábado · 12:20 · Que te conozcan'
 add(feat('El dossier de la banda', TAG3, 'El dossier de la banda.',
-         [m('alvaro', '¡¿Qué co******?! ¿Que ahora tenemos una web?!'),
+         [m('alvaro', '¿Pero qué co*****? ¿Que ahora tenemos una web? ¡Como los de verdad!'),
           m('brais', '¡Pero si está guapísima! ¡¿Qué me estás contando?!'),
-          m('iago', '¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto de booking, y es súper sencillo de editar desde la aplicación. ¡Pero esperad, que aún quedan muchas más cosas!'),
-          m('alvaro', 'Estoy flipando en colores…')],
+          m('iago', '¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la app. ¡Pero esperad, que esto no ha hecho más que empezar!'),
+          m('alvaro', 'Yo ya no sé si esto es un local de ensayo o una discográfica.')],
          shot_img('img/d-h-dossier.jpg')))
 
 add(f'''<section class="slide feat dl" data-grupo="promocion" data-title="Un QR y el público se hace fan" data-transition="rise">
   <div class="ft-copy" style="width:720px"><span class="tag">{TAG3}</span><h2>Un QR, y el público se hace fan.</h2>
-    {dlg(m('alvaro', '¿Cómo…? ¿Que si ponemos este QR en el concierto la gente podrá entrar aquí y seguirnos en redes?'),
-         m('iago', '¡Sí! También pueden echarnos una mano con dinero, comprarnos merchan (cuando lo hagamos), ver nuestros próximos bolos y entrar en la web.'),
+    {dlg(m('alvaro', '¿Cómo? ¿Que si ponemos este QR en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?'),
+         m('iago', '¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.'),
          m('iago', 'Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.', say='Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento, o una descarga exclusiva. Y tú te quedas con la lista, para avisarles de los bolos.'),
-         m('xandre', 'En serio… creo que estoy soñando… ¡¿pero qué locura es esta?!'))}
+         m('xandre', 'En serio, che… creo que estoy soñando. ¡Que alguien me pase el micro!'))}
   </div>
   <div class="qrcard">{QR}<b>Os Herdeiros do Código</b><span>Escanea y únete a la banda</span></div>
   <div class="ft-shot phone"><img src="img/md-h-fans-full.jpg" alt="Página de fans de la banda en el móvil" style="object-position:50% 0"></div>
@@ -512,7 +512,7 @@ add(feat('Merchan en un minuto', TAG3, 'El merchan, diseñado en un minuto.',
 add(feat('Del directo al reel', TAG3, 'Del directo al reel.',
          [m('xandre', '¿Y esto qué es?'),
           m('iago', 'Se me ocurrió hacer un generador automático de reels para Instagram, TikTok y YouTube. Todo personalizado y generado con IA.'),
-          m('brais', '¿Le subes un vídeo largo y te saca los mejores trocitos, los más virales, para cada plataforma?'),
+          m('brais', '¿O sea, que le subes el vídeo entero del concierto y te saca los trozos más virales para cada red?'),
           m('iago', '¡Eso es! Y te los deja listos, con el formato de cada plataforma.')],
          '<div class="ft-shot phone"><video data-ambient muted loop playsinline preload="auto" poster="video/reel-demo.jpg"><source src="video/reel-demo.mp4" type="video/mp4"></video></div>'))
 
@@ -525,7 +525,7 @@ add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
 # ───────── Capítulo 4 · Después del concierto ─────────
 add(act('Capítulo 4 · Después del concierto', 'IV', 'Capítulo 4 de 5 · Después del concierto', 'Y al final, las cuentas.',
         'Cuánto entra, cuánto sale y cuánto queda para la banda.', 'iago',
-        'Lo último. Y creo que lo que más os va a sorprender.', 4, 'img/concierto-1.jpg'))
+        'Lo último. Y creo que es lo que más os va a sorprender.', 4, 'img/concierto-1.jpg'))
 
 add(feat('Cuánto entra y cuánto queda', 'Sábado · 12:50 · Después del concierto', 'Cuánto entra y cuánto queda.',
          [m('iago', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada uno, en una sola pantalla.'),
@@ -543,7 +543,7 @@ add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del conci
 
 add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han visto todo.', 'img/concierto-1.jpg',
           dlg(m('alvaro', '¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas! 🤯'),
-              m('xandre', '¡Eres un genio, Iago! 🙌'),
+              m('xandre', '¡Sos un genio, Iago! 🙌'),
               m('iago', 'Por las noches, con Claudio y Guglio.'), cls='tight') + '''
   <ul class="fin-crowd">
     <li><img src="img/miembro-brais.jpg" alt="Brais"><span>Brais</span></li>
@@ -566,10 +566,10 @@ add(feat('Y mucho más', 'Sábado · 13:03 · Y mucho más', 'Y mucho más.',
          shot_vid('video/v-montaje.mp4', 'video/v-montaje.jpg'), grupo='negocio'))
 
 add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', 'Y entonces, alguien lo dijo.', 'img/concierto-3.jpg',
-          dlg(m('xandre', 'Iago, ¡esto es la hostia! Lo necesitan todos los grupos, todos los managers, todas las productoras.'),
+          dlg(m('xandre', 'Iago, esto es una locura. Lo necesitan todos los grupos, todos los mánagers, todas las productoras. ¡Todos!'),
               m('alvaro', '¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo. 💸'),
               m('iago', '¿En serio? ¿Creéis que esto lo podemos vender?'),
-              m('brais', '¡Pero tío, te vas a forrar! Ya te estoy imaginando en Miami, con tu descapotable y de traje.'),
+              m('brais', '¡Pero tío, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol.'),
               m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
@@ -635,7 +635,7 @@ add(f'''<section class="slide scene tech" data-title="Arquitectura" data-transit
        m('iago', 'Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.'),
        m('brais', 'Pues como si me hablas en chino.'),
        m('alvaro', 'Yo no entiendo nada…'),
-       m('iago', 'Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Estoy flipando! Aunque casi todo esto lo ha hecho mi amigo Claudio.'), cls='tight')}
+       m('iago', 'Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Una pasada! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.'), cls='tight')}
   <div class="tech-vis">
     <div class="pn"><h3>Frontend</h3><p class="chips2"><span>React 19 + Vite</span><span>Tailwind CSS v4</span><span>Motion</span><span>Tone.js · wavesurfer</span><span>PWA instalable</span></p></div>
     <div class="pn mid"><h3>Backend · Express 4 + TypeScript</h3><p class="chips2"><span>44 ficheros de rutas</span><span>Scout · Enviador · Lector</span><span>Cola y planificador</span><span>Aislamiento por banda</span></p></div>
@@ -706,8 +706,8 @@ add(f'''<section class="slide bigstats dl" data-title="Calidad en cifras">
   <div class="hero-bg"></div>
   <span class="tag">Sábado · 13:40 · Por dentro</span>
   <h2>Un producto con tests de verdad.</h2>
-  {dlg(m('alvaro', '¡Madre mía! ¡Esto tiene más tests que cuando el Covid!'),
-       m('iago', 'Y se ejecutan solos: en cada commit, en cada push y en producción hay un healthcheck y Sentry.'), cls='tight')}
+  {dlg(m('alvaro', '¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!'),
+       m('iago', 'Más de dos mil, y se ejecutan solos en cada commit y en cada push. Y en producción, un control de salud y Sentry vigilando los errores.'), cls='tight')}
   <div class="bs-grid">
     <div class="bs"><b class="bs-n" data-count="270" data-suffix="k">270k</b><span>líneas de TypeScript, entre cliente y servidor</span></div>
     <div class="bs"><b class="bs-n" data-count="358">358</b><span>rutas HTTP, de las que 307 son handlers propios</span></div>
@@ -727,9 +727,9 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
   <span class="tag">Sábado · 14:00 · Lo que viene</span>
   <h2>De máster a banda real.</h2>
   {dlg(m('iago', 'Y ahora, lo que viene: probarlo con una banda real. La nuestra.'),
-       m('alvaro', '¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!', say='[gasps] ¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!'),
+       m('alvaro', '¡Iago! ¡El móvil! ¡El Resurrection Fest acaba de abrir el dossier!', say='[gasps] ¡Iago! ¡El móvil! ¡El Resurrection Fest acaba de abrir el dossier!'),
        m('iago', 'Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.', say='Tres veces en una hora. Eso es que están leyendo. [softly] Y el cartel cierra… ahora.'), cls='tight')}
-  <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Resurrección Fest ha abierto tu dossier</b><span>3 veces en la última hora</span></div></div>
+  <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Resurrection Fest ha abierto tu dossier</b><span>3 veces en la última hora</span></div></div>
   <ol class="tech-vis steps">
     <li><b>1</b><div><h3>Probarlo con una banda real</h3><p>Lead, aprobación, borrador en Gmail y respuesta</p></div></li>
     <li><b>2</b><div><h3>Reactivar el cobro</h3><p>Facturación y planes de pago</p></div></li>
@@ -746,7 +746,7 @@ add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transi
   <span class="tag">Seis meses después · Sábado noche · 02:09 · Backstage</span>
   <h2 style="font-size:76px">Cinco minutos para salir.</h2>
   <div class="cartel" style="max-width:980px;padding:26px 40px;margin-top:22px">
-    <div class="fest" style="font-size:30px">Resurrección Fest</div>
+    <div class="fest" style="font-size:30px">Resurrection Fest</div>
     <div class="l1" style="font-size:78px">Os Herdeiros do Código</div>
     <div class="l2" style="font-size:36px">Escenario principal · Viveiro</div>
   </div>
@@ -767,7 +767,7 @@ add(f'''<section class="slide scene" data-title="En la radio" data-transition="f
   <span class="tag">Domingo · 09:00 · En antena</span>
   <div class="radio">
     <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div><div class="dial">Rock FM · en directo</div><div class="head" data-who="locutor" data-say="{EXTRA_SAY['radio']}">La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrección Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.</div></div>
+    <div><div class="dial">Rock FM · en directo</div><div class="head" data-who="locutor" data-say="{EXTRA_SAY['radio']}">La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.</div></div>
   </div>
 </section>
 ''')
@@ -775,7 +775,7 @@ add(f'''<section class="slide scene" data-title="En la radio" data-transition="f
 add(scene('Otro jueves, 23:47', 'Otro jueves · 23:47', 'El grupo seguía existiendo.', 'img/concierto-2.jpg',
           dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', '23:47', say=EXTRA_SAY['otro_jueves']),
               m('iago', 'Cerrao y bien cerrao, chaval. Mirad el calendario. ✅', '23:48'),
-              m('alvaro', 'Y la setlist de cada uno ya está en la hoja.', '23:49'),
+              m('alvaro', 'Y ya tenemos los setlists, cada uno en su hoja.', '23:49'),
               m('brais', 'Entonces ensayamos el sábado. 🥁', '23:51'))))
 
 # El giro: dos diapositivas, el punto álgido
@@ -793,7 +793,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
-  <h2>Y ya estamos pensando en montar un grupo.</h2>
+  <h2>Y ya estamos montando un grupo. Nos falta batería…</h2>
   <p class="sub">Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.</p>
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
 </section>
@@ -830,7 +830,7 @@ else:
 # El giro final (Nolan): el reloj de toda la película no contaba para el festival
 add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500" data-fin=".gr-ask">
   <span class="tag" style="opacity:0">Fin de la historia · El reloj</span>
-  <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECCIÓN FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
+  <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECTION FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
   <p class="gr-c" style="--t:4.2s;--d:3.2s">¿Os habéis fijado en el reloj?</p>
   <p class="gr-c" style="--t:7.6s;--d:3s">No contaba para un festival.</p>
@@ -838,7 +838,26 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
   <p class="gr-c" style="--t:18s;--d:3.4s">En la de verdad, sois el festival.</p>
-  <p class="gr-c gr-ask" style="--t:22s">Y ahora, a tocar.</p>
+  <p class="gr-c gr-ask" style="--t:22s">Y ahora… un reto.</p>
+</section>
+''')
+
+# El reto: la banda que está montando Diego busca batería… y Brais tiene una (la pantalla la dirige direccion.py)
+add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-transition="zoom">
+  <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
+    {dlg(m('iago', 'Y ahora, Brais, un reto. ¿Te acuerdas de la banda que estamos montando? Pues nos falta batería. Y tú tienes una de verdad.',
+           say='Y ahora, {bateria}, un reto. ¿Te acuerdas de la banda que estamos montando? Pues nos falta batería. Y tú tienes una de verdad.'),
+         m('brais', '¿Yo? ¿Y qué tocáis?', say='[surprised] ¿Yo? ¿Y qué tocáis?'),
+         m('iago', 'Temazos: Metallica, Pink Floyd y muchos más. Ya está todo en BandManager: el repertorio y tu hueco a la batería.',
+           say='Temazos. Metallica, Pink Floyd, y muchos más. Ya está todo en Band Mánayer: el repertorio, y tu hueco a la batería.'),
+         m('alvaro', '¡Enter Sandman con el profe a la batería! ¡Eso hay que verlo!', say='[excited] ¡Énter Sándman con el profe a la batería! ¡Eso hay que verlo!'),
+         m('iago', 'Te mando la invitación ahora mismo. Solo tienes que aceptarla.', say='Te mando la invitación ahora mismo. Solo tienes que aceptarla.'),
+         m('xandre', '¡Che, que no se lo piense mucho, que el Comfortably Numb no se toca solo!', say='[laughs] ¡Che, que no se lo piense mucho, que el Cómfortabli Nam no se toca solo!'),
+         m('brais', '¿Metallica y Pink Floyd…? ¿A qué hora es el ensayo?', say='[mischievously] ¿Metallica y Pink Floyd…? ¿A qué hora es el ensayo?'),
+         m('iago', 'El sábado, a las once. Ya está en el calendario. Trae las baquetas.', say='El sábado, a las once. Ya está en el calendario. [softly] Trae las baquetas.'))}
+  </div>
+  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="La banda de Diego, en BandManager, invita a Brais a la batería"></div>
+  <aside class="ficha" aria-hidden="true"><i>🥁</i><b>El reto</b><p>Brais: a nuestra banda le falta batería. Y tú tienes una.</p><span>Metallica</span><span>Pink Floyd</span><span>Y muchos más</span></aside>
 </section>
 ''')
 
@@ -861,7 +880,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
       <dt>{sello}</dt><dd>Discos Cuarzo · quería el 30 % y el repertorio</dd>
       <dt>{ia_claude}</dt><dd>Claude Code · el que discute</dd>
-      <dt>{ia_gemini}</dt><dd>Gemini · el que también discute</dd>
+      <dt>{ia_gemini}</dt><dd>Gemini · el de las ideas locas</dd>
       <dt>{locutor}</dt><dd>En directo</dd>
     </dl>
     <h3>Escrita, programada y dirigida por</h3>
@@ -977,7 +996,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
   <span class="tag">Escena post-créditos · Domingo, 03:12</span>
   ''' + dlg(m('brais', '¿Ya se ha acabado la peli? 🍿', '03:12', say='[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?'),
             m('iago', 'Dividir gastos está en mi lista de pendientes.', '03:12', say='[sighs] Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.'),
-            m('alvaro', '¡Pues que lo pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!'),
+            m('alvaro', '¡Pues que las pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!'),
             m('brais', 'Por cierto, mañana ensayo con Master of Prompts. ¿A qué hora era?', '03:14', say='[sighs] Por cierto, mañana ensayo con Máster of Prompts. ¿A qué hora era?'),
             m('iago', 'Mira el calendario, Brais.', '03:14', say='Mira el calendario, {bateria}. Mira el calendario.')) + '''
 </section>
@@ -1052,13 +1071,13 @@ direccion.aplicar(S)
 import json as _json
 _json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
-html = html.replace('<script src="sound.js"></script>', '<div id="barras" aria-hidden="true"><i></i><i></i></div>\n<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
 CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'El correo llega a la sala', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
-         'Un sueño hecho realidad', 'El reloj', 'Gracias', 'Créditos']
+         'Un sueño hecho realidad', 'El reloj', 'El reto', 'Gracias', 'Créditos']
 if FOTOS:
     CORTO.insert(CORTO.index('Un sueño hecho realidad'), 'Mis bandas')
 for t in CORTO:
@@ -1114,11 +1133,11 @@ CORTES = {
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
     'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
-    'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
+    'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'Gracias': 'lostrego',
+          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'El reto': 'tema', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

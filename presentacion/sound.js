@@ -142,6 +142,24 @@
         g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(gain * 1.5, t + 0.05); g2.gain.exponentialRampToValueAtTime(0.0001, t + dur);
         s.connect(bp).connect(g2).connect(out);
       },
+      // Clic de ratón y toque de pantalla: un «toc» de plástico apagado (filtrado: nada agudo)
+      clic(t, gain = 0.16) {
+        const s = noise(t, 0.04), bp = c.createBiquadFilter(), lp = c.createBiquadFilter(), g = c.createGain();
+        bp.type = 'bandpass'; bp.frequency.value = 820; bp.Q.value = 1.3; lp.type = 'lowpass'; lp.frequency.value = 1500;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+        s.connect(bp).connect(lp).connect(g).connect(out);
+        const o = c.createOscillator(), go = c.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(90, t + 0.05);
+        go.gain.setValueAtTime(0.0001, t); go.gain.exponentialRampToValueAtTime(gain * 0.8, t + 0.003); go.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+        o.connect(go).connect(out); o.start(t); o.stop(t + 0.1);
+      },
+      // Tecla: más corta y más baja que el clic, cada una un poco distinta
+      tecla(t, gain = 0.07) {
+        const s = noise(t, 0.03), bp = c.createBiquadFilter(), lp = c.createBiquadFilter(), g = c.createGain();
+        bp.type = 'bandpass'; bp.frequency.value = 520 + Math.random() * 260; bp.Q.value = 1.6; lp.type = 'lowpass'; lp.frequency.value = 1300;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain * (0.7 + Math.random() * 0.5), t + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.026);
+        s.connect(bp).connect(lp).connect(g).connect(out);
+      },
       // Tic-tac de reloj, grave y de madera (nada de clic agudo)
       toc(t, gain = 0.22) {
         const o = c.createOscillator(), g = c.createGain();
@@ -303,11 +321,10 @@
     if (el.classList.contains('giro-reloj')) giroScore(k, at);
     // El correo llega a la sala: golpe grave al enviar, al llegar, al abrir, en el botón del dossier y en el aviso (solo graves)
     if (el.classList.contains('mailscene')) [[4.0, 0.36], [6.0, 0.3], [8.0, 0.22], [11.6, 0.26], [18.8, 0.3]].forEach(([t, g]) => k.thump(at(t), g));
-    // Nolan: el tic-tac del reloj bajo las pantallas dirigidas (madera grave, un golpe por segundo, el segundo más hondo cada cuatro)
-    if (el.classList.contains('dirigida')) for (let q = 1; q < 40; q++) k.toc(at(q), q % 4 === 0 ? 0.075 : 0.05);
-    // Pantallas dirigidas: un golpe grave suave con cada rótulo (solo graves)
-    if (el.dataset.golpes) el.dataset.golpes.split(',').forEach((t) => { k.thump(at(+t), 0.32); k.hit && k.hit(at(+t), 0.12); });
-    if (el.classList.contains('dirigida')) el.querySelectorAll('.dr-lab').forEach((l) => k.thump(at((parseFloat(l.style.getPropertyValue('--t')) || 0) + 0.1), 0.2));
+    // Pantallas en directo (direccion.py): el clic de cada clic o toque, las teclas al escribir y un golpe grave suave con cada rótulo
+    if (el.dataset.clics) el.dataset.clics.split(',').filter(Boolean).forEach((t) => k.clic(at(+t)));
+    if (el.dataset.teclas) el.dataset.teclas.split(',').filter(Boolean).forEach((t) => k.tecla(at(+t)));
+    if (el.classList.contains('dirigida')) el.querySelectorAll('.dr-lab').forEach((l) => k.thump(at((parseFloat(l.style.getPropertyValue('--t')) || 0) + 0.1), 0.16));
     // Mis bandas: un golpe grave con cada foto y un boom al final
     if (el.classList.contains('mis-bandas')) {
       el.querySelectorAll('.mb-foto').forEach((f) => { const t0 = at(parseFloat(f.style.getPropertyValue('--t')) || 0); if (f.classList.contains('gran')) k.boom(t0, 0.55, 2.4); else k.thump(t0, 0.42); });

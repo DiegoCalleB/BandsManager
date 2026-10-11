@@ -109,7 +109,8 @@
     [/ráider/g, 'rider'], [/Resurrécshon/g, 'Resurrection'], [/Big Scul/g, 'Big School'], [/Mure Dev/g, 'MoureDev'], [/Gúgel/g, 'Google'],
     [/Pley Stor/g, 'Play Store'], [/scrol chálench/gi, 'Scroll Challenge'], [/Últimeit Guitar/g, 'Ultimate Guitar'], [/Eslash/g, 'Slash'],
     [/guasap/gi, 'WhatsApp'], [/efe eme/g, 'FM'], [/agents punto eme de/gi, 'AGENTS.md'], [/punto io/g, '.io'], [/[Bb]e tu ci/g, 'B2C'],
-    [/[Bb]e tu bi/g, 'B2B'], [/be pe eme/gi, 'BPM'], [/Máster of Prompts/g, 'Master of Prompts'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
+    [/[Bb]e tu bi/g, 'B2B'], [/be pe eme/gi, 'BPM'], [/Máster of Prompts/g, 'Master of Prompts'], [/\bpdf\b/g, 'PDF'], [/el cú-erre/g, 'el QR'], [/\bRolin\b/g, 'Rolling'],
+    [/jevi metal/g, 'heavy metal'], [/\brifs\b/g, 'riffs'], [/\brif\b/g, 'riff'], [/Moisés/g, 'Moises'], [/Ché/g, 'Che'], [/Énter Sándman/g, 'Enter Sandman'], [/Cómfortabli Nam/g, 'Comfortably Numb'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
   var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
   var SUBS_KEY = 'bm_subs', subsOn = false;
   try { subsOn = localStorage.getItem(SUBS_KEY) === 'es'; } catch (e) { /* sin almacenamiento: desactivados */ }
@@ -308,9 +309,9 @@
   var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!/menu/.test(nf.className) && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
   addEventListener('mousemove', function () { if (body.classList.contains('pelicula')) despierta(); });
   addEventListener('touchstart', function () { if (body.classList.contains('pelicula')) despierta(); }, { passive: true });
-  // Reloj de cuenta atrás (Nolan): el sábado el Resurrección Fest cierra el cartel a las 14:00 y cada plano marca la hora
+  // Reloj de cuenta atrás (Nolan): el sábado el Resurrection Fest cierra el cartel a las 14:00 y cada plano marca la hora
   var reloj = document.createElement('div'); reloj.id = 'reloj'; reloj.setAttribute('aria-hidden', 'true');
-  reloj.innerHTML = '<small>CIERRE DEL CARTEL · RESURRECCIÓN FEST</small><span></span>';
+  reloj.innerHTML = '<small>CIERRE DEL CARTEL · RESURRECTION FEST</small><span></span>';
   if (stage) stage.appendChild(reloj);
   var relojT0 = 0, relojRest = 0;
   var pintarReloj = function () {

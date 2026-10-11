@@ -17,8 +17,8 @@ SAY = [
  ('Y tú decides', 'Y tú decides, {bajo}. Nosotros proponemos, y tú revisas cada respuesta. Tú firmas el disco.'),
  ('Hecho, tronco. Empezamos esta noche', 'Hecho, tronco. Empezamos esta noche. Va a ser mi disco más largo.'),
  # Prólogo · viernes
- ('Chicos, mañana a las 11', 'Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis, tronco. Ni yo me creo que lo haya hecho yo solito.'),
- ('¿De qué va? ¿Qué es??', '¿Cómo? ¿De qué va? ¿Qué es? No me hagás esto, che, que el que genera expectativa en esta banda soy yo.'),
+ ('Chicos, mañana a las 11', 'Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis, tronco. Ni yo me lo creo.'),
+ ('¿De qué va? ¿Qué es?', '¿Cómo? ¿De qué va? ¿Qué es? No me hagás esto, che, que el que genera expectativa en esta banda soy yo.'),
  ('Seguro que ha encontrado una base de datos', 'Seguro que ha encontrado una base de datos con todas las salas de Galicia. Lo veo venir.'),
  ('O ha descubierto Google Calendar', 'O ha descubierto Gúgel Calendar. [laughs] ¡Rocanrol!'),
  ('Mañana a las 11. Traed unas birras', 'Mañana a las once. Traed birras. Fresquitas, {bateria}, no como la última vez, que vaya tela.'),
@@ -28,9 +28,9 @@ SAY = [
  ('¡Una base de datos de salas!', '[shouts] ¡Una base de datos de salas! ¡Te lo dije! ¡Te lo dije, tío!'),
  ('Casi. Y hay un agente, el Scout', 'Casi. Y además tenemos un agente, el Scaut, que busca salas nuevas por nosotros. Como un ojeador. Pero que no se bebe el caché.'),
  ('Pues yo dije Google Calendar', '[mischievously] Pues yo dije Gúgel Calendar, eh. Que conste en acta.'),
- ('Eso también. Ya llegamos', 'Eso también, {bateria}. Ya llegaremos. Tranqui, tronco, tranqui.'),
+ ('Eso también. Ya llegaremos', 'Eso también, {bateria}. Ya llegaremos. Tranqui, tronco, tranqui.'),
  # Cap. 1 · correos
- ('¡Ha escrito a tres salas y al Resurrección Fest', '¡Pero si ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Y eso que afino rápido!'),
+ ('¡Ha escrito a tres salas y al Resurrection Fest', '¡Pero si ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Y eso que afino rápido!'),
  ('Cada correo suena a nosotros', 'Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.'),
  ('¿Y si se le va la mano', '¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.'),
  ('Por eso nada sale sin mi visto bueno', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
@@ -39,11 +39,11 @@ SAY = [
  ('¿Y cómo le llega a la sala?', '[curious] ¿Y cómo le llega eso a la sala? ¿Con un pdf adjunto, como la última vez?'),
  ('Así: en su bandeja de entrada', 'Así. En su bandeja de entrada, con vuestro logo, y el botón al dossier.'),
  ('¡Pero qué bonito!', '[amazed] ¡Ai, mi madriña! ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!'),
- ('Con tu firma, tu cargo y tus redes', 'Con tu firma, tu cargo, y tus redes. Y cuando abren el dossier, la app te avisa.'),
+ ('Con tu firma, tu cargo y tus redes', 'Con tu firma, tu cargo, y tus redes. Y el dossier, a un clic.'),
  ('¡Y yo sin saber ni firmar un correo!', '[laughs] ¡Y yo, que ni sé firmar un correo, boludo!'),
  # Cap. 1 · Date Swap
- ('Propongo a otra banda cambiar fecha', 'Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.'),
- ('Os leo. Me encanta', 'Os leo, Herdeiros. Me encanta: nosotros en Vigo, y vosotros en Santiago. ¡Cartel doble, colegas! ¡Esto es rocanrol!'),
+ ('Esto es Date Swap: le propongo', 'Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.'),
+ ('Os leo. Me encanta', 'Os leo, Herdeiros. Me encanta: nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble, colegas! ¡Esto es rocanrol!'),
  ('¡Cartel doble con otra banda!', '[excited] ¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolin!'),
  ('¿Y quién es ese?', '[suspicious] ¿Y quién es ese? ¿Tiene más pelo que yo?'),
  ('El cantante de Master of Prompts', 'El cantante de Máster of Prompts. Guardaos su cara, que va a volver.'),
@@ -58,43 +58,43 @@ SAY = [
  ('¿Y si la sala nos cambia el caché', '¿Y si la sala nos cambia el caché el mismo día del bolo, como la última vez? Que acabamos cobrando en croquetas, home.'),
  ('Por eso el acuerdo se cierra', 'Por eso el acuerdo se cierra desde la plataforma: fecha, caché, ráider y camerino. Todo por escrito. Croquetas incluidas, si hace falta.'),
  ('¿Y la sala tiene que instalarse algo?', '¿Y la sala tiene que instalarse algo? Porque el de El Faro todavía usa fax.'),
- ('Solo abrir un enlace y firmar', 'Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia.'),
+ ('Nada: solo abrir un enlace', 'Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia.'),
  ('¡Se acabaron las sorpresas', '[excited] ¡Se acabaron las sorpresas el día del bolo! ¡Por fin, home!'),
  # Sábado, 11:35: contesta la sala y aparece el mánager de Master of Prompts
- ('Chicos, soy el mánager de Master of Prompts', 'Chicos, soy el mánayer de Máster of Prompts. Os ha contestado la sala El Faro: el catorce de noviembre es vuestro. ¡Afinad esas guitarras!'),
- ('¡¡Por fin!! ¡Del rojo al verde!', '[excited] ¡Por fin! ¡Del rojo al verde! ¡Esto hay que festejarlo arriba de un escenario!'),
+ ('Chicos, soy el mánager de Master of Prompts', 'Chicos, soy el mánayer de Máster of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro! ¡Afinad esas guitarras!'),
+ ('¡Por fin! ¡Del rojo al verde!', '[excited] ¡Por fin! ¡Del rojo al verde! ¡Esto hay que festejarlo arriba de un escenario!'),
  ('Y si queréis, os llevo también los bolos', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el treinta por ciento. Eso sí: se cobra en croquetas.'),
  # Cap. 2 · hoja
  ('Imprimo el setlist', 'Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes.'),
  ('¡Mi hoja! ¡Con mis notas', '[excited] ¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio, carallo!'),
- ('Y yo con el tono de cada tema', 'Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.'),
+ ('Y la mía, con el tono', 'Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.'),
  # Cap. 2 · acordes
  ('Dale al play, ', 'Dale al play, {guitarra}. Los acordes y la letra van siguiendo la canción solos.'),
  ('¡Pero tío! ¡Te has copiado de Ultimate Guitar!', '¡Pero tío! ¡Te has copiado de Últimeit Guitar! ¡Pellízcame! ¡Esto no puede ser real! ¡Esto es mejor que un solo de Eslash!'),
- ('¡Estoy flipando!', '[laughs] ¡Estoy flipando, neno! ¡Flipando en colores!'),
- ('Espera, espera, que esto es solo el principio', 'Espera, espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!'),
+ ('¡Estoy flipando, neno', '[laughs] ¡Estoy flipando, neno! ¡Flipando en colores!'),
+ ('Espera, espera, que esto es solo la intro', 'Espera, espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!'),
  # Cap. 2 · Iris
  ('Subo una canción y Iris separa', 'Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras. Pista a pista.'),
  ('¡Mi voz sola!', '[dramatically] ¡Mi voz sola! ¡Nunca me había escuchado así! ¡Canto como un ángel, boludo!'),
- ('¡Espera, espera! ¡¿Esto no será un Moisés?!', '¡Espera, espera! ¿Esto no será un Moisés?'),
- ('¡Sí, tío! Un Moisés integrado', '¡Sí, tío! Un Moisés metido en nuestro repertorio. Y encima podemos grabar nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas, pero lo conseguí. ¡Y por fin se oye el bajo!'),
+ ('¡Espera, espera! ¿Esto no será un Moises?', '¡Espera, espera! ¿Esto no será un Moisés?'),
+ ('¡Sí, tío! Un Moises', '¡Sí, tío! Un Moisés metido en nuestro repertorio. Y encima podemos grabar nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas, pero lo conseguí. ¡Y por fin se oye el bajo!'),
  # Cap. 2 · calendario
  ('¡Esto es lo de Google Calendar!', '[excited] ¡Esto es lo de Gúgel Calendar! ¡Mira, acerté! ¡Soy un visionario!'),
  ('Casi, ', 'Casi, {bateria}. Aquí están los ensayos y los bolos. Y cada fecha tiene su ficha: el tiempo que va a hacer, y el aviso de si cae en puente o en festivo.'),
  ('¡Por fin sé cuándo ensayamos', '[excited] ¡Por fin sé cuándo ensayamos y cuándo tocamos! Se terminó llegar al show en jogging.'),
  # Cap. 3 · dossier
- ('¡¿Qué co******?!', '¿Pero qué co [pi]? ¿Que ahora tenemos una web? ¡Como los de verdad!'),
+ ('¿Pero qué co', '¿Pero qué co [pi]? ¿Que ahora tenemos una web? ¡Como los de verdad!'),
  ('¡Pero si está guapísima!', '[gasps] ¡Pero si está guapísima! ¡Salgo con mi mejor perfil! ¿Qué me estás contando?'),
  ('¡Es una pasada, tronco! Es el dossier', '¡Es una pasada, tronco! Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación. ¡Pero esperad, que esto no ha hecho más que empezar!'),
- ('Estoy flipando en colores', 'Yo estoy flipando en colores. En colores y con distorsión.'),
+ ('Yo ya no sé si esto es', '[amazed] Yo ya no sé si esto es un local de ensayo, o una discográfica.'),
  # Cap. 3 · QR
- ('¿Cómo…? ¿Que si ponemos este QR', '¿Cómo? ¿Que si ponemos este código, el cú-erre, en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?'),
- ('¡Sí! También pueden echarnos una mano', '¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan, cuando lo tengamos, ver los próximos bolos, y entrar en nuestra nueva web.'),
- ('En serio… creo que estoy soñando', '[amazed] En serio, che. Creo que estoy soñando. Que alguien me pase el micro, que tengo que decir algo.'),
+ ('¿Cómo? ¿Que si ponemos este QR', '¿Cómo? ¿Que si ponemos este código, el cú-erre, en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?'),
+ ('¡Sí! Y también pueden echarnos', '¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan, cuando lo tengamos, ver los próximos bolos, y entrar en nuestra nueva web.'),
+ ('En serio, che… creo que', '[amazed] En serio, che. Creo que estoy soñando. Que alguien me pase el micro, que tengo que decir algo.'),
  # Cap. 3 · reels
  ('¿Y esto qué es?', '[gasps] ¿Y esto qué es? ¿Más magia, che?'),
  ('Se me ocurrió hacer un generador', 'Pues se me ocurrió hacer un generador automático de reels para Instagram, TikTok y Yutub. Todo personalizado, y generado con inteligencia artificial.'),
- ('¿Le subes un vídeo largo', '[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería? ¡Ai, mi madriña!'),
+ ('¿O sea, que le subes', '[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería? ¡Ai, mi madriña!'),
  ('¡Eso es! Y te los deja listos', '¡Eso es! Y te los deja listos, con el formato de cada plataforma. Tu solo también, {bateria}. Los tres minutos.'),
  # Cap. 4 · cuentas
  ('Lo que entra por cada bolo', 'Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno. En una sola pantalla.'),
@@ -103,10 +103,10 @@ SAY = [
  ('¡Oye!', '[laughs nervously] ¡Oye! ¡Que fue solo una vez! Bueno, dos. ¡Pero eran de importación!'),
  # Lo han visto todo
  ('¡¿Pero cuándo has hecho esto?!', 'Pero, {bajo}, ¿cuándo has hecho todo esto? ¡Si tienes curro y dos hijas!'),
- ('¡Eres un genio, ', '[gasps] ¡Sos un genio, {bajo}! ¡El bajista! ¡El que nadie mira, boludo!'),
+ ('¡Sos un genio, ', '[gasps] ¡Sos un genio, {bajo}! ¡El bajista! ¡El que nadie mira, boludo!'),
  ('Por las noches, con ', 'Por las noches, con {ia_claude} y {ia_gemini}. Y mucho café. Muchísimo café.'),
  # Esto lo necesitan todos
- ('Iago, ¡esto es la hostia!', '[gasps] {bajo}, esto es una locura total. Lo necesitan todos los grupos, todos los mánayers, todas las productoras. ¡Todos!'),
+ ('Iago, esto es una locura', '[gasps] {bajo}, esto es una locura total. Lo necesitan todos los grupos, todos los mánayers, todas las productoras. ¡Todos!'),
  ('¿Y si lo vendemos?', '¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo.'),
  ('¿En serio? ¿Creéis que esto lo podemos vender?', '¿En serio, tronco? ¿Creéis que esto se puede vender?'),
  ('¡Pero tío, te vas a forrar!', '[laughs] ¡Pero tío, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol. ¡Como una estrella del rock!'),
@@ -150,8 +150,8 @@ SAY = [
  ('¿Y eso es lo que hace que no nos hackeen?', '¿Y eso es lo que hace que no nos hackeen?'),
  ('Una parte. Tú toca la guitarra', 'Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.'),
  # Cap. 6 · calidad
- ('¡Madre mía! ¡Esto tiene más tests', '¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!'),
- ('Y se ejecutan solos', 'Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.'),
+ ('¡Madre mía! ¡Esto tiene más pruebas', '¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!'),
+ ('Más de dos mil', 'Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.'),
  # Cap. 6 · lo que viene
  ('Y ahora, lo que viene', 'Y ahora, lo que viene: probarlo con una banda real. La nuestra.'),
  # Festival
@@ -161,7 +161,7 @@ SAY = [
  ('Hace seis meses no sabíamos', 'Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. [shouts] ¡Un, dos, tres, cuatro!'),
  # Otro jueves (espejo)
  ('Cerrao y bien cerrao', 'Cerrao y bien cerrao, chaval. Mirad el calendario.'),
- ('Y la setlist de cada uno ya está', 'Y la setlist de cada uno ya está en la hoja.'),
+ ('Y ya tenemos los setlists', 'Y ya tenemos los setlists, cada uno en su hoja.'),
  ('Entonces ensayamos el sábado', 'Entonces, ensayamos el sábado. ¡Rocanrol!'),
 ]
 ACT_SAY = {
@@ -177,7 +177,7 @@ EXTRA_SAY = {
  'cast_voz': '{voz}. {voz:cargo}. Che, la cara bonita de la banda.',
  'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos, los rifs, y las palabrotas.',
  'cast_bajo': 'Y yo soy {bajo}, de San Blas de toda la vida. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
- 'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y la setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
+ 'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y el setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
  'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas, chavales, que esto mola mazo.',
  'react': 'A ver, neno, enséñanos eso que ni tú te crees. Y rápido, que se calienta la birra.',
  'radio': 'Buenos días, rockeros. Esto es Rock efe eme. La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrécshon Fest, gracias a su bajista, {bajo}, y a band mánayer punto io: la increíble app que ha creado, y que va a revolucionar la industria musical. ¡Sube el volumen!',
