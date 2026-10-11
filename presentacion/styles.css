@@ -1797,3 +1797,32 @@ body.pelicula:not(.scroll) #barras { display: block; }
 #barras i { position: fixed; left: 0; right: 0; height: 0; background: #000; z-index: 44; pointer-events: none; transition: height 1100ms cubic-bezier(.6, 0, .2, 1); }
 #barras i:first-child { top: 0; } #barras i:last-child { bottom: 0; }
 body.pelicula:not(.scroll):has(.slide.active:is(.act, .reveal, .giro-reloj, .mis-bandas, .scene:not(.tech):not(.biz):not(.creditos-post):not(.mailscene))) #barras i { height: 64px; }
+
+/* ───────── Más pantalla: la captura ocupa casi todo el cuadro y el móvil se hace grande, con la lista de rótulos a su izquierda ───────── */
+body.pelicula.compartiendo:not(.scroll) .slide.feat.dirigida > .ft-shot.dir:not(.phone) { left: 64px; right: 64px; top: 178px; bottom: 34px; }
+.feat.dirigida .ft-shot.dir:not(.phone) .dr-cam { top: 46px; }
+body.pelicula:not(.scroll) .slide.feat.dirigida.active > .ficha { left: 64px; width: 1792px; }
+body.pelicula:not(.scroll) .slide.feat.dirigida > .ft-shot.dir.phone { right: 110px; top: 48px; width: 520px; height: 984px; border-radius: 58px; }
+body.pelicula:not(.scroll) .slide.feat.dirigida:has(.ft-shot.dir.phone).active > .ficha { left: 100px; top: 70px; width: 1130px; }
+/* rótulos del móvil: una lista a la izquierda que se va llenando y se queda */
+body.pelicula:not(.scroll) .dirigida.active .dr-lab.mov { left: 100px; right: auto; top: calc(330px + var(--k) * 168px); bottom: auto; max-width: 1060px; font-size: 44px; padding: 20px 34px 20px 20px; gap: 22px;
+  animation: drlabstay 700ms cubic-bezier(.2, 1.1, .3, 1) var(--t) both; }
+body.pelicula:not(.scroll) .dirigida.active .dr-lab.mov b { width: 62px; height: 62px; font-size: 38px; }
+@keyframes drlabstay { 0% { opacity: 0; translate: -50px 0; } 100% { opacity: 1; translate: 0 0; } }
+/* en las escenas de móvil el reloj de cuenta atrás sube a la izquierda para no tapar el teléfono */
+body.pelicula.compartiendo:not(.scroll):has(.slide.active.dirigida .ft-shot.phone) #reloj { left: 100px; right: auto; top: 14px; }
+
+.feat.dirigida .ft-shot .dr-cam > video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: fill !important; }
+
+/* ───────── Cámara en mano, destello anamórfico y empuje de cámara en todas las escenas ───────── */
+body.pelicula:not(.scroll) .slide.active.scene:not(.dream):not(.tech):not(.biz) .scene-bg { inset: -2.5%; animation: kenb 24s ease-out both, mano 11s ease-in-out infinite alternate; }
+@keyframes mano { 0% { translate: 0 0; rotate: 0deg; } 20% { translate: -6px 4px; rotate: -.16deg; } 45% { translate: 5px -4px; rotate: .14deg; } 70% { translate: -4px -3px; rotate: -.1deg; } 100% { translate: 6px 5px; rotate: .18deg; } }
+.flare { display: none; }
+body.pelicula:not(.scroll) .slide.scene.active .flare { display: block; position: absolute; left: -30%; top: 46%; width: 160%; height: 5px; pointer-events: none; opacity: 0; mix-blend-mode: screen; z-index: 3;
+  background: linear-gradient(90deg, transparent 0%, rgba(110,160,255,0) 25%, rgba(150,190,255,.95) 50%, rgba(110,160,255,0) 75%, transparent 100%);
+  filter: blur(2px) drop-shadow(0 0 22px rgba(120,170,255,.9)); animation: flare 2.4s cubic-bezier(.3, 0, .2, 1) .35s both; }
+@keyframes flare { 0% { opacity: 0; translate: -20% 0; scale: .3 1; } 25% { opacity: .9; } 100% { opacity: 0; translate: 20% 0; scale: 1.1 1; } }
+/* los vídeos de la app que no llevan dirección propia avanzan despacio hacia la pantalla */
+body.pelicula:not(.scroll) .slide.feat:not(.dirigida).active .ft-shot:not(.phone) video { animation: dolly 26s ease-in-out both; transform-origin: 40% 35%; }
+@keyframes dolly { from { scale: 1; } to { scale: 1.09; } }
+@media (prefers-reduced-motion: reduce) { .flare { display: none !important; } body.pelicula .slide.active.scene .scene-bg, body.pelicula .slide.feat .ft-shot video { animation: none !important; } }

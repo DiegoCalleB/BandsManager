@@ -1040,6 +1040,11 @@ for i, x in enumerate(S):
     S[i] = x[:k] + '  ' + ficha + x[k:]
 assert _nf == len(FICHAS), _nf
 
+# Destello anamórfico (una veta horizontal de luz azul que cruza el plano al entrar) en las escenas de la historia
+import re as _re
+for _i, _x in enumerate(S):
+    if _re.match(r'\s*<section class="slide scene(?![^"]*\b(?:tech|biz|creditos-post|reveal|dream)\b)', _x) and '<div class="scene-bg"' in _x and 'class="flare"' not in _x:
+        S[_i] = _re.sub(r'(<div class="scene-bg"[^>]*></div>)', r'\1<i class="flare" aria-hidden="true"></i>', _x, count=1)
 # Dirección de pantalla (tools/guion/direccion.py): cámara, resaltes, rótulos y cursor en las capturas fijas
 sys.path.insert(0, AQUI)
 import direccion
