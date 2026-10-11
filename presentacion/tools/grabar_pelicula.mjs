@@ -8,9 +8,9 @@
  *
  * Cómo funciona (el Chromium de Playwright no tiene salida de audio ni reproduce H.264):
  *  - Vídeo: recordVideo de Playwright a 1280x720.
- *  - Voces y música: se anota cuándo se reproduce cada audio (HTMLMediaElement.play) y luego se mezclan con ffmpeg,
- *    bajando la música mientras habla alguien, igual que hace cine.js.
- *  - Sonidos de WebAudio (logotipo, tráiler, transiciones): se graban por una derivación de la salida con MediaRecorder.
+ *  - Voces: se anota cuándo se reproduce cada audio (HTMLMediaElement.play) y luego se mezclan con numpy y ffmpeg.
+ *  - WebAudio (música por escenas con su ducking, logotipo, tráiler, rampas y golpes del montaje): se graba por una
+ *    derivación de la salida con MediaRecorder.
  *  - Los .mp4 de video/ se sirven como .webm convertidos en $WEBM_DIR (por defecto /tmp/claude-0/webm).
  * Necesita: playwright-core, Chromium en /opt/pw-browsers/chromium, ffmpeg y python3 con numpy.
  */
@@ -40,7 +40,8 @@ await page.addInitScript(() => {
   window.__audio = []; window.__taps = [];
   const play = HTMLMediaElement.prototype.play;
   HTMLMediaElement.prototype.play = function () {
-    if (this.tagName === 'AUDIO' || /\.(mp3|m4a)/.test(this.currentSrc || this.src || '')) {
+    // la música (data-tap) va por WebAudio y ya la recoge la derivación; aquí solo se anotan las voces
+    if ((this.tagName === 'AUDIO' || /\.(mp3|m4a)/.test(this.currentSrc || this.src || '')) && !(this.dataset && this.dataset.tap)) {
       window.__audio.push({ t: performance.now(), src: this.currentSrc || this.src, rate: this.playbackRate, vol: this.volume, bgm: /musica/.test(this.src) });
     }
     return play.apply(this, arguments);

@@ -56,7 +56,8 @@
 
     return {
       // Barrido de aire: ruido filtrado que sube y se abre. Transiciones de slide.
-      whoosh(t, dur = 0.7, f0 = 260, f1 = 4200, gain = 0.14) {
+      whoosh(t, dur = 0.7, f0 = 260, f1 = 2400, gain = 0.14) {
+        f1 = Math.min(f1, 2400); f0 = Math.min(f0, f1 * 0.6); // nada de silbidos agudos: aire, no pitido
         const s = noise(t, dur + 0.15), bp = c.createBiquadFilter(), hp = c.createBiquadFilter(), g = c.createGain();
         bp.type = 'bandpass'; bp.Q.setValueAtTime(0.9, t); bp.Q.linearRampToValueAtTime(3.5, t + dur);
         bp.frequency.setValueAtTime(f0, t); bp.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.85);
@@ -75,9 +76,100 @@
         env(g2, t, 0.002, gain * 0.35, 0.16);
         o2.connect(g2).connect(out); o2.start(t); o2.stop(t + 0.3);
         const s = noise(t, 0.12), f = c.createBiquadFilter(), g3 = c.createGain();
-        f.type = 'bandpass'; f.frequency.value = 3000; f.Q.value = 0.7;
-        env(g3, t, 0.001, gain * 0.45, 0.08);
+        f.type = 'lowpass'; f.frequency.value = 900; f.Q.value = 0.5;
+        env(g3, t, 0.002, gain * 0.3, 0.09);
         s.connect(f).connect(g3).connect(out);
+      },
+      // ── Sonidos de montaje: todo grave, nada de campanitas ──
+      // Golpe sordo de sub, sin transitorio: el «pum» que se nota más que se oye
+      thump(t, gain = 0.5) {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(72, t); o.frequency.exponentialRampToValueAtTime(32, t + 0.5);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+        o.connect(g).connect(sat); o.start(t); o.stop(t + 1);
+      },
+      // Boom de tráiler: sub largo y retumbo de ruido grave
+      boom(t, gain = 0.7, dur = 2.4) {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(58, t); o.frequency.exponentialRampToValueAtTime(29, t + dur * 0.8);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g).connect(sat); o.start(t); o.stop(t + dur + 0.05);
+        const s = noise(t, dur), lp = c.createBiquadFilter(), g2 = c.createGain();
+        lp.type = 'lowpass'; lp.frequency.setValueAtTime(420, t); lp.frequency.exponentialRampToValueAtTime(90, t + dur);
+        g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(gain * 0.9, t + 0.03); g2.gain.exponentialRampToValueAtTime(0.0001, t + dur * 0.9);
+        s.connect(lp).connect(g2).connect(out);
+      },
+      // «Braam» (estilo Origen): metales graves desafinados en Mi que se abren despacio
+      braam(t, dur = 2.2, gain = 0.16) {
+        [41.2, 41.5, 82.4, 61.7].forEach((fr, i) => {
+          const o = c.createOscillator(), lp = c.createBiquadFilter(), g = c.createGain();
+          o.type = 'sawtooth'; o.frequency.value = fr;
+          lp.type = 'lowpass'; lp.Q.value = 2; lp.frequency.setValueAtTime(140, t); lp.frequency.exponentialRampToValueAtTime(620, t + dur * 0.35); lp.frequency.exponentialRampToValueAtTime(160, t + dur);
+          g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain / (1 + i * 0.4), t + 0.08); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+          o.connect(lp).connect(g).connect(sat); o.start(t); o.stop(t + dur + 0.05);
+        });
+      },
+      // Rampa de velocidad (como en los vídeos de dron): el aire acelera hasta el corte y cae en un golpe grave.
+      // t = instante del corte; pre = cuánto antes empieza a acelerar
+      rampa(t, pre = 0.55, gain = 0.2) {
+        const t0 = t - pre, s = noise(t0, pre + 0.7), bp = c.createBiquadFilter(), lp = c.createBiquadFilter(), g = c.createGain();
+        bp.type = 'bandpass'; bp.Q.value = 1.4; bp.frequency.setValueAtTime(180, t0); bp.frequency.exponentialRampToValueAtTime(1900, t); bp.frequency.exponentialRampToValueAtTime(260, t + 0.6);
+        lp.type = 'lowpass'; lp.frequency.value = 2600;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(gain * 3.2, t - 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
+        s.connect(bp).connect(lp).connect(g).connect(out);
+        // motor que sube de vueltas por debajo
+        const o = c.createOscillator(), lo = c.createBiquadFilter(), go = c.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(46, t0); o.frequency.exponentialRampToValueAtTime(132, t); o.frequency.exponentialRampToValueAtTime(40, t + 0.5);
+        lo.type = 'lowpass'; lo.frequency.value = 420;
+        go.gain.setValueAtTime(0.0001, t0); go.gain.exponentialRampToValueAtTime(gain * 0.5, t); go.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+        o.connect(lo).connect(go).connect(out); o.start(t0); o.stop(t + 0.6);
+        const ob = c.createOscillator(), gb = c.createGain(); // golpe al caer el corte
+        ob.type = 'sine'; ob.frequency.setValueAtTime(72, t); ob.frequency.exponentialRampToValueAtTime(32, t + 0.5);
+        gb.gain.setValueAtTime(0.0001, t); gb.gain.exponentialRampToValueAtTime(gain * 2.4, t + 0.012); gb.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+        ob.connect(gb).connect(sat); ob.start(t); ob.stop(t + 1);
+      },
+      // Rebobinado de cinta: zumbido grave que tiembla y cae
+      rebobinar(t, dur = 0.7, gain = 0.12) {
+        const o = c.createOscillator(), lfo = c.createOscillator(), lg = c.createGain(), lp = c.createBiquadFilter(), g = c.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(140, t + dur);
+        lfo.frequency.setValueAtTime(9, t); lfo.frequency.linearRampToValueAtTime(23, t + dur); lg.gain.value = 60;
+        lfo.connect(lg).connect(o.frequency);
+        lp.type = 'lowpass'; lp.frequency.value = 1400;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.06); g.gain.setValueAtTime(gain, t + dur - 0.1); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(lp).connect(g).connect(out); o.start(t); o.stop(t + dur + 0.05); lfo.start(t); lfo.stop(t + dur + 0.05);
+        const s = noise(t, dur), bp = c.createBiquadFilter(), g2 = c.createGain();
+        bp.type = 'bandpass'; bp.frequency.value = 700; bp.Q.value = 0.8;
+        g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(gain * 1.5, t + 0.05); g2.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        s.connect(bp).connect(g2).connect(out);
+      },
+      // Tic-tac de reloj, grave y de madera (nada de clic agudo)
+      toc(t, gain = 0.22) {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.06);
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+        o.connect(g).connect(out); o.start(t); o.stop(t + 0.2);
+        const s = noise(t, 0.05), bp = c.createBiquadFilter(), g2 = c.createGain();
+        bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 2;
+        g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(gain * 1.2, t + 0.002); g2.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+        s.connect(bp).connect(g2).connect(out);
+      },
+      // Tono de Shepard (Dunkerque): parece que sube sin parar. Octavas de Mi con campana de volumen; techo en 1 kHz
+      shepard(t, dur = 8, gain = 0.1, ciclo = 6) {
+        const capas = 6, base = 41.2;
+        for (let k = 0; k < capas; k++) {
+          const o = c.createOscillator(), g = c.createGain();
+          o.type = 'sine';
+          const pasos = Math.ceil(dur / ciclo) + 1;
+          for (let p = 0; p <= pasos; p++) {
+            const tt = t + p * ciclo - (k / capas) * ciclo;
+            o.frequency.setValueAtTime(base * Math.pow(2, k), Math.max(t, tt));
+            o.frequency.exponentialRampToValueAtTime(base * Math.pow(2, k + 1), Math.max(t + 0.01, tt + ciclo));
+          }
+          // campana fija por capa: las capas medias suenan, las de los extremos casi no
+          const peso = Math.exp(-Math.pow((k - (capas - 1) / 2) / 1.4, 2));
+          g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gain * peso, t + 1.5); g.gain.setValueAtTime(gain * peso, t + dur - 0.6); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+          o.connect(g).connect(out); o.start(t); o.stop(t + dur + 0.05);
+        }
       },
       // Pulso de interfaz: dos parciales con caída suave, para botones y pines.
       blip(t, freq = 880, gain = 0.1) {
@@ -141,15 +233,15 @@
   function trailerScore(k) {
     const ev = [
       [0, () => k.drone(0, 12.6)], [0, () => k.hit(0, 0.35)],
-      [0.4, () => k.blip(0.4, 760, 0.08)], [3.0, () => k.blip(3.0, 640, 0.08)], [6.8, () => k.blip(6.8, 520, 0.08)],
-      [2.4, () => k.whoosh(2.4, 0.6, 200, 3200, 0.13)], [2.6, () => k.hit(2.6, 0.5)],
+      [0.3, () => k.braam(0.3, 2.4, 0.13)], [2.0, () => k.rebobinar(2.0, 0.62, 0.12)], [2.62, () => k.thump(2.62, 0.55)],
+      [6.8, () => k.thump(6.8, 0.4)],
       [6.2, () => k.whoosh(6.2, 0.6, 200, 3200, 0.13)], [6.4, () => k.hit(6.4, 0.5)],
-      [11.2, () => k.riser(11.2, 1.0, 0.12)], [12.0, () => k.whoosh(12.0, 0.9, 250, 4200, 0.2)], [12.2, () => k.hit(12.2, 0.9)],
-      [12.25, () => k.chime(12.25, 0.16)],
+      [12.2, () => k.rampa(12.2, 1.0, 0.18)], [12.2, () => k.hit(12.2, 0.8)],
+      [12.25, () => k.boom(12.25, 0.6, 2.8)], [12.3, () => k.braam(12.3, 2.6, 0.12)],
     ];
     for (let n = 0; n < 4; n++) {
       const tt = 8.6 + n * 0.9;
-      ev.push([tt - 0.15, () => k.whoosh(tt - 0.15, 0.4, 400, 3400, 0.08)], [tt, () => k.tick(tt)], [tt, () => k.blip(tt, 660 + n * 110, 0.07)]);
+      ev.push([tt - 0.15, () => k.whoosh(tt - 0.15, 0.4, 300, 1800, 0.07)], [tt, () => k.thump(tt, 0.32)]);
     }
     return ev;
   }
@@ -183,33 +275,32 @@
     trailerScore(shifted).forEach(([t, fn]) => { if (t >= elapsed - 0.05) fn(); });
   }
 
+  // El giro final (El reloj): tic-tac grave que se para en 00:00, silencio, golpe y un Shepard que sube bajo los rótulos
+  function giroScore(k, at) {
+    [0.3, 1.3, 2.3].forEach((t) => k.toc(at(t), 0.26));
+    k.boom(at(3.3), 0.85, 3.2); k.braam(at(3.32), 2.8, 0.12);
+    k.shepard(at(6.5), 15.5, 0.085, 5);
+    k.thump(at(10.8), 0.45); k.thump(at(16.0), 0.4);
+    k.boom(at(22.0), 0.6, 3.6); k.braam(at(22.05), 3.4, 0.1);
+  }
+
   function play(el, elapsed) {
     if (!enabled || !ensure() || !el) return;
     if (el.classList.contains('trailer')) { playTrailer(elapsed); return; }
     const k = kit(ctx, newScene()), t0 = ctx.currentTime + 0.04;
     const at = (t) => t0 + t;
-    if (el.classList.contains('act')) {
-      k.whoosh(at(0.02), 1.6, 160, 3000, 0.18); k.hit(at(0.3), 0.6);
-      if (el.querySelector('.act-char')) k.chime(at(1.5), 0.08);
-    } else if (el.classList.contains('scene')) {
-      k.whoosh(at(0.02), 0.7, 200, 2400, 0.1);
-      const rows = el.querySelectorAll('.sheet tbody tr').length;
-      for (let i = 0; i < rows; i++) k.tick(at(0.8 + i * 0.28));
-      if (el.querySelector('.cartel')) { k.riser(at(0.2), 1.1, 0.12); k.hit(at(1.3), 0.7); }
-      if (el.querySelector('.eq')) { k.whoosh(at(0.1), 0.9, 800, 5200, 0.07); k.chime(at(0.9), 0.06); }
-      if (el.classList.contains('reveal')) { k.hit(at(0.5), 0.8); k.chime(at(0.6), 0.1); }
-      if (el.querySelector('.mail')) k.chime(at(0.7), 0.1);
-    } else if (el.classList.contains('hero')) {
-      k.whoosh(at(0.02), 0.8, 300, 3400, 0.13);
-      [740, 880, 1040].forEach((f, n) => k.blip(at(1.55 + n * 0.3), f, 0.09));
-    } else {
-      k.whoosh(at(0.02), 0.5, 320, 2800, 0.1);
-    }
-    // Chat de la banda: un pitido por mensaje, a la vez que entra (820 ms entre mensajes)
-    const msgs = window.DeckVoces && window.DeckVoces.enabled() ? 0 : el.querySelectorAll('.dlg li, .chat li').length;
-    for (let i = 0; i < msgs; i++) k.blip(at(0.74 + i * 0.82), el.querySelectorAll('.dlg li')[i]?.classList.contains('me') ? 520 : 760, 0.07);
-    if (el.classList.contains('dream')) { [0.5, 1.7, 3.0].forEach((t, n) => k.chime(at(t), 0.1 - n * 0.015)); }
-    if (el.querySelector('.react')) k.blip(at(2.6), 940, 0.07);
+    const peli = document.body.classList.contains('pelicula');
+    // Modo película: el sonido lo pone el tipo de corte (la rampa ya sonó antes del corte; J, L y fundido van limpios)
+    if (peli) {
+      const c = el.dataset.corteAhora;
+      if (c === 'golpe') { k.hit(at(0), 0.75); k.boom(at(0), 0.45, 1.8); }
+      else if (c === 'negro') k.boom(at(0.2), 0.5, 2.4);
+    } else if (el.classList.contains('act')) { k.whoosh(at(0.02), 1.6, 160, 1800, 0.16); k.hit(at(0.3), 0.6); }
+    else k.whoosh(at(0.02), 0.6, 200, 1600, 0.08);
+    if (el.querySelector('.cartel')) { k.braam(at(0.15), 2.2, 0.12); k.boom(at(1.2), 0.6, 2.2); }
+    if (el.classList.contains('reveal')) k.boom(at(0.5), 0.6, 2.6);
+    if (el.classList.contains('dream')) k.braam(at(0.5), 3.2, 0.07);
+    if (el.classList.contains('giro-reloj')) giroScore(k, at);
   }
 
   window.DeckSound = {
@@ -229,9 +320,11 @@
       document.body.classList.toggle('sound-on', on);
       onChange(on);
     },
-    tick() { if (enabled && ensure()) kit(ctx, newScene()).tick(ctx.currentTime + 0.01, 0.07); },
+    tick() { /* sin clic: los pasos por clics van en silencio */ },
+    // Rampa de velocidad: suena antes del corte (en ms), para que el golpe caiga justo cuando cambia el plano
+    rampa(ms) { if (enabled && ensure()) kit(ctx, input).rampa(ctx.currentTime + ms / 1000, Math.min(0.6, ms / 1000), 0.2); },
     // Pitido suave al entrar cada mensaje cuando hablan las voces (sin cortar el sonido de la diapositiva)
-    msg(me) { if (enabled && ensure()) kit(ctx, scene || newScene()).blip(ctx.currentTime + 0.01, me ? 520 : 760, 0.045); },
+    msg() { /* sin pitidos al hablar */ },
     toggle() {
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); } catch (e) { /* sin almacenamiento */ }

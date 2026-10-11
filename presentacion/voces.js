@@ -117,7 +117,7 @@
     }
     var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
     if (m) {
-      var audio = pista[turno]; turno = 1 - turno;
+      var audio = pista[turno]; turno = 1 - turno; audio._el = el;
       audio.onended = acabar; audio.onerror = function () { leer(); };
       audio.src = 'audio/voces/' + m.f + '?v=' + (m.h || m.v || ''); // el nombre del mp3 sale del texto: el ?v= evita servir de la caché un audio viejo
       audio.playbackRate = VEL;
@@ -150,8 +150,23 @@
     document.querySelectorAll('.foco.in').forEach(function (f) { f.classList.remove('in'); delete f.dataset.who; });
   }
 
-  // Habla la diapositiva entera: cada frase se muestra (mostrar) justo cuando empieza a sonar
-  function play(slide, mostrar, filtro, alFinal) {
+  // Corte en L: la frase que está sonando se suelta y termina sola sobre el plano siguiente (stop() ya no la corta)
+  var colgando = 0;
+  function soltar() {
+    pista.forEach(function (a, k) {
+      if (a.paused || a.ended || !a._el) return;
+      var el = a._el;
+      el.classList.remove('habla'); el.classList.add('habla-l');
+      a.onended = function () { el.classList.remove('habla-l'); callar(el); };
+      a.onerror = a.onended;
+      colgando = Math.max(colgando, performance.now() + ((a.duration || 0) - a.currentTime) / VEL * 1000);
+      var n = new Audio(); n.preload = 'auto'; n.preservesPitch = true; pista[k] = n;
+    });
+  }
+
+  // Habla la diapositiva entera: cada frase se muestra (mostrar) justo cuando empieza a sonar.
+  // opts.cola: segundos antes del final de la última frase en que se avisa (alFinal), para cortar en L
+  function play(slide, mostrar, filtro, alFinal, opts) {
     stop();
     var id = ++run;
     slide._hueco = undefined; // se vuelve a medir el hueco libre (puede haber cambiado el tamaño de la ventana)
@@ -164,7 +179,7 @@
       var el = cola[i++], prox = cola[i];
       var luego = function () { if (id === run) timer = setTimeout(siguiente, 0); };
       // La siguiente se prepara a tiempo para empezar justo al acabar esta, o pisándola un poco si habla otro
-      var antes = prox ? retardo(prox) / 1000 + (prox.dataset.who !== el.dataset.who ? PISAR : 0) : 0;
+      var antes = prox ? retardo(prox) / 1000 + (prox.dataset.who !== el.dataset.who ? PISAR : 0) : (opts && opts.cola) || 0;
       if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego, antes); return; }
       // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
       el.classList.add('typing');
@@ -175,13 +190,14 @@
         hablar(el, luego, antes);
       }, retardo(el));
     };
-    timer = setTimeout(siguiente, 200);
+    // si suena todavía la cola de un corte en L, se espera a que acabe para no pisarla
+    timer = setTimeout(siguiente, Math.max(200, colgando - performance.now() + 120));
   }
 
   function uno(el) { stop(); run++; hablar(el); }
 
   window.DeckVoces = {
-    enabled: enabled, play: play, stop: stop, uno: uno,
+    enabled: enabled, play: play, stop: stop, uno: uno, soltar: soltar,
     // segundos que dura lo que dicen los personajes de una diapositiva (para repartir una animación de cámara)
     duracion: function (slide) {
       var t = 0;

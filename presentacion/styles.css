@@ -1317,3 +1317,85 @@ body.scroll .slide.slide > .noche-reloj { position: relative; left: auto; top: a
 /* Corte de 5 minutos: los créditos largos se acortan */
 body.corte .solo-largo { display: none; }
 body.corte .slide.creditos.active .rollo { animation-duration: 30s; }
+
+/* ───────── Montaje de cine (modo película): cómo se entra en cada plano (data-corte, ver deck.js) ───────── */
+/* Rampa de velocidad: el plano que sale acelera (zoom, barrido y desenfoque de movimiento)… */
+body.pelicula:not(.scroll) .slide.active.acelera { animation: acelera 560ms cubic-bezier(.55, 0, 1, .45) both; }
+@keyframes acelera { to { scale: 1.06; translate: -7% 0; filter: blur(14px) brightness(1.45) saturate(1.2); } }
+/* …y el que entra llega lanzado y frena */
+body.pelicula[data-corte="rampa"]:not(.scroll) .slide.active { animation: frena 820ms cubic-bezier(.05, .7, .2, 1) both; transition: none; }
+body.pelicula[data-corte="rampa"]:not(.scroll) .slide:not(.active) { transition: none; opacity: 0; }
+@keyframes frena { from { scale: .78; translate: 9% 0; filter: blur(16px) brightness(1.5); opacity: .35; } 60% { filter: blur(0) brightness(1.05); opacity: 1; } to { scale: .9; translate: 0 0; filter: none; opacity: 1; } }
+/* estela de velocidad sobre el corte */
+body.pelicula[data-corte="rampa"]:not(.scroll) #stage > #etalon::after { content: ''; position: absolute; inset: 0; mix-blend-mode: screen;
+  background: repeating-linear-gradient(0deg, transparent 0 22px, rgba(255,220,180,.10) 22px 24px, transparent 24px 61px);
+  animation: estela 520ms ease-out both; }
+@keyframes estela { from { opacity: 1; translate: 0 0; filter: blur(3px); } to { opacity: 0; translate: -18% 0; filter: blur(8px); } }
+/* Corte seco: sin transición, con un fotograma de impacto */
+body.pelicula[data-corte="golpe"]:not(.scroll) .slide { transition: none !important; }
+body.pelicula[data-corte="golpe"]:not(.scroll) .slide.active { animation: golpe 380ms ease-out both; }
+@keyframes golpe { from { scale: .94; filter: brightness(1.8) contrast(1.3); } to { scale: .9; filter: none; } }
+/* Fundido a negro (saltos de tiempo y capítulos): sale rápido, un respiro en negro y entra despacio */
+body.pelicula[data-corte="negro"]:not(.scroll) .slide:not(.active) { transition: opacity 320ms ease-in, visibility 0s linear 340ms; }
+body.pelicula[data-corte="negro"]:not(.scroll) .slide.active { animation: denegro 1300ms ease-out both; }
+@keyframes denegro { 0%, 34% { opacity: 0; } 100% { opacity: 1; } }
+/* J y L: corte limpio, casi seco; lo que une los planos es el sonido */
+body.pelicula[data-corte="j"]:not(.scroll) .slide, body.pelicula[data-corte="l"]:not(.scroll) .slide { transition: opacity 200ms ease, visibility 0s linear 220ms; }
+body.pelicula[data-corte="j"]:not(.scroll) .slide.active, body.pelicula[data-corte="l"]:not(.scroll) .slide.active { transition: opacity 200ms ease; }
+@media (prefers-reduced-motion: reduce) { body.pelicula .slide.active, body.pelicula .slide.active.acelera { animation: none !important; filter: none !important; } }
+
+/* ───────── Etalonaje único: sombras frías y luces cálidas, y grano de película (en todos los planos igual) ───────── */
+#etalon, #grano { display: none; position: absolute; inset: 0; pointer-events: none; }
+body.pelicula:not(.scroll) #etalon { display: block; z-index: 44; mix-blend-mode: soft-light;
+  background: linear-gradient(180deg, rgba(20, 70, 90, .38) 0%, rgba(20, 50, 70, .18) 45%, rgba(255, 150, 70, .22) 100%); }
+body.pelicula:not(.scroll) #grano { display: block; z-index: 46; inset: -40px; opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E");
+  animation: grano 900ms steps(6) infinite; }
+@keyframes grano { 0% { translate: 0 0; } 20% { translate: -18px 12px; } 40% { translate: 14px -20px; } 60% { translate: -10px -8px; } 80% { translate: 20px 16px; } 100% { translate: 0 0; } }
+body.pelicula:not(.scroll) .slide.active { filter: contrast(1.04) saturate(.92); }
+@media (prefers-reduced-motion: reduce) { #grano { animation: none; } }
+
+/* ───────── El giro (El reloj): el reloj de toda la película no contaba para el festival ───────── */
+.slide.giro-reloj { background: #000; align-items: center; justify-content: center; text-align: center; color: #fff; padding: 0; }
+.giro-reloj .gr-reloj { position: absolute; left: 50%; top: 250px; translate: -50% 0; font-variant-numeric: tabular-nums; opacity: 0; }
+.giro-reloj .gr-reloj small { display: block; font: 600 26px/1.2 Onest, sans-serif; letter-spacing: .32em; color: rgba(255,255,255,.62); height: 32px; position: relative; }
+.giro-reloj .gr-reloj small i { position: absolute; left: 50%; translate: -50% 0; white-space: nowrap; font-style: normal; }
+.giro-reloj .gr-t { display: block; position: relative; height: 190px; width: 820px; margin-top: 18px; }
+.giro-reloj .gr-t i { position: absolute; inset: 0; font: 600 180px/1 Oswald, Onest, sans-serif; font-style: normal; letter-spacing: .04em; opacity: 0; }
+.giro-reloj .gr-c { position: absolute; left: 0; right: 0; top: 560px; margin: 0; font: 500 64px/1.25 Onest, sans-serif; letter-spacing: .01em; opacity: 0; }
+.giro-reloj .gr-c.gr-ask { font: 600 92px/1.1 Oswald, Onest, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: #ffb37a; top: 520px; }
+.slide.giro-reloj.active .gr-reloj { animation: grentra 600ms ease-out 200ms both, grsale 1600ms ease-in 21.4s both; }
+.slide.giro-reloj.active .gr-t i { animation: grnum 1000ms steps(1) forwards; }
+.slide.giro-reloj.active .gr-t i:nth-child(1) { animation-delay: .3s; } .slide.giro-reloj.active .gr-t i:nth-child(2) { animation-delay: 1.3s; }
+.slide.giro-reloj.active .gr-t i:nth-child(3) { animation-delay: 2.3s; }
+.slide.giro-reloj.active .gr-t i:nth-child(4) { animation: grcero 1ms 3.3s both; color: #ff5a4f; }
+.slide.giro-reloj.active .gr-l1 { animation: grlabel1 600ms ease-in 10.6s both; }
+.slide.giro-reloj.active .gr-l2 { animation: grlabel2 900ms ease-out 11.0s both; }
+.slide.giro-reloj.active .gr-c { animation: grcard var(--d, 3s) ease-in-out var(--t) both; }
+.slide.giro-reloj.active .gr-c.gr-ask { animation: grask 5s ease-out var(--t) both; }
+.slide.giro-reloj .notif { left: 50% !important; right: auto !important; top: 760px !important; translate: -50% 0; opacity: 0; }
+.slide.giro-reloj.active .notif { animation: grnotif 7.2s ease-out 13.8s both !important; }
+@keyframes grentra { from { opacity: 0; scale: .96; } to { opacity: 1; scale: 1; } }
+@keyframes grsale { to { opacity: 0; filter: blur(6px); } }
+@keyframes grnum { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes grcero { to { opacity: 1; } }
+@keyframes grlabel1 { 0% { opacity: 1; letter-spacing: .32em; } 60% { opacity: .5; filter: blur(2px); } 100% { opacity: 0; letter-spacing: .6em; filter: blur(8px); } }
+@keyframes grlabel2 { from { opacity: 0; letter-spacing: .02em; filter: blur(8px); color: #ffb37a; } to { opacity: 1; letter-spacing: .32em; filter: none; color: #ffb37a; } }
+@keyframes grcard { 0% { opacity: 0; filter: blur(8px); translate: 0 12px; } 18%, 82% { opacity: 1; filter: none; translate: 0 0; } 100% { opacity: 0; filter: blur(6px); } }
+@keyframes grask { 0% { opacity: 0; filter: blur(10px); scale: .97; } 30% { opacity: 1; filter: none; scale: 1; } 100% { opacity: 1; } }
+@keyframes grnotif { 0% { opacity: 0; translate: -50% 30px; } 10%, 88% { opacity: 1; translate: -50% 0; } 100% { opacity: 0; } }
+.slide.giro-reloj .gr-l1 { opacity: 1; } .slide.giro-reloj .gr-l2 { opacity: 0; }
+body.scroll .slide.giro-reloj { min-height: 900px; }
+body.scroll .giro-reloj .gr-c, body.scroll .giro-reloj .gr-reloj, body.scroll .giro-reloj .gr-t i:nth-child(4) { opacity: 1; position: relative; top: auto; translate: none; margin: 14px 0; }
+@media (prefers-reduced-motion: reduce) { .slide.giro-reloj.active * { animation-duration: 1ms !important; } }
+
+/* Tráiler: rebobinado (de la última noche, seis meses atrás) entre el primer y el segundo plano */
+.tr-rewind { position: absolute; inset: 0; opacity: 0; z-index: 3; overflow: hidden; background: #05070d; }
+.tr-rewind img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: saturate(.6) contrast(1.2) brightness(.8); }
+.tr-rewind::before { content: ''; position: absolute; inset: 0; z-index: 2; background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 2px, transparent 2px 6px); }
+.tr-rewind::after { content: '◀◀'; position: absolute; left: 90px; top: 80px; z-index: 3; font: 700 64px/1 Oswald, sans-serif; letter-spacing: -.1em; color: rgba(255,255,255,.9); }
+.slide.trailer.active .tr-rewind { animation: trrew 680ms linear 2.0s both; }
+.slide.trailer.active .tr-rewind img { animation: trrewimg 90ms steps(1) calc(2.0s + var(--k) * 90ms) forwards; }
+@keyframes trrew { 0% { opacity: 0; } 8%, 90% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes trrewimg { 0% { opacity: 1; translate: 0 -3%; } 100% { opacity: 0; translate: 0 3%; } }
+@media (prefers-reduced-motion: reduce) { .tr-rewind { display: none; } }

@@ -28,6 +28,11 @@ def section(title):
 
 
 trailer = section('Tráiler')
+# Rebobinado (Tenet): de la noche del festival, hacia atrás, hasta seis meses antes; 7 fotogramas de 90 ms
+REBOBINA = ['concierto-3', 'd-h-finanzas', 'd-h-dossier', 'd-h-calendario', 'd-h-pitch', 'd-h-booking', 'concierto-1']
+_rw = '<div class="tr-rewind" aria-hidden="true">' + ''.join(f'<img src="img/{n}.jpg" alt="" style="--k:{k}">' for k, n in enumerate(REBOBINA)) + '</div>'
+_i = trailer.index('<div class="tr-beat tr-photo" style="--t:2.6s')
+trailer = trailer[:_i] + _rw + '\n  ' + trailer[_i:]
 cast = section('Prólogo · La banda')
 excel = section('Prólogo · La hoja de cálculo')
 room = section('Prólogo · Sábado, 11:00 en el local')
@@ -736,6 +741,21 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 </section>
 ''')
 
+# El giro final (Nolan): el reloj de toda la película no contaba para el festival
+add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500">
+  <span class="tag" style="opacity:0">Fin de la historia · El reloj</span>
+  <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECCIÓN FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
+    <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
+  <p class="gr-c" style="--t:4.2s;--d:3.2s">¿Os habéis fijado en el reloj?</p>
+  <p class="gr-c" style="--t:7.6s;--d:3s">No contaba para un festival.</p>
+  <p class="gr-c" style="--t:11s;--d:2.9s">Contaba para esto.</p>
+  <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
+  <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
+  <p class="gr-c" style="--t:18s;--d:3.4s">En la de verdad, eres el festival.</p>
+  <p class="gr-c gr-ask" style="--t:22s">¿Nos dejas tocar?</p>
+</section>
+''')
+
 # Gracias
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
@@ -850,7 +870,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Playwright</dt><dd>Los vídeos de la app, con su cursor</dd>
       <dt>ffmpeg</dt><dd>El montaje y el sonido</dd>
       <dt>Whisper</dt><dd>Escuchó cada frase para comprobarla</dd>
-      <dt>Python</dt><dd>La música: un riff de garaje en Mi</dd>
+      <dt>Python y numpy</dt><dd>La banda sonora: «Compila ou Morre», «Cabalga o Lóstrego», «As noites» y «Cuenta atrás»</dd>
     </dl>
     <h3>Con el apoyo de</h3>
     <p>Brais Moure y The Big School · Máster de Desarrollo con IA</p>
@@ -878,7 +898,7 @@ for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'v
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
 CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
-         'Un sueño hecho realidad', 'Gracias', 'Créditos']
+         'Un sueño hecho realidad', 'El reloj', 'Gracias', 'Créditos']
 for t in CORTO:
     n = html.count(f'data-title="{t}"')
     assert n == 1, (t, n)
@@ -914,6 +934,42 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
   </div>
 </div>
 ''' + html[i1:]
+# ───────── Montaje: cómo se entra en cada plano (deck.js) y qué música suena (cine.js) ─────────
+# j: se oye antes de verse · l: la voz del plano anterior sigue sobre este · rampa: rampa de velocidad con golpe en el pulso
+# golpe: corte seco · negro: fundido a negro (saltos de tiempo, capítulos) · fundido: encadenado
+CORTES = {
+    'Prólogo · La banda': 'negro', 'Prólogo · Jueves, 23:47': 'negro', 'Prólogo · La llamada': 'golpe', 'Prólogo · La hoja de cálculo': 'j',
+    'Prólogo · La decisión': 'l', 'Prólogo · El sábado en el local': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
+    'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
+    'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
+    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'rampa', 'El profesor de armonía': 'l',
+    'Iris separa los instrumentos': 'rampa', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
+    'Choques en el calendario': 'l', 'El dossier de la banda': 'rampa', 'Un QR y el público se hace fan': 'j', 'Merchan en un minuto': 'rampa',
+    'Del directo al reel': 'j', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',
+    'Lo han visto todo': 'golpe', 'Las noches': 'l', 'Y mucho más': 'rampa', 'Esto lo necesitan todos': 'j',
+    'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
+    'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'rampa', 'Seguridad': 'j', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
+    'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
+    'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
+}
+# La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
+MUSICA = {'Tráiler': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
+          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'El reloj': '-', 'Gracias': 'lostrego',
+          'Escena post-créditos': 'tema'}
+for t in CORTES:
+    if t.startswith('Capítulo'):
+        continue
+    assert html.count(f'data-title="{t}"') == 1, ('corte', t)
+for t in [x for x in re.findall(r'data-title="([^"]+)"', html) if x.startswith('Capítulo')]:
+    CORTES[t] = 'negro'
+musica = '-'
+def _marca(mm):
+    global musica
+    t = mm.group(1)
+    musica = MUSICA.get(t, musica)
+    c = f' data-corte="{CORTES[t]}"' if t in CORTES else ''
+    return f'{mm.group(0)}{c} data-musica="{musica}"'
+html = re.sub(r'(?<=<section class="slide)[^>]*?data-title="([^"]+)"', lambda mm: _marca(mm), html)
 sin_usar = [k for k, v in SAY if k not in USADOS]
 if sin_usar: print('Guion hablado sin usar:', sin_usar)
 # fotos del reparto

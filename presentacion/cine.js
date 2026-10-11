@@ -1,32 +1,69 @@
 /* Modo película (tecla P): música de fondo que baja cuando alguien habla y viñeta de cine.
    La cámara (zoom al que habla), el foco sobre él y el fogonazo de cada plano son CSS (styles.css).
-   La música es audio/musica/rock.mp3 (la genera tools/musica.py); solo suena con el sonido activado. */
+   La música son cuatro piezas por escenas (audio/musica/*.mp3, las genera tools/musica.py); solo suena con el sonido activado. */
 (function () {
-  var bgm = new Audio('audio/musica/rock.mp3?v=2');
-  bgm.loop = true; bgm.preload = 'auto'; bgm.volume = 0;
-  var ALTO = 0.2, BAJO = 0.07, raf = 0;
-  var body = document.body;
-
+  // ── Banda sonora por escenas ──
+  // Cada diapositiva lleva data-musica (tension · tema · noches · lostrego · «-» silencio); al cambiar de pieza se funden.
+  // Va por WebAudio: así baja de volumen cuando alguien habla (ducking) y la grabación del MP4 la recoge tal cual.
+  // Los BPM coinciden con tools/musica.py: el montaje usa el pulso para que el golpe de cada rampa caiga a tiempo.
+  var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200 };
+  var ALTO = 0.2, BAJO = 0.07, raf = 0, body = document.body;
+  var ac = null, master = null, pistas = {}, actual = '';
+  var crearAudio = function () {
+    if (ac) return true;
+    try { var AC = window.AudioContext || window.webkitAudioContext; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination); return true; } catch (e) { ac = null; return false; }
+  };
+  ['pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, function () { crearAudio(); if (ac && ac.state === 'suspended') ac.resume(); }, true); });
+  var pista = function (n) {
+    if (pistas[n]) return pistas[n];
+    var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = true; a.preload = 'auto'; a.dataset.tap = '1';
+    var p = { a: a, g: null, v: 0 };
+    if (crearAudio()) { try { var src = ac.createMediaElementSource(a); p.g = ac.createGain(); p.g.gain.value = 0; src.connect(p.g); p.g.connect(master); } catch (e) { p.g = null; } }
+    pistas[n] = p; return p;
+  };
   var activo = function () {
     return body.classList.contains('pelicula') && !body.classList.contains('scroll') && !!(window.DeckSound && window.DeckSound.enabled);
   };
-  var objetivo = function () { return !activo() || body.classList.contains('pausado') ? 0 : document.querySelector('.habla') ? BAJO : ALTO; };
-
-  // El volumen persigue al objetivo con suavidad: baja cuando habla alguien y sube entre frases
+  var quiere = function () { var sl = document.querySelector('.slide.active'); return sl ? (sl.dataset.musica || '') : ''; };
+  var objetivo = function () { return !activo() || body.classList.contains('pausado') ? 0 : document.querySelector('.habla, .habla-l') ? BAJO : ALTO; };
+  var vol = 0;
+  // Volumen general (ducking) y fundido entre piezas (~1,6 s)
   function paso() {
-    var o = objetivo(), v = bgm.volume + (o - bgm.volume) * 0.07;
-    if (Math.abs(o - v) < 0.003) v = o;
-    bgm.volume = Math.max(0, Math.min(1, v));
-    if (o > 0 && bgm.paused) bgm.play().catch(function () { /* sin gesto del usuario: no suena */ });
-    if (o === 0 && v === 0) { bgm.pause(); raf = 0; return; }
+    var o = objetivo(); vol += (o - vol) * 0.07; if (Math.abs(o - vol) < 0.003) vol = o;
+    var q = activo() ? quiere() : '';
+    if (q && q !== '-' && MUSICA[q]) actual = q; else if (q === '-') actual = '';
+    var vivo = false;
+    Object.keys(MUSICA).forEach(function (n) {
+      var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
+      var meta = n === actual && o > 0 ? 1 : 0;
+      p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
+      if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol));
+      if (p.v > 0 && p.a.paused) p.a.play().catch(function () { /* sin gesto: no suena */ });
+      if (p.v === 0 && !p.a.paused) p.a.pause();
+      if (p.v > 0) vivo = true;
+    });
+    if (master) master.gain.value = vol;
+    if (!vivo && o === 0 && vol === 0) { raf = 0; return; }
     raf = requestAnimationFrame(paso);
   }
   function despertar() { if (!raf) raf = requestAnimationFrame(paso); }
+  // Cuántos ms faltan para el siguiente pulso de la pieza que suena (como mínimo «min»): las rampas cortan a tiempo
+  window.CineMusica = {
+    alPulso: function (min) {
+      var p = actual && pistas[actual]; if (!p || p.a.paused || !p.v) return min;
+      var bpm = MUSICA[actual]; if (bpm > 150) bpm /= 2; // en las rápidas, el pulso de medio tiempo
+      var b = 60 / bpm, t = p.a.currentTime + min / 1000, falta = (b - (t % b)) % b;
+      return Math.round(min + falta * 1000);
+    },
+  };
 
   // Viñeta: oscurece las esquinas, como una lente de cine
   var stage = document.getElementById('stage');
   if (stage) {
     var v = document.createElement('div'); v.id = 'vineta'; v.setAttribute('aria-hidden', 'true'); stage.appendChild(v);
+    // Etalonaje único (sombras frías, luces cálidas) y grano de película, igual en todos los planos
+    var gr = document.createElement('div'); gr.id = 'etalon'; gr.setAttribute('aria-hidden', 'true'); stage.appendChild(gr);
+    var gn = document.createElement('div'); gn.id = 'grano'; gn.setAttribute('aria-hidden', 'true'); stage.appendChild(gn);
   }
 
   // Logotipo animado con su «ta-dum», antes de empezar: un golpe grave, otro más bajo y un brillo, sintetizados con WebAudio
@@ -46,12 +83,10 @@
       golpe(t, 110, 44, 1.8, 0.85); golpe(t + 0.5, 82, 38, 2.6, 0.95); golpe(t + 0.5, 164, 82, 1.2, 0.25);
       var ruido = c.createBufferSource(), n = c.createBuffer(1, c.sampleRate * 2.4, c.sampleRate), d = n.getChannelData(0);
       for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
-      ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(400, t + 0.5); f.frequency.exponentialRampToValueAtTime(5200, t + 1.9);
+      ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(400, t + 0.5); f.frequency.exponentialRampToValueAtTime(1600, t + 1.9);
       var g = c.createGain(); g.gain.setValueAtTime(0.0001, t + 0.4); g.gain.exponentialRampToValueAtTime(0.18, t + 1.0); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.3);
       ruido.connect(f); f.connect(g); g.connect(out); ruido.start(t + 0.4);
-      [523.25, 783.99, 1046.5].forEach(function (fr, k) { var o = c.createOscillator(), a = c.createGain(); o.type = 'triangle'; o.frequency.value = fr;
-        a.gain.setValueAtTime(0.0001, t + 1.5 + k * 0.05); a.gain.exponentialRampToValueAtTime(0.06, t + 1.6 + k * 0.05); a.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
-        o.connect(a); a.connect(out); o.start(t + 1.5); o.stop(t + 3.3); });
+      golpe(t + 1.5, 55, 30, 2.4, 0.5); // cola grave en vez del brillo
       setTimeout(function () { c.close(); }, 4500);
     } catch (e) { /* sin audio: solo se ve */ }
   };
@@ -86,7 +121,7 @@
     return out;
   };
   var pintarSubs = function () {
-    var hablan = Array.prototype.slice.call(document.querySelectorAll('.slide.active [data-who].habla')).slice(-2);
+    var hablan = Array.prototype.slice.call(document.querySelectorAll('.slide [data-who].habla, .slide [data-who].habla-l')).slice(-2);
     if (!hablan.length) { if (sub.childNodes.length) sub.textContent = ''; return; }
     var html = hablan.map(function (el) {
       var nom = window.REPARTO && window.REPARTO[el.dataset.who];
@@ -204,7 +239,7 @@
     var sl = document.querySelector('.slide.active'), tag = sl && sl.querySelector('.tag');
     var mt = tag && /S[áa]bado[^0-9]{1,5}(\d{1,2}):(\d{2})/.exec(tag.textContent);
     var txt = (tag ? tag.textContent : '') + ' ' + (sl ? sl.dataset.title || '' : '');
-    var fuera = /Seis meses|Domingo|Otro jueves|Fin de la historia|Prólogo|Gracias|Créditos|Escena post/.test(txt) && !mt;
+    var fuera = /Seis meses|Domingo|Otro jueves|Fin de la historia|Prólogo|Gracias|Créditos|Escena post|El reloj/.test(txt) && !mt;
     if (mt && /Seis meses/.test(tag.textContent)) fuera = true;
     if (sl && sl.classList.contains('noches')) { reloj.classList.remove('on'); return; } // la escena íntima va sin cuenta atrás; el reloj sigue corriendo debajo
     if (fuera || (!mt && !relojT0)) { reloj.classList.remove('on', 'fin'); relojT0 = 0; return; }
@@ -213,6 +248,7 @@
   };
   setInterval(pintarReloj, 1000);
   addEventListener('hashchange', function () { setTimeout(ajustarReloj, 40); });
+  addEventListener('deckslide', function () { setTimeout(ajustarReloj, 40); setTimeout(camara, 30); pintar(); despertar(); });
 
   // La cámara recorre la captura (de arriba abajo) durante lo que dura la escena, para que se vea entera
   var camara = function () {
@@ -238,5 +274,5 @@
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });
   addEventListener('voz', despertar);
-  document.addEventListener('visibilitychange', function () { if (document.hidden) bgm.pause(); else despertar(); });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) Object.keys(pistas).forEach(function (n) { pistas[n].a.pause(); }); else despertar(); });
 })();
