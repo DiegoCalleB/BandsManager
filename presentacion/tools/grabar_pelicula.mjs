@@ -44,7 +44,7 @@ await page.addInitScript(() => {
   const play = HTMLMediaElement.prototype.play;
   HTMLMediaElement.prototype.play = function () {
     // la música (data-tap) va por WebAudio y ya la recoge la derivación; aquí solo se anotan las voces
-    if ((this.tagName === 'AUDIO' || /\.(mp3|m4a)/.test(this.currentSrc || this.src || '')) && !(this.dataset && this.dataset.tap)) {
+    if ((this.tagName === 'AUDIO' || /\.(mp3|m4a)/.test(this.currentSrc || this.src || '')) && !(this.dataset && this.dataset.tap) && !/^data:/.test(this.currentSrc || this.src || '')) {
       window.__audio.push({ t: performance.now(), src: this.currentSrc || this.src, rate: this.playbackRate, vol: this.volume, bgm: /musica/.test(this.src) });
     }
     return play.apply(this, arguments);
