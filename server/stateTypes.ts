@@ -56,7 +56,9 @@ export type UsuarioGuardado = Omit<UserWithHash, 'passwordHash' | 'salt'> & {
 };
 
 /** Banda registrada tal como se guarda (los datos legados traen alias de campos). */
-export type BandaRegistradaGuardada = RegisteredBand & {
+export type BandaRegistradaGuardada = Omit<RegisteredBand, 'fecha_registro'> & {
+  /** Las bandas semilla (demo, Vértice) no la traen. */
+  fecha_registro?: string;
   bandName?: string;
   name?: string;
   user_id?: string;

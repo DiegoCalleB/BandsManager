@@ -84,7 +84,8 @@ export async function dbGetEpkConfig(bandId: string) {
     riderPdfUrl: data.rider_pdf_url,
     riderPdfName: data.rider_pdf_name,
     enlacesRedes: mergedRedes,
-    contactoBooking: data.contacto_booking || {},
+    // Un EPK recién creado puede no tener contacto aún: quien lo lee comprueba cada campo.
+    contactoBooking: (data.contacto_booking || {}) as NonNullable<FilaEpk['contacto_booking']>,
     temasDestacadosIds: data.temas_destacados_ids || [],
     incentivoFans: data.incentivo_fans || {},
     donacionRevolut: resolvedDonacionRevolut,
