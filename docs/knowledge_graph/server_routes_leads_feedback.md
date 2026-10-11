@@ -18,7 +18,7 @@ Resumen global del feedback de pitches (`getGlobalPitchFeedbackSummary`) para af
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

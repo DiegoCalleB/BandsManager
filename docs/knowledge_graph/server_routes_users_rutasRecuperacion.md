@@ -23,6 +23,7 @@ Recuperación de contraseña (solicitud y confirmación) y correo de prueba.
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -56,6 +56,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_routes_ai_music_audioPublico|server/routes/ai_music/audioPublico.ts]] *(from #route)*
 - [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(from #route)*
 - [[server_routes_ai_music_diagnosticos|server/routes/ai_music/diagnosticos.ts]] *(from #route)*
+- [[server_routes_ai_music_diagnosticosInfra|server/routes/ai_music/diagnosticosInfra.ts]] *(from #route)*
 - [[server_routes_ai_music_generacionMusical|server/routes/ai_music/generacionMusical.ts]] *(from #route)*
 - [[server_routes_ai_music_motoresNeuronales|server/routes/ai_music/motoresNeuronales.ts]] *(from #route)*
 - [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
@@ -81,6 +82,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(from #route)*
+- [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(from #route)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*

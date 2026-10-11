@@ -23,6 +23,8 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
+- [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(Layer: #route, Domain: #finances)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*

@@ -34,6 +34,7 @@ Chatbot con herramientas que lee y actúa sobre los datos de la banda.
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*

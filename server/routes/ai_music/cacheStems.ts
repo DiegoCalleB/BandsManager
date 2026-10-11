@@ -17,8 +17,8 @@ export interface ProcessNeuralStemsResult {
     string,
     { url: string; formato: string; tamano: string }
   > | null;
-  /** Tiempos por fase que informa el motor; se guarda y se devuelve sin interpretarlo. */
-  timingBreakdown?: unknown;
+  /** Duración de cada fase en texto legible que informa el motor (`totalSec: '12.3s'`, …). */
+  timingBreakdown?: Record<string, string>;
   error?: string;
   errorType?: StemErrorType;
   errorTitle?: string;

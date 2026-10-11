@@ -20,6 +20,7 @@ Bandas que ve un usuario en el selector (propias, compartidas y registradas) y n
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

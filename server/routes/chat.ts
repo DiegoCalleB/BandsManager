@@ -612,7 +612,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       const functionCalls = response.functionCalls || 
         response.candidates?.[0]?.content?.parts?.filter((p) => p.functionCall)?.map((p) => p.functionCall);
       if (Array.isArray(functionCalls) && functionCalls.length > 0) {
-        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls);
+        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls).map((accion) => ({ ...accion }));
       }
     } catch (fcErr) {
       console.warn("[Gemini API] Error al extraer functionCalls nativas:", fcErr);

@@ -43,6 +43,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*

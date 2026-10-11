@@ -27,14 +27,18 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_tiposAgente|server/routes/tiposAgente.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_agentFunnel|server/utils/agentFunnel.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_scoutLeads|server/utils/scoutLeads.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*

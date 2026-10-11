@@ -22,6 +22,7 @@ Alta o actualización del administrador global al arrancar (contraseña solo des
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*
 
 ---

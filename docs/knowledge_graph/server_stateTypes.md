@@ -25,7 +25,19 @@ Forma del estado local de la aplicación (data.json / caché en memoria de serve
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[server_auth|server/auth.ts]] *(from #security)*
+- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
+- [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
+- [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+- [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(from #route)*
+- [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
+- [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(from #route)*
+- [[server_routes_users_permisosCuenta|server/routes/users/permisosCuenta.ts]] *(from #route)*
+- [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
+- [[server_routes_users_rutasLogin|server/routes/users/rutasLogin.ts]] *(from #route)*
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 
 ---
 

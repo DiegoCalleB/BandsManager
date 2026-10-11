@@ -31,6 +31,8 @@ Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
 - [[server_routes_billing|server/routes/billing.ts]] *(Layer: #route, Domain: #finances)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(Layer: #route, Domain: #finances)*
+- [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_financialBreakEvenService|server/services/financialBreakEvenService.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(Layer: #frontend, Domain: #system)*

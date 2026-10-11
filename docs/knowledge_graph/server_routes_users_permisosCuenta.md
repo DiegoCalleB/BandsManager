@@ -20,6 +20,7 @@ Quién puede restablecer la contraseña de quién: solo un líder sobre miembros
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

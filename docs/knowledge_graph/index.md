@@ -30,13 +30,13 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 4 ficheros lo usan
 - [[ext_fal|fal.ai]] — 9 ficheros lo usan
 - [[ext_ffmpeg|FFmpeg]] — 27 ficheros lo usan
-- [[ext_gemini|Gemini (Google GenAI)]] — 9 ficheros lo usan
+- [[ext_gemini|Gemini (Google GenAI)]] — 15 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
 - [[ext_resend|Resend]] — 4 ficheros lo usan
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
-- [[ext_stripe|Stripe]] — 3 ficheros lo usan
+- [[ext_stripe|Stripe]] — 4 ficheros lo usan
 - [[ext_supabase|Supabase (Postgres)]] — 3 ficheros lo usan
 - [[ext_supabase_storage|Supabase Storage]] — 8 ficheros lo usan
 
@@ -73,14 +73,14 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1509 nodos: 51 agent · 40 db · 12 external · 14 feature · 907 frontend · 41 hook · 74 route · 61 schema · 10 security · 299 service.
+1516 nodos: 52 agent · 40 db · 12 external · 14 feature · 907 frontend · 41 hook · 80 route · 61 schema · 10 security · 299 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 531 ficheros dependen de él
+- [[src_types|src/types.ts]] — 537 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 349 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
-- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 160 ficheros dependen de él
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 162 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 90 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 68 ficheros dependen de él
@@ -90,7 +90,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[server_db|server/db.ts]] — 48 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 44 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 40 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 33 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
