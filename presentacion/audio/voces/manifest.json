@@ -409,6 +409,16 @@
   "v": "c892cfb5956a",
   "who": "guitarra"
  },
+ "4ab6c17a": {
+  "d": 2.83,
+  "e": "012211110000034655643342325333321000079952242587915994195231136444110",
+  "f": "4ab6c17a.mp3",
+  "oido": "Ay, mi madriña, pero si no le falta de nada.",
+  "qa": 0.9,
+  "say": "[gasps] ¡Ai, mi madriña! ¡Pero si no le falta de nada!",
+  "v": "9269f538c50d",
+  "who": "bateria"
+ },
  "4b49374c": {
   "d": 4.39,
   "e": "048589990186431853026513223453751262462882067210353200287355213431046444215133221013221000002654999877466611",
@@ -1487,6 +1497,16 @@
   "qa": 0.94,
   "say": "Yo tampoco tenía ni pajolera idea. Pero desde que hice el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.",
   "v": "65358e40429a",
+  "who": "bajo"
+ },
+ "de931b7e": {
+  "d": 6.86,
+  "e": "00125411457933999612421176898553100000133310068845552110154433334444432100001564665541154200011245654200000455436410156771000000000000995699410255553552145543301000000000",
+  "f": "de931b7e.mp3",
+  "oido": "Y esto no acaba aquí, chavales. Ensayos, armonías, eventos, rills, el dossier, todo en la misma app.",
+  "qa": 0.94,
+  "say": "Y esto no acaba aquí, chavales: ensayos, armonías, eventos, reels, el dossier… Todo en la misma app.",
+  "v": "c193c83b96d9",
   "who": "bajo"
  },
  "e1114448": {

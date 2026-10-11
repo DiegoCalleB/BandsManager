@@ -150,7 +150,9 @@
       setIn(p.items.filter((it) => !tagsAndBrand.includes(it) && !(voces && it.el.matches('.dlg li'))), true, '380ms');
       p.shown = p.steps.length;
       const conVoz = voces && s.querySelector('[data-who][data-say]');
-      if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null, () => seguirPelicula(450));
+      // data-min: la diapositiva dura al menos eso aunque acaben antes de hablar (p. ej. para ver un vídeo entero)
+      const t0 = Date.now();
+      if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null, () => seguirPelicula(Math.max(450, (+s.dataset.min || 0) - (Date.now() - t0))));
       else if (i === cur) seguirPelicula(durPelicula(s) + (s.querySelectorAll('.dlg li').length * 820));
     }
     if (how !== 'instant' && clicksOn() && window.DeckVoces && window.DeckVoces.enabled()) window.DeckVoces.play(s, null, (el) => !el.matches('.dlg li'));

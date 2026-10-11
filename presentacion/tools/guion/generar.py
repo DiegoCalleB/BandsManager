@@ -427,6 +427,11 @@ add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han v
     <li><img src="img/miembro-iago.jpg" alt="Iago"><span>Iago</span></li>
   </ul>''', tr='zoom'))
 
+add(feat('Y mucho más', 'Sábado · 13:00 · Y mucho más', 'Y mucho más.',
+         [m('iago', 'Y hay más: ensayos, armonías, eventos, reels, dossier…', say='Y esto no acaba aquí, chavales: ensayos, armonías, eventos, reels, el dossier… Todo en la misma app.'),
+          m('brais', '¡Pero si no le falta de nada! 🤯', say='[gasps] ¡Ai, mi madriña! ¡Pero si no le falta de nada!')],
+         shot_vid('video/v-montaje.mp4', 'video/v-montaje.jpg'), grupo='negocio'))
+
 add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', 'Y entonces, alguien lo dijo.', 'img/concierto-3.jpg',
           dlg(m('xandre', 'Iago, ¡esto es la hostia! Lo necesitan todos los grupos, todos los managers, todas las productoras.'),
               m('alvaro', '¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo. 💸'),
@@ -708,6 +713,7 @@ html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
+html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="19500"', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
 html = html.replace('<div class="react wow"><img src="img/miembro-brais.jpg"', '<div class="react wow" data-who="bateria" data-say="' + EXTRA_SAY['react'] + '"><img src="img/miembro-brais.jpg"', 1)
