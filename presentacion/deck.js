@@ -224,7 +224,8 @@
   const sumaLineas = (sl, k) => lineasDe(sl).slice(0, k).reduce((a, b) => a + b, 0);
   const durEscena = (i) => {
     const sl = slides[i], L = lineasDe(sl);
-    const voz = L.length && window.DeckVoces && window.DeckVoces.enabled() ? L.reduce((a, b) => a + b, 0) + 0.9 : 0;
+    // las frases se pisan un poco al cambiar de personaje: ~0,35 s menos por frase (medido en una pasada completa)
+    const voz = L.length && window.DeckVoces && window.DeckVoces.enabled() ? L.reduce((a, b) => a + b, 0) - 0.35 * (L.length - 1) + 0.9 : 0;
     const base = durPelicula(sl) / 1000;
     return Math.max(voz, +sl.dataset.min / 1000 || 0, L.length ? 0 : base) + (sl.dataset.corte === 'negro' ? 0.6 : 0.25);
   };

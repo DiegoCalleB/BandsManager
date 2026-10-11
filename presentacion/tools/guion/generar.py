@@ -661,7 +661,8 @@ add(f'''<section class="slide bigstats dl" data-title="Calidad en cifras">
 ''')
 
 # Vídeo opcional (solo existe si hay video/demo.mp4)
-add(re.search(r'<section class="slide sunk" data-title="Vídeo de demostración".*?</section>', SRC, re.S).group(0) + '\n')
+if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'demo.mp4')):  # sin el archivo no se pregunta por él (ni da error en consola)
+    add(re.search(r'<section class="slide sunk" data-title="Vídeo de demostración".*?</section>', SRC, re.S).group(0) + '\n')
 
 add(f'''<section class="slide scene tech" data-title="Qué viene" data-transition="rise">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg)"></div>
