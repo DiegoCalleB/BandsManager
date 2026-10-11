@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, useMemo, lazy, Suspense, useSyncExternalStore } from "react";
 import { guardarOReverter } from "../utils/guardarConReversion";
 import {
   X,
@@ -196,6 +196,10 @@ export function Atril({
     if (idea) void iris.handlePerformAiStemSeparation(idea, motor);
   };
   const [masControles, setMasControles] = useState(false);
+  const esMovil = useSyncExternalStore(
+    (cb) => { const mq = window.matchMedia?.('(max-width: 639px)'); mq?.addEventListener?.('change', cb); return () => mq?.removeEventListener?.('change', cb); },
+    () => window.matchMedia?.('(max-width: 639px)').matches ?? false,
+  );
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
@@ -650,7 +654,7 @@ export function Atril({
               </button>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-[var(--ink)]">
+                  <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] leading-tight">
                     {formatSongTitle(song.titulo)}
                   </h2>
                   {song.esVersionCovers && (
@@ -666,14 +670,14 @@ export function Atril({
             </div>
 
             <div className="flex items-center gap-1.5">
-              {/* AI Generate — the main action, keeps its label */}
+              {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}
               <Button
                 variant="primary"
                 size="xs"
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="items-center gap-1.5"
+                className="hidden sm:inline-flex items-center gap-1.5"
                 title={
                   song.audioPrincipalUrl
                     ? "Transcribir la letra de la voz con tiempos y sincronizarla con los acordes (reconocimiento de voz; nunca se inventa a partir del título)"
@@ -694,7 +698,7 @@ export function Atril({
                   type="button"
                   onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio()}
                   disabled={isAnalyzingChords}
-                  className="items-center gap-1.5"
+                  className="hidden sm:inline-flex items-center gap-1.5"
                   title={
                     analisisAcordes
                       ? "Jamify: ver los acordes detectados en el audio"
@@ -710,6 +714,8 @@ export function Atril({
               <ActionMenu
                 label="Más acciones de la canción"
                 items={[
+                  { label: isGeneratingAi ? "Escuchando…" : "Letra del audio", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
+                  { label: isAnalyzingChords ? "Analizando..." : "Acordes del audio", icon: Music, onSelect: analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio(), hidden: !esMovil || !audioUrl },
                   { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
                   { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
                   { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
@@ -761,7 +767,7 @@ export function Atril({
             {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
-                <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
+                <div className="flex items-center gap-2 bg-[var(--acc)]/10 px-3 py-1 rounded-[var(--r-s)] w-full sm:w-auto">
                   {audioUrl ? (
                     <>
                       <IconButton
@@ -784,7 +790,7 @@ export function Atril({
                         step={0.1}
                         value={audioCurrentTime}
                         onChange={handleSeekAudio}
-                        className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
+                        className="flex-1 sm:flex-none sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
                         title="Barra de posición de reproducción"
                       />
 
@@ -856,7 +862,9 @@ export function Atril({
                 </div>
 
                 <ControlAutoscroll auto={autoScroll} />
-                <ControlMetronomo metronomo={metronomo} />
+                <div className={masControles ? 'contents' : 'hidden sm:contents'}>
+                  <ControlMetronomo metronomo={metronomo} />
+                </div>
 
                 <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
                   {masControles ? 'Menos' : 'Más'}
