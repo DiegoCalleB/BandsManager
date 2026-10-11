@@ -26,8 +26,8 @@ describe('Hardening de Límite de Confianza en Rutas (Repertorio y Conciertos)',
 
   it('server/routes/repertorio.ts: fuerza la asignación incondicional de userBandId resuelta por getTargetBandId', () => {
     const code = fs.readFileSync(repertorioPath, 'utf-8');
-    expect(code).toContain('(newSong as any).band_id = userBandId;');
-    expect(code).toContain('(newSetlist as any).band_id = userBandId;');
+    expect(code).toContain('newSong.band_id = userBandId;');
+    expect(code).toContain('newSetlist.band_id = userBandId;');
   });
 
   it('server/routes/concerts.ts: no contiene bypasses de if (!(objeto).band_id)', () => {
