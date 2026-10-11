@@ -20,7 +20,7 @@ Vista actual, navegación, notificaciones y sección del CRM.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_app_appViews|src/app/appViews.ts]] *(Layer: #service, Domain: #system)*
 - [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 - [[src_hooks_useBrowserPushNotifications|src/hooks/useBrowserPushNotifications.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

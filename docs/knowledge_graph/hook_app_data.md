@@ -22,12 +22,18 @@ Carga y sincronización global de datos de la banda autenticada.
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_appDataNormalize|src/utils/appDataNormalize.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_hooks_useAppController|src/app/hooks/useAppController.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/useAppData.behavior.test.ts`
 
 ---
 

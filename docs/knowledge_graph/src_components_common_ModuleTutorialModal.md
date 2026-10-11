@@ -34,6 +34,11 @@ Exporta: ModuleTutorialModal.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/common/__tests__/ModuleTutorialModal.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

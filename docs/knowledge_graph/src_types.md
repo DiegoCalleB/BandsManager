@@ -281,6 +281,7 @@ _Sin dependencias salientes directas._
 - [[src_components_dashboard_agent_autonomy_hooks_useAgentAutonomyController|src/components/dashboard/agent_autonomy/hooks/useAgentAutonomyController.ts]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_alertSettingsDefaults|src/components/dashboard/alertSettingsDefaults.ts]] *(from #frontend)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(from #frontend)*
@@ -534,6 +535,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(from #service)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
+- [[src_utils_appDataNormalize|src/utils/appDataNormalize.ts]] *(from #service)*
 - [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_bandGrowthTiers|src/utils/bandGrowthTiers.ts]] *(from #service)*
@@ -606,6 +608,7 @@ _Sin dependencias salientes directas._
 - `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
 - `src/components/onboarding/wizard/hooks/__tests__/musicSetlistStep.behavior.test.ts`
 - `src/components/onboarding/wizard/hooks/__tests__/onboardingSave.behavior.test.ts`
+- `src/components/repertorio/__tests__/SetlistModal.behavior.test.tsx`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/__tests__/showItemForm.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
@@ -613,7 +616,10 @@ _Sin dependencias salientes directas._
 - `src/components/setlist_performance/__tests__/setlistPerformanceContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioModulesContracts.test.ts`
 - `src/components/song_studio/__tests__/songStudioPureHooks.test.ts`
+- `src/components/song_studio/hooks/__tests__/useStudioKeyboardShortcuts.test.tsx`
 - `src/components/user_profile/hooks/__tests__/useProfileBands.behavior.test.ts`
+- `src/hooks/__tests__/useAuth.behavior.test.ts`
+- `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
 - `src/utils/__tests__/agendaASetlist.test.ts`
 - `src/utils/__tests__/audioCueDetector.test.ts`
 - `src/utils/__tests__/bookingUtils.test.ts`

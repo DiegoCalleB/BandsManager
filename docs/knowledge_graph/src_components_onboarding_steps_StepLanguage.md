@@ -18,7 +18,7 @@ Exporta: StepLanguage.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

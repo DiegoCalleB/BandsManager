@@ -35,6 +35,7 @@ Exporta: WeatherAlert, EventWeatherData, DetectAlertsParams, detectWeatherAlerts
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/calendar/__tests__/EventWeatherCard.test.tsx`
 - `src/services/__tests__/weatherService.test.ts`
 
 ---

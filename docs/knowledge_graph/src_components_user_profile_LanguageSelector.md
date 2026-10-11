@@ -19,7 +19,7 @@ Selector del idioma de la plataforma.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_user_profile_UserProfileContext|src/components/user_profile/UserProfileContext.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

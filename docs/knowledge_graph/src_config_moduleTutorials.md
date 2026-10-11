@@ -28,6 +28,7 @@ Exporta: MODULE_TUTORIALS.
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/common/__tests__/ModuleTutorialModal.test.tsx`
 - `src/hooks/__tests__/useModuleTutorial.test.ts`
 
 ---

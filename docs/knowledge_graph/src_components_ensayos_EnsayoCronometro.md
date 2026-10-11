@@ -29,6 +29,11 @@ Exporta: EnsayoCronometro.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/ensayos/__tests__/EnsayoCronometro.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?
