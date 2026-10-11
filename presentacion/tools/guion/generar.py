@@ -842,20 +842,22 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
 </section>
 ''')
 
-# El reto: la banda de tributo metal que está montando Diego busca batería… y Brais tiene una (la pantalla la dirige direccion.py)
+# El reto: para Brais Moure de verdad (no el batería de la historia). Toca muy bien en casa; le falta el escenario. La pantalla la dirige direccion.py
 add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-transition="zoom">
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
-    {dlg(m('iago', 'Y ahora, Brais, un reto. Te hemos visto en vídeo dándole a tu batería electrónica. Y a la banda que estamos montando le falta batería.',
-           say='Y ahora, {bateria}, un reto. Te hemos visto en vídeo dándole a tu batería electrónica. Y a la banda que estamos montando le falta batería.'),
-         m('brais', '¿Yo? ¿Y qué tocáis?', say='[surprised] ¿Yo? ¿Y qué tocáis?'),
-         m('iago', 'Metal: tributo a Metallica, AC/DC e Iron Maiden. Pero con letras de coña sobre programar aplicaciones.',
-           say='Metal. Tributo a Metálica, Áci Dici, y ÁironMéiden. Pero con letras de coña sobre programar aplicaciones.'),
-         m('alvaro', '¡Highway to Deploy! ¡Master of Pull Requests!', say='[excited] ¡Jáiguei tu Diplói! ¡Máster of Pul Ricuests!'),
+    {dlg(m('iago', 'Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.',
+           say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad.'),
+         m('iago', 'Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.',
+           say='Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.'),
+         m('iago', 'Así que te hemos preparado el setlist del primer ensayo de la banda que estoy montando: metal, con letras de coña sobre programar.',
+           say='Así que te hemos preparado el sétlist del primer ensayo de la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.'),
+         m('alvaro', '¡Psychosocket! ¡Freak on a Branch! ¡Eso hay que tocarlo!', say='[excited] ¡Sáicosóket! ¡Frík on a Bránch! ¡Eso hay que tocarlo, tío!'),
          m('xandre', '¡Che, y Fear of the Deadline, que esa la cantamos todos!', say='[laughs] ¡Che, y Fíar of de Dédlain, que esa la cantamos todos!'),
-         m('iago', 'Así que le escribimos. La IA lo redacta, yo lo repaso y… enviado.', say='Así que le escribimos. La IA lo redacta, yo lo repaso, y… enviado.'))}
+         m('iago', 'Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso y… enviado.',
+           say='Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso, y… enviado.'))}
   </div>
-  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="Desde BandManager, la banda de Diego le escribe a Brais para que toque la batería"></div>
-  <aside class="ficha" aria-hidden="true"><i>🥁</i><b>El reto</b><p>Brais: a nuestra banda de tributo metal le falta batería. Y tú tienes una.</p><span>Metallica</span><span>AC/DC</span><span>Iron Maiden</span></aside>
+  <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El setlist del primer ensayo de la banda de Diego, con la hoja de batería para Brais Moure"></div>
+  <aside class="ficha" aria-hidden="true"><i>🥁</i><b>El reto</b><p>Para Brais Moure, el de verdad: el setlist del primer ensayo.</p><span>Metallica</span><span>AC/DC</span><span>Iron Maiden</span><span>Slipknot</span><span>Korn</span></aside>
 </section>
 ''')
 

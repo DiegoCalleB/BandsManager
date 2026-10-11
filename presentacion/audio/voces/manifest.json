@@ -1,4 +1,13 @@
 {
+ "0168b168": {
+  "d": 6.26,
+  "e": "11158989958999841111101011366348731231000000000000137719989645788217610541117835411000000056343114310000000024444555233541000000000000000000000000000000000",
+  "f": "0168b168.mp3",
+  "h": "90fd4379",
+  "say": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti. El de verdad.",
+  "v": "4b763f84fab4",
+  "who": "bajo"
+ },
  "02f0f657": {
   "d": 1.92,
   "e": "0165543110000000034650864443335582544329995210",
@@ -120,6 +129,15 @@
   "say": "[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería? ¡Ai, mi madriña!",
   "v": "bf82017f9dc9",
   "who": "bateria"
+ },
+ "0d2fc671": {
+  "d": 5.98,
+  "e": "111188778921575379118589991119547799981443331100001002356764552210000000000004455652794462711783158532211000001133552178443101323222210111000010011",
+  "f": "0d2fc671.mp3",
+  "h": "ce5fb9f2",
+  "say": "Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.",
+  "v": "2028b7a66ff1",
+  "who": "bajo"
  },
  "0db9cf2c": {
   "d": 2.86,
@@ -661,15 +679,6 @@
   "v": "3a228eab3cca",
   "who": "bajo"
  },
- "51698cc3": {
-  "d": 4.87,
-  "e": "114213525879212354544310000000000000388767998896576799110563288893461099611245312333221000000000000245467987341000000000",
-  "f": "51698cc3.mp3",
-  "h": "64fea0cb",
-  "say": "Así que le escribimos. La IA lo redacta, yo lo repaso, y… enviado.",
-  "v": "6d35ba526d95",
-  "who": "bajo"
- },
  "51c499d1": {
   "d": 9.58,
   "e": "112978766418983211112237898111775435511111111111258116996311111111231111056986111010331686211102243110100000001000000100115199498623289737711855514421563133110000000002589873945125412882032021048864111899937837833353114864132100000000000",
@@ -720,6 +729,15 @@
   "say": "¿Y si la sala nos cambia el caché el mismo día del bolo, como la última vez? Que acabamos cobrando en croquetas, home.",
   "v": "ea635988fdb3",
   "who": "bateria"
+ },
+ "568a23e9": {
+  "d": 6.31,
+  "e": "111667569757914961389911779696125355531010013355116954311111000010024656689978945759951126311012667945510894003321000000001244443100101000002454477744210000",
+  "f": "568a23e9.mp3",
+  "h": "cf9f5d8b",
+  "say": "Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso, y… enviado.",
+  "v": "8ca2a1ae965b",
+  "who": "bajo"
  },
  "57b02ab3": {
   "d": 3.53,
@@ -861,15 +879,6 @@
   "say": "Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga. Y quien programa, hace que todo esto funcione.",
   "v": "d90218eb4a16",
   "who": "bajo"
- },
- "60ebf2c7": {
-  "d": 1.73,
-  "e": "01016899310000000013201620421895210000000",
-  "f": "60ebf2c7.mp3",
-  "h": "ec4d204a",
-  "say": "[surprised] ¿Yo? ¿Y qué tocáis?",
-  "v": "4db43b6a7572",
-  "who": "bateria"
  },
  "61778929": {
   "d": 8.62,
@@ -1516,6 +1525,15 @@
   "v": "fbb647670395",
   "who": "ia_claude"
  },
+ "9f3b7f81": {
+  "d": 10.87,
+  "e": "123114195177741149238687995211881345412741255675541138649876674675463121116544442143222211100001000355108954310000000014511897561197321100164114436621135321100011469969666667467542100000114312699336994110000042114997332110000000000019999815973872396765237676237677666762",
+  "f": "9f3b7f81.mp3",
+  "h": "6955ee70",
+  "say": "Así que te hemos preparado el sétlist del primer ensayo de la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.",
+  "v": "dd4a62f4325e",
+  "who": "bajo"
+ },
  "a0134e13": {
   "d": 4.68,
   "e": "0194883245894129941011111654113999973676211366367533334311001100136688981286282116511111102555112386115765163114311",
@@ -1597,15 +1615,6 @@
   "say": "[gasps] ¡Iago! ¡El móvil! ¡El Resurrection Fest acaba de abrir el dossier!",
   "v": "2c0a393c1767",
   "who": "guitarra"
- },
- "a9bab0f2": {
-  "d": 7.32,
-  "e": "0244117998721010011001247468219567314975611695311168201443551115531101249979775555544233210000000000000000779713867961793395149765411557831474574476851241241024322100000000000000000",
-  "f": "a9bab0f2.mp3",
-  "h": "508bc10c",
-  "say": "Metal. Tributo a Metálica, Áci Dici, y ÁironMéiden. Pero con letras de coña sobre programar aplicaciones.",
-  "v": "4c26c63d6390",
-  "who": "bajo"
  },
  "aa4fdaf7": {
   "d": 1.87,
@@ -1943,6 +1952,15 @@
   "v": "212596e72b14",
   "who": "bateria"
  },
+ "d0cfc052": {
+  "d": 3.6,
+  "e": "0017830295119920126543200005960268572797666311001000561174102500840269972445203443632110",
+  "f": "d0cfc052.mp3",
+  "h": "bf8169ae",
+  "say": "[excited] ¡Sáicosóket! ¡Frík on a Bránch! ¡Eso hay que tocarlo, tío!",
+  "v": "d1d2b67aceb0",
+  "who": "guitarra"
+ },
  "d2799f61": {
   "d": 9.41,
   "e": "11231396682149559982117666543129612221111110122145625754125514941141031049866931025567116554437845746454464433210000000013599779510565116554112433200000000000257657757975345520000000000049997666311655666213431100034662310034420310000",
@@ -2023,24 +2041,6 @@
   "h": "a1b4354b",
   "say": "Con tu firma, tu cargo, y tus redes. Y el dossier, a un clic.",
   "v": "f42c7e41c477",
-  "who": "bajo"
- },
- "e229a441": {
-  "d": 3.31,
-  "e": "012367763139944100624620157897543211001347751009486100029874235301599532100000000",
-  "f": "e229a441.mp3",
-  "h": "2db0fdd7",
-  "say": "[excited] ¡Jáiguei tu Diplói! ¡Máster of Pul Ricuests!",
-  "v": "7d5561e8304a",
-  "who": "guitarra"
- },
- "e43b2a13": {
-  "d": 6.38,
-  "e": "11599898946996411026745783133211015567312520065554653576276446667712437513235654101563321121000002586979766923300754512545318743464710563175741332232100000000",
-  "f": "e43b2a13.mp3",
-  "h": "b7228bf1",
-  "say": "Y ahora, Brais, un reto. Te hemos visto en vídeo dándole a tu batería electrónica. Y a la banda que estamos montando le falta batería.",
-  "v": "d754fe2ee0a1",
   "who": "bajo"
  },
  "e5d4d21f": {

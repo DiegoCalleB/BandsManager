@@ -1927,3 +1927,18 @@ body.pelicula:not(.scroll) .slide.feat:not(.dirigida).active .ft-shot:not(.phone
 /* el botón de aceptar late despacio bajo el cursor: la decisión es de Brais */
 .dirigida.active.invitacion .dr-hover { border-radius: 1cqw; animation: drhover var(--d) ease-out var(--t) both, drlate 1.6s ease-in-out var(--t) infinite; }
 @keyframes drlate { 0%, 100% { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3), 0 0 0 0 rgba(91,156,255,.0); } 50% { box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.5), 0 0 34px 6px rgba(91,156,255,.45); } }
+/* El reto: la hoja del setlist, impresa como las de cada músico */
+.dr-hojaset { position: absolute; border-radius: .5cqw; background: #f4f2ec; color: #1b1d22; box-shadow: 0 30px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.2); overflow: hidden; }
+.dr-hs-top { position: absolute; left: 0; right: 0; top: 0; height: 13%; display: flex; align-items: center; justify-content: space-between; padding: 0 2.4%; background: #1b1d22; color: #fff; font-size: 1.15cqw; }
+.dr-hs-top b { font-family: Oswald, var(--font); letter-spacing: .04em; text-transform: uppercase; font-size: 1.3cqw; } .dr-hs-top span { color: #c3c9d6; font-size: .95cqw; } .dr-hs-top em { color: #ffd596; font-style: normal; font-weight: 700; }
+.dr-hojaset .dr-vacia { top: 22%; color: #8a8f99; }
+.dr-tema2 { margin: 0; width: 100%; display: grid; grid-template-columns: 2.2cqw 13cqw 1fr 5.4cqw; grid-template-rows: auto auto; align-items: baseline; padding: 0 1cqw; column-gap: .8cqw; color: #1b1d22; white-space: nowrap; border-bottom: 1px dashed rgba(0,0,0,.14); }
+.dr-tema2 u { grid-row: 1 / 3; text-decoration: none; font-family: Oswald, var(--font); font-weight: 700; font-size: 1.5cqw; color: #b3261e; }
+.slide .dr-tema2 b { font-size: 1.12cqw !important; color: #14161a !important; font-weight: 700; margin: 0; } .slide .dr-tema2 span { font-size: .8cqw !important; color: #6b6f78 !important; overflow: hidden; text-overflow: ellipsis; }
+.dr-tema2 em { font-style: normal; font-weight: 700; font-size: .9cqw; color: #1b1d22; text-align: right; }
+.slide .dr-tema2 i { grid-column: 2 / 5; font-family: Caveat, cursive; font-size: 1.05cqw !important; color: #2a4fbf !important; font-style: normal; line-height: 1; }
+.slide .dr-tema2 em { color: #14161a !important; } .slide .dr-tema2 u { color: #b3261e !important; }
+.dr-tema2 { line-height: 1.15; }
+.dirigida.active .dr-tapa:has(.dr-tema2) { animation: drtapa var(--d) linear var(--t) forwards, drpop .45s cubic-bezier(.2, 1.2, .3, 1) var(--t) both; }
+.dr-adj { position: absolute; left: 2.5%; margin: 0; padding: .5cqw 1cqw; border-radius: .6cqw; background: rgba(255,213,150,.1); color: #ffd596; font-size: 1.05cqw; box-shadow: inset 0 0 0 1px rgba(255,213,150,.3); }
+.dr-adj2 { display: inline-block; padding: .4cqw .9cqw; border-radius: .6cqw; background: rgba(255,213,150,.1); color: #ffd596 !important; font-size: 1cqw; box-shadow: inset 0 0 0 1px rgba(255,213,150,.3); }

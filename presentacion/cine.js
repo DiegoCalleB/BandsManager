@@ -111,7 +111,8 @@
     [/guasap/gi, 'WhatsApp'], [/efe eme/g, 'FM'], [/agents punto eme de/gi, 'AGENTS.md'], [/punto io/g, '.io'], [/[Bb]e tu ci/g, 'B2C'],
     [/[Bb]e tu bi/g, 'B2B'], [/be pe eme/gi, 'BPM'], [/Máster of Prompts/g, 'Master of Prompts'], [/\bpdf\b/g, 'PDF'], [/el cú-erre/g, 'el QR'], [/\bRolin\b/g, 'Rolling'],
     [/jevi metal/g, 'heavy metal'], [/\brifs\b/g, 'riffs'], [/\brif\b/g, 'riff'], [/Moisés/g, 'Moises'], [/Ché/g, 'Che'], [/Metálica/g, 'Metallica'], [/Áci Dici/g, 'AC/DC'], [/ÁironMéiden/g, 'Iron Maiden'], [/Jáiguei tu Diplói/g, 'Highway to Deploy'],
-    [/Máster of Pul Ricuests/g, 'Master of Pull Requests'], [/Fíar of de Dédlain/g, 'Fear of the Deadline'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
+    [/Máster of Pul Ricuests/g, 'Master of Pull Requests'], [/Fíar of de Dédlain/g, 'Fear of the Deadline'], [/Sáicosóket/g, 'Psychosocket'], [/Frík on a Bránch/g, 'Freak on a Branch'],
+    [/Slípnot/g, 'Slipknot'], [/\bCorn\b/g, 'Korn'], [/sétlist/g, 'setlist'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
   var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
   var SUBS_KEY = 'bm_subs', subsOn = false;
   try { subsOn = localStorage.getItem(SUBS_KEY) === 'es'; } catch (e) { /* sin almacenamiento: desactivados */ }
