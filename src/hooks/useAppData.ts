@@ -15,6 +15,7 @@ import {
 } from '../types';
 import { api, ApiError } from '../services/api';
 import { comoErrorCapturado } from '../utils/errorCapturado';
+import { dedupeById, normalizeConcert, normalizeRehearsal } from '../utils/appDataNormalize';
 
 const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
   {
@@ -77,125 +78,90 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
   const [isLoading, setIsLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error'>('syncing');
 
-  const dedupeById = <T extends { id?: string }>(arr: T[] = []): T[] => {
-    const seen = new Set<string>();
-    return arr.filter((item) => {
-      if (!item) return false;
-      const idStr = item.id ? String(item.id).trim() : null;
-      if (!idStr) return true;
-      if (seen.has(idStr)) return false;
-      seen.add(idStr);
-      return true;
-    });
-  };
-
-  // Cada elemento puede ser un texto o un objeto {name|nombre} (filas antiguas guardadas como JSON).
-  const textoDeElemento = (x: unknown): string => {
-    if (typeof x === 'string') return x;
-    const conNombre = x as { name?: string; nombre?: string } | null | undefined;
-    return conNombre?.name || conNombre?.nombre || String(x);
-  };
-
-  const parseSafeList = (val: unknown): string[] => {
-    if (!val) return [];
-    if (Array.isArray(val)) return (val as unknown[]).map(textoDeElemento).filter(Boolean);
-    if (typeof val === 'string' && val.trim()) {
-      const trimmed = val.trim();
-      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-        try {
-          const parsed: unknown = JSON.parse(trimmed);
-          if (Array.isArray(parsed))
-            return (parsed as unknown[]).map(textoDeElemento).filter(Boolean);
-        } catch { /* texto no JSON: se trata como lista separada por comas */ }
-      }
-      return trimmed
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
-    return [];
-  };
-
-  const normalizeRehearsal = (r: Rehearsal): Rehearsal => {
-    if (!r) return r;
-    return {
-      ...r,
-      asistentes: parseSafeList(r.asistentes),
-      convocados_nombres: r.convocados_nombres ? parseSafeList(r.convocados_nombres) : undefined,
-      convocados_ids: r.convocados_ids ? parseSafeList(r.convocados_ids) : undefined,
-    };
-  };
-
-  const normalizeConcert = (c: Concert): Concert => {
-    if (!c) return c;
-    return {
-      ...c,
-      convocados_nombres: c.convocados_nombres ? parseSafeList(c.convocados_nombres) : undefined,
-      convocados_ids: c.convocados_ids ? parseSafeList(c.convocados_ids) : undefined,
-    };
-  };
-
-  const fetchState = useCallback(async (retryCount = 0) => {
-    setSyncStatus('syncing');
-    try {
-      const data = await api.getState();
-      setLeads(dedupeById(data.leads || []));
-      setRehearsals(dedupeById((data.rehearsals || []).map(normalizeRehearsal)));
-      setTours(dedupeById(data.tours || []));
-      setConcerts(dedupeById((data.concerts || []).map(normalizeConcert)));
-      setPosts(dedupeById(data.posts || []));
-      setPayments(dedupeById(data.payments || []));
-      setMessages(dedupeById(data.messages || []));
-      setMetrics(dedupeById(data.metrics || []));
-      setBandUsers(dedupeById(data.users || []));
-      setFans(dedupeById(data.fans || []));
-      setEpkConfig(data.epkConfig || {});
-      // Antes solo se sincronizaba cuando el array venía con datos, así que una banda sin ninguna
-      // campaña propia (p. ej. recién creada) se quedaba mostrando la campaña de la banda anterior
-      // (o la de la caché de localStorage, compartida entre bandas): "cero campañas" nunca se
-      // distinguía de "todavía no ha llegado la respuesta". Ahora se sincroniza siempre con lo que
-      // devuelva el servidor, incluida la lista vacía.
-      if (Array.isArray(data.campaigns)) {
-        const fetchedCampaigns = data.campaigns;
-        setCampaigns(fetchedCampaigns);
-        localStorage.setItem('bandmanager_campaigns', JSON.stringify(fetchedCampaigns));
-        const active = fetchedCampaigns.find((c: BookingCampaign) => c.isActive) || null;
-        setActiveCampaign(active);
-        if (active) {
-          localStorage.setItem('bandmanager_active_campaign', JSON.stringify(active));
-        } else {
-          localStorage.removeItem('bandmanager_active_campaign');
-        }
-      }
-      setSyncStatus('synced');
-    } catch (e) {
-      console.warn(`Connecting to server (attempt ${retryCount + 1}):`, e);
-      if (retryCount < 2) {
-        setTimeout(() => {
-          fetchState(retryCount + 1);
-        }, 1500);
-      } else {
-        // Antes se marcaba como'synced' tras agotar los reintentos, así que el usuario veía el
-        // indicador de "sincronizado" mientras en realidad no había datos reales cargados (solo
-        // los arrays vacíos del useState inicial, no hay caché real que reutilizar). Mejor
-        // mostrar el estado de error real.
-        console.warn('No se pudo conectar con el servidor tras varios intentos.');
-        setSyncStatus('error');
-      }
-    } finally {
-      setIsLoading(false);
-    }
+  // Carga el estado; ante un fallo reintenta hasta dos veces (1,5 s entre intentos) y, agotados,
+  // marca el error real. `intentoInicial` permite reanudar desde un intento concreto. Quien la llama
+  // ya ha marcado 'syncing' para el primer intento; los reintentos lo marcan ellos mismos. Va
+  // encadenada con then/catch/finally (no async/await) para que todo setState quede en callbacks.
+  const cargarEstado = useCallback((intentoInicial: number): Promise<void> => {
+    const intentar = (intento: number): Promise<void> =>
+      api
+        .getState()
+        .then((data) => {
+          setLeads(dedupeById(data.leads || []));
+          setRehearsals(dedupeById((data.rehearsals || []).map(normalizeRehearsal)));
+          setTours(dedupeById(data.tours || []));
+          setConcerts(dedupeById((data.concerts || []).map(normalizeConcert)));
+          setPosts(dedupeById(data.posts || []));
+          setPayments(dedupeById(data.payments || []));
+          setMessages(dedupeById(data.messages || []));
+          setMetrics(dedupeById(data.metrics || []));
+          setBandUsers(dedupeById(data.users || []));
+          setFans(dedupeById(data.fans || []));
+          setEpkConfig(data.epkConfig || {});
+          // Antes solo se sincronizaba cuando el array venía con datos, así que una banda sin ninguna
+          // campaña propia (p. ej. recién creada) se quedaba mostrando la campaña de la banda anterior
+          // (o la de la caché de localStorage, compartida entre bandas): "cero campañas" nunca se
+          // distinguía de "todavía no ha llegado la respuesta". Ahora se sincroniza siempre con lo que
+          // devuelva el servidor, incluida la lista vacía.
+          if (Array.isArray(data.campaigns)) {
+            const fetchedCampaigns = data.campaigns;
+            setCampaigns(fetchedCampaigns);
+            localStorage.setItem('bandmanager_campaigns', JSON.stringify(fetchedCampaigns));
+            const active = fetchedCampaigns.find((c: BookingCampaign) => c.isActive) || null;
+            setActiveCampaign(active);
+            if (active) {
+              localStorage.setItem('bandmanager_active_campaign', JSON.stringify(active));
+            } else {
+              localStorage.removeItem('bandmanager_active_campaign');
+            }
+          }
+          setSyncStatus('synced');
+        })
+        .catch((e: unknown) => {
+          console.warn(`Connecting to server (attempt ${intento + 1}):`, e);
+          if (intento < 2) {
+            setTimeout(() => {
+              setSyncStatus('syncing');
+              void intentar(intento + 1);
+            }, 1500);
+          } else {
+            // Antes se marcaba como'synced' tras agotar los reintentos, así que el usuario veía el
+            // indicador de "sincronizado" mientras en realidad no había datos reales cargados (solo
+            // los arrays vacíos del useState inicial, no hay caché real que reutilizar). Mejor
+            // mostrar el estado de error real.
+            console.warn('No se pudo conectar con el servidor tras varios intentos.');
+            setSyncStatus('error');
+          }
+        })
+        .finally(() => setIsLoading(false));
+    return intentar(intentoInicial);
   }, []);
 
-  useEffect(() => {
+  /** Recarga el estado desde la API (con reintentos) marcando la sincronización en curso. */
+  const fetchState = useCallback(
+    async (retryCount = 0) => {
+      setSyncStatus('syncing');
+      await cargarEstado(retryCount);
+    },
+    [cargarEstado]
+  );
+
+  // Evita que el EPK (y la campaña activa, mismo problema) de la banda anterior queden visibles
+  // mientras se cargan los datos de la nueva banda tras un cambio de banda activa. Se ajusta al
+  // renderizar (no en un efecto) comparando con la sesión/banda del render anterior.
+  const [sesionPrevia, setSesionPrevia] = useState<{ isLoggedIn: boolean; bandId?: string } | null>(null);
+  if (!sesionPrevia || sesionPrevia.isLoggedIn !== isLoggedIn || sesionPrevia.bandId !== bandId) {
+    setSesionPrevia({ isLoggedIn, bandId });
     if (isLoggedIn) {
-      // Evita que el EPK (y la campaña activa, mismo problema) de la banda anterior queden
-      // visibles mientras se cargan los datos de la nueva banda tras un cambio de banda activa.
       setEpkConfig({});
       setActiveCampaign(null);
-      fetchState();
+      setSyncStatus('syncing');
     }
-  }, [isLoggedIn, bandId, fetchState]);
+  }
+
+  useEffect(() => {
+    if (isLoggedIn) void cargarEstado(0);
+  }, [isLoggedIn, bandId, cargarEstado]);
 
   // Handle external agent completions and app data updates
   useEffect(() => {

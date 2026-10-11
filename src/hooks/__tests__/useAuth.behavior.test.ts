@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { renderHook, act, waitFor, cleanup } from '@testing-library/react';
 import type { User } from '../../types';
 
 const verifyMe = vi.fn();
@@ -30,7 +30,10 @@ describe('useAuth', () => {
     logout.mockReset();
     vi.spyOn(console, 'warn').mockImplementation(() => undefined);
   });
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
 
   it('sin sesión guardada arranca deslogueado y no consulta al servidor', () => {
     const { result } = renderHook(() => useAuth());
