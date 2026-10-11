@@ -21,7 +21,6 @@ Controlador del perfil de usuario: compone identidad, plan y bandas, y gestiona 
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_usePlanSummary|src/components/user_profile/hooks/usePlanSummary.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(Layer: #frontend, Domain: #system)*

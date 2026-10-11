@@ -19,7 +19,6 @@ Salir de una banda, fijar banda principal, subir logo y cambiar de banda.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

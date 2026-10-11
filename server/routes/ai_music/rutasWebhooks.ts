@@ -1,27 +1,12 @@
 /**
- * Webhooks de los proveedores de stems. Replicate se autentica por firma HMAC (y es idempotente); el de
- * Fal.ai solo registra la notificación y no actúa sobre ella: los resultados se recogen por polling.
+ * Webhook de Replicate para las predicciones de stems: se autentica por firma HMAC y es idempotente.
+ * Fal.ai no usa webhook: sus resultados se recogen por polling (el endpoint que había no lo
+ * registraba nadie y solo escribía en el log lo que le enviaran, sin firma).
  */
 import express from 'express';
 import { verifyReplicateWebhook, isPredictionWebhookProcessed, recordPredictionJob } from '../../services/stemPredictionReconciler.js';
 
 const router = express.Router();
-
-/**
- * Endpoint de Webhook para recibir resultados asíncronos de Fal.ai (Inference Webhooks)
- */
-router.post('/ai-stem-separation/fal-webhook', async (req, res) => {
-  try {
-    const payload = req.body;
-    console.log(
-      `[Fal.ai Webhook] 🔔 Notificación de inferencia recibida de Fal.ai: Request ID=${payload?.request_id}, Status=${payload?.status}`
-    );
-    res.status(200).json({ received: true });
-  } catch (err: any) {
-    console.error('[Fal.ai Webhook] Error al procesar webhook de Fal.ai:', err);
-    res.status(200).json({ received: true, error: err?.message });
-  }
-});
 
 /**
  * Webhook para recepcion asincrona de predicciones de Replicate con firma HMAC e idempotencia

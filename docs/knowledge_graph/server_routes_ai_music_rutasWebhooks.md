@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Webhooks de los proveedores de stems. Replicate se autentica por firma HMAC (y es idempotente); el de
+Webhook de Replicate para las predicciones de stems: se autentica por firma HMAC y es idempotente.
 
 ---
 

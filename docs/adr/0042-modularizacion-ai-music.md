@@ -17,7 +17,7 @@ Después, `ai_music.ts` queda como router contenedor que monta cuatro sub-router
 |---|---|
 | `rutasGeneracion`, `generacionMusical` | `/generate`, `/ai-generate-instrument-track`; Lyria y MusicGen |
 | `rutaSeparacion`, `separacionContexto`, `separacionMotores` | `/ai-stem-separation`: orquestación (caché → reserva → deduplicación → 202), contexto de la petición y un motor por función |
-| `rutasEstadoStems`, `rutasWebhooks` | polling de estado, diagnóstico de Fal.ai, webhooks de Fal.ai y Replicate |
+| `rutasEstadoStems`, `rutasWebhooks` | polling de estado, diagnóstico de Fal.ai y webhook de Replicate (el de Fal.ai, sin firma ni uso, se quitó después) |
 | `motorDemucs`, `motorMdx23`, `motoresNeuronales`, `motorFfmpeg` | motores de separación |
 | `diagnosticos`, `diagnosticosInfra`, `cacheStems`, `formatoStems`, `audioPublico`, `modelos`, `ffmpegConfigurado` | errores de proveedor, caché y formato de stems, preparación del audio |
 

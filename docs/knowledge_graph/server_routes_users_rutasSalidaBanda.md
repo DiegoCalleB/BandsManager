@@ -29,11 +29,6 @@ Salir de una banda (o borrarla si eras su único miembro) y subida del logo desd
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
-- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
-- [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(from #frontend)*
-- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
-- [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
-- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

@@ -21,7 +21,6 @@ Exporta: UserManagementModal.
 - [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*

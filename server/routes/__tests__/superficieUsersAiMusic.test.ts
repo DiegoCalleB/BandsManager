@@ -59,7 +59,6 @@ const RUTAS_USERS = [
   'POST /users/create-band',
   'DELETE /leave-band/:bandId',
   'DELETE /users/leave-band/:bandId',
-  'POST /users/upload-logo',
   'POST /users/associate',
   'GET /users',
   'POST /users',
@@ -70,7 +69,6 @@ const RUTAS_USERS = [
 const RUTAS_AI_MUSIC = [
   'POST /generate',
   'POST /generate-music',
-  'POST /ai-stem-separation/fal-webhook',
   'POST /ai-stem-separation',
   'GET /ai-stem-separation/status',
   'GET /ai-stem-separation/fal-diagnostic',
@@ -93,8 +91,7 @@ const PUBLICAS = new Set([
   '/auth/me',
   '/auth/switch-band',
   '/auth/logout',
-  // Webhooks de proveedores: Replicate valida la firma HMAC; el de Fal.ai solo registra el aviso.
-  '/ai-stem-separation/fal-webhook',
+  // Webhook de Replicate: se autentica por firma HMAC, no por sesión.
   '/webhooks/replicate-stems',
   '/api/webhooks/replicate-stems',
 ]);
@@ -119,13 +116,14 @@ const resFalso = () => {
 };
 
 describe('superficie de users y ai_music', () => {
-  it('users expone exactamente sus rutas, en el mismo orden', () => {
+  it('users expone exactamente sus rutas, en el mismo orden y sin duplicadas', () => {
     expect(inventario(usersRouter)).toEqual(RUTAS_USERS);
+    expect(new Set(RUTAS_USERS).size).toBe(RUTAS_USERS.length);
   });
 
   // En ai_music todas las rutas son literales distintos: el orden de montaje de sus sub-routers no
-  // cambia qué handler atiende cada petición. En users sí importa (POST /users/upload-logo está
-  // declarada dos veces y gana la primera), por eso allí se compara el orden.
+  // cambia qué handler atiende cada petición. En users se compara también el orden, y que ninguna
+  // ruta esté declarada dos veces (Express atendería solo la primera y la otra sería código muerto).
   it('ai_music expone exactamente sus rutas', () => {
     expect([...inventario(aiMusicRouter)].sort()).toEqual([...RUTAS_AI_MUSIC].sort());
     expect(new Set(RUTAS_AI_MUSIC).size).toBe(RUTAS_AI_MUSIC.length);
@@ -182,6 +180,18 @@ describe('aislamiento entre bandas', () => {
     await manejador(usersRouter, '/auth/switch-band', 'post')({ headers: { authorization: 'Bearer tok-ana' }, body: { band_id: 'band-ajena' } }, res);
     expect(res.code).toBe(404);
     expect(res.body?.token).toBeUndefined();
+  });
+
+  it('subir el logo de una banda ajena responde 403', async () => {
+    const res = resFalso();
+    const req = {
+      headers: { 'x-band-id': 'band-ajena' },
+      query: {},
+      body: { bandId: 'band-ajena', logoUrl: 'https://x.example/logo.png' },
+      user: { id: 'u1', role: 'leader', band_id: 'band-a', allowedBandIds: ['band-a'] },
+    };
+    await manejador(usersRouter, '/users/upload-logo', 'post')(req, res);
+    expect(res.code).toBe(403);
   });
 
   it('el estado de una separación de stems nunca lee la caché de otra banda', async () => {

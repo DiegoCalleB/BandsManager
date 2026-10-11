@@ -3,10 +3,10 @@
  */
 import express from 'express';
 import { getSafeUsers } from '../../auth.js';
-import { loadState, saveState, requireAuth, getEpkConfigForBand } from '../../state.js';
-import { dbUpsertUser, dbDeleteUserFromBand, dbUpsertRegisteredBand, dbDeleteRegisteredBand, dbUpsertEpkConfig } from '../../db.js';
-import { puedeEscribirEnBanda } from '../../utils/bandAccess.js';
-import { buildAvailableBandsForUser, cleanBandId } from './bandasDisponibles.js';
+import { loadState, saveState, requireAuth } from '../../state.js';
+import { dbUpsertUser, dbDeleteUserFromBand, dbDeleteRegisteredBand } from '../../db.js';
+import '../../utils/bandAccess.js';
+import { buildAvailableBandsForUser } from './bandasDisponibles.js';
 
 const router = express.Router();
 
@@ -218,71 +218,5 @@ router.delete(
     }
   }
 );
-
-// Upload and persist band logo
-router.post('/users/upload-logo', requireAuth, async (req, res) => {
-  try {
-    const { bandId, logoUrl } = req.body;
-    if (!bandId || !logoUrl) {
-      return res.status(400).json({ error: 'bandId y logoUrl son requeridos' });
-    }
-
-    if (!puedeEscribirEnBanda(req, bandId)) {
-      return res
-        .status(403)
-        .json({
-          error: 'No tienes permiso para modificar el logo de esta banda.',
-        });
-    }
-
-    const state = loadState();
-    const cleanId = cleanBandId(bandId);
-
-    // Update in registeredBands
-    if (!state.registeredBands) state.registeredBands = [];
-    let regBand = state.registeredBands.find((b: any) => {
-      const bBid = cleanBandId(b.band_id || b.id);
-      return bBid === cleanId;
-    });
-
-    if (regBand) {
-      regBand.logo_url = logoUrl;
-      regBand.imagen_url = logoUrl;
-      try {
-        await dbUpsertRegisteredBand(regBand);
-      } catch (e) {
-        console.warn('Could not sync registeredBand logo to DB:', e);
-      }
-    }
-
-    // Update in epkConfigsByBand
-    if (!state.epkConfigsByBand) state.epkConfigsByBand = {};
-    const existingEpk = getEpkConfigForBand(
-      state,
-      bandId,
-      regBand?.nombre_banda || 'Banda'
-    );
-    const updatedEpk = { ...existingEpk, logoUrl };
-    const possibleKeys = [bandId, cleanId, `band-${cleanId}`, `reg-${cleanId}`];
-    possibleKeys.forEach((k) => {
-      state.epkConfigsByBand[k] = updatedEpk;
-    });
-
-    try {
-      await dbUpsertEpkConfig(bandId, { logoUrl });
-    } catch (e) {
-      console.warn('Could not sync EPK logo to DB:', e);
-    }
-
-    saveState(state);
-
-    res.json({ success: true, bandId, logoUrl });
-  } catch (err: any) {
-    console.error('Error in /users/upload-logo:', err);
-    res
-      .status(500)
-      .json({ error: err?.message || 'Error al actualizar el logotipo' });
-  }
-});
 
 export default router;

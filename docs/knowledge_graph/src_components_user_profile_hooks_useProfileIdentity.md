@@ -19,7 +19,6 @@ Identidad del usuario: nombre, instrumento, color, banda principal y logo de la 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*

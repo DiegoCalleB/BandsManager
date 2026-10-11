@@ -1,9 +1,9 @@
 // Cuentas, sesión y bandas de un usuario: alta, login (contraseña o Google), recuperación de
 // contraseña, cambio de banda, preferencias y gestión de miembros.
 //
-// Router contenedor (ADR 0043): cada grupo de rutas vive en su sub-router de `users/`. El orden de
-// montaje es el de declaración original y SÍ importa: `POST /users/upload-logo` está declarada en
-// `rutasBandas` y en `rutasSalidaBanda`, y atiende la primera.
+// Router contenedor (ADR 0043): cada grupo de rutas vive en su sub-router de `users/`, montados en
+// el orden de declaración original. Ninguna ruta se declara dos veces (lo comprueba
+// superficieUsersAiMusic.test.ts): Express solo atendería la primera.
 import express from 'express';
 import { dbCleanCorruptedLeadFields, dbMigrateAllPlansToNewTiers } from '../db.js';
 import rutasBandas from './users/rutasBandas.js';

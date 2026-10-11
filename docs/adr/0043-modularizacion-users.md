@@ -30,7 +30,9 @@ Helpers: `bandasDisponibles`, `permisosCuenta`, `adminInicial`.
 | Mayor módulo | 3652 | 370 (`rutasRecuperacion`) |
 
 ## Por qué el orden importa aquí
-`POST /users/upload-logo` está declarada dos veces (en `rutasBandas` y en `rutasSalidaBanda`) y Express atiende la primera. El test de superficie compara el orden de users para que mover un sub-router no cambie en silencio qué handler responde. Unificar la ruta duplicada queda como deuda: hacerlo cambia comportamiento y merece su propio cambio.
+`POST /users/upload-logo` estaba declarada dos veces (en `rutasBandas` y en `rutasSalidaBanda`) y Express atendía siempre la primera. El test de superficie comparaba el orden de users para que mover un sub-router no cambiara en silencio qué handler respondía.
+
+**Actualización (2026-10-11):** se quitó la segunda declaración, que nunca se ejecutaba (la primera ya exige permiso de escritura en la banda; hay test de que una banda ajena da 403). El test de superficie impide ahora declarar una ruta dos veces.
 
 ## Consecuencias
 Una ruta nueva va a su sub-router y al inventario del test, con su motivo si es pública.
