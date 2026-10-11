@@ -147,10 +147,10 @@ export async function convertWavUrlToMp3(
     return null;
   } finally {
     if (fs.existsSync(tempWav)) {
-      try { fs.unlinkSync(tempWav); } catch (_) {}
+      try { fs.unlinkSync(tempWav); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
     if (fs.existsSync(tempMp3)) {
-      try { fs.unlinkSync(tempMp3); } catch (_) {}
+      try { fs.unlinkSync(tempMp3); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
   }
 }

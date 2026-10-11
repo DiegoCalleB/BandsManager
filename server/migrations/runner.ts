@@ -110,7 +110,7 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
         await db.consultar(`INSERT INTO schema_migrations (nombre, checksum) VALUES ($1, $2)`, [f.nombre, f.checksum]);
         await db.ejecutar('COMMIT');
       } catch (e: any) {
-        await db.ejecutar('ROLLBACK').catch(() => {});
+        await db.ejecutar('ROLLBACK').catch(() => { /* la conexión ya cayó: el error original se relanza abajo */ });
         throw new MigracionFallida(f.nombre, String(e?.message || e).split('\n')[0]);
       }
       informe.aplicadas.push(f.nombre);
@@ -122,6 +122,6 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
     if (!informe.aplicadas.length && !opciones.soloComprobar) log('[migraciones] Esquema al día.');
     return informe;
   } finally {
-    if (!opciones.soloComprobar) await db.consultar('SELECT pg_advisory_unlock($1)', [CLAVE_BLOQUEO]).catch(() => {});
+    if (!opciones.soloComprobar) await db.consultar('SELECT pg_advisory_unlock($1)', [CLAVE_BLOQUEO]).catch(() => { /* al cerrarse la conexión Postgres libera el bloqueo solo */ });
   }
 }

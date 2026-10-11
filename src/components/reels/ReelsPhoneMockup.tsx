@@ -310,7 +310,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                   if (video.currentTime < fStart) video.currentTime = fStart;
                   if (video.currentTime >= fEnd) {
                     video.currentTime = fStart;
-                    video.play().catch(() => {});
+                    video.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
                   }
                 }
               }}

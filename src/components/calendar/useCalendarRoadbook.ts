@@ -181,7 +181,7 @@ export function useCalendarRoadbook(
     setAllRoadbooks(updated);
     try {
       localStorage.setItem('bandmanager_roadbooks', JSON.stringify(updated));
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
   };
 
   const getCurrentRoadbook = (dateKey: string, concert?: Concert | null): RoadbookInfo => {

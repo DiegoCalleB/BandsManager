@@ -48,8 +48,8 @@ import {
 } from '../services/transactionalEmail.js';
 
 // Run asynchronous migration & cleanup checks on database records
-dbMigrateAllPlansToNewTiers().catch(() => {});
-dbCleanCorruptedLeadFields().catch(() => {});
+dbMigrateAllPlansToNewTiers().catch((err: unknown) => console.warn("[Usuarios] Falló la migración de planes al arrancar:", err));
+dbCleanCorruptedLeadFields().catch((err: unknown) => console.warn("[Usuarios] Falló la limpieza de campos corruptos de leads al arrancar:", err));
 
 // Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
 // ya en memoria (listas de bandas disponibles, band_order), no como filtro de escritura en
@@ -3441,7 +3441,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
       }
       try {
         await dbUpsertRegisteredBand(regBand);
-      } catch (e) {}
+      } catch (err) { console.warn("[Usuarios] No se pudo guardar la banda registrada en Supabase:", err); }
     }
 
     const cleanUserBand = user.band_id

@@ -134,7 +134,7 @@ export async function acquireStemsSeparationLock(
 
   try {
     if (bandId && bandId !== "sin-banda") {
-      await ensureRegisteredBandExists(bandId).catch(() => {});
+      await ensureRegisteredBandExists(bandId).catch((err: unknown) => console.warn("[Stems] No se pudo asegurar la banda registrada antes de guardar stems:", err));
     }
     const sb = getSupabase();
 
@@ -349,7 +349,7 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
   // esquema desincronizado) se registra como "guardado con éxito" mientras la fila real nunca cambia.
   try {
     if (record.bandId && record.bandId !== "sin-banda") {
-      await ensureRegisteredBandExists(record.bandId).catch(() => {});
+      await ensureRegisteredBandExists(record.bandId).catch((err: unknown) => console.warn("[Stems] No se pudo asegurar la banda registrada antes de guardar stems:", err));
     }
     const sb = getSupabase();
     const { error } = await sb

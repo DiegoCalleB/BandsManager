@@ -50,7 +50,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
     const alinear = () => {
       for (const el of esclavos) if (Math.abs(el.currentTime - maestro.currentTime) > DERIVA_MAX_S) el.currentTime = maestro.currentTime;
     };
-    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => {}); }); };
+    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ }); }); };
     const parar = () => esclavos.forEach((el) => el.pause());
     const ritmo = () => esclavos.forEach((el) => { el.playbackRate = maestro.playbackRate; });
 

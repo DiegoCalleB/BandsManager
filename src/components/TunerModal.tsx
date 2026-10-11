@@ -380,7 +380,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       mediaStreamRef.current = null;
     }
     if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
-      audioCtxRef.current.close().catch(() => {});
+      audioCtxRef.current.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       audioCtxRef.current = null;
     }
     analyserRef.current = null;
@@ -448,7 +448,7 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
       try {
         toneOscRef.current.stop();
         toneOscRef.current.disconnect();
-      } catch (e) {}
+      } catch { /* el oscilador ya estaba parado: nada que detener */ }
       toneOscRef.current = null;
     }
     setPlayingToneFreq(null);

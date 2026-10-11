@@ -67,8 +67,8 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
     const entrar = !pantallaCompleta;
     setPantallaCompleta(entrar);
     try {
-      if (entrar) void document.documentElement.requestFullscreen?.().catch(() => {});
-      else if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+      if (entrar) void document.documentElement.requestFullscreen?.().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
+      else if (document.fullscreenElement) void document.exitFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
     } catch {
       /* sin Fullscreen API (iOS Safari): basta con la hoja a viewport completo */
     }
@@ -79,7 +79,7 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
     document.addEventListener("fullscreenchange", alCambiar);
     return () => {
       document.removeEventListener("fullscreenchange", alCambiar);
-      try { if (document.fullscreenElement) void document.exitFullscreen().catch(() => {}); } catch { /* nada */ }
+      try { if (document.fullscreenElement) void document.exitFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ }); } catch { /* exitFullscreen no soportado: nada que deshacer */ }
     };
   }, []);
   const [showShareModal, setShowShareModal] = useState<boolean>(false);

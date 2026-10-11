@@ -159,12 +159,12 @@ export async function dbGetMusiciansWaitlist() {
   try {
     const { data, error } = await sb.from("musicians_waitlist").select("*").order("created_at", { ascending: false });
     if (!error && data) return data;
-  } catch (e) {}
+  } catch (err) { console.warn("[Fans] Fallo leyendo musicians_waitlist; se prueba la tabla leads:", err); }
 
   try {
     const { data, error } = await sb.from("leads").select("*").eq("tipo", "musico_waitlist").order("created_at", { ascending: false });
     if (!error && data) return data;
-  } catch (e) {}
+  } catch (err) { console.warn("[Fans] Fallo leyendo la lista de espera desde leads:", err); }
 
   return [];
 }

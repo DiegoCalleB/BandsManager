@@ -97,7 +97,7 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
           invalidateBandStateCache(bandId);
         }
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Deals] No se pudieron reflejar los acuerdos firmados en el calendario:", err); }
 
     return res.status(200).json({ success: true, deals });
   } catch (error: any) {
@@ -270,7 +270,7 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
             invalidateBandStateCache(deal.band_id);
           }
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Deals] No se pudo crear el concierto del acuerdo firmado:", err); }
     }
 
     return res.status(200).json({ success: true, deal: publicDeal });
@@ -343,7 +343,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
             if (!venueEmail && leadData?.email) {
               venueEmail = String(leadData.email).trim().toLowerCase();
             }
-          } catch (_) {}
+          } catch (err) { console.warn("[Deals] Fallo leyendo el email de la sala:", err); }
         }
 
         // Obtener datos y email de la banda
@@ -360,7 +360,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
             const leader = users.find((u: any) => u.role === 'leader' || u.rol === 'leader') || users[0];
             if (leader?.email) bandEmail = leader.email;
           }
-        } catch (_) {}
+        } catch (err) { console.warn("[Deals] Fallo leyendo el email de la banda:", err); }
 
         const feeImporte = deal.comision_importe ?? 0;
         const netoBanda = deal.neto_banda ?? Math.max(0, (deal.total_acordado || deal.cache_base || 0) - feeImporte);
@@ -453,7 +453,7 @@ dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, a
     try {
       const regBand = await dbGetRegisteredBandById(deal.band_id);
       if (regBand?.nombre_banda) bandDisplayName = regBand.nombre_banda;
-    } catch (_) {}
+    } catch (err) { console.warn("[Deals] Fallo leyendo el nombre de la banda; se usa el genérico:", err); }
 
     const result = await sendDealSignedToVenueEmail({
       toEmail: cleanEmail,

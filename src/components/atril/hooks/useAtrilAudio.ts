@@ -170,7 +170,7 @@ export function useAtrilAudio({ song, onUpdateSong, ajustes, transpose, setAiSuc
         audioRef.current
           .play()
           .then(() => setIsPlayingAudio(true))
-          .catch(() => {});
+          .catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
       }
     }
   };

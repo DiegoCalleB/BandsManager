@@ -326,7 +326,7 @@ async function fetchInstagramInsightsData(igUserId: string, token: string) {
               }
             }
           }
-        } catch {}
+        } catch { /* sin métricas de esta publicación (permiso o tipo no soportado): se lista sin ellas */ }
 
         insightsResult.media.push({
           id: m.id,

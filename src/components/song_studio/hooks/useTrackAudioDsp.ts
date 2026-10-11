@@ -96,7 +96,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
       if (!ctx) return;
 
       if (ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
+        ctx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
 
       let dsp = trackDSPMapRef.current[trackId];
@@ -249,7 +249,7 @@ export function useTrackAudioDsp({ lastPerTrackGainRef, applyMasterToElementVolu
         if (AudioCtxClass) studioAudioCtxRef.current = new AudioCtxClass();
       }
       const ctx = studioAudioCtxRef.current;
-      if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+      if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
 
       const songBpm = bpm > 40 && bpm < 240 ? bpm : song.bpm || 120;
       const beatIntervalMs = Math.max(300, Math.min(1200, (60 / songBpm) * 1000));

@@ -171,7 +171,7 @@ export function playNotificationChime(): void {
     osc2.stop(now + 0.41);
 
     setTimeout(() => {
-      ctx.close().catch(() => {});
+      ctx.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     }, 500);
   } catch (err) {
     // Audio context may be restricted by autoplay policy until user gesture
@@ -241,7 +241,7 @@ export function sendBrowserPushNotification(title: string, options: SendPushNoti
     notification.onclick = () => {
       try {
         window.focus();
-      } catch (_) {}
+      } catch { /* el navegador no deja enfocar la ventana: la notificación se cierra igual */ }
       if (options.onClick) {
         options.onClick();
       }

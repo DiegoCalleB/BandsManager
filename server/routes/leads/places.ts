@@ -232,7 +232,7 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
                     place.instagram = contactData.instagram;
                   }
                 }
-              } catch (_) {}
+              } catch { /* sin datos de contacto extraíbles: la sala se devuelve tal cual */ }
               return place;
             })
           );

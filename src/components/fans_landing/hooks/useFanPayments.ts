@@ -102,7 +102,7 @@ export function useFanPayments({ donacionRevolut, socialLinks, trackClick }: Fan
     if (!bizumPhone) return;
     const cleanPhone = bizumPhone.replace(/[\s-]/g, "");
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(cleanPhone).catch(() => {});
+      navigator.clipboard.writeText(cleanPhone).catch(() => { /* portapapeles no permitido: el teléfono sigue visible para copiarlo a mano */ });
     }
     setCopiedBizum(true);
     trackClick("bizum", `bizum:${cleanPhone}`, contextType);

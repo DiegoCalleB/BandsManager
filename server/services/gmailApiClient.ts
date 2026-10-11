@@ -92,7 +92,7 @@ async function getValidAccessToken(bandId: string): Promise<string> {
       if (parsed.error === "invalid_grant") {
         friendlyMessage = "Token de Google revocado o caducado (invalid_grant). Es necesario reconectar con 'Conectar con Google'.";
       }
-    } catch (_) {}
+    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
     throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${friendlyMessage || res.status}`, "api_error");
   }
 
@@ -345,7 +345,7 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
           friendlyMessage = `${parsed.error.message} (HTTP ${listRes.status})`;
         }
       }
-    } catch (_) {}
+    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
 
     if (isRateLimit) {
       setGmailRateLimitCooldown(bandId);

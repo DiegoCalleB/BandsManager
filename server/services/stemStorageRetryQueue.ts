@@ -188,7 +188,7 @@ class StemStorageRetryManager {
         last_error: error || null,
         updated_at: new Date().toISOString()
       }).eq("id", id);
-    } catch {}
+    } catch (err) { console.warn("[Stems] No se pudo guardar el estado del reintento en Supabase:", err); }
   }
 
   private async updateDbRetry(item: PendingStemUpload): Promise<void> {
@@ -200,7 +200,7 @@ class StemStorageRetryManager {
         last_error: item.lastError || null,
         updated_at: new Date().toISOString()
       }).eq("id", item.id);
-    } catch {}
+    } catch (err) { console.warn("[Stems] No se pudo guardar el reintento en Supabase:", err); }
   }
 
   public getQueueLength(): number {
@@ -216,5 +216,5 @@ export const stemStorageRetryManager = new StemStorageRetryManager();
 
 // Rehidratar automáticamente
 setTimeout(() => {
-  stemStorageRetryManager.initFromDatabase().catch(() => {});
+  stemStorageRetryManager.initFromDatabase().catch((err: unknown) => console.warn("[Stems] No se pudo cargar la cola de reintentos desde Supabase al arrancar:", err));
 }, 1000);

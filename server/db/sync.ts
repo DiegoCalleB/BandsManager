@@ -42,7 +42,7 @@ export function invalidateBandStateCache(bandId?: string) {
           bandStateCache.delete(key);
         }
       }
-    } catch (_) {}
+    } catch { /* id de banda no normalizable: no hay entradas de caché que invalidar */ }
   } else {
     bandStateCache.clear();
   }
@@ -126,7 +126,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
           }
         });
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Sync] Fallo leyendo user_bands; el usuario ve solo sus bandas en memoria:", err); }
   }
 
   const allRelevantBandIds = Array.from(userBandIds);

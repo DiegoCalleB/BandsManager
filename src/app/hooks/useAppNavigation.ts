@@ -248,7 +248,7 @@ export function useAppNavigation({ language, refreshTranslation, isLoggedIn, cur
           setBandsCount(res.bands.length);
         }
       })
-      .catch(() => {});
+      .catch(() => { /* el contador de bandas es informativo: sin él el menú funciona igual */ });
   }, [currentActiveBandId]);
 
   const handleCrmSectionChange = useCallback(

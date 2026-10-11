@@ -430,7 +430,7 @@ export function getOriginHost(req: express.Request): string {
     if (req.headers.referer) {
       try {
         host = new URL(req.headers.referer).origin;
-      } catch (e) {}
+      } catch { /* referer mal formado: se usa el host por defecto */ }
     }
   }
   if (!host || host === "null") {
@@ -922,7 +922,7 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
           .update({ creditos_usados: newUsed, creditos_periodo: totalCredits })
           .or(`band_id.eq.${bandId},id.eq.${bandId},band_id.eq.band-${cleanBandId},id.eq.band-${cleanBandId}`);
       }
-    } catch (e) {}
+    } catch (err) { console.warn("[Billing] No se pudo actualizar el consumo de créditos de la banda:", err); }
 
     return res.json({
       success: true,

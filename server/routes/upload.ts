@@ -83,7 +83,7 @@ async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: strin
   } catch (err: any) {
     console.warn(`[Audio Upload Optimizer] Aviso al comprimir audio con FFmpeg, usando original:`, err?.message || err);
     if (fs.existsSync(outputPath)) {
-      try { fs.unlinkSync(outputPath); } catch (_) {}
+      try { fs.unlinkSync(outputPath); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
   }
 
@@ -558,7 +558,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
 
     if (headerBytes && !validarMagicBytes(headerBytes, rawExt)) {
       if (fs.existsSync(filePath)) {
-        try { fs.unlinkSync(filePath); } catch (_) {}
+        try { fs.unlinkSync(filePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
       }
       return res.status(400).json({ error: "Firma binaria del archivo no válida para el formato declarado (Magic Bytes mismatch)." });
     }
@@ -711,7 +711,7 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
     fs.closeSync(fdChunk);
 
     if (bytesReadChunk >= 4 && !validarMagicBytes(headerChunkBytes, rawChunkExt)) {
-      try { fs.unlinkSync(finalFilePath); } catch (_) {}
+      try { fs.unlinkSync(finalFilePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
       return res.status(400).json({ error: "Firma binaria del archivo reensamblado no coincide con la extensión declarada." });
     }
 

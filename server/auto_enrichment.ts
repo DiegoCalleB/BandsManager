@@ -275,7 +275,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
 
         if (lead.instagram) modified = true;
       }
-    } catch (_) {}
+    } catch { /* sin coincidencia conocida el lead se queda sin Instagram; el enriquecimiento sigue */ }
   }
 
   const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
@@ -337,7 +337,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
                 lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
                 modified = true;
               }
-            } catch (e) {}
+            } catch { /* web mal formada: el lead se queda sin logo */ }
           }
           if (topPlace.formattedAddress && (!lead.ciudad || lead.ciudad === 'Desconocido')) {
             const parts = topPlace.formattedAddress.split(",");
@@ -382,7 +382,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
               lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
               modified = true;
             }
-          } catch (_) {}
+          } catch { /* web mal formada: el lead se queda sin logo */ }
         }
         if (serperContact.instagram && !lead.instagram) {
           lead.instagram = serperContact.instagram;
@@ -639,7 +639,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
         lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
         modified = true;
       }
-    } catch (e) {}
+    } catch { /* web mal formada: el lead se queda sin logo */ }
   }
 
   // Lo que el usuario vació a propósito se queda vacío, encuentre lo que encuentre la web.

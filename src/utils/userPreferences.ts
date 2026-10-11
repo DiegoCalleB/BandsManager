@@ -93,7 +93,7 @@ export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
         return true;
       }
     }
-  } catch {}
+  } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
 
   return false;
 }
@@ -108,7 +108,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   if (typeof localStorage !== 'undefined') {
     try {
       localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 2. Actualizar optimísticamente el usuario en caché
@@ -129,7 +129,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
         };
         localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 3. Persistir en Supabase
@@ -216,7 +216,7 @@ export async function markOnboardingCompleted(
         localStorage.setItem(PROFILE_WIZARD_GLOBAL_KEY, 'true');
         if (clean) localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`, 'true');
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 2. Actualizar usuario en caché
@@ -247,7 +247,7 @@ export async function markOnboardingCompleted(
         };
         localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 3. Sincronizar en Supabase

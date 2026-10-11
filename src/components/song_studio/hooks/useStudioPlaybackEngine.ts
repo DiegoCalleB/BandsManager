@@ -451,7 +451,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
           el.currentTime = targetTime;
           el.playbackRate = 1.0;
           if (playingIdeaIdRef.current === idea.id && el.paused && !tr.muted) {
-            el.play().catch(() => {});
+            el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
           }
         }
       }

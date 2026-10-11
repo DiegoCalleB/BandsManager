@@ -464,7 +464,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           try {
             const domain = new URL(l.website).hostname.replace(/^www\./, '');
             if (domain) existingWebsites.add(domain);
-          } catch (_) {}
+          } catch { /* web mal formada: no cuenta para detectar duplicados */ }
         }
       });
 
@@ -751,7 +751,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
               );
               continue;
             }
-          } catch (_) {}
+          } catch { /* web del candidato mal formada: no se puede comparar por dominio */ }
         }
 
         // Si sobrevive todas las comprobaciones, es un lead nuevo y real

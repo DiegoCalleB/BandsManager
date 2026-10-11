@@ -98,7 +98,7 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
       if (Tone.getContext().state !== 'running') {
         Tone.getContext()
           .resume()
-          .catch(() => {});
+          .catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
     };
 

@@ -24,7 +24,7 @@ export async function dbGetTours(bandId: string) {
           const parsed = JSON.parse(t.vehiculo);
           if (Array.isArray(parsed)) vehiculos = parsed;
         }
-      } catch (_) {}
+      } catch { /* vehículo antiguo guardado como texto, no JSON: se queda como vehículo único */ }
 
       if (vehiculos.length === 0) {
         vehiculos = [{

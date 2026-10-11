@@ -73,7 +73,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         `bandmanager_community_announcements_${effectiveBandName}`,
       );
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
     // Sin comunicados propios el muro arranca vacío. Antes se sembraba un comunicado de
     // bienvenida firmado por la banda (con 24 likes y 18 fuegos inventados) que nadie había
     // publicado: la banda veía como suyo un texto y unas reacciones que no existían.
@@ -169,7 +169,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           `bandmanager_community_announcements_${effectiveBandName}`,
           JSON.stringify(updated),
         );
-      } catch {}
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       return updated;
     });
   };
@@ -195,7 +195,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         `bandmanager_community_announcements_${effectiveBandName}`,
         JSON.stringify(updated),
       );
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
 
     setNewPostTitle("");
     setNewPostContent("");

@@ -91,7 +91,7 @@ export function useAuth() {
         localStorage.removeItem('bandmanager_available_bands');
         try {
           borrarCookieDeSesion();
-        } catch (e) {}
+        } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
       } else if (!navigator.onLine) {
         // Fallo de red real por estar offline: mantener la sesión en caché activa (móvil sin cobertura).
         const savedUserStr = localStorage.getItem('bandmanager_user');
@@ -99,7 +99,7 @@ export function useAuth() {
           try {
             setCurrentUser(JSON.parse(savedUserStr));
             setIsLoggedIn(true);
-          } catch (e) {}
+          } catch { /* usuario guardado corrupto: se arranca sin sesión y se pide login */ }
         }
       }
       // Online pero con un fallo no-401 (500, CORS, timeout...): no forzamos el cierre de sesión
@@ -289,7 +289,7 @@ export function useAuth() {
     localStorage.removeItem('bandmanager_available_bands');
     try {
       borrarCookieDeSesion();
-    } catch (e) {}
+    } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
   }, [authToken]);
 
   return {

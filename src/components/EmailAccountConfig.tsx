@@ -131,7 +131,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
       api
         .getGmailOAuthStatus()
         .then((data) => setGmailOAuthStatus(data || { connected: false }))
-        .catch(() => {});
+        .catch(() => { /* el aviso de conexión ya se mostró; el estado se refresca al reabrir */ });
     } else {
       const motivo = params.get("motivo") || "error_desconocido";
       setGmailOAuthFeedback({

@@ -46,7 +46,7 @@ export function useQrCustomization({ currentBandId }: QrCustomizationParams) {
           setClickStats(data.clicks);
         }
       })
-      .catch(() => {});
+      .catch(() => { /* las estadísticas de clics son un extra: sin ellas el panel funciona igual */ });
     return () => {
       isSubscribed = false;
     };

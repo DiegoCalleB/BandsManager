@@ -71,7 +71,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
       
       const domain = getDomainFromUrl(siteUrl);
       if (domain) return { logo: `https://icon.horse/icon/${domain}`, workingWebsite: siteUrl };
-    } catch (_) {}
+    } catch { /* web mal formada: se prueba el siguiente método para el logo */ }
   }
   return null;
 }
@@ -993,7 +993,7 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req: any,
     let epk: any = null;
     try {
       epk = await dbGetEpkConfig(bandId);
-    } catch (_) {}
+    } catch (err) { console.warn("[Bandas] Fallo leyendo el EPK; se responde sin él:", err); }
 
     const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || epk?.nombreBanda || req.user?.bandName || req.user?.name || "Banda";
     const bandGenre = genre || epk?.genero || bandInfo?.genero || "Rock / Indie";

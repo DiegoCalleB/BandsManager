@@ -871,7 +871,7 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
 
     // Se registra DESPUÉS de generar (no antes): si la generación falla, no queremos guardar un
     // feedback sobre un intento que nunca llegó a completarse.
-    logSetlistFeedbackIfPresent(userBandId, feedback).catch(() => {});
+    logSetlistFeedbackIfPresent(userBandId, feedback).catch((err: unknown) => console.warn("[Repertorio] No se pudo registrar el feedback del setlist:", err));
 
     res.json({ success: true, plan });
   } catch (err: any) {

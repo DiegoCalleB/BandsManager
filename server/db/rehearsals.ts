@@ -24,7 +24,7 @@ function parseSafeArray(val: any): string[] {
               typeof x === 'string' ? x : x?.name || x?.nombre || String(x)
             )
             .filter(Boolean);
-      } catch {}
+      } catch { /* asistentes guardados como texto, no JSON: se quedan como estaban */ }
     }
     return s
       .split(',')

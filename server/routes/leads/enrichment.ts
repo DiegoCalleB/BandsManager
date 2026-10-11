@@ -68,7 +68,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
           const stripped = `https://${u.hostname.replace(/^sala/, '')}`;
           if (!candidateUrls.includes(stripped)) candidateUrls.push(stripped);
         }
-      } catch (_) {}
+      } catch { /* URL mal formada: no genera variantes */ }
     }
   }
 
@@ -157,7 +157,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
       if (domain) {
         return { logo: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`, workingWebsite: siteUrl };
       }
-    } catch (_) {}
+    } catch { /* web mal formada: se prueba el siguiente método para el logo */ }
   }
 
   return null;

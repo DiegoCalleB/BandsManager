@@ -172,7 +172,7 @@ export function MetronomeModal({
         setCurrentBeat(0);
       }
       if (audioCtxRef.current && audioCtxRef.current.state === "running") {
-        audioCtxRef.current.suspend().catch(() => {});
+        audioCtxRef.current.suspend().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
     }
   }, [isOpen]);
@@ -184,7 +184,7 @@ export function MetronomeModal({
         clearInterval(timerWorkerRef.current);
       }
       if (audioCtxRef.current) {
-        audioCtxRef.current.close().catch(() => {});
+        audioCtxRef.current.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
     };
   }, []);

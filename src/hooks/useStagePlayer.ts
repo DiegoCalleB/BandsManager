@@ -166,7 +166,7 @@ export function useStagePlayer(activeSetlist: Setlist | null, songs: Song[], par
           gain.connect(stageAudioCtxRef.current.destination);
           osc.start();
           osc.stop(stageAudioCtxRef.current.currentTime + 0.06);
-        } catch {}
+        } catch { /* contexto de audio suspendido o cerrado: el clic del metrónomo se omite */ }
       }, 1000);
     } else {
       if (stageSynthIntervalRef.current) clearInterval(stageSynthIntervalRef.current);

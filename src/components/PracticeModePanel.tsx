@@ -225,7 +225,7 @@ export default function PracticeModePanel({
       } else {
         localStorage.removeItem(storageKey);
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
   }, [storageKey, overrides]);
 
   // Persistir el compás marcado (por dispositivo, igual que el resto de ajustes de práctica)
@@ -236,7 +236,7 @@ export default function PracticeModePanel({
       } else {
         localStorage.removeItem(beatAnchorStorageKey);
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
   }, [beatAnchorStorageKey, beatAnchorSec]);
 
   const getEffective = useCallback(
@@ -351,7 +351,7 @@ export default function PracticeModePanel({
         metronomeCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       const ctx = metronomeCtxRef.current;
-      if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+      if (ctx.state === 'suspended') ctx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       const anchor = anchorOverride ?? beatAnchorSec;
       const secPerBeat = 60 / (song.bpm || 120) / speed;
       const relativeTime = atTime - anchor;
@@ -429,7 +429,7 @@ export default function PracticeModePanel({
         if (el) {
           try {
             el.currentTime = clamped;
-          } catch {}
+          } catch { /* audio sin metadatos aún: no admite saltos y se sincroniza al cargar */ }
         }
       });
       setCurrentTime(clamped);
@@ -476,7 +476,7 @@ export default function PracticeModePanel({
     players.forEach((el) => {
       el.playbackRate = speed;
     });
-    await Promise.all(players.map((el) => el.play().catch(() => {})));
+    await Promise.all(players.map((el) => el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ })));
     setIsPlaying(true);
   };
 

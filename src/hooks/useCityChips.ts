@@ -72,7 +72,7 @@ export function useCityChips(
       setCustomCityChips(updated);
       try {
         localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
-      } catch {}
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
       }
@@ -88,7 +88,7 @@ export function useCityChips(
     setCustomCityChips(updated);
     try {
       localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
     if (selectedCityFilter === cityToRemove) {
       setSelectedCityFilter('');
     }

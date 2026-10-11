@@ -492,7 +492,7 @@ router.get('/public/epk', async (req, res) => {
       try {
         const { decodeTrackingToken } = await import('../routes/tracking.js');
         targetLeadId = decodeTrackingToken(trackingTokenParam)?.leadId;
-      } catch (_) {}
+      } catch { /* token de seguimiento inválido o caducado: la visita se registra sin lead */ }
     }
 
     if (targetLeadId) {
@@ -581,7 +581,7 @@ router.get('/public/epk', async (req, res) => {
         .limit(1)
         .maybeSingle();
       regBand = data;
-    } catch (e) {}
+    } catch (err) { console.warn("[EPK] Fallo leyendo la banda registrada:", err); }
 
     if (!regBand) {
       regBand = (state.registeredBands || []).find((b: any) => {
@@ -1102,7 +1102,7 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
         });
         supabaseStats = counts;
       }
-    } catch (e) {}
+    } catch (err) { console.warn("[EPK] Fallo leyendo las estadísticas de Supabase; se usan las de memoria:", err); }
 
     const state = loadState();
     const localClicks = state.clickMetricsByBand?.[targetBandId] || {};

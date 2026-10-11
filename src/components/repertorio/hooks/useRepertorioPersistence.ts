@@ -196,7 +196,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
           .then((res) => {
             if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
           })
-          .catch(() => {});
+          .catch(() => { /* sin conexión: el setlist sigue pendiente y se reintenta en la próxima sincronización */ });
       });
     };
     window.addEventListener("online", handleOnline);

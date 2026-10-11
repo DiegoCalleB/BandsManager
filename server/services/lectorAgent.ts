@@ -159,7 +159,7 @@ export async function findMatchingLeadForIncomingMessage(
         const matched = leads.find((l: any) => String(l.id) === String(msgByThread.lead_id));
         if (matched) return { lead: matched, matchReason: `Lead Message Thread/Subject (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Lector] Fallo buscando el lead por asunto del hilo; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 2: In-Reply-To & References RFC 5322 ---
@@ -199,7 +199,7 @@ export async function findMatchingLeadForIncomingMessage(
           return { lead: matched, matchReason: `RFC In-Reply-To (${ref})`, shouldAutoEnrichEmail: fromClean };
         }
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Lector] Fallo buscando el lead por In-Reply-To; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 3: Email Principal, Secundario o Alias ---
@@ -226,7 +226,7 @@ export async function findMatchingLeadForIncomingMessage(
       if (l.website) {
         try {
           webDom = new URL(l.website.startsWith("http") ? l.website : `https://${l.website}`).hostname.replace(/^www\./, "").toLowerCase();
-        } catch (_) {}
+        } catch { /* web del lead mal formada: no cuenta para emparejar por dominio */ }
       }
       return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.includes(webDom) || webDom.includes(fromDomain)));
     });

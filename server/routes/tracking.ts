@@ -127,7 +127,7 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
           memLead.historial_contacto = [nuevoContacto, ...(memLead.historial_contacto || [])].slice(0, 50);
           saveState(s);
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Tracking] No se pudo reflejar el contacto en el estado en memoria:", err); }
 
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría] 👁️ Apertura #${openCount} registrada para lead ${lead.id} (${lead.nombre_sala}) vía ${clientLabel}`);
@@ -238,7 +238,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
           memLead.historial_contacto = [...contactosToAdd, ...(memLead.historial_contacto || [])].slice(0, 50);
           saveState(s);
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Tracking] No se pudo reflejar los contactos en el estado en memoria:", err); }
 
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría] 🎯 Clic en ${accionBoton} registrado para lead ${lead.id} (${lead.nombre_sala})`);
@@ -305,7 +305,7 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
           memLead.historial_contacto = [nuevoContacto, ...(memLead.historial_contacto || [])].slice(0, 50);
           saveState(s);
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Tracking] No se pudo reflejar el contacto en el estado en memoria:", err); }
 
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría EPK] 🎯 ${cleanAction} registrada para lead ${lead.id} (${lead.nombre_sala}): ${cleanDetails}`);
@@ -426,7 +426,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
           memLead.historial_contacto = [...contactosToAdd, ...(memLead.historial_contacto || [])].slice(0, 50);
           saveState(s);
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Tracking] No se pudo reflejar los contactos en el estado en memoria:", err); }
 
       if (effectiveEmailId && idSeguro(effectiveEmailId)) {
         try {
@@ -438,7 +438,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
             })
             .in("id", [effectiveEmailId, `imap-${effectiveEmailId}`])
             .eq("band_id", lead.band_id);
-        } catch (_) {}
+        } catch (err) { console.warn("[Tracking] No se pudo marcar el correo como abierto:", err); }
       }
 
       invalidateBandStateCache(lead.band_id);

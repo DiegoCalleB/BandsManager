@@ -311,7 +311,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
     if (startIdx !== -1 && endIdx !== -1) {
       try {
         parsed = JSON.parse(cleaned.substring(startIdx, endIdx + 1));
-      } catch (_) {}
+      } catch { /* JSON del modelo mal formado: se trata como «sin datos encontrados» */ }
     }
 
     const conciertos = Array.isArray(parsed.conciertos) ? parsed.conciertos : [];

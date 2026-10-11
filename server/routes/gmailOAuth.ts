@@ -200,7 +200,7 @@ router.get("/callback", async (req, res) => {
         const profile = await profileRes.json();
         gmailEmail = profile.emailAddress || "";
       }
-    } catch (_) {}
+    } catch { /* se prueba el siguiente método para leer el email de la cuenta */ }
 
     // Fallback 1: Decodificar id_token si Google lo envió
     if (!gmailEmail && tokenData.id_token) {
@@ -210,7 +210,7 @@ router.get("/callback", async (req, res) => {
           const decoded = JSON.parse(Buffer.from(payloadBase64, "base64").toString("utf8"));
           gmailEmail = decoded.email || "";
         }
-      } catch (_) {}
+      } catch { /* se prueba el siguiente método para leer el email de la cuenta */ }
     }
 
     // Fallback 2: Endpoint userinfo clásico
@@ -223,7 +223,7 @@ router.get("/callback", async (req, res) => {
           const uData = await userinfoRes.json();
           gmailEmail = uData.email || "";
         }
-      } catch (_) {}
+      } catch { /* ningún método devolvió el email: la cuenta se conecta sin él */ }
     }
 
     await dbUpsertBandGmailOAuth({

@@ -499,7 +499,7 @@ router.get("/calendar.ics", async (req, res) => {
           if (!runOfShowMap[date]) runOfShowMap[date] = [];
           runOfShowMap[date].push(...(items || []));
         });
-      } catch (_) {}
+      } catch (err) { console.warn("[Conciertos] Fallo leyendo el run of show de la banda:", err); }
 
       try {
         const gear = await dbGetGearChecklists(bId);
@@ -507,21 +507,21 @@ router.get("/calendar.ics", async (req, res) => {
           if (!gearMap[date]) gearMap[date] = [];
           gearMap[date].push(...(items || []));
         });
-      } catch (_) {}
+      } catch (err) { console.warn("[Conciertos] Fallo leyendo el material de la banda:", err); }
 
       try {
         const sls = await dbGetSetlists(bId);
         (sls || []).forEach((sl: any) => {
           if (sl.id) setlistsMap[sl.id] = sl;
         });
-      } catch (_) {}
+      } catch (err) { console.warn("[Conciertos] Fallo leyendo los setlists de la banda:", err); }
 
       try {
         const sngs = await dbGetSongs(bId);
         (sngs || []).forEach((s: any) => {
           if (s.id) songsMap[s.id] = s;
         });
-      } catch (_) {}
+      } catch (err) { console.warn("[Conciertos] Fallo leyendo los temas de la banda:", err); }
 
       try {
         const lds = await dbGetLeads(bId);
@@ -530,7 +530,7 @@ router.get("/calendar.ics", async (req, res) => {
             venuesMap[l.nombre_sala.toLowerCase().trim()] = l;
           }
         });
-      } catch (_) {}
+      } catch (err) { console.warn("[Conciertos] Fallo leyendo las salas de la banda:", err); }
     }
 
     const pad = (n: number) => String(n).padStart(2, "0");

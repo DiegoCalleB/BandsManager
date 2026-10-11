@@ -268,7 +268,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                       if (video.currentTime < start) video.currentTime = start;
                       if (video.currentTime >= end) {
                         video.currentTime = start;
-                        video.play().catch(() => {});
+                        video.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
                       }
                     }
                   }}

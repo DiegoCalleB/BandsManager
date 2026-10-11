@@ -65,7 +65,7 @@ export const createCleanAudioRecordingPipeline = (rawStream: MediaStream, existi
   const audioCtx = existingCtx || new AudioCtxClass();
 
   if (audioCtx.state === 'suspended') {
-    audioCtx.resume().catch(() => {});
+    audioCtx.resume().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
   }
 
   const sourceNode = audioCtx.createMediaStreamSource(rawStream);
@@ -112,7 +112,7 @@ export const createCleanAudioRecordingPipeline = (rawStream: MediaStream, existi
       notch50.disconnect();
       notch60.disconnect();
       compressor.disconnect();
-    } catch (_) {}
+    } catch { /* nodos ya desconectados: nada que limpiar */ }
   };
 
   return {

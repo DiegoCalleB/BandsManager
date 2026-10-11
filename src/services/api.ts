@@ -34,7 +34,7 @@ export function getAuthHeaders(): HeadersInit {
       const u = JSON.parse(userStr);
       if (u?.band_id) activeBandId = u.band_id;
     }
-  } catch (e) {}
+  } catch { /* usuario guardado corrupto: las peticiones salen sin banda activa y el servidor decide */ }
 
   return {
     'Content-Type': 'application/json',

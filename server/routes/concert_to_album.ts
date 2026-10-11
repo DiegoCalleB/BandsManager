@@ -1246,7 +1246,7 @@ export async function getAudioSnippetPath(params: {
       if (fs.existsSync(fallbackSnippet)) {
         return fallbackSnippet;
       }
-    } catch {}
+    } catch { /* sin ffmpeg operativo no hay fragmento de reserva: se devuelve undefined */ }
   }
 }
 

@@ -213,6 +213,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 ### 5.1 Backend (Express + TypeScript)
 * **Tipado Estricto:** Prohibido añadir nuevos errores a `npx tsc --noEmit` (baseline en CI = 0 errores en código nuevo). Evitar `any` implícitos.
 * **Resiliencia ante Rechazos Asíncronos:** Mantener el handler global `unhandledRejection` en `server.ts` para evitar caídas del servidor Node ante fallos puntuales. Usar `try/catch` en todos los handlers asíncronos.
+* **Ningún catch mudo (front y back):** cada `catch` o `.catch()` registra el error con contexto (`console.warn("[Módulo] qué falló:", err)`) o lleva un comentario que diga por qué ignorarlo es correcto (temporal ya borrado, autoplay bloqueado, caché local corrupta). Una escritura en Supabase que falla nunca se ignora en silencio. Lo vigila `src/audit/catchVacios.test.ts`.
 
 * **Contrato de API:** si añades, quitas o cambias una ruta (método, ruta, middleware de auth o limitador), ejecuta `npm run docs:api` y commitea `docs/api/`. CI falla si el contrato no coincide con el código (`verify:docs`); los cambios de número de línea se ignoran a propósito. Si cambian las cifras del README (rutas, tests, migraciones), `npm run docs:metricas` las actualiza; solo falla si se desvían más de ~3 %. **Skills:** edita siempre `skills/`, nunca una copia, y ejecuta `npm run skills:sync` (CI falla si `.claude/`, `.gemini/` u `.opencode/` difieren). Las descripciones de esquemas van a mano en `docs/api/overrides.json` (ADR 0012).
 

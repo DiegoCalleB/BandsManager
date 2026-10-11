@@ -166,7 +166,7 @@ export async function separateAudioIntoStems(audioUrl: string, targetInstruments
       });
     }
 
-    tempCtx.close().catch(() => {});
+    tempCtx.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     return results;
   } catch (err) {
     console.error('Error rendering anti-phase cancelled stems:', err);

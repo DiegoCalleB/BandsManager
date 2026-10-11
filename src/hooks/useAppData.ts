@@ -62,14 +62,14 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     try {
       const cached = localStorage.getItem('bandmanager_campaigns');
       if (cached) return JSON.parse(cached);
-    } catch (_) {}
+    } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
     return DEFAULT_CAMPAIGNS;
   });
   const [activeCampaign, setActiveCampaign] = useState<BookingCampaign | null>(() => {
     try {
       const cached = localStorage.getItem('bandmanager_active_campaign');
       if (cached) return JSON.parse(cached);
-    } catch (_) {}
+    } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
     return DEFAULT_CAMPAIGNS.find((c) => c.isActive) || DEFAULT_CAMPAIGNS[0];
   });
 
@@ -98,7 +98,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
           const parsed = JSON.parse(trimmed);
           if (Array.isArray(parsed))
             return parsed.map((x) => (typeof x === 'string' ? x : x?.name || x?.nombre || String(x))).filter(Boolean);
-        } catch {}
+        } catch { /* texto no JSON: se trata como lista separada por comas */ }
       }
       return trimmed
         .split(',')

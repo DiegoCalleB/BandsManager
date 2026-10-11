@@ -67,7 +67,7 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
   // mano. En la primera visita nunca hay controller todavía, así que no dispara un refresco fantasma.
   const hadController = !!navigator.serviceWorker.controller;
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('/sw.js').catch(() => { /* sin service worker la app funciona igual, solo sin caché offline */ });
   });
   if (hadController) {
     let hasReloadedForUpdate = false;

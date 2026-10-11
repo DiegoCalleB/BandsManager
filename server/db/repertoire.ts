@@ -500,7 +500,7 @@ function parseJsonArray(val: any): any[] {
     try {
       const parsed = JSON.parse(val);
       if (Array.isArray(parsed)) return parsed;
-    } catch {}
+    } catch { /* texto no JSON: se trata como valor suelto */ }
   }
   return [];
 }
@@ -943,7 +943,7 @@ export async function dbUpsertSong(
   if (existing) {
     try {
       await sb.from("songs").delete().eq("id", payload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila previa del tema antes de reinsertar:", err); }
   }
 
   let { data, error } = await sb
@@ -955,7 +955,7 @@ export async function dbUpsertSong(
     // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
     try {
       await sb.from("songs").delete().eq("id", payload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema tras el conflicto:", err); }
     const retryIns = await sb.from("songs").insert(payload).select().single();
     data = retryIns.data;
     error = retryIns.error;
@@ -976,7 +976,7 @@ export async function dbUpsertSong(
     delete fallbackPayload.energia_variacion_calculada_en;
     try {
       await sb.from("songs").delete().eq("id", fallbackPayload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema antes del guardado reducido:", err); }
     const retry = await sb
       .from("songs")
       .insert(fallbackPayload)
@@ -1007,7 +1007,7 @@ export async function dbUpsertSong(
     if (!String(payload.cifrado_texto || "").trim()) {
       import("../services/colaLetras.js")
         .then((m) => m.encolarLetraAutomatica(targetBandId, finalSongId))
-        .catch(() => {});
+        .catch((err: unknown) => console.warn("[Repertorio] No se pudo encolar la transcripción automática del tema:", err));
     }
   }
 

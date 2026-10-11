@@ -750,7 +750,7 @@ export async function findAudioPreview(artistName: string, trackTitle: string): 
         }
       }
     }
-  } catch {}
+  } catch { /* Deezer caído o lento: se prueba iTunes */ }
 
   // 2. Try iTunes Search
   try {
@@ -765,7 +765,7 @@ export async function findAudioPreview(artistName: string, trackTitle: string): 
         }
       }
     }
-  } catch {}
+  } catch { /* iTunes caído o lento: el tema se queda sin preescucha */ }
 
   return "";
 }

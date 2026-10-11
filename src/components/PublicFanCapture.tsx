@@ -62,7 +62,7 @@ export const PublicFanCapture: React.FC = () => {
           });
         }
       })
-      .catch(() => {});
+      .catch(() => { /* sin datos de la banda la captura sigue con nombre y logo genéricos */ });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

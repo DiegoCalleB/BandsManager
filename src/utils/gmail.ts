@@ -88,7 +88,7 @@ export const initAuth = (onAuthSuccess?: (user: User, token: string) => void, on
       try {
         localStorage.removeItem(STORAGE_TOKEN_KEY);
         localStorage.removeItem(STORAGE_TOKEN_EXP_KEY);
-      } catch (e) {}
+      } catch { /* almacenamiento no disponible: el token ya se descartó en memoria */ }
       if (onAuthFailure) onAuthFailure();
     }
   });
@@ -161,7 +161,7 @@ export const logout = async () => {
   try {
     localStorage.removeItem(STORAGE_TOKEN_KEY);
     localStorage.removeItem(STORAGE_TOKEN_EXP_KEY);
-  } catch (e) {}
+  } catch { /* almacenamiento no disponible: el token ya se descartó en memoria */ }
 };
 
 // Base64URL decoder

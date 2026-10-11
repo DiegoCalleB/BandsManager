@@ -74,13 +74,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     const el = loginVideoRef.current;
     if (!el) return;
     el.muted = true;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   }, []);
   const handleReplayLoginVideo = () => {
     const el = loginVideoRef.current;
     if (!el) return;
     el.currentTime = 0;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   };
 
   // --- Login State ---
@@ -149,7 +149,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       params.delete("email");
       const resto = params.toString();
       window.history.replaceState({}, "", window.location.pathname + (resto ? `?${resto}` : "") + window.location.hash);
-    } catch {}
+    } catch { /* history no disponible (iframe con sandbox): la URL conserva los parámetros, sin efecto en el login */ }
   }, []);
   const [activateBandsFound, setActivateBandsFound] = useState<
     { band_id: string; bandName: string; role: string }[]

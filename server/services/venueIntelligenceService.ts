@@ -347,7 +347,7 @@ export async function enrichVenueDetailsWithSerper(
           ) {
             extractedWebsite = urlObj.origin;
           }
-        } catch (_) {}
+        } catch { /* URL mal formada: se descarta como web de la sala */ }
       }
 
       // Email en snippet o título

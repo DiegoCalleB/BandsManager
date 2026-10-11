@@ -192,7 +192,7 @@ export function startAgentQueueWorker(): void {
 
   // Ejecución inicial diferida de poda ligera al arrancar
   setTimeout(() => {
-    pruneOldJobs(7, 30).catch(() => {});
+    pruneOldJobs(7, 30).catch((err: unknown) => console.warn("[Agentes] No se pudieron purgar los trabajos antiguos:", err));
   }, 30000);
 
   workerLoop();

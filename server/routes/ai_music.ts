@@ -1067,10 +1067,10 @@ export async function transcodeBufferToMp3(buffer: Buffer): Promise<Buffer> {
   } finally {
     try {
       if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
-    } catch {}
+    } catch { /* el temporal ya no existe: nada que limpiar */ }
     try {
       if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
-    } catch {}
+    } catch { /* el temporal ya no existe: nada que limpiar */ }
   }
 }
 
@@ -2349,7 +2349,7 @@ export async function processServerStemsFfmpeg(
   if (tempLocalFile && fs.existsSync(tempLocalFile)) {
     try {
       fs.unlinkSync(tempLocalFile);
-    } catch (_) {}
+    } catch { /* el temporal ya no existe: nada que limpiar */ }
   }
 
   return stemsMap;

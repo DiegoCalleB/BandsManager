@@ -108,7 +108,7 @@ export const PublicEPK: React.FC<PublicEPKProps> = ({ initialData }) => {
             details,
             bandId: epkData?.bandId,
           }),
-        }).catch(() => {});
+        }).catch(() => { /* la telemetría del EPK nunca debe interrumpir al visitante */ });
       } catch {
         // el seguimiento nunca debe romper la vista del dossier
       }

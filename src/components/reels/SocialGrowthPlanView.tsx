@@ -91,7 +91,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           `growth_completed_actions_${bandName}`,
           JSON.stringify(updated),
         );
-      } catch (e) {}
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       return updated;
     });
   };

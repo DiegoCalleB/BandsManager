@@ -17,11 +17,11 @@ export function useStudioFullScreen() {
       const next = !prev;
       if (next) {
         if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => {});
+          document.documentElement.requestFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
         }
       } else {
         if (document.fullscreenElement && document.exitFullscreen) {
-          document.exitFullscreen().catch(() => {});
+          document.exitFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
         }
       }
       return next;
