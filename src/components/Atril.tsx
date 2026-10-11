@@ -530,6 +530,18 @@ export function Atril({
     return k ? extractUniqueChords(processedText).find((c) => normalizarAcorde(c) === k) ?? null : null;
   }, [acordeActivo, isPlayingAudio, processedText]);
 
+  // Los próximos acordes distintos (para la tira de diagramas de la barra fija).
+  const proximosAcordes = useMemo(() => {
+    if (acordeActivo < 0) return [] as string[];
+    const todos = acordesDelCifrado(processedText);
+    const actual = todos[acordeActivo];
+    const out: string[] = [];
+    for (let i = acordeActivo + 1; i < todos.length && out.length < 3; i++) {
+      if (todos[i] !== actual && todos[i] !== out[out.length - 1]) out.push(todos[i]);
+    }
+    return out;
+  }, [acordeActivo, processedText]);
+
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
   useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
 
@@ -975,16 +987,16 @@ export function Atril({
           )}
 
           {activeTab === "chords" && (
-            <div className="px-4 pt-3 shrink-0">
-              <AcordeActual
-                sonando={acordeSonando}
-                siguiente={sincronizado && acordeActivo >= 0 ? acordesDelCifrado(processedText)[acordeActivo + 1] ?? null : null}
-                contexto={contextoAcordes}
-                vista={vistaAcordes}
-                onVista={setVistaAcordes}
-                estiloArmonia={estiloArmonia}
-              />
-            </div>
+            <AcordeActual
+              sonando={acordeSonando}
+              proximos={sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined}
+              contexto={contextoAcordes}
+              vista={vistaAcordes}
+              onVista={setVistaAcordes}
+              estiloArmonia={estiloArmonia}
+              reproduciendo={isPlayingAudio}
+              onToggle={audioUrl ? handleToggleAudio : undefined}
+            />
           )}
 
           {/* ACORDES DETECTADOS DEL AUDIO */}

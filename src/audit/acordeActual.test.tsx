@@ -18,4 +18,19 @@ describe('AcordeActual', () => {
     expect(src).toContain('<AcordeActual');
     expect(src).toContain('label="Más acciones de la canción"');
   });
+  it('barra fija: play/pausa a mano, pegada arriba y con los próximos acordes', () => {
+    const h = renderToStaticMarkup(<AcordeActual sonando="Am" proximos={['G', 'C', 'F', 'Dm']} reproduciendo onToggle={() => {}} {...base} />);
+    expect(h).toContain('sticky top-0');
+    expect(h).toContain('aria-label="Pausar"');
+    expect(h).toContain('>G<');
+    expect(h).toContain('>F<');
+    expect(h).not.toContain('>Dm<'); // máximo 3 siguientes
+    const p = renderToStaticMarkup(<AcordeActual sonando={null} onToggle={() => {}} {...base} />);
+    expect(p).toContain('aria-label="Reproducir"');
+  });
+  it('Atril le pasa play/pausa y los próximos acordes', () => {
+    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    expect(src).toContain('onToggle={audioUrl ? handleToggleAudio : undefined}');
+    expect(src).toContain('proximos={');
+  });
 });
