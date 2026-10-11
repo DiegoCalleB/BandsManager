@@ -49,6 +49,8 @@ import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { Part } from '@google/genai';
+import type { RespuestaCifradoIA, RespuestaIdeaArreglo } from '../tiposRespuestasIA.js';
+import { unoDe } from '../utils/valoresIA.js';
 
 // Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
 // descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
@@ -671,11 +673,11 @@ Responde ÚNICAMENTE con JSON válido:
       });
 
       const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      const parsed = safeParseJson(responseText);
+      const parsed = safeParseJson<RespuestaCifradoIA>(responseText);
       if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
         generatedChords = parsed.cifradoTexto;
-        generatedGuide = parsed.guiaSustituto;
-        letraConfianza = ["alta", "media", "baja", "sin_letra"].includes(parsed.letraConfianza) ? parsed.letraConfianza : "baja";
+        generatedGuide = parsed.guiaSustituto && typeof parsed.guiaSustituto === "object" && !Array.isArray(parsed.guiaSustituto) ? parsed.guiaSustituto : null;
+        letraConfianza = unoDe(parsed.letraConfianza, ["alta", "media", "baja", "sin_letra"] as const) ?? "baja";
         esAproximado = letraConfianza !== "alta" && letraConfianza !== "sin_letra";
       }
     } catch (aiErrCapturado) {
@@ -806,9 +808,9 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
     });
 
     const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const parsed = safeParseJson(responseText);
+    const parsed = safeParseJson<RespuestaIdeaArreglo>(responseText);
 
-    if (!parsed || !parsed.tituloIdea) {
+    if (!parsed || typeof parsed.tituloIdea !== "string" || !parsed.tituloIdea.trim()) {
       return res.status(500).json({ error: "La IA no pudo generar una idea válida." });
     }
 

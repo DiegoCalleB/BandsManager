@@ -10,6 +10,8 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaHistorialSetlist } from '../tiposRespuestasIA.js';
+import { textoNoVacio, listaDeTextos } from '../utils/valoresIA.js';
 
 export interface SetlistVenueResult {
   success: boolean;
@@ -54,15 +56,16 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
       }
     });
 
-    const parsed = safeParseJson(response.text || "{}");
-    if (parsed && Array.isArray(parsed.bandas_similares_recientes) && parsed.bandas_similares_recientes.length > 0) {
+    const parsed = safeParseJson<RespuestaHistorialSetlist>(response.text || "{}");
+    const bandasSimilares = listaDeTextos(parsed?.bandas_similares_recientes);
+    if (parsed && bandasSimilares) {
       return {
         success: true,
-        bandas_similares_recientes: parsed.bandas_similares_recientes,
-        fecha_ultimo_concierto: parsed.fecha_ultimo_concierto || "Reciente",
-        generos_habituales: Array.isArray(parsed.generos_habituales) ? parsed.generos_habituales : ["Live Directo", "Fusión"],
-        promotores_frecuentes: Array.isArray(parsed.promotores_frecuentes) ? parsed.promotores_frecuentes : ["Promoción Independiente"],
-        referencia_pitch_sugerida: parsed.referencia_pitch_sugerida || `Gran admiración por el mimo que ponéis en la programación cultural de ${cleanVenue}.`
+        bandas_similares_recientes: bandasSimilares,
+        fecha_ultimo_concierto: textoNoVacio(parsed.fecha_ultimo_concierto) || "Reciente",
+        generos_habituales: listaDeTextos(parsed.generos_habituales) ?? ["Live Directo", "Fusión"],
+        promotores_frecuentes: listaDeTextos(parsed.promotores_frecuentes) ?? ["Promoción Independiente"],
+        referencia_pitch_sugerida: textoNoVacio(parsed.referencia_pitch_sugerida) || `Gran admiración por el mimo que ponéis en la programación cultural de ${cleanVenue}.`
       };
     }
   } catch (errCapturado) {

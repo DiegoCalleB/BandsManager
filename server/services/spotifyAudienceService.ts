@@ -11,6 +11,8 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaAudienciaSpotify } from '../tiposRespuestasIA.js';
+import { numeroFinito, textoNoVacio } from '../utils/valoresIA.js';
 
 export interface SpotifyCityDemandResult {
   success: boolean;
@@ -56,21 +58,22 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
       }
     });
 
-    const parsed = safeParseJson(response.text || "{}");
-    if (parsed && typeof parsed.oyentes_ciudad === "number") {
-      const oyentes = Math.max(100, parsed.oyentes_ciudad);
-      const tickets = Math.min(capacity, Math.max(15, parsed.prediccion_entradas || Math.round(capacity * 0.65)));
+    const parsed = safeParseJson<RespuestaAudienciaSpotify>(response.text || "{}");
+    const oyentesIA = numeroFinito(parsed?.oyentes_ciudad);
+    if (parsed && oyentesIA !== undefined) {
+      const oyentes = Math.max(100, oyentesIA);
+      const tickets = Math.min(capacity, Math.max(15, numeroFinito(parsed.prediccion_entradas) || Math.round(capacity * 0.65)));
       const ocupacion = Math.min(100, Math.round((tickets / capacity) * 100));
 
       return {
         success: true,
         ciudad: cleanCity,
         oyentes_ciudad: oyentes,
-        afinidad_genero: parsed.afinidad_genero || 85,
+        afinidad_genero: numeroFinito(parsed.afinidad_genero) || 85,
         prediccion_entradas: tickets,
         porcentaje_ocupacion_estimado: ocupacion,
-        top_ciudades_ranking: parsed.top_ciudades_ranking || 1,
-        resumen_audiencia: parsed.resumen_audiencia || `Mercado clave con alta afinidad para directos de ${cleanGenre}.`
+        top_ciudades_ranking: numeroFinito(parsed.top_ciudades_ranking) || 1,
+        resumen_audiencia: textoNoVacio(parsed.resumen_audiencia) || `Mercado clave con alta afinidad para directos de ${cleanGenre}.`
       };
     }
   } catch (errCapturado) {

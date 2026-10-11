@@ -13,6 +13,7 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { searchMusicBrainzVenues } from "./musicbrainzVenueService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaListaVenues } from '../tiposRespuestasIA.js';
 
 export interface DiscoveredVenue {
   nombre: string;
@@ -270,7 +271,7 @@ Devuelve máximo ${limit} recintos REALES y verificados en activo.`;
         }
       });
 
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaListaVenues<Partial<DiscoveredVenue>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.venues)) {
         parsed.venues.forEach((v: Partial<DiscoveredVenue>) => {
           // Deduplicar si ya existe en Ticketmaster o Setlist.fm

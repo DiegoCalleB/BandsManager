@@ -2,6 +2,8 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { dbGetSongs, dbUpsertSong } from "../db/repertoire.js";
 import { safeParseJson } from "../utils.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaDatosCover } from '../tiposRespuestasIA.js';
+import { textoNoVacio } from './valoresIA.js';
 
 export interface EnrichedCoverResult {
   songId: string;
@@ -87,17 +89,20 @@ REGLAS OBLIGATORIAS:
           responseText = aiRes.candidates[0].content.parts.map((p) => p.text || "").join("\n");
         }
 
-        const parsed = safeParseJson(responseText);
+        const parsed = safeParseJson<RespuestaDatosCover>(responseText);
         if (parsed && typeof parsed === 'object') {
-          if (parsed.tonalidadOriginal) tonoNuevo = String(parsed.tonalidadOriginal).trim();
+          const tono = textoNoVacio(parsed.tonalidadOriginal)?.trim();
+          if (tono) tonoNuevo = tono;
           if (parsed.bpmOriginal && Number(parsed.bpmOriginal) > 40 && Number(parsed.bpmOriginal) < 250) {
             bpmNuevo = Math.round(Number(parsed.bpmOriginal));
           }
           if (parsed.energia && Number(parsed.energia) >= 1 && Number(parsed.energia) <= 20) {
             energiaNueva = Math.round(Number(parsed.energia));
           }
-          if (parsed.artistaOriginal) artistaOriginal = String(parsed.artistaOriginal).trim();
-          if (parsed.generoRock) genero = String(parsed.generoRock).trim();
+          const artista = textoNoVacio(parsed.artistaOriginal)?.trim();
+          if (artista) artistaOriginal = artista;
+          const generoIA = textoNoVacio(parsed.generoRock)?.trim();
+          if (generoIA) genero = generoIA;
         }
       }
 

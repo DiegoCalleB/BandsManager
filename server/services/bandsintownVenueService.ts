@@ -1,6 +1,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaListaVenues } from '../tiposRespuestasIA.js';
 
 export interface BandsintownVenueEvent {
   nombre_sala: string;
@@ -101,7 +102,7 @@ Devuelve máximo ${limit} salas o recintos REALES.`;
           temperature: 0.2
         }
       });
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaListaVenues<Partial<BandsintownVenueEvent>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.venues)) {
         parsed.venues.forEach((v: Partial<BandsintownVenueEvent>) => {
           if (v.nombre_sala) {

@@ -28,6 +28,7 @@ import {
   variantesPieza,
   type HitoId,
 } from '../../src/utils/campanaConcierto.js';
+import type { RespuestaVariantesCampana } from '../tiposRespuestasIA.js';
 
 export const campanaConciertoRouter = express.Router();
 
@@ -87,7 +88,7 @@ Devuelve SOLO un JSON: {"variantes":["texto 1","texto 2"]}`;
 
   try {
     const respuesta = await generateContentWithFallback(client, { contents: prompt, bandId: args.bandId });
-    const crudo = safeParseJson(respuesta.text || '');
+    const crudo = safeParseJson<RespuestaVariantesCampana>(respuesta.text || '');
     const lista: unknown[] = Array.isArray(crudo?.variantes) ? crudo.variantes : [];
     const limpias = lista.map((v) => sanearVarianteIA(v, args.enlace)).filter((v): v is string => !!v);
     if (limpias.length >= 2 && limpias[0] !== limpias[1]) return [limpias[0], limpias[1]];

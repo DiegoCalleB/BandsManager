@@ -48,6 +48,7 @@ import { decodeBandId } from '../utils/bandHash.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { Concert, RegisteredBand, Song } from '../../src/types.js';
 import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
+import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
 
 const router = express.Router();
 
@@ -346,7 +347,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       respuesta?.text ||
       respuesta?.candidates?.[0]?.content?.parts?.[0]?.text ||
       '';
-    const crudo = safeParseJson(textoRespuesta);
+    const crudo = safeParseJson<RespuestaTraduccionEpk>(textoRespuesta);
 
     // GUARDARRAÍL CRÍTICO: la cadena de fallbacks de ai.ts termina en un motor local que
     // devuelve una PLANTILLA DE PITCH EN ESPAÑOL disfrazada de respuesta del modelo. Si eso se

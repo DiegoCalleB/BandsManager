@@ -8,6 +8,8 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaFichaGooglePlaces } from '../tiposRespuestasIA.js';
+import { numeroFinito, textoNoVacio, listaDeTextos } from '../utils/valoresIA.js';
 
 export interface GooglePlacesVenueResult {
   success: boolean;
@@ -58,8 +60,9 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
       }
     });
 
-    const parsed = safeParseJson(response.text || "{}");
-    if (parsed && typeof parsed.rating === "number") {
+    const parsed = safeParseJson<RespuestaFichaGooglePlaces>(response.text || "{}");
+    const rating = numeroFinito(parsed?.rating);
+    if (parsed && rating !== undefined) {
       const defaultPhotos = [
         "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
         "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80"
@@ -67,13 +70,13 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
 
       return {
         success: true,
-        rating: Math.min(5.0, Math.max(3.0, parsed.rating)),
-        total_reviews: Math.max(25, parsed.total_reviews || 240),
-        fotos: Array.isArray(parsed.fotos) && parsed.fotos.length > 0 ? parsed.fotos : defaultPhotos,
-        horario_carga: parsed.horario_carga || "Carga habitual 17:30h - 19:00h | Soundcheck 19:00h",
-        resumen_acustica: parsed.resumen_acustica || "Sonido balanceado y buena pegada en graves para directos.",
-        acceso_backline: parsed.acceso_backline || "Acceso principal a pie de calle con zona de descarga próxima.",
-        place_id: parsed.place_id || `place-${Date.now()}`
+        rating: Math.min(5.0, Math.max(3.0, rating)),
+        total_reviews: Math.max(25, numeroFinito(parsed.total_reviews) || 240),
+        fotos: listaDeTextos(parsed.fotos) ?? defaultPhotos,
+        horario_carga: textoNoVacio(parsed.horario_carga) || "Carga habitual 17:30h - 19:00h | Soundcheck 19:00h",
+        resumen_acustica: textoNoVacio(parsed.resumen_acustica) || "Sonido balanceado y buena pegada en graves para directos.",
+        acceso_backline: textoNoVacio(parsed.acceso_backline) || "Acceso principal a pie de calle con zona de descarga próxima.",
+        place_id: textoNoVacio(parsed.place_id) || `place-${Date.now()}`
       };
     }
   } catch (errCapturado) {

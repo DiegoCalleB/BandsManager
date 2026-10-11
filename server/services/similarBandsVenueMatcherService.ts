@@ -10,6 +10,7 @@ import { safeParseJson } from "../utils.js";
 import { searchSetlistFmVenues } from "./multiSourceVenueDiscoveryService.js";
 import { getVenuesFromBandsintown } from "./bandsintownVenueService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaMatchesSalas } from '../tiposRespuestasIA.js';
 
 export interface SimilarVenueMatch {
   nombre_sala: string;
@@ -136,7 +137,7 @@ Devuelve máximo ${limit} recintos REALES y recomendados.`;
         }
       });
 
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaMatchesSalas<Partial<SimilarVenueMatch>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.matches)) {
         parsed.matches.forEach((item: Partial<SimilarVenueMatch>) => {
           const exists = matches.some(m => m.nombre_sala.toLowerCase() === (item.nombre_sala || "").toLowerCase());
