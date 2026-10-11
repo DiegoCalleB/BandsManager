@@ -15,6 +15,7 @@ const apoyoAproximado = (cache: number, pct: number) =>
   pct > 0 && cache > 0 ? Math.min(500, Math.max(1, Math.round((cache * pct) / 100))) : 0;
 import { useApoyableDeals } from '../../hooks/useApoyableDeals';
 import { DealSupportCard } from './DealSupportCard';
+import { leerTokenDeSesion } from '../../services/sesionLocal';
 
 interface FastDealModalProps {
   isOpen: boolean;
@@ -79,7 +80,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
     // Fetch existing deal if any
     const fetchExistingDeal = async () => {
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         const res = await fetch(`/api/deals/lead/${lead.id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
@@ -126,7 +127,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
     setErrorMsg(null);
 
     try {
-      const token = localStorage.getItem('bandmanager_token');
+      const token = leerTokenDeSesion();
       const res = await fetch('/api/deals', {
         method: 'POST',
         headers: {

@@ -1,6 +1,7 @@
 import { api } from '../services/api';
 import { User } from '../types';
 import { syncCalendarPreferencesFromUser } from './calendarViewPreferences';
+import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
 
 export const TUTORIAL_STORAGE_PREFIX = 'bm_tutorial_seen_';
 export const ONBOARDING_GLOBAL_KEY = 'bandmanager_onboarding_completed';
@@ -85,9 +86,8 @@ export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
 
   // 3. Comprobación en usuario en caché de localStorage
   try {
-    const cachedUserStr = localStorage.getItem('bandmanager_user');
-    if (cachedUserStr) {
-      const parsed = JSON.parse(cachedUserStr);
+    const parsed = leerUsuarioDeSesion();
+    if (parsed) {
       if (parsed?.ui_preferences?.tutorials_seen?.includes(moduleId)) {
         localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
         return true;
@@ -115,9 +115,8 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   let currentTutorials: string[] = [];
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bandmanager_user');
-      if (cachedUserStr) {
-        const user = JSON.parse(cachedUserStr);
+      const user = leerUsuarioDeSesion();
+      if (user) {
         const currentPrefs = user.ui_preferences || {};
         currentTutorials = Array.isArray(currentPrefs.tutorials_seen) ? currentPrefs.tutorials_seen : [];
         if (!currentTutorials.includes(moduleId)) {
@@ -135,7 +134,7 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   // 3. Persistir en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_token') || localStorage.getItem('token') : null;
+      const token = leerTokenDeSesion();
 
       if (token) {
         const response = await api.saveUiPreferences({
@@ -225,9 +224,8 @@ export async function markOnboardingCompleted(
 
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bandmanager_user');
-      if (cachedUserStr) {
-        const user = JSON.parse(cachedUserStr);
+      const user = leerUsuarioDeSesion();
+      if (user) {
         const currentPrefs = user.ui_preferences || {};
         updatedOnboardingBands = Array.isArray(currentPrefs.onboarding_completed_bands) ? [...currentPrefs.onboarding_completed_bands] : [];
         updatedWizardBands = Array.isArray(currentPrefs.profile_wizard_completed_bands)
@@ -253,7 +251,7 @@ export async function markOnboardingCompleted(
   // 3. Sincronizar en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_token') || localStorage.getItem('token') : null;
+      const token = leerTokenDeSesion();
 
       if (token) {
         const response = await api.saveUiPreferences({

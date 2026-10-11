@@ -123,6 +123,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 5. **No hay "caché local persistente" para datos de banda:** si se necesita persistencia real (no perder cambios entre recargas), eso vive en Supabase vía API. localStorage es transporte prohibido.
 
+6. **Lectura de la sesión:** el token, el usuario y la banda activa se leen con `src/services/sesionLocal.ts` (`leerTokenDeSesion`, `leerUsuarioDeSesion`, `leerBandaActiva`), nunca con `localStorage.getItem` directo; lo vigila `src/audit/lecturaDeSesion.test.ts`.
+
 ---
 
 ## 🤖 3. Reglas de Negocio de Agentes IA (Human-in-the-Loop)

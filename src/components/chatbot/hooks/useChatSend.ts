@@ -5,6 +5,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import type { User } from "../../../types";
 import type { ChatAutonomyConfig, ChatMessage, ProposedAction } from "../chatTypes";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -45,7 +46,7 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('bandmanager_token');
+      const token = leerTokenDeSesion();
       const activeBandId = currentUser?.band_id || '';
       const response = await fetch('/api/chat', {
         method: 'POST',

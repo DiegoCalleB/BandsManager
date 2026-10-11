@@ -24,6 +24,7 @@ Exporta: AtrilAudioParams, useAtrilAudio.
 - [[src_hooks_useMezclaStems|src/hooks/useMezclaStems.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useSeparacionIris|src/hooks/useSeparacionIris.ts]] *(Layer: #hook, Domain: #repertoire)*
 - [[src_hooks_useTonoAudio|src/hooks/useTonoAudio.ts]] *(Layer: #hook, Domain: #repertoire)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*

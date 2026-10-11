@@ -20,6 +20,7 @@ Envía el mensaje del usuario al asistente y encadena la respuesta con sus accio
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

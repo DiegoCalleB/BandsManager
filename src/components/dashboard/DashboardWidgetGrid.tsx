@@ -43,6 +43,7 @@ import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
+import { leerUsuarioDeSesion } from '../../services/sesionLocal';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -186,9 +187,8 @@ export function DashboardWidgetGrid({
       const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
       const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
       try {
-        const cached = localStorage.getItem("bandmanager_user");
-        if (cached) {
-          const user = JSON.parse(cached);
+        const user = leerUsuarioDeSesion();
+        if (user) {
           user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
           localStorage.setItem("bandmanager_user", JSON.stringify(user));
         }

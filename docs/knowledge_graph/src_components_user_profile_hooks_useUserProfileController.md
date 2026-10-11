@@ -27,6 +27,7 @@ Controlador del perfil de usuario: compone identidad, plan y bandas, y gestiona 
 - [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_temaEspectro|src/utils/temaEspectro.ts]] *(Layer: #service, Domain: #system)*
 
 ---

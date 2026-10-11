@@ -12,6 +12,7 @@ import {
   Message,
   BookingCampaign,
 } from '../types';
+import { leerTokenDeSesion, leerBandaActiva } from './sesionLocal';
 
 export class ApiError extends Error {
   status: number;
@@ -26,15 +27,8 @@ export class ApiError extends Error {
 }
 
 export function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token');
-  let activeBandId = '';
-  try {
-    const userStr = localStorage.getItem('bandmanager_user');
-    if (userStr) {
-      const u = JSON.parse(userStr);
-      if (u?.band_id) activeBandId = u.band_id;
-    }
-  } catch { /* usuario guardado corrupto: las peticiones salen sin banda activa y el servidor decide */ }
+  const token = leerTokenDeSesion();
+  const activeBandId = leerBandaActiva();
 
   return {
     'Content-Type': 'application/json',

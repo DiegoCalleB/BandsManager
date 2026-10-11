@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../../services/api";
 import type { ActiveAgentRun, AgentRunStep, ChatAutonomyConfig, RemoteAgentRun } from "../chatTypes";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /**
  * Estado de los agentes autónomos, su configuración y el seguimiento de la ejecución activa.
@@ -106,7 +107,7 @@ export function useAgentRuns() {
       }
 
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         const pat = localStorage.getItem('bandmanager_github_pat') || '';
         const owner = localStorage.getItem('bandmanager_github_owner') || '';
         const repo = localStorage.getItem('bandmanager_github_repo') || '';

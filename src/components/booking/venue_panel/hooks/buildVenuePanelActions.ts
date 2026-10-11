@@ -12,6 +12,7 @@ import React,{ Dispatch,RefObject,SetStateAction } from "react";
 import { InteractionLog,Lead,LeadStatus,Setlist } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
 import { camposCambiados } from "../../../../utils/camposCambiados";
+import { leerTokenDeSesion } from '../../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface buildVenuePanelActionsParams {
@@ -67,10 +68,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
     setFeedbackSuccessMsg(null);
     const providerToUse = targetProvider || selectedAiModel;
     try {
-      const token =
-        localStorage.getItem("bandmanager_token") ||
-        localStorage.getItem("token") ||
-        "";
+      const token = leerTokenDeSesion();
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };
@@ -148,10 +146,7 @@ export function buildVenuePanelActions({ setIsRegeneratingPitch, setFeedbackSucc
     if (!selectedLead) return;
     setIsRevertingPitch(true);
     try {
-      const token =
-        localStorage.getItem("bandmanager_token") ||
-        localStorage.getItem("token") ||
-        "";
+      const token = leerTokenDeSesion();
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };

@@ -27,7 +27,7 @@ Se mantiene el contrato público (`Atril`, mismas props `cancion`/`modo`/`onClos
 - Los tests de auditoría que leían `Atril.tsx` como texto (once archivos) pasan a leer el contenedor y todos los módulos de `atril/` con `src/audit/leerAtril.ts`.
 
 ## Deuda conocida
-`useAtrilEditing` y `useAtrilAudio` leen el token y el usuario de `localStorage` directamente en vez de pasar por un servicio de sesión, y `useAtrilHarmony` guarda la preferencia de interfaz `bm_vibrar_acorde` (no son datos de banda; el test de contrato la exime).
+~~`useAtrilEditing` y `useAtrilAudio` leen el token y el usuario de `localStorage` directamente~~ (resuelto el 2026-10-11: pasan por `src/services/sesionLocal.ts`). `useAtrilHarmony` guarda la preferencia de interfaz `bm_vibrar_acorde` (no son datos de banda; el test de contrato la exime).
 
 ## Consecuencias
 Tests de contrato en `atril/__tests__/`: contenedor <400 líneas, `renderFormattedChordSheet` sigue importable desde `Atril`, hooks y vistas bien formados y <400 líneas, el contexto falla fuera del proveedor y sin `any` ni HTML crudo.

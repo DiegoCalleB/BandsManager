@@ -14,6 +14,7 @@ import type { ResolvedUserProfileProps } from "../../UserProfileModal";
 import { usePlanSummary } from "./usePlanSummary";
 import { useProfileBands } from "./useProfileBands";
 import { useProfileIdentity } from "./useProfileIdentity";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /**
  * Estado y acciones del perfil de usuario.
@@ -84,7 +85,7 @@ export function useUserProfileController({
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("bandmanager_token");
+      const token = leerTokenDeSesion();
       if (
         selectedMainBandId &&
         selectedMainBandId !==

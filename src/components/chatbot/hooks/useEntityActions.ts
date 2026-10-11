@@ -7,6 +7,7 @@ import { api } from "../../../services/api";
 import { Concert, Lead, Rehearsal, User } from "../../../types";
 import { getErrorMessage } from "../../../utils/errorMessage";
 import { ChatMessage, ProposedAction } from "../chatTypes";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface EntityActionsParams {
@@ -75,7 +76,7 @@ export function useEntityActions({ leads, onUpdateLead, updateActionStatusInMess
     };
 
     try {
-      const token = localStorage.getItem('bandmanager_token');
+      const token = leerTokenDeSesion();
       const activeBandId = currentUser?.band_id || '';
       await fetch('/api/bands', {
         method: 'POST',
@@ -120,7 +121,7 @@ export function useEntityActions({ leads, onUpdateLead, updateActionStatusInMess
       onAddConcert(concertData);
     } else {
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         await fetch('/api/concerts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -179,7 +180,7 @@ export function useEntityActions({ leads, onUpdateLead, updateActionStatusInMess
       onAddRehearsal(rehearsalData);
     } else {
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         await fetch('/api/rehearsals', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -221,7 +222,7 @@ export function useEntityActions({ leads, onUpdateLead, updateActionStatusInMess
     };
 
     try {
-      const token = localStorage.getItem('bandmanager_token');
+      const token = leerTokenDeSesion();
       await fetch('/api/tours', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
@@ -261,7 +262,7 @@ export function useEntityActions({ leads, onUpdateLead, updateActionStatusInMess
       });
     } else if (targetBandId) {
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         await fetch(`/api/bands/${targetBandId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },

@@ -7,6 +7,7 @@ import { formatSecondsToMmSs } from "../../utils/repertorioUtils";
 import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
+import { leerTokenDeSesion } from '../../services/sesionLocal';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -352,7 +353,7 @@ export function BulkAlbumAudioUploaderModal({
     stopPreview();
     setFeedbackMsg(null);
 
-    const token = localStorage.getItem("bandmanager_token");
+    const token = leerTokenDeSesion();
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

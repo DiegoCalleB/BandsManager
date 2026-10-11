@@ -1,3 +1,4 @@
+import { leerTokenDeSesion, leerBandaActiva } from '../services/sesionLocal';
 // Centralized authenticated API fetch helper for BandsManager
 
 /**
@@ -22,20 +23,11 @@ export class ApiRequestError extends Error {
 
 /** Banda activa del usuario, para que el backend sepa sobre qué banda opera la petición. */
 export function getActiveBandId(): string {
-  try {
-    const userStr = localStorage.getItem('bandmanager_user');
-    if (userStr) {
-      const u = JSON.parse(userStr);
-      if (u?.band_id) return String(u.band_id);
-    }
-  } catch {
-    /* localStorage con JSON corrupto: seguimos sin banda explícita */
-  }
-  return '';
+  return leerBandaActiva();
 }
 
 function buildHeaders(options: RequestInit): Record<string, string> {
-  const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token');
+  const token = leerTokenDeSesion();
   const headers: Record<string, string> = {
     ...((options.headers as Record<string, string>) || {}),
   };

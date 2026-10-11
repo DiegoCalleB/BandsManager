@@ -9,6 +9,7 @@ import { apiFetch } from "../../../utils/api";
 import { ColaBanda } from "../../booking/BandPreviewPlayer";
 import { BulkProgressItem } from "../../booking/BulkProgressModal";
 import type { MetricasBanda } from "../bandMetrics";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface BandCrmDataParams {
@@ -75,8 +76,7 @@ export function useBandCrmData({ bandName, currentBandId, leads }: BandCrmDataPa
   };
 
   useEffect(() => {
-    const token =
-      localStorage.getItem("bandmanager_token") || localStorage.getItem("token");
+    const token = leerTokenDeSesion();
     if (token) {
       fetchBands();
     }

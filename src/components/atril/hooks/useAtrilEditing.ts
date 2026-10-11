@@ -6,6 +6,7 @@ import { Dispatch,SetStateAction } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { apiFetch } from "../../../utils/api";
 import { guardarOReverter } from "../../../utils/guardarConReversion";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /** Respuesta de `/api/songs/:id/letra-sincronizada`. */
 interface RespuestaLetraSincronizada {
@@ -58,7 +59,7 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
     if (!analisisAcordes) return;
     const anterior = song;
     onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, segmentos } });
-    const token = localStorage.getItem("bandmanager_token") || localStorage.getItem("token") || "";
+    const token = leerTokenDeSesion();
     const headers: Record<string, string> = { "Content-Type": "application/json" };
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
@@ -138,10 +139,7 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
     };
 
     // Save to server
-    const token =
-      localStorage.getItem("bandmanager_token") ||
-      localStorage.getItem("token") ||
-      "";
+    const token = leerTokenDeSesion();
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };

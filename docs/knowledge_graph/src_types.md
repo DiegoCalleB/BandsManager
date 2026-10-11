@@ -476,6 +476,7 @@ _Sin dependencias salientes directas._
 - [[src_hooks_useStagePlayer|src/hooks/useStagePlayer.ts]] *(from #hook)*
 - [[src_hooks_useStudioShareModal|src/hooks/useStudioShareModal.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*

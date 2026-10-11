@@ -1072,6 +1072,12 @@ export interface User {
       mobile?: "1" | "2";
       desktop?: "1" | "2";
     };
+    /** Módulos cuya guía rápida ya vio el usuario. */
+    tutorials_seen?: string[];
+    onboarding_completed?: boolean;
+    /** Bandas en las que el usuario ya completó el onboarding / el asistente de perfil. */
+    onboarding_completed_bands?: string[];
+    profile_wizard_completed_bands?: string[];
     [key: string]: unknown;
   };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente

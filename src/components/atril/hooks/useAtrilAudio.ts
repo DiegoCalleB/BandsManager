@@ -19,6 +19,7 @@ import { instrumentoDelUsuario } from "../../../utils/instrumentoProfesor";
 import { cancionConIdeas,pistasDeCancion } from "../../../utils/irisTracks";
 import { ModoEscucha,pistaDelUsuario,pistasParaModo } from "../../../utils/mezclaStems";
 import { MotorIris,ideaParaSeparar } from "../../../utils/separacionIris";
+import { leerUsuarioDeSesion } from '../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AtrilAudioParams {
@@ -91,9 +92,8 @@ export function useAtrilAudio({ song, onUpdateSong, ajustes, transpose, setAiSuc
       const fichero = new File([grabacion.toma.blob], `${id}.${extension}`, { type: tipo });
       const url = await uploadFileToServer(fichero, { bandId: getActiveBandId() || undefined, folder: carpetaDeIdea(String(song.id)) });
       const instrumento = miId ? stems.find((p) => p.id === miId)?.nombre : undefined;
-      const usuario = (() => {
-        try { const u = JSON.parse(localStorage.getItem("bandmanager_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
-      })();
+      const sesion = leerUsuarioDeSesion();
+      const usuario = sesion?.name || sesion?.username || "Banda";
       const idea = crearIdeaDeAtril({
         id,
         titulo: tituloDeToma(instrumento, song.audioIdeas || []),

@@ -20,6 +20,7 @@ Lanza un agente autónomo propuesto por el asistente y registra su ejecución pa
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
 

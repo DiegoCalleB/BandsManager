@@ -15,6 +15,7 @@ import { Song } from "../../types";
 import { isImageDocument, isPdfDocument } from "../../utils/documentType";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
+import { leerTokenDeSesion } from '../../services/sesionLocal';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -149,10 +150,7 @@ export const SongStudioStructureUploadModal: React.FC<
     setIsSavingVerified(true);
     onUpdateSong(updatedSong);
     try {
-      const token =
-        localStorage.getItem("bandmanager_token") ||
-        localStorage.getItem("token") ||
-        "";
+      const token = leerTokenDeSesion();
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };

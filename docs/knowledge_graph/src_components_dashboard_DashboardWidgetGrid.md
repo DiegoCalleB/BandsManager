@@ -28,6 +28,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_hooks_useScrollLock|src/hooks/useScrollLock.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useVisualViewportOverlayStyle|src/hooks/useVisualViewportOverlayStyle.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*

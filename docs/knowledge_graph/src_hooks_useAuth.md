@@ -20,6 +20,7 @@ Exporta: useAuth.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_referido|src/utils/referido.ts]] *(Layer: #service, Domain: #system)*

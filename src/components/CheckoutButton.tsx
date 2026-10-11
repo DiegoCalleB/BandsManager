@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { ThemeColors } from '../types';
 import { api } from '../services/api';
+import { leerUsuarioDeSesion } from '../services/sesionLocal';
 
 interface CheckoutButtonProps {
   planId: string;
@@ -40,9 +41,8 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
 
       if (!effectiveEmail || !effectiveBandId) {
         try {
-          const storedUser = localStorage.getItem('bandmanager_user');
-          if (storedUser) {
-            const parsed = JSON.parse(storedUser);
+          const parsed = leerUsuarioDeSesion();
+          if (parsed) {
             if (!effectiveEmail && parsed.email) effectiveEmail = parsed.email;
             if (!effectiveBandId && parsed.band_id) effectiveBandId = parsed.band_id;
           }
