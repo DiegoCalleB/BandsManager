@@ -913,6 +913,18 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
 </section>
 ''')
 
+# «Y mucho más»: las funciones del anexo vuelven en ráfaga (modo película), una cada 4 pulsos de «Compila ou Morre» (1,3 s)
+RAFAGA = [('Bandas amigas', 'Escúchalas y mira sus números', 'video/v-spotify.jpg'), ('Curva de energía', 'La IA ordena el setlist', 'video/v-energia.jpg'),
+          ('Profesor de armonía', 'Qué escala tocar encima', 'video/v-profesor.jpg'), ('Ideas', 'Cada idea, en su canción', 'video/v-ideas.jpg'),
+          ('Ficha del bolo', 'Tiempo, rider y logística', 'img/d-h-evento.jpg'), ('Merchan', 'Camisetas con vuestro QR', 'img/d-h-merchan.jpg'),
+          ('Del concierto al disco', 'El directo, en canciones', 'img/d-h-concierto-disco.jpg'), ('Giras', 'La gasolina, calculada', 'video/v-giras.jpg')]
+_k = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
+assert len(_k) == 1
+_r = ('<div class="rafaga" aria-hidden="true">' + ''.join(
+    f'<figure class="rf" style="--k:{k}"><img src="{src}" alt=""><figcaption><b>{t}</b><span>{s}</span></figcaption></figure>' for k, (t, s, src) in enumerate(RAFAGA))
+    + f'<p class="rf rf-fin" style="--k:{len(RAFAGA)}">Y todo, en la misma app.</p></div>\n')
+_x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rindex('</section>'):]
+
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
 ANEXO = ['Bandas amigas', 'La curva de energía', 'El profesor de armonía', 'Las ideas, en su sitio', 'La ficha del bolo',
@@ -927,6 +939,37 @@ for t in ANEXO:
 S[:] = [x for x in S if x] + [scene('Anexo', 'Anexo · Para las preguntas', 'Lo que no cupo en la película.', 'img/concierto-2.jpg',
                                      '<p class="scene-foot">Más funciones de BandManager, por si el tribunal quiere verlas.</p>').replace(
                                          'data-title="Anexo"', 'data-title="Anexo" data-anexo', 1)] + fuera
+# Fichas de cada función (solo en modo película): el titular dice qué es; la ficha, qué hace. Como el rótulo de una keynote:
+# entra cuando la cámara sube hacia la pantalla y luego se queda pequeña, con su número. Todo lo que dicen existe en la app.
+FICHAS = {
+    'Todas las salas, en un sitio': ('Booking', 'Todas las salas y festivales, en el mapa y con cada conversación guardada.', ['Agente Scout: busca salas nuevas', 'Mapa de toda España', 'Historial de cada sala']),
+    'La IA escribe, tú apruebas': ('Pitch con IA', 'Escribe a cada sala con el tono de la banda. Nada sale sin tu visto bueno.', ['Gemini o DeepSeek', 'Aprobación humana', 'Avisa cuando lo abren']),
+    'Date Swap': ('Date Swap', 'Cambia fechas con otra banda: tú tocas en su ciudad y ella en la tuya.', ['Propuesta redactada por IA', 'Cartel doble']),
+    'Cambio de perfil': ('Varias bandas, una cuenta', 'Cambias de banda como de perfil. Lo de una banda nunca se ve en otra.', ['Hasta cinco bandas', 'Aislamiento por banda']),
+    'El acuerdo, firmado desde BandManager': ('Acuerdo firmado', 'Fecha, caché, rider y camerino, por escrito. La sala firma desde un enlace.', ['Sin instalar nada', 'Copia para la sala']),
+    'Una hoja para cada músico': ('Setlist', 'Una hoja impresa distinta para cada músico, con sus notas, tonos y BPM.', ['Cada uno elige qué ve', 'Con el logo de la banda']),
+    'Los acordes pasan solos': ('Atril', 'La letra y los acordes avanzan solos mientras suena la canción.', ['Sincronizado con el audio', 'Para cada tema del repertorio']),
+    'Iris separa los instrumentos': ('Iris', 'Separa la voz, la batería, el bajo y las guitarras de cualquier canción.', ['Pistas separadas con IA', 'Ideas sobre vuestras pistas']),
+    'Calendario de la banda': ('Calendario', 'Ensayos y bolos en un calendario, cada fecha con su ficha.', ['El tiempo de cada bolo', 'Aviso de puentes y festivos']),
+    'Choques en el calendario': ('Aviso de choques', 'Avisa si dos eventos se pisan o si no da tiempo a llegar.', ['Músicos en varias bandas', 'Solo avisa si afecta a alguien']),
+    'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
+    'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
+    'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
+}
+_nf = 0
+for i, x in enumerate(S):
+    t = re.search(r'data-title="([^"]+)"', x)
+    if not t or t.group(1) not in FICHAS or t.group(1) in ANEXO:
+        continue
+    _nf += 1
+    nombre, frase, chips = FICHAS[t.group(1)]
+    ficha = (f'<aside class="ficha" aria-hidden="true"><i>{_nf:02d}<small>/{len(FICHAS):02d}</small></i><b>{nombre}</b><p>{frase}</p>'
+             + ''.join(f'<span>{c}</span>' for c in chips) + '</aside>\n')
+    k = x.rindex('</section>')
+    S[i] = x[:k] + '  ' + ficha + x[k:]
+assert _nf == len(FICHAS), _nf
+
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
 html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),

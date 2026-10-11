@@ -426,3 +426,8 @@
   addEventListener('voz', despertar);
   document.addEventListener('visibilitychange', function () { if (document.hidden) Object.keys(pistas).forEach(function (n) { pistas[n].a.pause(); }); else despertar(); });
 })();
+
+// La ficha de cada función (modo película) entra con un golpe grave suave
+document.addEventListener('animationstart', function (e) {
+  if ((e.animationName === 'fichaentra' || e.animationName === 'rafagaentra' || e.animationName === 'rafagafin') && window.DeckSound && window.DeckSound.ficha) window.DeckSound.ficha();
+});

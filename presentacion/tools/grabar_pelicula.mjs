@@ -73,7 +73,16 @@ await page.addInitScript(() => {
 await page.goto(DECK);
 const PUERTA = process.env.GATE || 'gatePeli'; // gateCorto = el corte de 5 minutos
 await page.waitForSelector('#' + PUERTA);
+// Claqueta: medio segundo en magenta con su hora exacta en el reloj de la página. Luego se busca en el vídeo, y así
+// imagen y sonido se alinean midiendo (el inicio real del vídeo de Playwright varía con la carga de la máquina)
+const claqueta = () => page.evaluate(() => new Promise((res) => {
+  const d = document.createElement('div'); d.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#ff00ff';
+  document.documentElement.appendChild(d);
+  requestAnimationFrame(() => requestAnimationFrame(() => { const t = performance.now(); setTimeout(() => { d.remove(); requestAnimationFrame(() => res(t)); }, 500); }));
+}));
+const claq1 = await claqueta();
 const tClick = Date.now();
+const tClickPag = await page.evaluate(() => performance.now());
 await page.click('#' + PUERTA);
 const N = await page.evaluate(() => document.querySelectorAll('section.slide').length);
 let ultimo = '', desde = Date.now();
@@ -86,6 +95,7 @@ for (;;) {
   if (await page.evaluate(() => document.body.dataset.fin === '1')) { await page.waitForTimeout(2500); break; }
   if (Date.now() - desde > 150000) { console.error('\natascada en', h); break; }
 }
+const claq2 = await claqueta();
 console.log('\nrecogiendo audio…');
 const datos = await page.evaluate(async () => {
   const taps = [];
@@ -102,9 +112,22 @@ await ctx.close();
 await browser.close();
 const video = fs.readdirSync(tmp).filter((f) => f.endsWith('.webm')).map((f) => path.join(tmp, f))[0];
 // el vídeo empieza (t0) unos instantes antes que el contexto de la página (t1); performance.now() cuenta desde la navegación
-const off = (t1 - t0) / 1000 + 0.15;
-// el MP4 empieza al pulsar «Reproducir» (justo con el logotipo), sin la pantalla de entrada
-const inicio = Math.max(0, (tClick - t0) / 1000 + 0.1);
+// dónde cae cada claqueta en el vídeo: primer fotograma magenta a partir de cada mitad
+const magenta = (desde) => {
+  const raw = execFileSync('ffmpeg', ['-v', 'error', '-ss', String(desde), '-t', '40', '-i', video, '-vf', 'fps=100,scale=4:4', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], { maxBuffer: 1 << 30 });
+  for (let k = 0; k + 48 <= raw.length; k += 48) {
+    let m = 0; for (let j = 0; j < 48; j += 3) if (raw[k + j] > 200 && raw[k + j + 1] < 70 && raw[k + j + 2] > 200) m++;
+    if (m >= 14) return desde + k / 48 / 100;
+  }
+  return null;
+};
+const v1 = magenta(0), v2 = v1 === null ? null : magenta(Math.max(v1 + 2, v1 + (claq2 - claq1) / 1000 - 8));
+// tiempo del vídeo = tiempo de la página / 1000 + off (sin claqueta, la estimación de antes)
+const off = v1 === null ? (t1 - t0) / 1000 + 0.15 : v1 - claq1 / 1000;
+if (v1 !== null && v2 !== null) console.log(`claquetas: desfase ${off.toFixed(3)} s · deriva en ${((claq2 - claq1) / 60000).toFixed(1)} min: ${((v2 - claq2 / 1000) - off).toFixed(3)} s`);
+else console.log('OJO: sin claqueta en el vídeo; sincronía estimada');
+// el MP4 empieza al pulsar «Reproducir» (justo con el logotipo), sin la pantalla de entrada ni la claqueta
+const inicio = Math.max(0, tClickPag / 1000 + off + 0.1);
 fs.writeFileSync(path.join(tmp, 'eventos.json'), JSON.stringify({ off, audio: datos.audio, ahora: datos.ahora }));
 datos.taps.forEach((t, i) => fs.writeFileSync(path.join(tmp, `tap${i}.webm`), Buffer.from(t.b64, 'base64')));
 fs.writeFileSync(path.join(tmp, 'taps.json'), JSON.stringify(datos.taps.map((t, i) => ({ f: `tap${i}.webm`, t: t.t }))));

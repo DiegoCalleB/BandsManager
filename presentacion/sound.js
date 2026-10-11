@@ -329,6 +329,8 @@
     tick() { /* sin clic: los pasos por clics van en silencio */ },
     // Rampa de velocidad: suena antes del corte (en ms), para que el golpe caiga justo cuando cambia el plano
     rampa(ms) { if (enabled && ensure()) kit(ctx, input).rampa(ctx.currentTime + ms / 1000, Math.min(0.6, ms / 1000), 0.2); },
+    // La ficha de cada función entra con un golpe grave suave (solo graves: nada de campanitas)
+    ficha() { if (enabled && ensure()) kit(ctx, input).thump(ctx.currentTime + 0.02, 0.3); },
     // Pitido suave al entrar cada mensaje cuando hablan las voces (sin cortar el sonido de la diapositiva)
     msg() { /* sin pitidos al hablar */ },
     toggle() {

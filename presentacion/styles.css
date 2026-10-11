@@ -1553,3 +1553,44 @@ body.pelicula:not(.corte) .slide.creditos.active .rollo { animation-duration: 48
   .nx-top { top: 28px; } .nx-logo { font-size: 36px; } .nx-sello { font-size: 16px; } .nx-meta, .nx-gen { font-size: 18px; }
   #gate .gate-btns { margin-top: 20px; } #gate .gate-btn { font-size: 18px; padding: 12px 24px; } #gate .gate-btn.primary, #gatePeli { font-size: 21px; padding: 12px 34px; }
 }
+
+/* Ficha de cada función (modo película): número, nombre, qué hace y dos o tres detalles. Entra cuando la cámara sube
+   hacia la pantalla, se lee y se queda pequeña arriba a la izquierda, como el rótulo de una keynote */
+.ficha { display: none; }
+body.pelicula:not(.scroll) .slide.feat.active > .ficha { display: block; position: absolute; z-index: 6; left: 56px; top: 210px; width: 480px; padding: 26px 30px 24px;
+  border-radius: 14px; background: rgba(9, 11, 17, .82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: inset 4px 0 0 #ffd596, 0 30px 80px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.08); transform-origin: 0 0;
+  animation: fichaentra 760ms cubic-bezier(.2, .9, .3, 1.08) 4300ms both, fichamini 700ms cubic-bezier(.6, 0, .3, 1) 12600ms forwards; }
+.ficha i { display: block; font: 400 64px/1 Anton, Oswald, sans-serif; font-style: normal; color: #ffd596; letter-spacing: .02em; }
+.ficha i small { font: 600 20px/1 Onest, sans-serif; color: rgba(255,255,255,.45); margin-left: 6px; letter-spacing: .1em; }
+.ficha b { display: block; margin-top: 6px; font: 400 52px/1.02 Anton, Oswald, sans-serif; text-transform: uppercase; letter-spacing: .015em; color: #fff; }
+.ficha p { margin: 14px 0 16px; font: 500 24px/1.38 Onest, sans-serif; color: rgba(255,255,255,.9); }
+.ficha span { display: inline-block; margin: 0 8px 8px 0; padding: 7px 13px; border-radius: 99px; background: rgba(255,213,150,.12);
+  border: 1px solid rgba(255,213,150,.35); font: 600 17px/1.1 Onest, sans-serif; color: #ffe2b8; }
+body.pelicula:not(.scroll) .slide.feat.active > .ficha :is(p, span) { animation: fichafuera 420ms ease-in 12300ms forwards; }
+body.pelicula:not(.scroll) .slide.feat.active > .ficha span:nth-of-type(1) { animation: fichachip 420ms ease-out 5000ms both, fichafuera 420ms ease-in 12300ms forwards; }
+body.pelicula:not(.scroll) .slide.feat.active > .ficha span:nth-of-type(2) { animation: fichachip 420ms ease-out 5250ms both, fichafuera 420ms ease-in 12300ms forwards; }
+body.pelicula:not(.scroll) .slide.feat.active > .ficha span:nth-of-type(3) { animation: fichachip 420ms ease-out 5500ms both, fichafuera 420ms ease-in 12300ms forwards; }
+@keyframes fichaentra { from { opacity: 0; translate: -60px 0; filter: blur(10px); } }
+@keyframes fichachip { from { opacity: 0; translate: 0 10px; } }
+@keyframes fichafuera { to { opacity: 0; } }
+@keyframes fichamini { to { top: 150px; scale: .5; background: rgba(9, 11, 17, 0); box-shadow: inset 0 0 0 #ffd596, 0 0 0 0 transparent, 0 0 0 0 transparent; backdrop-filter: none; } }
+@media (prefers-reduced-motion: reduce) { body.pelicula .slide.feat.active > .ficha, body.pelicula .slide.feat.active > .ficha * { animation: none !important; } }
+
+/* «Y mucho más» (modo película): ráfaga de funciones, una cada 1,3 s (4 pulsos de «Compila ou Morre»), cada una con su golpe grave */
+.rafaga { display: none; }
+body.pelicula:not(.scroll) .slide.feat.active > .rafaga { display: block; position: absolute; inset: 0; z-index: 7; pointer-events: none;
+  background: radial-gradient(1200px 700px at 60% 45%, rgba(22,26,38,.94), rgba(4,5,9,.98) 70%); animation: rafagafondo 12200ms linear 4400ms both; }
+@keyframes rafagafondo { 0% { opacity: 0; } 3%, 94% { opacity: 1; } 100% { opacity: 0; } }
+.rafaga .rf { position: absolute; margin: 0; opacity: 0; animation: rafagaentra 1300ms cubic-bezier(.2, .8, .3, 1) calc(4400ms + var(--k) * 1300ms) both; }
+.rafaga figure.rf { left: 640px; top: 150px; width: 1150px; height: 650px; }
+.rafaga figure.rf img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; border-radius: 12px;
+  box-shadow: 0 0 0 10px #0b0c10, 0 0 0 12px #262833, 0 40px 120px rgba(0,0,0,.8); }
+.rafaga figcaption { position: absolute; left: -600px; top: 200px; width: 550px; text-align: right; }
+.rafaga figcaption b { display: block; font: 400 72px/1 Anton, Oswald, sans-serif; text-transform: uppercase; color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,.7); }
+.rafaga figcaption span { display: block; margin-top: 14px; font: 600 28px/1.25 Onest, sans-serif; color: #ffd596; }
+.rafaga .rf-fin { left: 0; right: 0; top: 440px; text-align: center; font: 400 104px/1 Anton, Oswald, sans-serif; text-transform: uppercase; color: #fff;
+  animation-name: rafagafin; animation-duration: 1600ms; }
+@keyframes rafagaentra { 0% { opacity: 0; scale: 1.06; filter: blur(6px); } 9% { opacity: 1; scale: 1; filter: none; } 86% { opacity: 1; } 100% { opacity: 0; scale: .985; } }
+@keyframes rafagafin { 0% { opacity: 0; scale: 1.15; letter-spacing: .2em; } 20% { opacity: 1; scale: 1; letter-spacing: .02em; } 85% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { body.pelicula .slide.feat.active > .rafaga { display: none; } }
