@@ -94,6 +94,12 @@ import { ActionMenu, Button, IconButton, Input, LinkButton, Textarea } from './u
 const MetronomeModal = lazy(() => import("./MetronomeModal").then((m) => ({ default: m.MetronomeModal })));
 const TunerModal = lazy(() => import("./TunerModal").then((m) => ({ default: m.TunerModal })));
 
+/** Un error técnico del servidor («Error 404: Not Found», «Failed to fetch») no se le enseña tal cual a un músico. */
+function mensajeDeError(err: unknown, amable: string): string {
+  const m = err instanceof Error ? err.message : '';
+  return !m || /^(error\s*)?\d{3}\b|not found|failed to fetch|networkerror|load failed/i.test(m) ? amable : m;
+}
+
 export interface AtrilProps {
   cancion: Song;
   /** Estudiar / Ensayar / Tocar: decide qué se ve y qué suena al abrir. */
@@ -344,7 +350,7 @@ export function Atril({
       setShowAnalisisAcordes(true);
       setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err: any) {
-      setAiSuccessMsg(`⚠️ ${err.message || "No se pudieron analizar los acordes del audio"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudieron analizar los acordes del audio. Prueba en un momento.")}`);
     } finally {
       setIsAnalyzingChords(false);
       setTimeout(() => setAiSuccessMsg(null), 7000);
@@ -441,7 +447,7 @@ export function Atril({
       setTimeout(() => setAiSuccessMsg(null), 9000);
     } catch (err: any) {
       console.error("Error generating with AI:", err);
-      setAiSuccessMsg(`⚠️ ${err.message || "No se pudo transcribir la letra"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudo transcribir la letra. Prueba en un momento.")}`);
       setTimeout(() => setAiSuccessMsg(null), 12000);
     } finally {
       setIsGeneratingAi(false);
