@@ -7,6 +7,7 @@ import { Lead, LeadType } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
 import { getErrorMessage } from "../../../../utils/errorMessage";
 import type { ScrapedField } from "../crmTypes";
+import type { RespuestaRastrearContacto } from "../../tiposRespuestasApi";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface LeadScrapingParams {
@@ -57,7 +58,7 @@ export function useLeadScraping({ newLeadData, setIsModalScraping, setModalScrap
     }, 1200);
 
     try {
-      const res = await apiFetch('/api/scrape-contact', {
+      const resData = await apiFetch<RespuestaRastrearContacto>('/api/scrape-contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -69,50 +70,45 @@ export function useLeadScraping({ newLeadData, setIsModalScraping, setModalScrap
 
       clearInterval(interval);
 
-      if (res.ok) {
-        const resData = await res.json();
-        if (resData.success && resData.data) {
-          const getVal = (f: ScrapedField): string => {
-            if (!f) return '';
-            return typeof f === 'object' ? f.valor || '' : f;
-          };
-          const emailVal = getVal(resData.data.email_contacto);
-          const telVal = getVal(resData.data.telefono);
-          const isMobile = telVal && /^(?:\+?34\s*)?[67]/.test(telVal.trim());
-          const isLandline = telVal && /^(?:\+?34\s*)?[89]/.test(telVal.trim());
-          const webVal = getVal(resData.data.website);
-          const aforoVal = getVal(resData.data.aforo);
-          const regionVal = getVal(resData.data.region);
-          const generoVal = getVal(resData.data.genero);
-          const imgVal = getVal(resData.data.imagen_url);
-          const iconVal = getVal(resData.data.icono);
+      // `apiFetch` ya devuelve el JSON y lanza `ApiRequestError` ante un HTTP de error.
+      if (resData.success && resData.data) {
+        const getVal = (f: ScrapedField): string => {
+          if (!f) return '';
+          return typeof f === 'object' ? f.valor || '' : f;
+        };
+        const emailVal = getVal(resData.data.email_contacto);
+        const telVal = getVal(resData.data.telefono);
+        const isMobile = telVal && /^(?:\+?34\s*)?[67]/.test(telVal.trim());
+        const isLandline = telVal && /^(?:\+?34\s*)?[89]/.test(telVal.trim());
+        const webVal = getVal(resData.data.website);
+        const aforoVal = getVal(resData.data.aforo);
+        const regionVal = getVal(resData.data.region);
+        const generoVal = getVal(resData.data.genero);
+        const imgVal = getVal(resData.data.imagen_url);
+        const iconVal = getVal(resData.data.icono);
 
-          setNewLeadData((prev) => ({
-            ...prev,
-            email_contacto: emailVal || prev.email_contacto,
-            telefono: telVal || prev.telefono,
-            telefono_movil: isMobile ? telVal : prev.telefono_movil,
-            telefono_fijo: isLandline ? telVal : prev.telefono_fijo,
-            website: webVal || prev.website,
-            region: regionVal || prev.region,
-            aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : prev.aforo,
-            genero: generoVal || prev.genero,
-            imagen_url: imgVal || prev.imagen_url,
-            icono: iconVal || prev.icono,
-            notas: prev.notas
-              ? `${prev.notas} | Scout: ${resData.data.source_info || 'IA Grounding'}`
-              : `Scout IA: ${resData.data.source_info || 'IA Grounding'}`,
-          }));
+        setNewLeadData((prev) => ({
+          ...prev,
+          email_contacto: emailVal || prev.email_contacto,
+          telefono: telVal || prev.telefono,
+          telefono_movil: isMobile ? telVal : prev.telefono_movil,
+          telefono_fijo: isLandline ? telVal : prev.telefono_fijo,
+          website: webVal || prev.website,
+          region: regionVal || prev.region,
+          aforo: aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : prev.aforo,
+          genero: generoVal || prev.genero,
+          imagen_url: imgVal || prev.imagen_url,
+          icono: iconVal || prev.icono,
+          notas: prev.notas
+            ? `${prev.notas} | Scout: ${resData.data.source_info || 'IA Grounding'}`
+            : `Scout IA: ${resData.data.source_info || 'IA Grounding'}`,
+        }));
 
-          setModalScrapeSuccessMsg(
-            `¡Éxito! Email: ${emailVal || 'No hallado'} | Tel: ${telVal || 'No hallado'} | Web: ${webVal || 'No hallado'}`
-          );
-        } else {
-          setModalScrapeError(resData.error || 'No se pudieron recuperar datos con la IA Scout.');
-        }
+        setModalScrapeSuccessMsg(
+          `¡Éxito! Email: ${emailVal || 'No hallado'} | Tel: ${telVal || 'No hallado'} | Web: ${webVal || 'No hallado'}`
+        );
       } else {
-        const errJson = await res.json().catch(() => null);
-        setModalScrapeError(errJson?.error || `Error ${res.status}: Fallo de respuesta del servidor.`);
+        setModalScrapeError(resData.error || 'No se pudieron recuperar datos con la IA Scout.');
       }
     } catch (err) {
       clearInterval(interval);
