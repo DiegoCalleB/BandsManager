@@ -27,6 +27,7 @@ Exporta: TecladoAcorde, BajoAcorde, ETIQUETA_VISTA, SelectorVistaAcorde, useVist
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 

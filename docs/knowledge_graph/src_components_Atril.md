@@ -22,6 +22,7 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 - [[src_components_MetronomeModal|src/components/MetronomeModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_TunerModal|src/components/TunerModal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlAutoscroll|src/components/chords/ControlAutoscroll.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ControlBucle|src/components/chords/ControlBucle.tsx]] *(Layer: #frontend, Domain: #repertoire)*

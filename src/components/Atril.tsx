@@ -42,6 +42,7 @@ import { ProfesorIA } from "./chords/ProfesorIA";
 import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
 import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "./chords/DrawerDiagramas";
+import { AcordeActual } from "./chords/AcordeActual";
 import { useAcordesDeLaHoja } from "../hooks/useAcordesDeLaHoja";
 import { analizarArmonia, explicarAcorde, nombreDeNota, usaBemoles, NOMBRE_FUNCION, type AnalisisArmonico, type Funcion } from "../utils/teoriaArmonica";
 import { infoDeAcordeVisible } from "../utils/armoniaVisor";
@@ -88,7 +89,7 @@ import {
 } from "../utils/chordUtils";
 import { ShowIcon } from './ui/ShowIcon';
 import { ajustesDeModoAtril, type ModoAtril } from "../utils/modosAtril";
-import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
+import { ActionMenu, Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
 const MetronomeModal = lazy(() => import("./MetronomeModal").then((m) => ({ default: m.MetronomeModal })));
 const TunerModal = lazy(() => import("./TunerModal").then((m) => ({ default: m.TunerModal })));
@@ -648,9 +649,6 @@ export function Atril({
                 )}
               </button>
               <div>
-                <p className="text-micro font-sans text-[var(--ink-2)]">
-                  <strong className="text-[var(--acc)]">Jamify</strong> · Toca sobre los acordes
-                </p>
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-[var(--ink)]">
                     {formatSongTitle(song.titulo)}
@@ -660,50 +658,10 @@ export function Atril({
                       Cover
                     </span>
                   )}
-                  {isPlayingAudio && (
-                    <span className="inline-flex items-center gap-1 text-micro font-mono px-2 py-0.5 rounded-full bg-[var(--ok)] text-[var(--on-ok)]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--ok)]"></span>
-                      En reproducción
-                    </span>
-                  )}
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[var(--ink-2)] font-sans mt-0.5">
-                  <span>
-                    Tonalidad:{" "}
-                    <strong className="text-[var(--acc)]">
-                      {song.tonalidad || "Mim"}
-                    </strong>
-                  </span>
-                  <span>•</span>
-                  <span>
-                    Tempo:{" "}
-                    <strong className="text-[var(--ok)]">
-                      {song.bpm || 120} BPM
-                    </strong>
-                  </span>
-                  {song.afinacion && (
-                    <>
-                      <span>•</span>
-                      <span>
-                        Afinación:{" "}
-                        <strong className="text-[var(--tentative)]/80">
-                          {song.afinacion}
-                        </strong>
-                      </span>
-                    </>
-                  )}
-                  {song.duracion && (
-                    <>
-                      <span>•</span>
-                      <span>
-                        Duración:{" "}
-                        <strong className="text-[var(--ink-2)]">
-                          {song.duracion}
-                        </strong>
-                      </span>
-                    </>
-                  )}
-                </div>
+                <p className="text-xs text-[var(--ink-2)] font-sans mt-0.5">
+                  {[song.tonalidad || "Mim", `${song.bpm || 120} BPM`, song.afinacion, song.duracion].filter(Boolean).join(" · ")}
+                </p>
               </div>
             </div>
 
@@ -739,7 +697,7 @@ export function Atril({
                   className="items-center gap-1.5"
                   title={
                     analisisAcordes
-                      ? "Ver los acordes detectados en el audio"
+                      ? "Jamify: ver los acordes detectados en el audio"
                       : "Detectar los acordes del audio con sus tiempos (automático, sin IA generativa)"
                   }
                 >
@@ -748,46 +706,19 @@ export function Atril({
                 </Button>
               )}
 
-              {/* Secondary actions — icon-only to keep the header clean */}
-              <IconButton
-                label="Subir PDF, imagen o Word con acordes - IA extrae automáticamente"
-                type="button"
-                onClick={() => setShowStructureUploadModal(true)}
-              >
-                <Upload className="w-4 h-4" />
-              </IconButton>
-
-              <IconButton
-                label="Compartir canción y acordes por WhatsApp o App"
-                type="button"
-                onClick={() => setShowShareModal(true)}
-              >
-                <MessageSquare className="w-4 h-4" />
-              </IconButton>
-
-              <IconButton
-                label="Metrónomo"
-                type="button"
-                onClick={() => setShowMetronomeModal(true)}
-              >
-                <Timer className="w-4 h-4" />
-              </IconButton>
-
-              <IconButton
-                label="Afinador"
-                type="button"
-                onClick={() => setShowTunerModal(true)}
-              >
-                <Guitar className="w-4 h-4" />
-              </IconButton>
-
-              <IconButton
-                label="Imprimir cifrado"
-                type="button"
-                onClick={() => window.print()}
-              >
-                <Printer className="w-4 h-4" />
-              </IconButton>
+              {/* Acciones secundarias detrás de ⋯ */}
+              <ActionMenu
+                label="Más acciones de la canción"
+                items={[
+                  { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
+                  { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
+                  { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
+                  { label: "Afinador", icon: Guitar, onSelect: () => setShowTunerModal(true) },
+                  { label: "Imprimir cifrado", icon: Printer, onSelect: () => window.print() },
+                  { label: "Ficha de sustituto urgente", icon: UserCheck, onSelect: () => setActiveTab("substitute") },
+                  { label: "Editar cifrado", icon: Edit3, onSelect: () => setActiveTab("edit") },
+                ]}
+              />
             </div>
           </div>
 
@@ -818,29 +749,12 @@ export function Atril({
                 <span>Armonía</span>
               </Button>
 
-              <Button
-                variant={activeTab === "substitute" ? "selected" : "ghost"}
-                size="xs"
-                type="button"
-                onClick={() => setActiveTab("substitute")}
-                className="items-center gap-1.5"
-              >
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Ficha Sustituto URGENTE</span>
-              </Button>
-
-              <button
-                type="button"
-                onClick={() => setActiveTab("edit")}
-                className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                  activeTab === "edit"
-                    ? "bg-[var(--surface)]/80 text-[var(--ink)] "
-                    : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
-              >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Editar</span>
-              </button>
+              {(activeTab === "substitute" || activeTab === "edit") && (
+                <Button variant="selected" size="xs" type="button" className="items-center gap-1.5">
+                  {activeTab === "edit" ? <Edit3 className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
+                  <span>{activeTab === "edit" ? "Editar" : "Ficha sustituto urgente"}</span>
+                </Button>
+              )}
             </div>
 
             {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
@@ -848,27 +762,6 @@ export function Atril({
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
                 <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
-                  <Button
-                    variant={isPlayingAudio ? "primary" : "neutral"}
-                    size="xs"
-                    type="button"
-                    onClick={handleToggleAudio}
-                    className="items-center justify-center"
-                    title={
-                      isPlayingAudio
-                        ? "Pausar audio de la canción"
-                        : audioUrl
-                          ? "Reproducir audio de la canción"
-                          : "Sin archivo de audio adjunto"
-                    }
-                  >
-                    {isPlayingAudio ? (
-                      <Pause className="w-3.5 h-3.5 fill-current" />
-                    ) : (
-                      <Play className="w-3.5 h-3.5 fill-current pl-0.5" />
-                    )}
-                  </Button>
-
                   {audioUrl ? (
                     <>
                       <IconButton
@@ -905,32 +798,6 @@ export function Atril({
                     </span>
                   )}
                 </div>
-
-                <IrisStudio
-                  pistas={stems.length}
-                  motor={metaStemsDeCancion(song)?.motor?.split("(")[0].trim()}
-                  tieneAudio={!!audioUrl}
-                  separando={iris.isSeparatingStemsAi}
-                  onSeparar={separarConIris}
-                />
-                {stems.length > 1 && (
-                  <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
-                )}
-                {audioUrl && (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
-                    <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
-                    <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
-                  </div>
-                )}
-                <TomasConFondo
-                  tomas={tomas}
-                  stems={stems}
-                  activaId={tomaActivaId}
-                  onActiva={setTomaActivaId}
-                  onFondo={(ideaId, ids) => onUpdateSong(cancionConIdeas(song, ideasConFondo(song.audioIdeas || [], ideaId, ids)))}
-                />
-                <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
                 {modo === 'Ensayar' && (
                   <GrabarIdea
@@ -991,13 +858,41 @@ export function Atril({
                 <ControlAutoscroll auto={autoScroll} />
                 <ControlMetronomo metronomo={metronomo} />
 
-                {modo === 'Estudiar' && (
-                  <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
-                    {masControles ? 'Menos' : 'Más'}
-                  </Button>
+                <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
+                  {masControles ? 'Menos' : 'Más'}
+                </Button>
+                {/* Todo lo demás sigue montado (sus atajos y estados no se pierden) pero oculto hasta pulsar «Más». */}
+                <div className={masControles ? 'contents' : 'hidden'}>
+                <IrisStudio
+                  pistas={stems.length}
+                  motor={metaStemsDeCancion(song)?.motor?.split("(")[0].trim()}
+                  tieneAudio={!!audioUrl}
+                  separando={iris.isSeparatingStemsAi}
+                  onSeparar={separarConIris}
+                />
+                {stems.length > 1 && (
+                  <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
                 )}
-                {(modo !== 'Estudiar' || masControles) && (
-                  <>
+                {audioUrl && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                    <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
+                    <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
+                  </div>
+                )}
+                <TomasConFondo
+                  tomas={tomas}
+                  stems={stems}
+                  activaId={tomaActivaId}
+                  onActiva={setTomaActivaId}
+                  onFondo={(ideaId, ids) => onUpdateSong(cancionConIdeas(song, ideasConFondo(song.audioIdeas || [], ideaId, ids)))}
+                />
+                <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
+
+
+                </div>
+
+                <div className={masControles ? 'contents' : 'hidden'}>
                 {/* NOTATION TOGGLE (Latino / C-D-E) */}
                 <Button
                   variant="neutral"
@@ -1038,8 +933,7 @@ export function Atril({
                     <Copy className="w-4 h-4" />
                   )}
                 </button>
-                  </>
-                )}
+                </div>
               </div>
             )}
           </div>
@@ -1069,6 +963,19 @@ export function Atril({
               >
                 ✕
               </button>
+            </div>
+          )}
+
+          {activeTab === "chords" && (
+            <div className="px-4 pt-3 shrink-0">
+              <AcordeActual
+                sonando={acordeSonando}
+                siguiente={sincronizado && acordeActivo >= 0 ? acordesDelCifrado(processedText)[acordeActivo + 1] ?? null : null}
+                contexto={contextoAcordes}
+                vista={vistaAcordes}
+                onVista={setVistaAcordes}
+                estiloArmonia={estiloArmonia}
+              />
             </div>
           )}
 
