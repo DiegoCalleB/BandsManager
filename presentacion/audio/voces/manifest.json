@@ -639,6 +639,16 @@
   "v": "f00ea5ddcfc0",
   "who": "bajo"
  },
+ "5ac2e73f": {
+  "d": 4.03,
+  "e": "057741870344771499940169369654311000000000672543313940065028789940196799619686420475489556422100000",
+  "f": "5ac2e73f.mp3",
+  "oido": "Pero si parece un Cubéis y cada pista con un color del arcoíris.",
+  "qa": 0.92,
+  "say": "[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!",
+  "v": "79a9a80cae54",
+  "who": "guitarra"
+ },
  "5bb8f38c": {
   "d": 2.95,
   "e": "094229831794972118947841451651277475124222100000036555554486641744321100",
@@ -908,6 +918,16 @@
   "say": "[amazed] ¡Ché, un setlist que sube como un cohete!",
   "v": "7560a5b0d5ce",
   "who": "voz"
+ },
+ "7f69037c": {
+  "d": 6.17,
+  "e": "11244554992299679416411457665420111111355431116976542112116543112211133799842101010110244112211641233211011125528996311111111111211776572121134113311000",
+  "f": "7f69037c.mp3",
+  "oido": "Y mirate el mapa, chavales, cada sala y cada festival en su sitio, le das y se abre su ficha.",
+  "qa": 0.95,
+  "say": "Y mirad el mapa, chavales: cada sala y cada festival, en su sitio. Le das, y se abre su ficha.",
+  "v": "e17555aad513",
+  "who": "bajo"
  },
  "80a1e97c": {
   "d": 4.87,
@@ -1227,6 +1247,16 @@
   "qa": 1.0,
   "say": "¿Y por qué iba a querer una sala usar esto? Si no nos atienden ni el teléfono.",
   "v": "7eaf05161af5",
+  "who": "voz"
+ },
+ "b2737e9a": {
+  "d": 4.46,
+  "e": "03897741148656749316797567733841385313565541775444114510058757756356796320000003556622695583177758779996968421",
+  "f": "b2737e9a.mp3",
+  "oido": "Y encima le podemos dejar comentarios a cada idea. Me encanta, boludo.",
+  "qa": 1.0,
+  "say": "[excited] ¡Y encima le podemos dejar comentarios a cada idea! ¡Me encanta, boludo!",
+  "v": "31608b78a000",
   "who": "voz"
  },
  "b2b598a0": {
@@ -1597,6 +1627,26 @@
   "qa": 0.96,
   "say": "¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan, cuando lo tengamos, ver los próximos bolos, y entrar en nuestra nueva web.",
   "v": "276a7cce64d1",
+  "who": "bajo"
+ },
+ "f2cec0bf": {
+  "d": 6.84,
+  "e": "1148598738877118627931451431599834521357869112373112138654111000001001011877951394158656768966651112589952124465313967746553079666542112224331101000000000000000000000000",
+  "f": "f2cec0bf.mp3",
+  "oido": "y la inteligencia artificial vigila las transiciones, que no choquen ni la energía ni el tono de un tema al siguiente.",
+  "qa": 1.0,
+  "say": "Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.",
+  "v": "78915aa3a4f2",
+  "who": "bajo"
+ },
+ "f5803192": {
+  "d": 4.73,
+  "e": "11152148663156761430299964544118959114887736996674211261115635778113435644554211257510594002561048621100000100001000",
+  "f": "f5803192.mp3",
+  "oido": "y te dice lo que queda limpio de cada bolo después de gasolina, dietas y hotel.",
+  "qa": 1.0,
+  "say": "Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.",
+  "v": "43a8e022a992",
   "who": "bajo"
  },
  "f98c8caa": {

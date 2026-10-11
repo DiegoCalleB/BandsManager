@@ -1139,3 +1139,12 @@ body.pelicula:not(.scroll) .feat > .foco { --t: 270px !important; left: 64px !im
 /* En las escenas ya sale en grande quien habla: el subtítulo no repite la cara */
 #stage:has(.slide.active:not(.feat) .foco.in) #subtitulo img { display: none; }
 #stage:has(.slide.active:not(.feat) .foco.in) #subtitulo { padding-left: 28px; }
+/* Vídeos de la app usándose: se ven enteros (el cursor de Iago no se sale del plano); los de una ventana, en vertical */
+.feat .ft-shot video { object-position: 50% 0; }
+.feat .ft-shot.alto video { object-fit: contain; }
+body.pelicula:not(.scroll) .feat .ft-shot video { object-fit: contain; }
+body.pelicula:not(.scroll):not(.nosubs) .feat .ft-shot.alto { left: 50%; right: auto; width: 620px; translate: -50% 0; }
+/* Las capturas fijas no se quedan quietas: la cámara se acerca despacio, como si Iago las fuera enseñando */
+body.pelicula:not(.scroll) .feat.active .ft-shot:not(.phone) img { transform-origin: 30% 20%; animation: kenburns 22s ease-in-out both; }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-2%, -1%); } }
+@media (prefers-reduced-motion: reduce) { body.pelicula .feat.active .ft-shot img { animation: none; } }

@@ -207,8 +207,9 @@ add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
           m('alvaro', '¡Una base de datos de salas! ¡Te lo dije!'),
           m('iago', 'Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.'),
           m('brais', 'Pues yo dije Google Calendar.'),
-          m('iago', 'Eso también. Ya llegamos.')],
-         shot_img('img/d-h-booking.jpg')))
+          m('iago', 'Eso también. Ya llegamos.'),
+          m('iago', 'Y en el mapa ves dónde está cada sala y cada festival.', say='Y mirad el mapa, chavales: cada sala y cada festival, en su sitio. Le das, y se abre su ficha.')],
+         shot_vid('video/v-mapa.mp4', 'video/v-mapa.jpg')))
 
 add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
          [m('alvaro', '¡Me ha escrito a tres salas mientras hablábamos!'),
@@ -234,7 +235,7 @@ add(feat('Bandas amigas', TAG1, 'Bandas amigas, a la escucha.',
           m('iago', 'Sí. Nos conectamos a su Spotify y a su YouTube para sacar un preview de sus temas más populares.'),
           m('brais', '¿Y cómo les va? ¿Tienen público de verdad?'),
           m('iago', 'Ves sus métricas del mes: seguidores en Spotify y suscriptores en YouTube.')],
-         shot_img('img/d-h-escuchar.jpg')))
+         shot_vid('video/v-spotify.mp4', 'video/v-spotify.jpg')))
 
 add(feat('El acuerdo, firmado desde BandManager', TAG1, 'Un acuerdo firmado, sin sorpresas.',
          [m('brais', '¿Y si la sala nos cambia el caché el mismo día del bolo?'),
@@ -319,8 +320,9 @@ add(feat('La curva de energía', TAG2, 'La curva de energía.',
          [m('iago', 'Cada tema tiene su energía. La app dibuja la curva del concierto.', say='Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.'),
           m('alvaro', '¿Y si la curva se cae a mitad del bolo?', say='[curious] ¿Y si a mitad del bolo la curva se cae?'),
           m('iago', 'Le das a «Optimizar orden» y te propone el setlist perfecto.', say='Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.'),
+          m('iago', 'Y vigila las transiciones: energía y tonalidad, tema a tema.', say='Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.'),
           m('xandre', '¡Un setlist que sube como un cohete! 🚀', say='[amazed] ¡Ché, un setlist que sube como un cohete!')],
-         shot_img('img/d-h-energia.jpg'), grupo='musica'))
+         shot_vid('video/v-energia.mp4', 'video/v-energia.jpg'), grupo='musica'))
 
 add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
          [m('iago', 'Dale al play, Álvaro. Los acordes y la letra siguen la canción solos.'),
@@ -332,15 +334,17 @@ add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
 add(feat('Iris separa los instrumentos', TAG2, 'Cada instrumento, por separado.',
          [m('iago', 'Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.'),
           m('xandre', '¡Mi voz sola! ¡Nunca me había oído así!'),
+          m('alvaro', '¡Parece un Cubase! ¡Y cada pista de un color del arcoíris! 🌈', say='[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!'),
           m('alvaro', '¡Espera, espera! ¡¿Esto no será un Moisés?!'),
           m('iago', '¡Sí, tío! Un Moisés integrado en nuestro repertorio, para subir nuestras ideas sobre nuestras propias pistas. Me ha costado lo suyo, pero al final lo conseguí. ¡Yo tampoco me lo creo, jajaja!')],
-         shot_img('img/d-h-iris-pistas.jpg'), grupo='musica'))
+         shot_vid('video/v-iris.mp4', 'video/v-iris.jpg', cls='alto'), grupo='musica'))
 
 add(feat('Las ideas, en su sitio', TAG2, 'Las ideas, en su sitio.',
          [m('brais', '¿Y el break que grabé en el móvil?', say='[softly] Neno, ¿y el break de batería que grabé el otro día en el móvil?'),
           m('iago', 'Va a su canción y a su sección: intro, verso, estribillo o solo.', say='Va a su canción y a su sección: intro, verso, estribillo o solo. Con tu nombre, tronco.'),
+          m('xandre', '¡Y cada uno comenta la idea! 💬', say='[excited] ¡Y encima le podemos dejar comentarios a cada idea! ¡Me encanta, boludo!'),
           m('alvaro', '¡Se acabó el audio perdido en el WhatsApp! 🙌', say='[laughs] ¡Se acabó el audio perdido en el guasap!')],
-         shot_img('img/d-h-ideas.jpg'), grupo='musica'))
+         shot_vid('video/v-ideas.mp4', 'video/v-ideas.jpg', cls='alto'), grupo='musica'))
 
 add(feat('Calendario de la banda', TAG2, 'Ensayos y bolos, en un calendario.',
          [m('brais', '¡Esto es lo de Google Calendar! ¡Mira, acerté! 🤣'),
@@ -406,8 +410,9 @@ add(feat('Cuánto entra y cuánto queda', 'Sábado · 12:50 · Después del conc
 add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del concierto', 'La gira, con la gasolina calculada.',
          [m('brais', '¿Y la gasolina de la furgo y de mi coche?', say='Home, ¿y la gasolina de la furgo y de mi coche? ¿Quién la paga?'),
           m('iago', 'Metes los coches que van en ruta y calcula el gasto de cada parada.', say='Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.'),
+          m('iago', 'Y lo que queda limpio de cada bolo.', say='Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.'),
           m('alvaro', '¡Ni una discusión más en la gasolinera! ⛽', say='[laughs] ¡Ni una discusión más en la gasolinera!')],
-         shot_img('img/d-h-giras-coches.jpg'), grupo='negocio'))
+         shot_vid('video/v-giras.mp4', 'video/v-giras.jpg'), grupo='negocio'))
 
 add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han visto todo.', 'img/concierto-1.jpg',
           dlg(m('alvaro', '¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas! 🤯'),
