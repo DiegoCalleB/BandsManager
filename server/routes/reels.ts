@@ -71,6 +71,20 @@ import {
 } from "../utils/reelsCore.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
+/** Respuesta de oEmbed de YouTube. */
+interface OembedYoutube {
+  title?: string;
+  author_name?: string;
+  thumbnail_url?: string;
+}
+
+/** Mejor momento para publicar que propone la IA. */
+interface MomentoOptimo {
+  date?: string;
+  time?: string;
+  reason?: string;
+}
+
 const router = express.Router();
 
 if (ffmpegStatic) {
@@ -185,7 +199,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
     try {
       const oembedRes = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
       if (oembedRes.ok) {
-        const oembed: any = await oembedRes.json();
+        const oembed = (await oembedRes.json()) as OembedYoutube;
         acumulado = fusionarMetadatos(acumulado, {
           ...metadatosVacios(),
           title: oembed?.title || "",
@@ -202,7 +216,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
   if (!completa()) {
     try {
       const info = await ytdl.getBasicInfo(url);
-      const detalles: any = info?.videoDetails;
+      const detalles = info?.videoDetails;
       if (detalles) {
         const miniaturas = detalles.thumbnails;
         acumulado = fusionarMetadatos(acumulado, {
@@ -237,10 +251,10 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
 
 /** Transcripción del vídeo completo, probando español y cayendo al idioma por defecto. */
 async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
-  const intentos: Array<() => Promise<any[]>> = [
-    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "es" }) as any,
-    () => YoutubeTranscript.fetchTranscript(videoId) as any,
-    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "en" }) as any
+  const intentos: Array<() => Promise<Array<{ offset?: number; duration?: number; text?: string }>>> = [
+    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "es" }),
+    () => YoutubeTranscript.fetchTranscript(videoId),
+    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "en" })
   ];
 
   for (const intento of intentos) {
@@ -248,7 +262,7 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
       const bruto = await intento();
       if (Array.isArray(bruto) && bruto.length > 0) {
         return bruto
-          .map((t: any) => ({
+          .map((t) => ({
             offset: Number(t?.offset) || 0,
             duration: Number(t?.duration) || 0,
             text: decodeTranscriptText(t?.text)
@@ -266,8 +280,8 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
  * Traduce el fallo crudo de ytdl a algo que un músico pueda entender y accionar. El error
  * literal ("Sign in to confirm you're not a bot") no le dice nada a nadie.
  */
-function explicarErrorYoutube(err: any): string {
-  const msg = String(err?.message || err || "");
+function explicarErrorYoutube(err: unknown): string {
+  const msg = String(comoErrorCapturado(err).message || err || "");
   if (/confirm you.?re not a bot|Sign in to confirm/i.test(msg)) {
     return "YouTube está pidiendo verificación antibot al servidor para descargar este vídeo. Suele ser temporal: prueba de nuevo en unos minutos, o sube el archivo de vídeo directamente en vez de usar la URL.";
   }
@@ -361,12 +375,12 @@ async function descargarVideo(
   await borrarSiExiste([destino]);
   console.log("[Reels] yt-dlp no disponible o fallido, probando con ytdl-core...");
 
-  const descargar = (opciones: any) =>
+  const descargar = (opciones: ytdl.downloadOptions) =>
     new Promise<void>((resolve, reject) => {
       const stream = ytdl(url, opciones);
       const writeStream = fs.createWriteStream(destino);
       let fallado = false;
-      const fallar = (err: any) => {
+      const fallar = (err: unknown) => {
         if (fallado) return;
         fallado = true;
         writeStream.destroy();
@@ -381,7 +395,7 @@ async function descargarVideo(
   try {
     await descargar({
       quality: "highest",
-      filter: (format: any) => format.container === "mp4" && Boolean(format.hasVideo) && Boolean(format.hasAudio)
+      filter: (format) => format.container === "mp4" && Boolean(format.hasVideo) && Boolean(format.hasAudio)
     });
   } catch (primerErrorCapturado) {
     const primerError = comoErrorCapturado(primerErrorCapturado);
@@ -589,7 +603,7 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
 
     const ai = getAiClient();
     let highlights: NormalizedHighlight[] = [];
-    let optimalTime: any = null;
+    let optimalTime: MomentoOptimo | null = null;
     let generadoPorIa = false;
     let avisoIa = "";
     // Frases reales de directo (habla, no letra cantada) extraídas de la transcripción: la fuente
@@ -689,7 +703,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
 
         if (Array.isArray(parsed?.frasesDirectoExtraidas)) {
           frasesDirectoExtraidas = parsed.frasesDirectoExtraidas
-            .map((f: any) => String(f || "").trim())
+            .map((f: unknown) => String(f || "").trim())
             .filter(Boolean)
             .slice(0, 5);
         }
@@ -759,8 +773,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
     }
 
     if (frasesDirectoExtraidas.length > 0) {
-      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: any) =>
-        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", e?.message || e)
+      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: unknown) =>
+        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", comoErrorCapturado(e).message || e)
       );
     }
 
@@ -956,7 +970,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
     // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
     // viajaba por la red.
-    const respuesta: any = {
+    const respuesta: Record<string, unknown> = {
       success: true,
       clipUrl,
       clipFileName: nombreSalida,
@@ -1020,7 +1034,7 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
     // Para dejar el highlight reanalizado también actualizado en lo que ya se guardó en BD
     // (si no, la próxima vez que se recuperase el análisis guardado se vería la versión vieja).
     const videoKeyDelCorte = resolverVideoKey(youtubeUrl, videoKeyExplicita);
-    const persistirPatch = async (patch: Record<string, any>) => {
+    const persistirPatch = async (patch: Record<string, unknown>) => {
       if (!videoKeyDelCorte || !highlightId) return;
       const bandId = getTargetBandId(req);
       await dbUpdateReelAnalysisHighlight(bandId, videoKeyDelCorte, highlightId, patch).catch(() => false);
@@ -1120,8 +1134,8 @@ Responde ÚNICAMENTE con JSON válido:
               descripcionNueva: analysis.recommendedCopy,
               alcance: alcance === "este_reel" ? "este_reel" : "global"
             };
-            dbLogReelFeedback(getTargetBandId(req), feedbackLog).catch((e: any) =>
-              console.warn("[Reanalyze Clip] No se pudo guardar el feedback:", e?.message || e)
+            dbLogReelFeedback(getTargetBandId(req), feedbackLog).catch((e: unknown) =>
+              console.warn("[Reanalyze Clip] No se pudo guardar el feedback:", comoErrorCapturado(e).message || e)
             );
           }
 
