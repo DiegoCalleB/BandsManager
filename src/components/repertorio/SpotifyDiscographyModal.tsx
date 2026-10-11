@@ -6,49 +6,8 @@ import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import type { SpotifyTrack, SpotifyAlbum, SpotifyArtist, RespuestaPreviewSpotify, RespuestaDiscografiaSpotify, RespuestaImportarDiscografia } from '../../services/tiposRespuestasHerramientas';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
-
-interface SpotifyTrack {
-  id: string;
-  name: string;
-  trackNumber: number;
-  discNumber: number;
-  durationMs: number;
-  durationFormatted: string;
-  durationSeconds: number;
-  previewUrl: string | null;
-  explicit: boolean;
-  spotifyUrl: string;
-  uri: string;
-  tonalidadEstimada?: string;
-  bpmEstimado?: number;
-}
-
-interface SpotifyAlbum {
-  id: string;
-  name: string;
-  albumType: "album" | "single" | "compilation";
-  releaseDate: string;
-  releaseYear: string;
-  totalTracks: number;
-  coverUrl: string;
-  coverUrlMedium: string;
-  spotifyUrl: string;
-  uri: string;
-  genres: string[];
-  tracks: SpotifyTrack[];
-}
-
-interface SpotifyArtist {
-  id: string;
-  name: string;
-  genres: string[];
-  followers: number;
-  popularity: number;
-  imageUrl: string;
-  spotifyUrl: string;
-  uri: string;
-}
 
 interface SpotifyDiscographyModalProps {
   isOpen: boolean;
@@ -134,7 +93,7 @@ export const SpotifyDiscographyModal: React.FC<
       setLoadingPreviewTrackId(track.id);
       try {
         const artist = artistProfile?.name || bandName || "";
-        const res = await apiFetch(
+        const res = await apiFetch<RespuestaPreviewSpotify>(
           `/api/spotify/preview?artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track.name)}`,
         );
         if (res && res.previewUrl) {
@@ -185,7 +144,7 @@ export const SpotifyDiscographyModal: React.FC<
     stopAudioPreview();
 
     try {
-      const data = await apiFetch(
+      const data = await apiFetch<RespuestaDiscografiaSpotify>(
         `/api/spotify/artist-discography?query=${encodeURIComponent(q)}`,
       );
 
@@ -267,7 +226,7 @@ export const SpotifyDiscographyModal: React.FC<
     stopAudioPreview();
 
     try {
-      const data = await apiFetch("/api/spotify/import-discography", {
+      const data = await apiFetch<RespuestaImportarDiscografia>("/api/spotify/import-discography", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -23,6 +23,7 @@ Exporta: PracticeModePanel.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_config_stemInstruments|src/config/stemInstruments.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_hooks_useTonePitchShift|src/hooks/useTonePitchShift.ts]] *(Layer: #hook, Domain: #booking)*
+- [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioLatency|src/utils/audioLatency.ts]] *(Layer: #service, Domain: #repertoire)*

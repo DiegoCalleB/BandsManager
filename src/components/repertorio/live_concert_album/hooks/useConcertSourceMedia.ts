@@ -4,6 +4,7 @@
  */
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { apiFetch } from "../../../../utils/api";
+import type { RespuestaAudioDemo } from '../../../../services/tiposRespuestasHerramientas';
 import { getErrorMessage } from "../../../../utils/errorMessage";
 import { leerTokenDeSesion, leerBandaActiva } from '../../../../services/sesionLocal';
 
@@ -149,7 +150,7 @@ export function useConcertSourceMedia({ setErrorMessage, setAnalysisStatus }: Co
     setIsLinkingLocalFile(true);
     setErrorMessage(null);
     try {
-      const res = await apiFetch("/api/concert-to-album/demo-audio", {
+      const res = await apiFetch<RespuestaAudioDemo>("/api/concert-to-album/demo-audio", {
         method: "POST",
       });
       if (res.success && res.filePath) {

@@ -31,6 +31,7 @@ import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
 import { programarClic } from '../utils/clicMetronomo';
+import type { RespuestaAcordesCancion } from '../services/tiposRespuestasHerramientas';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
@@ -549,7 +550,7 @@ export default function PracticeModePanel({
       // Sin songId a propósito: así el servidor NUNCA sobreescribe el cifrado principal de la
       // canción con el análisis de una pista aislada (bajo, guitarra...) — queda solo en este
       // panel hasta que el usuario decida explícitamente aplicarlo con onApplyAsMainChords.
-      const data = await apiFetch('/api/generate-song-chords', {
+      const data = await apiFetch<RespuestaAcordesCancion>('/api/generate-song-chords', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

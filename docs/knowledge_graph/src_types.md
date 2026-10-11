@@ -526,6 +526,7 @@ _Sin dependencias salientes directas._
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(from #service)*
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(from #service)*
+- [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(from #service)*
 - [[src_utils_accompanimentSynth|src/utils/accompanimentSynth.ts]] *(from #service)*
 - [[src_utils_agendaASetlist|src/utils/agendaASetlist.ts]] *(from #service)*
 - [[src_utils_agendaEnsayo|src/utils/agendaEnsayo.ts]] *(from #service)*
