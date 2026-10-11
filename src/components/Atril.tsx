@@ -535,11 +535,14 @@ export function Atril({
     if (acordeActivo < 0) return [] as string[];
     const todos = acordesDelCifrado(processedText);
     const actual = todos[acordeActivo];
+    // Los nombres salen normalizados (inglés): se devuelven con la grafía de la hoja (Do, Sol…) como el actual.
+    const visibles = extractUniqueChords(processedText);
+    const comoSeVe = (c: string) => visibles.find((v) => normalizarAcorde(v) === c) ?? c;
     const out: string[] = [];
     for (let i = acordeActivo + 1; i < todos.length && out.length < 3; i++) {
       if (todos[i] !== actual && todos[i] !== out[out.length - 1]) out.push(todos[i]);
     }
-    return out;
+    return out.map(comoSeVe);
   }, [acordeActivo, processedText]);
 
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
@@ -629,7 +632,7 @@ export function Atril({
             size="xs"
             type="button"
             onClick={alternarPantallaCompleta}
-            className="absolute top-3 right-14 z-20"
+            className="absolute top-3 right-14 z-20 hidden sm:inline-flex"
             title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
             aria-pressed={pantallaCompleta}
           >
@@ -681,7 +684,7 @@ export function Atril({
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 absolute top-3 right-14 z-20 sm:static">
               {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}
               <Button
                 variant="primary"
