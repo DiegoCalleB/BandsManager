@@ -3,14 +3,16 @@ import { X } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import type { SetlistItem, ThemeColors } from '../../types';
+import { formDesdeSetlistItem, setlistItemDesdeForm, TipoMomentoShow } from './showItemForm';
 
 interface ShowItemModalProps {
   isOpen: boolean;
   onClose: () => void;
-  colors: any;
-  editingShowItem: any;
-  setEditingShowItem: (item: any) => void;
-  handleSaveShowItem: (itemData: any) => void;
+  colors: ThemeColors;
+  editingShowItem: SetlistItem | null;
+  setEditingShowItem: (item: SetlistItem | null) => void;
+  handleSaveShowItem: (itemData: Partial<SetlistItem>) => void;
 }
 
 export const ShowItemModal: React.FC<ShowItemModalProps> = ({
@@ -22,7 +24,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   handleSaveShowItem,
 }) => {
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('interlude');
+  const [type, setType] = useState<TipoMomentoShow>('interlude');
   const [durationMin, setDurationMin] = useState<number | ''>(2);
   const [notes, setNotes] = useState('');
   const [tuning, setTuning] = useState('');
@@ -30,42 +32,22 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
   const [tempo, setTempo] = useState<number | ''>(120);
 
   useEffect(() => {
-    if (editingShowItem) {
-      setTitle(editingShowItem.title || editingShowItem.nombre || '');
-      setType(editingShowItem.itemType || 'interlude');
-      setDurationMin(editingShowItem.durationMin || Math.round((editingShowItem.duracionSegundos || 120) / 60));
-      setNotes(editingShowItem.notes || editingShowItem.notas || '');
-      setTuning(editingShowItem.tuning || '');
-      setKey(editingShowItem.key || editingShowItem.tono || '');
-      setTempo(editingShowItem.tempo || editingShowItem.bpm || 120);
-    } else {
-      setTitle('');
-      setType('interlude');
-      setDurationMin(2);
-      setNotes('');
-      setTuning('');
-      setKey('');
-      setTempo(120);
-    }
+    // Se lee de los campos reales de SetlistItem (ver showItemForm.ts).
+    const form = formDesdeSetlistItem(editingShowItem);
+    setTitle(form.title);
+    setType(form.type);
+    setDurationMin(form.durationMin);
+    setNotes(form.notes);
+    setKey(form.key);
+    setTuning('');
+    setTempo(120);
   }, [editingShowItem, isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSaveShowItem({
-      title,
-      itemType: type,
-      durationMin: Number(durationMin) || 0,
-      duracionSegundos: (Number(durationMin) || 0) * 60,
-      notes,
-      tuning,
-      key,
-      tono: key,
-      tempo: Number(tempo) || 0,
-      bpm: Number(tempo) || 0,
-      isNonSongItem: true,
-    });
+    handleSaveShowItem(setlistItemDesdeForm({ title, type, durationMin, notes, key }, editingShowItem));
     onClose();
     setEditingShowItem(null);
   };
@@ -116,7 +98,7 @@ export const ShowItemModal: React.FC<ShowItemModalProps> = ({
               <label className="block text-micro font-bold text-[var(--ink-2)] mb-1">Tipo de Elemento</label>
               <Select aria-label="Tipo de Elemento"
                 value={type}
-                onChange={(e) => setType(e.target.value)}
+                onChange={(e) => setType(e.target.value as TipoMomentoShow)}
                 wrapperClassName="w-full"
               >
                 <option value="interlude">Interludio / transición</option>
