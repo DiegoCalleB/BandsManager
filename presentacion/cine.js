@@ -151,9 +151,9 @@
   var pintar = function () {
     var d = D(); if (!d) return;
     var caps = capitulos(), cap = caps.filter(function (c) { return c.act && c.i <= d.cur; }).pop();
-    var pct = d.N > 1 ? d.cur / (d.N - 1) * 100 : 0;
+    var L = d.lista(), pos = Math.max(0, L.indexOf(d.cur)), pct = L.length > 1 ? pos / (L.length - 1) * 100 : 0;
     $n('.nf-lleno').style.width = pct + '%'; $n('.nf-bola').style.left = pct + '%';
-    $n('.nf-cuenta').textContent = (d.cur + 1) + ' / ' + d.N;
+    $n('.nf-cuenta').textContent = (pos + 1) + ' / ' + L.length;
     $n('.nf-titulo').innerHTML = '<b>BandManager.io</b> ' + (cap ? cap.t.replace(/·.*/, '').trim() : 'Prólogo') + ' <span>' + (caps[d.cur] ? caps[d.cur].t : '') + '</span>';
     $n('.nf-cap').textContent = cap ? cap.t : '';
     $n('.nf-pcap').textContent = (cap ? cap.t + ' · ' : '') + (caps[d.cur] ? caps[d.cur].t : '');
@@ -161,14 +161,13 @@
     $n('[data-nf="play"]').setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa');
     var son = !!(window.DeckSound && window.DeckSound.enabled);
     $n('[data-nf="sonido"]').innerHTML = son ? ico.sonido : ico.mudo;
-    if (!$n('.nf-caps').childNodes.length) {
-      caps.forEach(function (c) { if (c.act && c.i) { var t = document.createElement('i'); t.style.left = (c.i / (d.N - 1) * 100) + '%'; $n('.nf-caps').appendChild(t); } });
-    }
+    $n('.nf-caps').textContent = '';
+    L.forEach(function (i, k) { if (caps[i].act && k) { var t = document.createElement('i'); t.style.left = (k / (L.length - 1) * 100) + '%'; $n('.nf-caps').appendChild(t); } });
   };
   var acciones = {
     play: function () { var d = D(); if (d) d.pausar(!d.pausado); },
-    atras: function () { var d = D(); if (d) d.show(Math.max(0, d.cur - 1)); },
-    alante: function () { var d = D(); if (d) d.show(Math.min(d.N - 1, d.cur + 1)); },
+    atras: function () { var d = D(), a = d && d.anterior(d.cur); if (a !== null && a !== undefined) d.show(a); },
+    alante: function () { var d = D(), a = d && d.proximo(d.cur); if (a !== null && a !== undefined) d.show(a); },
     sonido: function () { if (window.DeckSound) window.DeckSound.toggle(); setTimeout(pintar, 50); },
     subs: function () { nf.classList.toggle('menu'); },
     fs: function () { var r = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : r.requestFullscreen && r.requestFullscreen()); }
@@ -179,11 +178,11 @@
     if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); despierta(); }
   });
   var prog = $n('.nf-prog');
-  var escenaEn = function (e) { var r = prog.getBoundingClientRect(), d = D(); return Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (d.N - 1)); };
+  var escenaEn = function (e) { var r = prog.getBoundingClientRect(), d = D(), L = d.lista(); return L[Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (L.length - 1))]; };
   prog.addEventListener('click', function (e) { var d = D(); if (d) d.show(escenaEn(e)); });
   prog.addEventListener('mousemove', function (e) {
-    var d = D(); if (!d) return; var i = escenaEn(e), tip = $n('.nf-tip');
-    tip.textContent = (i + 1) + ' · ' + (d.slides[i].dataset.title || ''); tip.style.left = (i / (d.N - 1) * 100) + '%';
+    var d = D(); if (!d) return; var i = escenaEn(e), L = d.lista(), tip = $n('.nf-tip');
+    tip.textContent = (L.indexOf(i) + 1) + ' · ' + (d.slides[i].dataset.title || ''); tip.style.left = (L.indexOf(i) / Math.max(1, L.length - 1) * 100) + '%';
   });
   // Se esconde a los 2,5 s sin mover el ratón, como en Netflix (en pausa se queda)
   var oculto = 0;

@@ -1313,3 +1313,7 @@ body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-po
 @keyframes respira { 50% { opacity: .78; } }
 @media (prefers-reduced-motion: reduce) { .noche-reloj b { animation: none; } }
 body.scroll .slide.slide > .noche-reloj { position: relative; left: auto; top: auto; margin: 10px 0; } body.scroll .noche-reloj b { font-size: 64px; }
+
+/* Corte de 5 minutos: los créditos largos se acortan */
+body.corte .solo-largo { display: none; }
+body.corte .slide.creditos.active .rollo { animation-duration: 30s; }

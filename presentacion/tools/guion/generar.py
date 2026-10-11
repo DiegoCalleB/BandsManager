@@ -760,6 +760,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </dl>
     <h3>Escrita, programada y dirigida por</h3>
     <p class="cr-nombre">Diego de la Calle</p>
+    <div class="solo-largo">
     <h2 class="cr-seccion">Los que aparecen en BandManager.io</h2>
     <h3>Los que tocan</h3>
     <dl class="cr-dl">
@@ -840,6 +841,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Vitest · Playwright</dt><dd>Más de dos mil pruebas</dd>
       <dt>ESLint · Husky · GitHub Actions</dt><dd>Nadie sube nada roto</dd>
     </dl>
+    </div>
     <h2 class="cr-seccion">Cómo se hizo esta película</h2>
     <dl class="cr-dl">
       <dt>Claude Code</dt><dd>Escribió casi todo el código y la historia</dd>
@@ -874,6 +876,14 @@ html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
+CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'Cambio de perfil',
+         'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
+         'Un sueño hecho realidad', 'Gracias', 'Créditos']
+for t in CORTO:
+    n = html.count(f'data-title="{t}"')
+    assert n == 1, (t, n)
+    html = html.replace(f'data-title="{t}"', f'data-title="{t}" data-corto', 1)
+html = html.replace('data-title="Créditos" data-corto', 'data-title="Créditos" data-corto data-dur-corto="33000"', 1)
 html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="19500"', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
@@ -896,6 +906,7 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
     <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
     <div class="gate-btns">
       <button id="gatePeli" class="gate-btn primary">▶ Reproducir</button>
+      <button id="gateCorto" class="gate-btn">Corte de 5 min</button>
       <button id="gateSound" class="gate-btn">Ver como presentación</button>
       <button id="gateSilent" class="gate-btn">Sin sonido</button>
     </div>

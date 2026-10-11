@@ -65,9 +65,10 @@ await page.addInitScript(() => {
   };
 });
 await page.goto(DECK);
-await page.waitForSelector('#gatePeli');
+const PUERTA = process.env.GATE || 'gatePeli'; // gateCorto = el corte de 5 minutos
+await page.waitForSelector('#' + PUERTA);
 const tClick = Date.now();
-await page.click('#gatePeli');
+await page.click('#' + PUERTA);
 const N = await page.evaluate(() => document.querySelectorAll('section.slide').length);
 let ultimo = '', desde = Date.now();
 for (;;) {
@@ -76,6 +77,7 @@ for (;;) {
   if (h !== ultimo) { ultimo = h; desde = Date.now(); process.stdout.write(`\r${h}/${N}  ${Math.round((Date.now() - tClick) / 1000)} s   `); }
   if (max && (Date.now() - tClick) / 1000 > max) break;
   if (h === '#' + (N - 1) && Date.now() - desde > 20000) break;
+  if (await page.evaluate(() => document.body.dataset.fin === '1')) { await page.waitForTimeout(2500); break; }
   if (Date.now() - desde > 150000) { console.error('\natascada en', h); break; }
 }
 console.log('\nrecogiendo audio…');

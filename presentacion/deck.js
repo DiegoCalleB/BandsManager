@@ -205,9 +205,20 @@
   let delayedVideoTimer = 0;
   // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
   let pelicula = false, pelTimer = 0;
-  const durPelicula = (s) => +(s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
+  const durPelicula = (s) => +((corte && s.dataset.durCorto) || s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
   let pausado = false; // reproductor de cine.js: pausa la película sin salir de ella
-  const seguirPelicula = (ms) => { clearTimeout(pelTimer); if (pelicula && !pausado && cur < N - 1) pelTimer = setTimeout(() => show(cur + 1), ms); };
+  // Corte de 5 minutos: las diapositivas con data-corto forman una lista más corta (?corte o el botón de la entrada)
+  let corte = new URLSearchParams(location.search).has('corte');
+  const idxCorte = slides.map((s, i) => (s.hasAttribute('data-corto') ? i : -1)).filter((i) => i >= 0);
+  const lista = () => (corte && idxCorte.length ? idxCorte : slides.map((_, i) => i));
+  const proximo = (i) => { const k = lista().find((x) => x > i); return k === undefined ? null : k; };
+  const anterior = (i) => { const l = lista().filter((x) => x < i); return l.length ? l[l.length - 1] : null; };
+  const seguirPelicula = (ms) => {
+    clearTimeout(pelTimer);
+    if (!pelicula || pausado) return;
+    const nx = proximo(cur);
+    pelTimer = setTimeout(() => { if (nx === null) document.body.dataset.fin = '1'; else show(nx); }, ms);
+  };
   const pausar = (on) => {
     pausado = !!on; document.body.classList.toggle('pausado', pausado);
     if (pausado) { clearTimeout(pelTimer); if (window.DeckVoces) window.DeckVoces.stop(); document.querySelectorAll('video').forEach((v) => v.pause()); }
@@ -264,18 +275,22 @@
         show(cur, false);
       };
       $('#gateSound').onclick = () => go(true);
-      if ($('#gatePeli')) $('#gatePeli').onclick = () => {
+      const peli = (conCorte) => () => {
+        corte = conCorte || corte; document.body.classList.toggle('corte', corte);
         const ir = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
         $$('.gate-btn').forEach((b) => { b.disabled = true; });
         if (window.CineIdent) window.CineIdent.play(ir); else ir();
       };
+      if ($('#gatePeli')) $('#gatePeli').onclick = peli(false);
+      if ($('#gateCorto')) $('#gateCorto').onclick = peli(true);
       $('#gateSilent').onclick = () => go(false);
       ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
+      if (corte) document.body.classList.add('corte');
     } else gate.remove();
   }
 
-  const next = () => { if (!stepForward()) show(cur + 1); };
-  const prev = () => { if (!stepBack()) show(cur - 1, true, clicksOn() ? 'instant' : 'play'); };
+  const next = () => { if (!stepForward()) { const nx = proximo(cur); if (nx !== null) show(nx); } };
+  const prev = () => { if (!stepBack()) { const an = anterior(cur); if (an !== null) show(an, true, clicksOn() ? 'instant' : 'play'); } };
 
   function countUp(slide) {
     $$('[data-count]', slide).forEach((el) => {
@@ -351,7 +366,7 @@
     }
   });
   // Para el reproductor estilo Netflix (cine.js)
-  window.Deck = { get cur() { return cur; }, N, slides, show: (i) => show(i), next, prev, pausar, get pausado() { return pausado; }, get pelicula() { return pelicula; } };
+  window.Deck = { get cur() { return cur; }, N, slides, show: (i) => show(i), next, prev, pausar, lista, proximo, anterior, get corte() { return corte; }, get pausado() { return pausado; }, get pelicula() { return pelicula; } };
   $('#edgeL').onclick = prev; $('#edgeR').onclick = next;
   $('#bPrev').onclick = prev; $('#bNext').onclick = next; $('#aL').onclick = prev; $('#aR').onclick = next;
   $('#bGrid').onclick = toggleGrid; $('#bFs').onclick = fs; $('#bTheme').onclick = toggleTheme;

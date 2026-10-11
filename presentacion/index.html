@@ -28,6 +28,7 @@
     <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
     <div class="gate-btns">
       <button id="gatePeli" class="gate-btn primary">▶ Reproducir</button>
+      <button id="gateCorto" class="gate-btn">Corte de 5 min</button>
       <button id="gateSound" class="gate-btn">Ver como presentación</button>
       <button id="gateSilent" class="gate-btn">Sin sonido</button>
     </div>
@@ -38,7 +39,7 @@
 <div id="viewport">
 <main id="stage">
 
-<section class="slide trailer" data-title="Tráiler" data-transition="fade">
+<section class="slide trailer" data-title="Tráiler" data-corto data-transition="fade">
   <div class="tr-beat tr-photo" style="--t:0s;--d:2.8s;--img:url(img/concierto-2.jpg)"><div class="tr-time">Resurrección Fest · Sábado · 02:14</div><div class="tr-big">Esta banda iba a separarse.</div></div>
   <div class="tr-beat tr-photo" style="--t:2.6s;--d:4.0s;--img:url(img/concierto-3.jpg)">
     <div class="tr-time">Seis meses antes · Jueves · 23:47</div>
@@ -73,7 +74,7 @@
   </div>
 </section>
 
-<section class="slide scene" data-title="Prólogo · Jueves, 23:47" data-transition="fade">
+<section class="slide scene" data-title="Prólogo · Jueves, 23:47" data-corto data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg)"></div>
   <span class="tag">Prólogo · Os Herdeiros do Código</span>
   <h2>Un jueves cualquiera, a las 23:47.</h2>
@@ -86,7 +87,7 @@
     </ul>
 </section>
 
-<section class="slide scene" data-title="Prólogo · La llamada" data-transition="zoom">
+<section class="slide scene" data-title="Prólogo · La llamada" data-corto data-transition="zoom">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg)"></div>
   <span class="tag">Prólogo · Jueves · 00:09</span>
   <h2>Y entonces, sonó el teléfono.</h2>
@@ -115,7 +116,7 @@
   </table>
 </section>
 
-<section class="slide scene" data-title="Prólogo · La decisión" data-transition="rise">
+<section class="slide scene" data-title="Prólogo · La decisión" data-corto data-transition="rise">
   <div class="scene-bg" style="--bg-img:url(img/concierto-2.jpg)"></div>
   <span class="tag">Prólogo · Jueves · 00:20</span>
   <h2 style="font-size:78px">Esa noche, {bajo} abrió el portátil.</h2>
@@ -190,7 +191,7 @@
   <div class="ft-shot"><video data-sync muted playsinline preload="auto" poster="img/d-h-booking.jpg"><source src="video/v-mapa-peninsula.mp4" type="video/mp4"></video></div>
 </section>
 
-<section class="slide feat dl" data-grupo="promocion" data-title="La IA escribe, tú apruebas" data-transition="rise">
+<section class="slide feat dl" data-grupo="promocion" data-title="La IA escribe, tú apruebas" data-corto data-transition="rise">
   <div class="ft-copy"><span class="tag">Sábado · 11:00 · Conseguir el bolo</span><h2>La IA escribe. Tú apruebas.</h2>
     <ul class="dlg">
       <li data-who="guitarra" data-say="¡Pero si ha escrito a tres salas mientras yo afinaba! ¡Y eso que afino rápido!">¡Me ha escrito a tres salas mientras hablábamos!</li>
@@ -222,7 +223,7 @@
   <div class="ft-shot"><img src="img/d-h-swap.jpg" alt="" style="object-position:50% 0"></div>
 </section>
 
-<section class="slide feat dl" data-grupo="promocion" data-title="Cambio de perfil" data-transition="rise">
+<section class="slide feat dl" data-grupo="promocion" data-title="Cambio de perfil" data-corto data-transition="rise">
   <div class="ft-copy"><span class="tag">Sábado · 11:00 · Conseguir el bolo</span><h2>Una cuenta, varias bandas.</h2>
     <ul class="dlg">
       <li data-who="bajo" data-say="Tranquilo, {voz}: {bateria} puede tocar en las dos bandas, y sin liarse. Mirad su cuenta.">Tranquilos: {bateria} puede tocar en las dos bandas sin liarse. Mirad su cuenta.</li>
@@ -351,7 +352,7 @@
   <div class="ft-shot"><video data-ambient muted loop playsinline preload="auto" poster="video/v-profesor.jpg" style="object-position:50% 0"><source src="video/v-profesor.mp4" type="video/mp4"></video></div>
 </section>
 
-<section class="slide feat dl" data-grupo="musica" data-title="Iris separa los instrumentos" data-transition="rise">
+<section class="slide feat dl" data-grupo="musica" data-title="Iris separa los instrumentos" data-corto data-transition="rise">
   <div class="ft-copy"><span class="tag">Sábado · 11:40 · Antes del concierto</span><h2>Cada instrumento, por separado.</h2>
     <ul class="dlg">
       <li data-who="bajo" data-say="Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras. Pista a pista.">Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.</li>
@@ -398,7 +399,7 @@
   <div class="ft-shot"><video data-sync muted playsinline preload="auto" poster="img/d-h-evento.jpg"><source src="video/v-concierto.mp4" type="video/mp4"></video></div>
 </section>
 
-<section class="slide feat dl" data-grupo="musica" data-title="Choques en el calendario" data-transition="rise">
+<section class="slide feat dl" data-grupo="musica" data-title="Choques en el calendario" data-corto data-transition="rise">
   <div class="ft-copy"><span class="tag">Sábado · 11:40 · Antes del concierto</span><h2>El calendario avisa de los choques.</h2>
     <ul class="dlg">
       <li data-who="bateria" data-say="[worried] Oye… ¿y si me cuadran dos ensayos a la vez? Uno con cada banda.">¿Y si me cuadran dos ensayos a la vez, uno con cada banda?</li>
@@ -532,7 +533,7 @@
   </ul>
 </section>
 
-<section class="slide scene noches" data-title="Las noches" data-transition="fade">
+<section class="slide scene noches" data-title="Las noches" data-corto data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg)"></div>
   <span class="tag">Sábado, 13:02 · El local de ensayo</span>
   <h2>Casi siempre, de noche.</h2>
@@ -1544,7 +1545,7 @@
   </ol>
 </section>
 
-<section class="slide scene" data-title="El festival, 02:14" data-transition="zoom">
+<section class="slide scene" data-title="El festival, 02:14" data-corto data-transition="zoom">
   <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg)"></div>
   <span class="tag">Seis meses después · Sábado · 01:58 · Backstage</span>
   <h2 style="font-size:76px">Cinco minutos para salir.</h2>
@@ -1565,7 +1566,7 @@
     </ul>
 </section>
 
-<section class="slide scene" data-title="En la radio" data-transition="fade">
+<section class="slide scene" data-title="En la radio" data-corto data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg)"></div>
   <span class="tag">Domingo · 09:00 · En antena</span>
   <div class="radio">
@@ -1586,7 +1587,7 @@
     </ul>
 </section>
 
-<section class="slide scene reveal" data-title="El giro: el bajista soy yo" data-transition="fade">
+<section class="slide scene reveal" data-title="El giro: el bajista soy yo" data-corto data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
@@ -1595,7 +1596,7 @@
   <p class="sub sub2">Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.</p>
 </section>
 
-<section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-transition="fade">
+<section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-corto data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
@@ -1604,7 +1605,7 @@
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
 </section>
 
-<section class="slide cover" data-title="Gracias" data-transition="fade">
+<section class="slide cover" data-title="Gracias" data-corto data-transition="fade">
   <div class="brand"><img src="img/logo.png" alt="">BandManager.io</div>
   <h1>Gracias.</h1>
   <p class="sub">A {bateria} y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad. Y, si todo sale bien, en un escenario.</p>
@@ -1613,7 +1614,7 @@
   <div class="art"><div class="shot" style="inset:120px 90px 0 90px;border-radius:44px 44px 0 0;background:var(--bg);cursor:zoom-in"><img class="l" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt="Setlist en el móvil"><img class="d" loading="lazy" decoding="async" src="img/md-h-repertorio.jpg" alt=""></div></div>
 </section>
 
-<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="82000">
+<section class="slide creditos" data-title="Créditos" data-corto data-dur-corto="33000" data-transition="fade" data-dur="82000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>
     <h2 class="cr-titulo">BandManager.io</h2>
@@ -1633,6 +1634,7 @@
     </dl>
     <h3>Escrita, programada y dirigida por</h3>
     <p class="cr-nombre">Diego de la Calle</p>
+    <div class="solo-largo">
     <h2 class="cr-seccion">Los que aparecen en BandManager.io</h2>
     <h3>Los que tocan</h3>
     <dl class="cr-dl">
@@ -1713,6 +1715,7 @@
       <dt>Vitest · Playwright</dt><dd>Más de dos mil pruebas</dd>
       <dt>ESLint · Husky · GitHub Actions</dt><dd>Nadie sube nada roto</dd>
     </dl>
+    </div>
     <h2 class="cr-seccion">Cómo se hizo esta película</h2>
     <dl class="cr-dl">
       <dt>Claude Code</dt><dd>Escribió casi todo el código y la historia</dd>
