@@ -26,7 +26,7 @@ router.delete(
 
       const state = loadState();
       const cleanTarget = rawBandId.replace(/^(band|reg)-/, '');
-      const user = state.users?.find((u: any) => u.id === user_id);
+      const user = state.users?.find((u) => u.id === user_id);
       const userEmail = (
         user?.email ||
         req.user?.email ||
@@ -35,7 +35,7 @@ router.delete(
 
       // 1. Remove relationship from state.userBands
       if (state.userBands && Array.isArray(state.userBands)) {
-        state.userBands = state.userBands.filter((ub: any) => {
+        state.userBands = state.userBands.filter((ub) => {
           const ubClean = ub.band_id
             ? ub.band_id.replace(/^(band|reg)-/, '')
             : '';
@@ -43,7 +43,7 @@ router.delete(
             ub.user_id === user_id ||
             (userEmail &&
               state.users?.some(
-                (u: any) =>
+                (u) =>
                   u.id === ub.user_id &&
                   (u.email?.toLowerCase() === userEmail ||
                     u.username?.toLowerCase() === userEmail)
@@ -54,7 +54,7 @@ router.delete(
 
       // 2. Remove / unlink on state.registeredBands if matching
       if (state.registeredBands && Array.isArray(state.registeredBands)) {
-        state.registeredBands = state.registeredBands.filter((rb: any) => {
+        state.registeredBands = state.registeredBands.filter((rb) => {
           const rbClean = rb.band_id
             ? rb.band_id.replace(/^(band|reg)-/, '')
             : rb.id
@@ -200,7 +200,7 @@ router.delete(
       }
 
       const updatedUser = user
-        ? state.users?.find((u: any) => u.id === user_id) || user
+        ? state.users?.find((u) => u.id === user_id) || user
         : null;
       const updatedAvailableBands = updatedUser
         ? await buildAvailableBandsForUser(state, updatedUser)

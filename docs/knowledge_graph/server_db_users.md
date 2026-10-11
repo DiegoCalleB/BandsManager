@@ -18,6 +18,7 @@ Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*

@@ -104,7 +104,7 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
 
     const userBandId = getTargetBandId(req);
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, userBandId);
@@ -124,7 +124,7 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, error: "No hay historial de entrenamiento previo para deshacer." });
     }
 
-    let targetLog = logId ? history.find((h: any) => h.id === logId) : history[0];
+    let targetLog = logId ? history.find((h) => h.id === logId) : history[0];
     if (!targetLog) {
       targetLog = history[0];
     }

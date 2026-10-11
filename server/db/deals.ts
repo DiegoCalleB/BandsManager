@@ -366,7 +366,7 @@ export async function dbSignDeal(
       const state = loadState();
       if (state && Array.isArray(state.concerts)) {
         const itemToSave = savedConcert || concertPayload;
-        const idx = state.concerts.findIndex((c: any) => c.id === createdConcertId || (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala));
+        const idx = state.concerts.findIndex((c) => c.id === createdConcertId || (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala));
         if (idx !== -1) {
           state.concerts[idx] = itemToSave as any;
         } else {

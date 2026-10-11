@@ -1,6 +1,7 @@
 // Métricas de la banda y de redes: CRUD, sincronización y métricas reales
 // (YouTube/Instagram/TikTok).
 
+import { bandaDe } from '../utils/bandAccess.js';
 import express from "express";
 import { SocialMetric } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth } from "../state.js";
@@ -18,7 +19,7 @@ router.get("/metrics", requireAuth, async (req, res) => {
     res.json(dbMetrics);
   } catch {
     const state = loadState();
-    res.json((state.metrics || []).filter((m: any) => m.band_id === userBandId || m.bandId === userBandId));
+    res.json((state.metrics || []).filter((m) => bandaDe(m) === userBandId));
   }
 });
 

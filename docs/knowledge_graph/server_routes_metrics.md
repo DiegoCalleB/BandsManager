@@ -19,6 +19,7 @@ Métricas de la banda y de redes: CRUD, sincronización y métricas reales
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(Layer: #service, Domain: #social)*

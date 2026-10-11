@@ -1,6 +1,7 @@
 // Repertorio: canciones (`songs`), setlists y atajos; análisis de dinámica, acordes y tonalidad
 // persistidos junto a la canción.
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import {
@@ -535,7 +536,7 @@ export function mapSongRecord(s: any) {
   return {
     ...s,
     id: s.id,
-    band_id: s.band_id || s.bandId,
+    band_id: bandaDe(s),
     titulo: s.titulo || "Sin Título",
     duracion: s.duracion || "03:30",
     duracionSegundos: Number(s.duracion_segundos ?? s.duracionSegundos ?? 210),

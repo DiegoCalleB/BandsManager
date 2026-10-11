@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webhook de Resend. Solo
+Exporta: generateTrackingToken, decodeTrackingToken.
 
 ---
 
@@ -23,6 +23,7 @@ Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webho
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_utils_trackingSeguro|server/utils/trackingSeguro.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_epk_configs|tabla epk_configs]] *(Layer: #schema, Domain: #epk)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*

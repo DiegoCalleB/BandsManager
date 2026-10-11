@@ -42,6 +42,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[server_services_tourLogisticsService|server/services/tourLogisticsService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_venueEventsRadarService|server/services/venueEventsRadarService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

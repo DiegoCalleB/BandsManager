@@ -26,7 +26,7 @@ router.post('/auth/check-invitation', loginRateLimiter, async (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
 
   const user = state.users.find(
-    (u: any) =>
+    (u) =>
       (u.email && u.email.toLowerCase() === cleanEmail) ||
       u.username.toLowerCase() === cleanEmail
   );
@@ -46,12 +46,12 @@ router.post('/auth/check-invitation', loginRateLimiter, async (req, res) => {
   // Find all bands this user belongs to
   if (!state.userBands) state.userBands = [];
   const userBandsList = state.userBands.filter(
-    (ub: any) => ub.user_id === user.id
+    (ub) => ub.user_id === user.id
   );
 
-  const bands = userBandsList.map((ub: any) => {
+  const bands = userBandsList.map((ub) => {
     const bandInfo = (state.registeredBands || []).find(
-      (b: any) => b.band_id === ub.band_id
+      (b) => b.band_id === ub.band_id
     );
     return {
       band_id: ub.band_id,
@@ -84,7 +84,7 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   const cleanUsername = username.trim().toLowerCase();
 
   const user = state.users.find(
-    (u: any) =>
+    (u) =>
       (u.email && u.email.toLowerCase() === cleanEmail) ||
       u.username.toLowerCase() === cleanEmail
   );
@@ -114,7 +114,7 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
 
   // Check if chosen username is already taken by a different user
   const usernameTaken = state.users.some(
-    (u: any) => u.id !== user.id && u.username.toLowerCase() === cleanUsername
+    (u) => u.id !== user.id && u.username.toLowerCase() === cleanUsername
   );
 
   if (usernameTaken) {
@@ -155,11 +155,11 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
   // Compute available bands
   if (!state.userBands) state.userBands = [];
   const userBandsList = state.userBands.filter(
-    (ub: any) => ub.user_id === user.id
+    (ub) => ub.user_id === user.id
   );
-  const availableBands = userBandsList.map((ub: any) => {
+  const availableBands = userBandsList.map((ub) => {
     const bandInfo = (state.registeredBands || []).find(
-      (b: any) => b.band_id === ub.band_id
+      (b) => b.band_id === ub.band_id
     );
     return {
       band_id: ub.band_id,

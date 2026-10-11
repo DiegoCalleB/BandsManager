@@ -1,3 +1,4 @@
+import type { UsuarioGuardado } from '../../stateTypes.js';
 /**
  * Miembros de la banda: asociar una cuenta existente, listar y dar de alta (solo líder).
  */
@@ -38,7 +39,7 @@ router.post(
       const cleanSearch = email.trim().toLowerCase();
 
       const targetUser = state.users.find(
-        (u: any) =>
+        (u) =>
           (u.email && u.email.toLowerCase() === cleanSearch) ||
           (u.username && u.username.toLowerCase() === cleanSearch)
       );
@@ -51,7 +52,7 @@ router.post(
 
       if (!state.userBands) state.userBands = [];
       const relationExists = state.userBands.some(
-        (ub: any) => ub.user_id === targetUser.id && ub.band_id === targetBandId
+        (ub) => ub.user_id === targetUser.id && ub.band_id === targetBandId
       );
 
       if (relationExists) {
@@ -112,15 +113,15 @@ router.get('/users', requireAuth, async (req, res) => {
   if (!state.userBands) state.userBands = [];
   const bandUserIds = new Set(
     state.userBands
-      .filter((ub: any) => ub.band_id === bandId)
-      .map((ub: any) => ub.user_id)
+      .filter((ub) => ub.band_id === bandId)
+      .map((ub) => ub.user_id)
   );
 
   const bandUsers = state.users
-    .filter((u: any) => bandUserIds.has(u.id))
-    .map((u: any) => {
+    .filter((u) => bandUserIds.has(u.id))
+    .map((u) => {
       const ub = state.userBands.find(
-        (ub: any) => ub.user_id === u.id && ub.band_id === bandId
+        (ub) => ub.user_id === u.id && ub.band_id === bandId
       );
       return { ...u, role: ub?.role || 'member' };
     });
@@ -130,7 +131,7 @@ router.get('/users', requireAuth, async (req, res) => {
     if (dbUsers && dbUsers.length > 0) {
       const mergedUsers = dbUsers.map((u: any) => {
         const ub = state.userBands.find(
-          (ub: any) => ub.user_id === u.id && ub.band_id === bandId
+          (ub) => ub.user_id === u.id && ub.band_id === bandId
         );
         return { ...u, role: ub?.role || 'member' };
       });
@@ -166,7 +167,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
 
   // Check if a user with this email or username already exists
   const existingUser = state.users.find(
-    (u: any) =>
+    (u) =>
       u.username.toLowerCase() === cleanUsername ||
       (u.email && u.email.toLowerCase() === cleanEmail)
   );
@@ -174,7 +175,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
   if (existingUser) {
     if (!state.userBands) state.userBands = [];
     const relationExists = state.userBands.some(
-      (ub: any) => ub.user_id === existingUser.id && ub.band_id === targetBandId
+      (ub) => ub.user_id === existingUser.id && ub.band_id === targetBandId
     );
 
     if (relationExists) {
@@ -189,7 +190,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
           console.warn('No se pudo persistir la invitación reenviada:', e);
         }
         const bandInfo = (state.registeredBands || []).find(
-          (b: any) => b.band_id === targetBandId || b.id === targetBandId
+          (b) => b.band_id === targetBandId || b.id === targetBandId
         );
         sendMemberInvitationEmail({
           toEmail: existingUser.email,
@@ -250,11 +251,11 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
   // Create new user record
   const { hash, salt } = hashPassword(password);
   const existingIds = new Set<string>(
-    (state.users || []).map((u: any) => u.id)
+    (state.users || []).map((u) => u.id)
   );
   const newUserId = generateUniqueSlugId('user', cleanUsername, existingIds);
 
-  const newUser = {
+  const newUser: UsuarioGuardado = {
     id: newUserId,
     username: cleanUsername,
     name: name.trim(),
@@ -302,7 +303,7 @@ router.post('/users', requireAuth, requireLeader, async (req, res) => {
   // Enviar email de invitación al nuevo miembro si tiene email válido
   if (cleanEmail && cleanEmail.includes('@')) {
     const bandInfo = (state.registeredBands || []).find(
-      (b: any) => b.band_id === targetBandId || b.id === targetBandId
+      (b) => b.band_id === targetBandId || b.id === targetBandId
     );
     const bName = bandInfo?.nombre_banda || 'tu banda';
     sendMemberInvitationEmail({

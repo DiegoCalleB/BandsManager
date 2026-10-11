@@ -1,6 +1,7 @@
 // Plantillas de email: listar, guardar, previsualizar, optimizar y generar todas con IA.
 
 import express from 'express';
+import { mapLeadTipoToTemplateCategory } from '../../promptsManager.js';
 import {
   requireAuth,
   loadState,
@@ -512,7 +513,7 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
   try {
     const state = await loadState();
     const bandId = getTargetBandId(req);
-    const leads = state.leads?.filter((l: any) => l.band_id === bandId) || [];
+    const leads = state.leads?.filter((l) => l.band_id === bandId) || [];
 
     const stats: Record<
       string,
@@ -577,7 +578,7 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
 
     // Validar emails en paralelo (con caché para performance)
     const emailValidities = await Promise.all(
-      leads.map(async (lead: any) => ({
+      leads.map(async (lead) => ({
         leadId: lead.id,
         email: lead.email || lead.email_contacto,
         isValid: isValidEmailSyntax(lead.email || lead.email_contacto)
@@ -591,7 +592,9 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
     );
 
     for (const lead of leads) {
-      const cat = lead.template_category || 'salas';
+      // La categoría sale del tipo del lead (como las plantillas). Antes se leía template_category,
+      // un campo que nadie escribe: todos los leads contaban como «salas».
+      const cat = mapLeadTipoToTemplateCategory(lead.tipo);
       if (!stats[cat]) continue;
 
       const email = lead.email || lead.email_contacto;
@@ -614,7 +617,9 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
       }
 
       // Contar uso solo si tiene pitch generado (y email válido)
-      if (lead.ultimo_pitch_generado) {
+      // Uso = el lead tiene pitch generado. Antes miraba ultimo_pitch_generado, que no existe:
+      // los usos y la tasa de respuesta salían siempre a 0.
+      if (lead.pitch_generado) {
         stats[cat].totalUses++;
 
         // Contar respuesta positiva (respondido, negociando, confirmado)

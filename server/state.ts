@@ -1,4 +1,5 @@
 import fs from "fs";
+import type { AppState } from './stateTypes.js';
 import path from "path";
 import express from "express";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES, INITIAL_SOCIAL_METRICS, INITIAL_USERS, INITIAL_SONGS, INITIAL_SETLISTS, INITIAL_BANDS, INITIAL_TOURS } from "../src/db_seed.js";
@@ -737,7 +738,7 @@ export function invalidateStateCache(): void {
   inMemoryStateCache = null;
 }
 
-export function loadState(): any {
+export function loadState(): AppState {
   if (inMemoryStateCache) {
     return inMemoryStateCache;
   }
@@ -946,7 +947,7 @@ export function loadState(): any {
   return defaultState;
 }
 
-export function saveState(state: any) {
+export function saveState(state: AppState) {
   try {
     ensureUniqueIdsInState(state);
     inMemoryStateCache = state;

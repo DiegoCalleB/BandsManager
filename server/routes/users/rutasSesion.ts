@@ -35,7 +35,7 @@ router.get('/auth/me', async (req, res) => {
     if (Array.isArray(freshUsers) && freshUsers.length > 0) {
       freshUsers.forEach((su: any) => {
         const idx = state.users.findIndex(
-          (u: any) =>
+          (u) =>
             u.id === su.id ||
             (u.username &&
               u.username.toLowerCase() === su.username?.toLowerCase())
@@ -59,7 +59,7 @@ router.get('/auth/me', async (req, res) => {
     (token && ACTIVE_SESSIONS[token]) ||
     (token && state.sessions && state.sessions[token]);
   const user = session
-    ? state.users.find((u: any) => u.id === session.userId)
+    ? state.users.find((u) => u.id === session.userId)
     : null;
 
   if (!user) {
@@ -94,7 +94,7 @@ router.get('/auth/me', async (req, res) => {
       .replace(/^(band|reg)-/, '')
       .toLowerCase()
       .trim();
-    const regBand = state.registeredBands.find((b: any) => {
+    const regBand = state.registeredBands.find((b) => {
       const bBid = (b.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -159,7 +159,7 @@ router.post('/auth/switch-band', async (req, res) => {
     (token && ACTIVE_SESSIONS[token]) ||
     (token && state.sessions && state.sessions[token]);
   const currentUser = session
-    ? state.users.find((u: any) => u.id === session.userId)
+    ? state.users.find((u) => u.id === session.userId)
     : null;
 
   if (!currentUser) {
@@ -178,7 +178,7 @@ router.post('/auth/switch-band', async (req, res) => {
   // Check if they have access to this band (either via userBands, registeredBands or legacy duplicates)
   if (!state.userBands) state.userBands = [];
   const hasAccessInUserBands = state.userBands.some(
-    (ub: any) =>
+    (ub) =>
       (ub.user_id === currentUser!.id ||
         (userEmail && ub.email?.toLowerCase() === userEmail)) &&
       ub.band_id &&
@@ -186,7 +186,7 @@ router.post('/auth/switch-band', async (req, res) => {
   );
 
   const hasAccessInRegisteredBands = (state.registeredBands || []).some(
-    (b: any) =>
+    (b) =>
       (b.user_id === currentUser!.id || b.email?.toLowerCase() === userEmail) &&
       ((b.band_id &&
         b.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand) ||
@@ -194,7 +194,7 @@ router.post('/auth/switch-band', async (req, res) => {
   );
 
   const legacyTargetUser = state.users.find(
-    (u: any) =>
+    (u) =>
       u.band_id &&
       u.band_id.replace(/^(band|reg)-/, '') === cleanTargetBand &&
       ((u.email && u.email.toLowerCase() === userEmail) ||
@@ -225,27 +225,7 @@ router.post('/auth/switch-band', async (req, res) => {
 
   const cleanCheck = cleanTargetBand.toLowerCase().trim();
   const bandInfo =
-    (state.registeredBands || []).find((b: any) => {
-      const bBid = (b.band_id || '')
-        .replace(/^(band|reg)-/, '')
-        .toLowerCase()
-        .trim();
-      const bId = (b.id || '')
-        .replace(/^(band|reg)-/, '')
-        .toLowerCase()
-        .trim();
-      const bName = (b.nombre_banda || b.bandName || b.name || '')
-        .toLowerCase()
-        .trim();
-      return (
-        b.band_id === band_id ||
-        b.id === band_id ||
-        bBid === cleanCheck ||
-        bId === cleanCheck ||
-        (cleanCheck.length > 1 && bName === cleanCheck)
-      );
-    }) ||
-    (state.bands || []).find((b: any) => {
+    (state.registeredBands || []).find((b) => {
       const bBid = (b.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -287,7 +267,7 @@ router.post('/auth/switch-band', async (req, res) => {
 
   // Sync band_id and plan on all user records matching email
   if (state.users) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       if (
         u.id === targetUser.id ||
         (userEmail &&

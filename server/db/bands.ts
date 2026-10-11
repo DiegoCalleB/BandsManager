@@ -1,6 +1,7 @@
 // Bandas registradas (`registered_bands`) y migración de planes. Lectura y escritura siempre con el
 // `bandId` resuelto por sesión (AGENTS.md §2.1).
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -116,7 +117,7 @@ export async function dbUpsertRegisteredBand(band: any) {
   const sb = getSupabase();
   const payload = {
     id: band.id || `reg-${band.band_id || Date.now()}`,
-    band_id: band.band_id || band.bandId,
+    band_id: bandaDe(band),
     user_id: band.user_id || band.userId || null,
     nombre_banda: band.nombre_banda || band.nombreBanda || band.bandName || "Banda",
     email: band.email || "",

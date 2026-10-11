@@ -11,7 +11,7 @@ import {
   dbUpsertBandSocialAccount,
   dbDeleteBandSocialAccount
 } from "../db.js";
-import { getTargetBandId } from "../utils/bandAccess.js";
+import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { publishSocialPostNow, publishDueScheduledPosts } from "../services/socialPublisher.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -25,7 +25,7 @@ router.get("/posts", requireAuth, async (req, res) => {
     res.json(posts);
   } catch {
     const state = loadState();
-    res.json((state.posts || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
+    res.json((state.posts || []).filter((p) => bandaDe(p) === userBandId));
   }
 });
 

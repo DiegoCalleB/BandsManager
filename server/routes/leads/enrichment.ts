@@ -2,6 +2,7 @@
 // URLs externas pasa por ssrfGuard y todo dato scrapeado por `sanitizeExternalText` (AGENTS.md
 // §2.2).
 
+import { getBandDnaProfile } from '../../utils/bandDna.js';
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
@@ -220,7 +221,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
   let existingLead: any = null;
   if (leadId) {
     const state = loadState();
-    existingLead = state.leads?.find((l: any) => l.id === leadId);
+    existingLead = state.leads?.find((l) => l.id === leadId);
     if (existingLead) {
       nombre_sala = nombre_sala || existingLead.nombre_sala || existingLead.nombre || existingLead.nombreSala || existingLead.name;
     }
@@ -375,7 +376,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 
   if (leadId && (finalLogo || finalIcon || finalWebsite)) {
     const state = loadState();
-    const idx = state.leads.findIndex((l: any) => l.id === leadId);
+    const idx = state.leads.findIndex((l) => l.id === leadId);
     if (idx !== -1) {
       if (finalLogo) state.leads[idx].imagen_url = finalLogo;
       if (finalIcon) state.leads[idx].icono = finalIcon;
@@ -403,10 +404,10 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
     // enriquecía y se devolvía entero.
     const delaBanda = (l: any) => mismaBanda(l?.band_id, userBandId);
     if (leadId) {
-      lead = state.leads?.find((l: any) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
+      lead = state.leads?.find((l) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
     } else if (name) {
       const cleanName = name.toLowerCase().trim();
-      lead = state.leads?.find((l: any) => delaBanda(l) && l.nombre_sala?.toLowerCase().trim() === cleanName);
+      lead = state.leads?.find((l) => delaBanda(l) && l.nombre_sala?.toLowerCase().trim() === cleanName);
     }
 
     if (!lead) {
@@ -420,7 +421,7 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
 
     // Reload the updated lead
     const updatedState = loadState();
-    const freshLead = updatedState.leads?.find((l: any) => l.id === lead.id) || enrichedLead || (await dbGetLeadById(lead.id, userBandId));
+    const freshLead = updatedState.leads?.find((l) => l.id === lead.id) || enrichedLead || (await dbGetLeadById(lead.id, userBandId));
 
     return res.json({
       success: true,
@@ -1111,9 +1112,11 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
     }
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
-    const bandGenre = band?.genero || lead.genero || "música en directo";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
+    const bandGenre = band.genero || lead.genero || "música en directo";
 
     const spotifyDemand = await calculateSpotifyCityDemand(
       bandName,
@@ -1272,9 +1275,11 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
     }
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
-    const bandGenre = band?.genero || lead.genero || "música en directo";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
+    const bandGenre = band.genero || lead.genero || "música en directo";
 
     const [
       spotifyRes,
@@ -1292,7 +1297,7 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
       fetchGooglePlacesVenueInfo(lead.nombre_sala, lead.ciudad || "Madrid", lead.direccion),
       fetchSetlistVenueHistory(lead.nombre_sala, lead.ciudad || "Madrid", lead.genero || bandGenre),
       lead.email_contacto ? verifyEmailDeliverability(lead.email_contacto) : Promise.resolve(null),
-      calculateTourLogistics(band?.ciudad || "Madrid", lead.ciudad || "Madrid", lead.direccion),
+      calculateTourLogistics(band.ciudadBase || "Madrid", lead.ciudad || "Madrid", lead.direccion),
       fetchVenueSocialEngagement(lead.nombre_sala, lead.ciudad || "Madrid", lead.instagram_handle),
       calculateBookingWindow(lead.nombre_sala, lead.tipo || "sala", lead.aforo || 200, lead.ciudad || "Madrid"),
       detectLocalEventsAndClashes(lead.ciudad || "Madrid", bandGenre),
@@ -1398,7 +1403,7 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
       alquilerSalaFijo: lead.alquiler_sala_estimado || 250,
       porcentajeSala: lead.porcentaje_taquilla || 15,
       gastosProduccionFijos: (updates.tour_logistics?.coste_total_viaje || 100) + 150, // viaje + técnico
-      numMusicos: band?.num_integrantes || 5,
+      numMusicos: band.numMusicos || 5,
       asistenciaEstimada: updates.spotify_city_demand?.prediccion_entradas || Math.round((lead.aforo || 250) * 0.75)
     });
 
@@ -1452,8 +1457,10 @@ router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAut
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const origin = req.body.origen || band?.ciudad || "Madrid";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const origin = req.body.origen || band.ciudadBase || "Madrid";
 
     const result = await calculateTourLogistics(origin, lead.ciudad || "Madrid", lead.direccion);
     const updatedLead: Lead = {
@@ -1608,8 +1615,10 @@ router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requ
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const genero = band?.genero || lead.genero || "Indie Rock";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const genero = band.genero || lead.genero || "Indie Rock";
 
     const result = await detectLocalEventsAndClashes(lead.ciudad || "Madrid", genero);
     const updatedLead: Lead = {
@@ -1636,8 +1645,10 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
 
     const result = await findLocalPressAndMedia(lead.ciudad || "Madrid", lead.nombre_sala, bandName);
     const updatedLead: Lead = {
@@ -1664,8 +1675,10 @@ router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireA
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const genero = band?.genero || lead.genero || "Indie Rock";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const genero = band.genero || lead.genero || "Indie Rock";
 
     const result = await findLocalBandPartners(lead.ciudad || "Madrid", genero, lead.nombre_sala);
     const updatedLead: Lead = {

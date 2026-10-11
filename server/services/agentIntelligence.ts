@@ -73,7 +73,7 @@ async function getMemberCrossBandConflicts(currentBandId: string): Promise<Membe
       if (userEmail) {
         const currentState = loadState();
         const regMatches = (currentState?.registeredBands || []).filter(
-          (b: any) => (b.email && b.email.toLowerCase().trim() === userEmail) || b.user_id === userId
+          (b) => (b.email && b.email.toLowerCase().trim() === userEmail) || b.user_id === userId
         );
         for (const reg of regMatches) {
           const cId = cleanBandId(reg.band_id || reg.id);

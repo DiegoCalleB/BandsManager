@@ -340,7 +340,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const { leadId, userBandId, comentario, tono_rating, contenido_rating, providers, activeCampaign } = params;
     const state = loadState();
 
-    let lead = state.leads.find((l: any) => String(l.id) === String(leadId));
+    let lead = state.leads.find((l) => String(l.id) === String(leadId));
     if (!lead) {
       try {
         lead = await dbGetLeadById(leadId, userBandId);
@@ -405,7 +405,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const { leadId, userBandId, tono_rating, contenido_rating, comentario, alcance, provider, modelName, activeCampaign } = params;
     const state = loadState();
 
-    let lead = state.leads.find((l: any) => String(l.id) === String(leadId));
+    let lead = state.leads.find((l) => String(l.id) === String(leadId));
     if (!lead) {
       try {
         lead = await dbGetLeadById(leadId, userBandId);
@@ -475,7 +475,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
     const audit = evaluation.audit;
 
     // Registro de aprendizaje en el lead
-    const finalAlcance = alcance === "este_pitch" ? "este_pitch" : "global";
+    const finalAlcance: 'este_pitch' | 'global' = alcance === 'este_pitch' ? 'este_pitch' : 'global';
     const logEntry = {
       id: `fb-${Date.now()}`,
       fecha: new Date().toISOString(),

@@ -71,7 +71,7 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
         let changed = false;
         deals.forEach((d) => {
           if (d.estado === 'confirmado') {
-            const exists = state.concerts.some((c: any) =>
+            const exists = state.concerts.some((c) =>
               (d.concert_id && c.id === d.concert_id) ||
               (c.fecha === d.fecha_evento && c.sala === d.lugar_sala)
             );
@@ -251,7 +251,7 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
       try {
         const state = loadState();
         if (state && Array.isArray(state.concerts)) {
-          const match = state.concerts.find((c: any) =>
+          const match = state.concerts.find((c) =>
             (deal.concert_id && c.id === deal.concert_id) ||
             (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala)
           );

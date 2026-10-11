@@ -12,7 +12,7 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { autoEnrichBandContact } from "../auto_enrichment.js";
 import { resolverUrlSpotifyDeBanda } from "../services/spotifyService.js";
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
-import { getTargetBandId, puedeEscribirEnBanda } from "../utils/bandAccess.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaDe } from "../utils/bandAccess.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import responseStrategiesRouter from "./bands/responseStrategies.js";
 
@@ -116,7 +116,7 @@ router.post("/bands", requireAuth, async (req, res) => {
     const saved = await dbUpsertBandContact(newBand, userBandId);
     const state = loadState();
     state.bands = state.bands || [];
-    const idx = state.bands.findIndex((b: any) => b.id === saved.id);
+    const idx = state.bands.findIndex((b) => b.id === saved.id);
     if (idx !== -1) {
       state.bands[idx] = saved;
     } else {
@@ -157,7 +157,7 @@ router.put("/bands/:id", requireAuth, async (req, res) => {
     const saved = await dbUpsertBandContact(updatedBand, userBandId);
     const state = loadState();
     state.bands = state.bands || [];
-    state.bands = state.bands.map((b: any) => b.id === id ? saved : b);
+    state.bands = state.bands.map((b) => b.id === id ? saved : b);
     saveState(state);
 
     autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
@@ -181,7 +181,7 @@ router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
     const state = loadState();
     if (state.bands) {
       const idsSet = new Set(ids);
-      state.bands = state.bands.filter((b: any) => !idsSet.has(b.id));
+      state.bands = state.bands.filter((b) => !idsSet.has(b.id));
       saveState(state);
     }
     res.json({ success: true, count: ids.length });
@@ -199,7 +199,7 @@ router.delete("/bands/:id", requireAuth, async (req, res) => {
     await dbDeleteBandContact(id, userBandId);
     const state = loadState();
     state.bands = state.bands || [];
-    state.bands = state.bands.filter((b: any) => b.id !== id);
+    state.bands = state.bands.filter((b) => b.id !== id);
     saveState(state);
     res.json({ success: true });
   } catch (errCapturado) {
@@ -485,7 +485,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
     if (save_to_band_id) {
       const state = loadState();
       state.bands = state.bands || [];
-      const bandIdx = state.bands.findIndex((b: any) => b.id === save_to_band_id || b.band_id === save_to_band_id);
+      const bandIdx = state.bands.findIndex((b) => b.id === save_to_band_id || b.band_id === save_to_band_id);
       if (bandIdx !== -1) {
         state.bands[bandIdx].estilo_comunicacion = data.tono_comunicacion || state.bands[bandIdx].estilo_comunicacion;
         state.bands[bandIdx].dna_expresion = data;
@@ -939,16 +939,17 @@ router.post("/bands/trigger-alert-digest", requireAuth, async (req, res) => {
     }
 
     const state = loadState();
-    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);
+    const bandInfo = (state.registeredBands || []).find((b) => b.band_id === bandId || b.id === bandId);
     const bandName = bandInfo?.nombre_banda || bandInfo?.bandName || req.user?.bandName || "Tu Banda";
 
-    const leads = (state.leads || []).filter((l: any) => l.band_id === bandId || l.bandId === bandId);
-    const concerts = (state.concerts || []).filter((c: any) => c.band_id === bandId || c.bandId === bandId);
+    const leads = (state.leads || []).filter((l) => bandaDe(l) === bandId);
+    const concerts = (state.concerts || []).filter((c) => bandaDe(c) === bandId);
 
     // Conteo de elementos pendientes
-    const pendingDraftsCount = leads.filter((l: any) => l.estado === 'pendiente_aprobacion' || l.estado === 'borrador_creado').length;
-    const staleLeadsCount = leads.filter((l: any) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length;
-    const confirmedShowsCount = concerts.filter((c: any) => c.estado === 'confirmado' || new Date(c.fecha) >= new Date()).length;
+    const pendingDraftsCount = leads.filter((l) => l.estado === 'pendiente_aprobacion' || l.estado === 'borrador_creado').length;
+    const staleLeadsCount = leads.filter((l) => l.estado === 'contactado' || l.estado === 'esperando_respuesta').length;
+    // Bolos próximos que no son tentativos (Concert no tiene «estado»: lo tentativo es tipo 'posible').
+    const confirmedShowsCount = concerts.filter((c) => c.tipo !== 'posible' && new Date(c.fecha) >= new Date()).length;
 
     const emailSubject = `📊 Resumen Ejecutivo & Alertas de Booking - ${bandName}`;
 
@@ -1013,7 +1014,7 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req, res)
     const { style, customPrompt, genre } = req.body || {};
 
     const state = loadState();
-    const bandInfo = (state.registeredBands || []).find((b: any) => b.band_id === bandId || b.id === bandId);
+    const bandInfo = (state.registeredBands || []).find((b) => b.band_id === bandId || b.id === bandId);
     let epk: any = null;
     try {
       epk = await dbGetEpkConfig(bandId);

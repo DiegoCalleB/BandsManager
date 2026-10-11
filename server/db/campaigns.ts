@@ -1,5 +1,6 @@
 // Campañas de booking (`booking_campaigns`) y su normalización desde BD.
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -108,7 +109,7 @@ export function normalizeCampaignFromDb(c: any) {
 
   return {
     id: String(c.id),
-    band_id: c.band_id || c.bandId,
+    band_id: bandaDe(c),
     name: c.name || "Campaña de Booking",
     targetCities,
     minCapacity: Number(c.min_capacity ?? c.minCapacity ?? 0),

@@ -62,6 +62,11 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/resetEstado.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

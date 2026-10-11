@@ -1,7 +1,7 @@
 import { History, Mail, Sparkles, X } from "lucide-react";
 import React,{ useEffect,useRef,useState } from "react";
 import type { BookingCampaign } from "../../types";
-import { Concert, InteractionLog, Lead, LeadStatus } from "../../types";
+import { Concert, InteractionLog, ResultadoInteraccion, CanalInteraccion, Lead, LeadStatus } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { getErrorMessage } from "../../utils/errorMessage";
 import { IconButton } from '../ui';
@@ -120,11 +120,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Bitácora state
   const [interactionType, setInteractionType] =
-    useState<InteractionLog["tipo"]>("Llamada");
+    useState<CanalInteraccion>("Llamada");
   const [interactionAutor, setInteractionAutor] = useState("Mánager / Booking");
   const [interactionNotes, setInteractionNotes] = useState("");
   const [interactionResultado, setInteractionResultado] =
-    useState<InteractionLog["resultado"]>("Interesado");
+    useState<ResultadoInteraccion>("Interesado");
 
   // Quick Copy status
   const [copiedPitch, setCopiedPitch] = useState(false);
@@ -397,7 +397,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               tipo: "WhatsApp",
               autor: interactionAutor || "Mánager / Booking",
               notas: logData.notas,
-              resultado: (logData.resultado as InteractionLog["resultado"]) || "Interesado",
+              resultado: (logData.resultado as ResultadoInteraccion) || "Interesado",
             };
             const existingLogs = selectedLead.historial_contacto || [];
             onUpdateLead(leadId, {

@@ -1,5 +1,6 @@
 // Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
@@ -100,7 +101,7 @@ export async function dbGetUserById(userId: string) {
 
 export async function dbUpsertUser(user: any) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(user.band_id || user.bandId);
+  const targetBandId = cleanBandId(bandaDe(user));
   await ensureRegisteredBandExists(targetBandId, user.bandName || user.band_name);
 
   const rawUsername = (user.username || user.email || "").trim();
@@ -239,7 +240,7 @@ export async function dbGetUserBands(userId?: string, bandId?: string) {
 
 export async function dbUpsertUserBand(userBand: any) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(userBand.band_id || userBand.bandId);
+  const targetBandId = cleanBandId(bandaDe(userBand));
   await ensureRegisteredBandExists(targetBandId);
 
   const payload = {

@@ -87,7 +87,7 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
   try {
     const state = loadState();
     if (userEmail && state.users && Array.isArray(state.users)) {
-      const matchedUser = state.users.find((u: any) => 
+      const matchedUser = state.users.find((u) => 
         (u.id === userEmail || u.username?.toLowerCase() === userEmail.toLowerCase() || u.email?.toLowerCase() === userEmail.toLowerCase()) &&
         isValidEmail(u.email)
       );
@@ -186,7 +186,7 @@ export async function applyPlanUpgrade(
 
   // Update in-memory users
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -262,7 +262,7 @@ export async function schedulePlanDowngrade(
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -321,7 +321,7 @@ export async function applyPlanCancellation(bandId: string, customerEmail?: stri
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {
@@ -378,7 +378,7 @@ export async function handlePaymentFailed(bandId: string, customerEmail?: string
   }
 
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       const uEmail = (u.email || u.username || '').toLowerCase().trim();
       const uBand = (u.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       if ((customerEmail && uEmail === customerEmail.toLowerCase().trim()) || (cleanBandId && uBand === cleanBandId)) {

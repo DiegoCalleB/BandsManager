@@ -132,3 +132,11 @@ export function bandaFacturableDelUsuario(req: express.Request): { bandId: strin
   );
   return { bandId, email };
 }
+
+/**
+ * Banda a la que pertenece un registro. Acepta el alias legado `bandId` (registros antiguos en
+ * camelCase) además de `band_id`, para filtrar por banda en un único sitio.
+ */
+export function bandaDe(registro: { band_id?: string; bandId?: string } | null | undefined): string | undefined {
+  return registro?.band_id || registro?.bandId;
+}

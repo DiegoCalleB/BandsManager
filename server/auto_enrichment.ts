@@ -313,7 +313,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
             }
             const state = loadState();
             if (state.leads) {
-              state.leads = state.leads.filter((l: any) => l.id !== lead.id);
+              state.leads = state.leads.filter((l) => l.id !== lead.id);
               saveState(state);
             }
             return { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
@@ -657,7 +657,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
     console.log(`[AutoEnrich] Lead '${lead.nombre_sala}' enriquecido y guardado con éxito.`);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
-    const idx = (state.leads || []).findIndex((l: any) => l.id === lead.id);
+    const idx = (state.leads || []).findIndex((l) => l.id === lead.id);
     if (idx !== -1) {
       state.leads[idx] = savedEnriched;
       saveState(state);
@@ -672,7 +672,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
 async function persistirBandaEnriquecida(band: any, userBandId: string): Promise<any> {
   const savedEnriched = await dbUpsertBandContact(band, userBandId);
   const state = loadState();
-  const idx = (state.bands || []).findIndex((b: any) => b.id === band.id);
+  const idx = (state.bands || []).findIndex((b) => b.id === band.id);
   if (idx !== -1) {
     state.bands[idx] = savedEnriched;
     saveState(state);

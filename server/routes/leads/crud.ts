@@ -313,7 +313,7 @@ router.post("/leads", requireAuth, async (req, res) => {
     // Also update state immediately so UI state reflects new lead
     const freshState = loadState();
     freshState.leads = freshState.leads || [];
-    const idx = freshState.leads.findIndex((l: any) => l.id === saved.id || (l.nombre_sala && saved.nombre_sala && l.nombre_sala.toLowerCase().trim() === saved.nombre_sala.toLowerCase().trim()));
+    const idx = freshState.leads.findIndex((l) => l.id === saved.id || (l.nombre_sala && saved.nombre_sala && l.nombre_sala.toLowerCase().trim() === saved.nombre_sala.toLowerCase().trim()));
     if (idx !== -1) {
       freshState.leads[idx] = saved;
     } else {
@@ -346,7 +346,7 @@ router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
     const state = loadState();
     if (state.leads) {
       const idsSet = new Set(ids);
-      state.leads = state.leads.filter((l: any) => !idsSet.has(l.id));
+      state.leads = state.leads.filter((l) => !idsSet.has(l.id));
       saveState(state);
     }
 
@@ -367,7 +367,7 @@ router.delete("/leads/:id", requireAuth, async (req, res) => {
 
     const state = loadState();
     if (state.leads) {
-      state.leads = state.leads.filter((l: any) => l.id !== id);
+      state.leads = state.leads.filter((l) => l.id !== id);
       saveState(state);
     }
 

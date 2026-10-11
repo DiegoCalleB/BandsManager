@@ -19,6 +19,7 @@ Exporta: BandDnaProfile, isCampaignActive, resolveMinCacheByType, getBandDnaProf
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_promptGuidelines|server/utils/promptGuidelines.ts]] *(Layer: #service, Domain: #system)*
@@ -30,6 +31,7 @@ Exporta: BandDnaProfile, isCampaignActive, resolveMinCacheByType, getBandDnaProf
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*

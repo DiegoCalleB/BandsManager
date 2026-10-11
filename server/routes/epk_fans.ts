@@ -40,6 +40,7 @@ import {
   getTargetBandId,
   puedeEscribirEnBanda,
   bandaSolicitada,
+  bandaDe,
 } from '../utils/bandAccess.js';
 import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
@@ -205,7 +206,7 @@ router.put('/epk', requireAuth, async (req, res) => {
     }
 
     if (newEpkConfig.logoUrl && state.registeredBands) {
-      state.registeredBands.forEach((b: any) => {
+      state.registeredBands.forEach((b) => {
         const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
         if (
           bClean === cleanUserBandId ||
@@ -540,7 +541,7 @@ router.get('/public/epk', async (req, res) => {
             .eq('id', leadToUpdate.id);
 
           const s = loadState();
-          const memLead = (s.leads || []).find((l: any) => l.id === leadToUpdate.id);
+          const memLead = (s.leads || []).find((l) => l.id === leadToUpdate.id);
           if (memLead) {
             memLead.clics_epk = clics;
             memLead.ultimo_clic_at = nowIso;
@@ -589,7 +590,7 @@ router.get('/public/epk', async (req, res) => {
     } catch (err) { console.warn("[EPK] Fallo leyendo la banda registrada:", err); }
 
     if (!regBand) {
-      regBand = (state.registeredBands || []).find((b: any) => {
+      regBand = (state.registeredBands || []).find((b) => {
         const bId = (b.band_id || b.id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -631,7 +632,7 @@ router.get('/public/epk', async (req, res) => {
       );
     }
     if (!songs || songs.length === 0) {
-      songs = (state.songs || []).filter((s: any) => {
+      songs = (state.songs || []).filter((s) => {
         const sBand = (s.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -649,7 +650,7 @@ router.get('/public/epk', async (req, res) => {
       );
     }
     if (!concerts || concerts.length === 0) {
-      concerts = (state.concerts || []).filter((c: any) => {
+      concerts = (state.concerts || []).filter((c) => {
         const cBand = (c.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -779,7 +780,7 @@ router.get('/fans', requireAuth, async (req, res) => {
     const state = loadState();
     res.json(
       (state.fans || []).filter(
-        (f: any) => f.band_id === userBandId || f.bandId === userBandId
+        (f) => bandaDe(f) === userBandId
       )
     );
   }
@@ -1050,7 +1051,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
       state.clickMetricsByBand[targetBandId] = {};
 
     const currentCount =
-      state.clickMetricsByBand[targetBandId][cleanButton] || 0;
+      Number(state.clickMetricsByBand[targetBandId][cleanButton]) || 0;
     state.clickMetricsByBand[targetBandId][cleanButton] = currentCount + 1;
     state.clickMetricsByBand[targetBandId][`${cleanButton}_last_at`] =
       new Date().toISOString();
@@ -1058,7 +1059,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
     if (finalConcertId) {
       const concertKey = `concert_${finalConcertId}_${cleanButton}`;
       state.clickMetricsByBand[targetBandId][concertKey] =
-        (state.clickMetricsByBand[targetBandId][concertKey] || 0) + 1;
+        (Number(state.clickMetricsByBand[targetBandId][concertKey]) || 0) + 1;
     }
 
     saveState(state);

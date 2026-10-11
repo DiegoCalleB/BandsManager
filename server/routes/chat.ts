@@ -9,7 +9,7 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists } from "../db.js";
-import { getTargetBandId } from "../utils/bandAccess.js";
+import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
@@ -194,7 +194,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         const userBandId = userReq.band_id;
         const matchBandLocal = (item: any) => {
           if (!item) return false;
-          const bid = item.band_id || item.bandId;
+          const bid = bandaDe(item);
           return bid === userBandId;
         };
         const count = state.leads.filter(matchBandLocal).filter((l: Lead) => (l.genero || "").toLowerCase().includes("reggae") || (l.genero || "").toLowerCase().includes("ska")).length;
@@ -203,7 +203,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         const userBandId = userReq.band_id;
         const matchBandLocal = (item: any) => {
           if (!item) return false;
-          const bid = item.band_id || item.bandId;
+          const bid = bandaDe(item);
           return bid === userBandId;
         };
         const totalLeads = state.leads.filter(matchBandLocal).length;
@@ -221,7 +221,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     const userBandId = userReq.band_id;
     const matchBand = (item: any) => {
       if (!item) return false;
-      const bid = item.band_id || item.bandId;
+      const bid = bandaDe(item);
       return bid === userBandId;
     };
 
@@ -257,7 +257,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         festival_start_date: l.festival_start_date,
         festival_end_date: l.festival_end_date
       })),
-      bands: (state.bands || []).filter(matchBand).map((b: any) => ({
+      bands: (state.bands || []).filter(matchBand).map((b) => ({
         id: b.id,
         nombre_banda: b.nombre_banda,
         estilo_musical: b.estilo_musical,
@@ -265,7 +265,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         icono: b.icono,
         imagen_url: b.imagen_url
       })),
-      tours: (state.tours || []).filter(matchBand).map((t: any) => ({
+      tours: (state.tours || []).filter(matchBand).map((t) => ({
         id: t.id,
         nombre: t.nombre,
         vehiculo: t.vehiculo,
@@ -314,8 +314,8 @@ router.post("/chat", requireAuth, async (req, res) => {
     // ADN musical: tempo/tonalidad/género dominantes del repertorio real + instrumentación real
     // de los miembros, para que 'propose_accompaniment' proponga bases rítmicas coherentes con
     // la banda en vez de un rock genérico a 120 BPM por defecto.
-    const ownBandGenre = (state.registeredBands || []).find((b: any) => b.id === userBandId)?.estilo_musical || "";
-    const bandMembersForDna = (state.users || []).filter(matchBand).map((u: any) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
+    const ownBandGenre = (state.registeredBands || []).find((b) => b.id === userBandId)?.estilo_musical || "";
+    const bandMembersForDna = (state.users || []).filter(matchBand).map((u) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
     stateSummary.musicalDna = computeMusicalDna(songsFromDb, ownBandGenre, bandMembersForDna);
 
     if (isLeader) {

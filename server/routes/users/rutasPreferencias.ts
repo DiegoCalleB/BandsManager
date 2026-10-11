@@ -36,7 +36,7 @@ router.post(
         ''
       ).toLowerCase();
       const user = state.users?.find(
-        (u: any) =>
+        (u) =>
           u.id === user_id ||
           (reqEmail &&
             (u.email?.toLowerCase() === reqEmail ||
@@ -48,15 +48,7 @@ router.post(
 
       const bandInfo =
         (state.registeredBands || []).find(
-          (b: any) =>
-            b.band_id === band_id ||
-            b.id === band_id ||
-            (b.band_id &&
-              b.band_id.replace(/^(band|reg)-/, '') === cleanTarget) ||
-            (b.id && b.id.replace(/^(band|reg)-/, '') === cleanTarget)
-        ) ||
-        (state.bands || []).find(
-          (b: any) =>
+          (b) =>
             b.band_id === band_id ||
             b.id === band_id ||
             (b.band_id &&
@@ -89,7 +81,7 @@ router.post(
       // Update on all user records sharing this email/username
       const userEmail = (user.email || user.username || reqEmail).toLowerCase();
       if (state.users) {
-        state.users.forEach((u: any) => {
+        state.users.forEach((u) => {
           if (
             u.id === user.id ||
             (userEmail &&
@@ -139,7 +131,7 @@ router.post(
       }
 
       const state = loadState();
-      const user = state.users?.find((u: any) => u.id === user_id);
+      const user = state.users?.find((u) => u.id === user_id);
       if (!user) {
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
@@ -148,7 +140,7 @@ router.post(
 
       const userEmail = (user.email || user.username || '').toLowerCase();
       if (state.users) {
-        state.users.forEach((u: any) => {
+        state.users.forEach((u) => {
           if (
             u.id === user.id ||
             (userEmail &&
@@ -196,7 +188,7 @@ router.post(
         ''
       ).toLowerCase();
       const user = state.users?.find(
-        (u: any) =>
+        (u) =>
           u.id === user_id ||
           (reqEmail &&
             (u.email?.toLowerCase() === reqEmail ||
@@ -222,7 +214,7 @@ router.post(
 
       const userEmail = (user.email || user.username || reqEmail).toLowerCase();
       if (state.users) {
-        state.users.forEach((u: any) => {
+        state.users.forEach((u) => {
           if (
             u.id === user.id ||
             (userEmail &&
@@ -267,7 +259,7 @@ router.get(
         ''
       ).toLowerCase();
       const user = state.users?.find(
-        (u: any) =>
+        (u) =>
           u.id === user_id ||
           (reqEmail &&
             (u.email?.toLowerCase() === reqEmail ||

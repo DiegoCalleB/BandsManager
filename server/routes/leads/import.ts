@@ -39,7 +39,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       }
 
       // Check existing lead
-      const existing = state.leads.find((l: any) => 
+      const existing = state.leads.find((l) => 
         l.nombre_sala.toLowerCase().trim() === nombreSala.toLowerCase().trim() &&
         (!l.ciudad || !rawLead.ciudad || l.ciudad.toLowerCase().trim() === (rawLead.ciudad || "").toLowerCase().trim())
       );

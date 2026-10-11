@@ -21,6 +21,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 

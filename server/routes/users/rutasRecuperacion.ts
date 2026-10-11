@@ -33,7 +33,7 @@ router.post(
       if (dbUsers && dbUsers.length > 0) {
         dbUsers.forEach((su: any) => {
           const idx = state.users.findIndex(
-            (u: any) =>
+            (u) =>
               u.id === su.id ||
               (u.username &&
                 u.username.toLowerCase().trim() ===
@@ -58,7 +58,7 @@ router.post(
 
     // 1. Find user by username or email
     let user = (state.users || []).find(
-      (u: any) =>
+      (u) =>
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
         (u.email && u.email.toLowerCase().trim() === cleanInput) ||
         (u.secondary_email &&
@@ -68,11 +68,11 @@ router.post(
     // 2. If not found and input is an email, check registeredBands
     if (!user && cleanInput.includes('@')) {
       const regBandWithEmail = (state.registeredBands || []).find(
-        (b: any) => b.email && b.email.toLowerCase().trim() === cleanInput
+        (b) => b.email && b.email.toLowerCase().trim() === cleanInput
       );
       if (regBandWithEmail?.user_id) {
         user = (state.users || []).find(
-          (u: any) => u.id === regBandWithEmail.user_id
+          (u) => u.id === regBandWithEmail.user_id
         );
       }
     }
@@ -85,7 +85,7 @@ router.post(
           iu.email?.toLowerCase().trim() === cleanInput
       );
       if (seedUser) {
-        user = (state.users || []).find((u: any) => u.id === seedUser.id);
+        user = (state.users || []).find((u) => u.id === seedUser.id);
       }
     }
 
@@ -104,7 +104,7 @@ router.post(
     } else {
       // Check registeredBands for this user
       const userBand = (state.registeredBands || []).find(
-        (b: any) => b.user_id === user.id && b.email && b.email.includes('@')
+        (b) => b.user_id === user.id && b.email && b.email.includes('@')
       );
       if (userBand?.email) {
         targetEmail = userBand.email.trim().toLowerCase();
@@ -137,13 +137,13 @@ router.post(
 
     // Store reset code on user object(s) with matching email/username
     const matchingUsers = (state.users || []).filter(
-      (u: any) =>
+      (u) =>
         u.id === user.id ||
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
         (u.email && u.email.toLowerCase().trim() === targetEmail)
     );
 
-    matchingUsers.forEach((u: any) => {
+    matchingUsers.forEach((u) => {
       u.resetCode = code;
       u.resetCodeExpires = expiresAt;
       u.resetIntentos = 0;
@@ -228,7 +228,7 @@ router.post(
       if (dbUsers && dbUsers.length > 0) {
         dbUsers.forEach((su: any) => {
           const idx = state.users.findIndex(
-            (u: any) =>
+            (u) =>
               u.id === su.id ||
               (u.username &&
                 u.username.toLowerCase().trim() ===
@@ -251,7 +251,7 @@ router.post(
 
     // Find user by username or email
     const matchingUsers = (state.users || []).filter(
-      (u: any) =>
+      (u) =>
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
         (u.email && u.email.toLowerCase().trim() === cleanInput)
     );

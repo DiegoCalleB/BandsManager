@@ -31,7 +31,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
   } = req.body;
 
   const state = loadState();
-  const userIndex = state.users.findIndex((u: any) => u.id === id);
+  const userIndex = state.users.findIndex((u) => u.id === id);
 
   if (userIndex === -1) {
     return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -82,7 +82,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
     // global legítimo es el admin de la plataforma.
     const isPlatformAdmin = loggedUser.role === 'admin';
     const isBandLeaderInUserBands = (state.userBands || []).some(
-      (ub: any) =>
+      (ub) =>
         (ub.user_id === loggedUser.id ||
           (loggedUserEmail && ub.email?.toLowerCase() === loggedUserEmail)) &&
         ub.band_id &&
@@ -90,7 +90,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
         (ub.role === 'leader' || ub.role === 'admin')
     );
     const isBandOwner = (state.registeredBands || []).some(
-      (b: any) =>
+      (b) =>
         (b.user_id === loggedUser.id ||
           (loggedUserEmail && b.email?.toLowerCase() === loggedUserEmail)) &&
         ((b.band_id &&
@@ -112,7 +112,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
       const cleanTarget = targetBandId.replace(/^(band|reg)-/, '');
       const cleanCheck = cleanTarget.toLowerCase().trim();
       if (!state.registeredBands) state.registeredBands = [];
-      let regBand = state.registeredBands.find((b: any) => {
+      let regBand = state.registeredBands.find((b) => {
         const bBid = (b.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase()
@@ -174,7 +174,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
       const targetBandId = loggedUser.band_id;
       if (!state.userBands) state.userBands = [];
       const userBand = state.userBands.find(
-        (ub: any) => ub.user_id === id && ub.band_id === targetBandId
+        (ub) => ub.user_id === id && ub.band_id === targetBandId
       );
       if (userBand) {
         userBand.role = role === 'leader' ? 'leader' : 'member';
@@ -238,11 +238,11 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
 
   if (!state.userBands) state.userBands = [];
 
-  const targetUserObj = state.users?.find((u: any) => u.id === id);
+  const targetUserObj = state.users?.find((u) => u.id === id);
   const targetEmail = (targetUserObj?.email || '').toLowerCase();
 
   const userBandRelation = state.userBands.find(
-    (ub: any) =>
+    (ub) =>
       ub.user_id === id &&
       ub.band_id?.replace(/^(band|reg)-/, '') === cleanTarget
   );
@@ -259,7 +259,7 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
 
   if (userBandRelation?.role === 'leader') {
     const leaderCount = state.userBands.filter(
-      (ub: any) =>
+      (ub) =>
         ub.band_id?.replace(/^(band|reg)-/, '') === cleanTarget &&
         ub.role === 'leader'
     ).length;
@@ -272,7 +272,7 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
 
   // Remove relationship from userBands
   state.userBands = state.userBands.filter(
-    (ub: any) =>
+    (ub) =>
       !(
         ub.user_id === id &&
         ub.band_id?.replace(/^(band|reg)-/, '') === cleanTarget
@@ -281,7 +281,7 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
 
   // Clear from registeredBands
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
-    state.registeredBands.forEach((rb: any) => {
+    state.registeredBands.forEach((rb) => {
       const rbClean = rb.band_id
         ? rb.band_id.replace(/^(band|reg)-/, '')
         : rb.id
@@ -296,9 +296,9 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
   }
 
   // Check if user is in any other band
-  const otherBandsExist = state.userBands.some((ub: any) => ub.user_id === id);
+  const otherBandsExist = state.userBands.some((ub) => ub.user_id === id);
   if (!otherBandsExist) {
-    state.users = state.users.filter((u: any) => u.id !== id);
+    state.users = state.users.filter((u) => u.id !== id);
   } else if (targetUserObj) {
     const activeClean = targetUserObj.band_id
       ? targetUserObj.band_id.replace(/^(band|reg)-/, '')

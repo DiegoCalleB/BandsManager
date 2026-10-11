@@ -18,6 +18,7 @@ Bandas registradas (`registered_bands`) y migración de planes. Lectura y escrit
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*

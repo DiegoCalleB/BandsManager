@@ -34,7 +34,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
     if (dbUsers && dbUsers.length > 0) {
       dbUsers.forEach((su: any) => {
         const idx = state.users.findIndex(
-          (u: any) =>
+          (u) =>
             u.id === su.id ||
             (u.username &&
               u.username.toLowerCase().trim() ===
@@ -57,14 +57,14 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 
   // Check if existing users exist for this email
   const existingUsersWithEmail = state.users.filter(
-    (u: any) =>
+    (u) =>
       u.username.toLowerCase() === cleanEmail ||
       u.email?.toLowerCase() === cleanEmail
   );
 
   if (existingUsersWithEmail.length > 0) {
     // If user exists, check if password matches existing account
-    const matchesAnyPassword = existingUsersWithEmail.some((u: any) =>
+    const matchesAnyPassword = existingUsersWithEmail.some((u) =>
       verifyPassword(password, u.passwordHash, u.salt)
     );
 
@@ -77,7 +77,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 
     // Check if this exact band name is already registered for this user
     const alreadyRegisteredSameBand = existingUsersWithEmail.some(
-      (u: any) =>
+      (u) =>
         (u.bandName || u.name || '').toLowerCase() === rawBandName.toLowerCase()
     );
 
@@ -93,11 +93,11 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 
   // Gather existing IDs across state to prevent duplicate collisions
   const existingIds = new Set<string>();
-  (state.users || []).forEach((u: any) => {
+  (state.users || []).forEach((u) => {
     if (u.id) existingIds.add(u.id);
     if (u.band_id) existingIds.add(u.band_id);
   });
-  (state.registeredBands || []).forEach((b: any) => {
+  (state.registeredBands || []).forEach((b) => {
     if (b.id) existingIds.add(b.id);
     if (b.band_id) existingIds.add(b.band_id);
   });
@@ -197,11 +197,11 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 
     if (!state.userBands) state.userBands = [];
     const hasUB = state.userBands.some(
-      (ub: any) => ub.user_id === userToUse.id && ub.band_id === bandId
+      (ub) => ub.user_id === userToUse.id && ub.band_id === bandId
     );
     const newUB = hasUB
       ? state.userBands.find(
-          (ub: any) => ub.user_id === userToUse.id && ub.band_id === bandId
+          (ub) => ub.user_id === userToUse.id && ub.band_id === bandId
         )
       : {
           id: `ub-${userToUse.id}-${bandId}`,

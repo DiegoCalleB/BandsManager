@@ -1,4 +1,5 @@
 import { detectPitchLanguage } from "./leadLanguage.js";
+import { bandaDe } from './bandAccess.js';
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { sanitizeExternalText } from "./promptSafety.js";
 import { getCoreAntiAiRulesPrompt } from "./promptGuidelines.js";
@@ -230,7 +231,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   const allConcerts = Array.isArray(state?.concerts) ? state.concerts : [];
   const bandConcerts = allConcerts.filter((c: any) => {
     if (!c) return false;
-    const cBand = String(c.band_id || c.bandId || "").toLowerCase();
+    const cBand = String(bandaDe(c) || "").toLowerCase();
     return cBand === bandId.toLowerCase() || cBand === cleanId.toLowerCase() || cBand === `band-${cleanId}`.toLowerCase();
   });
 

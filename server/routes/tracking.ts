@@ -1,3 +1,4 @@
+import type { InteractionLog } from '../../src/types.js';
 // Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webhook de Resend. Solo
 // registra con token firmado (`trackingSeguro.ts`); el webhook exige firma Svix (AGENTS.md §1).
 
@@ -96,7 +97,7 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
       const logNota = `[👁️ Email Abierto (${openCount}ª vez)] ${clientLabel} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
@@ -120,7 +121,7 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
+        const memLead = (s.leads || []).find((l) => l.id === lead.id);
         if (memLead) {
           memLead.veces_abierto = openCount;
           memLead.ultimo_abierto_at = nowIso;
@@ -192,7 +193,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
       const logNota = `[🎯 Clic Botón (${accionBoton})] ${detalleBoton} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `click-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
@@ -207,7 +208,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
 
       const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
 
-      const contactosToAdd = (timeSinceLastOpen > 30000 || !lastOpen)
+      const contactosToAdd: InteractionLog[] = (timeSinceLastOpen > 30000 || !lastOpen)
         ? [
             nuevoContacto,
             {
@@ -231,7 +232,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
+        const memLead = (s.leads || []).find((l) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = clickCount;
           memLead.ultimo_clic_at = nowIso;
@@ -279,7 +280,7 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
       const logNota = `[🎯 Acción EPK (${cleanAction})] ${cleanDetails} el ${dateTag}`;
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `epk-act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Interacción EPK",
@@ -300,7 +301,7 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
+        const memLead = (s.leads || []).find((l) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = clickCount;
           memLead.ultimo_clic_at = nowIso;
@@ -378,7 +379,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       const effectiveEmailId = targetMsgId || lead.gmail_message_id || null;
       const emailIdLabel = effectiveEmailId ? ` (Email ID: ${effectiveEmailId})` : "";
 
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `pdf-open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Dossier PDF",
@@ -397,7 +398,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       const timeSinceLastOpen = lastOpen?.fecha ? Date.now() - new Date(lastOpen.fecha).getTime() : Infinity;
       const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
 
-      const contactosToAdd = (timeSinceLastOpen > 30000 || !lastOpen)
+      const contactosToAdd: InteractionLog[] = (timeSinceLastOpen > 30000 || !lastOpen)
         ? [
             nuevoContacto,
             {
@@ -422,7 +423,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
 
       try {
         const s = loadState();
-        const memLead = (s.leads || []).find((l: any) => l.id === lead.id);
+        const memLead = (s.leads || []).find((l) => l.id === lead.id);
         if (memLead) {
           memLead.clics_epk = (memLead.clics_epk || 0) + 1;
           memLead.ultimo_clic_at = nowIso;
@@ -520,7 +521,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
     const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
 
     if (eventType === "email.delivered") {
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `resend-delivered-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
@@ -538,7 +539,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
 
     } else if (eventType === "email.opened") {
       const openCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `resend-open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",
@@ -561,7 +562,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
 
     } else if (eventType === "email.clicked") {
       const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier")).length + 1;
-      const nuevoContacto = {
+      const nuevoContacto: InteractionLog = {
         id: `resend-click-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
         tipo: "Email",

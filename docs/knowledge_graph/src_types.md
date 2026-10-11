@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: LeadStatus, PitchTemplateCategory, BookingCampaign, LeadType, BandRelationshipStatus, BandContact, InteractionLog, SavedFilter.
+Exporta: LeadStatus, PitchTemplateCategory, BookingCampaign, LeadType, BandRelationshipStatus, BandContact, CanalInteraccion, ResultadoInteraccion.
 
 ---
 
@@ -37,10 +37,12 @@ _Sin dependencias salientes directas._
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
+- [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
+- [[server_stateTypes|server/stateTypes.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*

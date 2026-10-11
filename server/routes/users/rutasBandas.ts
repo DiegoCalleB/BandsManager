@@ -40,7 +40,7 @@ router.post(
 
       // 2. Update local state registeredBands
       if (!state.registeredBands) state.registeredBands = [];
-      state.registeredBands.forEach((b: any) => {
+      state.registeredBands.forEach((b) => {
         const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
         if (
           bClean === cleanTarget ||
@@ -118,7 +118,7 @@ router.post(
       }
 
       const state = loadState();
-      const user = state.users?.find((u: any) => u.id === user_id);
+      const user = state.users?.find((u) => u.id === user_id);
       if (!user) {
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
@@ -135,11 +135,11 @@ router.post(
       ).trim();
 
       const existingIds = new Set<string>();
-      (state.users || []).forEach((u: any) => {
+      (state.users || []).forEach((u) => {
         if (u.id) existingIds.add(u.id);
         if (u.band_id) existingIds.add(u.band_id);
       });
-      (state.registeredBands || []).forEach((b: any) => {
+      (state.registeredBands || []).forEach((b) => {
         if (b.id) existingIds.add(b.id);
         if (b.band_id) existingIds.add(b.band_id);
       });
@@ -204,7 +204,7 @@ router.post(
 
       // Sync to all user records with matching email
       if (state.users) {
-        state.users.forEach((u: any) => {
+        state.users.forEach((u) => {
           if (
             u.id === user.id ||
             (cleanEmail &&

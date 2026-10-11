@@ -29,7 +29,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
     if (dbUsers && dbUsers.length > 0) {
       dbUsers.forEach((su: any) => {
         const idx = state.users.findIndex(
-          (u: any) =>
+          (u) =>
             u.id === su.id ||
             (u.username &&
               u.username.toLowerCase() === su.username?.toLowerCase())
@@ -63,7 +63,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
 
   // Find all user records matching this username or email
   const matchingUsers = state.users.filter(
-    (u: any) =>
+    (u) =>
       (u.username && u.username.toLowerCase() === cleanInput) ||
       (u.email && u.email.toLowerCase() === cleanInput) ||
       (u.secondary_email && u.secondary_email.toLowerCase() === cleanInput)
@@ -74,7 +74,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   }
 
   // Filter those that pass password check
-  const validUsers = matchingUsers.filter((u: any) => {
+  const validUsers = matchingUsers.filter((u) => {
     return verifyPassword(password, u.passwordHash, u.salt);
   });
 
@@ -84,7 +84,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
 
   // Choose target user profile & default to main or favorite band.
   const userMainBand =
-    validUsers.find((u: any) => u.main_band_id)?.main_band_id ||
+    validUsers.find((u) => u.main_band_id)?.main_band_id ||
     validUsers[0]?.main_band_id ||
     (Array.isArray(validUsers[0]?.band_order) &&
     validUsers[0].band_order.length > 0
@@ -99,15 +99,15 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   const anotarBanda = (id?: string) => {
     if (id) bandasDelUsuario.add(cleanBandId(id));
   };
-  validUsers.forEach((u: any) => {
+  validUsers.forEach((u) => {
     anotarBanda(u.band_id);
     anotarBanda(u.main_band_id);
     (Array.isArray(u.band_order) ? u.band_order : []).forEach(anotarBanda);
   });
-  (state.userBands || []).forEach((ub: any) => {
-    if (validUsers.some((u: any) => u.id === ub.user_id)) anotarBanda(ub.band_id);
+  (state.userBands || []).forEach((ub) => {
+    if (validUsers.some((u) => u.id === ub.user_id)) anotarBanda(ub.band_id);
   });
-  const esAdminGlobal = validUsers.some((u: any) => u.role === 'admin');
+  const esAdminGlobal = validUsers.some((u) => u.role === 'admin');
   const puedeElegirBanda = (id?: string) =>
     !!id && (esAdminGlobal || bandasDelUsuario.has(cleanBandId(id)));
   if (band_id && !puedeElegirBanda(band_id)) {
@@ -120,7 +120,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
     : undefined;
 
   const foundMatching = validUsers.find(
-    (u: any) =>
+    (u) =>
       u.band_id === preferredBandId ||
       (preferredClean && cleanBandId(u.band_id) === preferredClean)
   );
@@ -141,14 +141,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   const cleanPref = cleanBandId(selectedUser.band_id);
   const bandInfo =
     (state.registeredBands || []).find(
-      (b: any) =>
-        b.band_id === selectedUser.band_id ||
-        b.id === selectedUser.band_id ||
-        cleanBandId(b.band_id) === cleanPref ||
-        cleanBandId(b.id) === cleanPref
-    ) ||
-    (state.bands || []).find(
-      (b: any) =>
+      (b) =>
         b.band_id === selectedUser.band_id ||
         b.id === selectedUser.band_id ||
         cleanBandId(b.band_id) === cleanPref ||

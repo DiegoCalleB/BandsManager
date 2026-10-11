@@ -246,10 +246,9 @@ export async function buildAvailableBandsForUser(
 
   // 5. If user is platform superadmin / admin, grant access to ALL registered and stored bands
   if (targetUser.role === 'admin') {
-    const allBandsList = [
-      ...(state.registeredBands || []),
-      ...(state.bands || []),
-    ];
+    // Solo bandas registradas: state.bands son las bandas de contacto del CRM («Grupos»), no
+    // proyectos a los que cambiarse.
+    const allBandsList = [...(state.registeredBands || [])];
     allBandsList.forEach((b: any) => {
       const bid = b.band_id || b.id;
       if (!bid) return;

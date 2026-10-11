@@ -23,7 +23,7 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
     const { incomingMessage: incomingMessageOverride, provider } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -79,7 +79,7 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
     const { messageText } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -130,7 +130,7 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
     await dbUpsertLead(updatedLead, bandId);
 
     // Actualizamos en memoria
-    const leadIdx = state.leads.findIndex((l: any) => String(l.id) === String(id));
+    const leadIdx = state.leads.findIndex((l) => String(l.id) === String(id));
     if (leadIdx >= 0) {
       state.leads[leadIdx] = updatedLead;
     }
@@ -159,7 +159,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
     const { tono_rating, contenido_rating, comentario, alcance, provider } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -201,7 +201,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
       bandId, lead, incomingMessage, threadSoFar, provider, feedbackDetails
     );
 
-    const finalAlcance = alcance === 'este_pitch' ? 'este_pitch' : 'global';
+    const finalAlcance: 'este_pitch' | 'global' = alcance === 'este_pitch' ? 'este_pitch' : 'global';
     const logEntry = {
       id: `fb-${Date.now()}`,
       fecha: new Date().toISOString(),

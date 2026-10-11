@@ -9,7 +9,7 @@ import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./
 
 import { getUserFromRequest } from "./server/auth.js";
 import { jsonSegunSesion } from "./server/middleware/limiteCuerpo.js";
-import { mismaBanda } from "./server/utils/bandAccess.js";
+import { mismaBanda, bandaDe } from "./server/utils/bandAccess.js";
 import { loadState } from "./server/state.js";
 import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.js";
 import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
@@ -274,7 +274,7 @@ app.get("/api/download-excel", (req, res) => {
     const state = loadState();
     const wb = XLSX.utils.book_new();
 
-    const rehearsalsData = (state.rehearsals || []).filter((r: any) => isOwn(r.band_id || r.bandId)).map((r: Rehearsal) => ({
+    const rehearsalsData = (state.rehearsals || []).filter((r) => isOwn(bandaDe(r))).map((r: Rehearsal) => ({
       ID: r.id,
       Fecha: r.fecha,
       Hora: r.hora,
@@ -286,7 +286,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsRehearsals = XLSX.utils.json_to_sheet(rehearsalsData);
     XLSX.utils.book_append_sheet(wb, wsRehearsals, "Ensayos");
 
-    const concertsData = (state.concerts || []).filter((c: any) => isOwn(c.band_id || c.bandId)).map((c: Concert) => ({
+    const concertsData = (state.concerts || []).filter((c) => isOwn(bandaDe(c))).map((c: Concert) => ({
       ID: c.id,
       Fecha: c.fecha,
       Ciudad: c.ciudad,
@@ -303,7 +303,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsConcerts = XLSX.utils.json_to_sheet(concertsData);
     XLSX.utils.book_append_sheet(wb, wsConcerts, "Conciertos");
 
-    const leadsData = (state.leads || []).filter((l: any) => isOwn(l.band_id || l.bandId)).map((l: Lead) => ({
+    const leadsData = (state.leads || []).filter((l) => isOwn(bandaDe(l))).map((l: Lead) => ({
       ID: l.id,
       "Nombre Sala": l.nombre_sala,
       Ciudad: l.ciudad,
@@ -322,7 +322,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsLeads = XLSX.utils.json_to_sheet(leadsData);
     XLSX.utils.book_append_sheet(wb, wsLeads, "Salas_Leads");
 
-    const paymentsData = (state.payments || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: Payment) => ({
+    const paymentsData = (state.payments || []).filter((p) => isOwn(bandaDe(p))).map((p: Payment) => ({
       ID: p.id,
       Fecha: p.fecha,
       Concepto: p.concepto,
@@ -335,7 +335,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsPayments = XLSX.utils.json_to_sheet(paymentsData);
     XLSX.utils.book_append_sheet(wb, wsPayments, "Finanzas_Pagos");
 
-    const postsData = (state.posts || []).filter((p: any) => isOwn(p.band_id || p.bandId)).map((p: SocialPost) => ({
+    const postsData = (state.posts || []).filter((p) => isOwn(bandaDe(p))).map((p: SocialPost) => ({
       ID: p.id,
       Fecha: p.fecha,
       Plataforma: p.plataforma,
@@ -352,14 +352,14 @@ app.get("/api/download-excel", (req, res) => {
       Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, any]) => {
         if (Array.isArray(items)) {
           items.forEach((item: any) => {
-            if (!isOwn(item.band_id || item.bandId)) return;
+            if (!isOwn(bandaDe(item))) return;
             runOfShowRows.push({
               Fecha: dateKey,
               ID: item.id,
               Hora: item.time,
               "Actividad / Horario": item.activity,
               Completado: item.done ? "SÍ" : "NO",
-              band_id: item.band_id || item.bandId || "band-1"
+              band_id: bandaDe(item) || "band-1"
             });
           });
         }
@@ -373,13 +373,13 @@ app.get("/api/download-excel", (req, res) => {
       Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, any]) => {
         if (Array.isArray(items)) {
           items.forEach((item: any) => {
-            if (!isOwn(item.band_id || item.bandId)) return;
+            if (!isOwn(bandaDe(item))) return;
             gearRows.push({
               Fecha: dateKey,
               ID: item.id,
               "Material / Equipo a Llevar": item.label,
               "Cargado / Listo": item.checked ? "SÍ" : "NO",
-              band_id: item.band_id || item.bandId || "band-1"
+              band_id: bandaDe(item) || "band-1"
             });
           });
         }
@@ -388,7 +388,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsGear = XLSX.utils.json_to_sheet(gearRows);
     XLSX.utils.book_append_sheet(wb, wsGear, "Logistica_Equipo");
 
-    const songsData = (state.songs || []).filter((s: any) => isOwn(s.band_id || s.bandId)).map((s: Song) => ({
+    const songsData = (state.songs || []).filter((s) => isOwn(bandaDe(s))).map((s: Song) => ({
       ID: s.id,
       Título: s.titulo,
       Duración: s.duracion,
@@ -405,7 +405,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsSongs = XLSX.utils.json_to_sheet(songsData);
     XLSX.utils.book_append_sheet(wb, wsSongs, "Canciones");
 
-    const setlistsData = (state.setlists || []).filter((st: any) => isOwn(st.band_id || st.bandId)).map((st: Setlist) => ({
+    const setlistsData = (state.setlists || []).filter((st) => isOwn(bandaDe(st))).map((st: Setlist) => ({
       ID: st.id,
       Nombre: st.nombre,
       Descripción: st.descripcion || "",
@@ -419,7 +419,7 @@ app.get("/api/download-excel", (req, res) => {
     const wsSetlists = XLSX.utils.json_to_sheet(setlistsData);
     XLSX.utils.book_append_sheet(wb, wsSetlists, "Repertorios");
 
-    const fansData = (state.fans || []).filter((f: any) => isOwn(f.band_id || f.bandId)).map((f: any) => ({
+    const fansData = (state.fans || []).filter((f) => isOwn(bandaDe(f))).map((f) => ({
       ID: f.id,
       Nombre: f.nombre,
       Email: f.email,
@@ -428,12 +428,12 @@ app.get("/api/download-excel", (req, res) => {
       Concierto: f.conciertoOrigenNombre || "",
       "Fecha Captura": f.fechaCaptura || "",
       RGPD: f.consentimientoRGPD ? "SÍ" : "NO",
-      band_id: f.band_id || f.bandId || "band-1"
+      band_id: bandaDe(f) || "band-1"
     }));
     const wsFans = XLSX.utils.json_to_sheet(fansData);
     XLSX.utils.book_append_sheet(wb, wsFans, "Fans_Tribu");
 
-    const toursData = (state.tours || []).filter((t: any) => isOwn(t.band_id || t.bandId)).map((t: any) => ({
+    const toursData = (state.tours || []).filter((t) => isOwn(bandaDe(t))).map((t) => ({
       ID: t.id,
       Nombre: t.nombre,
       Vehículo: t.vehiculo,
@@ -442,14 +442,14 @@ app.get("/api/download-excel", (req, res) => {
       "Fecha Fin": t.fechaFin,
       "Presupuesto Logística": t.presupuestoLogistica || 0,
       "Número Paradas": t.stops?.length || 0,
-      band_id: t.band_id || t.bandId || "band-1"
+      band_id: bandaDe(t) || "band-1"
     }));
     const wsTours = XLSX.utils.json_to_sheet(toursData);
     XLSX.utils.book_append_sheet(wb, wsTours, "Giras");
 
     const registeredBandsData = (state.registeredBands || state.users || [])
-      .filter((b: any) => isOwn(b.band_id || b.bandId || b.id))
-      .map((b: any) => ({
+      .filter((b) => isOwn(bandaDe(b) || b.id))
+      .map((b) => ({
       ID: b.id || b.band_id,
       "Fecha Registro": b.fecha_registro || b.createdAt || "",
       "Nombre Banda": b.nombre_banda || b.bandName || b.name || "",
@@ -463,12 +463,12 @@ app.get("/api/download-excel", (req, res) => {
       "Spotify/YouTube": b.spotify_youtube || "",
       "Estado Cuenta": b.estado_cuenta || "activo",
       Notas: b.notas || "",
-      band_id: b.band_id || b.bandId || b.id || "band-1"
+      band_id: bandaDe(b) || b.id || "band-1"
     }));
     const wsRegisteredBands = XLSX.utils.json_to_sheet(registeredBandsData);
     XLSX.utils.book_append_sheet(wb, wsRegisteredBands, "Registro_Bandas");
 
-    const usersData = (state.users || []).filter((u: any) => isOwn(u.band_id || u.bandId)).map((u: any) => ({
+    const usersData = (state.users || []).filter((u) => isOwn(bandaDe(u))).map((u) => ({
       ID: u.id,
       "Usuario/Email": u.username || u.email,
       Nombre: u.name || u.bandName,
@@ -476,7 +476,7 @@ app.get("/api/download-excel", (req, res) => {
       Plan: u.plan || "emergente",
       Instrumento: u.instrument || "Músico",
       "Fecha Creación": u.createdAt || "",
-      band_id: u.band_id || u.bandId || u.id || "band-1"
+      band_id: bandaDe(u) || u.id || "band-1"
     }));
     const wsUsers = XLSX.utils.json_to_sheet(usersData);
     XLSX.utils.book_append_sheet(wb, wsUsers, "Usuarios");

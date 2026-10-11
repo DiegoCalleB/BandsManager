@@ -974,7 +974,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       }
 
       // Check if lead already exists by name and city
-      const existing = state.leads.find((l: any) => 
+      const existing = state.leads.find((l) => 
         l.nombre_sala.toLowerCase().trim() === rawLead.nombre_sala.toLowerCase().trim() &&
         (l.ciudad || "").toLowerCase().trim() === (rawLead.ciudad || "").toLowerCase().trim()
       );

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { bandaDe } from '../utils/bandAccess.js';
 import { loadState, saveState } from "../state.js";
 import { Tour } from "../../src/types.js";
 import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
@@ -22,7 +23,7 @@ export const toursController = {
       res.json({ tours });
     } catch {
       const state = loadState();
-      res.json({ tours: (state.tours || []).filter((t: any) => t.band_id === userBandId || t.bandId === userBandId) });
+      res.json({ tours: (state.tours || []).filter((t) => bandaDe(t) === userBandId) });
     }
   },
 

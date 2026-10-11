@@ -1,4 +1,4 @@
-import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, Tour } from "./types";
+import { BandContact, Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, Setlist, Song, Tour } from "./types";
 
 
 export const INITIAL_LEADS: Lead[] = [
@@ -1322,7 +1322,7 @@ export const INITIAL_USERS = [
   },
 ];
 
-export const INITIAL_SONGS = [
+export const INITIAL_SONGS: Song[] = [
   {
     id: "song-cm-1",
     band_id: "band-demo",
@@ -1560,7 +1560,7 @@ export const INITIAL_SONGS = [
   },
 ];
 
-export const INITIAL_SETLISTS = [
+export const INITIAL_SETLISTS: Setlist[] = [
   {
     id: "setlist-1",
     band_id: "band-demo",
@@ -1592,7 +1592,8 @@ export const INITIAL_SETLISTS = [
       },
       {
         id: "i-4",
-        tipoItem: "chapa",
+        tipoItem: "bloque",
+        bloqueSubtipo: "chapa",
         tituloCustom: "Chapa / Presentación Banda & Agradecimientos",
         duracionEstimadaMinutos: 2,
         notaTema: "Jon / Jose habla al público",
@@ -1611,7 +1612,8 @@ export const INITIAL_SETLISTS = [
       },
       {
         id: "i-7",
-        tipoItem: "bis",
+        tipoItem: "bloque",
+        bloqueSubtipo: "bis",
         tituloCustom: "BIS / CIERRE DE FESTIVAL",
         duracionEstimadaMinutos: 1,
       },
@@ -1639,7 +1641,8 @@ export const INITIAL_SETLISTS = [
       { id: "i-12", songId: "song-3", tipoItem: "cancion" },
       {
         id: "i-13",
-        tipoItem: "paron",
+        tipoItem: "bloque",
+        bloqueSubtipo: "descanso",
         tituloCustom: "Descanso / Parón 5 min",
         duracionEstimadaMinutos: 5,
       },
@@ -1656,7 +1659,7 @@ export const INITIAL_SETLISTS = [
   },
 ];
 
-export const INITIAL_BANDS: any[] = [
+export const INITIAL_BANDS: BandContact[] = [
   {
     id: "band-1",
     nombre_banda: "La Señora Tomasa",

@@ -53,7 +53,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
     if (dbUsers && dbUsers.length > 0) {
       dbUsers.forEach((su: any) => {
         const idx = state.users.findIndex(
-          (u: any) =>
+          (u) =>
             u.id === su.id ||
             (u.email && u.email.toLowerCase() === su.email?.toLowerCase())
         );
@@ -71,7 +71,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
 
   // Find existing user by email or google uid
   let user = state.users.find(
-    (u: any) =>
+    (u) =>
       (u.email && u.email.toLowerCase() === cleanEmail) ||
       (u.secondary_email && u.secondary_email.toLowerCase() === cleanEmail) ||
       (u.username && u.username.toLowerCase() === cleanEmail) ||
@@ -92,11 +92,11 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
     // If a new band name was explicitly requested during registration with existing email
     if (customBandName) {
       const existingIds = new Set<string>();
-      (state.users || []).forEach((u: any) => {
+      (state.users || []).forEach((u) => {
         if (u.id) existingIds.add(u.id);
         if (u.band_id) existingIds.add(u.band_id);
       });
-      (state.registeredBands || []).forEach((b: any) => {
+      (state.registeredBands || []).forEach((b) => {
         if (b.id) existingIds.add(b.id);
         if (b.band_id) existingIds.add(b.band_id);
       });
@@ -164,14 +164,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
       const bandInfo = !cleanPref
         ? undefined
         : (state.registeredBands || []).find(
-            (b: any) =>
-              b.band_id === user.band_id ||
-              b.id === user.band_id ||
-              cleanBandId(b.band_id) === cleanPref ||
-              cleanBandId(b.id) === cleanPref
-          ) ||
-          (state.bands || []).find(
-            (b: any) =>
+            (b) =>
               b.band_id === user.band_id ||
               b.id === user.band_id ||
               cleanBandId(b.band_id) === cleanPref ||
@@ -198,11 +191,11 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
 
     // Gather existing IDs across state to prevent collisions
     const existingIds = new Set<string>();
-    (state.users || []).forEach((u: any) => {
+    (state.users || []).forEach((u) => {
       if (u.id) existingIds.add(u.id);
       if (u.band_id) existingIds.add(u.band_id);
     });
-    (state.registeredBands || []).forEach((b: any) => {
+    (state.registeredBands || []).forEach((b) => {
       if (b.id) existingIds.add(b.id);
       if (b.band_id) existingIds.add(b.band_id);
     });

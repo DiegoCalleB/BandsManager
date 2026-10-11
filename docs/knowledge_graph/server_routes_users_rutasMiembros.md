@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Miembros de la banda: asociar una cuenta existente, listar y dar de alta (solo líder).
+Módulo sin exportaciones con nombre.
 
 ---
 
@@ -23,6 +23,7 @@ Miembros de la banda: asociar una cuenta existente, listar y dar de alta (solo l
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_invitacion|server/utils/invitacion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*

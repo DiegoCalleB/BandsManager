@@ -5,7 +5,7 @@ import express from "express";
 import crypto from "crypto";
 import { Rehearsal, Concert, Payment, Message } from "../../src/types.js";
 import { loadState, saveState, requireAuth, requireLeader } from "../state.js";
-import { getTargetBandId, puedeEscribirEnBanda } from "../utils/bandAccess.js";
+import { getTargetBandId, puedeEscribirEnBanda, bandaDe } from "../utils/bandAccess.js";
 import {
   dbGetRehearsals,
   dbUpsertRehearsal,
@@ -342,7 +342,7 @@ router.get("/payments", requireAuth, requireLeader, async (req, res) => {
     res.json(dbPayments);
   } catch {
     const state = loadState();
-    res.json((state.payments || []).filter((p: any) => p.band_id === userBandId || p.bandId === userBandId));
+    res.json((state.payments || []).filter((p) => bandaDe(p) === userBandId));
   }
 });
 
@@ -481,14 +481,14 @@ router.get("/calendar.ics", async (req, res) => {
     // Fallback to local state if Supabase returned empty
     if (!concerts || concerts.length === 0) {
       const state = loadState();
-      concerts = (state.concerts || []).filter((c: any) => {
+      concerts = (state.concerts || []).filter((c) => {
         const cBid = c.band_id || "";
         return bandIds.some(b => b === cBid || b.replace(/^band-/, "") === (cBid || "").replace(/^band-/, ""));
       });
     }
     if (!rehearsals || rehearsals.length === 0) {
       const state = loadState();
-      rehearsals = (state.rehearsals || []).filter((r: any) => {
+      rehearsals = (state.rehearsals || []).filter((r) => {
         const rBid = r.band_id || "";
         return bandIds.some(b => b === rBid || b.replace(/^band-/, "") === (rBid || "").replace(/^band-/, ""));
       });

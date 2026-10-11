@@ -29,6 +29,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_enviador|Enviador Agent (Dispatcher)]] *(from #agent)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(from #db)*
+- [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
@@ -37,6 +38,10 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server|server.ts]] *(from #route)*
+- [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(from #service)*
+- [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
+- [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_agentQueue|server/routes/agentQueue.ts]] *(from #agent)*
 - [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
@@ -59,6 +64,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_leads_exampleThreads|server/routes/leads/exampleThreads.ts]] *(from #route)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
@@ -71,6 +77,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(from #route)*
 - [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
+- [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---

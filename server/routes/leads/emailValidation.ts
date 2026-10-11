@@ -16,17 +16,17 @@ router.get("/validate-emails", requireAuth, async (req, res) => {
   try {
     const state = await loadState();
     const bandId = getTargetBandId(req);
-    const leads = state.leads?.filter((l: any) => l.band_id === bandId) || [];
+    const leads = state.leads?.filter((l) => l.band_id === bandId) || [];
 
     const validities: Record<string, boolean> = {};
 
     // Validar en paralelo pero con límite para no saturar DNS
     const emailsToValidate = leads
-      .filter((l: any) => l.email || l.email_contacto)
+      .filter((l) => l.email || l.email_contacto)
       .slice(0, 100); // Máx 100 para no saturar
 
     await Promise.all(
-      emailsToValidate.map(async (lead: any) => {
+      emailsToValidate.map(async (lead) => {
         const email = lead.email || lead.email_contacto;
         if (!isValidEmailSyntax(email)) {
           validities[lead.id] = false;

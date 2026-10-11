@@ -1186,8 +1186,13 @@ router.get('/agent-runs/:runId/jobs', requireAuth, async (req, res) => {
   }
 });
 
-// Reset database to initial seeds (Admin only)
+// Restaura los datos de ejemplo. Solo el administrador global: el estado es de TODAS las bandas.
+// Antes bastaba con ser líder de cualquier banda (requireLeader), y además el estado nuevo solo
+// llevaba seis colecciones, así que también desaparecían usuarios, sesiones y bandas registradas.
 router.post('/reset', requireAuth, requireLeader, (req, res) => {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Solo el administrador global puede restaurar los datos de ejemplo.' });
+  }
   const { confirmReset, confirm } = req.body || {};
   if (
     confirmReset !== true &&
@@ -1200,6 +1205,7 @@ router.post('/reset', requireAuth, requireLeader, (req, res) => {
     });
   }
   const defaultState = {
+    ...loadState(),
     leads: INITIAL_LEADS,
     rehearsals: INITIAL_REHEARSALS,
     concerts: INITIAL_CONCERTS,
@@ -1208,7 +1214,8 @@ router.post('/reset', requireAuth, requireLeader, (req, res) => {
     messages: INITIAL_MESSAGES,
   };
   saveState(defaultState);
-  res.json({ success: true, state: defaultState });
+  // Sin devolver el estado: llevaba los usuarios con sus hashes de contraseña.
+  res.json({ success: true });
 });
 
 // Obtener registros de auditoría de agentes
