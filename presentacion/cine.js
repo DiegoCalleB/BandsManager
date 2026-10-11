@@ -7,7 +7,7 @@
   // Va por WebAudio: así baja de volumen cuando alguien habla (ducking) y la grabación del MP4 la recoge tal cual.
   // Los BPM coinciden con tools/musica.py: el montaje usa el pulso para que el golpe de cada rampa caiga a tiempo.
   var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200 };
-  var ALTO = 0.2, BAJO = 0.07, raf = 0, body = document.body, volGlobal = 1;
+  var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;

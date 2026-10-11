@@ -1480,3 +1480,8 @@ body.pelicula:not(.scroll) .slide.scene.active > :is(.tech-vis, .biz-cols) > :is
 body.pelicula:not(.scroll) .slide.feat.active .ft-shot.alto { animation: subealto 1600ms cubic-bezier(.4, 0, .2, 1) 3600ms both; transform-origin: 50% 0; }
 @keyframes subealto { to { translate: -50% -150px; scale: 1.2; } }
 .grabando .nf-saltar { display: none !important; }
+
+/* Golpe de cámara en los gritos y las sorpresas (voces.js): un zoom rápido que vuelve, sobre el fondo y el plano */
+body.pelicula.golpe-voz:not(.scroll) #stage { animation: golpevoz 620ms cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes golpevoz { 0% { scale: 1; } 18% { scale: 1.045; filter: brightness(1.12) contrast(1.06); } 100% { scale: 1; filter: none; } }
+@media (prefers-reduced-motion: reduce) { body.pelicula.golpe-voz #stage { animation: none; } }

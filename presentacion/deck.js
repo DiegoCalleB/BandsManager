@@ -157,7 +157,7 @@
       const desde = i === cur ? desdeLinea : 0; desdeLinea = 0;
       if (i === cur) inicioEscena = performance.now() - (conVoz ? sumaLineas(s, desde) * 1000 : 0);
       if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null,
-        () => seguirPelicula(Math.max(nxL ? 0 : 450, (+s.dataset.min || 0) - (Date.now() - t0))), { cola: nxL ? 0.8 : 0, desde });
+        () => seguirPelicula(Math.max(nxL ? 0 : 280, (+s.dataset.min || 0) - (Date.now() - t0))), { cola: nxL ? 0.8 : 0, desde });
       else if (i === cur && s.dataset.fin && s.querySelector(s.dataset.fin)) {
         // escena de animación (data-fin = el último elemento que se anima): sigue cuando termina esa animación, aunque el
         // navegador vaya cargado y las animaciones arranquen tarde (al grabar el MP4); el tiempo fijo solo es el límite

@@ -26,8 +26,13 @@
   var volumen = 1, vel = 1; // los cambia el reproductor (volumen y velocidad)
   var libre = function () { for (var k = 0; k < pista.length; k++) { var a = pista[(turno + k) % pista.length]; if (!a._colgando) { turno = (turno + k + 1) % pista.length; return a; } } return pista[0]; };
   // Ritmo: voces un poco más rápidas; PISAR = cuánto se solapa con la anterior cuando cambia quien habla
-  var BASE = 1.12, VEL = BASE, PISAR = 0.28;
-  var retardo = function (el) { return el && el.matches('.dlg li') ? Math.min(420, 140 + (el.dataset.say || '').length * 1.3) : 0; };
+  var BASE = 1.17, VEL = BASE, PISAR = 0.3;
+  // «escribiendo…» antes de cada mensaje del chat; en modo película el chat no se ve, así que no se espera (sería silencio muerto)
+  var retardo = function (el) {
+    if (!el || !el.matches('.dlg li')) return 0;
+    if (document.body.classList.contains('pelicula') && !document.body.classList.contains('scroll')) return 40;
+    return Math.min(420, 140 + (el.dataset.say || '').length * 1.3);
+  };
   var run = 0, timer = 0, avisar = function () {};
 
   var enabled = function () { return pref && !!(window.DeckSound && window.DeckSound.enabled); };
@@ -110,6 +115,10 @@
     var hecho = false, avanzado = false;
     var avanzar = function () { if (avanzado) return; avanzado = true; if (fin) fin(); };
     var acabar = function () { if (hecho) return; hecho = true; callar(el); el.classList.remove('habla'); avanzar(); };
+    // gritos y sorpresas: golpe de cámara (zoom rápido) en la diapositiva, como un corte de montaje
+    if (/\[(shouts|gasps|amazed)\]/.test(say) || (say.match(/!/g) || []).length >= 3) {
+      var bd = document.body; bd.classList.remove('golpe-voz'); void bd.offsetWidth; bd.classList.add('golpe-voz'); clearTimeout(bd._golpe); bd._golpe = setTimeout(function () { bd.classList.remove('golpe-voz'); }, 700);
+    }
     el.classList.add('habla'); el._t0 = performance.now(); el._dur = m ? m.d / VEL * 1000 : Math.max(900, say.length * 42);
     dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
