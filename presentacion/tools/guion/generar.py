@@ -714,6 +714,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>{guitarra}</dt><dd>{guitarra:cargo} · y las palabrotas</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>
       <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
+      <dt>{sello}</dt><dd>Discos Cuarzo · quería los másteres</dd>
       <dt>{ia_claude}</dt><dd>Claude Code · el que discute</dd>
       <dt>{ia_gemini}</dt><dd>Gemini · el que también discute</dd>
       <dt>{locutor}</dt><dd>En directo</dd>

@@ -101,3 +101,9 @@ Dos personajes de la demo llevan la cara del CEO de The Big School (imágenes ap
 - El **Artifact de claude.ai** (un solo enlace para compartir) se reconstruye y se republica tras cada cambio relevante: HTML con el CSS y el JS inlinados, y las carpetas `img/` y `video/` como archivos aparte. Mantener el conjunto por debajo del límite de tamaño del Artifact.
 - Commits en formato convencional (`docs(presentación): …`, `feat(iris): …`); commitlint y lint-staged están activos. No tocar archivos grandes de `src/` sin necesidad: lint-staged revisa el archivo entero y arrastra errores antiguos.
 - Pendiente de mejora: el script de montaje del Artifact y los guiones de captura viven fuera del repo. Conviene versionarlos en `presentacion/tools/` para que el proceso sea reproducible.
+
+**Trama y recursos de cine (cine.js / voces.js):**
+- Estructura: tráiler en el festival (02:14) → jueves (la banda casi se separa) → **la llamada de Discos Cuarzo (Peláez)**, que ofrece contrato a cambio del 30 % y los másteres → Iago promete demostrarlo el sábado → capítulos → el festival, donde Peláez insiste y Iago responde que los másteres y la gestión son suyos. La cuenta atrás hasta el cierre del cartel (sábado 14:00) sale sola en `#reloj`, leyendo la hora del `.tag` de cada diapositiva.
+- **Cambio de perfil:** la diapositiva «Cambio de perfil» usa `video/v-perfiles.mp4` con `shot_vid_sync`: el vídeo no arranca solo, lo lanza la línea con `cls='sync'` (voces.js).
+- Los audios se piden con `?v=<huella del mp3>` (campo `h` del manifest) para que la caché no mezcle voces viejas con nuevas: `voces.py` lo recalcula al final.
+- Entrada tipo plataforma de cine + logotipo animado (`#ident`, cine.js) con su sonido sintetizado; créditos largos (~80 s) en generar.py.

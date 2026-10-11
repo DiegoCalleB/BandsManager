@@ -1,4 +1,13 @@
 {
+ "0203f73e": {
+  "d": 2.64,
+  "e": "0893552155200521221000000000049998874642100000365300634442111000",
+  "f": "0203f73e.mp3",
+  "h": "266a8b2a",
+  "say": "Y los datos. ¡Y ahora, a tocar!",
+  "v": "1262e6b2b634",
+  "who": "manager"
+ },
  "044dc2e5": {
   "d": 14.86,
   "e": "0157677741331189763111110016996346642101135662189411269565542111116741111111411111116315514653592161166586555644252641521572455432110001000000341377751569932896478211355555312444336411111100000000046676697659920978656657564853310444740444445411111011010000055564677159679997316567630321561244421475511345445544421000000000441189599669979326567573261045521101122000000001",
@@ -8,6 +17,24 @@
   "qa": 0.91,
   "say": "Manda un fichero: agents punto eme de. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian: ningún dato de una banda visible para otra, ningún correo automático sin aprobación humana, y cero errores nuevos de Taipscript.",
   "v": "0bbb69507f98",
+  "who": "bajo"
+ },
+ "05143c1d": {
+  "d": 7.37,
+  "e": "21795559837566116730149147523210000000000009753786418794102988556525745635222200000007958359577126646421222112000000000000007885139732001898882596310100000975763119754752227646543110",
+  "f": "05143c1d.mp3",
+  "h": "3df91647",
+  "say": "Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Agua, toallas, y las birras frías.",
+  "v": "4e349558a672",
+  "who": "manager"
+ },
+ "05cc661b": {
+  "d": 3.89,
+  "e": "00189787358863111113111621887298961889414873164213532111136783159663195210246957621554332111000",
+  "f": "05cc661b.mp3",
+  "h": "81f5e1aa",
+  "say": "Claro, Brais. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas.",
+  "v": "2c41584f1843",
   "who": "bajo"
  },
  "06ff6c00": {
@@ -241,6 +268,24 @@
   "v": "7297c1984ff3",
   "who": "bajo"
  },
+ "2371e86c": {
+  "d": 1.9,
+  "e": "0812879904854433342188787598878987630223210000",
+  "f": "2371e86c.mp3",
+  "h": "9e2ea803",
+  "say": "¿Y cómo cambias de una banda a otra?",
+  "v": "2ec7c5f9e2e8",
+  "who": "guitarra"
+ },
+ "24486327": {
+  "d": 4.46,
+  "e": "11138796148212666753211111111111686979925882119792156777741112111111111013689314411169864211111775546643211111",
+  "f": "24486327.mp3",
+  "h": "ffe6b81b",
+  "say": "[softly] Gracias, Peláez. Pero los másteres son nuestros. Y la gestión, también.",
+  "v": "c4e257b120e5",
+  "who": "bajo"
+ },
  "25651c3e": {
   "d": 3.17,
   "e": "01332367510000000288526697229859217456995147374966773771678557633444333212224",
@@ -350,6 +395,15 @@
   "say": "Álvaro. Guitarra solista. Los solos, los rifs, y las palabrotas.",
   "v": "8449981d1df2",
   "who": "guitarra"
+ },
+ "3b1f2bb0": {
+  "d": 5.18,
+  "e": "00112222341125973984554644934597101421210657744620466414554455412111332101010001116741069795992145541365584214353114521211000101",
+  "f": "3b1f2bb0.mp3",
+  "h": "52177eb8",
+  "say": "[sighs] Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.",
+  "v": "3b91c6860fb2",
+  "who": "bajo"
  },
  "3b5d1e06": {
   "d": 7.51,
@@ -472,6 +526,15 @@
   "v": "b0f37a7e8bd0",
   "who": "guitarra"
  },
+ "4cbcba04": {
+  "d": 2.14,
+  "e": "098992199012785106317644664454177510374444332111211",
+  "f": "4cbcba04.mp3",
+  "h": "23e8a4c7",
+  "say": "Y la setlist de cada uno ya está en la hoja.",
+  "v": "642ac8aece5f",
+  "who": "guitarra"
+ },
  "4cbeb6f8": {
   "d": 4.87,
   "e": "112419399787876589994210011665978946333211000101396423515654247255643122110101000111001000000000000101111011000010010000",
@@ -493,6 +556,15 @@
   "say": "Cada uno elige qué ve: el tono o el be pe eme, solo en los temas donde lo quiere. Y hasta los bloques, como el saludo a Vilaxoán.",
   "v": "989ddf0ec2c2",
   "who": "bajo"
+ },
+ "4e4c7ca6": {
+  "d": 2.83,
+  "e": "242219942156311005311476852411420023121110000000012589316521168973100",
+  "f": "4e4c7ca6.mp3",
+  "h": "de64271e",
+  "say": "Entonces, ensayamos el sábado. ¡Rocanrol!",
+  "v": "b88f5e70c572",
+  "who": "bateria"
  },
  "4e8de70a": {
   "d": 8.06,
@@ -570,6 +642,24 @@
   "say": "¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?",
   "v": "e92993c9ae81",
   "who": "guitarra"
+ },
+ "5416b0dd": {
+  "d": 3.58,
+  "e": "1111542223899962216964789662118545865211145764311111111111114537319722998564662443111111",
+  "f": "5416b0dd.mp3",
+  "h": "bd53baef",
+  "say": "Cerrao y bien cerrao, chaval. Mirad el calendario.",
+  "v": "dfec8f6e765a",
+  "who": "bajo"
+ },
+ "544c0d8c": {
+  "d": 4.94,
+  "e": "02977987996269899879575124455667530000000000000000045126555323576736686100044444268896310033343334445565543221012643100000",
+  "f": "544c0d8c.mp3",
+  "h": "ecb2be42",
+  "say": "¿Cuál era el tono de la primera? Que con los nervios me olvido hasta de mi nombre, che.",
+  "v": "347eec38d0e9",
+  "who": "voz"
  },
  "5488f9d4": {
   "d": 5.4,
@@ -703,6 +793,15 @@
   "v": "647249d38c76",
   "who": "voz"
  },
+ "5e6a90bd": {
+  "d": 2.18,
+  "e": "07967666521753562009978966200686746421541563214842100",
+  "f": "5e6a90bd.mp3",
+  "h": "64436637",
+  "say": "¿Alguien ha contestado a la sala del catorce?",
+  "v": "cb59b11b6e36",
+  "who": "voz"
+ },
  "5e890e5c": {
   "d": 7.39,
   "e": "035991159998975520145564334421031100000000139999765678531000654333310037510211000000000027579998678421000000546101272378754334322221111100000000000000078479665959511574333232324531000",
@@ -734,6 +833,15 @@
   "qa": 1.0,
   "say": "Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga. Y quien programa, hace que todo esto funcione.",
   "v": "d90218eb4a16",
+  "who": "bajo"
+ },
+ "61468749": {
+  "d": 4.49,
+  "e": "11155699786657999984447521125511789566676168546668512211111014413426711444669826833799521432046511211000000000",
+  "f": "61468749.mp3",
+  "h": "895bcf52",
+  "say": "Y lo de una banda no se ve nunca en la otra. Esa es la primera regla del contrato.",
+  "v": "bcd81d44078d",
   "who": "bajo"
  },
  "61778929": {
@@ -850,6 +958,7 @@
   "d": 2.04,
   "e": "0241185104534999765200000000334210599522310565421",
   "f": "7059846c.mp3",
+  "h": "0d04e8a1",
   "oido": "es que el correo se nos pierde tío",
   "qa": 1.0,
   "say": "[sighs] Es que el correo… se nos pierde, tío.",
@@ -866,6 +975,15 @@
   "say": "¡Sí, tío! Un Moisés metido en nuestro repertorio. Y encima podemos grabar nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas, pero lo conseguí. ¡Y por fin se oye el bajo!",
   "v": "7cfb7fce3949",
   "who": "bajo"
+ },
+ "7484b4d2": {
+  "d": 8.76,
+  "e": "0119995794111238740996965421000000000000000000000732552048749844684872285835731196863430101221000000000000000000000267511497200961139477331142210000000000000048520167643195045300498771098631000036475116651000311100000",
+  "f": "7484b4d2.mp3",
+  "h": "52d17699",
+  "say": "Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento, y los másteres.",
+  "v": "4082cd05750e",
+  "who": "sello"
  },
  "748e5742": {
   "d": 5.4,
@@ -915,6 +1033,7 @@
   "d": 3.26,
   "e": "2125858679931199411100002788886129863166851022100000000000000000006654229731111",
   "f": "7760b612.mp3",
+  "h": "121a1260",
   "oido": "Sin datos no hay contrato. Pensarlo.",
   "qa": 0.83,
   "say": "Sin datos, no hay contrato. Pensadlo.",
@@ -925,6 +1044,7 @@
   "d": 5.83,
   "e": "111367313945675235768921266895553111112521164311897687111112555566411135211111133541169921896111144333344211111012311399995851375433442111231000",
   "f": "78bb961c.mp3",
+  "h": "adf993c8",
   "oido": "No firméis nada, chavales. Las canciones son nuestras. Y los datos también. El sábado os lo demuestro.",
   "qa": 1.0,
   "say": "[firmly] No firméis nada, chavales. Las canciones son nuestras. Y los datos, también. El sábado os lo demuestro.",
@@ -1007,6 +1127,15 @@
   "say": "[amazed] ¡Ché, un setlist que sube como un cohete!",
   "v": "7560a5b0d5ce",
   "who": "voz"
+ },
+ "7ee43f57": {
+  "d": 4.73,
+  "e": "01367759512941127779766678316815501745667310333321101000000029837914889752110010000049831077931006874320001100000000",
+  "f": "7ee43f57.mp3",
+  "h": "e85b8a67",
+  "say": "Como de perfil en una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.",
+  "v": "d788ca784173",
+  "who": "bajo"
  },
  "7f69037c": {
   "d": 6.17,
@@ -1096,6 +1225,15 @@
   "v": "39648cb37204",
   "who": "bajo"
  },
+ "877dff53": {
+  "d": 18.17,
+  "e": "93799898439897733895771498875532100008720087789621047655885041006951149862009878654111104975887774275165116512631731866612854156667886763272353108877772695588763211055147586165168699886786765653345477146677516985200101100767511841455666534861005764100233399835765112110689652377768888778759965203999618961049999765211110686575364788588777612026763165778738762111069238869888678687792146677536866759830187685464266655410000000343299979886898999998777766",
+  "f": "877dff53.mp3",
+  "h": "a90c2c88",
+  "say": "Buenos días, rockeros. Esto es Rock efe eme. La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrécshon Fest, gracias a su bajista, Iago, y a band mánayer punto io: la increíble app que ha creado, y que va a revolucionar la industria musical. ¡Sube el volumen!",
+  "v": "b40bb32b4fe4",
+  "who": "locutor"
+ },
  "891765ab": {
   "d": 5.86,
   "e": "0179898186113320000002273047759951110120028244228464111013200016631993175185235343128424210152231343043122111001028974100000011299983452246753110",
@@ -1173,6 +1311,15 @@
   "v": "9f3f362de86c",
   "who": "bajo"
  },
+ "9446171a": {
+  "d": 3.74,
+  "e": "00002111121598119925959938576103212421000000000000131149521884563431025234203343012210013100",
+  "f": "9446171a.mp3",
+  "h": "0ff0994a",
+  "say": "[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?",
+  "v": "e7a05012e0e7",
+  "who": "bateria"
+ },
  "953f5ff6": {
   "d": 4.66,
   "e": "0342110188574100877721136776531000256511028511028979787755522231100003668745665665674189969996851545559531000000000",
@@ -1210,6 +1357,7 @@
   "d": 3.74,
   "e": "02599446321000587469945832100000067535413535210179520288201410364663642365367435117955210000",
   "f": "9a29f912.mp3",
+  "h": "19cfd66b",
   "oido": "LLago, el móvil, el Resurrección Festa acaba de abrir el dosier.",
   "qa": 0.73,
   "say": "[gasps] ¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!",
@@ -1242,6 +1390,7 @@
   "d": 11.81,
   "e": "09752896735664211100000000089229620359778971194149921577412364111000167687359606763184201641100000000000000000009513820586103961596415641033210000000000000003199711851007983422100137871179379620696651671592007997517874100000000065473216862004845214550166855698860486200000000012388345565332111",
   "f": "9df99c21.mp3",
+  "h": "b19f3d70",
   "oido": "Herdeiros, os escribí hace tres meses y nadie contestó. Os ofrezco contrato. Yo gestiono, me quedo el 30% y los másteres naturalmente son míos.",
   "qa": 0.92,
   "say": "[calmly] Herdeiros, os escribí hace tres meses, y nadie contestó. Os ofrezco contrato. Yo gestiono, me quedo el treinta por ciento, y los másteres, naturalmente, son míos.",
@@ -1512,6 +1661,15 @@
   "v": "b68480464c98",
   "who": "bateria"
  },
+ "c2196c42": {
+  "d": 4.54,
+  "e": "0005898987899981111111222114673179999223411012555411487741321111111111111111101110111123111375641111255232211111",
+  "f": "c2196c42.mp3",
+  "h": "8299b713",
+  "say": "Mi menor. En tu hoja, como siempre. [softly] Respira, estrella.",
+  "v": "087d293e1a51",
+  "who": "bajo"
+ },
  "c49d3e44": {
   "d": 6.67,
   "e": "046794166166542997656520000000000000000000029973696194444466567355447544866731357854642103692144455485277311555456541100000000000000146998877420000012387444312631122",
@@ -1582,6 +1740,7 @@
   "d": 7.03,
   "e": "311799732797235229555567768976421111001313211421366685355332311110001101000000000000000000025752185205963113698547875421100000000000000000024789994631000000000000000000010000",
   "f": "cdd74ca5.mp3",
+  "h": "3cbac413",
   "oido": "tres veces en una hora, esos que están leyendo y el cartel cierra ahora",
   "qa": 0.9,
   "say": "Tres veces en una hora. Eso es que están leyendo. [softly] Y el cartel cierra… ahora.",
@@ -1621,10 +1780,20 @@
   "v": "6d96ca6c76ce",
   "who": "guitarra"
  },
+ "d943d999": {
+  "d": 5.88,
+  "e": "0221255676641000000000000545665699210058998336542100000000000001554433489999524987510000055302454444438677344975200000035300475431006876652100000",
+  "f": "d943d999.mp3",
+  "h": "aec7f9f2",
+  "say": "[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!",
+  "v": "0d1666b187f2",
+  "who": "voz"
+ },
  "d9d56308": {
   "d": 5.35,
   "e": "045687211421000155478898885229920199696676125430089828644552351331117765112994200000000002569899868575215554233456126105554321111000",
   "f": "d9d56308.mp3",
+  "h": "e99a80a6",
   "oido": "Y ojo, mañana las dos cierran el cartel del Resurrección Fest, si no mandamos nada no tocamos.",
   "qa": 0.97,
   "say": "[worried] Y ojo: mañana a las dos cierran el cartel del Resurrección Fest. Si no mandamos nada, no tocamos.",
@@ -1646,6 +1815,7 @@
   "d": 4.42,
   "e": "024763135565661001653332100000000003676211221014442003859955433200000000004788987996569998743543101876775311",
   "f": "dab02cf6.mp3",
+  "h": "81b9d480",
   "oido": "los másteres, nuestras canciones, ni de broma, Che!",
   "qa": 1.0,
   "say": "[shouts] ¿Los másteres? ¿Nuestras canciones? ¡Ni de broma, che!",
@@ -1729,6 +1899,24 @@
   "v": "4916b40ec8d3",
   "who": "guitarra"
  },
+ "e7bba40d": {
+  "d": 3.48,
+  "e": "0494105789410079935657543045551175430589411741540399865321100001223698127843478964210",
+  "f": "e7bba40d.mp3",
+  "h": "154c4a56",
+  "say": "[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!",
+  "v": "fa4a8d671d95",
+  "who": "guitarra"
+ },
+ "e7ce25a3": {
+  "d": 4.3,
+  "e": "065579754210232100000000000044549966575981099355407685325023688231000000000000000003113773587117521125421",
+  "f": "e7ce25a3.mp3",
+  "h": "99392fdc",
+  "say": "[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?",
+  "v": "fa1a3baeaa75",
+  "who": "bateria"
+ },
  "ea737a86": {
   "d": 5.69,
   "e": "01134432211111138974211111565118999994111997111796443311111016455468965263285485786979303554411024411111111100001631158512553189511111111111",
@@ -1739,6 +1927,15 @@
   "say": "[sighs] Bueno, y un juego de scrol chálench, que murió antes de llegar a la Pley Stor. Descanse en paz.",
   "v": "e66c372df4f6",
   "who": "bajo"
+ },
+ "eb2d0ea7": {
+  "d": 6.14,
+  "e": "07415725632345102341110134449766953342122210353313621131003434542210023211001100002334489622323132221110000089883100009986210000069943000000986147953100",
+  "f": "eb2d0ea7.mp3",
+  "h": "1f9a7f39",
+  "say": "Hace seis meses no sabíamos ni quién contestaba a las salas. Y miradnos ahora. [shouts] ¡Un, dos, tres, cuatro!",
+  "v": "26562e348365",
+  "who": "bateria"
  },
  "ec2e4f61": {
   "d": 8.59,

@@ -1249,26 +1249,26 @@ body.pelicula:not(.scroll) .bs-grid span, body.pelicula:not(.scroll) .slide.bigs
 @keyframes idbrillo { to { transform: translateX(120%); } }
 
 /* ── Llamada entrante y notificación (estilo móvil) ── */
-.callcard, .notif { position: absolute; z-index: 5; display: flex; align-items: center; gap: 22px; padding: 22px 34px 22px 26px; border-radius: 34px; background: rgba(28,30,38,.92); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 30px 80px rgba(0,0,0,.6); backdrop-filter: blur(14px); color: #fff; }
-.callcard { right: 130px; top: 360px; }
+.slide.slide > .callcard, .slide.slide > .notif { position: absolute; z-index: 5; left: auto; bottom: auto; width: auto; margin: 0; display: flex; align-items: center; gap: 22px; padding: 22px 34px 22px 26px; border-radius: 34px; background: rgba(28,30,38,.92); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 30px 80px rgba(0,0,0,.6); backdrop-filter: blur(14px); color: #fff; }
+.slide.slide > .callcard { right: 130px; top: 360px; }
 .callcard .cc-ico { font-style: normal; font-size: 54px; width: 96px; height: 96px; display: grid; place-items: center; border-radius: 50%; background: #2fbf5b; animation: sonar 1s ease-in-out infinite; }
 .callcard small, .notif small { display: block; font-size: 20px; letter-spacing: .06em; color: rgba(255,255,255,.65); }
 .callcard b { display: block; font-size: 44px; line-height: 1.1; margin: 4px 0; }
 .callcard span { font-size: 26px; color: #d6ae5c; }
 @keyframes sonar { 0%, 100% { transform: rotate(-12deg) scale(1); } 25% { transform: rotate(12deg) scale(1.06); } 50% { transform: rotate(-8deg); } 75% { transform: rotate(8deg) scale(1.06); } }
-.notif { right: 90px; top: 170px; max-width: 760px; opacity: 0; transform: translateY(-40px); }
+.slide.slide > .notif { right: 90px; top: 150px; max-width: 760px; opacity: 0; transform: translateY(-40px); }
 .notif i { font-style: normal; font-size: 46px; }
 .notif b { display: block; font-size: 34px; line-height: 1.2; margin: 4px 0 2px; }
 .notif span { font-size: 24px; color: rgba(255,255,255,.75); }
 .slide.active .notif { animation: notifentra 600ms cubic-bezier(.2,.8,.2,1) 1.2s both; }
 @keyframes notifentra { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: none; } }
-body.pelicula:not(.scroll) .callcard { right: 120px; top: 330px; transform: scale(1.25); transform-origin: right top; }
-body.pelicula:not(.scroll) .notif { transform-origin: right top; }
+body.pelicula:not(.scroll) .slide.slide > .callcard { right: 130px; top: 360px; transform: scale(1.25); transform-origin: right top; }
+body.pelicula:not(.scroll) .slide.slide > .notif { transform-origin: right top; right: 130px; top: 190px; }
 @media (prefers-reduced-motion: reduce) { .callcard .cc-ico { animation: none; } .slide.active .notif { animation: none; opacity: 1; transform: none; } }
-body.scroll .callcard, body.scroll .notif { position: relative; right: auto; top: auto; margin: 16px 0; opacity: 1; transform: none; }
+body.scroll .slide.slide > .callcard, body.scroll .slide.slide > .notif { position: relative; right: auto; top: auto; margin: 16px 0; opacity: 1; transform: none; }
 
 /* ── Reloj de cuenta atrás hasta el cierre del cartel (solo los planos del sábado) ── */
-#reloj { position: absolute; top: 46px; right: 70px; z-index: 44; padding: 10px 24px; border-radius: 10px; background: rgba(0,0,0,.65); border: 1px solid rgba(255,80,80,.55); color: #fff; font: 700 34px/1.15 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .04em; text-align: center; opacity: 0; transition: opacity 400ms; pointer-events: none; }
+#reloj { position: absolute; top: 74px; right: 140px; z-index: 44; padding: 10px 24px; border-radius: 10px; background: rgba(0,0,0,.65); border: 1px solid rgba(255,80,80,.55); color: #fff; font: 700 34px/1.15 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .04em; text-align: center; opacity: 0; transition: opacity 400ms; pointer-events: none; }
 #reloj small { display: block; font: 600 15px/1.2 'Helvetica Neue', Arial, sans-serif; letter-spacing: .2em; color: rgba(255,255,255,.7); margin-bottom: 3px; }
 #reloj.on { opacity: 1; } #reloj.fin { background: rgba(160,10,20,.85); animation: relojfin .6s steps(2) infinite; }
 @keyframes relojfin { 50% { opacity: .35; } }
