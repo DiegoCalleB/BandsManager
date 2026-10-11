@@ -15,17 +15,29 @@ export interface StemsCacheRecord {
   degraded: boolean;
   degradedReason?: string;
   stemsMap: Record<string, { url: string; formato: string; tamano: string }>;
-  timingBreakdown?: any;
+  /** Tiempos de cada fase (preload, GPU, persistencia, total) en texto; la forma depende del motor. */
+  timingBreakdown?: Record<string, unknown>;
   audioUrl?: string;
   songTitle?: string;
   createdAt?: string;
   updatedAt?: string;
-  lockedAt?: string;
-  lockedBy?: string;
+  /** Reserva distribuida (ver acquireStemsSeparationLock): instante y instancia que procesa la pista. */
+  locked_at?: string;
+  locked_by?: string;
 }
 
 // In-memory fast layer
 export const stemsMemoryCache = new Map<string, StemsCacheRecord>();
+
+/** Entrada de L1 para una separación en curso: aún no hay stems, solo la reserva. */
+function entradaPendiente(
+  bandId: string,
+  songHash: string,
+  engine: string,
+  reserva: { locked_at: string; locked_by?: string; createdAt: string }
+): StemsCacheRecord {
+  return { bandId, songHash, engine, engineUsed: engine, isNeural: false, degraded: false, status: 'pending', stemsMap: {}, ...reserva };
+}
 
 const LOCK_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutos para declarar un pending como abandonado (permite cold-start de GPU en Replicate)
 
@@ -123,9 +135,9 @@ export async function acquireStemsSeparationLock(
       };
     }
     if (memExisting.status === 'pending') {
-      const lockedAt = (memExisting as any).locked_at ? new Date((memExisting as any).locked_at).getTime() : 0;
+      const lockedAt = memExisting.locked_at ? new Date(memExisting.locked_at).getTime() : 0;
       const isStale = Date.now() - lockedAt > LOCK_TIMEOUT_MS;
-      if (!isStale && (memExisting as any).locked_by && (memExisting as any).locked_by !== instanceId) {
+      if (!isStale && memExisting.locked_by && memExisting.locked_by !== instanceId) {
         return {
           acquired: false,
           reason: 'in_progress_by_other_instance'
@@ -192,31 +204,17 @@ export async function acquireStemsSeparationLock(
             .eq("song_hash", songHash)
             .eq("engine", engine);
           
-          stemsMemoryCache.set(cacheKey, {
-            bandId,
-            songHash,
-            engine,
-            status: 'pending',
-            locked_at: nowIso,
-            locked_by: instanceId,
-            stemsMap: {},
-            createdAt: nowIso
-          } as any);
+          stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
           return { acquired: true };
         }
 
         // Bloqueo activo en otra instancia
         console.log(`[Stems Lock] ⏳ Trabajo ya en progreso en otra instancia (${existing.locked_by}) para ${cacheKey}`);
-        stemsMemoryCache.set(cacheKey, {
-          bandId,
-          songHash,
-          engine,
-          status: 'pending',
+        stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, {
           locked_at: existing.locked_at || nowIso,
           locked_by: existing.locked_by,
-          stemsMap: {},
           createdAt: existing.created_at || nowIso
-        } as any);
+        }));
         return { acquired: false, reason: 'in_progress_by_other_instance' };
       }
     }
@@ -242,10 +240,7 @@ export async function acquireStemsSeparationLock(
 
       if (!reclaimErr && Array.isArray(reclamadas) && reclamadas.length > 0) {
         console.log(`[Stems Lock] 🔁 Reintento sobre trabajo ${existing.status} para ${cacheKey}`);
-        stemsMemoryCache.set(cacheKey, {
-          bandId, songHash, engine, status: 'pending',
-          locked_at: nowIso, locked_by: instanceId, stemsMap: {}, createdAt: nowIso
-        } as any);
+        stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
         return { acquired: true };
       }
       return { acquired: false, reason: 'in_progress_by_other_instance' };
@@ -268,16 +263,7 @@ export async function acquireStemsSeparationLock(
 
     if (!insertErr) {
       console.log(`[Stems Lock] 🔒 Bloqueo reservado exitosamente para inferencia en ${cacheKey} (Instancia: ${instanceId})`);
-      stemsMemoryCache.set(cacheKey, {
-        bandId,
-        songHash,
-        engine,
-        status: 'pending',
-        locked_at: nowIso,
-        locked_by: instanceId,
-        stemsMap: {},
-        createdAt: nowIso
-      } as any);
+      stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
       return { acquired: true };
     }
 
@@ -437,7 +423,7 @@ export async function getStemsJobStatus(
   }
 
   const mensajeCaducado = 'La separación se interrumpió (el servidor se reinició o tardó demasiado). Puedes reintentarla.';
-  const memExisting = stemsMemoryCache.get(cacheKey) as any;
+  const memExisting = stemsMemoryCache.get(cacheKey);
   if (memExisting?.status === 'pending') {
     const lockedAt = memExisting.locked_at ? new Date(memExisting.locked_at).getTime() : 0;
     if (lockedAt && Date.now() - lockedAt > LOCK_TIMEOUT_MS) {
