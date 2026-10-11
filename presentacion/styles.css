@@ -1942,3 +1942,7 @@ body.pelicula:not(.scroll) .slide.feat:not(.dirigida).active .ft-shot:not(.phone
 .dirigida.active .dr-tapa:has(.dr-tema2) { animation: drtapa var(--d) linear var(--t) forwards, drpop .45s cubic-bezier(.2, 1.2, .3, 1) var(--t) both; }
 .dr-adj { position: absolute; left: 2.5%; margin: 0; padding: .5cqw 1cqw; border-radius: .6cqw; background: rgba(255,213,150,.1); color: #ffd596; font-size: 1.05cqw; box-shadow: inset 0 0 0 1px rgba(255,213,150,.3); }
 .dr-adj2 { display: inline-block; padding: .4cqw .9cqw; border-radius: .6cqw; background: rgba(255,213,150,.1); color: #ffd596 !important; font-size: 1cqw; box-shadow: inset 0 0 0 1px rgba(255,213,150,.3); }
+/* con subtítulos, los rótulos de las pantallas en directo suben para no pisarlos */
+body.subs.pelicula:not(.scroll) .dirigida.active .dr-lab:not(.mov) { bottom: 150px; }
+/* y se apartan del retrato de quien habla (abajo a la izquierda) */
+body.pelicula:not(.scroll) .dirigida.active .dr-lab:not(.mov) { left: 400px; }
