@@ -1,4 +1,4 @@
-import type { InteractionLog } from '../../src/types.js';
+import type { InteractionLog, Lead } from '../../src/types.js';
 // Seguimiento público de emails y EPK (apertura, clic, PDF, interacción) y webhook de Resend. Solo
 // registra con token firmado (`trackingSeguro.ts`); el webhook exige firma Svix (AGENTS.md §1).
 
@@ -91,7 +91,7 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
 
       const effectiveEmailId = targetMsgId || lead.gmail_message_id || null;
       const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
-      const openCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+      const openCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
       const logNota = `[👁️ Email Abierto (${openCount}ª vez)] ${clientLabel} el ${dateTag}`;
@@ -164,7 +164,7 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
       const sb = getSupabase();
       const nowIso = new Date().toISOString();
       const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
-      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier") || h.notas?.includes("Pulsó")).length + 1;
+      const clickCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier") || h.notas?.includes("Pulsó")).length + 1;
       const dateTag = new Date().toLocaleDateString("es-ES") + " " + new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
 
       let accionBoton = "🔗 Enlace";
@@ -203,10 +203,10 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
       };
 
       // Si hace clic, necesariamente ha abierto el correo. Comprobamos si la última apertura fue hace más de 30s
-      const lastOpen = historialPrevio.find((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
+      const lastOpen = historialPrevio.find((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
       const timeSinceLastOpen = lastOpen?.fecha ? Date.now() - new Date(lastOpen.fecha).getTime() : Infinity;
 
-      const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+      const opensCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
 
       const contactosToAdd: InteractionLog[] = (timeSinceLastOpen > 30000 || !lastOpen)
         ? [
@@ -289,7 +289,7 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
         resultado: cleanAction
       };
 
-      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-")).length + 1;
+      const clickCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("click-") || h.id?.startsWith("epk-")).length + 1;
 
       await sb
         .from("leads")
@@ -372,7 +372,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       const historialPrevio = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
 
       const pdfOpenEvents = historialPrevio.filter(
-        (h: any) => h.id?.startsWith("pdf-open-") || h.resultado?.includes("Dossier PDF") || h.notas?.includes("archivo PDF") || h.event === "pdf_opened"
+        (h: InteractionLog) => h.id?.startsWith("pdf-open-") || h.resultado?.includes("Dossier PDF") || h.notas?.includes("archivo PDF") || h.event === "pdf_opened"
       );
       const pdfOpenCount = pdfOpenEvents.length + 1;
 
@@ -394,9 +394,9 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       const updatedNotas = `${lead.notas ? lead.notas + "\n" : ""}${logNota}`;
 
       // Si hace más de 30s que no se abre o no hay registro de apertura, registrar apertura de correo
-      const lastOpen = historialPrevio.find((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
+      const lastOpen = historialPrevio.find((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura"));
       const timeSinceLastOpen = lastOpen?.fecha ? Date.now() - new Date(lastOpen.fecha).getTime() : Infinity;
-      const opensCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+      const opensCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
 
       const contactosToAdd: InteractionLog[] = (timeSinceLastOpen > 30000 || !lastOpen)
         ? [
@@ -464,7 +464,8 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
 router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, res) => {
   // Sin firma Svix válida no se acepta nada: antes cualquiera podía falsear aperturas, clics o
   // entregas de cualquier lead. Requiere RESEND_WEBHOOK_SECRET (el `whsec_...` del webhook).
-  const cuerpoCrudo: Buffer | string = (req as any).rawBody || JSON.stringify(req.body ?? {});
+  // `limiteCuerpo` guarda el cuerpo crudo para verificar la firma.
+  const cuerpoCrudo: Buffer | string = (req as typeof req & { rawBody?: Buffer }).rawBody || JSON.stringify(req.body ?? {});
   const firmado = verificarFirmaSvix({
     secreto: process.env.RESEND_WEBHOOK_SECRET,
     id: req.headers["svix-id"] as string | undefined,
@@ -492,7 +493,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
     if (!emailTo && !eventData.tags?.lead_id && !eventData.metadata?.lead_id) return;
 
     const sb = getSupabase();
-    let lead: any = null;
+    let lead: Lead | null = null;
 
     const directLeadId = eventData.metadata?.lead_id || eventData.tags?.lead_id;
     if (directLeadId && idSeguro(directLeadId)) {
@@ -538,7 +539,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
         .eq("id", lead.id);
 
     } else if (eventType === "email.opened") {
-      const openCount = historialPrevio.filter((h: any) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
+      const openCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("open-") || h.notas?.includes("abrió el correo") || h.resultado?.includes("Apertura")).length + 1;
       const nuevoContacto: InteractionLog = {
         id: `resend-open-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,
@@ -561,7 +562,7 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
       invalidateBandStateCache(lead.band_id);
 
     } else if (eventType === "email.clicked") {
-      const clickCount = historialPrevio.filter((h: any) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier")).length + 1;
+      const clickCount = historialPrevio.filter((h: InteractionLog) => h.id?.startsWith("click-") || h.id?.startsWith("epk-") || h.notas?.includes("enlace") || h.notas?.includes("Dossier")).length + 1;
       const nuevoContacto: InteractionLog = {
         id: `resend-click-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         fecha: nowIso,

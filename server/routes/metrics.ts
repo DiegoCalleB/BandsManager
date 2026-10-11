@@ -27,10 +27,10 @@ router.get("/metrics", requireAuth, async (req, res) => {
 router.post("/metrics", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   const newMetric: SocialMetric = req.body;
-  const saved = await dbUpsertSocialMetric(newMetric, userBandId);
+  const saved: SocialMetric = await dbUpsertSocialMetric(newMetric, userBandId);
 
   const state = loadState();
-  state.metrics.push(saved as any);
+  state.metrics.push(saved);
   saveState(state);
   
   res.json({ success: true, metric: saved });
@@ -41,14 +41,14 @@ router.put("/metrics/:id", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   const { id } = req.params;
   const updated = { ...req.body, id };
-  const saved = await dbUpsertSocialMetric(updated, userBandId);
+  const saved: SocialMetric = await dbUpsertSocialMetric(updated, userBandId);
 
   const state = loadState();
   const idx = state.metrics.findIndex((m: SocialMetric) => m.id === id);
   if (idx !== -1) {
-    state.metrics[idx] = saved as any;
+    state.metrics[idx] = saved;
   } else {
-    state.metrics.push(saved as any);
+    state.metrics.push(saved);
   }
   saveState(state);
   
@@ -80,9 +80,9 @@ router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
 router.post("/metrics/sync", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   try {
-    const dbMetrics = await dbGetSocialMetrics(userBandId);
+    const dbMetrics: SocialMetric[] = await dbGetSocialMetrics(userBandId);
     const state = loadState();
-    state.metrics = dbMetrics as any;
+    state.metrics = dbMetrics;
     saveState(state);
 
     res.json({
@@ -102,6 +102,7 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
 
 import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRadarService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { CuentaInstagramVerificada, DatosCapturaIA, InsightsInstagram, PaginaFacebook } from './tiposMetricas.js';
 
 // Fetch real-world social statistics of the active band from live networks / YouTube API
 router.post("/metrics/real", requireAuth, async (req, res) => {
@@ -246,7 +247,7 @@ router.get("/metrics/content-items", requireAuth, async (req, res) => {
 
 // Helper to fetch live insights for an Instagram Business / Creator Account
 async function fetchInstagramInsightsData(igUserId: string, token: string) {
-  const insightsResult: any = {
+  const insightsResult: InsightsInstagram = {
     account: null,
     insights: {
       reach: 0,
@@ -311,7 +312,7 @@ async function fetchInstagramInsightsData(igUserId: string, token: string) {
       const mediaList = mediaData?.data || [];
 
       for (const m of mediaList) {
-        const mediaInsights: any = {};
+        const mediaInsights: Record<string, number> = {};
         // Fetch media-specific insights (Reels plays, reach, saved, shares, total_interactions)
         try {
           const isReel = m.media_product_type === "REELS" || m.media_type === "VIDEO";
@@ -404,7 +405,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
 
     if (fbRes && fbRes.ok) {
       const fbData = await fbRes.json();
-      const pageWithIg = fbData?.data?.find((p: any) => p.instagram_business_account);
+      const pageWithIg = fbData?.data?.find((p: PaginaFacebook) => p.instagram_business_account);
       if (pageWithIg?.instagram_business_account) {
         const igAcc = pageWithIg.instagram_business_account;
         const data = await fetchInstagramInsightsData(igAcc.id, token);
@@ -473,7 +474,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
     const cleanToken = accessToken.trim();
 
     // 1. Try discovering Business Account with Insights first (Meta Graph API / Instagram Platform Insights)
-    let verifiedAccount: any = null;
+    let verifiedAccount: CuentaInstagramVerificada | null = null;
     let authSource = "meta_platform_insights_api";
 
     const fbRes = await fetch(
@@ -483,7 +484,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 
     if (fbRes && fbRes.ok) {
       const fbData = await fbRes.json();
-      const pageWithIg = fbData?.data?.find((p: any) => p.instagram_business_account);
+      const pageWithIg = fbData?.data?.find((p: PaginaFacebook) => p.instagram_business_account);
       if (pageWithIg?.instagram_business_account) {
         const igAcc = pageWithIg.instagram_business_account;
         verifiedAccount = {
@@ -543,7 +544,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
     if (verifiedAccount.followers_count !== null) {
       const today = new Date().toISOString().split("T")[0];
       const existing = await dbGetSocialMetrics(userBandId).catch(() => []);
-      const currentToday = existing.find((m: any) => m.fecha === today) || existing[0] || {};
+      const currentToday: Partial<SocialMetric> = existing.find((m: SocialMetric) => m.fecha === today) || existing[0] || {};
 
       const newEntry: SocialMetric = {
         id: currentToday.id || `metric-${userBandId}-${today}`,
@@ -676,18 +677,18 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
     });
 
     const responseText = response.text || "{}";
-    let extractedData: any = {};
+    let extractedData: DatosCapturaIA = {};
     try {
       extractedData = JSON.parse(responseText.replace(/```json/g, "").replace(/```/g, "").trim());
     } catch {
       extractedData = { summary: responseText, confidence: "low" };
     }
 
-    let savedMetric: any = null;
+    let savedMetric: SocialMetric | null = null;
     if (autoSave && extractedData.platform && extractedData.followers !== undefined && extractedData.followers !== null) {
       const today = extractedData.detected_date || new Date().toISOString().split("T")[0];
       const existing = await dbGetSocialMetrics(userBandId).catch(() => []);
-      const currentToday = existing.find((m: any) => m.fecha === today) || {};
+      const currentToday: Partial<SocialMetric> = existing.find((m: SocialMetric) => m.fecha === today) || {};
 
       const platformKey = extractedData.platform === "instagram" ? "instagram" :
                           extractedData.platform === "tiktok" ? "tiktok" :
