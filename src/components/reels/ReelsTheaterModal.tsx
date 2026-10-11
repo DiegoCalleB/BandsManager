@@ -1,7 +1,10 @@
 import React from 'react';
 import { X, Volume2, VolumeX, AlertCircle, Clock, ChevronLeft, ChevronRight, Film, CheckCircle2, Check, RefreshCw, ExternalLink, Sparkles, Share2, Flame, Music } from 'lucide-react';
 import { ThemeColors } from '../../types';
-import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
+import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue, HighlightClip, OptimalTime } from '../../utils/reelsUtils';
+import type { LucideIcon } from 'lucide-react';
+import type { YoutubeVideoMeta } from '../reels_center/reelsHelpers';
+import type { PlataformaReel, PalabraTemporizada } from './reelsTipos';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
@@ -13,7 +16,7 @@ export interface ReelsTheaterModalProps {
   instagramHandle?: string;
   bandName?: string;
   selectedPlatform: string;
-  setSelectedPlatform: (p: any) => void;
+  setSelectedPlatform: (p: PlataformaReel) => void;
   phoneDuration: string;
   inputType: 'youtube' | 'file';
   youtubeUrl: string;
@@ -27,7 +30,7 @@ export interface ReelsTheaterModalProps {
   subtitleCues: SubtitleCue[];
   currentSubtitleText: string;
   setCurrentSubtitleText: (text: string) => void;
-  wordOffsets: any[];
+  wordOffsets: PalabraTemporizada[];
   isPreviewMuted: boolean;
   setIsPreviewMuted: (muted: boolean) => void;
   showSafeZone: boolean;
@@ -36,15 +39,15 @@ export interface ReelsTheaterModalProps {
   simulatedTime: number;
   setSimulatedTime: (time: number) => void;
   timelineDuration: number;
-  highlights: any[];
-  setHighlights: React.Dispatch<React.SetStateAction<any[]>>;
+  highlights: HighlightClip[];
+  setHighlights: React.Dispatch<React.SetStateAction<HighlightClip[]>>;
   selectedHighlightIndex: number;
-  videoMeta?: any;
+  videoMeta?: YoutubeVideoMeta | null;
   editedCopy: string;
   setEditedCopy: React.Dispatch<React.SetStateAction<string>>;
   copySuccess: boolean;
   handleCopyToClipboard: (text: string) => void;
-  copyForPlatform: (clip: any, plat: string) => string;
+  copyForPlatform: (clip: HighlightClip | undefined | null, plat: PlataformaReel) => string;
   // Cropping & physical cut
   cropMode: 'crop' | 'blur' | 'none' | 'smart_pan';
   setCropMode: (mode: 'crop' | 'blur' | 'none') => void;
@@ -63,13 +66,13 @@ export interface ReelsTheaterModalProps {
   setScheduledDate: (date: string) => void;
   scheduledTime: string;
   setScheduledTime: (time: string) => void;
-  optimalTime?: any;
+  optimalTime?: OptimalTime | null;
   isScheduling: boolean;
   schedulingSuccess: boolean;
   scheduleErrors: string[];
   scheduleWarnings: string[];
   handleSchedulePost: (e: React.FormEvent) => void;
-  platformIcons: Record<string, any[]>;
+  platformIcons: Record<string, LucideIcon[]>;
 }
 
 export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
@@ -682,7 +685,7 @@ export const ReelsTheaterModal: React.FC<ReelsTheaterModalProps> = ({
                 <Select size="sm" aria-label="Plataforma"
                   value={selectedPlatform}
                   onChange={(e) => {
-                    const nueva = e.target.value;
+                    const nueva = e.target.value as PlataformaReel;
                     setSelectedPlatform(nueva);
                     setEditedCopy(copyForPlatform(highlights[selectedHighlightIndex], nueva));
                   }}

@@ -5,6 +5,7 @@ import { CurveSeries } from "../ui/CurveSeries";
 import { ChannelChip } from "../ui/ChannelChip";
 import { CANAL_COLOR, type Canal } from "../../utils/canalColor";
 import { Button } from '../ui';
+import type { NavigationOptions } from '../Dashboard';
 
 export type TimePeriod = "7d" | "30d" | "90d" | "1y" | "all";
 
@@ -21,6 +22,17 @@ export const TIME_PERIOD_OPTIONS: {
   { id: "all", label: "Histórico completo", shortLabel: "Todo", days: null },
 ];
 
+/** Punto de la serie temporal del gráfico: seguidores por red y fans en una fecha. */
+interface PuntoCrecimiento {
+  fecha: string;
+  instagram: number;
+  tiktok: number;
+  youtube: number;
+  spotify: number;
+  fans: number;
+  unete_fans: number;
+}
+
 interface SocialAndFansGrowthChartProps {
   metrics?: SocialMetric[];
   fans?: Fan[];
@@ -28,7 +40,7 @@ interface SocialAndFansGrowthChartProps {
   colors?: ThemeColors;
   bandName?: string;
   bandId?: string;
-  onNavigate?: (view: any, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
 }
 
 function ChannelKpi({ canal, label, tag, value, sub }: { canal: Canal; label: string; tag: string; value: number; sub: string }) {
@@ -346,7 +358,7 @@ export const SocialAndFansGrowthChart: React.FC<
 
     // Dynamic progression points scaled to the selected period duration
     const now = new Date();
-    const points: any[] = [];
+    const points: PuntoCrecimiento[] = [];
 
     // Choose step days according to period
     let daysBack: number[];
@@ -483,7 +495,7 @@ export const SocialAndFansGrowthChart: React.FC<
       .map((c) => ({
         label: c.label,
         color: c.color,
-        data: sampled.map((d: any) => ({ label: etiqueta(d.fecha), value: Number(d[c.key] || 0) })),
+        data: sampled.map((d) => ({ label: etiqueta(d.fecha), value: Number(d[c.key] || 0) })),
       }));
   }, [chartTimelineData, selectedChannels]);
 

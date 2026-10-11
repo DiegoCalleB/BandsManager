@@ -3,6 +3,8 @@ import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRig
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
 import { Button, IconButton, LinkButton } from '../../ui';
+import type { NavigationOptions } from '../../Dashboard';
+import type { EventoConAlias } from '../../calendar/calendarTypes';
 
 export interface CalendarWidgetProps {
   concerts: Concert[];
@@ -11,7 +13,7 @@ export interface CalendarWidgetProps {
   colors: ThemeColors;
   agendaFilterMode: "active" | "all";
   onSetAgendaFilterMode: (mode: "active" | "all") => void;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   viewMode?: CalendarWidgetViewMode;
   onChangeViewMode?: (mode: CalendarWidgetViewMode) => void;
   filterType?: "all" | "concierto" | "ensayo";
@@ -126,11 +128,11 @@ export function CalendarWidget({
         dateStr: c.fecha,
         day,
         month,
-        time: (c as any).hora || undefined,
+        time: (c as EventoConAlias).hora || undefined,
         location:
           [c.sala, c.ciudad].filter(Boolean).join(" • ") || "Por determinar",
         badge: c.contrato_firmado ? "Contrato Firmado" : "Programado",
-        bandName: (c as any).bandName || activeBandName,
+        bandName: (c as EventoConAlias).bandName || activeBandName,
         details: c.cache ? `Caché: ${c.cache}€` : undefined,
       });
     });
@@ -154,7 +156,7 @@ export function CalendarWidget({
         time: r.hora || "18:00",
         location: r.lugar || "Local de Ensayo",
         badge: r.estado === "completado" ? "Completado" : "Programado",
-        bandName: (r as any).bandName || activeBandName,
+        bandName: (r as EventoConAlias).bandName || activeBandName,
         details: `Horario: ${r.hora || "18:00"}`,
       });
     });

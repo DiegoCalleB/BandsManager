@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Heart, MessageCircle, Share2, Disc, Gauge, Volume2, VolumeX, Maximize2, Music, Upload, CheckCircle2, UserPlus } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { SUBTITLE_STYLES } from './ViralGrowthStudio';
-import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
+import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue, HighlightClip } from '../../utils/reelsUtils';
+import type { YoutubeVideoMeta } from '../reels_center/reelsHelpers';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 
@@ -36,9 +37,9 @@ export interface ReelsPhoneMockupProps {
   ytLoopCount: number;
   simulatedTime: number;
   // Highlights & Clips
-  highlights: any[];
+  highlights: HighlightClip[];
   selectedHighlightIndex: number;
-  videoMeta?: any;
+  videoMeta?: YoutubeVideoMeta | null;
   // Retention & Virality Enhancements
   isSeamlessLoop: boolean;
   isPunchInZoom: boolean;

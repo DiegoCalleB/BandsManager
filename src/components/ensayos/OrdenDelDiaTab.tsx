@@ -1148,7 +1148,7 @@ export function OrdenDelDiaTab({
                           key={key}
                           type="button"
                           onClick={() => {
-                            setBlockTipo(key as any);
+                            setBlockTipo(key as RehearsalAgendaItem["tipo"]);
                             if (!blockTitulo) setBlockTitulo(def.label);
                           }}
                           className={`p-2.5 rounded-[var(--r-m)] text-left flex items-center gap-2 text-xs font-sans transition-ui cursor-pointer ${

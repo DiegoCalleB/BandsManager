@@ -12,6 +12,17 @@ import {
 import { CheckCircle2, AlertCircle, HelpCircle, ChevronDown, ChevronUp, Bot, FileText, Disc3, X, Sliders, Mail } from "lucide-react";
 import { api } from "../../services/api";
 import { Button, IconButton } from '../ui';
+import type { NavigationOptions } from '../Dashboard';
+
+/**
+ * Campos opcionales que el chequeo de perfil busca en el usuario o en el EPK aunque no formen
+ * parte de sus tipos: la configuración de autonomía y el ADN de tono pueden venir adjuntos.
+ */
+type UsuarioConExtras = User & {
+  autonomy_config?: { minCacheByType?: Record<string, unknown>; min_cache?: number | string };
+  bandToneDna?: unknown;
+};
+type EpkConTono = Partial<EPKConfig> & { toneDna?: unknown };
 
 interface ProfileCompletenessCardProps {
   epkConfig?: Partial<EPKConfig>;
@@ -23,7 +34,7 @@ interface ProfileCompletenessCardProps {
   tours?: Tour[];
   bandName?: string;
   currentUser?: User | null;
-  onNavigate?: (view: any, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   onOpenAutonomyModal?: () => void;
   onOpenProfileModal?: () => void;
 }
@@ -107,10 +118,10 @@ export const ProfileCompletenessCard: React.FC<
 
   useEffect(() => {
     // Check if autonomy config / min cache is configured
-    const autonomy = (currentUser as any)?.autonomy_config;
+    const autonomy = (currentUser as UsuarioConExtras | null | undefined)?.autonomy_config;
     if (
       autonomy?.minCacheByType &&
-      Object.values(autonomy.minCacheByType).some((v: any) => Number(v) > 0)
+      Object.values(autonomy.minCacheByType).some((v) => Number(v) > 0)
     ) {
       setHasMinCacheConfigured(true);
     } else if (autonomy?.min_cache && Number(autonomy.min_cache) > 0) {
@@ -180,8 +191,8 @@ export const ProfileCompletenessCard: React.FC<
         epkConfig?.incentivoFans?.codigoDescuento,
       );
     const hasToneDna = Boolean(
-      (epkConfig as any)?.toneDna ||
-      (currentUser as any)?.bandToneDna ||
+      (epkConfig as EpkConTono | undefined)?.toneDna ||
+      (currentUser as UsuarioConExtras | null | undefined)?.bandToneDna ||
       (epkConfig?.biografia && epkConfig.biografia.length > 120),
     );
 

@@ -8,7 +8,7 @@ import {
   User,
 } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId } from "./epkBlocks";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
 
@@ -23,10 +23,10 @@ interface EPKMusicaBlockProps {
   editarVideo: (id: string, patch: Partial<EPKVideo>) => void;
   quitarVideo: (id: string) => void;
   destacarVideo: (id: string) => void;
-  editarDatoContratacion: (campo: keyof DatosContratacion, valor: any) => void;
+  editarDatoContratacion: (campo: keyof DatosContratacion, valor: string | boolean) => void;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }

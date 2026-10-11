@@ -3,7 +3,7 @@ import { AtSign, Mail, Music, QrCode, Copy, ExternalLink, Check, Share2, FileTex
 import QRCode from "react-qr-code";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta, UNIFIED_PLATFORMS } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId, UNIFIED_PLATFORMS } from "./epkBlocks";
 import {
   buildEmailSignatureHtml,
   buildEmailSignaturePlainText,
@@ -18,10 +18,10 @@ interface EPKFirmaQRBlockProps {
   publicEpkUrl: string;
   handleCopyUrl: () => void;
   copiado: boolean;
-  onNavigateToBlock?: (blockId: any) => void;
+  onNavigateToBlock?: (blockId: EPKBlockId) => void;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }

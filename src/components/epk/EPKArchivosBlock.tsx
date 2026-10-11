@@ -9,9 +9,9 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react";
-import { EPKConfig } from "../../types";
+import { EPKConfig, RiderConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId } from "./epkBlocks";
 import { AILogoGeneratorModal } from "./AILogoGeneratorModal";
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
@@ -29,7 +29,7 @@ interface EPKArchivosBlockProps {
   handleRiderUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }
@@ -427,7 +427,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         ...config,
                         riderConfig: {
                           ...(config.riderConfig || {}),
-                          tipoMonitoreo: e.target.value as any,
+                          tipoMonitoreo: e.target.value as RiderConfig["tipoMonitoreo"],
                         },
                       })
                     }
@@ -456,7 +456,7 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                         ...config,
                         riderConfig: {
                           ...(config.riderConfig || {}),
-                          backlinePropio: e.target.value as any,
+                          backlinePropio: e.target.value as RiderConfig["backlinePropio"],
                         },
                       })
                     }
@@ -615,8 +615,9 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {(config.bandPhotos || [])
-                .map((item) =>
-                  typeof item === "string" ? item : (item as any)?.url || "",
+                // Filas antiguas guardaban la foto como objeto `{ url }` en vez de texto.
+                .map((item: string | { url?: string }) =>
+                  typeof item === "string" ? item : item?.url || "",
                 )
                 .filter((url) => typeof url === "string" && url.trim() !== "")
                 .map((url, idx) => (

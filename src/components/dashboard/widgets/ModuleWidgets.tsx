@@ -1,6 +1,7 @@
 import React from 'react';
 import { Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, QrCode, Disc3 } from 'lucide-react';
-import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors } from '../../../types';
+import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors, User } from '../../../types';
+import type { NavigationOptions } from '../../Dashboard';
 import { api } from '../../../services/api';
 import { Onda } from '../../ui/Onda';
 import { ShowIcon } from '../../ui/ShowIcon';
@@ -16,10 +17,10 @@ export interface ModuleWidgetProps {
   fans?: Fan[];
   posts?: SocialPost[];
   epkConfig?: Partial<EPKConfig>;
-  currentUser?: any;
+  currentUser?: User;
   activeBandName?: string;
   colors?: ThemeColors;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
 }
 
 /* 1. CRM PIPELINE WIDGET */

@@ -36,7 +36,9 @@ import {
   ThemeColors,
   Setlist,
   Song,
+  User,
 } from "../../types";
+import type { NavigationOptions } from "../Dashboard";
 import { api } from "../../services/api";
 import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
@@ -50,7 +52,7 @@ import { leerUsuarioDeSesion } from '../../services/sesionLocal';
 const isStitchLight = false;
 
 export interface DashboardWidgetGridProps {
-  currentUser?: any;
+  currentUser?: User;
   concerts: Concert[];
   rehearsals: Rehearsal[];
   leads: Lead[];
@@ -65,7 +67,7 @@ export interface DashboardWidgetGridProps {
   colors: ThemeColors;
   agendaFilterMode: "active" | "all";
   onSetAgendaFilterMode: (mode: "active" | "all") => void;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   isEditMode?: boolean;
   setIsEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
   viewDensityMode?: "clean" | "full";
@@ -325,7 +327,7 @@ export function DashboardWidgetGrid({
   // Update specific widget settings (e.g., calendar view mode)
   const handleUpdateWidgetSettings = (
     id: string,
-    newSettings: Record<string, any>,
+    newSettings: NonNullable<DashboardWidgetConfig["settings"]>,
   ) => {
     const updated = widgets.map((w) => {
       if (w.id === id) {

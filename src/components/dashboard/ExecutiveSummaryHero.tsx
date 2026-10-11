@@ -7,13 +7,14 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Concert, Lead, Rehearsal } from "../../types";
+import type { NavigationOptions } from "../Dashboard";
 import { ShowIcon } from '../ui/ShowIcon';
 
 interface ExecutiveSummaryHeroProps {
   concerts?: Concert[];
   leads?: Lead[];
   rehearsals?: Rehearsal[];
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
 }
 
 export const diasHasta = (fechaIso: string): number => {

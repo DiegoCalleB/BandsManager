@@ -153,7 +153,7 @@ export const StepEvents: React.FC<StepEventsProps> = ({
             <Select
               size="sm"
               value={newEventType}
-              onChange={(e) => setNewEventType(e.target.value as any)}
+              onChange={(e) => setNewEventType(e.target.value as StepEventsProps["newEventType"])}
               wrapperClassName="w-full"
             >
               <option value="concierto">Concierto en sala</option>

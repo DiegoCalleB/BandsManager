@@ -174,7 +174,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
     setIsAnalyzingDoctor(true);
     setDoctorError(null);
     try {
-      const res = await apiFetch<any>('/api/reels/ai-hook-doctor', {
+      const res = await apiFetch<{ success?: boolean; diagnosis?: HookDoctorDiagnosis; error?: string }>('/api/reels/ai-hook-doctor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,12 +1,13 @@
 import React from "react";
 import { AlertCircle, ArrowRight, DollarSign, Mail } from "lucide-react";
 import { Concert, Lead } from "../../types";
+import type { NavigationOptions } from "../Dashboard";
 import { ShowIcon } from '../ui/ShowIcon';
 
 interface NeedsAttentionBannerProps {
   concerts?: Concert[];
   leads?: Lead[];
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
 }
 
 interface AttentionItem {

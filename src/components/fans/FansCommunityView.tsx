@@ -624,7 +624,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onChange={(e) => {
                         if (onUpdateFan) {
                           onUpdateFan(fan.id, {
-                            nivelFan: e.target.value as any,
+                            nivelFan: e.target.value as Fan["nivelFan"],
                           });
                         }
                       }}

@@ -6,6 +6,16 @@ import { X, Bell, Mail, ShieldCheck, Sliders, Lock, Sparkles, Clock, Save, Check
 import { Button, IconButton, Input } from '../ui';
 import { comoErrorCapturado } from '../../utils/errorCapturado';
 
+/** Fila de `band_alert_settings` tal y como la devuelve `GET /api/bands/alert-settings`. */
+interface AjustesAlertasRemotos {
+  email_notifications_enabled?: boolean;
+  in_app_notifications_enabled?: boolean;
+  digest_frequency?: AlertSettingsConfig['digestFrequency'];
+  recipient_email?: string;
+  recipient_role?: AlertSettingsConfig['recipientRole'];
+  rules?: CustomAlertRule[];
+}
+
 interface AlertSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -123,7 +133,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     // Attempt to load remote alert settings from Supabase backend API
     const loadRemoteSettings = async () => {
       try {
-        const data = await apiFetch<any>('/api/bands/alert-settings');
+        const data = await apiFetch<{ settings?: AjustesAlertasRemotos }>('/api/bands/alert-settings');
         if (data?.settings) {
           const s = data.settings;
           setConfig((prev) => ({
@@ -183,7 +193,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
     setSendingTestDigest(true);
     setTestDigestResult(null);
     try {
-      const data = await apiFetch<any>('/api/bands/trigger-alert-digest', {
+      const data = await apiFetch<{ success?: boolean; recipient?: string; error?: string }>('/api/bands/trigger-alert-digest', {
         method: 'POST',
       });
       if (data?.success) {
@@ -470,7 +480,7 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
                         <button
                           key={f.id}
                           type="button"
-                          onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as any }))}
+                          onClick={() => setConfig((prev) => ({ ...prev, digestFrequency: f.id as AlertSettingsConfig['digestFrequency'] }))}
                           className={`p-3 rounded-[var(--r-m)] text-left transition-ui ${
                             config.digestFrequency === f.id
                               ? 'bg-[var(--acc)]/15 text-[var(--ink)]'
