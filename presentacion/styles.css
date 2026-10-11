@@ -1116,7 +1116,8 @@ body.scroll .creditos .rollo { transform: none; animation: none; width: auto; pa
 
 /* Modo película sin chat: hablan solos, así que las burbujas sobran y la app ocupa la pantalla */
 body.pelicula:not(.scroll) .slide .dlg { display: none; }
-body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) { left: 400px; right: 70px; top: 250px; bottom: 80px; width: auto; height: auto; }
+/* La app ocupa todo el ancho y quien habla sale encima, abajo a la izquierda, como la cámara de un streamer */
+body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) { left: 60px; right: 60px; top: 215px; bottom: 40px; width: auto; height: auto; }
 body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) img { object-position: 50% 0; }
 body.pelicula:not(.scroll) .feat h2 { max-width: 1700px; }
 /* Subtítulos estilo Netflix (se activan en el menú de subtítulos del reproductor o con C): texto blanco con sombra, sin caja */
@@ -1128,13 +1129,13 @@ body.pelicula.subs:not(.scroll) #subtitulo { display: block; }
 body.nf-ver #subtitulo { bottom: 210px; transition: bottom 200ms; }
 body.scroll #subtitulo { display: none; }
 /* En las diapositivas de la app, quien habla tiene su sitio fijo a la izquierda de la captura */
-body.pelicula:not(.scroll) .feat > .foco { --t: 270px !important; left: 64px !important; top: auto !important; bottom: 120px; }
+body.pelicula:not(.scroll) .feat > .foco { --t: 230px !important; left: 96px !important; top: auto !important; bottom: 74px; z-index: 6; filter: drop-shadow(0 18px 40px rgba(0,0,0,.75)); }
 
 /* Vídeos de la app usándose: se ven enteros (el cursor de Iago no se sale del plano); los de una ventana, en vertical */
 .feat .ft-shot video { object-position: 50% 0; }
 .feat .ft-shot.alto video { object-fit: contain; }
 body.pelicula:not(.scroll) .feat .ft-shot video { object-fit: contain; }
-body.pelicula:not(.scroll) .feat .ft-shot.alto { left: 760px; right: auto; width: 720px; }
+body.pelicula:not(.scroll) .feat .ft-shot.alto { left: 50%; right: auto; width: 760px; translate: -50% 0; }
 /* Las capturas fijas no se quedan quietas: la cámara se acerca despacio, como si Iago las fuera enseñando */
 body.pelicula:not(.scroll) .feat.active .ft-shot:not(.phone) img { transform-origin: 30% 20%; animation: kenburns 22s ease-in-out both; }
 @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-2%, -1%); } }
@@ -1183,3 +1184,4 @@ body.pausado #stage .slide.active { filter: brightness(.45); transition: filter 
 body.pelicula:not(.scroll) #hud { opacity: 0; pointer-events: none; }
 body.pelicula.nf-ver { cursor: default; } body.pelicula:not(.nf-ver):not(.pausado) { cursor: none; }
 body.pelicula:not(.scroll) #edgeL, body.pelicula:not(.scroll) #edgeR, body.pelicula:not(.scroll) #aL, body.pelicula:not(.scroll) #aR { display: none; }
+body.pelicula:not(.scroll) .feat > .foco b { background: rgba(0,0,0,.72); padding: 4px 16px; border-radius: 99px; }
