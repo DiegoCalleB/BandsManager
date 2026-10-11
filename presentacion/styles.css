@@ -1405,7 +1405,10 @@ body.scroll .giro-reloj .gr-c, body.scroll .giro-reloj .gr-reloj, body.scroll .g
 /* Mis bandas: fotos reales de Diego, una por pulso, tras «El bajista soy yo» */
 .slide.mis-bandas { background: #000; padding: 0; overflow: hidden; color: #fff; }
 .mis-bandas .mb-foto { position: absolute; inset: 0; margin: 0; opacity: 0; }
-.mis-bandas .mb-foto img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.06) saturate(.9); }
+.mis-bandas .mb-foto img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); filter: contrast(1.06) saturate(.9); }
+/* foto vertical o cuadrada: entera, sobre su propio fondo desenfocado */
+.mis-bandas .mb-foto.vert::before { content: ''; position: absolute; inset: -60px; background: var(--bg) center / cover; filter: blur(46px) brightness(.45) saturate(1.2); }
+.mis-bandas .mb-foto.vert img { object-fit: contain; }
 .mis-bandas .mb-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.7) 0%, transparent 40%); }
 .mis-bandas figcaption { position: absolute; left: 110px; bottom: 110px; z-index: 2; }
 .mis-bandas figcaption b { display: block; font: 600 54px/1.1 Oswald, Onest, sans-serif; letter-spacing: .03em; text-transform: uppercase; }

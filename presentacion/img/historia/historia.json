@@ -1,10 +1,26 @@
 [
- {"foto": "2001-local.jpg", "texto": "Mi primer grupo · 2001", "logro": "Un local sin ventanas y mucha ilusión", "provisional": true},
- {"foto": "2005-bigband.jpg", "texto": "La Big Band · 2005", "logro": "Primer concierto con público de verdad", "provisional": true},
- {"foto": "2008-fiestas.jpg", "texto": "Fiestas del barrio · 2008", "logro": "Tocando en San Blas", "provisional": true},
- {"foto": "2011-gira.jpg", "texto": "La primera gira · 2011", "logro": "Cinco ciudades en una furgoneta", "provisional": true},
- {"foto": "2014-sala.jpg", "texto": "Una sala de Madrid · 2014", "logro": "Entradas agotadas", "provisional": true},
- {"foto": "2016-concurso.jpg", "texto": "Concurso de bandas · 2016", "logro": "Primer premio", "provisional": true},
- {"foto": "2019-festival.jpg", "texto": "Mi primer festival · 2019", "logro": "El escenario grande", "provisional": true},
- {"foto": "2026-volver.jpg", "texto": "2026", "logro": "Volver a tocar", "provisional": true}
+ {
+  "foto": "repercusion.jpg",
+  "texto": "Repercusión",
+  "logro": "Subido al escenario"
+ },
+ {
+  "foto": "bajo-bn.jpg",
+  "texto": "Bajo en mano"
+ },
+ {
+  "foto": "bigband-bernabeu.jpg",
+  "texto": "Big Band · 2014",
+  "logro": "Estadio Santiago Bernabéu"
+ },
+ {
+  "foto": "bajo-contraluz.jpg",
+  "texto": "A contraluz"
+ },
+ {
+  "foto": "miles.jpg",
+  "texto": "Delante de miles de personas",
+  "logro": "El escenario grande",
+  "pos": "50% 78%"
+ }
 ]
