@@ -396,6 +396,13 @@ add(feat('Calendario de la banda', TAG2, 'Ensayos y bolos, en un calendario.',
           m('xandre', '¡Por fin sé cuándo ensayamos y cuándo tocamos!')],
          shot_img('img/d-h-calendario.jpg'), grupo='musica'))
 
+add(feat('La ficha del bolo', TAG2, 'Cada bolo, con su ficha.',
+         [m('xandre', '¿Y esto? ¿También sabe qué tiempo hará en el bolo?', say='[amazed] ¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo?'),
+          m('iago', 'Cada bolo tiene su ficha: el tiempo, el aviso si cae en puente y la ciudad se vacía, cuánto os queda limpio, la logística, el rider, los contactos y el merchan.', cls='sync',
+            say='Cada bolo tiene su ficha. El tiempo que va a hacer. El aviso si cae en puente, y la ciudad se vacía. Cuánto os queda limpio. Y la logística, el rider, los contactos, el merchan… Todo, en un clic.'),
+          m('brais', 'Y yo sin enterarme del puente. 🤦', say='[laughs] Y yo, sin enterarme nunca del puente.')],
+         shot_vid_sync('video/v-concierto.mp4', 'img/d-h-evento.jpg'), grupo='musica'))
+
 add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.',
          [m('brais', '¿Y si me cuadran dos ensayos a la vez, uno con cada banda?', say='[worried] Oye… ¿y si me cuadran dos ensayos a la vez? Uno con cada banda.'),
           m('iago', 'El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', cls='sync', say='El calendario te avisa. Si dos eventos se pisan, si no da tiempo de llegar de un sitio a otro, o si vas justo para montar.'),
