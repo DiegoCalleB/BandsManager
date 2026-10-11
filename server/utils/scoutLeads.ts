@@ -119,13 +119,16 @@ export function limpiarCampoContacto(valor: unknown): string {
   return esRelleno(valor) ? '' : String(valor).trim();
 }
 
+/** Recinto tal y como lo devuelve la IA, ya comprobado que trae un nombre de texto. */
+export type LeadDescubiertoBruto = { nombre_sala: string; [campo: string]: unknown };
+
 /**
  * Un recinto solo vale si tiene un nombre propio de verdad. Sin nombre no hay nada que
  * verificar después, así que se descarta en vez de guardarlo "por si acaso".
  */
-export function esLeadDescubiertoValido(bruto: any): boolean {
+export function esLeadDescubiertoValido(bruto: unknown): bruto is LeadDescubiertoBruto {
   if (!bruto || typeof bruto !== 'object') return false;
-  const nombre = bruto.nombre_sala;
+  const nombre = (bruto as { nombre_sala?: unknown }).nombre_sala;
   if (typeof nombre !== 'string') return false;
   const limpio = nombre.trim();
   if (limpio.length < 2) return false;
@@ -137,7 +140,7 @@ export function esLeadDescubiertoValido(bruto: any): boolean {
  * lo que la IA no supo se queda vacío (o el aforo a 0) para que el enriquecimiento posterior o
  * una persona lo completen con un dato real.
  */
-export function normalizarLeadDescubierto(bruto: any, ciudadPorDefecto: string, tipoPorDefecto: string): LeadDescubierto {
+export function normalizarLeadDescubierto(bruto: LeadDescubiertoBruto, ciudadPorDefecto: string, tipoPorDefecto: string): LeadDescubierto {
   const aforo = Number(bruto?.aforo);
   return {
     nombre_sala: String(bruto.nombre_sala).trim(),

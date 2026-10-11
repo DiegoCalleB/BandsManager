@@ -98,7 +98,7 @@ export function crearAgenteIpPinneada(ipPin: string, isHttps: boolean) {
   // ARRAY de direcciones; devolver una sola cadena produce «Invalid IP address: undefined» y
   // TODA petición anclada fallaba, también las de Supabase. Se atienden las dos formas.
   const family = net.isIPv6(ipPin) ? 6 : 4;
-  const customLookup = (_hostname: string, options: any, callback: (...args: any[]) => void) => {
+  const customLookup: net.LookupFunction = (_hostname, options, callback) => {
     if (options && options.all) callback(null, [{ address: ipPin, family }]);
     else callback(null, ipPin, family);
   };
@@ -106,6 +106,9 @@ export function crearAgenteIpPinneada(ipPin: string, isHttps: boolean) {
     ? new https.Agent({ lookup: customLookup, keepAlive: false })
     : new http.Agent({ lookup: customLookup, keepAlive: false });
 }
+
+/** Respuesta ya descargada; `json()` devuelve `unknown`: quien la lea debe comprobar su forma. */
+type RespuestaSegura = { statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => unknown };
 
 /**
  * Realiza una petición HTTP/HTTPS segura con anclaje de IP resuelta (Anti-DNS Rebinding / Anti-TOCTOU).
@@ -120,7 +123,7 @@ export async function fetchUrlExternaSegura(
     /** Redirecciones a seguir (0 = ninguna). Cada salto se revalida entero (DNS + rangos privados). */
     maxRedirects?: number;
   } = {}
-): Promise<{ statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any }> {
+): Promise<RespuestaSegura> {
   const respuesta = await peticionUnica(rawUrl, options);
   const ubicacion = respuesta.headers.location;
   const saltos = options.maxRedirects ?? 0;
@@ -132,7 +135,6 @@ export async function fetchUrlExternaSegura(
   return respuesta;
 }
 
-type RespuestaSegura = { statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any };
 
 async function peticionUnica(
   rawUrl: string,

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { execFile } from "child_process";
+import { execFile, type ExecFileOptions } from "child_process";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
@@ -24,7 +24,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
  * Ejecuta un binario sin pasar por el shell. Con un array de argumentos no hay cadena que
  * romper, así que una URL con comillas o `$(...)` llega al proceso tal cual.
  */
-export const ejecutar = (binario: string, args: string[], opts: any = {}) =>
+export const ejecutar = (binario: string, args: string[], opts: ExecFileOptions = {}) =>
   new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
     execFile(binario, args, opts, (err, stdout, stderr) => {
       if (err) return reject(err);
@@ -118,10 +118,11 @@ export function metadatosVacios(): MetadatosVideo {
  * Los capítulos de YouTube son highlights que ya ha marcado a mano quien subió el vídeo:
  * como pista para elegir cortes valen más que cualquier heurística.
  */
-export function normalizarCapitulos(bruto: any, duracionTotal = 0): CapituloVideo[] {
+export function normalizarCapitulos(bruto: unknown, duracionTotal = 0): CapituloVideo[] {
   if (!Array.isArray(bruto)) return [];
   const salida: CapituloVideo[] = [];
-  for (const c of bruto) {
+  // Capítulo tal como lo da yt-dlp; cada campo se convierte y valida abajo.
+  for (const c of bruto as Array<{ title?: unknown; start_time?: unknown; start?: unknown; end_time?: unknown; end?: unknown } | null>) {
     const title = String(c?.title || "").trim();
     const start = Number(c?.start_time ?? c?.start);
     let end = Number(c?.end_time ?? c?.end);
@@ -317,6 +318,24 @@ export async function urlDeVideoDirecta(url: string): Promise<string | null> {
 
 /* -------------------------------------------------------- YouTube Data API */
 
+/** Miniatura de la Data API de YouTube. */
+interface MiniaturaYoutube {
+  url?: string;
+}
+
+/** Lo que se lee de la respuesta de `youtube/v3/videos` (part=contentDetails,snippet). */
+interface RespuestaVideosDataApi {
+  items?: Array<{ snippet?: SnippetYoutube; contentDetails?: { duration?: string } }>;
+}
+
+/** Bloque `snippet` de un vídeo en la Data API. */
+interface SnippetYoutube {
+  title?: string;
+  description?: string;
+  channelTitle?: string;
+  thumbnails?: Partial<Record<"maxres" | "standard" | "high" | "medium" | "default", MiniaturaYoutube>>;
+}
+
 /**
  * Convierte la duración ISO 8601 de la Data API ("PT1H2M3S") a segundos.
  * Devuelve 0 si el formato no es reconocible, nunca NaN.
@@ -356,12 +375,12 @@ export async function metadatosDataApi(videoId: string): Promise<MetadatosVideo 
       console.log(`[YouTube] Data API respondió ${res.status}`);
       return null;
     }
-    const j: any = await res.json();
+    const j = (await res.json()) as RespuestaVideosDataApi;
     const item = j?.items?.[0];
     if (!item) return null;
 
-    const snippet = item.snippet || {};
-    const miniaturas = snippet.thumbnails || {};
+    const snippet: SnippetYoutube = item.snippet || {};
+    const miniaturas: NonNullable<SnippetYoutube["thumbnails"]> = snippet.thumbnails || {};
     const mejor = miniaturas.maxres || miniaturas.standard || miniaturas.high || miniaturas.medium || miniaturas.default;
 
     return {

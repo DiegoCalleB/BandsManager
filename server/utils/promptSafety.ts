@@ -108,7 +108,7 @@ export function getRecommendedWordRange(category?: string): { min: number; max: 
  * Sanitiza texto externo proveniente de leads, emails recibidos o scraping
  * para prevenir inyecciones de prompt.
  */
-export function sanitizeExternalText(text: any, maxLength: number = 3000): string {
+export function sanitizeExternalText(text: unknown, maxLength: number = 3000): string {
   if (text === null || text === undefined) return "";
   let clean = typeof text === "string" ? text : String(text);
 
@@ -327,7 +327,7 @@ export interface AgentOutputGuardrailResult {
  * esquemas no autorizados, y enmascara posibles fugas de datos confidenciales
  * (DNI/NIE, tarjetas bancarias, claves privadas/secretos) alucinados o inyectados por terceros.
  */
-export function sanitizeAgentOutput(text: any): AgentOutputGuardrailResult {
+export function sanitizeAgentOutput(text: unknown): AgentOutputGuardrailResult {
   if (text === null || text === undefined) {
     return { cleanedText: "", isSafe: true, warnings: [] };
   }

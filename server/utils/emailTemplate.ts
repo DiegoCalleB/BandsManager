@@ -7,6 +7,15 @@
 import { generateTrackingToken } from '../routes/tracking.js';
 import { firmarDestino } from './trackingSeguro.js';
 import { getHashedPublicEpkUrl } from './bandHash.js';
+import type { EPKConfig, EmailSignatureConfig } from '../../src/types.js';
+
+/** EPK del que sale la firma; los datos legados pueden traer los campos en snake_case. */
+export type EpkParaFirma = Partial<EPKConfig> & {
+  firma_email?: EmailSignatureConfig;
+  contacto_booking?: Partial<EPKConfig['contactoBooking']>;
+  logo_url?: string;
+  enlaces_redes?: EPKConfig['enlacesRedes'];
+};
 
 export function cleanTrailingPitchSignature(text: string): string {
   if (!text) return '';
@@ -43,8 +52,9 @@ export function buildServerEmailHtml(params: {
   pitchText: string;
   bandName: string;
   bandId: string;
-  epkConfig?: any;
-  lead?: any;
+  epkConfig?: EpkParaFirma | null;
+  /** Solo hace falta el id del lead, para el píxel y los enlaces con seguimiento. */
+  lead?: { id?: string } | null;
 }): { html: string; text: string; cleanPitch: string } {
   const { pitchText, bandName, bandId, epkConfig, lead } = params;
 
@@ -64,8 +74,8 @@ export function buildServerEmailHtml(params: {
         })
         .join('');
 
-  const firma = epkConfig?.firmaEmail || epkConfig?.firma_email || {};
-  const booking = epkConfig?.contactoBooking || epkConfig?.contacto_booking || {};
+  const firma: EmailSignatureConfig = epkConfig?.firmaEmail || epkConfig?.firma_email || {};
+  const booking: Partial<EPKConfig['contactoBooking']> = epkConfig?.contactoBooking || epkConfig?.contacto_booking || {};
 
   const remitenteNombre =
     firma.nombreRemitente ||
@@ -106,7 +116,7 @@ export function buildServerEmailHtml(params: {
     }
   }
 
-  const enlaces = epkConfig?.enlacesRedes || epkConfig?.enlaces_redes || {};
+  const enlaces: EPKConfig['enlacesRedes'] = epkConfig?.enlacesRedes || epkConfig?.enlaces_redes || {};
 
   // Build clean, elegant social media links with official icons for Instagram, Facebook, TikTok
   const socialIconsMap: Record<string, { iconSvg: string; label: string; color: string; bg: string }> = {

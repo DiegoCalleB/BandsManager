@@ -342,7 +342,7 @@ export async function optimizeWavSongsForBand(targetBandId?: string): Promise<Op
 
     // Si la canción fue modificada, actualizarla en Supabase
     if (songUpdated) {
-      const updatePayload: any = {
+      const updatePayload: Record<string, unknown> = {
         audio_principal_url: song.audio_principal_url,
         audio_url: song.audio_url,
         audio_ideas: song.audio_ideas,
