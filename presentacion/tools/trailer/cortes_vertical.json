@@ -1,51 +1,9 @@
 [
- {
-  "ini": 49.75,
-  "fin": 56.45,
-  "exacto": true,
-  "paso": "corte",
-  "rotulo": "s1.png"
- },
- {
-  "ini": 65.0,
-  "fin": 68.7,
-  "exacto": true,
-  "paso": "corte",
-  "rotulo": "s2.png"
- },
- {
-  "ini": 105.2,
-  "fin": 106.0,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 154.8,
-  "fin": 155.6,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 169.2,
-  "fin": 170.0,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 197.4,
-  "fin": 198.2,
-  "exacto": true,
-  "voz": false,
-  "paso": "rampa"
- },
- {
-  "ini": 330.4,
-  "fin": 333.8,
-  "exacto": true,
-  "paso": "negro",
-  "rotulo": "s3.png"
- }
+ {"ini": 47.1, "fin": 53.7, "exacto": true, "paso": "corte", "rotulo": "s1.png"},
+ {"ini": 61.9, "fin": 64.95, "exacto": true, "paso": "corte", "rotulo": "s2.png"},
+ {"ini": 98.2, "fin": 99.0, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 147.2, "fin": 148.0, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 162.2, "fin": 163.0, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 187.2, "fin": 188.0, "exacto": true, "voz": false, "paso": "rampa"},
+ {"ini": 318.8, "fin": 322.2, "exacto": true, "paso": "negro", "rotulo": "s3.png"}
 ]

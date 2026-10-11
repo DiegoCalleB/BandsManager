@@ -1503,13 +1503,11 @@ body.pelicula:not(.scroll) .feat .vent { display: flex; position: absolute; left
 .vent-vivo u { text-decoration: none; font-variant-numeric: tabular-nums; color: rgba(255,255,255,.7); }
 @keyframes vivo { 0% { box-shadow: 0 0 0 0 rgba(255,59,48,.6); } 100% { box-shadow: 0 0 0 10px rgba(255,59,48,0); } }
 /* las caras de la banda, como en una videollamada; la de quien habla se ilumina con su voz */
-body.pelicula.compartiendo:not(.scroll) #llamada { display: flex; flex-direction: column; position: absolute; right: 64px; top: 250px; z-index: 47; gap: 12px; }
+body.pelicula.compartiendo:not(.scroll) #llamada { display: none; } /* en el local no hay videollamada: ver cine.js */
 /* como en una videollamada: la pantalla compartida a la izquierda y la columna de caras a la derecha */
-body.pelicula.compartiendo:not(.scroll) .feat .ft-shot:not(.phone):not(.alto) { right: 300px; }
 body.pelicula.compartiendo:not(.scroll) #reloj { display: none; }
 .vent-reloj { white-space: nowrap; font: 600 15px/1 Onest, sans-serif; letter-spacing: .04em; color: #ff8f86; font-variant-numeric: tabular-nums; }
 .vent-reloj:empty { display: none; }
-body.compartiendo .slide.feat > .foco { display: none !important; }
 .tesela { position: relative; width: 214px; height: 134px; border-radius: 12px; overflow: hidden; background: #111; box-shadow: 0 10px 30px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.12);
   transition: box-shadow 200ms, translate 200ms; }
 .tesela img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.9); animation: respira 6s ease-in-out infinite alternate; }
@@ -1535,3 +1533,14 @@ body.pelicula:not(.scroll) .feat.active .raton::after { content: ''; position: a
 
 /* en la ventana estrecha (vídeos verticales) solo caben las tres bolitas, la dirección y el aviso */
 body.pelicula:not(.scroll) .feat .ft-shot.alto .vent :is(.vent-tab, .vent-reloj) { display: none; }
+
+/* El portátil de Iago en la tele del local: marco de pantalla y el local desenfocado detrás */
+body.pelicula.compartiendo:not(.scroll) .slide.feat.active { background: #07080c; }
+body.pelicula.compartiendo:not(.scroll) .slide.feat.active::before { content: ''; position: absolute; inset: -40px; z-index: 0; pointer-events: none;
+  background: url(img/concierto-1.jpg) center / cover; filter: blur(26px) brightness(.32) saturate(.8); }
+body.pelicula.compartiendo:not(.scroll) .slide.feat > .ft-shot:not(.phone) { border-radius: 10px;
+  box-shadow: 0 0 0 12px #0b0c10, 0 0 0 14px #262833, 0 40px 120px rgba(0,0,0,.8), 0 0 140px rgba(120,150,255,.12); }
+body.pelicula:not(.scroll) .vent-vivo i { background: #3d8bff; animation: none; }
+body.pelicula.compartiendo:not(.scroll) .slide.feat > .ft-shot:not(.phone):not(.alto) { left: 170px; right: 170px; }
+body.pelicula.compartiendo:not(.scroll) .slide.feat.active > .ft-shot:not(.phone):not(.alto) { animation-name: subetele; }
+@keyframes subetele { to { translate: 0 -120px; scale: 1.03; } }

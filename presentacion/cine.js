@@ -336,10 +336,11 @@
   addEventListener('hashchange', function () { setTimeout(ajustarReloj, 40); });
   addEventListener('deckslide', function () { setTimeout(ajustarReloj, 40); setTimeout(camara, 30); pintar(); despertar(); });
 
-  // ── En directo: los planos de la app se ven como la pantalla que Iago comparte ──
-  // Ventana de navegador (pestaña con la sección y bandmanager.io, el dominio real: la app no tiene una ruta por sección),
-  // aviso de «compartiendo pantalla» con el tiempo de directo, las caras de la banda como en una videollamada (se ilumina
-  // la de quien habla, con el volumen de su voz) y un cursor que se mueve y hace clic sobre las capturas fijas.
+  // ── En directo, en el local: los planos de la app son el portátil de Iago puesto en la tele del local de ensayo ──
+  // Ventana de navegador (pestaña con la sección y bandmanager.io, el dominio real: la app no tiene una ruta por sección)
+  // con marco de tele y el local desenfocado detrás, el aviso «En la tele del local» con la cuenta atrás del cartel, el
+  // retrato de quien reacciona (.foco) y un cursor que se mueve y hace clic sobre las capturas fijas.
+  // (#llamada, la cuadrícula de caras de videollamada, sigue montada pero oculta: la historia pasa en el local.)
   var MIEMBROS = ['bajo', 'bateria', 'voz', 'guitarra'];
   var directoT0 = 0;
   var mmssD = function (s) { s = Math.max(0, Math.floor(s)); return ('0' + Math.floor(s / 60)).slice(-2) + ':' + ('0' + s % 60).slice(-2); };
@@ -347,7 +348,7 @@
     var sl = sh.closest('.slide'), t = (sl.dataset.title || '').replace(/,.*/, '');
     var b = document.createElement('div'); b.className = 'vent'; b.setAttribute('aria-hidden', 'true');
     b.innerHTML = '<span class="vent-p"><i></i><i></i><i></i></span><span class="vent-tab"><b>BM</b><em></em></span>' +
-      '<span class="vent-url"><i>🔒</i>bandmanager.io</span><span class="vent-reloj"></span><span class="vent-vivo"><i></i>Compartiendo pantalla · <b></b> · <u>00:00</u></span>';
+      '<span class="vent-url"><i>🔒</i>bandmanager.io</span><span class="vent-reloj"></span><span class="vent-vivo"><i></i>En la tele del local · portátil de <b></b></span>';
     b.querySelector('em').textContent = t + ' · BandManager';
     sh.insertBefore(b, sh.firstChild);
     if (sh.querySelector('img') && !sh.querySelector('video')) { var c = document.createElement('i'); c.className = 'raton'; c.setAttribute('aria-hidden', 'true'); sh.appendChild(c); }
