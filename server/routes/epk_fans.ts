@@ -46,6 +46,8 @@ import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
 import { decodeBandId } from '../utils/bandHash.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Concert, RegisteredBand, Song } from '../../src/types.js';
+import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
 
 const router = express.Router();
 
@@ -255,7 +257,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
     const idiomasDestino = EPK_LANGUAGES.filter(
       (l) => l.code !== IDIOMA_ORIGEN
     ).map((l) => l.code);
-    if (!idiomasDestino.includes(idioma as any)) {
+    if (!idiomasDestino.includes(idioma as EpkLanguage)) {
       return res.status(400).json({
         error: `Idioma no soportado: "${idioma}". Disponibles: ${idiomasDestino.join(', ')}.`,
       });
@@ -263,7 +265,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
     const nombreIdioma =
       EPK_LANGUAGES.find((l) => l.code === idioma)?.label || idioma;
 
-    let config: any = null;
+    let config: Partial<EPKConfig> | null = null;
     try {
       config = await dbGetEpkConfig(bandId);
     } catch {
@@ -361,7 +363,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       });
     }
 
-    const texto = (v: any): string => (typeof v === 'string' ? v : '');
+    const texto = (v: unknown): string => (typeof v === 'string' ? v : '');
 
     const miembrosTraducidos: Record<string, { rol?: string; bio?: string }> =
       {};
@@ -559,7 +561,7 @@ router.get('/public/epk', async (req, res) => {
     }
 
     const state = loadState();
-    let epkConfig: any = null;
+    let epkConfig: Partial<EPKConfig> | null = null;
     try {
       epkConfig = await dbGetEpkConfig(reqBandId);
     } catch (e) {
@@ -570,7 +572,8 @@ router.get('/public/epk', async (req, res) => {
       epkConfig = getEpkConfigForBand(state, reqBandId);
     }
 
-    let regBand: any = null;
+    // Fila de registered_bands: trae además del tipo los alias de logo y las redes sueltas.
+    let regBand: (Partial<RegisteredBand> & { logo_url?: string; imagen_url?: string }) | null | undefined = null;
     try {
       const { getSupabase } = await import('../db.js');
       const sb = getSupabase();
@@ -622,7 +625,7 @@ router.get('/public/epk', async (req, res) => {
     // arriba. Antes esto solo miraba state.songs/state.concerts (el JSON local), y como el
     // contenedor de Railway es efímero, el EPK público salía SIN canciones aunque la banda las
     // tuviera cargadas en la app. El estado local queda como respaldo si Supabase falla.
-    let songs: any[] = [];
+    let songs: Song[] = [];
     try {
       songs = await dbGetSongs(reqBandId);
     } catch (e) {
@@ -640,7 +643,7 @@ router.get('/public/epk', async (req, res) => {
       });
     }
 
-    let concerts: any[] = [];
+    let concerts: Concert[] = [];
     try {
       concerts = await dbGetConcerts(reqBandId);
     } catch (e) {
@@ -662,12 +665,12 @@ router.get('/public/epk', async (req, res) => {
     const highlightedSongs =
       Array.isArray(epkConfig?.temasDestacadosIds) &&
       epkConfig.temasDestacadosIds.length > 0
-        ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
+        ? songs.filter((s) => epkConfig.temasDestacadosIds.includes(s.id))
         : [];
 
     // Upcoming concerts
     const today = new Date().toISOString().split('T')[0];
-    const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
+    const upcomingConcerts = concerts.filter((c) => c.fecha >= today);
 
     const logoUrl =
       epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
@@ -702,10 +705,10 @@ router.get('/public/epk', async (req, res) => {
     ) {
       const selectedSongId = resolvedAudioPreview?.cancionId;
       const targetSong = selectedSongId
-        ? songs.find((s: any) => s.id === selectedSongId)
+        ? songs.find((s) => s.id === selectedSongId)
         : highlightedSongs[0] ||
           songs.find(
-            (s: any) =>
+            (s) =>
               s.audioPrincipalUrl || (s.audioIdeas && s.audioIdeas[0]?.audioUrl)
           );
 
@@ -773,7 +776,7 @@ router.get('/fans', requireAuth, async (req, res) => {
   try {
     const fans = await dbGetFans(userBandId);
     const state = loadState();
-    state.fans = fans as any;
+    state.fans = fans;
     saveState(state);
     res.json(fans);
   } catch {
@@ -794,8 +797,8 @@ router.post('/fans', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Nombre y Email son obligatorios' });
     }
     const userBandId = req.user?.band_id;
-    if (!(newFan as any).band_id) {
-      (newFan as any).band_id = userBandId;
+    if (!newFan.band_id) {
+      newFan.band_id = userBandId;
     }
 
     // El límite de fans por plan solo se comprobaba en el cliente (App.tsx,
@@ -814,7 +817,7 @@ router.post('/fans', requireAuth, async (req, res) => {
 
     const state = loadState();
     if (!state.fans) state.fans = [];
-    state.fans.unshift(saved as any);
+    state.fans.unshift(saved);
     saveState(state);
 
     res.json({ success: true, fan: saved });
@@ -840,7 +843,7 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
       // cualquier usuario autenticado podía modificar el fan (nombre, email, consentimiento RGPD)
       // de otra banda adivinando su id.
       const ownerBandId =
-        (state.fans[index] as any).band_id || (state.fans[index] as any).bandId;
+        state.fans[index].band_id || (state.fans[index] as Fan & { bandId?: string }).bandId;
       if (!puedeEscribirEnBanda(req, ownerBandId || userBandId)) {
         return res
           .status(403)
@@ -947,7 +950,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
 
     const state = loadState();
     if (!state.fans) state.fans = [];
-    state.fans.unshift(saved as any);
+    state.fans.unshift(saved);
     saveState(state);
 
     // Supabase es la fuente de verdad del incentivo (ver AGENTS.md); el `state` en memoria de
@@ -955,7 +958,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
     // (enlace de descarga y cupón reales) con el que arranca el proyecto en local, aunque la
     // banda ya lo haya vaciado en Supabase desde el apartado QR. Se lee primero de Supabase y
     // solo se cae al estado en memoria si esa consulta falla.
-    let epkConf: any = null;
+    let epkConf: (Partial<EPKConfig> & { nombre_banda?: string }) | null = null;
     try {
       epkConf = await dbGetEpkConfig(targetBandId);
     } catch {
