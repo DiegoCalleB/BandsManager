@@ -2,6 +2,7 @@
  * Alta de cuenta y banda nueva, y listado de bandas registradas.
  */
 import express from 'express';
+import type { BandaRegistradaGuardada, UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
 import { ACTIVE_SESSIONS, verifyPassword, hashPassword } from '../../auth.js';
 import { loadState, saveState, requireAuth, ensureValidUserEmails } from '../../state.js';
@@ -32,7 +33,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
   try {
     const dbUsers = await dbGetUsers();
     if (dbUsers && dbUsers.length > 0) {
-      dbUsers.forEach((su: any) => {
+      dbUsers.forEach((su: UsuarioGuardado) => {
         const idx = state.users.findIndex(
           (u) =>
             u.id === su.id ||
@@ -109,7 +110,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
   const regId = generateUniqueSlugId('reg', rawBandName, existingIds);
   existingIds.add(regId);
 
-  let userToUse: any;
+  let userToUse: UsuarioGuardado;
 
   if (isExistingUser) {
     userToUse = existingUsersWithEmail[0];
@@ -281,19 +282,19 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
 });
 
 // Endpoint to fetch all registered bands from Supabase
-const handleGetRegisteredBands = async (req: any, res: any) => {
+const handleGetRegisteredBands = async (req: express.Request, res: express.Response) => {
   try {
     const userBandId = req.user?.band_id;
     // Antes, cualquier miembro (no solo admins) de la banda insignia veía la lista completa de
     // TODAS las bandas registradas en la plataforma -de cualquier cliente-, no solo la suya.
     const isAdmin = req.user?.role === 'admin';
 
-    const bands = await dbGetRegisteredBands();
+    const bands: BandaRegistradaGuardada[] = await dbGetRegisteredBands();
 
     const filteredBands = isAdmin
       ? bands
       : bands.filter(
-          (b: any) =>
+          (b) =>
             b.band_id === userBandId ||
             b.id === userBandId ||
             b.id === `reg-${userBandId.replace('band-', '')}` ||

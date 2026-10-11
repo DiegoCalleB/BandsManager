@@ -129,7 +129,7 @@ router.get('/users', requireAuth, async (req, res) => {
   try {
     const dbUsers = await dbGetUsers(bandId);
     if (dbUsers && dbUsers.length > 0) {
-      const mergedUsers = dbUsers.map((u: any) => {
+      const mergedUsers = dbUsers.map((u: UsuarioGuardado) => {
         const ub = state.userBands.find(
           (ub) => ub.user_id === u.id && ub.band_id === bandId
         );

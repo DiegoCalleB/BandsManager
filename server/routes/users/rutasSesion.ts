@@ -2,6 +2,7 @@
  * Sesión activa: quién soy, cambio de banda (solo a bandas de las que eres miembro) y cierre de sesión.
  */
 import express from 'express';
+import type { UsuarioGuardado } from '../../stateTypes.js';
 import { ACTIVE_SESSIONS } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
 import { dbGetUsers, dbUpsertUser, dbGetRegisteredBands, normalizePlan } from '../../db.js';
@@ -33,7 +34,7 @@ router.get('/auth/me', async (req, res) => {
       state.registeredBands = freshRegBands;
     }
     if (Array.isArray(freshUsers) && freshUsers.length > 0) {
-      freshUsers.forEach((su: any) => {
+      freshUsers.forEach((su: UsuarioGuardado) => {
         const idx = state.users.findIndex(
           (u) =>
             u.id === su.id ||

@@ -2,6 +2,7 @@
  * Acceso con Google: el token se verifica criptográficamente contra el Client ID (AGENTS.md §1).
  */
 import express from 'express';
+import type { UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
 import { ACTIVE_SESSIONS } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
@@ -51,7 +52,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
   try {
     const dbUsers = await dbGetUsers();
     if (dbUsers && dbUsers.length > 0) {
-      dbUsers.forEach((su: any) => {
+      dbUsers.forEach((su: UsuarioGuardado) => {
         const idx = state.users.findIndex(
           (u) =>
             u.id === su.id ||

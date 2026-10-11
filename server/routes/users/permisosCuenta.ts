@@ -4,6 +4,7 @@
 import express from 'express';
 import { puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { cleanBandId } from './bandasDisponibles.js';
+import type { AppState, UsuarioGuardado } from '../../stateTypes.js';
 
 /**
  * ¿Comparte este usuario alguna banda con quien hace la petición?
@@ -13,14 +14,14 @@ import { cleanBandId } from './bandasDisponibles.js';
  * editarlo (y en /users/:id, para ponerle una contraseña nueva).
  */
 export function compartenBanda(
-  state: any,
-  usuarioObjetivo: any,
+  state: AppState,
+  usuarioObjetivo: UsuarioGuardado | null | undefined,
   req: express.Request
 ): boolean {
   if (!usuarioObjetivo) return false;
   const bandas = new Set<string>();
   if (usuarioObjetivo.band_id) bandas.add(usuarioObjetivo.band_id);
-  (state.userBands || []).forEach((ub: any) => {
+  (state.userBands || []).forEach((ub) => {
     if (ub.user_id === usuarioObjetivo.id && ub.band_id) bandas.add(ub.band_id);
   });
   return Array.from(bandas).some((b) => puedeEscribirEnBanda(req, b));
@@ -34,7 +35,7 @@ export function compartenBanda(
  * aún sin activar, o un miembro cuya ÚNICA banda es esta. Una cuenta con banda propia (o admin)
  * nunca se resetea desde fuera.
  */
-export function puedeRestablecerContrasenaDe(state: any, usuarioObjetivo: any, req: express.Request): boolean {
+export function puedeRestablecerContrasenaDe(state: AppState, usuarioObjetivo: UsuarioGuardado | null | undefined, req: express.Request): boolean {
   if (!usuarioObjetivo || usuarioObjetivo.role === 'admin') return false;
   const bandas = new Set<string>();
   const anotar = (id?: string) => {
@@ -43,7 +44,7 @@ export function puedeRestablecerContrasenaDe(state: any, usuarioObjetivo: any, r
   anotar(usuarioObjetivo.band_id);
   anotar(usuarioObjetivo.main_band_id);
   (Array.isArray(usuarioObjetivo.band_order) ? usuarioObjetivo.band_order : []).forEach(anotar);
-  (state.userBands || []).forEach((ub: any) => {
+  (state.userBands || []).forEach((ub) => {
     if (ub.user_id === usuarioObjetivo.id) anotar(ub.band_id);
   });
   if (bandas.size === 0) return false;
@@ -51,6 +52,6 @@ export function puedeRestablecerContrasenaDe(state: any, usuarioObjetivo: any, r
   return Array.from(bandas).every((b) => puedeEscribirEnBanda(req, b)) &&
     // ...y no puede ser dueño de una banda registrada aparte.
     !(state.registeredBands || []).some(
-      (rb: any) => rb.user_id === usuarioObjetivo.id && !puedeEscribirEnBanda(req, rb.band_id || rb.id)
+      (rb) => rb.user_id === usuarioObjetivo.id && !puedeEscribirEnBanda(req, rb.band_id || rb.id)
     );
 }

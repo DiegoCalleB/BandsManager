@@ -328,7 +328,7 @@ router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
           targetUserObj.main_band_id || remainingBands[0].band_id;
         const chosen =
           remainingBands.find(
-            (b: any) => b.band_id === targetUserObj.band_id
+            (b) => b.band_id === targetUserObj.band_id
           ) || remainingBands[0];
         targetUserObj.bandName = chosen.bandName || chosen.nombre_banda;
       } else {

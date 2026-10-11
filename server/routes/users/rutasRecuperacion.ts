@@ -2,6 +2,7 @@
  * Recuperación de contraseña (solicitud y confirmación) y correo de prueba.
  */
 import express from 'express';
+import type { UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
 import { hashPassword } from '../../auth.js';
 import { loadState, saveState, requireAuth, ensureValidUserEmails } from '../../state.js';
@@ -31,7 +32,7 @@ router.post(
     try {
       const dbUsers = await dbGetUsers();
       if (dbUsers && dbUsers.length > 0) {
-        dbUsers.forEach((su: any) => {
+        dbUsers.forEach((su: UsuarioGuardado) => {
           const idx = state.users.findIndex(
             (u) =>
               u.id === su.id ||
@@ -226,7 +227,7 @@ router.post(
     try {
       const dbUsers = await dbGetUsers();
       if (dbUsers && dbUsers.length > 0) {
-        dbUsers.forEach((su: any) => {
+        dbUsers.forEach((su: UsuarioGuardado) => {
           const idx = state.users.findIndex(
             (u) =>
               u.id === su.id ||
@@ -265,7 +266,7 @@ router.post(
       });
     }
 
-    const codigoCoincide = (u: any) => {
+    const codigoCoincide = (u: UsuarioGuardado) => {
       if (!u.resetCode || !(u.resetCodeExpires > Date.now())) return false;
       const a = Buffer.from(String(u.resetCode));
       const b = Buffer.from(cleanCode);

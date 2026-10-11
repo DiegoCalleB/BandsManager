@@ -2,6 +2,7 @@
  * Inicio de sesión con usuario o email y contraseña.
  */
 import express from 'express';
+import type { UsuarioGuardado } from '../../stateTypes.js';
 import crypto from 'crypto';
 import { ACTIVE_SESSIONS, verifyPassword } from '../../auth.js';
 import { loadState, saveState } from '../../state.js';
@@ -27,7 +28,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   try {
     const dbUsers = await dbGetUsers();
     if (dbUsers && dbUsers.length > 0) {
-      dbUsers.forEach((su: any) => {
+      dbUsers.forEach((su: UsuarioGuardado) => {
         const idx = state.users.findIndex(
           (u) =>
             u.id === su.id ||

@@ -4,6 +4,7 @@
 import { verifyPassword, hashPassword } from '../../auth.js';
 import { saveState } from '../../state.js';
 import { dbUpsertUser } from '../../db.js';
+import type { AppState, UsuarioGuardado } from '../../stateTypes.js';
 
 /**
  * Garantiza la cuenta de administración global.
@@ -15,7 +16,7 @@ import { dbUpsertUser } from '../../db.js';
  *    únicamente si ha cambiado la variable (así se rota la clave);
  *  - sin ella: NO crea ningún admin y NO toca las credenciales del existente.
  */
-export async function ensureAdminUserExists(state: any) {
+export async function ensureAdminUserExists(state: AppState) {
   try {
     const adminPass = process.env.ADMIN_PASSWORD || '';
     const hayClaveValida = adminPass.length >= 12;
@@ -23,8 +24,8 @@ export async function ensureAdminUserExists(state: any) {
       console.warn('[admin] ADMIN_PASSWORD es demasiado corta (mínimo 12 caracteres): se ignora.');
     }
 
-    let adminUser = (state.users || []).find(
-      (u: any) =>
+    let adminUser: UsuarioGuardado | undefined = (state.users || []).find(
+      (u) =>
         (u.username && u.username.toLowerCase() === 'admin') ||
         (u.email && u.email.toLowerCase() === 'admin@bandmanager.ai')
     );
@@ -88,7 +89,7 @@ export async function ensureAdminUserExists(state: any) {
       }
 
       saveState(state);
-      await dbUpsertUser(adminUser).catch((err: any) =>
+      await dbUpsertUser(adminUser).catch((err: unknown) =>
         console.warn('Supabase admin upsert notice:', err)
       );
     }

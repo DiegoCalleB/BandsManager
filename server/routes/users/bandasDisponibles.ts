@@ -3,6 +3,19 @@
  */
 import { getEpkConfigForBand } from '../../state.js';
 import { dbGetEpkLogosMap, normalizePlan } from '../../db.js';
+import type { AppState, UsuarioGuardado } from '../../stateTypes.js';
+
+/** Entrada del selector de bandas que devuelve {@link buildAvailableBandsForUser}. */
+export interface BandaDisponible {
+  band_id: string;
+  bandName: string;
+  nombre_banda: string;
+  role: string;
+  userId: string;
+  plan: string;
+  logoUrl: string;
+  is_main: boolean;
+}
 
 // Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
 // ya en memoria (listas de bandas disponibles, band_order), no como filtro de escritura en
@@ -18,13 +31,13 @@ export function cleanBandId(bandId?: string): string {
 }
 
 export async function buildAvailableBandsForUser(
-  state: any,
-  targetUser: any
-): Promise<any[]> {
+  state: AppState,
+  targetUser: UsuarioGuardado | null | undefined
+): Promise<BandaDisponible[]> {
   if (!targetUser) return [];
   if (!state.userBands) state.userBands = [];
 
-  const availableBands: any[] = [];
+  const availableBands: BandaDisponible[] = [];
   const seenCleanBandIds = new Set<string>();
 
   const getLogoForBand = (bandId: string, defaultName: string) => {
@@ -39,7 +52,7 @@ export async function buildAvailableBandsForUser(
       .replace(/^(band|reg)-/, '')
       .toLowerCase()
       .trim();
-    const bandInfo = (state.registeredBands || []).find((b: any) => {
+    const bandInfo = (state.registeredBands || []).find((b) => {
       const bBid = (b.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -74,7 +87,7 @@ export async function buildAvailableBandsForUser(
       .replace(/^(band|reg)-/, '')
       .toLowerCase()
       .trim();
-    const regBand = (state.registeredBands || []).find((b: any) => {
+    const regBand = (state.registeredBands || []).find((b) => {
       const bBid = (b.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -105,11 +118,11 @@ export async function buildAvailableBandsForUser(
 
   // 1. Bands from state.userBands
   const userBandsList = state.userBands.filter(
-    (ub: any) =>
+    (ub) =>
       ub.user_id === targetUser.id ||
       (state.users &&
         state.users.some(
-          (u: any) =>
+          (u) =>
             u.id === ub.user_id &&
             userEmail &&
             (u.email?.toLowerCase() === userEmail ||
@@ -117,14 +130,14 @@ export async function buildAvailableBandsForUser(
         ))
   );
 
-  userBandsList.forEach((ub: any) => {
+  userBandsList.forEach((ub) => {
     if (!ub.band_id) return;
     const cleanId = ub.band_id.replace(/^(band|reg)-/, '');
     if (seenCleanBandIds.has(cleanId)) return;
     seenCleanBandIds.add(cleanId);
 
     const cleanCheck = cleanId.toLowerCase().trim();
-    const bandInfo = (state.registeredBands || []).find((b: any) => {
+    const bandInfo = (state.registeredBands || []).find((b) => {
       const bBid = (b.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -172,11 +185,11 @@ export async function buildAvailableBandsForUser(
 
   // 2. Bands from state.registeredBands
   const registeredBandsForUser = (state.registeredBands || []).filter(
-    (b: any) =>
+    (b) =>
       b.user_id === targetUser.id ||
       (b.email && b.email.toLowerCase() === userEmail)
   );
-  registeredBandsForUser.forEach((b: any) => {
+  registeredBandsForUser.forEach((b) => {
     const bid = b.band_id || b.id;
     if (!bid) return;
     const cleanId = bid.replace(/^(band|reg)-/, '');
@@ -198,7 +211,7 @@ export async function buildAvailableBandsForUser(
   });
 
   // 3. Bands from other accounts matching same email/username
-  (state.users || []).forEach((u: any) => {
+  (state.users || []).forEach((u) => {
     if (!u.band_id) return;
     if (
       u.id === targetUser.id ||
@@ -249,7 +262,7 @@ export async function buildAvailableBandsForUser(
     // Solo bandas registradas: state.bands son las bandas de contacto del CRM («Grupos»), no
     // proyectos a los que cambiarse.
     const allBandsList = [...(state.registeredBands || [])];
-    allBandsList.forEach((b: any) => {
+    allBandsList.forEach((b) => {
       const bid = b.band_id || b.id;
       if (!bid) return;
       const cleanId = cleanBandId(bid);

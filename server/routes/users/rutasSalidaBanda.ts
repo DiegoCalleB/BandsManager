@@ -105,7 +105,7 @@ router.delete(
               const remBands = (
                 await buildAvailableBandsForUser(state, u)
               ).filter(
-                (b: any) =>
+                (b) =>
                   b &&
                   b.band_id &&
                   typeof b.band_id === 'string' &&
@@ -119,7 +119,7 @@ router.delete(
                 if (remBands.length > 0) {
                   u.band_id = u.main_band_id || remBands[0].band_id;
                   const chosen =
-                    remBands.find((b: any) => b.band_id === u.band_id) ||
+                    remBands.find((b) => b.band_id === u.band_id) ||
                     remBands[0];
                   u.bandName = chosen.bandName || chosen.nombre_banda;
                 } else {
@@ -146,7 +146,7 @@ router.delete(
         const remainingBands = (
           await buildAvailableBandsForUser(state, user)
         ).filter(
-          (b: any) =>
+          (b) =>
             b &&
             b.band_id &&
             typeof b.band_id === 'string' &&
@@ -170,7 +170,7 @@ router.delete(
           if (remainingBands.length > 0) {
             user.band_id = user.main_band_id || remainingBands[0].band_id;
             const chosenBand =
-              remainingBands.find((b: any) => b.band_id === user.band_id) ||
+              remainingBands.find((b) => b.band_id === user.band_id) ||
               remainingBands[0];
             user.bandName = chosenBand.bandName || chosenBand.nombre_banda;
           } else {
