@@ -30,7 +30,7 @@ SAY = [
  ('Pues yo dije Google Calendar', '[mischievously] Pues yo dije Gúgel Calendar, eh. Que conste en acta.'),
  ('Eso también. Ya llegamos', 'Eso también, {bateria}. Ya llegaremos. Tranqui, tronco, tranqui.'),
  # Cap. 1 · correos
- ('¡Me ha escrito a tres salas', '¡Pero si ha escrito a tres salas mientras yo afinaba! ¡Y eso que afino rápido!'),
+ ('¡Ha escrito a tres salas y al Resurrección Fest', '¡Pero si ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Y eso que afino rápido!'),
  ('Cada correo suena a nosotros', 'Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.'),
  ('¿Y si se le va la mano', '¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.'),
  ('Por eso nada sale sin mi visto bueno', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
@@ -55,10 +55,10 @@ SAY = [
  ('¿Y la sala tiene que instalarse algo?', '¿Y la sala tiene que instalarse algo? Porque el de El Faro todavía usa fax.'),
  ('Solo abrir un enlace y firmar', 'Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia.'),
  ('¡Se acabaron las sorpresas', '[excited] ¡Se acabaron las sorpresas el día del bolo! ¡Por fin, home!'),
- # Tres semanas después
- ('Chicos, ha contestado la Sala El Faro', 'Chicos, noticias: ha contestado la sala El Faro. El catorce de noviembre es nuestro. ¡Afinad esas guitarras!'),
+ # Sábado, 11:35: contesta la sala y aparece el mánager de Master of Prompts
+ ('Chicos, soy el mánager de Master of Prompts', 'Chicos, soy el mánayer de Máster of Prompts. Os ha contestado la sala El Faro: el catorce de noviembre es vuestro. ¡Afinad esas guitarras!'),
  ('¡¡Por fin!! ¡Del rojo al verde!', '[excited] ¡Por fin! ¡Del rojo al verde! ¡Esto hay que festejarlo arriba de un escenario!'),
- ('Os conocí por Date Swap', 'Os conocí por Deit Suap, cuando todavía cantaba en Máster of Prompts. Ahora os llevo yo los bolos. Y no se cobra en croquetas.'),
+ ('Y si queréis, os llevo también los bolos', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el treinta por ciento. Eso sí: se cobra en croquetas.'),
  # Cap. 2 · hoja
  ('Imprimo el setlist', 'Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes.'),
  ('¡Mi hoja! ¡Con mis notas', '[excited] ¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio, carallo!'),
@@ -131,7 +131,7 @@ SAY = [
  ('Delante, React con Vite', 'Delante, Riact con Vit. Detrás, Express y Taipscript. Supabeis guarda todos los datos, y la inteligencia artificial solo vive en los bordes.'),
  ('Pues como si me hablas en chino', 'Pues como si me hablas en chino. O en jevi metal noruego.'),
  ('Yo no entiendo nada', 'Yo no entiendo nada de nada. Y eso que leo partituras.'),
- ('Yo tampoco tenía ni idea', 'Yo tampoco tenía ni pajolera idea. Pero desde que hice el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega {ia_claude}.'),
+ ('Yo tampoco tenía ni idea', 'Yo tampoco tenía ni pajolera idea. Pero desde que hago el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega {ia_claude}.'),
  # Cap. 6 · mapa
  ('¿Y eso qué es? ¿Un plato de espaguetis?', '¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?'),
  ('Es el mapa de nuestro código', 'Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. {ia_claude} y {ia_gemini} lo leen antes de tocar nada, para no romper lo que ya suena bien.'),

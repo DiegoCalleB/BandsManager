@@ -91,7 +91,8 @@
   "ini": 324.2,
   "fin": 328.0,
   "exacto": true,
-  "paso": "negro"
+  "paso": "negro",
+  "rotulo": "h3.png"
  },
  {
   "ini": 340.7,

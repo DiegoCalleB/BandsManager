@@ -180,13 +180,13 @@ add(scene('Prólogo · Jueves, 23:47', 'Prólogo · Os Herdeiros do Código', 'U
 
 add(scene('Prólogo · La llamada', 'Prólogo · Jueves · 00:09', 'Y entonces, sonó el teléfono.', 'img/concierto-1.jpg',
           '<div class="callcard"><i class="cc-ico" aria-hidden="true">☎</i><div><small>Llamada entrante · 00:09</small><b>Discos Cuarzo</b><span>Sr. Peláez</span></div></div>' +
-          dlg(m('sello', 'Herdeiros, os escribí hace tres meses y nadie contestó. Os ofrezco contrato: gestiono yo, me quedo el 30 % y los másteres son míos.', '00:09',
-                say='[calmly] Herdeiros, os escribí hace tres meses, y nadie contestó. Os ofrezco contrato. Yo gestiono, me quedo el treinta por ciento, y los másteres, naturalmente, son míos.'),
-              m('xandre', '¿Los másteres? ¿Nuestras canciones? ¡Ni de broma!', '00:10', say='[shouts] ¿Los másteres? ¿Nuestras canciones? ¡Ni de broma, che!'),
+          dlg(m('sello', 'Herdeiros, os escribí hace tres meses y nadie contestó. Os ofrezco contrato: os llevo yo los bolos, me quedo el 30 % de cada uno y decido yo qué tocáis.', '00:09',
+                say='[calmly] Herdeiros, os escribí hace tres meses, y nadie contestó. Os ofrezco contrato. Yo os llevo los bolos, me quedo el treinta por ciento de cada uno, y el repertorio, naturalmente, lo decido yo.'),
+              m('xandre', '¿Que decides tú lo que tocamos? ¡Ni de broma!', '00:10', say='[shouts] ¿Que decides tú lo que tocamos? ¿Nuestras canciones? ¡Ni de broma, che!'),
               m('alvaro', 'Es que el correo… se nos pierde.', '00:10', say='[sighs] Es que el correo… se nos pierde, tío.'),
-              m('sello', 'Sin datos no hay contrato. Pensadlo.', '00:11', say='Sin datos, no hay contrato. Pensadlo.'),
-              m('iago', 'No firméis nada. Las canciones son nuestras, y los datos también. El sábado os lo demuestro.', '00:12',
-                say='[firmly] No firméis nada, chavales. Las canciones son nuestras. Y los datos, también. El sábado os lo demuestro.'), cls='tight'), tr='zoom'))
+              m('sello', 'Sin mí no tenéis ni una fecha. Pensadlo.', '00:11', say='Sin mí, no tenéis ni una fecha. Pensadlo.'),
+              m('iago', 'No firméis nada. Las canciones son nuestras, y los bolos los podemos llevar nosotros. El sábado os lo demuestro.', '00:12',
+                say='[firmly] No firméis nada, chavales. Las canciones son nuestras. Y los bolos, los podemos llevar nosotros. El sábado os lo demuestro.'), cls='tight'), tr='zoom'))
 
 add(excel + '\n')
 
@@ -210,7 +210,7 @@ add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-
 </section>
 ''')
 
-add(scene('Prólogo · El sábado en el local', 'Prólogo · Viernes · 22:10', 'Iago tiene algo que enseñar.', 'img/concierto-1.jpg',
+add(scene('Prólogo · Viernes, 22:10', 'Prólogo · Viernes · 22:10', 'Iago tiene algo que enseñar.', 'img/concierto-1.jpg',
           dlg(m('iago', 'Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me creo que haya hecho solo. 🤯', '22:10'),
               m('xandre', '¿De qué va? ¿Qué es??', '22:14'),
               m('alvaro', 'Seguro que ha encontrado una base de datos con todas las salas de Galicia.', '22:19'),
@@ -238,7 +238,7 @@ add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
          shot_vid_sync('video/v-mapa-peninsula.mp4', 'img/d-h-booking.jpg')))
 
 add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
-         [m('alvaro', '¡Me ha escrito a tres salas mientras hablábamos!'),
+         [m('alvaro', '¡Ha escrito a tres salas y al Resurrección Fest mientras hablábamos!'),
           m('iago', 'Cada correo suena a nosotros: lo redacta la IA con el estilo de la banda y de la sala.'),
           m('brais', '¿Y si se le va la mano y escribe una burrada?'),
           m('iago', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
@@ -286,7 +286,7 @@ add(feat('El acuerdo, firmado desde BandManager', TAG1, 'Un acuerdo firmado, sin
           m('brais', '¡Se acabaron las sorpresas el día del bolo!')],
          '<div class="ft-shot phone acuerdo"><img src="img/md-h-acuerdo.jpg" alt="Hoja de acuerdo de la sala con la firma"></div>'))
 
-add(scene('La sala contestó', 'Tres semanas después', 'La sala contestó. Por fin.', 'img/concierto-2.jpg',
+add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala contestó. Por fin.', 'img/concierto-2.jpg',
           '''<table class="sheet" style="width:1180px;margin-top:26px">
     <thead><tr><th>bolos_2026_DEF_v7(1).xlsx</th><th>Enviado</th><th>Respuesta</th><th>Fecha</th></tr></thead>
     <tbody>
@@ -296,9 +296,9 @@ add(scene('La sala contestó', 'Tres semanas después', 'La sala contestó. Por 
       <tr><td>Sala El Faro</td><td>02 may</td><td class="yes">«Nos encaja el 14»</td><td class="yes">14 nov</td></tr>
     </tbody>
   </table>
-  ''' + dlg(m('manager', 'Chicos, ha contestado la Sala El Faro: nos encaja el 14 de noviembre.'),
+  ''' + dlg(m('manager', 'Chicos, soy el mánager de Master of Prompts. Os ha contestado la Sala El Faro: os encaja el 14 de noviembre.'),
             m('xandre', '¡¡Por fin!! ¡Del rojo al verde!'),
-            m('manager', 'Os conocí por Date Swap. Ahora os llevo yo los bolos.'), cls='tight')))
+            m('manager', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.'), cls='tight')))
 
 # ───────── Capítulo 2 · Antes del concierto ─────────
 add(act('Capítulo 2 · Antes del concierto', 'II', 'Capítulo 2 de 6 · Antes del concierto', 'Ahora, la música.',
@@ -499,7 +499,7 @@ add(scene('Las noches', 'Sábado, 13:02 · El local de ensayo', 'Casi siempre, d
               m('alvaro', 'Y nosotros, quejándonos de las birras.', '02:48', say='[sighs] Y nosotros, quejándonos de las birras.'),
               m('xandre', 'Gracias, Iago. De verdad.', '02:49', say='[softly] Gracias, {bajo}. De verdad.'), cls='tight'), cls='noches', tr='fade'))
 
-add(feat('Y mucho más', 'Sábado · 13:00 · Y mucho más', 'Y mucho más.',
+add(feat('Y mucho más', 'Sábado · 13:03 · Y mucho más', 'Y mucho más.',
          [m('iago', 'Y hay más: ensayos, armonías, eventos, reels, dossier…', say='Y esto no acaba aquí, chavales: ensayos, armonías, eventos, reels, el dossier… Todo en la misma app.'),
           m('brais', '¡Pero si no le falta de nada! 🤯', say='[gasps] ¡Ai, mi madriña! ¡Pero si no le falta de nada!')],
          shot_vid('video/v-montaje.mp4', 'video/v-montaje.jpg'), grupo='negocio'))
@@ -577,7 +577,7 @@ add(f'''<section class="slide scene tech" data-title="Arquitectura" data-transit
   {dlg(m('iago', 'Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.'),
        m('brais', 'Pues como si me hablas en chino.'),
        m('alvaro', 'Yo no entiendo nada…'),
-       m('iago', 'Yo tampoco tenía ni idea, pero desde que hice el máster de MoureDev lo entiendo casi todo. ¡Estoy flipando! Aunque casi todo esto lo ha hecho mi amigo Claudio.'), cls='tight')}
+       m('iago', 'Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Estoy flipando! Aunque casi todo esto lo ha hecho mi amigo Claudio.'), cls='tight')}
   <div class="tech-vis">
     <div class="pn"><h3>Frontend</h3><p class="chips2"><span>React 19 + Vite</span><span>Tailwind CSS v4</span><span>Motion</span><span>Tone.js · wavesurfer</span><span>PWA instalable</span></p></div>
     <div class="pn mid"><h3>Backend · Express 4 + TypeScript</h3><p class="chips2"><span>44 ficheros de rutas</span><span>Scout · Enviador · Lector</span><span>Cola y planificador</span><span>Aislamiento por banda</span></p></div>
@@ -688,7 +688,7 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
 # ───────── Convergencia: el festival, la radio, el espejo y el giro ─────────
 add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transition="zoom">
   <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg)"></div>
-  <span class="tag">Seis meses después · Sábado · 01:58 · Backstage</span>
+  <span class="tag">Seis meses después · Sábado noche · 02:09 · Backstage</span>
   <h2 style="font-size:76px">Cinco minutos para salir.</h2>
   <div class="cartel" style="max-width:980px;padding:26px 40px;margin-top:22px">
     <div class="fest" style="font-size:30px">Resurrección Fest</div>
@@ -696,12 +696,13 @@ add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transi
     <div class="l2" style="font-size:36px">Escenario principal · Viveiro</div>
   </div>
   {dlg(m('manager', 'Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.'),
-       m('sello', 'Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 % y los másteres.', say='Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento, y los másteres.'),
-       m('iago', 'Gracias, Peláez. Pero los másteres son nuestros. Y la gestión, también.', say='[softly] Gracias, Peláez. Pero los másteres son nuestros. Y la gestión, también.'),
-       m('manager', 'Y los datos. ¡A tocar!', say='Y los datos. ¡Y ahora, a tocar!'),
+       m('sello', 'Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.', say='Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento.'),
+       m('iago', 'Gracias, Peláez. Pero los bolos ya los llevamos nosotros.', say='[softly] Gracias, Peláez. Pero los bolos ya los llevamos nosotros. Y el repertorio, también.'),
+       m('manager', 'Y sin quedarme el 30 %.', say='Y sin quedarme el treinta por ciento.'),
        m('xandre', '¿Tengo el tono de la primera?'),
        m('iago', 'Em, en tu hoja, como siempre.'),
        m('iago', 'Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.', say='[softly] Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.'),
+       m('manager', '¡Y ahora, a tocar!', say='[shouts] ¡Y ahora, a tocar!'),
        m('brais', 'Hace seis meses no sabíamos ni quién contestaba a las salas.'), cls='tight')}
 </section>
 ''')
@@ -777,7 +778,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
   <p class="gr-c" style="--t:18s;--d:3.4s">En la de verdad, sois el festival.</p>
-  <p class="gr-c gr-ask" style="--t:22s">¿Nos dejas tocar?</p>
+  <p class="gr-c gr-ask" style="--t:22s">Y ahora, a tocar.</p>
 </section>
 ''')
 
@@ -798,7 +799,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>{guitarra}</dt><dd>{guitarra:cargo} · y las palabrotas</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>
       <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
-      <dt>{sello}</dt><dd>Discos Cuarzo · quería los másteres</dd>
+      <dt>{sello}</dt><dd>Discos Cuarzo · quería el 30 % y el repertorio</dd>
       <dt>{ia_claude}</dt><dd>Claude Code · el que discute</dd>
       <dt>{ia_gemini}</dt><dd>Gemini · el que también discute</dd>
       <dt>{locutor}</dt><dd>En directo</dd>
@@ -966,7 +967,7 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
 # golpe: corte seco · negro: fundido a negro (saltos de tiempo, capítulos) · fundido: encadenado
 CORTES = {
     'Prólogo · La banda': 'negro', 'Prólogo · Jueves, 23:47': 'negro', 'Prólogo · La llamada': 'golpe', 'Prólogo · La hoja de cálculo': 'j',
-    'Prólogo · La decisión': 'l', 'Prólogo · El sábado en el local': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
+    'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
     'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'rampa', 'El profesor de armonía': 'l',
