@@ -33,7 +33,11 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

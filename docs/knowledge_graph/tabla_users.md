@@ -30,7 +30,7 @@ Tabla de Supabase `users` (22 columnas).
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 - [[server_db_users|server/db/users.ts]] *(from #db)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(from #schema)*
 - [[tabla_user_bands|tabla user_bands]] *(from #schema)*
 

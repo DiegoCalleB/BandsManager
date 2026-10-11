@@ -65,7 +65,12 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(from #route)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_permisosCuenta|server/routes/users/permisosCuenta.ts]] *(from #route)*
+- [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(from #route)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(from #route)*
+- [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
+- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 
 ---

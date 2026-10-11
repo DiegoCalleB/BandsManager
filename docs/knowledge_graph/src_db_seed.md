@@ -26,7 +26,7 @@ Exporta: INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
 
 ---
 

@@ -104,9 +104,9 @@ jobs:
           # llegara a ejecutarse; al arreglarlo salió a la luz que main ya llevaba ~5500 hallazgos, así
           # que 3757 era un número caducado y no una regresión de este cambio. Sigue siendo un ratchet:
           # el valor nuevo solo debe BAJAR cuando se reduzca la deuda, y no subirse sin justificarlo.
-          # 2026-10-11: baseline bajado de 5525 a 3832, el recuento exacto tras la modularización de
+          # 2026-10-11: baseline bajado de 5525 a 3829, el recuento exacto tras la modularización de
           # Atril, LeadsTable, SongTransitionPreviewModal y el resto de monolitos y quitar los catch mudos. Sin margen: cada limpieza lo vuelve a bajar.
-          BASELINE=3832
+          BASELINE=3829
           if [ "$TOTAL" -gt "$BASELINE" ]; then
             echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
             exit 1

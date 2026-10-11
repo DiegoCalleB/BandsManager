@@ -19,7 +19,7 @@ Tipos de datos y respuestas de la API del CRM de bandas.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

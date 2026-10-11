@@ -27,7 +27,7 @@ Los servicios de `server/services/audioSeparator/` importan directamente del mó
 
 | Métrica | Antes | Después |
 |---|---|---|
-| Líneas de `ai_music.ts` | 4183 | 49 |
+| Líneas de `ai_music.ts` | 4183 | 48 |
 | Mayor módulo | 4183 | 388 (`motorDemucs`) |
 | Handler de `/ai-stem-separation` | ~1000 líneas | orquestador de ~60 + un motor por función |
 
