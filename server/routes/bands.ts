@@ -282,7 +282,7 @@ Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin f
     // El modelo se inventa los IDs de Spotify: solo se deja el enlace que la búsqueda real confirma.
     if (Array.isArray(parsedData)) {
       await Promise.all(
-        parsedData.map(async (b: any) => {
+        parsedData.map(async (b: { nombre_banda?: unknown; spotify_url?: string }) => {
           b.spotify_url = b?.nombre_banda ? await resolverUrlSpotifyDeBanda(String(b.nombre_banda)) : "";
         }),
       );
@@ -400,7 +400,7 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
       facebook = redes.facebook || "";
       const dnaActual = bandaActual?.dna_expresion;
       if (dnaActual && typeof dnaActual === "object" && Array.isArray(dnaActual.frases_directo_extraidas)) {
-        frasesDirectoExistentes = dnaActual.frases_directo_extraidas.map((f: any) => String(f || "").trim()).filter(Boolean);
+        frasesDirectoExistentes = dnaActual.frases_directo_extraidas.map((f: unknown) => String(f || "").trim()).filter(Boolean);
       }
     } catch (eCapturado) {
       const e = comoErrorCapturado(eCapturado);
@@ -474,7 +474,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
     
-    let data: any = {};
+    // ADN de tono que devuelve la IA: se guarda entero en dna_expresion.
+    let data: Record<string, unknown> & { tono_comunicacion?: string } = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
     } else {
@@ -554,7 +555,7 @@ const CAMPOS_TONO_EDITABLES = [
 
 const REDES_MATICES = ["instagram", "tiktok", "youtube", "facebook"] as const;
 
-function limpiarListaTono(v: any, max = 12): string[] {
+function limpiarListaTono(v: unknown, max = 12): string[] {
   if (!Array.isArray(v)) return [];
   const salida: string[] = [];
   for (const item of v) {
@@ -565,11 +566,12 @@ function limpiarListaTono(v: any, max = 12): string[] {
   return salida;
 }
 
-function limpiarMaticesPorRed(v: any): Record<string, string> {
+function limpiarMaticesPorRed(v: unknown): Record<string, string> {
   const salida: Record<string, string> = {};
   if (!v || typeof v !== "object") return salida;
+  const porRed = v as Record<string, unknown>;
   for (const red of REDES_MATICES) {
-    const s = String(v[red] ?? "").trim();
+    const s = String(porRed[red] ?? "").trim();
     if (s) salida[red] = s;
   }
   return salida;
@@ -595,7 +597,7 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
     const cambios = req.body || {};
 
     const { ok: guardado, dna: actualizado } = await dbUpdateBandDnaExpresion(bandId, (actual) => {
-      const siguiente: any = { ...actual };
+      const siguiente: Record<string, unknown> = { ...actual };
       for (const campo of CAMPOS_TONO_EDITABLES) {
         if (!(campo in cambios)) continue;
         if (
@@ -844,7 +846,7 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
     let emailError = null;
 
     if (send_email && Array.isArray(recipients) && recipients.length > 0) {
-      const emailList = recipients.filter((r: any) => typeof r === 'string' && r.includes('@'));
+      const emailList = recipients.filter((r: unknown): r is string => typeof r === 'string' && r.includes('@'));
       if (emailList.length > 0) {
         for (const targetEmail of emailList) {
           try {
@@ -913,6 +915,7 @@ router.post("/bands/alert-settings", requireAuth, async (req, res) => {
 
 import { dbGetPrintSettings, dbUpsertPrintSettings } from "../db/printSettings.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { EPKConfig } from '../../src/types.js';
 
 // GET /api/bands/print-settings — ajustes de impresión del setlist recordados por banda.
 router.get("/bands/print-settings", requireAuth, async (req, res) => {
@@ -1015,7 +1018,7 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req, res)
 
     const state = loadState();
     const bandInfo = (state.registeredBands || []).find((b) => b.band_id === bandId || b.id === bandId);
-    let epk: any = null;
+    let epk: (Partial<EPKConfig> & { nombreBanda?: string }) | null = null;
     try {
       epk = await dbGetEpkConfig(bandId);
     } catch (err) { console.warn("[Bandas] Fallo leyendo el EPK; se responde sin él:", err); }
@@ -1043,7 +1046,7 @@ router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req, res)
       try {
         const imagePrompt = `Professional music band logo for '${bandName}'. Genre: ${bandGenre}. Style: ${visualConcept}. ${customPrompt ? `Additional creative direction: ${customPrompt}.` : ''} Clean graphic design, centered emblem on dark isolated background, vector art quality, iconic branding.`;
         
-        const imgResponse: any = await (client.models as any).generateImages({
+        const imgResponse = await client.models.generateImages({
           model: 'imagen-3.0-generate-002',
           prompt: imagePrompt,
           config: {

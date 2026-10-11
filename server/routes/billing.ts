@@ -79,6 +79,8 @@ export { isValidEmail } from "../utils/email.js";
 import { isValidEmail } from "../utils/email.js";
 import { bandaFacturableDelUsuario, mismaBanda } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { AppState } from '../stateTypes.js';
+import type { BandaFacturable, FacturaStripeLegada, SesionCheckoutLegada, SuscripcionStripeLegada } from './tiposBilling.js';
 
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
@@ -108,12 +110,12 @@ export function resolveValidEmail(userEmail?: string, bandId?: string): string |
   return undefined;
 }
 
-export function findBandInState(state: any, bandId?: string, customerEmail?: string) {
+export function findBandInState(state: AppState, bandId?: string, customerEmail?: string) {
   if (!state.registeredBands) state.registeredBands = [];
   const cleanBandId = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
   const cleanEmail = (customerEmail || '').toLowerCase().trim();
 
-  const band = state.registeredBands.find((b: any) => {
+  const band: BandaFacturable | undefined = state.registeredBands.find((b) => {
     const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
     const bName = (b.nombre_banda || b.bandName || b.name || '').toLowerCase().trim();
@@ -150,7 +152,7 @@ export async function applyPlanUpgrade(
   const { band: foundBand, cleanBandId } = findBandInState(state, bandId, customerEmail);
   const credits = PLAN_CREDITS[normPlan] || 800;
 
-  let bandToSave: any = foundBand;
+  let bandToSave: BandaFacturable | undefined = foundBand;
 
   if (foundBand) {
     foundBand.plan = normPlan;
@@ -421,8 +423,8 @@ export async function handleInvoicePaid(bandId: string, customerEmail?: string, 
 
   return applyPlanUpgrade(bandId, activePlan, customerEmail, {
     stripeCustomerId: invoice?.customer as string,
-    stripeSubscriptionId: (invoice as any)?.subscription as string,
-    billingInterval: (invoice as any)?.lines?.data?.[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
+    stripeSubscriptionId: (invoice as FacturaStripeLegada | undefined)?.subscription as string,
+    billingInterval: (invoice as FacturaStripeLegada | undefined)?.lines?.data?.[0]?.price?.recurring?.interval === 'year' ? 'annual' : 'monthly'
   });
 }
 
@@ -737,7 +739,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
   }
 
   try {
-    const rawBody = (req as any).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
+    const rawBody = (req as typeof req & { rawBody?: Buffer }).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
     const stripe = getStripe();
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (errCapturado) {
@@ -780,8 +782,8 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           break;
         }
 
-        const bandId = session.metadata?.bandId || (session as any).subscription_data?.metadata?.bandId;
-        const planId = session.metadata?.planId || (session as any).subscription_data?.metadata?.planId;
+        const bandId = session.metadata?.bandId || (session as Stripe.Checkout.Session & SesionCheckoutLegada).subscription_data?.metadata?.bandId;
+        const planId = session.metadata?.planId || (session as Stripe.Checkout.Session & SesionCheckoutLegada).subscription_data?.metadata?.planId;
         const customerEmail = session.customer_email || session.metadata?.userEmail;
         const customerId = session.customer as string;
         const subscriptionId = session.subscription as string;
@@ -813,8 +815,9 @@ async function handleWebhook(req: express.Request, res: express.Response) {
         const customerEmail = subscription.metadata?.userEmail;
         const targetPlan = subscription.metadata?.planId || 'de_gira';
         const cancelAtPeriodEnd = subscription.cancel_at_period_end;
-        const periodEnd = (subscription as any).current_period_end
-          ? new Date((subscription as any).current_period_end * 1000).toISOString()
+        const finPeriodo = (subscription as Stripe.Subscription & SuscripcionStripeLegada).current_period_end;
+        const periodEnd = finPeriodo
+          ? new Date(finPeriodo * 1000).toISOString()
           : new Date().toISOString();
 
         if (cancelAtPeriodEnd) {
@@ -845,7 +848,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as Stripe.Invoice & FacturaStripeLegada).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handleInvoicePaid(bandId || '', customerEmail, invoice);
@@ -854,7 +857,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const bandId = invoice.metadata?.bandId || (invoice as any).subscription_details?.metadata?.bandId;
+        const bandId = invoice.metadata?.bandId || (invoice as Stripe.Invoice & FacturaStripeLegada).subscription_details?.metadata?.bandId;
         const customerEmail = invoice.customer_email || invoice.metadata?.userEmail;
 
         await handlePaymentFailed(bandId || '', customerEmail);
