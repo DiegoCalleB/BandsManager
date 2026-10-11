@@ -131,7 +131,7 @@ export function useUpcomingEvents({ filteredConcerts, todayStr, monthNames, getE
 
     list.sort((a, b) => a.fecha.localeCompare(b.fecha));
     return list;
-  }, [filteredConcerts, filteredRehearsals, campaigns, todayStr, activeBandName, monthNames]);
+  }, [filteredConcerts, filteredRehearsals, campaigns, todayStr, activeBandName, monthNames, getEventBandName]);
 
   return { upcomingCalendarEvents, upcomingFilter, setUpcomingFilter };
 }

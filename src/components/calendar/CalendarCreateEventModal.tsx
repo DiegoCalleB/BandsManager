@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Concert, Rehearsal, Setlist } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
@@ -66,13 +66,22 @@ export const CalendarCreateEventModal: React.FC<CalendarCreateEventModalProps> =
   const [concSetlistId, setConcSetlistId] = useState<string>('');
   const [concIsPosible, setConcIsPosible] = useState(false);
 
-  useEffect(() => {
+  // Al abrir el modal (o cambiar banda/miembros) se reinicia la convocatoria.
+  // Se ajusta el estado durante el render comparando con las entradas previas.
+  const [prevInputs, setPrevInputs] = useState<{ open: typeof showCreateModal; band: string; members: typeof effectiveBandMembers } | null>(null);
+  if (
+    prevInputs === null ||
+    prevInputs.open !== showCreateModal ||
+    prevInputs.band !== activeBandId ||
+    prevInputs.members !== effectiveBandMembers
+  ) {
+    setPrevInputs({ open: showCreateModal, band: activeBandId, members: effectiveBandMembers });
     if (showCreateModal) {
       setSelectedBandIdForNewEvent(activeBandId);
       setConvocatoriaTipo('completa');
       setConvocadosIds(effectiveBandMembers.map((m) => m.id));
     }
-  }, [showCreateModal, activeBandId, effectiveBandMembers]);
+  }
 
   if (!showCreateModal) return null;
 
