@@ -264,7 +264,11 @@
         show(cur, false);
       };
       $('#gateSound').onclick = () => go(true);
-      if ($('#gatePeli')) $('#gatePeli').onclick = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
+      if ($('#gatePeli')) $('#gatePeli').onclick = () => {
+        const ir = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
+        $$('.gate-btn').forEach((b) => { b.disabled = true; });
+        if (window.CineIdent) window.CineIdent.play(ir); else ir();
+      };
       $('#gateSilent').onclick = () => go(false);
       ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
     } else gate.remove();

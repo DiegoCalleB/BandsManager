@@ -92,7 +92,7 @@ SAY = [
  ('¿Y esto qué es?', '[gasps] ¿Y esto qué es? ¿Más magia, che?'),
  ('Se me ocurrió hacer un generador', 'Pues se me ocurrió hacer un generador automático de reels para Instagram, TikTok y Yutub. Todo personalizado, y generado con inteligencia artificial.'),
  ('¿Le subes un vídeo largo', '[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería? ¡Ai, mi madriña!'),
- ('¡Eso es! Y hasta los puedes programar', '¡Eso es! Y los puedes programar para que se suban solos a la mejor hora. Tu solo también, {bateria}. Los tres minutos.'),
+ ('¡Eso es! Y te los deja listos', '¡Eso es! Y te los deja listos, con el formato de cada plataforma. Tu solo también, {bateria}. Los tres minutos.'),
  # Cap. 4 · cuentas
  ('Lo que entra por cada bolo', 'Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno. En una sola pantalla.'),
  ('¡Las cuentas claras!', '¡Las cuentas claras! ¡Me encanta! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!'),

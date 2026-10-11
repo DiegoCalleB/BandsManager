@@ -2,7 +2,7 @@
    La cámara (zoom al que habla), el foco sobre él y el fogonazo de cada plano son CSS (styles.css).
    La música es audio/musica/rock.mp3 (la genera tools/musica.py); solo suena con el sonido activado. */
 (function () {
-  var bgm = new Audio('audio/musica/rock.mp3');
+  var bgm = new Audio('audio/musica/rock.mp3?v=2');
   bgm.loop = true; bgm.preload = 'auto'; bgm.volume = 0;
   var ALTO = 0.2, BAJO = 0.07, raf = 0;
   var body = document.body;
@@ -28,6 +28,37 @@
   if (stage) {
     var v = document.createElement('div'); v.id = 'vineta'; v.setAttribute('aria-hidden', 'true'); stage.appendChild(v);
   }
+
+  // Logotipo animado con su «ta-dum», antes de empezar: un golpe grave, otro más bajo y un brillo, sintetizados con WebAudio
+  var ident = document.createElement('div'); ident.id = 'ident'; ident.setAttribute('aria-hidden', 'true');
+  ident.innerHTML = '<div class="id-mark">BM</div><div class="id-sub">BANDMANAGER ORIGINALS</div>';
+  document.body.appendChild(ident);
+  var sting = function () {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext, c = new AC(), t = c.currentTime + 0.05, out = c.createGain();
+      out.gain.value = 0.9; out.connect(c.destination);
+      var golpe = function (t0, f0, f1, dur, g) {
+        var o = c.createOscillator(), a = c.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(f0, t0); o.frequency.exponentialRampToValueAtTime(f1, t0 + dur * 0.6);
+        a.gain.setValueAtTime(0.0001, t0); a.gain.exponentialRampToValueAtTime(g, t0 + 0.012); a.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        o.connect(a); a.connect(out); o.start(t0); o.stop(t0 + dur + 0.05);
+      };
+      golpe(t, 110, 44, 1.8, 0.85); golpe(t + 0.5, 82, 38, 2.6, 0.95); golpe(t + 0.5, 164, 82, 1.2, 0.25);
+      var ruido = c.createBufferSource(), n = c.createBuffer(1, c.sampleRate * 2.4, c.sampleRate), d = n.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
+      ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(400, t + 0.5); f.frequency.exponentialRampToValueAtTime(5200, t + 1.9);
+      var g = c.createGain(); g.gain.setValueAtTime(0.0001, t + 0.4); g.gain.exponentialRampToValueAtTime(0.18, t + 1.0); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.3);
+      ruido.connect(f); f.connect(g); g.connect(out); ruido.start(t + 0.4);
+      [523.25, 783.99, 1046.5].forEach(function (fr, k) { var o = c.createOscillator(), a = c.createGain(); o.type = 'triangle'; o.frequency.value = fr;
+        a.gain.setValueAtTime(0.0001, t + 1.5 + k * 0.05); a.gain.exponentialRampToValueAtTime(0.06, t + 1.6 + k * 0.05); a.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
+        o.connect(a); a.connect(out); o.start(t + 1.5); o.stop(t + 3.3); });
+      setTimeout(function () { c.close(); }, 4500);
+    } catch (e) { /* sin audio: solo se ve */ }
+  };
+  window.CineIdent = { play: function (fin, conSonido) {
+    ident.classList.add('on'); if (conSonido !== false) sting();
+    setTimeout(function () { fin(); ident.classList.remove('on'); }, 3300);
+  } };
 
   // ── Subtítulos estilo Netflix ──
   // Siguen a lo que se oye: salen mientras suena cada frase (con dos a la vez, dos líneas con guion, como en el cine)
@@ -97,7 +128,7 @@
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
-  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">B</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
     '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Escena" tabindex="0"><div class="nf-lleno"></div><div class="nf-bola"></div><div class="nf-caps"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
     '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button><button class="nf-b" data-nf="atras" aria-label="Escena anterior">' + ico.atras + '</button>' +
     '<button class="nf-b" data-nf="alante" aria-label="Escena siguiente">' + ico.alante + '</button><button class="nf-b" data-nf="sonido" aria-label="Sonido"></button>' +
@@ -158,6 +189,15 @@
   var oculto = 0;
   var despierta = function () { nf.classList.add('ver'); body.classList.add('nf-ver'); clearTimeout(oculto); oculto = setTimeout(function () { if (!nf.classList.contains('menu') && !(D() && D().pausado)) { nf.classList.remove('ver'); body.classList.remove('nf-ver'); } }, 2500); };
   addEventListener('mousemove', function () { if (body.classList.contains('pelicula')) despierta(); });
+  // La cámara recorre la captura (de arriba abajo) durante lo que dura la escena, para que se vea entera
+  var camara = function () {
+    var sl = document.querySelector('.slide.active');
+    if (!sl || !window.DeckVoces) return;
+    var d = Math.max(8, window.DeckVoces.duracion(sl) + 1);
+    sl.style.setProperty('--pan', d.toFixed(1) + 's');
+  };
+  addEventListener('hashchange', function () { setTimeout(camara, 30); });
+  addEventListener('voz', camara);
   addEventListener('hashchange', pintar);
   addEventListener('deckpausa', function () { pintar(); despierta(); });
   addEventListener('voz', pintar);

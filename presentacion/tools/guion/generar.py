@@ -216,6 +216,8 @@ add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
           m('iago', 'Cada correo suena a nosotros: lo redacta la IA con el estilo de la banda y de la sala.'),
           m('brais', '¿Y si se le va la mano y escribe una burrada?'),
           m('iago', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
+          m('alvaro', '¿Y cómo sabemos si lo han leído?', say='[curious] ¿Y cómo sabemos si lo han leído de verdad?'),
+          m('iago', 'Se puede entrenar a la IA con estrellas, y te avisa cuando abren el correo, el dossier o entran en nuestras redes.', say='Y a la IA la puedes entrenar: le das estrellas a cada correo, y aprende cómo hablas. Y te avisa cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.'),
           m('xandre', 'O sea, que tú solo aprietas el botón.'),
           m('iago', 'Y presumo. 😅')],
          shot_img('img/d-h-pitch.jpg')))
@@ -369,6 +371,7 @@ add(f'''<section class="slide feat dl" data-grupo="promocion" data-title="Un QR 
   <div class="ft-copy" style="width:720px"><span class="tag">{TAG3}</span><h2>Un QR, y el público se hace fan.</h2>
     {dlg(m('alvaro', '¿Cómo…? ¿Que si ponemos este QR en el concierto la gente podrá entrar aquí y seguirnos en redes?'),
          m('iago', '¡Sí! También pueden echarnos una mano con dinero, comprarnos merchan (cuando lo hagamos), ver nuestros próximos bolos y entrar en la web.'),
+         m('iago', 'Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.', say='Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento, o una descarga exclusiva. Y tú te quedas con la lista, para avisarles de los bolos.'),
          m('xandre', 'En serio… creo que estoy soñando… ¡¿pero qué locura es esta?!'))}
   </div>
   <div class="qrcard">{QR}<b>Os Herdeiros do Código</b><span>Escanea y únete a la banda</span></div>
@@ -386,7 +389,7 @@ add(feat('Del directo al reel', TAG3, 'Del directo al reel.',
          [m('xandre', '¿Y esto qué es?'),
           m('iago', 'Se me ocurrió hacer un generador automático de reels para Instagram, TikTok y YouTube. Todo personalizado y generado con IA.'),
           m('brais', '¿Le subes un vídeo largo y te saca los mejores trocitos, los más virales, para cada plataforma?'),
-          m('iago', '¡Eso es! Y hasta los puedes programar para que se suban solos a la mejor hora.')],
+          m('iago', '¡Eso es! Y te los deja listos, con el formato de cada plataforma.')],
          '<div class="ft-shot phone"><video data-ambient muted loop playsinline preload="auto" poster="video/reel-demo.jpg"><source src="video/reel-demo.mp4" type="video/mp4"></video></div>'))
 
 add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
@@ -666,7 +669,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
-add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="27000">
+add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="82000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>
     <h2 class="cr-titulo">BandManager.io</h2>
@@ -685,14 +688,96 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </dl>
     <h3>Escrita, programada y dirigida por</h3>
     <p class="cr-nombre">Diego de la Calle</p>
+    <h2 class="cr-seccion">Los que aparecen en BandManager.io</h2>
+    <h3>Los que tocan</h3>
+    <dl class="cr-dl">
+      <dt>Bandas y músicos</dt><dd>Booking, repertorio, ensayos, finanzas y giras</dd>
+      <dt>Líderes y miembros</dt><dd>El líder manda; los miembros ven y colaboran</dd>
+      <dt>Cabeza de Cartel</dt><dd>Mánagers con hasta cinco bandas a la vez</dd>
+    </dl>
+    <h3>Los que programan</h3>
+    <dl class="cr-dl">
+      <dt>Salas y clubs</dt><dd>Reciben el pitch y firman el acuerdo con un enlace</dd>
+      <dt>Festivales</dt><dd>Cada uno con su ficha, su mapa y su historial</dd>
+      <dt>Medios</dt><dd>Prensa, radio y podcast</dd>
+      <dt>Mánagements y sellos</dt><dd>Los que llevan varias bandas</dd>
+      <dt>Ayuntamientos</dt><dd>Fiestas patronales y programación municipal</dd>
+      <dt>Grupos amigos</dt><dd>Cartel doble con Date Swap</dd>
+    </dl>
+    <h3>Los que escuchan</h3>
+    <dl class="cr-dl">
+      <dt>Fans</dt><dd>Entran por QR y dejan su correo, con su consentimiento</dd>
+      <dt>Donantes</dt><dd>Apoyan a la banda con Stripe</dd>
+      <dt>Músicos en lista de espera</dt><dd>Los próximos Herdeiros</dd>
+    </dl>
+    <h3>Los agentes</h3>
+    <dl class="cr-dl">
+      <dt>Scout</dt><dd>Busca salas nuevas y las enriquece</dd>
+      <dt>Redactor</dt><dd>Escribe el correo con el tono de la banda</dd>
+      <dt>Enviador</dt><dd>Solo envía lo que tú apruebas</dd>
+      <dt>Lector</dt><dd>Lee las respuestas y propone la réplica</dd>
+      <dt>Agente Mánager</dt><dd>Chat con catorce herramientas, todas con tu visto bueno</dd>
+      <dt>Iris</dt><dd>Separa las pistas de cada canción</dd>
+      <dt>Profesor de armonía</dt><dd>Explica los acordes</dd>
+    </dl>
+    <h2 class="cr-seccion">Departamentos técnicos</h2>
+    <h3>Inteligencia artificial</h3>
+    <dl class="cr-dl">
+      <dt>Gemini 2.5 Flash</dt><dd>Pitches, chat y análisis</dd>
+      <dt>DeepSeek V3</dt><dd>El segundo redactor, a elegir</dd>
+      <dt>Gemini con Google Search</dt><dd>Encuentra salas y sus correos</dd>
+      <dt>Embeddings text-embedding-004</dt><dd>Memoria de los pitches que funcionaron</dd>
+      <dt>Lyria 3</dt><dd>Música y jingles</dd>
+      <dt>Imagen 3</dt><dd>El logo de la banda</dd>
+      <dt>Whisper</dt><dd>Transcribe las letras, con sus tiempos</dd>
+      <dt>Demucs, en Fal.ai</dt><dd>Iris: las pistas separadas</dd>
+    </dl>
+    <h3>Datos, música y calle</h3>
+    <dl class="cr-dl">
+      <dt>Spotify · YouTube · Meta</dt><dd>Métricas de cada banda</dd>
+      <dt>Deezer · iTunes</dt><dd>Avances para escuchar a las bandas amigas</dd>
+      <dt>Setlist.fm · MusicBrainz · Bandsintown</dt><dd>Qué toca cada sala</dd>
+      <dt>Ticketmaster · Google Places</dt><dd>Salas y eventos</dd>
+      <dt>Jina Reader · Serper · Apify</dt><dd>Leer webs y redes de las salas</dd>
+      <dt>OpenStreetMap · ArcGIS · Leaflet</dt><dd>El mapa de salas</dd>
+      <dt>Open-Meteo</dt><dd>El tiempo de cada bolo</dd>
+    </dl>
+    <h3>Comunicaciones</h3>
+    <dl class="cr-dl">
+      <dt>Gmail API</dt><dd>Borradores y bandeja de entrada</dd>
+      <dt>SMTP e IMAP</dt><dd>Para los que no usan Gmail</dd>
+      <dt>Resend</dt><dd>Correos de la plataforma</dd>
+      <dt>Web Push</dt><dd>Avisos en el móvil</dd>
+    </dl>
+    <h3>Dinero, datos y nube</h3>
+    <dl class="cr-dl">
+      <dt>Stripe</dt><dd>Planes y donaciones</dd>
+      <dt>Supabase</dt><dd>Base de datos, archivos y seguridad por banda</dd>
+      <dt>Firebase</dt><dd>Entrar con Google</dd>
+      <dt>Railway</dt><dd>Donde vive la aplicación</dd>
+      <dt>Sentry</dt><dd>Vigila los errores</dd>
+    </dl>
     <h3>Rodada en</h3>
-    <p>React · Vite · Express · TypeScript · Supabase · Railway</p>
-    <h3>Efectos especiales</h3>
-    <p>Claude Code · Gemini · Iris · Scout</p>
-    <h3>Voces</h3>
-    <p>ElevenLabs, con acento de aquí</p>
-    <h3>Música original</h3>
-    <p>Un riff de garaje en Mi, sintetizado línea a línea</p>
+    <dl class="cr-dl">
+      <dt>React 19 · Vite · Tailwind</dt><dd>Lo que ves</dd>
+      <dt>Express · TypeScript</dt><dd>Lo que no ves</dd>
+      <dt>Tone.js · wavesurfer</dt><dd>El sonido</dd>
+    </dl>
+    <h3>Control de calidad</h3>
+    <dl class="cr-dl">
+      <dt>Vitest · Playwright</dt><dd>Más de dos mil pruebas</dd>
+      <dt>ESLint · Husky · GitHub Actions</dt><dd>Nadie sube nada roto</dd>
+    </dl>
+    <h2 class="cr-seccion">Cómo se hizo esta película</h2>
+    <dl class="cr-dl">
+      <dt>Claude Code</dt><dd>Escribió casi todo el código y la historia</dd>
+      <dt>Gemini y AI Studio</dt><dd>El otro cerebro</dd>
+      <dt>ElevenLabs</dt><dd>Las voces, con acento de aquí</dd>
+      <dt>Playwright</dt><dd>Los vídeos de la app, con su cursor</dd>
+      <dt>ffmpeg</dt><dd>El montaje y el sonido</dd>
+      <dt>Whisper</dt><dd>Escuchó cada frase para comprobarla</dd>
+      <dt>Python</dt><dd>La música: un riff de garaje en Mi</dd>
+    </dl>
     <h3>Con el apoyo de</h3>
     <p>Brais Moure y The Big School · Máster de Desarrollo con IA</p>
     <p class="cr-nota">Ningún bajista fue ignorado durante el rodaje. Bueno, casi.</p>
@@ -724,6 +809,26 @@ html = html.replace('F para pantalla completa · M para el sonido', 'F para pant
 html = html.replace('T tema · F pantalla completa</div>', 'T tema · F pantalla completa · V voces · P película</div>')
 html = html.replace('>Empezar con sonido</button>', '>Empezar con sonido y voces</button>')
 html = html.replace('<button id="gateSound" class="gate-btn primary">Empezar con sonido y voces</button>', '<button id="gatePeli" class="gate-btn primary">🎬 Ver como película</button>\n      <button id="gateSound" class="gate-btn">Empezar con sonido y voces</button>', 1)
+# Pantalla de entrada a lo plataforma de cine: cartel, sinopsis y «Reproducir»
+i0 = html.index('<div id="gate"'); i1 = html.index('<div id="prog">')
+html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label="Empezar la película">
+  <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
+  <div class="nx-top"><span class="nx-logo">BANDMANAGER</span><span class="nx-orig">ORIGINALS</span></div>
+  <div class="nx-hero">
+    <div class="nx-sello"><i>B</i> PELÍCULA ORIGINAL</div>
+    <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
+    <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
+    <p class="nx-gen">Comedia · Rock · Tecnología · Basada en hechos casi reales</p>
+    <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+    <div class="gate-btns">
+      <button id="gatePeli" class="gate-btn primary">▶ Reproducir</button>
+      <button id="gateSound" class="gate-btn">Ver como presentación</button>
+      <button id="gateSilent" class="gate-btn">Sin sonido</button>
+    </div>
+    <div class="gate-note">TFM · Máster de Desarrollo con IA · The Big School by Brais Moure — F pantalla completa · espacio pausa · C subtítulos</div>
+  </div>
+</div>
+''' + html[i1:]
 sin_usar = [k for k, v in SAY if k not in USADOS]
 if sin_usar: print('Guion hablado sin usar:', sin_usar)
 # fotos del reparto

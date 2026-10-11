@@ -14,7 +14,7 @@
     return ('0000000' + h.toString(16)).slice(-8);
   };
   var manifest = {};
-  fetch('audio/voces/manifest.json').then(function (r) { return r.ok ? r.json() : {}; })
+  fetch('audio/voces/manifest.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : {}; })
     .then(function (m) { manifest = m || {}; }).catch(function () { /* sin voces grabadas */ });
 
   var pref = store.get('deck_voces') !== 'off';
@@ -114,7 +114,7 @@
     if (m) {
       var audio = pista[turno]; turno = 1 - turno;
       audio.onended = acabar; audio.onerror = function () { leer(); };
-      audio.src = 'audio/voces/' + m.f;
+      audio.src = 'audio/voces/' + m.f + '?v=' + (m.h || m.v || ''); // el nombre del mp3 sale del texto: el ?v= evita servir de la caché un audio viejo
       audio.playbackRate = VEL;
       audio.play().then(function () { mover(el, m.e || null, audio, avanzar, antes || 0); }).catch(function () { leer(); });
       return;
@@ -167,7 +167,6 @@
       timer = setTimeout(function () {
         if (id !== run) return;
         el.classList.remove('typing');
-        if (window.DeckSound && window.DeckSound.msg) window.DeckSound.msg(el.classList.contains('me'));
         hablar(el, luego, antes);
       }, retardo(el));
     };
@@ -178,6 +177,14 @@
 
   window.DeckVoces = {
     enabled: enabled, play: play, stop: stop, uno: uno,
+    // segundos que dura lo que dicen los personajes de una diapositiva (para repartir una animación de cámara)
+    duracion: function (slide) {
+      var t = 0;
+      slide.querySelectorAll('[data-who][data-say]').forEach(function (el) {
+        var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)]; t += m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.042);
+      });
+      return t;
+    },
     get pref() { return pref; },
     toggle: function () { pref = !pref; store.set('deck_voces', pref ? 'on' : 'off'); if (!pref) stop(); avisar(pref); return pref; },
     onChange: function (f) { avisar = f; },

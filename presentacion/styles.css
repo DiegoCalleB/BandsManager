@@ -1097,8 +1097,8 @@ body.pelicula:not(.scroll) .slide { scale: .9; }
 
 /* Títulos de crédito: el rollo sube despacio, como al final de una película */
 .slide.creditos { background: #000; padding: 0; overflow: hidden; align-items: center; color: #fff; }
-.creditos .rollo { width: 1100px; margin: 0 auto; text-align: center; transform: translateY(1080px); }
-.slide.creditos.active .rollo { animation: rollo 26s linear 600ms both; }
+.creditos .rollo { width: 1400px; margin: 0 auto; text-align: center; transform: translateY(1080px); }
+.slide.creditos.active .rollo { animation: rollo 80s linear 600ms both; }
 @keyframes rollo { from { transform: translateY(1080px); } to { transform: translateY(calc(-100% - 40px)); } }
 .creditos .cr-pre { font-size: 30px; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.6); margin: 0; }
 .creditos .cr-titulo { font-family: Anton, Oswald, sans-serif; font-size: 150px; line-height: 1; margin: 18px 0 8px; letter-spacing: .02em; }
@@ -1137,8 +1137,8 @@ body.pelicula:not(.scroll) .feat > .foco { --t: 230px !important; left: 96px !im
 body.pelicula:not(.scroll) .feat .ft-shot video { object-fit: contain; }
 body.pelicula:not(.scroll) .feat .ft-shot.alto { left: 50%; right: auto; width: 760px; translate: -50% 0; }
 /* Las capturas fijas no se quedan quietas: la cámara se acerca despacio, como si Iago las fuera enseñando */
-body.pelicula:not(.scroll) .feat.active .ft-shot:not(.phone) img { transform-origin: 30% 20%; animation: kenburns 22s ease-in-out both; }
-@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.12) translate(-2%, -1%); } }
+body.pelicula:not(.scroll) .feat.active .ft-shot:not(.phone) img { animation: panvert var(--pan, 20s) cubic-bezier(.45,0,.55,1) 700ms both; }
+@keyframes panvert { from { object-position: 50% 0%; } to { object-position: 50% 100%; } }
 @media (prefers-reduced-motion: reduce) { body.pelicula .feat.active .ft-shot img { animation: none; } }
 
 /* ── Reproductor estilo Netflix (modo película) ── */
@@ -1185,3 +1185,65 @@ body.pelicula:not(.scroll) #hud { opacity: 0; pointer-events: none; }
 body.pelicula.nf-ver { cursor: default; } body.pelicula:not(.nf-ver):not(.pausado) { cursor: none; }
 body.pelicula:not(.scroll) #edgeL, body.pelicula:not(.scroll) #edgeR, body.pelicula:not(.scroll) #aL, body.pelicula:not(.scroll) #aR { display: none; }
 body.pelicula:not(.scroll) .feat > .foco b { background: rgba(0,0,0,.72); padding: 4px 16px; border-radius: 99px; }
+
+/* ── Modo película: sin chat, los paneles de las escenas técnicas y de negocio aprovechan toda la pantalla ── */
+body.pelicula:not(.scroll) .slide.scene.tech h2, body.pelicula:not(.scroll) .slide.scene.biz h2 { font-size: 78px; max-width: 1650px; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis:not(.graphbox):not(pre), body.pelicula:not(.scroll) .slide.scene > .biz-cols {
+  left: 120px; right: 120px; top: 330px; width: auto; display: grid; gap: 26px; align-content: start; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis.mini { grid-template-columns: repeat(3, 1fr); }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis:not(.mini):not(.graphbox):not(pre) { grid-template-columns: 1fr 1fr; }
+body.pelicula:not(.scroll) .slide.scene > .biz-cols { grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); }
+body.pelicula:not(.scroll) .tech-vis .pn, body.pelicula:not(.scroll) .biz-col { margin: 0; padding: 34px 40px; border-radius: 28px; background: rgba(10,14,24,.88); }
+body.pelicula:not(.scroll) .tech-vis .pn h3, body.pelicula:not(.scroll) .biz-col h3, body.pelicula:not(.scroll) .tech-vis.mini h3 { font-size: 44px; }
+body.pelicula:not(.scroll) .tech-vis .pn p, body.pelicula:not(.scroll) .biz-col p, body.pelicula:not(.scroll) .tech-vis.mini p { font-size: 33px; margin-top: 12px; }
+body.pelicula:not(.scroll) .slide.scene > pre.tech-vis { left: 160px; right: 160px; top: 290px; width: auto; font-size: 32px; line-height: 1.5; padding: 36px 48px; max-height: 640px; overflow: hidden; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis.graphbox { left: 660px; right: 660px; top: 270px; width: auto; padding: 12px 16px; }
+body.pelicula:not(.scroll) .slide.scene.tech .scene-foot { font-size: 30px; }
+body.pelicula:not(.scroll) .tech-vis .chips2 span { font-size: 30px; padding: 8px 20px; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis:not(.mini):not(.graphbox):not(pre) { grid-template-columns: 1fr 1fr; align-content: center; top: 320px; bottom: 140px; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis.mini, body.pelicula:not(.scroll) .slide.scene > .biz-cols { top: 360px; }
+body.pelicula:not(.scroll) .slide.scene > .tech-vis.mini .pn { padding: 46px 48px; }
+body.pelicula:not(.scroll) .slide.bigstats.dl .bs-n { font-size: 230px; }
+body.pelicula:not(.scroll) .slide.bigstats.dl h2 { font-size: 84px; }
+body.pelicula:not(.scroll) .bs-grid span, body.pelicula:not(.scroll) .slide.bigstats .bs span { font-size: 38px; max-width: 760px; }
+
+/* Créditos largos, como los de una película: secciones y, en cada una, función → herramienta */
+.creditos .cr-seccion { font-family: Anton, Oswald, sans-serif; font-size: 70px; letter-spacing: .04em; color: #ffd596; margin: 150px 0 10px; font-weight: 400; }
+.creditos .cr-dl { grid-template-columns: 1fr 1fr; gap: 10px 38px; }
+.creditos .cr-dl dt { font-size: 30px; font-weight: 600; }
+.creditos .cr-dl dd { font-size: 28px; }
+
+/* ── Entrada a lo plataforma de cine ── */
+#gate { align-items: flex-end; justify-content: flex-start; background: #000; }
+.nx-bg { position: absolute; inset: 0; background: linear-gradient(90deg, #000 6%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.1) 80%), linear-gradient(to top, #000 4%, transparent 45%), var(--img) center / cover; animation: nxzoom 30s ease-out both; }
+@keyframes nxzoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+.nx-top { position: absolute; top: 44px; left: 64px; right: 64px; display: flex; align-items: baseline; gap: 14px; z-index: 2; }
+.nx-logo { font: 400 46px/1 Anton, Oswald, Impact, sans-serif; color: #e50914; letter-spacing: .06em; }
+.nx-orig { font: 600 18px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .5em; color: rgba(255,255,255,.75); }
+.nx-hero { position: relative; z-index: 2; padding: 0 64px 90px; max-width: 980px; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
+.nx-sello { font-size: 20px; letter-spacing: .32em; font-weight: 700; color: rgba(255,255,255,.8); display: flex; align-items: center; gap: 12px; }
+.nx-sello i { font: 400 34px/1 Anton, Impact, sans-serif; color: #e50914; font-style: normal; letter-spacing: 0; }
+.nx-titulo { font: 400 clamp(64px, 11vw, 180px)/.92 Anton, Oswald, Impact, sans-serif; letter-spacing: .01em; margin: 16px 0 18px; text-transform: uppercase; text-shadow: 0 8px 40px rgba(0,0,0,.7); }
+.nx-meta { display: flex; align-items: center; gap: 16px; font-size: 22px; color: rgba(255,255,255,.85); font-weight: 600; flex-wrap: wrap; }
+.nx-meta span { display: inline-block; }
+.nx-edad { border: 1px solid rgba(255,255,255,.7); padding: 0 8px; font-size: 18px; }
+.nx-cc { border: 1px solid rgba(255,255,255,.7); padding: 0 6px; font-size: 16px; border-radius: 3px; }
+.nx-gen { font-size: 22px; margin: 14px 0 0; color: #fff; font-weight: 600; }
+.nx-sin { font-size: 24px; line-height: 1.45; margin: 14px 0 0; max-width: 780px; color: rgba(255,255,255,.88); text-shadow: 0 2px 12px #000; }
+#gate .gate-btns { justify-content: flex-start; margin-top: 28px; }
+#gate .gate-btn { font-weight: 700; border-radius: 6px; padding: 16px 30px; background: rgba(109,109,110,.7); border: 0; color: #fff; }
+#gate .gate-btn.primary, #gatePeli { background: #fff; color: #000; font-size: 26px; padding: 16px 44px; box-shadow: none; }
+#gate .gate-note { margin-top: 26px; font-size: 14px; color: rgba(255,255,255,.55); }
+@media (max-width: 800px) { .nx-hero { padding: 0 24px 40px; } .nx-top { left: 24px; } .nx-sin { font-size: 17px; } .nx-meta { font-size: 16px; } }
+/* Logotipo animado antes de empezar (ver cine.js) */
+#ident { position: fixed; inset: 0; z-index: 95; background: #000; display: grid; place-items: center; opacity: 0; pointer-events: none; transition: opacity 500ms; }
+#ident.on { opacity: 1; pointer-events: auto; }
+#ident .id-mark { font: 400 min(34vw, 360px)/1 Anton, Oswald, Impact, sans-serif; letter-spacing: .04em; color: #e50914; text-shadow: 0 0 60px rgba(229,9,20,.55); transform: scale(.82); opacity: 0; }
+#ident.on .id-mark { animation: idmark 3.4s cubic-bezier(.2,.7,.2,1) both; }
+#ident .id-sub { position: absolute; bottom: 30%; left: 0; right: 0; text-align: center; font: 600 min(2.2vw, 26px)/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .5em; color: rgba(255,255,255,.85); opacity: 0; }
+#ident.on .id-sub { animation: idsub 3.4s ease both; }
+#ident::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,.28) 50%, transparent 62%); transform: translateX(-120%); }
+#ident.on::after { animation: idbrillo 1.4s ease-in-out .5s both; }
+@keyframes idmark { 0% { opacity: 0; transform: scale(.82); } 18% { opacity: 1; } 70% { opacity: 1; transform: scale(1.04); } 100% { opacity: 1; transform: scale(1.08); } }
+@keyframes idsub { 0%, 40% { opacity: 0; letter-spacing: .2em; } 75%, 100% { opacity: 1; letter-spacing: .5em; } }
+@keyframes idbrillo { to { transform: translateX(120%); } }

@@ -368,6 +368,11 @@ def main():
         if f.endswith('.mp3') and f not in usados:
             os.remove(os.path.join(SALIDA, f))
     json.dump(nuevo, open(ruta_man, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, sort_keys=True)
+    # huella del contenido del mp3: voces.js la añade a la URL (?v=) para que el navegador no sirva un audio viejo con el mismo nombre
+    for v in nuevo.values():
+        with open(os.path.join(SALIDA, v['f']), 'rb') as fh:
+            v['h'] = hashlib.sha1(fh.read()).hexdigest()[:8]
+    json.dump(nuevo, open(ruta_man, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, sort_keys=True)
     total = sum(v['d'] for v in nuevo.values())
     print(f'{len(nuevo)} frases, {total / 60:.1f} minutos de voz.')
     flojas = sorted((v for v in nuevo.values() if 'qa' in v and v['qa'] < 0.8), key=lambda v: v['qa'])
