@@ -31,7 +31,7 @@ trailer = section('Tráiler')
 # Rebobinado (Tenet): de la noche del festival, hacia atrás, hasta seis meses antes; 7 fotogramas de 90 ms
 REBOBINA = ['concierto-3', 'd-h-finanzas', 'd-h-dossier', 'd-h-calendario', 'd-h-pitch', 'd-h-booking', 'concierto-1']
 _rw = '<div class="tr-rewind" aria-hidden="true">' + ''.join(f'<img src="img/{n}.jpg" alt="" style="--k:{k}">' for k, n in enumerate(REBOBINA)) + '</div>'
-_i = trailer.index('<div class="tr-beat tr-photo" style="--t:2.6s')
+_i = trailer.index('<div class="tr-beat tr-photo" style="--t:3.6s')
 trailer = trailer[:_i] + _rw + '\n  ' + trailer[_i:]
 cast = section('Prólogo · La banda')
 excel = section('Prólogo · La hoja de cálculo')

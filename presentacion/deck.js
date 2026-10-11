@@ -218,7 +218,7 @@
   let delayedVideoTimer = 0;
   // Modo película (P): cada diapositiva pasa sola; con voces, cuando terminan de hablar
   let pelicula = false, pelTimer = 0;
-  const durPelicula = (s) => +((corte && s.dataset.durCorto) || (pelicula && s.dataset.durPeli) || s.dataset.dur || (s.classList.contains('trailer') ? 14500 : s.classList.contains('reveal') ? 11000 : 7000));
+  const durPelicula = (s) => +((corte && s.dataset.durCorto) || (pelicula && s.dataset.durPeli) || s.dataset.dur || (s.classList.contains('trailer') ? 15500 : s.classList.contains('reveal') ? 11000 : 7000));
   let pausado = false; // reproductor de cine.js: pausa la película sin salir de ella
   // Corte de 5 minutos: las diapositivas con data-corto forman una lista más corta (?corte o el botón de la entrada)
   let corte = new URLSearchParams(location.search).has('corte');
