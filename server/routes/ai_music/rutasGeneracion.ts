@@ -9,6 +9,7 @@ import { dbRecordAiUsage } from '../../db/aiLedger.js';
 import { getTargetBandId } from '../../utils/bandAccess.js';
 import { ai, generateMusicGenTrack, callLyriaWithRetries } from './generacionMusical.js';
 import { parseGeminiError } from './diagnosticosInfra.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -65,7 +66,8 @@ router.post(
       let bandId: string | undefined;
       try {
         bandId = getTargetBandId(req);
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.warn(
           '[AI Ledger] Sin banda activa para registrar consumo de Lyria:',
           e?.message || e
@@ -98,7 +100,8 @@ router.post(
         mimeType,
         lyrics: generatedLyrics,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('AI Music generation error:', err);
       const gemDiag = parseGeminiError(err);
       return res.status(gemDiag.httpStatus).json({
@@ -146,7 +149,7 @@ router.post(
       try {
         bandId = getTargetBandId(req);
       } catch {
-        bandId = (req as any).user?.band_id || 'sin-banda';
+        bandId = req.user?.band_id || 'sin-banda';
       }
 
       // Intento principal: MusicGen (Meta, vía Replicate) condicionado al audio REAL de la idea —
@@ -261,7 +264,8 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
         bpm: bpm || 120,
         key: key || 'Am',
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error al generar pista de instrumento con IA:', err);
       const gemDiag = parseGeminiError(err);
       return res.status(gemDiag.httpStatus).json({

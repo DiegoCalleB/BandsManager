@@ -6,6 +6,7 @@ import { Button } from '../../ui';
 import { ShowIcon } from '../../ui/ShowIcon';
 import { EmailDeliveryTicks } from '../EmailDeliveryTicks';
 import { apiFetch } from '../../../utils/api';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
 interface VenueEmailThreadProps {
   lead: Lead;
@@ -113,7 +114,8 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
       setSyncFeedback(res?.message || 'Bandeja sincronizada con éxito.');
       setTimeout(() => setSyncFeedback(null), 4000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setSyncFeedback(err?.message || 'Error al sincronizar con la bandeja de entrada');
     } finally {
       setIsSyncing(false);
@@ -318,7 +320,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
     const cleanMsgId = (msg.id || '').replace(/^imap-/, '').replace(/^gmail-/, '');
 
-    const matchingEvents = historial.filter((h: any) => {
+    const matchingEvents = historial.filter((h) => {
       if (h.email_id) {
         const cleanEventEmailId = String(h.email_id).replace(/^imap-/, '').replace(/^gmail-/, '');
         if (cleanEventEmailId === cleanMsgId || h.email_id === msg.id || h.email_id === msg.gmail_message_id) {
@@ -335,17 +337,17 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     });
 
     const openEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('open-') || h.notas?.includes('abrió el correo') || h.resultado?.includes('Apertura')
+      (h) => h.id?.startsWith('open-') || h.notas?.includes('abrió el correo') || h.resultado?.includes('Apertura')
     );
     const clickEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('click-') || h.id?.startsWith('epk-') || (h.tipo as string) === 'Interacción EPK'
+      (h) => h.id?.startsWith('click-') || h.id?.startsWith('epk-') || (h.tipo as string) === 'Interacción EPK'
     );
     const pdfEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('pdf-open-') || (h.tipo as string) === 'Dossier PDF' || h.resultado?.includes('Dossier PDF')
+      (h) => h.id?.startsWith('pdf-open-') || (h.tipo as string) === 'Dossier PDF' || h.resultado?.includes('Dossier PDF')
     );
 
     let maxParsedOpen = openEvents.length;
-    openEvents.forEach((ev: any) => {
+    openEvents.forEach((ev) => {
       const match = String(ev.resultado || ev.notas || '').match(/#(\d+)|(\d+)ª vez/);
       if (match) {
         const num = parseInt(match[1] || match[2], 10);
@@ -855,7 +857,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                            {msgTelemetry.events.slice(0, 6).map((ev: any, evIdx: number) => {
+                            {msgTelemetry.events.slice(0, 6).map((ev, evIdx: number) => {
                               const info = formatTelemetryItem(ev);
                               return (
                                 <div key={ev.id || evIdx} className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded bg-black/40 border border-white/5 gap-2">

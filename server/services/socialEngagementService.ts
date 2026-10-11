@@ -10,6 +10,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface SocialEngagementResult {
   success: boolean;
@@ -72,7 +73,8 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         resumen_social: parsed.resumen_social || `Comunidad activa con cartelera semanal difundida en redes.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error analyzing venue social engagement via AI:", err?.message);
   }
 

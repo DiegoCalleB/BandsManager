@@ -20,6 +20,7 @@ Exporta: StemPredictionJob, ReplicateWebhookHeaders, verifyReplicateWebhook, ver
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_stem_prediction_jobs|tabla stem_prediction_jobs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---

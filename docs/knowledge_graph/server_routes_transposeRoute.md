@@ -21,6 +21,7 @@ Transposición de audio (`/transpose-audio`).
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

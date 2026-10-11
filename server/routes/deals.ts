@@ -23,6 +23,7 @@ import { dbGetLeadById } from '../db/leads.js';
 import { dbGetRegisteredBandById } from '../db/bands.js';
 import { dbGetUsers } from '../db/users.js';
 import { invalidateBandStateCache } from '../db/sync.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const dealsRouter = Router();
 
@@ -100,7 +101,8 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
     } catch (err) { console.warn("[Deals] No se pudieron reflejar los acuerdos firmados en el calendario:", err); }
 
     return res.status(200).json({ success: true, deals });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdos:', error);
     return res.status(500).json({ error: error.message || 'Error al obtener acuerdos' });
   }
@@ -121,7 +123,8 @@ dealsRouter.get('/deals/lead/:leadId', requireAuth, async (req: Request, res: Re
     const deal = await dbGetDealByLeadId(leadId, bandId);
 
     return res.status(200).json({ success: true, deal });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdo por lead:', error);
     return res.status(500).json({ error: error.message || 'Error al obtener acuerdo' });
   }
@@ -191,7 +194,8 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
       deal: savedDeal,
       publicUrl
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al crear/actualizar acuerdo:', error);
     return res.status(estadoHttp(error, 500)).json({ error: error.message || 'Error al persistir acuerdo' });
   }
@@ -274,7 +278,8 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
     }
 
     return res.status(200).json({ success: true, deal: publicDeal });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener vista pública de acuerdo:', error);
     return res.status(estadoHttp(error, 500)).json({ error: 'Error al consultar el acuerdo' });
   }
@@ -418,7 +423,8 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
       },
       concertId
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al firmar acuerdo:', error);
     // Los DealError llevan mensajes pensados para el usuario; cualquier otro error (BD, red) no
     // se muestra tal cual a un visitante anónimo.
@@ -478,7 +484,8 @@ dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, a
       success: true,
       mensaje: `Copia del acuerdo enviada con éxito a ${cleanEmail}`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al reenviar email de acuerdo:', error);
     return res.status(500).json({ error: error.message || 'Error al enviar el correo' });
   }

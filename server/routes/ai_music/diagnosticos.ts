@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 /**
  * Tipos de error de los servicios de IA musical y diagnóstico de los errores de Replicate y Fal.ai (con reintentos de Replicate).
  */
@@ -308,7 +309,8 @@ export async function fetchReplicateWithRetry(
         continue;
       }
       return res;
-    } catch (netErr: any) {
+    } catch (netErrCapturado) {
+      const netErr = comoErrorCapturado(netErrCapturado);
       if (attempt <= maxRetries) {
         const waitSec = attempt * 2;
         console.warn(

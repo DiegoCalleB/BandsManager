@@ -41,6 +41,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_utils_setlistFeedback|server/utils/setlistFeedback.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_lineaTiempoAcordes|src/utils/lineaTiempoAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_songTitleMatch|src/utils/songTitleMatch.ts]] *(Layer: #service, Domain: #repertoire)*

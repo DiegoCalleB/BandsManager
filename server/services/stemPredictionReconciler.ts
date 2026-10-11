@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { getSupabase } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface StemPredictionJob {
   id: string;
@@ -152,7 +153,8 @@ export async function recordPredictionJob(job: Partial<StemPredictionJob> & { id
         result_stems_map: job.result_stems_map || null,
         error_message: job.error_message || null
       }, { onConflict: "id" });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Stem Predictions] Aviso guardando job de predicción ${job.id}:`, err?.message || err);
   }
 }
@@ -227,13 +229,15 @@ export async function reconcileStaleStemPredictions(staleMinutes = 5): Promise<n
             reconciledCount++;
           }
         }
-      } catch (jobErr: any) {
+      } catch (jobErrCapturado) {
+        const jobErr = comoErrorCapturado(jobErrCapturado);
         console.warn(`[Prediction Reconciler] Error reconciliando job ${job.id}:`, jobErr?.message || jobErr);
       }
     }
 
     return reconciledCount;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Prediction Reconciler] Fallo en ejecución del reconciliador:", err?.message || err);
     return 0;
   }

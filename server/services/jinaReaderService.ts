@@ -11,6 +11,7 @@
  */
 
 import { esUrlExternaSegura } from "../utils/ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface JinaExtractedVenueData {
   url: string;
@@ -217,7 +218,8 @@ export async function scrapeVenueWithJina(targetUrl: string): Promise<JinaExtrac
       rider_specs: riderSpecs,
       resumen_markdown: markdown.slice(0, 600)
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     if (err?.name === "AbortError") {
       console.log(`[JinaReader] Timeout (9s) consultando ${targetUrl}`);
     } else {

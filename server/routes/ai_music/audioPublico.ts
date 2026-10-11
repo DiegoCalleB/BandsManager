@@ -7,6 +7,7 @@ import { descargarBufferSeguro, fetchUrlExternaSegura } from '../../utils/ssrfGu
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
 import { esHostDeAlmacenamientoConfiable } from './formatoStems.js';
 import { transcodeBufferToMp3 } from './cacheStems.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Garantiza que cualquier URL o ruta local de audio se convierta en una URL HTTPS pública
@@ -250,7 +251,8 @@ export async function ensureCompressedAudioForReplicate(
       );
       return uploadedUrl;
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(
       '[Replicate Input Compression] No se pudo comprimir el audio de entrada, se usa el original:',
       err?.message || err

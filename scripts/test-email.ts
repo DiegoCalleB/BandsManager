@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { comoErrorCapturado } from '../src/utils/errorCapturado';
 
 const toEmail = process.argv[2];
 const apiKey = process.argv[3] || process.env.RESEND_API_KEY;
@@ -48,7 +49,8 @@ async function test() {
       console.log("✅ ¡EMAIL ENVIADO CON ÉXITO! ID de Resend:", result.data?.id);
       console.log("📩 Revisa la bandeja de entrada (y la de Spam por si acaso) de", toEmail);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("❌ Error inesperado:", err?.message || err);
   }
 }

@@ -1,4 +1,5 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // lead_messages es la tabla real de historial de conversación por lead - el Agente Enviador ya
 // escribe aquí cada pitch enviado de verdad (server/services/agentEngine.ts). El Lector y el
@@ -48,7 +49,8 @@ export async function dbGetLeadMessages(leadId: string, bandId: string): Promise
       return [];
     }
     return data || [];
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query lead_messages from Supabase:", err?.message || err);
     return [];
   }
@@ -139,7 +141,8 @@ export async function dbCreateLeadMessage(msg: {
       return { ...fallback.data, ...payload };
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not insert lead message into Supabase:", err?.message || err);
     return payload as DbLeadMessage;
   }

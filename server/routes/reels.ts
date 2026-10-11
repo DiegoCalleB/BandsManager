@@ -69,6 +69,7 @@ import {
   type TranscriptItem,
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -118,7 +119,8 @@ async function perfilDeLaPeticion(req: express.Request): Promise<BandProfile> {
       getEpk: (id) => dbGetEpkConfig(id),
       getState: () => loadState()
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Reels] No se pudo cargar el perfil de la banda:", err?.message || err);
     return emptyBandProfile();
   }
@@ -214,7 +216,8 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
         });
         meta.isLive = Boolean(detalles.isLiveContent && !detalles.lengthSeconds);
       }
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       // YouTube bloquea getBasicInfo desde IPs de datacenter. No es fatal: con la Data API
       // o yt-dlp por delante, aquí ya casi nunca hace falta llegar.
       console.log(`[Reels] getBasicInfo no disponible para ${videoId}:`, e?.message || e);
@@ -380,7 +383,8 @@ async function descargarVideo(
       quality: "highest",
       filter: (format: any) => format.container === "mp4" && Boolean(format.hasVideo) && Boolean(format.hasAudio)
     });
-  } catch (primerError: any) {
+  } catch (primerErrorCapturado) {
+    const primerError = comoErrorCapturado(primerErrorCapturado);
     console.warn("[Reels] Formato mp4 con audio+vídeo no disponible, probando 'highest':", primerError?.message || primerError);
     await borrarSiExiste([destino]);
     await descargar({ quality: "highest" });
@@ -425,7 +429,8 @@ router.get("/youtube-meta", requireAuth, async (req, res) => {
         durationKnown: meta.duration > 0
       }
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Reels youtube-meta]", err);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
   }
@@ -462,7 +467,8 @@ router.get("/reel-analysis", requireAuth, async (req, res) => {
       notice: guardado.notice || undefined,
       videoMeta: guardado.video_meta || {}
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[GET /reel-analysis]", err);
     return res.status(500).json({ success: false, error: "No se pudo recuperar el análisis guardado." });
   }
@@ -562,7 +568,8 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
             `${ventanasVirales.length} tramos candidatos (tipo: ${tipoContenido}).`
           );
         }
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.log("[Reels] Análisis de señales omitido:", e?.message || e);
       }
     }
@@ -686,7 +693,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
             .filter(Boolean)
             .slice(0, 5);
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Highlights AI] Fallo llamando al modelo:", err?.message || err);
         avisoIa = "La IA no respondió a tiempo; se muestran cortes automáticos que puedes ajustar a mano.";
       }
@@ -782,7 +790,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         transcriptLines: transcript.length
       }
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Highlights AI Route Error]:", err);
     return res.status(500).json({
       success: false,
@@ -939,7 +948,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
         // espacio ya mismo en vez de esperar a la barrida periódica.
         await borrarSiExiste([rutaSalida]);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
     }
 
@@ -970,7 +980,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     }
 
     return res.json(respuesta);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Video Cut Error]:", err);
     await borrarSiExiste([rutaSalida]);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
@@ -1116,7 +1127,8 @@ Responde ÚNICAMENTE con JSON válido:
 
           return res.json({ success: true, generatedByAI: true, analysis });
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Reanalyze Clip AI Error]:", err?.message || err);
       }
     }
@@ -1143,7 +1155,8 @@ Responde ÚNICAMENTE con JSON válido:
       notice: "La IA no estaba disponible: este análisis es una plantilla basada en tus notas y en el rango del corte.",
       analysis: analysisRespaldo
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Reanalyze Clip Route Error]:", err);
     return res.status(500).json({
       success: false,
@@ -1245,7 +1258,8 @@ Responde ÚNICAMENTE con JSON válido:
             }
           });
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[AI Hook Doctor Error]:", err?.message || err);
       }
     }
@@ -1269,7 +1283,8 @@ Responde ÚNICAMENTE con JSON válido:
       generatedByAI: false,
       diagnosis: fallbackDiagnosis
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[AI Hook Doctor Route Error]:", err);
     return res.status(500).json({
       success: false,

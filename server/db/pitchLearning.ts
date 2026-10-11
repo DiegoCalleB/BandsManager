@@ -6,6 +6,7 @@ import { generateUnifiedAI } from "../ai.js";
 import { dbUpdateBandDnaExpresion } from "./bands.js";
 import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { autoIndexPitchOnSuccess } from "../services/pitchVectorStore.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface PitchHumanEditRecord {
   id: string;
@@ -101,7 +102,8 @@ export async function dbRecordPitchHumanEdit(record: {
     });
 
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error recording pitch human edit:", err?.message || err);
     return false;
   }
@@ -233,7 +235,8 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
     }
 
     return [];
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not load dynamic few-shot examples from Supabase:", err?.message || err);
     return [];
   }
@@ -264,18 +267,19 @@ export async function dbGetReplyFewShotThreads(bandId: string, category: string,
 
     // Prioriza los hilos con resultado positivo y con más de un intercambio (más útiles para
     // aprender a gestionar una respuesta real que uno con un único mensaje).
-    const sorted = [...data].sort((a: any, b: any) => {
+    const sorted = [...data].sort((a, b) => {
       const scoreA = (a.resultado === "positiva" ? 10 : 0) + (Array.isArray(a.mensajes) ? a.mensajes.length : 0);
       const scoreB = (b.resultado === "positiva" ? 10 : 0) + (Array.isArray(b.mensajes) ? b.mensajes.length : 0);
       return scoreB - scoreA;
     });
 
-    return sorted.slice(0, maxThreads).map((t: any) => ({
+    return sorted.slice(0, maxThreads).map((t) => ({
       titulo: t.titulo,
       resultado: t.resultado,
       mensajes: Array.isArray(t.mensajes) ? t.mensajes : []
     }));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not load reply few-shot threads from Supabase:", err?.message || err);
     return [];
   }
@@ -456,7 +460,8 @@ export async function triggerSelfRefiningToneDnaBackground(bandId: string, categ
     const edits = recentEdits.filter((e) => mapLeadTipoToTemplateCategory(e.tipo_entidad) === targetCategory);
 
     await refineToneDnaForCategory(cleanId, targetCategory, edits, esRespuesta);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice during triggerSelfRefiningToneDnaBackground:", err?.message || err);
   }
 }
@@ -491,7 +496,8 @@ export async function refineAllToneDnaCategoriesForBand(bandId: string): Promise
       }
     }
     return refinedCategories;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice during refineAllToneDnaCategoriesForBand:", err?.message || err);
     return refinedCategories;
   }
@@ -550,7 +556,8 @@ export async function dbRecordCampaignPitchTraining(record: {
     });
 
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error recording campaign pitch training:", err?.message || err);
     return false;
   }
@@ -563,14 +570,17 @@ async function fetchCampaignTrainingExamples(cleanId: string, campaignId: string
   const sb = getSupabase();
   const { data } = await sb
     .from("campaign_pitch_training")
-    .select("borrador_ia, texto_aprobado, texto_aprobado as nombre_sala, texto_aprobado as tipo_entidad")
+    // Antes pedía `texto_aprobado as nombre_sala`, que no es sintaxis de PostgREST (es `alias:columna`):
+    // la consulta fallaba entera y la campaña nunca aprendía de sus ediciones. Los dos campos de
+    // contexto se rellenan con constantes más abajo, así que no hace falta pedirlos.
+    .select("borrador_ia, texto_aprobado")
     .eq("band_id", cleanId)
     .eq("campaign_id", campaignId)
     .eq("tuvo_edicion", true)
     .order("fecha_aprobacion", { ascending: false })
     .limit(20);
 
-  return (data || []).map((row: any) => ({
+  return (data || []).map((row) => ({
     borrador_ia: row.borrador_ia,
     texto_aprobado: row.texto_aprobado,
     nombre_sala: "Campaña",
@@ -659,7 +669,8 @@ export async function triggerCampaignToneRefinement(bandId: string, campaignId: 
     if (edits.length >= 2) {
       await refineCampaignToneDna(cleanId, campaignId, edits);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice during triggerCampaignToneRefinement:", err?.message || err);
   }
 }
@@ -684,7 +695,8 @@ export async function trainCampaignToneDnaManually(bandId: string, campaignId: s
       success: true,
       message: `ADN de tono de la campaña entrenado exitosamente con ${edits.length} ejemplos.`
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return {
       success: false,
       message: `Error al entrenar ADN de tono: ${err?.message || err}`

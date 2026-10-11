@@ -15,6 +15,7 @@ import {
   inicioDeMes,
   type EstadoJob,
 } from "../utils/colaLetras.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const ACTIVOS: EstadoJob[] = ["pendiente", "en_curso"];
 
@@ -101,7 +102,7 @@ export async function encolarLetras(
   if (!candidatas.length) return { encoladas: 0, porTope: 0, limiteMes };
 
   const { data: existentes } = await sb.from("letras_jobs").select("song_id, estado").eq("band_id", bandId).in("song_id", candidatas.map((s) => s.id));
-  const estadoPrevio = new Map((existentes ?? []).map((e: any) => [e.song_id as string, e.estado as EstadoJob]));
+  const estadoPrevio = new Map((existentes ?? []).map((e) => [e.song_id as string, e.estado as EstadoJob]));
   // Hecha/en cola/en curso: nada que hacer. Terminadas sin éxito: solo si lo pide una persona.
   const nuevas = candidatas.filter((s) => {
     const previo = estadoPrevio.get(s.id);
@@ -132,7 +133,8 @@ export async function encolarLetraAutomatica(bandId: string, songId: string): Pr
   try {
     if (!(await dbGetLetrasAuto(bandId))) return;
     await encolarLetras(bandId, { songIds: [songId], origen: "auto" });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[colaLetras] No se pudo encolar la letra automática:", err?.message || err);
   }
 }
@@ -191,7 +193,8 @@ async function procesarJob(job: { id: string; band_id: string; song_id: string; 
     const r = await ejecutarLetraSincronizada(job.song_id, job.band_id, { sobrescribir: false });
     status = r.status;
     error = status === 200 ? undefined : String(r.body?.error || "").slice(0, 300);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     error = String(err?.message || err).slice(0, 300);
   }
   const { estado, reintentar } = estadoTrasEjecucion(status, intentos);

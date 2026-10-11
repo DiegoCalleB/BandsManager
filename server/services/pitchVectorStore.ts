@@ -7,6 +7,7 @@
 
 import { getAiClient } from "../ai.js";
 import { getSupabase } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 
 export type RAGContentType = 
@@ -216,7 +217,8 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
     // Fallback determinista si los modelos de Google están en cuota 429
     const fallbackVector = generateDeterministicFallbackEmbedding(cleanText);
     return fallbackVector;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     const msg = err?.message || String(err);
     if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota")) {
       console.warn("[PitchVectorStore] API embedding en límite de cuota (429). Usando vector semántico local resiliente.");
@@ -271,7 +273,8 @@ ${entry.texto_pitch}`;
     }
 
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PitchVectorStore] Error storing pitch vector:", err?.message || err);
     return false;
   }
@@ -321,7 +324,8 @@ export async function findSemanticallySimilarPitches(params: {
       return data as SimilarPitchResult[];
     }
     return [];
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PitchVectorStore] Exception finding similar pitches:", err?.message || err);
     return [];
   }

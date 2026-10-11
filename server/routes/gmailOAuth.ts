@@ -20,6 +20,7 @@ import { getTargetBandId } from "../utils/bandAccess.js";
 import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -139,7 +140,8 @@ router.get("/authorize-url", requireAuth, (req, res) => {
     url.searchParams.set("scope", GMAIL_OAUTH_SCOPE);
     url.searchParams.set("state", state);
     res.json({ url: url.toString() });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error generando URL de autorización de Gmail OAuth:", err);
     res.status(500).json({ error: err.message || "Error al generar la URL de autorización." });
   }
@@ -251,7 +253,8 @@ router.get("/callback", async (req, res) => {
     }
 
     res.redirect("/?gmail_oauth=conectado");
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en el callback de Gmail OAuth:", err);
     redirigirConError("error_interno");
   }
@@ -263,7 +266,8 @@ router.get("/status", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const account = await dbGetBandGmailOAuth(bandId);
     res.json(toSafeGmailOAuthResponse(account));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error consultando estado de Gmail OAuth:", err);
     res.status(500).json({ error: "Error al consultar el estado de conexión de Gmail." });
   }
@@ -291,7 +295,8 @@ router.post("/disconnect", requireAuth, async (req, res) => {
       }
     }
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error desconectando Gmail OAuth:", err);
     res.status(500).json({ error: "Error al desconectar la cuenta de Gmail." });
   }

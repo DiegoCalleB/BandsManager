@@ -14,6 +14,7 @@ import {
   Mail
 } from 'lucide-react';
 import { ShowIcon } from '../components/ui/ShowIcon';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface DealData {
   token: string;
@@ -114,7 +115,8 @@ export const PublicDealView: React.FC = () => {
         if (data.deal.estado === 'confirmado') {
           setSignSuccess(true);
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         setError(err.message || 'Error al conectar con el servidor');
       } finally {
         setLoading(false);
@@ -222,7 +224,8 @@ export const PublicDealView: React.FC = () => {
       // La respuesta de /sign es parcial (solo estado y firma): se fusiona, no se sustituye
       setDeal(prev => (prev ? { ...prev, ...data.deal } : data.deal));
       setSignSuccess(true);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       alert(err.message || 'Error al confirmar el acuerdo');
     } finally {
       setIsSigning(false);
@@ -251,7 +254,8 @@ export const PublicDealView: React.FC = () => {
         throw new Error(data.error || 'Error al enviar el correo');
       }
       setResendStatus(data.mensaje || '¡Copia enviada correctamente!');
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       alert(err.message || 'Error al enviar el correo');
     } finally {
       setResending(false);

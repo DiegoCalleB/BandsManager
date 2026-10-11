@@ -25,6 +25,7 @@ import { findSemanticallySimilarPitches } from "./pitchVectorStore.js";
 import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
 import { getBandOperationalContext } from "./agentIntelligence.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface PitchContextResult {
   bandDna: BandDnaProfile;
@@ -370,7 +371,7 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
 
     // Auditar heurísticamente y evaluar/refinar con LLM-as-a-Judge cada propuesta
     const auditedProposals: MultiPitchProposalWithAudit[] = await Promise.all(
-      (rawProposals || []).map(async (p: any) => {
+      (rawProposals || []).map(async (p) => {
         const rawText = p.text || "";
         const evaluation = await evaluateAndRefinePitch({
           pitchText: rawText,
@@ -443,7 +444,8 @@ ${lead.pitch_generado ? `\n(Versión previa de referencia: "${sanitizeExternalTe
       if (unifiedRes && unifiedRes.text) {
         newPitchText = unifiedRes.text.trim();
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn(`[PitchEngine] Fallo ${provider || "AI"} al regenerar pitch, utilizando motor local de ADN:`, aiErr.message);
     }
 

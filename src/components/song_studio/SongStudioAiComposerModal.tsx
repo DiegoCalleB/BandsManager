@@ -5,6 +5,7 @@ import { Song, SongAudioIdea } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface SongStudioAiComposerModalProps {
   isOpen: boolean;
@@ -55,7 +56,8 @@ export const SongStudioAiComposerModal: React.FC<SongStudioAiComposerModalProps>
       } else {
         alert(data?.error || 'Error al generar idea con IA.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error generating AI arrangement:', err);
       alert(err?.message || 'Error de conexión al generar arreglo con IA.');
     } finally {

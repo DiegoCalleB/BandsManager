@@ -14,6 +14,7 @@ import {
   BookingCampaign,
 } from '../types';
 import { api, ApiError } from '../services/api';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
   {
@@ -218,7 +219,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
         bandId: resolvedBandId,
       };
       await api.updateEpkConfig(payload);
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       // Antes este error se quedaba solo en consola: el cambio se pintaba igual (estado
       // optimista de arriba) aunque el guardado real hubiera fallado, así que parecía
       // persistir hasta el siguiente refresco/redeploy, cuando volvía a como estaba. Al
@@ -239,7 +241,8 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     try {
       await api.updateLead(id, updatedFields, expectedStatus);
       return true;
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       if (e instanceof ApiError && e.status === 409) {
         alert(e.message);
       } else {

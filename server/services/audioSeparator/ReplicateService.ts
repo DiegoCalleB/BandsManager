@@ -6,6 +6,7 @@ import {
 } from './AudioSeparatorService.js';
 import { processDemucsStems } from '../../routes/ai_music/motorDemucs.js';
 import { processMdx23Stems } from '../../routes/ai_music/motorMdx23.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Adaptador concreto para los modelos de separación en Replicate (HT-Demucs v4 y MVSEP-MDX23).
@@ -83,7 +84,8 @@ export class ReplicateService extends AudioSeparatorService {
         actionAdvice: mdxRes?.actionAdvice || demucsRes?.actionAdvice || 'Prueba con LALAL.AI o Motor DSP local.',
         httpStatus: 502
       };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       return {
         success: false,
         provider: 'replicate',
@@ -117,7 +119,8 @@ export class ReplicateService extends AudioSeparatorService {
         return { jobId, status: 'failed', error: pred.error || 'Replicate prediction failed' };
       }
       return { jobId, status: 'processing', progressPct: pred.status === 'starting' ? 25 : 75 };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       return { jobId, status: 'failed', error: err?.message || String(err) };
     }
   }

@@ -7,6 +7,7 @@ import { dbGetLeadById, dbUpsertLead } from "../../db.js";
 import { refineAllToneDnaCategoriesForBand } from "../../db/pitchLearning.js";
 import { PitchEngine } from "../../services/pitchEngine.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -24,7 +25,8 @@ router.post("/leads/audit-pitch", requireAuth, (req, res) => {
       audit,
       sanitized
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     return res.status(500).json({ success: false, error: error?.message || "Error al auditar el pitch." });
   }
 });
@@ -52,7 +54,8 @@ router.post("/leads/:id/generate-multi-pitch", requireAuth, async (req, res) => 
       leadName: result.leadName,
       proposals: result.proposals
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/generate-multi-pitch:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al generar propuestas multi-IA." });
   }
@@ -86,7 +89,8 @@ router.post("/leads/:id/regenerate-pitch", requireAuth, async (req, res) => {
       audit: result.audit,
       feedbackLog: result.feedbackLog
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/regenerate-pitch:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al regenerar el pitch." });
   }
@@ -145,7 +149,8 @@ router.post("/leads/:id/revert-pitch", requireAuth, async (req, res) => {
       revertedLogId: targetLog.id,
       lead
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/revert-pitch:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al deshacer el entrenamiento del pitch." });
   }
@@ -164,7 +169,8 @@ router.post("/leads/train-tone-dna", requireAuth, async (req, res) => {
         ? `Auto-refinamiento ejecutado para: ${refinedCategories.join(", ")}.`
         : "Todavía no hay suficientes correcciones (mínimo 2 por categoría) para refinar el ADN de tono."
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in POST /api/leads/train-tone-dna:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al refinar el ADN de tono." });
   }

@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../utils/errorCapturado';
 /**
  * weatherService.ts
  * Servicio meteorológico para conciertos y ensayos en directo.
@@ -400,7 +401,8 @@ export async function fetchEventWeather(params: {
 
     weatherCache.set(cacheKey, { timestamp: Date.now(), data: resultData });
     return resultData;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn('[Weather] Error fetching forecast:', err);
     return {
       status: 'error',

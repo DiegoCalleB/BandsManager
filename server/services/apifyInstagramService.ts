@@ -14,6 +14,7 @@
  */
 
 import { classifySpanishPhones, extractRelevantEmails } from "./jinaReaderService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface InstagramEnrichedData {
   username: string;
@@ -98,7 +99,8 @@ export async function scrapeInstagramVenueProfile(
           };
         }
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn(`[ApifyInstagram] Error en llamada a Apify para @${username}:`, err?.message || err);
     }
   }

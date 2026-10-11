@@ -14,6 +14,7 @@ import {
 import { api } from "../services/api";
 import { BandEmailAccountStatus } from "../types";
 import { Input } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface EmailAccountConfigProps {
   bandId: string;
@@ -157,7 +158,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     try {
       const { url } = await api.getGmailOAuthAuthorizeUrl();
       window.location.href = url;
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error iniciando la conexión de Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -178,7 +180,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         message: "Gmail desconectado.",
       });
       setTimeout(() => setGmailOAuthFeedback(null), 4000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error desconectando Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -275,7 +278,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           "¡Cuenta de email conectada! El Agente Enviador ya puede usarla para enviar y leer correo real.",
       });
       setTimeout(() => setFeedback(null), 5000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error guardando la cuenta de email:", err);
       setFeedback({
         type: "error",

@@ -4,6 +4,7 @@ import { hasModuleAccess } from '../../utils/planPermissions';
 import { apiFetch } from '../../utils/api';
 import { X, Bell, Mail, ShieldCheck, Sliders, Lock, Sparkles, Clock, Save, Check } from 'lucide-react';
 import { Button, IconButton, Input } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface AlertSettingsModalProps {
   isOpen: boolean;
@@ -190,7 +191,8 @@ export const AlertSettingsModal: React.FC<AlertSettingsModalProps> = ({
       } else {
         setTestDigestResult(`Error: ${data?.error || 'No se pudo enviar'}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setTestDigestResult(err?.message || 'Error de conexión.');
     } finally {
       setSendingTestDigest(false);

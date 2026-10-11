@@ -8,6 +8,7 @@
 
 import { generateUnifiedAI } from "../ai.js";
 import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit, getRecommendedWordRange } from "../utils/promptSafety.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface JudgeEvaluation {
   score: number; // 0 a 100
@@ -198,7 +199,8 @@ Responde ÚNICAMENTE con el texto final corregido:`;
         audit: refinedAudit
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PitchJudge] Notice during LLM refinement:", err?.message || err);
   }
 

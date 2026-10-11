@@ -30,6 +30,7 @@ _Sin dependencias salientes directas._
 - [[server_services_audioSeparator_AudioSeparatorFactory|server/services/audioSeparator/AudioSeparatorFactory.ts]] *(from #service)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(from #service)*
 - [[server_services_audioSeparator_index|server/services/audioSeparator/index.ts]] *(from #service)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(from #service)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
 
 ---

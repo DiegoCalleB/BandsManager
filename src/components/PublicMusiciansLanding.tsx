@@ -12,6 +12,7 @@ import {
   MusiciansLandingDict,
 } from "../i18n/musiciansTranslations";
 import { Input, Select, Textarea } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 export const PublicMusiciansLanding: React.FC = () => {
   // 1. Detect language from query params or browser
@@ -130,7 +131,8 @@ export const PublicMusiciansLanding: React.FC = () => {
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error enviando registro de músico:", err);
       setErrorMessage(err?.message || t.errorGeneric);
     } finally {

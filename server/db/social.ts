@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export async function dbGetSocialPosts(bandId: string) {
   const sb = getSupabase();
@@ -84,7 +85,8 @@ export async function dbGetBandSocialAccounts(bandId: string) {
       return [];
     }
     return (data || []).filter((a: any) => cleanBandId(a.band_id) === cleanId);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Social DB] Error getting social accounts: ${err.message}`);
     return [];
   }
@@ -118,7 +120,8 @@ export async function dbUpsertBandSocialAccount(account: any, bandId: string) {
       return payload;
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Social DB] Fallback returning payload for band_social_accounts: ${err.message}`);
     return payload;
   }

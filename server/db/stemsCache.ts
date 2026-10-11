@@ -3,6 +3,7 @@
 
 import { getSupabase } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface StemsCacheRecord {
   bandId: string;
@@ -83,7 +84,8 @@ export async function getStemsFromPersistentCache(
       console.log(`[Stems Cache] 💾 L2 Supabase HIT para ${cacheKey}. Hidratada caché en memoria.`);
       return record;
     }
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     // Si la tabla no está creada aún o hay fallo de red, se degrada a L1 sin bloquear
     console.warn(`[Stems Cache] Aviso consultando L2 Supabase: ${dbErr?.message || dbErr}`);
   }
@@ -296,7 +298,8 @@ export async function acquireStemsSeparationLock(
       reason: 'distributed_lock_failed',
       error: insertErr.message
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[STEM_DISTRIBUTED_LOCK_FAILED_ALERT] 🚨 ALERTA CRÍTICA: Excepción en reserva distribuida para ${cacheKey}: ${err?.message || err}`);
     return {
       acquired: false,
@@ -375,7 +378,8 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
     }
 
     console.log(`[Stems Cache] 💾 Guardado persistente L2 en Supabase para ${cacheKey}`);
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     console.error(`[STEM_CACHE_PERSIST_FAILED_ALERT] 🚨 No se pudo persistir el resultado en Supabase para ${cacheKey} (L1 en memoria preservada, pero se perderá si el proceso reinicia): ${dbErr?.message || dbErr}`);
   }
 }
@@ -464,7 +468,8 @@ export async function getStemsJobStatus(
         return { state: 'pending' };
       }
     }
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     console.warn(`[Stems Cache] Aviso consultando estado de job ${cacheKey}: ${dbErr?.message || dbErr}`);
   }
 

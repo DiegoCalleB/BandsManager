@@ -21,6 +21,7 @@ MULTI-SOURCE VENUE & FESTIVAL DISCOVERY SERVICE
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_musicbrainzVenueService|server/services/musicbrainzVenueService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

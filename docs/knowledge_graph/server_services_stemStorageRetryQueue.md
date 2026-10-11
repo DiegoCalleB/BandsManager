@@ -20,6 +20,7 @@ Exporta: PendingStemUpload, stemStorageRetryManager.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_stem_storage_retry_queue|tabla stem_storage_retry_queue]] *(Layer: #schema, Domain: #repertoire)*
 
 ---

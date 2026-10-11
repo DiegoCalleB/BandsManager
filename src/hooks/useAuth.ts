@@ -6,6 +6,7 @@ import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
 import { atribuirReferidoPendiente } from '../utils/referido';
 import { atribuirReferido } from '../utils/promocionApi';
 import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Sesión del usuario: estado persistido en `localStorage` (`bandmanager_user`), login y logout. */
 export function useAuth() {
@@ -68,7 +69,8 @@ export function useAuth() {
         }
         setIsLoggedIn(true);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn('Silent session refresh skipped or offline:', err?.message || err);
       // Un 401 real solo puede venir de una respuesta del servidor, así que nunca coincide con
       // estar offline (sin red, el fetch falla con un error de red, no con un 401). Antes ambas

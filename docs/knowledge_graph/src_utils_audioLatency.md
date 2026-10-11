@@ -13,12 +13,12 @@ tags: ["service", "repertoire", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Utility for ultra-low latency & clean audio capture, WebAudio DSP filtering,
+Exporta: StudioAudioStreamOptions, getLowLatencyAudioStream, CleanPipelineResult, createCleanAudioRecordingPipeline, trimAudioBlobLatency, normalizeAudioBuffer, cleanAudioBlobOffline, getSystemAudioLatencyMs.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

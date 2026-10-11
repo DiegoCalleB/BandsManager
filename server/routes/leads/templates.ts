@@ -34,6 +34,7 @@ import {
   isValidEmailSyntax,
   isValidEmailCached,
 } from '../../utils/emailValidator.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -57,7 +58,8 @@ router.get('/templates', requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const templates = await dbGetCategoryTemplates(bandId);
     res.json({ success: true, templates });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in GET /api/templates:', error);
     res
       .status(500)
@@ -130,7 +132,8 @@ router.post('/templates/save', requireAuth, async (req, res) => {
         console.warn('Notice en auto-optimización de plantilla:', err);
       }
     );
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/save:', error);
     res.status(500).json({
       success: false,
@@ -231,7 +234,8 @@ INSTRUCCIONES CLAVE:
       subject: previewSubject,
       body: previewBody,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/preview:', error);
     res.status(500).json({
       success: false,
@@ -329,7 +333,8 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
       isSimulated: result.isSimulated,
       updatedTemplates,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/optimize:', error);
     res.status(500).json({
       success: false,
@@ -429,7 +434,8 @@ router.post('/templates/generate-all', requireAuth, async (req, res) => {
       message:
         'Se han generado y adaptado con éxito las 7 plantillas maestras y sus pautas de IA.',
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/generate-all:', error);
     res
       .status(500)
@@ -490,7 +496,8 @@ ${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"
       subject: subject || `Propuesta de concierto: ${bandDna.bandName}`,
       body: result.text.trim(),
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/preview:', error);
     res.status(500).json({
       success: false,
@@ -631,7 +638,8 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, stats });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in GET /api/templates/stats:', error);
     res.status(500).json({
       success: false,
@@ -668,7 +676,8 @@ router.post('/templates/reset', requireAuth, async (req, res) => {
       message: `Plantilla de ${category} restaurada a valores por defecto.`,
       template: defaultTemplate,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/reset:', error);
     res.status(500).json({
       success: false,

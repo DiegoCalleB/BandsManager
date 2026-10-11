@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 export interface MusicBrainzPlace {
   id: string;
   nombre: string;
@@ -58,7 +59,8 @@ export async function searchMusicBrainzVenues(params: {
           fuente: "MusicBrainz"
         };
       });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[MusicBrainz API] Excepción al consultar salas en ${ciudad}:`, err?.message);
     return [];
   }

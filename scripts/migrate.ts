@@ -13,6 +13,7 @@
 import path from 'node:path';
 import { Client } from 'pg';
 import { aplicarMigraciones, MigracionFallida, type Ejecutor } from '../server/migrations/runner';
+import { comoErrorCapturado } from '../src/utils/errorCapturado';
 
 const url = process.env.DATABASE_URL || process.env.SUPABASE_DB_URL;
 const soloComprobar = process.argv.includes('--check');
@@ -42,7 +43,8 @@ async function main() {
   let cliente: Client;
   try {
     cliente = await conectar();
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn(`[migraciones] No se pudo conectar a la base de datos (${e?.message || e}). Se arranca sin comprobar migraciones.`);
     return;
   }

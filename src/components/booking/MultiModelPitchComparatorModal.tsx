@@ -5,6 +5,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { X, Sparkles, CheckCircle2, Copy, RefreshCw, Loader2, Layers, ArrowRight, ShieldCheck, Check, AlertCircle, Coins, Calculator } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface MultiModelPitchComparatorModalProps {
   isOpen: boolean;
@@ -122,7 +123,8 @@ export const MultiModelPitchComparatorModal: React.FC<
       if (res.success && res.proposals) {
         setProposals(res.proposals);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error generating multi-model pitch:", err);
       alert(
         `Error al generar propuestas con los modelos seleccionados: ${err.message || "Verifica la conexión"}`,

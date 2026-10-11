@@ -9,6 +9,7 @@ import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { searchSetlistFmVenues } from "./multiSourceVenueDiscoveryService.js";
 import { getVenuesFromBandsintown } from "./bandsintownVenueService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface SimilarVenueMatch {
   nombre_sala: string;
@@ -156,7 +157,8 @@ Devuelve máximo ${limit} recintos REALES y recomendados.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Similar Bands Matcher] Error en radar IA:", err?.message);
   }
 

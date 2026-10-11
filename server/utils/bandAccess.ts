@@ -16,7 +16,7 @@ import { isValidEmail } from "./email.js";
  * Extraído de server/routes/repertorio.ts, que ya lo hacía bien, para no tener dos criterios.
  */
 export function getTargetBandId(req: express.Request): string {
-  const user = (req as any).user;
+  const user = req.user;
   const userBandId = user?.band_id;
   const headerBandId = (
     req.headers["x-band-id"] ||
@@ -67,7 +67,7 @@ export function bandaSolicitada(req: express.Request): string | undefined {
 
 /** ¿Puede este usuario escribir en la banda indicada? Para rutas que deben fallar, no degradar. */
 export function puedeEscribirEnBanda(req: express.Request, bandId: string): boolean {
-  const user = (req as any).user;
+  const user = req.user;
   if (!user) return false;
   if (user.role === "admin") return true;
   const limpio = (bandId || "").replace(/^(band|reg)-/, "");
@@ -88,7 +88,7 @@ export function puedeEscribirEnBanda(req: express.Request, bandId: string): bool
  * helpers de arriba no miran.
  */
 export function bandaDelAgente(req: express.Request, params: any): string | null {
-  const user = (req as any).user;
+  const user = req.user;
   const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
 
   // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en una banda por defecto, así
@@ -118,7 +118,7 @@ export function mismaBanda(a?: string, b?: string): boolean {
  * email, así que mandar el de otra persona bastaba para acabar operando sobre SU suscripción.
  */
 export function bandaFacturableDelUsuario(req: express.Request): { bandId: string; email?: string } | null {
-  const user = (req as any).user;
+  const user = req.user;
   if (!user) return null;
 
   const pedida = bandaSolicitada(req);

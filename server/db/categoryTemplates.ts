@@ -1,6 +1,7 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import { DEFAULT_CATEGORY_TEMPLATES, type CategoryTemplateConfig } from "../promptsManager.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
  * Persistencia por banda de las plantillas de email + pautas de IA por categoría de lead
@@ -46,7 +47,8 @@ export async function dbGetCategoryTemplates(bandId: string): Promise<Record<str
       if (row.category) result[row.category] = normalizeFromDb(row);
     }
     return result;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query category templates from Supabase:", err?.message || err);
     return result;
   }
@@ -90,7 +92,8 @@ export async function dbUpsertCategoryTemplate(
       return normalizeFromDb(payload);
     }
     return normalizeFromDb(data || payload);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to persist category template to Supabase:", err?.message || err);
     return normalizeFromDb(payload);
   }

@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 export interface OpenDataCulturalEvent {
   id: string;
   titulo: string;
@@ -57,7 +58,8 @@ export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCultu
         fuente: "Datos Abiertos Madrid"
       };
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[OpenData Madrid] Error al parsear eventos culturales:", err?.message);
     return [];
   }

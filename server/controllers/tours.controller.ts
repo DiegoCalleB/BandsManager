@@ -2,12 +2,13 @@ import { Request, Response } from "express";
 import { loadState, saveState } from "../state.js";
 import { Tour } from "../../src/types.js";
 import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
     // Las 4 rutas de este controller están detrás de requireAuth, así que band_id nunca debería
     // faltar; si falta es un bug de sesión, no un caso a tolerar cayendo en una banda por defecto.
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -26,7 +27,7 @@ export const toursController = {
   },
 
   async createTour(req: Request, res: Response) {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -43,13 +44,14 @@ export const toursController = {
       saveState(state);
 
       res.json(saved);
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       res.status(500).json({ error: error.message || "Error al crear la gira" });
     }
   },
 
   async updateTour(req: Request, res: Response) {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -64,13 +66,14 @@ export const toursController = {
       saveState(state);
 
       res.json(saved);
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       res.status(500).json({ error: error.message || "Error al actualizar la gira" });
     }
   },
 
   async deleteTour(req: Request, res: Response) {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -84,7 +87,8 @@ export const toursController = {
       saveState(state);
 
       res.json({ success: true });
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       res.status(500).json({ error: error.message || "Error al eliminar la gira" });
     }
   }

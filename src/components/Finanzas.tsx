@@ -15,6 +15,7 @@ import { Button, Input, Select, Textarea } from './ui';
 
 import { formatEur } from '../utils/formatMoney';
 import { Tabs } from "./ui/Tabs";
+import { comoErrorCapturado } from '../utils/errorCapturado';
 interface FinanzasProps {
   colors: ThemeColors;
   payments: Payment[];
@@ -88,7 +89,8 @@ export default function Finanzas({
           data?.error || "Error al intentar sincronizar las finanzas.",
         );
       }
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       console.error("Error synchronizing finances:", error);
       setSyncError(error?.message || "Error de conexión con el servidor.");
     } finally {

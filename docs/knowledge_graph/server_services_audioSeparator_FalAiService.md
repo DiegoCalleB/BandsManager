@@ -21,6 +21,7 @@ Exporta: ACTIVE_FAL_KEY, FalAiService.
 - [[ext_fal|fal.ai]] *(Layer: #external, Domain: #system)*
 - [[server_routes_ai_music_audioPublico|server/routes/ai_music/audioPublico.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

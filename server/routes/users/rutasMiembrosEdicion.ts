@@ -14,7 +14,7 @@ const router = express.Router();
 // Update user (Leader or self)
 router.put('/users/:id', requireAuth, async (req, res) => {
   const { id } = req.params;
-  const loggedUser = (req as any).user;
+  const loggedUser = req.user;
   if (loggedUser.role !== 'leader' && loggedUser.id !== id) {
     return res.status(403).json({
       error: 'Acceso denegado. Solo puedes modificar tu propia cuenta.',
@@ -227,7 +227,7 @@ router.put('/users/:id', requireAuth, async (req, res) => {
 // Delete user (Leader operation)
 router.delete('/users/:id', requireAuth, requireLeader, async (req, res) => {
   const { id } = req.params;
-  const targetBandId = (req as any).user?.band_id;
+  const targetBandId = req.user?.band_id;
   if (!targetBandId) {
     return res
       .status(401)

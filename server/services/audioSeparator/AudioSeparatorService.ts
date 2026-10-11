@@ -4,6 +4,7 @@ import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/stor
 import { descargarBufferSeguro } from '../../utils/ssrfGuard.js';
 import { stemStorageRetryManager } from '../stemStorageRetryQueue.js';
 import { transcodeBufferToMp3 } from '../../routes/ai_music/cacheStems.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 export interface AudioSeparatorOptions {
   bandId?: string;
@@ -128,7 +129,8 @@ export abstract class AudioSeparatorService {
                 }
               }
             }
-          } catch (err: any) {
+          } catch (errCapturado) {
+            const err = comoErrorCapturado(errCapturado);
             console.warn(`[AudioSeparator] Error descargando o persistiendo stem ${instrumentKey}:`, err?.message || err);
           }
         }

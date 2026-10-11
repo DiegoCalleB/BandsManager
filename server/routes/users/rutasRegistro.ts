@@ -10,6 +10,7 @@ import { sendWelcomeEmail } from '../../services/transactionalEmail.js';
 import { registroRateLimiter } from '../../middleware/rateLimiter.js';
 import { generateUniqueSlugId, slugify } from '../../utils/slug.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -261,7 +262,8 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
           `[Registro] Aviso: No se pudo entregar el email de bienvenida a ${cleanEmail}: ${emailResult.error}`
         );
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(
         `[Registro] Error al enviar email de bienvenida a ${cleanEmail}:`,
         err?.message || err
@@ -300,7 +302,8 @@ const handleGetRegisteredBands = async (req: any, res: any) => {
         );
 
     res.json({ registeredBands: filteredBands });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching registered bands:', err);
     res
       .status(500)

@@ -19,6 +19,7 @@ Exporta: SharePayload, shareViaWebShare, shareViaWhatsApp, shareViaEmail, copyTo
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_whatsapp|src/utils/whatsapp.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -2,6 +2,7 @@ import { Song, SetlistItem } from "../../src/types.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { tonalidadesSonFiables } from "../../src/utils/harmonicAnalysis.js";
 import { BandStyleContext, buildBandStyleContextBlock } from "./bandStyleContext.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type PerfectSetlistActionType = 'reorder' | 'remove_song' | 'add_song' | 'add_block';
 
@@ -80,7 +81,8 @@ export function parseRawPerfectSetlistPlanAIResponse(
   let raw: { summary?: string; actions?: RawAction[] };
   try {
     raw = JSON.parse(jsonStr);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     throw new Error(`Formato JSON inválido de la IA en plan de repertorio: ${err?.message || 'error de parseo'}`, { cause: err });
   }
 
@@ -309,7 +311,8 @@ REGLAS IMPORTANTES:
 
     const text = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
     return parseRawPerfectSetlistPlanAIResponse(text, items, songsById, catalogCandidates);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PerfectSetlistPlanner] Error en IA o cuota agotada, activando plan heurístico de respaldo:", err?.message || err);
     return generateRuleBasedFallbackPlan(items, songsById, catalogCandidates);
   }

@@ -212,7 +212,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <Select size="sm" aria-label="Tipo de Acuerdo"
               value={dealType}
-              onChange={(e: any) => setDealType(e.target.value)}
+              onChange={(e) => setDealType(e.target.value as typeof dealType)}
               wrapperClassName="w-full"
             >
               <option value="taquilla">Taquilla (%)</option>

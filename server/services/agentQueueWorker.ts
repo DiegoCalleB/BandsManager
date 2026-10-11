@@ -16,6 +16,7 @@ import { syncActiveCampaignsRadar } from "./campaignRadarScheduler.js";
 import { reconcileStaleStemPredictions } from "./stemPredictionReconciler.js";
 import { captureError } from "../utils/errorTracking.js";
 import { bandHasEmailConfigured } from "./agentScheduler.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(2, 6)}`;
 // En reposo, duerme por defecto 24 horas (o configurable con AGENT_WORKER_POLL_MS).
@@ -91,7 +92,8 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     await completeAgentJob(job.id, { ...resultDetails, duration_ms: durationMs });
     console.log(`[AgentQueueWorker] [${WORKER_ID}] Trabajo ${job.id} completado con éxito en ${durationMs}ms.`);
 
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     const durationMs = Date.now() - startTime;
     const errorMsg = err?.message || String(err);
 

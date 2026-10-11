@@ -7,6 +7,7 @@ import { getTargetBandId } from '../../utils/bandAccess.js';
 import { getStemsJobStatus } from '../../db/stemsCache.js';
 import { ACTIVE_FAL_KEY } from '../../services/audioSeparator/FalAiService.js';
 import { buildFormattedStems } from './formatoStems.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
     try {
       bandId = getTargetBandId(req);
     } catch {
-      bandId = (req as any).user?.band_id || 'sin-banda';
+      bandId = req.user?.band_id || 'sin-banda';
     }
 
     const jobStatus = await getStemsJobStatus(bandId, songHash, engine);
@@ -96,7 +97,8 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
     }
 
     return res.json({ success: true, status: 'not_found' });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error consultando estado de separación de stems:', err);
     return res
       .status(500)
@@ -110,7 +112,7 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
  */
 router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) => {
   // Cada llamada lanza una petición de pago a fal.ai: solo el admin de la plataforma.
-  if ((req as any).user?.role !== 'admin') {
+  if (req.user?.role !== 'admin') {
     return res.status(403).json({ error: 'Acceso denegado.' });
   }
   try {
@@ -158,7 +160,8 @@ router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) =
       falStatus = falRes.status;
       falStatusText = falRes.statusText;
       falBody = await falRes.json().catch(async () => await falRes.text());
-    } catch (netErr: any) {
+    } catch (netErrCapturado) {
+      const netErr = comoErrorCapturado(netErrCapturado);
       falStatusText = `Error de red: ${netErr.message}`;
     }
 
@@ -174,7 +177,8 @@ router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) =
       isOk: falStatus === 200,
       falResponseSnippet: falBody,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err.message });
   }
 });

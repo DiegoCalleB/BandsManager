@@ -3,6 +3,7 @@ import { Sparkles, Heart, CheckCircle2, ShieldCheck, Mail, User, MapPin, Music }
 import { sanitizeConcertDisplayName } from "../utils/fanUtils";
 import { ShowIcon } from './ui/ShowIcon';
 import { Input } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 export const PublicFanCapture: React.FC = () => {
   const [nombre, setNombre] = useState("");
@@ -95,7 +96,8 @@ export const PublicFanCapture: React.FC = () => {
 
       setIncentivoData(data.incentivo);
       setSubmitted(true);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error submitting fan form:", err);
       setLoading(false);
       setErrorMsg("No se pudo conectar con el servidor. Inténtalo de nuevo.");

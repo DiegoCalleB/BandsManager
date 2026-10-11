@@ -8,6 +8,7 @@ import { apiFetch } from "../../utils/api";
 import { analizarAcordesDelAudio } from "../../utils/analisisAcordesCliente";
 import { IconButton, Input, Select } from '../ui';
 import '../../services/sesionLocal';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface BulkAlbumAudioUploaderModalProps {
   isOpen: boolean;
@@ -544,7 +545,8 @@ export function BulkAlbumAudioUploaderModal({
             }
           }
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.error(`Error uploading track ${item.fileName}:`, err);
         setItems((prev) =>
           prev.map((it, idx) =>

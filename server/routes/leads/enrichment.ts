@@ -27,6 +27,7 @@ import { calculateBookingWindow } from "../../services/bookingWindowService.js";
 import { detectLocalEventsAndClashes } from "../../services/localEventsClashService.js";
 import { findLocalPressAndMedia } from "../../services/localPressMediaService.js";
 import { findLocalBandPartners } from "../../services/localBandPartnersService.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -318,7 +319,8 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
         console.warn(`[AILookup] Rejecting Gemini match '${parsed.nombre_oficial}' for searched venue '${nombre_sala}'`);
         parsed = {};
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[AILookup Warning] Gemini lookup failed (quota or network):", err?.message || String(err));
     }
   }
@@ -379,7 +381,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
       if (finalIcon) state.leads[idx].icono = finalIcon;
       if (finalWebsite) state.leads[idx].website = finalWebsite;
       saveState(state);
-      const userBandId = (req as any).user?.band_id ;
+      const userBandId = req.user?.band_id ;
       await dbUpsertLead(state.leads[idx], userBandId);
     }
   }
@@ -433,7 +435,8 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
       },
       message: `✨ Datos de "${lead.nombre_sala}" completados y verificados con éxito.`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("[Scout Enriquecedor] Error enriqueciendo lead:", error);
     return res.status(500).json({
       success: false,
@@ -489,7 +492,8 @@ router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
       results,
       leads: freshState.leads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /leads/enrich-all-band:", error);
     return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer todos los leads" });
   }
@@ -562,7 +566,8 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch (searchErrCapturado) {
+      const searchErr = comoErrorCapturado(searchErrCapturado);
       if (!isSpendCapOrQuotaError(searchErr)) {
         console.warn("[ScrapeContact Warning] Google search grounding failed, falling back to standard model call:", searchErr?.message || searchErr);
         response = await generateContentWithFallback(client, {
@@ -601,7 +606,8 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
       isFallback: false,
       data: parsedData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in Gemini Search Grounding for contact scraping:", error);
     return res.status(500).json({ error: "Fallo al realizar búsqueda con IA", details: String(error) });
   }
@@ -722,7 +728,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       saveState(state);
 
       // Async write back to Supabase
-      const userBandId = (req as any).user?.band_id ;
+      const userBandId = req.user?.band_id ;
       (async () => {
         for (const updatedLead of modifiedLeads) {
           try {
@@ -740,7 +746,8 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       totalLeads: leads.length,
       leads: state.leads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/enrich-addresses:", error);
     res.status(500).json({ error: error?.message || "Error al autocompletar las direcciones." });
   }
@@ -803,7 +810,8 @@ router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, async (
       lead: saved || updatedLead,
       extracted: jinaData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-jina:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar con Jina Reader" });
   }
@@ -853,7 +861,8 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
       lead: saved || updatedLead,
       radar
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/detect-dates:", error);
     res.status(500).json({ success: false, error: error?.message || "Error detectando disponibilidad de fechas" });
   }
@@ -928,7 +937,8 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
       totalOccupiedDates,
       updatedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/detect-all-dates:", error);
     res.status(500).json({ success: false, error: error?.message || "Error en el escaneo masivo de fechas" });
   }
@@ -1029,7 +1039,8 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
       updatedLeads,
       resumen: `Se han actualizado ${updatedLeads.length} recintos de la campaña "${targetCampaign?.name || 'Activa'}" contrastando datos con Ticketmaster, Wegow y Bandsintown. ${totalAvailableForCampaign} recintos coinciden con las fechas de la campaña.`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/batch-enrich-campaign:", error);
     return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer masivamente los leads de la campaña" });
   }
@@ -1080,7 +1091,8 @@ router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAut
       lead: saved,
       data: igData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-instagram:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar perfil de Instagram" });
   }
@@ -1123,7 +1135,8 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: spotifyDemand });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-spotify:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al analizar audiencia de Spotify" });
   }
@@ -1162,7 +1175,8 @@ router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], re
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: placesInfo });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-google-places:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al obtener datos de Google Places" });
   }
@@ -1199,7 +1213,8 @@ router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, a
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: setlistInfo });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-setlist:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al obtener historial de Setlist.fm" });
   }
@@ -1237,7 +1252,8 @@ router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, async
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: verification });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/verify-email:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al verificar entregabilidad del correo" });
   }
@@ -1418,7 +1434,8 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
         band_partners: updates.local_band_partners_info
       }
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-all-apis:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar enriquecimiento multi-API" });
   }
@@ -1454,7 +1471,8 @@ router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAut
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, logistics: updatedLead.tour_logistics });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1484,7 +1502,8 @@ router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, asy
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, social: updatedLead.social_engagement });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1548,7 +1567,8 @@ router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], re
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, financial: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1571,7 +1591,8 @@ router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], 
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, booking_window: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1598,7 +1619,8 @@ router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requ
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, local_events: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1625,7 +1647,8 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, press_media: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1652,7 +1675,8 @@ router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireA
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, band_partners: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });

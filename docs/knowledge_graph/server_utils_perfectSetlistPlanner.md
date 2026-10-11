@@ -21,6 +21,7 @@ Exporta: PerfectSetlistActionType, BLOCK_TYPES, PerfectSetlistAction, PerfectSet
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandStyleContext|server/utils/bandStyleContext.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_harmonicAnalysis|src/utils/harmonicAnalysis.ts]] *(Layer: #service, Domain: #system)*
 
 ---

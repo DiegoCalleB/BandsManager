@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, PublicoSilhouette } from '../ui';
 import { apiFetch } from '../../utils/api';
 import type { ApoyableDeal } from '../../hooks/useApoyableDeals';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface DealSupportCardProps {
   deal: ApoyableDeal;
@@ -31,7 +32,8 @@ export const DealSupportCard: React.FC<DealSupportCardProps> = ({ deal, onDismis
       });
       if (!data?.url) throw new Error('No se ha podido abrir el pago.');
       window.location.href = data.url;
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err?.message || 'No se ha podido abrir el pago. Inténtalo en un rato.');
       setEnviando(false);
     }

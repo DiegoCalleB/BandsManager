@@ -19,6 +19,7 @@ Exporta: useGmailIntegration.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_gmail|src/utils/gmail.ts]] *(Layer: #service, Domain: #system)*
 
 ---

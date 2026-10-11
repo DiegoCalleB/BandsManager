@@ -21,6 +21,7 @@ Cola de trabajos de los agentes (`agent_jobs_queue`): estadísticas, métricas, 
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(Layer: #agent, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

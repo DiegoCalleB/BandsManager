@@ -37,6 +37,7 @@ Exporta: EPKManager.
 - [[src_utils_bandHash|src/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(Layer: #service, Domain: #epk)*
 - [[src_utils_epkVerificacion|src/utils/epkVerificacion.ts]] *(Layer: #service, Domain: #epk)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 
 ---

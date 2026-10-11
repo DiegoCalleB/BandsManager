@@ -8,6 +8,7 @@ import { ModalPortal } from "./common/ModalPortal";
 import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: any[]) => void;
@@ -166,7 +167,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       setActivateUsername(data.username || data.email?.split("@")[0] || "");
       setActivateBandsFound(data.bands || []);
       setActivateStep(2);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al comprobar invitación");
     } finally {
       setLoading(false);
@@ -209,7 +211,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al activar tu cuenta");
     } finally {
       setLoading(false);
@@ -256,7 +259,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al conectar con el servidor.");
     } finally {
       setLoading(false);
@@ -291,7 +295,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       setResetMaskedEmail(data.emailMasked);
       setResetSuccessMsg(data.message || "Código de recuperación generado.");
       setResetStep(2);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al solicitar el restablecimiento");
     } finally {
       setLoading(false);
@@ -340,7 +345,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       setResetSuccessMsg(
         "¡Contraseña restablecida con éxito! Ya puedes iniciar sesión.",
       );
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al confirmar la nueva contraseña");
     } finally {
       setLoading(false);
@@ -394,7 +400,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
       }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al registrar cuenta:", err);
       setError(
         err.message ||
@@ -467,7 +474,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         createdAt: new Date().toISOString(),
       };
       onLoginSuccess(fallbackUser, googleUser.accessToken || "");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al iniciar sesión con Google:", err);
       setError(err.message || "Error al conectar con Google OAuth.");
     } finally {

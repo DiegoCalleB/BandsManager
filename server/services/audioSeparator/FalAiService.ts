@@ -5,6 +5,7 @@ import {
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
 import { ensurePublicAudioUrl } from '../../routes/ai_music/audioPublico.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Adaptador para Fal.ai (fal-ai/demucs) en GPU A100.
@@ -293,7 +294,8 @@ export class FalAiService extends AudioSeparatorService {
         stemsMap: persistentStemsMap,
         timingBreakdown
       };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('[Fal.ai Service] Error:', err);
       const isLocked = err?.isLocked || String(err?.message || '').includes('TOP_UP') || String(err?.message || '').includes('locked');
       const isRateLimit = err?.isRateLimit || err?.status === 429 || String(err?.message || '').includes('429');

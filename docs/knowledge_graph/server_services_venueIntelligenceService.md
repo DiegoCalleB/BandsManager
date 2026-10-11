@@ -19,6 +19,7 @@ VENUE & ARTIST INTELLIGENCE SERVICE (SERPER + SPOTIFY)
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

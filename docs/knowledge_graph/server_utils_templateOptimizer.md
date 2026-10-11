@@ -23,6 +23,7 @@ Exporta: CATEGORY_LABELS, AUTO_OPTIMIZE_FEEDBACK_THRESHOLD, countUnoptimizedFeed
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

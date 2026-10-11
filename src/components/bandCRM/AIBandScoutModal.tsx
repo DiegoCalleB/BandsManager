@@ -14,6 +14,7 @@ import { BandContact, BookingCampaign } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface AIBandScoutModalProps {
   isOpen: boolean;
@@ -82,7 +83,8 @@ export function AIBandScoutModal({
   // Auto-select all by default
   setSelectedBands(new Set(response.bands.map((_: any, i: number) => i)));
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al buscar bandas con IA.");
     } finally {
       setIsSearching(false);

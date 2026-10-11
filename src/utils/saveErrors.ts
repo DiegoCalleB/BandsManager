@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from './errorCapturado';
 /**
  * Aviso global de guardados fallidos.
  *
@@ -78,7 +79,8 @@ export function instalarAvisoDeGuardados(
     let respuesta: Response;
     try {
       respuesta = await original(entrada as any, init);
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       if (error?.name !== 'AbortError') avisar(0);
       throw error;
     }

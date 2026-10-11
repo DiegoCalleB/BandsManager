@@ -18,7 +18,7 @@ Auditoría de guardado a nivel de base de datos, sobre el esquema real cargado e
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -19,6 +19,7 @@ APIFY INSTAGRAM VENUE SCRAPER
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

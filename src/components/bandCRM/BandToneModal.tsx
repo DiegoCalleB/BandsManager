@@ -26,6 +26,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input, Textarea } from '../ui';
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";
 import { ShowIcon } from '../ui/ShowIcon';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -258,7 +259,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
             : "No se pudo entrenar el ADN de tono."),
       );
       if (res.success) await onRefreshLearnedRules?.();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error entrenando el ADN de tono:", err);
       setTrainMessage(
         err?.message || "Error de conexión al entrenar el ADN de tono.",
@@ -320,7 +322,8 @@ export const BandToneModal: React.FC<BandToneModalProps> = ({
       } else {
         setSaveError(json?.error || "No se pudo guardar la edición.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error guardando edición del ADN de tono:", err);
       setSaveError(err?.message || "Error de conexión al guardar.");
     } finally {

@@ -6,6 +6,7 @@ import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -297,7 +298,8 @@ export function ExcelImportModal({
         setSelectedSheet(firstSheet);
         parseSheet(wb, firstSheet);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al leer archivo Excel:", err);
       alert(
         "Error al leer el archivo. Asegúrate de que es un archivo .xlsx, .xls o .csv válido.",
@@ -694,7 +696,8 @@ export function ExcelImportModal({
       } else {
         alert(res.error || "Error al importar los contactos.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error importing Excel leads:", err);
       alert(err.message || "Error de conexión al importar contactos.");
     } finally {

@@ -6,6 +6,7 @@ import { loadState, saveState, requireAuth } from '../../state.js';
 import { dbUpsertUser, normalizePlan } from '../../db.js';
 import { puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const { band_id } = req.body;
       if (!band_id) {
         return res.status(400).json({ error: 'band_id es requerido' });
@@ -30,8 +31,8 @@ router.post(
       const state = loadState();
       const cleanTarget = band_id.replace(/^(band|reg)-/, '');
       const reqEmail = (
-        (req as any).user?.email ||
-        (req as any).user?.username ||
+        req.user?.email ||
+        req.user?.username ||
         ''
       ).toLowerCase();
       const user = state.users?.find(
@@ -114,7 +115,8 @@ router.post(
       const availableBands = await buildAvailableBandsForUser(state, user);
       const { passwordHash, salt, ...safeUser } = user;
       res.json({ success: true, user: safeUser, availableBands });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       res.status(500).json({
         error: err.message || 'Error al establecer la banda principal',
       });
@@ -128,7 +130,7 @@ router.post(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const { band_order } = req.body;
       if (!Array.isArray(band_order)) {
         return res
@@ -168,7 +170,8 @@ router.post(
       const availableBands = await buildAvailableBandsForUser(state, user);
       const { passwordHash, salt, ...safeUser } = user;
       res.json({ success: true, user: safeUser, availableBands });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error setting band order:', err);
       res
         .status(500)
@@ -183,13 +186,13 @@ router.post(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const { calendar_default_months, ...otherPrefs } = req.body || {};
 
       const state = loadState();
       const reqEmail = (
-        (req as any).user?.email ||
-        (req as any).user?.username ||
+        req.user?.email ||
+        req.user?.username ||
         ''
       ).toLowerCase();
       const user = state.users?.find(
@@ -240,7 +243,8 @@ router.post(
 
       const { passwordHash, salt, ...safeUser } = user;
       res.json({ success: true, ui_preferences: updatedPrefs, user: safeUser });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error saving ui-preferences:', err);
       res.status(500).json({
         error: err.message || 'Error al guardar preferencias de usuario',
@@ -255,11 +259,11 @@ router.get(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const state = loadState();
       const reqEmail = (
-        (req as any).user?.email ||
-        (req as any).user?.username ||
+        req.user?.email ||
+        req.user?.username ||
         ''
       ).toLowerCase();
       const user = state.users?.find(
@@ -273,7 +277,8 @@ router.get(
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
       res.json({ success: true, ui_preferences: user.ui_preferences || {} });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       res
         .status(500)
         .json({ error: err.message || 'Error al obtener preferencias' });

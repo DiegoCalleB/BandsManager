@@ -53,6 +53,7 @@ import {
   getBandOperationalContext,
   evaluateIncomingTactics,
 } from '../services/agentIntelligence.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -92,7 +93,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     return res.status(400).json({ error: 'Falta el nombre del agente.' });
   }
 
-  const usuarioDisparador = (req as any).user;
+  const usuarioDisparador = req.user;
   const targetBandId = bandaDelAgente(req, params);
   if (!targetBandId) {
     return res
@@ -151,7 +152,8 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         duracion_ms,
         detalles: logData.detalles || {},
       });
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       console.warn(
         '[AUDIT LOG ERROR] No se pudo guardar el registro de auditoría en Supabase:',
         e?.message || e
@@ -178,7 +180,8 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         message: result.message,
         results: result.results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error al ejecutar el Agente Enviador:', err);
       await logAgentExecution({
         band_id: targetBandId,
@@ -380,7 +383,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         message: successMsg,
         results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Redactor Supabase:', err);
       return res.status(500).json({
         success: false,
@@ -420,7 +424,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       const existingNames = new Set<string>();
       const existingWebsites = new Set<string>();
 
-      (existingLeads || []).forEach((l: any) => {
+      (existingLeads || []).forEach((l) => {
         if (l.place_id) existingPlaceIds.add(l.place_id);
         if (l.nombre_sala) existingNames.add(normalizeVenueName(l.nombre_sala));
         if (l.website) {
@@ -523,7 +527,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
               }
             }
           }
-        } catch (pErr: any) {
+        } catch (pErrCapturado) {
+          const pErr = comoErrorCapturado(pErrCapturado);
           console.warn(
             '[Agente Scout] Advertencia en Motor 1 Google Places:',
             pErr?.message || pErr
@@ -572,7 +577,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
               notas: `Descubierto por Agente Scout vía Serper Places en ${targetLoc}.`,
             });
           }
-        } catch (sErr: any) {
+        } catch (sErrCapturado) {
+          const sErr = comoErrorCapturado(sErrCapturado);
           console.warn(
             '[Agente Scout] Advertencia en Motor Serper Places:',
             sErr?.message || sErr
@@ -841,7 +847,8 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         message: successMsg,
         results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Scout Supabase:', err);
       return res.status(500).json({
         success: false,
@@ -885,7 +892,8 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         message: successMsg,
         results: resultado.leadsActualizados,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       const sinCuenta =
         err instanceof EmailAgentError && err.code === 'no_token';
       const mensaje = sinCuenta
@@ -963,7 +971,8 @@ router.post(
         message: result.message,
         results: result.results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en responder-hilo interno:', err);
       return res
         .status(500)
@@ -1001,7 +1010,8 @@ router.post('/agents/test-intel', requireAuth, async (req, res) => {
       },
       tacticalEvaluation: tacticalEval,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error en test-intel:', err);
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -1067,7 +1077,8 @@ router.get('/agent-runs', requireAuth, async (req, res) => {
       engine: 'Supabase Native Agent Engine',
       runs: [],
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching agent runs:', err);
     return res.json({
       configured: true,
@@ -1165,7 +1176,8 @@ router.get('/agent-runs/:runId/jobs', requireAuth, async (req, res) => {
         },
       ],
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching jobs from Supabase:', err);
     return res.status(500).json({
       success: false,
@@ -1214,7 +1226,8 @@ router.get('/agent-logs', requireAuth, async (req, res) => {
     const { data, error } = await query;
     if (error) throw error;
     res.json({ success: true, logs: data || [] });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error al obtener agent-logs:', err);
     res.status(500).json({ success: false, error: err.message, logs: [] });
   }
@@ -1228,7 +1241,7 @@ router.get('/agent-logs', requireAuth, async (req, res) => {
 router.post('/agent-logs', requireAuth, async (req, res) => {
   try {
     const sb = getSupabase();
-    const user = (req as any).user;
+    const user = req.user;
     const body = req.body || {};
     const bandId = getTargetBandId(req);
     const userEmail = user?.email || user?.username || '';
@@ -1261,7 +1274,8 @@ router.post('/agent-logs', requireAuth, async (req, res) => {
       .select();
     if (error) throw error;
     res.json({ success: true, log: data?.[0] || logEntry });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error al insertar en agent-logs:', err);
     res.status(500).json({ success: false, error: err.message });
   }
@@ -1274,7 +1288,7 @@ router.post('/agent-logs', requireAuth, async (req, res) => {
 // agrega datos de TODAS las bandas, no de una banda concreta.
 router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
   try {
-    const user = (req as any).user;
+    const user = req.user;
     if (user?.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -1308,7 +1322,8 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
     );
 
     res.json({ success: true, funnel: computeAgentFunnel(entradas) });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error calculando agent-funnel:', err);
     res.status(500).json({
       success: false,

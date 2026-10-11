@@ -26,6 +26,7 @@ Separación neuronal combinada: Replicate (MDX23 con caída a Demucs) y Fal.ai.
 - [[server_routes_ai_music_motorMdx23|server/routes/ai_music/motorMdx23.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_audioSeparator_FalAiService|server/services/audioSeparator/FalAiService.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

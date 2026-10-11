@@ -12,6 +12,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { searchMusicBrainzVenues } from "./musicbrainzVenueService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface DiscoveredVenue {
   nombre: string;
@@ -83,7 +84,8 @@ export async function searchTicketmasterVenues(
       telefono: v.boxOfficeInfo?.phoneNumberDetail || "",
       fiabilidad: "alta" as const
     }));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Ticketmaster API] Excepción al consultar:", err?.message);
     return [];
   }
@@ -132,7 +134,8 @@ export async function searchSetlistFmVenues(
       url_oficial: v.url || "",
       fiabilidad: "alta" as const
     }));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Setlist.fm API] Error de conexión:", err?.message);
     return [];
   }
@@ -195,7 +198,8 @@ export async function discoverVenuesMultiSource(params: {
         }
       });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[MultiSource Discovery] Error al consultar MusicBrainz:", err?.message);
   }
 
@@ -272,7 +276,8 @@ Devuelve máximo ${limit} recintos REALES y verificados en activo.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[MultiSource Discovery] Error en radar IA omnicanal:", err?.message);
   }
 

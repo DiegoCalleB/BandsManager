@@ -11,6 +11,7 @@ import { textOnColor } from '../utils/contrastText';
 import { apiFetch } from "../utils/api";
 import { Button, IconButton, Input, Select } from './ui';
 import { Tabs } from "./ui/Tabs";
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface UserManagementModalProps {
   currentUser: User;
@@ -73,7 +74,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
         onRefreshData();
       }
       setSuccessMsg("¡Logotipo de la banda actualizado con éxito!");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error uploading logo in UserManagementModal:", err);
       setError(err.message || "Error al subir el logo");
     } finally {
@@ -147,7 +149,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
       setNewInstrument("");
       onRefreshUsers();
       setActiveTab("list");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
@@ -182,7 +185,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
       setAssocInstrument("");
       onRefreshUsers();
       setActiveTab("list");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
@@ -208,7 +212,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
         `Rol cambiado a ${newRole === "leader" ? "Admin / Mánager" : "Miembro (Músico)"} para @${username}`,
       );
       onRefreshUsers();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al actualizar rol");
     } finally {
       setLoading(false);
@@ -235,7 +240,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
       setEditingUserId(null);
       setChangePasswordValue("");
       onRefreshUsers();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error en el servidor");
     } finally {
       setLoading(false);
@@ -260,7 +266,8 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
 
       setSuccessMsg(`Usuario @${username} eliminado correctamente.`);
       onRefreshUsers();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al eliminar");
     } finally {
       setLoading(false);

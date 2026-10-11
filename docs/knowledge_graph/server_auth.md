@@ -13,7 +13,7 @@ tags: ["security", "auth", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/auth`
 
 ## 📖 Descripción
-Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware, createCronOrAuthMiddleware.
+Exporta: ACTIVE_SESSIONS, hashPassword, verifyPassword, getSafeUsers, UsuarioDeSesion, getUserFromRequest, createAuthMiddleware, createLeaderMiddleware.
 
 ---
 

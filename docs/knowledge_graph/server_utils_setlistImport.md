@@ -21,6 +21,7 @@ Exporta: ParsedSetlistItemType, ParsedSetlistItem, ParsedSetlistResult, extractJ
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

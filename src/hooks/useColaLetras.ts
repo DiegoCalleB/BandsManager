@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiFetch } from "../utils/api";
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Estado de la cola de letras del servidor (espejo de `ResumenCola` en server/services/colaLetras.ts). */
 export interface ResumenColaLetras {
@@ -50,7 +51,8 @@ export function useColaLetras(alHacerseLetras: () => void) {
 
   const accion = async (fn: () => Promise<unknown>) => {
     setError(null);
-    try { await fn(); } catch (e: any) { setError(e?.message || "No se pudo completar."); }
+    try { await fn(); } catch (eCapturado) {
+                                         const e = comoErrorCapturado(eCapturado); setError(e?.message || "No se pudo completar."); }
     await refrescar();
   };
 

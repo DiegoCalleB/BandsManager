@@ -15,6 +15,7 @@ import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -509,7 +510,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
           tools: [{ functionDeclarations: chatFunctionDeclarations }]
         }
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       lastError = err;
     }
 
@@ -658,7 +660,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     parsed = sanearIdeasMelodicas(parsed);
     res.json(parsed);
 
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in Gemini API chat proxy:", error);
     res.json({
       text: `⚠️ **Aviso del Mánager Virtual AI:** Ocurrió un inconveniente al procesar tu consulta (${error?.message || error}). Por favor, vuelve a intentarlo.`,
@@ -683,7 +686,8 @@ router.post("/write-reels-copy", requireAuth, iaRateLimiter, async (req, res) =>
       getEpk: (id) => dbGetEpkConfig(id),
       getState: () => loadState()
     });
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[write-reels-copy] Sin perfil de banda:", e?.message || e);
   }
 

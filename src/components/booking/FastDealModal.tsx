@@ -16,6 +16,7 @@ const apoyoAproximado = (cache: number, pct: number) =>
 import { useApoyableDeals } from '../../hooks/useApoyableDeals';
 import { DealSupportCard } from './DealSupportCard';
 import { leerTokenDeSesion } from '../../services/sesionLocal';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface FastDealModalProps {
   isOpen: boolean;
@@ -168,7 +169,8 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
       if (onDealConfirmed) {
         onDealConfirmed();
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setErrorMsg(err.message || 'Error al crear la hoja de acuerdo');
     } finally {
       setIsSubmitting(false);
@@ -328,7 +330,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <label className="text-[11px] text-[var(--ink-2)] block mb-1">Forma de Pago</label>
                   <select
                     value={formaPago}
-                    onChange={(e: any) => setFormaPago(e.target.value)}
+                    onChange={(e) => setFormaPago(e.target.value as typeof formaPago)}
                     className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--hair)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
                   >
                     <option value="efectivo"><ShowIcon inline emoji="💵" />Efectivo al terminar (sobre)</option>

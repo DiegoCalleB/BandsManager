@@ -10,6 +10,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { scrapeVenueWithJina } from "./jinaReaderService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type EstadoCartelera = 
   | 'publicada_libre' 
@@ -213,7 +214,8 @@ export async function detectVenueEventsAndFreeDates(
         jinaSuccess = true;
         console.log(`[Venue Radar] ✓ Jina Reader extrajo ${jinaWebText.length} caracteres de la web oficial de ${cleanVenue}`);
       }
-    } catch (jinaErr: any) {
+    } catch (jinaErrCapturado) {
+      const jinaErr = comoErrorCapturado(jinaErrCapturado);
       console.warn(`[Venue Radar] Aviso al consultar web oficial con Jina Reader:`, jinaErr?.message || jinaErr);
     }
   }
@@ -441,7 +443,8 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
       is_campaign_active: isCampaignActive,
       success: true
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[VenueRadar] Error detectando fechas para "${cleanVenue}":`, err?.message || err);
     return {
       venue_name: cleanVenue,

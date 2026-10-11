@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import firebaseConfig from '../../firebase-applet-config.json';
 import { EmailMessage } from '../types';
+import { comoErrorCapturado } from './errorCapturado';
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -106,7 +107,8 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     saveTokenToStorage(credential.accessToken);
     return { user: result.user, accessToken: credential.accessToken };
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     const errCode = error?.code || '';
     const errMsg = String(error?.message || '').toLowerCase();
 

@@ -20,6 +20,7 @@ Exporta: TemplateCategory, useEmailTemplates.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

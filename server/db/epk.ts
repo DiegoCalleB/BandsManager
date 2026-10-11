@@ -148,7 +148,7 @@ export async function dbGetEpkLogosMap(
       .select('band_id, logo_url')
       .in('band_id', candidateIds);
     if (error) throw error;
-    (data || []).forEach((row: any) => {
+    (data || []).forEach((row) => {
       const clean = (row.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -174,7 +174,7 @@ export async function dbGetEpkLogosMap(
             candidateIds.map((id) => `id.eq.${id}`).join(',')
         );
       if (error) throw error;
-      (data || []).forEach((row: any) => {
+      (data || []).forEach((row) => {
         const cleanBid = (row.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase()

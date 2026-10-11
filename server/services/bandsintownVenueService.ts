@@ -1,5 +1,6 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface BandsintownVenueEvent {
   nombre_sala: string;
@@ -56,7 +57,8 @@ export async function getVenuesFromBandsintown(params: {
           }
         }
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn(`[Bandsintown API] Error consultando eventos para ${artistName}:`, err?.message);
     }
   }
@@ -108,7 +110,8 @@ Devuelve máximo ${limit} salas o recintos REALES.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Bandsintown Radar] Error en radar IA de ${artistName}:`, err?.message);
   }
 

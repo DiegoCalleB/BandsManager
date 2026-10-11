@@ -13,6 +13,7 @@ import { analisisAcordesEnCurso } from "../utils/bloqueoOido.js";
 import { pistasDeCancion } from "../../src/utils/irisTracks.js";
 import { getAudioSnippetPath } from "../routes/concert_to_album.js";
 import { dbGetSongs, dbUpsertSong } from "../db.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface OpcionesLetra {
   sobrescribir?: boolean;
@@ -35,7 +36,8 @@ export async function ejecutarLetraSincronizada(
     const respuesta = await transcribirYGuardar(id, userBandId, clave, sobrescribir, idioma);
     status = respuesta.status;
     return respuesta;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en letra-sincronizada:", err);
     status = 500;
     return { status, body: { error: err?.message || "No se pudo procesar la letra." } };
@@ -66,7 +68,7 @@ async function transcribirYGuardar(
 
   avanzarProgreso(clave, "voz", "Buscando la pista de voz aislada (si no hay, se usa la mezcla)…");
   const urlVoz = pistasDeCancion(song as any)
-      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+      .find((p) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
   const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
   const urlLetra: string | undefined = urlVoz || urlMezcla;
   if (!urlLetra) {
@@ -94,7 +96,8 @@ async function transcribirYGuardar(
       // Para APIs que reciben el fichero (OpenAI): mp3 mono recortado, descargado con la guardia SSRF.
       archivoLocal: () => getAudioSnippetPath({ audioUrl: urlLetra, allowSyntheticFallback: false, maxSeconds: 600 }),
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
     return { status: 502, body: { error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` } };
   }

@@ -30,6 +30,7 @@ Exporta: PracticeModePanel.
 - [[src_utils_bucleAB|src/utils/bucleAB.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_clicMetronomo|src/utils/clicMetronomo.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---

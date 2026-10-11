@@ -4,6 +4,7 @@ import { Lead } from '../../../types';
 import { Button, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
 import { MultiModelPitchComparatorModal } from '../MultiModelPitchComparatorModal';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
 interface VenuePitchWorkspaceProps {
   lead: Lead;
@@ -89,7 +90,8 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       } else {
         setDraftError(res.error || 'Error al regenerar con IA');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setDraftError(err.message || 'Error de conexión con el agente');
     } finally {
       setIsRegenerating(false);
@@ -129,7 +131,8 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       } else if (leadResult?.error || res.message) {
         setDraftError(leadResult?.error || res.message);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setDraftError(err.message || 'Error al despachar el correo');
     } finally {
       setIsCreatingDraft(false);

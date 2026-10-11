@@ -4,6 +4,7 @@ import { ModalPortal } from "../common/ModalPortal";
 import { Song, ThemeColors } from "../../types";
 import { Download, Copy, Check, X, FileSpreadsheet, Music, FileText, Code, Printer, Archive, Loader2, AlertCircle } from "lucide-react";
 import { IconButton, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface ExportAlbumSongsModalProps {
   isOpen: boolean;
@@ -440,7 +441,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       URL.revokeObjectURL(downloadUrl);
 
       setZipProgress({ current: 0, total: 0, status: "" });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al generar archivo ZIP:", err);
       setZipError(err?.message || "Error al empaquetar el disco en ZIP.");
     } finally {

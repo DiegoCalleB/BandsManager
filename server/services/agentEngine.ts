@@ -12,6 +12,7 @@ import { crearBorradorGmailApi, tieneGmailOAuthConectado, comprobarBorradorEnvia
 import { dbGetEpkConfig } from "../db/epk.js";
 import { buildServerEmailHtml } from "../utils/emailTemplate.js";
 import { getBandDnaProfile, buildIndexableSubjectLine } from "../utils/bandDna.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export async function logAgentExecution(logData: {
   band_id: string;
@@ -44,7 +45,8 @@ export async function logAgentExecution(logData: {
       duracion_ms: logData.duracion_ms,
       detalles: logData.detalles || {}
     });
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[AUDIT LOG ERROR] No se pudo guardar el registro de auditoría en Supabase:", e?.message || e);
   }
 }
@@ -368,7 +370,8 @@ export async function runEnviadorAgent(opts: {
       if (errMensaje) console.warn(`[Enviador] Correo enviado, pero no se registró en lead_messages (${errMensaje.message}).`);
 
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, email_contacto: emailContacto, estado_anterior: lead.estado, estado_nuevo: nextState, fecha_envio: nowIso, status: "enviado" });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       const isIdentityIssue = err instanceof EmailAgentError && (err.code === "no_token" || err.code === "identity_mismatch");
 
       // Registrar si el fallo fue por "usuario no existe" (invalid_recipient)
@@ -463,7 +466,8 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     let resultado: { existe: boolean; status: number; messageId?: string; cuerpo?: string };
     try {
       resultado = await comprobarBorradorEnviadoConDetalle(bandId, lead.gmail_draft_id);
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       // Un fallo puntual comprobando (token caducado, red) no debe marcar nada como enviado por
       // error - se reintenta en el siguiente tick. Pero SÍ queda registrado en el resultado, para
       // no confundir "no se pudo comprobar" con "se comprobó y sigue existiendo".
@@ -482,7 +486,8 @@ export async function comprobarBorradoresGmailEnviados(bandId: string): Promise<
     let enviado: { messageId: string } | null;
     try {
       enviado = await buscarMensajeEnviadoA(bandId, lead.email_contacto || "");
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       errores.push({ leadId: lead.id, draftId: lead.gmail_draft_id, error: e?.message || String(e) });
       continue;
     }

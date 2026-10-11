@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 /**
  * Transcripción de la letra con un modelo de voz (Whisper en Replicate) y tiempos.
  *
@@ -347,7 +348,8 @@ export async function transcribirLetra(
       const ruta = await opciones.archivoLocal();
       if (!ruta) throw new Error('no se pudo preparar el audio para subirlo');
       return await transcribirConOpenAI(ruta, claveOpenAI, opciones.idioma);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       fallos.push(`openai: ${String(err?.message || err).slice(0, 220)}`);
       console.warn('[Transcripción] OpenAI falló:', String(err?.message || err).slice(0, 300));
     }
@@ -369,7 +371,8 @@ export async function transcribirLetra(
   for (const modelo of modelosWhisper()) {
     try {
       return await intentarModelo(modelo, token, audioUrl, opciones.idioma);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       fallos.push(`${modelo}: ${String(err?.message || err).slice(0, 220)}`);
       console.warn(`[Transcripción] ${modelo} falló:`, String(err?.message || err).slice(0, 300));
     }

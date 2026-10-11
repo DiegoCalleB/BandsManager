@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(from #service)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(from #service)*
 
 ---
 

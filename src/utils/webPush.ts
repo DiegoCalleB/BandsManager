@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from './errorCapturado';
 /**
  * Helper para notificaciones push nativas del navegador y dispositivos móviles (PWA)
  */
@@ -51,7 +52,8 @@ export async function triggerNativeMobileNotification(
     });
 
     return { success: true, status: 'Notificación de sistema mostrada' };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error al lanzar notificación nativa:', err);
     return { success: false, status: err?.message || 'Error al lanzar notificación' };
   }

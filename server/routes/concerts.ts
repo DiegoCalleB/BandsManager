@@ -24,6 +24,7 @@ import {
   dbGetLeads
 } from "../db.js";
 import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calendarConflictService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -56,10 +57,11 @@ function firmaCoincide(esperada: string, recibida: unknown): boolean {
 router.get("/calendar/conflicts", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const userId = (req as any).user?.id;
+    const userId = req.user?.id;
     const conflicts = await choquesVisiblesPara(userBandId, userId || "");
     res.json({ success: true, conflicts });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error calculando choques de calendario:", err);
     res.status(500).json({ error: err?.message || "Error al calcular choques de calendario." });
   }
@@ -84,7 +86,8 @@ router.put("/rehearsals/:id", requireAuth, async (req, res) => {
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
     programarRevisionDeBanda(userBandId);
     res.json({ success: true, rehearsal: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating rehearsal:", err);
     res.status(500).json({ error: err?.message || "Error al actualizar ensayo." });
   }
@@ -106,7 +109,8 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
     programarRevisionDeBanda(userBandId);
     res.json({ success: true, rehearsal: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating rehearsal:", err);
     res.status(500).json({ error: err?.message || "Error al crear ensayo." });
   }
@@ -139,7 +143,8 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
       saveState(state);
     }
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting rehearsal:", err);
     res.status(500).json({ error: err?.message || "Error al eliminar ensayo." });
   }
@@ -164,7 +169,8 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
     programarRevisionDeBanda(userBandId);
     res.json({ success: true, concert: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating concert:", err);
     res.status(500).json({ error: err?.message || "Error al actualizar concierto." });
   }
@@ -186,7 +192,8 @@ router.post("/concerts", requireAuth, async (req, res) => {
     // Aviso por email si el evento choca con otro (agrupado y sin bloquear el guardado)
     programarRevisionDeBanda(userBandId);
     res.json({ success: true, concert: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating concert:", err);
     res.status(500).json({ error: err?.message || "Error al crear concierto." });
   }
@@ -219,7 +226,8 @@ router.delete("/concerts/:id", requireAuth, async (req, res) => {
       saveState(state);
     }
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting concert:", err);
     res.status(500).json({ error: err?.message || "Error al eliminar concierto." });
   }
@@ -239,7 +247,8 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
       message: `¡Se han sincronizado correctamente los conciertos con Supabase!`,
       concerts: dbConcerts
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/concerts/sync:", error);
     res.status(500).json({
       success: false,
@@ -383,7 +392,8 @@ router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
       message: `¡Se han sincronizado correctamente las transacciones de finanzas con Supabase!`,
       payments: dbPayments
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/payments/sync:", error);
     res.status(500).json({
       success: false,
@@ -831,7 +841,8 @@ router.get("/calendar.ics", async (req, res) => {
     res.setHeader("Expires", "0");
     res.setHeader("Content-Disposition", `inline; filename="calendar-${bandIds.join('-')}.ics"`);
     res.send(content);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error generating .ics feed:", err);
     res.status(500).send("Error generando archivo de calendario");
   }

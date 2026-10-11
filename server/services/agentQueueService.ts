@@ -481,7 +481,7 @@ export async function getDetailedQueueMetrics(bandId?: string): Promise<{
 
       const { data } = await query;
       if (data) {
-        recentJobs = data.map((j: any) => ({
+        recentJobs = data.map((j) => ({
           id: j.id,
           agent_type: j.agent_type,
           status: j.status,

@@ -1,6 +1,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { dbGetSongs, dbUpsertSong } from "../db/repertoire.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface EnrichedCoverResult {
   songId: string;
@@ -83,7 +84,7 @@ REGLAS OBLIGATORIAS:
 
         let responseText = aiRes?.text || "";
         if (!responseText && aiRes?.candidates?.[0]?.content?.parts) {
-          responseText = aiRes.candidates[0].content.parts.map((p: any) => p.text || "").join("\n");
+          responseText = aiRes.candidates[0].content.parts.map((p) => p.text || "").join("\n");
         }
 
         const parsed = safeParseJson(responseText);
@@ -129,7 +130,8 @@ REGLAS OBLIGATORIAS:
         genero,
         exito: true
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(`[EnrichCovers] Error procesando "${song.titulo}":`, err);
       results.push({
         songId: song.id,

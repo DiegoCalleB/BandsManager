@@ -6,6 +6,7 @@ import { saveSongsToLocalStorageSafely } from "../../utils/audioStorage";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface SpotifyTrack {
   id: string;
@@ -209,7 +210,8 @@ export const SpotifyDiscographyModal: React.FC<
 
       setSelectedAlbumIds(initialSelected);
       setExpandedAlbumIds(initialExpanded);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error fetching Spotify discography:", err);
       setErrorMsg(err.message || "Error al conectar con Spotify.");
       setArtistProfile(null);
@@ -291,7 +293,8 @@ export const SpotifyDiscographyModal: React.FC<
       }
 
       onClose();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error importing Spotify discography:", err);
       setErrorMsg(err.message || "Error al importar las canciones.");
     } finally {

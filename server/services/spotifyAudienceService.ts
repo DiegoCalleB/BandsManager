@@ -10,6 +10,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface SpotifyCityDemandResult {
   success: boolean;
@@ -72,7 +73,8 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         resumen_audiencia: parsed.resumen_audiencia || `Mercado clave con alta afinidad para directos de ${cleanGenre}.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error calculating Spotify city demand via AI:", err?.message);
   }
 

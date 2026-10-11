@@ -5,6 +5,7 @@ import {
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
 import { processServerStemsFfmpeg } from '../../routes/ai_music/motorFfmpeg.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Adaptador para el motor local de filtrado espectral DSP con FFmpeg (100% gratuito e ilimitado).
@@ -35,7 +36,8 @@ export class LocalDspService extends AudioSeparatorService {
         stemsMap,
         timingBreakdown: { totalSec: '2.5s' }
       };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       return {
         success: false,
         provider: 'ffmpeg',

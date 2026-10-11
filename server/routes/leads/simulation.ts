@@ -3,6 +3,7 @@
 import express from "express";
 import { loadState, requireAuth } from "../../state.js";
 import { getAiClient, generateContentWithFallback } from "../../ai.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.post("/generate-simulated-email", requireAuth, async (req, res) => {
     return res.status(404).json({ success: false, error: "Lead no encontrado." });
   }
 
-  const userBandId = lead.band_id || (req as any).user?.band_id ;
+  const userBandId = lead.band_id || req.user?.band_id ;
   const bandConfig = state.epkConfigsByBand?.[userBandId] || state.epkConfigsByBand?.[userBandId.replace(/^(band|reg)-/, '')] || state.epkConfig || {};
   const registeredBand = state.registeredBands?.find((b: any) => b.band_id === userBandId || b.band_id === userBandId.replace(/^(band|reg)-/, ''));
   const cleanId = userBandId.replace(/^(band|reg)-/, '');
@@ -74,7 +75,8 @@ Pautas importantes:
         generatedText = response.text.trim();
         isSimulated = false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("Fallo al llamar a Gemini para generar correo simulado, usando generador local:", err.message);
     }
   }

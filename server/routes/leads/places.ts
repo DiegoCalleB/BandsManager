@@ -14,6 +14,7 @@ import { searchVenuesWithSerper, enrichVenueDetailsWithSerper } from "../../serv
 import { discoverVenuesMultiSource } from "../../services/multiSourceVenueDiscoveryService.js";
 import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatcherService.js";
 import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -192,7 +193,8 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             results: v1Places
           });
         }
-      } catch (placesErr: any) {
+      } catch (placesErrCapturado) {
+        const placesErr = comoErrorCapturado(placesErrCapturado);
         console.warn("[Google Places API Warning] Failed to fetch from Places API, falling back to Serper/Gemini:", placesErr.message);
       }
     }
@@ -245,7 +247,8 @@ router.post(["/places-search", "/leads/places-search"], requireAuth, async (req,
             results: enrichedResults
           });
         }
-      } catch (serperErr: any) {
+      } catch (serperErrCapturado) {
+        const serperErr = comoErrorCapturado(serperErrCapturado);
         console.warn("[Serper Places Warning] Error en búsqueda con Serper, pasando a fallback Gemini:", serperErr?.message || serperErr);
       }
     }
@@ -364,7 +367,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       if (!isSpendCapOrQuotaError(err)) {
         response = await generateContentWithFallback(aiClient, {
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -397,7 +401,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
       query: searchQuery,
       results
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/places-search:", error);
     res.status(500).json({ error: error?.message || "Error al buscar salas en Google Places." });
   }
@@ -406,7 +411,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
 // Búsqueda Masiva de Recintos, Locales y Discotecas para Campaña Activa y Estilo de Banda
 router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const state = loadState();
     // Ciudades, aforos y nombre de campaña se completan después con la campaña activa.
     let { targetCities, minCapacity, maxCapacity, campaignName } = req.body;
@@ -614,7 +619,8 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
                 });
               }
             }
-          } catch (pErr: any) {
+          } catch (pErrCapturado) {
+            const pErr = comoErrorCapturado(pErrCapturado);
             console.warn(`[Mass Places] Advertencia en consulta "${sqObj.query}":`, pErr.message);
           }
         }
@@ -667,7 +673,8 @@ Responde estrictamente con un JSON con la estructura:
                 responseMimeType: 'application/json'
               }
             });
-          } catch (aiErr: any) {
+          } catch (aiErrCapturado) {
+            const aiErr = comoErrorCapturado(aiErrCapturado);
             if (!isSpendCapOrQuotaError(aiErr)) {
               response = await generateContentWithFallback(aiClient, {
                 contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
@@ -698,7 +705,8 @@ Responde estrictamente con un JSON con la estructura:
               });
             }
           }
-        } catch (groundingErr: any) {
+        } catch (groundingErrCapturado) {
+          const groundingErr = comoErrorCapturado(groundingErrCapturado);
           console.warn(`[Mass Grounding] Error en ${cleanCity}:`, groundingErr.message);
         }
       }
@@ -801,7 +809,8 @@ Responde estrictamente con un JSON con la estructura:
       results: finalResults
     });
 
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/campaign-mass-search:", error);
     res.status(500).json({ error: error?.message || "Error al realizar la búsqueda masiva de recintos para la campaña." });
   }
@@ -883,7 +892,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (err: any) {
+        } catch (errCapturado) {
+          const err = comoErrorCapturado(errCapturado);
           if (!isSpendCapOrQuotaError(err)) {
             console.warn("[Email Extractor Warning] Grounding failed, fallback to direct JSON model:", err?.message || err);
             response = await generateContentWithFallback(aiClient, {
@@ -898,7 +908,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
         const textResult = response?.text || "{}";
         const parsed = safeParseJson(textResult);
         return Array.isArray(parsed?.extracted) ? parsed.extracted : [];
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Email Extractor Warning] Error processing batch:", err?.message);
         return batch.map(p => ({
           id: p.place_id || p.id || p.nombre_sala,
@@ -931,7 +942,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
       extractedCount: allExtracted.filter((e: any) => e.email_contacto && e.email_contacto.trim() !== "").length,
       extracted: allExtracted
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/extract-emails:", error);
     res.status(500).json({ error: error?.message || "Error al extraer correos electrónicos de las salas." });
   }
@@ -945,7 +957,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       return res.status(400).json({ error: "Proporciona un array de leads a importar." });
     }
 
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = req.user?.band_id ;
     const state = loadState();
     let importedCount = 0;
     const newlyAddedLeads: Lead[] = [];
@@ -1081,7 +1093,8 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
       totalLeads: state.leads.length,
       leads: newlyAddedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-places:", error);
     res.status(500).json({ error: error?.message || "Error al importar salas de Google Places." });
   }
@@ -1103,7 +1116,8 @@ router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth,
       limit: Number(limit) || 10
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/multi-source-venues:", error);
     return res.status(500).json({
       success: false,
@@ -1141,7 +1155,8 @@ router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requir
       limit: Number(limit) || 8
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/similar-artists-venues:", error);
     return res.status(500).json({
       success: false,
@@ -1163,7 +1178,8 @@ router.post(["/public-cultural-radar", "/leads/public-cultural-radar"], requireA
       limit: Number(limit) || 8
     });
     return res.json(result);
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/public-cultural-radar:", error);
     return res.status(500).json({
       success: false,

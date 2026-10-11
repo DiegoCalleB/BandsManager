@@ -49,7 +49,22 @@ export function getSafeUsers(users: any[]) {
 }
 
 // Extract user & role from incoming request with multi-band isolation validation
-export function getUserFromRequest(req: express.Request, loadStateFn: () => any): { id: string; role: string; username: string; email?: string; name?: string; bandName?: string; band_id?: string; allowedBandIds?: string[]; plan?: string } | null {
+/** Usuario de la sesión que `requireAuth` deja en `req.user`, con la banda activa ya resuelta. */
+export interface UsuarioDeSesion {
+  id: string;
+  role: string;
+  username: string;
+  email?: string;
+  name?: string;
+  bandName?: string;
+  band_id?: string;
+  /** Bandas a las que tiene acceso (normalizadas, con y sin prefijo). */
+  allowedBandIds?: string[];
+  /** Plan de la banda activa, ya normalizado. */
+  plan?: ReturnType<typeof normalizePlan>;
+}
+
+export function getUserFromRequest(req: express.Request, loadStateFn: () => any): UsuarioDeSesion | null {
   const authHeader = req.headers.authorization;
   // El token NO se acepta por la URL. Un `?token=` acaba en los logs del servidor, en el
   // historial del navegador y en la cabecera Referer de cualquier recurso externo que cargue la
@@ -207,7 +222,7 @@ export function createAuthMiddleware(loadStateFn: () => any) {
     if (!user) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
-    (req as any).user = user;
+    req.user = user;
     next();
   };
 }
@@ -215,14 +230,14 @@ export function createAuthMiddleware(loadStateFn: () => any) {
 // Middleware: Requires leader/admin user
 export function createLeaderMiddleware(loadStateFn: () => any) {
   return function requireLeader(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const user = (req as any).user || getUserFromRequest(req, loadStateFn);
+    const user = req.user || getUserFromRequest(req, loadStateFn);
     if (!user) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
     if (user.role !== 'leader' && user.role !== 'admin') {
       return res.status(403).json({ error: "Acceso denegado. Se requieren permisos de dirección/leader o administrador." });
     }
-    (req as any).user = user;
+    req.user = user;
     next();
   };
 }
@@ -239,7 +254,7 @@ export function createCronOrAuthMiddleware(loadStateFn: () => any) {
 
     const user = getUserFromRequest(req, loadStateFn);
     if (user) {
-      (req as any).user = user;
+      req.user = user;
       return next();
     }
 

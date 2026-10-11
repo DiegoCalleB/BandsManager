@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { execFile } from "child_process";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
  * Acceso a YouTube desde el servidor, en un solo sitio.
@@ -152,7 +153,8 @@ export async function metadatosYtDlp(url: string): Promise<MetadatosVideo | null
       chapters: normalizarCapitulos(j?.chapters, duration),
       fuente: "yt-dlp"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[YouTube] yt-dlp --dump-json no disponible:", String(err?.message || err).substring(0, 200));
     return null;
   }
@@ -232,7 +234,8 @@ export async function descargarConYtDlp(
         { timeout, maxBuffer: 20 * 1024 * 1024 }
       );
       return descargaValida(destino);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[YouTube] Intento de descarga fallido:", String(err?.message || err).substring(0, 300));
       return false;
     }
@@ -280,7 +283,8 @@ export async function urlDeAudioDirecta(url: string): Promise<string | null> {
     );
     const primera = stdout.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith("http"));
     return primera || null;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[YouTube] No se pudo obtener la URL de audio:", String(err?.message || err).substring(0, 200));
     return null;
   }
@@ -304,7 +308,8 @@ export async function urlDeVideoDirecta(url: string): Promise<string | null> {
     );
     const primera = stdout.split(/\r?\n/).map((l) => l.trim()).find((l) => l.startsWith("http"));
     return primera || null;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[YouTube] No se pudo obtener la URL de vídeo:", String(err?.message || err).substring(0, 200));
     return null;
   }
@@ -369,7 +374,8 @@ export async function metadatosDataApi(videoId: string): Promise<MetadatosVideo 
       chapters: [],
       fuente: "data-api"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[YouTube] Data API no disponible:", String(err?.message || err).substring(0, 200));
     return null;
   }

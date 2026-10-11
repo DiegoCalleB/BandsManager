@@ -13,12 +13,13 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tipos de error de los servicios de IA musical y diagnóstico de los errores de Replicate y Fal.ai (con reintentos de Replicate).
+Exporta: MusicServiceErrorProvider, StemErrorType, ServiceDiagnosticError, ReplicateDiagnosticError, parseReplicateError, parseFalError, fetchReplicateWithRetry.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

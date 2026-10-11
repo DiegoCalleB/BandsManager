@@ -13,6 +13,7 @@ import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvaluation } from "./agentIntelligence.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -320,7 +321,8 @@ ${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de
       contactEmail: bandDna.contactoEmail
     });
     if (unifiedRes?.text) draftReply = unifiedRes.text.trim();
-  } catch (aiErr: any) {
+  } catch (aiErrCapturado) {
+    const aiErr = comoErrorCapturado(aiErrCapturado);
     console.warn("Fallo IA al generar respuesta:", aiErr?.message || aiErr);
   }
 

@@ -29,6 +29,7 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*

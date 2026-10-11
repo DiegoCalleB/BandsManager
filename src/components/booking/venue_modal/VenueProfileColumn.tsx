@@ -4,6 +4,7 @@ import { Lead, Concert } from '../../../types';
 import { checkBandDateConflict } from '../../../utils/bookingTourContext';
 import { Button, Input, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
 
 interface VenueProfileColumnProps {
   lead: Lead;
@@ -76,7 +77,8 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
       } else {
         setScoutMsg('No se encontraron nuevos datos públicos.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setScoutMsg(`Error en Scout: ${err.message || 'Error de conexión'}`);
     } finally {
       setIsEnrichingScout(false);

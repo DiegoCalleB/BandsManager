@@ -20,6 +20,7 @@
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
 import { type PuntoEnergia } from "./audioEnergy.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /** Cómo está grabado el material, que cambia por completo qué hace viral a un fragmento. */
 export type TipoContenido = "concierto" | "videoclip" | "ensayo" | "otro";
@@ -83,7 +84,8 @@ export async function detectarCambiosDePlano(
       { timeout: opciones.timeoutMs ?? 180_000, maxBuffer: 32 * 1024 * 1024 }
     );
     return parseCambiosDePlano(stdout);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[Señales] No se pudieron detectar los cambios de plano:", String(err?.message || err).substring(0, 200));
     return [];
   }

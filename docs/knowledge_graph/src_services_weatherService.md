@@ -13,12 +13,12 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-weatherService.ts
+Exporta: WeatherAlert, EventWeatherData, DetectAlertsParams, detectWeatherAlerts, fetchEventWeather, getCachedEventWeatherAlerts.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

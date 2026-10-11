@@ -10,6 +10,7 @@ import { stemStorageRetryManager } from '../../services/stemStorageRetryQueue.js
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
 import { StemErrorType, MusicServiceErrorProvider } from './diagnosticos.js';
 import type { AudioSeparatorResult } from '../../services/audioSeparator/AudioSeparatorService.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 export interface ProcessNeuralStemsResult {
   stemsMap: Record<
@@ -91,7 +92,8 @@ export async function transcodeBufferToMp3(buffer: Buffer): Promise<Buffer> {
     });
 
     return fs.readFileSync(outputPath);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(
       '[Neural Stems] No se pudo recomprimir el stem a MP3, se sube el buffer original:',
       err?.message || err
@@ -187,7 +189,8 @@ export async function persistRawStemsMap(
               }
             }
           }
-        } catch (storageErr: any) {
+        } catch (storageErrCapturado) {
+          const storageErr = comoErrorCapturado(storageErrCapturado);
           console.warn(
             `[Neural Stems] Error descargando o persistiendo stem ${instrumentKey}:`,
             storageErr?.message || storageErr

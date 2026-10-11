@@ -9,6 +9,7 @@ import { dbGetUsers, dbUpsertUser, dbUpsertUserBand } from '../../db.js';
 import { sendMemberInvitationEmail } from '../../services/transactionalEmail.js';
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from '../../utils/bandAccess.js';
 import { generateUniqueSlugId } from '../../utils/slug.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post(
           .json({ error: 'El email del músico es requerido' });
       }
 
-      const targetBandId = (req as any).user?.band_id;
+      const targetBandId = req.user?.band_id;
       if (!targetBandId) {
         return res.status(401).json({
           error: 'Acceso no autorizado. Inicie sesión para continuar.',
@@ -88,7 +89,8 @@ router.post(
 
       const { passwordHash, salt, ...safeUser } = targetUser;
       res.status(201).json(safeUser);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error in /users/associate:', err);
       res.status(500).json({
         error: err?.message || 'Error al asociar el músico a la banda',
@@ -99,7 +101,7 @@ router.post(
 
 // Get all band users (without password hashes)
 router.get('/users', requireAuth, async (req, res) => {
-  const bandId = (req as any).user?.band_id;
+  const bandId = req.user?.band_id;
   if (!bandId) {
     return res
       .status(401)

@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from './errorCapturado';
 /**
  * Utility for ultra-low latency & clean audio capture, WebAudio DSP filtering,
  * and background noise/speaker bleed suppression for multitrack recording.
@@ -32,7 +33,8 @@ export const getLowLatencyAudioStream = async (options?: StudioAudioStreamOption
     return await navigator.mediaDevices.getUserMedia({
       audio: audioConstraints,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     const isPermissionError =
       err?.name === 'NotAllowedError' ||
       err?.name === 'PermissionDeniedError' ||

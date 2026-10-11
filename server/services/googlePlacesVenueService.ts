@@ -7,6 +7,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface GooglePlacesVenueResult {
   success: boolean;
@@ -75,7 +76,8 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         place_id: parsed.place_id || `place-${Date.now()}`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error fetching Google Places venue info via AI:", err?.message);
   }
 

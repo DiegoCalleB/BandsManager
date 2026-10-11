@@ -6,6 +6,7 @@ import { GenerateAllTemplatesModal } from "../booking/GenerateAllTemplatesModal"
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 // Mismas 7 categorías y misma iconografía que src/components/booking/TemplateConfigSection.tsx
 // (plantillas generales por tipo de lead), para que el mánager reconozca de un vistazo qué
@@ -121,7 +122,8 @@ export function CampaignManagerModal({
         );
         return false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error in handleGenerateAllCampaignTemplates:", err);
       setTemplateGenerationFeedback(
         "⚠️ Error de conexión al generar las plantillas.",

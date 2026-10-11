@@ -31,6 +31,7 @@ import { transposeChordToken } from '../utils/chordUtils';
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
 import { programarClic } from '../utils/clicMetronomo';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Puente invisible: aplica trasposición de tono en tiempo real a UNA pista de audio, reutilizando
  * el mismo hook (Tone.js) que ya usa la barra de reproducción global. Practice Mode suena varias
@@ -531,7 +532,8 @@ export default function PracticeModePanel({
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setExportError(err?.message || 'No se pudo exportar la mezcla.');
     } finally {
       setIsExporting(null);
@@ -567,7 +569,8 @@ export default function PracticeModePanel({
           esAproximado: !!data.esAproximado,
         },
       }));
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setChordsErrorByTrack((prev) => ({
         ...prev,
         [tr.id]: err?.message || 'No se pudieron detectar los acordes de esta pista.',

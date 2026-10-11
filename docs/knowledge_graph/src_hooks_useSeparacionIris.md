@@ -25,6 +25,7 @@ Exporta: useSeparacionIris.
 - [[src_utils_audioLatency|src/utils/audioLatency.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_audioParaSubida|src/utils/audioParaSubida.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_stemSeparator|src/utils/stemSeparator.ts]] *(Layer: #service, Domain: #repertoire)*

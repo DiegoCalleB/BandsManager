@@ -9,6 +9,7 @@
 import { generateUnifiedAI } from "../ai.js";
 import { sanitizeExternalText } from "../utils/promptSafety.js";
 import { detectResponseType } from "./replyDrafting.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type SentimentLevel = "muy_positivo" | "positivo" | "neutral" | "cauteloso" | "rechazo" | "negativo";
 export type LeadTemperature = "caliente" | "templado" | "frio";
@@ -408,7 +409,8 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       confianza: 0.95,
       motor: "gemini_flash"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SentimentAnalysis] Fallo en la llamada a Gemini, usando clasificador heurístico:", err?.message || err);
     return analyzeSentimentHeuristic(incomingMessage, languageCode, context);
   }

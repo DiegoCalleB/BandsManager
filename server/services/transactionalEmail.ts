@@ -1,5 +1,6 @@
 import { escapeHtml, escaparTextos } from "../utils/html.js";
 import { Resend } from "resend";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
  * Servicio de envíos de correos transaccionales del sistema (no-reply).
@@ -159,7 +160,8 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
             }
             return { success: false, error: fallbackRes.error.message };
           }
-        } catch (fbErr: any) {
+        } catch (fbErrCapturado) {
+          const fbErr = comoErrorCapturado(fbErrCapturado);
           console.error(`[Resend Fallback Error]:`, fbErr?.message || fbErr);
         }
       }
@@ -168,7 +170,8 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
 
     console.log(`[Resend Success] Email enviado correctamente a ${to} desde ${from} (ID: ${response.data?.id})`);
     return { success: true, id: response.data?.id };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[Resend Exception] Error inesperado al enviar a ${to}:`, err);
     return { success: false, error: err?.message || String(err) };
   }

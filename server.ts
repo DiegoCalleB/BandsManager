@@ -52,6 +52,7 @@ import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
 import { dealsRouter } from "./server/routes/deals.js";
 
 import dotenv from "dotenv";
+import { comoErrorCapturado } from './src/utils/errorCapturado.js';
 dotenv.config(); // No sobreescribir variables de entorno inyectadas por Railway / producción
 
 // Pasivo sin SENTRY_DSN en el entorno - ver server/utils/errorTracking.ts.
@@ -485,7 +486,8 @@ app.get("/api/download-excel", (req, res) => {
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     res.setHeader("Content-Disposition", 'attachment; filename="band_data.xlsx"');
     return res.send(excelBuffer);
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.error("Error generating band_data.xlsx:", e);
     return res.status(500).json({ error: "Fallo al generar band_data.xlsx" });
   }
@@ -514,7 +516,8 @@ app.get("/api/state", async (req, res) => {
     }
 
     res.json(state);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /api/state:", err);
     res.status(500).json({ error: "Error al cargar datos desde Supabase PostgreSQL" });
   }
@@ -624,7 +627,7 @@ async function startServer() {
     }
   });
 
-  server.on("error", (err: any) => {
+  server.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
       console.error(`Port ${PORT} is already in use. Exiting process so process manager can restart.`);
       process.exit(1);

@@ -5,6 +5,7 @@ import {
   AudioSeparatorResult,
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Adaptador concreto para la API comercial de LALAL.AI (https://www.lalal.ai/api/).
@@ -212,7 +213,8 @@ export class LalalAiService extends AudioSeparatorService {
         stemsMap: persistentStemsMap,
         timingBreakdown
       };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('[LALAL.AI Service] Error en la API comercial de LALAL.AI:', err);
       return {
         success: false,
@@ -279,7 +281,8 @@ export class LalalAiService extends AudioSeparatorService {
       }
 
       return { jobId, status: 'processing', progressPct: data.progress || 50 };
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       return { jobId, status: 'failed', error: err?.message || String(err) };
     }
   }

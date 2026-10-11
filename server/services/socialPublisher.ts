@@ -1,5 +1,6 @@
 import { dbGetSocialPosts, dbUpsertSocialPost, dbGetBandSocialAccounts, dbUpsertSocialMetric, dbGetSocialMetrics } from "../db/social.js";
 import { cleanBandId } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface PublishResult {
   success: boolean;
@@ -85,7 +86,8 @@ export async function publishSocialPostNow(postId: string, bandId: string): Prom
       publishedId,
       publishedUrl
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[Social Publisher] Error publicando post ${postId} en ${platform}:`, err);
     await dbUpsertSocialPost({
       ...post,

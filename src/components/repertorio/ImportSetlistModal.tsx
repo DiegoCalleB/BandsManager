@@ -13,6 +13,7 @@ import { apiFetch, apiFetchRaw } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input, Select } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -136,7 +137,8 @@ export function ImportSetlistModal({
           };
         }),
       );
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al analizar el archivo");
     } finally {
       setAnalyzing(false);
@@ -232,7 +234,8 @@ export function ImportSetlistModal({
       onCreated(newSetlist, newSongs);
       reset();
       onClose();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al crear el repertorio");
     } finally {
       setCreating(false);

@@ -13,12 +13,12 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Aviso global de guardados fallidos.
+Exporta: SAVE_ERROR_EVENT, SaveErrorDetail, debeAvisar, instalarAvisoDeGuardados.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

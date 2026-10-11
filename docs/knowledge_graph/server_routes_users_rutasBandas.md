@@ -23,6 +23,7 @@ Logo de banda y creación de una banda nueva desde una cuenta existente.
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

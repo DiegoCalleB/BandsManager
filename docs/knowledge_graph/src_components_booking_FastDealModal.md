@@ -25,6 +25,7 @@ Exporta: FastDealModal.
 - [[src_hooks_useApoyableDeals|src/hooks/useApoyableDeals.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

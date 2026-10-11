@@ -9,6 +9,7 @@ import { ProcessNeuralStemsResult } from './cacheStems.js';
 import { processMdx23Stems } from './motorMdx23.js';
 import { processDemucsStems } from './motorDemucs.js';
 import { ensurePublicAudioUrl } from './audioPublico.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Procesa la separación de stems con Red Neuronal en Replicate.
@@ -43,7 +44,8 @@ export async function processNeuralStemsReplicate(
     console.warn(
       `[Neural Stems Replicate] ⚠️ MVSEP-MDX23 no devolvió stems válidos (${mdxRes?.error || 'sin resultado'}). Activando fallback a HT-Demucs v4...`
     );
-  } catch (mdxErr: any) {
+  } catch (mdxErrCapturado) {
+    const mdxErr = comoErrorCapturado(mdxErrCapturado);
     console.warn(
       `[Neural Stems Replicate] ⚠️ Error durante la inferencia con MVSEP-MDX23:`,
       mdxErr?.message || mdxErr,
@@ -195,7 +197,8 @@ export async function processNeuralStemsFal(
                 }
               }
             }
-          } catch (storageErr: any) {
+          } catch (storageErrCapturado) {
+            const storageErr = comoErrorCapturado(storageErrCapturado);
             console.warn(
               `[Fal Stems] Error guardando stem ${instrumentKey}:`,
               storageErr

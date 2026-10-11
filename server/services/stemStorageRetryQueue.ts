@@ -1,6 +1,7 @@
 import fs from "fs";
 import { uploadBufferToSupabase } from "../utils/storage.js";
 import { getSupabase } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface PendingStemUpload {
   id: string;
@@ -64,7 +65,8 @@ class StemStorageRetryManager {
         }
         console.log(`[Stem Storage Queue] 🔄 Rehidratados ${restoredCount} reintentos pendientes desde Supabase tras reinicio.`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn(`[Stem Storage Queue] Aviso rehidratando cola desde Supabase: ${err?.message || err}`);
     }
   }
@@ -112,7 +114,8 @@ class StemStorageRetryManager {
           created_at: now,
           status: 'pending'
         });
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn(`[Stem Storage Queue] Aviso persistiendo reintento en Supabase: ${err?.message || err}`);
       }
     })();
@@ -160,7 +163,8 @@ class StemStorageRetryManager {
         }
 
         throw new Error("Supabase devolvió null o URL inválida");
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         item.lastError = err?.message || String(err);
         if (item.attempts >= item.maxAttempts) {
           console.error(`[STEM_STORAGE_EXHAUSTED_ALERT] 🚨 ALERTA CRÍTICA: Se agotaron los ${item.maxAttempts} reintentos de subida a Supabase para ${item.storageSubPath}. Error: ${item.lastError}`);

@@ -47,7 +47,7 @@ export async function dbListSupportableDeals(bandId: string): Promise<DealData[]
     if (!tablaAusente(errPagos)) console.warn('[dealSupport] Error leyendo aportaciones:', errPagos.message);
     return []; // sin saber qué está pagado no se ofrece nada: mejor callar que insistir
   }
-  const yaApoyados = new Set((pagadas || []).map((p: any) => p.deal_id));
+  const yaApoyados = new Set((pagadas || []).map((p) => p.deal_id));
   // La banda que eligió "0 %" al crear el acuerdo no quiere apoyar: no se le vuelve a pedir.
   return lista.filter((d) => d.id && !yaApoyados.has(d.id) && !(Number(d.apoyo_porcentaje) === 0 && d.apoyo_porcentaje !== null));
 }

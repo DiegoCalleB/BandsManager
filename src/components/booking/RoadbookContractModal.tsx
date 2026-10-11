@@ -373,7 +373,7 @@ Firmado en conformidad por ambas partes.`;
                     <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Régimen Económico</label>
                     <Select size="sm" aria-label="Régimen Económico"
                       value={dealType}
-                      onChange={(e: any) => setDealType(e.target.value)}
+                      onChange={(e) => setDealType(e.target.value as typeof dealType)}
                       wrapperClassName="w-full"
                     >
                       <option value="taquilla">Taquilla (%)</option>

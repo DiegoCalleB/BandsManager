@@ -5,6 +5,7 @@ import { requireAuth } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { dbGetExampleThreads, dbCreateExampleThread, dbUpdateExampleThread, dbDeleteExampleThread, type ExampleThreadMessage } from "../../db/exampleThreads.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -26,7 +27,8 @@ router.get("/example-threads", requireAuth, async (req, res) => {
     const category = typeof req.query.category === "string" ? req.query.category : undefined;
     const threads = await dbGetExampleThreads(bandId, category);
     res.json({ success: true, threads });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/example-threads:", error);
     res.status(500).json({ success: false, error: "Error al obtener los hilos de ejemplo." });
   }
@@ -57,7 +59,8 @@ router.post("/example-threads", requireAuth, async (req, res) => {
     });
 
     res.json({ success: true, thread });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/example-threads:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al guardar el hilo de ejemplo." });
   }
@@ -81,7 +84,8 @@ router.put("/example-threads/:id", requireAuth, async (req, res) => {
     });
 
     res.json({ success: true, thread });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in PUT /api/example-threads/:id:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al actualizar el hilo de ejemplo." });
   }
@@ -92,7 +96,8 @@ router.delete("/example-threads/:id", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     await dbDeleteExampleThread(req.params.id, bandId);
     res.json({ success: true });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in DELETE /api/example-threads/:id:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al borrar el hilo de ejemplo." });
   }

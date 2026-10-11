@@ -47,6 +47,7 @@ import { formatGlobalSetlistFeedbackForPrompt } from "../utils/setlistFeedback.j
 import { parseSetlistFromFile } from "../utils/setlistImport.js";
 import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
 // descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
@@ -128,11 +129,12 @@ const router = express.Router();
 router.get("/songs", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const user = (req as any).user;
+    const user = req.user;
     console.log(`[Repertorio] GET /songs para usuario ${user?.email} band: ${userBandId}`);
     const songs = await dbGetSongs(userBandId);
     res.json({ success: true, songs });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching songs:", err);
     res.status(500).json({ error: "Error al obtener canciones", songs: [] });
   }
@@ -146,7 +148,7 @@ router.post("/songs", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    const isAdmin = (req as any).user?.role === "admin";
+    const isAdmin = req.user?.role === "admin";
     (newSong as any).band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -154,7 +156,8 @@ router.post("/songs", requireAuth, async (req, res) => {
     
     const saved = await dbUpsertSong(newSong, userBandId, isAdmin);
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating song:", err);
     res.status(500).json({ error: "Error al guardar la canción." });
   }
@@ -165,13 +168,14 @@ router.put("/songs/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const userBandId = getTargetBandId(req);
-    const isAdmin = (req as any).user?.role === "admin";
+    const isAdmin = req.user?.role === "admin";
     const updatedFields: Partial<Song> = req.body;
     const merged = { ...updatedFields, id, band_id: userBandId };
     const saved = await dbUpsertSong(merged, userBandId, isAdmin);
 
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating song:", err);
     res.status(500).json({ error: "Error al actualizar la canción." });
   }
@@ -192,7 +196,8 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
 
     const { variacion, audioAnalizable, bpmDetectado, tonalidadDetectada } = await analizarYGuardarDinamicaCancion(id, audioUrl, userBandId);
     res.json({ success: true, variacionDetectada: variacion, audioAnalizable, bpmDetectado, tonalidadDetectada });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error analizando dinámica interna de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
   }
@@ -275,7 +280,8 @@ router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
 router.get("/letras/cola", requireAuth, async (req, res) => {
   try {
     res.json(await resumenCola(getTargetBandId(req)));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err?.message || "No se pudo leer la cola de letras." });
   }
 });
@@ -284,7 +290,8 @@ router.post("/letras/cola", requireAuth, async (req, res) => {
   try {
     const songIds = Array.isArray(req.body?.songIds) ? req.body.songIds.filter((x: unknown) => typeof x === "string") : undefined;
     res.json(await encolarLetras(getTargetBandId(req), { songIds, origen: "manual" }));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err?.message || "No se pudo encolar las letras." });
   }
 });
@@ -292,7 +299,8 @@ router.post("/letras/cola", requireAuth, async (req, res) => {
 router.delete("/letras/cola", requireAuth, async (req, res) => {
   try {
     res.json({ canceladas: await cancelarCola(getTargetBandId(req)) });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err?.message || "No se pudo cancelar la cola." });
   }
 });
@@ -302,7 +310,8 @@ router.put("/letras/auto", requireAuth, async (req, res) => {
     if (typeof req.body?.activado !== "boolean") return res.status(400).json({ error: "Falta «activado» (true/false)." });
     await dbSetLetrasAuto(getTargetBandId(req), req.body.activado);
     res.json({ activado: req.body.activado });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err?.message || "No se pudo guardar el ajuste." });
   }
 });
@@ -326,7 +335,8 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
     const analisis = construirAnalisisCorregido(song.analisisAcordes, segmentos, new Date().toISOString());
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando la corrección de acordes:", err);
     res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
   }
@@ -382,7 +392,8 @@ router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
     const profesor = { huella, nivel, instrumento, generadoEn: new Date().toISOString(), descartadas: validada.descartadas, explicacion: validada.explicacion };
     await dbGuardarAnalisisAcordes(id, userBandId, { ...analisis, profesor });
     res.json({ success: true, profesor, deCache: false });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en el profesor de armonía:", err);
     res.status(500).json({ error: err?.message || "No se pudo generar la explicación." });
   }
@@ -402,7 +413,8 @@ router.patch("/songs/:id/energia", requireAuth, async (req, res) => {
     }
     const saved = await dbSetSongEnergiaManual(id, Math.round(energia), userBandId);
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fijando energía manual de la canción:", err);
     res.status(500).json({ error: err?.message || "No se pudo actualizar la energía." });
   }
@@ -416,7 +428,8 @@ router.delete("/songs/:id", requireAuth, async (req, res) => {
     await dbDeleteSong(id, userBandId);
 
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting song:", err);
     res.status(500).json({ error: "Error al eliminar la canción." });
   }
@@ -428,7 +441,8 @@ router.get("/setlists", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     const setlists = await dbGetSetlists(userBandId);
     res.json({ success: true, setlists });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching setlists:", err);
     res.status(500).json({ error: "Error al obtener repertorios", setlists: [] });
   }
@@ -453,7 +467,8 @@ router.post("/setlists", requireAuth, async (req, res) => {
 
     const saved = await dbUpsertSetlist(newSetlist, userBandId);
     res.json({ success: true, setlist: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating setlist:", err);
     res.status(500).json({ error: "Error al crear el repertorio." });
   }
@@ -470,7 +485,8 @@ router.put("/setlists/:id", requireAuth, async (req, res) => {
 
     const saved = await dbUpsertSetlist(merged, userBandId);
     res.json({ success: true, setlist: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating setlist:", err);
     res.status(500).json({ error: "Error al actualizar el repertorio." });
   }
@@ -484,7 +500,8 @@ router.delete("/setlists/:id", requireAuth, async (req, res) => {
     await dbDeleteSetlist(id, userBandId);
 
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting setlist:", err);
     res.status(500).json({ error: "Error al eliminar el repertorio." });
   }
@@ -496,7 +513,8 @@ router.get("/setlist-shortcuts", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     const shortcuts = await dbGetSetlistShortcuts(userBandId);
     res.json({ success: true, shortcuts });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching setlist shortcuts:", err);
     res.status(500).json({ error: "Error al obtener los accesos rápidos", shortcuts: [] });
   }
@@ -515,7 +533,8 @@ router.post("/setlist-shortcuts", requireAuth, async (req, res) => {
       userBandId
     );
     res.json({ success: true, shortcut: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating setlist shortcut:", err);
     res.status(500).json({ error: "Error al guardar el acceso rápido." });
   }
@@ -528,7 +547,8 @@ router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     await dbDeleteSetlistShortcut(id, userBandId);
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting setlist shortcut:", err);
     res.status(500).json({ error: "Error al eliminar el acceso rápido." });
   }
@@ -575,7 +595,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
     // Audio de la mezcla (acordes y estructura) y, si Iris separó la voz, pista de voz aislada
     // (la letra se oye mucho mejor sin guitarras ni batería).
     const urlVoz = pistasDeCancion(cancion as any)
-      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+      .find((p) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
     const [snippetMezcla, snippetVoz] = await Promise.all([
       audioUrl ? getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
       urlVoz ? getAudioSnippetPath({ audioUrl: urlVoz, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
@@ -650,7 +670,8 @@ Responde ÚNICAMENTE con JSON válido:
         letraConfianza = ["alta", "media", "baja", "sin_letra"].includes(parsed.letraConfianza) ? parsed.letraConfianza : "baja";
         esAproximado = letraConfianza !== "alta" && letraConfianza !== "sin_letra";
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn("[Gemini API] No se pudo transcribir la canción:", aiErr?.message || aiErr);
     }
 
@@ -688,7 +709,8 @@ Responde ÚNICAMENTE con JSON válido:
         } else {
           console.warn(`[generate-song-chords] Canción ${songId} no encontrada en BD; no se persiste el cifrado.`);
         }
-      } catch (dbErr: any) {
+      } catch (dbErrCapturado) {
+        const dbErr = comoErrorCapturado(dbErrCapturado);
         console.error("[generate-song-chords] Error al persistir el cifrado:", dbErr?.message || dbErr);
       }
 
@@ -701,7 +723,8 @@ Responde ÚNICAMENTE con JSON válido:
           state.songs[songIndex].guiaSustituto = generatedGuide;
           saveState(state);
         }
-      } catch (stateErr: any) {
+      } catch (stateErrCapturado) {
+        const stateErr = comoErrorCapturado(stateErrCapturado);
         console.warn("[generate-song-chords] No se pudo actualizar el estado local:", stateErr?.message || stateErr);
       }
     }
@@ -723,7 +746,8 @@ Responde ÚNICAMENTE con JSON válido:
       // true si hay huecos [?] o dudas: la letra hay que revisarla de oído.
       esAproximado
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-song-chords:", err);
     res.status(500).json({ error: err?.message || "Error al generar los acordes." });
   }
@@ -784,7 +808,8 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
       success: true,
       idea: parsed
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in ai-composer-arrangement:", err);
     res.status(500).json({ error: err?.message || "Error al generar arreglo con IA." });
   }
@@ -837,7 +862,8 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
       success: true,
       analysis
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in analyze-setlist-with-ai:", err);
     res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
   }
@@ -874,7 +900,8 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
     logSetlistFeedbackIfPresent(userBandId, feedback).catch((err: unknown) => console.warn("[Repertorio] No se pudo registrar el feedback del setlist:", err));
 
     res.json({ success: true, plan });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-perfect-setlist:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
   }
@@ -927,7 +954,8 @@ router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res
     });
 
     res.json({ success: true, nombreSugerido: parsed.nombreSugerido, items });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in import-from-image:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al leer el repertorio de la imagen/PDF" });
   }
@@ -940,7 +968,8 @@ router.post("/optimize-wavs", requireAuth, async (req, res) => {
     const { optimizeWavSongsForBand } = await import("../utils/optimizeExistingWavs.js");
     const result = await optimizeWavSongsForBand(userBandId);
     res.json({ success: true, result });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /optimize-wavs:", err);
     res.status(500).json({ success: false, error: err?.message || "Error optimizando audios WAV" });
   }
@@ -953,7 +982,8 @@ router.post("/enrich-missing-audio", requireAuth, async (req, res) => {
     const { enrichMissingAudioSongsForBand } = await import("../utils/enrichCoversWithoutAudio.js");
     const result = await enrichMissingAudioSongsForBand(userBandId);
     res.json({ success: true, ...result });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /enrich-missing-audio:", err);
     res.status(500).json({ success: false, error: err?.message || "Error enriqueciendo canciones sin audio" });
   }

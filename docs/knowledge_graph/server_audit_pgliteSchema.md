@@ -18,7 +18,7 @@ Postgres local en memoria (PGlite) con el esquema REAL del proyecto: supabase_sc
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

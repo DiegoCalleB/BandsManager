@@ -7,6 +7,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface TourLogisticsResult {
   success: boolean;
@@ -92,7 +93,8 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         recomendacion_logistica: parsed.recomendacion_logistica || `Salida recomendada con 2h de margen antes de la prueba de sonido.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error calculating tour logistics via AI:", err?.message);
   }
 

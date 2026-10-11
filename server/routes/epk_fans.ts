@@ -44,6 +44,7 @@ import {
 import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
 import { decodeBandId } from '../utils/bandHash.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -92,7 +93,8 @@ router.post('/autonomy', requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
     res.status(500).json({
       error:
@@ -125,7 +127,8 @@ router.put('/autonomy', requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
     res.status(500).json({
       error:
@@ -138,7 +141,7 @@ router.put('/autonomy', requireAuth, async (req, res) => {
 // pasando ?bandId= — con su email y teléfono de booking, su firma y su configuración. El EPK
 // que sí debe ser público se sirve por GET /public/epk, más abajo, y va recortado.
 router.get('/epk', requireAuth, async (req, res) => {
-  const user = (req as any).user;
+  const user = req.user;
   const userBandId = getTargetBandId(req);
   const userBandName = user?.bandName || user?.name || 'Tu Banda';
 
@@ -160,7 +163,7 @@ router.get('/epk', requireAuth, async (req, res) => {
 router.put('/epk', requireAuth, async (req, res) => {
   try {
     const updatedConfig: Partial<EPKConfig> = req.body;
-    const user = (req as any).user;
+    const user = req.user;
     // Antes se cogía req.body.bandId a pelo y se aprobaba con `|| role === 'leader'`, que en
     // esta app son todos los usuarios reales: cualquiera podía escribir el EPK de otra banda.
     // En una escritura no vale con degradar a la banda propia: si la petición pide una banda
@@ -221,7 +224,8 @@ router.put('/epk', requireAuth, async (req, res) => {
     invalidateBandStateCache(`band-${cleanUserBandId}`);
 
     res.json({ success: true, epkConfig: newEpkConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating EPK config:', err);
     res.status(500).json({
       error: err?.message || 'Error al actualizar la configuración del EPK.',
@@ -236,7 +240,7 @@ router.put('/epk', requireAuth, async (req, res) => {
 // abre gente de fuera. Lo que sirve /public/epk es siempre texto ya guardado.
 router.post('/epk/traducir', requireAuth, async (req, res) => {
   try {
-    const user = (req as any).user;
+    const user = req.user;
     // Mismo control de acceso que PUT /epk: traducir escribe en el EPK de una banda (y además
     // gasta tokens, así que no puede dispararlo alguien sobre una banda que no es suya).
     const solicitada = bandaSolicitada(req);
@@ -455,7 +459,8 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
 
     console.log(`[EPK traducir] ${bandId} -> ${idioma} (hash ${hashActual})`);
     res.json({ success: true, idioma, traduccion });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error traduciendo el EPK:', err);
     res
       .status(500)
@@ -752,7 +757,8 @@ router.get('/public/epk', async (req, res) => {
       upcomingConcerts,
       totalConcertsCount: concerts.length,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error in public EPK endpoint:', err);
     res
       .status(500)
@@ -762,7 +768,7 @@ router.get('/public/epk', async (req, res) => {
 
 // Get Fans List (Authenticated)
 router.get('/fans', requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   try {
     const fans = await dbGetFans(userBandId);
     const state = loadState();
@@ -786,7 +792,7 @@ router.post('/fans', requireAuth, async (req, res) => {
     if (!newFan.nombre || !newFan.email) {
       return res.status(400).json({ error: 'Nombre y Email son obligatorios' });
     }
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!(newFan as any).band_id) {
       (newFan as any).band_id = userBandId;
     }
@@ -794,7 +800,7 @@ router.post('/fans', requireAuth, async (req, res) => {
     // El límite de fans por plan solo se comprobaba en el cliente (App.tsx,
     // handleAddFanWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
     // podía dar de alta fans sin límite sin importar el plan contratado por su banda.
-    const userPlan = (req as any).user?.plan || 'ensayo';
+    const userPlan = req.user?.plan || 'ensayo';
     const existingFans = await dbGetFans(userBandId);
     const limitCheck = checkRecordLimit(userPlan, 'fans', existingFans.length);
     if (!limitCheck.allowed) {
@@ -811,7 +817,8 @@ router.post('/fans', requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, fan: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error adding fan:', err);
     res.status(500).json({ error: err?.message || 'Error al registrar fan.' });
   }
@@ -821,7 +828,7 @@ router.post('/fans', requireAuth, async (req, res) => {
 router.patch('/fans/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const updates = req.body;
 
     const state = loadState();
@@ -844,7 +851,8 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
       return res.json({ success: true, fan: state.fans[index] });
     }
     res.status(404).json({ error: 'Fan no encontrado' });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating fan:', err);
     res.status(500).json({ error: err?.message || 'Error al actualizar fan.' });
   }
@@ -852,7 +860,7 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
 
 // Delete Fan (Authenticated)
 router.delete('/fans/:id', requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   const { id } = req.params;
   await dbDeleteFan(id, userBandId);
 
@@ -969,7 +977,8 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
       message: `¡Registro completado con éxito! Bienvenido/a a la familia de ${bandName}.`,
       incentivo,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error in public fan registration:', err);
     res.status(500).json({ error: 'Error al procesar el registro de fan.' });
   }
@@ -1060,7 +1069,8 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
       platform: cleanButton,
       concert_id: finalConcertId,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error tracking click:', err);
     res.status(200).json({ success: false }); // Non-blocking
   }
@@ -1169,7 +1179,8 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
         '¡Solicitud recibida con éxito! Te contactaremos tan pronto abramos nuevas plazas.',
       data: saved,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error saving musician waitlist submission:', err);
     res.status(500).json({ error: 'Error al procesar tu solicitud.' });
   }
@@ -1179,7 +1190,7 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
 router.get('/musicians-waitlist', requireAuth, async (req, res) => {
   // Emails, teléfonos e Instagram de los músicos de la lista de espera de la PLATAFORMA: no son
   // datos de ninguna banda, solo los ve el admin.
-  if ((req as any).user?.role !== 'admin') {
+  if (req.user?.role !== 'admin') {
     return res.status(403).json({ error: 'Acceso denegado.' });
   }
   try {
@@ -1194,7 +1205,8 @@ router.get('/musicians-waitlist', requireAuth, async (req, res) => {
       ).values()
     );
     res.json({ success: true, count: combined.length, list: combined });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching musicians waitlist:', err);
     res
       .status(500)

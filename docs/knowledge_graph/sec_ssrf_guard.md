@@ -20,6 +20,7 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_scout|Scout Discovery Agent]] *(Layer: #agent, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

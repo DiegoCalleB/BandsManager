@@ -10,6 +10,7 @@ import ffmpeg from "fluent-ffmpeg";
 import { createClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export function detectMimeType(ext: string, fallback?: string): string {
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
@@ -80,7 +81,8 @@ async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: strin
 
       return { finalPath: finalCompressedPath, wasCompressed: true, newMime: 'audio/mpeg', newExt: 'mp3' };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Audio Upload Optimizer] Aviso al comprimir audio con FFmpeg, usando original:`, err?.message || err);
     if (fs.existsSync(outputPath)) {
       try { fs.unlinkSync(outputPath); } catch { /* el temporal ya no existe: nada que limpiar */ }
@@ -375,7 +377,8 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
       message: "¡Conexión y subida a Supabase exitosas!",
       publicUrl: publicUrlData?.publicUrl
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.json({ success: false, error: err.message || String(err) });
   }
 });
@@ -405,7 +408,7 @@ const PERMITTED_CLEANUP_KEYWORDS = [
 // Endpoint de diagnóstico de almacenamiento en Supabase Storage
 router.get("/storage-stats", requireAuth, async (req, res) => {
   // El estado de TODO el bucket es de la plataforma, no de una banda: solo admin.
-  if ((req as any).user?.role !== "admin") {
+  if (req.user?.role !== "admin") {
     return res.status(403).json({ error: "Acceso denegado." });
   }
   const supabase = getSupabaseClient();
@@ -425,7 +428,8 @@ router.get("/storage-stats", requireAuth, async (req, res) => {
       totalSizeMB: Number((totalBytes / (1024 * 1024)).toFixed(2)),
       allowedBands: ["Ruta 66", "Arritmia", "Vértice"]
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ error: err.message || String(err) });
   }
 });
@@ -435,7 +439,7 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
   // Borra del bucket de TODAS las bandas lo que no case con una lista fija de palabras: antes
   // bastaba estar registrado para vaciar el Storage de los demás clientes. Ahora solo el admin
   // de la plataforma, y sin `confirmar: true` únicamente enseña qué borraría (simulacro).
-  if ((req as any).user?.role !== "admin") {
+  if (req.user?.role !== "admin") {
     return res.status(403).json({ error: "Acceso denegado." });
   }
   const supabase = getSupabaseClient();
@@ -496,12 +500,13 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
       freedMB,
       deletedFiles: deletedCount
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ error: err.message || String(err) });
   }
 });
 
-router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req: any, res: any) => {
+router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req, res) => {
   try {
     let filePath = "";
     let originalFilename = "";
@@ -631,14 +636,15 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       originalName: originalFilename,
       storage: storageEngine
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error uploading file:", error);
     res.status(500).json({ error: error.message || "Failed to upload file" });
   }
 });
 
 // Route for Chunked File Upload (bypasses 32MB single request limit for 1GB+ files)
-router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req: any, res: any) => {
+router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req, res) => {
   try {
     const { uploadId, chunkIndex, totalChunks, filename } = req.body || {};
     if (!uploadId || chunkIndex === undefined || !totalChunks || !filename) {
@@ -738,7 +744,8 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       originalName: filename,
       storage: "local"
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error processing file chunk:", err);
     res.status(500).json({ error: err.message || "Failed to process chunk" });
   }

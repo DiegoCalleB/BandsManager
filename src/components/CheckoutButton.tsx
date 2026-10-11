@@ -3,6 +3,7 @@ import { CreditCard, Loader2 } from 'lucide-react';
 import { ThemeColors } from '../types';
 import { api } from '../services/api';
 import { leerUsuarioDeSesion } from '../services/sesionLocal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface CheckoutButtonProps {
   planId: string;
@@ -61,7 +62,8 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         bandId: effectiveBandId || 'default',
         userEmail: effectiveEmail && effectiveEmail.includes('@') ? effectiveEmail : undefined,
       });
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       console.error('Checkout error:', error);
       setErrorMessage(error.message || 'Error desconocido al procesar el pago');
     } finally {

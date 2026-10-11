@@ -20,6 +20,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

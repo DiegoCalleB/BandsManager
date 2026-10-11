@@ -11,6 +11,7 @@
 
 import fs from "fs";
 import { getSupabaseClient, getBucketName } from "../routes/upload.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
  * Sube un fichero local a Supabase Storage y devuelve su URL pública, o null si Supabase no
@@ -49,7 +50,8 @@ export async function uploadToSupabaseIfAvailable(
       console.log(`[Supabase Storage] Successfully uploaded: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
       return publicUrlData.publicUrl;
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Supabase Storage Error] ${storageSubPath}:`, err.message || err);
   }
   return null;
@@ -89,7 +91,8 @@ export async function uploadBufferToSupabase(
       console.log(`[Supabase Storage] Stem uploaded directly to permanent storage: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
       return publicUrlData.publicUrl;
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Supabase Storage Buffer Error] ${storageSubPath}:`, err.message || err);
   }
   return null;

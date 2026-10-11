@@ -13,6 +13,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const BASELINE_HASTA = '20261008_deal_support_neto_eur.sql';
 const CLAVE_BLOQUEO = 727274;
@@ -109,7 +110,8 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
         await db.ejecutar(f.sql);
         await db.consultar(`INSERT INTO schema_migrations (nombre, checksum) VALUES ($1, $2)`, [f.nombre, f.checksum]);
         await db.ejecutar('COMMIT');
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         await db.ejecutar('ROLLBACK').catch(() => { /* la conexión ya cayó: el error original se relanza abajo */ });
         throw new MigracionFallida(f.nombre, String(e?.message || e).split('\n')[0]);
       }

@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Los tipos válidos de respuesta y tono son responsabilidad de
 // server/routes/bands/responseStrategies.ts (VALID_RESPONSE_TYPES/VALID_TONES) - esta interfaz
@@ -220,7 +221,8 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
       );
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     if (err.message?.includes('agent_sender_')) {
       delete payload.agent_sender_email;
       delete payload.agent_sender_name;

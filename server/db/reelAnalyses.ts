@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /**
  * Persistencia del análisis de highlights del generador de Reels.
@@ -53,7 +54,8 @@ export async function dbGetReelAnalysis(bandId: string, videoKey: string): Promi
       return null;
     }
     return data || null;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     // getSupabase() lanza de forma SÍNCRONA si faltan las variables de entorno (por diseño,
     // ver server/db/core.ts). Sin este try/catch, un servidor sin Supabase configurado
     // reventaba con un 500 en vez de simplemente responder "no hay nada guardado".
@@ -99,7 +101,8 @@ export async function dbUpsertReelAnalysis(registro: ReelAnalysisRecord): Promis
       return null;
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[reel_analyses] No se pudo guardar el análisis:", err?.message || err);
     return null;
   }
@@ -136,7 +139,8 @@ export async function dbUpdateReelAnalysisHighlight(
       return false;
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[reel_analyses] No se pudo actualizar el highlight guardado:", err?.message || err);
     return false;
   }

@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
 import { ensurePublicAudioUrl } from './audioPublico.js';
 import { fetchReplicateWithRetry } from './diagnosticos.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 export const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -146,7 +147,8 @@ export async function generateMusicGenTrack(
       effectiveHash,
       requestHost
     );
-  } catch (resolveErr: any) {
+  } catch (resolveErrCapturado) {
+    const resolveErr = comoErrorCapturado(resolveErrCapturado);
     return {
       error: `No se pudo preparar el audio de referencia: ${resolveErr?.message || resolveErr}`,
     };

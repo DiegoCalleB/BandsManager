@@ -7,6 +7,7 @@ import { invalidateBandStateCache } from "../db/sync.js";
 import { loadState, saveState } from "../state.js";
 import { generarToken, decodificarToken, destinoSeguro, idSeguro, textoLibreSeguro, verificarFirmaSvix } from "../utils/trackingSeguro.js";
 import { publicoRateLimiter } from "../middleware/rateLimiter.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -132,7 +133,8 @@ router.get(["/tracking/open", "/api/tracking/open"], async (req, res) => {
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría] 👁️ Apertura #${openCount} registrada para lead ${lead.id} (${lead.nombre_sala}) vía ${clientLabel}`);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Tracking] Error al registrar apertura:", err?.message || err);
   }
 });
@@ -243,7 +245,8 @@ router.get(["/tracking/click", "/api/tracking/click"], async (req, res) => {
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría] 🎯 Clic en ${accionBoton} registrado para lead ${lead.id} (${lead.nombre_sala})`);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Tracking] Error al registrar clic:", err?.message || err);
   }
 });
@@ -310,7 +313,8 @@ router.post(["/tracking/interaction", "/api/tracking/interaction"], express.json
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría EPK] 🎯 ${cleanAction} registrada para lead ${lead.id} (${lead.nombre_sala}): ${cleanDetails}`);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Tracking] Error al registrar interacción EPK:", err?.message || err);
   }
 });
@@ -444,7 +448,8 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
       invalidateBandStateCache(lead.band_id);
       console.log(`[Telemetría PDF] 📥 Apertura #${pdfOpenCount} de Dossier PDF registrada para lead ${lead.id} (${lead.nombre_sala})${emailIdLabel}`);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Tracking PDF] Error al registrar apertura PDF:", err?.message || err);
     if (!res.headersSent) {
       res.redirect(302, finalRedirectUrl || "https://bandmanager.io/epk");
@@ -577,7 +582,8 @@ router.post("/webhooks/resend", publicoRateLimiter, express.json(), async (req, 
 
       invalidateBandStateCache(lead.band_id);
     }
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[Resend Webhook] Error procesando evento:", e?.message || e);
   }
 });

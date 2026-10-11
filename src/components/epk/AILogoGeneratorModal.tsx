@@ -3,6 +3,7 @@ import { Sparkles, X, Loader2, Check, RefreshCw, Palette, Wand2, AlertCircle } f
 import { api } from '../../services/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface AILogoGeneratorModalProps {
   isOpen: boolean;
@@ -69,7 +70,8 @@ export const AILogoGeneratorModal: React.FC<AILogoGeneratorModalProps> = ({ isOp
       } else {
         throw new Error('No se recibió la imagen generada.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error generando logo:', err);
       setError(err?.response?.data?.error || err?.message || 'Error al generar el logo con IA.');
     } finally {

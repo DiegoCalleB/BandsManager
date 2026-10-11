@@ -2,6 +2,7 @@
 // `bandId` resuelto por sesión (AGENTS.md §2.1).
 
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export async function dbMigrateAllPlansToNewTiers() {
   try {
@@ -168,7 +169,8 @@ export async function dbUpdateBandToneDna(bandId: string, dna: any): Promise<boo
       return false;
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el ADN de tono:", err?.message || err);
     return false;
   }
@@ -241,7 +243,8 @@ export async function dbAppendBandSpeechPhrases(bandId: string, nuevasFrases: st
       return { ...dnaActual, frases_directo_extraidas: acotadas };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudieron guardar las frases de directo:", err?.message || err);
     return false;
   }
@@ -267,7 +270,8 @@ export async function dbLogReelFeedback(bandId: string, entry: Record<string, an
       return { ...dnaActual, historial_feedback_reels: actualizados };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el feedback del Reel:", err?.message || err);
     return false;
   }
@@ -292,7 +296,8 @@ export async function dbLogSetlistFeedback(bandId: string, entry: Record<string,
       return { ...dnaActual, historial_feedback_setlist: actualizados };
     });
     return ok;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[registered_bands] No se pudo guardar el feedback del setlist:", err?.message || err);
     return false;
   }

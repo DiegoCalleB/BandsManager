@@ -112,6 +112,8 @@ export interface InteractionLog {
     | "Rechazado"
     | "Info recibida"
     | "Acuerdo cerrado";
+  /** Correo al que se refiere el evento (aperturas y clics de tracking), con o sin prefijo imap-/gmail-. */
+  email_id?: string;
 }
 
 export interface SavedFilter {

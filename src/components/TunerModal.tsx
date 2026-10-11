@@ -3,6 +3,7 @@ import { X, Mic, MicOff, Volume2, Guitar, Radio, Check, RefreshCw, AlertCircle }
 import { ThemeColors } from "../types";
 import { ModalPortal } from "./common/ModalPortal";
 import { Button, IconButton } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface TunerModalProps {
   isOpen: boolean;
@@ -333,7 +334,8 @@ export function TunerModal({ isOpen, onClose }: TunerModalProps) {
 
       setIsListening(true);
       updatePitchLoop();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("Microphone access warning:", err?.message || err);
       const isPermissionDenied =
         err?.name === "NotAllowedError" ||

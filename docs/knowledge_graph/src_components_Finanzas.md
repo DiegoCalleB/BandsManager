@@ -26,6 +26,7 @@ Exporta: Finanzas.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_financeUtils|src/utils/financeUtils.ts]] *(Layer: #service, Domain: #finances)*
 - [[src_utils_formatMoney|src/utils/formatMoney.ts]] *(Layer: #service, Domain: #system)*
 

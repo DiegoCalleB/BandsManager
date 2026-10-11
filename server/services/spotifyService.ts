@@ -2,6 +2,7 @@ import { dbGetSongs, dbUpsertSong, dbGetEpkConfig, dbUpsertEpkConfig } from "../
 import { Song } from "../../src/types.js";
 import { cleanBandId } from "../utils.js";
 import { elegirArtistaSpotify } from "../utils/spotifyMatch.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Cached token for Spotify API
 let spotifyCachedToken: { token: string; expiresAt: number } | null = null;
@@ -117,7 +118,8 @@ export async function getSpotifyAccessToken(): Promise<string | null> {
       }
       // Sin este aviso el fallo era silencioso y se usaba el token de respaldo, con datos incompletos.
       console.warn(`[SpotifyService] Client credentials respondió ${res.status}; usando token de respaldo`);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[SpotifyService] Client credentials token fetch failed:", err?.message);
     }
   }
@@ -279,7 +281,8 @@ async function fetchDiscographyViaDeezer(artistName: string): Promise<SpotifyArt
       totalSongs,
       source: "universal_music_api"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] Deezer discography lookup error:", err?.message);
     return null;
   }
@@ -378,7 +381,8 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
       totalSongs,
       source: "universal_music_api"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] iTunes discography lookup error:", err?.message);
     return null;
   }
@@ -426,7 +430,8 @@ export async function searchSpotifyArtists(query: string) {
           }));
         }
       }
-    } catch (spErr: any) {
+    } catch (spErrCapturado) {
+      const spErr = comoErrorCapturado(spErrCapturado);
       console.warn("[SpotifyService] Spotify API search error:", spErr?.message);
     }
   }
@@ -480,7 +485,8 @@ export async function searchSpotifyArtists(query: string) {
         }
       });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] Fallback search error:", err?.message);
   }
 
@@ -511,7 +517,8 @@ export async function resolverUrlSpotifyDeBanda(nombreBanda: string): Promise<st
   try {
     const candidatos = await searchSpotifyArtists(nombreBanda);
     return elegirArtistaSpotify(nombreBanda, candidatos)?.url || "";
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] No se pudo verificar el Spotify de la banda:", err?.message);
     return "";
   }
@@ -685,7 +692,8 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
           }
         }
       }
-    } catch (spErr: any) {
+    } catch (spErrCapturado) {
+      const spErr = comoErrorCapturado(spErrCapturado);
       console.warn("[SpotifyService] Official Spotify API error, using Universal Catalog Fallback:", spErr?.message);
     }
   }

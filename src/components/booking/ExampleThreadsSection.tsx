@@ -3,6 +3,7 @@ import { MessageSquareText, Plus, Trash2, Loader2, Pencil } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import type { TemplateCategory } from "./TemplateConfigSection";
 import { IconButton, Input, LinkButton, Select, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface ThreadMessage {
   rol: "banda" | "sala";
@@ -161,7 +162,8 @@ export function ExampleThreadsSection({
       } else {
         setError(res.error || "No se pudo guardar el hilo.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al guardar el hilo.");
     } finally {
       setIsSaving(false);

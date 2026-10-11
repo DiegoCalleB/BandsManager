@@ -1,6 +1,7 @@
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { SetlistItem } from "../../src/types.js";
 import { BLOCK_TYPES } from "./perfectSetlistPlanner.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export type ParsedSetlistItemType = 'song' | 'block';
 
@@ -52,7 +53,8 @@ export function parseRawSetlistAIResponse(text: string): ParsedSetlistResult {
   let raw: { nombreSugerido?: string; items?: RawParsedItem[] };
   try {
     raw = JSON.parse(jsonStr);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     throw new Error(`Formato JSON inválido de la IA al leer repertorio: ${err?.message || 'error de parseo'}`, { cause: err });
   }
 

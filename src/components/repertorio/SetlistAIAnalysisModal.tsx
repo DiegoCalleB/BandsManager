@@ -13,6 +13,7 @@ import { openWhatsAppChat } from "../../utils/whatsapp";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -280,7 +281,8 @@ export function SetlistAIAnalysisModal({
       } else {
         setError(result.error || "Error al analizar el setlist");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error desconocido");
     } finally {
       setLoading(false);
@@ -531,7 +533,8 @@ export function SetlistAIAnalysisModal({
       // admite adjuntar archivos por URL, así que la imagen hay que arrastrarla a mano al chat.
       if (imageBlob) downloadBlob(imageBlob, `analisis-ia-${setlistId}.png`);
       openWhatsAppChat(undefined, text);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
       if (err?.name !== "AbortError") {
         openWhatsAppChat(undefined, buildShareText(analysis));

@@ -3,6 +3,7 @@ import { safeParseJson } from "../utils.js";
 import type { TemplateFeedbackLog } from "../promptsManager.js";
 import { dbGetCategoryTemplates, dbUpsertCategoryTemplate } from "../db/categoryTemplates.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "../routes/leads/feedback.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const CATEGORY_LABELS: Record<string, string> = {
   salas: "Salas y Teatros de Conciertos",
@@ -364,7 +365,8 @@ export async function autoOptimizeCategoryTemplateIfDue(bandId: string, category
     });
 
     console.log(`[Auto-optimize plantilla] "${category}" de ${bandId} regenerada tras ${pending} valoraciones acumuladas.`);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice during autoOptimizeCategoryTemplateIfDue:", err?.message || err);
   }
 }

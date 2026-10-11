@@ -15,7 +15,7 @@ router.delete(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const rawBandId = req.params.bandId;
 
       if (!user_id || !rawBandId) {
@@ -29,7 +29,7 @@ router.delete(
       const user = state.users?.find((u: any) => u.id === user_id);
       const userEmail = (
         user?.email ||
-        (req as any).user?.email ||
+        req.user?.email ||
         ''
       ).toLowerCase();
 

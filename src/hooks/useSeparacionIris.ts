@@ -24,6 +24,7 @@ import {
   type MotorIris,
   type ProgresoIris,
 } from '../utils/separacionIris';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface Opciones {
   song: Song;
@@ -157,7 +158,8 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
       let kickoff: any;
       try {
         kickoff = await lanzar();
-      } catch (kickoffErr: any) {
+      } catch (kickoffErrCapturado) {
+        const kickoffErr = comoErrorCapturado(kickoffErrCapturado);
         if (esErrorDeRed(kickoffErr) && !abortado()) {
           // Reintento rápido en caso de micro-corte o reconexión de red
           await new Promise((r) => setTimeout(r, 1200));
@@ -194,7 +196,8 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
               `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
             );
             fallosDeRedSeguidos = 0;
-          } catch (pollErr: any) {
+          } catch (pollErrCapturado) {
+            const pollErr = comoErrorCapturado(pollErrCapturado);
             if (esErrorDeRed(pollErr) && fallosDeRedSeguidos < 4 && !abortado()) {
               fallosDeRedSeguidos++;
               console.warn(`[Stem Polling] Fallo transitorio de red (${fallosDeRedSeguidos}/4). Reintentando en el próximo ciclo...`);
@@ -346,7 +349,8 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
         executionTimeSec: data.executionTimeSec,
         timingBreakdown: data.timingBreakdown,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       clearInterval(progressTimer);
       clearInterval(elapsedTimer);
       console.error('Error en separación de stems por IA:', err);

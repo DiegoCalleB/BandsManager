@@ -78,6 +78,7 @@ export function liberarEvento(eventId: string): void {
 export { isValidEmail } from "../utils/email.js";
 import { isValidEmail } from "../utils/email.js";
 import { bandaFacturableDelUsuario, mismaBanda } from "../utils/bandAccess.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
@@ -234,7 +235,8 @@ export async function applyPlanUpgrade(
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Upgrade] Error updating Supabase tables:", err?.message || err);
   }
 
@@ -295,7 +297,8 @@ export async function schedulePlanDowngrade(
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Schedule Downgrade] Error updating Supabase:", err);
   }
 
@@ -357,7 +360,8 @@ export async function applyPlanCancellation(bandId: string, customerEmail?: stri
         })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Cancellation] Error updating Supabase:", err);
   }
 
@@ -398,7 +402,8 @@ export async function handlePaymentFailed(bandId: string, customerEmail?: string
         .update({ estado_suscripcion: 'pago_pendiente' })
         .ilike("email", customerEmail.trim());
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Billing Payment Failed] Error updating Supabase:", err);
   }
 }
@@ -488,7 +493,8 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth
     let session: Stripe.Checkout.Session;
     try {
       session = await stripe.checkout.sessions.retrieve(sessionId);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[Billing] Sesión de Checkout no recuperable:", err?.message || err);
       return res.status(404).json({ success: false, error: "Sesión de pago no encontrada en Stripe." });
     }
@@ -527,7 +533,8 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth
       stripeSubscriptionId: (session.subscription as string) || undefined
     });
     return res.json(result);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /billing/confirm-success:", err);
     return res.status(500).json({ success: false, error: err?.message || "Error confirming plan upgrade" });
   }
@@ -585,7 +592,8 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
         if (existingCustomers.data.length > 0) {
           customerId = existingCustomers.data[0].id;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Billing] Could not lookup existing customer by email in Stripe:", err?.message || err);
       }
     }
@@ -638,7 +646,8 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
     });
 
     res.json({ success: true, url: session.url });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe checkout session:", error);
     res.status(500).json({ success: false, error: error.message || "Error al crear la sesión de pago con Stripe" });
   }
@@ -686,7 +695,8 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
           });
           customerId = newCustomer.id;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Billing] Could not create/lookup customer for portal:", err?.message || err);
       }
     }
@@ -704,7 +714,8 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
     });
 
     return res.json({ success: true, url: portalSession.url });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe billing portal session:", error);
     return res.status(500).json({
       success: false,
@@ -729,7 +740,8 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     const rawBody = (req as any).rawBody || (Buffer.isBuffer(req.body) ? req.body : Buffer.from(JSON.stringify(req.body)));
     const stripe = getStripe();
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[Stripe Webhook] Signature verification failed: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
@@ -858,7 +870,8 @@ async function handleWebhook(req: express.Request, res: express.Response) {
       await dbRecordWebhookEvent(event.id, event.type, event.data?.object);
       marcarEventoProcesado(event.id);
     }
-  } catch (procErr: any) {
+  } catch (procErrCapturado) {
+    const procErr = comoErrorCapturado(procErrCapturado);
     console.error(`[Stripe Webhook] Error processing event ${event.type} (${event.id}):`, procErr);
     // Stripe solo reintenta si no recibe un 2xx. Antes se respondía 200 siempre, así que un cobro
     // cuyo registro fallaba (BD caída, columna que falta...) se perdía sin dejar rastro.
@@ -928,7 +941,8 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
       creditos_periodo: totalCredits,
       creditos_restantes: totalCredits - newUsed
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ success: false, error: err.message || "Error al consumir créditos" });
   }
 });
@@ -962,7 +976,8 @@ router.get(["/billing/credits-status", "/stripe/credits-status"], requireAuth, a
       plan_pendiente: foundBand?.plan_pendiente || null,
       fecha_cambio_plan: foundBand?.fecha_cambio_plan || null
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ success: false, error: err.message || "Error al obtener estado de créditos" });
   }
 });

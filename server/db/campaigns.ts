@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface DbCampaign {
   id: string;
@@ -155,7 +156,8 @@ export async function dbGetCampaigns(bandId: string) {
     }
     const validatedFallback = (fallbackData || []).filter((c: any) => cleanBandId(c.band_id) === cleanId);
     return validatedFallback.map(normalizeCampaignFromDb);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query campaigns from Supabase:", err?.message || err);
     return [];
   }
@@ -232,7 +234,8 @@ export async function dbUpsertCampaign(campaign: any, bandId: string) {
       throw new Error(`Supabase Error (upsert campaign): ${error?.message || fbError.message}`);
     }
     return normalizeCampaignFromDb(fbData || payload);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to persist campaign to Supabase:", err?.message || err);
     throw err instanceof Error ? err : new Error(String(err));
   }
@@ -257,7 +260,8 @@ export async function dbDeleteCampaign(id: string, bandId: string) {
     // Una de las dos tablas puede no existir (hay fallback): solo es fallo si fallan las dos.
     if (e1 && e2) throw new Error(e1.message || e2.message);
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to delete campaign from Supabase:", err?.message || err);
     // Antes devolvía true: la campaña «borrada» reaparecía al recargar.
     throw err instanceof Error ? err : new Error(String(err));
@@ -296,7 +300,8 @@ export async function dbSetActiveCampaign(id: string | null, bandId: string) {
       }
     }
     return true;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Failed to set active campaign in Supabase:", err?.message || err);
     return false;
   }

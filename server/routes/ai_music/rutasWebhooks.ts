@@ -5,6 +5,7 @@
  */
 import express from 'express';
 import { verifyReplicateWebhook, isPredictionWebhookProcessed, recordPredictionJob } from '../../services/stemPredictionReconciler.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -86,7 +87,8 @@ router.post(
         `[Stem Webhook] ✅ Webhook ${predictionId} procesado exitosamente con estado: ${prediction.status}`
       );
       return res.json({ status: 'processed', id: predictionId });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('[Stem Webhook] Error procesando webhook:', err);
       return res
         .status(500)

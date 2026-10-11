@@ -10,6 +10,7 @@ import { loginRateLimiter } from '../../middleware/rateLimiter.js';
 import { verificarAccessTokenDeGoogle } from '../../utils/googleVerify.js';
 import { generateUniqueSlugId } from '../../utils/slug.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -38,7 +39,8 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
     });
     uid = identidad.sub;
     cleanEmail = identidad.email;
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn('[auth/google] Verificación rechazada:', e?.message || e);
     return res.status(401).json({ error: 'No se pudo verificar tu cuenta de Google. Inténtalo de nuevo.' });
   }

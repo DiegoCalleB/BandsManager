@@ -6,6 +6,7 @@ import { api } from "../services/api";
 import { normalizePlan, getPlanTierLevel } from "../utils/planPermissions";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface PlanesProps {
   colors?: ThemeColors;
@@ -399,7 +400,8 @@ export const Planes: React.FC<PlanesProps> = ({
       } else {
         setPortalError(res.error || "No se pudo abrir el portal de Stripe.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setPortalError(
         err.message || "Error al conectar con Stripe Customer Portal",
       );

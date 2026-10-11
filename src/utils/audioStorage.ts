@@ -6,6 +6,7 @@
  */
 
 import { getAuthHeaders } from '../services/api';
+import { comoErrorCapturado } from './errorCapturado';
 
 const DB_NAME = 'BandManagerAudioDB';
 const STORE_NAME = 'audio_files';
@@ -168,7 +169,8 @@ async function executeIDBOperation<T>(mode: IDBTransactionMode, op: (store: IDBO
           reject(txErr);
         }
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       lastError = err;
       if (cachedDb) {
         try {

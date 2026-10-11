@@ -7,6 +7,7 @@ import { dbUpsertUser, dbUpsertUserBand, dbUpsertRegisteredBand, dbUpsertEpkConf
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from '../../utils/bandAccess.js';
 import { generateUniqueSlugId } from '../../utils/slug.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -68,8 +69,8 @@ router.post(
       });
 
       if (
-        (req as any).user?.band_id &&
-        cleanBandId((req as any).user.band_id) === cleanTarget
+        req.user?.band_id &&
+        cleanBandId(req.user.band_id) === cleanTarget
       ) {
         if (!state.epkConfig) state.epkConfig = {};
         state.epkConfig.logoUrl = logoUrl.trim();
@@ -85,7 +86,8 @@ router.post(
         bandId: targetBandId,
         logoUrl: logoUrl.trim(),
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error updating band logo:', err);
       res.status(500).json({
         error: err.message || 'Error al actualizar el logotipo de la banda',
@@ -100,7 +102,7 @@ router.post(
   requireAuth,
   async (req, res) => {
     try {
-      const user_id = (req as any).user.id;
+      const user_id = req.user.id;
       const {
         bandName,
         estilo_musical,
@@ -292,7 +294,8 @@ router.post(
         user: safeUser,
         availableBands,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error creating new band:', err);
       res
         .status(500)

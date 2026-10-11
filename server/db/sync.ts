@@ -119,7 +119,7 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
       const sb = getSupabase();
       const { data: uBands } = await sb.from("user_bands").select("band_id").eq("user_id", user.id);
       if (uBands && Array.isArray(uBands)) {
-        uBands.forEach((ub: any) => {
+        uBands.forEach((ub) => {
           if (ub.band_id) {
             const cb = cleanBandId(ub.band_id);
             if (cb && cb !== '__sin_banda__') userBandIds.add(cb);

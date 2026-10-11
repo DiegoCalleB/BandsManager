@@ -5,6 +5,7 @@ import ffmpegPath from "ffmpeg-static";
 import { getSupabase } from "../db/core.js";
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from "./storage.js";
 import { esUrlExternaSegura } from "./ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 if (ffmpegPath) {
   ffmpeg.setFfmpegPath(ffmpegPath);
@@ -142,7 +143,8 @@ export async function convertWavUrlToMp3(
       origSize,
       newSize
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[WAV Optimizer] Error convirtiendo ${wavUrl}:`, err?.message || err);
     return null;
   } finally {

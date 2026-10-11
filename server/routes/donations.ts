@@ -15,6 +15,7 @@ import {
   APOYO_MIN_CENTS,
   APOYO_MAX_CENTS
 } from "../utils/dealSupport.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -51,7 +52,8 @@ router.get("/donations/status", requireAuth, async (req, res) => {
     let owedCents = 0;
     try {
       owedCents = await dbGetAiDebtCents(banda.bandId);
-    } catch (innerErr: any) {
+    } catch (innerErrCapturado) {
+      const innerErr = comoErrorCapturado(innerErrCapturado);
       console.warn("[Donations] Error no crítico al calcular deuda IA, usando 0:", innerErr?.message);
     }
 
@@ -61,7 +63,8 @@ router.get("/donations/status", requireAuth, async (req, res) => {
       owed_eur: owedCents / 100,
       suggested_cents: defaultDonationCents(owedCents)
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Donations] Error al calcular la deuda de IA:", err);
     return res.json({
       success: true,
@@ -130,7 +133,8 @@ router.post("/donations/create-checkout-session", requireAuth, donationRateLimit
     });
 
     return res.json({ success: true, url: session.url });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Donations] Error creando la sesión de Checkout:", err);
     return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
   }
@@ -167,7 +171,8 @@ router.get("/donations/deal-support", requireAuth, async (req, res) => {
         apoyo_porcentaje: d.apoyo_porcentaje ?? null
       }))
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     // Función opcional: ante cualquier fallo, simplemente no se ofrece nada.
     console.warn("[Donations] No se pudo listar bolos apoyables:", err?.message);
     return res.json({ success: true, min_cents: APOYO_MIN_CENTS, max_cents: APOYO_MAX_CENTS, deals: [] });
@@ -229,7 +234,8 @@ router.post("/donations/deal-support/create-checkout-session", requireAuth, dona
     });
 
     return res.json({ success: true, url: session.url });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Donations] Error creando la sesión de apoyo al bolo:", err);
     return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
   }

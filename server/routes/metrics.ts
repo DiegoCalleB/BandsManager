@@ -12,7 +12,7 @@ const router = express.Router();
 
 // GET all metrics
 router.get("/metrics", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   try {
     const dbMetrics = await dbGetSocialMetrics(userBandId);
     res.json(dbMetrics);
@@ -24,7 +24,7 @@ router.get("/metrics", requireAuth, async (req, res) => {
 
 // Create metric record
 router.post("/metrics", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const newMetric: SocialMetric = req.body;
   const saved = await dbUpsertSocialMetric(newMetric, userBandId);
 
@@ -37,7 +37,7 @@ router.post("/metrics", requireAuth, async (req, res) => {
 
 // Update metric record
 router.put("/metrics/:id", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const { id } = req.params;
   const updated = { ...req.body, id };
   const saved = await dbUpsertSocialMetric(updated, userBandId);
@@ -57,7 +57,7 @@ router.put("/metrics/:id", requireAuth, async (req, res) => {
 // Delete metric record
 router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id ;
+    const userBandId = req.user?.band_id ;
     const { id } = req.params;
     await dbDeleteSocialMetric(id, userBandId);
 
@@ -68,7 +68,8 @@ router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
       saveState(state);
     }
     res.json({ success: true });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[API ERROR] DELETE /api/metrics/:id:', error);
     res.status(500).json({ error: error.message || 'Error al eliminar la métrica' });
   }
@@ -76,7 +77,7 @@ router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
 
 // Sync all metrics with Supabase
 router.post("/metrics/sync", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   try {
     const dbMetrics = await dbGetSocialMetrics(userBandId);
     const state = loadState();
@@ -88,7 +89,8 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
       message: `¡Se han sincronizado correctamente los registros de seguidores con Supabase!`,
       metrics: dbMetrics
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/metrics/sync:", error);
     res.status(500).json({
       success: false,
@@ -98,10 +100,11 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
 });
 
 import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRadarService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Fetch real-world social statistics of the active band from live networks / YouTube API
 router.post("/metrics/real", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   if (!userBandId) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -191,7 +194,8 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
       },
       metric: newEntry
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /metrics/real:", err);
     return res.status(500).json({ success: false, error: err?.message || "Error al escanear redes reales" });
   }
@@ -213,7 +217,8 @@ router.all("/metrics/cron-snapshot-all", requireCronOrAuth, async (req, res) => 
       message: `Rastreo del Agente Radar completado con éxito para ${radarResult.totalBands} bandas`,
       ...radarResult
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error ejecutando SocialRadar:", err);
     res.status(500).json({ success: false, error: err?.message || "Error ejecutando radar social" });
   }
@@ -222,14 +227,15 @@ router.all("/metrics/cron-snapshot-all", requireCronOrAuth, async (req, res) => 
 // Endpoint to fetch indexed social content items (videos, tracks, reels)
 router.get("/metrics/content-items", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
     const platform = req.query.platform as string | undefined;
     const items = await dbGetSocialContentItems(userBandId, platform);
     res.json({ success: true, items });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ success: false, error: err?.message });
   }
 });
@@ -354,7 +360,7 @@ async function fetchInstagramInsightsData(igUserId: string, token: string) {
 // Get Instagram connection status and live insights
 router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -443,7 +449,8 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
       docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights",
       error: "El token de Instagram ha expirado o no tiene los permisos requeridos (instagram_manage_insights, instagram_basic, pages_read_engagement)."
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error checking Instagram connection status:", err);
     res.status(500).json({ success: false, error: err?.message });
   }
@@ -452,7 +459,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
 // Connect Instagram account using User Access Token / Long-lived Token with Instagram Platform Insights permissions
 router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -559,7 +566,8 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
       authSource,
       docsUrl: "https://developers.facebook.com/documentation/instagram-platform/insights"
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error connecting Instagram token:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al conectar con Instagram Insights" });
   }
@@ -568,7 +576,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
 // Disconnect Instagram token
 router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -586,7 +594,8 @@ router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, message: "Token de Instagram desconectado. El sistema volverá al modo scraping autónomo." });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ success: false, error: err?.message });
   }
 });
@@ -594,7 +603,7 @@ router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
 // --- SCAN SOCIAL MEDIA SCREENSHOT WITH GEMINI MULTIMODAL VISION ---
 router.post("/metrics/scan-screenshot", requireAuth, async (req, res) => {
   try {
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
@@ -708,7 +717,8 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
       savedToSupabase: !!savedMetric,
       metric: savedMetric
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error scanning screenshot with Gemini Vision:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al analizar la captura con Visión IA" });
   }
@@ -881,7 +891,8 @@ Devuelve ÚNICAMENTE un JSON estrictamente válido con este esquema exacto:
       success: true,
       data: plan
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error generating social growth plan:", err);
     res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de crecimiento con Gemini" });
   }

@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
+import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
 
 export const GEMINI_MODEL = "gemini-2.5-flash";
 
@@ -290,7 +291,8 @@ export async function generateContentWithFallback(
           });
           return response;
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         lastError = err;
         if (isSpendingCapError(err)) {
           geminiSpendingCapUntil = Date.now() + 15 * 60 * 1000;
@@ -325,7 +327,8 @@ export async function generateContentWithFallback(
           candidates: [{ content: { parts: [{ text }] } }]
         };
       }
-    } catch (dsErr: any) {
+    } catch (dsErrCapturado) {
+      const dsErr = comoErrorCapturado(dsErrCapturado);
       deepSeekError = dsErr;
       console.warn("[AI Engine] Falló también fallback a DeepSeek:", dsErr.message);
     }
@@ -698,7 +701,8 @@ export async function generateUnifiedAI(params: {
       if (text) {
         return { text: text.trim(), provider: "gemini", modelName: params.modelName || GEMINI_MODEL };
       }
-    } catch (geminiErr: any) {
+    } catch (geminiErrCapturado) {
+      const geminiErr = comoErrorCapturado(geminiErrCapturado);
       console.warn(`[AI Engine] Gemini error (${geminiErr.message || geminiErr}).`);
       if (!allowFallback) {
         throw geminiErr;
@@ -717,7 +721,8 @@ export async function generateUnifiedAI(params: {
         maxTokens: params.maxTokens
       });
       return { text, provider: "deepseek", modelName: "deepseek-chat (fallback)", fallbackFrom: "gemini" };
-    } catch (dsErr: any) {
+    } catch (dsErrCapturado) {
+      const dsErr = comoErrorCapturado(dsErrCapturado);
       console.warn("[AI Engine] Fallback a DeepSeek falló:", dsErr.message);
     }
   }
@@ -777,7 +782,8 @@ export async function generateMultiModelProposals(params: {
           durationMs: Date.now() - startTime,
           costEstimate
         };
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         let cleanErrMsg = err?.message || "Error al contactar proveedor IA";
         if (cleanErrMsg.includes("429") || cleanErrMsg.includes("spending cap") || cleanErrMsg.includes("RESOURCE_EXHAUSTED")) {
           cleanErrMsg = "Límite mensual de gasto alcanzado en Google AI Studio (Error 429). Puedes gestionarlo en ai.studio/billing";

@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface ExampleThreadMessage {
   rol: "banda" | "sala";
@@ -45,7 +46,8 @@ export async function dbGetExampleThreads(bandId: string, category?: string): Pr
       return [];
     }
     return (data || []).map(normalizeFromDb);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query pitch_example_threads from Supabase:", err?.message || err);
     return [];
   }

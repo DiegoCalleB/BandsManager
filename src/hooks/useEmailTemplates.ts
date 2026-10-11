@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiFetch } from '../utils/api';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
@@ -221,7 +222,8 @@ Oficina de Producción — {bandName}`);
         setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
         return false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error generating all templates:', err);
       setOptimizationFeedbackMsg(`⚠️ Error de conexión al generar las 7 plantillas.`);
       return false;
@@ -273,7 +275,8 @@ Oficina de Producción — {bandName}`);
         const errorMsg = data?.error || data?.message || 'No se pudo re-generar la plantilla. Inténtalo de nuevo.';
         setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error optimizing template:', err);
       setOptimizationFeedbackMsg(`⚠️ Error al re-generar la plantilla: ${err?.message || 'Error de conexión'}`);
     } finally {
@@ -385,7 +388,8 @@ Oficina de Producción — {bandName}`);
       } else {
         setTestPromptResult(`⚠️ ${data?.error || 'No se pudo simular la plantilla.'}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error testing prompt:', err);
       setTestPromptResult(`⚠️ ${err?.message || 'Error de conexión al simular la plantilla.'}`);
     } finally {
@@ -478,7 +482,8 @@ Oficina de Producción — {bandName}`);
       } else {
         alert('⚠️ Error al guardar en el servidor.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error saving template:', err);
       alert(err?.message || '⚠️ Error de conexión al guardar la plantilla.');
     }
@@ -504,7 +509,8 @@ Oficina de Producción — {bandName}`);
       } else {
         setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error resetting template:', err);
       setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
     }

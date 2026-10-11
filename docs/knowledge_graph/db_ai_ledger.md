@@ -20,6 +20,7 @@ Contabilidad exacta de tokens consumidos por banda y modelo para control de cost
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(Layer: #schema, Domain: #system)*
 
 ---

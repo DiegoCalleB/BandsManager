@@ -4,6 +4,7 @@ import express, { Request, Response } from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       return res.status(400).json({ error: "No se han proporcionado contactos para importar." });
     }
 
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
@@ -157,7 +158,8 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       totalLeads: state.leads.length,
       leads: newlyAddedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-excel:", error);
     res.status(500).json({ error: error?.message || "Error al procesar el archivo Excel / CSV." });
   }

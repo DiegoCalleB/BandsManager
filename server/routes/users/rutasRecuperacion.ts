@@ -80,7 +80,7 @@ router.post(
     // 3. If still not found, check seed users in INITIAL_USERS
     if (!user) {
       const seedUser = INITIAL_USERS.find(
-        (iu: any) =>
+        (iu) =>
           iu.username.toLowerCase().trim() === cleanInput ||
           iu.email?.toLowerCase().trim() === cleanInput
       );
@@ -110,7 +110,7 @@ router.post(
         targetEmail = userBand.email.trim().toLowerCase();
       } else {
         const seedUser = INITIAL_USERS.find(
-          (iu: any) =>
+          (iu) =>
             iu.id === user.id ||
             iu.username.toLowerCase() === user.username?.toLowerCase()
         );
@@ -325,7 +325,7 @@ router.post(
 // Endpoint de diagnóstico para verificar el envío de emails con Resend
 router.post('/auth/test-email', requireAuth, async (req, res) => {
   const { to } = req.body;
-  const user = (req as any).user;
+  const user = req.user;
   // Solo se puede mandar la prueba al propio correo (el admin, a cualquiera): con un destino libre
   // esto era un relé para enviar correo con la marca de la plataforma a quien se quisiera.
   const pedido = to ? String(to).trim().toLowerCase() : '';

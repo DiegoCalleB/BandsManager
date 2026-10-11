@@ -91,14 +91,15 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, instagram?: string
 
 
 router.get("/bands", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   try {
     const dbBands = await dbGetBandContacts(userBandId);
     const state = loadState();
     state.bands = dbBands;
     saveState(state);
     res.json({ bands: dbBands });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Notice loading bands from Supabase, fallback to state:", err?.message || err);
     const state = loadState();
     res.json({ bands: state.bands || [] });
@@ -106,7 +107,7 @@ router.get("/bands", requireAuth, async (req, res) => {
 });
 
 router.post("/bands", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const newBand = req.body;
   if (!newBand.band_id) {
     newBand.band_id = userBandId;
@@ -126,7 +127,8 @@ router.post("/bands", requireAuth, async (req, res) => {
     autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
 
     res.json(saved);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating band contact:", err);
     res.status(500).json({ error: err.message || String(err) });
   }
@@ -135,19 +137,20 @@ router.post("/bands", requireAuth, async (req, res) => {
 // IMPORTANTE: va ANTES de PUT /bands/:id. Express resuelve por orden de declaración; detrás, "print-settings"
 // entraba en el handler de :id y creaba un contacto fantasma en lugar de guardar los ajustes.
 // PUT /api/bands/print-settings — solo se guarda lo que pasa la lista blanca (printSettings.ts).
-router.put("/bands/print-settings", requireAuth, async (req: any, res: any) => {
+router.put("/bands/print-settings", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const settings = await dbUpsertPrintSettings(bandId, req.body);
     return res.json({ success: settings !== null, settings });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando ajustes de impresión:", err);
     return res.status(500).json({ error: err?.message || "Error guardando ajustes de impresión" });
   }
 });
 
 router.put("/bands/:id", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const { id } = req.params;
   const updatedBand = { ...req.body, id };
   try {
@@ -160,14 +163,15 @@ router.put("/bands/:id", requireAuth, async (req, res) => {
     autoEnrichBandContact(saved, userBandId).catch(err => console.error("Error autoEnrichBandContact background:", err));
 
     res.json(saved);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating band contact:", err);
     res.status(500).json({ error: err.message || String(err) });
   }
 });
 
 router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   const { ids } = req.body;
   if (!Array.isArray(ids) || ids.length === 0) {
     return res.status(400).json({ error: "Debe proporcionar una lista de IDs de bandas para eliminar." });
@@ -181,14 +185,15 @@ router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
       saveState(state);
     }
     res.json({ success: true, count: ids.length });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error bulk deleting band contacts:", err);
     res.status(500).json({ error: err.message || String(err) });
   }
 });
 
 router.delete("/bands/:id", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const { id } = req.params;
   try {
     await dbDeleteBandContact(id, userBandId);
@@ -197,14 +202,15 @@ router.delete("/bands/:id", requireAuth, async (req, res) => {
     state.bands = state.bands.filter((b: any) => b.id !== id);
     saveState(state);
     res.json({ success: true });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting band contact:", err);
     res.status(500).json({ error: err.message || String(err) });
   }
 });
 
 router.post("/bands/sync", requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id ;
+  const userBandId = req.user?.band_id ;
   const { bands } = req.body;
   if (!Array.isArray(bands)) {
     return res.status(400).json({ error: "Invalid data format." });
@@ -220,7 +226,8 @@ router.post("/bands/sync", requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, count: bands.length });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error syncing bands:", err);
     res.status(500).json({ error: err.message || String(err) });
   }
@@ -281,7 +288,8 @@ Devuelve EXCLUSIVAMENTE un array JSON válido con la siguiente estructura (sin f
       );
     }
     res.json({ bands: parsedData });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("AI Scout Error:", error);
     res.status(500).json({ error: "No se pudieron obtener resultados de la IA." });
   }
@@ -345,7 +353,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON:
     data.website = scrapedLogoObj?.workingWebsite || website;
 
     res.json({ success: true, data });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in AI lookup:", err);
     res.status(500).json({ error: "No se pudo consultar información." });
   }
@@ -393,7 +402,8 @@ router.post("/bands/analyze-tone", requireAuth, async (req, res) => {
       if (dnaActual && typeof dnaActual === "object" && Array.isArray(dnaActual.frases_directo_extraidas)) {
         frasesDirectoExistentes = dnaActual.frases_directo_extraidas.map((f: any) => String(f || "").trim()).filter(Boolean);
       }
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       console.warn("[analyze-tone] No se pudo cargar el EPK para leer las redes reales:", e?.message || e);
     }
   }
@@ -510,13 +520,15 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
           ...data
         }));
         savedOwnBandDna = ok;
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.warn("[analyze-tone] No se pudo guardar el ADN de la banda emisora:", e?.message || e);
       }
     }
 
     res.json({ success: true, data, savedPermanently: savedOwnBandDna });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in Tone Analysis:", err);
     res.status(500).json({ error: "No se pudo analizar el tono de comunicación.", details: err?.message || String(err) });
   }
@@ -570,7 +582,8 @@ router.get("/bands/tone-dna", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const band = await dbGetRegisteredBandById(bandId);
     res.json({ success: true, data: band?.dna_expresion || null });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching tone DNA:", err);
     res.status(500).json({ error: "No se pudo cargar el ADN de tono guardado.", details: err?.message || String(err) });
   }
@@ -606,7 +619,8 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
       return res.status(500).json({ error: "No se pudo guardar la edición del ADN de tono." });
     }
     res.json({ success: true, data: actualizado });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating tone DNA:", err);
     res.status(500).json({ error: err?.message || "No se pudo actualizar el ADN de tono." });
   }
@@ -671,7 +685,8 @@ router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
       return res.status(500).json({ error: "No se pudo guardar la edición de las reglas aprendidas." });
     }
     res.json({ success: true, data: actualizado });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating learned tone rules:", err);
     res.status(500).json({ error: err?.message || "No se pudo actualizar las reglas aprendidas." });
   }
@@ -690,7 +705,8 @@ router.get("/bands/schedules/:bandId", requireAuth, async (req, res) => {
     }
     const schedule = await dbGetBandSchedule(bandId);
     res.json(schedule);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching band schedule:", err);
     res.status(500).json({ error: "Error al obtener el horario de la banda" });
   }
@@ -714,7 +730,8 @@ router.post("/bands/schedules", requireAuth, async (req, res) => {
       dias_lector: dias_lector || []
     });
     res.json({ success: true, data: updated });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error saving band schedule:", err);
     res.status(500).json({ error: "Error al guardar el horario de la banda" });
   }
@@ -733,7 +750,8 @@ router.get("/bands/email-account/:bandId", requireAuth, async (req, res) => {
     }
     const account = await dbGetBandEmailAccount(bandId);
     res.json(toSafeEmailAccountResponse(account));
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching band email account:", err);
     res.status(500).json({ error: "Error al obtener la cuenta de email de la banda" });
   }
@@ -768,7 +786,8 @@ router.post("/bands/email-account", requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, data: toSafeEmailAccountResponse(saved) });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error saving band email account:", err);
     res.status(500).json({ error: "Error al guardar la cuenta de email de la banda" });
   }
@@ -840,7 +859,8 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
             } else {
               throw new Error(txRes.error || "Error despachando correo transaccional de notificación");
             }
-          } catch (err: any) {
+          } catch (errCapturado) {
+            const err = comoErrorCapturado(errCapturado);
             console.error(`Error enviando email de recordatorio a ${targetEmail}:`, err?.message || err);
             emailError = err?.message || "Error al despachar el correo.";
           }
@@ -856,7 +876,8 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
         ? `Recordatorio enviado por correo a ${recipients.length} destinatario(s).`
         : "Notificación procesada correctamente en la plataforma."
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en /bands/send-reminder:", err);
     res.status(500).json({ error: err?.message || "Error procesando el recordatorio" });
   }
@@ -865,45 +886,49 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
 import { dbGetAlertSettings, dbUpsertAlertSettings } from "../db/alertSettings.js";
 
 // GET /api/bands/alert-settings
-router.get("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+router.get("/bands/alert-settings", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const settings = await dbGetAlertSettings(bandId);
     return res.json({ success: true, settings });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo configuración de alertas:", err);
     return res.status(500).json({ error: err?.message || "Error consultando alertas" });
   }
 });
 
 // POST /api/bands/alert-settings
-router.post("/bands/alert-settings", requireAuth, async (req: any, res: any) => {
+router.post("/bands/alert-settings", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const success = await dbUpsertAlertSettings(bandId, req.body || {});
     return res.json({ success });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando configuración de alertas:", err);
     return res.status(500).json({ error: err?.message || "Error guardando alertas" });
   }
 });
 
 import { dbGetPrintSettings, dbUpsertPrintSettings } from "../db/printSettings.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // GET /api/bands/print-settings — ajustes de impresión del setlist recordados por banda.
-router.get("/bands/print-settings", requireAuth, async (req: any, res: any) => {
+router.get("/bands/print-settings", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const settings = await dbGetPrintSettings(bandId);
     return res.json({ success: true, settings });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo ajustes de impresión:", err);
     return res.status(500).json({ error: err?.message || "Error consultando ajustes de impresión" });
   }
 });
 
 // POST /api/bands/trigger-alert-digest - Enviar email de resumen ejecutivo de alertas
-router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: any) => {
+router.post("/bands/trigger-alert-digest", requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const settings = await dbGetAlertSettings(bandId);
@@ -974,14 +999,15 @@ router.post("/bands/trigger-alert-digest", requireAuth, async (req: any, res: an
       recipient: recipientEmail,
       error: result.error
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en /bands/trigger-alert-digest:", err);
     return res.status(500).json({ error: err?.message || "Error al enviar el resumen por email" });
   }
 });
 
 // POST /api/bands/generate-logo - Generador de logotipos profesionales con IA para bandas amateurs
-router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req: any, res: any) => {
+router.post("/bands/generate-logo", requireAuth, iaRateLimiter, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const { style, customPrompt, genre } = req.body || {};
@@ -1115,7 +1141,8 @@ REQUISITOS ESTRICTOS DEL SVG:
       style: selectedStyle,
       generationMethod
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error generating band logo with AI:", err);
     return res.status(500).json({ error: err?.message || "Error al generar el logo con IA." });
   }

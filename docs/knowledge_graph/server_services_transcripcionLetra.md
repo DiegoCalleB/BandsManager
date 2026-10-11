@@ -13,12 +13,13 @@ tags: ["service", "repertoire", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Transcripción de la letra con un modelo de voz (Whisper en Replicate) y tiempos.
+Exporta: PalabraLetra, LineaLetra, Transcripcion, agruparPalabras, normalizarSalidaWhisper, repararTiempos, limpiarLineas, confianzaGlobal.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

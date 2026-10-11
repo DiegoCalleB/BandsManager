@@ -5,6 +5,7 @@ import { Song } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -71,7 +72,8 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
       setGeneratedAudioUrl(audioUrl);
       setGeneratedLyrics(data.lyrics || "");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(err);
       setError(
         err.message || "Error de conexión con el motor de audio Lyria AI",

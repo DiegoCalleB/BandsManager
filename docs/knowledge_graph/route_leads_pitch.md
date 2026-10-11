@@ -25,6 +25,7 @@ Endpoint para generación de pitches con IA y validación de Rate Limiting.
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

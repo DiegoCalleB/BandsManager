@@ -20,6 +20,7 @@ Exporta: auth, initAuth, googleSignIn, getAccessToken, logout, fetchGmailThreads
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

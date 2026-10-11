@@ -20,6 +20,7 @@ import { camposNoGuardados } from '../utils/epkVerificacion';
 import { getPublicEpkUrl } from '../utils/bandHash';
 import { useModuleTutorial } from '../hooks/useModuleTutorial';
 import { ModuleTutorialModal } from './common/ModuleTutorialModal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface EPKManagerProps {
   epkConfig?: Partial<EPKConfig>;
@@ -283,7 +284,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3500);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error saving EPK config:', err);
       const estado = typeof err?.status === 'number' ? ` (HTTP ${err.status})` : '';
       setSaveError(
@@ -313,7 +315,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         category: 'logo',
       });
       await persistEpkUpdate({ ...config, logoUrl: url });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error uploading logo:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
@@ -321,7 +324,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           const url = ev.target!.result as string;
           try {
             await persistEpkUpdate({ ...config, logoUrl: url });
-          } catch (fallbackErr: any) {
+          } catch (fallbackErrCapturado) {
+            const fallbackErr = comoErrorCapturado(fallbackErrCapturado);
             console.error('Error saving logo fallback:', fallbackErr);
             setSaveError(fallbackErr?.message || 'No se pudo subir el logo. Inténtalo de nuevo.');
           }
@@ -351,7 +355,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         dossierDocumentUrl: url,
         dossierDocumentName: file.name,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error uploading dossier:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
@@ -365,7 +370,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               dossierDocumentUrl: url,
               dossierDocumentName: file.name,
             });
-          } catch (fallbackErr: any) {
+          } catch (fallbackErrCapturado) {
+            const fallbackErr = comoErrorCapturado(fallbackErrCapturado);
             console.error('Error saving dossier fallback:', fallbackErr);
             setSaveError(fallbackErr?.message || 'No se pudo subir el dossier. Inténtalo de nuevo.');
           }
@@ -393,7 +399,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         riderPdfUrl: url,
         riderPdfName: file.name,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error uploading rider:', err);
       const reader = new FileReader();
       reader.onload = async (ev) => {
@@ -404,7 +411,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
               riderPdfUrl: ev.target!.result as string,
               riderPdfName: file.name,
             });
-          } catch (fallbackErr: any) {
+          } catch (fallbackErrCapturado) {
+            const fallbackErr = comoErrorCapturado(fallbackErrCapturado);
             console.error('Error saving rider fallback:', fallbackErr);
             setSaveError(fallbackErr?.message || 'No se pudo subir el rider. Inténtalo de nuevo.');
           }
@@ -436,7 +444,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         ...prev,
         bandPhotos: [...(prev.bandPhotos || []), ...urls],
       }));
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error subiendo fotos de galería:', err);
       setSaveError(err?.message || 'No se pudieron subir una o varias fotos. Inténtalo de nuevo.');
     } finally {
@@ -512,7 +521,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         category: 'miembros',
       });
       editarMiembro(id, { fotoUrl: url });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error subiendo foto de miembro:', err);
       // Fallback base64 para no perder la vista si falla la red
       const reader = new FileReader();
@@ -619,7 +629,8 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       if (res.yaEstabaAlDia) {
         setAvisoTraduccion(res.mensaje || 'La traducción ya estaba al día: no se ha gastado ninguna llamada a la IA.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setErrorTraduccion(err?.message || 'No se pudo traducir el EPK.');
     } finally {
       setTraduciendo(null);

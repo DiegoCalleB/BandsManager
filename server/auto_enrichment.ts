@@ -7,6 +7,7 @@ import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
+import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
@@ -133,7 +134,8 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
         endDate: endIso
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[FestivalDates] Error en AI fallback:`, err?.message || err);
   }
 
@@ -347,7 +349,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           }
         }
       }
-    } catch (placesErr: any) {
+    } catch (placesErrCapturado) {
+      const placesErr = comoErrorCapturado(placesErrCapturado);
       console.warn(`[AutoEnrich Places] Error llamando a Places API:`, placesErr?.message || placesErr);
     }
   }
@@ -388,7 +391,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           modified = true;
         }
       }
-    } catch (serperErr: any) {
+    } catch (serperErrCapturado) {
+      const serperErr = comoErrorCapturado(serperErrCapturado);
       console.warn(`[AutoEnrich Serper] Aviso en consulta Serper:`, serperErr?.message || serperErr);
     }
   }
@@ -428,7 +432,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           modified = true;
         }
       }
-    } catch (jinaErr: any) {
+    } catch (jinaErrCapturado) {
+      const jinaErr = comoErrorCapturado(jinaErrCapturado);
       console.warn(`[AutoEnrich Jina] Aviso en consulta Jina Reader:`, jinaErr?.message || jinaErr);
     }
 
@@ -520,7 +525,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         if (data.imagen_url && !lead.imagen_url) { lead.imagen_url = data.imagen_url; modified = true; }
         if (data.icono && (!lead.icono || lead.icono === '🏛️')) { lead.icono = data.icono; modified = true; }
         if (data.notas && (!lead.notas || lead.notas.length < 10)) { lead.notas = data.notas; modified = true; }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '${lead.nombre_sala}':`, err?.message || err);
       }
     }
@@ -615,7 +621,8 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
           modified = true;
           console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '${lead.nombre_sala}'.`);
         }
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.warn(`[AutoEnrich] Error generando pitch inicial con IA:`, e?.message || e);
       }
     }
@@ -718,7 +725,8 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch (searchErrCapturado) {
+      const searchErr = comoErrorCapturado(searchErrCapturado);
       console.warn(`[AutoEnrich] Google Search no disponible (${searchErr?.message || searchErr}), reintentando con conocimiento Gemini...`);
       response = await generateContentWithFallback(client, {
         contents: prompt
@@ -762,7 +770,8 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
       console.log(`[AutoEnrich] Banda '${band.nombre_banda}' enriquecida con éxito.`);
       return await persistirBandaEnriquecida(band, userBandId);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[AutoEnrich] Error enriqueciendo Banda '${band.nombre_banda}':`, err?.message || err);
   }
 

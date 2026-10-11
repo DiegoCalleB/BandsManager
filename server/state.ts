@@ -386,7 +386,7 @@ export function ensureValidUserEmails(state: any): boolean {
 
   for (const u of state.users) {
     const initUser = INITIAL_USERS.find(
-      (iu: any) => iu.id === u.id || (iu.username && iu.username.toLowerCase() === u.username?.toLowerCase())
+      (iu) => iu.id === u.id || (iu.username && iu.username.toLowerCase() === u.username?.toLowerCase())
     );
     if (initUser?.email && (!u.email || !u.email.includes("@") || u.email.toLowerCase() === u.username?.toLowerCase())) {
       u.email = initUser.email;
@@ -917,7 +917,7 @@ export function loadState(): any {
     setlists: INITIAL_SETLISTS,
     bands: INITIAL_BANDS,
     tours: INITIAL_TOURS,
-    users: INITIAL_USERS.map((u: any) => {
+    users: INITIAL_USERS.map((u) => {
       const { hash, salt } = hashPassword(u.initialPassword);
       return {
         id: u.id,

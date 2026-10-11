@@ -9,6 +9,7 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface SetlistVenueResult {
   success: boolean;
@@ -64,7 +65,8 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         referencia_pitch_sugerida: parsed.referencia_pitch_sugerida || `Gran admiración por el mimo que ponéis en la programación cultural de ${cleanVenue}.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error fetching Setlist venue history via AI:", err?.message);
   }
 

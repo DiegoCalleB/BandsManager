@@ -20,6 +20,7 @@ Exporta: ProfesorIA.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_Button|src/components/ui/Button.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 
 ---

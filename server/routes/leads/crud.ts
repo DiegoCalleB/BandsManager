@@ -15,6 +15,7 @@ import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -22,7 +23,8 @@ router.get("/ai/providers", requireAuth, async (req, res) => {
   try {
     const providers = getAvailableAIProviders();
     res.json({ success: true, providers });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching AI providers:", err);
     res.status(500).json({ error: "Error al obtener proveedores de IA" });
   }
@@ -87,7 +89,8 @@ router.get("/leads", requireAuth, async (req, res) => {
     } else {
       res.json({ leads });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error getting leads from Supabase:", err);
     res.status(500).json({ error: "Error al obtener salas desde Supabase" });
   }
@@ -103,7 +106,8 @@ router.get("/leads/:id", requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, error: "Sala o contacto no encontrado." });
     }
     res.json({ success: true, lead });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al obtener la sala." });
   }
@@ -120,7 +124,8 @@ router.get("/leads/:id/messages", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     const messages = await dbGetLeadMessages(id, bandId);
     res.json({ success: true, messages });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id/messages:", error);
     res.status(500).json({ error: error?.message || "Error al obtener el historial de conversación." });
   }
@@ -188,7 +193,8 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
     autoEnrichLead(saved, userBandId, { respetarVacios: camposVaciados }).catch(err => console.error("Error autoEnrichLead background:", err));
 
     res.json({ success: true, lead: saved });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in PUT /api/leads/:id:", error);
     res.status(500).json({ error: error?.message || "Error al actualizar la sala." });
   }
@@ -222,7 +228,7 @@ router.post("/leads", requireAuth, async (req, res) => {
     // El límite de leads/medios por plan solo se comprobaba en el cliente (App.tsx,
     // handleAddLeadWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
     // podía crear leads sin límite sin importar el plan contratado por su banda.
-    const userPlan = (req as any).user?.plan || 'ensayo';
+    const userPlan = req.user?.plan || 'ensayo';
     const isMedio = String(newLead.tipo || '').toLowerCase().includes('medio')
       || String(newLead.tipo || '').toLowerCase().includes('prensa')
       || String(newLead.tipo || '').toLowerCase().includes('radio');
@@ -292,7 +298,8 @@ router.post("/leads", requireAuth, async (req, res) => {
     let saved: Lead;
     try {
       saved = await dbUpsertLead(newLead, userBandId);
-    } catch (dbErr: any) {
+    } catch (dbErrCapturado) {
+      const dbErr = comoErrorCapturado(dbErrCapturado);
       console.error("Supabase upsert failed in POST /api/leads, saving to local state fallback:", dbErr);
       const fallbackId = newLead.id || `lead-${Date.now()}`;
       saved = {
@@ -318,7 +325,8 @@ router.post("/leads", requireAuth, async (req, res) => {
     autoEnrichLead(saved, userBandId).catch(err => console.error("Error autoEnrichLead background:", err));
 
     res.json({ success: true, lead: saved, warning: warningMsg });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads:", error);
     res.status(500).json({ error: error?.message || "Error al crear la sala." });
   }
@@ -343,7 +351,8 @@ router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, count: ids.length, message: `${ids.length} registros eliminados correctamente y guardados en la lista negra.` });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/bulk-delete:", error);
     res.status(500).json({ error: error?.message || "Error al eliminar registros masivamente." });
   }
@@ -363,7 +372,8 @@ router.delete("/leads/:id", requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, message: "Sala o medio eliminado correctamente y guardado en la lista negra de descartados." });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in DELETE /api/leads/:id:", error);
     res.status(500).json({ error: error?.message || "Error al eliminar la sala." });
   }

@@ -4,6 +4,7 @@ import { ThemeColors } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Input } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 export interface ViralHookVariant {
   id: string;
@@ -189,7 +190,8 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
       } else {
         setDoctorError(res?.error || 'No se pudo completar el diagnóstico.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setDoctorError(err?.message || 'Error conectando con el servicio de IA.');
     } finally {
       setIsAnalyzingDoctor(false);
