@@ -1273,3 +1273,33 @@ body.scroll .slide.slide > .callcard, body.scroll .slide.slide > .notif { positi
 #reloj.on { opacity: 1; } #reloj.fin { background: rgba(160,10,20,.85); animation: relojfin .6s steps(2) infinite; }
 @keyframes relojfin { 50% { opacity: .35; } }
 body.pelicula:not(.scroll) #reloj.on { opacity: 1; } body:not(.pelicula) #reloj, body.scroll #reloj { display: none; }
+
+/* ── Claudio y Guglio con su logo: se ve con quién habla Iago y quién de los dos contesta ── */
+.slide.slide > .ia-duo { position: absolute; left: 204px; right: 204px; top: 470px; z-index: 3; display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
+.ia-card { display: flex; align-items: center; gap: 36px; padding: 34px 40px; border-radius: 34px; background: rgba(12,14,22,.86); border: 2px solid rgba(255,255,255,.14); box-shadow: 0 30px 80px rgba(0,0,0,.55); transition: border-color 250ms, transform 250ms, box-shadow 250ms; }
+.ia-card img { width: 190px; height: 190px; border-radius: 40px; flex: none; }
+.ia-card b { display: block; font-size: 58px; line-height: 1.05; }
+.ia-card span { display: block; font-size: 34px; margin-top: 6px; color: rgba(255,255,255,.8); }
+.ia-card em { display: block; font-size: 28px; margin-top: 4px; color: rgba(255,255,255,.55); font-style: normal; }
+.ia-claude { --c: #d97757; } .ia-gemini { --c: #8ab4f8; }
+.ia-card b { color: var(--c); }
+.ia-pt { display: flex; gap: 10px; margin-top: 18px; height: 16px; opacity: 0; transition: opacity 200ms; }
+.ia-pt u { width: 14px; height: 14px; border-radius: 50%; background: var(--c); animation: iapt 1s ease-in-out infinite; } .ia-pt u:nth-child(2) { animation-delay: .15s; } .ia-pt u:nth-child(3) { animation-delay: .3s; }
+@keyframes iapt { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-8px); opacity: 1; } }
+#stage:has(.slide.active li.habla[data-who="ia_claude"]) .ia-claude, #stage:has(.slide.active li.habla[data-who="ia_gemini"]) .ia-gemini { border-color: var(--c); transform: scale(1.05); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 28%, transparent), 0 30px 80px rgba(0,0,0,.55); }
+#stage:has(.slide.active li.habla[data-who="ia_claude"]) .ia-claude .ia-pt, #stage:has(.slide.active li.habla[data-who="ia_gemini"]) .ia-gemini .ia-pt { opacity: 1; }
+body:not(.pelicula) .slide.slide > .ia-duo { top: auto; bottom: 150px; left: 120px; right: auto; width: 900px; grid-template-columns: 1fr; }
+body:not(.pelicula) .ia-card { padding: 16px 24px; gap: 20px; } body:not(.pelicula) .ia-card img { width: 90px; height: 90px; border-radius: 22px; } body:not(.pelicula) .ia-card b { font-size: 34px; } body:not(.pelicula) .ia-card span { font-size: 22px; margin-top: 2px; } body:not(.pelicula) .ia-card em { display: none; }
+body.scroll .slide.slide > .ia-duo { position: relative; left: auto; right: auto; top: auto; bottom: auto; width: 100%; grid-template-columns: 1fr; margin: 14px 0; }
+@media (prefers-reduced-motion: reduce) { .ia-pt u { animation: none; } }
+/* en la escena de Claudio y Guglio, las tarjetas ya dicen quién habla: su retrato no se repite y el de Iago baja a la esquina */
+.slide:has(> .ia-duo) > .foco[data-who^="ia_"] { display: none; }
+body.pelicula:not(.scroll) .slide:has(> .ia-duo) > .foco { left: 96px !important; top: auto !important; bottom: 86px !important; }
+/* Escenas de la historia: sin chat, el retrato de quien habla ocupa el hueco (grande, como un plano medio) */
+body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-post):not(:has(> .ia-duo)) > .foco.foco { --t: 400px !important; left: auto !important; right: 120px !important; top: auto !important; bottom: 100px !important; filter: drop-shadow(0 24px 50px rgba(0,0,0,.7)); }
+body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-post):not(:has(> .ia-duo)) > .foco b { font-size: 34px; }
+body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-post):not(:has(> .ia-duo)) > .foco img { border-radius: 40px; border-width: 5px; }
+body.pelicula:not(.scroll) .slide.slide > .callcard { top: 280px; }
+
+/* plano y contraplano: Iago a la derecha y los demás a la izquierda (salvo si hay una tabla a la izquierda) */
+body.pelicula:not(.scroll) .slide.scene:not(.room):not(.reveal):not(.creditos-post):not(:has(> .ia-duo)):not(:has(table)) > .foco.foco[data-lado="izq"] { left: 120px !important; right: auto !important; }

@@ -94,7 +94,7 @@
     f.dataset.who = el.dataset.who; f.dataset.mov = m.mov || 'calma';
     // plano y contraplano: quien escribe desde su lado (yo) entra por la derecha, los demás por la izquierda
     f.style.cssText = '--c:' + m.color + ';--t:' + h.t + 'px;left:' + h.x + 'px;top:' + h.y + 'px;--dx:' + (el.classList.contains('me') ? 160 : -160) + 'px';
-    f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.rol.length > 14 ? m.nombre : m.nombre + ' · ' + m.rol;
+    f.dataset.lado = el.classList.contains('me') ? 'der' : 'izq'; f.querySelector('img').src = m.foto; f.querySelector('b').textContent = m.rol.length > 14 ? m.nombre : m.nombre + ' · ' + m.rol;
     f.classList.add('in');
   }
   function sinfoco(slide) {

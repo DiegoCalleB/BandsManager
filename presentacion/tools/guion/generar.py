@@ -197,6 +197,10 @@ add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-
        m('guglio', 'Yo pongo las ideas locas. Claudio las discute.'),
        m('claudio', 'Y tú decides, Iago. Revisamos cada respuesta.'),
        m('iago', 'Hecho, tronco. Empezamos esta noche.'), cls='tight')}
+  <div class="ia-duo">
+    <div class="ia-card ia-claude"><img src="img/logo-claude.svg" alt="Claude"><div><b>Claudio</b><span>Claude Code</span><em>el que discute</em><i class="ia-pt" aria-hidden="true"><u></u><u></u><u></u></i></div></div>
+    <div class="ia-card ia-gemini"><img src="img/logo-gemini.svg" alt="Gemini"><div><b>Guglio</b><span>Gemini</span><em>el de las ideas locas</em><i class="ia-pt" aria-hidden="true"><u></u><u></u><u></u></i></div></div>
+  </div>
   <p class="scene-foot"><b>Y esta parte es cierta:</b> esta presentación es el TFM de ese máster.</p>
 </section>
 ''')
