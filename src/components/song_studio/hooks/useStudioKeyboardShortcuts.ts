@@ -2,7 +2,7 @@
  * Atajos de teclado estilo Cubase de Song Studio (espacio, bucle, cue, mute/solo, grabar)
  * Extraído de SongStudioModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
+import { Dispatch, RefObject, SetStateAction, useEffect, useEffectEvent } from "react";
 import { Song, SongAudioIdea } from "../../../types";
 import { getIdeaTracks } from "../ideaTracks";
 
@@ -34,138 +34,141 @@ export interface StudioKeyboardShortcutsParams {
  * @param params Estado y callbacks del contenedor ({@link StudioKeyboardShortcutsParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useStudioKeyboardShortcuts({ song, playingIdeaIdRef, isRecordingTrack, stopRecordingTrackOverdub, togglePlayIdea, handleStopIdea, handlePauseIdea, toggleIdeaLoop, setIdeaCueIn, setIdeaCueOut, startRecordingTrackOverdub, setShowAddIdea, currentTimeMap, handleSeekIdea, durationMap, handleToggleMuteTrack, handleToggleSoloTrack, setShowCubaseHelp, loopConfigMap }: StudioKeyboardShortcutsParams) {
-  // Cubase Keyboard Shortcuts Listener
+export function useStudioKeyboardShortcuts({ song, playingIdeaIdRef, isRecordingTrack, stopRecordingTrackOverdub, togglePlayIdea, handleStopIdea, handlePauseIdea, toggleIdeaLoop, setIdeaCueIn, setIdeaCueOut, startRecordingTrackOverdub, setShowAddIdea, currentTimeMap, handleSeekIdea, durationMap, handleToggleMuteTrack, handleToggleSoloTrack, setShowCubaseHelp }: StudioKeyboardShortcutsParams) {
+  // Cubase Keyboard Shortcuts Listener.
+  // `useEffectEvent`: el manejador lee siempre las props/estado más recientes (p. ej. `isRecordingTrack`),
+  // pero el listener de window se suscribe una sola vez en lugar de re-suscribirse en cada tic del reproductor.
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    // Ignore keypresses if typing in input, textarea, select or contenteditable
+    const activeEl = document.activeElement;
+    if (activeEl) {
+      const tagName = activeEl.tagName.toUpperCase();
+      if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || (activeEl as HTMLElement).isContentEditable) {
+        return;
+      }
+    }
+
+    const activeIdea = (song.audioIdeas || []).find((i) => i.id === playingIdeaIdRef.current) || (song.audioIdeas || [])[0];
+
+    // If currently recording an overdub track, pressing R, Space, or Stop keys finishes recording
+    if (isRecordingTrack) {
+      if (
+        ['Space', 'Numpad0', 'Digit0', 'KeyR', 'NumpadMultiply', 'KeyP', 'Escape', 'Home', 'NumpadEnter'].includes(e.code) ||
+        e.key === 'Home'
+      ) {
+        e.preventDefault();
+        stopRecordingTrackOverdub();
+        return;
+      }
+    }
+
+    // [Espacio]: Alternar Reproducir / Pausar Transport
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (activeIdea) {
+        togglePlayIdea(activeIdea);
+      }
+    }
+    // [Numpad0 / Digit0 / Home / Escape / Enter]: Detener e ir a inicio (Stop & Rewind)
+    else if (e.code === 'Numpad0' || e.code === 'Digit0' || e.key === 'Home' || e.code === 'NumpadEnter') {
+      e.preventDefault();
+      if (activeIdea) {
+        handleStopIdea(activeIdea);
+      }
+    }
+    // [KeyP]: Pausar en posición actual
+    else if (e.code === 'KeyP') {
+      e.preventDefault();
+      if (activeIdea) {
+        handlePauseIdea(activeIdea);
+      }
+    }
+    // [KeyL / Slash]: Alternar Bucle (Loop)
+    else if (e.code === 'KeyL' || e.code === 'Slash') {
+      e.preventDefault();
+      if (activeIdea) {
+        toggleIdeaLoop(activeIdea);
+      }
+    }
+    // [KeyI]: Fijar Cue In / Loop Start en la posición actual
+    else if (e.code === 'KeyI') {
+      e.preventDefault();
+      if (activeIdea) {
+        setIdeaCueIn(activeIdea);
+      }
+    }
+    // [KeyO]: Fijar Cue Out / Loop End en la posición actual
+    else if (e.code === 'KeyO') {
+      e.preventDefault();
+      if (activeIdea) {
+        setIdeaCueOut(activeIdea);
+      }
+    }
+    // [KeyR / NumpadMultiply]: Iniciar grabación overdub
+    else if (e.code === 'KeyR' || e.code === 'NumpadMultiply') {
+      e.preventDefault();
+      if (activeIdea) {
+        startRecordingTrackOverdub(activeIdea);
+      } else {
+        setShowAddIdea(true);
+      }
+    }
+    // [KeyN]: Abrir/Cerrar formulario de Nueva Idea
+    else if (e.code === 'KeyN') {
+      e.preventDefault();
+      setShowAddIdea((prev) => !prev);
+    }
+    // [Flecha Izquierda]: Retroceder 5s (o 15s con Shift)
+    else if (e.code === 'ArrowLeft') {
+      e.preventDefault();
+      if (activeIdea) {
+        const cur = currentTimeMap[activeIdea.id] || 0;
+        const delta = e.shiftKey ? 15 : 5;
+        handleSeekIdea(activeIdea, Math.max(0, cur - delta));
+      }
+    }
+    // [Flecha Derecha]: Avanzar 5s (o 15s con Shift)
+    else if (e.code === 'ArrowRight') {
+      e.preventDefault();
+      if (activeIdea) {
+        const cur = currentTimeMap[activeIdea.id] || 0;
+        const maxDur = durationMap[activeIdea.id] || 300;
+        const delta = e.shiftKey ? 15 : 5;
+        handleSeekIdea(activeIdea, Math.min(maxDur, cur + delta));
+      }
+    }
+    // [KeyM]: Alternar Silencio (Mute) en la idea activa
+    else if (e.code === 'KeyM') {
+      e.preventDefault();
+      if (activeIdea) {
+        const tracks = getIdeaTracks(activeIdea);
+        if (tracks.length > 0) {
+          tracks.forEach((tr) => handleToggleMuteTrack(activeIdea, tr.id));
+        }
+      }
+    }
+    // [KeyS]: Alternar Solo en la primera pista
+    else if (e.code === 'KeyS') {
+      e.preventDefault();
+      if (activeIdea) {
+        const tracks = getIdeaTracks(activeIdea);
+        if (tracks.length > 0) {
+          handleToggleSoloTrack(activeIdea, tracks[0].id);
+        }
+      }
+    }
+    // [KeyK or ?]: Abrir / Cerrar guía de atajos Cubase
+    else if (e.code === 'KeyK' || e.key === '?') {
+      e.preventDefault();
+      setShowCubaseHelp((prev) => !prev);
+    }
+  });
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore keypresses if typing in input, textarea, select or contenteditable
-      const activeEl = document.activeElement;
-      if (activeEl) {
-        const tagName = activeEl.tagName.toUpperCase();
-        if (tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT' || (activeEl as HTMLElement).isContentEditable) {
-          return;
-        }
-      }
-
-      const activeIdea = (song.audioIdeas || []).find((i) => i.id === playingIdeaIdRef.current) || (song.audioIdeas || [])[0];
-
-      // If currently recording an overdub track, pressing R, Space, or Stop keys finishes recording
-      if (isRecordingTrack) {
-        if (
-          ['Space', 'Numpad0', 'Digit0', 'KeyR', 'NumpadMultiply', 'KeyP', 'Escape', 'Home', 'NumpadEnter'].includes(e.code) ||
-          e.key === 'Home'
-        ) {
-          e.preventDefault();
-          stopRecordingTrackOverdub();
-          return;
-        }
-      }
-
-      // [Espacio]: Alternar Reproducir / Pausar Transport
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (activeIdea) {
-          togglePlayIdea(activeIdea);
-        }
-      }
-      // [Numpad0 / Digit0 / Home / Escape / Enter]: Detener e ir a inicio (Stop & Rewind)
-      else if (e.code === 'Numpad0' || e.code === 'Digit0' || e.key === 'Home' || e.code === 'NumpadEnter') {
-        e.preventDefault();
-        if (activeIdea) {
-          handleStopIdea(activeIdea);
-        }
-      }
-      // [KeyP]: Pausar en posición actual
-      else if (e.code === 'KeyP') {
-        e.preventDefault();
-        if (activeIdea) {
-          handlePauseIdea(activeIdea);
-        }
-      }
-      // [KeyL / Slash]: Alternar Bucle (Loop)
-      else if (e.code === 'KeyL' || e.code === 'Slash') {
-        e.preventDefault();
-        if (activeIdea) {
-          toggleIdeaLoop(activeIdea);
-        }
-      }
-      // [KeyI]: Fijar Cue In / Loop Start en la posición actual
-      else if (e.code === 'KeyI') {
-        e.preventDefault();
-        if (activeIdea) {
-          setIdeaCueIn(activeIdea);
-        }
-      }
-      // [KeyO]: Fijar Cue Out / Loop End en la posición actual
-      else if (e.code === 'KeyO') {
-        e.preventDefault();
-        if (activeIdea) {
-          setIdeaCueOut(activeIdea);
-        }
-      }
-      // [KeyR / NumpadMultiply]: Iniciar grabación overdub
-      else if (e.code === 'KeyR' || e.code === 'NumpadMultiply') {
-        e.preventDefault();
-        if (activeIdea) {
-          startRecordingTrackOverdub(activeIdea);
-        } else {
-          setShowAddIdea(true);
-        }
-      }
-      // [KeyN]: Abrir/Cerrar formulario de Nueva Idea
-      else if (e.code === 'KeyN') {
-        e.preventDefault();
-        setShowAddIdea((prev) => !prev);
-      }
-      // [Flecha Izquierda]: Retroceder 5s (o 15s con Shift)
-      else if (e.code === 'ArrowLeft') {
-        e.preventDefault();
-        if (activeIdea) {
-          const cur = currentTimeMap[activeIdea.id] || 0;
-          const delta = e.shiftKey ? 15 : 5;
-          handleSeekIdea(activeIdea, Math.max(0, cur - delta));
-        }
-      }
-      // [Flecha Derecha]: Avanzar 5s (o 15s con Shift)
-      else if (e.code === 'ArrowRight') {
-        e.preventDefault();
-        if (activeIdea) {
-          const cur = currentTimeMap[activeIdea.id] || 0;
-          const maxDur = durationMap[activeIdea.id] || 300;
-          const delta = e.shiftKey ? 15 : 5;
-          handleSeekIdea(activeIdea, Math.min(maxDur, cur + delta));
-        }
-      }
-      // [KeyM]: Alternar Silencio (Mute) en la idea activa
-      else if (e.code === 'KeyM') {
-        e.preventDefault();
-        if (activeIdea) {
-          const tracks = getIdeaTracks(activeIdea);
-          if (tracks.length > 0) {
-            tracks.forEach((tr) => handleToggleMuteTrack(activeIdea, tr.id));
-          }
-        }
-      }
-      // [KeyS]: Alternar Solo en la primera pista
-      else if (e.code === 'KeyS') {
-        e.preventDefault();
-        if (activeIdea) {
-          const tracks = getIdeaTracks(activeIdea);
-          if (tracks.length > 0) {
-            handleToggleSoloTrack(activeIdea, tracks[0].id);
-          }
-        }
-      }
-      // [KeyK or ?]: Abrir / Cerrar guía de atajos Cubase
-      else if (e.code === 'KeyK' || e.key === '?') {
-        e.preventDefault();
-        setShowCubaseHelp((prev) => !prev);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [song, currentTimeMap, durationMap, loopConfigMap]);
+    const alPulsar = (e: KeyboardEvent) => handleKeyDown(e);
+    window.addEventListener('keydown', alPulsar);
+    return () => window.removeEventListener('keydown', alPulsar);
+  }, []);
 
   return {  };
 }

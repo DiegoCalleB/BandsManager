@@ -473,6 +473,8 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
 
   // Stop background discography player when entering studio modal & cleanup on unmount
   useEffect(() => {
+    // El objeto del mapa se muta pero nunca se reasigna: copiarlo aquí es equivalente a leerlo en la limpieza.
+    const pistasAudio = trackAudioRefs.current;
     // Silence any background discography audio elements when entering Song Studio
     const allAudioElements = document.querySelectorAll('audio');
     allAudioElements.forEach((el) => {
@@ -486,7 +488,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
         cancelAnimationFrame(syncAnimationFrameRef.current);
       }
       // Stop all multitrack studio audio elements on unmount
-      Object.values(trackAudioRefs.current).forEach((el) => {
+      Object.values(pistasAudio).forEach((el) => {
         if (el) {
           try {
             el.pause();
@@ -496,7 +498,7 @@ export function useStudioPlaybackEngine({ syncAnimationFrameRef, pistasDeReprodu
       });
       playingIdeaIdRef.current = null;
     };
-  }, []);
+  }, [trackAudioRefs, playingIdeaIdRef, syncAnimationFrameRef]);
 
   return { togglePlayIdea, handleStopIdea, handlePauseIdea, handleSeekIdea, runMasterSyncLoop, jumpToTime };
 }
