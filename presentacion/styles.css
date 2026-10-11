@@ -1485,3 +1485,53 @@ body.pelicula:not(.scroll) .slide.feat.active .ft-shot.alto { animation: subealt
 body.pelicula.golpe-voz:not(.scroll) #stage { animation: golpevoz 620ms cubic-bezier(.2, .9, .3, 1) both; }
 @keyframes golpevoz { 0% { scale: 1; } 18% { scale: 1.045; filter: brightness(1.12) contrast(1.06); } 100% { scale: 1; filter: none; } }
 @media (prefers-reduced-motion: reduce) { body.pelicula.golpe-voz #stage { animation: none; } }
+
+/* ───────── En directo: la pantalla que Iago comparte (cine.js) ───────── */
+.vent, .raton, #llamada { display: none; }
+body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) { padding-top: 46px; box-sizing: border-box; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.14), 0 30px 90px rgba(0,0,0,.65); background: #0d1018; }
+body.pelicula:not(.scroll) .feat .ft-shot:not(.phone) > :is(img, video) { height: 100%; }
+body.pelicula:not(.scroll) .feat .vent { display: flex; position: absolute; left: 0; right: 0; top: 0; height: 46px; z-index: 3; align-items: center; gap: 18px;
+  padding: 0 18px; background: #1b1f29; border-bottom: 1px solid rgba(255,255,255,.08); font: 500 17px/1 Onest, sans-serif; color: rgba(255,255,255,.8); }
+.vent-p { display: flex; gap: 8px; } .vent-p i { width: 13px; height: 13px; border-radius: 50%; background: #5b6170; }
+.vent-tab { display: flex; align-items: center; gap: 10px; height: 34px; margin-top: 12px; padding: 0 18px; border-radius: 10px 10px 0 0; background: #0d1018; max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vent-tab b { font: 700 12px/1 Oswald, sans-serif; color: #fff; background: #e50914; border-radius: 4px; padding: 3px 4px; }
+.vent-url { flex: 1; display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 16px; border-radius: 99px; background: #0d1018; color: rgba(255,255,255,.7); }
+.vent-url i { font-style: normal; font-size: 13px; filter: grayscale(1); }
+.vent-vivo { display: flex; align-items: center; gap: 8px; white-space: nowrap; color: #fff; font-weight: 600; }
+.vent-vivo i { width: 11px; height: 11px; border-radius: 50%; background: #ff3b30; box-shadow: 0 0 0 0 rgba(255,59,48,.6); animation: vivo 1.6s ease-out infinite; }
+.vent-vivo u { text-decoration: none; font-variant-numeric: tabular-nums; color: rgba(255,255,255,.7); }
+@keyframes vivo { 0% { box-shadow: 0 0 0 0 rgba(255,59,48,.6); } 100% { box-shadow: 0 0 0 10px rgba(255,59,48,0); } }
+/* las caras de la banda, como en una videollamada; la de quien habla se ilumina con su voz */
+body.pelicula.compartiendo:not(.scroll) #llamada { display: flex; flex-direction: column; position: absolute; right: 64px; top: 250px; z-index: 47; gap: 12px; }
+/* como en una videollamada: la pantalla compartida a la izquierda y la columna de caras a la derecha */
+body.pelicula.compartiendo:not(.scroll) .feat .ft-shot:not(.phone):not(.alto) { right: 300px; }
+body.pelicula.compartiendo:not(.scroll) #reloj { display: none; }
+.vent-reloj { white-space: nowrap; font: 600 15px/1 Onest, sans-serif; letter-spacing: .04em; color: #ff8f86; font-variant-numeric: tabular-nums; }
+.vent-reloj:empty { display: none; }
+body.compartiendo .slide.feat > .foco { display: none !important; }
+.tesela { position: relative; width: 214px; height: 134px; border-radius: 12px; overflow: hidden; background: #111; box-shadow: 0 10px 30px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.12);
+  transition: box-shadow 200ms, translate 200ms; }
+.tesela img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.9); animation: respira 6s ease-in-out infinite alternate; }
+.tesela:nth-child(2) img { animation-delay: -2s; } .tesela:nth-child(3) img { animation-delay: -4s; } .tesela:nth-child(4) img { animation-delay: -1s; }
+@keyframes respira { from { scale: 1.02; translate: -1% 0; } to { scale: 1.08; translate: 1% -1%; } }
+.tesela span { position: absolute; left: 8px; bottom: 7px; padding: 3px 9px; border-radius: 6px; background: rgba(0,0,0,.6); font: 600 15px/1.2 Onest, sans-serif; color: #fff; }
+.tesela .mic { position: absolute; right: 8px; bottom: 8px; display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+.tesela .mic u { width: 4px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.7); }
+.tesela.habla { box-shadow: 0 0 0 3px var(--c, #3ddc84), 0 12px 34px rgba(0,0,0,.7); translate: 0 -6px; }
+.tesela.habla .mic u { background: var(--c, #3ddc84); height: calc(4px + var(--vu, .3) * 12px); }
+.tesela.habla .mic u:nth-child(2) { height: calc(4px + var(--vu, .3) * 16px); }
+.tesela.invitado { animation: entratesela 400ms cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes entratesela { from { opacity: 0; translate: 0 20px; } }
+/* el cursor de Iago sobre las capturas fijas: se mueve despacio y hace dos clics durante la escena */
+body.pelicula:not(.scroll) .feat.active .raton { display: block; position: absolute; z-index: 4; width: 30px; height: 30px; left: 30%; top: 30%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 11-7 1.2 4 7.4-3 1.6-4-7.4L4 20z' fill='white' stroke='black' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); animation: raton var(--pan, 18s) cubic-bezier(.45, 0, .55, 1) 900ms both; }
+body.pelicula:not(.scroll) .feat.active .raton::after { content: ''; position: absolute; left: -14px; top: -14px; width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,.85); opacity: 0; animation: clic var(--pan, 18s) linear 900ms both; }
+@keyframes raton { 0% { left: 62%; top: 70%; } 22% { left: 34%; top: 28%; } 30% { left: 34%; top: 28%; } 55% { left: 70%; top: 42%; } 68% { left: 70%; top: 42%; } 100% { left: 48%; top: 62%; } }
+@keyframes clic { 0%, 25% { opacity: 0; scale: .4; } 26% { opacity: 1; scale: .4; } 30% { opacity: 0; scale: 1.6; } 63% { opacity: 0; scale: .4; } 64% { opacity: 1; scale: .4; } 68% { opacity: 0; scale: 1.6; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .raton, .raton::after, .tesela img, .vent-vivo i { animation: none !important; } }
+
+/* en la ventana estrecha (vídeos verticales) solo caben las tres bolitas, la dirección y el aviso */
+body.pelicula:not(.scroll) .feat .ft-shot.alto .vent :is(.vent-tab, .vent-reloj) { display: none; }
