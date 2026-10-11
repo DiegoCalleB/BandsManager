@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { BandContact, BandRelationshipStatus } from "../types";
@@ -285,6 +285,10 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
   >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
 
+  // Estilo y callback «en vivo» para los efectos de Leaflet (no deben re-crear el mapa ni los marcadores)
+  const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
+  const seleccionarBanda = useEffectEvent((band: BandContact) => onSelectBand(band));
+
   // Initialize Map
   useEffect(() => {
     if (!mapRef.current) return;
@@ -298,7 +302,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
-      const currentPreset = MAP_STYLES[mapStyle];
+      const currentPreset = estiloInicial();
       const layer = L.tileLayer(currentPreset.url, {
         attribution: currentPreset.attr,
         maxZoom: 19,
@@ -598,7 +602,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
         const btn = document.getElementById(`pop-band-select-${band.id}`);
         if (btn) {
           btn.onclick = () => {
-            onSelectBand(band);
+            seleccionarBanda(band);
           };
         }
       });

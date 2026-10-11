@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { Lead } from "../types";
@@ -696,6 +696,12 @@ export const VenueMap: React.FC<VenueMapProps> = ({
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
   const [, setGeocodedCount] = useState<number>(0);
 
+  // Valores «en vivo» para los efectos de Leaflet: leerlos no debe re-crear el mapa ni los marcadores
+  const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
+  const idLeadSeleccionado = useEffectEvent(() => selectedLead?.id);
+  const seleccionarLead = useEffectEvent((lead: Lead) => onSelectLead(lead));
+  const aprobarLead = useEffectEvent((leadId: string) => onUpdateLead(leadId, { estado: "aprobado" }));
+
   // Initialize Map with Marker Clustering
   useEffect(() => {
     if (!mapRef.current) return;
@@ -711,7 +717,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
       // Tile Layer (Default to Voyager for crisp bright visibility)
-      const currentPreset = MAP_STYLES[mapStyle];
+      const currentPreset = estiloInicial();
       const layer = L.tileLayer(currentPreset.url, {
         attribution: currentPreset.attr,
         maxZoom: 19,
@@ -926,7 +932,7 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         pinColor = "#2563eb"; // Blue
       else if (lead.estado === "no_interesado") pinColor = "#64748b"; // Slate
 
-      const isSelected = selectedLead?.id === lead.id;
+      const isSelected = idLeadSeleccionado() === lead.id;
 
       let cleanMapImg = lead.imagen_url || "";
       if (cleanMapImg.includes("icon.horse/icon/")) {
@@ -1145,13 +1151,13 @@ export const VenueMap: React.FC<VenueMapProps> = ({
         const btnSelect = document.getElementById(`pop-select-${lead.id}`);
         if (btnSelect) {
           btnSelect.onclick = () => {
-            onSelectLead(lead);
+            seleccionarLead(lead);
           };
         }
         const btnApprove = document.getElementById(`pop-approve-${lead.id}`);
         if (btnApprove) {
           btnApprove.onclick = () => {
-            onUpdateLead(lead.id, { estado: "aprobado" });
+            aprobarLead(lead.id);
             marker.closePopup();
           };
         }

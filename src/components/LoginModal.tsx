@@ -9,6 +9,8 @@ import { useLanguage, SUPPORTED_LANGUAGES } from "../context/idioma";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
+import { SocialButtons } from './login/GoogleSocialButton';
+import { PasswordStrengthBar } from './login/PasswordStrengthBar';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: BandaDisponible[]) => void;
@@ -48,13 +50,33 @@ function tieneConexionMala(): boolean {
   }
 }
 
+/** Usuario o correo que el navegador recordó en un acceso anterior ("" si no hay). */
+function leerUsuarioRecordado(): string {
+  return (
+    localStorage.getItem("bandmanager_remembered_username") ||
+    localStorage.getItem("bandmanager_last_login_email") ||
+    ""
+  );
+}
+
+/** Enlace de invitación del correo (?invitacion=...&email=...), o null si no hay. */
+function leerInvitacionDeLaUrl(): { token: string; correo: string } | null {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("invitacion");
+    return token ? { token, correo: params.get("email") || "" } : null;
+  } catch {
+    return null;
+  }
+}
+
 // ⚠️ NO SE RENDERIZA EN PRODUCCIÓN AHORA MISMO. App.tsx:USE_SIMPLE_LOGIN = true hace que la
 // pantalla de login real sea SimplePromoLoginModal.tsx. Este componente (registro con parrilla
 // de 4 planes) se conserva intacto para cuando se reabra el registro público — antes de tocar
 // un color, texto o bug aquí, confirma en App.tsx cuál de los dos está activo: es fácil editar
 // este por error pensando que es el que se ve (ya ha pasado).
 export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
-  const [view, setView] = useState<ViewState>("login");
+  const [view, setView] = useState<ViewState>(() => (leerInvitacionDeLaUrl() ? "activate" : "login"));
   const { language: currentAppLang, setLanguage: setAppLang } = useLanguage();
 
   // El atributo JSX `muted` en un <video> no basta en algunos navegadores: si el motor evalúa
@@ -77,7 +99,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   };
 
   // --- Login State ---
-  const [username, setUsername] = useState("");
+  const [usuarioRecordado] = useState(leerUsuarioRecordado);
+  const [invitacionUrl] = useState(leerInvitacionDeLaUrl);
+  const [username, setUsername] = useState(usuarioRecordado);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -85,21 +109,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
 
   // --- Remember Me State ---
   const [rememberMe, setRememberMe] = useState(() => {
-    return localStorage.getItem("bandmanager_remember_me") !== "false";
+    return !!usuarioRecordado || localStorage.getItem("bandmanager_remember_me") !== "false";
   });
-
-  // On mount, prefill username and emails if stored in localStorage
-  useEffect(() => {
-    const savedUser =
-      localStorage.getItem("bandmanager_remembered_username") ||
-      localStorage.getItem("bandmanager_last_login_email");
-    if (savedUser) {
-      setUsername(savedUser);
-      setRegEmail(savedUser);
-      setActivateEmail(savedUser);
-      setRememberMe(true);
-    }
-  }, []);
 
   // --- Reset Password State ---
   const [resetEmailOrUsername, setResetEmailOrUsername] = useState("");
@@ -114,30 +125,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
   // --- Register State ---
   const [regLeaderName, setRegLeaderName] = useState("");
   const [regBandName, setRegBandName] = useState("");
-  const [regEmail, setRegEmail] = useState("");
+  const [regEmail, setRegEmail] = useState(usuarioRecordado);
   const [regPassword, setRegPassword] = useState("");
   const [showRegPassword, setShowRegPassword] = useState(false);
 
   // --- Activate Account State ---
-  const [activateEmail, setActivateEmail] = useState("");
+  const [activateEmail, setActivateEmail] = useState(invitacionUrl?.correo || usuarioRecordado);
   const [activateName, setActivateName] = useState("");
   const [activateUsername, setActivateUsername] = useState("");
   const [activatePassword, setActivatePassword] = useState("");
   const [showActivatePassword, setShowActivatePassword] = useState(false);
   const [activateStep, setActivateStep] = useState<1 | 2>(1);
   // Token de un solo uso que viaja en el enlace del correo de invitación (?invitacion=...&email=...).
-  const [activateToken, setActivateToken] = useState("");
-
+  const [activateToken] = useState(invitacionUrl?.token ?? "");
+  // El token no debe quedarse en la barra de direcciones ni en el historial.
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const token = params.get("invitacion");
-      if (!token) return;
-      const correo = params.get("email") || "";
-      setActivateToken(token);
-      if (correo) setActivateEmail(correo);
-      setView("activate");
-      // El token no debe quedarse en la barra de direcciones ni en el historial.
+      if (!params.get("invitacion")) return;
       params.delete("invitacion");
       params.delete("email");
       const resto = params.toString();
@@ -492,80 +497,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     }
   };
 
-  const GoogleIcon = () => (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      stroke="currentColor"
-      strokeWidth="2"
-      fill="none"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0"
-    >
-      <path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 8.529-3.249 8.529-8.934 0-.528-.081-1.097-.202-1.625z" />
-    </svg>
-  );
-
-  const PasswordStrengthBar = ({ pass }: { pass: string }) => {
-    if (!pass) return null;
-    let score = 0;
-    if (pass.length >= 6) score += 1;
-    if (pass.length >= 8) score += 1;
-    if (/[0-9]/.test(pass) && /[^A-Za-z0-9]/.test(pass)) score += 1;
-
-    const labels = ["Contraseña básica", "Seguridad media", "Muy segura"];
-    const colors = [
-      "bg-[var(--alert)]",
-      "bg-[var(--acc)]",
-      "bg-[var(--ok)]",
-    ];
-    const textColors = [
-      "text-[var(--alert)]",
-      "text-[var(--acc)]",
-      "text-[var(--ok)]",
-    ];
-
-    return (
-      <div className="space-y-1.5 pt-1 px-0.5">
-        <div className="flex gap-1 h-1 w-full bg-[var(--surface)]/80 rounded-[var(--r-pill)] overflow-hidden">
-          <div
-            className={`h-full transition-ui duration-300 ${score >= 1 ? colors[0] : "bg-transparent"} w-1/3`}
-          />
-          <div
-            className={`h-full transition-ui duration-300 ${score >= 2 ? colors[1] : "bg-transparent"} w-1/3`}
-          />
-          <div
-            className={`h-full transition-ui duration-300 ${score >= 3 ? colors[2] : "bg-transparent"} w-1/3`}
-          />
-        </div>
-        <div className="flex justify-between items-center text-xs">
-          <span className={`font-medium ${textColors[Math.max(0, score - 1)]}`}>
-            {labels[Math.max(0, score - 1)]}
-          </span>
-          <span className="text-[var(--ink-2)]">
-            {pass.length < 6 ? "Mínimo 6 caracteres" : "✓ Longitud OK"}
-          </span>
-        </div>
-      </div>
-    );
-  };
-
-  const SocialButtons = () => (
-    <div className="w-full mt-3">
-      <button
-        type="button"
-        onClick={handleGoogleSocialSignIn}
-        disabled={loading}
-        className="w-full flex items-center justify-center gap-2.5 py-3 bg-[var(--surface)]/80 hover:bg-[var(--surface)] rounded-[var(--r-l)] text-sm font-medium text-[var(--ink-2)] hover:text-[var(--ink)] transition-ui cursor-pointer disabled:opacity-50"
-      >
-        <GoogleIcon />
-        <span>{loading ? "Conectando..." : "Continuar con Google"}</span>
-      </button>
-    </div>
-  );
-
   return (
     <ModalPortal isOpen={true}>
       <div
@@ -775,7 +706,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
-                <SocialButtons />
+                <SocialButtons onClick={handleGoogleSocialSignIn} loading={loading} />
 
                 <div className="text-center mt-5 text-xs text-[var(--ink-2)] flex items-center justify-center gap-2 flex-wrap">
                   <span>¿No tienes cuenta?</span>
@@ -1124,7 +1055,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
-                <SocialButtons />
+                <SocialButtons onClick={handleGoogleSocialSignIn} loading={loading} />
 
                 <div className="text-center mt-8">
                   <p className="text-sm text-[var(--ink-2)]">
@@ -1215,7 +1146,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
-                    <SocialButtons />
+                    <SocialButtons onClick={handleGoogleSocialSignIn} loading={loading} />
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -1327,7 +1258,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
                   <span className="h-px flex-1 bg-[var(--hair)]" />
                 </div>
 
-                    <SocialButtons />
+                    <SocialButtons onClick={handleGoogleSocialSignIn} loading={loading} />
                   </div>
                 )}
 
