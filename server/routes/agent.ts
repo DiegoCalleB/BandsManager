@@ -54,6 +54,11 @@ import {
   evaluateIncomingTactics,
 } from '../services/agentIntelligence.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Lead } from '../../src/types.js';
+import type { BandaRegistradaGuardada } from '../stateTypes.js';
+import type { LeadDescubierto } from '../utils/scoutLeads.js';
+import type { RespuestaBusquedaPlaces, RespuestaIA } from './leads/tiposScout.js';
+import type { CampanaCruda, PitchRedactado, RegistroEjecucionAgente } from './tiposAgente.js';
 
 const router = express.Router();
 
@@ -128,9 +133,9 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     usuario_email?: string;
     estado: 'success' | 'error' | 'warning';
     mensaje: string;
-    leads_afectados?: any[];
+    leads_afectados?: unknown[];
     conteo_afectados?: number;
-    detalles?: any;
+    detalles?: Record<string, unknown>;
   }) => {
     try {
       const sb = getSupabase();
@@ -252,7 +257,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         });
       }
 
-      let activeCampaign: any = null;
+      let activeCampaign: CampanaCruda | null = null;
 
       try {
         const { data: campData } = await sb
@@ -276,7 +281,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         // fallback
       }
 
-      const results: any[] = [];
+      const results: PitchRedactado[] = [];
       const ai = getAiClient();
       const state = loadState();
       const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
@@ -413,7 +418,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         process.env.GOOGLE_PLACES_API_KEY ||
         process.env.VITE_GOOGLE_PLACES_API_KEY ||
         '';
-      const rawCandidates: any[] = [];
+      // Candidatos sin validar de cada motor: prepararLeadsDescubiertos los filtra y normaliza.
+      const rawCandidates: unknown[] = [];
 
       // 1. CARGA DE LEADS EXISTENTES EN SUPABASE PARA DEDUPLICACIÓN DE EXACTITUD
       const { data: existingLeads } = await sb
@@ -473,7 +479,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           );
 
           if (placesRes.ok) {
-            const placesData: any = await placesRes.json();
+            const placesData = (await placesRes.json()) as RespuestaBusquedaPlaces;
             if (Array.isArray(placesData.places)) {
               for (const place of placesData.places) {
                 if (
@@ -627,7 +633,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
   ]
 }`;
 
-          let response: any = null;
+          let response: RespuestaIA | null = null;
           try {
             response = await generateContentWithFallback(ai, {
               contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -647,7 +653,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
             .replace(/```json/g, '')
             .replace(/```/g, '')
             .trim();
-          let parsedData: any = {};
+          let parsedData: unknown = {};
           try {
             const jsonStart = cleanedText.indexOf('{');
             const jsonEnd = cleanedText.lastIndexOf('}');
@@ -663,8 +669,9 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
               parsedData = { results: cleanedText };
           }
 
-          const geminiResults = Array.isArray(parsedData?.results)
-            ? parsedData.results
+          const resultadosIA = (parsedData as { results?: unknown } | null)?.results;
+          const geminiResults: unknown[] = Array.isArray(resultadosIA)
+            ? resultadosIA
             : Array.isArray(parsedData)
               ? parsedData
               : [];
@@ -686,7 +693,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         tipo || 'sala'
       );
 
-      const deduplicatedLeads: any[] = [];
+      const deduplicatedLeads: LeadDescubierto[] = [];
       for (const cand of leadsValidos) {
         const normName = normalizeVenueName(cand.nombre_sala);
         if (!normName) continue;
@@ -756,10 +763,11 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       }
 
       // 5. ENRIQUECIMIENTO INTEGRAL PREVIO Y ALMACENAMIENTO EN SUPABASE
-      const results: any[] = [];
+      const results: Awaited<ReturnType<typeof dbUpsertLead>>[] = [];
       for (const raw of deduplicatedLeads) {
-        let startD: string | undefined = raw.festival_start_date;
-        let endD: string | undefined = raw.festival_end_date;
+        // LeadDescubierto no trae fechas de festival: se buscan en la base local de festivales.
+        let startD: string | undefined;
+        let endD: string | undefined;
 
         if (!startD || !endD) {
           const localFest = searchFestivalByName(raw.nombre_sala, raw.ciudad);
@@ -1042,7 +1050,7 @@ router.get('/agent-runs', requireAuth, async (req, res) => {
     }
 
     if (logs && logs.length > 0) {
-      const runs = logs.map((log: any, idx: number) => {
+      const runs = logs.map((log: RegistroEjecucionAgente, idx: number) => {
         const agentRaw = log.agente || 'scout';
         const agentName = agentRaw.charAt(0).toUpperCase() + agentRaw.slice(1);
         const isSuccess = log.estado !== 'error';
@@ -1305,7 +1313,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
 
     const bandas = await dbGetRegisteredBands();
     const entradas: FunnelBandInput[] = await Promise.all(
-      (bandas || []).map(async (b: any): Promise<FunnelBandInput> => {
+      (bandas || []).map(async (b: BandaRegistradaGuardada): Promise<FunnelBandInput> => {
         const bandId = b.band_id || b.id;
         try {
           const [gmailOAuth, emailAccount, leads] = await Promise.all([
@@ -1316,7 +1324,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
           return {
             bandId,
             emailConectado: Boolean(gmailOAuth || emailAccount),
-            leadsEstados: (leads || []).map((l: any) => l.estado),
+            leadsEstados: (leads || []).map((l: Lead) => l.estado),
           };
         } catch (err) {
           console.warn(
