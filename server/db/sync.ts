@@ -20,8 +20,48 @@ import { dbGetRunOfShow, dbGetGearChecklists } from "./production.js";
 import { dbGetCampaigns } from "./campaigns.js";
 import { dbGetCategoryTemplates } from "./categoryTemplates.js";
 import { defaultEpkConfigFor } from "../seeds/demoEpk.js";
+import type { UsuarioDeSesion } from "../auth.js";
+import type { AutonomyConfig } from "./autonomy.js";
 
-const bandStateCache = new Map<string, { timestamp: number; result: any }>();
+/** Cualquier registro que pertenece a una banda: es lo único que miran los filtros de aislamiento. */
+type ConBanda = { band_id?: string };
+
+/** Estado que se sirve a una banda (lo que devuelve `loadStateFromSupabase` y se guarda en caché). */
+export interface EstadoDeBanda {
+  leads: Awaited<ReturnType<typeof dbGetLeads>>;
+  rehearsals: Awaited<ReturnType<typeof dbGetRehearsals>>;
+  concerts: Awaited<ReturnType<typeof dbGetConcerts>>;
+  posts: Awaited<ReturnType<typeof dbGetSocialPosts>>;
+  payments: Awaited<ReturnType<typeof dbGetPayments>>;
+  metrics: Awaited<ReturnType<typeof dbGetSocialMetrics>>;
+  songs: Awaited<ReturnType<typeof dbGetSongs>>;
+  setlists: Awaited<ReturnType<typeof dbGetSetlists>>;
+  bands: Awaited<ReturnType<typeof dbGetBandContacts>>;
+  tours: Awaited<ReturnType<typeof dbGetTours>>;
+  fans: Awaited<ReturnType<typeof dbGetFans>>;
+  campaigns: Awaited<ReturnType<typeof dbGetCampaigns>>;
+  messages: unknown[];
+  runOfShow: Awaited<ReturnType<typeof dbGetRunOfShow>>;
+  gearChecklists: Awaited<ReturnType<typeof dbGetGearChecklists>>;
+  epkConfig: NonNullable<Awaited<ReturnType<typeof dbGetEpkConfig>>> | ReturnType<typeof defaultEpkConfigFor>;
+  autonomyConfig: AutonomyConfig | AutonomiaPorDefecto;
+  registeredBands: Awaited<ReturnType<typeof dbGetRegisteredBands>>;
+  users: Awaited<ReturnType<typeof dbGetUsers>>;
+  categoryTemplates: Awaited<ReturnType<typeof dbGetCategoryTemplates>>;
+}
+
+/** Autonomía que se sirve cuando la banda no ha configurado nada (incluye los umbrales heredados). */
+interface AutonomiaPorDefecto {
+  dispatchLevel: string;
+  negotiationDepth: string;
+  minCacheThreshold: number;
+  maxCacheThreshold: number;
+  autoDeclineUnderMinCache: boolean;
+  notifyOnEveryProposal: boolean;
+  requireHumanForFinalSignOff: boolean;
+}
+
+const bandStateCache = new Map<string, { timestamp: number; result: EstadoDeBanda }>();
 // TTL de caché en memoria para lecturas pasivas: 60 segundos por defecto (o BAND_CACHE_TTL_MS).
 //
 // Antes eran 30 minutos y el comentario aseguraba que "cualquier mutación invalida la clave", pero
@@ -57,7 +97,10 @@ function variantesDeBanda(id: string): string[] {
 }
 
 /** Bandas implicadas en una petición: la de la sesión y la que pida la cabecera x-band-id. */
-export function bandasDeLaPeticion(req: { headers?: any; user?: any }): string[] {
+export function bandasDeLaPeticion(req: {
+  headers?: Record<string, string | string[] | undefined>;
+  user?: { band_id?: string };
+}): string[] {
   const ids = new Set<string>();
   const sesion = req?.user?.band_id;
   if (typeof sesion === 'string') variantesDeBanda(sesion).forEach((v) => ids.add(v));
@@ -72,7 +115,11 @@ export function bandasDeLaPeticion(req: { headers?: any; user?: any }): string[]
  * que alguien se acuerde de llamar a invalidateBandStateCache(). `invalidar` es inyectable para tests.
  */
 export function invalidarCachePorEscritura(invalidar: (bandId: string) => void = invalidateBandStateCache) {
-  return (req: any, res: any, next: () => void) => {
+  return (
+    req: { method?: string; headers?: Record<string, string | string[] | undefined>; user?: { band_id?: string } },
+    res: { statusCode: number; on(evento: 'finish', callback: () => void): unknown },
+    next: () => void,
+  ) => {
     const metodo = String(req?.method || '').toUpperCase();
     if (metodo === 'GET' || metodo === 'HEAD' || metodo === 'OPTIONS') return next();
     res.on('finish', () => {
@@ -87,7 +134,20 @@ export function invalidarCachePorEscritura(invalidar: (bandId: string) => void =
   };
 }
 
-export async function loadStateFromSupabase(bandId: string, user?: any) {
+/** Usuario de la sesión con los alias heredados de banda que aún traen algunas cuentas. */
+type UsuarioDelEstado = UsuarioDeSesion & { id?: string; main_band_id?: string; band_name?: string };
+
+/**
+ * Valor de respaldo si una lectura falla, con el tipo de la propia lectura (un `[]` suelto se
+ * ensancharía a `any[]` y la lectura tipada perdería su tipo).
+ */
+const conRespaldo = <T>(lectura: Promise<T>, respaldo: T): Promise<T> => lectura.catch(() => respaldo);
+
+/** Filtro de aislamiento: deja solo los registros de las bandas indicadas. */
+const perteneceA = (bandas: Set<string>) => (registro: ConBanda) =>
+  Boolean(registro.band_id) && bandas.has(cleanBandId(registro.band_id));
+
+export async function loadStateFromSupabase(bandId: string, user?: UsuarioDelEstado): Promise<EstadoDeBanda> {
   const cleanId = cleanBandId(bandId);
   const cacheKey = `${cleanId}:${user?.id || 'anonymous'}`;
   const cached = bandStateCache.get(cacheKey);
@@ -153,24 +213,24 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
     campaigns,
     categoryTemplates
   ] = await Promise.all([
-    dbGetLeads(cleanId).catch(() => []),
-    dbGetRehearsals(eventsBandParam).catch(() => []),
-    dbGetConcerts(eventsBandParam).catch(() => []),
-    dbGetSongs(cleanId).catch(() => []),
-    dbGetSetlists(cleanId).catch(() => []),
-    dbGetEpkConfig(cleanId).catch(() => null),
-    dbGetAutonomyConfig(cleanId).catch(() => null),
-    dbGetFans(cleanId).catch(() => []),
-    dbGetSocialPosts(cleanId).catch(() => []),
-    dbGetPayments(cleanId).catch(() => []),
-    dbGetSocialMetrics(cleanId).catch(() => []),
-    dbGetTours(cleanId).catch(() => []),
+    conRespaldo(dbGetLeads(cleanId), []),
+    conRespaldo(dbGetRehearsals(eventsBandParam), []),
+    conRespaldo(dbGetConcerts(eventsBandParam), []),
+    conRespaldo(dbGetSongs(cleanId), []),
+    conRespaldo(dbGetSetlists(cleanId), []),
+    conRespaldo(dbGetEpkConfig(cleanId), null),
+    conRespaldo(dbGetAutonomyConfig(cleanId), null),
+    conRespaldo(dbGetFans(cleanId), []),
+    conRespaldo(dbGetSocialPosts(cleanId), []),
+    conRespaldo(dbGetPayments(cleanId), []),
+    conRespaldo(dbGetSocialMetrics(cleanId), []),
+    conRespaldo(dbGetTours(cleanId), []),
     dbGetRunOfShow(cleanId).catch(() => ({})),
     dbGetGearChecklists(cleanId).catch(() => ({})),
-    dbGetRegisteredBands().catch(() => []),
-    dbGetUsers(cleanId).catch(() => []),
-    dbGetBandContacts(cleanId).catch(() => []),
-    dbGetCampaigns(cleanId).catch(() => []),
+    conRespaldo(dbGetRegisteredBands(), []),
+    conRespaldo(dbGetUsers(cleanId), []),
+    conRespaldo(dbGetBandContacts(cleanId), []),
+    conRespaldo(dbGetCampaigns(cleanId), []),
     dbGetCategoryTemplates(cleanId).catch(() => ({}))
   ]);
 
@@ -179,22 +239,22 @@ export async function loadStateFromSupabase(bandId: string, user?: any) {
   const permittedBandsSet = new Set(allRelevantBandIds.flatMap(id => [id, id.startsWith('band-') ? id.replace(/^band-/, '') : `band-${id}`]));
 
   // Calendar events: visible for all bands the user is permitted to see
-  const validatedConcerts = (concerts || []).filter((c: any) => c.band_id && permittedBandsSet.has(cleanBandId(c.band_id)));
-  const validatedRehearsals = (rehearsals || []).filter((r: any) => r.band_id && permittedBandsSet.has(cleanBandId(r.band_id)));
+  const validatedConcerts = (concerts || []).filter(perteneceA(permittedBandsSet));
+  const validatedRehearsals = (rehearsals || []).filter(perteneceA(permittedBandsSet));
 
   // All other modules: strictly scoped to the active band
-  const validatedLeads = (leads || []).filter((l: any) => l.band_id && activeBandSet.has(cleanBandId(l.band_id)));
-  const validatedSongs = (songs || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
-  const validatedSetlists = (setlists || []).filter((s: any) => s.band_id && activeBandSet.has(cleanBandId(s.band_id)));
-  const validatedPosts = (posts || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
-  const validatedPayments = (payments || []).filter((p: any) => p.band_id && activeBandSet.has(cleanBandId(p.band_id)));
-  const validatedTours = (tours || []).filter((t: any) => t.band_id && activeBandSet.has(cleanBandId(t.band_id)));
-  const validatedFans = (fans || []).filter((f: any) => f.band_id && activeBandSet.has(cleanBandId(f.band_id)));
-  const validatedBands = (bands || []).filter((b: any) => b.band_id && activeBandSet.has(cleanBandId(b.band_id)));
-  const validatedCampaigns = (campaigns || []).filter((c: any) => c.band_id && activeBandSet.has(cleanBandId(c.band_id)));
+  const validatedLeads = (leads || []).filter(perteneceA(activeBandSet));
+  const validatedSongs = (songs || []).filter(perteneceA(activeBandSet));
+  const validatedSetlists = (setlists || []).filter(perteneceA(activeBandSet));
+  const validatedPosts = (posts || []).filter(perteneceA(activeBandSet));
+  const validatedPayments = (payments || []).filter(perteneceA(activeBandSet));
+  const validatedTours = (tours || []).filter(perteneceA(activeBandSet));
+  const validatedFans = (fans || []).filter(perteneceA(activeBandSet));
+  const validatedBands = (bands || []).filter(perteneceA(activeBandSet));
+  const validatedCampaigns = (campaigns || []).filter(perteneceA(activeBandSet));
 
   // Strict tenant scoping: never leak other bands' registered info to unauthorized users
-  const filteredRegisteredBands = (registeredBands || []).filter((b: any) => {
+  const filteredRegisteredBands = (registeredBands || []).filter((b: ConBanda & { id?: string }) => {
     const rawBandId = b.band_id ? b.band_id : (b.id ?? '');
     const bId = cleanBandId(rawBandId);
     return allRelevantBandIds.includes(bId);
