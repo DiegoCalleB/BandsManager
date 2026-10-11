@@ -4,7 +4,7 @@
  * Extraído de UserProfileModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import React,{ useState } from "react";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/idioma";
 import {
 leerPreferencia as leerPreferenciaEspectro,
 PreferenciaTema

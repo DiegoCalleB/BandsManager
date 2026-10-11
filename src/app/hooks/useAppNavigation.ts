@@ -4,7 +4,7 @@
  */
 import { Dispatch,SetStateAction,useCallback,useEffect,useEffectEvent,useState } from "react";
 import { findNavGroupIdForItem } from "../../config/navGroups";
-import type { SupportedLanguage } from "../../context/LanguageContext";
+import type { SupportedLanguage } from "../../context/idioma";
 import { useBrowserPushNotifications } from "../../hooks/useBrowserPushNotifications";
 import { api } from "../../services/api";
 import type { Message } from "../../types";

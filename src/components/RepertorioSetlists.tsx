@@ -4,7 +4,7 @@ import type { Analysis } from "./repertorio/SetlistAIAnalysisModal";
  react-hooks/exhaustive-deps
 */
 import { useEffect, useState } from "react";
-import { useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/idioma";
 import { useModuleTutorial } from "../hooks/useModuleTutorial";
 import { useRepertorioTabs } from "../hooks/useRepertorioTabs";
 import { Concert, Rehearsal, ThemeColors } from "../types";

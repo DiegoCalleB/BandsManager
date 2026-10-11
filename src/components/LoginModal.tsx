@@ -5,7 +5,7 @@ import { signInWithGoogleIdentity } from "../utils/googleAuth";
 import { guardarCookieDeSesion } from "../utils/sessionCookie";
 import { BandNameStylerHelper } from "./common/BandNameStylerHelper";
 import { ModalPortal } from "./common/ModalPortal";
-import { useLanguage, SUPPORTED_LANGUAGES } from "../context/LanguageContext";
+import { useLanguage, SUPPORTED_LANGUAGES } from "../context/idioma";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';

@@ -2,7 +2,7 @@ import { ShowIcon } from './ui/ShowIcon';
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Check, ChevronDown, Layers, Rocket, ShieldCheck, Sliders, Star } from 'lucide-react';
 import { Button } from './ui';
-import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
+import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
 
 interface PublicTfmLandingProps {

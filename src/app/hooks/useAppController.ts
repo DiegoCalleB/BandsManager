@@ -4,7 +4,7 @@
  */
 import { useState } from "react";
 import { findNavGroupIdForItem } from "../../config/navGroups";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "../../context/idioma";
 import { useAppData } from "../../hooks/useAppData";
 import { useAuth } from "../../hooks/useAuth";
 import { useActiveBand } from "./useActiveBand";

@@ -4,7 +4,7 @@ import {
   useLanguage,
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
-} from "../../../context/LanguageContext";
+} from "../../../context/idioma";
 
 interface StepLanguageProps {
   language: string;

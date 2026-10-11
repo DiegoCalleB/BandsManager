@@ -10,7 +10,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, MessageCircle, X } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from '../context/idioma';
 import { Button } from './ui';
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────

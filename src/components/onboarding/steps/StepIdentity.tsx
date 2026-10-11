@@ -4,7 +4,6 @@ import {
   BAND_FONT_OPTIONS,
   getFontFamilyById,
 } from "../../../config/bandFonts";
-import "../../../context/LanguageContext";
 import { Button, Input } from '../../ui';
 
 interface StepIdentityProps {
