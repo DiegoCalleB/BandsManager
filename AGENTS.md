@@ -228,6 +228,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
   * Tests en carpetas `__tests__/` adyacentes al código que prueban (ej: `server/utils/__tests__/bandAccess.test.ts`).
   * Pruebas rápidas de funciones puras sin levantar servidor HTTP (`npm test`, `npx vitest run ruta/al/test.ts`).
   * **TDD Obligatorio:** En **aislamiento multi-banda (`band_id`)** y **dinero/facturación (Stripe, ledger de IA `aiLedger.ts`)**, el test del caso límite se escribe **antes** de tocar el código.
+  * **Hooks con efectos (React):** su comportamiento se prueba con `renderHook` de `@testing-library/react` y `// @vitest-environment happy-dom` en la cabecera del test (el resto de la suite sigue en Node). Referencia: `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`.
+  * **Cobertura con ratchet:** CI ejecuta `npm run test:coverage` y falla si baja de `coverage-thresholds.json`. Cuando la subas, `npm run coverage:ratchet` actualiza el JSON: commitéalo. Nunca lo bajes a mano.
 * **Playwright (E2E Smoke & Journeys):**
   * Suites de humo sobre superficies críticas (`health.spec.ts`, `auth.spec.ts`, `epk-public.spec.ts`, `onboarding-journey.spec.ts`).
   * Ejecución local sin credenciales externas con `npm run test:e2e`. Regresión visual con `npm run test:visual`.

@@ -34,6 +34,11 @@ Asistente de configuración inicial de la banda (EPK, repertorio, eventos, condi
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/onboarding/wizard/hooks/__tests__/onboardingSave.behavior.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

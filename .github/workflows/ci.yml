@@ -115,8 +115,9 @@ jobs:
       - name: Verify docs references
         run: npm run verify:docs
 
+      # Con cobertura: falla si baja del umbral de vite.config.ts (ratchet, solo sube).
       - name: Tests
-        run: npm test
+        run: npm run test:coverage
 
       # Smoke E2E con Playwright (e2e/) - corre contra el servidor de dev sin credenciales de
       # Supabase/Stripe/Gemini (login funciona contra los usuarios semilla de src/db_seed.ts,

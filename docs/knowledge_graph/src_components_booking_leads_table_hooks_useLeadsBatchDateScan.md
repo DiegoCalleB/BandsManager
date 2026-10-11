@@ -30,6 +30,11 @@ Escaneo en lote de fechas libres de los recintos.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

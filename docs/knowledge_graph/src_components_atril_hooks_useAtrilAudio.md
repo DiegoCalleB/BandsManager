@@ -42,6 +42,11 @@ Exporta: AtrilAudioParams, useAtrilAudio.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?
