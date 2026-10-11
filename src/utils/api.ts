@@ -56,7 +56,7 @@ export async function apiFetchRaw(url: string, options: RequestInit = {}): Promi
   return fetch(url, { ...options, headers: buildHeaders(options) });
 }
 
-export async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promise<T> {
+export async function apiFetch<T = unknown>(url: string, options: RequestInit = {}): Promise<T> {
   const res = await apiFetchRaw(url, options);
 
   const contentType = res.headers.get('content-type');

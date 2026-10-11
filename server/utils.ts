@@ -1,4 +1,4 @@
-export function safeParseJson(text: string): any {
+export function safeParseJson<T = unknown>(text: string): T {
   if (!text || typeof text !== "string") return text;
   let cleanText = text.trim();
   
