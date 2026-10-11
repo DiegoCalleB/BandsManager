@@ -40,7 +40,7 @@ export const RoadbookContractModal: React.FC<RoadbookContractModalProps> = ({
   lead: initialLead,
   leads = [],
   concerts = [],
-  bandName = 'Bakandeya',
+  bandName = 'Tu banda',
   isStitchLight = false,
 }) => {
   const [selectedLeadId, setSelectedLeadId] = useState<string>(initialLead?.id || '');

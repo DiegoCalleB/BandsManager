@@ -22,7 +22,6 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
-- [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -18,11 +18,8 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
-- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
-- [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
@@ -31,11 +28,9 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_referidos|server/db/referidos.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*

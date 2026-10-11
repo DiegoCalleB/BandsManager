@@ -96,13 +96,13 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
 });
 
 describe('generateSmartLocalPitchFallback: no se presenta con el nombre de otra banda real', () => {
-  it('cuando no puede extraer el nombre de la banda del texto, usa un genérico en vez de "Bakandeya"', () => {
+  it('cuando no puede extraer el nombre de la banda del texto, usa un genérico en vez de "Banda Ejemplo"', () => {
     const texto = generateSmartLocalPitchFallback({
       prompt: 'Escribe un pitch para la SALA: Sala Caracol',
     });
-    expect(texto.toLowerCase()).not.toContain('bakandeya');
-    // El bug original no solo ponía el nombre equivocado: al no encontrar banda, isBakandeya se
-    // activaba y con él el estilo/formato real de Bakandeya (Balkan-Ska, violín solista...) se
+    expect(texto.toLowerCase()).not.toContain('ejemplo');
+    // El bug original no solo ponía el nombre equivocado: al no encontrar banda, isBanda Ejemplo se
+    // activaba y con él el estilo/formato real de Banda Ejemplo (Balkan-Ska, violín solista...) se
     // colaba en el pitch de CUALQUIER banda que cayera en este generador de emergencia.
     expect(texto.toLowerCase()).not.toContain('balkan');
     expect(texto.toLowerCase()).not.toContain('violín solista');
@@ -113,7 +113,7 @@ describe('generateSmartLocalPitchFallback: no se presenta con el nombre de otra 
       prompt: 'Escribe un pitch para la SALA: Sala Caracol\nBanda: Los Tigres del Ritmo',
     });
     expect(texto).toContain('Los Tigres del Ritmo');
-    expect(texto.toLowerCase()).not.toContain('bakandeya');
+    expect(texto.toLowerCase()).not.toContain('ejemplo');
   });
 });
 

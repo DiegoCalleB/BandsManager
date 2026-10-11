@@ -25,8 +25,7 @@ Exporta: ConcertBreakEvenCard.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventCoreInfo|src/components/calendar/logistics/EventCoreInfo.tsx]] *(from #frontend)*
 
 ---
 

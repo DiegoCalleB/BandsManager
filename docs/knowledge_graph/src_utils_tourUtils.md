@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_TourManager|src/components/TourManager.tsx]] *(from #frontend)*
+- [[src_components_tour_manager_hooks_useTourForm|src/components/tour_manager/hooks/useTourForm.ts]] *(from #frontend)*
 
 ---
 

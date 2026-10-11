@@ -156,14 +156,14 @@ export function useCalendarRoadbook(
 
   const [allRoadbooks, setAllRoadbooks] = useState<Record<string, RoadbookInfo>>(() => {
     try {
-      const saved = localStorage.getItem('bakandeya_roadbooks');
+      const saved = localStorage.getItem('bandmanager_roadbooks');
       return saved
         ? JSON.parse(saved)
         : {
             '2026-07-18': {
               contactoPromotor: 'Manuel (Producción Cabo de Plata)',
               telefonoPromotor: '+34 654 321 987',
-              tecnicoSonido: 'Carlos (FOH Bakandeya)',
+              tecnicoSonido: 'Carlos (FOH)',
               hotelNombre: 'Hotel Playa de Barbate ****',
               hotelDireccion: 'Avenida del Mar, 12, 11160 Barbate',
               cateringInfo: 'Cena tras prueba de sonido (21:00). 2 menús vegetarianos.',
@@ -180,7 +180,7 @@ export function useCalendarRoadbook(
     const updated = { ...allRoadbooks, [dateKey]: info };
     setAllRoadbooks(updated);
     try {
-      localStorage.setItem('bakandeya_roadbooks', JSON.stringify(updated));
+      localStorage.setItem('bandmanager_roadbooks', JSON.stringify(updated));
     } catch {}
   };
 

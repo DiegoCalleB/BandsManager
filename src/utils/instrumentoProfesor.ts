@@ -19,7 +19,7 @@ export function instrumentoDesdeTexto(texto?: string | null): InstrumentoProfeso
 /** Instrumento del usuario con sesión (campo `instrument` de su perfil), si se reconoce. */
 export function instrumentoDelUsuario(): InstrumentoProfesor | null {
   try {
-    const crudo = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_user') : null;
+    const crudo = typeof localStorage !== 'undefined' ? localStorage.getItem('bandmanager_user') : null;
     return crudo ? instrumentoDesdeTexto(JSON.parse(crudo)?.instrument) : null;
   } catch {
     return null;

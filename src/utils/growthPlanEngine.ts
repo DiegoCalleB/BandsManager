@@ -82,7 +82,7 @@ export function getDeterministicGrowthPlan(
   const archetype = detectBandProfileArchetype(latestMetric);
   const tier = archetype.tier;
   // Sin género configurado en el EPK, no se puede inventar un estilo musical concreto para
-  // describir la música de la banda: usar el nombre por defecto de Bakandeya aquí hacía que el
+  // describir la música de la banda: usar un estilo por defecto de otra banda aquí hacía que el
   // plan de crecimiento de CUALQUIER banda hablase de "Balkan-Ska" como si fuera su estilo. Los
   // textos que usan `genre` abajo omiten la mención de género cuando no hay uno configurado.
   const genre = epkConfig?.genero || "";

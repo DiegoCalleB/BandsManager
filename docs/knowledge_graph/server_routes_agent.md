@@ -47,12 +47,19 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
+- [[src_components_booking_crm_crmTypes|src/components/booking/crm/crmTypes.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadEditing|src/components/booking/crm/hooks/useLeadEditing.ts]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
-- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
+- [[src_components_booking_venue_panel_VenueAgentWorkflowBanner|src/components/booking/venue_panel/VenueAgentWorkflowBanner.tsx]] *(from #agent)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(from #frontend)*
+- [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useAgentRuns|src/components/chatbot/hooks/useAgentRuns.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useAgentTriggerAction|src/components/chatbot/hooks/useAgentTriggerAction.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useLeadEmailActions|src/components/chatbot/hooks/useLeadEmailActions.ts]] *(from #frontend)*
+- [[src_components_dashboard_agent_autonomy_autonomyTypes|src/components/dashboard/agent_autonomy/autonomyTypes.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyAuditLogs|src/components/dashboard/agent_autonomy/hooks/useAutonomyAuditLogs.ts]] *(from #agent)*
 
 ---
 

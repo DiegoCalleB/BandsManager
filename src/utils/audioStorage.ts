@@ -7,7 +7,7 @@
 
 import { getAuthHeaders } from '../services/api';
 
-const DB_NAME = 'BakandeyaAudioDB';
+const DB_NAME = 'BandManagerAudioDB';
 const STORE_NAME = 'audio_files';
 const DB_VERSION = 1;
 
@@ -552,16 +552,10 @@ export async function saveSongsToLocalStorageSafely(songs: any[], bandId?: strin
     );
 
     const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
-    const isBakandeya = clean === 'bakandeya';
-    const finalSongs = isBakandeya
-      ? sanitizedSongs
-      : sanitizedSongs.filter((s: any) => {
-          const sId = (s?.id || '').toLowerCase();
-          return !sId.startsWith('song-cm-') && !/^song-[1-8]$/.test(sId) && !sId.startsWith('live_song_');
-        });
+    const finalSongs = sanitizedSongs;
     const key = `band_songs_${clean || 'default'}`;
     localStorage.setItem(key, JSON.stringify(finalSongs));
-    // NOTE: Removed bakandeya_songs_catalog setItem() to ensure multi-tenant data isolation.
+    // NOTE: Removed bandmanager_songs_catalog setItem() to ensure multi-tenant data isolation.
     // Band data is persisted to Supabase API (band_id validated server-side), not localStorage.
     // React state is the source of truth; band-scoped localStorage is an anti-pattern.
   } catch (e) {
@@ -606,16 +600,10 @@ export async function saveSetlistsToLocalStorageSafely(setlists: any[], bandId?:
     );
 
     const clean = (bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
-    const isBakandeya = clean === 'bakandeya';
-    const finalSetlists = isBakandeya
-      ? sanitizedSetlists
-      : sanitizedSetlists.filter((sl: any) => {
-          const slId = (sl?.id || '').toLowerCase();
-          return slId !== 'setlist-1' && slId !== 'setlist-2';
-        });
+    const finalSetlists = sanitizedSetlists;
     const key = `band_setlists_${clean || 'default'}`;
     localStorage.setItem(key, JSON.stringify(finalSetlists));
-    // NOTE: Removed bakandeya_setlists setItem() for multi-tenant safety.
+    // NOTE: Removed bandmanager_setlists setItem() for multi-tenant safety.
     // Setlist data is persisted to Supabase API (band_id validated), not localStorage.
   } catch (e) {
     console.warn('Could not save setlists to localStorage:', e);

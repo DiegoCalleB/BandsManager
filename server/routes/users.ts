@@ -53,8 +53,8 @@ dbCleanCorruptedLeadFields().catch(() => {});
 
 // Normaliza un band_id para comparar/ordenar (quita el prefijo band-/reg-). Se usa sobre datos
 // ya en memoria (listas de bandas disponibles, band_order), no como filtro de escritura en
-// Supabase. Antes, un bandId vacío devolvía 'bakandeya' en silencio, así que un registro legado
-// sin band_id podía terminar agrupado/ordenado como si fuera la banda insignia. Usamos un
+// Supabase. Antes, un bandId vacío devolvía una banda por defecto en silencio, así que un registro legado
+// sin band_id podía terminar agrupado/ordenado como si fuera de esa banda. Usamos un
 // centinela que no coincide con ningún band_id real en vez de fallar aquí, porque esta función
 // se llama en bucles .map()/.sort() sobre listas completas donde un solo registro corrupto no
 // debe tumbar el listado entero de bandas de un usuario.
@@ -81,7 +81,7 @@ export async function buildAvailableBandsForUser(
     // minúsculas antes de comparar; esta buscaba con match exacto, así que una banda cuyo band_id
     // llevara mayúsculas (p. ej. registrada como "STOMP") no encontraba su propia fila en
     // registeredBands aquí, aunque sí la encontraba para el plan. Resultado: el badge de plan salía
-    // bien pero el logo se quedaba vacío para cualquier banda que no fuera 'bakandeya'.
+    // bien pero el logo se quedaba vacío para cualquier banda.
     const cleanId = bandId
       .replace(/^(band|reg)-/, '')
       .toLowerCase()
@@ -146,8 +146,8 @@ export async function buildAvailableBandsForUser(
 
   // cleanBandId ya resuelve el caso de un usuario sin main_band_id NI band_id con un centinela
   // que no coincide con ninguna banda real (ver su comentario más arriba), en vez de caer en
-  // BAKANDEYA_BAND_ID: una cuenta rota sin banda asignada no debe etiquetarse como perteneciente
-  // a la banda insignia del fundador.
+  // una banda por defecto: una cuenta rota sin banda asignada no debe etiquetarse como
+  // perteneciente a ninguna banda real.
   const mainClean = cleanBandId(targetUser.main_band_id || targetUser.band_id);
 
   // 1. Bands from state.userBands
@@ -194,14 +194,10 @@ export async function buildAvailableBandsForUser(
     const formattedFallback = cleanId
       ? cleanId.charAt(0).toUpperCase() + cleanId.slice(1)
       : 'Banda';
-    let bandName =
+    const bandName =
       bandInfo?.nombre_banda ||
       (ub.band_id === targetUser.band_id ? targetUser.bandName : null) ||
       formattedFallback;
-    if (cleanCheck === 'master-of-prompts') bandName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bandName = 'Os Herdeiros do Código';
-    else if (cleanCheck === 'bakandeya') bandName = 'BAKANDEYA';
     const resolvedPlan = normalizePlan(
       bandInfo?.plan ||
         getPlanForBand(
@@ -234,12 +230,7 @@ export async function buildAvailableBandsForUser(
     if (seenCleanBandIds.has(cleanId)) return;
     seenCleanBandIds.add(cleanId);
 
-    const cleanCheck = cleanId.toLowerCase().trim();
-    let bName = b.nombre_banda || 'Banda';
-    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bName = 'Os Herdeiros do Código';
-    else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+    const bName = b.nombre_banda || 'Banda';
 
     availableBands.push({
       band_id: bid,
@@ -266,12 +257,7 @@ export async function buildAvailableBandsForUser(
       if (seenCleanBandIds.has(cleanId)) return;
       seenCleanBandIds.add(cleanId);
 
-      const cleanCheck = cleanId.toLowerCase().trim();
-      let bName = u.bandName || u.name || 'Banda';
-      if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-      else if (cleanCheck === 'os-herdeiros-do-codigo')
-        bName = 'Os Herdeiros do Código';
-      else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+      const bName = u.bandName || u.name || 'Banda';
 
       availableBands.push({
         band_id: u.band_id,
@@ -291,12 +277,7 @@ export async function buildAvailableBandsForUser(
   const cleanCurrent = cleanBandId(currentBid);
   if (!seenCleanBandIds.has(cleanCurrent)) {
     seenCleanBandIds.add(cleanCurrent);
-    const cleanCheck = cleanCurrent.toLowerCase().trim();
-    let bName = targetUser.bandName || targetUser.name || 'Banda';
-    if (cleanCheck === 'master-of-prompts') bName = 'Master of Prompts';
-    else if (cleanCheck === 'os-herdeiros-do-codigo')
-      bName = 'Os Herdeiros do Código';
-    else if (cleanCheck === 'bakandeya') bName = 'BAKANDEYA';
+    const bName = targetUser.bandName || targetUser.name || 'Banda';
 
     availableBands.push({
       band_id: currentBid,
@@ -380,74 +361,10 @@ export async function buildAvailableBandsForUser(
     return 0;
   });
 
-  const isBraisMoure = esCuentaDeBrais({ id: targetUser.id, email: userEmail });
-
-  if (isBraisMoure) {
-    targetUser.instrument = targetUser.instrument || 'Batería';
-    const cleanCurrentBand = cleanBandId(targetUser.band_id);
-    const effectivePlan = normalizePlan(targetUser.plan || 'cabeza_de_cartel');
-    const withoutBakandeya = availableBands.filter(
-      (b) => cleanBandId(b.band_id) !== 'bakandeya'
-    );
-
-    // Master of Prompts
-    if (
-      !withoutBakandeya.some(
-        (b) => cleanBandId(b.band_id) === 'master-of-prompts'
-      )
-    ) {
-      withoutBakandeya.unshift({
-        band_id: 'band-master-of-prompts',
-        bandName: 'Master of Prompts',
-        nombre_banda: 'Master of Prompts',
-        role: 'leader',
-        userId: targetUser.id,
-        plan: 'cabeza_de_cartel',
-        logoUrl: '',
-        is_main: cleanCurrentBand === 'master-of-prompts',
-      });
-    } else {
-      withoutBakandeya.forEach((b) => {
-        if (cleanBandId(b.band_id) === 'master-of-prompts') {
-          b.band_id = 'band-master-of-prompts';
-          b.is_main = cleanCurrentBand === 'master-of-prompts';
-        }
-      });
-    }
-
-    // Os Herdeiros do Código
-    if (
-      !withoutBakandeya.some(
-        (b) => cleanBandId(b.band_id) === 'os-herdeiros-do-codigo'
-      )
-    ) {
-      withoutBakandeya.push({
-        band_id: 'band-os-herdeiros-do-codigo',
-        bandName: 'Os Herdeiros do Código',
-        nombre_banda: 'Os Herdeiros do Código',
-        role: 'leader',
-        userId: targetUser.id,
-        plan: 'cabeza_de_cartel',
-        logoUrl: '',
-        is_main: cleanCurrentBand === 'os-herdeiros-do-codigo',
-      });
-    } else {
-      withoutBakandeya.forEach((b) => {
-        if (cleanBandId(b.band_id) === 'os-herdeiros-do-codigo') {
-          b.band_id = 'band-os-herdeiros-do-codigo';
-          b.is_main = cleanCurrentBand === 'os-herdeiros-do-codigo';
-        }
-      });
-    }
-
-    return withoutBakandeya;
-  }
-
   return availableBands;
 }
 import { loginRateLimiter, registroRateLimiter } from '../middleware/rateLimiter.js';
 import { verificarAccessTokenDeGoogle } from '../utils/googleVerify.js';
-import { esCuentaDeBrais } from '../utils/cuentaBrais.js';
 import {
   getTargetBandId,
   puedeEscribirEnBanda,
@@ -727,7 +644,7 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
   // Calculate availableBands dynamically
   const availableBands = await buildAvailableBandsForUser(state, userToUse);
 
-  res.cookie('bakandeya_token', token, {
+  res.cookie('bandmanager_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
     // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -965,7 +882,7 @@ router.post('/auth/activate-member', loginRateLimiter, async (req, res) => {
     };
   });
 
-  res.cookie('bakandeya_token', token, {
+  res.cookie('bandmanager_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
     // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -1103,7 +1020,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
       }
     } else {
       // Regular Google Login: default to main or favorite band. Antes, sin ninguna banda propia
-      // todavía, se caía en 'band-bakandeya' en silencio.
+      // todavía, se caía en una banda por defecto en silencio.
       const preferredBandId =
         user.main_band_id ||
         (Array.isArray(user.band_order) && user.band_order.length > 0
@@ -1246,7 +1163,7 @@ router.post('/auth/google', loginRateLimiter, async (req, res) => {
   const availableBands = await buildAvailableBandsForUser(state, user);
   const { passwordHash: _, salt: __, ...safeUser } = user;
 
-  res.cookie('bakandeya_token', token, {
+  res.cookie('bandmanager_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
     // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -1311,10 +1228,10 @@ export async function ensureAdminUserExists(state: any) {
         name: 'Administrador Global',
         role: 'admin',
         plan: 'cabeza_de_cartel',
-        bandName: 'BAKANDEYA',
-        band_id: 'band-bakandeya',
-        main_band_id: 'band-bakandeya',
-        band_order: ['bakandeya'],
+        bandName: 'Vértice',
+        band_id: 'band-vertice',
+        main_band_id: 'band-vertice',
+        band_order: ['vertice'],
         avatarColor: '#ec4899',
         passwordHash: hash,
         salt: salt,
@@ -1516,7 +1433,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
   // Recalculate availableBands
   const availableBands = await buildAvailableBandsForUser(state, selectedUser);
 
-  res.cookie('bakandeya_token', token, {
+  res.cookie('bandmanager_token', token, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
     // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -1897,7 +1814,7 @@ router.get('/auth/me', async (req, res) => {
     : (req.headers['x-auth-token'] as string);
 
   if (!token && req.headers.cookie) {
-    const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
+    const match = req.headers.cookie.match(/bandmanager_token=([^;]+)/);
     if (match) token = match[1];
   }
 
@@ -1955,31 +1872,9 @@ router.get('/auth/me', async (req, res) => {
     }
   }
 
-  const isBraisUser =
-    user.id === 'user-mouredev' ||
-    user.username?.toLowerCase() === 'mouredev' ||
-    user.username?.toLowerCase() === 'braismouredev' ||
-    esCuentaDeBrais(user);
-
-  if (isBraisUser) {
-    user.instrument = user.instrument || 'Batería';
-    user.plan = normalizePlan(user.plan || 'cabeza_de_cartel');
-    const cleanCurrent = cleanBandId(user.band_id);
-    if (cleanCurrent === 'master-of-prompts') {
-      user.band_id = 'band-master-of-prompts';
-      user.bandName = user.bandName || 'Master of Prompts';
-    } else if (cleanCurrent === 'os-herdeiros-do-codigo') {
-      user.band_id = 'band-os-herdeiros-do-codigo';
-      user.bandName = user.bandName || 'Os Herdeiros do Código';
-    } else if (!user.band_id || cleanCurrent === 'bakandeya') {
-      user.band_id = 'band-master-of-prompts';
-      user.bandName = 'Master of Prompts';
-    }
-  }
-
   // Set/Refresh 30-day session cookie
   if (token) {
-    res.cookie('bakandeya_token', token, {
+    res.cookie('bandmanager_token', token, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
       // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -2041,7 +1936,7 @@ router.post('/auth/switch-band', async (req, res) => {
     : (req.headers['x-auth-token'] as string);
 
   if (!token && req.headers.cookie) {
-    const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
+    const match = req.headers.cookie.match(/bandmanager_token=([^;]+)/);
     if (match) token = match[1];
   }
 
@@ -2105,8 +2000,8 @@ router.post('/auth/switch-band', async (req, res) => {
 
   const isGlobalAdmin = currentUser.role === 'admin';
 
-  // 'bakandeya' NUNCA fue una excepción legítima aquí: cualquier cuenta autenticada podía
-  // cambiarse a la banda insignia (band-bakandeya) sin tener vínculo real vía userBands,
+  // Ninguna banda es una excepción legítima aquí: cualquier cuenta autenticada podía
+  // cambiarse a una banda sin tener vínculo real vía userBands,
   // registeredBands ni legacyTargetUser, con acceso de lectura/escritura completo a partir de
   // ahí — y el band_id que quedaba asignado era el crudo del body, sin normalizar al prefijo
   // canónico (ver bandInfo más abajo). Solo el admin global salta el chequeo de pertenencia,
@@ -2168,23 +2063,14 @@ router.post('/auth/switch-band', async (req, res) => {
       );
     });
 
-  let resolvedName = bandInfo
+  const resolvedName = bandInfo
     ? bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name
-    : cleanTargetBand === 'bakandeya'
-      ? 'BAKANDEYA'
-      : targetUser.bandName || 'Banda';
-  if (cleanTargetBand === 'master-of-prompts') {
-    resolvedName = 'Master of Prompts';
-  } else if (cleanTargetBand === 'os-herdeiros-do-codigo') {
-    resolvedName = 'Os Herdeiros do Código';
-  } else if (cleanTargetBand === 'bakandeya') {
-    resolvedName = 'BAKANDEYA';
-  }
+    : targetUser.bandName || 'Banda';
   const resolvedPlan = normalizePlan(
     bandInfo?.plan || targetUser.plan || 'ensayo'
   );
   // El id CANÓNICO del registro encontrado (bandInfo.band_id), no el crudo del body: si alguien
-  // manda "bakandeya" sin prefijo pero el registro real es "band-bakandeya", guardar el crudo
+  // manda "mi-banda" sin prefijo pero el registro real es "band-mi-banda", guardar el crudo
   // creaba un band_id gemelo sin datos la próxima vez que algo hiciera ensureRegisteredBandExists
   // con ese id suelto. Solo cae al crudo si no hay bandInfo (caso legacy sin registro).
   const canonicalBandId = bandInfo?.band_id || band_id;
@@ -2230,7 +2116,7 @@ router.post('/auth/switch-band', async (req, res) => {
     console.warn('Could not sync switched band to Supabase:', err);
   }
 
-  res.cookie('bakandeya_token', effectiveToken, {
+  res.cookie('bandmanager_token', effectiveToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     // httpOnly=false A PROPÓSITO: el cliente también lee/escribe el token (localStorage + cookie, ver sessionCookie.ts);
     // pasar a httpOnly exige migrar todo el cliente a sesión solo por cookie (BACKLOG.md).
@@ -2258,7 +2144,7 @@ router.post('/auth/logout', (req, res) => {
       saveState(state);
     }
   }
-  res.clearCookie('bakandeya_token', { path: '/' });
+  res.clearCookie('bandmanager_token', { path: '/' });
   res.json({ success: true });
 });
 
@@ -2318,9 +2204,7 @@ router.post(
 
       const resolvedName = bandInfo
         ? bandInfo.nombre_banda || bandInfo.bandName || bandInfo.name
-        : cleanTarget === 'bakandeya'
-          ? 'BAKANDEYA'
-          : user.bandName || 'Banda';
+        : user.bandName || 'Banda';
       const resolvedPlan = normalizePlan(
         bandInfo?.plan || user.plan || 'ensayo'
       );
@@ -2596,9 +2480,8 @@ router.post(
       });
 
       if (
-        cleanTarget === 'bakandeya' ||
-        ((req as any).user?.band_id &&
-          cleanBandId((req as any).user.band_id) === cleanTarget)
+        (req as any).user?.band_id &&
+        cleanBandId((req as any).user.band_id) === cleanTarget
       ) {
         if (!state.epkConfig) state.epkConfig = {};
         state.epkConfig.logoUrl = logoUrl.trim();
@@ -3089,10 +2972,6 @@ router.post('/users/upload-logo', requireAuth, async (req, res) => {
     possibleKeys.forEach((k) => {
       state.epkConfigsByBand[k] = updatedEpk;
     });
-
-    if (cleanId === 'bakandeya') {
-      state.epkConfig = updatedEpk;
-    }
 
     try {
       await dbUpsertEpkConfig(bandId, { logoUrl });

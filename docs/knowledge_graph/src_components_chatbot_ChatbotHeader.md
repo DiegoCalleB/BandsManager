@@ -24,7 +24,7 @@ Exporta: ChatbotHeaderProps, ChatbotHeader.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_chatbot_ChatLayout|src/components/chatbot/ChatLayout.tsx]] *(from #frontend)*
 
 ---
 

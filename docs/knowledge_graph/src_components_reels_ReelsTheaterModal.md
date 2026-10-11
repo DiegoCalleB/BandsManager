@@ -26,7 +26,7 @@ Exporta: ReelsTheaterModalProps, ReelsTheaterModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_ReelsCenterLayout|src/components/reels_center/ReelsCenterLayout.tsx]] *(from #frontend)*
 
 ---
 

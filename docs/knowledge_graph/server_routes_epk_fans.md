@@ -41,8 +41,11 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_fanLandingTypes|src/components/fans_landing/fanLandingTypes.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanEngagement|src/components/fans_landing/hooks/useFanEngagement.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanSignupSubmit|src/components/fans_landing/hooks/useFanSignupSubmit.ts]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrCustomization|src/components/fans_panel/hooks/useQrCustomization.ts]] *(from #frontend)*
 - [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
 - [[src_components_PublicFanCapture|src/components/PublicFanCapture.tsx]] *(from #frontend)*
 - [[src_components_PublicMusiciansLanding|src/components/PublicMusiciansLanding.tsx]] *(from #frontend)*

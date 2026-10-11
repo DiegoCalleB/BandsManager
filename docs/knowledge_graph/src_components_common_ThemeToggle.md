@@ -4,7 +4,7 @@ title: "src/components/common/ThemeToggle.tsx"
 layer: frontend
 domain: system
 file: "src/components/common/ThemeToggle.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/common/ThemeToggle.tsx
@@ -24,7 +24,7 @@ Exporta: ThemeToggle.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
 
 ---
 

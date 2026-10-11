@@ -24,7 +24,7 @@ Exporta: useShareModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPlayers|src/components/repertorio/hooks/useRepertorioPlayers.ts]] *(from #frontend)*
 
 ---
 

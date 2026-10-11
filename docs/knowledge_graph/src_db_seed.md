@@ -18,7 +18,6 @@ Exporta: INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_data_mouredevBandsSeed|src/data/mouredevBandsSeed.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -28,7 +27,6 @@ Exporta: INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POS
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

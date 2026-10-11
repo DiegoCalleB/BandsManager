@@ -263,7 +263,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   // Miembros se mezcla POR MIEMBRO (id), no se reemplaza el array entero: antes, si quien
   // llamaba a este endpoint mandaba un miembro sin `foto`/`bio` (un formulario que solo
   // gestiona nombre/rol/instagram, por ejemplo), esos campos desaparecían en silencio aunque
-  // ya existieran — pasó de verdad con los 4 integrantes de Bakandeya, foto y bio borrados
+  // ya existieran — pasó de verdad con los integrantes de una banda, foto y bio borrados
   // sin que nadie los tocara. Quién SIGUE en la lista lo decide `config.miembros` (si alguien
   // se quita del formulario, desaparece); lo que se preserva es lo que el objeto nuevo no
   // incluye para un id que ya existía.
@@ -481,11 +481,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
     config.localBandName ||
     ''
   ).trim();
-  if (
-    providedName &&
-    providedName.toLowerCase() !== 'banda' &&
-    !providedName.toLowerCase().includes('bakandeya')
-  ) {
+  if (providedName && providedName.toLowerCase() !== 'banda') {
     regUpdates.nombre_banda = providedName;
   }
   if (Object.keys(regUpdates).length > 0) {

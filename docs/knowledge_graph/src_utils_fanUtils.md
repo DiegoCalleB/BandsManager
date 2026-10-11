@@ -23,7 +23,9 @@ Exporta: FanMetrics, calculateFanEngagementMetrics, filterFans, sanitizeConcertD
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansLanding|src/components/FansLanding.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_FanIdentityHeader|src/components/fans_landing/FanIdentityHeader.tsx]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanBandProfile|src/components/fans_landing/hooks/useFanBandProfile.ts]] *(from #frontend)*
+- [[src_components_fans_landing_hooks_useFanJoinForm|src/components/fans_landing/hooks/useFanJoinForm.ts]] *(from #frontend)*
 - [[src_components_PublicFanCapture|src/components/PublicFanCapture.tsx]] *(from #frontend)*
 
 ---

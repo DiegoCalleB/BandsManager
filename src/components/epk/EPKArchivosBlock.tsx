@@ -18,7 +18,6 @@ import { Button, IconButton, Input, Select, Textarea } from '../ui';
 interface EPKArchivosBlockProps {
   config: EPKConfig;
   setConfig: React.Dispatch<React.SetStateAction<EPKConfig>>;
-  isBakandeya?: boolean;
   isUploadingLogo: boolean;
   handleLogoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   subiendoGaleria: boolean;
@@ -38,7 +37,6 @@ interface EPKArchivosBlockProps {
 export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
   config,
   setConfig,
-  isBakandeya = false,
   isUploadingLogo,
   handleLogoUpload,
   subiendoGaleria,
@@ -89,12 +87,6 @@ export const EPKArchivosBlock: React.FC<EPKArchivosBlockProps> = ({
                 <img
                   src={config.logoUrl}
                   alt="Logo de la banda"
-                  className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
-                />
-              ) : isBakandeya ? (
-                <img
-                  src="/logo_bakandeya_bueno_sin_fondo.png"
-                  alt="Bakandeya logo"
                   className="w-28 h-28 rounded-[var(--r-l)] object-contain p-1  bg-[var(--sunken)]"
                 />
               ) : (

@@ -1,0 +1,34 @@
+---
+id: src_components_reels_center_SoulWriterCard
+title: "src/components/reels_center/SoulWriterCard.tsx"
+layer: frontend
+domain: social
+file: "src/components/reels_center/SoulWriterCard.tsx"
+tags: ["frontend", "social", "auto"]
+---
+
+# 📌 src/components/reels_center/SoulWriterCard.tsx
+
+> **Ubicación:** `src/components/reels_center/SoulWriterCard.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
+
+## 📖 Descripción
+Escritor de copy estructurado con IA a partir de una idea de reel.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_reels_center_PipelineTab|src/components/reels_center/PipelineTab.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

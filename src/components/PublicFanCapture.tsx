@@ -56,13 +56,9 @@ export const PublicFanCapture: React.FC = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data?.bandName) {
-          const isBkn =
-            (data.bandId || "").includes("bakandeya") ||
-            data.bandName.toLowerCase().includes("bakandeya");
           setBandInfo({
             name: data.bandName,
-            logoUrl:
-              data.epkConfig?.logoUrl || (isBkn ? "/logo_bakandeya.jpg" : ""),
+            logoUrl: data.epkConfig?.logoUrl || "",
           });
         }
       })
@@ -165,7 +161,7 @@ export const PublicFanCapture: React.FC = () => {
               </span>
             ) : (
               <span>
-                Recibe información de Bakandeya directamente en tu correo.
+                Recibe información de {bandInfo.name || "la banda"} directamente en tu correo.
               </span>
             )}
           </p>
@@ -253,9 +249,9 @@ export const PublicFanCapture: React.FC = () => {
                 />
                 <span>
                   Acepto recibir novedades, lanzamientos y fechas de conciertos
-                  de <strong>Bakandeya</strong>.
+                  de <strong>{bandInfo.name || "la banda"}</strong>.
                   <span className="block text-micro text-[var(--ink-2)] mt-0.5">
-                    Responsable: Bakandeya. Puedes darte de baja en cualquier
+                    Responsable: {bandInfo.name || "la banda"}. Puedes darte de baja en cualquier
                     momento con 1 clic.
                   </span>
                 </span>
@@ -272,7 +268,7 @@ export const PublicFanCapture: React.FC = () => {
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  <span>UNIRME A BAKANDEYA</span>
+                  <span>UNIRME A {(bandInfo.name || "LA BANDA").toUpperCase()}</span>
                 </>
               )}
             </button>
@@ -324,7 +320,7 @@ export const PublicFanCapture: React.FC = () => {
         </div>
 
         <footer className="text-center text-xs text-[var(--ink-2)]">
-          Bakandeya official community • powered by bandManager
+          {bandInfo.name ? `${bandInfo.name} official community • ` : ""}powered by bandManager
         </footer>
       </div>
     </div>

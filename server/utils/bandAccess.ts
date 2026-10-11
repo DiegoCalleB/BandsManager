@@ -91,9 +91,9 @@ export function bandaDelAgente(req: express.Request, params: any): string | null
   const user = (req as any).user;
   const pedida = typeof params?.band_id === "string" ? params.band_id.trim() : "";
 
-  // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en band-bakandeya, así
+  // Sin usuario (llamada de cron) y sin params.band_id: antes esto caía en una banda por defecto, así
   // que un job del planificador que se olvidara de mandar el band_id acababa disparando el
-  // agente sobre la banda insignia en vez de fallar. Sin banda explícita, null.
+  // agente sobre otra banda en vez de fallar. Sin banda explícita, null.
   if (!user) return pedida || null;
   if (pedida && !puedeEscribirEnBanda(req, pedida)) return null;
   return pedida || user.band_id || null;

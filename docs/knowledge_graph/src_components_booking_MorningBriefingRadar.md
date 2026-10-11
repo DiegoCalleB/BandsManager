@@ -27,7 +27,7 @@ Exporta: MorningBriefingRadar.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[src_components_booking_crm_MorningBriefingSection|src/components/booking/crm/MorningBriefingSection.tsx]] *(from #frontend)*
 
 ---
 

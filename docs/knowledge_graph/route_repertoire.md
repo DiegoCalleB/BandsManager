@@ -49,27 +49,34 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
-- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
-- [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
 - [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useCatalogActions|src/components/repertorio/hooks/useCatalogActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioDialogs|src/components/repertorio/hooks/useRepertorioDialogs.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPersistence|src/components/repertorio/hooks/useRepertorioPersistence.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioPlaybackAndModals|src/components/repertorio/hooks/useRepertorioPlaybackAndModals.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistCrud|src/components/repertorio/hooks/useSetlistCrud.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistDeletion|src/components/repertorio/hooks/useSetlistDeletion.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemActions|src/components/repertorio/hooks/useSetlistItemActions.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistItemPopovers|src/components/repertorio/hooks/useSetlistItemPopovers.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_live_concert_album_hooks_useAlbumGeneration|src/components/repertorio/live_concert_album/hooks/useAlbumGeneration.ts]] *(from #frontend)*
+- [[src_components_repertorio_live_concert_album_types|src/components/repertorio/live_concert_album/types.ts]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioAiComposerModal|src/components/song_studio/SongStudioAiComposerModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(from #frontend)*
 - [[src_hooks_useColaLetras|src/hooks/useColaLetras.ts]] *(from #hook)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
-- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---
 

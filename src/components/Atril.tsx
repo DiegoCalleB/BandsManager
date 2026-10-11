@@ -231,7 +231,7 @@ export function Atril({
       const url = await uploadFileToServer(fichero, { bandId: getActiveBandId() || undefined, folder: carpetaDeIdea(String(song.id)) });
       const instrumento = miId ? stems.find((p) => p.id === miId)?.nombre : undefined;
       const usuario = (() => {
-        try { const u = JSON.parse(localStorage.getItem("bakandeya_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
+        try { const u = JSON.parse(localStorage.getItem("bandmanager_user") || "{}"); return u?.name || u?.username || "Banda"; } catch { return "Banda"; }
       })();
       const idea = crearIdeaDeAtril({
         id,
@@ -373,7 +373,7 @@ export function Atril({
     if (!analisisAcordes) return;
     const anterior = song;
     onUpdateSong({ ...song, analisisAcordes: { ...analisisAcordes, segmentos } });
-    const token = localStorage.getItem("bakandeya_token") || localStorage.getItem("token") || "";
+    const token = localStorage.getItem("bandmanager_token") || localStorage.getItem("token") || "";
     const headers: Record<string, string> = { "Content-Type": "application/json" };
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
@@ -454,7 +454,7 @@ export function Atril({
 
     // Save to server
     const token =
-      localStorage.getItem("bakandeya_token") ||
+      localStorage.getItem("bandmanager_token") ||
       localStorage.getItem("token") ||
       "";
     const headers: Record<string, string> = {

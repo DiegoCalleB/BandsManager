@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X, Wand2, RefreshCw, Music, CheckCircle2, Check } from 'lucide-react';
-import { SongAudioIdea, Song } from '../../types';
-import { ShowIcon } from '../ui/ShowIcon';
+import { Check, CheckCircle2, Music, RefreshCw, Wand2, X } from 'lucide-react';
+import React,{ useState } from 'react';
+import { Song, SongAudioIdea } from '../../types';
 import { Button, IconButton, Textarea } from '../ui';
+import { ShowIcon } from '../ui/ShowIcon';
 
 interface SongStudioAiTrackGenModalProps {
   showAiTrackGenModal: SongAudioIdea | null;
@@ -17,7 +17,6 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
   setShowAiTrackGenModal,
   isGeneratingAiTrack = false,
   handleGenerateAiInstrumentTrack,
-  song,
 }) => {
   const [aiTrackGenInstrument, setAiTrackGenInstrument] = useState('bajo');
   const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState('');

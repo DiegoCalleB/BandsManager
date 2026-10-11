@@ -24,7 +24,8 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_common_ThemeToggle|src/components/common/ThemeToggle.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_EspectroPreferenceCard|src/components/user_profile/EspectroPreferenceCard.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
 - [[src_main|src/main.tsx]] *(from #service)*
 
 ---

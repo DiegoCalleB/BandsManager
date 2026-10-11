@@ -1,7 +1,7 @@
 /**
  * Semillas de demostración del servidor.
  *
- * Bakandeya es la banda de la propia plataforma: su EPK de ejemplo vive aquí, aislado, y no en las
+ * La banda de ejemplo de la plataforma (`band-demo`): su EPK vive aquí, aislado, y no en las
  * rutas de lectura. Toda banda que no tenga EPK guardado recibe la base vacía.
  */
 export const EMPTY_EPK_CONFIG = {
@@ -17,24 +17,24 @@ export const EMPTY_EPK_CONFIG = {
 };
 
 const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
-  bakandeya: {
+  demo: {
     biografia:
-      "Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
-    logoUrl: "/logo_bakandeya.jpg",
-    bandPhotos: ["/logo_bakandeya.jpg"],
+      "Banda Demo es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Banda Demo ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.",
+    logoUrl: "/logo_demo.jpg",
+    bandPhotos: ["/logo_demo.jpg"],
     riderTecnico:
       "- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 2 Micrófonos dinámicos vocal (Shure SM58)\n- Líneas de inyección DI para violín solista y sintetizadores analógicos/secuencias\n- Microfonía para percusión y batería estándar en vivo (Kick, Snare, 2 Toms, Overheads)\n- 1 Línea DI para bajo eléctrico",
     enlacesRedes: {
       spotify: "",
-      youtube: "https://youtube.com/@bakandeya_oficial",
-      instagram: "https://instagram.com/bakandeya_oficial",
-      tiktok: "https://tiktok.com/@bakandeya_oficial",
+      youtube: "https://youtube.com/@banda_demo",
+      instagram: "https://instagram.com/banda_demo",
+      tiktok: "https://tiktok.com/@banda_demo",
       appleMusic: "",
-      bandcamp: "https://bakandeya.bandcamp.com",
+      bandcamp: "https://banda-demo.bandcamp.com",
       website: "https://bandmanager.io",
       whatsapp: "+34612345678",
-      facebook: "https://facebook.com/bakandeyaoficial",
-      twitter: "https://x.com/bakandeya_band",
+      facebook: "https://facebook.com/bandademo",
+      twitter: "https://x.com/banda_demo",
     },
     contactoBooking: {
       nombre: "Booking & Management",
@@ -51,11 +51,11 @@ const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
       adjuntarDossierPorDefecto: true,
       redesSociales: {
         spotify: "",
-        youtube: "https://youtube.com/@bakandeya_oficial",
-        instagram: "https://instagram.com/bakandeya_oficial",
-        tiktok: "https://tiktok.com/@bakandeya_oficial",
+        youtube: "https://youtube.com/@banda_demo",
+        instagram: "https://instagram.com/banda_demo",
+        tiktok: "https://tiktok.com/@banda_demo",
         appleMusic: "",
-        bandcamp: "https://bakandeya.bandcamp.com",
+        bandcamp: "https://banda-demo.bandcamp.com",
         website: "https://bandmanager.io",
         whatsapp: "+34612345678",
       },
@@ -63,10 +63,10 @@ const DEMO_EPK_BY_BAND: Record<string, Record<string, unknown>> = {
     temasDestacadosIds: ["s-1", "s-2", "s-3"],
     incentivoFans: {
       mensajeAgradecimiento:
-        "¡Muchas gracias por unirte a la familia de Bakandeya! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
+        "¡Muchas gracias por unirte a la familia de Banda Demo! Aquí tienes tu regalo exclusivo por apoyarnos en el concierto.",
       enlaceDescarga:
         "https://bandmanager.io/descargas/tema-inedito-directo.mp3",
-      codigoDescuento: "BAKANDEYA-FAN-10",
+      codigoDescuento: "DEMO-FAN-10",
     },
     ciudadesConfig: [
       "Madrid",

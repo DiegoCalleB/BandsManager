@@ -182,7 +182,7 @@ export function getCityTourHistory(venueCity: string | undefined, concerts: Conc
 /**
  * Snippets comerciales de rápida inserción para negociación de fechas
  */
-export function getCommercialDealSnippets(bandName: string = 'Bakandeya', lead?: Partial<Lead>): CommercialDealSnippet[] {
+export function getCommercialDealSnippets(bandName: string = 'la banda', lead?: Partial<Lead>): CommercialDealSnippet[] {
   const precioAnticipada = lead?.financial_break_even?.precio_entrada_anticipada || 12;
   const precioTaquilla = lead?.financial_break_even?.precio_entrada_taquilla || 15;
   const cacheEstimado = lead?.financial_break_even?.beneficio_estimado_lleno

@@ -372,7 +372,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 358 rutas HTTP (307 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 43 migraciones SQL en el runner, 273 componentes React y 2.109 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 358 rutas HTTP (307 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 45 migraciones SQL en el runner, 282 componentes React y 2.172 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 
@@ -392,7 +392,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 ### Construido pero a medias
 
 - **Facturación con Stripe:** el flujo existe y tiene tests, pero está desactivado a propósito y hay arreglos pendientes (idempotencia, cancelación al cambiar de plan, descuento de créditos en servidor) que hay que cerrar **antes** de reactivarlo. Detalle en [BACKLOG.md](./BACKLOG.md).
-- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = Bakandeya»): limpiado en parte; queda una migración de datos antes de poder borrar el resto.
+- **Datos de bandas concretas en el código** (textos de ejemplo y la regla «evento sin banda = banda por defecto»): limpiado; queda solo el caso especial de la cuenta de Brais Moure (ver BACKLOG.md).
 - **Diseño:** el sistema Espectro está aplicado en bloque; faltan primitivas (`Tabs`, `IconButton`) y envolver en portal unos 35 modales que se recortan en móvil.
 
 ### Solo especificado (aún no se ha escrito código)

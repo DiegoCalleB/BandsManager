@@ -27,7 +27,7 @@ Exporta: ReelsPhoneMockupProps, ReelsPhoneMockup.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_ReelsPhonePreviewPanel|src/components/reels_center/ReelsPhonePreviewPanel.tsx]] *(from #frontend)*
 
 ---
 

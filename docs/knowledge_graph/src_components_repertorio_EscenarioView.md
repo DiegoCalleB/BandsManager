@@ -29,7 +29,7 @@ Exporta: EscenarioView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

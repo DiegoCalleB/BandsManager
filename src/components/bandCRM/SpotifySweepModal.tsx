@@ -1,5 +1,5 @@
+import { Loader2, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { X, Loader2 } from "lucide-react";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton } from "../ui";

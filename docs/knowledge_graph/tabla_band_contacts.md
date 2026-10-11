@@ -23,7 +23,6 @@ Tabla de Supabase `band_contacts` (24 columnas).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*

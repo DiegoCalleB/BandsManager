@@ -4,7 +4,7 @@
 // nota, interludios y un nombre de setlist con el paréntesis repetido.
 // Se inyecta interceptando /api/songs y /api/setlists, sin tocar los datos de la app.
 
-const BAND_ID = 'band-bakandeya';
+const BAND_ID = 'band-demo';
 
 const TEMAS: [string, string, number][] = [
   ['Bienvenidos', 'E', 132], ['Born to be wild', 'E', 146], ['Some kind of wonderful', 'D', 105],

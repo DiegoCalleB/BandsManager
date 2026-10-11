@@ -27,7 +27,7 @@ Exporta: CurveSeriesProps, CurveSeries.
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
 - [[src_components_fans_FansDashboardView|src/components/fans/FansDashboardView.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsChartSection|src/components/reels/metrics/MetricsChartSection.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 
 ---

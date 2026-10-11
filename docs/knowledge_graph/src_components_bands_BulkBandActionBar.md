@@ -27,7 +27,7 @@ Exporta: BulkBandActionBar.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_BulkBandsBar|src/components/bandCRM/BulkBandsBar.tsx]] *(from #frontend)*
 
 ---
 

@@ -4,7 +4,7 @@ title: "src/components/onboarding/MusicianOnboardingModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/onboarding/MusicianOnboardingModal.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/onboarding/MusicianOnboardingModal.tsx
@@ -26,7 +26,7 @@ Exporta: MusicianOnboardingModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 - [[src_components_onboarding_index|src/components/onboarding/index.ts]] *(from #frontend)*
 
 ---

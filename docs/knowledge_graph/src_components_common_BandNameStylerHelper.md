@@ -26,7 +26,7 @@ Exporta: BandNameStylerHelper.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_CreateBandStepOne|src/components/band_switcher/CreateBandStepOne.tsx]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 
 ---

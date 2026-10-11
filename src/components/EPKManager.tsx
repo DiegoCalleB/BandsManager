@@ -31,73 +31,8 @@ interface EPKManagerProps {
   isPromoPlan?: boolean;
 }
 
-const DEFAULT_EPK_CONFIG: EPKConfig = {
-  biografia:
-    'Bakandeya es una propuesta vibrante de mestizaje, balkan-ska, reggae y electrónica analógica liderada por violín solista, sintetizadores, percusión en vivo, bajo y voz. Con más de 40 conciertos a sus espaldas en salas y festivales de la península, Bakandeya ofrece un directo arrollador de 90 minutos concebido para hacer bailar e involucrar a todo el público de principio a fin.',
-  genero: 'Mestizaje / Balkan-Ska / Reggae / Electrónica',
-  bandasSimilares: ['Macaco', 'La Pegatina', 'Green Valley', 'Ojos de Brujo', 'Bomba Estéreo'],
-  mostrarBandasSimilares: true,
-  logoUrl: '/logo_bakandeya.jpg',
-  dossierPdfUrl: '',
-  dossierPdfName: '',
-  dossierTextoExtra: '',
-  bandPhotos: ['/logo_bakandeya.jpg'],
-  temasDestacadosIds: ['s-1', 's-2', 's-3'],
-  contactoBooking: {
-    nombre: 'Booking & Management',
-    email: '',
-    telefono: '',
-  },
-  riderTecnico:
-    '- 1 PA estéreo adecuada para el aforo de la sala/escenario (mín. 2000W)\n- Manguera de 16 canales con 4 envíos de monitores o sistema IEM inalámbrico\n- 3 Micrófonos dinámicos vocal (Shure SM58)\n- Miking completo para instrumentos y percusión\n- 2 Cajas de inyección DI para teclados/secuencias\n- Microfonía para batería estándar (Kick, Snare, 2 Toms, Overheads)',
-  enlacesRedes: {
-    spotify: 'https://open.spotify.com',
-    youtube: 'https://youtube.com',
-    instagram: 'https://instagram.com',
-    tiktok: 'https://tiktok.com',
-    appleMusic: 'https://music.apple.com',
-    bandcamp: 'https://bandcamp.com',
-    website: 'https://bandmanager.io',
-    whatsapp: '',
-    facebook: '',
-    twitter: '',
-    revolut: '',
-    paypal: '',
-  },
-  donacionRevolut: {
-    habilitado: true,
-    revolutTag: '',
-    revolutUrl: '',
-    paypalUser: '',
-    paypalUrl: '',
-    metodoPorDefecto: 'revolut',
-    titulo: 'Colabora con la banda',
-    descripcion: 'Tu aportación directa nos ayuda a financiar furgoneta de gira, grabación de nuevos temas e instrumentos.',
-  },
-  firmaEmail: {
-    nombreRemitente: 'Booking & Management',
-    cargo: 'Booking & Management',
-    telefono: '',
-    email: '',
-    textoPie: 'Música en directo y gira',
-    incluirIconosRedes: true,
-    adjuntarDossierPorDefecto: true,
-    redesSociales: {
-      spotify: 'https://open.spotify.com',
-      youtube: 'https://youtube.com',
-      instagram: 'https://instagram.com',
-      tiktok: 'https://tiktok.com',
-      appleMusic: 'https://music.apple.com',
-      bandcamp: 'https://bandcamp.com',
-      website: 'https://bandmanager.io',
-      whatsapp: '',
-    },
-  },
-};
-
-// Base vacía para cualquier banda que NO sea Bakandeya: los datos de
-// Bakandeya de arriba son solo su semilla de ejemplo, nunca deben usarse
-// como fallback para rellenar el dossier de una banda nueva o distinta.
+// Base vacía para cualquier banda: nunca se rellena el dossier de una banda nueva con datos
+// de ejemplo de otra.
 const EMPTY_EPK_CONFIG: EPKConfig = {
   biografia: '',
   genero: '',
@@ -209,8 +144,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
 
   const activeBandId = currentUser?.band_id || '';
   const cleanBandId = activeBandId.replace(/^(band|reg)-/, '').toLowerCase();
-  const isBakandeya = cleanBandId === 'bakandeya' || (currentUser?.bandName || '').toLowerCase().includes('bakandeya');
-  const baseDefaults = isBakandeya ? DEFAULT_EPK_CONFIG : EMPTY_EPK_CONFIG;
+  const baseDefaults = EMPTY_EPK_CONFIG;
 
   const { isOpen: isTutorialOpen, openTutorial, closeTutorial } = useModuleTutorial('epk');
 
@@ -286,13 +220,13 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
       setConfig((prev) => ({
         ...prev,
         ...epkConfig,
-        logoUrl: epkConfig.logoUrl || prev.logoUrl || (isBakandeya ? '/logo_bakandeya.jpg' : ''),
+        logoUrl: epkConfig.logoUrl || prev.logoUrl || '',
         contactoBooking: mergedContacto,
         enlacesRedes: mergedRedes,
         firmaEmail: mergedFirma,
       }));
     }
-  }, [epkConfig, isBakandeya]);
+  }, [epkConfig]);
 
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -809,7 +743,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
           <EPKArchivosBlock
             config={config}
             setConfig={setConfig}
-            isBakandeya={isBakandeya}
             isUploadingLogo={isUploadingLogo}
             handleLogoUpload={handleLogoUpload}
             subiendoGaleria={subiendoGaleria}
@@ -887,7 +820,6 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
             config={config}
             setConfig={setConfig}
             publicEpkUrl={publicEpkUrl}
-            isBakandeya={isBakandeya}
             handleCopyUrl={handleCopyUrl}
             copiado={copiedPublicUrl}
             onNavigateToBlock={setActiveBlock}
@@ -908,7 +840,7 @@ export const EPKManager: React.FC<EPKManagerProps> = ({
         currentBandName={
           (currentUser?.bandName && currentUser.bandName !== 'Banda' ? currentUser.bandName : '') ||
           (config.contactoBooking?.nombre && config.contactoBooking.nombre !== 'Banda' ? config.contactoBooking.nombre : '') ||
-          (isBakandeya ? 'Bakandeya' : cleanBandId ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1) : 'Tu Banda')
+          (cleanBandId ? cleanBandId.charAt(0).toUpperCase() + cleanBandId.slice(1) : 'Tu Banda')
         }
         currentBandLogo={config.logoUrl}
         epkConfig={config}

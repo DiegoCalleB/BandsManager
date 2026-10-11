@@ -26,13 +26,28 @@ _Sin dependencias salientes directas._
 - [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useBandRepertoireScope|src/components/repertorio/hooks/useBandRepertoireScope.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildHeaderFooter|src/components/repertorio/pdf_export/buildHeaderFooter.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_buildRowHtmlFactory|src/components/repertorio/pdf_export/buildRowHtmlFactory.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_useMemberSelection|src/components/repertorio/pdf_export/hooks/useMemberSelection.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePdfExportController|src/components/repertorio/pdf_export/hooks/usePdfExportController.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintMembers|src/components/repertorio/pdf_export/hooks/usePrintMembers.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintPreview|src/components/repertorio/pdf_export/hooks/usePrintPreview.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_useSongMarks|src/components/repertorio/pdf_export/hooks/useSongMarks.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_PdfExportContext|src/components/repertorio/pdf_export/PdfExportContext.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_printDocumentBuilder|src/components/repertorio/pdf_export/printDocumentBuilder.ts]] *(from #frontend)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistItemsList|src/components/repertorio/SetlistItemsList.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
+- [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
-- [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(from #service)*
+- [[src_components_song_studio_SongStudioReadinessSelect|src/components/song_studio/SongStudioReadinessSelect.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioToolsMenu|src/components/song_studio/SongStudioToolsMenu.tsx]] *(from #frontend)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---
 

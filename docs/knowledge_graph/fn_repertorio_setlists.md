@@ -31,7 +31,6 @@ Catálogo de canciones, setlists, atril, modo escenario y práctica.
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_songs_index|server/routes/songs/index.ts]] *(Layer: #route, Domain: #repertoire)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(Layer: #route, Domain: #repertoire)*
-- [[server_routes_spotify|server/routes/spotify.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(Layer: #service, Domain: #repertoire)*

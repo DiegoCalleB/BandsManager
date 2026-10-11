@@ -29,7 +29,7 @@ Exporta: CalendarViewsContainerProps, CalendarViewsContainer.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_views_MonthGrids|src/components/calendar/views/MonthGrids.tsx]] *(from #frontend)*
 
 ---
 

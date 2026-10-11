@@ -6,7 +6,7 @@
  * conexión. Se marca Secure siempre que la página vaya por https, para no romper el desarrollo
  * en local, que va por http.
  */
-const NOMBRE_COOKIE = 'bakandeya_token';
+const NOMBRE_COOKIE = 'bandmanager_token';
 const DURACION_SEGUNDOS = 30 * 24 * 60 * 60;
 
 export function guardarCookieDeSesion(token: string): void {

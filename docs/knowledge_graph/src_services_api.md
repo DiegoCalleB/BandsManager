@@ -40,17 +40,23 @@ Exporta: ApiError, getAuthHeaders, api.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_app_data|useAppData Hook]] *(from #hook)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+- [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
+- [[src_app_hooks_useAppTheme|src/app/hooks/useAppTheme.ts]] *(from #service)*
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandOrdering|src/components/band_switcher/hooks/useBandOrdering.ts]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useCreateBand|src/components/band_switcher/hooks/useCreateBand.ts]] *(from #frontend)*
+- [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
-- [[src_components_booking_GooglePlacesExplorerModal|src/components/booking/GooglePlacesExplorerModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
 - [[src_components_booking_MultiModelPitchComparatorModal|src/components/booking/MultiModelPitchComparatorModal.tsx]] *(from #frontend)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_booking_venue_panel_hooks_useVenueMessageThread|src/components/booking/venue_panel/hooks/useVenueMessageThread.ts]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFeed|src/components/calendar/hooks/useCalendarFeed.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useAgentRuns|src/components/chatbot/hooks/useAgentRuns.ts]] *(from #agent)*
+- [[src_components_chatbot_hooks_useEntityActions|src/components/chatbot/hooks/useEntityActions.ts]] *(from #frontend)*
 - [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
+- [[src_components_dashboard_agent_autonomy_hooks_useResponseStrategies|src/components/dashboard/agent_autonomy/hooks/useResponseStrategies.ts]] *(from #agent)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(from #frontend)*
@@ -61,20 +67,24 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_epk_AILogoGeneratorModal|src/components/epk/AILogoGeneratorModal.tsx]] *(from #frontend)*
 - [[src_components_EPKManager|src/components/EPKManager.tsx]] *(from #frontend)*
 - [[src_components_Merchan|src/components/Merchan.tsx]] *(from #frontend)*
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
 - [[src_components_Planes|src/components/Planes.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useContentItems|src/components/reels/metrics/hooks/useContentItems.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useInstagramConnection|src/components/reels/metrics/hooks/useInstagramConnection.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useScreenshotScan|src/components/reels/metrics/hooks/useScreenshotScan.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useRepertorioData|src/components/repertorio/hooks/useRepertorioData.ts]] *(from #frontend)*
+- [[src_components_repertorio_hooks_useSetlistReordering|src/components/repertorio/hooks/useSetlistReordering.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 - [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(from #frontend)*
+- [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
 - [[src_hooks_useEmailTemplates|src/hooks/useEmailTemplates.ts]] *(from #hook)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
-- [[ui_venue_detail|Venue Detail & Pitch Simulator]] *(from #frontend)*
 
 ---
 

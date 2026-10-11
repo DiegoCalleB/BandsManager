@@ -4,7 +4,7 @@ title: "src/components/Merchan.tsx"
 layer: frontend
 domain: finances
 file: "src/components/Merchan.tsx"
-tags: ["frontend", "finances", "auto", "pantalla"]
+tags: ["frontend", "finances", "auto"]
 ---
 
 # 📌 src/components/Merchan.tsx
@@ -28,7 +28,7 @@ Exporta: Merchan.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

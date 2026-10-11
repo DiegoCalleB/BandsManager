@@ -23,7 +23,7 @@ export class ApiRequestError extends Error {
 /** Banda activa del usuario, para que el backend sepa sobre qué banda opera la petición. */
 export function getActiveBandId(): string {
   try {
-    const userStr = localStorage.getItem('bakandeya_user');
+    const userStr = localStorage.getItem('bandmanager_user');
     if (userStr) {
       const u = JSON.parse(userStr);
       if (u?.band_id) return String(u.band_id);
@@ -35,7 +35,7 @@ export function getActiveBandId(): string {
 }
 
 function buildHeaders(options: RequestInit): Record<string, string> {
-  const token = localStorage.getItem('bakandeya_token') || localStorage.getItem('token');
+  const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token');
   const headers: Record<string, string> = {
     ...((options.headers as Record<string, string>) || {}),
   };

@@ -18,14 +18,14 @@ import {
 
 const datos: DatosPaginaConcierto = {
   baseUrl: 'https://bandmanager.io',
-  canonicalUrl: 'https://bandmanager.io/e/os-herdeiros-sala-capitol-2026-10-16--cnc-hdc-1',
-  id: 'cnc-hdc-1',
+  canonicalUrl: 'https://bandmanager.io/e/banda-ejemplo-sala-capitol-2026-10-16--cnc-1',
+  id: 'cnc-1',
   fecha: '2026-10-16',
   sala: 'Sala Capitol',
   ciudad: 'Santiago de Compostela',
   direccion: 'Rúa Concheiros 1',
   cartelUrl: 'https://cdn.example.com/cartel.jpg',
-  bandaNombre: 'Os Herdeiros do Código',
+  bandaNombre: 'Banda Ejemplo',
   logoUrl: 'https://cdn.example.com/logo.png',
   entradasHref: 'https://bandmanager.io/r/abcdefg',
   entradasDirectaUrl: 'https://www.ticketmaster.es/event/1',
@@ -70,12 +70,12 @@ describe('qué se publica', () => {
 });
 
 describe('slug', () => {
-  const c = { id: 'cnc-hdc-1', sala: 'Sala Capitol', fecha: '2026-10-16' };
+  const c = { id: 'cnc-1', sala: 'Sala Capitol', fecha: '2026-10-16' };
 
   it('hace un slug legible con el id al final y vuelve a sacar el id', () => {
-    const s = slugConcierto('Os Herdeiros do Código', c);
-    expect(s).toBe('os-herdeiros-do-codigo-sala-capitol-2026-10-16--cnc-hdc-1');
-    expect(idDesdeSlug(s)).toBe('cnc-hdc-1');
+    const s = slugConcierto('Banda Ejemplo', c);
+    expect(s).toBe('banda-ejemplo-sala-capitol-2026-10-16--cnc-1');
+    expect(idDesdeSlug(s)).toBe('cnc-1');
   });
 
   it('el id sobrevive a nombres raros', () => {
@@ -91,7 +91,7 @@ describe('slug', () => {
   });
 
   it('urlConcierto cuelga de /e/', () => {
-    expect(urlConcierto('https://bandmanager.io/', 'Banda', c)).toBe('https://bandmanager.io/e/banda-sala-capitol-2026-10-16--cnc-hdc-1');
+    expect(urlConcierto('https://bandmanager.io/', 'Banda', c)).toBe('https://bandmanager.io/e/banda-sala-capitol-2026-10-16--cnc-1');
   });
 });
 
@@ -111,11 +111,11 @@ describe('JSON-LD', () => {
   it('es un MusicEvent con lo que Google exige', () => {
     const ld = construirJsonLd(datos) as any;
     expect(ld['@type']).toBe('MusicEvent');
-    expect(ld.name).toBe('Os Herdeiros do Código en Sala Capitol');
+    expect(ld.name).toBe('Banda Ejemplo en Sala Capitol');
     expect(ld.startDate).toBe('2026-10-16');
     expect(ld.location.name).toBe('Sala Capitol');
     expect(ld.location.address.addressLocality).toBe('Santiago de Compostela');
-    expect(ld.performer.name).toBe('Os Herdeiros do Código');
+    expect(ld.performer.name).toBe('Banda Ejemplo');
     expect(ld.offers.url).toBe('https://www.ticketmaster.es/event/1');
     expect(ld.image).toEqual(['https://cdn.example.com/cartel.jpg', 'https://cdn.example.com/logo.png']);
   });
@@ -148,8 +148,8 @@ describe('JSON-LD', () => {
 describe('renderizarPaginaConcierto', () => {
   it('lleva título, canónica, Open Graph, datos estructurados y el botón de entradas', () => {
     const html = renderizarPaginaConcierto(datos);
-    expect(html).toContain('<title>Os Herdeiros do Código en Sala Capitol (Santiago de Compostela)');
-    expect(html).toContain('<link rel="canonical" href="https://bandmanager.io/e/os-herdeiros-sala-capitol-2026-10-16--cnc-hdc-1">');
+    expect(html).toContain('<title>Banda Ejemplo en Sala Capitol (Santiago de Compostela)');
+    expect(html).toContain('<link rel="canonical" href="https://bandmanager.io/e/banda-ejemplo-sala-capitol-2026-10-16--cnc-1">');
     expect(html).toContain('property="og:image" content="https://cdn.example.com/cartel.jpg"');
     expect(html).toContain('application/ld+json');
     expect(html).toContain('href="https://bandmanager.io/r/abcdefg"');

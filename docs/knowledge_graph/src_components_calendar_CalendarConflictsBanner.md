@@ -24,7 +24,7 @@ Exporta: CalendarConflictsBanner.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_views_CalendarLayout|src/components/calendar/views/CalendarLayout.tsx]] *(from #frontend)*
 
 ---
 

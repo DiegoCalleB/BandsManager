@@ -45,6 +45,8 @@ export interface BookingCampaign {
   // sin entrada aquí siguen usando solo la plantilla general de su tipo.
   customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
   isActive: boolean;
+  /** Alias heredado de la API (snake_case) de `isActive`. */
+  is_active?: boolean;
   color?: string; // Hex color for badge styling (e.g.'var(--acc)', 'var(--acc)', '#06b6d4')
   created_at?: string;
 }
@@ -977,6 +979,8 @@ export interface SocialMetric {
   id: string;
   band_id?: string;
   fecha: string;
+  /** Total de fans combinado; se calcula al fusionar el histórico en la vista de métricas. */
+  fans?: number;
   instagram: number;
   tiktok: number;
   youtube: number;
@@ -1323,7 +1327,7 @@ export interface Song {
   analisisAcordes?: AnalisisAcordes; // Acordes con tiempos detectados del audio (Chordify propio)
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
   estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
-  estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
+  estructuraDocumentoNombre?: string; // Original filename (e.g., "mi-banda-estructura.pdf")
   estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
   speechTranscription?: string; // Audio/speech transcription from live cutting
   // Puntos CUE y detección automática de inicio/fin de música real (para saltar

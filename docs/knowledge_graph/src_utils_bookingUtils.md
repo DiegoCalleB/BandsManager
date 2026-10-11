@@ -24,6 +24,15 @@ Exporta: BookingMetrics, normalizeStatus, normalizeType, VENUE_ADDRESS_DATABASE,
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(from #hook)*
+- [[src_components_booking_crm_FiltersPanelSection|src/components/booking/crm/FiltersPanelSection.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadActions|src/components/booking/crm/hooks/useLeadActions.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*
+- [[src_components_booking_crm_hooks_useLeadSelectionAndTemplates|src/components/booking/crm/hooks/useLeadSelectionAndTemplates.ts]] *(from #frontend)*
+- [[src_components_booking_crm_leadTypeMatchers|src/components/booking/crm/leadTypeMatchers.ts]] *(from #frontend)*
+- [[src_components_booking_crm_ListOrMapArea|src/components/booking/crm/ListOrMapArea.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_SearchAndViewRow|src/components/booking/crm/SearchAndViewRow.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_StatusTabsBar|src/components/booking/crm/StatusTabsBar.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_VenueWorkspaceHost|src/components/booking/crm/VenueWorkspaceHost.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_hooks_useCityChips|src/hooks/useCityChips.ts]] *(from #hook)*
 - [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*

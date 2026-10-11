@@ -25,7 +25,7 @@ Exporta: StepEvents.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_onboarding_OnboardingWizardModal|src/components/onboarding/OnboardingWizardModal.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_WizardStepsLate|src/components/onboarding/wizard/WizardStepsLate.tsx]] *(from #frontend)*
 
 ---
 

@@ -28,7 +28,7 @@ Exporta: ChangeBandImageModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

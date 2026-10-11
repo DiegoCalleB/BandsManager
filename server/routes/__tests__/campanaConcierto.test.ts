@@ -13,7 +13,7 @@ vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupaba
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => null }));
 vi.mock('../../services/perfilPublicoBanda.js', () => ({
-  obtenerPerfilPublicoBandaCacheado: async () => ({ nombre: 'Os Herdeiros', logoUrl: null, mostrarInsignia: true, refCode: null }),
+  obtenerPerfilPublicoBandaCacheado: async () => ({ nombre: 'Banda Ejemplo', logoUrl: null, mostrarInsignia: true, refCode: null }),
 }));
 
 const ia = { cliente: null as null | object, respuesta: vi.fn(), prompts: [] as string[] };

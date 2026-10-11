@@ -4,7 +4,7 @@ title: "src/components/GlobalPlayer.tsx"
 layer: frontend
 domain: system
 file: "src/components/GlobalPlayer.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/GlobalPlayer.tsx
@@ -25,7 +25,7 @@ eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_AppShell|src/app/AppShell.tsx]] *(from #service)*
 
 ---
 

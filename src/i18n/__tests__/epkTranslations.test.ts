@@ -46,7 +46,7 @@ describe('epkTranslations', () => {
   });
 
   it('interpolate rellena las variables del diccionario del EPK', () => {
-    expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName: 'Bakandeya' })).toBe('Bakandeya — EPK / Press Kit');
+    expect(interpolate(EPK_TRANSLATIONS.en.insigniaCabecera, { bandName: 'Banda Demo' })).toBe('Banda Demo — EPK / Press Kit');
     expect(interpolate(EPK_TRANSLATIONS.es.fotoPromocional, { n: '3' })).toBe('Foto Promocional #3');
   });
 

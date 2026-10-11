@@ -1,7 +1,7 @@
 /**
  * Perfil de banda para los prompts de IA.
  *
- * Antes, las rutas de Reels escribían "Bakandeya" a pelo en el prompt, junto con su
+ * Antes, las rutas de Reels escribían el nombre de una banda a pelo en el prompt, junto con su
  * instrumentación concreta y su regla de "no tiene vientos". En una app multi-banda eso
  * significaba que a CUALQUIER banda la IA le generaba copies hablando del violín y la
  * percusión reciclada de otra banda. Aquí se arma el bloque de contexto a partir de los
@@ -153,7 +153,7 @@ export function baseHashtags(profile: Partial<BandProfile> | null | undefined, m
 
 /**
  * Bloque de texto con TODO lo que la IA sabe de verdad sobre la banda, más las reglas
- * anti-invención. Es lo que sustituye al párrafo hardcodeado de Bakandeya.
+ * anti-invención. Es lo que sustituye al párrafo hardcodeado de una banda concreta.
  */
 export function buildBandContextBlock(profile: Partial<BandProfile> | null | undefined): string {
   const p = { ...emptyBandProfile(), ...(profile || {}) };

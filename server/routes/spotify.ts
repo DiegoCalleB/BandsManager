@@ -26,7 +26,7 @@ router.get("/status", (req, res) => {
 });
 
 /**
- * GET /api/spotify/preview?artist=Bakandeya&track=Clandestino
+ * GET /api/spotify/preview?artist=Banda+Demo&track=Tema
  * Resolves high-quality 30-second audio stream URL for any track.
  */
 router.get("/preview", requireAuth, async (req, res) => {
@@ -44,7 +44,7 @@ router.get("/preview", requireAuth, async (req, res) => {
 });
 
 /**
- * GET /api/spotify/search?q=Bakandeya
+ * GET /api/spotify/search?q=Banda+Demo
  * Searches artists or resolves artist URL on Spotify.
  */
 router.get("/search", requireAuth, async (req, res) => {
@@ -63,7 +63,7 @@ router.get("/search", requireAuth, async (req, res) => {
 });
 
 /**
- * GET /api/spotify/artist-discography?query=Bakandeya
+ * GET /api/spotify/artist-discography?query=Banda+Demo
  * Fetches the entire discography (all albums, singles, tracks, preview audio) of an artist.
  */
 router.get("/artist-discography", requireAuth, async (req, res) => {

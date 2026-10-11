@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_FansPanel|src/components/FansPanel.tsx]] *(from #frontend)*
+- [[src_components_fans_panel_hooks_useQrSharing|src/components/fans_panel/hooks/useQrSharing.ts]] *(from #frontend)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(from #frontend)*
 
 ---

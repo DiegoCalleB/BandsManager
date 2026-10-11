@@ -37,9 +37,8 @@ export function resolveBandNameAndBio(state: any, bandId: string): { bandName: s
   const cleanId = bandId.replace(/^(band|reg)-/, "");
   const bandConfig = state?.epkConfigsByBand?.[bandId] || state?.epkConfigsByBand?.[cleanId] || state?.epkConfig || {};
   const registeredBand = state?.registeredBands?.find((b: any) => b.band_id === bandId || b.band_id === cleanId);
-  const isBakandeya = cleanId === "bakandeya";
   const bandName = registeredBand?.nombre_banda || registeredBand?.bandName || bandConfig?.contactoBooking?.nombre || bandConfig?.nombre_banda ||
-    (isBakandeya ? "Bakandeya" : cleanId.charAt(0).toUpperCase() + cleanId.slice(1));
+    cleanId.charAt(0).toUpperCase() + cleanId.slice(1);
   const bandBio = bandConfig?.biografia || registeredBand?.biografia || registeredBand?.dossier_texto_extra || "";
   return { bandName, bandBio };
 }

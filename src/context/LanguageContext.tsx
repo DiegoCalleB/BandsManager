@@ -488,7 +488,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<SupportedLanguage>(() => {
-    const saved = localStorage.getItem('bakandeya_language') as SupportedLanguage;
+    const saved = localStorage.getItem('bandmanager_language') as SupportedLanguage;
     if (saved && TRANSLATIONS[saved]) {
       return saved;
     }
@@ -502,7 +502,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const [isTranslating, setIsTranslating] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('bakandeya_language');
+      const saved = localStorage.getItem('bandmanager_language');
       return saved !== null && saved !== 'es';
     }
     return false;
@@ -662,7 +662,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (lang: SupportedLanguage) => {
     setLanguageState(lang);
-    localStorage.setItem('bakandeya_language', lang);
+    localStorage.setItem('bandmanager_language', lang);
     triggerGoogleTranslate(lang);
   };
 

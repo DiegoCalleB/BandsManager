@@ -27,7 +27,6 @@ Exporta: TemplateRecommendationsCard.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_TemplateConfigSection|src/components/booking/TemplateConfigSection.tsx]] *(from #frontend)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---
 

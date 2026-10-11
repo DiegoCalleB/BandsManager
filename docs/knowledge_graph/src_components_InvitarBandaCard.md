@@ -25,7 +25,7 @@ Exporta: InvitarBandaCard.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_IdentityFields|src/components/user_profile/IdentityFields.tsx]] *(from #frontend)*
 
 ---
 

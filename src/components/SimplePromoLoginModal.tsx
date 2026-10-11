@@ -187,7 +187,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
 
         const data = await response.json().catch(() => ({}));
         if (response.ok && data.token) {
-          localStorage.setItem('bakandeya_token', data.token);
+          localStorage.setItem('bandmanager_token', data.token);
           guardarCookieDeSesion(data.token);
           onLoginSuccess(data.user, data.token, data.availableBands);
           return;
@@ -234,7 +234,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'Fallo en la autenticación');
       }
       if (data.token) {
-        localStorage.setItem('bakandeya_token', data.token);
+        localStorage.setItem('bandmanager_token', data.token);
         guardarCookieDeSesion(data.token);
       }
       onLoginSuccess(data.user, data.token, data.availableBands);
@@ -270,7 +270,7 @@ export const SimplePromoLoginModal: React.FC<SimplePromoLoginModalProps> = ({ on
         throw new Error(data.error || 'Fallo en la creación de cuenta');
       }
       if (data.token) {
-        localStorage.setItem('bakandeya_token', data.token);
+        localStorage.setItem('bandmanager_token', data.token);
         guardarCookieDeSesion(data.token);
       }
       onLoginSuccess(data.user, data.token, data.availableBands);

@@ -24,7 +24,7 @@ Exportador a MIDI (Standard MIDI File tipo 0) de las ideas que compone la IA.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
 
 ---
 

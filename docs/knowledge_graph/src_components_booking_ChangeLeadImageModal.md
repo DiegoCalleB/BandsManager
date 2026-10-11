@@ -30,7 +30,7 @@ Exporta: ChangeLeadImageModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
+- [[src_components_booking_leads_table_LeadsTableView|src/components/booking/leads_table/LeadsTableView.tsx]] *(from #frontend)*
 
 ---
 

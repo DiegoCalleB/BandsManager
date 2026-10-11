@@ -27,8 +27,8 @@ router.post("/chat", requireAuth, async (req, res) => {
   const userReq = getUserFromRequestLocal(req);
   // requireAuth ya garantiza que hay banda activa (getUserFromRequest devuelve null si no la
   // hay), pero esta ruta vuelve a resolver el usuario por su cuenta con getUserFromRequestLocal:
-  // se repite la comprobación aquí para no depender en silencio de esa garantía y caer en la
-  // banda de Bakandeya (BAKANDEYA_BAND_ID) más abajo si algún día dejara de cumplirse.
+  // se repite la comprobación aquí para no depender en silencio de esa garantía y caer en una
+  // banda por defecto más abajo si algún día dejara de cumplirse.
   if (!userReq?.band_id) {
     return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
   }
@@ -675,7 +675,7 @@ router.post("/write-reels-copy", requireAuth, iaRateLimiter, async (req, res) =>
   const { idea, style } = req.body;
   const client = getAiClient();
 
-  // Antes este prompt decía "Bakandeya" a pelo, con su instrumentación y su regla de vientos.
+  // Antes este prompt nombraba a una banda concreta a pelo, con su instrumentación y su regla de vientos.
   // En una app multi-banda eso le escribía a cualquiera copies sobre una banda que no es la suya.
   let perfil = emptyBandProfile();
   try {

@@ -24,9 +24,7 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
-- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
-- [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
 - [[hook_booking_pipeline|useBookingPipeline Hook]] *(Layer: #hook, Domain: #booking)*
@@ -34,7 +32,6 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
-- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*
@@ -55,7 +52,6 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_db_users|server/db/users.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_deals|server/routes/deals.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*
@@ -67,11 +63,6 @@ Embudo de salas y festivales: leads, enriquecimiento, pitch con IA, respuestas y
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(Layer: #service, Domain: #booking)*
-- [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
-- [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*
-- [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
-- [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
-- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[ui_booking_crm|Booking CRM Component]] *(Layer: #frontend, Domain: #booking)*

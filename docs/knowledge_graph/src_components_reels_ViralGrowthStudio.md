@@ -26,8 +26,8 @@ Exporta: ViralHookVariant, HookDoctorDiagnosis, SubtitleStyleConfig, SUBTITLE_ST
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_reels_center_ViralGrowthStudioPanel|src/components/reels_center/ViralGrowthStudioPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
 
 ---
 

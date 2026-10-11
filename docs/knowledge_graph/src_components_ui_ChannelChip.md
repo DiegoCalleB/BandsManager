@@ -25,7 +25,7 @@ Exporta: ChannelChipProps, ChannelChip.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsChartSection|src/components/reels/metrics/MetricsChartSection.tsx]] *(from #frontend)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
 
 ---

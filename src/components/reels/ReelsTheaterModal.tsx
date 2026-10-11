@@ -50,7 +50,7 @@ export interface ReelsTheaterModalProps {
   handleCopyToClipboard: (text: string) => void;
   copyForPlatform: (clip: any, plat: string) => string;
   // Cropping & physical cut
-  cropMode: 'crop' | 'blur' | 'none';
+  cropMode: 'crop' | 'blur' | 'none' | 'smart_pan';
   setCropMode: (mode: 'crop' | 'blur' | 'none') => void;
   burnSubtitles: boolean;
   setBurnSubtitles: React.Dispatch<React.SetStateAction<boolean>>;

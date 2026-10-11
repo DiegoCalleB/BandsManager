@@ -27,7 +27,6 @@ import {
   requireCronOrAuth,
   getAutonomyConfigForBand,
   getEpkConfigForBand,
-  BAKANDEYA_BAND_ID,
 } from '../state.js';
 import { dbUpsertLead, dbCheckDeletedLead, getSupabase } from '../db.js';
 import {
@@ -159,7 +158,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
       const duracion_ms = Date.now() - startTime;
       await sb.from('agent_execution_logs').insert({
         id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
-        band_id: logData.band_id || BAKANDEYA_BAND_ID,
+        band_id: logData.band_id,
         agente: logData.agente,
         motor: logData.motor,
         disparado_por_tipo: logData.disparado_por_tipo || 'usuario_manual',
@@ -272,7 +271,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         });
       }
 
-      let bandInfo = 'Bakandeya (Rock / Mestizaje / Fusión)';
+      let bandInfo = 'la banda (estilo musical sin especificar)';
       let activeCampaign: any = null;
       try {
         const { data: bandData } = await sb

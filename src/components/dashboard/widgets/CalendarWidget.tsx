@@ -79,12 +79,9 @@ export function CalendarWidget({
     if (agendaFilterMode === "active") {
       return concerts.filter((c) => {
         if (!c.band_id && !c.bandName) return true;
-        const bId = (c.band_id || "").replace(/^(band|reg)-/, "").toLowerCase();
         const bName = (c.bandName || "").trim().toLowerCase();
         const activeName = (activeBandName || "").trim().toLowerCase();
-        return (
-          bId === "bakandeya" || (bName && activeName && bName === activeName)
-        );
+        return Boolean(bName && activeName && bName === activeName);
       });
     }
     return concerts;
@@ -94,12 +91,9 @@ export function CalendarWidget({
     if (agendaFilterMode === "active") {
       return rehearsals.filter((r) => {
         if (!r.band_id && !r.bandName) return true;
-        const rId = (r.band_id || "").replace(/^(band|reg)-/, "").toLowerCase();
         const rName = (r.bandName || "").trim().toLowerCase();
         const activeName = (activeBandName || "").trim().toLowerCase();
-        return (
-          rId === "bakandeya" || (rName && activeName && rName === activeName)
-        );
+        return Boolean(rName && activeName && rName === activeName);
       });
     }
     return rehearsals;

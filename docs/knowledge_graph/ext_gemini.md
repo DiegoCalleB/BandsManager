@@ -27,7 +27,6 @@ _Sin dependencias salientes directas._
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server_ai|server/ai.ts]] *(from #service)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*

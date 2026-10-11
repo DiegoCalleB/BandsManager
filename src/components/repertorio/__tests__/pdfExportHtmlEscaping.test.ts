@@ -1,17 +1,15 @@
+import { readPdfExportModule } from "./pdfExportSource";
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 
 // El setlist impreso se construye concatenando HTML con datos de la banda (títulos, notas de
 // cada músico, nombres). Esa ventana (`window.open("")`) es del mismo origen que la app, así que
 // un "<img onerror=...>" en una nota de un miembro ejecutaría JS con su sesión. Invariante: todo
 // `${...}` que meta uno de esos campos en el HTML pasa por escapeHtml.
-const FILE = resolve(__dirname, "../PdfExportModal.tsx");
 const USER_FIELDS =
   /\b(titulo|tituloCustom|notaTema|notas|bandName|activeSetlist\.nombre|member\.name|member\.instrument|line\.text|truncatedTitle|customLogoUrl|absoluteLogoUrl)\b/;
 
 describe("PdfExportModal: HTML de impresión", () => {
-  const source = readFileSync(FILE, "utf8");
+  const source = readPdfExportModule();
   // Solo las plantillas HTML (las que contienen etiquetas), no las llamadas de medición.
   const interpolations = [...source.matchAll(/\$\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g)]
     .map((m) => ({ expr: m[1], index: m.index ?? 0 }))

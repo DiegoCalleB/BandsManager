@@ -29,8 +29,8 @@ Exporta: MemberNotesModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_MemberNotesHost|src/components/repertorio/pdf_export/MemberNotesHost.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 
 ---
 

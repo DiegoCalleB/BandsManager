@@ -1511,7 +1511,7 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
     const contents = buildAudioOrTextContents(
       snippetPath,
       promptText,
-      "Audio no disponible localmente, genera el cifrado de acordes y letra profesional en directo estilo Bakandeya para esta canción."
+      "Audio no disponible localmente, genera el cifrado de acordes y letra profesional en directo para esta canción."
     );
 
     let tonalidad = "Mim / Em";

@@ -27,7 +27,7 @@ Exporta: SocialGrowthPlanView.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsLayout|src/components/reels/metrics/MetricsLayout.tsx]] *(from #frontend)*
 
 ---
 

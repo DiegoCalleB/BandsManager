@@ -15,7 +15,6 @@ export interface FormattedEmailResult {
 
 export interface SignatureDataParams {
   epkConfig?: Partial<EPKConfig> | null;
-  isBakandeya?: boolean;
   bandName?: string;
   senderName?: string;
   bandId?: string;
@@ -70,7 +69,6 @@ export const SOCIAL_ICONS_BADGES_MAP: Record<string, { badgeUrl: string; label: 
  */
 export function buildEmailSignatureData(params: SignatureDataParams) {
   const resolvedBandName = params.bandName || params.epkConfig?.contactoBooking?.nombre || 'la banda';
-  const isBakandeya = params.isBakandeya ?? false;
   const defaultEmail = `${resolvedBandName.toLowerCase().replace(/[^a-z0-9]/g, '') || 'contacto'}@booking.com`;
   const defaultPhone = '+34 600 000 000';
 
@@ -139,7 +137,6 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
 
   return {
     resolvedBandName,
-    isBakandeya,
     remitenteNombre,
     cargo,
     textoPie,
@@ -323,7 +320,7 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 /**
  * Builds a valid binary PDF 1.4 base64 encoded document for the active band's Dossier & EPK
  */
-export function buildBakandeyaDossierPdfBase64(params?: {
+export function buildDossierPdfBase64(params?: {
   bandName?: string;
   contactEmail?: string;
   phone?: string;
@@ -334,8 +331,8 @@ export function buildBakandeyaDossierPdfBase64(params?: {
   const email = params?.contactEmail || '';
   const phone = params?.phone || '';
   // Mismo criterio que en la firma del email: el enlace al EPK siempre lleva su band_id. Antes,
-  // sin bandId explícito, caía en'band-bakandeya': el dossier PDF adjunto en el email de
-  // CUALQUIER banda enlazaba al EPK público real de Bakandeya en vez del propio.
+  // sin bandId explícito, caía en una banda por defecto: el dossier PDF adjunto en el email de
+  // CUALQUIER banda enlazaba al EPK público de otra banda en vez del propio.
   const bandIdPdf = params?.bandId || '';
   // El idioma viaja con el enlace: el EPK abre directamente en la versión que le toca al
   // destinatario en vez de obligarle a buscar el selector.
@@ -454,8 +451,8 @@ export function formatEmailWithSignatureAndDossier(params: {
 }): FormattedEmailResult {
   const { pitchText, lead, epkConfig, senderName, bandName, bandId } = params;
 
-  // Sin bandName ni contactoBooking.nombre, esto firmaba el email como Bakandeya y usaba su
-  // email/teléfono reales (ver isBakandeya/defaultEmail/defaultPhone más abajo) para CUALQUIER
+  // Sin bandName ni contactoBooking.nombre, esto firmaba el email con el nombre de otra banda y usaba su
+  // email/teléfono reales (ver defaultEmail/defaultPhone más abajo) para CUALQUIER
   // banda. Los llamantes actuales ya evitan pasar undefined (ver bandDisplayName en
   // Chatbot.tsx), pero la función no debe depender de eso para no filtrar datos reales.
   const resolvedBandName = bandName || epkConfig?.contactoBooking?.nombre || 'la banda';
@@ -705,7 +702,7 @@ ${linksTextArray.length > 0 ? linksTextArray.join(' | ') : ''}
 `.trim();
 
   // 5. Generate REAL PDF attachment
-  const dossierPdfBase64 = buildBakandeyaDossierPdfBase64({
+  const dossierPdfBase64 = buildDossierPdfBase64({
     bandName: resolvedBandName,
     contactEmail: email,
     phone: telefono,

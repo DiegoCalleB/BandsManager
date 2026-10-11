@@ -1,12 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 
-const src = readFileSync('src/components/SongStudioModal.tsx', 'utf8');
+import { leerModuloSongStudio } from './songStudioSource';
+
+const src = leerModuloSongStudio();
 
 describe('Iris vive a nivel de canción en el modal', () => {
   it('hay una barra de Iris antes de "Ideas y grabaciones"', () => {
-    expect(src.indexOf('Iris · pistas de la canción')).toBeGreaterThan(0);
-    expect(src.indexOf('Iris · pistas de la canción')).toBeLessThan(src.indexOf('Ideas y grabaciones'));
+    expect(src).toContain('Iris · pistas de la canción');
+    expect(src).toContain('Ideas y grabaciones');
+    const cuerpo = readFileSync('src/components/song_studio/SongStudioContentBody.tsx', 'utf8');
+    expect(cuerpo.indexOf('<SongStudioIrisBar />')).toBeGreaterThan(-1);
+    expect(cuerpo.indexOf('<SongStudioIrisBar />')).toBeLessThan(cuerpo.indexOf('<SongStudioIdeasBar />'));
   });
 
   it('las tomas ya no ofrecen "Separar con Iris" por su cuenta', () => {
@@ -17,17 +22,19 @@ describe('Iris vive a nivel de canción en el modal', () => {
 
 describe('El feed de ideas solo lleva tomas', () => {
   it('el feed mapea las tomas (sin Iris) y Iris se pinta en su panel', () => {
-    expect(src).toContain('{tomas.map((toma) => renderIdeaCard(toma))}');
-    expect(src).toContain('{irisIdea ? (\n                  <div className="space-y-6">{renderIdeaCard(irisIdea, { iris: true })}</div>');
+    expect(src).toMatch(/tomas\.map\(\(toma\) => \(\s*<SongStudioIdeaCard key=\{toma\.id\} idea=\{toma\} \/>/);
+    expect(src).toMatch(/\{irisIdea \? \(\s*<div className="space-y-6"><SongStudioIdeaCard idea=\{irisIdea\} opts=\{\{ iris: true \}\} \/><\/div>/);
     expect(src).not.toContain('{filteredIdeas.map((idea)');
   });
 
   it('el panel de Iris no lleva cabecera de idea (título, autor, borrar, + Pista, + Base tema)', () => {
-    expect(src).toContain('const modoIris = !!opts?.iris;');
-    expect(src).toContain("{modoIris ? 'Pistas de la canción' : idea.titulo}");
-    expect(src).toContain('{!modoIris && (<div className="flex items-center gap-2 flex-wrap justify-end">');
-    expect(src).toContain('{!modoIris && selectedSongBaseUrl');
-    expect(src).toContain('{!modoIris && (\n                            <IconButton\n                              label="Eliminar idea"');
+    // El JSX se movió de archivo y de indentación: se compara sin depender de los espacios.
+    const compacto = src.replace(/\s+/g, ' ');
+    expect(compacto).toContain('const modoIris = !!opts?.iris;');
+    expect(compacto).toContain("{modoIris ? 'Pistas de la canción' : idea.titulo}");
+    expect(compacto).toContain('{!modoIris && (<div className="flex items-center gap-2 flex-wrap justify-end">');
+    expect(compacto).toContain('{!modoIris && selectedSongBaseUrl');
+    expect(compacto).toContain('{!modoIris && ( <IconButton label="Eliminar idea"');
   });
 });
 
@@ -42,7 +49,7 @@ describe('Iris tiene su propia hoja', () => {
   it('el estudio solo trae la entrada y la hoja lleva el mezclador', () => {
     expect(src).toContain('setShowIrisPanel(true)');
     expect(src).toContain('aria-label="Iris, pistas de la canción"');
-    expect(src.indexOf('renderIdeaCard(irisIdea, { iris: true })')).toBeGreaterThan(src.indexOf('HOJA DE IRIS'));
+    expect(src.indexOf('<SongStudioIdeaCard idea={irisIdea} opts={{ iris: true }} />')).toBeGreaterThan(src.indexOf('HOJA DE IRIS'));
   });
 });
 

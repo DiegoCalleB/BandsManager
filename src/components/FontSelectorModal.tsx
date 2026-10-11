@@ -140,7 +140,7 @@ export const FontSelectorModal: React.FC<FontSelectorModalProps> = ({
                     style={{ fontFamily: preset.displayFont }}
                   >
                     <div className="font-bold text-base mb-1">
-                      Bakandeya management hub 2026
+                      BandManager management hub 2026
                     </div>
                     <div
                       className="text-xs opacity-80"

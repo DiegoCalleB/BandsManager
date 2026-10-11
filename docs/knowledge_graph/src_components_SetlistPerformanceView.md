@@ -13,34 +13,25 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: SetlistPerformanceView.
+Visor de repertorio en directo / ensayo.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ensayos_BarraSeguimientoEnsayo|src/components/ensayos/BarraSeguimientoEnsayo.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_hooks_useFullscreen|src/hooks/useFullscreen.ts]] *(Layer: #hook, Domain: #system)*
-- [[src_hooks_useNavegacionItems|src/hooks/useNavegacionItems.ts]] *(Layer: #hook, Domain: #system)*
-- [[src_hooks_useWakeLock|src/hooks/useWakeLock.ts]] *(Layer: #hook, Domain: #system)*
+- [[src_components_setlist_performance_SetlistPerformanceProvider|src/components/setlist_performance/SetlistPerformanceProvider.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_setlist_performance_SetlistPerformanceRoot|src/components/setlist_performance/SetlistPerformanceRoot.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_setlist_performance_hooks_useSetlistPerformanceController|src/components/setlist_performance/hooks/useSetlistPerformanceController.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_documentType|src/utils/documentType.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_pasarPagina|src/utils/pasarPagina.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_stageOfflineCache|src/utils/stageOfflineCache.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_components_setlist_performance_hooks_useSetlistPerformanceController|src/components/setlist_performance/hooks/useSetlistPerformanceController.ts]] *(from #frontend)*
+- [[src_components_setlist_performance_SetlistPerformanceContext|src/components/setlist_performance/SetlistPerformanceContext.ts]] *(from #frontend)*
 
 ---
 

@@ -4,7 +4,7 @@ title: "src/components/Dashboard.tsx"
 layer: frontend
 domain: system
 file: "src/components/Dashboard.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/Dashboard.tsx
@@ -51,7 +51,7 @@ Exporta: NavigationOptions, Dashboard.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
 
 ---
 

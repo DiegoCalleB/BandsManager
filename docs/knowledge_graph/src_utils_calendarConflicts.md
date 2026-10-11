@@ -26,8 +26,8 @@ Detector de choques de calendario (conciertos, ensayos y reuniones).
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[src_components_calendar_CalendarConflictsBanner|src/components/calendar/CalendarConflictsBanner.tsx]] *(from #frontend)*
+- [[src_components_calendar_hooks_useCalendarFilters|src/components/calendar/hooks/useCalendarFilters.ts]] *(from #frontend)*
 - [[src_components_calendar_useCalendarConflicts|src/components/calendar/useCalendarConflicts.ts]] *(from #frontend)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
 
 ---
 

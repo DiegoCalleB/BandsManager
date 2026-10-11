@@ -7,7 +7,7 @@ vi.mock('../../db.js', () => ({
   getSupabase: vi.fn(),
   dbGetAutonomyConfig: (...args: any[]) => dbGetAutonomyConfigMock(...args)
 }));
-vi.mock('../../state.js', () => ({ BAKANDEYA_BAND_ID: 'band-bakandeya' }));
+vi.mock('../../state.js', () => ({ DEMO_BAND_ID: 'band-demo' }));
 
 const enviarEmailMock = vi.fn();
 const crearBorradorMock = vi.fn();

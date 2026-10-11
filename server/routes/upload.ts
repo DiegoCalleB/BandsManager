@@ -398,7 +398,7 @@ async function listRecursiveStorageFiles(supabase: any, bucketName: string, fold
 
 const PERMITTED_CLEANUP_KEYWORDS = [
   "ruta", "ruta-66", "ruta_66", "ruta66",
-  "bakandeya", "arritmia", "vertice", "vértice",
+  "arritmia", "vertice", "vértice",
   "fer_y_dani", "nuevo__lbum"
 ];
 
@@ -423,7 +423,7 @@ router.get("/storage-stats", requireAuth, async (req, res) => {
       bucket: bucketName,
       totalFiles: files.length,
       totalSizeMB: Number((totalBytes / (1024 * 1024)).toFixed(2)),
-      allowedBands: ["Ruta 66", "Bakandeya", "Arritmia", "Vértice"]
+      allowedBands: ["Ruta 66", "Arritmia", "Vértice"]
     });
   } catch (err: any) {
     return res.status(500).json({ error: err.message || String(err) });

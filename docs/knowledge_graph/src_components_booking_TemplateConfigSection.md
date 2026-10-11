@@ -28,10 +28,10 @@ Exporta: TemplateCategory, ActiveTemplateData, TemplateConfigSection.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
+- [[src_components_booking_crm_TemplatesConfigCard|src/components/booking/crm/TemplatesConfigCard.tsx]] *(from #frontend)*
 - [[src_components_booking_ExampleThreadsSection|src/components/booking/ExampleThreadsSection.tsx]] *(from #frontend)*
 - [[src_components_booking_TemplateRecommendationsCard|src/components/booking/TemplateRecommendationsCard.tsx]] *(from #frontend)*
 - [[src_data_templateRecommendations|src/data/templateRecommendations.ts]] *(from #service)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---
 

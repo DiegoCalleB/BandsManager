@@ -1,10 +1,9 @@
+import { readPdfExportModule } from "./pdfExportSource";
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 
 // Contratos de maquetación que ya fallaron una vez con datos reales (Ruta 66) y que ninguna prueba
 // con datos de ejemplo detectaba. Son comprobaciones estáticas del CSS de impresión.
-const source = readFileSync(resolve(__dirname, "../PdfExportModal.tsx"), "utf8");
+const source = readPdfExportModule();
 
 /** Cuerpo de la primera regla CSS cuyo selector sea exactamente `selector`. */
 function regla(selector: string): string {

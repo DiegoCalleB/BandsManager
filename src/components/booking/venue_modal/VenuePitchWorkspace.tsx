@@ -410,7 +410,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold font-sans text-[var(--ink)]">
-              Entrenamiento de Tono y Estilo
+              Entrenamiento de tono y estilo
             </span>
             <span className="text-micro font-mono px-1.5 py-0.5 rounded bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold">
               Dynamic Few-Shot

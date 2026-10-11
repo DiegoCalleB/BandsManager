@@ -24,9 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
-- [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
@@ -44,7 +42,8 @@ _Sin dependencias salientes directas._
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(from #service)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(from #frontend)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(from #service)*
 
 ---

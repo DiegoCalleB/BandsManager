@@ -1,5 +1,5 @@
+import { Camera, Check, Link as LinkIcon, Loader2, Sparkles, Trash2, Upload, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { X, Upload, Sparkles, Link as LinkIcon, Trash2, Camera, Loader2, Check } from 'lucide-react';
 import { BandContact } from '../../types';
 import { apiFetch } from '../../utils/api';
 import { uploadFileToServer } from '../../utils/audioStorage';

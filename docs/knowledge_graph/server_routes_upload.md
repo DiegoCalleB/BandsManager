@@ -34,7 +34,7 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_utils_storage|server/utils/storage.ts]] *(from #service)*
-- [[src_components_repertorio_LiveConcertToAlbumModal|src/components/repertorio/LiveConcertToAlbumModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_live_concert_album_hooks_useConcertSourceMedia|src/components/repertorio/live_concert_album/hooks/useConcertSourceMedia.ts]] *(from #frontend)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 
 ---

@@ -25,11 +25,11 @@ Exporta: ProvinceCorridor, SPANISH_TOUR_CORRIDORS, normalizeLocationName, findCo
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+- [[src_components_booking_crm_hooks_useLeadFiltering|src/components/booking/crm/hooks/useLeadFiltering.ts]] *(from #frontend)*
 - [[src_components_booking_DealAndLogisticsCopilot|src/components/booking/DealAndLogisticsCopilot.tsx]] *(from #frontend)*
 - [[src_components_booking_MorningBriefingRadar|src/components/booking/MorningBriefingRadar.tsx]] *(from #frontend)*
 - [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(from #service)*
 - [[src_utils_managerAlerts|src/utils/managerAlerts.ts]] *(from #service)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---
 

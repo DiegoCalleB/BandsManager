@@ -170,7 +170,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
           <div className="space-y-1 text-center sm:text-left">
             <span className="text-xs font-bold text-[var(--ink)] font-display flex items-center justify-center sm:justify-start gap-1.5">
               <span>{config.mascot === 'dino' ? '🦖' : config.mascot === 'pacman' ? '🕹️' : config.mascot === 'rock_skull' ? '💀' : '✨'}</span>
-              <span>Diseño Artístico Aplicado</span>
+              <span>Diseño artístico aplicado</span>
             </span>
             <p className="text-[11px] text-[var(--ink-2)] font-sans max-w-xs">
               Tu QR incluye la mascota ({config.mascot}), puntos ({config.dotStyle}), ojos ({config.eyeStyle}) y paleta personalizada.
@@ -268,7 +268,7 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
               <div className="flex items-center justify-between">
                 <span className="font-bold text-sm flex items-center gap-2 text-[var(--ink)]">
                   <Layers className="w-4 h-4 text-[var(--acc)]" />
-                  Pegatina / Stand de Merchan
+                  Pegatina / stand de merchan
                 </span>
                 <span className="text-micro font-sans font-bold bg-[var(--ok)]/20 text-[var(--ink)] px-2 py-0.5 rounded-[var(--r-s)]">
                   Cuadrado 2400px

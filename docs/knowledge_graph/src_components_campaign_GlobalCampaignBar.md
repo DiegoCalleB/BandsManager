@@ -4,7 +4,7 @@ title: "src/components/campaign/GlobalCampaignBar.tsx"
 layer: frontend
 domain: system
 file: "src/components/campaign/GlobalCampaignBar.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/campaign/GlobalCampaignBar.tsx
@@ -26,7 +26,7 @@ Exporta: GlobalCampaignBar.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_AppMainContent|src/app/AppMainContent.tsx]] *(from #service)*
 
 ---
 

@@ -40,7 +40,6 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
-- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_conciertos_qr|Conciertos, QR y calendario]] *(from #feature)*
 - [[fn_ensayos|Ensayos]] *(from #feature)*
@@ -54,18 +53,24 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandBulkActions|src/components/bandCRM/hooks/useBandBulkActions.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrud|src/components/bandCRM/hooks/useBandCrud.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandForm|src/components/bandCRM/hooks/useBandForm.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandToneAnalysis|src/components/bandCRM/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
 - [[src_components_bandCRM_SpotifySweepModal|src/components/bandCRM/SpotifySweepModal.tsx]] *(from #frontend)*
 - [[src_components_booking_BandPreviewPlayer|src/components/booking/BandPreviewPlayer.tsx]] *(from #frontend)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
-- [[src_components_Chatbot|src/components/Chatbot.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(from #agent)*
+- [[src_components_calendar_hooks_useEventReminder|src/components/calendar/hooks/useEventReminder.ts]] *(from #frontend)*
+- [[src_components_chatbot_hooks_useEntityActions|src/components/chatbot/hooks/useEntityActions.ts]] *(from #frontend)*
+- [[src_components_dashboard_agent_autonomy_hooks_useAutonomyConfig|src/components/dashboard/agent_autonomy/hooks/useAutonomyConfig.ts]] *(from #agent)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
-- [[src_components_ReelsCenter|src/components/ReelsCenter.tsx]] *(from #frontend)*
-- [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
+- [[src_components_repertorio_pdf_export_hooks_usePrintSettingsPersistence|src/components/repertorio/pdf_export/hooks/usePrintSettingsPersistence.ts]] *(from #frontend)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---

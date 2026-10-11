@@ -81,8 +81,8 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
-- [[src_components_SongStudioModal|src/components/SongStudioModal.tsx]] *(from #frontend)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+- [[src_components_song_studio_SongStudioDialogs|src/components/song_studio/SongStudioDialogs.tsx]] *(from #frontend)*
 
 ---
 

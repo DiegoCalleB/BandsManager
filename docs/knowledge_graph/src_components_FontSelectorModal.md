@@ -4,7 +4,7 @@ title: "src/components/FontSelectorModal.tsx"
 layer: frontend
 domain: system
 file: "src/components/FontSelectorModal.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/FontSelectorModal.tsx
@@ -25,7 +25,7 @@ Exporta: FontSelectorModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

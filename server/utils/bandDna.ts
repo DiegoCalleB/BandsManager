@@ -121,7 +121,7 @@ export function resolveMinCacheByType(activeCampaign: any, bandMinCache?: any): 
 
 /**
  * Extrae el perfil de ADN completo y multidimensional de cualquier banda registrada
- * o de Bakandeya a partir del estado de la aplicación.
+ * a partir del estado de la aplicación.
  */
 export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 'pitch' | 'reply' = 'pitch'): BandDnaProfile {
   const cleanId = (bandId || "").replace(/^(band|reg)-/, "");

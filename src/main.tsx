@@ -55,7 +55,7 @@ const esRutaPublicaEpk = /^\/epk\/?$/.test(pathname);
 const esRutaPublicaMusicos = /^\/(musicos|musicians|para-musicos|waitlist-musicos)\/?$/.test(pathname);
 
 // El EPK se monta FUERA de LanguageProvider a propósito: ese provider inyecta el widget de
-// Google Translate, que traduce a nivel de DOM y destroza nombres propios y jerga ("Bakandeya",
+// Google Translate, que traduce a nivel de DOM y destroza nombres propios y jerga ("Mi Banda",
 // "Electrobasureo"). En un documento cuyo único trabajo es parecer profesional eso no vale, y
 // además pelearía con el selector de idioma propio de la página (ver useEpkLanguage). PublicEPK
 // no usa useLanguage() en ningún sitio, así que no necesita el contexto para nada.

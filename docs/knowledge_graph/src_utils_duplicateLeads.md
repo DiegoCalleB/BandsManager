@@ -23,8 +23,8 @@ Exporta: normalizeText, normalizeVenueName, normalizeEmail, normalizeWebOrHandle
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_booking_crm_hooks_useLeadEditing|src/components/booking/crm/hooks/useLeadEditing.ts]] *(from #frontend)*
 - [[src_components_booking_LeadDuplicatesModal|src/components/booking/LeadDuplicatesModal.tsx]] *(from #frontend)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---
 

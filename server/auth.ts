@@ -1,4 +1,3 @@
-import { esCuentaDeBrais } from './utils/cuentaBrais.js';
 import express from "express";
 import crypto from "crypto";
 import { normalizePlan } from "./db/core.js";
@@ -58,7 +57,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   let token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : (req.headers["x-auth-token"] as string);
 
   if (!token && req.headers.cookie) {
-    const match = req.headers.cookie.match(/bakandeya_token=([^;]+)/);
+    const match = req.headers.cookie.match(/bandmanager_token=([^;]+)/);
     if (match) token = match[1];
   }
 
@@ -97,33 +96,8 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   if (foundUser.band_id) addBandIdAndVariants(foundUser.band_id);
 
-  const isBraisMoureUser = esCuentaDeBrais({ id: foundUser.id, email: userEmail });
-
-  if (isBraisMoureUser) {
-    // Valores por defecto, no forzados: si Brais edita su banda/instrumento, se respeta.
-    foundUser.instrument = foundUser.instrument || 'Batería';
-    addBandIdAndVariants('band-os-herdeiros-do-codigo');
-    addBandIdAndVariants('band-master-of-prompts');
-    allowedBandIds.delete('bakandeya');
-    allowedBandIds.delete('band-bakandeya');
-    allowedBandIds.delete('reg-bakandeya');
-
-    const cleanUserCurrent = (foundUser.band_id || '').replace(/^(band|reg)-/, '').toLowerCase();
-    if (cleanUserCurrent === 'master-of-prompts') {
-      foundUser.band_id = 'band-master-of-prompts';
-      foundUser.bandName = foundUser.bandName || 'Master of Prompts';
-    } else if (cleanUserCurrent === 'os-herdeiros-do-codigo') {
-      foundUser.band_id = 'band-os-herdeiros-do-codigo';
-      foundUser.bandName = foundUser.bandName || 'Os Herdeiros do Código';
-    } else if (!foundUser.band_id || cleanUserCurrent === 'bakandeya') {
-      foundUser.band_id = 'band-master-of-prompts';
-      foundUser.bandName = 'Master of Prompts';
-    }
-  }
-
   if (foundUser.role === 'admin') {
     addBandIdAndVariants('vertice');
-    addBandIdAndVariants('bakandeya');
   }
 
   if (state?.userBands) {
@@ -151,10 +125,9 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     });
   }
 
-  // Antes, un usuario sin ninguna banda asociada se quedaba con 'band-bakandeya' en la lista de
-  // permitidas. Eso venía de cuando la app era de una sola banda; hoy significa que cualquier
-  // cuenta a la que le falte su vínculo entra en la banda insignia y ve sus leads y sus
-  // finanzas. Sin banda no hay sesión válida: más abajo, un activeBandId vacío devuelve null.
+  // Un usuario sin ninguna banda asociada no recibe ninguna banda en la lista de permitidas:
+  // si no, cualquier cuenta a la que le falte su vínculo entraría en otra banda y vería sus
+  // leads y sus finanzas. Sin banda no hay sesión válida: más abajo, un activeBandId vacío devuelve null.
 
   // Check requested active band from headers / query / body
   const requestedBandId = (
@@ -185,9 +158,6 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
     activeBandId = 'band-vertice';
   }
 
-  if (isBraisMoureUser && (!activeBandId || activeBandId.includes('bakandeya'))) {
-    activeBandId = foundUser.band_id || 'band-master-of-prompts';
-  }
 
   if (!activeBandId) return null;
 

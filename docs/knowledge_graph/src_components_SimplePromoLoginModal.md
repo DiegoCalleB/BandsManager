@@ -4,7 +4,7 @@ title: "src/components/SimplePromoLoginModal.tsx"
 layer: frontend
 domain: auth
 file: "src/components/SimplePromoLoginModal.tsx"
-tags: ["frontend", "auth", "auto", "pantalla"]
+tags: ["frontend", "auth", "auto"]
 ---
 
 # 📌 src/components/SimplePromoLoginModal.tsx
@@ -28,7 +28,7 @@ Exporta: SimplePromoLoginModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

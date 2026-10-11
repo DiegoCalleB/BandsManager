@@ -25,7 +25,7 @@ Exporta: VenueMap.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
+- [[src_components_booking_crm_ListOrMapArea|src/components/booking/crm/ListOrMapArea.tsx]] *(from #frontend)*
 
 ---
 

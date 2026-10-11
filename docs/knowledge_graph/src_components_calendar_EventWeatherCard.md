@@ -25,9 +25,8 @@ Exporta: EventWeatherCard.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_calendar_CalendarEventDetailModal|src/components/calendar/CalendarEventDetailModal.tsx]] *(from #frontend)*
-- [[src_components_calendar_CalendarSidebarLogistics|src/components/calendar/CalendarSidebarLogistics.tsx]] *(from #frontend)*
-- [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_calendar_event_detail_EventWeatherSection|src/components/calendar/event_detail/EventWeatherSection.tsx]] *(from #frontend)*
+- [[src_components_calendar_logistics_EventWeatherPanel|src/components/calendar/logistics/EventWeatherPanel.tsx]] *(from #frontend)*
 
 ---
 

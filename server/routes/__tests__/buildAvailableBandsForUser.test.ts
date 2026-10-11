@@ -3,7 +3,7 @@ import { normalizePlan } from '../../db/core.js';
 
 // buildAvailableBandsForUser (server/routes/users.ts) construye la lista de bandas que ve el
 // selector de bandas del usuario (AuthContext.availableBands) - nunca se había testeado
-// directamente a pesar de tener dos fallbacks a BAKANDEYA_BAND_ID (para "cuál es la banda
+// directamente a pesar de tener dos fallbacks a DEMO_BAND_ID (para "cuál es la banda
 // principal" y para "banda actual" cuando al usuario le falta band_id) y, hasta este cambio, un
 // segundo hack de "si el email contiene lorenzo, fuerza el plan a promo" que corría en CADA
 // petición (no solo en el arranque, a diferencia del que ya se quitó de server/db/bands.ts).
@@ -14,7 +14,7 @@ vi.mock('../../state.js', () => ({
   requireAuth: (_req: any, _res: any, next: any) => next(),
   requireLeader: (_req: any, _res: any, next: any) => next(),
   getUserFromRequestLocal: vi.fn(),
-  BAKANDEYA_BAND_ID: 'band-bakandeya',
+  DEMO_BAND_ID: 'band-demo',
   // Mismo contrato que el real: exige un band_id no vacío (server/state.ts línea 654) para no
   // devolver en silencio el EPK del fundador a un llamador que se olvidó de pasar la banda.
   getEpkConfigForBand: (state: any, bandId: string) => {
@@ -109,14 +109,14 @@ describe('buildAvailableBandsForUser', () => {
     expect(bandaPlus?.plan).toBe('promo_plus');
   });
 
-  it('un usuario sin band_id no se etiqueta con la identidad de Bakandeya', async () => {
+  it('un usuario sin band_id no se etiqueta con la identidad de Banda Ejemplo', async () => {
     const state = baseState();
     const user = { id: 'u4', email: 'cuenta-rota@ejemplo.com' }; // sin band_id ni main_band_id
 
     const bands = await buildAvailableBandsForUser(state, user);
     expect(bands.length).toBe(1);
-    expect(bands[0].band_id).not.toBe('band-bakandeya');
-    expect(bands[0].bandName).not.toMatch(/bakandeya/i);
+    expect(bands[0].band_id).not.toBe('band-ejemplo');
+    expect(bands[0].bandName).not.toMatch(/ejemplo/i);
   });
 
   it('una nueva banda sin logo configurado no hereda el logo de otra banda (ej: Ruta 66)', async () => {

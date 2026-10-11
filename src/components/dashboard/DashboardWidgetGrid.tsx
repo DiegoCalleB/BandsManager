@@ -215,11 +215,11 @@ export function DashboardWidgetGrid({
       const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
       const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
       try {
-        const cached = localStorage.getItem("bakandeya_user");
+        const cached = localStorage.getItem("bandmanager_user");
         if (cached) {
           const user = JSON.parse(cached);
           user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
-          localStorage.setItem("bakandeya_user", JSON.stringify(user));
+          localStorage.setItem("bandmanager_user", JSON.stringify(user));
         }
       } catch {
         /* sin localStorage: la copia del servidor sigue siendo la buena */

@@ -140,12 +140,7 @@ export default function Merchan({
 }: MerchanProps) {
   const isDemo = false;
 
-  // La plantilla de Bakandeya (logo/álbumes/catálogo de temas de demo) solo debe verse en la
-  // propia Bakandeya: mismo criterio que RepertorioSetlists.tsx (ver"isBakandeya" ahí) para no
-  // filtrar el logo, redes sociales o discografía de la banda de demo al taller de cualquier
-  // otra banda.
   const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
-  const isBakandeya = cleanBand === "bakandeya";
   const displayBandName = bandName || "Tu Banda";
   const bandInitials =
     displayBandName
@@ -188,20 +183,7 @@ export default function Merchan({
     }[]
   >([]);
 
-  const [albums, setAlbums] = useState<{ name: string; url: string }[]>(
-    isBakandeya
-      ? [
-          {
-            name: "Bakandeya (2025)",
-            url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&q=80",
-          },
-          {
-            name: "EP Cacharros",
-            url: "https://images.unsplash.com/photo-1493225457124-a1a2a5f590bc?w=500&q=80",
-          },
-        ]
-      : [],
-  );
+  const [albums, setAlbums] = useState<{ name: string; url: string }[]>([]);
 
   // Regalo de bienvenida: Estado de canje de pack de pegatinas
   const [hasGiftPending, setHasGiftPending] = useState(true);
@@ -281,7 +263,7 @@ export default function Merchan({
     return () => {
       isSubscribed = false;
     };
-  }, [cleanBand, isBakandeya]);
+  }, [cleanBand]);
 
   // Galería de diseños generados, cacheada por banda (misma convención que el resto del módulo
   // de repertorio: ver `band_songs_${cleanBand}` arriba) para que una banda nunca vea los diseños

@@ -174,14 +174,16 @@ function deriveLogoForLead(lead: Lead): string {
 }
 
 async function run() {
-  console.log("=== INICIANDO LIMPIEZA Y ENRIQUECIMIENTO DE LEADS DE BAKANDEYA ===");
+  console.log("=== INICIANDO LIMPIEZA Y ENRIQUECIMIENTO DE LEADS ===");
   const sb = getSupabase();
 
-  // 1. Cargar todos los leads de Bakandeya
+  // 1. Cargar todos los leads de la banda indicada (argumento: band_id)
+  const bandId = process.argv[2];
+  if (!bandId) throw new Error("Uso: tsx scripts/dedupe_and_enrich.ts <band_id>");
   const { data: rawLeads, error: fetchErr } = await sb
     .from("leads")
     .select("*")
-    .eq("band_id", "band-bakandeya");
+    .eq("band_id", bandId);
 
   if (fetchErr || !rawLeads) {
     console.error("Error al cargar leads:", fetchErr);

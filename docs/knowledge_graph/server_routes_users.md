@@ -25,7 +25,6 @@ Usuarios y autenticación: registro, login Google verificado, invitaciones de mi
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_cuentaBrais|server/utils/cuentaBrais.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_googleVerify|server/utils/googleVerify.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_invitacion|server/utils/invitacion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
@@ -37,12 +36,14 @@ Usuarios y autenticación: registro, login Google verificado, invitaciones de mi
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
-- [[src_components_BandCRM|src/components/BandCRM.tsx]] *(from #frontend)*
-- [[src_components_BandSwitcherModal|src/components/BandSwitcherModal.tsx]] *(from #frontend)*
+- [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
+- [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
+- [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(from #frontend)*
+- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*
-- [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
 - [[src_services_api|src/services/api.ts]] *(from #service)*
 

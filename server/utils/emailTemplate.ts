@@ -18,7 +18,7 @@ export function cleanTrailingPitchSignature(text: string): string {
   // Strip redundant trailing signature blocks with contact details (names, roles, phones, emails)
   const signOffPatterns = [
     /\n+(?:(?:¡?Un saludo(?: cordial)?!?|Atentamente,?|Cordialmente,?|¡?Un (?:fuerte )?abrazo!?|Saludos cordiales,?|Quedamos a vuestra (?:entera )?disposici[oó]n\.?))\s*\n+([\s\S]*)$/i,
-    /\n+(?:(?:Booking\s*&\s*Management|Management|Equipo de Booking|Booking Team|Bakandeya Management|Equipo de Comunicación|Músicos de \w+)[\s\S]*)$/i,
+    /\n+(?:(?:Booking\s*&\s*Management|Management|Equipo de Booking|Booking Team|Equipo de Comunicación|Músicos de \w+)[\s\S]*)$/i,
     /\n+(?:(?:📞|📱|✉️|Email:|Tel:|\+34|\b[\w.-]+@[\w.-]+\.\w+\b)[\s\S]*)$/i,
     /\n+(?:--\s*\n[\s\S]*)$/i
   ];

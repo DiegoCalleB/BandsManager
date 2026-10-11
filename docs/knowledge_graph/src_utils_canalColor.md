@@ -24,7 +24,8 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsMetricsView|src/components/reels/ReelsMetricsView.tsx]] *(from #frontend)*
+- [[src_components_reels_metrics_hooks_useMetricsChart|src/components/reels/metrics/hooks/useMetricsChart.ts]] *(from #frontend)*
+- [[src_components_reels_metrics_MetricsChartSection|src/components/reels/metrics/MetricsChartSection.tsx]] *(from #frontend)*
 - [[src_components_ui_ChannelChip|src/components/ui/ChannelChip.tsx]] *(from #frontend)*
 
 ---

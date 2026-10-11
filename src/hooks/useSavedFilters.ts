@@ -57,7 +57,7 @@ export function useSavedFilters(
 
   const [savedFilters, setSavedFilters] = useState<SavedFilter[]>(() => {
     try {
-      const saved = localStorage.getItem('bakandeya_saved_crm_filters');
+      const saved = localStorage.getItem('bandmanager_saved_crm_filters');
       return saved ? JSON.parse(saved) : DEFAULT_PRESET_FILTERS;
     } catch {
       return DEFAULT_PRESET_FILTERS;
@@ -96,7 +96,7 @@ export function useSavedFilters(
     const updated = [newSf, ...savedFilters];
     setSavedFilters(updated);
     try {
-      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
+      localStorage.setItem('bandmanager_saved_crm_filters', JSON.stringify(updated));
     } catch (err) {
       console.error(err);
     }
@@ -111,7 +111,7 @@ export function useSavedFilters(
     const updated = savedFilters.filter((f) => f.id !== filterId);
     setSavedFilters(updated);
     try {
-      localStorage.setItem('bakandeya_saved_crm_filters', JSON.stringify(updated));
+      localStorage.setItem('bandmanager_saved_crm_filters', JSON.stringify(updated));
     } catch (err) {
       console.error(err);
     }

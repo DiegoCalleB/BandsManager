@@ -13,24 +13,26 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: TrackCutItem, LiveConcertToAlbumModal.
+Modal "Concierto en directo → álbum": orquesta controlador, contexto y maqueta.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
-- [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_live_concert_album_LiveConcertAlbumLayout|src/components/repertorio/live_concert_album/LiveConcertAlbumLayout.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_live_concert_album_LiveConcertAlbumProvider|src/components/repertorio/live_concert_album/LiveConcertAlbumProvider.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_live_concert_album_hooks_useLiveConcertAlbumController|src/components/repertorio/live_concert_album/hooks/useLiveConcertAlbumController.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_live_concert_album_types|src/components/repertorio/live_concert_album/types.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
 
 ---
 

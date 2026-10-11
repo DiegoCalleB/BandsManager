@@ -4,7 +4,7 @@ title: "src/components/Planes.tsx"
 layer: frontend
 domain: system
 file: "src/components/Planes.tsx"
-tags: ["frontend", "system", "auto", "pantalla"]
+tags: ["frontend", "system", "auto"]
 ---
 
 # 📌 src/components/Planes.tsx
@@ -29,7 +29,7 @@ Exporta: Planes.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
-- [[src_App|src/App.tsx]] *(from #frontend)*
+- [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
 
 ---
 

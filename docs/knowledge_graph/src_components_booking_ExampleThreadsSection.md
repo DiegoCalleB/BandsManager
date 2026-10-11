@@ -28,7 +28,6 @@ Exporta: ExampleThreadsSection.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
 - [[src_components_booking_TemplateConfigSection|src/components/booking/TemplateConfigSection.tsx]] *(from #frontend)*
-- [[ui_booking_crm|Booking CRM Component]] *(from #frontend)*
 
 ---
 
