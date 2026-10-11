@@ -1613,3 +1613,149 @@ body.pelicula:not(.scroll) .slide.feat.active > .rafaga { display: block; positi
 @keyframes mbhaces { 0% { opacity: 0; rotate: -16deg; } 18% { opacity: 1; } 82% { opacity: 1; } 100% { opacity: 0; rotate: 16deg; } }
 .mis-bandas .mb-foto.gran::after { background: radial-gradient(ellipse at 50% 55%, transparent 40%, rgba(0,0,0,.55) 100%), linear-gradient(0deg, rgba(0,0,0,.72) 0%, transparent 42%); }
 @media (prefers-reduced-motion: reduce) { .mis-bandas .mb-foto.gran::before { display: none; } }
+
+/* ───────── «Y así le llega a la sala»: aprobar el pitch y verlo llegar a la bandeja de entrada de la sala ─────────
+   Todo con --t absolutos (segundos desde que entra la escena). Diseño en 1600x860; en la película ocupa casi toda la pantalla. */
+.mailscene .ms { position: absolute; left: 660px; top: 190px; width: 1600px; height: 860px; transform-origin: 0 0; scale: .72; font-family: Onest, sans-serif; }
+body.pelicula:not(.scroll) .mailscene .ms { left: 160px; top: 110px; scale: 1; }
+body.scroll .mailscene .ms { display: none; }
+.mailscene .ms > * { position: absolute; }
+/* — la app: borrador de la IA, aprobación, envío — */
+.ms-app { left: 250px; top: 40px; width: 1100px; height: 780px; border-radius: 18px; background: #0e1220; box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.1); opacity: 0; overflow: hidden; }
+.mailscene.active .ms-app { animation: msapp 5.2s linear .1s both; }
+@keyframes msapp { 0% { opacity: 0; scale: .95; translate: 0 30px; } 5% { opacity: 1; scale: 1; translate: 0 0; } 88% { opacity: 1; scale: 1; translate: 0 0; filter: none; } 100% { opacity: 0; scale: .96; translate: -6% -3%; filter: blur(8px); } }
+.ms-app-top { display: flex; align-items: center; gap: 18px; height: 54px; padding: 0 22px; background: #151a2c; color: rgba(255,255,255,.8); font-size: 20px; }
+.ms-dots { display: flex; gap: 8px; } .ms-dots i { width: 13px; height: 13px; border-radius: 50%; background: #4a5068; }
+.ms-app-top b { font-weight: 600; } .ms-app-top em { margin-left: auto; font-style: normal; color: #ffd596; }
+.ms-app-body { padding: 26px 40px; }
+.ms-chips { display: flex; flex-wrap: wrap; gap: 10px; position: relative; height: 44px; }
+.ms-chips span { padding: 8px 16px; border-radius: 99px; background: rgba(255,255,255,.09); font-size: 19px; color: rgba(255,255,255,.85); }
+.ms-chips .ms-borr { background: rgba(255,213,150,.14); color: #ffd596; border: 1px solid rgba(255,213,150,.4); }
+.ms-chips .ms-apr { position: absolute; right: 0; top: 0; background: #1f9d55; color: #fff; font-weight: 700; opacity: 0; }
+.mailscene.active .ms-apr { animation: msapr 420ms cubic-bezier(.2, 1.4, .4, 1) 4.1s both; }
+.mailscene.active .ms-borr { animation: msborr 300ms ease-out 4.1s forwards; }
+@keyframes msapr { from { opacity: 0; scale: 1.6; rotate: -6deg; } to { opacity: 1; scale: 1; rotate: 0deg; } }
+@keyframes msborr { to { opacity: 0; } }
+.ms-pitch { margin-top: 22px; padding: 28px 34px; border-radius: 12px; background: #0a0d18; border: 1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.92); font-size: 25px; line-height: 1.5; min-height: 440px; }
+.ms-pitch p { margin: 0 0 16px; opacity: 0; }
+.mailscene.active .ms-pitch p { animation: mslinea 700ms ease-out var(--t) both; }
+@keyframes mslinea { from { opacity: 0; clip-path: inset(0 100% 0 0); translate: 0 6px; } to { opacity: 1; clip-path: inset(0 0 0 0); translate: 0 0; } }
+.ms-actions { display: flex; align-items: center; gap: 14px; margin-top: 26px; font-size: 21px; }
+.ms-actions span { padding: 12px 20px; border-radius: 10px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.8); }
+.ms-send { margin-left: auto; padding: 16px 30px; border-radius: 12px; background: #2f6bff; color: #fff; font-size: 24px; box-shadow: 0 10px 30px rgba(47,107,255,.45); }
+.mailscene.active .ms-send { animation: mspulso 1.2s ease-in-out 2.4s 1, mspulsa 360ms ease-out 4.0s both; }
+@keyframes mspulso { 50% { box-shadow: 0 0 0 10px rgba(47,107,255,.25), 0 10px 30px rgba(47,107,255,.45); } }
+@keyframes mspulsa { 40% { scale: .94; background: #1d4fd6; } 100% { scale: 1; background: #1f9d55; } }
+.ms-toast { left: 50%; bottom: 40px; translate: -50% 0; padding: 16px 30px; border-radius: 12px; background: #1f9d55; color: #fff; font-size: 24px; font-weight: 700; opacity: 0; box-shadow: 0 16px 50px rgba(0,0,0,.5); }
+.mailscene.active .ms-toast { animation: mstoast 1.5s ease-out 4.3s both; }
+@keyframes mstoast { 0% { opacity: 0; translate: -50% 30px; } 14%, 80% { opacity: 1; translate: -50% 0; } 100% { opacity: 0; translate: -50% -10px; } }
+/* — la bandeja de entrada de la sala — */
+.ms-mail { inset: 0; border-radius: 14px; background: #f6f8fc; box-shadow: 0 40px 120px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.2); overflow: hidden; opacity: 0; color: #1f2430; }
+.mailscene.active .ms-mail { animation: msmail 18s linear 5s both; }
+@keyframes msmail { 0% { opacity: 0; scale: .94; translate: 0 40px; } 3.5% { opacity: 1; scale: 1; translate: 0 0; } 100% { opacity: 1; scale: 1; } }
+.ms-mail > * { position: absolute; }
+.ms-side { left: 0; top: 0; bottom: 0; width: 250px; padding: 26px 18px; background: #eaf0fb; display: flex; flex-direction: column; gap: 6px; font-size: 21px; color: #3a4256; }
+.ms-side span { padding: 11px 18px; border-radius: 99px; } .ms-side span.on { background: #cfdcf7; font-weight: 700; color: #0b1b45; }
+.ms-side u { text-decoration: none; float: right; font-size: 18px; }
+.ms-comp { display: block; margin-bottom: 18px; padding: 18px 22px; border-radius: 16px; background: #c2e7ff; color: #00315a; font-size: 22px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.ms-listwrap { left: 250px; top: 0; right: 0; bottom: 0; padding: 18px 26px; }
+.mailscene.active .ms-listwrap { animation: mslista 20s linear 5s both; }
+@keyframes mslista { 0%, 14% { opacity: 1; } 17%, 100% { opacity: 0; } }
+.ms-search { width: 560px; padding: 14px 24px; border-radius: 99px; background: #e4e9f4; font-size: 20px; color: #5a6275; margin-bottom: 18px; }
+.ms-row { display: flex; align-items: center; gap: 18px; height: 66px; border-bottom: 1px solid #dfe4ee; font-size: 20px; white-space: nowrap; background: #fff; padding: 0 20px; }
+.ms-row i { width: 12px; height: 12px; border-radius: 50%; background: transparent; flex: none; }
+.ms-row .ms-from { width: 270px; flex: none; overflow: hidden; text-overflow: ellipsis; }
+.ms-row .ms-subj { flex: 1; overflow: hidden; text-overflow: ellipsis; color: #5a6275; } .ms-row .ms-subj b { color: #1f2430; }
+.ms-row em { font-style: normal; color: #5a6275; font-size: 18px; }
+.ms-row.new { background: #fff7e3; box-shadow: inset 5px 0 0 #f4a300; }
+.ms-row.new i { background: #2f6bff; }
+.ms-row:not(.new) { opacity: .85; } .ms-row:not(.new) .ms-from, .ms-row:not(.new) .ms-subj b { font-weight: 500; }
+.mailscene.active .ms-row.new { animation: msnueva 900ms cubic-bezier(.2, 1.2, .3, 1) 6s both, mshover 600ms ease-out 7.4s forwards; }
+@keyframes msnueva { 0% { opacity: 0; translate: 0 -66px; box-shadow: inset 5px 0 0 #f4a300, 0 0 0 0 rgba(244,163,0,.8); } 60% { box-shadow: inset 5px 0 0 #f4a300, 0 0 0 14px rgba(244,163,0,0); } 100% { opacity: 1; translate: 0 0; } }
+@keyframes mshover { to { background: #ffe9b0; } }
+/* las filas de antes bajan un hueco cuando llega la nueva */
+.mailscene.active .ms-row:not(.new) { animation: msbaja 900ms cubic-bezier(.2, 1.2, .3, 1) 6s both; }
+@keyframes msbaja { from { translate: 0 -66px; } to { translate: 0 0; } }
+/* — el correo abierto — */
+.ms-read { left: 250px; top: 0; right: 0; bottom: 0; background: #fff; opacity: 0; overflow: hidden; }
+.mailscene.active .ms-read { animation: msread 600ms ease-out 8s both; }
+@keyframes msread { from { opacity: 0; translate: 40px 0; } to { opacity: 1; translate: 0 0; } }
+.ms-rd-in { position: absolute; left: 70px; right: 70px; top: 40px; }
+.mailscene.active .ms-rd-in { animation: msscroll 1.5s cubic-bezier(.4, 0, .2, 1) 10.8s both; }
+@keyframes msscroll { to { translate: 0 -330px; } }
+.ms-rd-h { margin: 0 0 22px; font: 400 36px/1.2 Onest, sans-serif; color: #1f2430; opacity: 0; }
+.ms-rd-from { display: flex; align-items: center; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid #e3e7ef; opacity: 0; font-size: 20px; color: #1f2430; }
+.ms-rd-from img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #111; }
+.ms-rd-from small { color: #5a6275; font-size: 18px; } .ms-rd-from span { display: block; color: #5a6275; font-size: 18px; } .ms-rd-from em { margin-left: auto; font-style: normal; color: #5a6275; }
+.mailscene.active :is(.ms-rd-h, .ms-rd-from) { animation: msaparece 600ms ease-out var(--t) both; }
+@keyframes msaparece { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+.ms-rd-body { padding-top: 24px; font-size: 24px; line-height: 1.55; color: #2a2e35; }
+.ms-rd-body p { margin: 0 0 18px; opacity: 0; } .mailscene.active .ms-rd-body p { animation: msaparece 600ms ease-out var(--t) both; }
+.ms-foot { margin-top: 26px; padding-top: 22px; border-top: 1px solid #dde1e6; }
+.ms-foot { position: relative; }
+.ms-foot > *:not(.ms-pin) { opacity: 0; } .mailscene.active .ms-foot > *:not(.ms-pin) { animation: msaparece 700ms ease-out var(--t) both; }
+.ms-foot { border-top-color: transparent; } .mailscene.active .ms-foot { animation: msborde 600ms ease-out 11.4s both; } @keyframes msborde { to { border-top-color: #dde1e6; } }
+.ms-btn { display: inline-block; padding: 14px 28px; border-radius: 9px; background: #0f172a; color: #fff; font-size: 21px; font-weight: 600; letter-spacing: .2px; }
+.mailscene.active .ms-btn { animation: msaparece 700ms ease-out var(--t) both, msbtn 1.4s ease-in-out 12.4s 3; }
+@keyframes msbtn { 50% { box-shadow: 0 0 0 12px rgba(47,107,255,.22); scale: 1.03; } }
+.ms-sig { display: flex; gap: 18px; margin-top: 26px; align-items: flex-start; }
+.ms-sig img { width: 66px; height: 66px; border-radius: 12px; object-fit: contain; background: #111; }
+.ms-sig b { display: block; font-size: 22px; color: #0f172a; } .ms-sig span { display: block; font-size: 18px; color: #5a6275; margin-top: 3px; font-weight: 500; }
+.ms-sig small { display: block; font-size: 18px; color: #5a6275; margin-top: 8px; } .ms-sig u { color: #0284c7; text-decoration: none; }
+.ms-soc { margin-top: 22px; display: flex; gap: 10px; }
+.ms-soc span { padding: 9px 18px; border-radius: 6px; color: #fff; font-size: 18px; font-weight: 700; letter-spacing: .03em; }
+.ms-soc .ig { background: #e4405f; } .ms-soc .sp { background: #1db954; } .ms-soc .yt { background: #ff0000; }
+/* — llamadas sobre cada parte del correo — */
+.ms-pin { margin: 0; padding: 12px 20px; border-radius: 10px; background: #0b0e18; color: #fff; font: 600 24px/1.25 Onest, sans-serif; opacity: 0; box-shadow: 0 16px 50px rgba(0,0,0,.5); border-left: 5px solid #ffd596; max-width: 330px; }
+.ms-pin small { display: block; font-size: 18px; font-weight: 500; color: #ffd596; margin-top: 2px; }
+.ms-foot .ms-pin { position: absolute; }
+.ms-pin.p1 { left: 560px; top: -6px; } .ms-pin.p2 { left: 700px; top: 86px; } .ms-pin.p3 { left: 400px; top: 196px; }
+.mailscene.active .ms-pin { animation: mspin 900ms cubic-bezier(.2, 1.2, .3, 1) both; }
+.mailscene.active .ms-pin.p1 { animation-delay: 12s; } .mailscene.active .ms-pin.p2 { animation-delay: 16.3s; } .mailscene.active .ms-pin.p3 { animation-delay: 17.7s; }
+@keyframes mspin { from { opacity: 0; translate: -30px 0; } 20%, 100% { opacity: 1; translate: 0 0; } }
+/* — el cursor de Iago — */
+.ms-cur { left: 0; top: 0; width: 34px; height: 34px; z-index: 5; opacity: 0; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 11-7 1.2 4 7.4-3 1.6-4-7.4L4 20z' fill='white' stroke='black' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,.6)); }
+.mailscene.active .ms-cur { animation: mscur 8s cubic-bezier(.45, 0, .55, 1) .1s both; }
+@keyframes mscur { 0%, 27% { opacity: 0; translate: 1300px 640px; } 30% { opacity: 1; translate: 1300px 640px; } 48% { translate: 1190px 750px; } 55% { translate: 1190px 750px; } 72% { translate: 1000px 520px; } 90% { translate: 830px 232px; } 96% { translate: 830px 232px; opacity: 1; } 100% { translate: 830px 232px; opacity: 0; } }
+.ms-cur::after { content: ''; position: absolute; left: -8px; top: -8px; width: 30px; height: 30px; border-radius: 50%; border: 3px solid rgba(255,255,255,.9); opacity: 0; }
+.mailscene.active .ms-cur::after { animation: msclic 8s linear .1s both; }
+@keyframes msclic { 0%, 48% { opacity: 0; scale: .4; } 49% { opacity: 1; scale: .4; } 53% { opacity: 0; scale: 1.8; } 93% { opacity: 0; scale: .4; } 94% { opacity: 1; scale: .4; } 98% { opacity: 0; scale: 1.8; } 100% { opacity: 0; } }
+/* — aviso en el móvil de Iago: han abierto el correo — */
+.ms-notif { right: 40px; bottom: 30px; display: flex; gap: 18px; align-items: center; padding: 20px 28px; border-radius: 18px; background: rgba(12,15,26,.94); color: #fff; box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.12); opacity: 0; max-width: 520px; }
+.ms-notif i { font-style: normal; font-size: 44px; } .ms-notif small { display: block; font-size: 17px; color: rgba(255,255,255,.6); } .ms-notif b { display: block; font-size: 25px; line-height: 1.2; margin: 3px 0; } .ms-notif span { font-size: 19px; color: #ffd596; }
+.mailscene.active .ms-notif { animation: msnotif 4s ease-out 18.8s both; }
+@keyframes msnotif { 0% { opacity: 0; translate: 0 40px; } 8%, 85% { opacity: 1; translate: 0 0; } 100% { opacity: 1; translate: 0 0; } }
+.ms-fin { margin: 0; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; }
+.mailscene.active .ms-fin { animation: msfin 100ms linear 21.4s both; }
+@keyframes msfin { to { opacity: .01; } }
+/* en la película la escena no enseña el titular ni el chat: el correo ocupa la pantalla */
+body.pelicula:not(.scroll) .mailscene .ft-copy h2 { display: none; }
+@media (prefers-reduced-motion: reduce) { .mailscene .ms * { animation-duration: 1ms !important; animation-delay: 0s !important; } }
+/* el correo no hereda el texto blanco ni el tamaño de las diapositivas */
+.mailscene .ms-mail { color: #1f2430; }
+.mailscene .ms-mail :is(b, p, span, small, em, u, h4) { color: inherit; }
+.mailscene .ms-row .ms-from { color: #1f2430; font-size: 20px; font-weight: 700; }
+.mailscene .ms-row:not(.new) .ms-from { font-weight: 500; }
+.mailscene .ms-row .ms-subj { color: #5a6275; font-size: 20px; font-weight: 400; } .mailscene .ms-row .ms-subj b { color: #1f2430; font-size: 20px; }
+.mailscene .ms-row em { color: #5a6275; font-size: 18px; }
+.mailscene .ms-side span { color: #3a4256; font-size: 21px; } .mailscene .ms-side span.on { color: #0b1b45; } .mailscene .ms-side .ms-comp { color: #00315a; font-size: 22px; }
+.mailscene .ms-search { color: #5a6275; font-size: 20px; }
+.mailscene .ms-rd-h { color: #1f2430; font-size: 36px; }
+.mailscene .ms-rd-from b { color: #1f2430; font-size: 21px; } .mailscene .ms-rd-from small, .mailscene .ms-rd-from span, .mailscene .ms-rd-from em { color: #5a6275; font-size: 18px; }
+.mailscene .ms-rd-body p { color: #2a2e35; font-size: 24px; line-height: 1.55; }
+.mailscene .ms-btn { color: #fff; font-size: 21px; }
+.mailscene .ms-sig b { color: #0f172a; font-size: 22px; } .mailscene .ms-sig span { color: #5a6275; font-size: 18px; } .mailscene .ms-sig small { color: #5a6275; font-size: 18px; } .mailscene .ms-sig u { color: #0284c7; }
+.mailscene .ms-soc span { color: #fff; font-size: 18px; }
+.mailscene .ms-pitch p { color: rgba(255,255,255,.92); font-size: 25px; line-height: 1.5; }
+.mailscene .ms-pitch strong { color: #ffd596; }
+.mailscene .ms-pin { color: #fff; font-size: 24px; } .mailscene .ms-pin small { color: #ffd596; font-size: 18px; }
+.mailscene .ms-notif b { color: #fff; font-size: 25px; } .mailscene .ms-notif span { color: #ffd596; font-size: 19px; } .mailscene .ms-notif small { color: rgba(255,255,255,.6); font-size: 17px; }
+.mailscene .ms-app-top b { color: rgba(255,255,255,.85); font-size: 20px; } .mailscene .ms-send { color: #fff; font-size: 24px; }
+
+/* empuje de cámara lento sobre todo el conjunto, mientras dura la escena */
+body.pelicula:not(.scroll) .mailscene.active .ms { animation: mscam 23s ease-in-out .1s both; }
+@keyframes mscam { from { transform: scale(1); } to { transform: scale(1.045) translate(-.6%, -.8%); } }
+@media (prefers-reduced-motion: reduce) { body.pelicula .mailscene.active .ms { animation: none; } }
+.mailscene .ms-mail .ms-pin { color: #fff; font-size: 24px; } .mailscene .ms-mail .ms-pin small { color: #ffd596; font-size: 18px; }
+.mailscene .ms-toast { color: #fff; font-size: 24px; font-weight: 700; white-space: nowrap; }

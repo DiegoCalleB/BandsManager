@@ -301,6 +301,8 @@
     if (el.classList.contains('reveal')) k.boom(at(0.5), 0.6, 2.6);
     if (el.classList.contains('dream')) k.braam(at(0.5), 3.2, 0.07);
     if (el.classList.contains('giro-reloj')) giroScore(k, at);
+    // El correo llega a la sala: golpe grave al enviar, al llegar, al abrir, en el botón del dossier y en el aviso (solo graves)
+    if (el.classList.contains('mailscene')) [[4.0, 0.36], [6.0, 0.3], [8.0, 0.22], [11.6, 0.26], [18.8, 0.3]].forEach(([t, g]) => k.thump(at(t), g));
     // Mis bandas: un golpe grave con cada foto y un boom al final
     if (el.classList.contains('mis-bandas')) {
       el.querySelectorAll('.mb-foto').forEach((f) => { const t0 = at(parseFloat(f.style.getPropertyValue('--t')) || 0); if (f.classList.contains('gran')) k.boom(t0, 0.55, 2.4); else k.thump(t0, 0.42); });

@@ -246,6 +246,72 @@ add(feat('La IA escribe, tú apruebas', TAG1, 'La IA escribe. Tú apruebas.',
           m('iago', 'Se puede entrenar a la IA con estrellas, y te avisa cuando abren el correo, el dossier o entran en nuestras redes.', say='Y a la IA la puedes entrenar: le das estrellas a cada correo, y aprende cómo hablas. Y te avisa cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.')],
          shot_img('img/d-h-pitch.jpg')))
 
+MAIL_HTML = """<div class="ms" aria-hidden="true">
+  <div class="ms-app">
+    <div class="ms-app-top"><span class="ms-dots"><i></i><i></i><i></i></span><b>bandmanager.io</b><em>Pitch · Sala El Faro</em></div>
+    <div class="ms-app-body">
+      <div class="ms-chips"><span>Gemini 2.5</span><span>Tono de la banda: rock gallego</span><span class="ms-borr">Borrador de la IA</span><span class="ms-apr">✓ Aprobado por Iago</span></div>
+      <div class="ms-pitch">
+        <p style="--t:0.5s"><strong>Asunto:</strong> Propuesta de concierto · sábado 14 de noviembre</p>
+        <p style="--t:1.1s">Hola, equipo de Sala El Faro:</p>
+        <p style="--t:1.7s">Somos Os Herdeiros do Código: rock con gaita y mucho ruido bueno. Nos encantaría tocar en vuestra sala el sábado 14 de noviembre.</p>
+        <p style="--t:2.5s">En el dossier tenéis fotos, vídeos y el rider técnico. ¿Tenéis hueco esa noche?</p>
+        <p style="--t:3.2s">Un abrazo rockero.</p>
+      </div>
+      <div class="ms-actions"><span>Regenerar</span><span>Editar</span><span>Comparar A/B</span><b class="ms-send">✓ Aprobar y enviar</b></div>
+    </div>
+    <div class="ms-toast">✓ Enviado a Sala El Faro</div>
+  </div>
+  <div class="ms-mail">
+    <aside class="ms-side"><b class="ms-comp">＋ Redactar</b><span class="on">Recibidos <u>4</u></span><span>Destacados</span><span>Enviados</span><span>Borradores</span><span>Más</span></aside>
+    <div class="ms-listwrap">
+      <div class="ms-search">🔍 Buscar en el correo</div>
+      <div class="ms-row new"><i class="ms-dot"></i><b class="ms-from">Os Herdeiros do Código</b><span class="ms-subj"><b>Propuesta de concierto · sábado 14 de noviembre</b> — Hola, equipo de Sala El Faro: somos Os Herdeiros do Código…</span><em>ahora</em></div>
+      <div class="ms-row"><i></i><b class="ms-from">Ticketing Madrid</b><span class="ms-subj"><b>Liquidación de octubre</b> — Adjuntamos el resumen de taquilla del mes…</span><em>09:12</em></div>
+      <div class="ms-row"><i></i><b class="ms-from">Proveedor de sonido</b><span class="ms-subj"><b>Presupuesto monitores</b> — Te paso las dos opciones que comentamos…</span><em>08:40</em></div>
+      <div class="ms-row"><i></i><b class="ms-from">Banda de Vigo</b><span class="ms-subj"><b>¿Fechas libres en diciembre?</b> — Buenas, ¿tendríais algún sábado…</span><em>ayer</em></div>
+      <div class="ms-row"><i></i><b class="ms-from">Ayuntamiento</b><span class="ms-subj"><b>Licencia de actividad</b> — Recordatorio: documentación pendiente…</span><em>ayer</em></div>
+    </div>
+    <section class="ms-read">
+      <div class="ms-rd-in">
+        <h4 class="ms-rd-h" style="--t:8.2s">Propuesta de concierto · sábado 14 de noviembre</h4>
+        <div class="ms-rd-from" style="--t:8.4s"><img src="img/logo-hdc.png" alt=""><div><b>Os Herdeiros do Código</b> <small>&lt;booking@herdeiros.example&gt;</small><span>para Sala El Faro</span></div><em>ahora</em></div>
+        <div class="ms-rd-body">
+          <p style="--t:8.9s">Hola, equipo de Sala El Faro:</p>
+          <p style="--t:9.5s">Somos Os Herdeiros do Código: rock con gaita y mucho ruido bueno. Nos encantaría tocar en vuestra sala el sábado 14 de noviembre.</p>
+          <p style="--t:10.2s">En el dossier tenéis fotos, vídeos y el rider técnico. ¿Tenéis hueco esa noche?</p>
+          <p style="--t:10.9s">Un abrazo rockero.</p>
+        </div>
+        <div class="ms-foot">
+          <div class="ms-btn" style="--t:11.6s">📄 Ver Dossier Oficial &amp; Kit de Prensa</div>
+          <div class="ms-sig" style="--t:15.9s"><img src="img/logo-hdc.png" alt=""><div><b>Iago</b><span>Booking &amp; Management | Os Herdeiros do Código</span><small>+34 600 12 34 56 &nbsp;•&nbsp; <u>booking@herdeiros.example</u></small></div></div>
+          <div class="ms-soc" style="--t:17.2s"><span class="ig">Instagram</span><span class="sp">Spotify</span><span class="yt">YouTube</span></div>
+          <p class="ms-pin p1">① Botón al dossier <small>con seguimiento de clics</small></p>
+          <p class="ms-pin p2">② Firma con tu logo, tu cargo y tu contacto</p>
+          <p class="ms-pin p3">③ Tus redes, en un clic</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <i class="ms-cur"></i>
+  <div class="ms-notif"><i>🔔</i><div><small>BandManager · ahora</small><b>Sala El Faro ha abierto tu correo</b><span>y ha pulsado el botón del dossier</span></div></div>
+  <p class="ms-fin"></p>
+</div>"""
+
+_it = [m('iago', 'Lo repasas, lo apruebas y le das a enviar.'),
+       m('alvaro', '¿Y cómo le llega a la sala?'),
+       m('iago', 'Así: en su bandeja de entrada, con vuestro logo y el botón al dossier.'),
+       m('brais', '¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!'),
+       m('iago', 'Con tu firma, tu cargo y tus redes. Y cuando abren el dossier, la app te avisa.'),
+       m('xandre', '¡Y yo sin saber ni firmar un correo!')]
+add(f'''<section class="slide feat dl mailscene" data-grupo="promocion" data-title="El correo llega a la sala" data-transition="rise" data-fin=".ms-fin">
+  <div class="ft-copy"><span class="tag">{TAG1}</span><h2>Y así le llega a la sala.</h2>
+    {dlg(*_it)}
+  </div>
+  {MAIL_HTML}
+</section>
+''')
+
 add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
          [m('iago', 'Propongo a otra banda cambiar fecha: yo toco en su ciudad y ellos en la mía. La IA redacta la propuesta.'),
           m('mop', 'Os leo. Me encanta: nosotros en Vigo y vosotros en Santiago. ¡Cartel doble!'),
@@ -978,7 +1044,7 @@ html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
-CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'Cambio de perfil',
+CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'El correo llega a la sala', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
          'Un sueño hecho realidad', 'El reloj', 'Gracias', 'Créditos']
 if FOTOS:
@@ -1026,7 +1092,7 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
 CORTES = {
     'Prólogo · La banda': 'negro', 'Prólogo · Jueves, 23:47': 'negro', 'Prólogo · La llamada': 'golpe', 'Prólogo · La hoja de cálculo': 'j',
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
-    'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
+    'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'El correo llega a la sala': 'golpe', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
     'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
     'Iris separa los instrumentos': 'l', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',

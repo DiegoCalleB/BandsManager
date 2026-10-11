@@ -34,6 +34,13 @@ SAY = [
  ('Cada correo suena a nosotros', 'Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala. Como un buen rif: cada noche el mismo, pero distinto.'),
  ('¿Y si se le va la mano', '¿Y si se le va la mano y le escribe una burrada al de la sala? Porque eso es más de mi estilo.'),
  ('Por eso nada sale sin mi visto bueno', 'Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.'),
+ # Cap. 1 · el correo llega a la sala
+ ('Lo repasas, lo apruebas y le das a enviar', 'Lo repasas, lo apruebas, y le das a enviar. Así de fácil.'),
+ ('¿Y cómo le llega a la sala?', '[curious] ¿Y cómo le llega eso a la sala? ¿Con un pdf adjunto, como la última vez?'),
+ ('Así: en su bandeja de entrada', 'Así. En su bandeja de entrada, con vuestro logo, y el botón al dossier.'),
+ ('¡Pero qué bonito!', '[amazed] ¡Ai, mi madriña! ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!'),
+ ('Con tu firma, tu cargo y tus redes', 'Con tu firma, tu cargo, y tus redes. Y cuando abren el dossier, la app te avisa.'),
+ ('¡Y yo sin saber ni firmar un correo!', '[laughs] ¡Y yo, que ni sé firmar un correo, boludo!'),
  # Cap. 1 · Date Swap
  ('Propongo a otra banda cambiar fecha', 'Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial.'),
  ('Os leo. Me encanta', 'Os leo, Herdeiros. Me encanta: nosotros en Vigo, y vosotros en Santiago. ¡Cartel doble, colegas! ¡Esto es rocanrol!'),

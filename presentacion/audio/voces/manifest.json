@@ -652,17 +652,6 @@
   "v": "bad9987738f9",
   "who": "bajo"
  },
- "4e1c15e7": {
-  "d": 7.37,
-  "e": "31688997766665531152138778631111013431139865653201378664299911598622554442110001169895574104667625565545211463211111111111177115769522799313511114566411566769976557411146442110101000",
-  "f": "4e1c15e7.mp3",
-  "h": "aab38469",
-  "oido": "Cada uno elige que ve, el tono o el BPM, solo en los temas donde lo quiere, y hasta los bloques, como el saludo a Bilaxuan.",
-  "qa": 0.89,
-  "say": "Cada uno elige qué ve: el tono o el be pe eme, solo en los temas donde lo quiere. Y hasta los bloques, como el saludo a Vilaxoán.",
-  "v": "989ddf0ec2c2",
-  "who": "bajo"
- },
  "4e4c7ca6": {
   "d": 2.83,
   "e": "242219942156311005311476852411420023121110000000012589316521168973100",
@@ -767,17 +756,6 @@
   "v": "ea635988fdb3",
   "who": "bateria"
  },
- "57044181": {
-  "d": 4.68,
-  "e": "0699820986971178741099757885555554212299940077666676520000002620154316657751039674105712731542033566620321100000000",
-  "f": "57044181.mp3",
-  "h": "dff67260",
-  "oido": "y hay temas sin tono ni BPM porque algunos yo los toco a sentimiento.",
-  "qa": 0.87,
-  "say": "¿Y hay temas sin tono ni be pe eme? Porque algunos yo los toco a sentimiento.",
-  "v": "602bebe66bc8",
-  "who": "guitarra"
- },
  "57b02ab3": {
   "d": 3.53,
   "e": "01110000000123678101542211110000000007684114243059466447755432126977999798532211000000",
@@ -854,17 +832,6 @@
   "say": "[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!",
   "v": "79a9a80cae54",
   "who": "guitarra"
- },
- "5bb8f38c": {
-  "d": 2.95,
-  "e": "094229831794972118947841451651277475124222100000036555554486641744321100",
-  "f": "5bb8f38c.mp3",
-  "h": "236d7bf3",
-  "oido": "O sea que vos solo apretas el botón, como él lee un",
-  "qa": 0.88,
-  "say": "O sea que vos solo apretás el botón. Como el de un pedal.",
-  "v": "f67559cc0ce8",
-  "who": "voz"
  },
  "5bec9b23": {
   "d": 5.21,
@@ -1005,6 +972,15 @@
   "v": "606453b93f86",
   "who": "bateria"
  },
+ "65828105": {
+  "d": 3.34,
+  "e": "011114510000000000146536991169444210872146557986552299434786555257657766432110000",
+  "f": "65828105.mp3",
+  "h": "63511dba",
+  "say": "[laughs] ¡Y yo, que ni sé firmar un correo, boludo!",
+  "v": "09ea2e782c5e",
+  "who": "voz"
+ },
  "66063fa3": {
   "d": 8.38,
   "e": "1115811189849738979979611558511233234552102797453111112555563288111654211367554232111001000010000029999977786667821355711534218983574210125633575104632110353115444541114532102452019964564211365203965644641110",
@@ -1129,6 +1105,15 @@
   "qa": 0.91,
   "say": "Os cuento la estrategia de negocio, y me decís qué os parece, ¿vale? Sin tirarme latas.",
   "v": "9107a8bb2342",
+  "who": "bajo"
+ },
+ "7819663a": {
+  "d": 4.87,
+  "e": "001573351069921499410000000000012566210699979951000000000000013466368710443377321000000000000014200357710971012110000000",
+  "f": "7819663a.mp3",
+  "h": "b40bbd95",
+  "say": "Lo repasas, lo apruebas, y le das a enviar. Así de fácil.",
+  "v": "4f647d0216c6",
   "who": "bajo"
  },
  "793f975f": {
@@ -1375,26 +1360,13 @@
   "v": "0f6a79a1a71b",
   "who": "voz"
  },
- "891765ab": {
-  "d": 5.86,
-  "e": "0179898186113320000002273047759951110120028244228464111013200016631993175185235343128424210152231343043122111001028974100000011299983452246753110",
-  "f": "891765ab.mp3",
-  "h": "62320295",
-  "oido": "Claro que sí, lo probamos, lo mejoramos, y en cuanto termines el Master de Marketing Digital, gira mundial.",
-  "qa": 1.0,
-  "say": "¡Claro que sí! Lo probamos, lo mejoramos, y en cuanto termines el máster de Marketing Digital, ¡gira mundial!",
-  "v": "5f9e9431dd39",
-  "who": "bateria"
- },
- "89583b84": {
-  "d": 6.1,
-  "e": "1399211111101113137578683149971476577525112811966477555567434532311000000014310499936985344113347532735110376543100013203641156448462011336631000000000",
-  "f": "89583b84.mp3",
-  "h": "eb86f6b0",
-  "oido": "hecho y con la lista de pendientes que tengo no me aburro. El cobro, los videos de los fans, el try count de las giras...",
-  "qa": 0.94,
-  "say": "Hecho. Y con la lista de pendientes que tengo, no me aburro: el cobro, los vídeos de los fans, el Traicaunt de las giras.",
-  "v": "109194d59062",
+ "89955df8": {
+  "d": 4.68,
+  "e": "1159613413987676310011143189964552110144147236975411101111110101521885589678666556112597210014689611178444111211010",
+  "f": "89955df8.mp3",
+  "h": "1249dc68",
+  "say": "Con tu firma, tu cargo, y tus redes. Y cuando abren el dossier, la app te avisa.",
+  "v": "75df515631d0",
   "who": "bajo"
  },
  "8d834dd7": {
@@ -1461,6 +1433,15 @@
   "v": "9f3f362de86c",
   "who": "bajo"
  },
+ "92a2edb9": {
+  "d": 4.25,
+  "e": "02323334534443355434531100005587149479433310693100000013616856107830294574397595341134210762945531467510",
+  "f": "92a2edb9.mp3",
+  "h": "39755700",
+  "say": "[amazed] ¡Ai, mi madriña! ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!",
+  "v": "8b30c08c5254",
+  "who": "bateria"
+ },
  "9446171a": {
   "d": 3.74,
   "e": "00002111121598119925959938576103212421000000000000131149521884563431025234203343012210013100",
@@ -1513,17 +1494,6 @@
   "say": "[gasps] ¡Iago! ¡El móvil! ¡El Resurrección Fest acaba de abrir el dossier!",
   "v": "651ca5caec5d",
   "who": "guitarra"
- },
- "9b2d3d79": {
-  "d": 6.02,
-  "e": "00268872145594391686851049113977821444545777479684410262038495085166573144547710275941006754310000000179534100575436713853135227411669656444522100000",
-  "f": "9b2d3d79.mp3",
-  "h": "3be7685b",
-  "oido": "y decirle que te busques alas en vivo que quiero tocar allí en las fiestas con FUEGOS ARTIFICIALES",
-  "qa": 0.78,
-  "say": "[excited] ¡Y decile que te busque salas en Vigo, que quiero tocar allí en las fiestas! ¡Con fuegos artificiales!",
-  "v": "1eca5bd81c0a",
-  "who": "voz"
  },
  "9c341935": {
   "d": 6.43,
@@ -1631,6 +1601,15 @@
   "qa": 0.91,
   "say": "¡Pero tío! ¡Te has copiado de Últimeit Guitar! ¡Pellízcame! ¡Esto no puede ser real! ¡Esto es mejor que un solo de Eslash!",
   "v": "df397c343d56",
+  "who": "guitarra"
+ },
+ "abb5cae0": {
+  "d": 3.77,
+  "e": "09219967886138427777422775521343222100034345319838995148711177621740354434494158664597200000",
+  "f": "abb5cae0.mp3",
+  "h": "5d91496b",
+  "say": "[curious] ¿Y cómo le llega eso a la sala? ¿Con un pdf adjunto, como la última vez?",
+  "v": "5897f37877df",
   "who": "guitarra"
  },
  "ac8c0b9b": {
@@ -1753,17 +1732,6 @@
   "say": "Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.",
   "v": "23e38a887a23",
   "who": "voz"
- },
- "b442b59c": {
-  "d": 5.74,
-  "e": "1116218951398886311111111631698212167466265434553111111111123543376159645999741013671235549436867713344442010100000000000000000000000000000000",
-  "f": "b442b59c.mp3",
-  "h": "4d71f93e",
-  "oido": "Y presumo que pasos hay de zamblas en el rock and roll presumir esnaio trabajo.",
-  "qa": 0.52,
-  "say": "Y presumo, que pa eso soy de San Blas. En el rocanrol, presumir es medio trabajo.",
-  "v": "091b4f33b2e9",
-  "who": "bajo"
  },
  "b6e1fc28": {
   "d": 4.49,
@@ -1889,17 +1857,6 @@
   "v": "ab1e321b8d79",
   "who": "bateria"
  },
- "cbf179f5": {
-  "d": 4.34,
-  "e": "08976322311545686299410899775255364246364123232007958406756304201553377255124523100332221033016951259510110",
-  "f": "cbf179f5.mp3",
-  "h": "6f2c0127",
-  "oido": "Pero si tú nunca has programado nada que no fuera para tu curro de promociones de coches.",
-  "qa": 1.0,
-  "say": "[amazed] ¡Pero si tú nunca has programado nada que no fuera para tu curro de promociones de coches!",
-  "v": "10a99a876867",
-  "who": "bateria"
- },
  "cc1d158b": {
   "d": 13.08,
   "e": "0786545998828752111000000000000084449432245756998710881168611354211332110026788729931864154210762100000000000000000066339415661019814954146630122100000000000000021789972189659695112883321110000000036640475499520268665165028520179661883841774987743210000000015994238711832039844453233015698548742058731000025883341025526527882",
@@ -2006,6 +1963,15 @@
   "v": "1fcb59c58a38",
   "who": "guitarra"
  },
+ "dd490a87": {
+  "d": 5.98,
+  "e": "1132103531000010111110110113531586767841289855267997994220015647511347799938842100000025754671197886555113532100000010000000000000000000001000000000",
+  "f": "dd490a87.mp3",
+  "h": "579df09c",
+  "say": "Así. En su bandeja de entrada, con vuestro logo, y el botón al dossier.",
+  "v": "ad929d891c8f",
+  "who": "bajo"
+ },
  "de931b7e": {
   "d": 6.86,
   "e": "00125411457933999612421176898553100000133310068845552110154433334444432100001564665541154200011245654200000455436410156771000000000000995699410255553552145543301000000000",
@@ -2096,17 +2062,6 @@
   "say": "[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?",
   "v": "fa1a3baeaa75",
   "who": "bateria"
- },
- "ea737a86": {
-  "d": 5.69,
-  "e": "01134432211111138974211111565118999994111997111796443311111016455468965263285485786979303554411024411111111100001631158512553189511111111111",
-  "f": "ea737a86.mp3",
-  "h": "680cec37",
-  "oido": "Bueno, ni un juego de Skull Challenge que murió antes de llegar a la Play Store. Descansa en paz.",
-  "qa": 0.68,
-  "say": "[sighs] Bueno, y un juego de scrol chálench, que murió antes de llegar a la Pley Stor. Descanse en paz.",
-  "v": "e66c372df4f6",
-  "who": "bajo"
  },
  "eb2d0ea7": {
   "d": 6.14,
