@@ -244,11 +244,15 @@ add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
           m('mop', 'Os leo. Me encanta: nosotros en Vigo y vosotros en Santiago. ¡Cartel doble!'),
           m('brais', '¡Cartel doble con otra banda! ¡Esto no lo tiene nadie!'),
           m('xandre', '¿Y quién es ese?'),
-          m('iago', 'El cantante de Master of Prompts. Ya veréis lo que da de sí.')],
+          m('iago', 'El cantante de Master of Prompts. Ya veréis lo que da de sí.'),
+          m('mop', 'Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?', say='[laughs] Y oye, {bateria}: nos falta batería. ¿Te vienes a Máster of Prompts?'),
+          m('brais', '¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.', say='[gasps] ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.'),
+          m('xandre', '¡Traidor! ¡Nos deja por unos metaleros!', say='[dramatically] ¡Traidor! ¡Nos deja por unos metaleros, che!')],
          shot_img('img/d-h-swap.jpg')))
 
 add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
-         [m('brais', 'Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?', say='[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?'),
+         [m('iago', 'Tranquilos: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.', say='Tranquilo, {voz}: {bateria} puede tocar en las dos bandas, y sin liarse. Mirad su cuenta.'),
+          m('brais', 'Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?', say='[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?'),
           m('iago', 'Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.', say='Claro, {bateria}. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas.'),
           m('alvaro', '¿Y cómo cambias de una banda a otra?', say='¿Y cómo cambias de una banda a otra?'),
           m('iago', 'Como de perfil en una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como de perfil en una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
@@ -709,7 +713,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     <h3>Reparto</h3>
     <dl>
       <dt>{bajo}</dt><dd>{bajo:cargo} · el que nadie oye</dd>
-      <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras</dd>
+      <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras. En dos bandas, desde que lo ficharon</dd>
       <dt>{voz}</dt><dd>{voz:cargo} · la cara bonita</dd>
       <dt>{guitarra}</dt><dd>{guitarra:cargo} · y las palabrotas</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>
@@ -824,7 +828,9 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
   <span class="tag">Escena post-créditos · Domingo, 03:12</span>
   ''' + dlg(m('brais', '¿Ya se ha acabado la peli? 🍿', '03:12', say='[laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?'),
             m('iago', 'Dividir gastos está en mi lista de pendientes.', '03:12', say='[sighs] Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.'),
-            m('alvaro', '¡Pues que lo pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!')) + '''
+            m('alvaro', '¡Pues que lo pague la IA! 🤘', '03:13', say='[shouts] ¡Pues que las pague la inteligencia artificial! ¡Rocanrol!'),
+            m('brais', 'Por cierto, mañana ensayo con Master of Prompts. ¿A qué hora era?', '03:14', say='[sighs] Por cierto, mañana ensayo con Máster of Prompts. ¿A qué hora era?'),
+            m('iago', 'Mira el calendario, Brais.', '03:14', say='Mira el calendario, {bateria}. Mira el calendario.')) + '''
 </section>
 ''')
 
