@@ -1599,3 +1599,17 @@ body.pelicula:not(.scroll) .slide.feat.active > .rafaga { display: block; positi
 @keyframes rafagaentra { 0% { opacity: 0; scale: 1.06; filter: blur(6px); } 9% { opacity: 1; scale: 1; filter: none; } 86% { opacity: 1; } 100% { opacity: 0; scale: .985; } }
 @keyframes rafagafin { 0% { opacity: 0; scale: 1.15; letter-spacing: .2em; } 20% { opacity: 1; scale: 1; letter-spacing: .02em; } 85% { opacity: 1; } 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { body.pelicula .slide.feat.active > .rafaga { display: none; } }
+
+/* La foto del público: se queda más, la cámara avanza despacio y los haces de luz del escenario barren la multitud */
+.mis-bandas .mb-foto.gran figcaption { left: 110px; bottom: 120px; }
+.mis-bandas .mb-foto.gran figcaption b { font-size: 78px; letter-spacing: .04em; text-shadow: 0 6px 40px rgba(0,0,0,.8); }
+.mis-bandas .mb-foto.gran figcaption span { font-size: 38px; }
+.slide.mis-bandas.active .mb-foto.gran img { animation: mbgran calc(var(--d) + 120ms) cubic-bezier(.25, .1, .3, 1) var(--t) both; }
+@keyframes mbgran { from { scale: 1.03; translate: 1.5% 2%; } to { scale: 1.2; translate: -2% 4%; } }
+.mis-bandas .mb-foto.gran::before { content: ''; position: absolute; inset: -30%; z-index: 1; pointer-events: none; mix-blend-mode: screen; transform-origin: 50% 100%;
+  background: conic-gradient(from 300deg at 50% 108%, transparent 0 12deg, rgba(255,216,150,.42) 18deg, transparent 30deg, transparent 48deg, rgba(130,175,255,.36) 56deg, transparent 70deg, transparent 96deg, rgba(255,120,150,.34) 104deg, transparent 118deg, transparent 360deg);
+  filter: blur(14px); opacity: 0; }
+.slide.mis-bandas.active .mb-foto.gran::before { animation: mbhaces calc(var(--d) + 120ms) ease-in-out var(--t) both; }
+@keyframes mbhaces { 0% { opacity: 0; rotate: -16deg; } 18% { opacity: 1; } 82% { opacity: 1; } 100% { opacity: 0; rotate: 16deg; } }
+.mis-bandas .mb-foto.gran::after { background: radial-gradient(ellipse at 50% 55%, transparent 40%, rgba(0,0,0,.55) 100%), linear-gradient(0deg, rgba(0,0,0,.72) 0%, transparent 42%); }
+@media (prefers-reduced-motion: reduce) { .mis-bandas .mb-foto.gran::before { display: none; } }

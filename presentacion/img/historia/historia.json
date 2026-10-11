@@ -21,6 +21,8 @@
   "foto": "miles.jpg",
   "texto": "Delante de miles de personas",
   "logro": "El escenario grande",
-  "pos": "50% 78%"
+  "pos": "50% 78%",
+  "dur": 5.2,
+  "gran": true
  }
 ]

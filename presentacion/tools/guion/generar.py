@@ -740,16 +740,15 @@ FOTOS = [f for f in (json.load(open(_hj, encoding='utf-8')) if os.path.exists(_h
 if [f for f in FOTOS if f.get('provisional')]:
     print('OJO: «Mis bandas» lleva fotos y textos inventados (provisional: true en img/historia/historia.json). Cámbialos por los reales antes de entregar.')
 if FOTOS:
-    # 1,2 s por foto (4 pulsos de «Cabalga o Lóstrego»); las dos últimas, a la mitad: la rampa del final
     pasos, t = [], 0.4
     for k, f in enumerate(FOTOS):
-        d = 1.2 if k < len(FOTOS) - 2 else 0.6
+        d = f.get('dur', 1.9)  # 1,9 s por foto; la del público (la última), más: «gran» lleva efecto
         pasos.append((t, d, f)); t += d
     from PIL import Image  # las fotos casi cuadradas o verticales se ven enteras sobre su propio fondo desenfocado
     def _vert(f):
         w, h = Image.open(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto'])).size
         return w / h < 1.25
-    cuerpo = ''.join(f'''<figure class="mb-foto{' vert' if _vert(f) else ''}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f['foto']});--pos:{f.get('pos', '50% 50%')}"><img src="img/historia/{f['foto']}" alt="{f.get('texto', '')}">'''
+    cuerpo = ''.join(f'''<figure class="mb-foto{' vert' if _vert(f) else ''}{' gran' if f.get('gran') else ''}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f['foto']});--pos:{f.get('pos', '50% 50%')}"><img src="img/historia/{f['foto']}" alt="{f.get('texto', '')}">'''
                      f'''<figcaption><b>{f.get('texto', '')}</b>{('<span>' + f['logro'] + '</span>') if f.get('logro') else ''}</figcaption></figure>'''
                      for t0, d, f in pasos)
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
