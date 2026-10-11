@@ -4,9 +4,10 @@
  */
 import React,{ useState } from "react";
 import { api } from "../../../../services/api";
-import { Song,User } from "../../../../types";
+import { SetlistItem,Song,User } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
 import { uploadFileToServer } from "../../../../utils/audioStorage";
+import { parseMmSsToSeconds } from "../../../../utils/repertorioUtils";
 import { ManualSongItem,SpotifyAlbum } from "../../types";
 
 /** Pista devuelta por la búsqueda de Spotify del servidor (nombres heredados mezclados). */
@@ -348,20 +349,19 @@ export function useMusicSetlistStep({ bandName, currentUser, logoUrl, localBandN
     setIsCreatingSetlist(true);
     try {
       const setlistName = `Setlist Debut (${durationMinutes} min)`;
-      const items = allSongItems.map((s, idx) => ({
+      // Los items deben ser `tipoItem: "cancion"`: todo el repertorio filtra por ese campo,
+      // y un item con otra forma no cuenta como tema (duración, energía, exportes...).
+      const items: SetlistItem[] = allSongItems.map((s, idx) => ({
         id: `item_${Date.now()}_${idx}`,
-        type: "song",
+        tipoItem: "cancion",
         songId: s.id,
-        duracionSegundos: 210,
-        duracion: s.duracion || "3:30",
-        tonalidad: s.tonalidad || "Mim",
-        bpm: s.bpm || 120,
+        duracionEstimadaSegundos: parseMmSsToSeconds(s.duracion) || 210,
       }));
 
       await api.createSetlist({
         nombre: setlistName,
         items,
-        duracionEstimadaMinutos: durationMinutes,
+        duracionTotalEstimadaMinutos: durationMinutes,
         band_id: activeBandId,
       });
       setCreatedSetlistName(setlistName);

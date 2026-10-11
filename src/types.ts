@@ -1501,6 +1501,18 @@ export interface Tour {
   estado: "planificacion" | "confirmada" | "completada" | "cancelada";
 }
 
+/** Banda en el selector del usuario (lo que devuelve el servidor en availableBands). */
+export interface BandaDisponible {
+  band_id: string;
+  bandName: string;
+  nombre_banda?: string;
+  role?: string;
+  logoUrl?: string;
+  plan?: string;
+  is_main?: boolean;
+  userId?: string;
+}
+
 export interface RegisteredBand {
   id: string;
   band_id: string;

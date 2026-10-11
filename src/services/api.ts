@@ -11,7 +11,20 @@ import {
   EPKConfig,
   Message,
   BookingCampaign,
+  BandaDisponible,
+  BandContact,
+  RegisteredBand,
+  Setlist,
+  Song,
 } from '../types';
+
+/** Respuesta de alta o edición de un tema. */
+type RespuestaTema = { success: boolean; song?: Song; error?: string };
+/** Respuesta de alta o edición de un setlist. */
+type RespuestaSetlist = { success: boolean; setlist?: Setlist; error?: string };
+/** Respuesta de un borrado. */
+type RespuestaBorrado = { success: boolean; id?: string; error?: string };
+type PreferenciasUi = NonNullable<User['ui_preferences']>;
 import { leerTokenDeSesion, leerBandaActiva } from './sesionLocal';
 
 export class ApiError extends Error {
@@ -70,13 +83,13 @@ export const api = {
   async verifyMe(): Promise<{
     user: User;
     token?: string;
-    availableBands?: any[];
+    availableBands?: BandaDisponible[];
     multipleBands?: boolean;
   }> {
     return request<{
       user: User;
       token?: string;
-      availableBands?: any[];
+      availableBands?: BandaDisponible[];
       multipleBands?: boolean;
     }>('/api/auth/me');
   },
@@ -95,29 +108,29 @@ export const api = {
     });
   },
 
-  async setMainBand(band_id: string): Promise<{ success: boolean; user: User; availableBands: any[] }> {
-    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-main-band', {
+  async setMainBand(band_id: string): Promise<{ success: boolean; user: User; availableBands: BandaDisponible[] }> {
+    return request<{ success: boolean; user: User; availableBands: BandaDisponible[] }>('/api/users/set-main-band', {
       method: 'POST',
       body: JSON.stringify({ band_id }),
     });
   },
 
-  async setBandOrder(band_order: string[]): Promise<{ success: boolean; user: User; availableBands: any[] }> {
-    return request<{ success: boolean; user: User; availableBands: any[] }>('/api/users/set-band-order', {
+  async setBandOrder(band_order: string[]): Promise<{ success: boolean; user: User; availableBands: BandaDisponible[] }> {
+    return request<{ success: boolean; user: User; availableBands: BandaDisponible[] }>('/api/users/set-band-order', {
       method: 'POST',
       body: JSON.stringify({ band_order }),
     });
   },
 
-  async saveUiPreferences(preferences: Record<string, any>): Promise<{ success: boolean; ui_preferences: any; user: User }> {
-    return request<{ success: boolean; ui_preferences: any; user: User }>('/api/users/ui-preferences', {
+  async saveUiPreferences(preferences: Partial<PreferenciasUi>): Promise<{ success: boolean; ui_preferences: PreferenciasUi; user: User }> {
+    return request<{ success: boolean; ui_preferences: PreferenciasUi; user: User }>('/api/users/ui-preferences', {
       method: 'POST',
       body: JSON.stringify(preferences),
     });
   },
 
-  async getUiPreferences(): Promise<{ success: boolean; ui_preferences: any }> {
-    return request<{ success: boolean; ui_preferences: any }>('/api/users/ui-preferences');
+  async getUiPreferences(): Promise<{ success: boolean; ui_preferences: PreferenciasUi }> {
+    return request<{ success: boolean; ui_preferences: PreferenciasUi }>('/api/users/ui-preferences');
   },
 
   async createBand(data: {
@@ -133,7 +146,7 @@ export const api = {
     band_id: string;
     bandName: string;
     user: User;
-    availableBands: any[];
+    availableBands: BandaDisponible[];
   }> {
     return request<{
       success: boolean;
@@ -141,7 +154,7 @@ export const api = {
       band_id: string;
       bandName: string;
       user: User;
-      availableBands: any[];
+      availableBands: BandaDisponible[];
     }>('/api/users/create-band', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -152,13 +165,13 @@ export const api = {
     success: boolean;
     message?: string;
     user?: User;
-    availableBands?: any[];
+    availableBands?: BandaDisponible[];
   }> {
     return request<{
       success: boolean;
       message?: string;
       user?: User;
-      availableBands?: any[];
+      availableBands?: BandaDisponible[];
     }>(`/api/users/leave-band/${encodeURIComponent(bandId)}`, {
       method: 'DELETE',
     });
@@ -560,8 +573,8 @@ export const api = {
   },
 
   // Bands
-  async getBands(): Promise<{ bands: any[] }> {
-    return request<{ bands: any[] }>('/api/bands');
+  async getBands(): Promise<{ bands: BandContact[] }> {
+    return request<{ bands: BandContact[] }>('/api/bands');
   },
 
   async deleteBand(id: string): Promise<void> {
@@ -570,56 +583,56 @@ export const api = {
     });
   },
 
-  async getRegisteredBands(): Promise<{ registeredBands: any[] }> {
-    return request<{ registeredBands: any[] }>('/api/registered-bands');
+  async getRegisteredBands(): Promise<{ registeredBands: RegisteredBand[] }> {
+    return request<{ registeredBands: RegisteredBand[] }>('/api/registered-bands');
   },
 
   // Repertorio de la banda activa (lo resuelve el header x-band-id de getAuthHeaders)
-  async getSongs(): Promise<{ songs: any[] }> {
-    return request<{ songs: any[] }>('/api/songs');
+  async getSongs(): Promise<{ songs: Song[] }> {
+    return request<{ songs: Song[] }>('/api/songs');
   },
 
-  async createSong(song: any): Promise<any> {
-    return request('/api/songs', {
+  async createSong(song: Partial<Song>): Promise<RespuestaTema> {
+    return request<RespuestaTema>('/api/songs', {
       method: 'POST',
       body: JSON.stringify(song),
     });
   },
 
-  async updateSong(id: string, updatedFields: any): Promise<any> {
-    return request(`/api/songs/${id}`, {
+  async updateSong(id: string, updatedFields: Partial<Song>): Promise<RespuestaTema> {
+    return request<RespuestaTema>(`/api/songs/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
     });
   },
 
-  async deleteSong(id: string): Promise<any> {
-    return request(`/api/songs/${id}`, {
+  async deleteSong(id: string): Promise<RespuestaBorrado> {
+    return request<RespuestaBorrado>(`/api/songs/${id}`, {
       method: 'DELETE',
     });
   },
 
   // Setlists
-  async getSetlists(): Promise<{ setlists: any[] }> {
-    return request<{ setlists: any[] }>('/api/setlists');
+  async getSetlists(): Promise<{ setlists: Setlist[] }> {
+    return request<{ setlists: Setlist[] }>('/api/setlists');
   },
 
-  async createSetlist(setlist: any): Promise<any> {
-    return request('/api/setlists', {
+  async createSetlist(setlist: Partial<Setlist>): Promise<RespuestaSetlist> {
+    return request<RespuestaSetlist>('/api/setlists', {
       method: 'POST',
       body: JSON.stringify(setlist),
     });
   },
 
-  async updateSetlist(id: string, updatedFields: any): Promise<any> {
-    return request(`/api/setlists/${id}`, {
+  async updateSetlist(id: string, updatedFields: Partial<Setlist>): Promise<RespuestaSetlist> {
+    return request<RespuestaSetlist>(`/api/setlists/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updatedFields),
     });
   },
 
-  async deleteSetlist(id: string): Promise<any> {
-    return request(`/api/setlists/${id}`, {
+  async deleteSetlist(id: string): Promise<RespuestaBorrado> {
+    return request<RespuestaBorrado>(`/api/setlists/${id}`, {
       method: 'DELETE',
     });
   },

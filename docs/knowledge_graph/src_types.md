@@ -550,6 +550,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
+- `src/components/onboarding/wizard/hooks/__tests__/musicSetlistStep.behavior.test.ts`
 - `src/components/onboarding/wizard/hooks/__tests__/onboardingSave.behavior.test.ts`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
