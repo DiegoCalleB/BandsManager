@@ -72,7 +72,7 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
     }
 
     if (jobStatus.state === 'failed') {
-      let errorPayload: Record<string, any> = {};
+      let errorPayload: Record<string, unknown> & { httpStatus?: number } = {};
       try {
         errorPayload = JSON.parse(jobStatus.errorMessage);
       } catch {
@@ -145,7 +145,7 @@ router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) =
 
     let falStatus = 0;
     let falStatusText = '';
-    let falBody: any = null;
+    let falBody: unknown = null;
 
     try {
       const falRes = await fetch('https://fal.run/fal-ai/demucs', {

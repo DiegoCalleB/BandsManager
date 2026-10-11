@@ -17,7 +17,8 @@ export interface ProcessNeuralStemsResult {
     string,
     { url: string; formato: string; tamano: string }
   > | null;
-  timingBreakdown?: any;
+  /** Tiempos por fase que informa el motor; se guarda y se devuelve sin interpretarlo. */
+  timingBreakdown?: unknown;
   error?: string;
   errorType?: StemErrorType;
   errorTitle?: string;
@@ -34,7 +35,8 @@ export interface ProcessNeuralStemsResult {
 // ============================================================================
 export interface CachedStemsEntry {
   stemsMap: Record<string, { url: string; formato: string; tamano: string }>;
-  timingBreakdown: any;
+  /** Tiempos por fase que informa el motor; se guarda y se devuelve sin interpretarlo. */
+  timingBreakdown: unknown;
   engine: string;
   engineUsed?: string;
   degraded?: boolean;
@@ -47,7 +49,8 @@ export const stemsMemoryCache = new Map<string, CachedStemsEntry>();
 /** Resultado de una separación en curso, compartido con las peticiones duplicadas que la esperan. */
 export interface ResultadoSeparacionEnVuelo {
   stemsMap: Record<string, { url: string; formato: string; tamano: string }> | null;
-  timingBreakdown?: any;
+  /** Tiempos por fase que informa el motor; se guarda y se devuelve sin interpretarlo. */
+  timingBreakdown?: unknown;
   engine: string;
   engineUsed?: string;
   degraded?: boolean;

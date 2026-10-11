@@ -48,12 +48,12 @@ async function callLyriaOnce(
     contents: prompt,
   });
   for await (const chunk of lyriaResponse) {
-    const promptFeedback = (chunk as any).promptFeedback;
+    const promptFeedback = chunk.promptFeedback;
     if (promptFeedback?.blockReason)
       blockReason = String(promptFeedback.blockReason);
     const candidate = chunk.candidates?.[0];
-    if ((candidate as any)?.finishReason)
-      finishReason = String((candidate as any).finishReason);
+    if (candidate?.finishReason)
+      finishReason = String(candidate.finishReason);
     const parts = candidate?.content?.parts;
     if (!parts) continue;
     for (const part of parts) {

@@ -70,7 +70,10 @@ function sortStemsMapCanonically<T>(
   return sorted;
 }
 
-export function buildFormattedStems(stemsMap: Record<string, any>) {
+/** Stem tal como llega del motor o de la caché: solo la URL (los antiguos) o con su formato y tamaño. */
+export type StemEnMapa = string | { url: string; formato?: string; tamano?: string };
+
+export function buildFormattedStems(stemsMap: Record<string, StemEnMapa>) {
   return Object.entries(sortStemsMapCanonically(stemsMap || {})).map(
     ([instrument, rawValue]) => {
       const meta = STEM_METADATA[instrument] || {
@@ -125,7 +128,7 @@ export async function failStemsJob(
   bandId: string,
   songHash: string,
   engine: string,
-  payload: Record<string, any>
+  payload: Record<string, unknown>
 ): Promise<void> {
   try {
     await markStemsSeparationFailed(

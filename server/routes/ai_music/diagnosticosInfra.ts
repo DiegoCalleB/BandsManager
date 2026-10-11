@@ -4,14 +4,15 @@
 import ffmpegPath from 'ffmpeg-static';
 import fs from 'fs';
 import { ServiceDiagnosticError } from './diagnosticos.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 /**
  * Parsea y clasifica con precisión diagnóstica cualquier error originado en la API de Google Gemini (GenAI).
  */
-export function parseGeminiError(err: any): ServiceDiagnosticError {
-  const errMsg = String(err?.message || err || '');
+export function parseGeminiError(err: unknown): ServiceDiagnosticError {
+  const errMsg = String(comoErrorCapturado(err).message || err || '');
   const errStatus =
-    err?.status ||
+    comoErrorCapturado(err).status ||
     (errMsg.includes('403')
       ? 403
       : errMsg.includes('429')
@@ -134,8 +135,8 @@ export function parseGeminiError(err: any): ServiceDiagnosticError {
 /**
  * Parsea y clasifica con precisión diagnóstica cualquier error originado en FFmpeg (Motor DSP Local).
  */
-export function parseFfmpegError(err: any): ServiceDiagnosticError {
-  const msg = String(err?.message || err || '');
+export function parseFfmpegError(err: unknown): ServiceDiagnosticError {
+  const msg = String(comoErrorCapturado(err).message || err || '');
   if (!ffmpegPath && !fs.existsSync('/usr/bin/ffmpeg')) {
     return {
       provider: 'ffmpeg',
@@ -182,8 +183,8 @@ export function parseFfmpegError(err: any): ServiceDiagnosticError {
 /**
  * Parsea y clasifica con precisión diagnóstica errores originados en Supabase Storage.
  */
-export function parseSupabaseStorageError(err: any): ServiceDiagnosticError {
-  const msg = String(err?.message || err || '');
+export function parseSupabaseStorageError(err: unknown): ServiceDiagnosticError {
+  const msg = String(comoErrorCapturado(err).message || err || '');
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return {
       provider: 'supabase',

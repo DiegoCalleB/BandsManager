@@ -40,7 +40,8 @@ router.post(
       }
 
       const rawBody =
-        (req as any).rawBody ||
+        // `limiteCuerpo` guarda el cuerpo crudo para verificar la firma.
+        (req as typeof req & { rawBody?: Buffer }).rawBody ||
         (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
       const verification = verifyReplicateWebhook(
         rawBody,

@@ -100,7 +100,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
 
     // Update in-memory state if applicable
     const state = loadState();
-    state.songs = result.allBandSongs as any;
+    state.songs = result.allBandSongs;
     saveState(state);
 
     res.json(result);

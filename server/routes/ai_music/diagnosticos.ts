@@ -153,11 +153,22 @@ export function parseReplicateError(
 }
 
 /**
+ * Cuerpo JSON de un error de Fal.ai. `detail` es un texto o, en los errores de validación, una
+ * lista de objetos que se serializa tal cual.
+ */
+interface CuerpoErrorFal {
+  detail?: string | object;
+  title?: string;
+  error?: string;
+  message?: string;
+}
+
+/**
  * Parsea y clasifica con precisión diagnóstica cualquier respuesta de error recibida de la API de Fal.ai.
  */
 export function parseFalError(
   status: number,
-  errBody: any
+  errBody: unknown
 ): ServiceDiagnosticError {
   let parsedDetail: string;
   let isLocked = false;
@@ -165,14 +176,14 @@ export function parseFalError(
   const rawStr =
     typeof errBody === 'string'
       ? errBody
-      : errBody?.message || JSON.stringify(errBody || {});
+      : (errBody as CuerpoErrorFal | null | undefined)?.message || JSON.stringify(errBody || {});
 
   try {
-    const json = typeof errBody === 'object' ? errBody : JSON.parse(errBody);
-    parsedDetail =
-      json.detail || json.title || json.error || json.message || '';
-    if (typeof parsedDetail === 'object')
-      parsedDetail = JSON.stringify(parsedDetail);
+    // Un `null` llega aquí como objeto y lanza al leer `.detail`: cae al análisis del texto en bruto.
+    const json: CuerpoErrorFal =
+      typeof errBody === 'object' ? (errBody as CuerpoErrorFal) : JSON.parse(errBody as string);
+    const detalle = json.detail || json.title || json.error || json.message || '';
+    parsedDetail = typeof detalle === 'object' ? JSON.stringify(detalle) : detalle;
     if (
       parsedDetail.includes('TOP_UP') ||
       parsedDetail.includes('locked') ||
