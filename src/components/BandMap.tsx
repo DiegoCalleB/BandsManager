@@ -179,7 +179,7 @@ function resolveBandCoordinates(
     return offsetCoords(SPANISH_CITIES_GEO[rawLoc], index);
   }
 
-  const parts = rawLoc.split(/[\(\-\/\,]/);
+  const parts = rawLoc.split(/[(\-/,]/);
   for (const p of parts) {
     const trimmed = p.trim();
     if (SPANISH_CITIES_GEO[trimmed]) {

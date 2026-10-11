@@ -42,7 +42,7 @@ export function useCityChips(
     activeLeadsForSection.forEach((l) => {
       const cityRaw = (l.ciudad || '').trim();
       if (cityRaw) {
-        const mainCity = cityRaw.split(/[\(\-\/]/)[0].trim();
+        const mainCity = cityRaw.split(/[(\-/]/)[0].trim();
         if (mainCity) {
           counts[mainCity] = (counts[mainCity] || 0) + 1;
         }

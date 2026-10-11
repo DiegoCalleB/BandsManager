@@ -114,7 +114,7 @@ Example response format:
     return extracted;
   } catch (error) {
     console.error('AI extraction error:', error);
-    throw new Error('No se pudo extraer la información de la estructura');
+    throw new Error('No se pudo extraer la información de la estructura', { cause: error });
   }
 }
 

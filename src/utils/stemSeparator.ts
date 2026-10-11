@@ -241,7 +241,7 @@ function createPhaseCancelledBuffer(
     for (let i = 0; i < length; i++) {
       const vocalSample = i < vocalBuffer.length ? vocalData[i] : 0;
       // Anti-phase wave cancellation math: M(t) + (-V(t)) = M(t) - V(t)
-      let sample = origData[i] - cancellationGain * vocalSample;
+      const sample = origData[i] - cancellationGain * vocalSample;
       outData[i] = Math.max(-1, Math.min(1, sample));
     }
   }
@@ -310,8 +310,8 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   const numOfChan = buffer.numberOfChannels;
   const length = buffer.length * numOfChan * 2 + 44;
   const out = new DataView(new ArrayBuffer(length));
-  let channels: Float32Array[] = [];
-  let sampleRate = buffer.sampleRate;
+  const channels: Float32Array[] = [];
+  const sampleRate = buffer.sampleRate;
   let offset = 0;
   let pos = 0;
 

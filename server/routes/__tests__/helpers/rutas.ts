@@ -41,10 +41,8 @@ export function pilaDeRuta(router: unknown, ruta: string, metodo: Metodo) {
 }
 
 /** Handler final de una ruta (el último de su pila). */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- los tests llaman al handler con req/res falsos
 export function manejador(router: unknown, ruta: string, metodo: Metodo): (...args: any[]) => any {
   const pila = pilaDeRuta(router, ruta, metodo);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ver arriba
   return pila[pila.length - 1].handle as (...args: any[]) => any;
 }
 

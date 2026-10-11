@@ -337,8 +337,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
     try {
       const zip = new JSZip();
-      const safeAlbumName = activeTitle.replace(/[^a-z0-9_\-]/gi, "_");
-      const safeBandName = bandName.replace(/[^a-z0-9_\-]/gi, "_");
+      const safeAlbumName = activeTitle.replace(/[^a-z0-9_-]/gi, "_");
+      const safeBandName = bandName.replace(/[^a-z0-9_-]/gi, "_");
       const folderName = `${safeBandName}_${safeAlbumName}`;
       const folder = zip.folder(folderName) || zip;
 
@@ -384,7 +384,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       for (let i = 0; i < audioTargets.length; i++) {
         const target = audioTargets[i];
         const numStr = String(target.trackIndex).padStart(2, "0");
-        const cleanTitle = target.song.titulo.replace(/[^a-z0-9_\-]/gi, "_");
+        const cleanTitle = target.song.titulo.replace(/[^a-z0-9_-]/gi, "_");
 
         setZipProgress({
           current: i + 1,

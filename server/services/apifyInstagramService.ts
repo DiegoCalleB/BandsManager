@@ -36,7 +36,7 @@ export function cleanInstagramUsername(input?: string): string {
   if (!input) return "";
   let clean = input.trim().toLowerCase();
   clean = clean.replace(/^https?:\/\/(?:www\.)?instagram\.com\//, "");
-  clean = clean.replace(/^\@/, "");
+  clean = clean.replace(/^@/, "");
   clean = clean.split("/")[0].split("?")[0].trim();
   return clean;
 }

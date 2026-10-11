@@ -158,7 +158,7 @@ export async function generateMusicGenTrack(
     'Content-Type': 'application/json',
   };
 
-  let response = await fetchReplicateWithRetry(
+  const response = await fetchReplicateWithRetry(
     'https://api.replicate.com/v1/models/meta/musicgen/predictions',
     {
       method: 'POST',

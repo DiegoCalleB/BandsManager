@@ -118,7 +118,6 @@ export function asignarVoces(eventos: { tiempo: number; duracion: number }[], nu
     for (let v = 0; v < numVoces; v++) {
       if (libreEn[v] <= evento.tiempo) {
         elegida = v;
-        masCercanaALiberarse = -Infinity;
         break;
       }
       if (libreEn[v] < masCercanaALiberarse) {

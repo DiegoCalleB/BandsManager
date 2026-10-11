@@ -88,14 +88,14 @@ export function getDeterministicGrowthPlan(
   const genre = epkConfig?.genero || "";
 
   // 1. Instagram Strategy based on Band Tier & Metrics
-  let igStage = "Iniciación / Tracción 0-500";
-  let igObjective = "";
-  let igStrategy = "";
-  let igHooks: string[] = [];
-  let igSchedule = "";
-  let igActions: ActionItem[] = [];
-  let igDonts: string[] = [];
-  let igViralConcepts: any[] = [];
+  let igStage: string;
+  let igObjective: string;
+  let igStrategy: string;
+  let igHooks: string[];
+  let igSchedule: string;
+  let igActions: ActionItem[];
+  let igDonts: string[];
+  let igViralConcepts: any[];
 
   if (tier === "garage_debut") {
     igStage = "Fase Debut (0 - 500)";
@@ -282,14 +282,14 @@ export function getDeterministicGrowthPlan(
   };
 
   // 2. TikTok Strategy based on Band Tier
-  let tkStage = "Iniciación 0-500";
-  let tkObjective = "";
-  let tkStrategy = "";
-  let tkHooks: string[] = [];
-  let tkSchedule = "";
-  let tkActions: ActionItem[] = [];
-  let tkDonts: string[] = [];
-  let tkViralConcepts: any[] = [];
+  let tkStage: string;
+  let tkObjective: string;
+  let tkStrategy: string;
+  let tkHooks: string[];
+  let tkSchedule: string;
+  let tkActions: ActionItem[];
+  let tkDonts: string[];
+  let tkViralConcepts: any[];
 
   if (tkCount < 1000) {
     tkStage = "Fase de Descubrimiento (0 - 1K)";
@@ -395,14 +395,14 @@ export function getDeterministicGrowthPlan(
   };
 
   // 3. YouTube Strategy based on views & subscribers
-  let ytStage = "Fase Inicial (0 - 500 suscriptores)";
-  let ytObjective = "";
-  let ytStrategy = "";
-  let ytHooks: string[] = [];
-  let ytSchedule = "";
-  let ytActions: ActionItem[] = [];
-  let ytDonts: string[] = [];
-  let ytViralConcepts: any[] = [];
+  let ytStage: string;
+  let ytObjective: string;
+  let ytStrategy: string;
+  let ytHooks: string[];
+  let ytSchedule: string;
+  let ytActions: ActionItem[];
+  let ytDonts: string[];
+  let ytViralConcepts: any[];
 
   if (ytSubs < 1000) {
     ytStage = "Tracción de Catálogo & Shorts (0 - 1K)";
@@ -524,13 +524,13 @@ export function getDeterministicGrowthPlan(
     : spCount < 1000
       ? "Tracción Inicial (0 - 1K oyentes)"
       : "Consolidación Algorítmica (1K+ oyentes)";
-  let spObjective = "";
-  let spStrategy = "";
-  let spHooks: string[] = [];
-  let spSchedule = "";
-  let spActions: ActionItem[] = [];
-  let spDonts: string[] = [];
-  let spViralConcepts: any[] = [];
+  let spObjective: string;
+  let spStrategy: string;
+  let spHooks: string[];
+  let spSchedule: string;
+  let spActions: ActionItem[];
+  let spDonts: string[];
+  let spViralConcepts: any[];
 
   if (!hasSpotifyProfile || spCount < 1000) {
     spObjective = hasSpotifyProfile

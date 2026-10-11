@@ -17,7 +17,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 2. Formato DD/MM/YYYY o DD-MM-YYYY
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     const day = parseInt(ddmmyyyy[1], 10);
     const month = parseInt(ddmmyyyy[2], 10) - 1;
@@ -27,7 +27,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 3. Formato DD/MM o DD-MM (asume año actual o próximo)
-  const ddm = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  const ddm = trimmed.match(/^(\d{1,2})[/-](\d{1,2})$/);
   if (ddm) {
     const day = parseInt(ddm[1], 10);
     const month = parseInt(ddm[2], 10) - 1;

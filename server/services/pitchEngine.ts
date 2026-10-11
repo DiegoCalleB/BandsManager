@@ -296,7 +296,7 @@ export class PitchEngine {
     );
 
     // 7. User Prompt según sea generación nueva o refinamiento
-    let userPrompt = "";
+    let userPrompt: string;
     if (options.isRegeneration) {
       userPrompt = `Reescribe y perfecciona el correo de pitch para "${sanitizeExternalText(lead.nombre_sala)}" en ${sanitizeExternalText(lead.ciudad) || "España"} (Tipo: ${sanitizeExternalText(lead.tipo) || "sala"}, Aforo: ${lead.aforo || "N/D"}).
 

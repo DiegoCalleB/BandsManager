@@ -138,7 +138,7 @@ export function BulkAlbumAudioUploaderModal({
     filename: string,
   ): { title: string; trackNumber: number } => {
     const rawNoExt = filename.replace(/\.[^/.]+$/, "");
-    let trackNumber = 1;
+    let trackNumber: number;
 
     // Detect leading track number: e.g."01 - Title","01. Title","01_Title","1 Title"
     const leadNumMatch = rawNoExt.match(/^0?(\d+)[\s._-]+(.+)$/);
@@ -236,7 +236,7 @@ export function BulkAlbumAudioUploaderModal({
       const { title, trackNumber } = cleanFileNameToTitle(file.name);
 
       // Detect duration accurately
-      let durationSec = 210;
+      let durationSec: number;
       try {
         durationSec = await new Promise<number>((resolve) => {
           const tempA = new Audio(objectUrl);

@@ -987,7 +987,6 @@ export async function dbUpsertSong(
         `Supabase Error (insert song fallback): ${retry.error.message}`,
       );
     data = retry.data;
-    error = null;
   } else if (error) {
     throw new Error(`Supabase Error (upsert song): ${error.message}`);
   }

@@ -26,7 +26,7 @@ export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCultu
       return [];
     }
     const rawText = await res.text();
-    const cleanText = rawText.replace(/[\u0000-\u001F\u007F]/g, (c) => c === "\n" || c === "\r" || c === "\t" ? " " : "");
+    const cleanText = rawText.replace(/\p{Cc}/gu, (c) => c === "\n" || c === "\r" || c === "\t" ? " " : "");
     const data = JSON.parse(cleanText);
     const items = data["@graph"] || [];
     const musicKeywords = ["concierto", "música", "musica", "recital", "banda", "acústico", "jazz", "rock", "pop", "flamenco", "orquesta", "coral"];

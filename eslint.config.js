@@ -63,6 +63,11 @@ export default tseslint.config(
     },
   },
   {
+    // La presentación (presentacion/) es una página estática que corre en el navegador.
+    files: ['presentacion/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, globals: globals.browser },
+  },
+  {
     // Los scripts de utilidad (CommonJS y ESM) corren en Node: sin esto, cada require/process/console
     // salía como no-undef y los scripts nuevos gastaban margen del ratchet de CI sin ser un problema real.
     files: ['scripts/**/*.{js,mjs,cjs}'],

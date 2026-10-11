@@ -428,7 +428,7 @@ export function ensureUniqueIdsInState(state: any): boolean {
           return;
         }
 
-        let key = '';
+        let key: string;
         const bid = cleanBidStr(item.band_id || '');
 
         if (colKey === 'registeredBands') {

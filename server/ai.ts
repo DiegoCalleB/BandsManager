@@ -416,7 +416,7 @@ export function generateSmartLocalPitchFallback(params: {
 
   // Extract venue details with clean pattern matching
   let salaNombre = "la sala";
-  const salaMatch = text.match(/(?:SALA|Sala|SALA DESTINO|nombre_sala)\s*[:=]\s*([^\n,\(\)]+)/i) ||
+  const salaMatch = text.match(/(?:SALA|Sala|SALA DESTINO|nombre_sala)\s*[:=]\s*([^\n,()]+)/i) ||
                     text.match(/para\s+(?:la\s+sala\s+|el\s+|el\s+ayuntamiento\s+de\s+)?([A-ZÁÉÍÓÚÑa-záéíóúñ0-9\s]{3,40})(?:\s*\(|$)/i);
   if (salaMatch && salaMatch[1]) {
     const rawSala = salaMatch[1].replace(/^-\s*Nombre:\s*/i, '').replace(/^enviar\s*/i, '').trim();
@@ -426,7 +426,7 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   let ciudad = "";
-  const ciudadMatch = text.match(/(?:CIUDAD|Ciudad)\s*[:=]\s*([^\n,\(\)]+)/i) || text.match(/\(([A-ZÁÉÍÓÚÑa-záéíóúñ\s]{3,30})\)/);
+  const ciudadMatch = text.match(/(?:CIUDAD|Ciudad)\s*[:=]\s*([^\n,()]+)/i) || text.match(/\(([A-ZÁÉÍÓÚÑa-záéíóúñ\s]{3,30})\)/);
   if (ciudadMatch && ciudadMatch[1]) {
     ciudad = ciudadMatch[1].trim();
   }
@@ -442,7 +442,7 @@ export function generateSmartLocalPitchFallback(params: {
   // banda, aunque el generador estuviera redactando para una distinta. Un genérico sin nombre
   // propio es mucho mejor que mentir con el nombre real de otro cliente.
   let bandName = "nuestra banda";
-  const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,\.]+)/i) ||
+  const bandMatch = text.match(/(?:Banda|Nombre de la banda|Artista)\s*[:=]\s*([^\n,.]+)/i) ||
                     text.match(/(?:de la banda\s+)"([^"]+)"/i);
   if (bandMatch && bandMatch[1]) {
     const rawBand = bandMatch[1].replace(/^-\s*Nombre:\s*/i, '').trim();
@@ -452,13 +452,13 @@ export function generateSmartLocalPitchFallback(params: {
   }
 
   let estilo = "Música en directo";
-  const estiloMatch = text.match(/(?:Estilo|Género|Estilo musical)\s*[:=]\s*([^\n,\.]+)/i);
+  const estiloMatch = text.match(/(?:Estilo|Género|Estilo musical)\s*[:=]\s*([^\n,.]+)/i);
   if (estiloMatch && estiloMatch[1]) {
     estilo = estiloMatch[1].trim();
   }
 
   let formato = "Banda en directo";
-  const formatoMatch = text.match(/(?:Formato|Formación)\s*[:=]\s*([^\n,\.]+)/i);
+  const formatoMatch = text.match(/(?:Formato|Formación)\s*[:=]\s*([^\n,.]+)/i);
   if (formatoMatch && formatoMatch[1]) {
     formato = formatoMatch[1].trim();
   }

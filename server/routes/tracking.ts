@@ -334,7 +334,7 @@ router.get(["/tracking/pdf", "/api/tracking/pdf"], async (req, res) => {
 
   try {
     const sb = getSupabase();
-    let lead = targetLeadId ? await resolveLead(targetLeadId) : null;
+    const lead = targetLeadId ? await resolveLead(targetLeadId) : null;
 
     if (!finalRedirectUrl) {
       const bandToQuery = String(lead?.band_id || targetBandId || "");

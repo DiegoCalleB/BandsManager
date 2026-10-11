@@ -19,7 +19,7 @@ describe('cifrado con los acordes ENCIMA de la letra', () => {
     expect(palabra).not.toBeNull();
     expect(h.replace(/<[^>]+>/g, '')).toContain('imagi');
     // el texto sin etiquetas es la letra sin acordes (con un hueco nbsp por columna sin texto)
-    expect(h.replace(/<[^>]+>/g, '').replace(/ /g, '').replace('F', '')).toContain('imaginación');
+    expect(h.replace(/<[^>]+>/g, '').replace(/\u00a0/g, '').replace('F', '')).toContain('imaginación');
   });
 
   it('las palabras se separan con espacios normales para que la línea se ajuste sola al ancho', () => {

@@ -383,7 +383,7 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
 async function listRecursiveStorageFiles(supabase: any, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
   const { data: items, error } = await supabase.storage.from(bucketName).list(folder, { limit: 1000 });
   if (error) return [];
-  let all: Array<{ path: string; size: number }> = [];
+  const all: Array<{ path: string; size: number }> = [];
   for (const item of items || []) {
     const itemPath = folder ? `${folder}/${item.name}` : item.name;
     if (!item.id && !item.metadata) {
@@ -534,9 +534,9 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       uniqueName = `${crypto.randomUUID()}${baseNameSanitized ? '-' + baseNameSanitized : ''}${ext}`;
       filePath = path.join(UPLOAD_DIR, uniqueName);
 
-      const match = base64.match(/^data:([A-Za-z-+\/]+);base64,/);
+      const match = base64.match(/^data:([A-Za-z-+/]+);base64,/);
       mimeType = match ? match[1] : 'application/octet-stream';
-      const base64Data = base64.replace(/^data:([A-Za-z-+\/]+);base64,/, '');
+      const base64Data = base64.replace(/^data:([A-Za-z-+/]+);base64,/, '');
       buffer = Buffer.from(base64Data, 'base64');
       fs.writeFileSync(filePath, buffer);
     } else {

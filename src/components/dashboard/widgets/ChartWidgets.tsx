@@ -85,7 +85,7 @@ export function RepertorioEnergyChartWidget({
     label: string;
     hexColor: string;
     durationMin: number;
-  }> = [];
+  }>;
 
   // Use selected repertorio/setlist or active setlist
   const activeSetlist =

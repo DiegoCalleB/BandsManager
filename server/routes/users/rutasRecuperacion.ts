@@ -250,7 +250,7 @@ router.post(
     }
 
     // Find user by username or email
-    let matchingUsers = (state.users || []).filter(
+    const matchingUsers = (state.users || []).filter(
       (u: any) =>
         (u.username && u.username.toLowerCase().trim() === cleanInput) ||
         (u.email && u.email.toLowerCase().trim() === cleanInput)

@@ -171,7 +171,7 @@ export function CalendarViewsContainer(props: CalendarViewsContainerProps) {
 
             const isToday = isThisRealMonth && cell.day === realToday.getDate();
 
-            let borderAndBgClass = '';
+            let borderAndBgClass: string;
             if (isSelected) {
               borderAndBgClass = 'bg-[var(--acc-soft)] text-[var(--ink)] ring-2 ring-[var(--acc)] z-10 border border-[var(--acc)]';
             } else if (hasConcert && hasRehearsal) {

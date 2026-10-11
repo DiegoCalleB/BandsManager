@@ -439,8 +439,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
           : existing?.seccionesOcultas) || null,
   };
 
-  let data: any = null;
-  let error: any = null;
+  let data: any;
 
   const currentPayload: Record<string, any> = { ...payload };
   // Si a la BD le falta alguna columna nueva (migración sin aplicar) se guarda sin ella, pero
@@ -450,7 +449,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   );
   for (const col of res.omitidas) delete currentPayload[col];
   data = res.data;
-  error = res.error;
+  const error = res.error;
 
   if (error)
     throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);

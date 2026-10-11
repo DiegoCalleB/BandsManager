@@ -205,8 +205,8 @@ function autoCorrelate(buf: Float32Array, sampleRate: number): number {
   if (rms < 0.008) return -1; // Too quiet
 
   let r1 = 0,
-    r2 = SIZE - 1,
-    thres = 0.2;
+    r2 = SIZE - 1;
+  const thres = 0.2;
   for (let i = 0; i < SIZE / 2; i++) {
     if (Math.abs(buf[i]) < thres) {
       r1 = i;

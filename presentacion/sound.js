@@ -241,7 +241,7 @@
     },
   };
 
-  if (enabled) document.body && document.body.classList.add('sound-on');
+  if (enabled) document.body?.classList.add('sound-on');
   addEventListener('pointerdown', () => { if (enabled) ensure(); }, { once: true });
   addEventListener('keydown', () => { if (enabled) ensure(); }, { once: true });
 })();

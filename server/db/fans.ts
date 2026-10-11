@@ -65,7 +65,9 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     instagram: fan.instagram || ""
   };
 
-  let { data, error } = await sb.from("fans").upsert(payload).select().single();
+  const primero = await sb.from("fans").upsert(payload).select().single();
+  const error = primero.error;
+  let data = primero.data;
 
   // Reintenta sin las columnas nuevas si el esquema remoto de Supabase aún
   // no tiene la migración aplicada (ver supabase_migration_only_new.sql).
@@ -82,7 +84,6 @@ export async function dbUpsertFan(fan: any, bandId: string) {
     const retry = await sb.from("fans").upsert(fallbackPayload).select().single();
     if (retry.error) throw new Error(`Supabase Error (upsert fan fallback): ${retry.error.message}`);
     data = retry.data;
-    error = null;
   } else if (error) {
     throw new Error(`Supabase Error (upsert fan): ${error.message}`);
   }

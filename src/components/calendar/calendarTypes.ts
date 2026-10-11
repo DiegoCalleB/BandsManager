@@ -222,8 +222,8 @@ export const getDetailedDateInfo = (dateInput: string | Date | undefined | null)
   const target = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 0, 0);
   const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-  let relativeLabel = '';
-  let relativeBadgeClass = '';
+  let relativeLabel: string;
+  let relativeBadgeClass: string;
   if (diffDays === 0) {
     relativeLabel = '¡HOY!';
     relativeBadgeClass = 'bg-emerald-500 text-stone-950 font-black shadow-xs animate-pulse';

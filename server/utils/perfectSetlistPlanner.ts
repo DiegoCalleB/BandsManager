@@ -81,7 +81,7 @@ export function parseRawPerfectSetlistPlanAIResponse(
   try {
     raw = JSON.parse(jsonStr);
   } catch (err: any) {
-    throw new Error(`Formato JSON inválido de la IA en plan de repertorio: ${err?.message || 'error de parseo'}`);
+    throw new Error(`Formato JSON inválido de la IA en plan de repertorio: ${err?.message || 'error de parseo'}`, { cause: err });
   }
 
   const rawActions = Array.isArray(raw.actions) ? raw.actions : [];

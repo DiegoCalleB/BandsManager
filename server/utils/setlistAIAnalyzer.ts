@@ -137,6 +137,6 @@ IMPORTANTE:
     return analysis;
   } catch (error) {
     console.error("[SetlistAI] Error analyzing with AI:", error);
-    throw new Error(`No se pudo analizar el setlist: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+    throw new Error(`No se pudo analizar el setlist: ${error instanceof Error ? error.message : 'Error desconocido'}`, { cause: error });
   }
 }

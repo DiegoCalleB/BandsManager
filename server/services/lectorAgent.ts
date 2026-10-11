@@ -325,7 +325,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
 
     // Emparejamiento Multi-Vector inteligente
     const matchResult = await findMatchingLeadForIncomingMessage(msg, leads, bandId);
-    let lead = matchResult?.lead || null;
+    const lead = matchResult?.lead || null;
 
     if (lead && matchResult) {
       console.log(`[Lector] ✨ Emparejamiento exitoso: ${msg.from} -> Lead ${lead.id} (${lead.nombre_sala}) vía [${matchResult.matchReason}]`);

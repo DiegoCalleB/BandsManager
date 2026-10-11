@@ -553,7 +553,7 @@ function resolveLeadCoordinates(lead: Lead, index: number): [number, number] {
   }
 
   // 4. Clean city name (e.g. "Barbate (Cádiz)" -> "Barbate", "Vilaxoán de Arousa" -> "Vilaxoán")
-  const mainPart = rawCity.split(/[\(\-\/\,]/)[0].trim();
+  const mainPart = rawCity.split(/[(\-/,]/)[0].trim();
   if (SPANISH_CITIES_GEO[mainPart]) {
     const base = SPANISH_CITIES_GEO[mainPart];
     return offsetCoords(base, index);

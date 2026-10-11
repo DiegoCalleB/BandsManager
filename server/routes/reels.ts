@@ -85,7 +85,7 @@ const MAX_CLIP_SECONDS = 180;
 
 function getYouTubeId(urlStr?: string): string | null {
   if (!urlStr) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/|live\/)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
   const match = String(urlStr).match(regExp);
   return match && match[2] && match[2].length === 11 ? match[2] : null;
 }

@@ -36,7 +36,7 @@ export async function escrituraTolerante<T = any>(
   payload: Record<string, any> | Array<Record<string, any>>,
   escribir: (payload: any) => PromiseLike<{ data: T | null; error: any }>
 ): Promise<ResultadoTolerante<T>> {
-  let actual: any = Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload };
+  const actual: any = Array.isArray(payload) ? payload.map((f) => ({ ...f })) : { ...payload };
   const omitidas: string[] = [];
 
   for (let intento = 0; ; intento++) {

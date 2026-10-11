@@ -163,7 +163,7 @@ export async function dbGetDynamicFewShotExamples(bandId: string, currentLead?: 
     }
 
     // 1. Intentar obtener ejemplos de pitch_learning_examples
-    let query = sb
+    const query = sb
       .from("pitch_learning_examples")
       .select("*")
       .eq("band_id", cleanId)

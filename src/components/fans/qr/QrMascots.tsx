@@ -300,7 +300,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
 
       // 🖼️ LOGO OFICIAL DE LA BANDA
       case 'band_logo':
-      default:
+      default: {
         if (bandLogoUrl) {
           return (
             <g transform="translate(12, 12)">
@@ -342,6 +342,7 @@ export const QrMascotSvgGroup: React.FC<QrMascotProps> = ({
             <circle cx="40" cy="40" r="32" fill="none" stroke="url(#mascotGlow)" strokeWidth="2" strokeDasharray="4 3" />
           </g>
         );
+      }
     }
   };
 

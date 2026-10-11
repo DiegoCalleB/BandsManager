@@ -124,7 +124,7 @@ router.post('/auth/login', loginRateLimiter, async (req, res) => {
       u.band_id === preferredBandId ||
       (preferredClean && cleanBandId(u.band_id) === preferredClean)
   );
-  let selectedUser = foundMatching || validUsers[0];
+  const selectedUser = foundMatching || validUsers[0];
 
   // Ensure active band on login is the preferred / favorite band
   if (preferredBandId) {

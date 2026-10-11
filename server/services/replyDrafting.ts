@@ -266,7 +266,7 @@ export async function generarBorradorRespuesta(
   }
 
   // [TACTICAL EVALUATION]: Evaluación estructurada de intenciones y ofertas económicas
-  let tacticalEval: TacticalEvaluation | null = null;
+  let tacticalEval: TacticalEvaluation | null;
   try {
     tacticalEval = await evaluateIncomingTactics(incomingMessage, {
       name: lead?.nombre_sala,

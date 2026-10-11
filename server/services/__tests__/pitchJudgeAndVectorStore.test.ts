@@ -51,4 +51,20 @@ describe("PitchJudge - LLM-as-a-Judge & Self-Correction", () => {
     expect(audit.bannedWordsFound.length).toBeGreaterThan(0);
     expect(audit.emDashesFound).toBeGreaterThan(0);
   });
+
+  // Las tres reglas llevaban caracteres de retroceso (0x08) donde iba \b: nunca casaban con texto real.
+  it.each([
+    ['curfew', 'El curfew de la sala es a las 23:00, sin problema.', /Anglicismo/],
+    ['merch', 'Llevamos merch propio a cada bolo.', /Merchandising/],
+    ['zip', 'Os mando un zip con todo el material.', /adjuntos/],
+  ])('detecta «%s» como palabra suelta', async (_palabra, frase, critica) => {
+    const evalResult = await evaluateAndRefinePitch({
+      pitchText: `Hola equipo de Sala Sol. ${frase} ` + Array(45).fill('directo').join(' '),
+      leadName: 'Sala Sol',
+      leadCategory: 'sala',
+      bandName: 'Los Astros',
+      skipRefinement: true,
+    });
+    expect(evalResult.critique.some((c) => critica.test(c))).toBe(true);
+  });
 });

@@ -136,12 +136,12 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
 
     if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
       throw new Error(
-        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.'
+        'El dominio actual de la app no está en la lista de "Dominios autorizados" en la consola de Firebase Authentication.', { cause: error }
       );
     }
 
     if (errCode === 'auth/operation-not-allowed' || errMsg.includes('operation-not-allowed')) {
-      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.');
+      throw new Error('El proveedor de inicio de sesión con Google no está habilitado en Firebase Authentication.', { cause: error });
     }
 
     console.error('Error al iniciar sesión con Google:', error);
@@ -343,7 +343,7 @@ export function buildRawMimeMessage(
 
   const boundary = `====_BandManager_Boundary_${Date.now()}_====`;
 
-  let rawMime = '';
+  let rawMime: string;
 
   if (attachments && attachments.length > 0) {
     // Multipart MIME Message with Attachments

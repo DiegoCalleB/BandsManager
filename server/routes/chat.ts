@@ -82,7 +82,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     const triggerParams: Record<string, any> = {};
 
     if (agentName === "Scout Descubridor" || agentName === "Scout") {
-      let detectedRegion = "";
+      let detectedRegion: string;
       const knownLocations = KNOWN_LOCATIONS;
       const canonicalMapping = CANONICAL_LOCATION_MAP;
 
@@ -98,7 +98,6 @@ router.post("/chat", requireAuth, async (req, res) => {
       if (matchedLocation) {
         const canonical = canonicalMapping[matchedLocation.toLowerCase()] || matchedLocation;
         const regionForCity = getRegionForCity(matchedLocation);
-        detectedRegion = canonical;
         triggerParams.ciudad = canonical;
         triggerParams.region = regionForCity || canonical;
       } else {

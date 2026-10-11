@@ -53,7 +53,7 @@ export function parseRawSetlistAIResponse(text: string): ParsedSetlistResult {
   try {
     raw = JSON.parse(jsonStr);
   } catch (err: any) {
-    throw new Error(`Formato JSON inválido de la IA al leer repertorio: ${err?.message || 'error de parseo'}`);
+    throw new Error(`Formato JSON inválido de la IA al leer repertorio: ${err?.message || 'error de parseo'}`, { cause: err });
   }
 
   const rawItems = Array.isArray(raw.items) ? raw.items : [];

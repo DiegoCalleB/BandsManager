@@ -372,8 +372,8 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
       .output("-");
 
     command.on("stderr", (stderrLine: string) => {
-      const startMatch = stderrLine.match(/silence_start:\s*([\d\.]+)/);
-      const endMatch = stderrLine.match(/silence_end:\s*([\d\.]+)/);
+      const startMatch = stderrLine.match(/silence_start:\s*([\d.]+)/);
+      const endMatch = stderrLine.match(/silence_end:\s*([\d.]+)/);
 
       if (startMatch) {
         const start = parseFloat(startMatch[1]);

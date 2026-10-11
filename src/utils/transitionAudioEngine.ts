@@ -151,8 +151,8 @@ export function getTransitionGains(
     clampedTime <= timeline.crossfadeEndSec;
   const fadeDuration = timeline.crossfadeEndSec - timeline.crossfadeStartSec;
 
-  let gainA = 0;
-  let gainB = 0;
+  let gainA: number;
+  let gainB: number;
 
   if (clampedTime < timeline.crossfadeStartSec) {
     gainA = 1;
@@ -503,12 +503,11 @@ export function diagnoseTransition(
   const clampedScore = Math.max(20, Math.min(100, score));
 
   // Determine Verdict & Artistic Intent
-  let verdictStatus: TransitionVerdict["status"] = "buena";
-  let badgeLabel = "Transición Favorable";
-  let badgeClass = "bg-[var(--ok)]/15 text-[var(--ok)]";
-  let summary = "Enlace recomendado con buen flujo musical y dinámico.";
-  let artisticIntent =
-    "Mantiene la atención y enriquece la narrativa del concierto.";
+  let verdictStatus: TransitionVerdict["status"];
+  let badgeLabel: string;
+  let badgeClass: string;
+  let summary: string;
+  let artisticIntent: string;
 
   if (clampedScore >= 90) {
     verdictStatus = "excelente";

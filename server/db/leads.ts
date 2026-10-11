@@ -577,7 +577,7 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
     );
 
     // Dynamic column fallback: if error mentions a missing column, strip it and retry preserving all other fields
-    let fallbackPayload: any = { ...payload };
+    const fallbackPayload: any = { ...payload };
     const missingColMatches = [
       ...error.message.matchAll(/column "([^"]+)"/gi),
       ...error.message.matchAll(/column '([^']+)'/gi),

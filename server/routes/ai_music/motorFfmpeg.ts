@@ -27,7 +27,7 @@ export async function processServerStemsFfmpeg(
   const timestamp = Date.now();
   let inputPath = audioUrl;
   let tempLocalFile: string | null = null;
-  let tempPreprocessedFile: string | null = null;
+  let tempPreprocessedFile: string | null;
 
   // Si la URL es HTTP(S) o data URL, la descargamos UNA SOLA VEZ a disco local para evitar re-descargas HTTP repetidas
   if (

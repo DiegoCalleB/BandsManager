@@ -37,7 +37,7 @@ function parseSafeArray(val: any): string[] {
 export async function dbGetRehearsals(bandId: string | string[]) {
   const sb = getSupabase();
   let query = sb.from('rehearsals').select('*');
-  let allowedIds: string[] = [];
+  let allowedIds: string[];
 
   if (Array.isArray(bandId)) {
     allowedIds = bandId

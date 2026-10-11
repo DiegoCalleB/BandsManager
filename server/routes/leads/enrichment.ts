@@ -945,7 +945,7 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
     const { campaignId, forceAll = false } = req.body || {};
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    let targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive || (c as any).is_active) || campaigns[0];
+    const targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive || (c as any).is_active) || campaigns[0];
 
     const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText || (targetCampaign as any)?.target_dates || (targetCampaign as any)?.target_dates_text;
 
@@ -1490,6 +1490,17 @@ router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, asy
 });
 
 /**
+ * Número de un campo del formulario, con valor por defecto si falta o no es un número. Respeta el 0
+ * (un alquiler de sala gratis es válido). Antes se usaba `Number(x) ?? defecto`, que nunca aplicaba
+ * el defecto: `Number(undefined)` es NaN, no null, y el NaN llegaba al cálculo del punto de equilibrio.
+ */
+export function numeroConDefecto(valor: unknown, defecto: number): number {
+  if (valor === undefined || valor === null || valor === '') return defecto;
+  const n = Number(valor);
+  return Number.isFinite(n) ? n : defecto;
+}
+
+/**
  * POST /api/leads/:id/calculate-break-even
  * Simulador financiero P&L y punto de equilibrio de entradas.
  */
@@ -1513,9 +1524,9 @@ router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], re
       aforo: lead.aforo || 250,
       precioAnticipada: Number(precioAnticipada) || 12,
       precioTaquilla: Number(precioTaquilla) || 15,
-      alquilerSalaFijo: Number(alquilerSalaFijo) ?? 250,
-      porcentajeSala: Number(porcentajeSala) ?? 15,
-      gastosProduccionFijos: Number(gastosProduccionFijos) ?? 150,
+      alquilerSalaFijo: numeroConDefecto(alquilerSalaFijo, 250),
+      porcentajeSala: numeroConDefecto(porcentajeSala, 15),
+      gastosProduccionFijos: numeroConDefecto(gastosProduccionFijos, 150),
       numMusicos: Number(numMusicos) || 5,
       asistenciaEstimada: Number(asistenciaEstimada) || Math.round((lead.aforo || 250) * 0.8)
     });

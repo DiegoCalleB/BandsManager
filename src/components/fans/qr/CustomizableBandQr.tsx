@@ -146,7 +146,7 @@ export const CustomizableBandQr: React.FC<CustomizableBandQrProps> = ({
             break;
 
           // Diamantes a 45 grados
-          case 'diamond':
+          case 'diamond': {
             const cx = x + moduleSize / 2;
             const cy = y + moduleSize / 2;
             const s = moduleSize * 0.46;
@@ -158,9 +158,10 @@ export const CustomizableBandQr: React.FC<CustomizableBandQrProps> = ({
               />
             );
             break;
+          }
 
           // Estrellas de 4 puntas
-          case 'stars':
+          case 'stars': {
             const scx = x + moduleSize / 2;
             const scy = y + moduleSize / 2;
             const rExt = moduleSize * 0.48;
@@ -182,6 +183,7 @@ export const CustomizableBandQr: React.FC<CustomizableBandQrProps> = ({
               />
             );
             break;
+          }
 
           // Surcos de vinilo
           case 'grooves':

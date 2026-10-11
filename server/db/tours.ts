@@ -111,7 +111,9 @@ export async function dbUpsertTour(tour: any, bandId: string) {
     estado: tour.estado || "planificacion"
   };
 
-  let { data, error } = await sb.from("tours").upsert(payload).select().single();
+  const primero = await sb.from("tours").upsert(payload).select().single();
+  const error = primero.error;
+  let data = primero.data;
 
   // Retry gracefully if any newly introduced optional columns are not yet in remote Supabase schema cache
   if (error && error.message) {
@@ -134,7 +136,6 @@ export async function dbUpsertTour(tour: any, bandId: string) {
       const retry = await sb.from("tours").upsert(fallbackPayload).select().single();
       if (retry.error) throw new Error(`Supabase Error (upsert tour fallback): ${retry.error.message}`);
       data = retry.data;
-      error = null;
     } else {
       throw new Error(`Supabase Error (upsert tour): ${error.message}`);
     }

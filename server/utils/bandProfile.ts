@@ -292,7 +292,7 @@ export async function loadBandProfile(
     perfil.reelFeedbackHistory = Array.isArray(adnDurable.historial_feedback_reels) ? adnDurable.historial_feedback_reels : [];
   }
 
-  let state: any = null;
+  let state: any;
   try {
     state = deps.getState();
   } catch {

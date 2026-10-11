@@ -108,7 +108,7 @@ export function analyzeSentimentHeuristic(
   let playbook: TacticalPlaybook | undefined;
 
   // Extracción básica de fechas o meses
-  const mesesRegex = /\b(\d{1,2}\s+(?:de\s+)?(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)|(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+(?:de\s+)?\d{4}|\d{1,2}[\/\.-]\d{1,2}[\/\.-]\d{2,4}|viernes\s+\d{1,2}|sábado\s+\d{1,2}|sabado\s+\d{1,2})\b/gi;
+  const mesesRegex = /\b(\d{1,2}\s+(?:de\s+)?(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)|(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\s+(?:de\s+)?\d{4}|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}|viernes\s+\d{1,2}|sábado\s+\d{1,2}|sabado\s+\d{1,2})\b/gi;
   const matchFechas = messageText.match(mesesRegex);
   if (matchFechas) {
     matchFechas.forEach((f) => {
@@ -118,7 +118,7 @@ export function analyzeSentimentHeuristic(
   }
 
   // Detección de condiciones económicas
-  const moneyMatch = messageText.match(/(\d+[\d\.,]*)\s*(?:€|euros|eur|\$)/i) || messageText.match(/(?:cache|caché|precio|presupuesto|garantía|garantia|taquilla)\s*(?:de|:)?\s*(\d+[\d\.,]*\s*(?:€|euros|eur)?)/i);
+  const moneyMatch = messageText.match(/(\d+[\d.,]*)\s*(?:€|euros|eur|\$)/i) || messageText.match(/(?:cache|caché|precio|presupuesto|garantía|garantia|taquilla)\s*(?:de|:)?\s*(\d+[\d.,]*\s*(?:€|euros|eur)?)/i);
   if (moneyMatch) {
     condicionesEco = {
       tipo: t.includes("taquilla") ? "taquilla" : t.includes("alquiler") ? "alquiler_sala" : "cache_fijo",

@@ -148,7 +148,7 @@ export function auditPitchQuality(pitch: string, category?: string): PitchQualit
   let scoreDeductions = 0;
 
   // 1. Longitud
-  let lengthStatus: "optimal" | "acceptable" | "too_long" | "too_short" = "optimal";
+  let lengthStatus: "optimal" | "acceptable" | "too_long" | "too_short";
   let lengthFeedback = `Longitud adecuada (${wordCount} palabras).`;
 
   if (wordCount === 0) {

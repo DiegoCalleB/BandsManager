@@ -408,19 +408,9 @@ router.post(["/campaign-mass-search", "/leads/campaign-mass-search"], requireAut
   try {
     const userBandId = (req as any).user?.band_id;
     const state = loadState();
-    let {
-      targetCities,
-      minCapacity,
-      maxCapacity,
-      targetDates,
-      targetDatesText,
-      tipos,
-      campaignName,
-      limitPerCity,
-      bandGenre,
-      genero,
-      bandStyle
-    } = req.body;
+    // Ciudades, aforos y nombre de campaña se completan después con la campaña activa.
+    let { targetCities, minCapacity, maxCapacity, campaignName } = req.body;
+    const { targetDates, targetDatesText, tipos, limitPerCity, bandGenre, genero, bandStyle } = req.body;
 
     // Obtener ADN de la banda para conocer su género y estilo por defecto si no se indica
     let bandDnaGenre = "";
@@ -673,7 +663,6 @@ Responde estrictamente con un JSON con la estructura:
             response = await generateContentWithFallback(aiClient, {
               contents: [{ role: 'user', parts: [{ text: groundingPrompt }] }],
               config: {
-                // @ts-ignore
                 tools: [{ googleSearch: {} }],
                 responseMimeType: 'application/json'
               }

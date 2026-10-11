@@ -121,7 +121,7 @@ export async function sendTransactionalEmail(options: SendEmailOptions): Promise
   }
 
   try {
-    let response = await resend.emails.send({
+    const response = await resend.emails.send({
       from,
       to,
       subject: options.subject,

@@ -69,6 +69,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
+- `server/routes/leads/__tests__/numeroConDefecto.test.ts`
 
 ---
 

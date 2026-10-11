@@ -663,11 +663,11 @@ router.get('/public/epk', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
 
-    let logoUrl =
+    const logoUrl =
       epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
 
     // Ensure social links are present
-    let enlacesRedes = epkConfig?.enlacesRedes || {};
+    const enlacesRedes = epkConfig?.enlacesRedes || {};
     if (regBand) {
       if (regBand.instagram && !enlacesRedes.instagram)
         enlacesRedes.instagram = regBand.instagram.startsWith('http')

@@ -66,7 +66,7 @@ export function parseReplicateError(
   status: number,
   errBody: string
 ): ServiceDiagnosticError {
-  let parsedDetail = '';
+  let parsedDetail: string;
   try {
     const json = JSON.parse(errBody);
     parsedDetail =
@@ -158,7 +158,7 @@ export function parseFalError(
   status: number,
   errBody: any
 ): ServiceDiagnosticError {
-  let parsedDetail = '';
+  let parsedDetail: string;
   let isLocked = false;
   let isRateLimit = status === 429;
   const rawStr =

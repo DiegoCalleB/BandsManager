@@ -55,7 +55,7 @@ export function getLeadHealth(lead: Lead): LeadHealthInfo {
     lead.estado === 'interesado' ||
     lead.estado === 'negociando'
   ) {
-    let desc = 'Interés activo';
+    let desc: string;
     if (hasClickedEpk) {
       desc = `Dossier EPK revisado (${lead.clics_epk} ${lead.clics_epk === 1 ? 'clic' : 'clics'})`;
     } else if (multipleOpens) {

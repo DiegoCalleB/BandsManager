@@ -31,7 +31,7 @@ router.post("/generate-simulated-email", requireAuth, async (req, res) => {
   const fechaStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
   const defaultSender = senderName || (bandName + " Agent Manager");
-  let prompt = "";
+  let prompt: string;
   if (role === "sala") {
     prompt = `Actúa como el programador o responsable de booking de la sala o festival "${lead.nombre_sala}" en la ciudad de "${lead.ciudad}" (Aforo: ${lead.aforo || "N/D"}, género musical habitual: ${lead.genero || "N/D"}).
 Genera una respuesta realista por correo electrónico a la propuesta que la banda "${bandName}" (${bandBio ? `con propuesta: ${bandBio}` : 'banda de música en directo'}) te envió para tocar en su gira.

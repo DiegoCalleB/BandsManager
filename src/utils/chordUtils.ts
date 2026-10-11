@@ -316,7 +316,7 @@ export function processChordText(text: string, semitones: number, notation: 'ES'
   if (!text) return '';
 
   // Process inline bracket notation [Do] or [C#m]
-  const result = text.replace(/\[([A-Za-z0-9#\/]+)\]/g, (match, chord) => {
+  const result = text.replace(/\[([A-Za-z0-9#/]+)\]/g, (match, chord) => {
     const transposed = transposeChordToken(chord, semitones, notation);
     return `[${transposed}]`;
   });
@@ -334,7 +334,7 @@ export function processChordText(text: string, semitones: number, notation: 'ES'
     if (!isChordLine(tokens)) return line;
 
     // Replace each chord token preserving spacing
-    return line.replace(/([A-Za-z0-9#\/]+)/g, (match) => {
+    return line.replace(/([A-Za-z0-9#/]+)/g, (match) => {
       if (parseRootNote(match)) {
         return transposeChordToken(match, semitones, notation);
       }
@@ -372,7 +372,7 @@ export function extractUniqueChords(text: string): string[] {
   const found = new Set<string>();
 
   // Bracketed chords
-  const bracketMatches = text.match(/\[([A-Za-z0-9#\/]+)\]/g);
+  const bracketMatches = text.match(/\[([A-Za-z0-9#/]+)\]/g);
   if (bracketMatches) {
     bracketMatches.forEach((m) => {
       const clean = m.replace('[', '').replace(']', '').trim();

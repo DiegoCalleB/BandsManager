@@ -76,7 +76,7 @@ let ytDlpCache: { valor: boolean; cuando: number } | null = null;
  */
 export async function ytDlpDisponible(): Promise<boolean> {
   if (ytDlpCache && Date.now() - ytDlpCache.cuando < 5 * 60 * 1000) return ytDlpCache.valor;
-  let valor = false;
+  let valor: boolean;
   try {
     await ejecutar(rutaYtDlp(), ["--version"], { timeout: 10_000 });
     valor = true;

@@ -56,7 +56,7 @@ describe('generateContentWithFallback: el generador local es opt-in', () => {
 
   it('nunca devuelve un pitch de booking a quien no lo pidió', async () => {
     // El fallo concreto que motivó el cambio: pedir un JSON y recibir un email de booking.
-    let resultado: any = null;
+    let resultado: any;
     try {
       resultado = await generateContentWithFallback(clienteQueSiempreFalla, {
         contents: 'Extrae los emails de contacto y devuelve JSON',

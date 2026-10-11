@@ -39,7 +39,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 2. Formato DD/MM/YYYY o DD-MM-YYYY
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     const day = parseInt(ddmmyyyy[1], 10);
     const month = parseInt(ddmmyyyy[2], 10) - 1;
@@ -49,7 +49,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
   }
 
   // 3. Formato DD/MM o DD-MM (asume año actual o próximo)
-  const ddm = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  const ddm = trimmed.match(/^(\d{1,2})[/-](\d{1,2})$/);
   if (ddm) {
     const day = parseInt(ddm[1], 10);
     const month = parseInt(ddm[2], 10) - 1;
@@ -65,7 +65,7 @@ export function parseFlexibleDate(dateStr: string | null | undefined): Date | nu
       const year = yearMatch ? parseInt(yearMatch[1], 10) : new Date().getFullYear();
 
       const dayMatches = [...trimmed.matchAll(/\b(\d{1,2})\b/g)];
-      let day = dayMatches.length > 0 ? parseInt(dayMatches[0][1], 10) : 1;
+      const day = dayMatches.length > 0 ? parseInt(dayMatches[0][1], 10) : 1;
 
       const d = new Date(year, monthIndex, day);
       if (!isNaN(d.getTime())) return d;

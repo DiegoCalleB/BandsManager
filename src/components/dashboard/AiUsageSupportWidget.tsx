@@ -94,7 +94,7 @@ export const AiSupportWidget: React.FC<AiSupportWidgetProps> = ({ variant }) => 
   );
 };
 
-interface AiUsageCardProps {}
+type AiUsageCardProps = Record<string, never>;
 
 // Por debajo de esto no merece la pena ni mostrar la tarjeta: Diego prefiere que una banda que
 // apenas ha usado IA este mes no vea un número casi a cero, en vez de"ocultar hasta que gaste".

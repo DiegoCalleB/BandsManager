@@ -309,7 +309,7 @@
       case 'f': case 'F': fs(); break;
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
-      case 'm': case 'M': window.DeckSound && window.DeckSound.toggle(); break;
+      case 'm': case 'M': window.DeckSound?.toggle(); break;
       case 'a': case 'A': toggleAnim(); break;
       case 's': case 'S': setScroll(!isScroll()); show(cur, false); break;
     }
