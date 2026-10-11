@@ -361,7 +361,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       "consulta_general"
     ];
     const validTemperatures: LeadTemperature[] = ["caliente", "templado", "frio"];
-    const validActions = ["bloquear_fecha", "enviar_rider", "contraofertar_cache", "proponer_alternativa_date_swap", "agendar_seguimiento", "cerrar_hilo_cordial"];
+    const validActions: MessageSentimentAnalysis["accion_sugerida"][] = ["bloquear_fecha", "enviar_rider", "contraofertar_cache", "proponer_alternativa_date_swap", "agendar_seguimiento", "cerrar_hilo_cordial"];
 
     const sentimiento: SentimentLevel = validSentiments.includes(parsed.sentimiento)
       ? parsed.sentimiento
@@ -375,7 +375,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
       ? parsed.temperatura
       : (sentimiento === "muy_positivo" || sentimiento === "positivo" ? "caliente" : sentimiento === "rechazo" || sentimiento === "negativo" ? "frio" : "templado");
 
-    const accionSugerida = validActions.includes(parsed.accion_sugerida)
+    const accionSugerida: MessageSentimentAnalysis["accion_sugerida"] = validActions.includes(parsed.accion_sugerida)
       ? parsed.accion_sugerida
       : "agendar_seguimiento";
 
@@ -398,7 +398,7 @@ Devuelve ÚNICAMENTE el objeto JSON sin bloques de código markdown ni texto adi
         detalles: parsed.condiciones_economicas.detalles ? String(parsed.condiciones_economicas.detalles) : undefined
       } : undefined,
       requisitos_tecnicos: Array.isArray(parsed.requisitos_tecnicos) ? parsed.requisitos_tecnicos.map(String) : [],
-      accion_sugerida: accionSugerida as any,
+      accion_sugerida: accionSugerida,
       estrategia_playbook: parsed.estrategia_playbook && typeof parsed.estrategia_playbook === "object" ? {
         titulo: String(parsed.estrategia_playbook.titulo || "Estrategia Recomendada"),
         pasos: Array.isArray(parsed.estrategia_playbook.pasos) ? parsed.estrategia_playbook.pasos.map(String) : [],

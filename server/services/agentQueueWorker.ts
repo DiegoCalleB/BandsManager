@@ -7,7 +7,8 @@ import {
   failAgentJob,
   pruneOldJobs,
   onAgentJobEnqueued,
-  AgentJob
+  AgentJob,
+  type DetallesResultadoTrabajo
 } from "./agentQueueService.js";
 import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
@@ -33,7 +34,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
   console.log(`[AgentQueueWorker] [${WORKER_ID}] Iniciando trabajo ${job.id} (${job.agent_type}) para banda ${job.band_id}...`);
 
   try {
-    let resultDetails: Record<string, any> = {};
+    let resultDetails: DetallesResultadoTrabajo = {};
 
     switch (job.agent_type) {
       case "lector_inbox_check": {
@@ -44,7 +45,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
         }
 
         const resultado = await runLectorAgent(job.band_id);
-        resultDetails = resultado;
+        resultDetails = { ...resultado };
 
         // Auditoría estructurada si hubo novedades
         if (resultado.mensajesLeidos > 0 || resultado.borradoresEnviadosDetectados > 0 || resultado.borradorIaGenerados > 0) {
@@ -109,7 +110,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     if (!sinCuenta) {
       await logAgentExecution({
         band_id: job.band_id,
-        agente: (job.agent_type.split("_")[0] as any) || "sistema",
+        agente: job.agent_type.split("_")[0] || "sistema",
         motor: "worker_queue",
         disparado_por_tipo: "queue",
         estado: isRateLimit ? "warning" : "error",

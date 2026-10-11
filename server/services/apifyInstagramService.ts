@@ -30,6 +30,16 @@ export interface InstagramEnrichedData {
   apify_free_tier_info?: string;
 }
 
+/** Campos que se leen de cada perfil devuelto por el actor `instagram-profile-scraper` de Apify. */
+interface PerfilApifyInstagram {
+  businessPhoneNumber?: string;
+  contactPhoneNumber?: string;
+  businessEmail?: string;
+  biography?: string;
+  externalUrl?: string;
+  followersCount?: number;
+}
+
 /**
  * Limpia el nombre de usuario de Instagram a partir de un handle o URL
  */
@@ -78,8 +88,8 @@ export async function scrapeInstagramVenueProfile(
       clearTimeout(timeoutId);
 
       if (res.ok) {
-        const items: any = await res.json();
-        const profile = Array.isArray(items) && items.length > 0 ? items[0] : null;
+        const items: unknown = await res.json();
+        const profile: PerfilApifyInstagram | null = Array.isArray(items) && items.length > 0 ? items[0] : null;
 
         if (profile) {
           const rawPhone = profile.businessPhoneNumber || profile.contactPhoneNumber;

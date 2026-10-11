@@ -14,6 +14,14 @@ export interface BandsintownVenueEvent {
   fuente: string;
 }
 
+/** Lo que se lee de cada evento de `GET /artists/{artista}/events` de la API de Bandsintown. */
+interface EventoBandsintown {
+  venue?: { name?: string; city?: string; country?: string };
+  datetime?: string;
+  title?: string;
+  url?: string;
+}
+
 export async function getVenuesFromBandsintown(params: {
   artistName: string;
   targetCities?: string[];
@@ -33,9 +41,9 @@ export async function getVenuesFromBandsintown(params: {
         headers: { "Accept": "application/json" }
       });
       if (res.ok) {
-        const events = await res.json();
+        const events: unknown = await res.json();
         if (Array.isArray(events)) {
-          events.forEach((ev: any) => {
+          events.forEach((ev: EventoBandsintown) => {
             if (ev.venue?.name) {
               const city = ev.venue.city || "España";
               if (!params.targetCities || params.targetCities.length === 0 || params.targetCities.some((c) => city.toLowerCase().includes(c.toLowerCase()))) {
@@ -95,7 +103,7 @@ Devuelve máximo ${limit} salas o recintos REALES.`;
       });
       const parsed = safeParseJson(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.venues)) {
-        parsed.venues.forEach((v: any) => {
+        parsed.venues.forEach((v: Partial<BandsintownVenueEvent>) => {
           if (v.nombre_sala) {
             results.push({
               nombre_sala: v.nombre_sala,

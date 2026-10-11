@@ -39,6 +39,27 @@ export interface MultiSourceDiscoveryResult {
   resumen_ejecucion: string;
 }
 
+/** Sala de `GET /discovery/v2/venues.json` de Ticketmaster (solo lo que se lee). */
+interface SalaTicketmaster {
+  name?: string;
+  type?: string;
+  url?: string;
+  postalCode?: string;
+  city?: { name?: string };
+  country?: { name?: string };
+  address?: { line1?: string };
+  generalInfo?: { capacity?: number };
+  boxOfficeInfo?: { openHoursDetail?: string; phoneNumberDetail?: string };
+}
+
+/** Sala de `GET /rest/1.0/search/venues` de Setlist.fm (solo lo que se lee). */
+interface SalaSetlistFm {
+  name?: string;
+  street?: string;
+  url?: string;
+  city?: { name?: string; country?: { name?: string } };
+}
+
 /**
  * Búsqueda mediante Ticketmaster Discovery API v2
  */
@@ -68,10 +89,10 @@ export async function searchTicketmasterVenues(
       return [];
     }
 
-    const data: any = await res.json();
+    const data: { _embedded?: { venues?: SalaTicketmaster[] } } = await res.json();
     const venuesList = data?._embedded?.venues || [];
 
-    return venuesList.map((v: any) => ({
+    return venuesList.map((v): DiscoveredVenue => ({
       nombre: v.name || "Sala de Conciertos",
       ciudad: v.city?.name || ciudad || "España",
       pais: v.country?.name || countryCode || "España",
@@ -120,10 +141,10 @@ export async function searchSetlistFmVenues(
 
     if (!res.ok) return [];
 
-    const data: any = await res.json();
+    const data: { venue?: SalaSetlistFm[] } = await res.json();
     const venueItems = data?.venue || [];
 
-    return venueItems.slice(0, 5).map((v: any) => ({
+    return venueItems.slice(0, 5).map((v): DiscoveredVenue => ({
       nombre: v.name || venueName,
       ciudad: v.city?.name || ciudad || "España",
       pais: v.city?.country?.name || "España",
@@ -251,7 +272,7 @@ Devuelve máximo ${limit} recintos REALES y verificados en activo.`;
 
       const parsed = safeParseJson(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.venues)) {
-        parsed.venues.forEach((v: any) => {
+        parsed.venues.forEach((v: Partial<DiscoveredVenue>) => {
           // Deduplicar si ya existe en Ticketmaster o Setlist.fm
           const normNew = (v.nombre || "").toLowerCase().replace(/[^a-z0-9]/g, "");
           const isDup = results.some(r => r.nombre.toLowerCase().replace(/[^a-z0-9]/g, "") === normNew);
@@ -262,7 +283,7 @@ Devuelve máximo ${limit} recintos REALES y verificados en activo.`;
               pais: v.pais || "España",
               direccion: v.direccion || "",
               capacidad: typeof v.capacidad === "number" ? v.capacidad : undefined,
-              tipo: (v.tipo || "sala") as any,
+              tipo: v.tipo || "sala",
               fuente: v.fuente || "Gemini Radar",
               fuentes_verificadas: Array.isArray(v.fuentes_verificadas) ? v.fuentes_verificadas : ["Gemini Radar"],
               url_oficial: v.url_oficial || "",
@@ -270,7 +291,7 @@ Devuelve máximo ${limit} recintos REALES y verificados en activo.`;
               telefono: v.telefono || "",
               generos_frecuentes: Array.isArray(v.generos_frecuentes) ? v.generos_frecuentes : [],
               detalles_tecnicos: v.detalles_tecnicos || "",
-              fiabilidad: (v.fiabilidad || "alta") as any
+              fiabilidad: v.fiabilidad || "alta"
             });
           }
         });

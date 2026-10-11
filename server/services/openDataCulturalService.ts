@@ -13,6 +13,17 @@ export interface OpenDataCulturalEvent {
   fuente: string;
 }
 
+/** Evento de la agenda cultural de datos.madrid.es (JSON-LD, colección `@graph`). */
+interface EventoAgendaMadrid {
+  title?: string;
+  description?: string;
+  "event-location"?: string;
+  address?: { area?: { "formatted-address"?: string }; locality?: string };
+  dtstart?: string;
+  price?: string;
+  link?: string;
+}
+
 export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCulturalEvent[]> {
   try {
     const url = "https://datos.madrid.es/egob/catalogo/206974-0-agenda-eventos-culturales-100.json";
@@ -28,16 +39,16 @@ export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCultu
     }
     const rawText = await res.text();
     const cleanText = rawText.replace(/\p{Cc}/gu, (c) => c === "\n" || c === "\r" || c === "\t" ? " " : "");
-    const data = JSON.parse(cleanText);
+    const data: { "@graph"?: EventoAgendaMadrid[] } = JSON.parse(cleanText);
     const items = data["@graph"] || [];
     const musicKeywords = ["concierto", "música", "musica", "recital", "banda", "acústico", "jazz", "rock", "pop", "flamenco", "orquesta", "coral"];
-    const musicEvents = items.filter((item: any) => {
+    const musicEvents = items.filter((item) => {
       const t = (item.title || "").toLowerCase();
       const d = (item.description || "").toLowerCase();
       return musicKeywords.some((kw) => t.includes(kw) || d.includes(kw));
     });
 
-    return musicEvents.slice(0, 25).map((m: any, idx: number) => {
+    return musicEvents.slice(0, 25).map((m, idx): OpenDataCulturalEvent => {
       const loc = m["event-location"] || "Centro Cultural Municipal";
       let tipoEspacio = "Centro Cultural";
       const locLower = loc.toLowerCase();

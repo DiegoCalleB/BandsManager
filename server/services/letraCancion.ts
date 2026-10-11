@@ -14,6 +14,13 @@ import { pistasDeCancion } from "../../src/utils/irisTracks.js";
 import { getAudioSnippetPath } from "../routes/concert_to_album.js";
 import { dbGetSongs, dbUpsertSong } from "../db.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { AnalisisAcordes, Song } from '../../src/types.js';
+
+/** Cuerpo JSON de la respuesta: `error` si algo falla; si no, el cifrado, la canción guardada y el análisis. */
+export interface CuerpoRespuestaLetra {
+  error?: string;
+  [campo: string]: unknown;
+}
 
 export interface OpcionesLetra {
   sobrescribir?: boolean;
@@ -24,7 +31,7 @@ export async function ejecutarLetraSincronizada(
   id: string,
   userBandId: string,
   { sobrescribir = false, idioma }: OpcionesLetra = {}
-): Promise<{ status: number; body: any }> {
+): Promise<{ status: number; body: CuerpoRespuestaLetra }> {
   const clave = `${userBandId}:${id}`;
   if (analisisAcordesEnCurso.has(clave)) {
     return { status: 409, body: { error: "Ya se está procesando el audio de esta canción." } };
@@ -53,9 +60,9 @@ async function transcribirYGuardar(
   clave: string,
   sobrescribir: boolean,
   idioma?: string
-): Promise<{ status: number; body: any }> {
-  const songs = await dbGetSongs(userBandId);
-  const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+): Promise<{ status: number; body: CuerpoRespuestaLetra }> {
+  const songs: Song[] = await dbGetSongs(userBandId);
+  const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
   if (!song) return { status: 404, body: { error: "Canción no encontrada." } };
 
   // Un cifrado escrito por la banda no se sustituye sin confirmación (y no se gasta transcripción).
@@ -67,9 +74,9 @@ async function transcribirYGuardar(
   }
 
   avanzarProgreso(clave, "voz", "Buscando la pista de voz aislada (si no hay, se usa la mezcla)…");
-  const urlVoz = pistasDeCancion(song as any)
+  const urlVoz = pistasDeCancion(song)
       .find((p) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
-  const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
+  const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i) => i.audioUrl)?.audioUrl;
   const urlLetra: string | undefined = urlVoz || urlMezcla;
   if (!urlLetra) {
     return {
@@ -80,7 +87,7 @@ async function transcribirYGuardar(
   const fuenteLetra: "voz" | "mezcla" = urlVoz ? "voz" : "mezcla";
 
   // Acordes: los ya detectados (con correcciones) o un análisis nuevo. Si fallan, la letra sigue.
-  let analisis = song.analisisAcordes as any;
+  let analisis: AnalisisAcordes | undefined = song.analisisAcordes;
   let avisoAcordes: string | undefined;
   if (!analisis) {
     const r = await analizarAcordesDeCancion(song, (e, d) => avanzarProgreso(clave, e, d));

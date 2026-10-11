@@ -138,7 +138,7 @@ Devuelve máximo ${limit} recintos REALES y recomendados.`;
 
       const parsed = safeParseJson(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.matches)) {
-        parsed.matches.forEach((item: any) => {
+        parsed.matches.forEach((item: Partial<SimilarVenueMatch>) => {
           const exists = matches.some(m => m.nombre_sala.toLowerCase() === (item.nombre_sala || "").toLowerCase());
           if (!exists && item.nombre_sala) {
             matches.push({

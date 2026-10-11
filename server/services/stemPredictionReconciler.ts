@@ -15,7 +15,8 @@ export interface StemPredictionJob {
   updated_at: string;
   webhook_received_at?: string;
   webhook_signature_verified?: boolean;
-  result_stems_map?: any;
+  /** `output` de la predicción tal como lo devuelve el proveedor (forma propia de cada modelo). */
+  result_stems_map?: unknown;
   error_message?: string;
 }
 

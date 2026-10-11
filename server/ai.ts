@@ -1,6 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type ContentListUnion, type GenerateContentConfig } from "@google/genai";
 import { dbRecordAiUsage } from "./db/aiLedger.js";
-import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import type { EPKConfig } from "../src/types.js";
+import { comoErrorCapturado, type ErrorCapturado } from '../src/utils/errorCapturado.js';
 
 export const GEMINI_MODEL = "gemini-2.5-flash";
 
@@ -186,40 +187,55 @@ export function getAvailableAIProviders() {
   ];
 }
 
-export function extractTextFromContents(contents: any): string {
+/** Lo que se lee de un contenido o una parte del SDK de Gemini (o de un objeto suelto con `text`). */
+type ContenidoConTexto = { parts?: unknown; text?: unknown };
+
+const comoContenido = (valor: unknown): ContenidoConTexto =>
+  typeof valor === "object" && valor !== null ? (valor as ContenidoConTexto) : {};
+
+const textoDeParte = (parte: unknown): string => {
+  const { text } = comoContenido(parte);
+  return text ? String(text) : "";
+};
+
+export function extractTextFromContents(contents: unknown): string {
   if (!contents) return "";
   if (typeof contents === "string") return contents;
   if (Array.isArray(contents)) {
     return contents
-      .map((c) => {
+      .map((c: unknown) => {
         if (typeof c === "string") return c;
-        if (c?.parts && Array.isArray(c.parts)) {
-          return c.parts.map((p: any) => p?.text || "").join("\n");
+        const { parts, text } = comoContenido(c);
+        if (Array.isArray(parts)) {
+          return parts.map(textoDeParte).join("\n");
         }
-        if (c?.text) return c.text;
+        if (text) return String(text);
         return "";
       })
       .join("\n");
   }
-  if (contents?.parts && Array.isArray(contents.parts)) {
-    return contents.parts.map((p: any) => p?.text || "").join("\n");
+  const { parts, text } = comoContenido(contents);
+  if (Array.isArray(parts)) {
+    return parts.map(textoDeParte).join("\n");
   }
-  if (contents?.text) return contents.text;
+  if (text) return String(text);
   return String(contents);
 }
 
-export function isSpendingCapError(err: any): boolean {
-  if (!err) return false;
-  const msg = (err.message || String(err)).toLowerCase();
+export function isSpendingCapError(capturado: unknown): boolean {
+  if (!capturado) return false;
+  const err = comoErrorCapturado(capturado);
+  const msg = (err.message || String(capturado)).toLowerCase();
   return msg.includes("spending cap") || msg.includes("spend cap") || msg.includes("exceeded its monthly");
 }
 
-export function isSpendCapOrQuotaError(err: any): boolean {
-  if (!err) return false;
-  const msg = (err.message || String(err) || JSON.stringify(err)).toLowerCase();
+export function isSpendCapOrQuotaError(capturado: unknown): boolean {
+  if (!capturado) return false;
+  const err = comoErrorCapturado(capturado);
+  const msg = (err.message || String(capturado) || JSON.stringify(capturado)).toLowerCase();
   const status = String(err.status || err.code || err.statusCode || "");
   return (
-    isSpendingCapError(err) ||
+    isSpendingCapError(capturado) ||
     status === "429" ||
     status === "RESOURCE_EXHAUSTED" ||
     msg.includes("429") ||
@@ -241,8 +257,8 @@ export function setGeminiSpendingCap(active: boolean, durationMs = 15 * 60 * 100
 export async function generateContentWithFallback(
   client: GoogleGenAI,
   params: {
-    contents: any;
-    config?: any;
+    contents: ContentListUnion;
+    config?: GenerateContentConfig;
     preferredModel?: string;
     /**
      * Permite caer en generateSmartLocalPitchFallback si se agotan TODOS los proveedores.
@@ -262,8 +278,8 @@ export async function generateContentWithFallback(
     ? [params.preferredModel, ...FALLBACK_MODELS.filter(m => m !== params.preferredModel)]
     : FALLBACK_MODELS;
 
-  let lastError: any = null;
-  let deepSeekError: any = null;
+  let lastError: ErrorCapturado | null = null;
+  let deepSeekError: ErrorCapturado | null = null;
 
   const skipGeminiDueToCap = Date.now() < geminiSpendingCapUntil;
   if (!skipGeminiDueToCap) {
@@ -317,7 +333,7 @@ export async function generateContentWithFallback(
       console.log("[AI Engine] Activando failover automático a DeepSeek V3 por fallo/cuota en Gemini...");
       const text = await callDeepSeek({
         prompt: promptText,
-        systemPrompt: params.config?.systemInstruction,
+        systemPrompt: params.config?.systemInstruction === undefined ? undefined : extractTextFromContents(params.config.systemInstruction),
         temperature: params.config?.temperature,
         timeoutMs: params.timeoutMs
       });
@@ -351,13 +367,16 @@ export async function generateContentWithFallback(
   // error (server/routes/chat.ts) no podía distinguir "solo falló Gemini" de "fallaron los dos
   // proveedores por motivos distintos" (ej. cuota de Gemini + sin saldo en DeepSeek). Se adjuntan
   // ambos errores por separado para que el mensaje al usuario pueda nombrar la causa real de cada uno.
-  const finalError: any = lastError instanceof Error
+  const finalError: Error & { geminiError?: ErrorCapturado | null; deepSeekError?: ErrorCapturado | null } = lastError instanceof Error
     ? lastError
     : new Error(String(lastError || "Ningún proveedor de IA disponible: se han agotado las claves configuradas o han fallado todas."));
   finalError.geminiError = lastError;
   finalError.deepSeekError = deepSeekError;
   throw finalError;
 }
+
+/** Lo que devuelve `generateContentWithFallback`: la respuesta del SDK o el sustituto de DeepSeek / generador local. */
+export type RespuestaIA = Awaited<ReturnType<typeof generateContentWithFallback>>;
 
 export function generateSmartGeneralFallback(promptText: string): string {
   const lower = (promptText || "").toLowerCase();
@@ -395,7 +414,7 @@ export interface PitchLinks {
  * todo. El EPK sí se puede construir siempre porque no depende de que la banda lo haya
  * rellenado: es la misma ruta pública que ya usa EPKManager.tsx (/epk?band=...).
  */
-export function buildPitchLinksFromEpkConfig(bandConfig: any, bandId?: string): PitchLinks {
+export function buildPitchLinksFromEpkConfig(bandConfig: Partial<Pick<EPKConfig, "enlacesRedes">> | null | undefined, bandId?: string): PitchLinks {
   const links: PitchLinks = {};
   if (bandConfig?.enlacesRedes?.spotify) links.spotify = bandConfig.enlacesRedes.spotify;
   if (bandConfig?.enlacesRedes?.youtube) links.youtube = bandConfig.enlacesRedes.youtube;
@@ -593,6 +612,11 @@ ${dossierNote}
 Un saludo cordial,`;
 }
 
+/** Lo que se lee de la respuesta de `/chat/completions` de DeepSeek (formato OpenAI). */
+interface RespuestaDeepSeek {
+  choices?: Array<{ message?: { content?: string } }>;
+}
+
 // DeepSeek API integration (OpenAI-compatible)
 export async function callDeepSeek(params: {
   prompt: string;
@@ -635,7 +659,7 @@ export async function callDeepSeek(params: {
     throw new Error(`DeepSeek API error (${res.status}): ${errText}`);
   }
 
-  const data: any = await res.json();
+  const data: RespuestaDeepSeek = await res.json();
   const text = data?.choices?.[0]?.message?.content || "";
   return text.trim();
 }
@@ -768,7 +792,7 @@ export async function generateMultiModelProposals(params: {
         const result = await generateUnifiedAI({
           prompt: params.prompt,
           systemPrompt: params.systemPrompt,
-          provider: providerId as any,
+          provider: providerId,
           allowFallback: false // in comparison mode, test each model independently
         });
         const fullInputText = (params.systemPrompt || "") + "\n" + (params.prompt || "");

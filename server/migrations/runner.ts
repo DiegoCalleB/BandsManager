@@ -20,8 +20,8 @@ const CLAVE_BLOQUEO = 727274;
 
 /** Lo mínimo que necesita el runner de una conexión: vale `pg.Client` envuelto o PGlite. */
 export interface Ejecutor {
-  /** Consulta con parámetros. */
-  consultar(sql: string, parametros?: unknown[]): Promise<any[]>;
+  /** Consulta con parámetros. `Fila` describe las columnas que devuelve el SELECT. */
+  consultar<Fila = Record<string, unknown>>(sql: string, parametros?: unknown[]): Promise<Fila[]>;
   /** Script de varias sentencias, sin parámetros. */
   ejecutar(sql: string): Promise<void>;
 }
@@ -78,7 +78,7 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
 
   try {
     let registradas = new Map<string, string>(
-      (await db.consultar('SELECT nombre, checksum FROM schema_migrations')).map((r) => [r.nombre, r.checksum])
+      (await db.consultar<{ nombre: string; checksum: string }>('SELECT nombre, checksum FROM schema_migrations')).map((r) => [r.nombre, r.checksum])
     );
 
     if (registradas.size === 0) {

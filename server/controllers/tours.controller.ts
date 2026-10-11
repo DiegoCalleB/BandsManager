@@ -17,7 +17,7 @@ export const toursController = {
       const tours = await dbGetTours(userBandId);
 
       const state = loadState();
-      state.tours = tours as any;
+      state.tours = tours;
       saveState(state);
 
       res.json({ tours });
@@ -34,14 +34,14 @@ export const toursController = {
     }
     try {
       const newTour: Tour = req.body;
-      if (!(newTour as any).band_id) {
-        (newTour as any).band_id = userBandId;
+      if (!newTour.band_id) {
+        newTour.band_id = userBandId;
       }
       const saved = await dbUpsertTour(newTour, userBandId);
 
       const state = loadState();
       state.tours = state.tours || [];
-      state.tours.push(saved as any);
+      state.tours.push(saved);
       saveState(state);
 
       res.json(saved);
@@ -63,7 +63,7 @@ export const toursController = {
 
       const state = loadState();
       state.tours = state.tours || [];
-      state.tours = state.tours.map((t: Tour) => t.id === id ? (saved as any) : t);
+      state.tours = state.tours.map((t: Tour) => t.id === id ? saved : t);
       saveState(state);
 
       res.json(saved);

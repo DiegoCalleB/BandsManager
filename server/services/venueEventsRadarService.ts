@@ -8,7 +8,7 @@
  * 4. Si NO se encuentran datos de la sala en ninguna fuente, no inventa fechas: devuelve mensaje claro "(no se han encontrado datos de fechas de esta sala)".
  */
 
-import { getAiClient, generateContentWithFallback } from "../ai.js";
+import { getAiClient, generateContentWithFallback, type RespuestaIA } from "../ai.js";
 import { scrapeVenueWithJina } from "./jinaReaderService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
@@ -285,7 +285,7 @@ Si NO encuentras conciertos ni cartelera pública de esta sala para ese periodo,
 }`;
 
   try {
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,

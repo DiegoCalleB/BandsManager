@@ -26,6 +26,7 @@ import { evaluateAndRefinePitch } from "./pitchJudge.js";
 import { fetchVenueLiveContext, fetchBandSpotifyTraction } from "./venueIntelligenceService.js";
 import { getBandOperationalContext } from "./agentIntelligence.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BookingCampaign, Concert, Lead } from '../../src/types.js';
 
 export interface PitchContextResult {
   bandDna: BandDnaProfile;
@@ -55,7 +56,7 @@ export interface GenerateMultiPitchParams {
   tono_rating?: number;
   contenido_rating?: number;
   providers?: string[];
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
 }
 
 export interface RegeneratePitchParams {
@@ -67,19 +68,19 @@ export interface RegeneratePitchParams {
   alcance?: "este_pitch" | "global";
   provider?: string;
   modelName?: string;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
 }
 
 /**
  * Busca conciertos cercanos en la misma ruta geográfica para aportar valor de logística real
  */
-export function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): string | null {
+export function findNearbyTourContextForLead(lead: Pick<Lead, "ciudad"> | null | undefined, stateConcerts: Concert[]): string | null {
   if (!lead?.ciudad || !Array.isArray(stateConcerts) || stateConcerts.length === 0) return null;
   const leadCorridor = findCorridorForCity(lead.ciudad);
   if (!leadCorridor) return null;
 
   const now = new Date();
-  const upcomingConfirmed = stateConcerts.filter((c: any) => {
+  const upcomingConfirmed = stateConcerts.filter((c) => {
     if (!c.fecha) return false;
     const cDate = new Date(c.fecha);
     const isFuture = cDate >= now;
@@ -87,7 +88,7 @@ export function findNearbyTourContextForLead(lead: any, stateConcerts: any[]): s
     return isFuture && isConfirmed && c.ciudad;
   });
 
-  const nearby = upcomingConfirmed.find((c: any) => {
+  const nearby = upcomingConfirmed.find((c) => {
     const cCorridor = findCorridorForCity(c.ciudad);
     return cCorridor && (cCorridor.key === leadCorridor.key || leadCorridor.info.neighboringCorridors.includes(cCorridor.key));
   });
@@ -106,9 +107,9 @@ export class PitchEngine {
    */
   static async compileContext(
     userBandId: string,
-    lead: any,
+    lead: Lead,
     options: {
-      activeCampaign?: any;
+      activeCampaign?: BookingCampaign | null;
       comentario?: string;
       tono_rating?: number;
       contenido_rating?: number;

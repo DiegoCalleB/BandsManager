@@ -10,6 +10,17 @@ export interface MusicBrainzPlace {
   fuente: string;
 }
 
+/** Lugar tal como lo devuelve `GET /ws/2/place` de MusicBrainz (solo los campos que se leen). */
+interface LugarMusicBrainz {
+  id?: string;
+  name?: string;
+  type?: string;
+  address?: string;
+  /** MusicBrainz manda las coordenadas como texto. */
+  coordinates?: { latitude?: string; longitude?: string };
+  area?: { name?: string; "iso-3166-1-codes"?: string[] };
+}
+
 export async function searchMusicBrainzVenues(params: {
   ciudad?: string;
   limit?: number;
@@ -35,12 +46,12 @@ export async function searchMusicBrainzVenues(params: {
       return [];
     }
 
-    const data = await res.json();
+    const data: { places?: LugarMusicBrainz[] } = await res.json();
     const places = data.places || [];
 
     return places
-      .filter((p: any) => p.name && (p.type === "Venue" || !p.type))
-      .map((p: any) => {
+      .filter((p) => p.name && (p.type === "Venue" || !p.type))
+      .map((p): MusicBrainzPlace => {
         let lat: number | undefined;
         let lng: number | undefined;
         if (p.coordinates?.latitude && p.coordinates?.longitude) {

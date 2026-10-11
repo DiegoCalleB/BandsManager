@@ -5,7 +5,22 @@ import {
   AudioSeparatorJobStatus
 } from './AudioSeparatorService.js';
 import { ensurePublicAudioUrl } from '../../routes/ai_music/audioPublico.js';
-import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { comoErrorCapturado, type ErrorCapturado } from '../../../src/utils/errorCapturado.js';
+
+/** Pista separada en la respuesta de fal-ai/demucs (la URL puede venir como `url` o `file_url`). */
+interface PistaFal {
+  stem?: string;
+  url?: string;
+  file_url?: string;
+}
+
+/** Respuesta de fal-ai/demucs (directa o de la cola): según la versión, las pistas van en uno u otro campo. */
+interface RespuestaDemucsFal {
+  audio_files?: unknown;
+  output?: unknown;
+  stems?: unknown;
+  [campo: string]: unknown;
+}
 
 /**
  * Adaptador para Fal.ai (fal-ai/demucs) en GPU A100.
@@ -145,7 +160,7 @@ export class FalAiService extends AudioSeparatorService {
               if (reqId) {
                 const statusUrl = queueData.status_url || `https://queue.fal.run/fal-ai/demucs/requests/${reqId}/status`;
                 const responseUrl = queueData.response_url || `https://queue.fal.run/fal-ai/demucs/requests/${reqId}`;
-                let queueResult: any = null;
+                let queueResult: RespuestaDemucsFal | null = null;
                 const pollStart = Date.now();
                 while (Date.now() - pollStart < 240000) { // Hasta 4 minutos de polling en cola
                   await new Promise(r => setTimeout(r, 2500));
@@ -181,15 +196,16 @@ export class FalAiService extends AudioSeparatorService {
                     return k;
                   };
                   if (Array.isArray(rawOutputs)) {
-                    rawOutputs.forEach((item: any) => {
+                    rawOutputs.forEach((item: PistaFal) => {
                       if (item.stem && (item.url || item.file_url)) rawStemsMap[mapKey(item.stem)] = item.url || item.file_url;
                     });
                   } else if (typeof rawOutputs === 'object') {
-                    Object.entries(rawOutputs).forEach(([key, val]: [string, any]) => {
+                    Object.entries(rawOutputs).forEach(([key, val]: [string, unknown]) => {
                       if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
                         rawStemsMap[mapKey(key)] = val;
-                      } else if (val && typeof val === 'object' && (val.url || val.file_url)) {
-                        rawStemsMap[mapKey(key)] = val.url || val.file_url;
+                      } else if (val && typeof val === 'object') {
+                        const pista: PistaFal = val;
+                        if (pista.url || pista.file_url) rawStemsMap[mapKey(key)] = pista.url || pista.file_url;
                       }
                     });
                   }
@@ -221,15 +237,15 @@ export class FalAiService extends AudioSeparatorService {
           ? 'Límite de peticiones de Fal.ai alcanzado (429 Rate Limit). Puedes esperar unos segundos o usar Iris Básico gratis.'
           : `Fal.ai HTTP ${res.status}: ${errText.substring(0, 300)}`;
 
-        const httpErr = new Error(friendlyMsg);
-        (httpErr as any).isLocked = isLocked;
-        (httpErr as any).isRateLimit = isRateLimit;
-        (httpErr as any).status = res.status;
-        (httpErr as any).rawDetail = errText;
+        const httpErr: Error & Pick<ErrorCapturado, 'isLocked' | 'isRateLimit' | 'status' | 'rawDetail'> = new Error(friendlyMsg);
+        httpErr.isLocked = isLocked;
+        httpErr.isRateLimit = isRateLimit;
+        httpErr.status = res.status;
+        httpErr.rawDetail = errText;
         throw httpErr;
       }
 
-      const data = await res.json();
+      const data: RespuestaDemucsFal = await res.json();
       const rawOutputs = data.audio_files || data.output || data.stems || data;
       if (!rawOutputs) {
         throw new Error('Fal.ai no devolvió archivos de audio procesados.');
@@ -248,17 +264,18 @@ export class FalAiService extends AudioSeparatorService {
       };
 
       if (Array.isArray(rawOutputs)) {
-        rawOutputs.forEach((item: any) => {
+        rawOutputs.forEach((item: PistaFal) => {
           if (item.stem && (item.url || item.file_url)) {
             rawStemsMap[mapKey(item.stem)] = item.url || item.file_url;
           }
         });
       } else if (typeof rawOutputs === 'object') {
-        Object.entries(rawOutputs).forEach(([key, val]: [string, any]) => {
+        Object.entries(rawOutputs).forEach(([key, val]: [string, unknown]) => {
           if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
             rawStemsMap[mapKey(key)] = val;
-          } else if (val && typeof val === 'object' && (val.url || val.file_url)) {
-            rawStemsMap[mapKey(key)] = val.url || val.file_url;
+          } else if (val && typeof val === 'object') {
+            const pista: PistaFal = val;
+            if (pista.url || pista.file_url) rawStemsMap[mapKey(key)] = pista.url || pista.file_url;
           }
         });
       }

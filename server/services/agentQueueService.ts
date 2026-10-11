@@ -12,6 +12,22 @@ export type AgentJobType =
   | "campaign_radar_sync"
   | "custom";
 
+/**
+ * Datos libres de un trabajo: el disparador al encolarlo y, al terminar, `result` con los
+ * detalles del worker (incluida la duración).
+ */
+export interface CargaTrabajoAgente {
+  trigger?: string;
+  result?: DetallesResultadoTrabajo;
+  [campo: string]: unknown;
+}
+
+/** Lo que el worker deja al completar un trabajo (cada agente añade sus campos). */
+export interface DetallesResultadoTrabajo {
+  duration_ms?: number;
+  [campo: string]: unknown;
+}
+
 export type AgentJobStatus = "pending" | "processing" | "completed" | "failed" | "cancelled";
 
 export interface AgentJob {
@@ -19,7 +35,7 @@ export interface AgentJob {
   band_id: string;
   agent_type: AgentJobType;
   status: AgentJobStatus;
-  payload: Record<string, any>;
+  payload: CargaTrabajoAgente;
   attempts: number;
   max_attempts: number;
   error_message?: string;
@@ -63,7 +79,7 @@ function notifyJobEnqueued(): void {
 export async function enqueueAgentJob(params: {
   bandId: string;
   agentType: AgentJobType;
-  payload?: Record<string, any>;
+  payload?: CargaTrabajoAgente;
   scheduledAt?: Date;
   maxAttempts?: number;
 }): Promise<string> {
@@ -263,7 +279,7 @@ export async function fetchNextPendingJob(workerId: string): Promise<AgentJob | 
 /**
  * Marca un trabajo como completado con éxito.
  */
-export async function completeAgentJob(jobId: string, resultDetails?: Record<string, any>): Promise<void> {
+export async function completeAgentJob(jobId: string, resultDetails?: DetallesResultadoTrabajo): Promise<void> {
   const nowIso = new Date().toISOString();
 
   try {
@@ -439,6 +455,19 @@ export async function getQueueStats(bandId?: string): Promise<{
   return stats;
 }
 
+/** Trabajo reciente tal como lo muestra el Monitor de UI. */
+interface TrabajoReciente {
+  id: string;
+  agent_type: string;
+  status: string;
+  attempts: number;
+  error_message?: string;
+  scheduled_at: string;
+  completed_at?: string;
+  created_at: string;
+  duration_ms?: number;
+}
+
 /**
  * Métricas detalladas de telemetría y lista de trabajos recientes para el Monitor de UI.
  */
@@ -450,21 +479,11 @@ export async function getDetailedQueueMetrics(bandId?: string): Promise<{
     failed: number;
     total: number;
   };
-  recentJobs: Array<{
-    id: string;
-    agent_type: string;
-    status: string;
-    attempts: number;
-    error_message?: string;
-    scheduled_at: string;
-    completed_at?: string;
-    created_at: string;
-    duration_ms?: number;
-  }>;
+  recentJobs: TrabajoReciente[];
   workerOnline: boolean;
 }> {
   const stats = await getQueueStats(bandId);
-  let recentJobs: any[] = [];
+  let recentJobs: TrabajoReciente[] = [];
 
   try {
     const sb = getSupabase();

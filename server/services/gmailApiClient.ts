@@ -197,7 +197,7 @@ export async function enviarEmailGmailApi(bandId: string, params: { to: string; 
       "api_error"
     );
     // Adjuntar el tipo de fallo para que agentEngine pueda registrarlo
-    (error as any).deliveryFailureReason = failureReason;
+    error.deliveryFailureReason = failureReason;
     throw error;
   }
 
@@ -268,7 +268,14 @@ export async function buscarMensajeEnviadoA(bandId: string, email: string): Prom
 // Extrae el primer cuerpo de texto plano de un mensaje de Gmail (formato "full"): o bien viene
 // directo en payload.body, o hay que bajar por payload.parts buscando 'text/plain' (los mensajes
 // multipart/alternative traen html y texto plano como partes hermanas).
-function extraerTextoPlano(payload: any): string {
+/** Parte MIME de un mensaje de Gmail (`format=full`): lo que se lee para sacar el texto plano. */
+interface ParteMensajeGmail {
+  mimeType?: string;
+  body?: { data?: string };
+  parts?: ParteMensajeGmail[];
+}
+
+function extraerTextoPlano(payload: ParteMensajeGmail | undefined): string {
   if (!payload) return "";
   if (payload.mimeType === "text/plain" && payload.body?.data) {
     return base64UrlDecode(payload.body.data);
@@ -355,8 +362,8 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
 
     throw new EmailAgentError(`No se pudieron listar los mensajes nuevos de '${bandId}': ${friendlyMessage || listRes.status}`, "api_error");
   }
-  const listData = await listRes.json();
-  const ids: string[] = (listData.messages || []).map((m: any) => m.id);
+  const listData: { messages?: Array<{ id: string }> } = await listRes.json();
+  const ids: string[] = (listData.messages || []).map((m) => m.id);
 
   const resultados: RespuestaEntrante[] = [];
   console.log(`[Gmail API] Lector: encontrados ${ids.length} mensajes recientes en Gmail`);

@@ -1,4 +1,9 @@
-export function getGlobalPitchFeedbackSummary(leads: any[]) {
+import type { Lead } from "../src/types.js";
+
+/** Lo que el resumen de feedback lee de cada lead. */
+type LeadConFeedback = Pick<Lead, "historial_feedback_pitch" | "nombre_sala" | "tipo" | "ciudad">;
+
+export function getGlobalPitchFeedbackSummary(leads: LeadConFeedback[]) {
   if (!Array.isArray(leads)) return [];
   const logs: Array<{
     sala_o_medio: string;
@@ -31,7 +36,7 @@ export function getGlobalPitchFeedbackSummary(leads: any[]) {
   return logs.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime()).slice(0, 15);
 }
 
-export function formatGlobalPitchFeedbackForPrompt(leads: any[]): string {
+export function formatGlobalPitchFeedbackForPrompt(leads: LeadConFeedback[]): string {
   const summary = getGlobalPitchFeedbackSummary(leads);
   if (summary.length === 0) {
     return "Sin historial previo de feedback. Usar tono conciso, directo, respetuoso y adecuado a la identidad y propuesta musical de la banda.";
@@ -83,7 +88,7 @@ export const DEFAULT_CATEGORY_TEMPLATES: Record<string, CategoryTemplateConfig> 
 /**
  * Ensures state has categoryTemplates initialized and updated
  */
-export function ensureCategoryTemplatesInState(state: any): Record<string, CategoryTemplateConfig> {
+export function ensureCategoryTemplatesInState(state: { categoryTemplates?: Record<string, unknown> }): Record<string, CategoryTemplateConfig> {
   if (!state.categoryTemplates) {
     state.categoryTemplates = JSON.parse(JSON.stringify(DEFAULT_CATEGORY_TEMPLATES));
   } else {
@@ -94,5 +99,6 @@ export function ensureCategoryTemplatesInState(state: any): Record<string, Categ
       }
     }
   }
-  return state.categoryTemplates;
+  // Cada categoría que falte se acaba de rellenar con su plantilla por defecto.
+  return state.categoryTemplates as Record<string, CategoryTemplateConfig>;
 }

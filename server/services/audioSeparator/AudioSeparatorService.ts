@@ -27,7 +27,8 @@ export interface AudioSeparatorResult {
   degraded: boolean;
   degradedReason?: string;
   stemsMap: Record<string, { url: string; formato: string; tamano: string }>;
-  timingBreakdown?: any;
+  /** Duración de cada fase en texto legible (`totalSec: '12.3s'`, `gpuInferenceSec`, …). */
+  timingBreakdown?: Record<string, string>;
   errorTitle?: string;
   error?: string;
   actionAdvice?: string;

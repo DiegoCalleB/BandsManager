@@ -169,7 +169,7 @@ export async function searchVenuesWithSerper(options: {
   }
 
   try {
-    const serperBody: any = {
+    const serperBody = {
       q: targetQuery,
       hl: "es"
     };

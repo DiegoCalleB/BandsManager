@@ -1,4 +1,4 @@
-import { getAiClient, generateContentWithFallback } from "./ai.js";
+import { getAiClient, generateContentWithFallback, type RespuestaIA } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
@@ -8,6 +8,8 @@ import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
 import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import type { BandContact, Lead } from '../src/types.js';
+import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
@@ -28,7 +30,7 @@ function toIsoDateString(val?: string | null): string {
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
+export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
   const cleanCity = (lead.ciudad || '').replace(/\s*\([^)]*\)/g, '').trim();
@@ -77,7 +79,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
 
   try {
     console.log(`[FestivalDates] Consulta a Gemini AI para "${cleanVenue}" (${cleanCity})...`);
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -95,7 +97,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: FechasFestivalIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       try {
         data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
@@ -242,8 +244,12 @@ export interface AutoEnrichOptions {
   respetarVacios?: string[];
 }
 
-export async function autoEnrichLead(lead: any, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<any> {
-  if (!lead || !lead.nombre_sala) return lead;
+// Genérico para devolver el mismo tipo que se recibe: el Scout (routes/agent.ts) pasa un literal que
+// aún no es un Lead y reasigna el resultado a esa variable. Dentro, todo se comprueba contra Lead.
+export async function autoEnrichLead<L extends object>(entrada: L, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<L> {
+  // Los campos obligatorios de Lead los rellena quien crea el lead; aquí solo se leen y completan.
+  const lead = entrada as unknown as Lead;
+  if (!lead || !lead.nombre_sala) return entrada;
   const respetarVacios = new Set(opciones.respetarVacios || []);
 
   let modified = false;
@@ -300,7 +306,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
       });
 
       if (placesRes.ok) {
-        const placesData: any = await placesRes.json();
+        const placesData: RespuestaPlacesTextSearch = await placesRes.json();
         if (Array.isArray(placesData.places) && placesData.places.length > 0) {
           const topPlace = placesData.places[0];
 
@@ -316,7 +322,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
               state.leads = state.leads.filter((l) => l.id !== lead.id);
               saveState(state);
             }
-            return { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            const eliminado: LeadEliminadoPorCierre = { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            return eliminado as unknown as L;
           }
 
           if (topPlace.formattedAddress && (!lead.direccion || lead.direccion.length < 5)) {
@@ -483,7 +490,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
 
       try {
         console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '${lead.nombre_sala}'...`);
-        let response: any = null;
+        let response: RespuestaIA | null = null;
         try {
           response = await generateContentWithFallback(client, {
             contents: prompt,
@@ -502,7 +509,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
         const jsonStart = cleanedText.indexOf('{');
         const jsonEnd = cleanedText.lastIndexOf('}');
-        let data: any = {};
+        let data: DatosLeadIA = {};
         if (jsonStart !== -1 && jsonEnd !== -1) {
           data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
         } else {
@@ -650,7 +657,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
 
   // Lo que el usuario vació a propósito se queda vacío, encuentre lo que encuentre la web.
   for (const campo of respetarVacios) {
-    if (campo in lead) lead[campo] = '';
+    if (campo in lead) Reflect.set(lead, campo, '');
   }
 
   if (modified) {
@@ -662,14 +669,14 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
       state.leads[idx] = savedEnriched;
       saveState(state);
     }
-    return savedEnriched;
+    return savedEnriched as unknown as L;
   }
 
-  return lead;
+  return entrada;
 }
 
 /** Guarda la banda enriquecida y refresca la copia en memoria. */
-async function persistirBandaEnriquecida(band: any, userBandId: string): Promise<any> {
+async function persistirBandaEnriquecida(band: BandContact, userBandId: string): Promise<BandContact> {
   const savedEnriched = await dbUpsertBandContact(band, userBandId);
   const state = loadState();
   const idx = (state.bands || []).findIndex((b) => b.id === band.id);
@@ -680,7 +687,7 @@ async function persistirBandaEnriquecida(band: any, userBandId: string): Promise
   return savedEnriched;
 }
 
-export async function autoEnrichBandContact(band: any, userBandId: string): Promise<any> {
+export async function autoEnrichBandContact(band: BandContact, userBandId: string): Promise<BandContact> {
   if (!band || !band.nombre_banda) return band;
 
   const client = getAiClient();
@@ -717,7 +724,7 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
 
   try {
     console.log(`[AutoEnrich] Buscando información automática para Banda: '${band.nombre_banda}'...`);
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -737,7 +744,7 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: DatosBandaIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
     } else {

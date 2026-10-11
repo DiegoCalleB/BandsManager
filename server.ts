@@ -252,6 +252,18 @@ app.get("/terms", (req, res) => {
   `);
 });
 
+/** Elemento de `runOfShow` (horario) o `gearChecklists` (material) de una fecha, tal como se guarda en el estado. */
+interface ElementoLogistica {
+  id?: string;
+  time?: string;
+  activity?: string;
+  done?: boolean;
+  label?: string;
+  checked?: boolean;
+  band_id?: string;
+  bandId?: string;
+}
+
 app.get("/api/download-excel", (req, res) => {
   try {
     // Antes esta ruta no exigía sesión y exportaba en un Excel los datos de TODAS las bandas del
@@ -266,7 +278,7 @@ app.get("/api/download-excel", (req, res) => {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
     const bandId = authUser.band_id;
-    const isOwn = (recordBandId: any) => {
+    const isOwn = (recordBandId: string | undefined) => {
       if (!recordBandId) return false;
       return mismaBanda(String(recordBandId), bandId);
     };
@@ -298,7 +310,7 @@ app.get("/api/download-excel", (req, res) => {
       "Estado Pago": c.estado_pago,
       Tipo: c.tipo,
       Notas: c.notas || "",
-      band_id: (c as any).band_id || (c as any).bandId || "band-1"
+      band_id: bandaDe(c) || "band-1"
     }));
     const wsConcerts = XLSX.utils.json_to_sheet(concertsData);
     XLSX.utils.book_append_sheet(wb, wsConcerts, "Conciertos");
@@ -317,7 +329,7 @@ app.get("/api/download-excel", (req, res) => {
       Fuente: l.fuente,
       Estado: l.estado,
       Notas: l.notas || "",
-      band_id: (l as any).band_id || (l as any).bandId || "band-1"
+      band_id: bandaDe(l) || "band-1"
     }));
     const wsLeads = XLSX.utils.json_to_sheet(leadsData);
     XLSX.utils.book_append_sheet(wb, wsLeads, "Salas_Leads");
@@ -330,7 +342,7 @@ app.get("/api/download-excel", (req, res) => {
       Tipo: p.tipo,
       Categoría: p.categoria,
       Estado: p.estado,
-      band_id: (p as any).band_id || (p as any).bandId || "band-1"
+      band_id: bandaDe(p) || "band-1"
     }));
     const wsPayments = XLSX.utils.json_to_sheet(paymentsData);
     XLSX.utils.book_append_sheet(wb, wsPayments, "Finanzas_Pagos");
@@ -342,16 +354,16 @@ app.get("/api/download-excel", (req, res) => {
       Contenido: p.contenido,
       Responsable: p.responsable,
       Estado: p.estado,
-      band_id: (p as any).band_id || (p as any).bandId || "band-1"
+      band_id: bandaDe(p) || "band-1"
     }));
     const wsPosts = XLSX.utils.json_to_sheet(postsData);
     XLSX.utils.book_append_sheet(wb, wsPosts, "Redes_Sociales");
 
-    const runOfShowRows: any[] = [];
+    const runOfShowRows: Record<string, unknown>[] = [];
     if (state.runOfShow) {
-      Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, any]) => {
+      Object.entries(state.runOfShow).forEach(([dateKey, items]: [string, unknown]) => {
         if (Array.isArray(items)) {
-          items.forEach((item: any) => {
+          items.forEach((item: ElementoLogistica) => {
             if (!isOwn(bandaDe(item))) return;
             runOfShowRows.push({
               Fecha: dateKey,
@@ -368,11 +380,11 @@ app.get("/api/download-excel", (req, res) => {
     const wsRunOfShow = XLSX.utils.json_to_sheet(runOfShowRows);
     XLSX.utils.book_append_sheet(wb, wsRunOfShow, "Logistica_Horarios");
 
-    const gearRows: any[] = [];
+    const gearRows: Record<string, unknown>[] = [];
     if (state.gearChecklists) {
-      Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, any]) => {
+      Object.entries(state.gearChecklists).forEach(([dateKey, items]: [string, unknown]) => {
         if (Array.isArray(items)) {
-          items.forEach((item: any) => {
+          items.forEach((item: ElementoLogistica) => {
             if (!isOwn(bandaDe(item))) return;
             gearRows.push({
               Fecha: dateKey,
@@ -400,7 +412,7 @@ app.get("/api/download-excel", (req, res) => {
       "Es Cover": s.esVersionCovers ? "SÍ" : "NO",
       Acordes: s.enlaceAcordes || "",
       Notas: s.notasInternas || "",
-      band_id: (s as any).band_id || (s as any).bandId || "band-1"
+      band_id: bandaDe(s) || "band-1"
     }));
     const wsSongs = XLSX.utils.json_to_sheet(songsData);
     XLSX.utils.book_append_sheet(wb, wsSongs, "Canciones");
@@ -414,7 +426,7 @@ app.get("/api/download-excel", (req, res) => {
       "Fecha Creación": st.fechaCreacion,
       "Última Edición": st.fechaUltimaEdicion,
       "Número Temas": st.items?.length || 0,
-      band_id: (st as any).band_id || (st as any).bandId || "band-1"
+      band_id: bandaDe(st) || "band-1"
     }));
     const wsSetlists = XLSX.utils.json_to_sheet(setlistsData);
     XLSX.utils.book_append_sheet(wb, wsSetlists, "Repertorios");
@@ -538,7 +550,7 @@ app.use("/api/*", (req, res) => {
 // caía en el manejador por defecto de Express (responde 500 pero no deja ningún rastro propio,
 // ni en consola con contexto ni en Sentry). Va DESPUÉS de las rutas para que Express lo enrute
 // aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
-app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(`[UnhandledRouteError] ${req.method} ${req.originalUrl}:`, err);
   captureError(err, { method: req.method, url: req.originalUrl });
   if (res.headersSent) return;

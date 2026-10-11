@@ -16,8 +16,12 @@ import { simpleParser } from "mailparser";
 import { getSupabase } from "../db/core.js";
 import { dbGetBandEmailAccount, BandEmailAccount } from "../db/emailAccounts.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { EmailDeliveryFailureReason } from "../utils/emailDeliveryTracker.js";
 
 export class EmailAgentError extends Error {
+  /** Tipo de fallo de entrega que adjunta el cliente de Gmail para que agentEngine lo registre. */
+  deliveryFailureReason?: EmailDeliveryFailureReason;
+
   constructor(message: string, public code: "no_token" | "identity_mismatch" | "api_error") {
     super(message);
     this.name = "EmailAgentError";
@@ -225,7 +229,8 @@ export interface RespuestaEntrante {
 export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): Promise<RespuestaEntrante[]> {
   const account = await getAccount(bandId);
 
-  const isPortSecure = Number(account.imap_port) === 993 || (account as any).imap_secure === true;
+  // band_email_accounts no tiene columna imap_secure: el TLS implícito lo decide el puerto (993).
+  const isPortSecure = Number(account.imap_port) === 993;
   const client = new ImapFlow({
     host: account.imap_host,
     port: Number(account.imap_port) || 993,

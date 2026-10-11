@@ -123,7 +123,7 @@ Devuelve máximo ${limit} entidades públicas y programas culturales REALES.`;
 
       const parsed = safeParseJson(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.leads_publicos)) {
-        parsed.leads_publicos.forEach((item: any) => {
+        parsed.leads_publicos.forEach((item: Partial<PublicCulturalLead>) => {
           if (item.entidad_publica) {
             leadsPublicos.push({
               entidad_publica: item.entidad_publica,

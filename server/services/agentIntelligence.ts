@@ -31,6 +31,13 @@ export interface OperationalContext {
   resumenTacticoParaPrompt: string;
 }
 
+/** Concierto con los alias en inglés que traen algunas filas antiguas (date, city, venue…). */
+type ConciertoConAlias = Concert & { date?: string; city?: string; location?: string; venue?: string; title?: string };
+
+const fechaDe = (c: ConciertoConAlias): string | undefined => c.fecha || c.date;
+const ciudadDe = (c: ConciertoConAlias): string => c.ciudad || c.city || c.location || "Por definir";
+const lugarDe = (c: ConciertoConAlias): string => c.sala || c.venue || c.title || "Concierto";
+
 /**
  * Detecta miembros de la banda actual que tocan en otras bandas del sistema y recupera
  * sus conciertos para advertir de solapamientos reales en el calendario.
@@ -86,15 +93,15 @@ async function getMemberCrossBandConflicts(currentBandId: string): Promise<Membe
       // 3. Para cada otra banda del músico, consultar sus conciertos confirmados
       for (const otherBand of otherBands) {
         try {
-          const otherConcerts: Concert[] = await dbGetConcerts(otherBand.id);
+          const otherConcerts: ConciertoConAlias[] = await dbGetConcerts(otherBand.id);
           for (const c of otherConcerts || []) {
-            const fechaStr = (c as any).fecha || (c as any).date;
+            const fechaStr = fechaDe(c);
             if (!fechaStr) continue;
             const d = new Date(fechaStr);
             if (isNaN(d.getTime()) || d < twoDaysAgo) continue;
 
-            const ciudad = (c as any).ciudad || (c as any).city || (c as any).location || "Por definir";
-            const lugar = (c as any).sala || (c as any).venue || (c as any).title || "Concierto";
+            const ciudad = ciudadDe(c);
+            const lugar = lugarDe(c);
 
             conflicts.push({
               fecha: fechaStr,
@@ -127,27 +134,27 @@ export async function getBandOperationalContext(bandId: string, leadCiudad?: str
   const ciudadesEnRuta: string[] = [];
 
   try {
-    const rawConcerts: Concert[] = await dbGetConcerts(bandId);
+    const rawConcerts: ConciertoConAlias[] = await dbGetConcerts(bandId);
     const now = new Date();
     
     // Filtrar fechas futuras o de los próximos 6 meses
     const futuros = (rawConcerts || [])
       .filter(c => {
-        const fechaStr = (c as any).fecha || (c as any).date;
+        const fechaStr = fechaDe(c);
         if (!fechaStr) return false;
         const d = new Date(fechaStr);
         return !isNaN(d.getTime()) && d >= new Date(now.getTime() - 86400000 * 2); // desde hace 2 días hacia adelante
       })
       .sort((a, b) => {
-        const dateA = new Date((a as any).fecha || (a as any).date).getTime();
-        const dateB = new Date((b as any).fecha || (b as any).date).getTime();
+        const dateA = new Date(fechaDe(a)).getTime();
+        const dateB = new Date(fechaDe(b)).getTime();
         return dateA - dateB;
       });
 
     for (const c of futuros.slice(0, 10)) {
-      const fecha = (c as any).fecha || (c as any).date || "";
-      const ciudad = (c as any).ciudad || (c as any).city || (c as any).location || "Por definir";
-      const lugar = (c as any).sala || (c as any).venue || (c as any).title || "Concierto";
+      const fecha = fechaDe(c) || "";
+      const ciudad = ciudadDe(c);
+      const lugar = lugarDe(c);
       conciertosProximos.push({ fecha, ciudad, lugar });
       if (fecha) fechasOcupadas.push(fecha);
       if (ciudad && !ciudadesEnRuta.includes(ciudad.toLowerCase().trim())) {

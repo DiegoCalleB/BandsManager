@@ -7,6 +7,13 @@ import {
 } from './AudioSeparatorService.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+/** Pista separada en la respuesta de LALAL.AI (la URL puede venir como `url` o `download_url`). */
+interface PistaLalal {
+  stem?: string;
+  url?: string;
+  download_url?: string;
+}
+
 /**
  * Adaptador concreto para la API comercial de LALAL.AI (https://www.lalal.ai/api/).
  * Proporciona separación ultra-rápida (~15s-30s) y de calidad de estudio sin cold-starts de GPU.
@@ -290,7 +297,7 @@ export class LalalAiService extends AudioSeparatorService {
   /**
    * Normaliza las claves e instrumentos devueltos por LALAL.AI a los nombres estándar de BandManager.io.
    */
-  private extractLalalStems(data: any): Record<string, string> {
+  private extractLalalStems(data: unknown): Record<string, string> {
     const stems: Record<string, string> = {};
     if (!data) return stems;
 
@@ -306,17 +313,18 @@ export class LalalAiService extends AudioSeparatorService {
     };
 
     if (Array.isArray(data)) {
-      data.forEach((item: any) => {
+      data.forEach((item: PistaLalal) => {
         if (item.stem && (item.url || item.download_url)) {
           stems[mapKey(item.stem)] = item.url || item.download_url;
         }
       });
     } else if (typeof data === 'object') {
-      Object.entries(data).forEach(([key, val]: [string, any]) => {
+      Object.entries(data).forEach(([key, val]: [string, unknown]) => {
         if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
           stems[mapKey(key)] = val;
-        } else if (val && typeof val === 'object' && (val.url || val.download_url)) {
-          stems[mapKey(key)] = val.url || val.download_url;
+        } else if (val && typeof val === 'object') {
+          const pista: PistaLalal = val;
+          if (pista.url || pista.download_url) stems[mapKey(key)] = pista.url || pista.download_url;
         }
       });
     }

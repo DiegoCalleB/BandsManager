@@ -40,6 +40,61 @@ export interface Transcripcion {
 const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 const limpiarTexto = (t: unknown): string => String(t ?? '').replace(/\s+/g, ' ').trim();
 
+/** Palabra de Whisper tal como llega (Replicate u OpenAI); los valores se validan con `num`/`limpiarTexto`. */
+interface PalabraWhisperCruda {
+  start?: unknown;
+  end?: unknown;
+  word?: unknown;
+  text?: unknown;
+}
+
+/** Frase de Whisper tal como llega. */
+interface SegmentoWhisperCrudo {
+  start?: unknown;
+  end?: unknown;
+  text?: unknown;
+  words?: unknown;
+  avg_logprob?: unknown;
+  no_speech_prob?: unknown;
+  compression_ratio?: unknown;
+}
+
+/** Trozo de incredibly-fast-whisper: `timestamp` es `[ini, fin | null]`. */
+interface TrozoWhisperCrudo {
+  timestamp?: unknown;
+  text?: unknown;
+}
+
+/** Salida de un modelo de Whisper antes de validar (cualquier campo puede faltar o venir mal). */
+interface SalidaWhisperCruda {
+  detected_language?: unknown;
+  language?: unknown;
+  segments?: unknown;
+  chunks?: unknown;
+  words?: unknown;
+}
+
+/** Lo que se lee de las respuestas de la API de Replicate (modelo y predicción) y de OpenAI. */
+interface RespuestaApiTranscripcion {
+  latest_version?: { id?: string; openapi_schema?: { components?: { schemas?: { Input?: { properties?: Record<string, unknown> } } } } };
+  detail?: string;
+  id?: string;
+  status?: string;
+  urls?: { get?: string };
+  output?: unknown;
+  /** Replicate lo manda como texto; OpenAI como `{ message }`. */
+  error?: string | { message?: string };
+}
+
+/** Palabras con tiempos válidos de una lista cruda. */
+const palabrasValidas = (lista: PalabraWhisperCruda[], conTexto: boolean): PalabraLetra[] =>
+  lista.flatMap((w) => {
+    const a = num(w?.start);
+    const b = num(w?.end);
+    const tx = limpiarTexto(conTexto ? w?.word ?? w?.text : w?.word);
+    return a !== null && b !== null && tx ? [{ t0: a, t1: b, texto: tx }] : [];
+  });
+
 /** Agrupa palabras con tiempos en líneas: corte por pausa larga, longitud o duración. */
 export function agruparPalabras(palabras: PalabraLetra[]): LineaLetra[] {
   const lineas: LineaLetra[] = [];
@@ -71,25 +126,20 @@ export function agruparPalabras(palabras: PalabraLetra[]): LineaLetra[] {
  *  - { segments: [{ start, end, text, words?: [{word,start,end}] }], detected_language }   (openai/whisper)
  * Devuelve null si no hay tiempos: sin ellos no se puede sincronizar y no se inventan.
  */
-export function normalizarSalidaWhisper(salida: any): { lineas: LineaLetra[]; idioma?: string } | null {
-  if (!salida || typeof salida !== 'object') return null;
+export function normalizarSalidaWhisper(entrada: unknown): { lineas: LineaLetra[]; idioma?: string } | null {
+  if (!entrada || typeof entrada !== 'object') return null;
+  const salida: SalidaWhisperCruda = entrada;
   const idioma = typeof salida.detected_language === 'string' ? salida.detected_language : undefined;
 
   if (Array.isArray(salida.segments) && salida.segments.length > 0) {
     const lineas: LineaLetra[] = [];
-    for (const s of salida.segments) {
+    const segmentos: SegmentoWhisperCrudo[] = salida.segments;
+    for (const s of segmentos) {
       const t0 = num(s?.start);
       const t1 = num(s?.end);
       const texto = limpiarTexto(s?.text);
       if (t0 === null || t1 === null || !texto) continue;
-      const palabras: PalabraLetra[] = Array.isArray(s.words)
-        ? s.words.flatMap((w: any) => {
-            const a = num(w?.start);
-            const b = num(w?.end);
-            const tx = limpiarTexto(w?.word ?? w?.text);
-            return a !== null && b !== null && tx ? [{ t0: a, t1: b, texto: tx }] : [];
-          })
-        : [];
+      const palabras: PalabraLetra[] = Array.isArray(s.words) ? palabrasValidas(s.words, true) : [];
       lineas.push({ t0, t1: Math.max(t1, t0 + 0.2), texto, ...(palabras.length ? { palabras } : {}) });
     }
     return lineas.length ? { lineas, idioma } : null;
@@ -97,7 +147,8 @@ export function normalizarSalidaWhisper(salida: any): { lineas: LineaLetra[]; id
 
   if (Array.isArray(salida.chunks) && salida.chunks.length > 0) {
     const trozos: PalabraLetra[] = [];
-    for (const c of salida.chunks) {
+    const trozosCrudos: TrozoWhisperCrudo[] = salida.chunks;
+    for (const c of trozosCrudos) {
       const ts = Array.isArray(c?.timestamp) ? c.timestamp : null;
       const t0 = ts ? num(ts[0]) : null;
       if (t0 === null) continue;
@@ -225,7 +276,7 @@ export function construirEntrada(propiedades: Set<string>, audioUrl: string, idi
   return entrada;
 }
 
-async function json(res: Response): Promise<any> {
+async function json(res: Response): Promise<RespuestaApiTranscripcion> {
   const texto = await res.text();
   try {
     return JSON.parse(texto);
@@ -270,18 +321,14 @@ async function intentarModelo(modelo: string, token: string, audioUrl: string, i
 // ── OpenAI Whisper (API estable y documentada: tiempos por palabra y métricas por frase) ───────
 
 /** Convierte la respuesta verbose_json de OpenAI en líneas con palabras y confianza. */
-export function normalizarSalidaOpenAI(salida: any): { lineas: LineaLetra[]; idioma?: string } | null {
-  if (!salida || !Array.isArray(salida.segments) || salida.segments.length === 0) return null;
-  const palabras: PalabraLetra[] = Array.isArray(salida.words)
-    ? salida.words.flatMap((w: any) => {
-        const a = num(w?.start);
-        const b = num(w?.end);
-        const tx = limpiarTexto(w?.word);
-        return a !== null && b !== null && tx ? [{ t0: a, t1: b, texto: tx }] : [];
-      })
-    : [];
+export function normalizarSalidaOpenAI(entrada: unknown): { lineas: LineaLetra[]; idioma?: string } | null {
+  if (!entrada || typeof entrada !== 'object') return null;
+  const salida: SalidaWhisperCruda = entrada;
+  if (!Array.isArray(salida.segments) || salida.segments.length === 0) return null;
+  const palabras: PalabraLetra[] = Array.isArray(salida.words) ? palabrasValidas(salida.words, false) : [];
   const lineas: LineaLetra[] = [];
-  for (const sg of salida.segments) {
+  const segmentos: SegmentoWhisperCrudo[] = salida.segments;
+  for (const sg of segmentos) {
     const t0 = num(sg?.start);
     const t1 = num(sg?.end);
     const texto = limpiarTexto(sg?.text);
@@ -324,7 +371,7 @@ export async function transcribirConOpenAI(rutaAudio: string, apiKey: string, id
     signal: AbortSignal.timeout(5 * 60_000),
   });
   const cuerpo = await json(res);
-  if (!res.ok) throw new Error(`OpenAI respondió ${res.status}: ${String(cuerpo?.error?.message || '').slice(0, 200)}`);
+  if (!res.ok) throw new Error(`OpenAI respondió ${res.status}: ${String((typeof cuerpo?.error === 'object' ? cuerpo.error?.message : '') || '').slice(0, 200)}`);
   const norm = normalizarSalidaOpenAI(cuerpo);
   if (!norm) throw new Error('OpenAI no devolvió frases con tiempos (¿audio sin voz?)');
   return { lineas: norm.lineas, idioma: norm.idioma, modelo: 'openai/whisper-1' };

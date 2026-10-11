@@ -50,7 +50,7 @@ async function main() {
   }
 
   const db: Ejecutor = {
-    consultar: async (sql, parametros) => (await cliente.query(sql, parametros as any[])).rows,
+    consultar: async (sql, parametros) => (await cliente.query(sql, parametros)).rows,
     ejecutar: async (sql) => {
       await cliente.query(sql);
     },

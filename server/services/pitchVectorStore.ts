@@ -5,6 +5,7 @@
  * y ejemplos curados mediante embeddings matemáticos de Google (text-embedding-004, 768d).
  */
 
+import type { EmbedContentResponse } from "@google/genai";
 import { getAiClient } from "../ai.js";
 import { getSupabase } from "../db/core.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -75,7 +76,7 @@ export interface BandManagerChunkMetadata {
     burstiness_level?: "high" | "medium";
   };
   language?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface PitchVectorEntry {
@@ -89,7 +90,7 @@ export interface PitchVectorEntry {
   texto_pitch: string;
   resultado_respuesta?: "pendiente" | "positiva" | "negativa" | "confirmado";
   conversion_score?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SimilarPitchResult {
@@ -187,7 +188,8 @@ export async function generateEmbedding(text: string): Promise<number[] | null> 
 
     for (const modelName of modelsToTry) {
       try {
-        const response = await (ai.models as any).embedContent({
+        // `embedding` (singular) es la forma de la API REST antigua: se sigue aceptando por si acaso.
+        const response: EmbedContentResponse & { embedding?: { values?: number[] } } = await ai.models.embedContent({
           model: modelName,
           contents: truncated,
           config: {
