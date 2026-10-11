@@ -24,11 +24,21 @@ import { dbGetRegisteredBandById } from '../db/bands.js';
 import { dbGetUsers } from '../db/users.js';
 import { invalidateBandStateCache } from '../db/sync.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Concert } from '../../src/types.js';
+import type { UsuarioGuardado } from '../stateTypes.js';
 
 export const dealsRouter = Router();
 
+/**
+ * Concierto que se da de alta solo al confirmarse un acuerdo. No trae aforo (lo rellena la banda
+ * después) y lleva el nombre en `band_name`, que el calendario también lee. Se guarda en
+ * `state.concerts` como `Concert` sabiendo que le faltan los dos campos de aforo.
+ */
+type ConciertoDeAcuerdo = Omit<Concert, 'aforo_vendido' | 'aforo_total'> &
+  Partial<Pick<Concert, 'aforo_vendido' | 'aforo_total'>> & { band_name?: string };
+
 /** Código HTTP de un error de acuerdos: los DealError llevan el suyo (404/409/410/503...). */
-function estadoHttp(error: any, porDefecto: number): number {
+function estadoHttp(error: unknown, porDefecto: number): number {
   return error instanceof DealError ? error.status : porDefecto;
 }
 
@@ -76,7 +86,7 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
               (c.fecha === d.fecha_evento && c.sala === d.lugar_sala)
             );
             if (!exists) {
-              state.concerts.push({
+              const conciertoNuevo: ConciertoDeAcuerdo = {
                 id: d.concert_id || `cnc_deal_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
                 band_id: d.band_id,
                 band_name: d.nombre_evento.replace(/^Concierto de /, '').replace(/^Concierto en /, '') || 'Banda',
@@ -88,7 +98,8 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
                 estado_pago: d.forma_pago === 'efectivo' ? 'pendiente' : 'pendiente',
                 notas: `Acuerdo 1-Click firmado por ${d.nombre_firmante || 'la sala'}.`,
                 tipo: 'sala'
-              } as any);
+              };
+              state.concerts.push(conciertoNuevo as Concert);
               changed = true;
             }
           }
@@ -256,7 +267,7 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
             (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala)
           );
           if (!match) {
-            const concertItem = {
+            const concertItem: ConciertoDeAcuerdo = {
               id: deal.concert_id || `cnc_deal_${Date.now()}`,
               band_id: deal.band_id,
               band_name: deal.nombre_evento.replace(/^Concierto de /, '').replace(/^Concierto en /, '') || 'Banda',
@@ -269,7 +280,7 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
               notas: `Acuerdo 1-Click firmado por ${deal.nombre_firmante || 'la sala'}.`,
               tipo: 'sala'
             };
-            state.concerts.push(concertItem as any);
+            state.concerts.push(concertItem as Concert);
             saveState(state);
             invalidateBandStateCache(deal.band_id);
           }
@@ -362,7 +373,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
           }
           if (!bandEmail) {
             const users = await dbGetUsers(deal.band_id);
-            const leader = users.find((u: any) => u.role === 'leader' || u.rol === 'leader') || users[0];
+            const leader = users.find((u: UsuarioGuardado) => u.role === 'leader' || u.rol === 'leader') || users[0];
             if (leader?.email) bandEmail = leader.email;
           }
         } catch (err) { console.warn("[Deals] Fallo leyendo el email de la banda:", err); }

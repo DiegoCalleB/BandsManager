@@ -7,7 +7,7 @@ import path from "path";
 import crypto from "crypto";
 import multer from "multer";
 import ffmpeg from "fluent-ffmpeg";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -236,14 +236,14 @@ export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
   return EXTENSIONES_PERMITIDAS.has(cleanExt);
 }
 
-const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const multerFileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (!extensionPermitida(file.originalname)) {
     return cb(new Error('Tipo de archivo no permitido.'));
   }
   cb(null, true);
 };
 
-const multerChunkFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const multerChunkFileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const original = file.originalname || '';
   // Strips chunk extensions like .part0, .part1, .part
   const strippedPart = original.replace(/\.part\d*$/i, '');
@@ -291,9 +291,9 @@ const uploadChunkMiddleware = multer({
 // error genérica de Express en vez de un JSON limpio.
 function conManejoDeErrorMulter(mw: express.RequestHandler): express.RequestHandler {
   return (req, res, next) => {
-    mw(req, res, (err: any) => {
+    mw(req, res, (err?: unknown) => {
       if (err) {
-        return res.status(400).json({ error: err.message || "No se pudo procesar el archivo." });
+        return res.status(400).json({ error: comoErrorCapturado(err).message || "No se pudo procesar el archivo." });
       }
       next();
     });
@@ -383,7 +383,7 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   }
 });
 
-async function listRecursiveStorageFiles(supabase: any, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
+async function listRecursiveStorageFiles(supabase: SupabaseClient, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
   const { data: items, error } = await supabase.storage.from(bucketName).list(folder, { limit: 1000 });
   if (error) return [];
   const all: Array<{ path: string; size: number }> = [];
@@ -590,7 +590,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       const storagePath = `${subPath}/${uniqueName}`;
       const fileContent = buffer || fs.readFileSync(filePath);
 
-      let uploadError: any = null;
+      let uploadError: unknown = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
           const { error } = await supabase.storage
@@ -608,7 +608,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             }
           } else {
             uploadError = error;
-            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || (error as any).statusCode === "404" || (error as any).status === 404)) {
+            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || error.statusCode === "404" || error.status === 404)) {
               try {
                 await supabase.storage.createBucket(bucketName, { public: true });
               } catch (createErr) {
@@ -622,7 +622,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
 
       if (storageEngine !== "supabase") {
-        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", uploadError?.message || uploadError);
+        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", comoErrorCapturado(uploadError).message || uploadError);
         // Fallback to locally served path so upload never fails for user
         finalUrl = `/uploads/${uniqueName}`;
         storageEngine = "local";

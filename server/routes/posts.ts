@@ -36,16 +36,17 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
   const updated: Partial<SocialPost> = req.body;
   const merged = { ...updated, id };
 
-  let saved: any;
+  // Fila de social_posts tal como la devuelve Supabase tras el upsert.
+  let saved: SocialPost;
   try {
     saved = await dbUpsertSocialPost(merged, userBandId);
 
     const state = loadState();
     const idx = state.posts.findIndex((p: SocialPost) => p.id === id);
     if (idx !== -1) {
-      state.posts[idx] = saved as any;
+      state.posts[idx] = saved;
     } else {
-      state.posts.push(saved as any);
+      state.posts.push(saved);
     }
     saveState(state);
   } catch (errCapturado) {
@@ -88,10 +89,10 @@ router.post("/posts", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   const newPost: SocialPost = req.body;
   try {
-    const saved = await dbUpsertSocialPost(newPost, userBandId);
+    const saved: SocialPost = await dbUpsertSocialPost(newPost, userBandId);
 
     const state = loadState();
-    state.posts.push(saved as any);
+    state.posts.push(saved);
     saveState(state);
 
     res.json({ success: true, post: saved });
@@ -217,9 +218,9 @@ router.post("/social/run-scheduled-publisher", requireAuth, async (req, res) => 
 router.post("/posts/sync", requireAuth, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
-    const posts = await dbGetSocialPosts(userBandId);
+    const posts: SocialPost[] = await dbGetSocialPosts(userBandId);
     const state = loadState();
-    state.posts = posts as any;
+    state.posts = posts;
     saveState(state);
     
     res.json({

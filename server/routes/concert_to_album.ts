@@ -18,6 +18,8 @@ import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
 import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO } from "../utils/audioEnergy.js";
 import { esUrlExternaSegura, descargarBufferSeguro } from "../utils/ssrfGuard.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Part } from '@google/genai';
+import type { AnalisisConciertoIA, CapituloYoutube, ClasificacionPistasIA } from './tiposConcertToAlbum.js';
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
@@ -472,7 +474,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
     let videoTitle = "Concierto en Directo";
     let videoDuration = 3600; // default 1 hour if unknown
     let rawDescription = "";
-    let chapters: any[] = [];
+    let chapters: CapituloYoutube[] = [];
     let detectedTracks: TrackItem[] = [];
     let ytDlpBinaryPath = path.join(process.cwd(), "bin", "yt-dlp");
 
@@ -509,7 +511,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
     // A. Native Chapters check
     if (chapters && chapters.length > 0) {
       console.log(`[Concert Analyzer] Found ${chapters.length} native chapters in video!`);
-      detectedTracks = chapters.map((chap: any, idx: number) => {
+      detectedTracks = chapters.map((chap, idx): TrackItem => {
         const start = chap.start_time || 0;
         const end = chap.end_time || (idx < chapters.length - 1 ? chapters[idx + 1].start_time : videoDuration);
         const duration = end - start;
@@ -582,7 +584,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
       const aiClient = getAiClient();
       if (aiClient) {
         try {
-          let contents: any;
+          let contents: string | Part[];
           let promptText = "";
 
           if (isPreTranscribing) {
@@ -697,11 +699,11 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           const jsonText = response.text || "";
           const match = jsonText.match(/\{[\s\S]*\}/);
           if (match) {
-            const aiData = JSON.parse(match[0]);
+            const aiData: AnalisisConciertoIA = JSON.parse(match[0]);
             if (aiData.tracks && Array.isArray(aiData.tracks) && aiData.tracks.length > 0) {
-              detectedTracks = aiData.tracks.map((t: any, idx: number) => {
+              detectedTracks = aiData.tracks.map((t, idx): TrackItem => {
                 const duration = Math.max(0.5, (typeof t.duration === "number" ? t.duration : (t.end || 0) - (t.start || 0)));
-                let type = t.type === "dialogo" ? "dialogo" : "musica";
+                let type: TrackItem["type"] = t.type === "dialogo" ? "dialogo" : "musica";
                 let title = t.title || `Pista ${idx + 1}`;
 
                 const titleLower = title.toLowerCase();
@@ -817,7 +819,7 @@ router.post("/process", requireAuth, async (req, res) => {
     // Fallback: If no local master was provided or YouTube blocked download, generate a synthesized concert master so the album slicing pipeline completes flawlessly
     if (!localMasterMedia || !fs.existsSync(localMasterMedia)) {
       const fallbackMaster = path.join(outputDir, "master_concert.mp3");
-      const maxEnd = Math.max(...tracks.map((t: any) => t.end || 0), 120);
+      const maxEnd = Math.max(...tracks.map((t: TrackItem) => t.end || 0), 120);
       console.log(`[Concert Slicer] Synthesizing master audio placeholder (${maxEnd}s) with FFmpeg...`);
       try {
         await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", `sine=frequency=330:duration=${Math.ceil(maxEnd)}`, "-c:a", "libmp3lame", "-q:a", "4", fallbackMaster]);
@@ -1274,7 +1276,7 @@ export function buildAudioOrTextContents(
   snippetPath: string | null | undefined,
   promptText: string,
   fallbackNote: string
-): any {
+): string | Part[] {
   if (snippetPath && fs.existsSync(snippetPath)) {
     try {
       const audioBuffer = fs.readFileSync(snippetPath);
@@ -1431,10 +1433,10 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
         const jsonText = response.text || "";
         const match = jsonText.match(/\{[\s\S]*\}/);
         if (match) {
-          const aiData = JSON.parse(match[0]);
+          const aiData: ClasificacionPistasIA = JSON.parse(match[0]);
           if (aiData.classified && Array.isArray(aiData.classified)) {
             classifiedTracks = classifiedTracks.map((t) => {
-              const item = aiData.classified.find((c: any) => c.index === t.index);
+              const item = aiData.classified.find((c) => c.index === t.index);
               if (item) {
                 return {
                   ...t,
