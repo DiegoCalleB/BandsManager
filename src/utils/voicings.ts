@@ -146,13 +146,25 @@ export function notaDePasoHacia(acorde: string, siguiente?: string | null): { pc
   return { pc: modulo(s.raiz - 1), desde: 'abajo', alternativa: modulo(s.raiz + 1) };
 }
 
-/** Dónde pisar la nota de paso con la forma elegida: en la cuerda más grave que suena, al traste más cercano. */
+/**
+ * Dónde pisar la nota de paso con la forma elegida: en la cuerda libre (o la más grave de la forma) donde el traste queda
+ * más cerca de la mano, para que el diagrama no se estire hasta el traste 9.
+ */
 export function pasoEnGuitarra(forma: FormaGuitarra, pc: number): NotaGuitarra | null {
-  const cuerda = forma.graveCuerda;
-  const grave = forma.notas.find((n) => n.cuerda === cuerda);
-  if (!grave) return null;
-  let traste = modulo(pc - CUERDAS_GUITARRA[cuerda]);
-  while (traste + 12 <= ULTIMO_TRASTE && Math.abs(traste + 12 - grave.traste) < Math.abs(traste - grave.traste)) traste += 12;
-  if (traste > ULTIMO_TRASTE) return null;
-  return { cuerda, traste, pc, intervalo: 'paso' };
+  const pisadas = forma.notas.filter((n) => n.traste > 0);
+  if (!forma.notas.length) return null;
+  const centro = pisadas.length ? pisadas.reduce((a, n) => a + n.traste, 0) / pisadas.length : 1;
+  const ocupadas = new Set(forma.notas.map((n) => n.cuerda));
+  let mejor: NotaGuitarra | null = null;
+  let distancia = Infinity;
+  for (let cuerda = 0; cuerda < 6; cuerda++) {
+    if (ocupadas.has(cuerda) && cuerda !== forma.graveCuerda) continue;
+    const base = modulo(pc - CUERDAS_GUITARRA[cuerda]);
+    for (const traste of [base, base + 12]) {
+      if (traste > ULTIMO_TRASTE || traste === 0) continue;
+      const d = Math.abs(traste - centro) + (cuerda === forma.graveCuerda ? 0 : 0.5);
+      if (d < distancia) { distancia = d; mejor = { cuerda, traste, pc, intervalo: 'paso' }; }
+    }
+  }
+  return mejor;
 }

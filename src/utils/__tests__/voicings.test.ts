@@ -55,11 +55,13 @@ describe('nota de paso', () => {
     expect(notaDePasoHacia('C', null)).toBeNull();
     expect(notaDePasoHacia('C', 'Cmaj7')).toBeNull();
   });
-  it('se coloca en la cuerda más grave de la forma', () => {
-    const forma = powerChord('C')!;
-    const paso = pasoEnGuitarra(forma, 4)!;
-    expect(paso.cuerda).toBe(forma.graveCuerda);
-    expect((CUERDAS_GUITARRA[paso.cuerda] + paso.traste) % 12).toBe(4);
+  it('se coloca cerca de la mano y suena la nota pedida', () => {
+    for (const a of ['C', 'Am', 'G7']) {
+      const forma = inversionesGuitarra(a)[0];
+      const paso = pasoEnGuitarra(forma, 4)!;
+      expect((CUERDAS_GUITARRA[paso.cuerda] + paso.traste) % 12).toBe(4);
+      expect(Math.abs(paso.traste - forma.base)).toBeLessThanOrEqual(5);
+    }
   });
 });
 
