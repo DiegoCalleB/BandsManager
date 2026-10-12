@@ -1979,3 +1979,4 @@ body.scroll .mis-bandas .mb-linea { display: none; }
 .mis-bandas .mb-foto.gran figcaption { bottom: 168px; }
 .mis-bandas .mb-linea { bottom: 34px; }
 .mis-bandas .mb-foto.vert .mb-edad { right: auto; left: 110px; }
+.mis-bandas .mb-foto.izq .mb-edad { right: auto; left: 110px; }

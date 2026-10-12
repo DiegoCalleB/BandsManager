@@ -829,7 +829,7 @@ if FOTOS:
         cap = f'<figcaption><b>{f.get("texto", "")}</b>{("<span>" + f["logro"] + "</span>") if f.get("logro") else ""}</figcaption>'
         if f.get('tarjeta'):
             return f'<figure class="mb-foto tarjeta" style="--t:{t0:.2f}s;--d:{d:.2f}s">{edad}{cap}</figure>'
-        return (f'<figure class="mb-foto{" vert" if _vert(f) else ""}{" gran" if f.get("gran") else ""}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f.get("ruta", f["foto"])});--pos:{f.get("pos", "50% 50%")}">'
+        return (f'<figure class="mb-foto{" vert" if _vert(f) else ""}{" gran" if f.get("gran") else ""}{" izq" if f.get("lado") == "izq" else ""}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f.get("ruta", f["foto"])});--pos:{f.get("pos", "50% 50%")}">'
                 f'<img src="img/historia/{f.get("ruta", f["foto"])}" alt="{f.get("texto", "")}">{edad}{cap}</figure>')
     cuerpo = ''.join(_fig(t0, d, f) for t0, d, f in pasos)
     # línea de tiempo: un punto por edad distinta; se enciende cuando llega su primera foto y ya no se apaga
