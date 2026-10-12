@@ -9,6 +9,7 @@ import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS, GEMINI_MODEL } from "../ai.js";
 import { requireAuth } from "../state.js";
+import { ficherosRateLimiter } from "../middleware/rateLimiter.js";
 // Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
 // descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
 import { ejecutar, banderasAntiBot, COOKIES_FILE } from "../utils/youtubeSource.js";
@@ -68,9 +69,51 @@ export function rutaFuenteSegura(rutaPedida: unknown): string | null {
   if (typeof rutaPedida !== "string" || !rutaPedida.trim()) return null;
   const raiz = path.resolve(process.cwd(), "public");
   const resuelta = path.resolve(raiz, rutaPedida.trim());
-  const dentro = resuelta === raiz || resuelta.startsWith(raiz + path.sep);
-  if (!dentro) return null;
+  // La guarda va inline (sin variable intermedia) para que el análisis estático la reconozca.
+  // La propia raíz tampoco vale: es un directorio, no un fichero fuente.
+  if (!resuelta.startsWith(raiz + path.sep)) return null;
   return resuelta;
+}
+
+/**
+ * Ruta de un fichero con nombre `nombre` dentro de `base`. El nombre ha de ser un nombre plano
+ * (sin separadores ni `..`): títulos, índices o hashes que acaban en el nombre de un fichero
+ * podían traer `../` del cliente y escribir fuera del directorio.
+ */
+export function rutaEnDirectorio(base: string, nombre: string): string {
+  const raiz = path.resolve(base);
+  if (!nombre || nombre.includes("\0") || nombre !== path.basename(nombre)) {
+    throw new Error("Nombre de fichero no válido.");
+  }
+  const resuelta = path.resolve(raiz, nombre);
+  if (!resuelta.startsWith(raiz + path.sep)) throw new Error("Nombre de fichero no válido.");
+  return resuelta;
+}
+
+/** Índice de pista apto para un nombre de fichero: entero no negativo (el cliente manda cualquier cosa). */
+export function indicePistaSeguro(valor: unknown): number {
+  const n = Number.parseInt(String(valor), 10);
+  return Number.isFinite(n) ? Math.abs(n) : 1;
+}
+
+/** Hosts de YouTube por hostname parseado; `evil.com/youtube.com` o `youtube.com.evil.com` no cuentan. */
+export function esUrlYoutube(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return host === "youtube.com" || host.endsWith(".youtube.com") || host === "youtu.be";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Objeto JSON que la IA envuelve en texto: del primer `{` al último `}`. Equivale a
+ * `/\{[\s\S]*\}/` pero sin la regex, que sobre texto largo es de coste polinómico.
+ */
+export function extraerObjetoJson(texto: string): string | null {
+  const ini = texto.indexOf("{");
+  const fin = texto.lastIndexOf("}");
+  return ini !== -1 && fin > ini ? texto.slice(ini, fin + 1) : null;
 }
 
 interface TrackItem {
@@ -127,11 +170,12 @@ export async function detectCuesForAudioFile(
   } = options;
 
   try {
-    if (!filePath || !fs.existsSync(filePath)) {
+    const rutaSegura = rutaFuenteSegura(filePath);
+    if (!rutaSegura || !fs.existsSync(rutaSegura)) {
       return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0 };
     }
 
-    const curva = await analizarEnergiaAudio(filePath, { maxDuracion: 900 });
+    const curva = await analizarEnergiaAudio(rutaSegura, { maxDuracion: 900 });
     if (!curva || curva.length === 0) {
       return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0.5 };
     }
@@ -223,7 +267,7 @@ export async function detectCuesForAudioFile(
     };
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    console.warn(`[CUE Detection] Error en ${filePath}:`, err?.message || err);
+    console.warn("[CUE Detection] Error en %s:", filePath, err?.message || err);
     return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0 };
   }
 }
@@ -233,7 +277,7 @@ export async function detectCuesForAudioFile(
 // Routes for YouTube Cookies Management
 // requireAuth en las tres: el fichero de cookies guarda la sesión de YouTube con la que el
 // servidor descarga vídeos. Abiertas, cualquiera podía sobrescribirlo con las suyas o borrarlo.
-router.get("/cookies-status", requireAuth, (req, res) => {
+router.get("/cookies-status", requireAuth, ficherosRateLimiter, (req, res) => {
   try {
     if (fs.existsSync(COOKIES_FILE)) {
       const stats = fs.statSync(COOKIES_FILE);
@@ -250,7 +294,7 @@ router.get("/cookies-status", requireAuth, (req, res) => {
   }
 });
 
-router.post("/save-cookies", requireAuth, (req, res) => {
+router.post("/save-cookies", requireAuth, ficherosRateLimiter, (req, res) => {
   try {
     const { cookiesText } = req.body;
     if (!cookiesText || typeof cookiesText !== "string" || cookiesText.trim().length < 5) {
@@ -274,7 +318,7 @@ router.post("/save-cookies", requireAuth, (req, res) => {
   }
 });
 
-router.post("/delete-cookies", requireAuth, (req, res) => {
+router.post("/delete-cookies", requireAuth, ficherosRateLimiter, (req, res) => {
   try {
     if (fs.existsSync(COOKIES_FILE)) {
       fs.unlinkSync(COOKIES_FILE);
@@ -370,7 +414,7 @@ function parseTimestampsFromText(text: string, videoDuration: number): TrackItem
 // Helper: Run FFmpeg silence detection on audio file
 async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number): Promise<TrackItem[]> {
   return new Promise((resolve) => {
-    console.log(`[FFmpeg Silence] Executing silencedetect on ${filePath}...`);
+    console.log("[FFmpeg Silence] Executing silencedetect on %s...", filePath);
     const silences: { start: number; end: number }[] = [];
 
     // Run ffmpeg with silencedetect filter
@@ -394,7 +438,7 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
     });
 
     command.on("end", () => {
-      console.log(`[FFmpeg Silence] Detected ${silences.length} silence markers.`);
+      console.log("[FFmpeg Silence] Detected %s silence markers.", silences.length);
       const cutPoints: number[] = [0];
 
       for (const silence of silences) {
@@ -462,7 +506,7 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
 // 1. ANALYZE CONCERT ROUTE
 // requireAuth: descarga vídeo, gasta CPU y llama a la IA. Abierta era trabajo pesado gratis
 // para cualquiera que diera con la URL.
-router.post("/analyze", requireAuth, async (req, res) => {
+router.post("/analyze", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { url, useAi, transcribeFirst, bandName } = req.body;
     const urlVideo = await urlDeVideoSegura(url);
@@ -485,8 +529,8 @@ router.post("/analyze", requireAuth, async (req, res) => {
     const sourceMediaToAnalyze = sourceFilePath || "";
     let youtubeBlocked = false;
 
-    if (urlVideo && (urlVideo.includes("youtube.com") || urlVideo.includes("youtu.be"))) {
-      console.log(`[Concert Analyzer] Investigating YouTube metadata with yt-dlp for: ${urlVideo}`);
+    if (urlVideo && esUrlYoutube(urlVideo)) {
+      console.log("[Concert Analyzer] Investigating YouTube metadata with yt-dlp for: %s", urlVideo);
       try {
         const { stdout } = await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "--dump-json", "--skip-download", urlVideo]);
         const metadata = JSON.parse(stdout);
@@ -510,7 +554,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
 
     // A. Native Chapters check
     if (chapters && chapters.length > 0) {
-      console.log(`[Concert Analyzer] Found ${chapters.length} native chapters in video!`);
+      console.log("[Concert Analyzer] Found %s native chapters in video!", chapters.length);
       detectedTracks = chapters.map((chap, idx): TrackItem => {
         const start = chap.start_time || 0;
         const end = chap.end_time || (idx < chapters.length - 1 ? chapters[idx + 1].start_time : videoDuration);
@@ -541,7 +585,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
       if (!mediaForSilence && urlVideo) {
         const tempAudioDir = path.join(process.cwd(), "public", "uploads", "temp");
         if (!fs.existsSync(tempAudioDir)) fs.mkdirSync(tempAudioDir, { recursive: true });
-        mediaForSilence = path.join(tempAudioDir, `analysis_${Date.now()}.mp3`);
+        mediaForSilence = rutaEnDirectorio(tempAudioDir, `analysis_${Date.now()}.mp3`);
 
         console.log(`[Concert Analyzer] Downloading temporary audio for silence detection...`);
         try {
@@ -580,7 +624,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
     // D. Gemini AI Enrichment & Full Audio Pre-Transcription
     if (useAi) {
       const isPreTranscribing = Boolean(transcribeFirst !== false);
-      console.log(`[Concert Analyzer] Enriched by Gemini AI requested (transcribeFirst: ${isPreTranscribing})...`);
+      console.log("[Concert Analyzer] Enriched by Gemini AI requested (transcribeFirst: %s)...", isPreTranscribing);
       const aiClient = getAiClient();
       if (aiClient) {
         try {
@@ -672,7 +716,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           if (isPreTranscribing && sourceFilePath && fs.existsSync(sourceFilePath)) {
             const stats = fs.statSync(sourceFilePath);
             if (stats.size < 20 * 1024 * 1024) {
-              console.log(`[Concert Analyzer] Sending ${stats.size} bytes local audio to Gemini multimodal audio analysis...`);
+              console.log("[Concert Analyzer] Sending %s bytes local audio to Gemini multimodal audio analysis...", stats.size);
               const audioBuf = fs.readFileSync(sourceFilePath);
               contents = [
                 {
@@ -697,9 +741,9 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           });
 
           const jsonText = response.text || "";
-          const match = jsonText.match(/\{[\s\S]*\}/);
+          const match = extraerObjetoJson(jsonText);
           if (match) {
-            const aiData: AnalisisConciertoIA = JSON.parse(match[0]);
+            const aiData: AnalisisConciertoIA = JSON.parse(match);
             if (aiData.tracks && Array.isArray(aiData.tracks) && aiData.tracks.length > 0) {
               detectedTracks = aiData.tracks.map((t, idx): TrackItem => {
                 const duration = Math.max(0.5, (typeof t.duration === "number" ? t.duration : (t.end || 0) - (t.start || 0)));
@@ -766,7 +810,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
 
 // 2. SLICE & GENERATE ALBUM ROUTE
 // requireAuth: igual que /analyze, descarga y trocea vídeo en el servidor.
-router.post("/process", requireAuth, async (req, res) => {
+router.post("/process", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { tracks, albumTitle, artist, normalizeAudio = true } = req.body;
     const urlVideo = await urlDeVideoSegura(req.body.url);
@@ -820,7 +864,7 @@ router.post("/process", requireAuth, async (req, res) => {
     if (!localMasterMedia || !fs.existsSync(localMasterMedia)) {
       const fallbackMaster = path.join(outputDir, "master_concert.mp3");
       const maxEnd = Math.max(...tracks.map((t: TrackItem) => t.end || 0), 120);
-      console.log(`[Concert Slicer] Synthesizing master audio placeholder (${maxEnd}s) with FFmpeg...`);
+      console.log("[Concert Slicer] Synthesizing master audio placeholder (%ss) with FFmpeg...", maxEnd);
       try {
         await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", `sine=frequency=330:duration=${Math.ceil(maxEnd)}`, "-c:a", "libmp3lame", "-q:a", "4", fallbackMaster]);
         localMasterMedia = fallbackMaster;
@@ -830,24 +874,24 @@ router.post("/process", requireAuth, async (req, res) => {
       }
     }
 
-    console.log(`[Concert Slicer] Slicing ${tracks.length} tracks using FFmpeg High-Performance...`);
+    console.log("[Concert Slicer] Slicing %s tracks using FFmpeg High-Performance...", tracks.length);
     const processedTracks: TrackItem[] = [];
 
     for (const track of tracks) {
-      const idxStr = String(track.index).padStart(2, "0");
-      const safeTitle = (track.title || `Pista_${track.index}`).replace(/[/\\?%*:|"<>]/g, "_");
+      const idxStr = String(indicePistaSeguro(track.index)).padStart(2, "0");
+      const safeTitle = String(track.title || `Pista_${track.index}`).replace(/[/\\?%*:|"<>\0]/g, "_");
       const isSong = track.type === "musica";
       const targetFolder = isSong ? temasDir : dialogosDir;
 
       const mp3FileName = `${idxStr} - ${safeTitle}.mp3`;
-      const mp3Path = path.join(targetFolder, mp3FileName);
+      const mp3Path = rutaEnDirectorio(targetFolder, mp3FileName);
       const mp3RelativeUrl = `/uploads/live_albums/${albumId}/${isSong ? "temas" : "dialogos"}/${encodeURIComponent(mp3FileName)}`;
 
       const startTime = Math.max(0, track.start);
       const duration = Math.max(0.5, track.end - track.start);
 
       // FFmpeg slice to MP3 con acondicionamiento para directo (de-rumble + loudnorm opcional)
-      console.log(`[Concert Slicer] Cutting Track ${track.index}: "${track.title}" (${startTime}s to ${track.end}s)...`);
+      console.log('[Concert Slicer] Cutting Track %s: "%s" (%ss to %ss)...', track.index, track.title, startTime, track.end);
       try {
         const sliceArgs = ["-y", "-ss", String(startTime), "-i", localMasterMedia, "-t", String(duration), "-vn"];
         if (normalizeAudio) {
@@ -863,7 +907,7 @@ router.post("/process", requireAuth, async (req, res) => {
         await ejecutar(ffmpegStatic!, sliceArgs);
       } catch (ffErrCapturado) {
         const ffErr = comoErrorCapturado(ffErrCapturado);
-        console.warn(`[Concert Slicer] FFmpeg slice error on track ${track.index}:`, ffErr.message);
+        console.warn("[Concert Slicer] FFmpeg slice error on track %s:", track.index, ffErr.message);
       }
 
       // Autodetectar CUEs de inicio y fin musical real en el tema generado
@@ -884,10 +928,10 @@ router.post("/process", requireAuth, async (req, res) => {
           hasApplauseIntro = cueAnalysis.hasApplauseIntro;
           hasApplauseOutro = cueAnalysis.hasApplauseOutro;
           cueConfidence = cueAnalysis.confidence;
-          console.log(`[Concert Slicer] Track ${track.index} CUEs detectados -> CUE In: +${cueIn}s, CUE Out: ${cueOut}s (applause: ${hasApplauseIntro ? 'intro ' : ''}${hasApplauseOutro ? 'outro' : ''})`);
+          console.log("[Concert Slicer] Track %s CUEs detectados -> CUE In: +%ss, CUE Out: %ss (applause: %s%s)", track.index, cueIn, cueOut, hasApplauseIntro ? 'intro ' : '', hasApplauseOutro ? 'outro' : '');
         } catch (cueErrCapturado) {
           const cueErr = comoErrorCapturado(cueErrCapturado);
-          console.warn(`[Concert Slicer] Error detectando CUE para pista ${track.index}:`, cueErr.message);
+          console.warn("[Concert Slicer] Error detectando CUE para pista %s:", track.index, cueErr.message);
         }
       }
 
@@ -1020,7 +1064,7 @@ router.post("/process", requireAuth, async (req, res) => {
 });
 
 // Endpoint para autodetectar los CUEs de inicio y fin musical de las pistas
-router.post("/detect-cues", requireAuth, async (req, res) => {
+router.post("/detect-cues", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { tracks, sourceFilePath, url } = req.body;
     if (!tracks || !Array.isArray(tracks) || tracks.length === 0) {
@@ -1047,8 +1091,9 @@ router.post("/detect-cues", requireAuth, async (req, res) => {
           allowSyntheticFallback: false,
         });
 
-        if (snippetPath && fs.existsSync(snippetPath)) {
-          const analysis = await detectCuesForAudioFile(snippetPath, {
+        const snippetSeguro = rutaFuenteSegura(snippetPath);
+        if (snippetSeguro && fs.existsSync(snippetSeguro)) {
+          const analysis = await detectCuesForAudioFile(snippetSeguro, {
             preRollSec: track.type === "musica" ? 0.35 : 0.1,
             postRollSec: 0.5,
           });
@@ -1065,7 +1110,7 @@ router.post("/detect-cues", requireAuth, async (req, res) => {
         }
       } catch (trackErrCapturado) {
         const trackErr = comoErrorCapturado(trackErrCapturado);
-        console.warn(`[CUE Detection API] Error en pista ${track.index}:`, trackErr.message);
+        console.warn("[CUE Detection API] Error en pista %s:", track.index, trackErr.message);
       }
 
       updatedTracks.push({
@@ -1126,7 +1171,8 @@ export async function getAudioSnippetPath(params: {
   // y el llamador lo mandaba a la IA con mime audio/mp3.
   maxSeconds?: number;
 }): Promise<string | null> {
-  const { audioUrl, start = 0, end = 30, trackIndex = 1, allowSyntheticFallback = true, maxSeconds } = params;
+  const { audioUrl, start = 0, end = 30, allowSyntheticFallback = true, maxSeconds } = params;
+  const trackIndex = indicePistaSeguro(params.trackIndex);
   // Las tres entradas que vienen del cliente se normalizan aquí, que es por donde pasan las
   // cuatro rutas que usan este helper: así no hay que acordarse de validarlas en cada una.
   const urlVideo = await urlDeVideoSegura(params.url);
@@ -1142,7 +1188,7 @@ export async function getAudioSnippetPath(params: {
       // primeros de la URL ("https://xxxx"): todas las canciones del mismo host compartían
       // fichero en caché y la segunda recibía el audio de la primera.
       const tempHash = hashDeUrl(audioRemoto);
-      const remoteTemp = path.join(tempDir, `remote_${tempHash}.mp3`);
+      const remoteTemp = rutaEnDirectorio(tempDir, `remote_${tempHash}.mp3`);
       // La subida usa upsert, así que el contenido tras una URL puede cambiar: la caché caduca.
       const cacheVigente = fs.existsSync(remoteTemp)
         && fs.statSync(remoteTemp).size > 0
@@ -1158,7 +1204,7 @@ export async function getAudioSnippetPath(params: {
       }
       if (fs.existsSync(remoteTemp) && fs.statSync(remoteTemp).size > 0) {
         if (!maxSeconds) return remoteTemp;
-        const recortado = await recortarAMp3(remoteTemp, path.join(tempDir, `remote_${tempHash}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
+        const recortado = await recortarAMp3(remoteTemp, rutaEnDirectorio(tempDir, `remote_${tempHash}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
         if (recortado) return recortado;
       }
     } else {
@@ -1167,7 +1213,7 @@ export async function getAudioSnippetPath(params: {
       const localPath = rutaFuenteSegura(audioUrl.startsWith("/") ? audioUrl.slice(1) : audioUrl);
       if (localPath && fs.existsSync(localPath) && fs.statSync(localPath).size > 0) {
         if (!maxSeconds) return localPath;
-        const recortado = await recortarAMp3(localPath, path.join(tempDir, `local_${hashDeUrl(localPath)}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
+        const recortado = await recortarAMp3(localPath, rutaEnDirectorio(tempDir, `local_${hashDeUrl(localPath)}_${Math.round(maxSeconds)}s.mp3`), maxSeconds);
         if (recortado) return recortado;
       }
     }
@@ -1178,7 +1224,7 @@ export async function getAudioSnippetPath(params: {
     const startTime = Math.max(0, parseFloat(String(start)) || 0);
     const duration = Math.max(1, (parseFloat(String(end)) - startTime) || 30);
     const snippetFilename = `snippet_${trackIndex}_${Math.round(startTime)}_${Math.round(duration)}_${Date.now()}.mp3`;
-    const snippetPath = path.join(tempDir, snippetFilename);
+    const snippetPath = rutaEnDirectorio(tempDir, snippetFilename);
 
     try {
       await ejecutar(ffmpegStatic!, ["-y", "-ss", String(startTime), "-i", ficheroFuente, "-t", String(duration), "-vn", "-c:a", "libmp3lame", "-q:a", "4", snippetPath]);
@@ -1201,11 +1247,11 @@ export async function getAudioSnippetPath(params: {
     const startTime = Math.max(0, parseFloat(String(start)) || 0);
     const duration = Math.max(1, (parseFloat(String(end)) - startTime) || 30);
     const snippetFilename = `snippet_yt_${trackIndex}_${Math.round(startTime)}_${Math.round(duration)}_${Date.now()}.mp3`;
-    const snippetPath = path.join(tempDir, snippetFilename);
+    const snippetPath = rutaEnDirectorio(tempDir, snippetFilename);
 
     // Try A: Direct Stream URL via yt-dlp -g
     try {
-      console.log(`[Snippet Helper] Fetching direct stream URL with yt-dlp for: ${urlVideo}`);
+      console.log("[Snippet Helper] Fetching direct stream URL with yt-dlp for: %s", urlVideo);
       const { stdout } = await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-g", "-f", "ba/b/bestaudio/best", urlVideo]);
       const streamUrls = stdout.trim().split("\n");
       const directStreamUrl = streamUrls[0];
@@ -1223,7 +1269,7 @@ export async function getAudioSnippetPath(params: {
 
     // Try B: Cached master or yt-dlp audio download with --ffmpeg-location
     const urlHash = hashDeUrl(urlVideo);
-    const cachedMaster = path.join(tempDir, `master_${urlHash}.mp3`);
+    const cachedMaster = rutaEnDirectorio(tempDir, `master_${urlHash}.mp3`);
 
     if (!fs.existsSync(cachedMaster)) {
       console.log(`[Snippet Helper] Downloading master audio for fallback...`);
@@ -1253,14 +1299,14 @@ export async function getAudioSnippetPath(params: {
   }
 
   try {
-    const fallbackSnippet = path.join(tempDir, `fallback_snippet_${Date.now()}.mp3`);
+    const fallbackSnippet = rutaEnDirectorio(tempDir, `fallback_snippet_${Date.now()}.mp3`);
     await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "sine=frequency=440:duration=10", "-c:a", "libmp3lame", "-q:a", "4", fallbackSnippet]);
     if (fs.existsSync(fallbackSnippet) && fs.statSync(fallbackSnippet).size > 0) {
       return fallbackSnippet;
     }
   } catch {
     try {
-      const fallbackSnippet = path.join(tempDir, `fallback_snippet_${Date.now()}.mp3`);
+      const fallbackSnippet = rutaEnDirectorio(tempDir, `fallback_snippet_${Date.now()}.mp3`);
       await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono", "-t", "5", "-q:a", "9", "-acodec", "libmp3lame", fallbackSnippet]);
       if (fs.existsSync(fallbackSnippet)) {
         return fallbackSnippet;
@@ -1277,9 +1323,10 @@ export function buildAudioOrTextContents(
   promptText: string,
   fallbackNote: string
 ): string | Part[] {
-  if (snippetPath && fs.existsSync(snippetPath)) {
+  const rutaSegura = rutaFuenteSegura(snippetPath);
+  if (rutaSegura && fs.existsSync(rutaSegura)) {
     try {
-      const audioBuffer = fs.readFileSync(snippetPath);
+      const audioBuffer = fs.readFileSync(rutaSegura);
       return [
         {
           inlineData: {
@@ -1299,7 +1346,7 @@ export function buildAudioOrTextContents(
 // 3. TRANSCRIBE SPEECH ROUTE USING GEMINI MULTIMODAL AUDIO
 // requireAuth en las cuatro que quedaban: todas mandan audio del servidor a la IA o gastan
 // ffmpeg, y todas aceptan sourceFilePath/audioUrl del body.
-router.post("/transcribe-speech", requireAuth, async (req, res) => {
+router.post("/transcribe-speech", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { trackTitle, audioUrl, url, sourceFilePath, start, end, trackIndex, promptContext } = req.body;
     const aiClient = getAiClient();
@@ -1356,19 +1403,20 @@ REQUISITOS OBLIGATORIOS:
 });
 
 // 4. PREVIEW SNIPPET ROUTE (Quick slice of any track item for instant listening in editor table)
-router.post("/preview-snippet", requireAuth, async (req, res) => {
+router.post("/preview-snippet", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { url, sourceFilePath, audioUrl, start, end, trackIndex } = req.body;
     const snippetPath = await getAudioSnippetPath({ url, sourceFilePath, audioUrl, start, end, trackIndex });
 
-    if (!snippetPath || !fs.existsSync(snippetPath)) {
+    const snippetSeguro = rutaFuenteSegura(snippetPath);
+    if (!snippetSeguro || !fs.existsSync(snippetSeguro)) {
       return res.status(400).json({ error: "No se pudo obtener o extraer el archivo fuente para previsualizar el trozo." });
     }
 
-    const filename = path.basename(snippetPath);
+    const filename = path.basename(snippetSeguro);
     let publicAudioUrl = `/uploads/temp/${filename}`;
 
-    const supabaseUrl = await uploadToSupabaseIfAvailable(snippetPath, `live_albums/snippets/${filename}`, "audio/mpeg");
+    const supabaseUrl = await uploadToSupabaseIfAvailable(snippetSeguro, `live_albums/snippets/${filename}`, "audio/mpeg");
     if (supabaseUrl) {
       publicAudioUrl = supabaseUrl;
     }
@@ -1385,7 +1433,7 @@ router.post("/preview-snippet", requireAuth, async (req, res) => {
 });
 
 // 5. AUTO-CLASSIFY TRACKS ROUTE (Identify Song vs Dialogue automatically)
-router.post("/classify-tracks", requireAuth, async (req, res) => {
+router.post("/classify-tracks", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { tracks, bandName, albumTitle, useAi } = req.body;
 
@@ -1431,9 +1479,9 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
         });
 
         const jsonText = response.text || "";
-        const match = jsonText.match(/\{[\s\S]*\}/);
+        const match = extraerObjetoJson(jsonText);
         if (match) {
-          const aiData: ClasificacionPistasIA = JSON.parse(match[0]);
+          const aiData: ClasificacionPistasIA = JSON.parse(match);
           if (aiData.classified && Array.isArray(aiData.classified)) {
             classifiedTracks = classifiedTracks.map((t) => {
               const item = aiData.classified.find((c) => c.index === t.index);
@@ -1493,7 +1541,7 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
 });
 
 // 6. TRANSCRIBE SONG LYRICS & CHORDS ROUTE USING GEMINI MULTIMODAL AUDIO
-router.post("/transcribe-song", requireAuth, async (req, res) => {
+router.post("/transcribe-song", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const { title, artist, duration, speechTranscription, audioUrl, url, sourceFilePath, start, end, trackIndex } = req.body;
 
@@ -1550,10 +1598,10 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
       });
 
       const jsonText = response.text || "";
-      const match = jsonText.match(/\{[\s\S]*\}/);
+      const match = extraerObjetoJson(jsonText);
 
       if (match) {
-        const resultData = JSON.parse(match[0]);
+        const resultData = JSON.parse(match);
         if (resultData.tonalidad) tonalidad = resultData.tonalidad;
         if (resultData.bpm) bpm = Number(resultData.bpm) || 125;
         if (resultData.lyricsWithChords) lyricsWithChords = resultData.lyricsWithChords;
@@ -1577,11 +1625,11 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
 });
 
 // Endpoint to generate/load instant demo audio when YouTube is blocked by bot check
-router.post("/demo-audio", requireAuth, async (req, res) => {
+router.post("/demo-audio", requireAuth, ficherosRateLimiter, async (req, res) => {
   try {
     const tempDir = path.join(process.cwd(), "public", "uploads", "temp");
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-    const demoPath = path.join(tempDir, `demo_concert_${Date.now()}.mp3`);
+    const demoPath = rutaEnDirectorio(tempDir, `demo_concert_${Date.now()}.mp3`);
     await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "sine=frequency=440:duration=60", "-c:a", "libmp3lame", "-q:a", "4", demoPath]);
     res.json({ success: true, filePath: demoPath });
   } catch (errCapturado) {

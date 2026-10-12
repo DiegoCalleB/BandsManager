@@ -132,6 +132,19 @@ export const iaRateLimiter = createRateLimiter({
 });
 
 /**
+ * Límite para las rutas que tocan el disco del servidor (cookies de yt-dlp, recortes de audio,
+ * temporales del flujo Concierto → Álbum). Es holgado para el uso normal de la UI, que lanza
+ * una petición por pista, pero corta un bucle que llene el disco o la CPU de ffmpeg.
+ */
+export const ficherosRateLimiter = createRateLimiter({
+  nombre: "ficheros",
+  windowMs: 60 * 1000,
+  maxRequests: 60,
+  porUsuario: true,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
+});
+
+/**
  * Límite para el renderizado de clips: descarga vídeo y lanza ffmpeg, así que es lo más caro
  * en CPU y en disco de toda la aplicación.
  */

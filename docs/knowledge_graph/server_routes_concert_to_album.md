@@ -23,6 +23,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
@@ -50,6 +51,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/acordesHonestos.test.ts`
 - `server/routes/__tests__/concertCueDetection.test.ts`
+- `server/routes/__tests__/concertToAlbumEntradasHostiles.test.ts`
 - `server/routes/__tests__/rutaFuenteSegura.test.ts`
 
 ---
