@@ -140,6 +140,27 @@ export const ficherosRateLimiter = createRateLimiter({
   nombre: "ficheros",
   windowMs: 60 * 1000,
   maxRequests: 60,
+
+ * Límite para el enriquecimiento de leads: cada llamada hace peticiones salientes (scraping de
+ * webs, Google Places, Jina, Apify) y a veces consume tokens de IA. El tope es holgado para no
+ * romper los lotes legítimos de la interfaz, pero impide convertir el servidor en un martillo.
+ */
+export const enriquecimientoRateLimiter = createRateLimiter({
+  nombre: "enriquecimiento",
+  windowMs: 5 * 60 * 1000,
+  maxRequests: 120,
+  porUsuario: true,
+  mensaje: "Has lanzado muchos enriquecimientos seguidos. Espera un momento antes de volver a intentarlo."
+});
+
+/**
+ * Límite general para las rutas autenticadas de lectura/escritura en BD (leads, campañas): no
+ * protege de un abuso fino, pero acota un bucle descontrolado de un cliente o una sesión robada.
+ */
+export const apiAutenticadaRateLimiter = createRateLimiter({
+  nombre: "api-autenticada",
+  windowMs: 60 * 1000,
+  maxRequests: 300,
   porUsuario: true,
   mensaje: "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
 });
