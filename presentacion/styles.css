@@ -2058,7 +2058,7 @@ body.pelicula:not(.scroll) .slide.active .pr-l { animation: prlab .6s ease-out c
 @media (prefers-reduced-motion: reduce) { .prisma { display: none !important; } }
 
 /* Dolor → solución: mientras Iago enseña la función, abajo a la izquierda sale lo que dolía y lo que hay ahora */
-.dolor { position: absolute; left: 150px; bottom: 36px; z-index: 6; display: none; flex-direction: column; gap: 10px; pointer-events: none; }
+.dolor { position: absolute; right: 150px; top: 222px; z-index: 6; display: none; flex-direction: column; align-items: flex-end; gap: 10px; pointer-events: none; }
 body.pelicula:not(.scroll) .slide.active .dolor { display: flex; }
 .dolor p { margin: 0; display: flex; align-items: center; gap: 14px; padding: 12px 22px 12px 14px; background: rgba(8,8,10,.86); border-radius: 8px; font: 600 26px/1.15 'Helvetica Neue', Arial, sans-serif; color: #fff; opacity: 0; box-shadow: 0 6px 24px rgba(0,0,0,.5); }
 .dolor i { font: 700 15px/1 'Helvetica Neue', Arial, sans-serif; font-style: normal; letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 4px; }
@@ -2066,5 +2066,5 @@ body.pelicula:not(.scroll) .slide.active .dolor { display: flex; }
 .dl-b { border-left: 5px solid #46d37b; } .dl-b i { background: rgba(70,211,123,.2); color: #7fe5a4; }
 body.pelicula:not(.scroll) .slide.active .dl-a { animation: dolor 8.4s ease both 1.2s; }
 body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both 3.8s; }
-@keyframes dolor { 0% { opacity: 0; transform: translateX(-24px) } 6% { opacity: 1; transform: none } 86% { opacity: 1; transform: none } 100% { opacity: 0; transform: translateX(-12px) } }
+@keyframes dolor { 0% { opacity: 0; transform: translateX(24px) } 6% { opacity: 1; transform: none } 86% { opacity: 1; transform: none } 100% { opacity: 0; transform: translateX(12px) } }
 @media (prefers-reduced-motion: reduce) { .dolor { display: none !important; } }

@@ -156,6 +156,15 @@
       const nxL = pelicula && i === cur && proximo(i) !== null && slides[proximo(i)].dataset.corte === 'l';
       const desde = i === cur ? desdeLinea : 0; desdeLinea = 0;
       if (i === cur) inicioEscena = performance.now() - (conVoz ? sumaLineas(s, desde) * 1000 : 0);
+      // Si se entra a mitad de escena (barra de progreso o reanudar tras una pausa), la voz sigue en la frase que toca: las animaciones de la
+      // pantalla (el email que se escribe, la cámara, las marcas) saltan al mismo punto en vez de empezar desde cero y quedarse atrás
+      if (i === cur && conVoz && desde > 0) {
+        const off = sumaLineas(s, desde) * 1000;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (cur !== i) return;
+          try { document.getAnimations().forEach((an) => { const tg = an.effect && an.effect.target; if (tg && s.contains(tg) && an.animationName !== undefined) an.currentTime = off; }); } catch (_) { /* sin salto: empieza desde el principio */ }
+        }));
+      }
       if (conVoz) window.DeckVoces.play(s, (el) => { if (el.matches('.dlg li')) { el.style.setProperty('--n', 0); el.style.setProperty('--b', '0ms'); el.classList.add('in'); } }, null,
         () => seguirPelicula(Math.max(nxL ? 0 : 280, (+s.dataset.min || 0) - (Date.now() - t0))), { cola: nxL ? 0.8 : 0, desde });
       else if (i === cur && s.dataset.fin && s.querySelector(s.dataset.fin)) {
