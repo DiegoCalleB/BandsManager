@@ -28,6 +28,7 @@ _Sin dependencias salientes directas._
 - [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
+- [[src_components_chords_renderFormattedChordSheet|src/components/chords/renderFormattedChordSheet.tsx]] *(from #frontend)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
 - [[src_utils_armoniaVisor|src/utils/armoniaVisor.ts]] *(from #service)*

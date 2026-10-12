@@ -226,6 +226,7 @@ _Sin dependencias salientes directas._
 - [[src_components_chords_MezclaPistas|src/components/chords/MezclaPistas.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(from #frontend)*
+- [[src_components_chords_respuestasAtril|src/components/chords/respuestasAtril.ts]] *(from #frontend)*
 - [[src_components_chords_SelectorEscucha|src/components/chords/SelectorEscucha.tsx]] *(from #frontend)*
 - [[src_components_chords_TomasConFondo|src/components/chords/TomasConFondo.tsx]] *(from #frontend)*
 - [[src_components_common_ReliabilityBadge|src/components/common/ReliabilityBadge.tsx]] *(from #frontend)*

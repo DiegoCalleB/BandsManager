@@ -2,7 +2,7 @@
   "server/routes/ai_music.ts": 4184,
   "server/routes/users.ts": 3653,
   "server/routes/leads/enrichment.ts": 1651,
-  "src/components/Atril.tsx": 1635,
+  "src/components/Atril.tsx": 1450,
   "src/components/booking/ExcelImportModal.tsx": 1620,
   "src/components/repertorio/SongTransitionPreviewModal.tsx": 1597,
   "src/types.ts": 1583,

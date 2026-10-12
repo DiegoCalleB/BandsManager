@@ -29,6 +29,7 @@ Exporta: EstiloArmonia, ESTILO_POR_DEFECTO, leerEstiloArmonia, guardarEstiloArmo
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
+- [[src_components_chords_renderFormattedChordSheet|src/components/chords/renderFormattedChordSheet.tsx]] *(from #frontend)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(from #frontend)*
 
 ---

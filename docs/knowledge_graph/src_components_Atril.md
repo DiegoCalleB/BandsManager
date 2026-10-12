@@ -13,7 +13,7 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: AtrilProps, Atril, renderFormattedChordSheet.
+Exporta: AtrilProps, Atril.
 
 ---
 
@@ -37,10 +37,11 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 - [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_ProfesorIA|src/components/chords/ProfesorIA.tsx]] *(Layer: #frontend, Domain: #repertoire)*
-- [[src_components_chords_RelojEnAcorde|src/components/chords/RelojEnAcorde.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_SelectorArmonia|src/components/chords/SelectorArmonia.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_SelectorEscucha|src/components/chords/SelectorEscucha.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_TomasConFondo|src/components/chords/TomasConFondo.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_renderFormattedChordSheet|src/components/chords/renderFormattedChordSheet.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_respuestasAtril|src/components/chords/respuestasAtril.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_song_studio_SongStudioStemProgressModal|src/components/song_studio/SongStudioStemProgressModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_song_studio_SongStudioStructureUploadModal|src/components/song_studio/SongStudioStructureUploadModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
@@ -59,7 +60,6 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 - [[src_utils_alineacionAcordes|src/utils/alineacionAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_armoniaVisor|src/utils/armoniaVisor.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*

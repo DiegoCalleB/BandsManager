@@ -23,7 +23,7 @@ Exporta: RelojEnAcorde.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_chords_renderFormattedChordSheet|src/components/chords/renderFormattedChordSheet.tsx]] *(from #frontend)*
 
 ---
 

@@ -24,7 +24,7 @@ Exporta: InfoChip, infoDeAcordeVisible.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_chords_renderFormattedChordSheet|src/components/chords/renderFormattedChordSheet.tsx]] *(from #frontend)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*
 
 ---
