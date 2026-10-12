@@ -1101,7 +1101,7 @@ body.pelicula:not(.scroll) .slide { scale: .9; }
 /* Títulos de crédito: el rollo sube despacio, como al final de una película */
 .slide.creditos { background: #000; padding: 0; overflow: hidden; align-items: center; color: #fff; }
 .creditos .rollo { width: 1400px; margin: 0 auto; text-align: center; transform: translateY(1080px); }
-.slide.creditos.active .rollo { animation: rollo 114s linear 600ms both; }
+.slide.creditos.active .rollo { animation: rollo 144s linear 600ms both; }
 @keyframes rollo { from { transform: translateY(1080px); } to { transform: translateY(calc(-100% - 40px)); } }
 .creditos .cr-pre { font-size: 30px; letter-spacing: .3em; text-transform: uppercase; color: rgba(255,255,255,.6); margin: 0; }
 .creditos .cr-titulo { font-family: Anton, Oswald, sans-serif; font-size: 150px; line-height: 1; margin: 18px 0 8px; letter-spacing: .02em; }

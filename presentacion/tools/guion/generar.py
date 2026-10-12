@@ -890,7 +890,7 @@ add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" da
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
-add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="120000">
+add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="150000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>
     <h2 class="cr-titulo">BandManager.io</h2>
@@ -1012,6 +1012,11 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </div>
     </div>
     <div class="cr-extra">
+    <h2 class="cr-seccion">La parte técnica</h2>
+    <p class="cr-nota" style="margin-top:6px">Para los profesores: cómo está hecho por dentro. Para defenderlo en vivo, pulsa D</p>
+    <!--TECNICA-->
+    </div>
+    <div class="cr-extra">
     <h2 class="cr-seccion">Todo lo que usamos</h2>
     <h3>Lo que ves</h3>
     <dl class="cr-dl">
@@ -1126,7 +1131,7 @@ _x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rinde
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
 ANEXO = ['Las ideas, en su sitio', 'La ficha del bolo',
-         'A quién se lo vendemos', 'El mapa que lee la IA', 'Seguridad', 'Calidad en cifras']
+         'El mapa que lee la IA', 'Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras']
 fuera = []
 for t in ANEXO:
     k = [i for i, x in enumerate(S) if x.lstrip().startswith('<section') and f'data-title="{t}"' in x]
@@ -1223,6 +1228,9 @@ for _q, _a in _df.PREGUNTAS:
     _md_doc += [f'**{_q}**', '', _a, '']
 _md_doc += ['## Una idea por tema', '', *[f'- **{t}** · {a}: {b}' for i, t, cs in _df.SECCIONES for a, b in cs[:1]], '']
 open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write('\n'.join(_md_doc))
+# La parte técnica de la película vive en los créditos (misma fuente que el panel D)
+_tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
+html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
 html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
@@ -1239,7 +1247,7 @@ for t in CORTO:
     html = html.replace(f'data-title="{t}"', f'data-title="{t}" data-corto', 1)
 html = html.replace('data-title="Créditos" data-corto', 'data-title="Créditos" data-corto data-dur-corto="33000"', 1)
 # en la película completa, sin los bloques .cr-extra: 48 s de rollo (styles.css), a la misma velocidad que en el corte
-html = html.replace('data-dur="120000"', 'data-dur="120000" data-dur-peli="116000" data-dur-corto="50000"', 1)
+html = html.replace('data-dur="150000"', 'data-dur="150000" data-dur-peli="146000" data-dur-corto="50000"', 1)
 html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="10500"', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
