@@ -2036,3 +2036,23 @@ body.pelicula:not(.scroll) .nf-sig-ep.on { display: flex; animation: nfsig .4s e
 body.df-abierto #stage { filter: blur(6px); }
 @media (max-width: 800px) { .df-cab > b { font-size: 26px; } .df-tabs button, .df-x { font-size: 15px; padding: 9px 12px; } .df-cuerpo p { font-size: 17px; } .nf-def { font-size: 16px; padding: 8px 12px; } }
 @media print { #defensa { display: none !important; } }
+
+/* ── Iris: el prisma de «The Dark Side of the Moon» abre la canción en una onda por instrumento ── */
+.prisma { position: absolute; inset: 0; z-index: 5; display: none; place-items: center; background: radial-gradient(ellipse at 50% 50%, #12121a 0%, #05050a 78%); border-radius: inherit; opacity: 0; pointer-events: none; }
+body.pelicula:not(.scroll) .slide.active .prisma { display: grid; animation: prfade 11s linear .3s both; }
+.pr-svg { width: 100%; height: 100%; }
+.pr-beam { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 26px rgba(255,255,255,.7)); stroke-dasharray: 1; stroke-dashoffset: 1; }
+.pr-prisma { fill: none; stroke: #fff; stroke-width: 3; stroke-linejoin: round; opacity: .9; filter: drop-shadow(0 0 14px rgba(190,205,255,.8)); }
+.pr-r { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 8px var(--c)); }
+.pr-l { fill: var(--c); font: 700 22px/1 'Helvetica Neue', Arial, sans-serif; opacity: 0; letter-spacing: .04em; text-shadow: 0 0 10px #000; }
+body.pelicula:not(.scroll) .slide.active .pr-beam { animation: prbeam 1.3s ease-out .9s both; }
+body.pelicula:not(.scroll) .slide.active .pr-prisma-in { animation: prglow 1.8s ease-in-out 2s both; }
+body.pelicula:not(.scroll) .slide.active .pr-r { animation: prray 1.4s ease-out calc(2.4s + var(--k) * .22s) both, prflow 2.2s linear calc(3.8s + var(--k) * .22s) infinite; stroke-dasharray: .035 .02; }
+body.pelicula:not(.scroll) .slide.active .pr-l { animation: prlab .6s ease-out calc(3.6s + var(--k) * .22s) both; }
+@keyframes prfade { 0% { opacity: 0 } 6% { opacity: 1 } 88% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes prbeam { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
+@keyframes prglow { 0%, 100% { opacity: 0; } 40%, 70% { opacity: 1; } }
+@keyframes prray { from { stroke-dasharray: 0 1 } to { stroke-dasharray: .035 .02 } }
+@keyframes prflow { to { stroke-dashoffset: -.11 } }
+@keyframes prlab { from { opacity: 0; transform: translateX(14px) } to { opacity: 1; transform: none } }
+@media (prefers-reduced-motion: reduce) { .prisma { display: none !important; } }

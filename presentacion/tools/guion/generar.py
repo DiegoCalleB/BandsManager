@@ -449,7 +449,7 @@ add(feat('Iris separa los instrumentos', TAG2, 'Cada instrumento, por separado.'
           m('alvaro', '¡Parece un Cubase! ¡Y cada pista de un color del arcoíris! 🌈', say='[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!'),
           m('alvaro', '¡Espera, espera! ¿Esto no será un Moises?'),
           m('iago', '¡Sí, tío! Un Moises metido en nuestro repertorio. Y encima grabamos nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas. ¡Y por fin se oye el bajo!')],
-         shot_vid('video/v-iris.mp4', 'video/v-iris.jpg', cls='alto'), grupo='musica'))
+         shot_vid('video/v-iris.mp4', 'video/v-iris.jpg', cls='alto').replace('</div>', '<div class="prisma" aria-hidden="true">' + open(os.path.join(AQUI, 'prisma.svg.html'), encoding='utf-8').read() + '</div></div>', 1) if False else shot_vid('video/v-iris.mp4', 'video/v-iris.jpg', cls='alto')[:-6] + '<div class="prisma" aria-hidden="true">' + open(os.path.join(AQUI, 'prisma.svg.html'), encoding='utf-8').read() + '</div></div>', grupo='musica'))
 
 add(feat('Las ideas, en su sitio', TAG2, 'Las ideas, en su sitio.',
          [m('brais', '¿Y el break que grabé en el móvil?', say='[softly] Neno, ¿y el break de batería que grabé el otro día en el móvil?'),
