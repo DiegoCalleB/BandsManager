@@ -261,6 +261,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Umbrales pragmáticos de tamaño (evitar monstruos reales, no monstruitos recién nacidos):**
   * `0 - 600 líneas`: Zona verde. Tamaño normal y saludable en React/TypeScript con JSX estructurado, estilos de Tailwind y tipado completo. No fragmentar por deporte.
   * `600 - 800 líneas`: Zona de atención. Si el archivo crece, evaluar desacoplamiento en la siguiente refactorización.
+  * **Regla dura, automatizada:** ningún fichero nuevo puede pasar de 600 líneas y los monolitos existentes tienen el tope congelado en `scripts/tamano-baseline.json` (solo puede bajar). Lo comprueba `scripts/tamano-ficheros.mjs` dentro de `npm run verify:docs` (CI y pre-push). Al reducir un monolito, `npm run verify:tamano -- --actualizar` baja su tope.
   * `> 800 líneas`: Zona roja / Monstruo en gestación. **La IA tiene terminantemente prohibido inflar con bloques nuevos de JSX o lógica compleja un archivo que ya supere las 800 líneas.** Toda nueva funcionalidad o bloque debe nacer en subcomponente, hook o función utilitaria.
 * **Los 3 Gatillos Objetivos de Extracción (cuándo separar obligatoriamente):**
   1. **Modales y paneles secundarios:** Si una vista principal contiene un `<Modal>` o `<Drawer>` que pasa de ~100-150 líneas, debe residir en su propio archivo (ej. dentro de una subcarpeta del dominio como `modals/` o subcomponentes). La vista principal solo gestiona su apertura/cierre.
