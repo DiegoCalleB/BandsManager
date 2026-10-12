@@ -106,7 +106,7 @@ jobs:
           # el valor nuevo solo debe BAJAR cuando se reduzca la deuda, y no subirse sin justificarlo.
           # 2026-10-11: baseline bajado de 5525 a 1270, el recuento exacto tras la modularización de
           # Atril, LeadsTable, SongTransitionPreviewModal y el resto de monolitos, quitar los catch mudos y las variables sin usar. Sin margen: cada limpieza lo vuelve a bajar.
-          BASELINE=17
+          BASELINE=0
           if [ "$TOTAL" -gt "$BASELINE" ]; then
             echo "::error::El total de hallazgos de eslint ha subido de $BASELINE a $TOTAL. Revisa el diff antes de mergear - no hace falta arreglar la deuda existente, pero no añadas más."
             exit 1
