@@ -2086,3 +2086,6 @@ body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both
 .cover .art.foto .foto-lema b { display: block; font: 400 52px/1.05 Anton, Oswald, Impact, sans-serif; letter-spacing: .02em; text-transform: uppercase; color: #ffd596; margin-bottom: 8px; }
 .cover .art.foto .foto-pie { padding-top: 6px; background: rgba(0,0,0,.88); font-size: 17px; font-weight: 500; color: rgba(255,255,255,.7); }
 @keyframes lema { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+.cover .art.foto .foto-lema b.l2 { color: #fff; font-size: 40px; opacity: 0; animation: lema 1s var(--ease) 6s both; }
+.cover .art.foto .foto-lema .l3 { display: block; opacity: 0; animation: lema 1s var(--ease) 9s both; }
