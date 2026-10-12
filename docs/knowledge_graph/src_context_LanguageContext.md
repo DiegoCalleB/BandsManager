@@ -29,12 +29,8 @@ Exporta: LanguageProvider.
 ---
 
 ## 🧪 Tests que lo cubren
-- `src/context/__tests__/LanguageContext.behavior.test.tsx`
-
----
-
-## 🧪 Tests que lo cubren
 - `src/components/__tests__/LandingChatWidget.test.tsx`
+- `src/context/__tests__/LanguageContext.behavior.test.tsx`
 
 ---
 
