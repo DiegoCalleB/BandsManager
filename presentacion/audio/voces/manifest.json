@@ -915,17 +915,6 @@
   "v": "d8014b3f2a83",
   "who": "bateria"
  },
- "650f1dbb": {
-  "d": 5.86,
-  "e": "1274139549776765654651111113422899817541994311179218618515999655677461154134311111164566369697117561242114589685111113511199411245685352012111110",
-  "f": "650f1dbb.mp3",
-  "h": "6924455d",
-  "oido": "Esto es Bandmanager, os voy a contar qué hace por cada uno de vosotros. Abrí bielas orejas, chavales, que esto m",
-  "qa": 0.76,
-  "say": "Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas, chavales, que esto mola mazo.",
-  "v": "76e72eb0d4c2",
-  "who": "bajo"
- },
  "6567c41b": {
   "d": 2.21,
   "e": "03688844554893856433322100011981169898997227922112110",
@@ -1283,6 +1272,17 @@
   "v": "cb4ecbc4af05",
   "who": "bajo"
  },
+ "82d5b43b": {
+  "d": 5.74,
+  "e": "1229961468888652110004631129630399975620057894331100011026411499405667579112310132100100000111111111001265669988612556511164676654123211111111",
+  "f": "82d5b43b.mp3",
+  "h": "740009bd",
+  "oido": "Dime hasta el sábado chavales, confiacen el bajista, por una vez en la historia del rock.",
+  "qa": 0.85,
+  "say": "Dadme… hasta el sábado, chavales. Confiad en el bajista. [sighs] Por una vez en la historia del rock.",
+  "v": "ae8571fd24c0",
+  "who": "bajo"
+ },
  "8331d8c0": {
   "d": 3.74,
   "e": "05432115662486210000187746721830450461333320012210000001540597774004998995318732693225422111",
@@ -1369,17 +1369,6 @@
   "say": "[softly] Gracias, Iago. De verdad.",
   "v": "0f6a79a1a71b",
   "who": "voz"
- },
- "8d834dd7": {
-  "d": 5.42,
-  "e": "21219959920793149787830399955410000000000015520577035554593113100321000000000000000000011110000000333346640133321024233343212310100001",
-  "f": "8d834dd7.mp3",
-  "h": "0075d91e",
-  "oido": "DADMESTALS SABADO CHAVALES, confiacen el bajista. Por una vez en la historia del rock",
-  "qa": 0.77,
-  "say": "Dadme hasta el sábado, chavales. Confiad en el bajista. [sighs] Por una vez en la historia del rock.",
-  "v": "d6fad98a43d1",
-  "who": "bajo"
  },
  "8ed6e1e8": {
   "d": 8.38,
@@ -1504,6 +1493,17 @@
   "say": "¿Cómo? ¿Que si ponemos este código, el cú-erre, en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?",
   "v": "e22f8e985a3a",
   "who": "guitarra"
+ },
+ "9dce1fd8": {
+  "d": 6.34,
+  "e": "102620098718954875642331101113128998257636983104993047158319999768886541145122311110001011112316723662269696115741330136896552010143100574556879845641002100",
+  "f": "9dce1fd8.mp3",
+  "h": "9627d1bc",
+  "oido": "Esto es Band-Manager, os voy a contar qué hace por cada uno de vosotros. Así que abrí 10 las orejas, chavales, que esto mola",
+  "qa": 0.86,
+  "say": "Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Así que abrid bien las orejas, chavales, que esto mola mazo.",
+  "v": "a261a2b5edd5",
+  "who": "bajo"
  },
  "9f2590b1": {
   "d": 3.07,

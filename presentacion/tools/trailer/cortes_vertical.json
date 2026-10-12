@@ -1,9 +1,10 @@
 [
- {"ini": 47.1, "fin": 53.7, "exacto": true, "paso": "corte", "rotulo": "s1.png"},
- {"ini": 61.9, "fin": 64.95, "exacto": true, "paso": "corte", "rotulo": "s2.png"},
- {"ini": 98.2, "fin": 99.0, "exacto": true, "voz": false, "paso": "rampa"},
- {"ini": 147.2, "fin": 148.0, "exacto": true, "voz": false, "paso": "rampa"},
- {"ini": 162.2, "fin": 163.0, "exacto": true, "voz": false, "paso": "rampa"},
- {"ini": 187.2, "fin": 188.0, "exacto": true, "voz": false, "paso": "rampa"},
- {"ini": 318.8, "fin": 322.2, "exacto": true, "paso": "negro", "rotulo": "s3.png"}
+ {"ini": 47.6, "fin": 54.15, "paso": "corte", "rotulo": "s1.png", "exacto": true},
+ {"ini": 62.35, "fin": 65.6, "paso": "corte", "rotulo": "s2.png", "exacto": true},
+ {"ini": 99.2, "fin": 100.0, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 133.4, "fin": 134.2, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 161.4, "fin": 162.2, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 180.6, "fin": 181.4, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 361.6, "fin": 362.4, "voz": false, "paso": "rampa", "exacto": true},
+ {"ini": 256.95, "fin": 263.85, "paso": "negro", "rotulo": "s3.png", "exacto": true}
 ]

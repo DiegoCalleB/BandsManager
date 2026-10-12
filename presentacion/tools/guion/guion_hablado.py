@@ -9,7 +9,7 @@ SAY = [
  ('Llevamos tres ensayos sin saber', 'Y llevamos tres ensayos sin saber qué tocamos. Cada uno trae su setlist. ¡Así no hay solo que aguante!'),
  ('Así no llegamos a ningún lado', 'Rapaces, así no llegamos ni al bar de abajo. Y mira que está cerca.'),
  ('Ya he dejado dos grupos por esto', 'Ya he dejado dos grupos por esto mismo. Y con vosotros no me va a pasar, que sois mis hermanos de escenario.'),
- ('Dadme hasta el sábado', 'Dadme hasta el sábado, chavales. Confiad en el bajista. [sighs] Por una vez en la historia del rock.'),
+ ('Dadme hasta el sábado', 'Dadme… hasta el sábado, chavales. Confiad en el bajista. [sighs] Por una vez en la historia del rock.'),
  # Prólogo · el portátil
  ('Para acabar el máster necesito', 'Vale. Para acabar el máster necesito un proyecto. Mi banda necesita un milagro. Y yo, un café.'),
  ('¿Y si el proyecto es el milagro?', '¿Y si el proyecto es el milagro, {bajo}?'),
@@ -178,7 +178,7 @@ EXTRA_SAY = {
  'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos, los rifs, y las palabrotas.',
  'cast_bajo': 'Y yo soy {bajo}, de San Blas de toda la vida. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
  'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y el setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
- 'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Abrid bien las orejas, chavales, que esto mola mazo.',
+ 'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Así que abrid bien las orejas, chavales, que esto mola mazo.',
  'react': 'A ver, neno, enséñanos eso que ni tú te crees. Y rápido, que se calienta la birra.',
  'radio': 'Buenos días, rockeros. Esto es Rock efe eme. La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrécshon Fest, gracias a su bajista, {bajo}, y a band mánayer punto io: la increíble app que ha creado, y que va a revolucionar la industria musical. ¡Sube el volumen!',
  'otro_jueves': '¿Alguien ha contestado a la sala del catorce?',
