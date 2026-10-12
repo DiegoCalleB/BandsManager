@@ -329,7 +329,7 @@ add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
           m('brais', 'Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?', say='[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?'),
           m('iago', 'Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.', say='Claro, {bateria}. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas.'),
           m('alvaro', '¿Y cómo cambias de una banda a otra?', say='¿Y cómo cambias de una banda a otra?'),
-          m('iago', 'Como de perfil en una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como de perfil en una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
+          m('iago', 'Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
           m('xandre', '¡Cambió todo! ¡El logo, el calendario, hasta las salas!', say='[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!'),
           m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa.')],
          shot_vid_sync('video/v-perfiles.mp4', 'video/v-perfiles.jpg')))
@@ -541,7 +541,7 @@ add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del conci
           m('alvaro', '¡Ni una discusión más en la gasolinera! ⛽', say='[laughs] ¡Ni una discusión más en la gasolinera!')],
          shot_vid('video/v-giras.mp4', 'video/v-giras.jpg'), grupo='negocio'))
 
-add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han visto todo.', 'img/concierto-1.jpg',
+add(scene('Lo han visto todo', 'Sábado · 13:00 · El local de ensayo', 'Lo han visto todo.', 'img/concierto-1.jpg',
           dlg(m('alvaro', '¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas! 🤯'),
               m('xandre', '¡Sos un genio, Iago! 🙌'),
               m('iago', 'Por las noches, con Claudio y Guglio.'), cls='tight') + '''
@@ -552,7 +552,7 @@ add(scene('Lo han visto todo', 'Sábado, 13:00 · El local de ensayo', 'Lo han v
     <li><img src="img/miembro-iago.jpg" alt="Iago"><span>Iago</span></li>
   </ul>''', tr='zoom'))
 
-add(scene('Las noches', 'Sábado, 13:02 · El local de ensayo', 'Casi siempre, de noche.', 'img/concierto-1.jpg',
+add(scene('Las noches', 'Sábado · 13:02 · El local de ensayo', 'Casi siempre, de noche.', 'img/concierto-1.jpg',
           '<div class="noche-reloj" aria-hidden="true"><b>02:47</b><span>la hora a la que Iago seguía programando</span></div>' +
           dlg(m('iago', 'Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.', '02:47',
                 say='[softly] Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.'),
@@ -600,11 +600,11 @@ add(f'''<section class="slide scene biz" data-title="A quién se lo vendemos" da
   <h2>A quién se lo vendemos.</h2>
   <div class="biz-cols">
     <div class="biz-col"><span class="badge">B2C</span><h3>Bandas y músicos</h3><p>Una cuota por banda, de 0 a 79 € al mes</p></div>
-    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Managers, agencias, salas, festivales y productoras</h3><p>Los que llevan varias bandas y los que programan</p></div>
+    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Mánagers, agencias, salas, festivales y productoras</h3><p>Los que llevan varias bandas y los que programan</p></div>
   </div>
   {dlg(m('iago', 'Dos tipos de cliente. B2C: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda.'),
        m('brais', '¿Y B2B?'),
-       m('iago', 'Managers y agencias, que llevan varias bandas a la vez. Y salas, festivales y productoras, que son las que programan.'),
+       m('iago', 'Mánagers y agencias, que llevan varias bandas a la vez. Y salas, festivales y productoras, que son las que programan.'),
        m('xandre', '¿Y por qué iba a querer una sala usar esto?'),
        m('iago', 'Porque si es fácil trabajar con nosotros, contestan antes. Quien toca paga; quien programa hace que el producto funcione.'), cls='tight')}
 </section>
@@ -665,7 +665,7 @@ add(f'''<section class="slide scene tech" data-title="Cómo se construyó con IA
   {dlg(m('brais', 'Y si Claudio y Guglio programan, ¿quién manda aquí?'),
        m('iago', 'Un fichero: AGENTS.md. Es el contrato que leen antes de tocar nada, y tiene tres reglas que no se negocian.'),
        m('xandre', '¿Y si se las saltan?'),
-       m('iago', 'Se rompe el build. Un test lo vigila en cada commit, hay 22 skills y un hook que avisa cuando se toca algo sensible.'), cls='tight')}
+       m('iago', 'Se rompe el build. Un test lo vigila en cada commit; hay 22 skills y un hook que avisa cuando se toca algo sensible.'), cls='tight')}
   <pre class="code tech-vis"><b>AGENTS.md · no negociable</b>
 
 1. Ningún dato de una banda
@@ -871,8 +871,8 @@ add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="E
            say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad.'),
          m('diego', 'Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.',
            say='Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario.'),
-         m('diego', 'Así que te hemos preparado el setlist del primer ensayo de Master of Prompts, la banda que estoy montando: metal, con letras de coña sobre programar.',
-           say='Así que te hemos preparado el sétlist del primer ensayo de Máster of Prompts, la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.'),
+         m('diego', 'Así que te he preparado el setlist del primer ensayo de Master of Prompts, la banda que estoy montando: metal, con letras de coña sobre programar.',
+           say='Así que te he preparado el sétlist del primer ensayo de Máster of Prompts, la banda que estoy montando. Metal: Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar.'),
          m('alvaro', '¡Psychosocket! ¡Freak on a Branch! ¡Eso hay que tocarlo!', say='[excited] ¡Sáicosóket! ¡Frík on a Bránch! ¡Eso hay que tocarlo, tío!'),
          m('xandre', '¡Che, y Fear of the Deadline, que esa la cantamos todos!', say='[laughs] ¡Che, y Fíar of de Dédlain, que esa la cantamos todos!'),
          m('diego', 'Te lo mando con tu hoja de batería, como a todos. La IA lo redacta, yo lo repaso y… enviado.',
@@ -908,7 +908,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>{bajo}</dt><dd>{bajo:cargo} · el que nadie oye</dd>
       <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras. En dos bandas, desde que lo ficharon</dd>
       <dt>{voz}</dt><dd>{voz:cargo} · la cara bonita</dd>
-      <dt>{guitarra}</dt><dd>{guitarra:cargo} · los solos y los rifs</dd>
+      <dt>{guitarra}</dt><dd>{guitarra:cargo} · los solos y los riffs</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>
       <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
       <dt>{sello}</dt><dd>Discos Cuarzo · quería el 30 % y el repertorio</dd>
@@ -945,7 +945,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Salas y clubs</dt><dd>Reciben el pitch y firman el acuerdo con un enlace</dd>
       <dt>Festivales</dt><dd>Cada uno con su ficha, su mapa y su historial</dd>
       <dt>Medios</dt><dd>Prensa, radio y podcast</dd>
-      <dt>Mánagements y sellos</dt><dd>Los que llevan varias bandas</dd>
+      <dt>Representantes y sellos</dt><dd>Los que llevan varias bandas</dd>
       <dt>Ayuntamientos</dt><dd>Fiestas patronales y programación municipal</dd>
       <dt>Grupos amigos</dt><dd>Cartel doble con Date Swap</dd>
     </dl>

@@ -120,7 +120,7 @@ SAY = [
  # Cap. 5 · clientes
  ('Dos tipos de cliente', 'Hay dos tipos de cliente. Be tu ci: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes.'),
  ('¿Y B2B?', '[confused] ¿Y be tu bi? ¿Eso qué es, un grupo coreano?'),
- ('Managers y agencias, que llevan', 'Los mánayers y las agencias, que llevan varias bandas a la vez. Y las salas, los festivales y las productoras, que son los que programan.'),
+ ('Mánagers y agencias, que llevan', 'Los mánayers y las agencias, que llevan varias bandas a la vez. Y las salas, los festivales y las productoras, que son los que programan.'),
  ('¿Y por qué iba a querer una sala', '¿Y por qué iba a querer una sala usar esto? Si no nos atienden ni el teléfono.'),
  ('Porque si es fácil trabajar con nosotros', 'Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga. Y quien programa, hace que todo esto funcione.'),
  # Cap. 5 · dinero
@@ -175,7 +175,7 @@ ACT_SAY = {
 EXTRA_SAY = {
  'cast_bateria': 'Soy {bateria}, a la {bateria:rol}. El que marca el ritmo. Y el que se bebe las birras.',
  'cast_voz': '{voz}. {voz:cargo}. Che, la cara bonita de la banda.',
- 'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos y los rifs.',
+ 'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos y los riffs.',
  'cast_bajo': 'Y yo soy {bajo}, de San Blas de toda la vida. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
  'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y el setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
  'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Así que abrid bien las orejas, chavales, que esto mola mazo.',
