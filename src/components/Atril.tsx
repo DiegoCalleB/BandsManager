@@ -40,7 +40,7 @@ import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
 import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
-import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { useNivelAcordes, useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "./chords/DrawerDiagramas";
 import { AcordeActual } from "./chords/AcordeActual";
 import { useAcordesDeLaHoja } from "../hooks/useAcordesDeLaHoja";
@@ -131,6 +131,7 @@ export function Atril({
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
+  const [nivelAcordes, setNivelAcordes] = useNivelAcordes();
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(ajustes.diagramas);
 
   // Edit form state
@@ -998,6 +999,8 @@ export function Atril({
               contexto={contextoAcordes}
               vista={vistaAcordes}
               onVista={setVistaAcordes}
+              nivel={nivelAcordes}
+              onNivel={setNivelAcordes}
               estiloArmonia={estiloArmonia}
               reproduciendo={isPlayingAudio}
               onToggle={audioUrl ? handleToggleAudio : undefined}
@@ -1357,6 +1360,8 @@ export function Atril({
                 contexto={contextoAcordes}
                 vista={vistaAcordes}
                 onVista={setVistaAcordes}
+                nivel={nivelAcordes}
+                onNivel={setNivelAcordes}
                 onCerrar={() => setShowChordDiagrams(false)}
                 sonando={acordeSonando}
                 estiloArmonia={estiloArmonia}

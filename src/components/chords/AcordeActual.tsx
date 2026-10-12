@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Pause, Play, ChevronDown, ChevronUp } from 'lucide-react';
 import type { ContextoAcorde, VistaAcorde } from '../../utils/vistaAcordes';
 import { gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
-import { CajaAcorde, SelectorVistaAcorde } from './AcordeEnInstrumento';
+import type { NivelAcorde } from '../../utils/voicings';
+import { CajaAcorde, SelectorNivel, SelectorVistaAcorde } from './AcordeEnInstrumento';
 
 interface Props {
   /** Acorde que suena ahora (transpuesto, como se ve en la hoja). */
@@ -14,6 +15,8 @@ interface Props {
   contexto: Map<string, ContextoAcorde>;
   vista: VistaAcorde;
   onVista: (v: VistaAcorde) => void;
+  nivel?: NivelAcorde;
+  onNivel?: (n: NivelAcorde) => void;
   estiloArmonia?: EstiloArmonia;
   /** Play/pausa siempre a mano: la barra se queda pegada arriba aunque se baje por la hoja. */
   reproduciendo?: boolean;
@@ -27,11 +30,11 @@ const CLAVE_DIAGRAMAS = 'bm_acorde_actual_diagramas';
  * que vienen, como una tira de diagramas que avanza con la canción. Se pliega a solo nombres para ganar sitio.
  * Al pausar conserva el último acorde para poder mirarlo con calma.
  */
-export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, contexto, vista, onVista, estiloArmonia, reproduciendo, onToggle }) => {
+export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reproduciendo, onToggle }) => {
   const [ultimo, setUltimo] = useState<string | null>(sonando);
   useEffect(() => { if (sonando) setUltimo(sonando); }, [sonando]);
   const [diagramas, setDiagramas] = useState<boolean>(() => {
-    try { return localStorage.getItem(CLAVE_DIAGRAMAS) !== '0'; } catch { return true; }
+    try { return localStorage.getItem(CLAVE_DIAGRAMAS) === '1'; } catch { return false; }
   });
   const alternarDiagramas = () => {
     const v = !diagramas;
@@ -83,12 +86,12 @@ export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, co
       {diagramas && acorde && (
         <>
           <div className="flex items-start gap-2 overflow-x-auto pb-1" aria-label="Diagramas de los acordes que vienen">
-            <div className="w-32 shrink-0"><CajaAcorde chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} /></div>
+            <div className="w-32 shrink-0"><CajaAcorde chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} /></div>
             {lista.map((c, i) => (
-              <div key={`${c}-${i}`} className={`w-28 shrink-0 ${i > 0 ? 'opacity-70' : ''}`}><CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} /></div>
+              <div key={`${c}-${i}`} className={`w-28 shrink-0 ${i > 0 ? 'opacity-70' : ''}`}><CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} /></div>
             ))}
           </div>
-          <div className="flex justify-end"><SelectorVistaAcorde vista={vista} onCambio={onVista} /></div>
+          <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
         </>
       )}
     </section>
