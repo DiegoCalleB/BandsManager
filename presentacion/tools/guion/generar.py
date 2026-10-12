@@ -607,7 +607,7 @@ add(f'''<section class="slide scene biz" data-title="Cómo ganamos dinero" data-
   <span class="tag">Cómo lo hacemos · El dinero</span>
   <h2>Y de qué vivimos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Cinco planes, de 0 a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
     <div class="biz-col"><span class="badge b2b">Voluntaria, de momento</span><h3>Pequeña comisión por concierto</h3><p>De los conciertos que se cierran por la plataforma</p></div>
   </div>
   {dlg(m('alvaro', '¿Y de qué vivimos, entonces?'),
@@ -759,7 +759,7 @@ add(f'''<section class="slide scene" data-title="En la radio" data-transition="f
   <span class="tag">Domingo · 09:00 · En antena</span>
   <div class="radio">
     <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div><div class="dial">Rock FM · en directo</div><div class="head" data-who="locutor" data-say="{EXTRA_SAY['radio']}">La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.</div></div>
+    <div><div class="dial">Radio Riff · en directo</div><div class="head" data-who="locutor" data-say="{EXTRA_SAY['radio']}">La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.</div></div>
   </div>
 </section>
 ''')
@@ -1128,6 +1128,12 @@ _r = ('<div class="rafaga" aria-hidden="true">' + ''.join(
     + f'<p class="rf rf-fin" style="--k:{len(RAFAGA)}">Y todo, en la misma app.</p></div>\n')
 _x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rindex('</section>'):]
 
+# Orden de la recta final del capítulo 4: la ráfaga de funciones va antes del momento íntimo (así «Las noches» no se pisa)
+_ym = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
+_lh = [i for i, x in enumerate(S) if 'data-title="Lo han visto todo"' in x]
+if _ym and _lh and _ym[0] > _lh[0]:
+    _x = S.pop(_ym[0]); S.insert(_lh[0], _x)
+
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
 ANEXO = ['Las ideas, en su sitio', 'La ficha del bolo',
@@ -1331,5 +1337,60 @@ html = re.sub(r'\bClaudio\b', '{ia_claude}', html)
 html = re.sub(r'\bGuglio\b', '{ia_gemini}', html)
 # lo que no debe tocarse: el contenido de <script> y <style> no lleva nombres, pero por si acaso se restauran
 
+# ───────── Guion final (guion_final.json): diálogos pulidos de cada escena, pantalla y voz ─────────
+import json as _jg, html as _hg
+def _aplicar_guion(html):
+    datos = _jg.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8'))
+    esc = lambda t: _hg.escape(t, quote=True)
+    avisos = []
+    for sc in datos:
+        t = sc['title']
+        ini = html.find(f'data-title="{t}"')
+        if ini < 0:
+            avisos.append('sin escena: ' + t); continue
+        ini = html.rfind('<section', 0, ini); fin = html.index('</section>', ini)
+        cuerpo = html[ini:fin]
+        pat = re.compile(r'<(li|div|figure|p|span)\b([^>]*\bdata-who="([^"]*)"[^>]*)>')
+        els = [m for m in pat.finditer(cuerpo) if 'data-say=' in m.group(2)]
+        L = sc['lines']
+        if len(els) == len(L):
+            # misma cantidad: se actualiza cada elemento en su sitio (la animación de pantalla va ligada a esas líneas)
+            nuevo, pos = [], 0
+            for m, l in zip(els, L):
+                if m.group(3) != l['who']:
+                    avisos.append(f"{t}: personaje {m.group(3)}≠{l['who']}")
+                tag = re.sub(r'data-say="[^"]*"', lambda _: 'data-say="' + esc(l['voz']) + '"', m.group(0), 1)
+                nuevo.append(cuerpo[pos:m.start()]); nuevo.append(tag); pos = m.end()
+                if m.group(1) in ('li', 'div', 'p', 'span'):
+                    fin_t = cuerpo.find('</' + m.group(1) + '>', pos)
+                    if fin_t > 0 and '<' not in cuerpo[pos:fin_t] and m.group(1) == 'li':
+                        nuevo.append(esc(l['txt']).replace('&#x27;', "'")); pos = fin_t
+            nuevo.append(cuerpo[pos:]); cuerpo = ''.join(nuevo)
+        elif els and all(m.group(1) == 'li' for m in els):
+            # cambia la cantidad de líneas: se rehace la lista conservando los atributos (sync, hora) de las que se mantienen
+            a, b = els[0].start(), cuerpo.find('</li>', els[-1].end()) + 5
+            lis = []
+            for k, l in enumerate(L):
+                base = els[min(k, len(els) - 1)].group(2)
+                atrs = re.sub(r'\s*data-who="[^"]*"|\s*data-say="[^"]*"|\s*data-t="[^"]*"', '', base).strip()
+                if k >= len(els): atrs = re.sub(r'\bsync\b', '', atrs)
+                atrs = re.sub(r'class="\s*"', '', atrs).strip()
+                hora = f' data-t="{l["t"]}"' if l.get('t') else (re.search(r'data-t="[^"]*"', base).group(0).join([' ', '']) if re.search(r'data-t="[^"]*"', base) else '')
+                lis.append(f'<li data-who="{l["who"]}"{hora}{(" " + atrs) if atrs else ""} data-say="{esc(l["voz"])}">{esc(l["txt"]).replace("&#x27;", chr(39))}</li>')
+            cuerpo = cuerpo[:a] + '\n      '.join(lis) + cuerpo[b:]
+        elif not els and t == 'Gracias':
+            # Diego habla sobre la portada de «Gracias»: cada frase es un elemento con su voz y su texto en pantalla
+            v = [l['voz'] for l in L]
+            cuerpo = re.sub(r'<p class="sub">.*?</p>',
+                '<p class="sub" data-who="diego" data-say="' + esc(v[0]) + '">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>\n'
+                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación no es solo para Brais: si algún profesor quiere unirse a Master of Prompts, está invitado.</p>\n'
+                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[2]) + '">¿Que no tocáis ningún instrumento? Os pongo al bajo. Total, no lo oye nadie.</p>', cuerpo, 1, flags=re.S)
+            cuerpo = re.sub(r'<div class="sign-msg">', '<div class="sign-msg" data-who="diego" data-say="' + esc(v[3]) + '">', cuerpo, 1)
+        else:
+            avisos.append(f'{t}: estructura no soportada ({len(els)}→{len(L)})')
+        html = html[:ini] + cuerpo + html[fin:]
+    for a in avisos: print('  guion ⚠', a)
+    return html
+html = _aplicar_guion(html)
 open(os.path.join(AQUI, '..', '..', 'index.html'), 'w', encoding='utf-8').write(html)
 print('slides', html.count('<section class="slide'))

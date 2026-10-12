@@ -40,7 +40,7 @@
     guitarra: { nombre: 'Álvaro',  rol: 'guitarra',  cargo: 'Guitarra solista', foto: 'img/miembro-alvaro.jpg', color: '#8be0a4',
                 mov: 'cabeceo',
                 tts: { motor: 'elevenlabs', voz: 'ozbKZapo4Cy6jU7KTHtp', estabilidad: 0.35 } },
-    manager:  { nombre: 'Mánager', rol: 'Os Herdeiros do Código', cargo: 'Mánager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
+    manager:  { nombre: 'Mánager', rol: 'Master of Prompts · El Faro', cargo: 'Mánager', foto: 'img/personaje-manager.jpg', color: '#c9a6ff',
                 tts: { motor: 'elevenlabs', voz: 'Zb72NBThGN2Rv3y1RSTT', estabilidad: 0.5, efecto: 'telefono' } },
     sello:    { nombre: 'Peláez', rol: 'Discos Cuarzo', cargo: 'Discográfica', foto: 'img/personaje-sello.jpg', color: '#d6ae5c',
                 tts: { motor: 'elevenlabs', voz: 'ewZshglVwjWcMIuBYCCS', estabilidad: 0.5, efecto: 'telefono' } },

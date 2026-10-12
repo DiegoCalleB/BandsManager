@@ -2068,3 +2068,10 @@ body.pelicula:not(.scroll) .slide.active .dl-a { animation: dolor 8.4s ease both
 body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both 3.8s; }
 @keyframes dolor { 0% { opacity: 0; transform: translateX(24px) } 6% { opacity: 1; transform: none } 86% { opacity: 1; transform: none } 100% { opacity: 0; transform: translateX(12px) } }
 @media (prefers-reduced-motion: reduce) { .dolor { display: none !important; } }
+
+/* «Gracias»: Diego habla sobre la portada, con la invitación al profesorado; todo cabe sin pisar el pie */
+.slide[data-title="Gracias"] h1 { font-size: 150px; line-height: .95; }
+.slide[data-title="Gracias"] .sub { font-size: 34px; line-height: 1.3; margin-top: 18px; max-width: 980px; }
+.slide[data-title="Gracias"] .sub.inv { margin-top: 12px; color: var(--ink); }
+.slide[data-title="Gracias"] .sign-msg { margin-top: 24px; font-size: 28px; }
+.slide[data-title="Gracias"] .foot { position: static; margin-top: 22px; font-size: 20px; }
