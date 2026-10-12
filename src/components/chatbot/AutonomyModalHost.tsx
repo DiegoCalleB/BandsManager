@@ -10,12 +10,20 @@ import { useChat } from "./ChatContext";
  * @returns Sección de interfaz.
  */
 export function AutonomyModalHost() {
-  const { isAdmin, isAutonomyModalOpen, setIsAutonomyModalOpen, bandDisplayName } = useChat();
+  const { isAdmin, isAutonomyModalOpen, setIsAutonomyModalOpen, bandDisplayName, currentUser } = useChat();
   return (
     <>
       {/* MODAL CONFIGURACIÓN NIVELES DE AUTONOMÍA (SOLO ADMINISTRADORES) */}
       {isAdmin && (
-      <AgentAutonomySettingsModal isOpen={isAutonomyModalOpen} onClose={() => setIsAutonomyModalOpen(false)} bandName={bandDisplayName} />
+      // Sin `bandId` ni `currentUser` el panel de Email se quedaba en «Comprobando cuenta…» para siempre:
+      // no consultaba ninguna cuenta porque no sabía de qué banda.
+      <AgentAutonomySettingsModal
+        isOpen={isAutonomyModalOpen}
+        onClose={() => setIsAutonomyModalOpen(false)}
+        bandName={bandDisplayName}
+        bandId={currentUser?.band_id || ""}
+        currentUser={currentUser ?? undefined}
+      />
       )}
     </>
   );

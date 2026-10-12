@@ -36,3 +36,12 @@ describe('EmailAccountConfig: retorno del consentimiento de Gmail', () => {
     expect(screen.queryByText(/Gmail conectado/)).toBeNull();
   });
 });
+
+describe('EmailAccountConfig sin banda', () => {
+  it('no se queda comprobando para siempre si falta el bandId', () => {
+    cleanup();
+    render(<EmailAccountConfig bandId="" />);
+    expect(screen.queryByText(/Comprobando cuenta de email/)).toBeNull();
+    expect(screen.getByText(/No se pudo identificar la banda activa/)).toBeTruthy();
+  });
+});

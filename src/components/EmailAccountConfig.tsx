@@ -302,6 +302,15 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   const labelClass =
     "text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2";
 
+  // Sin banda no hay cuenta que consultar: antes el spinner de abajo no terminaba nunca.
+  if (!bandId) {
+    return (
+      <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)]">
+        No se pudo identificar la banda activa. Cierra este panel y vuelve a abrirlo desde una banda seleccionada.
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div
