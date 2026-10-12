@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `campaigns` (14 columnas).
+Tabla de Supabase `campaigns` (17 columnas).
 
 ---
 
@@ -48,8 +48,11 @@ Tabla de Supabase `campaigns` (14 columnas).
 - `created_at`
 - `updated_at`
 - `campaign_tone_rules`
+- `campaign_start_date`
+- `campaign_end_date`
+- `min_cache_by_type`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migration_campaign_pitch_template.sql`, `supabase/migration_campaign_tone_rules.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migration_campaign_pitch_template.sql`, `supabase/migration_campaign_tone_rules.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

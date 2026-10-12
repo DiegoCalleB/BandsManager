@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent, MouseEvent } from 'react';
+import { useState, FormEvent, MouseEvent } from 'react';
 import { LeadStatus, LeadType, SavedFilter } from '../types';
 
 const DEFAULT_PRESET_FILTERS: SavedFilter[] = [
@@ -49,11 +49,12 @@ export function useSavedFilters(
   const [onlyFavoritesFilter, setOnlyFavoritesFilter] = useState<boolean>(false);
   const [onlyVerifiedFilter, setOnlyVerifiedFilter] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (initialStatusFilter !== undefined) {
-      setStatusFilter(initialStatusFilter);
-    }
-  }, [initialStatusFilter]);
+  // Si el contenedor cambia el filtro inicial (p. ej. al saltar desde el dashboard), se aplica.
+  const [statusInicialPrevio, setStatusInicialPrevio] = useState(initialStatusFilter);
+  if (initialStatusFilter !== statusInicialPrevio) {
+    setStatusInicialPrevio(initialStatusFilter);
+    if (initialStatusFilter !== undefined) setStatusFilter(initialStatusFilter);
+  }
 
   const [savedFilters, setSavedFilters] = useState<SavedFilter[]>(() => {
     try {

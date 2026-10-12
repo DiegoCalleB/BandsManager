@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp, GraduationCap } from 'lucide-react';
 import type { AnalisisAcordes } from '../../types';
 import { Button } from '../ui/Button';
 import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 type Profesor = NonNullable<AnalisisAcordes['profesor']>;
 
@@ -46,7 +47,8 @@ export const ProfesorIA: React.FC<Props> = ({ profesor, onPedir, extendida = fal
     setError(null);
     try {
       await onPedir({ nivel, instrumento, forzar });
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       setError(String(e?.message || e || 'No se pudo generar la explicación.'));
     } finally {
       setCargando(false);

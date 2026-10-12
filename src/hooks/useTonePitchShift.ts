@@ -20,6 +20,11 @@ const pitchShiftMap = new WeakMap<HTMLMediaElement, NodeRecord>();
 /** Si el elemento ya pasa por la cadena de Tone (no se puede deshacer; por eso se evita conectarlo sin necesidad). */
 export const tonoConectado = (el: HTMLMediaElement) => pitchShiftMap.has(el);
 
+/** Web Audio exige CORS para leer el audio: marca el elemento como `anonymous` si aún no tiene valor. */
+function permitirCrossOrigin(el: HTMLMediaElement): void {
+  if (!el.crossOrigin) el.crossOrigin = 'anonymous';
+}
+
 /** Conecta (la primera vez) el elemento a Tone.PitchShift y fija la transposición en semitonos. */
 export async function aplicarTono(audioElement: HTMLMediaElement, semitones: number): Promise<void> {
   try {
@@ -37,7 +42,9 @@ export async function aplicarTono(audioElement: HTMLMediaElement, semitones: num
     // Get or create MediaElementAudioSourceNode once for this HTMLAudioElement
     let sourceNode = mediaElementSourceMap.get(audioElement);
     if (!sourceNode) {
-      const createSource = rawCtx.createMediaElementSource || (rawCtx as any).createMediaElementAudioSource;
+      // Alias legado de algunos navegadores antiguos; no está en los tipos del DOM.
+      const ctxLegado = rawCtx as AudioContext & { createMediaElementAudioSource?: AudioContext['createMediaElementSource'] };
+      const createSource = rawCtx.createMediaElementSource || ctxLegado.createMediaElementAudioSource;
       sourceNode = createSource.call(rawCtx, audioElement);
       mediaElementSourceMap.set(audioElement, sourceNode);
     }
@@ -87,9 +94,7 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
     currentAudioElRef.current = audioElement;
 
     // Ensure crossOrigin is set for Web Audio compatibility
-    if (!audioElement.crossOrigin) {
-      audioElement.crossOrigin = 'anonymous';
-    }
+    permitirCrossOrigin(audioElement);
 
     void aplicarTono(audioElement, semitones);
 
@@ -98,7 +103,7 @@ export function useTonePitchShift({ audioElement, semitones }: UseTonePitchShift
       if (Tone.getContext().state !== 'running') {
         Tone.getContext()
           .resume()
-          .catch(() => {});
+          .catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
       }
     };
 

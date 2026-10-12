@@ -21,7 +21,7 @@ export const SongStudioAiTrackGenModal: React.FC<SongStudioAiTrackGenModalProps>
   const [aiTrackGenInstrument, setAiTrackGenInstrument] = useState('bajo');
   const [aiTrackGenPrompt, setAiTrackGenPrompt] = useState('');
   const [aiTrackGenError, setAiTrackGenError] = useState<string | null>(null);
-  const [aiTrackGenPreview, setAiTrackGenPreview] = useState<any | null>(null);
+  const [aiTrackGenPreview, setAiTrackGenPreview] = useState<{ trackName?: string; audioUrl?: string; arrangementNotes?: string } | null>(null);
 
   if (!showAiTrackGenModal) return null;
 

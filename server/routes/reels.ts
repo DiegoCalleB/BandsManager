@@ -69,6 +69,21 @@ import {
   type TranscriptItem,
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+
+/** Respuesta de oEmbed de YouTube. */
+interface OembedYoutube {
+  title?: string;
+  author_name?: string;
+  thumbnail_url?: string;
+}
+
+/** Mejor momento para publicar que propone la IA. */
+interface MomentoOptimo {
+  date?: string;
+  time?: string;
+  reason?: string;
+}
 
 const router = express.Router();
 
@@ -85,7 +100,7 @@ const MAX_CLIP_SECONDS = 180;
 
 function getYouTubeId(urlStr?: string): string | null {
   if (!urlStr) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/|live\/)([^#\&\?]*).*/;
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
   const match = String(urlStr).match(regExp);
   return match && match[2] && match[2].length === 11 ? match[2] : null;
 }
@@ -118,7 +133,8 @@ async function perfilDeLaPeticion(req: express.Request): Promise<BandProfile> {
       getEpk: (id) => dbGetEpkConfig(id),
       getState: () => loadState()
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Reels] No se pudo cargar el perfil de la banda:", err?.message || err);
     return emptyBandProfile();
   }
@@ -183,7 +199,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
     try {
       const oembedRes = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
       if (oembedRes.ok) {
-        const oembed: any = await oembedRes.json();
+        const oembed = (await oembedRes.json()) as OembedYoutube;
         acumulado = fusionarMetadatos(acumulado, {
           ...metadatosVacios(),
           title: oembed?.title || "",
@@ -192,7 +208,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
           fuente: "oembed"
         });
       }
-    } catch (e) {
+    } catch {
       /* oEmbed caído o vídeo privado: seguimos con ytdl-core */
     }
   }
@@ -200,7 +216,7 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
   if (!completa()) {
     try {
       const info = await ytdl.getBasicInfo(url);
-      const detalles: any = info?.videoDetails;
+      const detalles = info?.videoDetails;
       if (detalles) {
         const miniaturas = detalles.thumbnails;
         acumulado = fusionarMetadatos(acumulado, {
@@ -214,7 +230,8 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
         });
         meta.isLive = Boolean(detalles.isLiveContent && !detalles.lengthSeconds);
       }
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       // YouTube bloquea getBasicInfo desde IPs de datacenter. No es fatal: con la Data API
       // o yt-dlp por delante, aquí ya casi nunca hace falta llegar.
       console.log(`[Reels] getBasicInfo no disponible para ${videoId}:`, e?.message || e);
@@ -234,10 +251,10 @@ async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
 
 /** Transcripción del vídeo completo, probando español y cayendo al idioma por defecto. */
 async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
-  const intentos: Array<() => Promise<any[]>> = [
-    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "es" }) as any,
-    () => YoutubeTranscript.fetchTranscript(videoId) as any,
-    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "en" }) as any
+  const intentos: Array<() => Promise<Array<{ offset?: number; duration?: number; text?: string }>>> = [
+    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "es" }),
+    () => YoutubeTranscript.fetchTranscript(videoId),
+    () => YoutubeTranscript.fetchTranscript(videoId, { lang: "en" })
   ];
 
   for (const intento of intentos) {
@@ -245,14 +262,14 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
       const bruto = await intento();
       if (Array.isArray(bruto) && bruto.length > 0) {
         return bruto
-          .map((t: any) => ({
+          .map((t) => ({
             offset: Number(t?.offset) || 0,
             duration: Number(t?.duration) || 0,
             text: decodeTranscriptText(t?.text)
           }))
           .filter((t: TranscriptItem) => t.text);
       }
-    } catch (e) {
+    } catch {
       /* siguiente idioma */
     }
   }
@@ -263,8 +280,8 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
  * Traduce el fallo crudo de ytdl a algo que un músico pueda entender y accionar. El error
  * literal ("Sign in to confirm you're not a bot") no le dice nada a nadie.
  */
-function explicarErrorYoutube(err: any): string {
-  const msg = String(err?.message || err || "");
+function explicarErrorYoutube(err: unknown): string {
+  const msg = String(comoErrorCapturado(err).message || err || "");
   if (/confirm you.?re not a bot|Sign in to confirm/i.test(msg)) {
     return "YouTube está pidiendo verificación antibot al servidor para descargar este vídeo. Suele ser temporal: prueba de nuevo en unos minutos, o sube el archivo de vídeo directamente en vez de usar la URL.";
   }
@@ -317,7 +334,7 @@ async function limpiarClipsAntiguos(): Promise<void> {
       try {
         const info = await fs.promises.stat(completo);
         if (ahora - info.mtimeMs > CLIP_TTL_MS) await fs.promises.unlink(completo);
-      } catch (e) {
+      } catch {
         /* fichero en uso o ya borrado */
       }
     }
@@ -358,12 +375,12 @@ async function descargarVideo(
   await borrarSiExiste([destino]);
   console.log("[Reels] yt-dlp no disponible o fallido, probando con ytdl-core...");
 
-  const descargar = (opciones: any) =>
+  const descargar = (opciones: ytdl.downloadOptions) =>
     new Promise<void>((resolve, reject) => {
       const stream = ytdl(url, opciones);
       const writeStream = fs.createWriteStream(destino);
       let fallado = false;
-      const fallar = (err: any) => {
+      const fallar = (err: unknown) => {
         if (fallado) return;
         fallado = true;
         writeStream.destroy();
@@ -378,9 +395,10 @@ async function descargarVideo(
   try {
     await descargar({
       quality: "highest",
-      filter: (format: any) => format.container === "mp4" && Boolean(format.hasVideo) && Boolean(format.hasAudio)
+      filter: (format) => format.container === "mp4" && Boolean(format.hasVideo) && Boolean(format.hasAudio)
     });
-  } catch (primerError: any) {
+  } catch (primerErrorCapturado) {
+    const primerError = comoErrorCapturado(primerErrorCapturado);
     console.warn("[Reels] Formato mp4 con audio+vídeo no disponible, probando 'highest':", primerError?.message || primerError);
     await borrarSiExiste([destino]);
     await descargar({ quality: "highest" });
@@ -425,7 +443,8 @@ router.get("/youtube-meta", requireAuth, async (req, res) => {
         durationKnown: meta.duration > 0
       }
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Reels youtube-meta]", err);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
   }
@@ -462,7 +481,8 @@ router.get("/reel-analysis", requireAuth, async (req, res) => {
       notice: guardado.notice || undefined,
       videoMeta: guardado.video_meta || {}
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[GET /reel-analysis]", err);
     return res.status(500).json({ success: false, error: "No se pudo recuperar el análisis guardado." });
   }
@@ -562,7 +582,8 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
             `${ventanasVirales.length} tramos candidatos (tipo: ${tipoContenido}).`
           );
         }
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.log("[Reels] Análisis de señales omitido:", e?.message || e);
       }
     }
@@ -582,7 +603,7 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
 
     const ai = getAiClient();
     let highlights: NormalizedHighlight[] = [];
-    let optimalTime: any = null;
+    let optimalTime: MomentoOptimo | null = null;
     let generadoPorIa = false;
     let avisoIa = "";
     // Frases reales de directo (habla, no letra cantada) extraídas de la transcripción: la fuente
@@ -682,11 +703,12 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
 
         if (Array.isArray(parsed?.frasesDirectoExtraidas)) {
           frasesDirectoExtraidas = parsed.frasesDirectoExtraidas
-            .map((f: any) => String(f || "").trim())
+            .map((f: unknown) => String(f || "").trim())
             .filter(Boolean)
             .slice(0, 5);
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Highlights AI] Fallo llamando al modelo:", err?.message || err);
         avisoIa = "La IA no respondió a tiempo; se muestran cortes automáticos que puedes ajustar a mano.";
       }
@@ -751,8 +773,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
     }
 
     if (frasesDirectoExtraidas.length > 0) {
-      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: any) =>
-        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", e?.message || e)
+      dbAppendBandSpeechPhrases(getTargetBandId(req), frasesDirectoExtraidas).catch((e: unknown) =>
+        console.warn("[Highlights AI] No se pudieron guardar las frases de directo:", comoErrorCapturado(e).message || e)
       );
     }
 
@@ -782,7 +804,8 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         transcriptLines: transcript.length
       }
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Highlights AI Route Error]:", err);
     return res.status(500).json({
       success: false,
@@ -939,14 +962,15 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
         // espacio ya mismo en vez de esperar a la barrida periódica.
         await borrarSiExiste([rutaSalida]);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
     }
 
     // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
     // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
     // viajaba por la red.
-    const respuesta: any = {
+    const respuesta: Record<string, unknown> = {
       success: true,
       clipUrl,
       clipFileName: nombreSalida,
@@ -970,7 +994,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     }
 
     return res.json(respuesta);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Video Cut Error]:", err);
     await borrarSiExiste([rutaSalida]);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
@@ -1009,7 +1034,7 @@ router.post("/reanalyze-clip", requireAuth, iaRateLimiter, async (req, res) => {
     // Para dejar el highlight reanalizado también actualizado en lo que ya se guardó en BD
     // (si no, la próxima vez que se recuperase el análisis guardado se vería la versión vieja).
     const videoKeyDelCorte = resolverVideoKey(youtubeUrl, videoKeyExplicita);
-    const persistirPatch = async (patch: Record<string, any>) => {
+    const persistirPatch = async (patch: Record<string, unknown>) => {
       if (!videoKeyDelCorte || !highlightId) return;
       const bandId = getTargetBandId(req);
       await dbUpdateReelAnalysisHighlight(bandId, videoKeyDelCorte, highlightId, patch).catch(() => false);
@@ -1109,14 +1134,15 @@ Responde ÚNICAMENTE con JSON válido:
               descripcionNueva: analysis.recommendedCopy,
               alcance: alcance === "este_reel" ? "este_reel" : "global"
             };
-            dbLogReelFeedback(getTargetBandId(req), feedbackLog).catch((e: any) =>
-              console.warn("[Reanalyze Clip] No se pudo guardar el feedback:", e?.message || e)
+            dbLogReelFeedback(getTargetBandId(req), feedbackLog).catch((e: unknown) =>
+              console.warn("[Reanalyze Clip] No se pudo guardar el feedback:", comoErrorCapturado(e).message || e)
             );
           }
 
           return res.json({ success: true, generatedByAI: true, analysis });
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[Reanalyze Clip AI Error]:", err?.message || err);
       }
     }
@@ -1143,7 +1169,8 @@ Responde ÚNICAMENTE con JSON válido:
       notice: "La IA no estaba disponible: este análisis es una plantilla basada en tus notas y en el rango del corte.",
       analysis: analysisRespaldo
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Reanalyze Clip Route Error]:", err);
     return res.status(500).json({
       success: false,
@@ -1160,7 +1187,8 @@ Responde ÚNICAMENTE con JSON válido:
  */
 router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
   try {
-    const bandId = getTargetBandId(req);
+    // Sin datos de banda en esta ruta, pero exige banda activa en la sesión (falla con 500 si falta).
+    getTargetBandId(req);
     const { 
       hookText = "", 
       copyText = "", 
@@ -1244,7 +1272,8 @@ Responde ÚNICAMENTE con JSON válido:
             }
           });
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn("[AI Hook Doctor Error]:", err?.message || err);
       }
     }
@@ -1268,7 +1297,8 @@ Responde ÚNICAMENTE con JSON válido:
       generatedByAI: false,
       diagnosis: fallbackDiagnosis
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[AI Hook Doctor Route Error]:", err);
     return res.status(500).json({
       success: false,

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Loader, AlertCircle, Wand2, Star, Sparkles } from 'lucide-react';
 import { IndexChange, adjustPosition1 } from '../../utils/setlistActionPositionAdjust';
+import { useReajusteAlCambiar } from '../../hooks/useReajusteAlCambiar';
 import { EnergyChart, EnergyChartPoint, EnergyChartZone } from './EnergyChart';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Textarea } from '../ui';
@@ -186,12 +187,12 @@ export function PerfectSetlistModal({
   const [comentarioFeedback, setComentarioFeedback] = useState('');
   const [feedbackScope, setFeedbackScope] = useState<'este_setlist' | 'global'>('este_setlist');
 
-  useEffect(() => {
+  useReajusteAlCambiar([plan] as const, () => {
     setLiveActions(plan ? plan.actions : null);
     setAppliedActionIndices(new Set());
     setInvalidActionIndices(new Set());
     setPreApplySnapshot(null);
-  }, [plan]);
+  });
 
   if (!isOpen) return null;
 

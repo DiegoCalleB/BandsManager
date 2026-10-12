@@ -1,26 +1,7 @@
-import { ShowIcon } from './ui/ShowIcon';
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Globe,
-  Guitar,
-  Headphones,
-  Music2,
-  QrCode,
-  Rocket,
-  ShieldCheck,
-  Smartphone,
-  Sparkles,
-  Star,
-  Truck,
-  Users,
-  Wallet,
-  Zap,
-} from 'lucide-react';
-import { Button, Card } from './ui';
-import { useLanguage, SupportedLanguage } from '../context/LanguageContext';
+import React, { useEffect, useState } from 'react';
+import { ArrowRight, ChevronDown, Music2, QrCode, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
+import { Button } from './ui';
+import { useLanguage, SupportedLanguage } from '../context/idioma';
 import { LandingChatWidget } from './LandingChatWidget';
 
 interface PublicLandingProps {
@@ -78,8 +59,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage, t } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [fotoError, setFotoError] = useState(false);
-  const [email, setEmail] = useState('');
-  const emailRef = useRef<HTMLInputElement>(null);
 
   const es = language === 'es';
 
@@ -369,7 +348,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               <div className="rounded-[var(--r-xl)] bg-[var(--surface)] p-2 sm:p-3">
                 <Captura
                   nombre="hojas"
-                  movil="miembros"
+                  movil="m-hojas"
                   alt="Setlists personalizados por músico en BandManager"
                 />
               </div>

@@ -22,13 +22,9 @@ import postsRouter from '../posts.js';
 import epkFansRouter from '../epk_fans.js';
 import aiMusicRouter from '../ai_music.js';
 import { ACTIVE_FAL_KEY } from '../../services/audioSeparator/FalAiService.js';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(router: any, ruta: string, metodo: 'get' | 'post') {
-  const capa: any = router.stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods[metodo]);
-  expect(capa, `${metodo} ${ruta}`).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = manejadorDe;
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);

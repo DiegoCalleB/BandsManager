@@ -20,13 +20,17 @@ Caché de separación de stems (`song_stems_cache`) en memoria y persistente, co
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_song_stems_cache|tabla song_stems_cache]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_formatoStems|server/routes/ai_music/formatoStems.ts]] *(from #route)*
+- [[server_routes_ai_music_rutaSeparacion|server/routes/ai_music/rutaSeparacion.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
+- [[server_routes_ai_music_separacionContexto|server/routes/ai_music/separacionContexto.ts]] *(from #route)*
 
 ---
 

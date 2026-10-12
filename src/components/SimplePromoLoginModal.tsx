@@ -98,13 +98,13 @@ const LoginBrandVideo: React.FC = () => {
     const el = ref.current;
     if (!el) return;
     el.muted = true;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   }, []);
   const handleReplay = () => {
     const el = ref.current;
     if (!el) return;
     el.currentTime = 0;
-    el.play().catch(() => {});
+    el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
   };
   if (failed || skipVideo) {
     return (

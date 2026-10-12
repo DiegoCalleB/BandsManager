@@ -66,7 +66,7 @@ export function useGrabarIdea(audioRef: RefObject<HTMLAudioElement | null>) {
       let latenciaMs = 0;
       if (maestro) {
         maestro.currentTime = 0;
-        await maestro.play().catch(() => {});
+        await maestro.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
         const ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
         if (ctx) {
           const c = new ctx();

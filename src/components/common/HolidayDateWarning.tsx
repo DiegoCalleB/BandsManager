@@ -1,6 +1,6 @@
 import React from 'react';
-import { auditDateAndCity, HolidayAuditResult } from '../../utils/holidayAuditor';
-import { AlertTriangle, Calendar, Info, CheckCircle2, Flame } from 'lucide-react';
+import { auditDateAndCity } from '../../utils/holidayAuditor';
+import { AlertTriangle } from 'lucide-react';
 
 interface HolidayDateWarningProps {
   date?: string | Date | null;

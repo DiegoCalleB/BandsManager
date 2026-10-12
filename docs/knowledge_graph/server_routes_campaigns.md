@@ -22,6 +22,7 @@ Campañas de booking masivas: CRUD, campaña activa y registro de entrenamiento 
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -22,7 +22,10 @@ Exporta: CATEGORY_LABELS, AUTO_OPTIMIZE_FEEDBACK_THRESHOLD, countUnoptimizedFeed
 - [[server_db_categoryTemplates|server/db/categoryTemplates.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
 - [[server_routes_leads_feedback|server/routes/leads/feedback.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -106,6 +106,18 @@ export function mencionaAcordeAjeno(texto: string, h: Hechos): string | null {
   return null;
 }
 
+/** JSON del modelo antes de validar: cada campo puede venir con cualquier forma. */
+interface SalidaProfesorCruda {
+  resumen?: unknown;
+  comoFunciona?: unknown;
+  paraImprovisar?: unknown;
+  paraComponer?: unknown;
+  dinamismo?: unknown;
+}
+
+/** Elemento crudo de `comoFunciona` o `dinamismo`. */
+type ElementoCrudo = { texto?: unknown; hechos?: unknown; idea?: unknown; ejemplo?: unknown } | null | undefined;
+
 const limpio = (x: unknown): string => String(x ?? "").replace(/\s+/g, " ").trim().slice(0, MAX_TEXTO);
 
 /**
@@ -113,8 +125,9 @@ const limpio = (x: unknown): string => String(x ?? "").replace(/\s+/g, " ").trim
  * «comoFunciona») se descarta frase a frase si nombra un acorde que no está en la canción o cita un
  * hecho que no existe. Devuelve null si no queda nada útil.
  */
-export function validarExplicacion(bruto: any, h: Hechos): { explicacion: ExplicacionProfesor; descartadas: number } | null {
-  if (!bruto || typeof bruto !== "object") return null;
+export function validarExplicacion(salida: unknown, h: Hechos): { explicacion: ExplicacionProfesor; descartadas: number } | null {
+  if (!salida || typeof salida !== "object") return null;
+  const bruto: SalidaProfesorCruda = salida;
   let descartadas = 0;
   const ids = new Set([...h.acordes.map((a) => a.id), "tonalidad", "modo", "bucle", "funciones", "ritmo"]);
 
@@ -124,7 +137,7 @@ export function validarExplicacion(bruto: any, h: Hechos): { explicacion: Explic
 
   const comoFunciona = (Array.isArray(bruto.comoFunciona) ? bruto.comoFunciona : [])
     .slice(0, MAX_ITEMS)
-    .map((c: any) => ({ texto: limpio(c?.texto), hechos: (Array.isArray(c?.hechos) ? c.hechos : []).map(String).filter((id: string) => ids.has(id)) }))
+    .map((c: ElementoCrudo) => ({ texto: limpio(c?.texto), hechos: (Array.isArray(c?.hechos) ? c.hechos : []).map(String).filter((id: string) => ids.has(id)) }))
     .filter((c: { texto: string; hechos: string[] }) => {
       const ok = c.texto && c.hechos.length > 0 && !mencionaAcordeAjeno(c.texto, h);
       if (!ok && c.texto) descartadas++;
@@ -134,7 +147,7 @@ export function validarExplicacion(bruto: any, h: Hechos): { explicacion: Explic
   const lista = (x: unknown): string[] => (Array.isArray(x) ? x : []).slice(0, MAX_ITEMS).map(limpio).filter(Boolean);
   const dinamismo = (Array.isArray(bruto.dinamismo) ? bruto.dinamismo : [])
     .slice(0, MAX_ITEMS)
-    .map((d: any) => ({ idea: limpio(d?.idea), ejemplo: limpio(d?.ejemplo) }))
+    .map((d: ElementoCrudo) => ({ idea: limpio(d?.idea), ejemplo: limpio(d?.ejemplo) }))
     .filter((d: { idea: string }) => d.idea);
 
   const explicacion: ExplicacionProfesor = {

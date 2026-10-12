@@ -20,12 +20,14 @@ Audio Storage & Utility Helpers for BandManager
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_AlbumCover|src/components/AlbumCover.tsx]] *(from #frontend)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_band_switcher_hooks_useBandActions|src/components/band_switcher/hooks/useBandActions.ts]] *(from #frontend)*
 - [[src_components_bandCRM_ChangeBandImageModal|src/components/bandCRM/ChangeBandImageModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandForm|src/components/bandCRM/hooks/useBandForm.ts]] *(from #frontend)*
@@ -54,7 +56,7 @@ Audio Storage & Utility Helpers for BandManager
 - [[src_components_repertorio_hooks_useSetlistItemsMutations|src/components/repertorio/hooks/useSetlistItemsMutations.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSetlistReordering|src/components/repertorio/hooks/useSetlistReordering.ts]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(from #frontend)*
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionSources|src/components/repertorio/song_transition/hooks/useTransitionSources.ts]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useIdeaMicRecording|src/components/song_studio/hooks/useIdeaMicRecording.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useResolvedAudioUrls|src/components/song_studio/hooks/useResolvedAudioUrls.ts]] *(from #frontend)*

@@ -3,10 +3,11 @@
  * Extraído de AgentAutonomySettingsModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import type { User } from "../../../../types";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useEffectEvent } from "react";
 import { api } from "../../../../services/api";
 import { BandSchedule } from "../../../../types";
 import { apiFetch } from "../../../../utils/api";
+import type { PlantillaCategoria, RespuestaAdnTono, RespuestaPlantillas } from "../../../../services/tiposRespuestasHerramientas";
 import type { AgentAutonomyConfig, LearnedRuleBucket } from "../autonomyTypes";
 import { ResponseStrategyForm } from "../responseTypes";
 
@@ -101,10 +102,10 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
   }, [isOpen, bandId, currentUser]);
 
   // Load existing configuration from server
-  useEffect(() => {
+  // El efecto se dispara solo por [isOpen, bandId, currentUser?.band_id]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarIsOpen = useEffectEvent(() => {
     if (!isOpen) return;
     let isMounted = true;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- marca la carga al abrir el modal
     setIsLoading(true);
     setStatusFeedback(null);
 
@@ -185,7 +186,7 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
         // 3b. Fetch reglas aprendidas de respuestas (Self-Refining Tone DNA) - mismo endpoint
         // que ya usa BandToneModal.tsx, solo nos quedamos con la parte de respuestas. De paso,
         // reutilizamos la misma llamada para la señal"ADN de voz entrenado" de la checklist.
-        const toneDnaRes = await apiFetch("/api/bands/tone-dna").catch(
+        const toneDnaRes = await apiFetch<RespuestaAdnTono>("/api/bands/tone-dna").catch(
           () => null,
         );
         if (isMounted && toneDnaRes?.data?.reglas_por_categoria_respuesta) {
@@ -205,15 +206,10 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
         // checklist: customInstruction empieza vacío en las 7 categorías por defecto (a
         // diferencia de guidelines, que ya viene pre-rellenado de fábrica), así que si alguna
         // tiene contenido es que el mánager escribió una instrucción propia de verdad.
-        const templatesRes = await apiFetch("/api/templates").catch(() => null);
+        const templatesRes = await apiFetch<RespuestaPlantillas>("/api/templates").catch(() => null);
         const templateCustomized = Boolean(
           templatesRes?.templates &&
-          Object.values(
-            templatesRes.templates as Record<
-              string,
-              { customInstruction?: string }
-            >,
-          ).some((t) => t.customInstruction && t.customInstruction.trim()),
+          Object.values<PlantillaCategoria>(templatesRes.templates).some((t) => t.customInstruction && t.customInstruction.trim()),
         );
 
         if (isMounted) {
@@ -256,6 +252,10 @@ export function useAutonomyConfig({ initialConfig, bandName, bandId, currentUser
     return () => {
       isMounted = false;
     };
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- marca la carga al abrir el modal
+    return alCambiarIsOpen();
   }, [isOpen, bandId, currentUser?.band_id]);
 
   // Toggle Hour & Day Handlers

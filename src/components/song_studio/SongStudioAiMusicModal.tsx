@@ -1,18 +1,11 @@
 import React, { useState } from "react";
-import {
-  Wand2,
-  X,
-  RefreshCw,
-  Play,
-  Download,
-  Music,
-  Radio,
-} from "lucide-react";
+import { Wand2, X, RefreshCw, Download, Music, Radio } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface SongStudioAiMusicModalProps {
   isOpen: boolean;
@@ -49,7 +42,7 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
     setGeneratedLyrics("");
 
     try {
-      const data = await apiFetch<any>("/api/ai-music/generate", {
+      const data = await apiFetch<{ success?: boolean; audioBase64?: string; mimeType?: string; lyrics?: string; error?: string }>("/api/ai-music/generate", {
         method: "POST",
         body: JSON.stringify({
           prompt,
@@ -79,7 +72,8 @@ export const SongStudioAiMusicModal: React.FC<SongStudioAiMusicModalProps> = ({
 
       setGeneratedAudioUrl(audioUrl);
       setGeneratedLyrics(data.lyrics || "");
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(err);
       setError(
         err.message || "Error de conexión con el motor de audio Lyria AI",

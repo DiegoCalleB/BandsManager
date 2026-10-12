@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { leerAtril } from './leerAtril';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { AcordeActual } from '../components/chords/AcordeActual';
 
@@ -15,7 +15,7 @@ describe('AcordeActual', () => {
     expect(h).not.toMatch(/\bborder/);
   });
   it('Atril lo monta en la pestaña de acordes y deja lo secundario en ⋯', () => {
-    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    const src = leerAtril();
     expect(src).toContain('<AcordeActual');
     expect(src).toContain('label="Más acciones de la canción"');
   });
@@ -30,7 +30,7 @@ describe('AcordeActual', () => {
     expect(p).toContain('aria-label="Reproducir"');
   });
   it('Atril le pasa play/pausa y los próximos acordes', () => {
-    const src = readFileSync('src/components/Atril.tsx', 'utf8');
+    const src = leerAtril();
     expect(src).toContain('onToggle={audioUrl ? handleToggleAudio : undefined}');
     expect(src).toContain('proximos={');
   });

@@ -24,6 +24,8 @@ import {
   type MotorIris,
   type ProgresoIris,
 } from '../utils/separacionIris';
+import { comoErrorCapturado } from '../utils/errorCapturado';
+import type { RespuestaSeparacion } from '../utils/tiposSeparacionIris';
 
 interface Opciones {
   song: Song;
@@ -63,11 +65,15 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
   const motorRef = useRef(motor);
   const pistasRef = useRef(pistasElegidas);
   const alTerminarRef = useRef(alTerminarIdea);
-  songRef.current = song;
-  onUpdateSongRef.current = onUpdateSong;
-  motorRef.current = motor;
-  pistasRef.current = pistasElegidas;
-  alTerminarRef.current = alTerminarIdea;
+  // Se actualizan tras cada render confirmado: `separar` las lee siempre en un handler o callback
+  // asíncrono, nunca durante el render.
+  useEffect(() => {
+    songRef.current = song;
+    onUpdateSongRef.current = onUpdateSong;
+    motorRef.current = motor;
+    pistasRef.current = pistasElegidas;
+    alTerminarRef.current = alTerminarIdea;
+  });
 
   const cancelar = useCallback(() => {
     if (abortRef.current) {
@@ -148,16 +154,17 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
       );
 
       const lanzar = () =>
-        apiFetch('/api/ai-stem-separation', {
+        apiFetch<RespuestaSeparacion>('/api/ai-stem-separation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...peticion, audioUrl: sendableAudioUrl }),
         });
 
-      let kickoff: any;
+      let kickoff: RespuestaSeparacion;
       try {
         kickoff = await lanzar();
-      } catch (kickoffErr: any) {
+      } catch (kickoffErrCapturado) {
+        const kickoffErr = comoErrorCapturado(kickoffErrCapturado);
         if (esErrorDeRed(kickoffErr) && !abortado()) {
           // Reintento rápido en caso de micro-corte o reconexión de red
           await new Promise((r) => setTimeout(r, 1200));
@@ -188,13 +195,14 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
             prev ? { ...prev, stage: 'demucs', currentStepText: textoFaseEspera(engineToUse, segundos) } : null
           );
 
-          let statusRes: any = null;
+          let statusRes: RespuestaSeparacion | null = null;
           try {
-            statusRes = await apiFetch(
+            statusRes = await apiFetch<RespuestaSeparacion>(
               `/api/ai-stem-separation/status?songHash=${encodeURIComponent(kickoff.songHash)}&engine=${encodeURIComponent(kickoff.engine)}`
             );
             fallosDeRedSeguidos = 0;
-          } catch (pollErr: any) {
+          } catch (pollErrCapturado) {
+            const pollErr = comoErrorCapturado(pollErrCapturado);
             if (esErrorDeRed(pollErr) && fallosDeRedSeguidos < 4 && !abortado()) {
               fallosDeRedSeguidos++;
               console.warn(`[Stem Polling] Fallo transitorio de red (${fallosDeRedSeguidos}/4). Reintentando en el próximo ciclo...`);
@@ -346,7 +354,8 @@ export function useSeparacionIris({ song, onUpdateSong, motor, pistasElegidas, a
         executionTimeSec: data.executionTimeSec,
         timingBreakdown: data.timingBreakdown,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       clearInterval(progressTimer);
       clearInterval(elapsedTimer);
       console.error('Error en separación de stems por IA:', err);

@@ -1,0 +1,63 @@
+/** Textos de la interfaz en este idioma (clave -> texto). */
+export const gl: Record<string, string> = {
+  // Navigation
+  'nav.resumen': 'Resumo',
+  'nav.booking': 'Escenarios',
+  'nav.medios': 'Medios',
+  'nav.management': 'Management',
+  'nav.bandas': 'Grupos',
+  'nav.calendario': 'Calendario',
+  'nav.giras': 'Tour Manager',
+  'nav.epk': 'Dossier (EPK)',
+  'nav.fans': 'Captura QR e Fans',
+  'nav.reels': 'Reels Center',
+  'nav.repertorio': 'Repertorios',
+  'nav.ensayos': 'Ensaios',
+  'nav.discografia': 'Discografía',
+  'nav.chat': 'Axente Mánager',
+  'nav.finanzas': 'Finanzas',
+  'nav.merchan': 'Merchandising',
+
+  // Headers & Labels
+  'app.active_band': 'Banda activa',
+  'app.switch_band': 'Mudar de banda',
+  'app.tools': 'Ferramentas',
+  'app.metronome': 'Metrónomo',
+  'app.tuner': 'Afinador',
+  'app.upgrade_plan': 'Mellorar Plan',
+  'app.settings': 'Configuración',
+  'app.profile': 'Perfil de Usuario',
+  'app.logout': 'Cerrar Sesión',
+  'app.language': 'Idioma',
+  'app.theme': 'Tema Visual',
+
+  // Actions
+  'action.save': 'Gardar',
+  'action.cancel': 'Cancelar',
+  'action.edit': 'Editar',
+  'action.delete': 'Eliminar',
+  'action.add': 'Engadir',
+  'action.search': 'Buscar...',
+  'action.filter': 'Filtrar',
+  'action.close': 'Pechar',
+  'action.approve': 'Aprobar',
+  'action.reject': 'Rexeitar',
+  'action.confirm': 'Confirmar',
+  'action.loading': 'Cargando...',
+  'action.export': 'Exportar',
+  'action.import': 'Importar',
+
+  // Statuses
+  'status.nuevo': 'Novo',
+  'status.pendiente_aprobacion': 'Pendente Aprobación',
+  'status.aprobado': 'Aprobado',
+  'status.esperando_respuesta': 'Agardando Resposta',
+  'status.interesado': 'Interesado',
+  'status.no_interesado': 'Non Interesado',
+  'status.negociando': 'Negociando',
+
+  // General UI
+  'general.no_data': 'Sen datos dispoñibles',
+  'general.search_placeholder': 'Buscar sala, cidade, contacto...',
+  'general.welcome': 'Benvido a BandManager.io!',
+};

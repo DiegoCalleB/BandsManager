@@ -18,12 +18,13 @@ Song & Setlist calculation utilities
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_tiposRepertorio|src/utils/tiposRepertorio.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*
+- [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
 - [[src_components_repertorio_AddSongsToSetlistModal|src/components/repertorio/AddSongsToSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useBandRepertoireScope|src/components/repertorio/hooks/useBandRepertoireScope.ts]] *(from #frontend)*
@@ -54,6 +55,7 @@ _Sin dependencias salientes directas._
 ## 🧪 Tests que lo cubren
 - `src/utils/__tests__/repertorioPdf.test.ts`
 - `src/utils/__tests__/repertorioUtils.test.ts`
+- `src/utils/__tests__/resolveBandMembers.test.ts`
 - `src/utils/__tests__/songMarkedForMember.test.ts`
 
 ---

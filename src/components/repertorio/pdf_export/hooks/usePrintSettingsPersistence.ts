@@ -2,7 +2,7 @@
  * Carga y guarda en el servidor los ajustes de impresión del setlist activo.
  * Extraído de PdfExportModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState, useEffectEvent } from "react";
 import { apiFetch } from "../../../../utils/api";
 import { PrintSettings, mergePrintSettings } from "../../../../utils/printSettings";
 
@@ -70,7 +70,8 @@ export function usePrintSettingsPersistence({ textAlign, columnsChoice, showGene
 
   const lastSavedRef = useRef<string | null>(null);
 
-  useEffect(() => {
+  // El efecto se dispara solo por []; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarMontar = useEffectEvent(() => {
     let cancelled = false;
     apiFetch<{ settings: PrintSettings | null }>("/api/bands/print-settings")
       .then((r) => {
@@ -102,6 +103,9 @@ export function usePrintSettingsPersistence({ textAlign, columnsChoice, showGene
     return () => {
       cancelled = true;
     };
+  });
+  useEffect(() => {
+    return alCambiarMontar();
   }, []);
 
   useEffect(() => {

@@ -24,6 +24,7 @@ Barra de acciones masivas y listado con selección múltiple.
 - [[src_components_booking_BulkLeadsActionBar|src/components/booking/BulkLeadsActionBar.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_BulkProgressModal|src/components/booking/BulkProgressModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_crm_BookingCrmContext|src/components/booking/crm/BookingCrmContext.ts]] *(Layer: #frontend, Domain: #booking)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*

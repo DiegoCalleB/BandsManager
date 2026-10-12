@@ -20,13 +20,9 @@ vi.mock('../../services/transactionalEmail.js', async (orig) => ({
 
 import usersRouter from '../users.js';
 import { verifyPassword } from '../../auth';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(ruta: string, metodo: 'post' | 'put') {
-  const capa: any = (usersRouter as any).stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods[metodo]);
-  expect(capa).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = (ruta: string, metodo: 'post' | 'put') => manejadorDe(usersRouter, ruta, metodo);
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);

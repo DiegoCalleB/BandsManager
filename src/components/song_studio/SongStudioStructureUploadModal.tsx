@@ -15,6 +15,7 @@ import { Song } from "../../types";
 import { isImageDocument, isPdfDocument } from "../../utils/documentType";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
+import { leerTokenDeSesion } from '../../services/sesionLocal';
 
 interface SongStudioStructureUploadModalProps {
   song: Song;
@@ -26,7 +27,7 @@ interface SongStudioStructureUploadModalProps {
 
 export const SongStudioStructureUploadModal: React.FC<
   SongStudioStructureUploadModalProps
-> = ({ song, isOpen, onClose, onUpdateSong, currentUsername = "Usuario" }) => {
+> = ({ song, isOpen, onClose, onUpdateSong }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -34,7 +35,6 @@ export const SongStudioStructureUploadModal: React.FC<
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -149,10 +149,7 @@ export const SongStudioStructureUploadModal: React.FC<
     setIsSavingVerified(true);
     onUpdateSong(updatedSong);
     try {
-      const token =
-        localStorage.getItem("bandmanager_token") ||
-        localStorage.getItem("token") ||
-        "";
+      const token = leerTokenDeSesion();
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
       };

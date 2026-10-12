@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, CreditCard, Loader2 } from 'lucide-react';
+import { CreditCard, Loader2 } from 'lucide-react';
 import { ThemeColors } from '../types';
 import { api } from '../services/api';
+import { leerUsuarioDeSesion } from '../services/sesionLocal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface CheckoutButtonProps {
   planId: string;
@@ -19,8 +21,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   bandId,
   userEmail,
   className = '',
-  children,
-  colors,
+  children
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,9 +42,8 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
 
       if (!effectiveEmail || !effectiveBandId) {
         try {
-          const storedUser = localStorage.getItem('bandmanager_user');
-          if (storedUser) {
-            const parsed = JSON.parse(storedUser);
+          const parsed = leerUsuarioDeSesion();
+          if (parsed) {
             if (!effectiveEmail && parsed.email) effectiveEmail = parsed.email;
             if (!effectiveBandId && parsed.band_id) effectiveBandId = parsed.band_id;
           }
@@ -51,7 +51,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
             const activeBandId = localStorage.getItem('bandmanager_active_band_id');
             if (activeBandId) effectiveBandId = activeBandId;
           }
-        } catch (e) {
+        } catch {
           // ignore parsing error
         }
       }
@@ -62,7 +62,8 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
         bandId: effectiveBandId || 'default',
         userEmail: effectiveEmail && effectiveEmail.includes('@') ? effectiveEmail : undefined,
       });
-    } catch (error: any) {
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       console.error('Checkout error:', error);
       setErrorMessage(error.message || 'Error desconocido al procesar el pago');
     } finally {

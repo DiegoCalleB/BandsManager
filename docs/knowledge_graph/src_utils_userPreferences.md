@@ -19,6 +19,7 @@ Exporta: TUTORIAL_STORAGE_PREFIX, ONBOARDING_GLOBAL_KEY, PROFILE_WIZARD_GLOBAL_K
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(Layer: #service, Domain: #system)*
 

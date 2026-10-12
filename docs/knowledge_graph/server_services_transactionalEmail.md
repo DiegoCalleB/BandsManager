@@ -20,6 +20,7 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[server_utils_html|server/utils/html.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -27,7 +28,9 @@ Exporta: getProductionAppUrl, resolveResendApiKey, SendEmailOptions, sendTransac
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 
 ---

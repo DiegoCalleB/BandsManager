@@ -20,6 +20,7 @@ PITCH JUDGE — EVALUADOR LLM-AS-A-JUDGE Y AUTO-REFINAMIENTO QUIRÚRGICO
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

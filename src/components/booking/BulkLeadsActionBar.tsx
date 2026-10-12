@@ -1,6 +1,6 @@
 import { PopoverAncla } from '../ui/PopoverAncla';
 import React, { useState } from "react";
-import { Lead, LeadStatus } from "../../types";
+import { LeadStatus } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import {
   CheckSquare,
@@ -19,6 +19,7 @@ import {
   ArrowRight,
   MessageSquare,
   ShieldAlert,
+  type LucideIcon,
 } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, LinkButton } from '../ui';
@@ -42,7 +43,7 @@ const STATUS_OPTIONS: {
   status: LeadStatus;
   label: string;
   color: string;
-  icon: any;
+  icon: LucideIcon;
 }[] = [
   {
     status: "nuevo",

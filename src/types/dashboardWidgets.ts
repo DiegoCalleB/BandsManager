@@ -28,7 +28,7 @@ export interface DashboardWidgetConfig {
   settings?: {
     calendarViewMode?: CalendarWidgetViewMode;
     calendarFilter?: 'all' | 'concierto' | 'ensayo';
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

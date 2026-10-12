@@ -23,6 +23,24 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    rules: {
+      // Convenciones habituales: `_` marca a propósito un parámetro o variable sin usar (el cuarto
+      // argumento de un manejador de errores de Express, un hueco en una desestructuración), y una
+      // clave sacada junto a `...resto` sirve precisamente para excluirla: así se quitan
+      // `passwordHash` y `salt` del usuario que se devuelve al cliente.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
+  {
     files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
@@ -43,6 +61,11 @@ export default tseslint.config(
       ecmaVersion: 2022,
       globals: globals.node,
     },
+  },
+  {
+    // La presentación (presentacion/) es una página estática que corre en el navegador.
+    files: ['presentacion/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, globals: globals.browser },
   },
   {
     // Los scripts de utilidad (CommonJS y ESM) corren en Node: sin esto, cada require/process/console

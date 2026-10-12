@@ -13,12 +13,12 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-weatherService.ts
+Exporta: WeatherAlert, EventWeatherData, DetectAlertsParams, detectWeatherAlerts, fetchEventWeather, getCachedEventWeatherAlerts.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -35,6 +35,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/calendar/__tests__/EventWeatherCard.test.tsx`
 - `src/services/__tests__/weatherService.test.ts`
 
 ---

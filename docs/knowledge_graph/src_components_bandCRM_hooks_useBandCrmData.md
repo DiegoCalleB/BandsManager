@@ -20,11 +20,12 @@ Carga de bandas, métricas, reproductor y bandas registradas.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_bandCRM_bandMetrics|src/components/bandCRM/bandMetrics.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_BandPreviewPlayer|src/components/booking/BandPreviewPlayer.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_BulkProgressModal|src/components/booking/BulkProgressModal.tsx]] *(Layer: #frontend, Domain: #booking)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 

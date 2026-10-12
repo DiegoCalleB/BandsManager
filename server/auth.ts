@@ -1,6 +1,20 @@
 import express from "express";
 import crypto from "crypto";
 import { normalizePlan } from "./db/core.js";
+import type { AppState, UsuarioGuardado } from "./stateTypes.js";
+
+/** Colecciones del estado que se leen para resolver la sesión (todas opcionales: el estado puede no haber cargado). */
+export type EstadoDeSesion = Partial<Pick<AppState, "users" | "registeredBands" | "userBands" | "sessions" | "bands">>;
+
+/** Lo que se lee de la banda activa, venga de `registeredBands` o de `bands` (con alias heredados). */
+interface BandaDeSesion {
+  id?: string;
+  band_id?: string;
+  nombre_banda?: string;
+  bandName?: string;
+  name?: string;
+  plan?: string;
+}
 
 // Active sessions stored in memory and persisted
 export const ACTIVE_SESSIONS: Record<string, { userId: string; createdAt: number }> = {};
@@ -28,28 +42,47 @@ export function verifyPassword(password: string, hash: string, salt: string) {
     if (hash.length === verifyHash1k.length && crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(verifyHash1k))) {
       return true;
     }
-  } catch (e) {
+  } catch {
     return false;
   }
 
   return false;
 }
 
-export function getSafeUsers(users: any[]) {
+/** Lo mínimo que tiene un usuario para quitarle los secretos antes de mandarlo al cliente. */
+type UsuarioConSecretos = { passwordHash?: unknown; salt?: unknown; ui_preferences?: Record<string, unknown> };
+
+export function getSafeUsers<U extends UsuarioConSecretos>(users: U[]) {
   if (!Array.isArray(users)) return [];
   return users.map(u => {
     const { passwordHash, salt, ...safeUser } = u;
-    if (safeUser.ui_preferences?._invitacion) {
+    const prefs = u.ui_preferences;
+    if (prefs?._invitacion) {
       // El registro de invitación (hash + caducidad) no sale del servidor.
-      const { _invitacion, ...prefs } = safeUser.ui_preferences;
-      safeUser.ui_preferences = prefs;
+      const { _invitacion, ...resto } = prefs;
+      return { ...safeUser, ui_preferences: resto };
     }
     return safeUser;
   });
 }
 
 // Extract user & role from incoming request with multi-band isolation validation
-export function getUserFromRequest(req: express.Request, loadStateFn: () => any): { id: string; role: string; username: string; email?: string; name?: string; bandName?: string; band_id?: string; allowedBandIds?: string[]; plan?: string } | null {
+/** Usuario de la sesión que `requireAuth` deja en `req.user`, con la banda activa ya resuelta. */
+export interface UsuarioDeSesion {
+  id: string;
+  role: string;
+  username: string;
+  email?: string;
+  name?: string;
+  bandName?: string;
+  band_id?: string;
+  /** Bandas a las que tiene acceso (normalizadas, con y sin prefijo). */
+  allowedBandIds?: string[];
+  /** Plan de la banda activa, ya normalizado. */
+  plan?: ReturnType<typeof normalizePlan>;
+}
+
+export function getUserFromRequest(req: express.Request, loadStateFn: () => EstadoDeSesion): UsuarioDeSesion | null {
   const authHeader = req.headers.authorization;
   // El token NO se acepta por la URL. Un `?token=` acaba en los logs del servidor, en el
   // historial del navegador y en la cabecera Referer de cualquier recurso externo que cargue la
@@ -62,7 +95,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   }
 
   const state = loadStateFn ? loadStateFn() : null;
-  let foundUser: any = null;
+  let foundUser: UsuarioGuardado | undefined;
 
   const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
   if (token) {
@@ -74,7 +107,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
         if (state?.sessions) delete state.sessions[token];
       } else {
         ACTIVE_SESSIONS[token] = session;
-        foundUser = state?.users?.find((u: any) => u.id === session.userId);
+        foundUser = state?.users?.find((u) => u.id === session.userId);
       }
     }
   }
@@ -101,7 +134,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   }
 
   if (state?.userBands) {
-    state.userBands.forEach((ub: any) => {
+    state.userBands.forEach((ub) => {
       if ((ub.user_id === foundUser.id || (userEmail && ub.email?.toLowerCase() === userEmail)) && ub.band_id) {
         addBandIdAndVariants(ub.band_id);
       }
@@ -109,7 +142,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   }
 
   if (state?.registeredBands) {
-    state.registeredBands.forEach((rb: any) => {
+    state.registeredBands.forEach((rb) => {
       if ((rb.user_id === foundUser.id || (rb.email && rb.email.toLowerCase() === userEmail))) {
         if (rb.band_id) addBandIdAndVariants(rb.band_id);
         if (rb.id) addBandIdAndVariants(rb.id);
@@ -118,7 +151,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
   }
 
   if (state?.users) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       if ((u.id === foundUser.id || (userEmail && (u.email?.toLowerCase() === userEmail || u.username?.toLowerCase() === userEmail))) && u.band_id) {
         addBandIdAndVariants(u.band_id);
       }
@@ -163,7 +196,7 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   // Determine user's role for this active band
   const cleanActive = activeBandId.replace(/^(band|reg)-/, '');
-  const userBand = state?.userBands?.find((ub: any) =>
+  const userBand = state?.userBands?.find((ub) =>
     ub.user_id === foundUser.id && ub.band_id && ub.band_id.replace(/^(band|reg)-/, '') === cleanActive
   );
   // El rol es POR BANDA. El `|| foundUser.role` que había de repuesto se applied cuando
@@ -173,11 +206,11 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 
   // Retrieve band name for this active band
   let activeBandName = foundUser.bandName;
-  const bandObj = (state?.registeredBands || []).find((rb: any) =>
+  const bandObj: BandaDeSesion | undefined = (state?.registeredBands || []).find((rb) =>
     rb.band_id === activeBandId || rb.id === activeBandId ||
     (rb.band_id && rb.band_id.replace(/^(band|reg)-/, '') === cleanActive) ||
     (rb.id && rb.id.replace(/^(band|reg)-/, '') === cleanActive)
-  ) || (state?.bands || []).find((b: any) =>
+  ) || (state?.bands || []).find((b) =>
     b.band_id === activeBandId || b.id === activeBandId ||
     (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanActive) ||
     (b.id && b.id.replace(/^(band|reg)-/, '') === cleanActive)
@@ -201,34 +234,34 @@ export function getUserFromRequest(req: express.Request, loadStateFn: () => any)
 }
 
 // Middleware: Requires valid authenticated user
-export function createAuthMiddleware(loadStateFn: () => any) {
+export function createAuthMiddleware(loadStateFn: () => EstadoDeSesion) {
   return function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
     const user = getUserFromRequest(req, loadStateFn);
     if (!user) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
-    (req as any).user = user;
+    req.user = user;
     next();
   };
 }
 
 // Middleware: Requires leader/admin user
-export function createLeaderMiddleware(loadStateFn: () => any) {
+export function createLeaderMiddleware(loadStateFn: () => EstadoDeSesion) {
   return function requireLeader(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const user = (req as any).user || getUserFromRequest(req, loadStateFn);
+    const user = req.user || getUserFromRequest(req, loadStateFn);
     if (!user) {
       return res.status(401).json({ error: "Acceso no autorizado. Inicie sesión para continuar." });
     }
     if (user.role !== 'leader' && user.role !== 'admin') {
       return res.status(403).json({ error: "Acceso denegado. Se requieren permisos de dirección/leader o administrador." });
     }
-    (req as any).user = user;
+    req.user = user;
     next();
   };
 }
 
 // Middleware: Allows request if valid CRON secret header is present OR user is authenticated
-export function createCronOrAuthMiddleware(loadStateFn: () => any) {
+export function createCronOrAuthMiddleware(loadStateFn: () => EstadoDeSesion) {
   return function requireCronOrAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
     const cronSecretHeader = req.headers['x-cron-secret'];
     const expectedSecret = process.env.CRON_SECRET;
@@ -239,7 +272,7 @@ export function createCronOrAuthMiddleware(loadStateFn: () => any) {
 
     const user = getUserFromRequest(req, loadStateFn);
     if (user) {
-      (req as any).user = user;
+      req.user = user;
       return next();
     }
 

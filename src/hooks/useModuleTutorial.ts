@@ -56,7 +56,7 @@ export function useModuleTutorial(moduleId: ModuleTutorialId, autoOpenFirstTime 
     (markAsSeen = true) => {
       setIsOpen(false);
       if (markAsSeen) {
-        markTutorialSeen(moduleId, true).catch(() => {});
+        markTutorialSeen(moduleId, true).catch(() => { /* ya guardado en este navegador; el servidor lo recibirá en el próximo guardado del perfil */ });
       }
     },
     [moduleId]

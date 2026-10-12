@@ -28,6 +28,11 @@ Atajos de teclado estilo Cubase de Song Studio (espacio, bucle, cue, mute/solo, 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/song_studio/hooks/__tests__/useStudioKeyboardShortcuts.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

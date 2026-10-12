@@ -99,19 +99,32 @@ export interface BandContact {
   dna_expresion?: Record<string, unknown>;
 }
 
+/** Canales que se eligen al anotar una interacción a mano en la bitácora. */
+export type CanalInteraccion = "Llamada" | "WhatsApp" | "Email" | "Reunión" | "Otro";
+
+/** Resultados que se eligen al anotar una interacción en la bitácora. */
+export type ResultadoInteraccion =
+  | "Interesado"
+  | "Enviar propuesta"
+  | "Seguimiento pendiente"
+  | "Rechazado"
+  | "Info recibida"
+  | "Acuerdo cerrado";
+
 export interface InteractionLog {
   id: string;
   fecha: string;
-  tipo: "Llamada" | "WhatsApp" | "Email" | "Reunión" | "Otro";
+  /** Canal. «Interacción EPK» y «Dossier PDF» los escribe la telemetría del dossier. */
+  tipo: CanalInteraccion | "Interacción EPK" | "Dossier PDF";
   autor?: string;
   notas: string;
-  resultado?:
-    | "Interesado"
-    | "Enviar propuesta"
-    | "Seguimiento pendiente"
-    | "Rechazado"
-    | "Info recibida"
-    | "Acuerdo cerrado";
+  /** Lo que elige quien anota a mano, o el texto propio de la telemetría de correo
+   * («👁️ Apertura de correo (#3)»). */
+  resultado?: ResultadoInteraccion | (string & {});
+  /** Evento de telemetría que originó la entrada (email_opened, email_clicked…). */
+  event?: string;
+  /** Correo al que se refiere el evento (aperturas y clics de tracking), con o sin prefijo imap-/gmail-. */
+  email_id?: string;
 }
 
 export interface SavedFilter {
@@ -188,6 +201,8 @@ export interface PitchFeedbackLog {
   pitch_nuevo: string;
   deshecho?: boolean;
   alcance?: "este_pitch" | "global";
+  /** Puntuación anti-IA del pitch nuevo (pitchEngine). */
+  anti_ai_score?: number;
 }
 
 export interface Lead {
@@ -201,6 +216,8 @@ export interface Lead {
   roster?: string;
   tipo?: LeadType | string;
   email_contacto: string;
+  /** Alias legado de email_contacto en leads importados antes de normalizar el campo. */
+  email?: string;
   email_secundario?: string;
   telefono: string;
   telefono_movil?: string;
@@ -267,7 +284,11 @@ export interface Lead {
     | "positivo"
     | "neutral"
     | "negativo_suave"
-    | "negativo_firme";
+    | "negativo_firme"
+    // Valores del analizador de sentimiento (server/services/sentimentAnalysis.ts › SentimentLevel).
+    | "cauteloso"
+    | "negativo"
+    | "rechazo";
   ultimo_sentimiento_score?: number;
   ultimo_sentimiento_label?: string;
   ultima_intencion?: string;
@@ -278,6 +299,8 @@ export interface Lead {
     | "muy_caliente"
     | "caliente"
     | "tibio"
+    // «templado» lo devuelve el analizador de sentimiento (LeadTemperature).
+    | "templado"
     | "frio"
     | "congelado";
   fechas_propuestas_sala?: string[];
@@ -1072,6 +1095,12 @@ export interface User {
       mobile?: "1" | "2";
       desktop?: "1" | "2";
     };
+    /** Módulos cuya guía rápida ya vio el usuario. */
+    tutorials_seen?: string[];
+    onboarding_completed?: boolean;
+    /** Bandas en las que el usuario ya completó el onboarding / el asistente de perfil. */
+    onboarding_completed_bands?: string[];
+    profile_wizard_completed_bands?: string[];
     [key: string]: unknown;
   };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
@@ -1470,6 +1499,18 @@ export interface Tour {
   sincronizarFinanzas?: boolean;
   stops: TourRouteStop[];
   estado: "planificacion" | "confirmada" | "completada" | "cancelada";
+}
+
+/** Banda en el selector del usuario (lo que devuelve el servidor en availableBands). */
+export interface BandaDisponible {
+  band_id: string;
+  bandName: string;
+  nombre_banda?: string;
+  role?: string;
+  logoUrl?: string;
+  plan?: string;
+  is_main?: boolean;
+  userId?: string;
 }
 
 export interface RegisteredBand {

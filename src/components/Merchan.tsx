@@ -1,37 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  Image as ImageIcon,
-  Shirt,
-  Tag,
-  QrCode,
-  Download,
-  RefreshCw,
-  Wand2,
-  Type,
-  Upload,
-  Trash2,
-  Scissors,
-  Layers,
-  Plus,
-  Gift,
-  PackageCheck,
-  MapPin,
-  CheckCircle2,
-  X,
-  ArrowRight,
-  Truck,
-  Clock,
-  Palette,
-  Phone,
-  User,
-  Building,
-} from "lucide-react";
-import { ThemeColors, ThemeName } from "../types";
+import { Image as ImageIcon, Shirt, Tag, QrCode, Download, RefreshCw, Wand2, Type, Upload, Trash2, Scissors, Layers, Plus, Gift, PackageCheck, MapPin, CheckCircle2, X, ArrowRight, Palette, Phone, User, Building } from "lucide-react";
+import { ThemeColors, ThemeName, Song } from "../types";
 import QRCode from "react-qr-code";
 import { resolveAudioUrl, uploadFileToServer } from "../utils/audioStorage";
 import { api } from "../services/api";
+import { useDisenosMerchan } from "../hooks/useDisenosMerchan";
 import { ShowIcon } from './ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton } from './ui';
+
+/** Canción con la portada también en `portada_url`, como en copias locales antiguas. */
+type CancionConPortada = Song & { portada_url?: string };
+/** Cómo se quita el fondo del diseño subido. */
+type ModoQuitarFondo = "none" | "white" | "black";
 
 const ResolvedBgImage: React.FC<{
   url: string;
@@ -39,16 +19,18 @@ const ResolvedBgImage: React.FC<{
   style?: React.CSSProperties;
   onClick?: () => void;
 }> = ({ url, className, style, onClick }) => {
-  const [resolved, setResolved] = useState<string | null>(null);
+  const [resuelta, setResuelta] = useState<string | null>(null);
   useEffect(() => {
-    if (url) {
-      resolveAudioUrl(url)
-        .then((res) => setResolved(res))
-        .catch(() => setResolved(null));
-    } else {
-      setResolved(null);
-    }
+    if (!url) return;
+    let vigente = true;
+    resolveAudioUrl(url)
+      .then((res) => vigente && setResuelta(res))
+      .catch(() => vigente && setResuelta(null));
+    return () => {
+      vigente = false;
+    };
   }, [url]);
+  const resolved = url ? resuelta : null;
 
   return (
     <div
@@ -132,13 +114,10 @@ interface MerchanProps {
 }
 
 export default function Merchan({
-  colors,
-  currentTheme,
   bandId,
   bandName,
-  bandLogoUrl,
+  bandLogoUrl
 }: MerchanProps) {
-  const isDemo = false;
 
   const cleanBand = (bandId || "").replace(/^(band|reg)-/, "").toLowerCase();
   const displayBandName = bandName || "Tu Banda";
@@ -157,7 +136,7 @@ export default function Merchan({
     "logo",
   );
   const [customImageUrl, setCustomImageUrl] = useState<string | null>(null);
-  const [removeBgMode, setRemoveBgMode] = useState<"none" | "white" | "black">(
+  const [removeBgMode, setRemoveBgMode] = useState<ModoQuitarFondo>(
     "white",
   );
   const [isUploading, setIsUploading] = useState(false);
@@ -168,20 +147,7 @@ export default function Merchan({
   const [shirtColor, setShirtColor] = useState("var(--ink)");
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedDesigns, setGeneratedDesigns] = useState<
-    {
-      id: string;
-      type: string;
-      url: string;
-      processedUrl?: string;
-      bg: string;
-      text: string;
-      assetType: string;
-      shirtColor?: string;
-      qrUrl?: string;
-      date: string;
-    }[]
-  >([]);
+  const [generatedDesigns, setGeneratedDesigns] = useDisenosMerchan(cleanBand);
 
   const [albums, setAlbums] = useState<{ name: string; url: string }[]>([]);
 
@@ -189,8 +155,6 @@ export default function Merchan({
   const [hasGiftPending, setHasGiftPending] = useState(true);
   const [showClaimModal, setShowClaimModal] = useState(false);
   const [claimStep, setClaimStep] = useState<"form" | "success">("form");
-  const [selectedGiftDesignId, setSelectedGiftDesignId] =
-    useState<string>("default-logo");
   // El formulario de envío del regalo empezaba precargado con el nombre, la dirección real y el
   // teléfono del fundador: cualquier banda que reclamase su pack de pegatinas sin fijarse en el
   // formulario acababa enviando el regalo a su casa en vez de a la suya propia.
@@ -208,9 +172,9 @@ export default function Merchan({
     const fetchAlbums = async () => {
       try {
         const res = await api.getSongs();
-        const songs = res?.songs || [];
+        const songs: CancionConPortada[] = res?.songs || [];
         const albumsMap = new Map<string, string>();
-        songs.forEach((s: any) => {
+        songs.forEach((s) => {
           const album = s.albumDisco || s.album;
           const cover = s.portadaUrl || s.portada_url;
           if (album && cover && String(cover).trim() !== "") {
@@ -227,7 +191,7 @@ export default function Merchan({
           setAlbums(loadedAlbums);
           return;
         }
-      } catch (_) {
+      } catch {
         // Fallback local
       }
 
@@ -235,9 +199,9 @@ export default function Merchan({
         const key = `band_songs_${cleanBand || "default"}`;
         const saved = localStorage.getItem(key);
         if (saved && isSubscribed) {
-          const songs = JSON.parse(saved);
+          const songs: CancionConPortada[] = JSON.parse(saved);
           const albumsMap = new Map<string, string>();
-          songs.forEach((s: any) => {
+          songs.forEach((s) => {
             const album = s.albumDisco || s.album;
             const cover = s.portadaUrl || s.portada_url;
             if (album && cover && cover !== "") {
@@ -264,24 +228,6 @@ export default function Merchan({
       isSubscribed = false;
     };
   }, [cleanBand]);
-
-  // Galería de diseños generados, cacheada por banda (misma convención que el resto del módulo
-  // de repertorio: ver `band_songs_${cleanBand}` arriba) para que una banda nunca vea los diseños
-  // de merchandising de otra.
-  useEffect(() => {
-    try {
-      const key = `merchan_designs_${cleanBand || "default"}`;
-      const saved = localStorage.getItem(key);
-      setGeneratedDesigns(saved ? JSON.parse(saved) : []);
-    } catch {
-      setGeneratedDesigns([]);
-    }
-  }, [cleanBand]);
-
-  useEffect(() => {
-    const key = `merchan_designs_${cleanBand || "default"}`;
-    localStorage.setItem(key, JSON.stringify(generatedDesigns));
-  }, [generatedDesigns, cleanBand]);
 
   const handleDelete = (id: string) => {
     setGeneratedDesigns((prev) => prev.filter((d) => d.id !== id));
@@ -615,7 +561,7 @@ export default function Merchan({
               ].map((m) => (
                 <button
                   key={m.id}
-                  onClick={() => setRemoveBgMode(m.id as any)}
+                  onClick={() => setRemoveBgMode(m.id as ModoQuitarFondo)}
                   className={`py-1.5 px-1 rounded text-micro font-sans font-bold transition ${
                     removeBgMode === m.id
                       ? "bg-[var(--ink)] text-[var(--bg)]"

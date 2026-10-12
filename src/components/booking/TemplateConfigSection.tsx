@@ -1,25 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Sparkles,
-  RefreshCw,
-  Building2,
-  Tent,
-  Disc3,
-  Radio,
-  Users,
-  Briefcase,
-  MessageSquare,
-  Landmark,
-  Wand2,
-  Lightbulb,
-  Save,
-  Copy,
-  Check,
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-  Eye,
-} from 'lucide-react';
+import { Sparkles, Building2, Tent, Disc3, Radio, Users, Briefcase, MessageSquare, Landmark, Wand2, Lightbulb, Save, Copy, Check, ChevronDown, ChevronUp, Eye } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ExampleThreadsSection } from './ExampleThreadsSection';
 import { TemplateRecommendationsCard } from './TemplateRecommendationsCard';
@@ -91,7 +71,6 @@ const TEMPLATE_VARIABLES = [
 export function TemplateConfigSection({
   colors,
   textSub,
-  textMuted,
   templateTab,
   onSelectTemplateTab,
   activeTemplate,
@@ -104,7 +83,7 @@ export function TemplateConfigSection({
   onGenerateAllTemplates,
   isGeneratingAllTemplates = false,
   optimizationFeedbackMsg,
-  onClearFeedbackMsg,
+  onClearFeedbackMsg
 }: TemplateConfigSectionProps) {
   const [isMultiModalOpen, setIsMultiModalOpen] = useState(false);
   const [showRecommendations, setShowRecommendations] = useState(false);

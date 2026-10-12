@@ -21,6 +21,7 @@ Exporta: QrExportModal.
 - [[src_components_fans_qr_CustomizableBandQr|src/components/fans/qr/CustomizableBandQr.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_fans_qr_qrCustomizationConfig|src/components/fans/qr/qrCustomizationConfig.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_qrExport|src/utils/qrExport.ts]] *(Layer: #service, Domain: #system)*
 
 ---

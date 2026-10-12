@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
-import { getAuthHeaders } from '../services/api';
 import { apiFetch } from '../utils/api';
+import { comoErrorCapturado } from '../utils/errorCapturado';
+import type {
+  EstadisticaPlantilla,
+  PlantillaEmail,
+  RespuestaMapaPlantillas,
+  RespuestaOptimizarPlantilla,
+  RespuestaPreviewPlantilla,
+  RespuestaEstadisticasPlantillas,
+  RespuestaResetPlantilla,
+  RespuestaGuardarPlantilla,
+} from './tiposPlantillas';
 
 export type TemplateCategory = 'salas' | 'festivales' | 'discotecas' | 'medios' | 'grupos' | 'managements' | 'ayuntamientos';
 
@@ -150,20 +160,9 @@ Oficina de Producción — {bandName}`);
   const [templateContentRating, setTemplateContentRating] = useState<number>(0);
 
   // Estadísticas de éxito por categoría
-  const [templateStats, setTemplateStats] = useState<
-    Record<
-      string,
-      {
-        totalUses: number;
-        positiveResponses: number;
-        responseRate: number;
-        invalidEmails: number;
-        bouncedEmails: number;
-      }
-    >
-  >({});
+  const [templateStats, setTemplateStats] = useState<Record<string, EstadisticaPlantilla>>({});
 
-  const applyTemplatesMap = (t: Record<string, any>) => {
+  const applyTemplatesMap = (t: Record<string, PlantillaEmail>) => {
     if (!t) return;
     if (t.salas) {
       setSubjectTemplateSala(t.salas.subject || '');
@@ -207,7 +206,7 @@ Oficina de Producción — {bandName}`);
     setIsGeneratingAllTemplates(true);
     setOptimizationFeedbackMsg(null);
     try {
-      const data = await apiFetch<any>('/api/templates/generate-all', {
+      const data = await apiFetch<RespuestaMapaPlantillas>('/api/templates/generate-all', {
         method: 'POST',
         body: JSON.stringify({ baseProposal }),
       });
@@ -222,7 +221,8 @@ Oficina de Producción — {bandName}`);
         setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
         return false;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error generating all templates:', err);
       setOptimizationFeedbackMsg(`⚠️ Error de conexión al generar las 7 plantillas.`);
       return false;
@@ -238,7 +238,7 @@ Oficina de Producción — {bandName}`);
       typeof overrideInstruction === 'string' && overrideInstruction.trim() !== '' ? overrideInstruction.trim() : templateCustomInstruction;
     try {
       const activeData = getActiveTemplateData();
-      const data = await apiFetch<any>('/api/templates/optimize', {
+      const data = await apiFetch<RespuestaOptimizarPlantilla>('/api/templates/optimize', {
         method: 'POST',
         body: JSON.stringify({
           category: templateTab,
@@ -274,7 +274,8 @@ Oficina de Producción — {bandName}`);
         const errorMsg = data?.error || data?.message || 'No se pudo re-generar la plantilla. Inténtalo de nuevo.';
         setOptimizationFeedbackMsg(`⚠️ ${errorMsg}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error optimizing template:', err);
       setOptimizationFeedbackMsg(`⚠️ Error al re-generar la plantilla: ${err?.message || 'Error de conexión'}`);
     } finally {
@@ -372,7 +373,7 @@ Oficina de Producción — {bandName}`);
     const activeData = getActiveTemplateData();
 
     try {
-      const data = await apiFetch<any>('/api/templates/preview', {
+      const data = await apiFetch<RespuestaPreviewPlantilla>('/api/templates/preview', {
         method: 'POST',
         body: JSON.stringify({
           category: templateTab,
@@ -386,7 +387,8 @@ Oficina de Producción — {bandName}`);
       } else {
         setTestPromptResult(`⚠️ ${data?.error || 'No se pudo simular la plantilla.'}`);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error testing prompt:', err);
       setTestPromptResult(`⚠️ ${err?.message || 'Error de conexión al simular la plantilla.'}`);
     } finally {
@@ -397,7 +399,7 @@ Oficina de Producción — {bandName}`);
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const data = await apiFetch<any>('/api/templates');
+        const data = await apiFetch<RespuestaMapaPlantillas>('/api/templates');
         if (data?.success && data?.templates) {
           const t = data.templates;
           if (t.salas) {
@@ -442,7 +444,7 @@ Oficina de Producción — {bandName}`);
     };
     const fetchStats = async () => {
       try {
-        const data = await apiFetch<any>('/api/templates/stats');
+        const data = await apiFetch<RespuestaEstadisticasPlantillas>('/api/templates/stats');
         if (data?.success && data?.stats) {
           setTemplateStats(data.stats);
         }
@@ -457,7 +459,7 @@ Oficina de Producción — {bandName}`);
   const handleSaveTemplates = async () => {
     const activeData = getActiveTemplateData();
     try {
-      const data = await apiFetch<any>('/api/templates/save', {
+      const data = await apiFetch<RespuestaGuardarPlantilla>('/api/templates/save', {
         method: 'POST',
         body: JSON.stringify({
           category: templateTab,
@@ -479,7 +481,8 @@ Oficina de Producción — {bandName}`);
       } else {
         alert('⚠️ Error al guardar en el servidor.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error saving template:', err);
       alert(err?.message || '⚠️ Error de conexión al guardar la plantilla.');
     }
@@ -489,7 +492,7 @@ Oficina de Producción — {bandName}`);
     if (!confirm(`¿Restaurar la plantilla de ${templateTab} a valores por defecto?`)) return;
 
     try {
-      const data = await apiFetch<any>('/api/templates/reset', {
+      const data = await apiFetch<RespuestaResetPlantilla>('/api/templates/reset', {
         method: 'POST',
         body: JSON.stringify({ category: templateTab }),
       });
@@ -505,7 +508,8 @@ Oficina de Producción — {bandName}`);
       } else {
         setOptimizationFeedbackMsg('⚠️ Error al resetear la plantilla.');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error resetting template:', err);
       setOptimizationFeedbackMsg('⚠️ Error de conexión al resetear la plantilla.');
     }

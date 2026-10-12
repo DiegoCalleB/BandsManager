@@ -1,33 +1,5 @@
 import React, { useState } from "react";
-import {
-  Settings,
-  Plus,
-  RotateCcw,
-  Save,
-  Trash2,
-  ArrowUp,
-  ArrowDown,
-  Maximize2,
-  Minimize2,
-  Eye,
-  Check,
-  Calendar,
-  Building2,
-  Music,
-  DollarSign,
-  Users,
-  BookOpen,
-  Bot,
-  Truck,
-  LayoutGrid,
-  X,
-  GripVertical,
-  Zap,
-  TrendingUp,
-  Info,
-  Smartphone,
-  Monitor,
-} from "lucide-react";
+import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Maximize2, Check, LayoutGrid, X, GripVertical, Info, Monitor } from "lucide-react";
 import {
   DashboardWidgetConfig,
   DEFAULT_DASHBOARD_WIDGETS,
@@ -64,20 +36,23 @@ import {
   ThemeColors,
   Setlist,
   Song,
+  User,
 } from "../../types";
+import type { NavigationOptions } from "../Dashboard";
 import { api } from "../../services/api";
 import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
+import { leerUsuarioDeSesion } from '../../services/sesionLocal';
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
 const isStitchLight = false;
 
 export interface DashboardWidgetGridProps {
-  currentUser?: any;
+  currentUser?: User;
   concerts: Concert[];
   rehearsals: Rehearsal[];
   leads: Lead[];
@@ -92,12 +67,15 @@ export interface DashboardWidgetGridProps {
   colors: ThemeColors;
   agendaFilterMode: "active" | "all";
   onSetAgendaFilterMode: (mode: "active" | "all") => void;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   isEditMode?: boolean;
   setIsEditMode?: React.Dispatch<React.SetStateAction<boolean>>;
   viewDensityMode?: "clean" | "full";
   setViewDensityMode?: React.Dispatch<React.SetStateAction<"clean" | "full">>;
 }
+
+/** Id único de un widget recién añadido (a nivel de módulo: se llama solo desde handlers). */
+const nuevoIdWidget = (type: WidgetType) => `${type}-${Date.now()}`;
 
 export function DashboardWidgetGrid({
   currentUser,
@@ -106,7 +84,6 @@ export function DashboardWidgetGrid({
   leads,
   tours = [],
   fans = [],
-  posts = [],
   payments = [],
   setlists = [],
   songs = [],
@@ -119,19 +96,16 @@ export function DashboardWidgetGrid({
   isEditMode: externalEditMode,
   setIsEditMode: externalSetIsEditMode,
   viewDensityMode: externalDensityMode,
-  setViewDensityMode: externalSetViewDensityMode,
 }: DashboardWidgetGridProps) {
   const userPlan = currentUser?.plan;
 
   // Internal fallback state if props not passed
-  const [internalDensityMode, setInternalDensityMode] = useState<
+  const [internalDensityMode] = useState<
     "clean" | "full"
   >("clean");
   const [internalEditMode, setInternalEditMode] = useState(false);
 
   const viewDensityMode = externalDensityMode ?? internalDensityMode;
-  const setViewDensityMode =
-    externalSetViewDensityMode ?? setInternalDensityMode;
 
   const isEditMode = externalEditMode ?? internalEditMode;
   const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
@@ -140,11 +114,6 @@ export function DashboardWidgetGrid({
   const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as
     | DashboardWidgetConfig[]
     | undefined;
-
-  // true si la carga inicial tuvo que quitar algún widget duplicado — dispara un guardado
-  // silencioso una vez montado, para que la limpieza no se pierda en la próxima carga (ver
-  // debajo del todo de este componente).
-  const hadDuplicatesOnLoadRef = React.useRef(false);
 
   // Quita lo que el plan no permite y los tipos duplicados. Un tipo de widget solo puede estar
   // una vez en el panel — de guardados anteriores pueden quedar duplicados ("Añadir Otro" lo
@@ -166,15 +135,16 @@ export function DashboardWidgetGrid({
     return { deduped, hadDuplicates: deduped.length !== withModuleAccess.length };
   };
 
-  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(() => {
-    const initial =
+  // `hadDuplicates` es true si la carga inicial tuvo que quitar algún widget duplicado — dispara
+  // un guardado silencioso una vez montado, para que la limpieza no se pierda en la próxima carga.
+  const [initialLayout] = useState(() =>
+    sanitizeLayout(
       Array.isArray(savedWidgets) && savedWidgets.length > 0
         ? savedWidgets
-        : DEFAULT_DASHBOARD_WIDGETS;
-    const { deduped, hadDuplicates } = sanitizeLayout(initial);
-    if (hadDuplicates) hadDuplicatesOnLoadRef.current = true;
-    return deduped;
-  });
+        : DEFAULT_DASHBOARD_WIDGETS,
+    ),
+  );
+  const [widgets, setWidgets] = useState<DashboardWidgetConfig[]>(initialLayout.deduped);
 
   // true en cuanto el panel es del usuario (ya guardado antes, o tocado en esta sesión): la vista
   // «Esencial» solo recorta el panel por defecto. Antes recortaba también lo que el usuario había
@@ -188,7 +158,7 @@ export function DashboardWidgetGrid({
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [isSaving, setIsSaving] = useState(false);
+  const [, setIsSaving] = useState(false);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
 
   // Drag and drop state
@@ -201,7 +171,9 @@ export function DashboardWidgetGrid({
   // vuelo (y por tanto sin el último cambio) no debe deshacerlo.
   const hasSavedRef = React.useRef(false);
   const widgetsRef = React.useRef(widgets);
-  widgetsRef.current = widgets;
+  React.useEffect(() => {
+    widgetsRef.current = widgets;
+  }, [widgets]);
 
   // Sync to database — y al usuario en caché (estado de la app + localStorage), para que al salir
   // del dashboard y volver, o al recargar antes de que la sesión se refresque, no reaparezca el
@@ -215,9 +187,8 @@ export function DashboardWidgetGrid({
       const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
       const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
       try {
-        const cached = localStorage.getItem("bandmanager_user");
-        if (cached) {
-          const user = JSON.parse(cached);
+        const user = leerUsuarioDeSesion();
+        if (user) {
           user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
           localStorage.setItem("bandmanager_user", JSON.stringify(user));
         }
@@ -263,8 +234,8 @@ export function DashboardWidgetGrid({
   // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
   // que el usuario tocara algo manualmente.
   React.useEffect(() => {
-    if (hadDuplicatesOnLoadRef.current) {
-      hadDuplicatesOnLoadRef.current = false;
+    if (initialLayout.hadDuplicates) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- persistir la limpieza inicial en el servidor al montar; los setState son los del indicador de guardado de saveLayoutToDb
       saveLayoutToDb(widgets);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -357,7 +328,7 @@ export function DashboardWidgetGrid({
   // Update specific widget settings (e.g., calendar view mode)
   const handleUpdateWidgetSettings = (
     id: string,
-    newSettings: Record<string, any>,
+    newSettings: NonNullable<DashboardWidgetConfig["settings"]>,
   ) => {
     const updated = widgets.map((w) => {
       if (w.id === id) {
@@ -405,7 +376,7 @@ export function DashboardWidgetGrid({
     if (widgets.some((w) => w.type === type && w.visible)) return;
 
     const newWidget: DashboardWidgetConfig = {
-      id: `${type}-${Date.now()}`,
+      id: nuevoIdWidget(type),
       type,
       title: meta.title,
       wSpan: meta.defaultWSpan,

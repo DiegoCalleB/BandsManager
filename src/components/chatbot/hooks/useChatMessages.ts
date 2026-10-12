@@ -2,7 +2,7 @@
  * Historial del chat: persistencia por banda/usuario, scroll, autoajuste del campo y estado de carga.
  * Extraído de Chatbot.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useEffectEvent } from "react";
 import type { ChatMessage, RawChatMessage } from "../chatTypes";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -57,13 +57,13 @@ export function useChatMessages({ storageKey, ensureUniqueMessageIds, getWelcome
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Re-sync messages when storageKey or active band changes
-  useEffect(() => {
+  // El efecto se dispara solo por [storageKey, bandDisplayName]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarStorageKey = useEffectEvent(() => {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // eslint-disable-next-line react-hooks/set-state-in-effect -- restaura el historial guardado al cambiar de banda/usuario
           setMessages(ensureUniqueMessageIds(parsed));
           return;
         }
@@ -79,6 +79,10 @@ export function useChatMessages({ storageKey, ensureUniqueMessageIds, getWelcome
         timestamp: new Date(),
       },
     ]);
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- restaura el historial guardado al cambiar de banda/usuario
+    return alCambiarStorageKey();
   }, [storageKey, bandDisplayName]);
 
   useEffect(() => {

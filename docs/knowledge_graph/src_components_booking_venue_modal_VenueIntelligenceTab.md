@@ -18,9 +18,7 @@ Exporta: VenueIntelligenceTab.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_booking_DealAndLogisticsCopilot|src/components/booking/DealAndLogisticsCopilot.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_booking_QuickDealSimulator|src/components/booking/QuickDealSimulator.tsx]] *(Layer: #frontend, Domain: #booking)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

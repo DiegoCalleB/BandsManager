@@ -23,12 +23,12 @@ export function useCalendarFullscreen() {
   const toggleCalendarFullscreen = React.useCallback(() => {
     if (!isCalendarFullscreen) {
       if (calendarContainerRef.current && calendarContainerRef.current.requestFullscreen) {
-        calendarContainerRef.current.requestFullscreen().catch(() => {});
+        calendarContainerRef.current.requestFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
       }
       setIsCalendarFullscreen(true);
     } else {
       if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+        document.exitFullscreen().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
       }
       setIsCalendarFullscreen(false);
     }

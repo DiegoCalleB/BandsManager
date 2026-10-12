@@ -4,9 +4,10 @@ import path from 'path';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { AroAcorde } from '../components/chords/AroAcorde';
+import { leerAtril } from './leerAtril';
 
 const modos = fs.readFileSync(path.join(__dirname, '..', 'utils', 'modosAtril.ts'), 'utf-8');
-const visor = fs.readFileSync(path.join(__dirname, '..', 'components', 'Atril.tsx'), 'utf-8');
+const visor = leerAtril();
 
 describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () => {
   // Con la cabecera y el panel de acordes ocupando casi toda la pantalla, el cuerpo con flex-1 se

@@ -21,6 +21,7 @@ Carga del estado en memoria desde Supabase (`loadStateFromSupabase`) e invalidac
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
 - [[db_payments|Pagos y suscripciones (Stripe)]] *(Layer: #db, Domain: #finances)*
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
+- [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*

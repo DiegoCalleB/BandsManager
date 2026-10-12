@@ -27,6 +27,7 @@ Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el sche
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_tiposLeadCorreo|server/services/tiposLeadCorreo.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailDeliveryTracker|server/utils/emailDeliveryTracker.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*

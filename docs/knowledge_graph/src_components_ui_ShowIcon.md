@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_CreateBandStepTwo|src/components/band_switcher/CreateBandStepTwo.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AddEditBandModal|src/components/bandCRM/AddEditBandModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*
@@ -57,10 +57,6 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_RoadbookContractModal|src/components/booking/RoadbookContractModal.tsx]] *(from #frontend)*
 - [[src_components_booking_TemplateRecommendationsCard|src/components/booking/TemplateRecommendationsCard.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_modal_VenueEmailThread|src/components/booking/venue_modal/VenueEmailThread.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenueIntelligenceTab|src/components/booking/venue_modal/VenueIntelligenceTab.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenueModalHeader|src/components/booking/venue_modal/VenueModalHeader.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenuePitchWorkspace|src/components/booking/venue_modal/VenuePitchWorkspace.tsx]] *(from #frontend)*
-- [[src_components_booking_venue_modal_VenueProfileColumn|src/components/booking/venue_modal/VenueProfileColumn.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueAgentWorkflowBanner|src/components/booking/venue_panel/VenueAgentWorkflowBanner.tsx]] *(from #agent)*
 - [[src_components_booking_venue_panel_VenueAudienceVerificationCards|src/components/booking/venue_panel/VenueAudienceVerificationCards.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueCalendarEventsCards|src/components/booking/venue_panel/VenueCalendarEventsCards.tsx]] *(from #frontend)*
@@ -106,7 +102,6 @@ _Sin dependencias salientes directas._
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 - [[src_components_common_BandNameStylerHelper|src/components/common/BandNameStylerHelper.tsx]] *(from #frontend)*
 - [[src_components_common_ModuleTutorialModal|src/components/common/ModuleTutorialModal.tsx]] *(from #frontend)*
-- [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_agent_autonomy_AuditTab|src/components/dashboard/agent_autonomy/AuditTab.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_BestDaysCard|src/components/dashboard/agent_autonomy/BestDaysCard.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_EmailDispatchTab|src/components/dashboard/agent_autonomy/EmailDispatchTab.tsx]] *(from #agent)*
@@ -141,7 +136,6 @@ _Sin dependencias salientes directas._
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(from #frontend)*
 - [[src_components_PublicFanCapture|src/components/PublicFanCapture.tsx]] *(from #frontend)*
-- [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
 - [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
 - [[src_components_reels_center_AnalysisProgress|src/components/reels_center/AnalysisProgress.tsx]] *(from #frontend)*
 - [[src_components_reels_center_AutoPublishPanel|src/components/reels_center/AutoPublishPanel.tsx]] *(from #frontend)*
@@ -157,7 +151,6 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
-- [[src_components_repertorio_ExportAlbumSongsModal|src/components/repertorio/ExportAlbumSongsModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_live_concert_album_AudioAvailabilityBanner|src/components/repertorio/live_concert_album/AudioAvailabilityBanner.tsx]] *(from #frontend)*
 - [[src_components_repertorio_live_concert_album_ConcertErrorBanner|src/components/repertorio/live_concert_album/ConcertErrorBanner.tsx]] *(from #frontend)*
@@ -177,11 +170,11 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_PerfectSetlistModal|src/components/repertorio/PerfectSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioNavBar|src/components/repertorio/RepertorioNavBar.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionPlayer|src/components/repertorio/song_transition/TransitionPlayer.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionTrackCard|src/components/repertorio/song_transition/TransitionTrackCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 - [[src_components_setlist_performance_ChordSheetPage|src/components/setlist_performance/ChordSheetPage.tsx]] *(from #frontend)*
 - [[src_components_setlist_performance_PerformanceFooter|src/components/setlist_performance/PerformanceFooter.tsx]] *(from #frontend)*

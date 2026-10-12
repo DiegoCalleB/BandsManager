@@ -18,12 +18,11 @@ Exporta: NavigationOptions, Dashboard.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
-- [[src_components_DirectionsCard|src/components/DirectionsCard.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_app_appViews|src/app/appViews.ts]] *(Layer: #service, Domain: #system)*
+- [[src_components_band_switcher_bandSwitcherTypes|src/components/band_switcher/bandSwitcherTypes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_booking_MobileBottomSheet|src/components/booking/MobileBottomSheet.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_dashboard_AgentAutonomySettingsModal|src/components/dashboard/AgentAutonomySettingsModal.tsx]] *(Layer: #agent, Domain: #system)*
-- [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_EmailTemplatesModal|src/components/dashboard/EmailTemplatesModal.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -31,13 +30,10 @@ Exporta: NavigationOptions, Dashboard.
 - [[src_components_dashboard_NeedsAttentionBanner|src/components/dashboard/NeedsAttentionBanner.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_NextGigStrip|src/components/dashboard/NextGigStrip.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ensayos_ConvocarEnsayoModal|src/components/ensayos/ConvocarEnsayoModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_PopoverAncla|src/components/ui/PopoverAncla.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
-- [[src_context_PlayerContext|src/context/PlayerContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_playerContextValue|src/context/playerContextValue.ts]] *(Layer: #service, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
@@ -52,6 +48,15 @@ Exporta: NavigationOptions, Dashboard.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[src_app_ActiveViewRouter|src/app/ActiveViewRouter.tsx]] *(from #service)*
+- [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
+- [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+- [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
+- [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(from #frontend)*
+- [[src_components_dashboard_NeedsAttentionBanner|src/components/dashboard/NeedsAttentionBanner.tsx]] *(from #frontend)*
+- [[src_components_dashboard_ProfileCompletenessCard|src/components/dashboard/ProfileCompletenessCard.tsx]] *(from #frontend)*
+- [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
 
 ---
 

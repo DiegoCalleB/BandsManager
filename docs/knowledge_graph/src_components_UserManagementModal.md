@@ -18,7 +18,9 @@ Exporta: UserManagementModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
@@ -27,6 +29,7 @@ Exporta: UserManagementModal.
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_contrastText|src/utils/contrastText.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

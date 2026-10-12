@@ -8,10 +8,6 @@ import { ShowIcon } from '../ui/ShowIcon';
 import { textOnColor } from '../../utils/contrastText';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
-
 interface SongModalProps {
   isOpen: boolean;
   editingSong: Song | null;
@@ -27,13 +23,12 @@ interface SongModalProps {
 export function SongModal({
   isOpen,
   editingSong,
-  colors,
   onClose,
   onSave,
   albumsList = [],
   defaultAlbum = '',
   defaultAlbumForNewSong = '',
-  bandMembers = [],
+  bandMembers = []
 }: SongModalProps) {
   const effectiveDefaultAlbum = defaultAlbumForNewSong || defaultAlbum || '';
   const resolvedMembers = resolveBandMembers(bandMembers, editingSong?.notasMiembros);
@@ -50,7 +45,7 @@ export function SongModal({
     const albumVal = editingSong?.albumDisco || editingSong?.album || effectiveDefaultAlbum || '';
     return albumsList.includes(albumVal) ? '' : albumVal;
   });
-  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || (editingSong as any)?.audioUrl || '');
+  const [audioFileUrl, setAudioFileUrl] = useState<string>(editingSong?.audioPrincipalUrl || editingSong?.audioUrl || '');
   const [audioFileName, setAudioFileName] = useState<string>('');
 
   // Determine if advanced section should start open (e.g. if editing a song with extra data)

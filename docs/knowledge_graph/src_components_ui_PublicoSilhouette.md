@@ -27,7 +27,6 @@ _Sin dependencias salientes directas._
 - [[src_components_booking_google_places_PlaceDiscardedModal|src/components/booking/google_places/PlaceDiscardedModal.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueBitacoraSection|src/components/booking/venue_panel/VenueBitacoraSection.tsx]] *(from #frontend)*
 - [[src_components_booking_venue_panel_VenueEmailsSection|src/components/booking/venue_panel/VenueEmailsSection.tsx]] *(from #frontend)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_ensayos_GrabacionActaTab|src/components/ensayos/GrabacionActaTab.tsx]] *(from #frontend)*
 - [[src_components_ensayos_OrdenDelDiaTab|src/components/ensayos/OrdenDelDiaTab.tsx]] *(from #frontend)*
 - [[src_components_fans_panel_FansGridView|src/components/fans_panel/FansGridView.tsx]] *(from #frontend)*
@@ -43,7 +42,6 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistItemsList|src/components/repertorio/SetlistItemsList.tsx]] *(from #frontend)*
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_setlist_performance_PerformanceEmptyState|src/components/setlist_performance/PerformanceEmptyState.tsx]] *(from #frontend)*
 - [[src_components_tour_manager_TourCardsGrid|src/components/tour_manager/TourCardsGrid.tsx]] *(from #frontend)*
 - [[src_components_ui_EmptyState|src/components/ui/EmptyState.tsx]] *(from #frontend)*

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global document -- se usa dentro de page.evaluate, que corre en el navegador */
 import { chromium } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';

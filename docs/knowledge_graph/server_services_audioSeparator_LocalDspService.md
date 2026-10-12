@@ -19,8 +19,9 @@ Exporta: LocalDspService.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_ai_music_motorFfmpeg|server/routes/ai_music/motorFfmpeg.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

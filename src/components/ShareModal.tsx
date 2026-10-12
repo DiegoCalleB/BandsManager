@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, MessageSquare, Share2, Copy, Check, Mail, Phone, Edit3, Sparkles, Music, Calendar, Disc, FileText, Send } from 'lucide-react';
 import { ThemeColors } from '../types';
-import { shareViaWhatsApp, shareViaWebShare, copyToClipboard, shareViaEmail, SharePayload } from '../utils/shareUtils';
+import { shareViaWhatsApp, shareViaWebShare, copyToClipboard, shareViaEmail } from '../utils/shareUtils';
 import { ModalPortal } from './common/ModalPortal';
 import { Button, IconButton, Input, LinkButton, Textarea } from './ui';
 
@@ -23,8 +23,7 @@ export function ShareModal({
   subtitle,
   initialText,
   itemType = 'custom',
-  defaultPhone = '',
-  colors,
+  defaultPhone = ''
 }: ShareModalProps) {
   const [text, setText] = useState<string>(initialText);
   const [phone, setPhone] = useState<string>(defaultPhone);
@@ -32,10 +31,12 @@ export function ShareModal({
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   // Sync state if initialText changes while modal opens
-  React.useEffect(() => {
+  const [textoInicialPrevio, setTextoInicialPrevio] = useState(initialText);
+  if (initialText !== textoInicialPrevio) {
+    setTextoInicialPrevio(initialText);
     setText(initialText);
     setCopied(false);
-  }, [initialText]);
+  }
 
   if (!isOpen) return null;
 

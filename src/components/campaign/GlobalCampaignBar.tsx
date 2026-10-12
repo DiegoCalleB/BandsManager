@@ -1,30 +1,17 @@
 import React, { useState } from "react";
 import { BookingCampaign, Lead } from "../../types";
 import { leadMatchesCampaign } from "../../utils/campaignMatch";
-import {
-  Target,
-  Calendar,
-  MapPin,
-  Users,
-  X,
-  Settings2,
-  Building2,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  Sparkles,
-  Flame,
-  CheckCircle2,
-} from "lucide-react";
+import { Calendar, MapPin, Users, X, Settings2, Building2, ChevronDown, ChevronUp, Flame } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton } from '../ui';
+import type { NavigationOptions } from '../Dashboard';
 
 interface GlobalCampaignBarProps {
   campaign: BookingCampaign;
   allLeads?: Lead[];
   onOpenManager: () => void;
   onDeactivate: () => void;
-  onNavigate: (view: string, options?: any) => void;
+  onNavigate: (view: string, options?: NavigationOptions & { campaignFilter?: string; campaignCities?: string[] }) => void;
   currentView: string;
 }
 

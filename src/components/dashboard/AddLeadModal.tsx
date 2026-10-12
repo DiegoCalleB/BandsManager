@@ -2,7 +2,6 @@ import React from "react";
 import { LeadType } from "../../types";
 import { Plus, X } from "lucide-react";
 import { ModalPortal } from "../common/ModalPortal";
-import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
 
 interface AddLeadModalProps {

@@ -13,21 +13,22 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: ViralHookVariant, HookDoctorDiagnosis, SubtitleStyleConfig, SUBTITLE_STYLES, ViralGrowthStudioProps, ViralGrowthStudio.
+Exporta: ViralHookVariant, HookDoctorDiagnosis, ViralGrowthStudioProps, ViralGrowthStudio.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_subtitleStyles|src/components/reels/subtitleStyles.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_reels_center_ViralGrowthStudioPanel|src/components/reels_center/ViralGrowthStudioPanel.tsx]] *(from #frontend)*
-- [[src_components_reels_ReelsPhoneMockup|src/components/reels/ReelsPhoneMockup.tsx]] *(from #frontend)*
 
 ---
 

@@ -1,19 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Check, Loader2, Ear, AlertTriangle } from 'lucide-react';
-import { apiFetch } from '../../utils/api';
 import { Button } from '../ui';
-
-export interface EtapaOido { id: string; titulo: string }
-export interface ProgresoOido {
-  tarea: 'acordes' | 'letra';
-  etapas: EtapaOido[];
-  actual: string | null;
-  detalle: string;
-  pct: number;
-  estado: 'en_curso' | 'listo' | 'error';
-  error?: string;
-  inicio: number;
-}
+import { pctVisible, useProgresoOido, type ProgresoOido } from './progresoOido';
 
 /** Qué significa cada etapa, en una frase de músico (no de ingeniero). */
 const PORQUE: Record<string, string> = {
@@ -31,34 +19,7 @@ const TITULO: Record<ProgresoOido['tarea'], string> = {
   letra: 'Chordscribe está sacando la letra y los acordes',
 };
 
-/** Consulta el progreso mientras `activo`; el servidor lo anota, la petición larga sigue su curso. */
-export function useProgresoOido(songId: string, activo: boolean): ProgresoOido | null {
-  const [progreso, setProgreso] = useState<ProgresoOido | null>(null);
-  useEffect(() => {
-    if (!activo) { setProgreso(null); return; }
-    let vivo = true;
-    const consultar = async () => {
-      try {
-        const r = await apiFetch<{ progreso: ProgresoOido | null }>(`/api/songs/${encodeURIComponent(songId)}/progreso-oido`);
-        if (vivo && r?.progreso) setProgreso(r.progreso);
-      } catch { /* la siguiente consulta lo recupera */ }
-    };
-    consultar();
-    const t = setInterval(consultar, 800);
-    return () => { vivo = false; clearInterval(t); };
-  }, [songId, activo]);
-  return progreso;
-}
-
 const fmt = (ms: number) => `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, '0')}`;
-
-/** Porcentaje que se ve: el del servidor (inicio de etapa) más un avance suave dentro de la etapa, sin llegar a la siguiente. */
-export function pctVisible(p: ProgresoOido, msEnEtapa: number): number {
-  if (p.estado === 'listo') return 100;
-  const paso = 100 / p.etapas.length;
-  const extra = paso * 0.9 * (1 - Math.exp(-msEnEtapa / 9000));
-  return Math.min(99, Math.round(p.pct + extra));
-}
 
 interface Props {
   abierto: boolean;
@@ -69,20 +30,18 @@ interface Props {
 }
 
 export const ModalOido: React.FC<Props> = ({ abierto, tarea, songId, titulo, onOcultar }) => {
-  const p = useProgresoOido(songId, abierto);
-  const [ahora, setAhora] = useState(Date.now());
-  const cambio = useRef<{ id: string | null; t: number }>({ id: null, t: Date.now() });
+  const { progreso: p, inicioEtapa } = useProgresoOido(songId, abierto);
+  const [ahora, setAhora] = useState(() => Date.now());
   useEffect(() => {
     if (!abierto) return;
     const t = setInterval(() => setAhora(Date.now()), 500);
     return () => clearInterval(t);
   }, [abierto]);
   if (!abierto) return null;
-  if (p && cambio.current.id !== p.actual) cambio.current = { id: p.actual, t: Date.now() };
 
   const etapas = p?.etapas ?? [];
   const iActual = p ? etapas.findIndex((e) => e.id === p.actual) : -1;
-  const pct = p ? pctVisible(p, ahora - cambio.current.t) : 0;
+  const pct = p ? pctVisible(p, Math.max(0, ahora - inicioEtapa)) : 0;
   const falla = p?.estado === 'error';
 
   return (

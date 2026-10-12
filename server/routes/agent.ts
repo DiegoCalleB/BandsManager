@@ -3,14 +3,7 @@
 // AGENTS.md §3.
 
 import express from 'express';
-import { getRegionForCity } from '../../src/constants/regions.js';
-import {
-  prepararLeadsDescubiertos,
-  limpiarCampoContacto,
-  determinarCorredorGira,
-  clasificarAforoRecinto,
-  calcularAfinidadMusical,
-} from '../utils/scoutLeads.js';
+import { prepararLeadsDescubiertos, determinarCorredorGira, clasificarAforoRecinto, calcularAfinidadMusical } from '../utils/scoutLeads.js';
 import {
   INITIAL_LEADS,
   INITIAL_REHEARSALS,
@@ -19,21 +12,9 @@ import {
   INITIAL_PAYMENTS,
   INITIAL_MESSAGES,
 } from '../../src/db_seed.js';
-import {
-  loadState,
-  saveState,
-  requireAuth,
-  requireLeader,
-  requireCronOrAuth,
-  getAutonomyConfigForBand,
-  getEpkConfigForBand,
-} from '../state.js';
+import { loadState, saveState, requireAuth, requireLeader, requireCronOrAuth, getAutonomyConfigForBand } from '../state.js';
 import { dbUpsertLead, dbCheckDeletedLead, getSupabase } from '../db.js';
-import {
-  getAiClient,
-  generateContentWithFallback,
-  buildPitchLinksFromEpkConfig,
-} from '../ai.js';
+import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { formatGlobalPitchFeedbackForPrompt } from './leads.js';
 import {
   runEnviadorAgent,
@@ -57,10 +38,7 @@ import {
   formatFestivalDates,
 } from '../utils/spanishFestivalsDB.js';
 import { normalizeVenueName } from './leads/places.js';
-import {
-  searchVenuesWithSerper,
-  enrichVenueDetailsWithSerper,
-} from '../services/venueIntelligenceService.js';
+import { searchVenuesWithSerper } from '../services/venueIntelligenceService.js';
 import {
   dbGetRegisteredBands,
   dbGetLeads,
@@ -75,6 +53,12 @@ import {
   getBandOperationalContext,
   evaluateIncomingTactics,
 } from '../services/agentIntelligence.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Lead } from '../../src/types.js';
+import type { BandaRegistradaGuardada } from '../stateTypes.js';
+import type { LeadDescubierto } from '../utils/scoutLeads.js';
+import type { RespuestaBusquedaPlaces, RespuestaIA } from './leads/tiposScout.js';
+import type { CampanaCruda, PitchRedactado, RegistroEjecucionAgente } from './tiposAgente.js';
 
 const router = express.Router();
 
@@ -114,7 +98,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     return res.status(400).json({ error: 'Falta el nombre del agente.' });
   }
 
-  const usuarioDisparador = (req as any).user;
+  const usuarioDisparador = req.user;
   const targetBandId = bandaDelAgente(req, params);
   if (!targetBandId) {
     return res
@@ -149,9 +133,9 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     usuario_email?: string;
     estado: 'success' | 'error' | 'warning';
     mensaje: string;
-    leads_afectados?: any[];
+    leads_afectados?: unknown[];
     conteo_afectados?: number;
-    detalles?: any;
+    detalles?: Record<string, unknown>;
   }) => {
     try {
       const sb = getSupabase();
@@ -173,7 +157,8 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         duracion_ms,
         detalles: logData.detalles || {},
       });
-    } catch (e: any) {
+    } catch (eCapturado) {
+      const e = comoErrorCapturado(eCapturado);
       console.warn(
         '[AUDIT LOG ERROR] No se pudo guardar el registro de auditoría en Supabase:',
         e?.message || e
@@ -200,7 +185,8 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         message: result.message,
         results: result.results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error al ejecutar el Agente Enviador:', err);
       await logAgentExecution({
         band_id: targetBandId,
@@ -271,20 +257,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         });
       }
 
-      let bandInfo = 'la banda (estilo musical sin especificar)';
-      let activeCampaign: any = null;
-      try {
-        const { data: bandData } = await sb
-          .from('registered_bands')
-          .select('*')
-          .eq('band_id', targetBandId)
-          .maybeSingle();
-        if (bandData) {
-          bandInfo = `${bandData.nombre_banda} - Estilo: ${bandData.estilo_musical || 'Mestizaje / Rock'} - Bio: ${bandData.biografia_corta || 'Banda en gira'}`;
-        }
-      } catch (e) {
-        // fallback
-      }
+      let activeCampaign: CampanaCruda | null = null;
 
       try {
         const { data: campData } = await sb
@@ -304,11 +277,11 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
             .maybeSingle();
           if (fallbackCamp) activeCampaign = fallbackCamp;
         }
-      } catch (e) {
+      } catch {
         // fallback
       }
 
-      const results: any[] = [];
+      const results: PitchRedactado[] = [];
       const ai = getAiClient();
       const state = loadState();
       const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
@@ -415,7 +388,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         message: successMsg,
         results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Redactor Supabase:', err);
       return res.status(500).json({
         success: false,
@@ -435,8 +409,6 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       const targetLoc = params?.ciudad || params?.region || 'Huelva';
       const tipo = params?.tipo || 'sala';
       const limit = Math.max(2, Math.min(10, Number(params?.limit) || 4));
-      const aforoMin = params?.aforoMin ? Number(params.aforoMin) : null;
-      const aforoMax = params?.aforoMax ? Number(params.aforoMax) : null;
       const state = loadState();
       const bandDna = getBandDnaProfile(state, targetBandId);
       const generoBanda =
@@ -446,7 +418,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
         process.env.GOOGLE_PLACES_API_KEY ||
         process.env.VITE_GOOGLE_PLACES_API_KEY ||
         '';
-      const rawCandidates: any[] = [];
+      // Candidatos sin validar de cada motor: prepararLeadsDescubiertos los filtra y normaliza.
+      const rawCandidates: unknown[] = [];
 
       // 1. CARGA DE LEADS EXISTENTES EN SUPABASE PARA DEDUPLICACIÓN DE EXACTITUD
       const { data: existingLeads } = await sb
@@ -457,14 +430,14 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       const existingNames = new Set<string>();
       const existingWebsites = new Set<string>();
 
-      (existingLeads || []).forEach((l: any) => {
+      (existingLeads || []).forEach((l) => {
         if (l.place_id) existingPlaceIds.add(l.place_id);
         if (l.nombre_sala) existingNames.add(normalizeVenueName(l.nombre_sala));
         if (l.website) {
           try {
             const domain = new URL(l.website).hostname.replace(/^www\./, '');
             if (domain) existingWebsites.add(domain);
-          } catch (_) {}
+          } catch { /* web mal formada: no cuenta para detectar duplicados */ }
         }
       });
 
@@ -506,7 +479,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           );
 
           if (placesRes.ok) {
-            const placesData: any = await placesRes.json();
+            const placesData = (await placesRes.json()) as RespuestaBusquedaPlaces;
             if (Array.isArray(placesData.places)) {
               for (const place of placesData.places) {
                 if (
@@ -560,7 +533,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
               }
             }
           }
-        } catch (pErr: any) {
+        } catch (pErrCapturado) {
+          const pErr = comoErrorCapturado(pErrCapturado);
           console.warn(
             '[Agente Scout] Advertencia en Motor 1 Google Places:',
             pErr?.message || pErr
@@ -609,7 +583,8 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
               notas: `Descubierto por Agente Scout vía Serper Places en ${targetLoc}.`,
             });
           }
-        } catch (sErr: any) {
+        } catch (sErrCapturado) {
+          const sErr = comoErrorCapturado(sErrCapturado);
           console.warn(
             '[Agente Scout] Advertencia en Motor Serper Places:',
             sErr?.message || sErr
@@ -658,7 +633,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
   ]
 }`;
 
-          let response: any = null;
+          let response: RespuestaIA | null = null;
           try {
             response = await generateContentWithFallback(ai, {
               contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -666,7 +641,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
                 tools: [{ googleSearch: {} }],
               },
             });
-          } catch (searchErr) {
+          } catch {
             response = await generateContentWithFallback(ai, {
               contents: [{ role: 'user', parts: [{ text: prompt }] }],
               config: { responseMimeType: 'application/json' },
@@ -678,7 +653,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
             .replace(/```json/g, '')
             .replace(/```/g, '')
             .trim();
-          let parsedData: any = {};
+          let parsedData: unknown = {};
           try {
             const jsonStart = cleanedText.indexOf('{');
             const jsonEnd = cleanedText.lastIndexOf('}');
@@ -689,13 +664,14 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
             } else {
               parsedData = JSON.parse(cleanedText);
             }
-          } catch (_) {
+          } catch {
             if (Array.isArray(cleanedText))
               parsedData = { results: cleanedText };
           }
 
-          const geminiResults = Array.isArray(parsedData?.results)
-            ? parsedData.results
+          const resultadosIA = (parsedData as { results?: unknown } | null)?.results;
+          const geminiResults: unknown[] = Array.isArray(resultadosIA)
+            ? resultadosIA
             : Array.isArray(parsedData)
               ? parsedData
               : [];
@@ -717,7 +693,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         tipo || 'sala'
       );
 
-      const deduplicatedLeads: any[] = [];
+      const deduplicatedLeads: LeadDescubierto[] = [];
       for (const cand of leadsValidos) {
         const normName = normalizeVenueName(cand.nombre_sala);
         if (!normName) continue;
@@ -751,7 +727,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
               );
               continue;
             }
-          } catch (_) {}
+          } catch { /* web del candidato mal formada: no se puede comparar por dominio */ }
         }
 
         // Si sobrevive todas las comprobaciones, es un lead nuevo y real
@@ -787,10 +763,11 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       }
 
       // 5. ENRIQUECIMIENTO INTEGRAL PREVIO Y ALMACENAMIENTO EN SUPABASE
-      const results: any[] = [];
+      const results: Awaited<ReturnType<typeof dbUpsertLead>>[] = [];
       for (const raw of deduplicatedLeads) {
-        let startD: string | undefined = raw.festival_start_date;
-        let endD: string | undefined = raw.festival_end_date;
+        // LeadDescubierto no trae fechas de festival: se buscan en la base local de festivales.
+        let startD: string | undefined;
+        let endD: string | undefined;
 
         if (!startD || !endD) {
           const localFest = searchFestivalByName(raw.nombre_sala, raw.ciudad);
@@ -878,7 +855,8 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         message: successMsg,
         results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Scout Supabase:', err);
       return res.status(500).json({
         success: false,
@@ -922,7 +900,8 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         message: successMsg,
         results: resultado.leadsActualizados,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       const sinCuenta =
         err instanceof EmailAgentError && err.code === 'no_token';
       const mensaje = sinCuenta
@@ -1000,7 +979,8 @@ router.post(
         message: result.message,
         results: result.results,
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error en responder-hilo interno:', err);
       return res
         .status(500)
@@ -1038,7 +1018,8 @@ router.post('/agents/test-intel', requireAuth, async (req, res) => {
       },
       tacticalEvaluation: tacticalEval,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error en test-intel:', err);
     return res.status(500).json({ success: false, error: err.message });
   }
@@ -1069,7 +1050,7 @@ router.get('/agent-runs', requireAuth, async (req, res) => {
     }
 
     if (logs && logs.length > 0) {
-      const runs = logs.map((log: any, idx: number) => {
+      const runs = logs.map((log: RegistroEjecucionAgente, idx: number) => {
         const agentRaw = log.agente || 'scout';
         const agentName = agentRaw.charAt(0).toUpperCase() + agentRaw.slice(1);
         const isSuccess = log.estado !== 'error';
@@ -1104,7 +1085,8 @@ router.get('/agent-runs', requireAuth, async (req, res) => {
       engine: 'Supabase Native Agent Engine',
       runs: [],
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching agent runs:', err);
     return res.json({
       configured: true,
@@ -1202,7 +1184,8 @@ router.get('/agent-runs/:runId/jobs', requireAuth, async (req, res) => {
         },
       ],
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching jobs from Supabase:', err);
     return res.status(500).json({
       success: false,
@@ -1211,8 +1194,13 @@ router.get('/agent-runs/:runId/jobs', requireAuth, async (req, res) => {
   }
 });
 
-// Reset database to initial seeds (Admin only)
+// Restaura los datos de ejemplo. Solo el administrador global: el estado es de TODAS las bandas.
+// Antes bastaba con ser líder de cualquier banda (requireLeader), y además el estado nuevo solo
+// llevaba seis colecciones, así que también desaparecían usuarios, sesiones y bandas registradas.
 router.post('/reset', requireAuth, requireLeader, (req, res) => {
+  if (req.user?.role !== 'admin') {
+    return res.status(403).json({ error: 'Solo el administrador global puede restaurar los datos de ejemplo.' });
+  }
   const { confirmReset, confirm } = req.body || {};
   if (
     confirmReset !== true &&
@@ -1225,6 +1213,7 @@ router.post('/reset', requireAuth, requireLeader, (req, res) => {
     });
   }
   const defaultState = {
+    ...loadState(),
     leads: INITIAL_LEADS,
     rehearsals: INITIAL_REHEARSALS,
     concerts: INITIAL_CONCERTS,
@@ -1233,7 +1222,8 @@ router.post('/reset', requireAuth, requireLeader, (req, res) => {
     messages: INITIAL_MESSAGES,
   };
   saveState(defaultState);
-  res.json({ success: true, state: defaultState });
+  // Sin devolver el estado: llevaba los usuarios con sus hashes de contraseña.
+  res.json({ success: true });
 });
 
 // Obtener registros de auditoría de agentes
@@ -1251,7 +1241,8 @@ router.get('/agent-logs', requireAuth, async (req, res) => {
     const { data, error } = await query;
     if (error) throw error;
     res.json({ success: true, logs: data || [] });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error al obtener agent-logs:', err);
     res.status(500).json({ success: false, error: err.message, logs: [] });
   }
@@ -1265,7 +1256,7 @@ router.get('/agent-logs', requireAuth, async (req, res) => {
 router.post('/agent-logs', requireAuth, async (req, res) => {
   try {
     const sb = getSupabase();
-    const user = (req as any).user;
+    const user = req.user;
     const body = req.body || {};
     const bandId = getTargetBandId(req);
     const userEmail = user?.email || user?.username || '';
@@ -1298,7 +1289,8 @@ router.post('/agent-logs', requireAuth, async (req, res) => {
       .select();
     if (error) throw error;
     res.json({ success: true, log: data?.[0] || logEntry });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error al insertar en agent-logs:', err);
     res.status(500).json({ success: false, error: err.message });
   }
@@ -1311,7 +1303,7 @@ router.post('/agent-logs', requireAuth, async (req, res) => {
 // agrega datos de TODAS las bandas, no de una banda concreta.
 router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
   try {
-    const user = (req as any).user;
+    const user = req.user;
     if (user?.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -1321,7 +1313,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
 
     const bandas = await dbGetRegisteredBands();
     const entradas: FunnelBandInput[] = await Promise.all(
-      (bandas || []).map(async (b: any): Promise<FunnelBandInput> => {
+      (bandas || []).map(async (b: BandaRegistradaGuardada): Promise<FunnelBandInput> => {
         const bandId = b.band_id || b.id;
         try {
           const [gmailOAuth, emailAccount, leads] = await Promise.all([
@@ -1332,7 +1324,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
           return {
             bandId,
             emailConectado: Boolean(gmailOAuth || emailAccount),
-            leadsEstados: (leads || []).map((l: any) => l.estado),
+            leadsEstados: (leads || []).map((l: Lead) => l.estado),
           };
         } catch (err) {
           console.warn(
@@ -1345,7 +1337,8 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
     );
 
     res.json({ success: true, funnel: computeAgentFunnel(entradas) });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error calculando agent-funnel:', err);
     res.status(500).json({
       success: false,

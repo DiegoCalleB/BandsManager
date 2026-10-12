@@ -62,6 +62,7 @@ Módulo sin exportaciones con nombre.
 - [[server_utils_guardadoParcial|server/utils/guardadoParcial.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_version|server/utils/version.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

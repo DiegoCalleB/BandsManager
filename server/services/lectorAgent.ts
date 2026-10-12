@@ -17,6 +17,7 @@ import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, dbGetAutonomyConfig, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
+import type { LeadConCorreo } from "./tiposLeadCorreo.js";
 
 // Clasificador de precisión para respuestas entrantes de salas/festivales/medios:
 // Evalúa el contenido del mensaje entrante en el idioma del lead y determina la transición de estado óptima:
@@ -134,16 +135,16 @@ const GENERIC_EMAIL_DOMAINS = new Set([
  */
 export async function findMatchingLeadForIncomingMessage(
   msg: RespuestaEntrante,
-  leads: any[],
+  leads: LeadConCorreo[],
   bandId: string
-): Promise<{ lead: any; matchReason: string; shouldAutoEnrichEmail?: string } | null> {
+): Promise<{ lead: LeadConCorreo; matchReason: string; shouldAutoEnrichEmail?: string } | null> {
   const sb = getSupabase();
   const fromClean = cleanEmailAddress(msg.from);
   const fromDomain = extractEmailDomain(msg.from);
 
   // --- VECTOR 1: Gmail Thread ID ---
   if (msg.threadId) {
-    const leadByThread = leads.find((l: any) => l.gmail_thread_id && String(l.gmail_thread_id).trim() === String(msg.threadId).trim());
+    const leadByThread = leads.find((l) => l.gmail_thread_id && String(l.gmail_thread_id).trim() === String(msg.threadId).trim());
     if (leadByThread) {
       return { lead: leadByThread, matchReason: `Gmail Thread ID (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
     }
@@ -156,10 +157,10 @@ export async function findMatchingLeadForIncomingMessage(
         .eq("asunto", msg.subject || "")
         .maybeSingle();
       if (msgByThread) {
-        const matched = leads.find((l: any) => String(l.id) === String(msgByThread.lead_id));
+        const matched = leads.find((l) => String(l.id) === String(msgByThread.lead_id));
         if (matched) return { lead: matched, matchReason: `Lead Message Thread/Subject (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Lector] Fallo buscando el lead por asunto del hilo; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 2: In-Reply-To & References RFC 5322 ---
@@ -175,7 +176,7 @@ export async function findMatchingLeadForIncomingMessage(
   for (const ref of allReferences) {
     if (!ref) continue;
     // Comprobar con leads.gmail_message_id
-    const leadByMsgId = leads.find((l: any) => {
+    const leadByMsgId = leads.find((l) => {
       const gId = cleanMessageId(l.gmail_message_id);
       return gId && (gId === ref || ref.includes(gId) || gId.includes(ref));
     });
@@ -194,17 +195,17 @@ export async function findMatchingLeadForIncomingMessage(
         .maybeSingle();
 
       if (origMsg) {
-        const matched = leads.find((l: any) => String(l.id) === String(origMsg.lead_id));
+        const matched = leads.find((l) => String(l.id) === String(origMsg.lead_id));
         if (matched) {
           return { lead: matched, matchReason: `RFC In-Reply-To (${ref})`, shouldAutoEnrichEmail: fromClean };
         }
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Lector] Fallo buscando el lead por In-Reply-To; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 3: Email Principal, Secundario o Alias ---
   if (fromClean) {
-    const leadByEmail = leads.find((l: any) => {
+    const leadByEmail = leads.find((l) => {
       const main = cleanEmailAddress(l.email_contacto);
       const sec = cleanEmailAddress(l.email_secundario);
       if (main && (main === fromClean || fromClean.includes(main) || main.includes(fromClean))) return true;
@@ -219,14 +220,14 @@ export async function findMatchingLeadForIncomingMessage(
 
   // --- VECTOR 4: Dominio Corporativo del Recinto ---
   if (fromDomain && !GENERIC_EMAIL_DOMAINS.has(fromDomain)) {
-    const leadByDomain = leads.find((l: any) => {
+    const leadByDomain = leads.find((l) => {
       const mainDom = extractEmailDomain(l.email_contacto);
       const secDom = extractEmailDomain(l.email_secundario);
       let webDom = "";
       if (l.website) {
         try {
           webDom = new URL(l.website.startsWith("http") ? l.website : `https://${l.website}`).hostname.replace(/^www\./, "").toLowerCase();
-        } catch (_) {}
+        } catch { /* web del lead mal formada: no cuenta para emparejar por dominio */ }
       }
       return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.includes(webDom) || webDom.includes(fromDomain)));
     });
@@ -239,7 +240,7 @@ export async function findMatchingLeadForIncomingMessage(
   // --- VECTOR 5: Asunto & Nombre de la Sala (Fuzzy Matching Inteligente) ---
   const subjectClean = (msg.subject || "").toLowerCase().replace(/^(re|fwd|rv|aw|respuesta|sv):\s*/gi, "").trim();
   if (subjectClean.length >= 3) {
-    const candidateLeads = leads.filter((l: any) => {
+    const candidateLeads = leads.filter((l) => {
       const nombre = (l.nombre_sala || "").toLowerCase().trim();
       return nombre.length >= 3 && subjectClean.includes(nombre);
     });
@@ -250,7 +251,7 @@ export async function findMatchingLeadForIncomingMessage(
 
     if (candidateLeads.length > 1) {
       // Priorizar el que esté en un estado de conversación activa
-      const active = candidateLeads.find((l: any) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
+      const active = candidateLeads.find((l) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
       if (active) {
         return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")` };
       }
@@ -298,7 +299,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0 };
   }
 
-  const leads = await dbGetLeads(bandId);
+  const leads: LeadConCorreo[] = await dbGetLeads(bandId);
   const uidsProcesados: Array<number | string> = [];
   let sinEmparejar = 0;
   let borradorIaGenerados = 0;
@@ -310,7 +311,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     if (isBounceMessage(msg.subject || "", msg.from || "")) {
       const emailFallido = extractFailedRecipientEmail(msg.text || "");
       const leadBounce = emailFallido
-        ? leads.find((l: any) => (l.email_contacto || "").toLowerCase().trim() === emailFallido)
+        ? leads.find((l) => (l.email_contacto || "").toLowerCase().trim() === emailFallido)
         : null;
       if (leadBounce && !(leadBounce.notas || "").includes("[Email Rechazado]")) {
         await dbUpsertLead({
@@ -325,7 +326,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
 
     // Emparejamiento Multi-Vector inteligente
     const matchResult = await findMatchingLeadForIncomingMessage(msg, leads, bandId);
-    let lead = matchResult?.lead || null;
+    const lead = matchResult?.lead || null;
 
     if (lead && matchResult) {
       console.log(`[Lector] ✨ Emparejamiento exitoso: ${msg.from} -> Lead ${lead.id} (${lead.nombre_sala}) vía [${matchResult.matchReason}]`);

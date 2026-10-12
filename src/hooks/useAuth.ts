@@ -1,40 +1,47 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from '../types';
+import { BandaDisponible, User } from '../types';
 import { api } from '../services/api';
 import { guardarCookieDeSesion, borrarCookieDeSesion } from '../utils/sessionCookie';
 import { syncAllUserPreferencesFromUser } from '../utils/userPreferences';
 import { atribuirReferidoPendiente } from '../utils/referido';
 import { atribuirReferido } from '../utils/promocionApi';
+import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
+import { comoErrorCapturado } from '../utils/errorCapturado';
+
+/**
+ * Banda de la lista de bandas disponibles. Además de {@link BandaDisponible}, las listas que llegan
+ * de otros orígenes (o guardadas en `localStorage` por versiones anteriores) pueden traer `id`/`name`.
+ */
+export type BandaDeLaSesion = BandaDisponible & { id?: string; name?: string };
 
 /** Sesión del usuario: estado persistido en `localStorage` (`bandmanager_user`), login y logout. */
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     try {
-      const savedUser = localStorage.getItem('bandmanager_user');
-      if (savedUser) {
-        const parsed = JSON.parse(savedUser);
+      const parsed = leerUsuarioDeSesion();
+      if (parsed) {
         syncAllUserPreferencesFromUser(parsed);
         return parsed;
       }
       return null;
-    } catch (e) {
+    } catch {
       return null;
     }
   });
 
   const [authToken, setAuthToken] = useState<string | null>(() => {
-    return localStorage.getItem('bandmanager_token') || null;
+    return leerTokenDeSesion() || null;
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return !!localStorage.getItem('bandmanager_token') || localStorage.getItem('bandmanager_logged_in') === 'true';
+    return !!leerTokenDeSesion() || localStorage.getItem('bandmanager_logged_in') === 'true';
   });
 
-  const [availableBands, setAvailableBands] = useState<any[]>(() => {
+  const [availableBands, setAvailableBands] = useState<BandaDeLaSesion[]>(() => {
     try {
       const savedBands = localStorage.getItem('bandmanager_available_bands');
       return savedBands ? JSON.parse(savedBands) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
@@ -47,12 +54,13 @@ export function useAuth() {
   }, []);
 
   // Silent session refresh function
-  const refreshSession = useCallback(async () => {
-    const tokenToUse = authToken || localStorage.getItem('bandmanager_token');
-    if (!tokenToUse) return;
+  // Encadenada con `.then`/`.catch` (en vez de async/await) para que las actualizaciones de estado
+  // queden en callbacks asíncronos y no cuenten como setState síncrono al llamarla desde un efecto.
+  const refreshSession = useCallback((): Promise<void> => {
+    const tokenToUse = authToken || leerTokenDeSesion();
+    if (!tokenToUse) return Promise.resolve();
 
-    try {
-      const data = await api.verifyMe();
+    return api.verifyMe().then((data) => {
       if (data && data.user) {
         setCurrentUser(data.user);
         setAvailableBands(data.availableBands || []);
@@ -68,7 +76,8 @@ export function useAuth() {
         }
         setIsLoggedIn(true);
       }
-    } catch (err: any) {
+    }).catch((errCapturado: unknown) => {
+      const err = comoErrorCapturado(errCapturado);
       console.warn('Silent session refresh skipped or offline:', err?.message || err);
       // Un 401 real solo puede venir de una respuesta del servidor, así que nunca coincide con
       // estar offline (sin red, el fetch falla con un error de red, no con un 401). Antes ambas
@@ -91,20 +100,18 @@ export function useAuth() {
         localStorage.removeItem('bandmanager_available_bands');
         try {
           borrarCookieDeSesion();
-        } catch (e) {}
+        } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
       } else if (!navigator.onLine) {
         // Fallo de red real por estar offline: mantener la sesión en caché activa (móvil sin cobertura).
-        const savedUserStr = localStorage.getItem('bandmanager_user');
-        if (savedUserStr) {
-          try {
-            setCurrentUser(JSON.parse(savedUserStr));
-            setIsLoggedIn(true);
-          } catch (e) {}
+        const savedUser = leerUsuarioDeSesion();
+        if (savedUser) {
+          setCurrentUser(savedUser);
+          setIsLoggedIn(true);
         }
       }
       // Online pero con un fallo no-401 (500, CORS, timeout...): no forzamos el cierre de sesión
       // por un error transitorio del servidor, pero tampoco lo ocultamos (ver console.warn arriba).
-    }
+    });
   }, [authToken, syncSessionCookie]);
 
   // Las preferencias de interfaz (p. ej. la disposición del dashboard) se guardan desde los
@@ -166,7 +173,7 @@ export function useAuth() {
   }, [isLoggedIn, authToken]);
 
   const handleLoginSuccess = useCallback(
-    (user: User, token: string, bandsList?: any[]) => {
+    (user: User, token: string, bandsList?: BandaDeLaSesion[]) => {
       // If the user has a designated main_band_id or preferred band, ensure the active band matches it on login.
       // Antes, si no había ninguna banda preferida, se caía en una banda por defecto en silencio: una
       // cuenta nueva sin banda todavía asignada entraba viendo los datos reales de esa banda. Sin
@@ -188,10 +195,10 @@ export function useAuth() {
       };
 
       // If availableBands list is provided, synchronize band name & plan with the active main band
-      if (bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
+      if (normalizedBandId && bandsList && Array.isArray(bandsList) && bandsList.length > 0) {
         const cleanPref = normalizedBandId.replace(/^(band|reg)-/, '');
         const match = bandsList.find(
-          (b: any) =>
+          (b) =>
             b.band_id === normalizedBandId ||
             b.id === normalizedBandId ||
             (b.band_id && b.band_id.replace(/^(band|reg)-/, '') === cleanPref) ||
@@ -225,7 +232,7 @@ export function useAuth() {
 
   const handleSwitchBand = useCallback(
     async (band_id: string) => {
-      const tokenToUse = authToken || localStorage.getItem('bandmanager_token');
+      const tokenToUse = authToken || leerTokenDeSesion();
       const response = await fetch('/api/auth/switch-band', {
         method: 'POST',
         headers: {
@@ -289,7 +296,7 @@ export function useAuth() {
     localStorage.removeItem('bandmanager_available_bands');
     try {
       borrarCookieDeSesion();
-    } catch (e) {}
+    } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
   }, [authToken]);
 
   return {

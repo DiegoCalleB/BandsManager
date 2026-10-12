@@ -1,5 +1,5 @@
-export function safeParseJson(text: string): any {
-  if (!text || typeof text !== "string") return text;
+export function safeParseJson<T = unknown>(text: string): T {
+  if (!text || typeof text !== "string") return text as T;
   let cleanText = text.trim();
   
   if (cleanText.startsWith("```")) {
@@ -31,7 +31,7 @@ export function safeParseJson(text: string): any {
 
   try {
     return JSON.parse(cleanText);
-  } catch (_err) {
+  } catch {
     let sanitized = "";
     let inString = false;
     let escaped = false;

@@ -18,7 +18,7 @@ Exporta: SelectProps, Select.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_ui_Input|src/components/ui/Input.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_variantes|src/components/ui/variantes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_cn|src/utils/cn.ts]] *(Layer: #service, Domain: #system)*
 
 ---

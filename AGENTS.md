@@ -123,6 +123,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 5. **No hay "caché local persistente" para datos de banda:** si se necesita persistencia real (no perder cambios entre recargas), eso vive en Supabase vía API. localStorage es transporte prohibido.
 
+6. **Lectura de la sesión:** el token, el usuario y la banda activa se leen con `src/services/sesionLocal.ts` (`leerTokenDeSesion`, `leerUsuarioDeSesion`, `leerBandaActiva`), nunca con `localStorage.getItem` directo; lo vigila `src/audit/lecturaDeSesion.test.ts`.
+
 ---
 
 ## 🤖 3. Reglas de Negocio de Agentes IA (Human-in-the-Loop)
@@ -213,6 +215,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 ### 5.1 Backend (Express + TypeScript)
 * **Tipado Estricto:** Prohibido añadir nuevos errores a `npx tsc --noEmit` (baseline en CI = 0 errores en código nuevo). Evitar `any` implícitos.
 * **Resiliencia ante Rechazos Asíncronos:** Mantener el handler global `unhandledRejection` en `server.ts` para evitar caídas del servidor Node ante fallos puntuales. Usar `try/catch` en todos los handlers asíncronos.
+* **Ningún catch mudo (front y back):** cada `catch` o `.catch()` registra el error con contexto (`console.warn("[Módulo] qué falló:", err)`) o lleva un comentario que diga por qué ignorarlo es correcto (temporal ya borrado, autoplay bloqueado, caché local corrupta). Una escritura en Supabase que falla nunca se ignora en silencio. Lo vigila `src/audit/catchVacios.test.ts`.
 
 * **Contrato de API:** si añades, quitas o cambias una ruta (método, ruta, middleware de auth o limitador), ejecuta `npm run docs:api` y commitea `docs/api/`. CI falla si el contrato no coincide con el código (`verify:docs`); los cambios de número de línea se ignoran a propósito. Si cambian las cifras del README (rutas, tests, migraciones), `npm run docs:metricas` las actualiza; solo falla si se desvían más de ~3 %. **Skills:** edita siempre `skills/`, nunca una copia, y ejecuta `npm run skills:sync` (CI falla si `.claude/`, `.gemini/` u `.opencode/` difieren). Las descripciones de esquemas van a mano en `docs/api/overrides.json` (ADR 0012).
 
@@ -227,6 +230,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
   * Tests en carpetas `__tests__/` adyacentes al código que prueban (ej: `server/utils/__tests__/bandAccess.test.ts`).
   * Pruebas rápidas de funciones puras sin levantar servidor HTTP (`npm test`, `npx vitest run ruta/al/test.ts`).
   * **TDD Obligatorio:** En **aislamiento multi-banda (`band_id`)** y **dinero/facturación (Stripe, ledger de IA `aiLedger.ts`)**, el test del caso límite se escribe **antes** de tocar el código.
+  * **Hooks con efectos (React):** su comportamiento se prueba con `renderHook` de `@testing-library/react` y `// @vitest-environment happy-dom` en la cabecera del test (el resto de la suite sigue en Node). Referencia: `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`.
+  * **Cobertura con ratchet:** CI ejecuta `npm run test:coverage` y falla si baja de `coverage-thresholds.json`. Cuando la subas, `npm run coverage:ratchet` actualiza el JSON: commitéalo. Nunca lo bajes a mano.
 * **Playwright (E2E Smoke & Journeys):**
   * Suites de humo sobre superficies críticas (`health.spec.ts`, `auth.spec.ts`, `epk-public.spec.ts`, `onboarding-journey.spec.ts`).
   * Ejecución local sin credenciales externas con `npm run test:e2e`. Regresión visual con `npm run test:visual`.
@@ -261,6 +266,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Umbrales pragmáticos de tamaño (evitar monstruos reales, no monstruitos recién nacidos):**
   * `0 - 600 líneas`: Zona verde. Tamaño normal y saludable en React/TypeScript con JSX estructurado, estilos de Tailwind y tipado completo. No fragmentar por deporte.
   * `600 - 800 líneas`: Zona de atención. Si el archivo crece, evaluar desacoplamiento en la siguiente refactorización.
+  * **Regla dura, automatizada:** ningún fichero nuevo puede pasar de 600 líneas y los monolitos existentes tienen el tope congelado en `scripts/tamano-baseline.json` (solo puede bajar). Lo comprueba `scripts/tamano-ficheros.mjs` dentro de `npm run verify:docs` (CI y pre-push). Al reducir un monolito, `npm run verify:tamano -- --actualizar` baja su tope.
   * `> 800 líneas`: Zona roja / Monstruo en gestación. **La IA tiene terminantemente prohibido inflar con bloques nuevos de JSX o lógica compleja un archivo que ya supere las 800 líneas.** Toda nueva funcionalidad o bloque debe nacer en subcomponente, hook o función utilitaria.
 * **Los 3 Gatillos Objetivos de Extracción (cuándo separar obligatoriamente):**
   1. **Modales y paneles secundarios:** Si una vista principal contiene un `<Modal>` o `<Drawer>` que pasa de ~100-150 líneas, debe residir en su propio archivo (ej. dentro de una subcarpeta del dominio como `modals/` o subcomponentes). La vista principal solo gestiona su apertura/cierre.

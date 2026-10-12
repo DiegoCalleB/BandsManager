@@ -11,6 +11,7 @@ import { Setlist,SetlistShortcut,Song } from "../../../types";
 import { saveSetlistsToLocalStorageSafely,saveSongsToLocalStorageSafely } from "../../../utils/audioStorage";
 import { guardarOReverter } from "../../../utils/guardarConReversion";
 import { clearPendingSetlistSync,getPendingSetlistSyncs } from "../../../utils/offlineSync";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface RepertorioPersistenceParams {
@@ -57,8 +58,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
 
   // Save changes to localStorage and Backend API
   const getHeaders = () => {
-    const token =
-      localStorage.getItem("bandmanager_token") || localStorage.getItem("token") || "";
+    const token = leerTokenDeSesion();
     const effectiveBandId = bandId || cleanBand;
     return {
       "Content-Type": "application/json",
@@ -196,7 +196,7 @@ export function useRepertorioPersistence({ songs, setSongs, bandId, cleanBand, s
           .then((res) => {
             if (res.ok) clearPendingSetlistSync(bandId, setlist.id);
           })
-          .catch(() => {});
+          .catch(() => { /* sin conexión: el setlist sigue pendiente y se reintenta en la próxima sincronización */ });
       });
     };
     window.addEventListener("online", handleOnline);

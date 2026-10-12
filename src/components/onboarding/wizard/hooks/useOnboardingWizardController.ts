@@ -347,7 +347,7 @@ export function useOnboardingWizardController({
       activeBandId,
       { wizard: true, onboarding: true },
       true,
-    ).catch(() => {});
+    ).catch((err: unknown) => console.warn("[Onboarding] No se pudo guardar en el servidor que el asistente terminó; queda guardado en este navegador:", err));
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
     }

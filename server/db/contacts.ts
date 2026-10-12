@@ -4,6 +4,30 @@ import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import { cargarEnlacesDeContactos, sincronizarEnlacesDeContacto } from "./enlacesBandas.js";
 import { valorVisibleSpotifyYoutube } from "../utils/enlacesBandas.js";
+import type { BandContact } from "../../src/types.js";
+
+/**
+ * Contacto tal como llega para guardarse: los campos de `BandContact` en snake_case o con los
+ * alias camelCase que mandan algunos formularios y el enriquecimiento automático.
+ */
+export type EntradaBandContact = Partial<BandContact> & {
+  nombreBanda?: string;
+  bandName?: string;
+  estiloMusical?: string;
+  estadoRelacion?: BandContact["estado_relacion"];
+  ultimoContacto?: string;
+  contactoNombre?: string;
+  spotifyYoutube?: string;
+  aforoPromedio?: number;
+  notasColaboracion?: string;
+  ciudadOrigenSwap?: string;
+  imagenUrl?: string;
+  esFavorito?: boolean;
+  esVerificado?: boolean;
+  fiabilidadScore?: number;
+  estiloComunicacion?: string;
+  dnaExpresion?: Record<string, unknown>;
+};
 
 export async function dbGetBandContacts(bandId: string) {
   const sb = getSupabase();
@@ -29,7 +53,7 @@ export async function dbGetBandContacts(bandId: string) {
   });
 }
 
-export async function dbUpsertBandContact(band: any, bandId: string) {
+export async function dbUpsertBandContact(band: EntradaBandContact, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
   // (req.user.band_id). 'band.band_id' viene del cuerpo de la petición sin validar — de
@@ -42,7 +66,7 @@ export async function dbUpsertBandContact(band: any, bandId: string) {
 
   // Ver nota equivalente en dbUpsertLead: un id que no pertenece a la banda del usuario no se
   // reutiliza nunca (evita secuestrar/sobrescribir el contacto de otra banda por coincidencia de id).
-  let existingRecord: any = null;
+  let existingRecord: BandContact | null = null;
   let idBelongsToOtherBand = false;
   if (band.id) {
     const { data } = await sb.from("band_contacts").select("*").eq("id", band.id).maybeSingle();

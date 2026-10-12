@@ -68,12 +68,12 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
       const acordes: string[] = [];
       for (const { s, i } of tramos) {
         const g = armonia.porTramo[i]?.grado;
-        if (g && g !== grados[grados.length - 1]) { grados.push(grado(g)); acordes.push(s.acorde); }
+        if (g && g !== grados[grados.length - 1]) { grados.push(gradoVisible(g, estilo)); acordes.push(s.acorde); }
       }
       porLetra.set(b.letra, { letra: b.letra, compases: `compases ${b.desde}–${b.hasta}`, grados, acordes });
     }
     return [...porLetra.values()];
-  }, [cuadricula, analisis, armonia]);
+  }, [cuadricula, analisis, armonia, estilo]);
 
   return (
     <div className="space-y-5 max-w-3xl mx-auto font-sans text-sm" translate="no">

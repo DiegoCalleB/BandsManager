@@ -21,6 +21,7 @@ Server-side email template generator and signature cleaner.
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_trackingSeguro|server/utils/trackingSeguro.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

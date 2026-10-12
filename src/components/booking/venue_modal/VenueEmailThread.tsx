@@ -1,33 +1,27 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import {
-  Mail,
-  Clock,
-  Send,
-  Sparkles,
-  RefreshCw,
-  CheckCircle2,
-  AlertCircle,
-  Eye,
-  MousePointerClick,
-  ArrowUpDown,
-  Copy,
-  Check,
-  Building2,
-  User,
-  Flame,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  ShieldCheck,
-  Zap,
-  Download,
-} from 'lucide-react';
-import { Lead, EmailMessage } from '../../../types';
+import React, { useState, useEffect, useEffectEvent, useCallback, useMemo } from 'react';
+import { Mail, Clock, Send, Sparkles, RefreshCw, Eye, MousePointerClick, ArrowUpDown, Copy, Check, Building2, User, ChevronDown, ChevronUp, ExternalLink, Zap, Download } from 'lucide-react';
+import { Lead, EmailMessage, InteractionLog } from '../../../types';
 import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../../utils/bookingFollowup';
-import { Button, IconButton } from '../../ui';
+import { Button } from '../../ui';
 import { ShowIcon } from '../../ui/ShowIcon';
 import { EmailDeliveryTicks } from '../EmailDeliveryTicks';
 import { apiFetch } from '../../../utils/api';
+import type { TriggerAgentResponse } from '../venue_panel/venuePanelTypes';
+import type { RespuestaLeadPorId } from '../tiposRespuestasApi';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
+
+/**
+ * Mensaje del hilo tal y como llega de `lead_messages` o de los campos antiguos del lead: no
+ * siempre trae todos los campos de {@link EmailMessage}, y los de Gmail añaden su id propio.
+ */
+type MensajeHilo = Omit<Partial<EmailMessage>, 'remitente'> & {
+  /** En BD es TEXT libre ('sala', 'banda' y, en filas antiguas, 'promotor'). */
+  remitente?: string;
+  gmail_message_id?: string;
+};
+
+/** Lead con los arrays de mensajes de versiones anteriores a `lead_messages`. */
+type LeadConHiloLegacy = Lead & { mensajes?: MensajeHilo[]; email_thread?: MensajeHilo[] };
 
 interface VenueEmailThreadProps {
   lead: Lead;
@@ -45,40 +39,55 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   const needsFollowup = isLeadNeedsFollowup(lead);
   const daysSince = getDaysSinceContact(lead);
 
-  const [dbMessages, setDbMessages] = useState<any[]>([]);
-  const [loadingMessages, setLoadingMessages] = useState(false);
+  // Mensajes del backend, asociados al lead al que pertenecen (no se arrastran al cambiar de lead).
+  const [mensajesCargados, setMensajesCargados] = useState<{ leadId: string; mensajes: MensajeHilo[] }>({ leadId: '', mensajes: [] });
+  const [cargaTerminadaDe, setCargaTerminadaDe] = useState<string | null>(null);
+  const [recargando, setRecargando] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // 'desc' = newest first (default)
   const [expandedMessageIds, setExpandedMessageIds] = useState<Record<string, boolean>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Fetch real conversation messages from backend
-  const fetchMessages = useCallback(async () => {
-    if (!lead?.id) return;
-    try {
-      setLoadingMessages(true);
-      const res = await apiFetch(`/api/leads/${lead.id}/messages`);
-      if (res?.success && Array.isArray(res.messages)) {
-        setDbMessages(res.messages);
-      }
-    } catch (err) {
-      console.warn('Error fetching lead messages:', err);
-    } finally {
-      setLoadingMessages(false);
-    }
-  }, [lead?.id]);
+  const loadingMessages = recargando || (Boolean(lead?.id) && cargaTerminadaDe !== lead.id);
+
+  // Trae los mensajes reales del hilo. Solo toca estado tras el await, así que puede lanzarse desde un efecto.
+  const cargarMensajes = (leadId: string) =>
+    apiFetch<{ success?: boolean; messages?: MensajeHilo[] }>(`/api/leads/${leadId}/messages`)
+      .then((res) => {
+        if (res?.success && Array.isArray(res.messages)) {
+          setMensajesCargados({ leadId, mensajes: res.messages });
+        }
+      })
+      .catch((err) => {
+        console.warn('Error fetching lead messages:', err);
+      })
+      .finally(() => {
+        setCargaTerminadaDe(leadId);
+        setRecargando(false);
+      });
+
+  const fetchMessages = () => {
+    if (!lead?.id) return Promise.resolve();
+    setRecargando(true);
+    return cargarMensajes(lead.id);
+  };
+
+  const cargarMensajesInicial = useEffectEvent((leadId: string) => {
+    void cargarMensajes(leadId);
+  });
 
   useEffect(() => {
-    fetchMessages();
-  }, [fetchMessages]);
+    if (lead?.id) cargarMensajesInicial(lead.id);
+  }, [lead?.id]);
 
   // Combine lead.mensajes with dbMessages
-  const rawMessages: any[] = useMemo(() => {
+  const rawMessages: MensajeHilo[] = useMemo(() => {
+    const dbMessages = mensajesCargados.leadId === lead.id ? mensajesCargados.mensajes : [];
     return dbMessages.length > 0
       ? dbMessages
-      : (lead as any).mensajes || (lead as any).email_thread || [];
-  }, [dbMessages, lead]);
+      : (lead as LeadConHiloLegacy).mensajes || (lead as LeadConHiloLegacy).email_thread || [];
+  }, [mensajesCargados, lead]);
 
   // Sort messages (Newest first by default)
   const sortedMessages = useMemo(() => {
@@ -89,16 +98,15 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     });
   }, [rawMessages, sortOrder]);
 
-  // Expand newest message by default
-  useEffect(() => {
+  // Al cambiar el número de mensajes, el más reciente queda expandido (ajuste durante el render).
+  const [totalVisto, setTotalVisto] = useState<number | null>(null);
+  if (totalVisto !== sortedMessages.length) {
+    setTotalVisto(sortedMessages.length);
     if (sortedMessages.length > 0) {
       const newestId = sortedMessages[0].id || 'msg-0';
-      setExpandedMessageIds((prev) => ({
-        ...prev,
-        [newestId]: true,
-      }));
+      setExpandedMessageIds((prev) => ({ ...prev, [newestId]: true }));
     }
-  }, [sortedMessages.length]);
+  }
 
   const toggleExpand = (id: string) => {
     setExpandedMessageIds((prev) => ({
@@ -118,7 +126,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     setIsSyncing(true);
     setSyncFeedback(null);
     try {
-      const res = await apiFetch('/api/trigger-agent', {
+      const res = await apiFetch<TriggerAgentResponse>('/api/trigger-agent', {
         method: 'POST',
         body: JSON.stringify({
           agentName: 'lector',
@@ -128,14 +136,15 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
       await fetchMessages();
 
-      const updatedLeadRes = await apiFetch(`/api/leads/${lead.id}`).catch(() => null);
+      const updatedLeadRes = await apiFetch<RespuestaLeadPorId>(`/api/leads/${lead.id}`).catch(() => null);
       if (updatedLeadRes?.lead) {
         onUpdateLead(lead.id, updatedLeadRes.lead);
       }
 
       setSyncFeedback(res?.message || 'Bandeja sincronizada con éxito.');
       setTimeout(() => setSyncFeedback(null), 4000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setSyncFeedback(err?.message || 'Error al sincronizar con la bandeja de entrada');
     } finally {
       setIsSyncing(false);
@@ -179,12 +188,12 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
         hour: '2-digit',
         minute: '2-digit',
       });
-    } catch (_) {
+    } catch {
       return dateStr;
     }
   };
 
-  const formatTelemetryItem = (item: any) => {
+  const formatTelemetryItem = (item: Partial<InteractionLog>) => {
     const notas = String(item.notas || '');
     const res = String(item.resultado || '');
     const id = String(item.id || '');
@@ -328,7 +337,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   /**
    * Calcula la telemetría específica vinculada a cada mensaje individual del hilo
    */
-  const getMessageTelemetry = (msg: any, msgIndex: number) => {
+  const getMessageTelemetry = useCallback((msg: MensajeHilo, msgIndex: number) => {
     if (msg.remitente !== 'banda') return null;
     const historial = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
     const msgTime = msg.fecha ? new Date(msg.fecha).getTime() : 0;
@@ -340,7 +349,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
 
     const cleanMsgId = (msg.id || '').replace(/^imap-/, '').replace(/^gmail-/, '');
 
-    const matchingEvents = historial.filter((h: any) => {
+    const matchingEvents = historial.filter((h) => {
       if (h.email_id) {
         const cleanEventEmailId = String(h.email_id).replace(/^imap-/, '').replace(/^gmail-/, '');
         if (cleanEventEmailId === cleanMsgId || h.email_id === msg.id || h.email_id === msg.gmail_message_id) {
@@ -357,17 +366,17 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     });
 
     const openEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('open-') || h.notas?.includes('abrió el correo') || h.resultado?.includes('Apertura')
+      (h) => h.id?.startsWith('open-') || h.notas?.includes('abrió el correo') || h.resultado?.includes('Apertura')
     );
     const clickEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('click-') || h.id?.startsWith('epk-') || (h.tipo as string) === 'Interacción EPK'
+      (h) => h.id?.startsWith('click-') || h.id?.startsWith('epk-') || (h.tipo as string) === 'Interacción EPK'
     );
     const pdfEvents = matchingEvents.filter(
-      (h: any) => h.id?.startsWith('pdf-open-') || (h.tipo as string) === 'Dossier PDF' || h.resultado?.includes('Dossier PDF')
+      (h) => h.id?.startsWith('pdf-open-') || (h.tipo as string) === 'Dossier PDF' || h.resultado?.includes('Dossier PDF')
     );
 
     let maxParsedOpen = openEvents.length;
-    openEvents.forEach((ev: any) => {
+    openEvents.forEach((ev) => {
       const match = String(ev.resultado || ev.notas || '').match(/#(\d+)|(\d+)ª vez/);
       if (match) {
         const num = parseInt(match[1] || match[2], 10);
@@ -386,7 +395,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
       events: matchingEvents,
       lastActivity: matchingEvents[0]?.fecha
     };
-  };
+  }, [lead.historial_contacto, sortedMessages]);
 
   // Mensaje más reciente enviado por la banda
   const latestBandMsg = useMemo(() => {
@@ -414,10 +423,6 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     : 0;
 
   const hasClickedEpk = epkClicks > 0;
-
-  const pdfOpens = isSent && latestMsgTelemetry
-    ? latestMsgTelemetry.pdfOpens
-    : 0;
 
   const lastOpenDate = isSent && latestMsgTelemetry?.lastActivity
     ? latestMsgTelemetry.lastActivity
@@ -721,7 +726,6 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
             const senderDisplayName = isFromVenue
               ? msg.remitente_nombre || lead.nombre_sala || 'Programador de Sala'
               : bandName || 'Tu Banda / Productora';
-            const senderInitial = senderDisplayName.charAt(0).toUpperCase();
 
             return (
               <div
@@ -882,7 +886,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                            {msgTelemetry.events.slice(0, 6).map((ev: any, evIdx: number) => {
+                            {msgTelemetry.events.slice(0, 6).map((ev, evIdx: number) => {
                               const info = formatTelemetryItem(ev);
                               return (
                                 <div key={ev.id || evIdx} className="flex items-center justify-between text-xs py-1.5 px-2.5 rounded bg-black/40 border border-white/5 gap-2">

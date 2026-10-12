@@ -24,7 +24,8 @@ Exporta: esTokenAcorde, esLineaCabecera, acordesDelCifrado, transponerAcorde, Pa
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(from #service)*
 
 ---

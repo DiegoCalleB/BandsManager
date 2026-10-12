@@ -9,6 +9,7 @@ import { generarBorradorRespuesta } from "../../services/replyDrafting.js";
 import { analyzeIncomingMessageSentiment } from "../../services/sentimentAnalysis.js";
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
     const { incomingMessage: incomingMessageOverride, provider } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -63,7 +64,8 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
       incomingMessage,
       threadSoFar
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/generate-reply:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al generar la respuesta." });
   }
@@ -77,7 +79,7 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
     const { messageText } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -128,7 +130,7 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
     await dbUpsertLead(updatedLead, bandId);
 
     // Actualizamos en memoria
-    const leadIdx = state.leads.findIndex((l: any) => String(l.id) === String(id));
+    const leadIdx = state.leads.findIndex((l) => String(l.id) === String(id));
     if (leadIdx >= 0) {
       state.leads[leadIdx] = updatedLead;
     }
@@ -138,7 +140,8 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
       sentimentAnalysis,
       lead: updatedLead
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/analyze-sentiment:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al analizar el sentimiento." });
   }
@@ -156,7 +159,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
     const { tono_rating, contenido_rating, comentario, alcance, provider } = req.body || {};
 
     const state = loadState();
-    let lead = state.leads.find((l: any) => String(l.id) === String(id));
+    let lead = state.leads.find((l) => String(l.id) === String(id));
     if (!lead) {
       try {
         lead = await dbGetLeadById(id, bandId);
@@ -198,7 +201,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
       bandId, lead, incomingMessage, threadSoFar, provider, feedbackDetails
     );
 
-    const finalAlcance = alcance === 'este_pitch' ? 'este_pitch' : 'global';
+    const finalAlcance: 'este_pitch' | 'global' = alcance === 'este_pitch' ? 'este_pitch' : 'global';
     const logEntry = {
       id: `fb-${Date.now()}`,
       fecha: new Date().toISOString(),
@@ -216,7 +219,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
 
     saveState(state);
 
-    dbUpsertLead(lead, bandId).catch((err: any) => {
+    dbUpsertLead(lead, bandId).catch((err: unknown) => {
       console.warn("Async Supabase update for regenerated reply failed:", err);
     });
 
@@ -234,7 +237,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
         texto_aprobado: newPitchText,
         tipo_accion: "regenerado_respuesta_con_feedback",
         resultado_respuesta: "pendiente"
-      }).catch((err: any) => console.warn("Notice dbRecordPitchHumanEdit (respuesta):", err));
+      }).catch((err: unknown) => console.warn("Notice dbRecordPitchHumanEdit (respuesta):", err));
     }
 
     res.json({
@@ -244,7 +247,8 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
       newPitchText,
       feedbackLog: logEntry
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/regenerate-reply:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al regenerar la respuesta." });
   }

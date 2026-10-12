@@ -23,6 +23,7 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
 
   useEffect(() => {
     if (!activo) return;
+    const elAnillo = anillo.current;
     let raf = 0;
     let siguiente: HTMLElement | null = null;
     const apagarSiguiente = () => {
@@ -50,7 +51,7 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
     return () => {
       cancelAnimationFrame(raf);
       apagarSiguiente();
-      if (anillo.current) anillo.current.style.background = '';
+      if (elAnillo) elAnillo.style.background = '';
     };
   }, [activo, indice, tiempos, duracionTotal, audioRef]);
 

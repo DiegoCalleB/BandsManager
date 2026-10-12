@@ -26,8 +26,8 @@ describe('Hardening de Límite de Confianza en Rutas (Repertorio y Conciertos)',
 
   it('server/routes/repertorio.ts: fuerza la asignación incondicional de userBandId resuelta por getTargetBandId', () => {
     const code = fs.readFileSync(repertorioPath, 'utf-8');
-    expect(code).toContain('(newSong as any).band_id = userBandId;');
-    expect(code).toContain('(newSetlist as any).band_id = userBandId;');
+    expect(code).toContain('newSong.band_id = userBandId;');
+    expect(code).toContain('newSetlist.band_id = userBandId;');
   });
 
   it('server/routes/concerts.ts: no contiene bypasses de if (!(objeto).band_id)', () => {
@@ -39,7 +39,7 @@ describe('Hardening de Límite de Confianza en Rutas (Repertorio y Conciertos)',
     expect(code.match(dangerousIfRehearsal), 'No debe existir bypass en creación de ensayo').toBeNull();
   });
 
-  it('server/routes/concerts.ts: no usa (req as any).user?.band_id directamente en endpoints de sync o payments', () => {
+  it('server/routes/concerts.ts: no usa req.user?.band_id directamente en endpoints de sync o payments', () => {
     const code = fs.readFileSync(concertsPath, 'utf-8').replace(/\r\n/g, '\n');
     // Verifica que en las rutas principales de sync y logistics se usa getTargetBandId(req)
     expect(code).toContain('router.post("/concerts/sync", requireAuth, async (req, res) => {\n  const userBandId = getTargetBandId(req);');

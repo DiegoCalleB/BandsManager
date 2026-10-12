@@ -28,6 +28,7 @@ Exporta: RepertorioModalsContainerProps, RepertorioModalsContainer.
 - [[src_components_repertorio_AssignSongsToAlbumModal|src/components/repertorio/AssignSongsToAlbumModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_ConfirmDeleteAlbumModal|src/components/repertorio/ConfirmDeleteAlbumModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_ConfirmDeleteModal|src/components/repertorio/ConfirmDeleteModal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_MemberNotesModal|src/components/repertorio/MemberNotesModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_repertorio_PdfExportModal|src/components/repertorio/PdfExportModal.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -38,7 +39,9 @@ Exporta: RepertorioModalsContainerProps, RepertorioModalsContainer.
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_repertorioModalsTipos|src/components/repertorio/repertorioModalsTipos.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] *(Layer: #service, Domain: #system)*
 
 ---

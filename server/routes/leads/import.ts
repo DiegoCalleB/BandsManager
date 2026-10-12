@@ -1,9 +1,10 @@
 // Importación de leads desde Excel (`/import-excel`).
 
 import express, { Request, Response } from "express";
-import { Lead } from "../../../src/types.js";
+import { Lead, LeadStatus } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       return res.status(400).json({ error: "No se han proporcionado contactos para importar." });
     }
 
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     if (!userBandId) {
       return res.status(409).json({ error: "Tu cuenta todavía no tiene ninguna banda asignada." });
     }
@@ -38,7 +39,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       }
 
       // Check existing lead
-      const existing = state.leads.find((l: any) => 
+      const existing = state.leads.find((l) => 
         l.nombre_sala.toLowerCase().trim() === nombreSala.toLowerCase().trim() &&
         (!l.ciudad || !rawLead.ciudad || l.ciudad.toLowerCase().trim() === (rawLead.ciudad || "").toLowerCase().trim())
       );
@@ -125,7 +126,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
           direccion: (rawLead.direccion || "").trim(),
           aforo: !isNaN(parsedAforo) && parsedAforo > 0 ? parsedAforo : (resolvedType === 'sala' ? 250 : 0),
           genero: (rawLead.genero || (resolvedType === 'ayuntamiento' ? 'Fiestas Patronales / Cultura' : 'Música en Directo / Variado')).trim(),
-          tipo: resolvedType as any,
+          tipo: resolvedType,
           email_contacto: (rawLead.email_contacto || rawLead.email || "").trim(),
           telefono: String(rawLead.telefono || rawLead.telefono_movil || rawLead.telefono_fijo || "").trim(),
           telefono_movil: String(rawLead.telefono_movil || "").trim(),
@@ -134,7 +135,8 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
           website: (rawLead.website || "").trim(),
           contacto_nombre: (rawLead.contacto_nombre || rawLead.contacto || "").trim(),
           fuente: sourceName,
-          estado: (rawLead.estado || "nuevo").toLowerCase().trim() as any,
+          // El estado del archivo se guarda tal cual (sin validar contra LeadStatus), como siempre.
+          estado: (rawLead.estado || "nuevo").toLowerCase().trim() as LeadStatus,
           pitch_generado: (rawLead.pitch_generado || "").trim(),
           notas: (rawLead.notas || `Importado desde archivo Excel / CSV el ${nowStr}.`).trim(),
           icono: rawLead.icono || defaultIcon,
@@ -157,7 +159,8 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
       totalLeads: state.leads.length,
       leads: newlyAddedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-excel:", error);
     res.status(500).json({ error: error?.message || "Error al procesar el archivo Excel / CSV." });
   }

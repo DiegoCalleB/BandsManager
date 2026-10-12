@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `rehearsals` (25 columnas).
+Tabla de Supabase `rehearsals` (28 columnas).
 
 ---
 
@@ -56,8 +56,11 @@ Tabla de Supabase `rehearsals` (25 columnas).
 - `temperatura_local`
 - `created_at`
 - `updated_at`
+- `tipo_evento`
+- `asunto`
+- `enlace_reunion`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260916_add_ensayos_pro_fields.sql`
+**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20260916_add_ensayos_pro_fields.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
 
 ---
 

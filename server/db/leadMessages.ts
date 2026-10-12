@@ -1,4 +1,6 @@
 import { getSupabase, cleanBandId } from "./core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { EconomicConditions, MessageSentimentAnalysis, TacticalPlaybook } from "../services/sentimentAnalysis.js";
 
 // lead_messages es la tabla real de historial de conversación por lead - el Agente Enviador ya
 // escribe aquí cada pitch enviado de verdad (server/services/agentEngine.ts). El Lector y el
@@ -24,14 +26,22 @@ export interface DbLeadMessage {
   objeciones?: string[];
   puntos_clave?: string[];
   fechas_propuestas?: string[];
-  condiciones_economicas?: any;
+  condiciones_economicas?: EconomicConditions;
   requisitos_tecnicos?: string[];
   accion_sugerida?: string;
-  estrategia_playbook?: any;
+  estrategia_playbook?: TacticalPlaybook;
   resumen_ejecutivo?: string;
   sugerencia_estrategia?: string;
-  analisis_ia?: any;
+  /** Análisis completo del Lector (sentimentAnalysis) sobre un mensaje recibido. */
+  analisis_ia?: MessageSentimentAnalysis;
 }
+
+/** Mensaje para registrar: id, asunto y fecha se generan si faltan. */
+export type NuevoLeadMessage = Omit<DbLeadMessage, "id" | "asunto" | "fecha"> & {
+  id?: string;
+  asunto?: string;
+  fecha?: string;
+};
 
 export async function dbGetLeadMessages(leadId: string, bandId: string): Promise<DbLeadMessage[]> {
   try {
@@ -48,7 +58,8 @@ export async function dbGetLeadMessages(leadId: string, bandId: string): Promise
       return [];
     }
     return data || [];
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query lead_messages from Supabase:", err?.message || err);
     return [];
   }
@@ -59,39 +70,14 @@ export async function dbLeadMessageExists(id: string): Promise<boolean> {
     const sb = getSupabase();
     const { data } = await sb.from("lead_messages").select("id").eq("id", id).maybeSingle();
     return !!data;
-  } catch (err) {
+  } catch {
     return false;
   }
 }
 
-export async function dbCreateLeadMessage(msg: {
-  id?: string;
-  lead_id: string;
-  band_id: string;
-  remitente: "banda" | "sala";
-  remitente_nombre: string;
-  asunto?: string;
-  mensaje: string;
-  fecha?: string;
-  sentimiento?: string;
-  sentimiento_score?: number;
-  sentimiento_label?: string;
-  intencion?: string;
-  intencion_etiqueta?: string;
-  temperatura?: string;
-  objeciones?: string[];
-  puntos_clave?: string[];
-  fechas_propuestas?: string[];
-  condiciones_economicas?: any;
-  requisitos_tecnicos?: string[];
-  accion_sugerida?: string;
-  estrategia_playbook?: any;
-  resumen_ejecutivo?: string;
-  sugerencia_estrategia?: string;
-  analisis_ia?: any;
-}): Promise<DbLeadMessage> {
+export async function dbCreateLeadMessage(msg: NuevoLeadMessage): Promise<DbLeadMessage> {
   const sb = getSupabase();
-  const payload: any = {
+  const payload: DbLeadMessage = {
     id: msg.id || `msg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
     lead_id: msg.lead_id,
     band_id: cleanBandId(msg.band_id),
@@ -139,8 +125,9 @@ export async function dbCreateLeadMessage(msg: {
       return { ...fallback.data, ...payload };
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not insert lead message into Supabase:", err?.message || err);
-    return payload as DbLeadMessage;
+    return payload;
   }
 }

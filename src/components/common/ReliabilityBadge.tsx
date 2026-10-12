@@ -13,8 +13,7 @@ interface ReliabilityBadgeProps {
 export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
   item,
   size = "md",
-  showDetails = false,
-  className = "",
+  className = ""
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const { score, details } = calculateLeadReliability(item);
@@ -44,6 +43,9 @@ export const ReliabilityBadge: React.FC<ReliabilityBadgeProps> = ({
       onMouseLeave={() => setShowTooltip(false)}
     >
       <div
+        role="img"
+        aria-label={`${score}% de fiabilidad: ${levelText}`}
+        title={levelText}
         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-s)] font-sans font-semibold transition-ui cursor-help ${badgeColor} ${
           isSmall ? "text-micro" : "text-xs"
         }`}

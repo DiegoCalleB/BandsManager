@@ -13,11 +13,13 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: diasHasta, formatearCuentaAtras, ExecutiveSummaryHero.
+Exporta: ExecutiveSummaryHero.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_executiveSummaryUtils|src/components/dashboard/executiveSummaryUtils.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
@@ -25,7 +27,6 @@ Exporta: diasHasta, formatearCuentaAtras, ExecutiveSummaryHero.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
-- [[src_components_dashboard_NextGigStrip|src/components/dashboard/NextGigStrip.tsx]] *(from #frontend)*
 
 ---
 

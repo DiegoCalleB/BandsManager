@@ -21,6 +21,7 @@ Convocatorias, orden del día, acta y seguimiento del ensayo.
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(Layer: #frontend, Domain: #system)*

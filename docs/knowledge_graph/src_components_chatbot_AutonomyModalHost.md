@@ -28,6 +28,11 @@ Modal de niveles de autonomía, solo para administradores.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/chatbot/__tests__/autonomyModalHost.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

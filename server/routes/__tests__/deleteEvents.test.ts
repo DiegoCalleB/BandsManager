@@ -1,5 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
-import express from 'express';
+import { describe, it, expect } from 'vitest';
 import { dbDeleteConcert } from '../../db/concerts.js';
 import { dbDeleteRehearsal } from '../../db/rehearsals.js';
 

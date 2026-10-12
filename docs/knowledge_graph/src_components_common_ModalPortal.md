@@ -23,7 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilView|src/components/atril/AtrilView.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandSwitcherLayout|src/components/band_switcher/BandSwitcherLayout.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_BandPitchModal|src/components/bandCRM/BandPitchModal.tsx]] *(from #frontend)*
@@ -81,8 +81,8 @@ _Sin dependencias salientes directas._
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistModal|src/components/repertorio/SetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_SongTransitionView|src/components/repertorio/song_transition/SongTransitionView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*

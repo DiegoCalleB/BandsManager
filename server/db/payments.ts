@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { Payment } from "../../src/types.js";
 
 export async function dbGetPayments(bandId: string) {
   const sb = getSupabase();
@@ -16,7 +17,7 @@ export async function dbGetPayments(bandId: string) {
   return (data || []).filter(p => cleanBandId(p.band_id) === cleanId);
 }
 
-export async function dbUpsertPayment(payment: any, bandId: string) {
+export async function dbUpsertPayment(payment: Partial<Payment>, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la

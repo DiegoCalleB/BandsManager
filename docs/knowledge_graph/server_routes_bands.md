@@ -29,11 +29,11 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
-- [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
-- [[server_services_gmailApiClient|server/services/gmailApiClient.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_transactionalEmail|server/services/transactionalEmail.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
@@ -53,6 +53,7 @@ CRUD de bandas, borrado en bloque y sincronización. Toda operación resuelve la
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(from #db)*
 - [[src_components_bandCRM_AIBandScoutModal|src/components/bandCRM/AIBandScoutModal.tsx]] *(from #frontend)*
 - [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(from #frontend)*

@@ -2,7 +2,7 @@
  * Concierto seleccionado, dominio, ruta e idioma del enlace del QR.
  * Extraído de FansPanel.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { useEffect,useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { DEFAULT_FAN_FORM_LANGUAGE,FanFormLanguage,isFanFormLanguage } from "../../../i18n/fansTranslations";
 import { Concert } from "../../../types";
 import { encodeBandIdClient } from "../../../utils/bandHash";
@@ -38,12 +38,12 @@ export function useQrLink({ concerts, selectedConcertId, currentBandId, cleanBan
     DEFAULT_FAN_FORM_LANGUAGE,
   );
 
-  useEffect(() => {
+  // El efecto se dispara solo por [selectedConcertId]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarSelectedConcertId = useEffectEvent(() => {
     if (selectedConcert) {
       const defaultSlug = `${selectedConcert.ciudad}-${selectedConcert.sala}`
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "-");
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza el estado local con la prop o la banda activa
       setCustomSlug(defaultSlug);
       // Precarga el idioma guardado en el concierto; el manager siempre puede cambiarlo a mano abajo.
       setQrLanguage(
@@ -54,6 +54,10 @@ export function useQrLink({ concerts, selectedConcertId, currentBandId, cleanBan
     } else {
       setCustomSlug("");
     }
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza el estado local con la prop o la banda activa
+    return alCambiarSelectedConcertId();
   }, [selectedConcertId]);
 
   // Build clean target URL

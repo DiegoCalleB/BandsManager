@@ -467,8 +467,7 @@ export function auditDateAndCity(dateStr: string | Date | undefined | null, rawC
   }
 
   // 3. Evaluar Puente / Éxodo Vacacional / Oportunidad
-  const isEve = !!tomorrowHoliday && dayOfWeek !== 6; // Víspera de festivo (excepto si el festivo cae en domingo)
-  const isWeekend = dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0;
+  const isEve = !!tomorrowHoliday && dayOfWeek !== 6;
 
   // Detección de macropuente de diciembre (Constitución 6 dic e Inmaculada 8 dic)
   const isPuenteDiciembre = month === 12 && day >= 4 && day <= 9;

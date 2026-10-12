@@ -2,6 +2,7 @@
 // URLs externas pasa por ssrfGuard y todo dato scrapeado por `sanitizeExternalText` (AGENTS.md
 // §2.2).
 
+import { getBandDnaProfile } from '../../utils/bandDna.js';
 import express from "express";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
@@ -27,6 +28,8 @@ import { calculateBookingWindow } from "../../services/bookingWindowService.js";
 import { detectLocalEventsAndClashes } from "../../services/localEventsClashService.js";
 import { findLocalPressAndMedia } from "../../services/localPressMediaService.js";
 import { findLocalBandPartners } from "../../services/localBandPartnersService.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import type { ContactoConConfianzaIA, FichaSalaIA, LugarNominatim, RespuestaBusquedaPlaces, RespuestaIA } from './tiposScout.js';
 
 const router = express.Router();
 
@@ -39,7 +42,6 @@ function isMatchRelevant(searchedName: string, foundName: string): boolean {
   const stopWords = new Set(['sala', 'de', 'del', 'la', 'el', 'los', 'las', 'san', 'santa', 'club', 'bar', 'festival', 'teatro', 'espacio', 'conciertos', 'musica', 'live']);
   
   const sWords = sNorm.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
-  const fWords = fNorm.split(/\s+/).filter(w => w.length >= 3 && !stopWords.has(w));
 
   if (sWords.length === 0) {
     return fNorm.includes(sNorm) || sNorm.includes(fNorm);
@@ -68,7 +70,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
           const stripped = `https://${u.hostname.replace(/^sala/, '')}`;
           if (!candidateUrls.includes(stripped)) candidateUrls.push(stripped);
         }
-      } catch (_) {}
+      } catch { /* URL mal formada: no genera variantes */ }
     }
   }
 
@@ -157,7 +159,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
       if (domain) {
         return { logo: `https://www.google.com/s2/favicons?domain=${domain}&sz=128`, workingWebsite: siteUrl };
       }
-    } catch (_) {}
+    } catch { /* web mal formada: se prueba el siguiente método para el logo */ }
   }
 
   return null;
@@ -214,13 +216,14 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
 // Custom simulation endpoint to generate custom venue or band negotiation emails using Gemini
 
 router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
-  const { ciudad, tipo, leadId } = req.body;
+  const { ciudad, leadId } = req.body;
   let nombre_sala = req.body.nombre_sala || req.body.nombre || req.body.nombreSala || req.body.name || req.body.sala_o_medio;
 
-  let existingLead: any = null;
+  // Los leads legados pueden traer el nombre o el email con otros alias.
+  let existingLead: (Lead & { nombre?: string; nombreSala?: string; name?: string; email?: string }) | null | undefined = null;
   if (leadId) {
     const state = loadState();
-    existingLead = state.leads?.find((l: any) => l.id === leadId);
+    existingLead = state.leads?.find((l) => l.id === leadId);
     if (existingLead) {
       nombre_sala = nombre_sala || existingLead.nombre_sala || existingLead.nombre || existingLead.nombreSala || existingLead.name;
     }
@@ -253,7 +256,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
         })
       });
 
-      const v1Data: any = await v1Res.json();
+      const v1Data = (await v1Res.json()) as RespuestaBusquedaPlaces;
       if (v1Res.ok && Array.isArray(v1Data.places) && v1Data.places.length > 0) {
         const topPlace = v1Data.places[0];
         const placeName = topPlace.displayName?.text || "";
@@ -279,7 +282,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
   }
 
   const client = getAiClient();
-  let parsed: any = {};
+  let parsed: FichaSalaIA = {};
 
   if (client) {
     const prompt = `Busca información pública y el logotipo oficial sobre la sala, festival o medio de comunicación "${nombre_sala}" ${ciudad ? `en ${ciudad}` : ''} en España. Utiliza Google Search para encontrar su web oficial y la URL directa de imagen de su logotipo o isotipo oficial.
@@ -310,7 +313,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
         } else {
           parsed = JSON.parse(text);
         }
-      } catch (_) {
+      } catch {
         parsed = {};
       }
 
@@ -319,7 +322,8 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
         console.warn(`[AILookup] Rejecting Gemini match '${parsed.nombre_oficial}' for searched venue '${nombre_sala}'`);
         parsed = {};
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[AILookup Warning] Gemini lookup failed (quota or network):", err?.message || String(err));
     }
   }
@@ -374,13 +378,13 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 
   if (leadId && (finalLogo || finalIcon || finalWebsite)) {
     const state = loadState();
-    const idx = state.leads.findIndex((l: any) => l.id === leadId);
+    const idx = state.leads.findIndex((l) => l.id === leadId);
     if (idx !== -1) {
       if (finalLogo) state.leads[idx].imagen_url = finalLogo;
       if (finalIcon) state.leads[idx].icono = finalIcon;
       if (finalWebsite) state.leads[idx].website = finalWebsite;
       saveState(state);
-      const userBandId = (req as any).user?.band_id ;
+      const userBandId = req.user?.band_id ;
       await dbUpsertLead(state.leads[idx], userBandId);
     }
   }
@@ -392,7 +396,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const { leadId, name, city, force } = req.body;
+    const { leadId, name } = req.body;
     
     let lead: Lead | undefined;
     const state = loadState();
@@ -400,12 +404,12 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
     // `state.leads` es una caché global con leads de VARIAS bandas: filtrar siempre por la banda
     // de la sesión. Antes, un id (o un nombre de sala) de otra banda presente en la caché se
     // enriquecía y se devolvía entero.
-    const delaBanda = (l: any) => mismaBanda(l?.band_id, userBandId);
+    const delaBanda = (l: Pick<Lead, 'band_id'> | null | undefined) => mismaBanda(l?.band_id, userBandId);
     if (leadId) {
-      lead = state.leads?.find((l: any) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
+      lead = state.leads?.find((l) => l.id === leadId && delaBanda(l)) || (await dbGetLeadById(leadId, userBandId));
     } else if (name) {
       const cleanName = name.toLowerCase().trim();
-      lead = state.leads?.find((l: any) => delaBanda(l) && l.nombre_sala?.toLowerCase().trim() === cleanName);
+      lead = state.leads?.find((l) => delaBanda(l) && l.nombre_sala?.toLowerCase().trim() === cleanName);
     }
 
     if (!lead) {
@@ -419,7 +423,7 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
 
     // Reload the updated lead
     const updatedState = loadState();
-    const freshLead = updatedState.leads?.find((l: any) => l.id === lead.id) || enrichedLead || (await dbGetLeadById(lead.id, userBandId));
+    const freshLead = updatedState.leads?.find((l) => l.id === lead.id) || enrichedLead || (await dbGetLeadById(lead.id, userBandId));
 
     return res.json({
       success: true,
@@ -434,7 +438,8 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
       },
       message: `✨ Datos de "${lead.nombre_sala}" completados y verificados con éxito.`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("[Scout Enriquecedor] Error enriqueciendo lead:", error);
     return res.status(500).json({
       success: false,
@@ -490,14 +495,15 @@ router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
       results,
       leads: freshState.leads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /leads/enrich-all-band:", error);
     return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer todos los leads" });
   }
 });
 
 router.post("/scrape-contact", requireAuth, async (req, res) => {
-  const { leadId, nombre_sala, ciudad, region } = req.body;
+  const { nombre_sala, ciudad, region } = req.body;
   if (!nombre_sala) {
     return res.status(400).json({ error: "Falta el nombre de la sala." });
   }
@@ -555,7 +561,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
   "source_info": "Resumen técnico de los hallazgos de búsqueda"
 }`;
 
-    let response: any;
+    let response: RespuestaIA;
     try {
       response = await generateContentWithFallback(client, {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -563,7 +569,8 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch (searchErrCapturado) {
+      const searchErr = comoErrorCapturado(searchErrCapturado);
       if (!isSpendCapOrQuotaError(searchErr)) {
         console.warn("[ScrapeContact Warning] Google search grounding failed, falling back to standard model call:", searchErr?.message || searchErr);
         response = await generateContentWithFallback(client, {
@@ -578,7 +585,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
     }
 
     const textResult = response?.text || "";
-    let parsedData: any = {};
+    let parsedData: ContactoConConfianzaIA = {};
     try {
       parsedData = safeParseJson(textResult);
     } catch (e) {
@@ -602,7 +609,8 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
       isFallback: false,
       data: parsedData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in Gemini Search Grounding for contact scraping:", error);
     return res.status(500).json({ error: "Fallo al realizar búsqueda con IA", details: String(error) });
   }
@@ -691,7 +699,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
               headers: { 'User-Agent': 'BandManagerApp/1.0 (info@bandmanager.io)' }
             });
             if (geoRes.ok) {
-              const geoData: any = await geoRes.json();
+              const geoData = (await geoRes.json()) as LugarNominatim[];
               if (Array.isArray(geoData) && geoData.length > 0 && geoData[0].display_name) {
                 const parts = geoData[0].display_name.split(',');
                 if (parts.length >= 2) {
@@ -701,7 +709,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
                 }
               }
             }
-          } catch (e) {
+          } catch {
             // ignore network error for single item
           }
         }
@@ -723,7 +731,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       saveState(state);
 
       // Async write back to Supabase
-      const userBandId = (req as any).user?.band_id ;
+      const userBandId = req.user?.band_id ;
       (async () => {
         for (const updatedLead of modifiedLeads) {
           try {
@@ -741,7 +749,8 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
       totalLeads: leads.length,
       leads: state.leads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/enrich-addresses:", error);
     res.status(500).json({ error: error?.message || "Error al autocompletar las direcciones." });
   }
@@ -804,7 +813,8 @@ router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, async (
       lead: saved || updatedLead,
       extracted: jinaData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-jina:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar con Jina Reader" });
   }
@@ -823,8 +833,8 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
     }
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
-    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+    const activeCampaign = campaigns.find(c => c.isActive);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText;
 
     const radar = await detectVenueEventsAndFreeDates(lead.nombre_sala, lead.ciudad || "", campaignTargetDates, lead.website);
     
@@ -854,7 +864,8 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
       lead: saved || updatedLead,
       radar
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/detect-dates:", error);
     res.status(500).json({ success: false, error: error?.message || "Error detectando disponibilidad de fechas" });
   }
@@ -885,8 +896,8 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
     }
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    const activeCampaign = campaigns.find(c => c.isActive || (c as any).is_active);
-    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText || (activeCampaign as any)?.target_dates || (activeCampaign as any)?.target_dates_text;
+    const activeCampaign = campaigns.find(c => c.isActive);
+    const campaignTargetDates = req.body?.campaignTargetDates || activeCampaign?.targetDates || activeCampaign?.targetDatesText;
 
     const updatedLeads: Lead[] = [];
     let totalFreeDates = 0;
@@ -929,7 +940,8 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
       totalOccupiedDates,
       updatedLeads
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/detect-all-dates:", error);
     res.status(500).json({ success: false, error: error?.message || "Error en el escaneo masivo de fechas" });
   }
@@ -946,11 +958,11 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
     const { campaignId, forceAll = false } = req.body || {};
 
     const campaigns = await dbGetCampaigns(targetBandId);
-    let targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive || (c as any).is_active) || campaigns[0];
+    const targetCampaign = campaigns.find(c => c.id === campaignId) || campaigns.find(c => c.isActive) || campaigns[0];
 
-    const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText || (targetCampaign as any)?.target_dates || (targetCampaign as any)?.target_dates_text;
+    const campaignTargetDates = req.body?.campaignTargetDates || targetCampaign?.targetDates || targetCampaign?.targetDatesText;
 
-    const allLeads = await dbGetLeads(targetBandId);
+    const allLeads: Lead[] = await dbGetLeads(targetBandId);
     if (!allLeads || allLeads.length === 0) {
       return res.status(400).json({ success: false, error: "No hay leads registrados para esta banda." });
     }
@@ -962,7 +974,7 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
       const campIdStr = String(targetCampaign.id);
 
       campaignLeads = allLeads.filter(l => {
-        if ((l as any).campaign_id === targetCampaign.id || (l as any).campaign_id === campIdStr) return true;
+        if (l.campaign_id === targetCampaign.id || l.campaign_id === campIdStr) return true;
         if (l.campaña_asociada && l.campaña_asociada.toLowerCase().trim() === campNameNorm) return true;
         // Si el lead no tiene campaña explícita pero hay una campaña activa, se incluye en el proceso
         return !l.campaña_asociada;
@@ -1030,7 +1042,8 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
       updatedLeads,
       resumen: `Se han actualizado ${updatedLeads.length} recintos de la campaña "${targetCampaign?.name || 'Activa'}" contrastando datos con Ticketmaster, Wegow y Bandsintown. ${totalAvailableForCampaign} recintos coinciden con las fechas de la campaña.`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/batch-enrich-campaign:", error);
     return res.status(500).json({ success: false, error: error?.message || "Error al enriquecer masivamente los leads de la campaña" });
   }
@@ -1081,7 +1094,8 @@ router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAut
       lead: saved,
       data: igData
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-instagram:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar perfil de Instagram" });
   }
@@ -1100,9 +1114,11 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
     }
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
-    const bandGenre = band?.genero || lead.genero || "música en directo";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
+    const bandGenre = band.genero || lead.genero || "música en directo";
 
     const spotifyDemand = await calculateSpotifyCityDemand(
       bandName,
@@ -1124,7 +1140,8 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: spotifyDemand });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-spotify:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al analizar audiencia de Spotify" });
   }
@@ -1163,7 +1180,8 @@ router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], re
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: placesInfo });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-google-places:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al obtener datos de Google Places" });
   }
@@ -1200,7 +1218,8 @@ router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, a
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: setlistInfo });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-setlist:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al obtener historial de Setlist.fm" });
   }
@@ -1238,7 +1257,8 @@ router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, async
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, data: verification });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/verify-email:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al verificar entregabilidad del correo" });
   }
@@ -1257,9 +1277,11 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
     }
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
-    const bandGenre = band?.genero || lead.genero || "música en directo";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
+    const bandGenre = band.genero || lead.genero || "música en directo";
 
     const [
       spotifyRes,
@@ -1277,7 +1299,7 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
       fetchGooglePlacesVenueInfo(lead.nombre_sala, lead.ciudad || "Madrid", lead.direccion),
       fetchSetlistVenueHistory(lead.nombre_sala, lead.ciudad || "Madrid", lead.genero || bandGenre),
       lead.email_contacto ? verifyEmailDeliverability(lead.email_contacto) : Promise.resolve(null),
-      calculateTourLogistics(band?.ciudad || "Madrid", lead.ciudad || "Madrid", lead.direccion),
+      calculateTourLogistics(band.ciudadBase || "Madrid", lead.ciudad || "Madrid", lead.direccion),
       fetchVenueSocialEngagement(lead.nombre_sala, lead.ciudad || "Madrid", lead.instagram_handle),
       calculateBookingWindow(lead.nombre_sala, lead.tipo || "sala", lead.aforo || 200, lead.ciudad || "Madrid"),
       detectLocalEventsAndClashes(lead.ciudad || "Madrid", bandGenre),
@@ -1383,7 +1405,7 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
       alquilerSalaFijo: lead.alquiler_sala_estimado || 250,
       porcentajeSala: lead.porcentaje_taquilla || 15,
       gastosProduccionFijos: (updates.tour_logistics?.coste_total_viaje || 100) + 150, // viaje + técnico
-      numMusicos: band?.num_integrantes || 5,
+      numMusicos: band.numMusicos || 5,
       asistenciaEstimada: updates.spotify_city_demand?.prediccion_entradas || Math.round((lead.aforo || 250) * 0.75)
     });
 
@@ -1419,7 +1441,8 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
         band_partners: updates.local_band_partners_info
       }
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/enrich-all-apis:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al procesar enriquecimiento multi-API" });
   }
@@ -1436,8 +1459,10 @@ router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAut
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const origin = req.body.origen || band?.ciudad || "Madrid";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const origin = req.body.origen || band.ciudadBase || "Madrid";
 
     const result = await calculateTourLogistics(origin, lead.ciudad || "Madrid", lead.direccion);
     const updatedLead: Lead = {
@@ -1455,7 +1480,8 @@ router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAut
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, logistics: updatedLead.tour_logistics });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1485,10 +1511,22 @@ router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, asy
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, social: updatedLead.social_engagement });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
+
+/**
+ * Número de un campo del formulario, con valor por defecto si falta o no es un número. Respeta el 0
+ * (un alquiler de sala gratis es válido). Antes se usaba `Number(x) ?? defecto`, que nunca aplicaba
+ * el defecto: `Number(undefined)` es NaN, no null, y el NaN llegaba al cálculo del punto de equilibrio.
+ */
+export function numeroConDefecto(valor: unknown, defecto: number): number {
+  if (valor === undefined || valor === null || valor === '') return defecto;
+  const n = Number(valor);
+  return Number.isFinite(n) ? n : defecto;
+}
 
 /**
  * POST /api/leads/:id/calculate-break-even
@@ -1514,9 +1552,9 @@ router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], re
       aforo: lead.aforo || 250,
       precioAnticipada: Number(precioAnticipada) || 12,
       precioTaquilla: Number(precioTaquilla) || 15,
-      alquilerSalaFijo: Number(alquilerSalaFijo) ?? 250,
-      porcentajeSala: Number(porcentajeSala) ?? 15,
-      gastosProduccionFijos: Number(gastosProduccionFijos) ?? 150,
+      alquilerSalaFijo: numeroConDefecto(alquilerSalaFijo, 250),
+      porcentajeSala: numeroConDefecto(porcentajeSala, 15),
+      gastosProduccionFijos: numeroConDefecto(gastosProduccionFijos, 150),
       numMusicos: Number(numMusicos) || 5,
       asistenciaEstimada: Number(asistenciaEstimada) || Math.round((lead.aforo || 250) * 0.8)
     });
@@ -1538,7 +1576,8 @@ router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], re
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, financial: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1561,7 +1600,8 @@ router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], 
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, booking_window: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1577,8 +1617,10 @@ router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requ
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const genero = band?.genero || lead.genero || "Indie Rock";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const genero = band.genero || lead.genero || "Indie Rock";
 
     const result = await detectLocalEventsAndClashes(lead.ciudad || "Madrid", genero);
     const updatedLead: Lead = {
@@ -1588,7 +1630,8 @@ router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requ
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, local_events: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1604,8 +1647,10 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const bandName = band?.nombre || "la banda";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const bandName = band.bandName || "la banda";
 
     const result = await findLocalPressAndMedia(lead.ciudad || "Madrid", lead.nombre_sala, bandName);
     const updatedLead: Lead = {
@@ -1615,7 +1660,8 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, press_media: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });
@@ -1631,8 +1677,10 @@ router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireA
     if (!lead) return res.status(404).json({ success: false, error: "Lead no encontrado" });
 
     const state = loadState();
-    const band = state.bands?.find((b: any) => b.id === targetBandId);
-    const genero = band?.genero || lead.genero || "Indie Rock";
+    // Perfil de la banda activa (EPK). Antes se buscaba en state.bands, que son las bandas de
+    // contacto del CRM: nunca coincidía y se usaban siempre «la banda», Madrid y 5 músicos.
+    const band = getBandDnaProfile(state, targetBandId);
+    const genero = band.genero || lead.genero || "Indie Rock";
 
     const result = await findLocalBandPartners(lead.ciudad || "Madrid", genero, lead.nombre_sala);
     const updatedLead: Lead = {
@@ -1642,7 +1690,8 @@ router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireA
 
     const saved = await dbUpsertLead(updatedLead, targetBandId);
     res.json({ success: true, lead: saved, band_partners: result });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     res.status(500).json({ success: false, error: error?.message });
   }
 });

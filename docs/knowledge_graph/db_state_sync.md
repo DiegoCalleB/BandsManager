@@ -20,9 +20,14 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(Layer: #schema, Domain: #system)*
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposRepertorio|server/db/tiposRepertorio.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_slug|server/utils/slug.ts]] *(Layer: #service, Domain: #system)*
 - [[src_db_seed|src/db_seed.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -42,7 +47,9 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_agentQueue|server/routes/agentQueue.ts]] *(from #agent)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_rutaSeparacion|server/routes/ai_music/rutaSeparacion.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasEstadoStems|server/routes/ai_music/rutasEstadoStems.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*
@@ -73,9 +80,26 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(from #route)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
+- [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(from #route)*
+- [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(from #route)*
+- [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
+- [[server_routes_users_rutasInvitacion|server/routes/users/rutasInvitacion.ts]] *(from #route)*
+- [[server_routes_users_rutasLogin|server/routes/users/rutasLogin.ts]] *(from #route)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(from #route)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(from #route)*
+- [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(from #route)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(from #route)*
+- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/superficieUsersAiMusic.test.ts`
 
 ---
 

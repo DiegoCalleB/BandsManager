@@ -20,7 +20,9 @@ MULTI-SOURCE VENUE & FESTIVAL DISCOVERY SERVICE
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_musicbrainzVenueService|server/services/musicbrainzVenueService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

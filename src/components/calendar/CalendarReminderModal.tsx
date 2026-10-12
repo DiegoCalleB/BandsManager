@@ -12,7 +12,8 @@ interface CalendarReminderModalProps {
   selectedRehearsal: Rehearsal | null;
   selectedDate: Date;
   monthNames: string[];
-  effectiveBandMembers: any[];
+  /** Miembros convocados; solo se muestran nombre y email. */
+  effectiveBandMembers: { name?: string; email?: string }[];
   reminderNotes: string;
   setReminderNotes: (val: string) => void;
   reminderSendPush: boolean;
@@ -28,7 +29,6 @@ interface CalendarReminderModalProps {
 export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
   isOpen,
   onClose,
-  isStitchLight = false,
   selectedConcert,
   selectedRehearsal,
   selectedDate,
@@ -43,7 +43,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
   reminderSending,
   reminderSuccessMsg,
   reminderErrorMsg,
-  handleSendEventReminder,
+  handleSendEventReminder
 }) => {
   if (!isOpen) return null;
 
@@ -104,7 +104,7 @@ export const CalendarReminderModal: React.FC<CalendarReminderModalProps> = ({
               Destinatarios ({effectiveBandMembers.length} miembros)
             </label>
             <div className="flex flex-wrap gap-1 font-mono text-micro">
-              {effectiveBandMembers.map((m: any, idx: number) => (
+              {effectiveBandMembers.map((m, idx) => (
                 <span key={idx} className="px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--acc)]/10 text-[var(--ink)] ">
                   <ShowIcon inline emoji="👤" />{m.name} {m.email ? `(${m.email})` : ''}
                 </span>

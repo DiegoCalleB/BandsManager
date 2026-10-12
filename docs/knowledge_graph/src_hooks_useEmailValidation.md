@@ -29,6 +29,11 @@ Exporta: useEmailValidation, getEmailStatus, isBouncedLead.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/hooksSinEfectosEnCascada.behavior.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

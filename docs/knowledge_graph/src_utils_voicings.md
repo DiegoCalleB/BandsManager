@@ -27,6 +27,7 @@ Exporta: NivelAcorde, NIVELES, ETIQUETA_NIVEL, AYUDA_NIVEL, CUERDAS_GUITARRA, et
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
 - [[src_components_chords_DiagramaGuitarra|src/components/chords/DiagramaGuitarra.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(from #frontend)*
 
 ---
 

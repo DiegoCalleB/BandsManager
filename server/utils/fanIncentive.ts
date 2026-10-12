@@ -16,8 +16,9 @@ function textoRellenado(valor: unknown): string | undefined {
   return limpio ? limpio : undefined;
 }
 
-export function buildFanIncentive(config: any): FanIncentive {
-  const origen = config && typeof config === "object" ? config : {};
+export function buildFanIncentive(config: unknown): FanIncentive {
+  // Cada campo se comprueba después con textoRellenado: basta con leerlo como unknown.
+  const origen: Record<string, unknown> = config && typeof config === "object" ? (config as Record<string, unknown>) : {};
   const incentivo: FanIncentive = {};
 
   const mensajeAgradecimiento = textoRellenado(origen.mensajeAgradecimiento);

@@ -1,7 +1,16 @@
 import { detectPitchLanguage } from "./leadLanguage.js";
-import { formatGlobalPitchFeedbackForPrompt, mapLeadTipoToTemplateCategory } from "../promptsManager.js";
+import { bandaDe } from './bandAccess.js';
+import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { sanitizeExternalText } from "./promptSafety.js";
 import { getCoreAntiAiRulesPrompt } from "./promptGuidelines.js";
+import type { MessageSentimentAnalysis } from "../services/sentimentAnalysis.js";
+import type {
+  CachePorTipoLibre,
+  CampanaParaPrompt,
+  EstadoParaAdn,
+  LeadParaPrompt,
+  ResponseStrategy,
+} from "./tiposBandDna.js";
 
 export interface BandDnaProfile {
   bandId: string;
@@ -89,12 +98,12 @@ export interface BandDnaProfile {
   artistasReferencia?: string;
 }
 
-function strOrUndef(v: any): string | undefined {
+function strOrUndef(v: unknown): string | undefined {
   return typeof v === "string" && v.trim() ? v.trim() : undefined;
 }
 
 /** Una campaña sin `isActive`/`is_active` explícito a `false` se trata como activa. */
-export function isCampaignActive(campaign: any): boolean {
+export function isCampaignActive(campaign: CampanaParaPrompt | null | undefined): boolean {
   return Boolean(campaign) && campaign.isActive !== false && campaign.is_active !== false;
 }
 
@@ -102,7 +111,7 @@ export function isCampaignActive(campaign: any): boolean {
  * Resuelve el caché mínimo por tipo de recinto, priorizando campaña activa sobre banda.
  * Retorna objeto con tipos que aplican + sus cachés (tipos con caché 0 o undefined se filtran).
  */
-export function resolveMinCacheByType(activeCampaign: any, bandMinCache?: any): Record<string, number> {
+export function resolveMinCacheByType(activeCampaign: CampanaParaPrompt | null | undefined, bandMinCache?: CachePorTipoLibre): Record<string, number> {
   const cacheToUse = (activeCampaign && isCampaignActive(activeCampaign) && activeCampaign.minCacheByType)
     ? activeCampaign.minCacheByType
     : (bandMinCache || {});
@@ -123,7 +132,7 @@ export function resolveMinCacheByType(activeCampaign: any, bandMinCache?: any): 
  * Extrae el perfil de ADN completo y multidimensional de cualquier banda registrada
  * a partir del estado de la aplicación.
  */
-export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 'pitch' | 'reply' = 'pitch'): BandDnaProfile {
+export function getBandDnaProfile(state: EstadoParaAdn | null | undefined, bandId: string, lead?: LeadParaPrompt, mode: 'pitch' | 'reply' = 'pitch'): BandDnaProfile {
   const cleanId = (bandId || "").replace(/^(band|reg)-/, "");
 
   const bandConfig = state?.epkConfigsByBand?.[bandId] ||
@@ -132,7 +141,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     state?.epkConfig || {};
 
   const registeredBand = (state?.registeredBands || []).find(
-    (b: any) => b.band_id === bandId ||
+    (b) => b.band_id === bandId ||
       b.band_id === cleanId ||
       b.band_id === `band-${cleanId}` ||
       b.id === bandId
@@ -183,7 +192,6 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
   const tieneTecnicoSonidoPropio = bandConfig?.datosContratacion?.tieneTecnicoSonidoPropio === true;
   const transportePropio = bandConfig?.datosContratacion?.transportePropio === true;
   const hospedajeRequerido = bandConfig?.datosContratacion?.hospedajeRequerido === true;
-  const modoFacturacion = bandConfig?.datosContratacion?.facturacion || 'Cooperativa / Facturación estándar';
 
   const duracionDirecto = bandConfig?.datosContratacion?.duracionDirecto || "75 a 90 minutos de show continuo sin pausas";
 
@@ -229,21 +237,21 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
 
   // Extracción de Convocatoria Real e Hitos Destacados
   const allConcerts = Array.isArray(state?.concerts) ? state.concerts : [];
-  const bandConcerts = allConcerts.filter((c: any) => {
+  const bandConcerts = allConcerts.filter((c) => {
     if (!c) return false;
-    const cBand = String(c.band_id || c.bandId || "").toLowerCase();
+    const cBand = String(bandaDe(c) || "").toLowerCase();
     return cBand === bandId.toLowerCase() || cBand === cleanId.toLowerCase() || cBand === `band-${cleanId}`.toLowerCase();
   });
 
   const concertHighlightItems: string[] = [];
-  const pastOrHighlights = bandConcerts.filter((c: any) => 
+  const pastOrHighlights = bandConcerts.filter((c) => 
     c.es_hito_destacado || 
     (c.asistencia_propia && c.asistencia_propia > 0) || 
     (c.aforo_vendido && c.aforo_vendido > 0) || 
     (c.post_show_review && c.post_show_review.trim().length > 0)
   );
 
-  pastOrHighlights.sort((a: any, b: any) => {
+  pastOrHighlights.sort((a, b) => {
     if (a.es_hito_destacado && !b.es_hito_destacado) return -1;
     if (!a.es_hito_destacado && b.es_hito_destacado) return 1;
     const astA = Number(a.asistencia_propia || a.aforo_vendido || 0);
@@ -251,7 +259,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
     return astB - astA;
   });
 
-  pastOrHighlights.slice(0, 5).forEach((c: any) => {
+  pastOrHighlights.slice(0, 5).forEach((c) => {
     const salaInfo = `${c.sala || 'Sala'}, ${c.ciudad || 'Ciudad'} (${c.fecha || 'Fecha'})`;
     const propia = Number(c.asistencia_propia || c.aforo_vendido || 0);
     const total = c.aforo_total ? ` / Aforo: ${c.aforo_total}` : '';
@@ -426,7 +434,7 @@ export function getBandDnaProfile(state: any, bandId: string, lead?: any, mode: 
  * de idioma y tono sin fórmulas clichés de IA.
  * bandMinCache: cachés mínimos generales de la banda (usados si no hay campaña activa).
  */
-export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: any, activeCampaign?: any, bandMinCache?: any, negotiationStartCacheByType?: any): string {
+export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMemory: string, lead: LeadParaPrompt, activeCampaign?: CampanaParaPrompt, bandMinCache?: CachePorTipoLibre, negotiationStartCacheByType?: CachePorTipoLibre): string {
   const languageHint = detectPitchLanguage(lead);
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const categoryKey = mapLeadTipoToTemplateCategory(lead?.tipo);
@@ -440,10 +448,6 @@ export function buildEnhancedPitchSystemPrompt(bandDna: BandDnaProfile, globalMe
     const customTemplates = activeCampaign.customPitchTemplates || activeCampaign.custom_pitch_templates || {};
     const cTemplate = customTemplates[categoryKey] || '';
     const cNotes = activeCampaign.notes || '';
-    const cMin = activeCampaign.minCapacity || activeCampaign.min_capacity || 0;
-    const cMax = activeCampaign.maxCapacity || activeCampaign.max_capacity || 0;
-    // Removed capInfo - avoid mentioning capacity in pitch unless explicitly needed
-    const capInfo = '';
 
     const campaignToneRules = activeCampaign.campaignToneRules || activeCampaign.campaign_tone_rules;
     let campaignToneSection = "";
@@ -730,16 +734,16 @@ ${getCoreAntiAiRulesPrompt()}
  */
 export function buildReplySystemPrompt(
   bandDna: BandDnaProfile,
-  lead: any,
+  lead: LeadParaPrompt,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   replyFewShotSection: string,
   responseType?: string,
-  responseStrategy?: any,
+  responseStrategy?: Partial<ResponseStrategy>,
   feedbackDetails?: string[],
-  minCacheByType?: any,
-  negotiationStartCacheByType?: any,
-  sentimentAnalysis?: any,
+  minCacheByType?: CachePorTipoLibre,
+  negotiationStartCacheByType?: CachePorTipoLibre,
+  sentimentAnalysis?: Partial<MessageSentimentAnalysis> | null,
   operationalContext?: string
 ): string {
   const languageHint = detectPitchLanguage(lead);
@@ -940,19 +944,17 @@ ${formatted}
  */
 export function generateSmartDnaPitchFallback(params: {
   bandDna: BandDnaProfile;
-  lead: any;
+  lead: LeadParaPrompt;
   provider?: string;
   customInstruction?: string;
   feedbackDetails?: string[];
-  activeCampaign?: any;
+  activeCampaign?: CampanaParaPrompt;
 }): string {
   const { bandDna, lead, activeCampaign } = params;
   const leadTipo = String(lead?.tipo || "sala").toLowerCase();
   const salaNombre = lead?.nombre_sala || "la sala";
   const ciudad = lead?.ciudad || "";
   const ciudadStr = ciudad ? ` (${ciudad})` : "";
-  const aforo = lead?.aforo ? Number(lead.aforo) : 0;
-  const aforoStr = aforo > 0 ? ` para aforos de unas ${aforo} personas` : "";
   const customNote = params.customInstruction ? `\n[Ajuste solicitado por el mánager: "${params.customInstruction.trim()}"]\n` : "";
 
   const campDatesText = activeCampaign?.targetDatesText || (Array.isArray(activeCampaign?.targetDates) && activeCampaign.targetDates.length > 0 ? activeCampaign.targetDates.join(', ') : (Array.isArray(activeCampaign?.target_dates) ? activeCampaign.target_dates.join(', ') : ''));
@@ -1058,8 +1060,8 @@ Un saludo,`;
  */
 export function buildIndexableSubjectLine(params: {
   bandDna: BandDnaProfile;
-  lead?: any;
-  activeCampaign?: any;
+  lead?: LeadParaPrompt;
+  activeCampaign?: CampanaParaPrompt;
   isRespuesta?: boolean;
 }): string {
   const { bandDna, lead, activeCampaign, isRespuesta } = params;
@@ -1089,7 +1091,7 @@ export function buildIndexableSubjectLine(params: {
  */
 export function buildAdvancingSystemPrompt(params: {
   bandDna: BandDnaProfile;
-  lead: any;
+  lead: LeadParaPrompt;
   concertDetails?: {
     fechaConcierto?: string;
     horarioLoadIn?: string;

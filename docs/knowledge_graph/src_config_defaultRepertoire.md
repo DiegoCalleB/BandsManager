@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistShowItemRow|src/components/repertorio/SetlistShowItemRow.tsx]] *(from #frontend)*
 - [[src_utils_repertorioPdf|src/utils/repertorioPdf.ts]] *(from #service)*

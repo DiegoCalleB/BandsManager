@@ -20,17 +20,22 @@ Exporta: VenueProfileColumn.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_leads_crud|Leads CRUD Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_booking_tiposRespuestasApi|src/components/booking/tiposRespuestasApi.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_bookingTourContext|src/utils/bookingTourContext.ts]] *(Layer: #service, Domain: #booking)*
-- [[src_utils_whatsapp|src/utils/whatsapp.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_booking_venue_modal_VenueWorkspaceModal|src/components/booking/venue_modal/VenueWorkspaceModal.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
 
 ---
 

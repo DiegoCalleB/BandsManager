@@ -20,6 +20,7 @@ Fans de la banda (`fans`) y lista de espera de músicos (`musicians_waitlist`).
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_fans|tabla fans]] *(Layer: #schema, Domain: #social)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_musicians_waitlist|tabla musicians_waitlist]] *(Layer: #schema, Domain: #system)*

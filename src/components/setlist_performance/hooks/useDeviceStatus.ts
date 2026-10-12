@@ -60,7 +60,7 @@ export function useDeviceStatus() {
           battery.addEventListener("levelchange", handleChange);
           battery.addEventListener("chargingchange", handleChange);
         })
-        .catch(() => {});
+        .catch(() => { /* API de batería no permitida: el indicador no se muestra */ });
     }
     return () => {
       if (batteryRef) {

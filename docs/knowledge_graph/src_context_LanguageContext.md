@@ -13,31 +13,24 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: SupportedLanguage, LanguageOption, SUPPORTED_LANGUAGES, TRANSLATIONS, LanguageContextType, LanguageProvider, useLanguage.
+Exporta: LanguageProvider.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_context_googleTranslate|src/context/googleTranslate.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_app_hooks_useAppController|src/app/hooks/useAppController.ts]] *(from #service)*
-- [[src_app_hooks_useAppNavigation|src/app/hooks/useAppNavigation.ts]] *(from #service)*
-- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
-- [[src_components_finanzas_FinanceSummaryCards|src/components/finanzas/FinanceSummaryCards.tsx]] *(from #frontend)*
-- [[src_components_LandingChatWidget|src/components/LandingChatWidget.tsx]] *(from #frontend)*
-- [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
-- [[src_components_onboarding_MusicianOnboardingModal|src/components/onboarding/MusicianOnboardingModal.tsx]] *(from #frontend)*
-- [[src_components_onboarding_steps_StepIdentity|src/components/onboarding/steps/StepIdentity.tsx]] *(from #frontend)*
-- [[src_components_onboarding_steps_StepLanguage|src/components/onboarding/steps/StepLanguage.tsx]] *(from #frontend)*
-- [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
-- [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
-- [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
-- [[src_components_user_profile_LanguageSelector|src/components/user_profile/LanguageSelector.tsx]] *(from #frontend)*
 - [[src_main|src/main.tsx]] *(from #service)*
-- [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/__tests__/LandingChatWidget.test.tsx`
+- `src/context/__tests__/LanguageContext.behavior.test.tsx`
 
 ---
 

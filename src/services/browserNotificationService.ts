@@ -5,6 +5,7 @@ import {
   NotificationHistoryItem,
   NotificationPermissionStatus,
 } from '../types/browserNotifications';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 
 const CONFIG_STORAGE_KEY = 'bandmanager_notification_config_v1';
 const HISTORY_STORAGE_KEY = 'bandmanager_notification_history_v1';
@@ -63,7 +64,7 @@ export function loadNotificationConfig(): BrowserNotificationConfig {
         leadDiscovered: parsed.events?.leadDiscovered ?? true,
       },
     };
-  } catch (e) {
+  } catch {
     return DEFAULT_NOTIFICATION_CONFIG;
   }
 }
@@ -90,7 +91,7 @@ export function loadNotificationHistory(): NotificationHistoryItem[] {
     const raw = localStorage.getItem(HISTORY_STORAGE_KEY);
     if (!raw) return [];
     return JSON.parse(raw);
-  } catch (e) {
+  } catch {
     return [];
   }
 }
@@ -131,7 +132,7 @@ export function addNotificationToHistory(item: Omit<NotificationHistoryItem, 'id
 export function playNotificationChime(): void {
   if (typeof window === 'undefined') return;
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = getAudioContextClass();
     if (!AudioContextClass) return;
     const ctx = new AudioContextClass();
 
@@ -171,9 +172,9 @@ export function playNotificationChime(): void {
     osc2.stop(now + 0.41);
 
     setTimeout(() => {
-      ctx.close().catch(() => {});
+      ctx.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     }, 500);
-  } catch (err) {
+  } catch {
     // Audio context may be restricted by autoplay policy until user gesture
   }
 }
@@ -241,7 +242,7 @@ export function sendBrowserPushNotification(title: string, options: SendPushNoti
     notification.onclick = () => {
       try {
         window.focus();
-      } catch (_) {}
+      } catch { /* el navegador no deja enfocar la ventana: la notificación se cierra igual */ }
       if (options.onClick) {
         options.onClick();
       }

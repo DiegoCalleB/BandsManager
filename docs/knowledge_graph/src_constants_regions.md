@@ -23,7 +23,6 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 
 ---

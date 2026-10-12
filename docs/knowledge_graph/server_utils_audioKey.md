@@ -20,6 +20,7 @@ Detección de tonalidad (tono/clave musical) desde audio.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

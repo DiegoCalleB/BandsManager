@@ -18,7 +18,7 @@ Resumen global del feedback de pitches (`getGlobalPitchFeedbackSummary`) para af
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -26,7 +26,6 @@ _Sin dependencias salientes directas._
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
-- [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
 - [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*

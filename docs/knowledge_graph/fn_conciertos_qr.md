@@ -19,6 +19,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
@@ -29,6 +30,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_mergeWithExisting|server/db/mergeWithExisting.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_referidos|server/db/referidos.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
@@ -36,6 +38,8 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_CalendarView|src/components/CalendarView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_QrExportModal|src/components/QrExportModal.tsx]] *(Layer: #frontend, Domain: #system)*

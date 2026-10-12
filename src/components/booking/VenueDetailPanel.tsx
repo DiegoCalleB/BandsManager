@@ -1,7 +1,7 @@
 import { History, Mail, Sparkles, X } from "lucide-react";
-import React,{ useEffect,useRef,useState } from "react";
+import React,{ useState } from "react";
 import type { BookingCampaign } from "../../types";
-import { Concert, InteractionLog, Lead, LeadStatus } from "../../types";
+import { Concert, InteractionLog, ResultadoInteraccion, CanalInteraccion, Lead, LeadStatus } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { getErrorMessage } from "../../utils/errorMessage";
 import { IconButton } from '../ui';
@@ -81,15 +81,19 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
   const [isEditingLeadInfo, setIsEditingLeadInfo] = useState(false);
   // Foto del lead en el momento de pulsar «Editar»: sirve para mandar al guardar SOLO lo que
   // el usuario ha cambiado (ver src/utils/camposCambiados.ts).
-  const leadAlEditarRef = useRef<Partial<Lead> | null>(null);
+  // Caja mutable estable (no un ref de React): solo la leen y escriben los manejadores de eventos.
+  const [leadAlEditarRef] = useState<{ current: Partial<Lead> | null }>(() => ({ current: null }));
 
   const [editedLeadInfo, setEditedLeadInfo] = useState<Partial<Lead>>({
     ...selectedLead,
   });
 
-  useEffect(() => {
+  // El formulario se rehace desde el lead cada vez que llega un objeto lead nuevo (ajuste durante el render)
+  const [leadPrevio, setLeadPrevio] = useState(selectedLead);
+  if (selectedLead !== leadPrevio) {
+    setLeadPrevio(selectedLead);
     setEditedLeadInfo({ ...selectedLead });
-  }, [selectedLead]);
+  }
 
   // Pitch Editing & Feedback State
   const [isEditingPitch, setIsEditingPitch] = useState(false);
@@ -120,11 +124,11 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   // Bitácora state
   const [interactionType, setInteractionType] =
-    useState<InteractionLog["tipo"]>("Llamada");
+    useState<CanalInteraccion>("Llamada");
   const [interactionAutor, setInteractionAutor] = useState("Mánager / Booking");
   const [interactionNotes, setInteractionNotes] = useState("");
   const [interactionResultado, setInteractionResultado] =
-    useState<InteractionLog["resultado"]>("Interesado");
+    useState<ResultadoInteraccion>("Interesado");
 
   // Quick Copy status
   const [copiedPitch, setCopiedPitch] = useState(false);
@@ -206,25 +210,25 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
 
   const { cleanVal, hiloCompleto, handleAnalyzeMessageSentiment, isAnalyzingMessageSentiment } = useVenueMessageThread({ selectedLead, onUpdateLead });
 
-  // Sync state when selected lead changes or pitch updates
-  useEffect(() => {
-    if (!selectedLead) return;
-    setEditedPitch(selectedLead.pitch_generado || "");
-    setEditedLeadInfo({
-      ...selectedLead,
-      telefono: cleanVal(selectedLead.telefono),
-      telefono_movil: cleanVal(selectedLead.telefono_movil),
-      telefono_fijo: cleanVal(selectedLead.telefono_fijo),
-      contacto_nombre: cleanVal(selectedLead.contacto_nombre),
-      email_contacto: cleanVal(selectedLead.email_contacto),
-      direccion: cleanVal(selectedLead.direccion),
-    });
-  }, [
-    selectedLead?.id,
-    selectedLead?.pitch_generado,
-    selectedLead?.imagen_url,
-    selectedLead?.icono,
-  ]);
+  // Sincroniza pitch y formulario (con teléfonos y contacto limpios) cuando cambia el lead,
+  // su pitch o su imagen/icono. Se ajusta durante el render comparando con la clave anterior.
+  const claveSync = `${selectedLead?.id}|${selectedLead?.pitch_generado}|${selectedLead?.imagen_url}|${selectedLead?.icono}`;
+  const [claveSyncPrevia, setClaveSyncPrevia] = useState("");
+  if (claveSync !== claveSyncPrevia) {
+    setClaveSyncPrevia(claveSync);
+    if (selectedLead) {
+      setEditedPitch(selectedLead.pitch_generado || "");
+      setEditedLeadInfo({
+        ...selectedLead,
+        telefono: cleanVal(selectedLead.telefono),
+        telefono_movil: cleanVal(selectedLead.telefono_movil),
+        telefono_fijo: cleanVal(selectedLead.telefono_fijo),
+        contacto_nombre: cleanVal(selectedLead.contacto_nombre),
+        email_contacto: cleanVal(selectedLead.email_contacto),
+        direccion: cleanVal(selectedLead.direccion),
+      });
+    }
+  }
 
   // Los hooks de arriba tienen que ejecutarse siempre en el mismo orden (ver
   // react-hooks/rules-of-hooks): este guard vivía ANTES de ellos, así que abrir el panel con
@@ -397,7 +401,7 @@ export const VenueDetailPanel: React.FC<VenueDetailPanelProps> = ({
               tipo: "WhatsApp",
               autor: interactionAutor || "Mánager / Booking",
               notas: logData.notas,
-              resultado: (logData.resultado as InteractionLog["resultado"]) || "Interesado",
+              resultado: (logData.resultado as ResultadoInteraccion) || "Interesado",
             };
             const existingLogs = selectedLead.historial_contacto || [];
             onUpdateLead(leadId, {

@@ -13,7 +13,7 @@ tags: ["frontend", "social", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Exporta: SocialLinks, PayPalLogo, SocialIcons, PLATFORM_CONFIG, PLATFORM_PRIORITY_ORDER, SocialPlatformsList, BizumLogo.
+Exporta: SocialLinks, PayPalLogo, SocialPlatformsList, BizumLogo.
 
 ---
 

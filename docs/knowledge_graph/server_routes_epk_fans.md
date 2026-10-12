@@ -25,6 +25,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_fanIncentive|server/utils/fanIncentive.ts]] *(Layer: #service, Domain: #social)*
@@ -32,6 +33,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[src_i18n_epkTranslations|src/i18n/epkTranslations.ts]] *(Layer: #service, Domain: #epk)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_epkTraducciones|src/utils/epkTraducciones.ts]] *(Layer: #service, Domain: #epk)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*

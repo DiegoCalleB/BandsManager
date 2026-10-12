@@ -19,9 +19,8 @@ Módulo sin exportaciones con nombre.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_App|src/App.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_app_rutasPublicasLazy|src/app/rutasPublicasLazy.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_components_ErrorBoundary|src/components/ErrorBoundary.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_PublicEPK|src/components/PublicEPK.tsx]] *(Layer: #frontend, Domain: #epk)*
-- [[src_components_PublicMusiciansLanding|src/components/PublicMusiciansLanding.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_utils_domTranslatePatch|src/utils/domTranslatePatch.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorTracking|src/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*

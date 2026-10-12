@@ -32,7 +32,6 @@ export interface SetlistShowItemRowProps {
 
 export const SetlistShowItemRow: React.FC<SetlistShowItemRowProps> = ({
   item,
-  index,
   isSelected,
   isDragging,
   isDragOver,
@@ -44,7 +43,7 @@ export const SetlistShowItemRow: React.FC<SetlistShowItemRowProps> = ({
   onSelect,
   onUpdateTitle,
   onEdit,
-  onRemove,
+  onRemove
 }) => {
   if (item.tipoItem === "bloque" && item.bloqueSubtipo === "header") {
     return (

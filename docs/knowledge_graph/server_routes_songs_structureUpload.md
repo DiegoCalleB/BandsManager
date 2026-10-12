@@ -20,12 +20,12 @@ Subida y procesado de la estructura de una canción (`/songs/...`).
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_songs|tabla songs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---

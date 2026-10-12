@@ -4,6 +4,60 @@
 import { escrituraTolerante } from './tolerantWrite.js';
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
+import type { InteractionLog, Lead } from '../../src/types.js';
+
+/**
+ * Fila de `leads` tal como sale de Supabase: los campos de `Lead` más los que solo existen en la
+ * base de datos (análisis del Lector, telemetría). Cualquier columna extra se lee como `unknown`.
+ */
+export type FilaLead = Lead & {
+  ultimo_sentimiento_score?: number | null;
+  ultimo_sentimiento_label?: string | null;
+  ultima_intencion?: string | null;
+  ultima_intencion_etiqueta?: string | null;
+  ultimas_objeciones?: string[];
+  ultimo_analisis_resumen?: string;
+  temperatura_lead?: string | null;
+  fechas_propuestas_sala?: string[];
+  condiciones_economicas_detectadas?: unknown;
+  estrategia_playbook?: unknown;
+  updated_at?: string;
+  instagram_handle?: string;
+  alquiler_sala_estimado?: number;
+};
+
+/**
+ * Lead para guardar: el de la app, con campos opcionales, más los alias camelCase que mandan
+ * algunos formularios y las importaciones.
+ */
+export type EntradaLead = Omit<Partial<FilaLead>, 'estado'> & {
+  /** Texto libre: algunas rutas mandan estados legados que `LeadStatus` no recoge. */
+  estado?: string;
+  nombreSala?: string;
+  emailContacto?: string;
+  emailSecundario?: string;
+  telefonoMovil?: string;
+  telefonoFijo?: string;
+  contactoNombre?: string;
+  contextoExtra?: string;
+  pitchGenerado?: string;
+  fechaEnvio?: string;
+  fechaUltimaRespuesta?: string;
+  imagenUrl?: string;
+  esFavorito?: boolean;
+  esVerificado?: boolean;
+  fiabilidadScore?: number;
+  pitchFeedbackTono?: number;
+  pitchFeedbackContenido?: number;
+  pitchFeedbackComentario?: string;
+  historialFeedbackPitch?: Lead['historial_feedback_pitch'];
+  historialContacto?: InteractionLog[];
+  festivalStartDate?: string;
+  festivalEndDate?: string;
+  fechasOcupadas?: string[];
+  fechasLibresDetectadas?: string[];
+  temperatura?: string;
+};
 
 export function sanitizeWebsiteUrl(val: unknown): string {
   if (!val || typeof val !== 'string') return '';
@@ -161,7 +215,7 @@ export interface GetLeadsOptions {
 }
 
 export interface PaginatedLeadsResult {
-  leads: any[];
+  leads: FilaLead[];
   pagination: {
     page: number;
     limit: number;
@@ -170,14 +224,14 @@ export interface PaginatedLeadsResult {
   };
 }
 
-export function enrichLeadWithTelemetry(l: any) {
+export function enrichLeadWithTelemetry(l: FilaLead | null | undefined) {
   if (!l) return null;
   const historial = Array.isArray(l.historial_contacto) ? l.historial_contacto : [];
   const notas = String(l.notas || '');
 
   // 1. Detección de aperturas de correo
   const openEvents = historial.filter(
-    (h: any) =>
+    (h) =>
       h.id?.startsWith('open-') ||
       h.id?.startsWith('resend-open-') ||
       h.notas?.toLowerCase().includes('abrió el correo') ||
@@ -198,7 +252,7 @@ export function enrichLeadWithTelemetry(l: any) {
 
   // 2. Detección de clics en EPK / Dossier
   const clickEvents = historial.filter(
-    (h: any) =>
+    (h) =>
       h.id?.startsWith('click-') ||
       h.id?.startsWith('epk-') ||
       h.id?.startsWith('resend-click-') ||
@@ -244,7 +298,7 @@ export function enrichLeadWithTelemetry(l: any) {
   };
 }
 
-export async function dbGetLeads(bandId: string): Promise<any[]> {
+export async function dbGetLeads(bandId: string): Promise<FilaLead[]> {
   const sb = getSupabase();
   const cleanId = cleanBandId(bandId);
   const { data, error } = await sb
@@ -360,7 +414,7 @@ export interface UpsertLeadOptions {
   permitirVaciar?: boolean;
 }
 
-export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLeadOptions = {}) {
+export async function dbUpsertLead(lead: EntradaLead, bandId: string, opciones: UpsertLeadOptions = {}) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza: lo resuelve la ruta a partir de la sesión
   // (req.user.band_id). 'lead.band_id' viene del cuerpo de la petición sin validar, y
@@ -378,7 +432,7 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
   // primaria) lo sobrescribía reasignándolo a la banda atacante, y los campos no enviados se
   // rellenaban con los valores reales del lead ajeno (email, teléfono, notas...). Un id que no
   // pertenece a la banda del usuario no se reutiliza nunca: se trata como un lead nuevo.
-  let existingRecord: any = null;
+  let existingRecord: FilaLead | null = null;
   let idBelongsToOtherBand = false;
   if (lead.id) {
     const { data } = await sb
@@ -418,12 +472,13 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
 
   // Campo de texto de la ficha. Modo normal: el primer valor con contenido, o el existente.
   // Modo `permitirVaciar`: el primer valor RECIBIDO (aunque sea ""), o el existente si no llegó.
-  const texto = (recibidos: any[], existente: any, porDefecto = ''): string => {
+  const texto = (recibidos: unknown[], existente: unknown, porDefecto = ''): string => {
     if (opciones.permitirVaciar) {
       const recibido = recibidos.find((v) => v !== undefined && v !== null);
-      return recibido !== undefined ? String(recibido) : existente ?? porDefecto;
+      if (recibido !== undefined) return String(recibido);
+      return existente === undefined || existente === null ? porDefecto : String(existente);
     }
-    return recibidos.find(Boolean) || existente || porDefecto;
+    return String(recibidos.find(Boolean) || existente || porDefecto);
   };
 
   const payload = {
@@ -577,7 +632,7 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
     );
 
     // Dynamic column fallback: if error mentions a missing column, strip it and retry preserving all other fields
-    let fallbackPayload: any = { ...payload };
+    const fallbackPayload: Record<string, unknown> = { ...payload };
     const missingColMatches = [
       ...error.message.matchAll(/column "([^"]+)"/gi),
       ...error.message.matchAll(/column '([^']+)'/gi),
@@ -642,7 +697,7 @@ export async function dbUpsertLead(lead: any, bandId: string, opciones: UpsertLe
         retryError.message.includes('telefono_movil') ||
         retryError.message.includes('telefono_fijo')
       ) {
-        const legacyPayload: any = { ...corePayload };
+        const legacyPayload: Partial<typeof corePayload> = { ...corePayload };
         if (retryError.message.includes('email_secundario'))
           delete legacyPayload.email_secundario;
         if (retryError.message.includes('telefono_movil'))
@@ -707,7 +762,7 @@ export async function dbCheckDeletedLead(nombreSala: string, bandId: string) {
       .ilike('nombre_sala', `%${nombreSala.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -723,7 +778,7 @@ export async function dbCheckDeletedBand(nombreBanda: string, bandId: string) {
       .ilike('nombre_banda', `%${nombreBanda.trim()}%`)
       .limit(1);
     return data && data.length > 0 ? data[0] : null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

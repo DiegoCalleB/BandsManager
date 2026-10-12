@@ -17,10 +17,10 @@ export function useFullscreen(contenedor: RefObject<HTMLElement | null>) {
   const toggleFullscreen = useCallback(() => {
     if (!isFullscreen) {
       setIsFullscreen(true);
-      contenedor.current?.requestFullscreen?.().catch(() => {});
+      contenedor.current?.requestFullscreen?.().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
     } else {
       setIsFullscreen(false);
-      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => { /* el navegador rechaza la pantalla completa (sin gesto o no soportada): se sigue en ventana */ });
     }
   }, [isFullscreen, contenedor]);
 

@@ -42,7 +42,6 @@ for (const rel of files) {
   const sf = ts.createSourceFile(rel, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const edits = [];
   const used = new Set();
-  let did = false;
 
   const handle = (open, closing) => {
     const tag = open.tagName.getText();
@@ -88,7 +87,6 @@ for (const rel of files) {
         // Excepción justificada (campo dentro de un contenedor propio, invisible, etc.): se marca con data-raw
         if (!open.attributes.properties.some((a) => ts.isJsxAttribute(a) && a.name.getText() === 'data-raw')) {
           edits.push({ start: open.tagName.getEnd(), end: open.tagName.getEnd(), text: ' data-raw' });
-          did = true;
         }
         return skip('estilo especial');
       }

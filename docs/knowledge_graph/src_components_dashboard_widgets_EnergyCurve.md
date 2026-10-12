@@ -18,7 +18,7 @@ Exporta: EnergyCurvePoint, EnergyCurve.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_curve|src/utils/curve.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

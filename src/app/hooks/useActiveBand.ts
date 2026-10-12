@@ -2,7 +2,7 @@
  * Banda activa del usuario: id, nombre, logo, plan y comparación de ids.
  * Extraído de App.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import React,{ Dispatch,SetStateAction,useEffect } from "react";
+import React,{ Dispatch,SetStateAction,useEffect,useEffectEvent } from "react";
 import type { SwitcherBand } from "../../components/band_switcher/bandSwitcherTypes";
 import type { EPKConfig,User } from "../../types";
 import { normalizePlan } from "../../utils/planPermissions";
@@ -122,6 +122,12 @@ export function useActiveBand({ currentUser, availableBands, epkConfig, isLogged
   const isPromoPlan =
     currentActiveBandPlan === "promo" || currentActiveBandPlan === "promo_plus";
 
+  // Abrir los asistentes sin que cambiar de callback relance el efecto.
+  const abrirAsistentes = useEffectEvent((perfil: boolean, bienvenida: boolean) => {
+    if (perfil) setShowProfileWizardModal(true);
+    if (bienvenida) setShowOnboardingModal(true);
+  });
+
   // Disparar reactivamente el asistente de perfil o bienvenida si la banda activa actual aún no lo ha completado
   useEffect(() => {
     if (isLoggedIn && cleanActiveBandId) {
@@ -132,12 +138,7 @@ export function useActiveBand({ currentUser, availableBands, epkConfig, isLogged
         );
 
         // Si es una banda nueva o sin asistente completado para este usuario, abrir el asistente
-        if (!wizardCompleted) {
-          setShowProfileWizardModal(true);
-        }
-        if (!onboardingCompleted) {
-          setShowOnboardingModal(true);
-        }
+        abrirAsistentes(!wizardCompleted, !onboardingCompleted);
       } catch {
         // En caso de modo incógnito o localStorage restringido
       }

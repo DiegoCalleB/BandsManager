@@ -6,6 +6,7 @@
  * generadas por error, etc.
  */
 import type { PGlite } from '@electric-sql/pglite';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 interface Columna {
   column_name: string;
@@ -97,7 +98,8 @@ export async function auditarTabla(db: PGlite, tabla: string): Promise<Resultado
 
   try {
     await db.query(`INSERT INTO ${ident(tabla)} (${nombres}) VALUES (${marcadores})`, params);
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     return { tabla, estado: 'saltada', motivo: `no se pudo insertar una fila de prueba: ${String(e.message).split('\n')[0]}`, columnasComprobadas: 0, noPersistidas: [] };
   }
 

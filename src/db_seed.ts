@@ -1,15 +1,4 @@
-import {
-  Lead,
-  Rehearsal,
-  Concert,
-  SocialPost,
-  Payment,
-  Message,
-  SocialMetric,
-  Tour,
-  Song,
-  Setlist,
-} from "./types";
+import { BandContact, Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, Setlist, Song, Tour } from "./types";
 
 
 export const INITIAL_LEADS: Lead[] = [
@@ -1270,6 +1259,9 @@ export const INITIAL_USERS = [
     instrument: "Mánager / Booking (Oficina)",
     avatarColor: "#06b6d4",
     initialPassword: "demo2026",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1281,6 +1273,9 @@ export const INITIAL_USERS = [
     instrument: "Percusión, Showman y Admin",
     avatarColor: "var(--ok)",
     initialPassword: "demo2026",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1292,6 +1287,9 @@ export const INITIAL_USERS = [
     instrument: "Cantante, Loops y Percusión",
     avatarColor: "#ec4899",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1303,6 +1301,9 @@ export const INITIAL_USERS = [
     instrument: "Handpan y Percusión",
     avatarColor: "var(--acc)",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
   {
@@ -1314,11 +1315,14 @@ export const INITIAL_USERS = [
     instrument: "Violín",
     avatarColor: "var(--acc)",
     initialPassword: "banda123",
+    band_id: "band-demo",
+    main_band_id: "band-demo",
+    bandName: "Banda Demo",
     createdAt: "2026-01-01T10:00:00.000Z",
   },
 ];
 
-export const INITIAL_SONGS = [
+export const INITIAL_SONGS: Song[] = [
   {
     id: "song-cm-1",
     band_id: "band-demo",
@@ -1556,7 +1560,7 @@ export const INITIAL_SONGS = [
   },
 ];
 
-export const INITIAL_SETLISTS = [
+export const INITIAL_SETLISTS: Setlist[] = [
   {
     id: "setlist-1",
     band_id: "band-demo",
@@ -1588,7 +1592,8 @@ export const INITIAL_SETLISTS = [
       },
       {
         id: "i-4",
-        tipoItem: "chapa",
+        tipoItem: "bloque",
+        bloqueSubtipo: "chapa",
         tituloCustom: "Chapa / Presentación Banda & Agradecimientos",
         duracionEstimadaMinutos: 2,
         notaTema: "Jon / Jose habla al público",
@@ -1607,7 +1612,8 @@ export const INITIAL_SETLISTS = [
       },
       {
         id: "i-7",
-        tipoItem: "bis",
+        tipoItem: "bloque",
+        bloqueSubtipo: "bis",
         tituloCustom: "BIS / CIERRE DE FESTIVAL",
         duracionEstimadaMinutos: 1,
       },
@@ -1635,7 +1641,8 @@ export const INITIAL_SETLISTS = [
       { id: "i-12", songId: "song-3", tipoItem: "cancion" },
       {
         id: "i-13",
-        tipoItem: "paron",
+        tipoItem: "bloque",
+        bloqueSubtipo: "descanso",
         tituloCustom: "Descanso / Parón 5 min",
         duracionEstimadaMinutos: 5,
       },
@@ -1652,7 +1659,7 @@ export const INITIAL_SETLISTS = [
   },
 ];
 
-export const INITIAL_BANDS: any[] = [
+export const INITIAL_BANDS: BandContact[] = [
   {
     id: "band-1",
     nombre_banda: "La Señora Tomasa",

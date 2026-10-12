@@ -2,7 +2,7 @@
  * Selección múltiple, envío masivo, ciudades, interacciones y plantillas del CRM.
  * Extraído de BookingCRM.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useEffectEvent } from "react";
 import { useCityChips } from "../../../../hooks/useCityChips";
 import { useEmailTemplates } from "../../../../hooks/useEmailTemplates";
 import { useGmailIntegration } from "../../../../hooks/useGmailIntegration";
@@ -90,9 +90,9 @@ export function useLeadSelectionAndTemplates({ leads, sectionTab, epkConfig, onU
   );
 
   // Automatically activate campaign filter & reset conflicting manual search filters whenever a campaign is active
-  useEffect(() => {
+  // El efecto se dispara solo por [activeCampaign?.id, activeCampaign?.isActive, activeCampaign?.is_active]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarActiveCampaign = useEffectEvent(() => {
     if (activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- activa el filtro al haber una campaña activa
       setFilterByCampaign(true);
       if (sectionTab === 'salas') {
         setSelectedCityFilter('');
@@ -102,20 +102,29 @@ export function useLeadSelectionAndTemplates({ leads, sectionTab, epkConfig, onU
         setSearchTerm('');
       }
     }
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- activa el filtro al haber una campaña activa
+    return alCambiarActiveCampaign();
   }, [activeCampaign?.id, activeCampaign?.isActive, activeCampaign?.is_active]);
 
   // Keep selectedLead synchronized with the latest leads prop data
-  useEffect(() => {
+  // El efecto se dispara solo por [leads]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarLeads = useEffectEvent(() => {
     if (selectedLead) {
       const updated = leads.find((l) => l.id === selectedLead.id);
       if (updated && updated !== selectedLead) {
         setSelectedLead(updated);
       }
     }
+  });
+  useEffect(() => {
+    return alCambiarLeads();
   }, [leads]);
 
   // Automatically detect & save address when a lead is selected
-  useEffect(() => {
+  // El efecto se dispara solo por [selectedLead?.id, selectedLead?.nombre_sala, selectedLead?.direccion]; el cuerpo lee siempre lo más reciente (useEffectEvent).
+  const alCambiarSelectedLead = useEffectEvent(() => {
     if (selectedLead && !selectedLead.direccion && selectedLead.nombre_sala) {
       const detected = autoDetectVenueAddress(selectedLead.nombre_sala, selectedLead.ciudad || '');
       if (detected) {
@@ -123,6 +132,9 @@ export function useLeadSelectionAndTemplates({ leads, sectionTab, epkConfig, onU
         setSelectedLead((prev) => (prev ? { ...prev, direccion: detected } : null));
       }
     }
+  });
+  useEffect(() => {
+    return alCambiarSelectedLead();
   }, [selectedLead?.id, selectedLead?.nombre_sala, selectedLead?.direccion]);
 
   return { filterByCampaign, setSelectedLeadIds, setFilterByCampaign, viewMode, setViewMode, activeLeadsForSection, displayCityChips, cityCounts, selectedLeadIds, setBulkProgressState, templateTab, setTemplateTab, getActiveTemplateData, isTestingPrompt, testPromptResult, handleTestPrompt, handleSaveTemplates, handleOptimizeTemplate, isOptimizingTemplate, handleGenerateAllFromBase, isGeneratingAllTemplates, optimizationFeedbackMsg, setOptimizationFeedbackMsg, bulkProgressState };

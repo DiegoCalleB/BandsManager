@@ -18,17 +18,26 @@
 import fs from "fs";
 import path from "path";
 import { evaluarAcordes, leerTramos, type ResultadoEvaluacion, type TramoEval } from "../src/utils/evaluacionAcordes.ts";
+import type { AnalisisAcordes } from "../src/types.ts";
+
+/** Fila de canción tal como llega del volcado JSON o de la API REST de Supabase. */
+interface FilaCancion {
+  titulo: string;
+  analisis_acordes?: AnalisisAcordes | null;
+  /** Volcados exportados desde el cliente (camelCase). */
+  analisisAcordes?: AnalisisAcordes | null;
+}
 
 const args = process.argv.slice(2);
 const valor = (flag: string) => { const i = args.indexOf(flag); return i >= 0 ? args[i + 1] : undefined; };
 
 const normalizar = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
 
-async function cargarCanciones(): Promise<Array<{ titulo: string; analisis: any }>> {
+async function cargarCanciones(): Promise<Array<{ titulo: string; analisis: AnalisisAcordes | null | undefined }>> {
   const archivo = valor("--archivo");
   if (archivo) {
-    const datos = JSON.parse(fs.readFileSync(archivo, "utf8"));
-    return datos.map((d: any) => ({ titulo: d.titulo, analisis: d.analisis_acordes ?? d.analisisAcordes }));
+    const datos: FilaCancion[] = JSON.parse(fs.readFileSync(archivo, "utf8"));
+    return datos.map((d) => ({ titulo: d.titulo, analisis: d.analisis_acordes ?? d.analisisAcordes }));
   }
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const clave = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -40,7 +49,8 @@ async function cargarCanciones(): Promise<Array<{ titulo: string; analisis: any 
     headers: { apikey: clave, Authorization: `Bearer ${clave}` },
   });
   if (!res.ok) { console.error(`Supabase respondió ${res.status}: ${await res.text()}`); process.exit(1); }
-  return (await res.json()).map((d: any) => ({ titulo: d.titulo, analisis: d.analisis_acordes }));
+  const filas: FilaCancion[] = await res.json();
+  return filas.map((d) => ({ titulo: d.titulo, analisis: d.analisis_acordes }));
 }
 
 function prediccionesExternas(): Map<string, TramoEval[]> {
@@ -69,7 +79,7 @@ for (const { titulo, analisis } of canciones) {
   const ref = analisis?.referenciaManual;
   if (!ref?.segmentos?.length || !(ref.hasta > 0)) continue;
   evaluadas++;
-  const editadosAhora = (analisis.segmentos ?? []).some((s: any) => s.editado);
+  const editadosAhora = (analisis.segmentos ?? []).some((s) => s.editado);
   const propia: TramoEval[] = editadosAhora ? analisis.segmentosOriginales ?? [] : analisis.segmentos ?? [];
   console.log(`\n«${titulo}» · revisado 0:00–${Math.floor(ref.hasta / 60)}:${String(Math.floor(ref.hasta % 60)).padStart(2, "0")}`);
   const candidatos: Array<[string, TramoEval[]]> = [["BandManager", propia]];

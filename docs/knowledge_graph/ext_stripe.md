@@ -26,6 +26,7 @@ _Sin dependencias salientes directas._
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
+- [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(from #route)*
 
 ---
 

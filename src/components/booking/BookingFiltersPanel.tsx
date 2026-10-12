@@ -1,6 +1,9 @@
 import React from 'react';
 import { Filter, X, Building2, Radio, Briefcase, LayoutGrid, List, Map as MapIcon, BookmarkCheck, RefreshCw } from 'lucide-react';
-import { Lead } from '../../types';
+import { Lead, SavedFilter } from '../../types';
+
+/** Valores posibles del filtro «Tipo de espacio» (los mismos que guarda un {@link SavedFilter}). */
+type FiltroTipoEspacio = NonNullable<SavedFilter['typeFilter']>;
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, LinkButton, Select } from '../ui';
 
@@ -12,7 +15,7 @@ export interface BookingFiltersPanelProps {
   viewMode: 'grid' | 'table' | 'map';
   setViewMode: (mode: 'grid' | 'table' | 'map') => void;
   typeFilter: string;
-  setTypeFilter: (val: any) => void;
+  setTypeFilter: (val: FiltroTipoEspacio) => void;
   onlyFavoritesFilter: boolean;
   setOnlyFavoritesFilter: (val: boolean | ((prev: boolean) => boolean)) => void;
   onlyVerifiedFilter: boolean;
@@ -24,9 +27,9 @@ export interface BookingFiltersPanelProps {
   newFilterName: string;
   setNewFilterName: (val: string) => void;
   handleSaveCurrentFilter: (e: React.FormEvent) => void;
-  savedFilters: any[];
+  savedFilters: SavedFilter[];
   activeSavedFilterId: string | null;
-  handleApplySavedFilter: (sf: any) => void;
+  handleApplySavedFilter: (sf: SavedFilter) => void;
   handleDeleteSavedFilter: (id: string, e: React.MouseEvent) => void;
   selectedCityFilter: string;
   setSelectedCityFilter: (city: string) => void;
@@ -175,7 +178,7 @@ export const BookingFiltersPanel: React.FC<BookingFiltersPanelProps> = ({
           <Select
             size="sm"
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as any)}
+            onChange={(e) => setTypeFilter(e.target.value as FiltroTipoEspacio)}
             wrapperClassName="w-full"
           >
             {sectionTab === 'medios' ? (

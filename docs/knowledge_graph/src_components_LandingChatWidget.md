@@ -19,13 +19,18 @@ LandingChatWidget — Chatbot flotante de conversión para la landing pública.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
 - [[src_components_PublicTfmLanding|src/components/PublicTfmLanding.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/__tests__/LandingChatWidget.test.tsx`
 
 ---
 

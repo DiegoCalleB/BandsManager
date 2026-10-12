@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Wand2, X, Check, Loader2, Info, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
+import { Sparkles, Wand2, X, Loader2, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Textarea } from '../ui';
@@ -36,13 +36,11 @@ const CATEGORIES_PREVIEW = [
 export function GenerateAllTemplatesModal({
   isOpen,
   onClose,
-  colors,
-  isStitchLight = false,
   initialBaseText = '',
   onGenerateAll,
   isGenerating,
   mode = 'crm',
-  campaignContext,
+  campaignContext
 }: GenerateAllTemplatesModalProps) {
   const [baseProposal, setBaseProposal] = useState(initialBaseText);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);

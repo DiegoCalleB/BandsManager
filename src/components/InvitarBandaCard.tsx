@@ -17,7 +17,7 @@ export function InvitarBandaCard() {
     let vivo = true;
     obtenerReferidos()
       .then((e) => vivo && setEstado(e))
-      .catch(() => {});
+      .catch(() => { /* sin datos de referidos la tarjeta se muestra sin contador */ });
     return () => {
       vivo = false;
     };

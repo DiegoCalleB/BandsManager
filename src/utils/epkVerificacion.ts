@@ -36,23 +36,37 @@ const vacio = (v: unknown): boolean =>
   (typeof v === 'object' && !Array.isArray(v) && Object.keys(v as object).length === 0);
 
 /** ¿Todo lo que trae `enviado` está, igual, en `guardado`? (el servidor puede añadir más). */
-function contenido(enviado: any, guardado: any): boolean {
+function contenido(enviado: unknown, guardado: unknown): boolean {
   if (vacio(enviado)) return vacio(guardado);
   if (Array.isArray(enviado)) {
     if (!Array.isArray(guardado) || enviado.length !== guardado.length) return false;
-    return enviado.every((e, i) => contenido(e, guardado[i]));
+    const lista: unknown[] = guardado;
+    return (enviado as unknown[]).every((e, i) => contenido(e, lista[i]));
   }
   if (typeof enviado === 'object') {
     if (typeof guardado !== 'object' || guardado === null) return false;
-    return Object.keys(enviado).every((k) => contenido(enviado[k], guardado[k]));
+    const e = enviado as Record<string, unknown>;
+    const g = guardado as Record<string, unknown>;
+    return Object.keys(e).every((k) => contenido(e[k], g[k]));
   }
   return enviado === guardado;
 }
 
-function miembrosIguales(enviado: any[], guardado: any[]): boolean {
+/** Campos de un miembro que se comparan; la foto puede venir como `fotoUrl` o `foto_url`. */
+interface MiembroComparable {
+  nombre?: string;
+  rol?: string;
+  bio?: string;
+  instagram?: string;
+  fotoUrl?: string;
+  foto_url?: string;
+}
+
+function miembrosIguales(enviado: MiembroComparable[], guardado: unknown): boolean {
   if (!Array.isArray(guardado) || enviado.length !== guardado.length) return false;
+  const lista: (MiembroComparable | null | undefined)[] = guardado;
   return enviado.every((m, i) => {
-    const g = guardado[i];
+    const g = lista[i];
     const foto = m?.fotoUrl ?? m?.foto_url ?? '';
     return (
       !!g &&
@@ -66,8 +80,10 @@ function miembrosIguales(enviado: any[], guardado: any[]): boolean {
 }
 
 /** Etiquetas legibles de los campos enviados que no coinciden con lo que quedó guardado. */
-export function camposNoGuardados(enviado: any, guardado: any): string[] {
-  if (!enviado || !guardado || typeof guardado !== 'object') return [];
+export function camposNoGuardados(enviadoRecibido: object | null | undefined, guardadoRecibido: unknown): string[] {
+  if (!enviadoRecibido || !guardadoRecibido || typeof guardadoRecibido !== 'object') return [];
+  const enviado = enviadoRecibido as Record<string, unknown> & { miembros?: MiembroComparable[] };
+  const guardado = guardadoRecibido as Record<string, unknown>;
   const fallos: string[] = [];
   for (const [clave, etiqueta] of Object.entries(ETIQUETAS)) {
     if (enviado[clave] === undefined) continue;

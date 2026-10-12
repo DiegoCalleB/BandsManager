@@ -13,19 +13,21 @@ tags: ["db", "system", "auto"]
 > **Capa:** `#layer/db` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomyConfig.
+Exporta: ResponseStrategy, AutonomyConfig, CachePorTipo, EntradaAutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomyConfig.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_autonomy_configs|tabla autonomy_configs]] *(Layer: #schema, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[agent_redactor|Agente Redactor (borradores de respuesta)]] *(from #agent)*
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(from #db)*
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
@@ -33,6 +35,7 @@ Exporta: ResponseStrategy, AutonomyConfig, dbGetAutonomyConfig, dbUpsertAutonomy
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(from #route)*
+- [[server_utils_tiposBandDna|server/utils/tiposBandDna.ts]] *(from #service)*
 
 ---
 

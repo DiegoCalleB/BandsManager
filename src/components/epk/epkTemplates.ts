@@ -1,20 +1,4 @@
-import {
-  BarChart3,
-  Briefcase,
-  Video,
-  Users,
-  FileText,
-  Quote,
-  Music,
-  Image as ImageIcon,
-  Headphones,
-  Calendar,
-  Sparkles,
-  Palette,
-  Flame,
-  Disc,
-  Feather,
-} from "lucide-react";
+import { BarChart3, Briefcase, Video, Users, FileText, Quote, Music, Image as ImageIcon, Headphones, Calendar, Sparkles, Flame, Disc, Feather, type LucideIcon } from "lucide-react";
 import { EPKSectionId, EPKTemplateId, EPKConfig } from "../../types";
 
 export interface EPKTemplateMeta {
@@ -23,7 +7,7 @@ export interface EPKTemplateMeta {
   badge: string;
   description: string;
   recommendedFor: string;
-  icon: any;
+  icon: LucideIcon;
   preview: {
     bg: string;
     cardBg: string;
@@ -107,7 +91,7 @@ export interface EPKSectionMeta {
   id: EPKSectionId;
   label: string;
   subtitle: string;
-  icon: any;
+  icon: LucideIcon;
   defaultBadge: string;
 }
 

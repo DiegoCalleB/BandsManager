@@ -27,10 +27,12 @@ Descubre y enriquece información de salas registrándolas en estado nuevo.
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_tiposAutoEnrichment|server/tiposAutoEnrichment.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
-- [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_scoutLeads|server/utils/scoutLeads.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils_spanishFestivalsDB|server/utils/spanishFestivalsDB.ts]] *(Layer: #service, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

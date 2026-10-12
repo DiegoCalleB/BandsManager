@@ -18,6 +18,7 @@ Aplicador de migraciones: ejecuta las de supabase/migrations/*.sql que aún no s
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_schema_migrations|tabla schema_migrations]] *(Layer: #schema, Domain: #system)*
 
 ---

@@ -10,10 +10,22 @@ import crypto from "crypto";
 // `activacion_pendiente` suelto solo vivía en memoria y se perdía al reiniciar el servidor).
 const VALIDEZ_MS = 14 * 24 * 60 * 60 * 1000;
 
+/** Lo que se guarda de la invitación: el hash del token y cuándo caduca (ms). */
+interface RegistroInvitacion {
+  hash: string;
+  expira: number;
+}
+
+/** Los campos del usuario que lee o escribe la invitación. */
+export interface UsuarioInvitable {
+  activacion_pendiente?: unknown;
+  ui_preferences?: { _invitacion?: RegistroInvitacion; [preferencia: string]: unknown };
+}
+
 const hashDe = (token: string) => crypto.createHash("sha256").update(token).digest("hex");
 
 /** Marca al usuario como invitación pendiente y devuelve el token en claro (para el correo). */
-export function asignarInvitacion(user: any): string {
+export function asignarInvitacion(user: UsuarioInvitable): string {
   const token = crypto.randomBytes(24).toString("hex");
   user.activacion_pendiente = true;
   user.ui_preferences = {
@@ -23,11 +35,11 @@ export function asignarInvitacion(user: any): string {
   return token;
 }
 
-export function invitacionPendiente(user: any): boolean {
+export function invitacionPendiente(user: UsuarioInvitable | null | undefined): boolean {
   return !!user && (!!user.activacion_pendiente || !!user.ui_preferences?._invitacion);
 }
 
-export function tokenInvitacionValido(user: any, token: unknown): boolean {
+export function tokenInvitacionValido(user: UsuarioInvitable | null | undefined, token: unknown): boolean {
   const registro = user?.ui_preferences?._invitacion;
   if (!registro || typeof token !== "string" || !token || token.length > 200) return false;
   if (typeof registro.expira !== "number" || registro.expira < Date.now()) return false;
@@ -36,7 +48,7 @@ export function tokenInvitacionValido(user: any, token: unknown): boolean {
   return esperado.length === recibido.length && crypto.timingSafeEqual(esperado, recibido);
 }
 
-export function limpiarInvitacion(user: any): void {
+export function limpiarInvitacion(user: UsuarioInvitable): void {
   delete user.activacion_pendiente;
   if (user.ui_preferences && "_invitacion" in user.ui_preferences) {
     const { _invitacion, ...resto } = user.ui_preferences;

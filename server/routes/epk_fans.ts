@@ -40,10 +40,15 @@ import {
   getTargetBandId,
   puedeEscribirEnBanda,
   bandaSolicitada,
+  bandaDe,
 } from '../utils/bandAccess.js';
 import { checkRecordLimit } from '../utils/planLimits.js';
 import { buildFanIncentive } from '../utils/fanIncentive.js';
 import { decodeBandId } from '../utils/bandHash.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Concert, RegisteredBand, Song } from '../../src/types.js';
+import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
+import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
 
 const router = express.Router();
 
@@ -58,7 +63,7 @@ router.get('/autonomy', requireAuth, async (req, res) => {
     if (dbAutonomy) {
       return res.json(dbAutonomy);
     }
-  } catch (e) {
+  } catch {
     // Keep local state fallback
   }
 
@@ -92,7 +97,8 @@ router.post('/autonomy', requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
     res.status(500).json({
       error:
@@ -125,7 +131,8 @@ router.put('/autonomy', requireAuth, async (req, res) => {
     saveState(state);
 
     res.json({ success: true, autonomyConfig: newAutonomyConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
     res.status(500).json({
       error:
@@ -138,7 +145,7 @@ router.put('/autonomy', requireAuth, async (req, res) => {
 // pasando ?bandId= — con su email y teléfono de booking, su firma y su configuración. El EPK
 // que sí debe ser público se sirve por GET /public/epk, más abajo, y va recortado.
 router.get('/epk', requireAuth, async (req, res) => {
-  const user = (req as any).user;
+  const user = req.user;
   const userBandId = getTargetBandId(req);
   const userBandName = user?.bandName || user?.name || 'Tu Banda';
 
@@ -147,7 +154,7 @@ router.get('/epk', requireAuth, async (req, res) => {
     if (dbEpk) {
       return res.json(dbEpk);
     }
-  } catch (e) {
+  } catch {
     // Fallback
   }
 
@@ -160,7 +167,7 @@ router.get('/epk', requireAuth, async (req, res) => {
 router.put('/epk', requireAuth, async (req, res) => {
   try {
     const updatedConfig: Partial<EPKConfig> = req.body;
-    const user = (req as any).user;
+    const user = req.user;
     // Antes se cogía req.body.bandId a pelo y se aprobaba con `|| role === 'leader'`, que en
     // esta app son todos los usuarios reales: cualquiera podía escribir el EPK de otra banda.
     // En una escritura no vale con degradar a la banda propia: si la petición pide una banda
@@ -202,7 +209,7 @@ router.put('/epk', requireAuth, async (req, res) => {
     }
 
     if (newEpkConfig.logoUrl && state.registeredBands) {
-      state.registeredBands.forEach((b: any) => {
+      state.registeredBands.forEach((b) => {
         const bClean = (b.band_id || b.id || '').replace(/^(band|reg)-/, '');
         if (
           bClean === cleanUserBandId ||
@@ -221,7 +228,8 @@ router.put('/epk', requireAuth, async (req, res) => {
     invalidateBandStateCache(`band-${cleanUserBandId}`);
 
     res.json({ success: true, epkConfig: newEpkConfig });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating EPK config:', err);
     res.status(500).json({
       error: err?.message || 'Error al actualizar la configuración del EPK.',
@@ -236,7 +244,7 @@ router.put('/epk', requireAuth, async (req, res) => {
 // abre gente de fuera. Lo que sirve /public/epk es siempre texto ya guardado.
 router.post('/epk/traducir', requireAuth, async (req, res) => {
   try {
-    const user = (req as any).user;
+    const user = req.user;
     // Mismo control de acceso que PUT /epk: traducir escribe en el EPK de una banda (y además
     // gasta tokens, así que no puede dispararlo alguien sobre una banda que no es suya).
     const solicitada = bandaSolicitada(req);
@@ -250,7 +258,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
     const idiomasDestino = EPK_LANGUAGES.filter(
       (l) => l.code !== IDIOMA_ORIGEN
     ).map((l) => l.code);
-    if (!idiomasDestino.includes(idioma as any)) {
+    if (!idiomasDestino.includes(idioma as EpkLanguage)) {
       return res.status(400).json({
         error: `Idioma no soportado: "${idioma}". Disponibles: ${idiomasDestino.join(', ')}.`,
       });
@@ -258,10 +266,10 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
     const nombreIdioma =
       EPK_LANGUAGES.find((l) => l.code === idioma)?.label || idioma;
 
-    let config: any = null;
+    let config: Partial<EPKConfig> | null = null;
     try {
       config = await dbGetEpkConfig(bandId);
-    } catch (e) {
+    } catch {
       // Sin Supabase se cae al estado local, igual que el resto de rutas del EPK.
     }
     if (!config) {
@@ -339,7 +347,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       respuesta?.text ||
       respuesta?.candidates?.[0]?.content?.parts?.[0]?.text ||
       '';
-    const crudo = safeParseJson(textoRespuesta);
+    const crudo = safeParseJson<RespuestaTraduccionEpk>(textoRespuesta);
 
     // GUARDARRAÍL CRÍTICO: la cadena de fallbacks de ai.ts termina en un motor local que
     // devuelve una PLANTILLA DE PITCH EN ESPAÑOL disfrazada de respuesta del modelo. Si eso se
@@ -356,7 +364,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
       });
     }
 
-    const texto = (v: any): string => (typeof v === 'string' ? v : '');
+    const texto = (v: unknown): string => (typeof v === 'string' ? v : '');
 
     const miembrosTraducidos: Record<string, { rol?: string; bio?: string }> =
       {};
@@ -455,7 +463,8 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
 
     console.log(`[EPK traducir] ${bandId} -> ${idioma} (hash ${hashActual})`);
     res.json({ success: true, idioma, traduccion });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error traduciendo el EPK:', err);
     res
       .status(500)
@@ -492,7 +501,7 @@ router.get('/public/epk', async (req, res) => {
       try {
         const { decodeTrackingToken } = await import('../routes/tracking.js');
         targetLeadId = decodeTrackingToken(trackingTokenParam)?.leadId;
-      } catch (_) {}
+      } catch { /* token de seguimiento inválido o caducado: la visita se registra sin lead */ }
     }
 
     if (targetLeadId) {
@@ -535,7 +544,7 @@ router.get('/public/epk', async (req, res) => {
             .eq('id', leadToUpdate.id);
 
           const s = loadState();
-          const memLead = (s.leads || []).find((l: any) => l.id === leadToUpdate.id);
+          const memLead = (s.leads || []).find((l) => l.id === leadToUpdate.id);
           if (memLead) {
             memLead.clics_epk = clics;
             memLead.ultimo_clic_at = nowIso;
@@ -553,7 +562,7 @@ router.get('/public/epk', async (req, res) => {
     }
 
     const state = loadState();
-    let epkConfig: any = null;
+    let epkConfig: Partial<EPKConfig> | null = null;
     try {
       epkConfig = await dbGetEpkConfig(reqBandId);
     } catch (e) {
@@ -564,7 +573,8 @@ router.get('/public/epk', async (req, res) => {
       epkConfig = getEpkConfigForBand(state, reqBandId);
     }
 
-    let regBand: any = null;
+    // Fila de registered_bands: trae además del tipo los alias de logo y las redes sueltas.
+    let regBand: (Partial<RegisteredBand> & { logo_url?: string; imagen_url?: string }) | null | undefined = null;
     try {
       const { getSupabase } = await import('../db.js');
       const sb = getSupabase();
@@ -581,10 +591,10 @@ router.get('/public/epk', async (req, res) => {
         .limit(1)
         .maybeSingle();
       regBand = data;
-    } catch (e) {}
+    } catch (err) { console.warn("[EPK] Fallo leyendo la banda registrada:", err); }
 
     if (!regBand) {
-      regBand = (state.registeredBands || []).find((b: any) => {
+      regBand = (state.registeredBands || []).find((b) => {
         const bId = (b.band_id || b.id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -616,7 +626,7 @@ router.get('/public/epk', async (req, res) => {
     // arriba. Antes esto solo miraba state.songs/state.concerts (el JSON local), y como el
     // contenedor de Railway es efímero, el EPK público salía SIN canciones aunque la banda las
     // tuviera cargadas en la app. El estado local queda como respaldo si Supabase falla.
-    let songs: any[] = [];
+    let songs: Song[] = [];
     try {
       songs = await dbGetSongs(reqBandId);
     } catch (e) {
@@ -626,7 +636,7 @@ router.get('/public/epk', async (req, res) => {
       );
     }
     if (!songs || songs.length === 0) {
-      songs = (state.songs || []).filter((s: any) => {
+      songs = (state.songs || []).filter((s) => {
         const sBand = (s.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -634,7 +644,7 @@ router.get('/public/epk', async (req, res) => {
       });
     }
 
-    let concerts: any[] = [];
+    let concerts: Concert[] = [];
     try {
       concerts = await dbGetConcerts(reqBandId);
     } catch (e) {
@@ -644,7 +654,7 @@ router.get('/public/epk', async (req, res) => {
       );
     }
     if (!concerts || concerts.length === 0) {
-      concerts = (state.concerts || []).filter((c: any) => {
+      concerts = (state.concerts || []).filter((c) => {
         const cBand = (c.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase();
@@ -656,18 +666,18 @@ router.get('/public/epk', async (req, res) => {
     const highlightedSongs =
       Array.isArray(epkConfig?.temasDestacadosIds) &&
       epkConfig.temasDestacadosIds.length > 0
-        ? songs.filter((s: any) => epkConfig.temasDestacadosIds.includes(s.id))
+        ? songs.filter((s) => epkConfig.temasDestacadosIds.includes(s.id))
         : [];
 
     // Upcoming concerts
     const today = new Date().toISOString().split('T')[0];
-    const upcomingConcerts = concerts.filter((c: any) => c.fecha >= today);
+    const upcomingConcerts = concerts.filter((c) => c.fecha >= today);
 
-    let logoUrl =
+    const logoUrl =
       epkConfig?.logoUrl || regBand?.logo_url || regBand?.imagen_url || null;
 
     // Ensure social links are present
-    let enlacesRedes = epkConfig?.enlacesRedes || {};
+    const enlacesRedes = epkConfig?.enlacesRedes || {};
     if (regBand) {
       if (regBand.instagram && !enlacesRedes.instagram)
         enlacesRedes.instagram = regBand.instagram.startsWith('http')
@@ -696,10 +706,10 @@ router.get('/public/epk', async (req, res) => {
     ) {
       const selectedSongId = resolvedAudioPreview?.cancionId;
       const targetSong = selectedSongId
-        ? songs.find((s: any) => s.id === selectedSongId)
+        ? songs.find((s) => s.id === selectedSongId)
         : highlightedSongs[0] ||
           songs.find(
-            (s: any) =>
+            (s) =>
               s.audioPrincipalUrl || (s.audioIdeas && s.audioIdeas[0]?.audioUrl)
           );
 
@@ -752,7 +762,8 @@ router.get('/public/epk', async (req, res) => {
       upcomingConcerts,
       totalConcertsCount: concerts.length,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error in public EPK endpoint:', err);
     res
       .status(500)
@@ -762,18 +773,18 @@ router.get('/public/epk', async (req, res) => {
 
 // Get Fans List (Authenticated)
 router.get('/fans', requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   try {
     const fans = await dbGetFans(userBandId);
     const state = loadState();
-    state.fans = fans as any;
+    state.fans = fans;
     saveState(state);
     res.json(fans);
-  } catch (err) {
+  } catch {
     const state = loadState();
     res.json(
       (state.fans || []).filter(
-        (f: any) => f.band_id === userBandId || f.bandId === userBandId
+        (f) => bandaDe(f) === userBandId
       )
     );
   }
@@ -786,15 +797,15 @@ router.post('/fans', requireAuth, async (req, res) => {
     if (!newFan.nombre || !newFan.email) {
       return res.status(400).json({ error: 'Nombre y Email son obligatorios' });
     }
-    const userBandId = (req as any).user?.band_id;
-    if (!(newFan as any).band_id) {
-      (newFan as any).band_id = userBandId;
+    const userBandId = req.user?.band_id;
+    if (!newFan.band_id) {
+      newFan.band_id = userBandId;
     }
 
     // El límite de fans por plan solo se comprobaba en el cliente (App.tsx,
     // handleAddFanWithLimitCheck): quien llamase a esta ruta directamente con su token de sesión
     // podía dar de alta fans sin límite sin importar el plan contratado por su banda.
-    const userPlan = (req as any).user?.plan || 'ensayo';
+    const userPlan = req.user?.plan || 'ensayo';
     const existingFans = await dbGetFans(userBandId);
     const limitCheck = checkRecordLimit(userPlan, 'fans', existingFans.length);
     if (!limitCheck.allowed) {
@@ -807,11 +818,12 @@ router.post('/fans', requireAuth, async (req, res) => {
 
     const state = loadState();
     if (!state.fans) state.fans = [];
-    state.fans.unshift(saved as any);
+    state.fans.unshift(saved);
     saveState(state);
 
     res.json({ success: true, fan: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error adding fan:', err);
     res.status(500).json({ error: err?.message || 'Error al registrar fan.' });
   }
@@ -821,7 +833,7 @@ router.post('/fans', requireAuth, async (req, res) => {
 router.patch('/fans/:id', requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const updates = req.body;
 
     const state = loadState();
@@ -832,7 +844,7 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
       // cualquier usuario autenticado podía modificar el fan (nombre, email, consentimiento RGPD)
       // de otra banda adivinando su id.
       const ownerBandId =
-        (state.fans[index] as any).band_id || (state.fans[index] as any).bandId;
+        state.fans[index].band_id || (state.fans[index] as Fan & { bandId?: string }).bandId;
       if (!puedeEscribirEnBanda(req, ownerBandId || userBandId)) {
         return res
           .status(403)
@@ -844,7 +856,8 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
       return res.json({ success: true, fan: state.fans[index] });
     }
     res.status(404).json({ error: 'Fan no encontrado' });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error updating fan:', err);
     res.status(500).json({ error: err?.message || 'Error al actualizar fan.' });
   }
@@ -852,7 +865,7 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
 
 // Delete Fan (Authenticated)
 router.delete('/fans/:id', requireAuth, async (req, res) => {
-  const userBandId = (req as any).user?.band_id;
+  const userBandId = req.user?.band_id;
   const { id } = req.params;
   await dbDeleteFan(id, userBandId);
 
@@ -938,7 +951,7 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
 
     const state = loadState();
     if (!state.fans) state.fans = [];
-    state.fans.unshift(saved as any);
+    state.fans.unshift(saved);
     saveState(state);
 
     // Supabase es la fuente de verdad del incentivo (ver AGENTS.md); el `state` en memoria de
@@ -946,10 +959,10 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
     // (enlace de descarga y cupón reales) con el que arranca el proyecto en local, aunque la
     // banda ya lo haya vaciado en Supabase desde el apartado QR. Se lee primero de Supabase y
     // solo se cae al estado en memoria si esa consulta falla.
-    let epkConf: any = null;
+    let epkConf: (Partial<EPKConfig> & { nombre_banda?: string }) | null = null;
     try {
       epkConf = await dbGetEpkConfig(targetBandId);
-    } catch (e) {
+    } catch {
       // Fallback abajo
     }
     if (!epkConf) {
@@ -969,7 +982,8 @@ router.post('/public/fans', publicoRateLimiter, async (req, res) => {
       message: `¡Registro completado con éxito! Bienvenido/a a la familia de ${bandName}.`,
       incentivo,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error in public fan registration:', err);
     res.status(500).json({ error: 'Error al procesar el registro de fan.' });
   }
@@ -1030,7 +1044,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
         user_agent: userAgent,
         referer: referer,
       });
-    } catch (sbErr: any) {
+    } catch {
       // Non-blocking: cae a estado en memoria
     }
 
@@ -1041,7 +1055,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
       state.clickMetricsByBand[targetBandId] = {};
 
     const currentCount =
-      state.clickMetricsByBand[targetBandId][cleanButton] || 0;
+      Number(state.clickMetricsByBand[targetBandId][cleanButton]) || 0;
     state.clickMetricsByBand[targetBandId][cleanButton] = currentCount + 1;
     state.clickMetricsByBand[targetBandId][`${cleanButton}_last_at`] =
       new Date().toISOString();
@@ -1049,7 +1063,7 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
     if (finalConcertId) {
       const concertKey = `concert_${finalConcertId}_${cleanButton}`;
       state.clickMetricsByBand[targetBandId][concertKey] =
-        (state.clickMetricsByBand[targetBandId][concertKey] || 0) + 1;
+        (Number(state.clickMetricsByBand[targetBandId][concertKey]) || 0) + 1;
     }
 
     saveState(state);
@@ -1060,7 +1074,8 @@ router.post('/public/track-click', publicoRateLimiter, async (req, res) => {
       platform: cleanButton,
       concert_id: finalConcertId,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error tracking click:', err);
     res.status(200).json({ success: false }); // Non-blocking
   }
@@ -1074,12 +1089,6 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
       (req.query.concert_id as string) || (req.query.concertId as string);
 
     let supabaseStats: Record<string, number> = {};
-    let concertBreakdown: Array<{
-      concert_id: string;
-      concert_date: string;
-      button_type: string;
-      count: number;
-    }> = [];
 
     try {
       const { getSupabase } = await import('../db.js');
@@ -1102,14 +1111,14 @@ router.get('/epk/clicks', requireAuth, async (req, res) => {
         });
         supabaseStats = counts;
       }
-    } catch (e) {}
+    } catch (err) { console.warn("[EPK] Fallo leyendo las estadísticas de Supabase; se usan las de memoria:", err); }
 
     const state = loadState();
     const localClicks = state.clickMetricsByBand?.[targetBandId] || {};
     const mergedClicks = { ...localClicks, ...supabaseStats };
 
     res.json({ success: true, clicks: mergedClicks, band_id: targetBandId });
-  } catch (err: any) {
+  } catch {
     res.status(500).json({ error: 'Error al obtener estadísticas de clicks.' });
   }
 });
@@ -1175,7 +1184,8 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
         '¡Solicitud recibida con éxito! Te contactaremos tan pronto abramos nuevas plazas.',
       data: saved,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error saving musician waitlist submission:', err);
     res.status(500).json({ error: 'Error al procesar tu solicitud.' });
   }
@@ -1185,7 +1195,7 @@ router.post('/public/musicians-waitlist', publicoRateLimiter, async (req, res) =
 router.get('/musicians-waitlist', requireAuth, async (req, res) => {
   // Emails, teléfonos e Instagram de los músicos de la lista de espera de la PLATAFORMA: no son
   // datos de ninguna banda, solo los ve el admin.
-  if ((req as any).user?.role !== 'admin') {
+  if (req.user?.role !== 'admin') {
     return res.status(403).json({ error: 'Acceso denegado.' });
   }
   try {
@@ -1200,7 +1210,8 @@ router.get('/musicians-waitlist', requireAuth, async (req, res) => {
       ).values()
     );
     res.json({ success: true, count: combined.length, list: combined });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching musicians waitlist:', err);
     res
       .status(500)

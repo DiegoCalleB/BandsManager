@@ -1,5 +1,6 @@
 import { getSupabase, cleanBandId } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Los tipos válidos de respuesta y tono son responsabilidad de
 // server/routes/bands/responseStrategies.ts (VALID_RESPONSE_TYPES/VALID_TONES) - esta interfaz
@@ -51,6 +52,47 @@ export interface AutonomyConfig {
   };
 }
 
+/** Importe por tipo de recinto (mínimo real o cifra de arranque de la negociación). */
+export type CachePorTipo = NonNullable<AutonomyConfig['minCacheByType']>;
+
+/**
+ * Lo que acepta `dbUpsertAutonomyConfig`: la config en camelCase o, por compatibilidad con datos
+ * legados y con el cuerpo crudo de la petición, los mismos campos en snake_case. Las estrategias
+ * pueden llegar incompletas: las valida server/routes/bands/responseStrategies.ts, no esta capa.
+ */
+export type EntradaAutonomyConfig = Omit<Partial<AutonomyConfig>, 'responseStrategies'> & {
+  responseStrategies?: Record<string, Partial<ResponseStrategy>>;
+  dispatch_level?: string;
+  negotiation_depth?: string;
+  auto_decline_under_min_cache?: boolean;
+  notify_on_every_proposal?: boolean;
+  require_human_for_final_sign_off?: boolean;
+  dispatch_mode?: string;
+  mark_as_read_in_inbox?: boolean;
+  response_strategies?: Record<string, Partial<ResponseStrategy>>;
+  agent_sender_email?: string;
+  agent_sender_name?: string;
+  agent_reply_to_email?: string;
+};
+
+/** Fila de `autonomy_configs` tal como se escribe (los `undefined` no tocan la columna). */
+interface FilaAutonomyConfig {
+  band_id: string;
+  dispatch_level: string;
+  negotiation_depth: string;
+  auto_decline_under_min_cache: boolean;
+  notify_on_every_proposal: boolean;
+  require_human_for_final_sign_off: boolean;
+  dispatch_mode: 'direct_send' | 'draft_gmail';
+  mark_as_read_in_inbox: boolean;
+  response_strategies?: Record<string, Partial<ResponseStrategy>>;
+  min_cache_by_type?: CachePorTipo;
+  negotiation_start_cache_by_type?: CachePorTipo;
+  agent_sender_email?: string;
+  agent_sender_name?: string;
+  agent_reply_to_email?: string;
+}
+
 export async function dbGetAutonomyConfig(
   bandId: string
 ): Promise<AutonomyConfig | null> {
@@ -65,7 +107,7 @@ export async function dbGetAutonomyConfig(
     throw new Error(`Supabase Error (autonomy_configs): ${error.message}`);
   if (!data) return null;
 
-  let minCacheByType: any = {};
+  let minCacheByType: CachePorTipo = {};
   const rawMinCache = data.min_cache_by_type;
   if (
     rawMinCache &&
@@ -83,7 +125,7 @@ export async function dbGetAutonomyConfig(
     }
   }
 
-  let negotiationStartCacheByType: any = {};
+  let negotiationStartCacheByType: CachePorTipo = {};
   const rawNegotiationStartCache = data.negotiation_start_cache_by_type;
   if (
     rawNegotiationStartCache &&
@@ -125,12 +167,12 @@ export async function dbGetAutonomyConfig(
   };
 }
 
-export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
+export async function dbUpsertAutonomyConfig(bandId: string, config: EntradaAutonomyConfig) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
 
-  const payload: any = {
+  const payload: FilaAutonomyConfig = {
     band_id: targetBandId,
     dispatch_level:
       config.dispatchLevel || config.dispatch_level || 'draft_only',
@@ -220,7 +262,8 @@ export async function dbUpsertAutonomyConfig(bandId: string, config: any) {
       );
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     if (err.message?.includes('agent_sender_')) {
       delete payload.agent_sender_email;
       delete payload.agent_sender_name;

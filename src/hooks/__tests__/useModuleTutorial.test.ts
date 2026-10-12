@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { MODULE_TUTORIALS } from '../../config/moduleTutorials';
 import { ModuleTutorialId } from '../../types/tutorial';
 

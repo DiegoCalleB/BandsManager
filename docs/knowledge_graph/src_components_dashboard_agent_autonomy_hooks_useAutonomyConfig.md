@@ -23,6 +23,7 @@ Carga, edición, presets y guardado de la configuración de autonomía de los ag
 - [[src_components_dashboard_agent_autonomy_autonomyTypes|src/components/dashboard/agent_autonomy/autonomyTypes.tsx]] *(Layer: #agent, Domain: #system)*
 - [[src_components_dashboard_agent_autonomy_responseTypes|src/components/dashboard/agent_autonomy/responseTypes.tsx]] *(Layer: #agent, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_tiposRespuestasHerramientas|src/services/tiposRespuestasHerramientas.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 

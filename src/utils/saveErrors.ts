@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from './errorCapturado';
 /**
  * Aviso global de guardados fallidos.
  *
@@ -43,7 +44,14 @@ export function debeAvisar(metodo: string, url: string, status: number): boolean
   return true;
 }
 
-function textoDeError(status: number, cuerpo: any): string {
+/** Campos de un cuerpo de error JSON de los que se saca el mensaje. */
+interface CuerpoDeError {
+  message?: unknown;
+  error?: unknown;
+  detail?: unknown;
+}
+
+function textoDeError(status: number, cuerpo: CuerpoDeError | null | undefined): string {
   const detalle = cuerpo && (cuerpo.message || cuerpo.error || cuerpo.detail);
   if (typeof detalle === 'string' && detalle.trim()) return detalle.trim().slice(0, 200);
   if (status === 0) return 'No hay conexión con el servidor.';
@@ -61,11 +69,11 @@ export function instalarAvisoDeGuardados(
   ventana.__avisoGuardadosInstalado = true;
   const original = ventana.fetch.bind(ventana);
 
-  ventana.fetch = async (entrada: RequestInfo | URL, init?: RequestInit) => {
+  const envuelto = async (entrada: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof entrada === 'string' ? entrada : entrada instanceof URL ? entrada.href : entrada.url;
     const metodo = (init?.method || (typeof entrada === 'object' && 'method' in entrada ? entrada.method : 'GET') || 'GET').toUpperCase();
 
-    const avisar = (status: number, cuerpo?: any) => {
+    const avisar = (status: number, cuerpo?: CuerpoDeError | null) => {
       if (!debeAvisar(metodo, url, status)) return;
       const detalle: SaveErrorDetail = { ruta: rutaDe(url) || url, metodo, status, mensaje: textoDeError(status, cuerpo) };
       try {
@@ -77,8 +85,9 @@ export function instalarAvisoDeGuardados(
 
     let respuesta: Response;
     try {
-      respuesta = await original(entrada as any, init);
-    } catch (error: any) {
+      respuesta = await original(entrada, init);
+    } catch (errorCapturado) {
+      const error = comoErrorCapturado(errorCapturado);
       if (error?.name !== 'AbortError') avisar(0);
       throw error;
     }
@@ -102,7 +111,7 @@ export function instalarAvisoDeGuardados(
       }
     }
     if (!respuesta.ok) {
-      let cuerpo: any;
+      let cuerpo: CuerpoDeError | null | undefined;
       try {
         cuerpo = await respuesta.clone().json();
       } catch {
@@ -112,4 +121,13 @@ export function instalarAvisoDeGuardados(
     }
     return respuesta;
   };
+
+  // Algunos entornos (vistas previas en iframes, WebViews) dejan `fetch` solo como getter: asignarlo
+  // lanza TypeError y, al llamarse en el arranque, dejaba la app en blanco. Sin el envoltorio solo
+  // se pierde el aviso de guardados fallidos.
+  try {
+    ventana.fetch = envuelto;
+  } catch {
+    ventana.__avisoGuardadosInstalado = false;
+  }
 }

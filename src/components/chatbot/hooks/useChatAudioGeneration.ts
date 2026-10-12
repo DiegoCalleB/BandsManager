@@ -11,6 +11,7 @@ import { getErrorMessage } from "../../../utils/errorMessage";
 import { renderMelodicIdeaAudioBlob } from "../../../utils/instrumentSynth";
 import { eventosAMidiBlob } from "../../../utils/midiExport";
 import type { ProposedAction } from "../chatTypes";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -69,7 +70,7 @@ export function useChatAudioGeneration({ currentUser, cleanUserName }: ChatAudio
   const melodicIdeaAudioRef = useRef(melodicIdeaAudio);
 
   const buildBandAuthHeaders = (): Record<string, string> => {
-    const token = localStorage.getItem('bandmanager_token');
+    const token = leerTokenDeSesion();
     const activeBandId = currentUser?.band_id || '';
     return {
       'Content-Type': 'application/json',

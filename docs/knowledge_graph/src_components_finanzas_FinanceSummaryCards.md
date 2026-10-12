@@ -18,14 +18,14 @@ Exporta: FinanceSummaryCards.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_financeUtils|src/utils/financeUtils.ts]] *(Layer: #service, Domain: #finances)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Finanzas|src/components/Finanzas.tsx]] *(from #frontend)*
+_Sin llamadas entrantes indexadas._
 
 ---
 

@@ -1,16 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  X,
-  Loader,
-  AlertCircle,
-  Brain,
-  TrendingUp,
-  Zap,
-  Move,
-  Printer,
-  Share2,
-  Download,
-} from "lucide-react";
+import { X, Loader, AlertCircle, Brain, Zap, Move, Printer, Share2, Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import { api } from "../../services/api";
 import { titlesMatch } from "../../utils/songTitleMatch";
@@ -24,6 +13,8 @@ import { openWhatsAppChat } from "../../utils/whatsapp";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 
 interface SetlistAIAnalysisModalProps {
   isOpen: boolean;
@@ -113,13 +104,12 @@ export function SetlistAIAnalysisModal({
 
   // Al abrir, si ya hay un análisis guardado para este setlist, mostrarlo directamente en vez
   // de forzar al usuario a pulsar"Iniciar Análisis IA" solo para ver lo que ya se calculó.
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen, setlistId] as const, () => {
     if (isOpen) {
       setAnalysis(initialAnalysis ?? null);
       setError(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, setlistId]);
+  });
 
   // Copia local de las sugerencias que SÍ se reajusta tras cada"Aplicar" — aplicar una sugerencia
   // cambia el orden real del setlist, y las demás sugerencias pendientes seguían apuntando a la
@@ -141,12 +131,12 @@ export function SetlistAIAnalysisModal({
     invalidIndices: Set<number>;
   } | null>(null);
 
-  useEffect(() => {
+  useReajusteAlCambiar([analysis] as const, () => {
     setLiveSuggestions(analysis ? analysis.suggestions : null);
     setAppliedSuggestionIndices(new Set());
     setInvalidSuggestionIndices(new Set());
     setPreApplySnapshot(null);
-  }, [analysis]);
+  });
 
   const handleApplySuggestion = (idx: number) => {
     if (!liveSuggestions || !onReorder) return;
@@ -217,9 +207,9 @@ export function SetlistAIAnalysisModal({
     originY: number;
   } | null>(null);
 
-  useEffect(() => {
+  useReajusteAlCambiar([isOpen] as const, () => {
     if (!isOpen) setDragOffset({ x: 0, y: 0 });
-  }, [isOpen]);
+  });
 
   useEffect(() => {
     const handleMove = (e: MouseEvent) => {
@@ -279,29 +269,6 @@ export function SetlistAIAnalysisModal({
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgString)}`;
   };
 
-  /** Convierte el SVG del gráfico a PNG (dibujándolo en un <canvas>) para compartir como archivo de imagen — la Web Share API y WhatsApp entienden PNG universalmente, no todos los destinos aceptan SVG. Resuelve null si no hay gráfico o el navegador bloquea el canvas (raro, pero posible en algunos navegadores muy restrictivos). */
-  const getChartPngBlob = (): Promise<Blob | null> => {
-    return new Promise((resolve) => {
-      const svgDataUrl = getChartSvgDataUrl();
-      if (!svgDataUrl) return resolve(null);
-      const img = new Image();
-      img.onload = () => {
-        const scale = 2; // más nítido al compartir/imprimir que el tamaño real en pantalla
-        const canvas = document.createElement("canvas");
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return resolve(null);
-        ctx.fillStyle = "#0a0a0a";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob) => resolve(blob), "image/png");
-      };
-      img.onerror = () => resolve(null);
-      img.src = svgDataUrl;
-    });
-  };
-
   const handleAnalyze = async () => {
     setLoading(true);
     setError(null);
@@ -314,7 +281,8 @@ export function SetlistAIAnalysisModal({
       } else {
         setError(result.error || "Error al analizar el setlist");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error desconocido");
     } finally {
       setLoading(false);
@@ -565,7 +533,8 @@ export function SetlistAIAnalysisModal({
       // admite adjuntar archivos por URL, así que la imagen hay que arrastrarla a mano al chat.
       if (imageBlob) downloadBlob(imageBlob, `analisis-ia-${setlistId}.png`);
       openWhatsAppChat(undefined, text);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       // AbortError = el usuario cerró el selector de compartir sin elegir nada: no es un fallo.
       if (err?.name !== "AbortError") {
         openWhatsAppChat(undefined, buildShareText(analysis));

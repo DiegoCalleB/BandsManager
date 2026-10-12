@@ -27,7 +27,7 @@ export function InsigniaBandManager({ bandId, origen, className }: InsigniaBandM
       .then((d) => {
         if (vivo && d && typeof d.href === 'string') setHref(safeUrl(d.href) ?? null);
       })
-      .catch(() => {});
+      .catch(() => { /* la insignia es opcional: sin respuesta se pinta sin enlace */ });
     return () => {
       vivo = false;
     };

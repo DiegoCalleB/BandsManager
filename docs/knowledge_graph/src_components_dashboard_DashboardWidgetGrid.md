@@ -18,6 +18,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -28,6 +29,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_hooks_useScrollLock|src/hooks/useScrollLock.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useVisualViewportOverlayStyle|src/hooks/useVisualViewportOverlayStyle.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*

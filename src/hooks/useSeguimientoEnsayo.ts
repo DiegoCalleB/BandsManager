@@ -17,12 +17,14 @@ export function useSeguimientoEnsayo(opts: {
 }) {
   const { agenda, currentItem, claveDePista, onUpdateRehearsal } = opts;
   const [trackSeconds, setTrackSeconds] = useState(0);
-  const [isTrackTimerActive, setIsTrackTimerActive] = useState(false);
-
-  useEffect(() => {
+  // El cronómetro de pista arranca solo y vuelve a cero al cambiar de pista (ajuste en render).
+  const [isTrackTimerActive, setIsTrackTimerActive] = useState(true);
+  const [clavePrevia, setClavePrevia] = useState(claveDePista);
+  if (claveDePista !== clavePrevia) {
+    setClavePrevia(claveDePista);
     setTrackSeconds(0);
     setIsTrackTimerActive(true);
-  }, [claveDePista]);
+  }
 
   useEffect(() => {
     if (!isTrackTimerActive) return;

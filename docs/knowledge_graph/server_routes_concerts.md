@@ -22,8 +22,10 @@ Conciertos y ensayos: CRUD de `/concerts` y `/rehearsals`. Capa de
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

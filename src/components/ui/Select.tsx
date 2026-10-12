@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn';
-import { fieldVariants } from './Input';
+import { fieldVariants } from './variantes';
 
 export interface SelectProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size'>,

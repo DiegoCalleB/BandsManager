@@ -13,11 +13,12 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: chipVariants, ChipProps, Chip.
+Exporta: ChipProps, Chip.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_ui_variantes|src/components/ui/variantes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_cn|src/utils/cn.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -36,7 +36,7 @@ Exporta: PublicEPK.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
-- [[src_main|src/main.tsx]] *(from #service)*
+- [[src_app_rutasPublicasLazy|src/app/rutasPublicasLazy.tsx]] *(from #service)*
 
 ---
 

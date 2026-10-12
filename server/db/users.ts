@@ -1,7 +1,43 @@
 // Usuarios (`users`) y su pertenencia a bandas (`user_bands`).
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId, normalizePlan } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import type { GoogleOAuthConfig, User } from "../../src/types.js";
+import type { UsuarioGuardado, UserBand } from "../stateTypes.js";
+
+/** Usuario para guardar: el del estado local, admitiendo también los nombres de columna. */
+export type EntradaUsuario = Partial<UsuarioGuardado> & {
+  band_name?: string;
+  avatar_color?: string;
+  password_hash?: string;
+  google_oauth?: GoogleOAuthConfig;
+  mainBandId?: string;
+  uiPreferences?: User["ui_preferences"];
+};
+
+/** Fila de `users`. `id` y las tres últimas se quitan en los reintentos (update por username o columnas sin migrar). */
+interface FilaUsuario {
+  id?: string;
+  username: string;
+  name: string;
+  role: string;
+  plan: string;
+  band_name: string;
+  band_id: string;
+  email: string;
+  instrument: string;
+  avatar_color: string;
+  password_hash: string;
+  salt: string;
+  google_oauth: GoogleOAuthConfig | Record<string, never>;
+  main_band_id?: string | null;
+  band_order?: string[] | null;
+  ui_preferences?: User["ui_preferences"];
+}
+
+/** Pertenencia a banda para guardar (admite el alias legado `userId`). */
+export type EntradaUserBand = Partial<UserBand> & { userId?: string; bandId?: string };
 
 export async function dbGetUsers(bandId?: string) {
   const sb = getSupabase();
@@ -98,9 +134,9 @@ export async function dbGetUserById(userId: string) {
   };
 }
 
-export async function dbUpsertUser(user: any) {
+export async function dbUpsertUser(user: EntradaUsuario) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(user.band_id || user.bandId);
+  const targetBandId = cleanBandId(bandaDe(user));
   await ensureRegisteredBandExists(targetBandId, user.bandName || user.band_name);
 
   const rawUsername = (user.username || user.email || "").trim();
@@ -123,7 +159,7 @@ export async function dbUpsertUser(user: any) {
     }
   }
 
-  const payload: any = {
+  const payload: FilaUsuario = {
     id: resolvedId || `user-${Date.now()}`,
     username: rawUsername,
     name: user.name || user.username || "Usuario",
@@ -237,9 +273,9 @@ export async function dbGetUserBands(userId?: string, bandId?: string) {
   return data || [];
 }
 
-export async function dbUpsertUserBand(userBand: any) {
+export async function dbUpsertUserBand(userBand: EntradaUserBand) {
   const sb = getSupabase();
-  const targetBandId = cleanBandId(userBand.band_id || userBand.bandId);
+  const targetBandId = cleanBandId(bandaDe(userBand));
   await ensureRegisteredBandExists(targetBandId);
 
   const payload = {

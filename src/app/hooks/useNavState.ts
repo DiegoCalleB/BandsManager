@@ -36,7 +36,7 @@ export function useNavState({ concerts, isSameBand, currentActiveBandId, current
         currentActiveBandName,
       );
     });
-  }, [concerts, currentActiveBandId, currentActiveBandName]);
+  }, [concerts, isSameBand, currentActiveBandId, currentActiveBandName]);
 
   const activeBandRehearsals = React.useMemo(() => {
     return rehearsals.filter((r) => {
@@ -48,7 +48,7 @@ export function useNavState({ concerts, isSameBand, currentActiveBandId, current
         currentActiveBandName,
       );
     });
-  }, [rehearsals, currentActiveBandId, currentActiveBandName]);
+  }, [rehearsals, isSameBand, currentActiveBandId, currentActiveBandName]);
 
   // Badges del menú de navegación (booking/medios/calendario), calculados una sola vez
   // y reutilizados por la barra de tabs móvil, el drawer y el <aside> de escritorio —

@@ -1,5 +1,7 @@
 import { dbGetSocialPosts, dbUpsertSocialPost, dbGetBandSocialAccounts, dbUpsertSocialMetric, dbGetSocialMetrics } from "../db/social.js";
 import { cleanBandId } from "../db/core.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BandSocialAccount, SocialPost } from '../../src/types.js';
 
 export interface PublishResult {
   success: boolean;
@@ -15,16 +17,16 @@ export interface PublishResult {
  */
 export async function publishSocialPostNow(postId: string, bandId: string): Promise<PublishResult> {
   const cleanId = cleanBandId(bandId);
-  const posts = await dbGetSocialPosts(cleanId);
-  const post = posts.find((p: any) => p.id === postId);
+  const posts: SocialPost[] = await dbGetSocialPosts(cleanId);
+  const post = posts.find((p) => p.id === postId);
 
   if (!post) {
     return { success: false, postId, platform: "unknown", error: "Publicación no encontrada." };
   }
 
   const platform = post.plataforma || "Instagram";
-  const accounts = await dbGetBandSocialAccounts(cleanId);
-  const account = accounts.find((a: any) => a.plataforma?.toLowerCase() === platform.toLowerCase() && a.status === "conectado");
+  const accounts: BandSocialAccount[] = await dbGetBandSocialAccounts(cleanId);
+  const account = accounts.find((a) => a.plataforma?.toLowerCase() === platform.toLowerCase() && a.status === "conectado");
 
   // Validamos si hay cuenta conectada o si se publica en modo sandbox/simulado
   const handle = account?.handle || post.account_handle || `@${(cleanId || "banda").replace(/^band-/, "")}`;
@@ -41,7 +43,7 @@ export async function publishSocialPostNow(postId: string, bandId: string): Prom
       publishedUrl = `https://youtube.com/shorts/${publishedId}`;
     }
 
-    const updatedPost = {
+    const updatedPost: Partial<SocialPost> = {
       ...post,
       estado: "publicado",
       published_id: publishedId,
@@ -85,7 +87,8 @@ export async function publishSocialPostNow(postId: string, bandId: string): Prom
       publishedId,
       publishedUrl
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[Social Publisher] Error publicando post ${postId} en ${platform}:`, err);
     await dbUpsertSocialPost({
       ...post,
@@ -114,10 +117,10 @@ export async function publishDueScheduledPosts(bandId?: string): Promise<{ dispa
 
   if (bandId) {
     const cleanId = cleanBandId(bandId);
-    const posts = await dbGetSocialPosts(cleanId);
+    const posts: SocialPost[] = await dbGetSocialPosts(cleanId);
     
     // Filtrar posts programados que ya deben publicarse
-    const duePosts = posts.filter((p: any) => {
+    const duePosts = posts.filter((p) => {
       if (p.estado === "publicado" || p.estado === "fallido") return false;
       if (!p.auto_publish && p.estado !== "aprobado" && p.estado !== "en_cola") return false;
       

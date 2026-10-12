@@ -2,13 +2,8 @@
 
 import express from "express";
 import { requireAuth, loadState, saveState } from "../state.js";
-import {
-  searchSpotifyArtists,
-  getArtistCompleteDiscography,
-  bulkImportSpotifyDiscographyToBand,
-  extractSpotifyArtistId,
-  findAudioPreview
-} from "../services/spotifyService.js";
+import { searchSpotifyArtists, getArtistCompleteDiscography, bulkImportSpotifyDiscographyToBand, findAudioPreview } from "../services/spotifyService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
@@ -38,7 +33,8 @@ router.get("/preview", requireAuth, async (req, res) => {
     }
     const previewUrl = await findAudioPreview(artist, track);
     res.json({ success: true, previewUrl });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err.message || "Error al buscar preview." });
   }
 });
@@ -56,7 +52,8 @@ router.get("/search", requireAuth, async (req, res) => {
 
     const artists = await searchSpotifyArtists(query);
     res.json({ success: true, artists });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Search error:", err);
     res.status(500).json({ error: err.message || "Error al buscar en Spotify." });
   }
@@ -75,7 +72,8 @@ router.get("/artist-discography", requireAuth, async (req, res) => {
 
     const discography = await getArtistCompleteDiscography(query);
     res.json({ success: true, discography });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Discography error:", err);
     res.status(500).json({ error: err.message || "Error al obtener la discografía de Spotify." });
   }
@@ -92,7 +90,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "No se han seleccionado álbumes para importar." });
     }
 
-    const userBandId = (req as any).user?.band_id;
+    const userBandId = req.user?.band_id;
     const result = await bulkImportSpotifyDiscographyToBand(
       userBandId,
       artist,
@@ -102,11 +100,12 @@ router.post("/import-discography", requireAuth, async (req, res) => {
 
     // Update in-memory state if applicable
     const state = loadState();
-    state.songs = result.allBandSongs as any;
+    state.songs = result.allBandSongs;
     saveState(state);
 
     res.json(result);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Import error:", err);
     res.status(500).json({ error: err.message || "Error al importar la discografía de Spotify." });
   }

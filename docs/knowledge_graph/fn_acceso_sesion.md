@@ -19,7 +19,6 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_leads|Leads DB Handlers]] *(Layer: #db, Domain: #booking)*
-- [[ext_correo_smtp_imap|Correo SMTP / IMAP]] *(Layer: #external, Domain: #system)*
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] *(Layer: #external, Domain: #system)*
 - [[ext_resend|Resend]] *(Layer: #external, Domain: #system)*
 - [[ext_spotify|Spotify]] *(Layer: #external, Domain: #system)*
@@ -27,12 +26,25 @@ Login (email o Google), sesión por cookie y multi-banda: de quién es cada peti
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_autonomy|server/db/autonomy.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_printSettings|server/db/printSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_bands_responseStrategies|server/routes/bands/responseStrategies.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_permisosCuenta|server/routes/users/permisosCuenta.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasBandas|server/routes/users/rutasBandas.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasInvitacion|server/routes/users/rutasInvitacion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasLogin|server/routes/users/rutasLogin.ts]] *(Layer: #route, Domain: #auth)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(Layer: #frontend, Domain: #auth)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[src_utils_googleAuth|src/utils/googleAuth.ts]] *(Layer: #security, Domain: #auth)*

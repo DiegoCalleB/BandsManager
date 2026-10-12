@@ -21,7 +21,7 @@ Hoja de grupo de navegación móvil.
 - [[src_app_AppContext|src/app/AppContext.ts]] *(Layer: #service, Domain: #system)*
 - [[src_app_appViews|src/app/appViews.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_common_NavItemButton|src/components/common/NavItemButton.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 
 ---

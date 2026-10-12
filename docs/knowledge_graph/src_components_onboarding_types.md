@@ -18,7 +18,7 @@ Exporta: SpotifyTrack, SpotifyAlbum, SpotifyArtist, QuickEventItem, ManualSongIt
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+_Sin dependencias salientes directas._
 
 ---
 

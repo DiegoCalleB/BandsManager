@@ -26,11 +26,14 @@ Ingresos, gastos, merchan, donaciones, planes y cobro con Stripe.
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_deals|server/db/deals.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_billing|server/routes/billing.ts]] *(Layer: #route, Domain: #finances)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_donations|server/routes/donations.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(Layer: #route, Domain: #finances)*
+- [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_financialBreakEvenService|server/services/financialBreakEvenService.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_CheckoutButton|src/components/CheckoutButton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_Finanzas|src/components/Finanzas.tsx]] *(Layer: #frontend, Domain: #system)*

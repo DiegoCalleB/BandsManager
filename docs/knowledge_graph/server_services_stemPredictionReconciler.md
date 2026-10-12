@@ -19,15 +19,15 @@ Exporta: StemPredictionJob, ReplicateWebhookHeaders, verifyReplicateWebhook, ver
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_replicate|Replicate]] *(Layer: #external, Domain: #system)*
-- [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_stem_prediction_jobs|tabla stem_prediction_jobs]] *(Layer: #schema, Domain: #repertoire)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_iris_estudio|Estudio de canción e Iris (stems)]] *(from #feature)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasWebhooks|server/routes/ai_music/rutasWebhooks.ts]] *(from #route)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 
 ---

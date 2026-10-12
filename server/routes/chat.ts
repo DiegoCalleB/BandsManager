@@ -3,18 +3,21 @@
 
 import express from "express";
 import { KNOWN_LOCATIONS, CANONICAL_LOCATION_MAP, getRegionForCity } from "../../src/constants/regions.js";
-import { Lead, Rehearsal, Concert } from "../../src/types.js";
+import { Lead, Rehearsal, Concert, Message } from "../../src/types.js";
 import { loadState, getUserFromRequestLocal, getEpkConfigForBand, getAutonomyConfigForBand, requireAuth } from "../state.js";
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { getGlobalPitchFeedbackSummary, formatGlobalPitchFeedbackForPrompt } from "./leads.js";
 import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetActiveCampaign, dbGetSongs, dbGetSetlists } from "../db.js";
-import { getTargetBandId } from "../utils/bandAccess.js";
+import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, emptyBandProfile } from "../utils/bandProfile.js";
 import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { AccionPropuesta, CancionParaChat, MensajeHistorialChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
+
 
 const router = express.Router();
 
@@ -79,10 +82,10 @@ router.post("/chat", requireAuth, async (req, res) => {
       desc = "Disparar el agente de Python Lector para revisar tu bandeja de correo en busca de respuestas de salas.";
     }
 
-    const triggerParams: Record<string, any> = {};
+    const triggerParams: ParametrosAgenteChat = {};
 
     if (agentName === "Scout Descubridor" || agentName === "Scout") {
-      let detectedRegion = "";
+      let detectedRegion: string;
       const knownLocations = KNOWN_LOCATIONS;
       const canonicalMapping = CANONICAL_LOCATION_MAP;
 
@@ -98,7 +101,6 @@ router.post("/chat", requireAuth, async (req, res) => {
       if (matchedLocation) {
         const canonical = canonicalMapping[matchedLocation.toLowerCase()] || matchedLocation;
         const regionForCity = getRegionForCity(matchedLocation);
-        detectedRegion = canonical;
         triggerParams.ciudad = canonical;
         triggerParams.region = regionForCity || canonical;
       } else {
@@ -164,7 +166,7 @@ router.post("/chat", requireAuth, async (req, res) => {
     setTimeout(() => {
       const lowerMsg = message.toLowerCase();
       let reply = "¡Hola! Estoy funcionando en modo simulación (sin clave GEMINI_API_KEY). Puedo responderte de manera estática.\n\n";
-      const proposedActions: any[] = [];
+      const proposedActions: AccionPropuesta[] = [];
       
       if (lowerMsg.includes("madrid") || lowerMsg.includes("pendiente")) {
         const pendingMadrid = state.leads.filter((l: Lead) => l.ciudad.toLowerCase().includes("madrid") || l.estado === "pendiente_aprobacion");
@@ -192,18 +194,18 @@ router.post("/chat", requireAuth, async (req, res) => {
         }
       } else if (lowerMsg.includes("reggae") || lowerMsg.includes("ska")) {
         const userBandId = userReq.band_id;
-        const matchBandLocal = (item: any) => {
+        const matchBandLocal = (item: Parameters<typeof bandaDe>[0]) => {
           if (!item) return false;
-          const bid = item.band_id || item.bandId;
+          const bid = bandaDe(item);
           return bid === userBandId;
         };
         const count = state.leads.filter(matchBandLocal).filter((l: Lead) => (l.genero || "").toLowerCase().includes("reggae") || (l.genero || "").toLowerCase().includes("ska")).length;
         reply += `Tienes actualmente **${count} salas** especializadas en Ska/Reggae en la base de datos (por ejemplo, *Kafe Antzokia* en Bilbao, *Sala El Tren* en Granada y *Viña Rock*).`;
       } else {
         const userBandId = userReq.band_id;
-        const matchBandLocal = (item: any) => {
+        const matchBandLocal = (item: Parameters<typeof bandaDe>[0]) => {
           if (!item) return false;
-          const bid = item.band_id || item.bandId;
+          const bid = bandaDe(item);
           return bid === userBandId;
         };
         const totalLeads = state.leads.filter(matchBandLocal).length;
@@ -219,9 +221,9 @@ router.post("/chat", requireAuth, async (req, res) => {
 
   try {
     const userBandId = userReq.band_id;
-    const matchBand = (item: any) => {
+    const matchBand = (item: Parameters<typeof bandaDe>[0]) => {
       if (!item) return false;
-      const bid = item.band_id || item.bandId;
+      const bid = bandaDe(item);
       return bid === userBandId;
     };
 
@@ -234,7 +236,7 @@ router.post("/chat", requireAuth, async (req, res) => {
       dbGetSetlists(userBandId).catch(() => [])
     ]);
 
-    const stateSummary: any = {
+    const stateSummary: Record<string, unknown> = {
       leads: state.leads.filter(matchBand).map((l: Lead) => ({
         id: l.id,
         nombre_sala: l.nombre_sala,
@@ -257,7 +259,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         festival_start_date: l.festival_start_date,
         festival_end_date: l.festival_end_date
       })),
-      bands: (state.bands || []).filter(matchBand).map((b: any) => ({
+      bands: (state.bands || []).filter(matchBand).map((b) => ({
         id: b.id,
         nombre_banda: b.nombre_banda,
         estilo_musical: b.estilo_musical,
@@ -265,7 +267,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         icono: b.icono,
         imagen_url: b.imagen_url
       })),
-      tours: (state.tours || []).filter(matchBand).map((t: any) => ({
+      tours: (state.tours || []).filter(matchBand).map((t) => ({
         id: t.id,
         nombre: t.nombre,
         vehiculo: t.vehiculo,
@@ -275,8 +277,8 @@ router.post("/chat", requireAuth, async (req, res) => {
         presupuestoLogistica: t.presupuestoLogistica,
         stops: t.stops
       })),
-      songs: songsFromDb.map((s: any) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
-      setlists: setlistsFromDb.map((st: any) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
+      songs: (songsFromDb as CancionParaChat[]).map((s) => ({ id: s.id, titulo: s.titulo, estado: s.estado, duracion: s.duracion, bpm: s.bpm, tonalidad: s.tonalidad, genero: s.genero })),
+      setlists: (setlistsFromDb as SetlistParaChat[]).map((st) => ({ id: st.id, titulo: st.nombre, fecha: st.fecha_ultima_edicion, duracionTotal: st.duracion_total_estimada_minutos })),
       fansCount: (state.fans || []).filter(matchBand).length,
       rehearsals: (state.rehearsals || []).filter(matchBand),
       concerts: (state.concerts || []).filter(matchBand).map((c: Concert) => ({
@@ -288,7 +290,7 @@ router.post("/chat", requireAuth, async (req, res) => {
         contrato_firmado: c.contrato_firmado,
         estado_pago: c.estado_pago
       })),
-      recentMessages: (state.messages || []).filter(matchBand).slice(-5)
+      recentMessages: (state.messages || []).filter((m) => matchBand(m as Message & { band_id?: string })).slice(-5)
     };
 
     const bandIdForEpk = userReq.band_id;
@@ -314,8 +316,8 @@ router.post("/chat", requireAuth, async (req, res) => {
     // ADN musical: tempo/tonalidad/género dominantes del repertorio real + instrumentación real
     // de los miembros, para que 'propose_accompaniment' proponga bases rítmicas coherentes con
     // la banda en vez de un rock genérico a 120 BPM por defecto.
-    const ownBandGenre = (state.registeredBands || []).find((b: any) => b.id === userBandId)?.estilo_musical || "";
-    const bandMembersForDna = (state.users || []).filter(matchBand).map((u: any) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
+    const ownBandGenre = (state.registeredBands || []).find((b) => b.id === userBandId)?.estilo_musical || "";
+    const bandMembersForDna = (state.users || []).filter(matchBand).map((u) => ({ name: u.name || u.username || "", instrument: u.instrument || "" }));
     stateSummary.musicalDna = computeMusicalDna(songsFromDb, ownBandGenre, bandMembersForDna);
 
     if (isLeader) {
@@ -452,10 +454,10 @@ REGLA IMPORTANTE: Si el usuario te pide agendar, añadir o programar un conciert
 Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como una lista vacía [].
 Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.`;
 
-    const contents: any[] = [];
+    const contents: TurnoChat[] = [];
     
     if (chatHistory && chatHistory.length > 0) {
-      chatHistory.forEach((h: any) => {
+      (chatHistory as MensajeHistorialChat[]).forEach((h) => {
         const role = h.sender === 'user' ? 'user' : 'model';
         if (contents.length === 0 && role === 'model') return;
 
@@ -499,8 +501,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       }
     }
 
-    let response: any = null;
-    let lastError: any = null;
+    let response: VistaRespuestaIA | null = null;
+    let lastError: ErrorDeFailover | null = null;
 
     try {
       response = await generateContentWithFallback(client, {
@@ -510,7 +512,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
           tools: [{ functionDeclarations: chatFunctionDeclarations }]
         }
       });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       lastError = err;
     }
 
@@ -552,7 +555,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
                  `Por favor, inténtalo de nuevo en unos instantes o comprueba tu conexión y configuración de claves.`;
       }
 
-      const proposedActions: any[] = [];
+      const proposedActions: AccionPropuesta[] = [];
       const lowerMsg = (message || "").toLowerCase();
 
       const pendingLeads = state.leads.filter((l: Lead) => l.estado === "pendiente_aprobacion");
@@ -602,14 +605,14 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     }
 
     let textResult = "";
-    let nativeProposedActions: any[] = [];
+    let nativeProposedActions: AccionPropuesta[] = [];
 
     // 1. Extraer Function Calls nativas del SDK si están presentes
     try {
       const functionCalls = response.functionCalls || 
-        response.candidates?.[0]?.content?.parts?.filter((p: any) => p.functionCall)?.map((p: any) => p.functionCall);
+        response.candidates?.[0]?.content?.parts?.filter((p) => p.functionCall)?.map((p) => p.functionCall);
       if (Array.isArray(functionCalls) && functionCalls.length > 0) {
-        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls);
+        nativeProposedActions = convertFunctionCallsToProposedActions(functionCalls).map((accion) => ({ ...accion }));
       }
     } catch (fcErr) {
       console.warn("[Gemini API] Error al extraer functionCalls nativas:", fcErr);
@@ -618,16 +621,16 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     // 2. Extraer texto conversacional
     try {
       textResult = response.text || "";
-    } catch (_) {
+    } catch {
       try {
-        const textParts = response.candidates?.[0]?.content?.parts?.filter((p: any) => p.text)?.map((p: any) => p.text);
+        const textParts = response.candidates?.[0]?.content?.parts?.filter((p) => p.text)?.map((p) => p.text);
         textResult = textParts ? textParts.join("\n\n") : "";
-      } catch (__) {
+      } catch {
         textResult = "";
       }
     }
 
-    let parsed: any;
+    let parsed: { text: string; proposedActions: AccionPropuesta[] };
 
     if (nativeProposedActions.length > 0) {
       // Si el modelo invocó herramientas nativas, usamos su texto o un mensaje de cortesía si solo emitió tool calls
@@ -659,7 +662,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     parsed = sanearIdeasMelodicas(parsed);
     res.json(parsed);
 
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in Gemini API chat proxy:", error);
     res.json({
       text: `⚠️ **Aviso del Mánager Virtual AI:** Ocurrió un inconveniente al procesar tu consulta (${error?.message || error}). Por favor, vuelve a intentarlo.`,
@@ -684,7 +688,8 @@ router.post("/write-reels-copy", requireAuth, iaRateLimiter, async (req, res) =>
       getEpk: (id) => dbGetEpkConfig(id),
       getState: () => loadState()
     });
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[write-reels-copy] Sin perfil de banda:", e?.message || e);
   }
 

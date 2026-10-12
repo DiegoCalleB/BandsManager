@@ -22,8 +22,10 @@ Exporta: Analysis, SetlistAIAnalysisModal.
 - [[src_components_repertorio_EnergyChart|src/components/repertorio/EnergyChart.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_hooks_useReajusteAlCambiar|src/hooks/useReajusteAlCambiar.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_setlistActionPositionAdjust|src/utils/setlistActionPositionAdjust.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_songTitleMatch|src/utils/songTitleMatch.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_whatsapp|src/utils/whatsapp.ts]] *(Layer: #service, Domain: #system)*
@@ -31,9 +33,11 @@ Exporta: Analysis, SetlistAIAnalysisModal.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useRepertorioViewState|src/components/repertorio/hooks/useRepertorioViewState.ts]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 - [[ui_repertoire_setlists|Repertorio & Setlists]] *(from #frontend)*
 
 ---

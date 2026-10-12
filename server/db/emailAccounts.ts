@@ -88,7 +88,9 @@ export async function dbUpsertBandEmailAccount(account: {
 // devolverla nunca, ni en el GET ni haciendo eco del POST. Función pura y exportada aparte
 // (en vez de repetir el destructuring en cada ruta) para poder verificarlo con un test
 // unitario sin necesidad de montar Express.
-export function toSafeEmailAccountResponse(account: BandEmailAccount | null): { connected: boolean; [key: string]: any } {
+export function toSafeEmailAccountResponse(
+  account: BandEmailAccount | null
+): { connected: boolean } & Partial<Omit<BandEmailAccount, 'app_password'>> {
   if (!account) {
     return { connected: false };
   }

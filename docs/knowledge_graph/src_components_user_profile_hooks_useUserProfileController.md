@@ -18,12 +18,15 @@ Controlador del perfil de usuario: compone identidad, plan y bandas, y gestiona 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_usePlanSummary|src/components/user_profile/hooks/usePlanSummary.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_user_profile_hooks_useProfileIdentity|src/components/user_profile/hooks/useProfileIdentity.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_temaEspectro|src/utils/temaEspectro.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -4,6 +4,7 @@
  */
 import { Lead } from "../../../types";
 import { apiFetch } from "../../../utils/api";
+import type { RespuestaEnriquecerLead, RespuestaRegenerarPitch } from "../tiposRespuestasApi";
 import { getErrorMessage } from "../../../utils/errorMessage";
 import { BulkLeadsActionBar } from "../BulkLeadsActionBar";
 import { BulkProgressItem } from "../BulkProgressModal";
@@ -75,7 +76,7 @@ export function BulkActionsSection() {
             const campaignIsActive = Boolean(
               activeCampaign && (activeCampaign.isActive ?? activeCampaign.is_active ?? true)
             );
-            const res = await apiFetch(`/api/leads/${targetLead.id}/regenerate-pitch`, {
+            const res = await apiFetch<RespuestaRegenerarPitch>(`/api/leads/${targetLead.id}/regenerate-pitch`, {
               method: 'POST',
               body: JSON.stringify({
                 activeCampaign: campaignIsActive ? activeCampaign : undefined,
@@ -155,7 +156,7 @@ export function BulkActionsSection() {
           }));
 
           try {
-            const res = await apiFetch(`/api/leads/enrich-lead`, {
+            const res = await apiFetch<RespuestaEnriquecerLead>(`/api/leads/enrich-lead`, {
               method: 'POST',
               body: JSON.stringify({
                 leadId: targetLead.id,

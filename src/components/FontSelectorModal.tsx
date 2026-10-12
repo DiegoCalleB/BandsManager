@@ -1,18 +1,6 @@
 import React from "react";
-import {
-  Type,
-  Check,
-  X,
-  Sparkles,
-  SlidersHorizontal,
-  Info,
-} from "lucide-react";
-import {
-  FONT_PRESETS,
-  FontPresetKey,
-  applyFontPreset,
-  getStoredFontPreset,
-} from "../utils/typography";
+import { Type, Check, X, Info } from "lucide-react";
+import { FONT_PRESETS, FontPresetKey } from "../utils/typography";
 import { ModalPortal } from "./common/ModalPortal";
 import { Button, IconButton } from './ui';
 

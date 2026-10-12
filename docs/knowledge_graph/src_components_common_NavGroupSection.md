@@ -19,7 +19,7 @@ Exporta: NavGroupSection.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_common_NavItemButton|src/components/common/NavItemButton.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -24,7 +24,8 @@ Exporta: DatosIdeaDeAtril, crearIdeaDeAtril, ideasCompatiblesConPistas, pistasBa
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_chords_TomasConFondo|src/components/chords/TomasConFondo.tsx]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useIdeaPlaybackTracks|src/components/song_studio/hooks/useIdeaPlaybackTracks.ts]] *(from #frontend)*
 - [[src_components_song_studio_hooks_useSongIdeasCrud|src/components/song_studio/hooks/useSongIdeasCrud.ts]] *(from #frontend)*

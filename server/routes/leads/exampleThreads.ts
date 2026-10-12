@@ -5,16 +5,24 @@ import { requireAuth } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { DEFAULT_CATEGORY_TEMPLATES } from "../../promptsManager.js";
 import { dbGetExampleThreads, dbCreateExampleThread, dbUpdateExampleThread, dbDeleteExampleThread, type ExampleThreadMessage } from "../../db/exampleThreads.js";
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
-function limpiarMensajes(mensajes: any): ExampleThreadMessage[] {
+/** Mensaje tal como llega en el cuerpo de la petición: sin validar. */
+interface MensajeRecibido {
+  rol?: unknown;
+  texto?: unknown;
+  orden?: unknown;
+}
+
+function limpiarMensajes(mensajes: unknown): ExampleThreadMessage[] {
   if (!Array.isArray(mensajes)) return [];
-  return mensajes
-    .map((m: any, idx: number): ExampleThreadMessage => ({
+  return (mensajes as MensajeRecibido[])
+    .map((m, idx): ExampleThreadMessage => ({
       rol: m.rol === "sala" ? "sala" : "banda",
       texto: String(m.texto || "").trim(),
-      orden: Number.isFinite(m.orden) ? m.orden : idx
+      orden: typeof m.orden === "number" && Number.isFinite(m.orden) ? m.orden : idx
     }))
     .filter((m: ExampleThreadMessage) => m.texto);
 }
@@ -26,7 +34,8 @@ router.get("/example-threads", requireAuth, async (req, res) => {
     const category = typeof req.query.category === "string" ? req.query.category : undefined;
     const threads = await dbGetExampleThreads(bandId, category);
     res.json({ success: true, threads });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/example-threads:", error);
     res.status(500).json({ success: false, error: "Error al obtener los hilos de ejemplo." });
   }
@@ -57,7 +66,8 @@ router.post("/example-threads", requireAuth, async (req, res) => {
     });
 
     res.json({ success: true, thread });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/example-threads:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al guardar el hilo de ejemplo." });
   }
@@ -81,7 +91,8 @@ router.put("/example-threads/:id", requireAuth, async (req, res) => {
     });
 
     res.json({ success: true, thread });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in PUT /api/example-threads/:id:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al actualizar el hilo de ejemplo." });
   }
@@ -92,7 +103,8 @@ router.delete("/example-threads/:id", requireAuth, async (req, res) => {
     const bandId = getTargetBandId(req);
     await dbDeleteExampleThread(req.params.id, bandId);
     res.json({ success: true });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error in DELETE /api/example-threads/:id:", error);
     res.status(500).json({ success: false, error: error?.message || "Error al borrar el hilo de ejemplo." });
   }

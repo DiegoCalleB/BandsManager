@@ -18,7 +18,10 @@ Exporta: SimplePromoLoginModal.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasLogin|server/routes/users/rutasLogin.ts]] *(Layer: #route, Domain: #auth)*
+- [[server_routes_users_rutasRecuperacion|server/routes/users/rutasRecuperacion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

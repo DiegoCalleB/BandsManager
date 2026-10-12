@@ -4,7 +4,9 @@
  */
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { apiFetch } from "../../../../utils/api";
+import type { RespuestaAudioDemo } from '../../../../services/tiposRespuestasHerramientas';
 import { getErrorMessage } from "../../../../utils/errorMessage";
+import { leerTokenDeSesion, leerBandaActiva } from '../../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface ConcertSourceMediaParams {
@@ -38,15 +40,8 @@ export function useConcertSourceMedia({ setErrorMessage, setAnalysisStatus }: Co
   ): Promise<string> => {
     const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks fit easily inside Cloud Run / proxy limits
 
-    const token =
-      localStorage.getItem("bandmanager_token") || localStorage.getItem("token");
-    let activeBandId = "";
-    try {
-      const userStr = localStorage.getItem("bandmanager_user");
-      if (userStr) activeBandId = JSON.parse(userStr)?.band_id || "";
-    } catch {
-      // localStorage no disponible: se envía la petición sin cabecera de banda explícita
-    }
+    const token = leerTokenDeSesion();
+    const activeBandId = leerBandaActiva();
 
     const authHeaders: Record<string, string> = {};
     if (token) authHeaders["Authorization"] = `Bearer ${token}`;
@@ -155,7 +150,7 @@ export function useConcertSourceMedia({ setErrorMessage, setAnalysisStatus }: Co
     setIsLinkingLocalFile(true);
     setErrorMessage(null);
     try {
-      const res = await apiFetch("/api/concert-to-album/demo-audio", {
+      const res = await apiFetch<RespuestaAudioDemo>("/api/concert-to-album/demo-audio", {
         method: "POST",
       });
       if (res.success && res.filePath) {

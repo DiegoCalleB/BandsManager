@@ -1,25 +1,10 @@
 import React, { useState } from "react";
-import {
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  List,
-  Grid,
-  CalendarDays,
-  ArrowRight,
-  Music,
-  Users,
-  MapPin,
-  Clock,
-  Sparkles,
-} from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, List, Grid, CalendarDays, ArrowRight, Users, MapPin } from "lucide-react";
 import { Concert, Rehearsal, ThemeColors } from "../../../types";
 import { CalendarWidgetViewMode } from "../../../types/dashboardWidgets";
 import { Button, IconButton, LinkButton } from '../../ui';
-
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
+import type { NavigationOptions } from '../../Dashboard';
+import type { EventoConAlias } from '../../calendar/calendarTypes';
 
 export interface CalendarWidgetProps {
   concerts: Concert[];
@@ -28,7 +13,7 @@ export interface CalendarWidgetProps {
   colors: ThemeColors;
   agendaFilterMode: "active" | "all";
   onSetAgendaFilterMode: (mode: "active" | "all") => void;
-  onNavigate?: (view: string, options?: any) => void;
+  onNavigate?: (view: string, options?: NavigationOptions) => void;
   viewMode?: CalendarWidgetViewMode;
   onChangeViewMode?: (mode: CalendarWidgetViewMode) => void;
   filterType?: "all" | "concierto" | "ensayo";
@@ -46,8 +31,7 @@ export function CalendarWidget({
   viewMode: initialViewMode = "list",
   onChangeViewMode,
   filterType: initialFilterType = "all",
-  onChangeFilterType,
-  isEditMode = false,
+  onChangeFilterType
 }: CalendarWidgetProps) {
   const [internalViewMode, setInternalViewMode] =
     useState<CalendarWidgetViewMode>(initialViewMode);
@@ -144,11 +128,11 @@ export function CalendarWidget({
         dateStr: c.fecha,
         day,
         month,
-        time: (c as any).hora || undefined,
+        time: (c as EventoConAlias).hora || undefined,
         location:
           [c.sala, c.ciudad].filter(Boolean).join(" • ") || "Por determinar",
         badge: c.contrato_firmado ? "Contrato Firmado" : "Programado",
-        bandName: (c as any).bandName || activeBandName,
+        bandName: (c as EventoConAlias).bandName || activeBandName,
         details: c.cache ? `Caché: ${c.cache}€` : undefined,
       });
     });
@@ -172,7 +156,7 @@ export function CalendarWidget({
         time: r.hora || "18:00",
         location: r.lugar || "Local de Ensayo",
         badge: r.estado === "completado" ? "Completado" : "Programado",
-        bandName: (r as any).bandName || activeBandName,
+        bandName: (r as EventoConAlias).bandName || activeBandName,
         details: `Horario: ${r.hora || "18:00"}`,
       });
     });
@@ -207,13 +191,6 @@ export function CalendarWidget({
     month: "long",
     year: "numeric",
   });
-
-  const cardContainerBg = "bg-[var(--sunken)] ";
-  const subCardBg = "bg-[var(--sunken)] text-[var(--ink)] hover:brightness-95";
-  const textTitleColor = "text-[var(--ink)]";
-  const textSubColor = "text-[var(--ink-2)]";
-  const dividerColor = "border-[var(--hair)]";
-  const accentColor = "text-[var(--acc)]";
 
   return (
     <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] transition-ui space-y-4">

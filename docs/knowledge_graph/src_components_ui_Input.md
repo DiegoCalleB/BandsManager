@@ -13,18 +13,18 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: fieldVariants, InputProps, Input, TextareaProps, Textarea.
+Exporta: InputProps, Input, TextareaProps, Textarea.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_ui_variantes|src/components/ui/variantes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_cn|src/utils/cn.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(from #frontend)*
-- [[src_components_ui_Select|src/components/ui/Select.tsx]] *(from #frontend)*
 
 ---
 

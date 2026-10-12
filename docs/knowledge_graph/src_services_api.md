@@ -33,8 +33,17 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[server_routes_metrics|server/routes/metrics.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembros|server/routes/users/rutasMiembros.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasRegistro|server/routes/users/rutasRegistro.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
+- [[src_components_reels_metrics_metricsTypes|src/components/reels/metrics/metricsTypes.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_repertorio_PerfectSetlistModal|src/components/repertorio/PerfectSetlistModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_tiposApi|src/services/tiposApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_growthPlanEngine|src/utils/growthPlanEngine.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -77,11 +86,9 @@ Exporta: ApiError, getAuthHeaders, api.
 - [[src_components_repertorio_hooks_useSetlistReordering|src/components/repertorio/hooks/useSetlistReordering.ts]] *(from #frontend)*
 - [[src_components_repertorio_ImportSetlistModal|src/components/repertorio/ImportSetlistModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
-- [[src_components_SpotifyPlayerBar|src/components/SpotifyPlayerBar.tsx]] *(from #frontend)*
 - [[src_components_user_profile_hooks_useProfileBands|src/components/user_profile/hooks/useProfileBands.ts]] *(from #frontend)*
 - [[src_components_user_profile_UpgradePlanDialog|src/components/user_profile/UpgradePlanDialog.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
-- [[src_hooks_useEmailTemplates|src/hooks/useEmailTemplates.ts]] *(from #hook)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_userPreferences|src/utils/userPreferences.ts]] *(from #service)*

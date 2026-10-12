@@ -1,20 +1,22 @@
-import { getAiClient, generateContentWithFallback } from "./ai.js";
+import { getAiClient, generateContentWithFallback, type RespuestaIA } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
-import { detectPitchLanguage } from "./utils/leadLanguage.js";
 import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
 import { enrichVenueDetailsWithSerper } from "./services/venueIntelligenceService.js";
 import { resolverUrlSpotifyDeBanda } from "./services/spotifyService.js";
+import { comoErrorCapturado } from '../src/utils/errorCapturado.js';
+import type { BandContact, Lead } from '../src/types.js';
+import type { DatosBandaIA, DatosLeadIA, FechasFestivalIA, LeadEliminadoPorCierre, RespuestaPlacesTextSearch } from './tiposAutoEnrichment.js';
 
 function toIsoDateString(val?: string | null): string {
   if (!val || typeof val !== 'string') return '';
   const trimmed = val.trim();
   if (!trimmed) return '';
   if (/^\d{4}-\d{2}-\d{2}/.test(trimmed)) return trimmed.substring(0, 10);
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     return `${ddmmyyyy[3]}-${ddmmyyyy[2].padStart(2, '0')}-${ddmmyyyy[1].padStart(2, '0')}`;
   }
@@ -28,7 +30,7 @@ function toIsoDateString(val?: string | null): string {
 /**
  * Scrapes a venue/contact website via direct HTTP fetch to extract emails, instagram, and phone numbers without spending Gemini tokens.
  */
-export async function extractFestivalDates(lead: any): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
+export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
   const cleanCity = (lead.ciudad || '').replace(/\s*\([^)]*\)/g, '').trim();
@@ -77,7 +79,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
 
   try {
     console.log(`[FestivalDates] Consulta a Gemini AI para "${cleanVenue}" (${cleanCity})...`);
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -85,7 +87,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch {
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -95,11 +97,11 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: FechasFestivalIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       try {
         data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
-      } catch (_) { data = {}; }
+      } catch { data = {}; }
     }
 
     let rawStart = data.festival_start_date || data.startDate || data.start_date;
@@ -134,7 +136,8 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
         endDate: endIso
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[FestivalDates] Error en AI fallback:`, err?.message || err);
   }
 
@@ -157,7 +160,7 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       urlsToTry.push(`${origin}/geral`);
       urlsToTry.push(`${origin}/contact-us`);
     }
-  } catch (e) {
+  } catch {
     // Ignore URL parse error
   }
 
@@ -224,7 +227,7 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
       }
 
       if (results.email) break; // Found main contact email, stop crawling subpages
-    } catch (err) {
+    } catch {
       // Ignore timeout or fetch error on subpage
     }
   }
@@ -241,8 +244,12 @@ export interface AutoEnrichOptions {
   respetarVacios?: string[];
 }
 
-export async function autoEnrichLead(lead: any, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<any> {
-  if (!lead || !lead.nombre_sala) return lead;
+// Genérico para devolver el mismo tipo que se recibe: el Scout (routes/agent.ts) pasa un literal que
+// aún no es un Lead y reasigna el resultado a esa variable. Dentro, todo se comprueba contra Lead.
+export async function autoEnrichLead<L extends object>(entrada: L, userBandId: string, opciones: AutoEnrichOptions = {}): Promise<L> {
+  // Los campos obligatorios de Lead los rellena quien crea el lead; aquí solo se leen y completan.
+  const lead = entrada as unknown as Lead;
+  if (!lead || !lead.nombre_sala) return entrada;
   const respetarVacios = new Set(opciones.respetarVacios || []);
 
   let modified = false;
@@ -275,7 +282,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
 
         if (lead.instagram) modified = true;
       }
-    } catch (_) {}
+    } catch { /* sin coincidencia conocida el lead se queda sin Instagram; el enriquecimiento sigue */ }
   }
 
   const placesApiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_PLACES_API_KEY || "";
@@ -299,7 +306,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
       });
 
       if (placesRes.ok) {
-        const placesData: any = await placesRes.json();
+        const placesData: RespuestaPlacesTextSearch = await placesRes.json();
         if (Array.isArray(placesData.places) && placesData.places.length > 0) {
           const topPlace = placesData.places[0];
 
@@ -312,10 +319,11 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
             }
             const state = loadState();
             if (state.leads) {
-              state.leads = state.leads.filter((l: any) => l.id !== lead.id);
+              state.leads = state.leads.filter((l) => l.id !== lead.id);
               saveState(state);
             }
-            return { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            const eliminado: LeadEliminadoPorCierre = { id: lead.id, deleted: true, reason: 'closed_permanently', nombre_sala: lead.nombre_sala };
+            return eliminado as unknown as L;
           }
 
           if (topPlace.formattedAddress && (!lead.direccion || lead.direccion.length < 5)) {
@@ -337,7 +345,7 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
                 lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
                 modified = true;
               }
-            } catch (e) {}
+            } catch { /* web mal formada: el lead se queda sin logo */ }
           }
           if (topPlace.formattedAddress && (!lead.ciudad || lead.ciudad === 'Desconocido')) {
             const parts = topPlace.formattedAddress.split(",");
@@ -348,7 +356,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           }
         }
       }
-    } catch (placesErr: any) {
+    } catch (placesErrCapturado) {
+      const placesErr = comoErrorCapturado(placesErrCapturado);
       console.warn(`[AutoEnrich Places] Error llamando a Places API:`, placesErr?.message || placesErr);
     }
   }
@@ -382,14 +391,15 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
               lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
               modified = true;
             }
-          } catch (_) {}
+          } catch { /* web mal formada: el lead se queda sin logo */ }
         }
         if (serperContact.instagram && !lead.instagram) {
           lead.instagram = serperContact.instagram;
           modified = true;
         }
       }
-    } catch (serperErr: any) {
+    } catch (serperErrCapturado) {
+      const serperErr = comoErrorCapturado(serperErrCapturado);
       console.warn(`[AutoEnrich Serper] Aviso en consulta Serper:`, serperErr?.message || serperErr);
     }
   }
@@ -429,7 +439,8 @@ export async function autoEnrichLead(lead: any, userBandId: string, opciones: Au
           modified = true;
         }
       }
-    } catch (jinaErr: any) {
+    } catch (jinaErrCapturado) {
+      const jinaErr = comoErrorCapturado(jinaErrCapturado);
       console.warn(`[AutoEnrich Jina] Aviso en consulta Jina Reader:`, jinaErr?.message || jinaErr);
     }
 
@@ -479,7 +490,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
 
       try {
         console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '${lead.nombre_sala}'...`);
-        let response: any = null;
+        let response: RespuestaIA | null = null;
         try {
           response = await generateContentWithFallback(client, {
             contents: prompt,
@@ -487,7 +498,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
               tools: [{ googleSearch: {} }]
             }
           });
-        } catch (searchErr: any) {
+        } catch {
           console.warn(`[AutoEnrich Gemini] Google Search no disponible, reintentando con conocimiento Gemini...`);
           response = await generateContentWithFallback(client, {
             contents: prompt
@@ -498,7 +509,7 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
         const jsonStart = cleanedText.indexOf('{');
         const jsonEnd = cleanedText.lastIndexOf('}');
-        let data: any = {};
+        let data: DatosLeadIA = {};
         if (jsonStart !== -1 && jsonEnd !== -1) {
           data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
         } else {
@@ -521,7 +532,8 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         if (data.imagen_url && !lead.imagen_url) { lead.imagen_url = data.imagen_url; modified = true; }
         if (data.icono && (!lead.icono || lead.icono === '🏛️')) { lead.icono = data.icono; modified = true; }
         if (data.notas && (!lead.notas || lead.notas.length < 10)) { lead.notas = data.notas; modified = true; }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '${lead.nombre_sala}':`, err?.message || err);
       }
     }
@@ -616,7 +628,8 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
           modified = true;
           console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '${lead.nombre_sala}'.`);
         }
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         console.warn(`[AutoEnrich] Error generando pitch inicial con IA:`, e?.message || e);
       }
     }
@@ -639,34 +652,34 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
         lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
         modified = true;
       }
-    } catch (e) {}
+    } catch { /* web mal formada: el lead se queda sin logo */ }
   }
 
   // Lo que el usuario vació a propósito se queda vacío, encuentre lo que encuentre la web.
   for (const campo of respetarVacios) {
-    if (campo in lead) lead[campo] = '';
+    if (campo in lead) Reflect.set(lead, campo, '');
   }
 
   if (modified) {
     console.log(`[AutoEnrich] Lead '${lead.nombre_sala}' enriquecido y guardado con éxito.`);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
-    const idx = (state.leads || []).findIndex((l: any) => l.id === lead.id);
+    const idx = (state.leads || []).findIndex((l) => l.id === lead.id);
     if (idx !== -1) {
       state.leads[idx] = savedEnriched;
       saveState(state);
     }
-    return savedEnriched;
+    return savedEnriched as unknown as L;
   }
 
-  return lead;
+  return entrada;
 }
 
 /** Guarda la banda enriquecida y refresca la copia en memoria. */
-async function persistirBandaEnriquecida(band: any, userBandId: string): Promise<any> {
+async function persistirBandaEnriquecida(band: BandContact, userBandId: string): Promise<BandContact> {
   const savedEnriched = await dbUpsertBandContact(band, userBandId);
   const state = loadState();
-  const idx = (state.bands || []).findIndex((b: any) => b.id === band.id);
+  const idx = (state.bands || []).findIndex((b) => b.id === band.id);
   if (idx !== -1) {
     state.bands[idx] = savedEnriched;
     saveState(state);
@@ -674,7 +687,7 @@ async function persistirBandaEnriquecida(band: any, userBandId: string): Promise
   return savedEnriched;
 }
 
-export async function autoEnrichBandContact(band: any, userBandId: string): Promise<any> {
+export async function autoEnrichBandContact(band: BandContact, userBandId: string): Promise<BandContact> {
   if (!band || !band.nombre_banda) return band;
 
   const client = getAiClient();
@@ -711,7 +724,7 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
 
   try {
     console.log(`[AutoEnrich] Buscando información automática para Banda: '${band.nombre_banda}'...`);
-    let response: any = null;
+    let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
         contents: prompt,
@@ -719,7 +732,8 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
           tools: [{ googleSearch: {} }]
         }
       });
-    } catch (searchErr: any) {
+    } catch (searchErrCapturado) {
+      const searchErr = comoErrorCapturado(searchErrCapturado);
       console.warn(`[AutoEnrich] Google Search no disponible (${searchErr?.message || searchErr}), reintentando con conocimiento Gemini...`);
       response = await generateContentWithFallback(client, {
         contents: prompt
@@ -730,7 +744,7 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
     const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const jsonStart = cleanedText.indexOf('{');
     const jsonEnd = cleanedText.lastIndexOf('}');
-    let data: any = {};
+    let data: DatosBandaIA = {};
     if (jsonStart !== -1 && jsonEnd !== -1) {
       data = JSON.parse(cleanedText.substring(jsonStart, jsonEnd + 1));
     } else {
@@ -763,7 +777,8 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
       console.log(`[AutoEnrich] Banda '${band.nombre_banda}' enriquecida con éxito.`);
       return await persistirBandaEnriquecida(band, userBandId);
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[AutoEnrich] Error enriqueciendo Banda '${band.nombre_banda}':`, err?.message || err);
   }
 

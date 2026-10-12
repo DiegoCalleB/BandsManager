@@ -14,6 +14,7 @@ import {
   Mail
 } from 'lucide-react';
 import { ShowIcon } from '../components/ui/ShowIcon';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface DealData {
   token: string;
@@ -68,8 +69,11 @@ export const PublicDealView: React.FC = () => {
     return pathParts[1] || pathParts[0] || '';
   }, []);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [cargando, setLoading] = useState(true);
+  const [errorCarga, setError] = useState<string | null>(null);
+  // Sin token no hay nada que pedir: el aviso y el fin de la carga se derivan, no se guardan.
+  const loading = token ? cargando : false;
+  const error = token ? errorCarga : 'Enlace inválido o sin token de concierto';
   const [deal, setDeal] = useState<DealData | null>(null);
 
   // Form State for Signature
@@ -94,11 +98,7 @@ export const PublicDealView: React.FC = () => {
 
   // Fetch Deal Data
   useEffect(() => {
-    if (!token) {
-      setError('Enlace inválido o sin token de concierto');
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
 
     const fetchDeal = async () => {
       try {
@@ -114,7 +114,8 @@ export const PublicDealView: React.FC = () => {
         if (data.deal.estado === 'confirmado') {
           setSignSuccess(true);
         }
-      } catch (err: any) {
+      } catch (errCapturado) {
+        const err = comoErrorCapturado(errCapturado);
         setError(err.message || 'Error al conectar con el servidor');
       } finally {
         setLoading(false);
@@ -222,7 +223,8 @@ export const PublicDealView: React.FC = () => {
       // La respuesta de /sign es parcial (solo estado y firma): se fusiona, no se sustituye
       setDeal(prev => (prev ? { ...prev, ...data.deal } : data.deal));
       setSignSuccess(true);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       alert(err.message || 'Error al confirmar el acuerdo');
     } finally {
       setIsSigning(false);
@@ -251,7 +253,8 @@ export const PublicDealView: React.FC = () => {
         throw new Error(data.error || 'Error al enviar el correo');
       }
       setResendStatus(data.mensaje || '¡Copia enviada correctamente!');
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       alert(err.message || 'Error al enviar el correo');
     } finally {
       setResending(false);

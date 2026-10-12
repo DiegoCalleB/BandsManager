@@ -84,7 +84,7 @@ export function formatLeadPitchForWhatsApp(lead: Partial<Lead>, bandName = 'la b
   const venueName = lead.nombre_sala?.trim() || 'la sala';
 
   // Saludo cercano y directo (en minúsculas o informal como manda el protocolo B2B de booking en salas)
-  let greeting = `¡Hola${contactName ? ` ${contactName}` : ''}! 👋`;
+  const greeting = `¡Hola${contactName ? ` ${contactName}` : ''}! 👋`;
 
   let datesFragment = '';
   if (detectedDates && detectedDates.length > 0) {

@@ -32,7 +32,7 @@ export function toIsoDateString(val?: string | null): string {
   }
 
   // If DD/MM/YYYY or DD-MM-YYYY
-  const ddmmyyyy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  const ddmmyyyy = trimmed.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
   if (ddmmyyyy) {
     const day = ddmmyyyy[1].padStart(2, '0');
     const month = ddmmyyyy[2].padStart(2, '0');

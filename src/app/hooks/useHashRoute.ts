@@ -3,6 +3,7 @@
  * Extraído de App.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import React from "react";
+import { hayUsuarioGuardado } from '../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface HashRouteParams {
@@ -123,7 +124,7 @@ export function useHashRoute({ isLoggedIn }: HashRouteParams) {
     const yaRegistrado =
       localStorage.getItem("bandmanager_registered_user") === "true" ||
       localStorage.getItem("bandmanager_remember_me") === "true" ||
-      Boolean(localStorage.getItem("bandmanager_user"));
+      hayUsuarioGuardado();
     return !raiz || !!search || !!hash || instalada || yaRegistrado;
   });
 
@@ -135,7 +136,7 @@ export function useHashRoute({ isLoggedIn }: HashRouteParams) {
         const yaRegistrado =
           localStorage.getItem("bandmanager_registered_user") === "true" ||
           localStorage.getItem("bandmanager_remember_me") === "true" ||
-          Boolean(localStorage.getItem("bandmanager_user"));
+          hayUsuarioGuardado();
         if (!yaRegistrado) {
           setVerLogin(false);
         }

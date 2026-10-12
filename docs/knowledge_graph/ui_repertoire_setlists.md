@@ -44,7 +44,7 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 - [[src_components_repertorio_hooks_useSetlistSync|src/components/repertorio/hooks/useSetlistSync.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_repertorio_hooks_useSongEditing|src/components/repertorio/hooks/useSongEditing.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_config_defaultRepertoire|src/config/defaultRepertoire.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_context_idioma|src/context/idioma.ts]] *(Layer: #service, Domain: #system)*
 - [[src_hooks_useModuleTutorial|src/hooks/useModuleTutorial.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_hooks_useRepertorioTabs|src/hooks/useRepertorioTabs.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
@@ -55,7 +55,6 @@ Gestión de canciones, directos, compatibilidad tonal y transiciones armónicas.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
-- [[src_components_repertorio_EscenarioView|src/components/repertorio/EscenarioView.tsx]] *(from #frontend)*
 
 ---
 

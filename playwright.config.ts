@@ -15,6 +15,9 @@ export default defineConfig({
   timeout: 30_000,
   use: {
     baseURL: process.env.E2E_BASE_URL || 'http://localhost:3000',
+    // La landing elige idioma por el navegador: se fija el español para que los textos de los
+    // tests no dependan del idioma de la máquina que los corre.
+    locale: 'es-ES',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },

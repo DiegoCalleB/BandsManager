@@ -21,6 +21,7 @@ Estado de los agentes autónomos, su configuración y el seguimiento de la ejecu
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

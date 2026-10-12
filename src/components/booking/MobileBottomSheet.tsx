@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Lead, LeadStatus, Concert } from "../../types";
+import { Lead, LeadStatus, Concert, BookingCampaign } from "../../types";
 import { VenueDetailPanel } from "./VenueDetailPanel";
 import { X, Building2 } from "lucide-react";
 import { Button } from '../ui';
@@ -17,7 +17,7 @@ interface MobileBottomSheetProps {
   normalizeType: (type?: string) => string;
   autoDetectVenueAddress: (venueName: string, city: string) => string;
   sectionTab: "salas" | "medios" | "grupos";
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   onLeadLogoUpload?: (file: File) => void;
   isUploadingLeadLogo?: boolean;
   onFilterByRouteCity?: (city: string) => void;

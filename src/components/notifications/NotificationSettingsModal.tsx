@@ -1,21 +1,5 @@
 import React from 'react';
-import {
-  Bell,
-  BellOff,
-  BellRing,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  AlertTriangle,
-  Sparkles,
-  MessageSquare,
-  RefreshCw,
-  PartyPopper,
-  Radio,
-  X,
-  ExternalLink,
-  ShieldCheck,
-} from 'lucide-react';
+import { Bell, BellOff, BellRing, Volume2, VolumeX, CheckCircle2, AlertTriangle, Sparkles, MessageSquare, RefreshCw, PartyPopper, Radio, X } from 'lucide-react';
 import { ModalPortal } from '../common/ModalPortal';
 import { BrowserNotificationConfig, NotificationPermissionStatus } from '../../types/browserNotifications';
 import { ShowIcon } from '../ui/ShowIcon';

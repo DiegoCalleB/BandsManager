@@ -1,8 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { generateObsidianGraph, escanearFicheros, construirNodos } from '../../scripts/generate_obsidian_graph';
+
+// Con la CI cargada superan los 5 s por defecto (en local tardan 1-2 s).
+vi.setConfig({ testTimeout: 30_000 });
 
 // El grafo de docs/knowledge_graph se genera desde los imports reales. Este test es lo que lo mantiene
 // vivo: si añades, borras o enlazas un fichero y no regeneras, falla (el pre-commit lo regenera solo).

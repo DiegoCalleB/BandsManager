@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import crypto from "crypto";
 import { verifyReplicateWebhook } from "../stemPredictionReconciler.js";
-import { acquireStemsSeparationLock, waitForStemsCompletion, saveStemsToPersistentCache, stemsMemoryCache } from "../../db/stemsCache.js";
+import { acquireStemsSeparationLock, saveStemsToPersistentCache, stemsMemoryCache } from "../../db/stemsCache.js";
 import { stemStorageRetryManager } from "../stemStorageRetryQueue.js";
 import { esIpPrivadaOReservada, crearAgenteIpPinneada } from "../../utils/ssrfGuard.js";
 

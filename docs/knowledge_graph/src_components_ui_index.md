@@ -38,6 +38,7 @@ BandManager UI Component Library
 - [[src_components_ui_Skeleton|src/components/ui/Skeleton.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Switch|src/components/ui/Switch.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Tabs|src/components/ui/Tabs.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_variantes|src/components/ui/variantes.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---
 
@@ -45,7 +46,10 @@ BandManager UI Component Library
 - [[src_app_DesktopSidebar|src/app/DesktopSidebar.tsx]] *(from #service)*
 - [[src_app_MobileDrawer|src/app/MobileDrawer.tsx]] *(from #service)*
 - [[src_app_MobileTopBar|src/app/MobileTopBar.tsx]] *(from #service)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilBody|src/components/atril/AtrilBody.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilHeader|src/components/atril/AtrilHeader.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilView|src/components/atril/AtrilView.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandCardsGrid|src/components/band_switcher/BandCardsGrid.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandSettingsModal|src/components/band_switcher/BandSettingsModal.tsx]] *(from #frontend)*
 - [[src_components_band_switcher_BandSwitcherFooter|src/components/band_switcher/BandSwitcherFooter.tsx]] *(from #frontend)*
@@ -331,9 +335,13 @@ BandManager UI Component Library
 - [[src_components_repertorio_SetlistSongRow|src/components/repertorio/SetlistSongRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistStatsSummaryBar|src/components/repertorio/SetlistStatsSummaryBar.tsx]] *(from #frontend)*
 - [[src_components_repertorio_ShowItemModal|src/components/repertorio/ShowItemModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionDiagnosisPanel|src/components/repertorio/song_transition/TransitionDiagnosisPanel.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionFooter|src/components/repertorio/song_transition/TransitionFooter.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionHeader|src/components/repertorio/song_transition/TransitionHeader.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionPlayer|src/components/repertorio/song_transition/TransitionPlayer.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionTrackCard|src/components/repertorio/song_transition/TransitionTrackCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SongModal|src/components/repertorio/SongModal.tsx]] *(from #frontend)*
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SpotifyDiscographyModal|src/components/repertorio/SpotifyDiscographyModal.tsx]] *(from #frontend)*
 - [[src_components_SaveErrorBanner|src/components/SaveErrorBanner.tsx]] *(from #frontend)*
 - [[src_components_setlist_performance_ChordSheetPage|src/components/setlist_performance/ChordSheetPage.tsx]] *(from #frontend)*

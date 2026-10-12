@@ -3,7 +3,7 @@
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
 import { Check,Globe } from "lucide-react";
-import { SUPPORTED_LANGUAGES } from "../../context/LanguageContext";
+import { SUPPORTED_LANGUAGES } from "../../context/idioma";
 import { useUserProfile } from "./UserProfileContext";
 
 /**

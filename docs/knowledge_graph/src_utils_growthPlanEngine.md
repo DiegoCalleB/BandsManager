@@ -26,6 +26,7 @@ Exporta: ActionItem, ChannelRecommendation, GrowthPlan, getDeterministicGrowthPl
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_reels_metrics_hooks_useGrowthPlan|src/components/reels/metrics/hooks/useGrowthPlan.ts]] *(from #frontend)*
 - [[src_components_reels_SocialGrowthPlanView|src/components/reels/SocialGrowthPlanView.tsx]] *(from #frontend)*
+- [[src_services_api|src/services/api.ts]] *(from #service)*
 
 ---
 

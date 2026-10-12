@@ -20,6 +20,7 @@ VENUE EVENTS & AVAILABILITY RADAR (WEGOW / BANDSINTOWN / SONGKICK / TICKETING)
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

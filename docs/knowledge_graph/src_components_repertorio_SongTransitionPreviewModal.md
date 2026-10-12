@@ -13,26 +13,26 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: SongTransitionPreviewModal.
+Comprobación de la unión entre dos temas del repertorio: escucharla, diagnosticarla y ajustarla.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_PublicoSilhouette|src/components/ui/PublicoSilhouette.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_repertorio_song_transition_SongTransitionProvider|src/components/repertorio/song_transition/SongTransitionProvider.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_song_transition_SongTransitionView|src/components/repertorio/song_transition/SongTransitionView.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_song_transition_hooks_useSongTransitionController|src/components/repertorio/song_transition/hooks/useSongTransitionController.ts]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_repertorio_song_transition_types|src/components/repertorio/song_transition/types.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_energyPacingUtils|src/utils/energyPacingUtils.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_transitionAudioEngine|src/utils/transitionAudioEngine.ts]] *(Layer: #service, Domain: #repertoire)*
-- [[src_utils_transitionSynthesizer|src/utils/transitionSynthesizer.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/repertorio/song_transition/__tests__/songTransitionContracts.test.ts`
 
 ---
 

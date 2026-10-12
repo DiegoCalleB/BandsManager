@@ -49,7 +49,8 @@ export interface SetlistItemsListProps {
   onOpenStudio: (song: Song) => void;
   onOpenMemberNotes: (song: Song) => void;
   onOpenChords: (song: Song) => void;
-  currentUser: any;
+  /** Usuario activo: solo se usan id y nombre (dudas por tema). */
+  currentUser: { id?: string; name?: string } | null | undefined;
   handleUpdateSongFromStudio: (song: Song) => void;
   onUpdateShowItemTitle: (itemId: string, title: string) => void;
   onEditShowItem: (item: SetlistItem) => void;

@@ -1,3 +1,4 @@
+import { leerTokenDeSesion, leerBandaActiva } from '../services/sesionLocal';
 // Centralized authenticated API fetch helper for BandsManager
 
 /**
@@ -10,9 +11,9 @@
 
 export class ApiRequestError extends Error {
   status: number;
-  data: any;
+  data: unknown;
 
-  constructor(message: string, status: number, data?: any) {
+  constructor(message: string, status: number, data?: unknown) {
     super(message);
     this.name = 'ApiRequestError';
     this.status = status;
@@ -22,20 +23,11 @@ export class ApiRequestError extends Error {
 
 /** Banda activa del usuario, para que el backend sepa sobre qué banda opera la petición. */
 export function getActiveBandId(): string {
-  try {
-    const userStr = localStorage.getItem('bandmanager_user');
-    if (userStr) {
-      const u = JSON.parse(userStr);
-      if (u?.band_id) return String(u.band_id);
-    }
-  } catch (e) {
-    /* localStorage con JSON corrupto: seguimos sin banda explícita */
-  }
-  return '';
+  return leerBandaActiva();
 }
 
 function buildHeaders(options: RequestInit): Record<string, string> {
-  const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token');
+  const token = leerTokenDeSesion();
   const headers: Record<string, string> = {
     ...((options.headers as Record<string, string>) || {}),
   };
@@ -64,7 +56,7 @@ export async function apiFetchRaw(url: string, options: RequestInit = {}): Promi
   return fetch(url, { ...options, headers: buildHeaders(options) });
 }
 
-export async function apiFetch<T = any>(url: string, options: RequestInit = {}): Promise<T> {
+export async function apiFetch<T = unknown>(url: string, options: RequestInit = {}): Promise<T> {
   const res = await apiFetchRaw(url, options);
 
   const contentType = res.headers.get('content-type');
@@ -85,7 +77,7 @@ export async function apiFetch<T = any>(url: string, options: RequestInit = {}):
   }
 }
 
-export async function safeJsonFetch<T = any>(res: Response, fallbackValue: T = {} as T): Promise<T> {
+export async function safeJsonFetch<T = unknown>(res: Response, fallbackValue: T = {} as T): Promise<T> {
   const contentType = res.headers.get('content-type');
   if (!contentType || !contentType.includes('application/json')) {
     const text = await res.text().catch(() => '');

@@ -2,7 +2,7 @@ import type { Rehearsal, RehearsalAgendaItem } from '../../types';
 import { useSeguimientoEnsayo } from '../../hooks/useSeguimientoEnsayo';
 import { ShowIcon } from '../ui/ShowIcon';
 import { BotonesEvaluacion } from './BotonesEvaluacion';
-import { formatTime } from './EnsayoCronometro';
+import { formatTime } from './formatTime';
 
 /**
  * Barra de ensayo del visor en vivo: cronómetro de la pista, evaluación de 1 toque y nota de

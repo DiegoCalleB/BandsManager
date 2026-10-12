@@ -23,7 +23,7 @@ Verificación de la identidad de Google en el servidor.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*
 
 ---
 

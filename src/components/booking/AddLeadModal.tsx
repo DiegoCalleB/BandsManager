@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { X, Building2, Radio, Sparkles, Loader2, Upload, Briefcase, SlidersHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import { LeadType } from '../../types';
 import { apiFetch } from '../../utils/api';
+import type { RespuestaBuscarFichaSala } from './tiposRespuestasApi';
 import { ModalPortal } from '../common/ModalPortal';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
-
-// Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
-// activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
-const isStitchLight = false;
 
 export interface NewLeadDataState {
   nombre_sala: string;
@@ -75,7 +72,7 @@ export function AddLeadModal({
     if (!newLeadData.nombre_sala) return;
     setIsSearchingLogo(true);
     try {
-      const res = await apiFetch('/api/leads/ai-lookup', {
+      const res = await apiFetch<RespuestaBuscarFichaSala>('/api/leads/ai-lookup', {
         method: 'POST',
         body: JSON.stringify({
           nombre_sala: newLeadData.nombre_sala,

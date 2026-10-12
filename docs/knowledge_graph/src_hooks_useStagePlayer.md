@@ -18,6 +18,7 @@ Exporta: useStagePlayer.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_song_studio_audioContext|src/components/song_studio/audioContext.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_crossfade|src/utils/crossfade.ts]] *(Layer: #service, Domain: #system)*
@@ -26,6 +27,11 @@ Exporta: useStagePlayer.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_repertorio_hooks_useRepertorioPlayers|src/components/repertorio/hooks/useRepertorioPlayers.ts]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/useStagePlayer.behavior.test.ts`
 
 ---
 

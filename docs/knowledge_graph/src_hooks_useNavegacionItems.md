@@ -29,6 +29,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/hooksSinEfectosEnCascada.behavior.test.ts`
 - `src/hooks/__tests__/useNavegacionItems.test.ts`
 
 ---

@@ -19,12 +19,13 @@ Exporta: SharePayload, shareViaWebShare, shareViaWhatsApp, shareViaEmail, copyTo
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_whatsapp|src/utils/whatsapp.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilModals|src/components/atril/AtrilModals.tsx]] *(from #frontend)*
 - [[src_components_calendar_PromocionConciertoModal|src/components/calendar/PromocionConciertoModal.tsx]] *(from #frontend)*
 - [[src_components_InvitarBandaCard|src/components/InvitarBandaCard.tsx]] *(from #frontend)*
 - [[src_components_ShareModal|src/components/ShareModal.tsx]] *(from #frontend)*

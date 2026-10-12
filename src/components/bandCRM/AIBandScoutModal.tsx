@@ -9,11 +9,12 @@ Sparkles,
 UserPlus,
 X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BandContact, BookingCampaign } from "../../types";
 import { apiFetch } from "../../utils/api";
 import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface AIBandScoutModalProps {
   isOpen: boolean;
@@ -36,27 +37,26 @@ export function AIBandScoutModal({
   const [results, setResults] = useState<Partial<BandContact>[]>([]);
   const [selectedBands, setSelectedBands] = useState<Set<number>>(new Set());
 
-  // Pre-fill from active campaign or defaults
-  useEffect(() => {
+  // Pre-rellena desde la campaña activa al abrir o al cambiar de campaña (ajuste durante el render)
+  const [abiertoPrevio, setAbiertoPrevio] = useState(false);
+  const [campanaPrevia, setCampanaPrevia] = useState(activeCampaign);
+  if (isOpen !== abiertoPrevio || activeCampaign !== campanaPrevia) {
+    setAbiertoPrevio(isOpen);
+    setCampanaPrevia(activeCampaign);
     if (isOpen) {
       if (activeCampaign && activeCampaign.targetCities.length > 0) {
-  // If the campaign is in Madrid, we probably want bands from OUTSIDE Madrid
-  // as the user mentioned"bandas conocidillas fuera de madrid para invitarles a venir"
-  const mainCity = activeCampaign.targetCities[0].toLowerCase();
-  if (mainCity.includes("madrid")) {
-    setCity("Barcelona, Valencia o Bilbao"); // Default suggestion outside
-  } else {
-    setCity("Madrid"); // Suggest bringing Madrid bands to their city
-  }
+        // Si la campaña es en Madrid, interesan bandas de FUERA de Madrid para invitarlas a venir
+        const mainCity = activeCampaign.targetCities[0].toLowerCase();
+        setCity(mainCity.includes("madrid") ? "Barcelona, Valencia o Bilbao" : "Madrid");
       } else {
-  setCity("Barcelona");
+        setCity("Barcelona");
       }
       setGenre("");
       setResults([]);
       setSelectedBands(new Set());
       setError("");
     }
-  }, [isOpen, activeCampaign]);
+  }
 
   if (!isOpen) return null;
 
@@ -72,7 +72,7 @@ export function AIBandScoutModal({
     setSelectedBands(new Set());
 
     try {
-      const response = await apiFetch("/api/bands/ai-scout", {
+      const response = await apiFetch<{ bands?: Partial<BandContact>[] }>("/api/bands/ai-scout", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ city, genre, count }),
@@ -80,9 +80,10 @@ export function AIBandScoutModal({
       if (response && response.bands) {
   setResults(response.bands);
   // Auto-select all by default
-  setSelectedBands(new Set(response.bands.map((_: any, i: number) => i)));
+  setSelectedBands(new Set(response.bands.map((_, i) => i)));
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al buscar bandas con IA.");
     } finally {
       setIsSearching(false);

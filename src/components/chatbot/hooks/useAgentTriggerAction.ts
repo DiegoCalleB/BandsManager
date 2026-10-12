@@ -8,6 +8,7 @@ import { Lead } from "../../../types";
 import { getErrorMessage } from "../../../utils/errorMessage";
 import type { ChatAutonomyConfig } from "../chatTypes";
 import { ChatMessage, ProposedAction, TriggerAgentResponse } from "../chatTypes";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AgentTriggerActionParams {
@@ -26,7 +27,7 @@ export interface AgentTriggerActionParams {
 export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMessages, setMessages, setActiveRun, leads }: AgentTriggerActionParams) {
   const applyAgentTrigger = async (msgId: string, actionIndex: number, action: ProposedAction) => {
     try {
-      const token = localStorage.getItem('bandmanager_token') || localStorage.getItem('token') || '';
+      const token = leerTokenDeSesion();
       const pat = localStorage.getItem('bandmanager_github_pat') || '';
       const owner = localStorage.getItem('bandmanager_github_owner') || '';
       const repo = localStorage.getItem('bandmanager_github_repo') || '';

@@ -24,7 +24,7 @@ Exporta: FaseGrabacion, TomaGrabada, useGrabarIdea.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_chords_GrabarIdea|src/components/chords/GrabarIdea.tsx]] *(from #frontend)*
 
 ---

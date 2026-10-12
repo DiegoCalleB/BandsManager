@@ -66,7 +66,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
-- [[server_routes_users|server/routes/users.ts]] *(from #route)*
+- [[server_routes_users_adminInicial|server/routes/users/adminInicial.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_agentQueueService|server/services/agentQueueService.ts]] *(from #agent)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*

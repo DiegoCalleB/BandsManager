@@ -18,8 +18,11 @@ Campañas de booking (`booking_campaigns`) y su normalización desde BD.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
 
@@ -28,7 +31,6 @@ Campañas de booking (`booking_campaigns`) y su normalización desde BD.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
-- [[fn_metricas_panel|Panel y métricas]] *(from #feature)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_sync|server/db/sync.ts]] *(from #db)*

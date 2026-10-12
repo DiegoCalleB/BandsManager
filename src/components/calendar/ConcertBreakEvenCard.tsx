@@ -12,9 +12,8 @@ interface ConcertBreakEvenCardProps {
 
 export const ConcertBreakEvenCard: React.FC<ConcertBreakEvenCardProps> = ({
   concert,
-  isStitchLight = false,
   textTitle = 'text-[var(--ink)]',
-  textSub = 'text-[var(--ink-2)]',
+  textSub = 'text-[var(--ink-2)]'
 }) => {
   const analysis = calcularBreakEvenConcierto(concert, 'Madrid', 4);
   const net = analysis.beneficioNetoEstimado;

@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { leerModuloSongStudio } from './songStudioSource';
+import { leerAtril } from './leerAtril';
 
 const studio = leerModuloSongStudio();
 
@@ -35,7 +36,7 @@ describe('Estudio: motores de Iris', () => {
 });
 
 describe('Visor de acordes: el traductor automático no toca los acordes', () => {
-  const visor = fs.readFileSync(path.join(__dirname, '..', 'components', 'Atril.tsx'), 'utf-8');
+  const visor = leerAtril();
   const linea = fs.readFileSync(path.join(__dirname, '..', 'components', 'chords', 'LineaTiempoAcordes.tsx'), 'utf-8');
 
   // Con el idioma en gallego, Google Translate convertía «Mi» en «Meu/Miña», «La» en «A» y «Si» en

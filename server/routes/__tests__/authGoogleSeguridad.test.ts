@@ -8,13 +8,9 @@ const loadState = vi.fn(() => ({ users: [{ id: 'u-admin', email: 'admin@bandmana
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: (...a: any[]) => (loadState as any)(...a), saveState: () => {} }));
 
 import usersRouter from '../users.js';
+import { manejador as manejadorDe } from './helpers/rutas.js';
 
-function manejador(ruta: string) {
-  const capa: any = (usersRouter as any).stack.find((s: any) => s.route && s.route.path === ruta && s.route.methods.post);
-  expect(capa).toBeDefined();
-  const pila = capa.route.stack;
-  return pila[pila.length - 1].handle;
-}
+const manejador = (ruta: string) => manejadorDe(usersRouter, ruta, 'post');
 const resFalso = () => {
   const r: any = {};
   r.status = (c: number) => ((r.code = c), r);

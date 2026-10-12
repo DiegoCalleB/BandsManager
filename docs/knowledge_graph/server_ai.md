@@ -20,6 +20,8 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_ai_ledger|AI Token Ledger]] *(Layer: #db, Domain: #system)*
 - [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
@@ -29,11 +31,10 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[route_leads_crud|Leads CRUD Route]] *(from #route)*
 - [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
-- [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
@@ -42,6 +43,7 @@ Exporta: GEMINI_MODEL, TIMEOUT_IA_MS, TIMEOUT_IA_LARGO_MS, FALLBACK_MODELS, getA
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(from #route)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(from #route)*
+- [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(from #route)*
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*

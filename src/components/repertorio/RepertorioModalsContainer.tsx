@@ -5,7 +5,16 @@ import {
   Setlist,
   SetlistItem,
   Song,
+  ThemeColors,
+  User,
 } from "../../types";
+import type { SetlistEnergyAnalysis } from "../../utils/energyPacingUtils";
+import type { EnergyChartPoint, EnergyChartZone } from "./EnergyChart";
+import type { Analysis } from "./SetlistAIAnalysisModal";
+import type { PerfectSetlistPlan, PerfectSetlistAction } from "./PerfectSetlistModal";
+import type { ConfirmDeleteData } from "./ConfirmDeleteModal";
+import type { ConfirmDeleteAlbumData } from "./ConfirmDeleteAlbumModal";
+import type { MetricasSetlistActivo, SetlistModalData, ShareModalData, TransitionPreviewData } from "./repertorioModalsTipos";
 import { SongModal } from "./SongModal";
 import { BandMemberOption } from "../../utils/repertorioUtils";
 import { AssignSetlistModal } from "./AssignSetlistModal";
@@ -36,7 +45,7 @@ export interface RepertorioModalsContainerProps {
   bandRosterMembers: BandMemberOption[];
   defaultAlbumForNewSong: string;
   albumsList: string[];
-  colors: any;
+  colors: ThemeColors;
   handleSaveSong: (e: React.FormEvent<HTMLFormElement>) => void;
 
   // AssignSetlistModal
@@ -51,8 +60,8 @@ export interface RepertorioModalsContainerProps {
   // ShowItemModal
   showShowItemModal: boolean;
   setShowShowItemModal: (show: boolean) => void;
-  editingShowItem: any;
-  setEditingShowItem: (it: any) => void;
+  editingShowItem: SetlistItem | null;
+  setEditingShowItem: (it: SetlistItem | null) => void;
   handleSaveShowItem: (itemData: Partial<SetlistItem>) => void;
 
   // PdfExportModal
@@ -60,7 +69,7 @@ export interface RepertorioModalsContainerProps {
   setShowPdfPreview: (show: boolean) => void;
   bandLogoUrl?: string;
   activeSetlist: Setlist | null;
-  activeSetlistMetrics: any;
+  activeSetlistMetrics: MetricasSetlistActivo;
   songs: Song[];
   bName: string;
   handleUpdateSongFromStudio: (song: Song) => void;
@@ -70,7 +79,7 @@ export interface RepertorioModalsContainerProps {
   setActiveStudioSong: (s: Song | null) => void;
   activeStudioOpenIris: boolean;
   setActiveStudioOpenIris: (open: boolean) => void;
-  currentUser: any;
+  currentUser: User | undefined;
 
   // AssignSongsToAlbumModal
   assignSongsModalData: { isOpen: boolean; albumName: string } | null;
@@ -78,8 +87,8 @@ export interface RepertorioModalsContainerProps {
   handleSaveAlbumSongs: (albumName: string, selectedSongIds: string[]) => void;
 
   // SetlistModal
-  setlistModalData: any;
-  setSetlistModalData: (data: any) => void;
+  setlistModalData: SetlistModalData | null;
+  setSetlistModalData: (data: SetlistModalData | null) => void;
   handleSaveSetlistModal: (data: Partial<Setlist>) => void;
 
   // AddSongsToSetlistModal
@@ -97,18 +106,18 @@ export interface RepertorioModalsContainerProps {
   handleUpdateSongFromChords: (s: Song) => void;
 
   // ConfirmDeleteModal
-  confirmDeleteModal: any;
-  setConfirmDeleteModal: (data: any) => void;
+  confirmDeleteModal: ConfirmDeleteData | null;
+  setConfirmDeleteModal: (data: ConfirmDeleteData | null) => void;
 
   // ConfirmDeleteAlbumModal
-  deleteAlbumData: any;
-  setDeleteAlbumData: (data: any) => void;
+  deleteAlbumData: ConfirmDeleteAlbumData | null;
+  setDeleteAlbumData: (data: ConfirmDeleteAlbumData | null) => void;
   handleUnassignAlbumSongs: (albumName: string) => void;
   handleDeleteAlbumAndSongs: (albumName: string) => void;
 
   // ShareModal
-  shareModalData: any;
-  setShareModalData: React.Dispatch<React.SetStateAction<any>>;
+  shareModalData: ShareModalData;
+  setShareModalData: React.Dispatch<React.SetStateAction<ShareModalData>>;
 
   // SpotifyDiscographyModal
   isSpotifyModalOpen: boolean;
@@ -123,15 +132,15 @@ export interface RepertorioModalsContainerProps {
   setShowAIAnalysisModal: (show: boolean) => void;
   setHighlightedSongIds: (ids: string[]) => void;
   highlightedSongIds: string[];
-  aiAnalysisResult: any;
-  setAiAnalysisResult: (res: any) => void;
+  aiAnalysisResult: Analysis | null;
+  setAiAnalysisResult: (res: Analysis | null) => void;
   setAiAnalysisLoading: (loading: boolean) => void;
-  chartData: any;
-  yDomain: any;
-  zonasEnergia: any;
-  energyAnalysis: any;
+  chartData: EnergyChartPoint[];
+  yDomain: [number, number];
+  zonasEnergia: EnergyChartZone[];
+  energyAnalysis: SetlistEnergyAnalysis | null;
   reorderSetlistItems: (idxA: number, idxB: number) => void;
-  handleEnergyChartDrag: (point: any, newScore: number) => void;
+  handleEnergyChartDrag: (point: EnergyChartPoint, newScore: number) => void;
   canUndoReorder: boolean;
   undoLastReorder: () => void;
   undoSourceKey: string | null;
@@ -140,10 +149,10 @@ export interface RepertorioModalsContainerProps {
   showPerfectSetlistModal: boolean;
   setShowPerfectSetlistModal: (show: boolean) => void;
   perfectSetlistLoading: boolean;
-  perfectSetlistPlan: any;
+  perfectSetlistPlan: PerfectSetlistPlan | null;
   perfectSetlistError: string | null;
   handleGeneratePerfectSetlist: () => void;
-  applyPerfectSetlistAction: (action: any, sourceKey?: string) => void;
+  applyPerfectSetlistAction: (action: PerfectSetlistAction, sourceKey?: string) => void;
 
   // ImportSetlistModal
   showImportSetlistModal: boolean;
@@ -158,12 +167,12 @@ export interface RepertorioModalsContainerProps {
   handleOpenStudioModal: (song: Song) => void;
 
   // SongTransitionPreviewModal
-  transitionPreviewData: any;
-  setTransitionPreviewData: React.Dispatch<React.SetStateAction<any>>;
+  transitionPreviewData: TransitionPreviewData | null;
+  setTransitionPreviewData: React.Dispatch<React.SetStateAction<TransitionPreviewData | null>>;
   handleOpenTransitionPreview: (idxA: number, idxB: number) => void;
   handleAddItemToSetlist: (
     songId?: string,
-    tipoItem?: any,
+    tipoItem?: string,
     customTitle?: string,
     duracionMin?: number,
     duracionSeg?: number,
@@ -417,7 +426,7 @@ export const RepertorioModalsContainer: React.FC<RepertorioModalsContainerProps>
       <ShareModal
         isOpen={shareModalData.isOpen}
         onClose={() =>
-          setShareModalData((prev: any) => ({ ...prev, isOpen: false }))
+          setShareModalData((prev) => ({ ...prev, isOpen: false }))
         }
         title={shareModalData.title}
         subtitle={shareModalData.subtitle}
@@ -544,7 +553,7 @@ export const RepertorioModalsContainer: React.FC<RepertorioModalsContainerProps>
             }}
             onSwapSongs={(idxA, idxB) => {
               reorderSetlistItems(idxA, idxB);
-              setTransitionPreviewData((prev: any) =>
+              setTransitionPreviewData((prev) =>
                 prev
                   ? {
                       ...prev,

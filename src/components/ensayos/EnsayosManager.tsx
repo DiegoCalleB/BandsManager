@@ -1,22 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  Plus,
-  Disc3,
-  Mic,
-  ListOrdered,
-  Radio,
-  CheckCircle2,
-  ChevronDown,
-  History,
-  Sparkles,
-  Filter,
-  Edit3,
-  Trash2,
-} from "lucide-react";
+import { Calendar, MapPin, Users, Plus, Mic, ListOrdered, Radio, ChevronDown, Edit3 } from "lucide-react";
 import { Rehearsal, Song, Setlist, Concert, ThemeColors } from "../../types";
 import { EnsayoCronometro } from "./EnsayoCronometro";
 import { OrdenDelDiaTab } from "./OrdenDelDiaTab";
@@ -46,14 +29,13 @@ interface EnsayosManagerProps {
 export function EnsayosManager({
   rehearsals = [],
   onSaveRehearsal,
-  onDeleteRehearsal,
   songs: initialSongs = [],
   setlists: initialSetlists = [],
   concerts = [],
   colors,
   currentBandId,
   bandUsers = [],
-  onUpdateSong,
+  onUpdateSong
 }: EnsayosManagerProps) {
   const [loadedSongs, setLoadedSongs] = useState<Song[]>(initialSongs);
   const [loadedSetlists, setLoadedSetlists] =

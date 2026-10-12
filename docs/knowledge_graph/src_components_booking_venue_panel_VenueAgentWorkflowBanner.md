@@ -19,6 +19,7 @@ Exporta: VenueAgentWorkflowBannerProps, VenueAgentWorkflowBanner.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
+- [[src_components_booking_venue_panel_venuePanelTypes|src/components/booking/venue_panel/venuePanelTypes.ts]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*

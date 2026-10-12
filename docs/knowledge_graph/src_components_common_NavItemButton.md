@@ -19,7 +19,7 @@ Exporta: NavItemButton.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

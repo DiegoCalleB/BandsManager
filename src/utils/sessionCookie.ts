@@ -13,11 +13,11 @@ export function guardarCookieDeSesion(token: string): void {
   try {
     const seguro = typeof window !== 'undefined' && window.location.protocol === 'https:' ? '; Secure' : '';
     document.cookie = `${NOMBRE_COOKIE}=${token}; path=/; max-age=${DURACION_SEGUNDOS}; SameSite=Lax${seguro}`;
-  } catch (e) {}
+  } catch { /* sin acceso a document.cookie (iframe o SSR): la sesión sigue por el token en memoria */ }
 }
 
 export function borrarCookieDeSesion(): void {
   try {
     document.cookie = `${NOMBRE_COOKIE}=; max-age=0; path=/;`;
-  } catch (e) {}
+  } catch { /* sin acceso a document.cookie: la cookie caduca sola */ }
 }

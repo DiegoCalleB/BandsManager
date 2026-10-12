@@ -13,14 +13,15 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export const BASELINE_HASTA = '20261008_deal_support_neto_eur.sql';
 const CLAVE_BLOQUEO = 727274;
 
 /** Lo mínimo que necesita el runner de una conexión: vale `pg.Client` envuelto o PGlite. */
 export interface Ejecutor {
-  /** Consulta con parámetros. */
-  consultar(sql: string, parametros?: unknown[]): Promise<any[]>;
+  /** Consulta con parámetros. `Fila` describe las columnas que devuelve el SELECT. */
+  consultar<Fila = Record<string, unknown>>(sql: string, parametros?: unknown[]): Promise<Fila[]>;
   /** Script de varias sentencias, sin parámetros. */
   ejecutar(sql: string): Promise<void>;
 }
@@ -77,7 +78,7 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
 
   try {
     let registradas = new Map<string, string>(
-      (await db.consultar('SELECT nombre, checksum FROM schema_migrations')).map((r) => [r.nombre, r.checksum])
+      (await db.consultar<{ nombre: string; checksum: string }>('SELECT nombre, checksum FROM schema_migrations')).map((r) => [r.nombre, r.checksum])
     );
 
     if (registradas.size === 0) {
@@ -109,8 +110,9 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
         await db.ejecutar(f.sql);
         await db.consultar(`INSERT INTO schema_migrations (nombre, checksum) VALUES ($1, $2)`, [f.nombre, f.checksum]);
         await db.ejecutar('COMMIT');
-      } catch (e: any) {
-        await db.ejecutar('ROLLBACK').catch(() => {});
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
+        await db.ejecutar('ROLLBACK').catch(() => { /* la conexión ya cayó: el error original se relanza abajo */ });
         throw new MigracionFallida(f.nombre, String(e?.message || e).split('\n')[0]);
       }
       informe.aplicadas.push(f.nombre);
@@ -122,6 +124,6 @@ export async function aplicarMigraciones(db: Ejecutor, opciones: OpcionesRunner)
     if (!informe.aplicadas.length && !opciones.soloComprobar) log('[migraciones] Esquema al día.');
     return informe;
   } finally {
-    if (!opciones.soloComprobar) await db.consultar('SELECT pg_advisory_unlock($1)', [CLAVE_BLOQUEO]).catch(() => {});
+    if (!opciones.soloComprobar) await db.consultar('SELECT pg_advisory_unlock($1)', [CLAVE_BLOQUEO]).catch(() => { /* al cerrarse la conexión Postgres libera el bloqueo solo */ });
   }
 }

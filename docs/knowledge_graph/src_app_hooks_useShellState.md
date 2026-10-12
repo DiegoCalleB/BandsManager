@@ -18,7 +18,7 @@ Estado del armazón: menú móvil, chat flotante y grupos de navegación.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_config_navGroups|src/config/navGroups.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_config_navGroups|src/config/navGroups.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

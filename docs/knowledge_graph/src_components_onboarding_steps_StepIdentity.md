@@ -20,7 +20,6 @@ Exporta: StepIdentity.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_config_bandFonts|src/config/bandFonts.ts]] *(Layer: #service, Domain: #system)*
-- [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: CalendarBand, CalendarUser, BandTaggedEvent, ChronologicalEvent, BandIdentity, CalendarViewProps, RunOfShowItem, GearItem.
+Exporta: CalendarBand, CalendarUser, BandTaggedEvent, EventoConAlias, FichaEventoTab, CalendarNavigationOptions, ChronologicalEvent, BandIdentity.
 
 ---
 
@@ -39,6 +39,7 @@ Exporta: CalendarBand, CalendarUser, BandTaggedEvent, ChronologicalEvent, BandId
 - [[src_components_calendar_views_ConcertDetailCard|src/components/calendar/views/ConcertDetailCard.tsx]] *(from #frontend)*
 - [[src_components_calendar_views_RehearsalDetailCard|src/components/calendar/views/RehearsalDetailCard.tsx]] *(from #frontend)*
 - [[src_components_CalendarView|src/components/CalendarView.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
 
 ---
 

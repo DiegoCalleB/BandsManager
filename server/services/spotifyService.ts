@@ -1,7 +1,9 @@
 import { dbGetSongs, dbUpsertSong, dbGetEpkConfig, dbUpsertEpkConfig } from "../db.js";
-import { Song } from "../../src/types.js";
+import { Song, SongAudioIdea } from "../../src/types.js";
+import type { AlbumSpotifyApi, ArtistaDeezer, ArtistaItunes, ArtistaSpotifyApi, PistaDeezer, PistaItunes, PistaSpotifyApi } from "./tiposSpotify.js";
 import { cleanBandId } from "../utils.js";
 import { elegirArtistaSpotify } from "../utils/spotifyMatch.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Cached token for Spotify API
 let spotifyCachedToken: { token: string; expiresAt: number } | null = null;
@@ -35,6 +37,9 @@ export interface SpotifyAlbumData {
   genres: string[];
   tracks: SpotifyTrackData[];
 }
+
+/** Artista resumido que devuelven la búsqueda y la discografía (venga de Spotify, Deezer o iTunes). */
+export type ArtistaResumen = SpotifyArtistDiscography["artist"];
 
 export interface SpotifyArtistDiscography {
   artist: {
@@ -117,7 +122,8 @@ export async function getSpotifyAccessToken(): Promise<string | null> {
       }
       // Sin este aviso el fallo era silencioso y se usaba el token de respaldo, con datos incompletos.
       console.warn(`[SpotifyService] Client credentials respondió ${res.status}; usando token de respaldo`);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[SpotifyService] Client credentials token fetch failed:", err?.message);
     }
   }
@@ -143,7 +149,7 @@ export async function getSpotifyAccessToken(): Promise<string | null> {
         return data.accessToken;
       }
     }
-  } catch (webErr: any) {
+  } catch {
     // Non-fatal, fallback to SSR scraping or Universal API
   }
 
@@ -208,14 +214,14 @@ async function fetchDiscographyViaDeezer(artistName: string): Promise<SpotifyArt
           signal: AbortSignal.timeout(6000)
         });
 
-        let tracksList: any[] = [];
+        let tracksList: PistaDeezer[] = [];
         if (tracksRes.ok) {
           const tData = await tracksRes.json();
           tracksList = tData.data || [];
         }
 
         const releaseYear = alb.release_date ? alb.release_date.split("-")[0] : "";
-        const tracks: SpotifyTrackData[] = tracksList.map((t: any, idx: number) => {
+        const tracks: SpotifyTrackData[] = tracksList.map((t, idx) => {
           const durationSeconds = t.duration || 180;
           const durationFormatted = formatDuration(durationSeconds * 1000);
 
@@ -279,7 +285,8 @@ async function fetchDiscographyViaDeezer(artistName: string): Promise<SpotifyArt
       totalSongs,
       source: "universal_music_api"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] Deezer discography lookup error:", err?.message);
     return null;
   }
@@ -311,13 +318,13 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
         if (!lookupRes.ok) continue;
 
         const lookupData = await lookupRes.json();
-        const results = lookupData.results || [];
-        const trackItems = results.filter((r: any) => r.wrapperType === "track");
+        const results: PistaItunes[] = lookupData.results || [];
+        const trackItems = results.filter((r) => r.wrapperType === "track");
 
         const releaseYear = alb.releaseDate ? alb.releaseDate.split("-")[0] : "";
         const artworkHighRes = (alb.artworkUrl100 || "").replace("100x100bb", "600x600bb");
 
-        const tracks: SpotifyTrackData[] = trackItems.map((t: any, idx: number) => {
+        const tracks: SpotifyTrackData[] = trackItems.map((t, idx) => {
           const durationSeconds = Math.round((t.trackTimeMillis || 180000) / 1000);
           const durationFormatted = formatDuration(t.trackTimeMillis || 180000);
 
@@ -378,7 +385,8 @@ async function fetchDiscographyViaItunes(artistName: string): Promise<SpotifyArt
       totalSongs,
       source: "universal_music_api"
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] iTunes discography lookup error:", err?.message);
     return null;
   }
@@ -412,9 +420,9 @@ export async function searchSpotifyArtists(query: string) {
         }
 
         const data = await res.json();
-        const items = data.artists?.items || [];
+        const items: ArtistaSpotifyApi[] = data.artists?.items || [];
         if (items.length > 0) {
-          return items.map((a: any) => ({
+          return items.map((a): ArtistaResumen => ({
             id: a.id,
             name: a.name,
             genres: a.genres || [],
@@ -426,13 +434,14 @@ export async function searchSpotifyArtists(query: string) {
           }));
         }
       }
-    } catch (spErr: any) {
+    } catch (spErrCapturado) {
+      const spErr = comoErrorCapturado(spErrCapturado);
       console.warn("[SpotifyService] Spotify API search error:", spErr?.message);
     }
   }
 
   // Fallback: Parallel search on Deezer & iTunes
-  const results: any[] = [];
+  const results: ArtistaResumen[] = [];
   const seenNames = new Set<string>();
 
   try {
@@ -443,7 +452,7 @@ export async function searchSpotifyArtists(query: string) {
 
     if (dzRes.status === "fulfilled" && dzRes.value.ok) {
       const dzData = await dzRes.value.json();
-      (dzData.data || []).forEach((a: any) => {
+      (dzData.data || []).forEach((a: ArtistaDeezer) => {
         const nameLower = (a.name || "").toLowerCase().trim();
         if (nameLower && !seenNames.has(nameLower)) {
           seenNames.add(nameLower);
@@ -463,7 +472,7 @@ export async function searchSpotifyArtists(query: string) {
 
     if (itRes.status === "fulfilled" && itRes.value.ok) {
       const itData = await itRes.value.json();
-      (itData.results || []).forEach((a: any) => {
+      (itData.results || []).forEach((a: ArtistaItunes) => {
         const nameLower = (a.artistName || "").toLowerCase().trim();
         if (nameLower && !seenNames.has(nameLower)) {
           seenNames.add(nameLower);
@@ -480,7 +489,8 @@ export async function searchSpotifyArtists(query: string) {
         }
       });
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] Fallback search error:", err?.message);
   }
 
@@ -511,7 +521,8 @@ export async function resolverUrlSpotifyDeBanda(nombreBanda: string): Promise<st
   try {
     const candidatos = await searchSpotifyArtists(nombreBanda);
     return elegirArtistaSpotify(nombreBanda, candidatos)?.url || "";
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[SpotifyService] No se pudo verificar el Spotify de la banda:", err?.message);
     return "";
   }
@@ -542,7 +553,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
           resolvedArtistName = rawTitle;
         }
       }
-    } catch (oeErr) {
+    } catch {
       // Non-fatal
     }
   }
@@ -551,7 +562,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
   if (token) {
     try {
       let artistId = parsed.value;
-      let artistData: any = null;
+      let artistData: ArtistaResumen | null = null;
 
       if (parsed.type === "query") {
         const searchResults = await searchSpotifyArtists(parsed.value);
@@ -569,7 +580,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
             signal: AbortSignal.timeout(6000)
           });
           if (artistRes.ok) {
-            const a = await artistRes.json();
+            const a: ArtistaSpotifyApi = await artistRes.json();
             artistData = {
               id: a.id,
               name: a.name,
@@ -592,7 +603,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
           );
 
           const rawAlbumsData = albumsRes.ok ? await albumsRes.json() : null;
-          let rawAlbums = rawAlbumsData?.items || [];
+          let rawAlbums: AlbumSpotifyApi[] = rawAlbumsData?.items || [];
 
           // If empty, retry with market=ES
           if (rawAlbums.length === 0) {
@@ -606,7 +617,7 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
             }
           }
 
-          const uniqueAlbumsMap = new Map<string, any>();
+          const uniqueAlbumsMap = new Map<string, AlbumSpotifyApi>();
           for (const alb of rawAlbums) {
             const key = `${alb.name.toLowerCase().trim()}_${alb.album_type}_${alb.release_date}`;
             if (!uniqueAlbumsMap.has(key)) uniqueAlbumsMap.set(key, alb);
@@ -627,14 +638,14 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
 
             if (batchRes.ok) {
               const batchData = await batchRes.json();
-              const albumsList = batchData.albums || [];
+              const albumsList: (AlbumSpotifyApi | null)[] = batchData.albums || [];
 
               for (const alb of albumsList) {
                 if (!alb) continue;
-                const tracksList = alb.tracks?.items || [];
+                const tracksList: PistaSpotifyApi[] = alb.tracks?.items || [];
                 const releaseYear = alb.release_date ? alb.release_date.split("-")[0] : "";
 
-                const tracks: SpotifyTrackData[] = tracksList.map((t: any, index: number) => {
+                const tracks: SpotifyTrackData[] = tracksList.map((t, index) => {
                   const durationSeconds = Math.round((t.duration_ms || 0) / 1000);
                   const durationFormatted = formatDuration(t.duration_ms || 0);
 
@@ -685,7 +696,8 @@ export async function getArtistCompleteDiscography(artistInput: string): Promise
           }
         }
       }
-    } catch (spErr: any) {
+    } catch (spErrCapturado) {
+      const spErr = comoErrorCapturado(spErrCapturado);
       console.warn("[SpotifyService] Official Spotify API error, using Universal Catalog Fallback:", spErr?.message);
     }
   }
@@ -750,7 +762,7 @@ export async function findAudioPreview(artistName: string, trackTitle: string): 
         }
       }
     }
-  } catch {}
+  } catch { /* Deezer caído o lento: se prueba iTunes */ }
 
   // 2. Try iTunes Search
   try {
@@ -765,17 +777,20 @@ export async function findAudioPreview(artistName: string, trackTitle: string): 
         }
       }
     }
-  } catch {}
+  } catch { /* iTunes caído o lento: el tema se queda sin preescucha */ }
 
   return "";
 }
+
+/** Canción tal como puede venir de filas antiguas, con las ideas de audio aún en snake_case. */
+type CancionConAlias = Song & { audio_ideas?: SongAudioIdea[] };
 
 /**
  * Bulk imports discography albums and songs into Supabase for a band.
  */
 export async function bulkImportSpotifyDiscographyToBand(
   bandId: string,
-  artistProfile: any,
+  artistProfile: Partial<ArtistaResumen> | null | undefined,
   selectedAlbums: SpotifyAlbumData[],
   options: {
     overwriteDuplicates?: boolean;
@@ -828,7 +843,8 @@ export async function bulkImportSpotifyDiscographyToBand(
         songAudioUrl = existing.audioPrincipalUrl;
       }
 
-      const songPayload: any = {
+      // Fila de `songs` en snake_case, tal como la recibe dbUpsertSong.
+      const songPayload: Record<string, unknown> = {
         id: songId,
         band_id: cleanId,
         titulo: track.name,
@@ -854,8 +870,8 @@ export async function bulkImportSpotifyDiscographyToBand(
         notas_repertorio: existing?.notasRepertorio || "",
         audio_principal_url: songAudioUrl || "",
         audio_ideas: (() => {
-          const existingIdeas = existing?.audioIdeas || (existing as any)?.audio_ideas || [];
-          const hasPreviewAlready = existingIdeas.some((i: any) => i.id === `idea_sp_${track.id}` || i.subidoPor === 'Spotify Sync');
+          const existingIdeas: SongAudioIdea[] = existing?.audioIdeas || (existing as CancionConAlias | undefined)?.audio_ideas || [];
+          const hasPreviewAlready = existingIdeas.some((i) => i.id === `idea_sp_${track.id}` || i.subidoPor === 'Spotify Sync');
           if (songAudioUrl && !hasPreviewAlready) {
             return [
               {
@@ -876,9 +892,9 @@ export async function bulkImportSpotifyDiscographyToBand(
 
       const saved = await dbUpsertSong(songPayload, cleanId);
       if (existing) {
-        updatedSongs.push(saved as any);
+        updatedSongs.push(saved);
       } else {
-        importedSongs.push(saved as any);
+        importedSongs.push(saved);
       }
     }
   }

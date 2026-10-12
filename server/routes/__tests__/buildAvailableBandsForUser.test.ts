@@ -138,4 +138,16 @@ describe('buildAvailableBandsForUser', () => {
     expect(nuevaBanda).toBeDefined();
     expect(nuevaBanda?.logoUrl).toBeFalsy();
   });
+
+  it('el admin ve todas las bandas registradas, pero no las bandas de contacto del CRM', async () => {
+    const state = {
+      ...baseState(),
+      bands: [{ id: 'grupo-1', band_id: 'band-otra', nombre_banda: 'Grupo amigo del CRM' }],
+    };
+    const admin = { id: 'u0', email: 'admin@x.com', role: 'admin', band_id: 'band-lostigres' };
+    const bands = await buildAvailableBandsForUser(state, admin);
+    expect(bands.map((b: any) => b.band_id)).toContain('band-lostigres');
+    expect(bands.some((b: any) => /Grupo amigo/.test(b.bandName || b.nombre_banda || ''))).toBe(false);
+    expect(bands.some((b: any) => b.band_id === 'grupo-1' || b.band_id === 'band-otra')).toBe(false);
+  });
 });

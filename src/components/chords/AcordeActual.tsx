@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Pause, Play, ChevronDown, ChevronUp } from 'lucide-react';
 import type { ContextoAcorde, VistaAcorde } from '../../utils/vistaAcordes';
 import { gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
@@ -32,7 +32,8 @@ const CLAVE_DIAGRAMAS = 'bm_acorde_actual_diagramas';
  */
 export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reproduciendo, onToggle }) => {
   const [ultimo, setUltimo] = useState<string | null>(sonando);
-  useEffect(() => { if (sonando) setUltimo(sonando); }, [sonando]);
+  // Recuerda el último acorde que sonó: se ajusta durante el render, sin efecto.
+  if (sonando && sonando !== ultimo) setUltimo(sonando);
   const [diagramas, setDiagramas] = useState<boolean>(() => {
     try { return localStorage.getItem(CLAVE_DIAGRAMAS) === '1'; } catch { return false; }
   });

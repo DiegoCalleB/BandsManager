@@ -20,6 +20,7 @@ Exporta: LalalAiService.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

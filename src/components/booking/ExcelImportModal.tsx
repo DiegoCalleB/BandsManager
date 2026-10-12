@@ -1,28 +1,16 @@
 import React, { useState, useRef } from "react";
 import * as XLSX from "xlsx";
-import {
-  FileSpreadsheet,
-  Upload,
-  CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  ArrowLeft,
-  X,
-  Download,
-  Info,
-  Building2,
-  Trash2,
-  RefreshCw,
-  Eye,
-  Check,
-  Search,
-  Filter,
-} from "lucide-react";
+import { FileSpreadsheet, Upload, CheckCircle2, AlertTriangle, ArrowRight, ArrowLeft, X, Download, Info, Building2, Trash2, RefreshCw, Check, Search, Filter } from "lucide-react";
 import { Lead, LeadType } from "../../types";
 import { apiFetch } from "../../utils/api";
+import type { RespuestaImportarLeads } from "./tiposRespuestasApi";
 import { ModalPortal } from "../common/ModalPortal";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+
+/** Fila cruda de la hoja: cabecera → valor de celda (texto, número, booleano o vacío). */
+type FilaExcel = Record<string, unknown>;
 
 interface ExcelImportModalProps {
   isOpen: boolean;
@@ -68,7 +56,7 @@ interface ParsedRow {
   notas: string;
   isDuplicate: boolean;
   selected: boolean;
-  originalData: Record<string, any>;
+  originalData: FilaExcel;
 }
 
 const CATEGORY_OPTIONS: { id: LeadType; label: string; icon: string }[] = [
@@ -95,7 +83,7 @@ export function ExcelImportModal({
   const [selectedSheet, setSelectedSheet] = useState<string>("");
   const [workbook, setWorkbook] = useState<XLSX.WorkBook | null>(null);
   const [rawHeaders, setRawHeaders] = useState<string[]>([]);
-  const [rawRows, setRawRows] = useState<Record<string, any>[]>([]);
+  const [rawRows, setRawRows] = useState<FilaExcel[]>([]);
 
   // Mapping
   const [mapping, setMapping] = useState<ColumnMapping>({
@@ -124,7 +112,7 @@ export function ExcelImportModal({
   const [defaultCategory, setDefaultCategory] = useState<LeadType>("sala");
 
   // Loading & statuses
-  const [isProcessingFile, setIsProcessingFile] = useState<boolean>(false);
+  const [, setIsProcessingFile] = useState<boolean>(false);
   const [isImporting, setIsImporting] = useState<boolean>(false);
   const [importStatusMsg, setImportStatusMsg] = useState<string>("");
   const [searchPreview, setSearchPreview] = useState<string>("");
@@ -314,7 +302,8 @@ export function ExcelImportModal({
         setSelectedSheet(firstSheet);
         parseSheet(wb, firstSheet);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al leer archivo Excel:", err);
       alert(
         "Error al leer el archivo. Asegúrate de que es un archivo .xlsx, .xls o .csv válido.",
@@ -328,7 +317,7 @@ export function ExcelImportModal({
     const ws = wb.Sheets[sheetName];
     if (!ws) return;
 
-    const data: Record<string, any>[] = XLSX.utils.sheet_to_json(ws, {
+    const data = XLSX.utils.sheet_to_json<FilaExcel>(ws, {
       defval: "",
     });
     if (data.length === 0) {
@@ -662,7 +651,7 @@ export function ExcelImportModal({
         estado: "nuevo",
       }));
 
-      const res = await apiFetch("/api/leads/import-excel", {
+      const res = await apiFetch<RespuestaImportarLeads>("/api/leads/import-excel", {
         method: "POST",
         body: JSON.stringify({
           leads: leadsPayload,
@@ -679,7 +668,7 @@ export function ExcelImportModal({
           res.leads.length > 0
         ) {
           const leadsToEnrich = res.leads.filter(
-            (l: Lead) => !l.email_contacto || l.email_contacto.trim() === "",
+            (l) => !l.email_contacto || l.email_contacto.trim() === "",
           );
           if (leadsToEnrich.length > 0) {
             setImportStatusMsg(
@@ -689,7 +678,7 @@ export function ExcelImportModal({
               await apiFetch("/api/leads/extract-emails", {
                 method: "POST",
                 body: JSON.stringify({
-                  places: leadsToEnrich.slice(0, 10).map((l: Lead) => ({
+                  places: leadsToEnrich.slice(0, 10).map((l) => ({
                     place_id: l.id,
                     nombre_sala: l.nombre_sala,
                     ciudad: l.ciudad,
@@ -711,7 +700,8 @@ export function ExcelImportModal({
       } else {
         alert(res.error || "Error al importar los contactos.");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error importing Excel leads:", err);
       alert(err.message || "Error de conexión al importar contactos.");
     } finally {

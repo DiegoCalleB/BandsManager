@@ -1,4 +1,4 @@
-import type { AnalisisAcordes } from "../../src/types.js";
+import type { AnalisisAcordes, Song } from "../../src/types.js";
 import { detectarAcordesConDiagnostico, sumarPcm } from "../utils/chordDetection.js";
 import { calcularPulso, ajustarAPulso } from "../utils/pulso.js";
 import { extraerPcmMono, SAMPLE_RATE } from "../utils/audioKey.js";
@@ -13,7 +13,7 @@ export type ResultadoAnalisis =
  * (instrumental de Iris → stems armónicos → mezcla) y con la red de seguridad de
  * `motivoAnalisisPocoFiable`. No toca la base de datos: quien llama decide si guarda.
  */
-export async function analizarAcordesDeCancion(song: any, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisis> {
+export async function analizarAcordesDeCancion(song: Partial<Song>, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisis> {
   const avisa = (etapa: string, detalle: string) => alAvanzar?.(etapa, detalle);
   avisa("audio", "Eligiendo el mejor audio: instrumental, stems o mezcla…");
   const niveles = elegirFuentesAudio(song);

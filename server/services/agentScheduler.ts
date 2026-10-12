@@ -8,6 +8,7 @@ import { dbGetAgentLastRun, dbSetAgentLastRun } from "../db/agentSchedule.js";
 import { enqueueAgentJob } from "./agentQueueService.js";
 import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.js";
 import { captureError } from "../utils/errorTracking.js";
+import type { RegisteredBand } from "../../src/types.js";
 import { isGmailRateLimited } from "./gmailApiClient.js";
 
 // Planificador periódico: por defecto 1 vez al día (24 horas) para optimizar consultas y costos en Supabase.
@@ -96,7 +97,7 @@ async function tick() {
   }
   tickEnCurso = true;
   try {
-    let bands: any[] = [];
+    let bands: Pick<RegisteredBand, "band_id" | "estado_cuenta">[] = [];
     try {
       bands = await dbGetRegisteredBands();
     } catch (e) {
@@ -119,7 +120,7 @@ async function tick() {
       let schedule;
       try {
         schedule = await dbGetBandSchedule(bandId);
-      } catch (e) {
+      } catch {
         continue;
       }
 

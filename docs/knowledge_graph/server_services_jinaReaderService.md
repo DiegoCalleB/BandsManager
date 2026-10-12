@@ -19,6 +19,7 @@ JINA READER SERVICE (r.jina.ai)
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

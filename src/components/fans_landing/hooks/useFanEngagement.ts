@@ -69,7 +69,7 @@ export function useFanEngagement({ bandName, resolvedBandId, concertId, previewC
           context: context || (activeTab === "form" ? "form" : "redes"),
         }),
         keepalive: true,
-      }).catch(() => {});
+      }).catch(() => { /* la telemetría del fan nunca debe interrumpir la navegación */ });
     } catch {
       // La telemetría de clics es opcional.
     }

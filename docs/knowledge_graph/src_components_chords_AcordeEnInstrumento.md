@@ -13,25 +13,23 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: TecladoAcorde, BajoAcorde, ETIQUETA_VISTA, SelectorVistaAcorde, SelectorNivel, useNivelAcordes, useVistaAcordes, CajaAcorde.
+Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, SelectorNivel, CajaAcorde.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chords_DiagramaGuitarra|src/components/chords/DiagramaGuitarra.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_instrumentoProfesor|src/utils/instrumentoProfesor.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
 - [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
-- [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 
 ---
 

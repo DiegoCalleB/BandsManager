@@ -6,6 +6,7 @@ import {configDefaults} from 'vitest/config';
 import fs from 'fs';
 
 const { version } = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
+const coverageThresholds = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'coverage-thresholds.json'), 'utf8'));
 
 export default defineConfig(() => {
   return {
@@ -18,6 +19,15 @@ export default defineConfig(() => {
       // e2e/*.spec.ts son tests de Playwright, no de Vitest - el include por defecto de Vitest
       // (**/*.spec.ts) los pillaba igual y explotaba porque usan el test() de @playwright/test.
       exclude: [...configDefaults.exclude, 'e2e/**'],
+      // Umbral de cobertura que solo sube (ratchet): el suelo vive en coverage-thresholds.json (la
+      // cobertura real del 2026-10-11) y `npm run coverage:ratchet` lo sube tras mejorarla. Commitea
+      // ese cambio; no lo bajes a mano para que pase un PR.
+      coverage: {
+        provider: 'v8' as const,
+        include: ['src/**', 'server/**'],
+        reporter: ['text-summary', 'json-summary'],
+        thresholds: coverageThresholds,
+      },
     },
     esbuild: {
       legalComments: 'none' as const,

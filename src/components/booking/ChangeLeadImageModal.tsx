@@ -16,6 +16,15 @@ import { LeadAvatar } from "./LeadAvatar";
 import { ModalPortal } from "../common/ModalPortal";
 import { Button, IconButton, Input } from '../ui';
 
+/** Lead con los alias de nombre que traen algunas importaciones antiguas. */
+type LeadConAliasNombre = Lead & { nombre?: string; nombreSala?: string; name?: string };
+
+/** Respuesta de `POST /api/leads/ai-lookup`. */
+interface RespuestaBusquedaLogo {
+  success?: boolean;
+  data?: Pick<Partial<Lead>, 'imagen_url' | 'icono' | 'website'>;
+}
+
 interface ChangeLeadImageModalProps {
   lead: Lead | null;
   isOpen: boolean;
@@ -79,15 +88,15 @@ export const ChangeLeadImageModal: React.FC<ChangeLeadImageModalProps> = ({
     setStatusMsg(null);
 
     try {
-      const res = await apiFetch("/api/leads/ai-lookup", {
+      const res = await apiFetch<RespuestaBusquedaLogo>("/api/leads/ai-lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nombre_sala:
             lead.nombre_sala ||
-            (lead as any).nombre ||
-            (lead as any).nombreSala ||
-            (lead as any).name ||
+            (lead as LeadConAliasNombre).nombre ||
+            (lead as LeadConAliasNombre).nombreSala ||
+            (lead as LeadConAliasNombre).name ||
             "",
           ciudad: lead.ciudad,
           leadId: lead.id,

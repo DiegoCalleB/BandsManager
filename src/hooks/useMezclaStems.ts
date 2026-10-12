@@ -19,9 +19,12 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
   const pistasRef = useRef(pistas);
   const mapaRef = useRef(new Map<string, HTMLAudioElement>());
   const semitonosRef = useRef(semitonos);
-  semitonosRef.current = semitonos;
-  ajustesRef.current = ajustes;
-  pistasRef.current = pistas;
+  // Primero de los efectos: los demás leen los valores más recientes a través de estos refs.
+  useEffect(() => {
+    semitonosRef.current = semitonos;
+    ajustesRef.current = ajustes;
+    pistasRef.current = pistas;
+  });
 
   const aplicarVolumenes = () => {
     const solo = hayPistaEnSolo(pistasRef.current, ajustesRef.current);
@@ -44,13 +47,14 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
     const maestro = audioRef.current;
     if (!maestro || pistas.length === 0) return;
     let vivo = true;
+    const mapa = mapaRef.current;
     maestro.muted = true;
     const esclavos: HTMLAudioElement[] = [];
 
     const alinear = () => {
       for (const el of esclavos) if (Math.abs(el.currentTime - maestro.currentTime) > DERIVA_MAX_S) el.currentTime = maestro.currentTime;
     };
-    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => {}); }); };
+    const tocar = () => { alinear(); esclavos.forEach((el) => { void el.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ }); }); };
     const parar = () => esclavos.forEach((el) => el.pause());
     const ritmo = () => esclavos.forEach((el) => { el.playbackRate = maestro.playbackRate; });
 
@@ -68,7 +72,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
         try { el.src = (await resolveAudioUrl(p.audioUrl)) || p.audioUrl; } catch { el.src = p.audioUrl; }
         if (!vivo) return;
         esclavos.push(el);
-        mapaRef.current.set(p.id, el);
+        mapa.set(p.id, el);
       }
       aplicarVolumenes();
       aplicarTonos();
@@ -78,7 +82,7 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
 
     return () => {
       vivo = false;
-      mapaRef.current.clear();
+      mapa.clear();
       maestro.muted = false;
       maestro.removeEventListener('play', tocar);
       maestro.removeEventListener('pause', parar);

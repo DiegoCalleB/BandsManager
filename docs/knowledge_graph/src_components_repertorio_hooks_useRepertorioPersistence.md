@@ -20,6 +20,7 @@ Persistencia del repertorio: favoritos, cabeceras de API, guardado local seguro,
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[route_repertoire|Repertoire & Setlists Route]] *(Layer: #route, Domain: #repertoire)*
 - [[src_config_sampleRepertoire|src/config/sampleRepertoire.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_guardarConReversion|src/utils/guardarConReversion.ts]] *(Layer: #service, Domain: #system)*

@@ -5,19 +5,21 @@ import express from "express";
 import path from "path";
 import { createHash } from "crypto";
 import fs from "fs";
-import promisify from "util";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS, GEMINI_MODEL } from "../ai.js";
-import { loadState, saveState, requireAuth } from "../state.js";
+import { requireAuth } from "../state.js";
 // Estos helpers vivían aquí; ahora los comparte también el generador de Reels, que antes
 // descargaba con ytdl-core a secas y era el que se comía los bloqueos antibot de YouTube.
-import { ejecutar, banderasAntiBot, banderasDeCookies, COOKIES_FILE } from "../utils/youtubeSource.js";
+import { ejecutar, banderasAntiBot, COOKIES_FILE } from "../utils/youtubeSource.js";
 // uploadToSupabaseIfAvailable vivía aquí; ahora la comparte también el generador de Reels,
 // para que el clip renderizado sobreviva a un redeploy del disco efímero de Railway.
 import { uploadToSupabaseIfAvailable } from "../utils/storage.js";
-import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO, PuntoEnergia } from "../utils/audioEnergy.js";
+import { construirFiltroPreprocesamientoDirecto, analizarEnergiaAudio, DB_SILENCIO } from "../utils/audioEnergy.js";
 import { esUrlExternaSegura, descargarBufferSeguro } from "../utils/ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Part } from '@google/genai';
+import type { AnalisisConciertoIA, CapituloYoutube, ClasificacionPistasIA } from './tiposConcertToAlbum.js';
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
@@ -219,7 +221,8 @@ export async function detectCuesForAudioFile(
       hasApplauseOutro,
       confidence: cueIn > 0 || cueOut < totalDuration ? 0.95 : 0.85,
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[CUE Detection] Error en ${filePath}:`, err?.message || err);
     return { cueIn: 0, cueOut: 0, duration: 0, introSilenceSec: 0, outroSilenceSec: 0, hasApplauseIntro: false, hasApplauseOutro: false, confidence: 0 };
   }
@@ -241,7 +244,8 @@ router.get("/cookies-status", requireAuth, (req, res) => {
       });
     }
     return res.json({ hasCookies: false, size: 0, updatedAt: null });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ error: err.message });
   }
 });
@@ -264,7 +268,8 @@ router.post("/save-cookies", requireAuth, (req, res) => {
       message: "Cookies de YouTube guardadas con éxito. Ahora el servidor puede descargar vídeos del canal directamente.",
       size: fs.statSync(COOKIES_FILE).size,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ error: err.message });
   }
 });
@@ -275,7 +280,8 @@ router.post("/delete-cookies", requireAuth, (req, res) => {
       fs.unlinkSync(COOKIES_FILE);
     }
     return res.json({ success: true, message: "Cookies eliminadas." });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.status(500).json({ error: err.message });
   }
 });
@@ -305,7 +311,8 @@ async function scrapeYoutubeMetadata(url: string) {
     }
 
     return { title, duration: 3600, description, chapters: [] };
-  } catch (e: any) {
+  } catch (eCapturado) {
+    const e = comoErrorCapturado(eCapturado);
     console.warn("[Scrape YouTube Fallback Error]:", e.message);
     return { title: "Concierto en Directo", duration: 3600, description: "", chapters: [] };
   }
@@ -373,8 +380,8 @@ async function detectSilencesWithFFmpeg(filePath: string, videoDuration: number)
       .output("-");
 
     command.on("stderr", (stderrLine: string) => {
-      const startMatch = stderrLine.match(/silence_start:\s*([\d\.]+)/);
-      const endMatch = stderrLine.match(/silence_end:\s*([\d\.]+)/);
+      const startMatch = stderrLine.match(/silence_start:\s*([\d.]+)/);
+      const endMatch = stderrLine.match(/silence_end:\s*([\d.]+)/);
 
       if (startMatch) {
         const start = parseFloat(startMatch[1]);
@@ -467,7 +474,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
     let videoTitle = "Concierto en Directo";
     let videoDuration = 3600; // default 1 hour if unknown
     let rawDescription = "";
-    let chapters: any[] = [];
+    let chapters: CapituloYoutube[] = [];
     let detectedTracks: TrackItem[] = [];
     let ytDlpBinaryPath = path.join(process.cwd(), "bin", "yt-dlp");
 
@@ -487,14 +494,15 @@ router.post("/analyze", requireAuth, async (req, res) => {
         videoDuration = metadata.duration || videoDuration;
         rawDescription = metadata.description || "";
         chapters = metadata.chapters || [];
-      } catch (err: any) {
+      } catch {
         console.warn(`[Concert Analyzer] yt-dlp metadata dump notice: YouTube bot check active. Using web scraper fallback...`);
         youtubeBlocked = true;
         try {
           const scraped = await scrapeYoutubeMetadata(urlVideo);
           videoTitle = scraped.title || videoTitle;
           rawDescription = scraped.description || rawDescription;
-        } catch (scrapeErr: any) {
+        } catch (scrapeErrCapturado) {
+          const scrapeErr = comoErrorCapturado(scrapeErrCapturado);
           console.warn(`[Concert Analyzer] HTML scraper warning:`, scrapeErr.message);
         }
       }
@@ -503,7 +511,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
     // A. Native Chapters check
     if (chapters && chapters.length > 0) {
       console.log(`[Concert Analyzer] Found ${chapters.length} native chapters in video!`);
-      detectedTracks = chapters.map((chap: any, idx: number) => {
+      detectedTracks = chapters.map((chap, idx): TrackItem => {
         const start = chap.start_time || 0;
         const end = chap.end_time || (idx < chapters.length - 1 ? chapters[idx + 1].start_time : videoDuration);
         const duration = end - start;
@@ -538,7 +546,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
         console.log(`[Concert Analyzer] Downloading temporary audio for silence detection...`);
         try {
           await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "-x", "--audio-format", "mp3", "-o", mediaForSilence, urlVideo]);
-        } catch (dlErr: any) {
+        } catch {
           console.log(`[Concert Analyzer] yt-dlp quick audio download notice (using fallback).`);
         }
       }
@@ -576,7 +584,7 @@ router.post("/analyze", requireAuth, async (req, res) => {
       const aiClient = getAiClient();
       if (aiClient) {
         try {
-          let contents: any;
+          let contents: string | Part[];
           let promptText = "";
 
           if (isPreTranscribing) {
@@ -691,11 +699,11 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
           const jsonText = response.text || "";
           const match = jsonText.match(/\{[\s\S]*\}/);
           if (match) {
-            const aiData = JSON.parse(match[0]);
+            const aiData: AnalisisConciertoIA = JSON.parse(match[0]);
             if (aiData.tracks && Array.isArray(aiData.tracks) && aiData.tracks.length > 0) {
-              detectedTracks = aiData.tracks.map((t: any, idx: number) => {
+              detectedTracks = aiData.tracks.map((t, idx): TrackItem => {
                 const duration = Math.max(0.5, (typeof t.duration === "number" ? t.duration : (t.end || 0) - (t.start || 0)));
-                let type = t.type === "dialogo" ? "dialogo" : "musica";
+                let type: TrackItem["type"] = t.type === "dialogo" ? "dialogo" : "musica";
                 let title = t.title || `Pista ${idx + 1}`;
 
                 const titleLower = title.toLowerCase();
@@ -731,7 +739,8 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
               videoTitle = aiData.albumTitle;
             }
           }
-        } catch (aiErr: any) {
+        } catch (aiErrCapturado) {
+          const aiErr = comoErrorCapturado(aiErrCapturado);
           console.warn("[Concert Analyzer] AI Enrichment failed, using algorithmic detection:", aiErr.message || aiErr);
         }
       }
@@ -748,7 +757,8 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
       youtubeBlocked,
       audioAvailable,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Concert Analyzer] Error:", err);
     res.status(500).json({ error: err.message || "Error al analizar el concierto." });
   }
@@ -792,7 +802,7 @@ router.post("/process", requireAuth, async (req, res) => {
         if (fs.existsSync(tempMaster) && fs.statSync(tempMaster).size > 0) {
           localMasterMedia = tempMaster;
         }
-      } catch (dlErr: any) {
+      } catch {
         console.log(`[Concert Slicer] Video download notice, trying audio extraction instead.`);
         const tempAudioMaster = path.join(outputDir, "master_concert.mp3");
         try {
@@ -800,7 +810,7 @@ router.post("/process", requireAuth, async (req, res) => {
           if (fs.existsSync(tempAudioMaster) && fs.statSync(tempAudioMaster).size > 0) {
             localMasterMedia = tempAudioMaster;
           }
-        } catch (audioErr: any) {
+        } catch {
           console.warn("[Concert Slicer] Direct YouTube download restricted by YouTube bot verification (using synthesized master fallback).");
         }
       }
@@ -809,12 +819,13 @@ router.post("/process", requireAuth, async (req, res) => {
     // Fallback: If no local master was provided or YouTube blocked download, generate a synthesized concert master so the album slicing pipeline completes flawlessly
     if (!localMasterMedia || !fs.existsSync(localMasterMedia)) {
       const fallbackMaster = path.join(outputDir, "master_concert.mp3");
-      const maxEnd = Math.max(...tracks.map((t: any) => t.end || 0), 120);
+      const maxEnd = Math.max(...tracks.map((t: TrackItem) => t.end || 0), 120);
       console.log(`[Concert Slicer] Synthesizing master audio placeholder (${maxEnd}s) with FFmpeg...`);
       try {
         await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", `sine=frequency=330:duration=${Math.ceil(maxEnd)}`, "-c:a", "libmp3lame", "-q:a", "4", fallbackMaster]);
         localMasterMedia = fallbackMaster;
-      } catch (synthErr: any) {
+      } catch (synthErrCapturado) {
+        const synthErr = comoErrorCapturado(synthErrCapturado);
         console.warn("[Concert Slicer] Fallback synth notice:", synthErr.message);
       }
     }
@@ -850,7 +861,8 @@ router.post("/process", requireAuth, async (req, res) => {
         }
         sliceArgs.push("-c:a", "libmp3lame", "-b:a", "320k", mp3Path);
         await ejecutar(ffmpegStatic!, sliceArgs);
-      } catch (ffErr: any) {
+      } catch (ffErrCapturado) {
+        const ffErr = comoErrorCapturado(ffErrCapturado);
         console.warn(`[Concert Slicer] FFmpeg slice error on track ${track.index}:`, ffErr.message);
       }
 
@@ -873,7 +885,8 @@ router.post("/process", requireAuth, async (req, res) => {
           hasApplauseOutro = cueAnalysis.hasApplauseOutro;
           cueConfidence = cueAnalysis.confidence;
           console.log(`[Concert Slicer] Track ${track.index} CUEs detectados -> CUE In: +${cueIn}s, CUE Out: ${cueOut}s (applause: ${hasApplauseIntro ? 'intro ' : ''}${hasApplauseOutro ? 'outro' : ''})`);
-        } catch (cueErr: any) {
+        } catch (cueErrCapturado) {
+          const cueErr = comoErrorCapturado(cueErrCapturado);
           console.warn(`[Concert Slicer] Error detectando CUE para pista ${track.index}:`, cueErr.message);
         }
       }
@@ -999,7 +1012,8 @@ router.post("/process", requireAuth, async (req, res) => {
       manifestUrl: supabaseManifestUrl || `/uploads/live_albums/${albumId}/repertoire_data.json`,
       tracks: processedTracks,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Concert Slicer Error]:", err);
     res.status(500).json({ error: err.message || "Error al trocear y generar el disco en el servidor." });
   }
@@ -1049,7 +1063,8 @@ router.post("/detect-cues", requireAuth, async (req, res) => {
             }
           }
         }
-      } catch (trackErr: any) {
+      } catch (trackErrCapturado) {
+        const trackErr = comoErrorCapturado(trackErrCapturado);
         console.warn(`[CUE Detection API] Error en pista ${track.index}:`, trackErr.message);
       }
 
@@ -1064,7 +1079,8 @@ router.post("/detect-cues", requireAuth, async (req, res) => {
     }
 
     return res.json({ success: true, tracks: updatedTracks });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[CUE Detection API Error]:", err);
     return res.status(500).json({ error: err.message || "Error al autodetectar CUEs de los temas." });
   }
@@ -1085,7 +1101,8 @@ async function recortarAMp3(origen: string, destino: string, segundos: number): 
       && fs.statSync(destino).mtimeMs >= fs.statSync(origen).mtimeMs) return destino;
     await ejecutar(ffmpegStatic!, ["-y", "-i", origen, "-t", String(Math.max(1, segundos)), "-vn", "-ac", "1", "-c:a", "libmp3lame", "-b:a", "96k", destino]);
     return fs.existsSync(destino) && fs.statSync(destino).size > 0 ? destino : null;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Snippet Helper] No se pudo transcodificar el audio:", String(err?.message || err).substring(0, 160));
     return null;
   }
@@ -1134,7 +1151,8 @@ export async function getAudioSnippetPath(params: {
         try {
           const resp = await descargarBufferSeguro(audioRemoto);
           if (resp) fs.writeFileSync(remoteTemp, resp.buffer);
-        } catch (err: any) {
+        } catch (errCapturado) {
+          const err = comoErrorCapturado(errCapturado);
           console.warn("[Snippet Helper] Failed to fetch remote audioUrl:", err.message);
         }
       }
@@ -1167,7 +1185,8 @@ export async function getAudioSnippetPath(params: {
       if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
         return snippetPath;
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.warn("[Snippet Helper] Local source slice warning:", err.message);
     }
   }
@@ -1198,7 +1217,7 @@ export async function getAudioSnippetPath(params: {
           return snippetPath;
         }
       }
-    } catch (err: any) {
+    } catch {
       console.log("[Snippet Helper] Direct stream extract notice (using fallback).");
     }
 
@@ -1210,7 +1229,7 @@ export async function getAudioSnippetPath(params: {
       console.log(`[Snippet Helper] Downloading master audio for fallback...`);
       try {
         await ejecutar(ytDlpBinaryPath, [...banderasAntiBot(), "--ffmpeg-location", String(ffmpegStatic), "-x", "--audio-format", "mp3", "-o", cachedMaster, urlVideo]);
-      } catch (dlErr: any) {
+      } catch {
         console.log("[Snippet Helper] Master download notice (using fallback).");
       }
     }
@@ -1221,7 +1240,7 @@ export async function getAudioSnippetPath(params: {
         if (fs.existsSync(snippetPath) && fs.statSync(snippetPath).size > 0) {
           return snippetPath;
         }
-      } catch (err: any) {
+      } catch {
         console.log("[Snippet Helper] Cached master slice notice.");
       }
     }
@@ -1246,7 +1265,7 @@ export async function getAudioSnippetPath(params: {
       if (fs.existsSync(fallbackSnippet)) {
         return fallbackSnippet;
       }
-    } catch {}
+    } catch { /* sin ffmpeg operativo no hay fragmento de reserva: se devuelve undefined */ }
   }
 }
 
@@ -1257,7 +1276,7 @@ export function buildAudioOrTextContents(
   snippetPath: string | null | undefined,
   promptText: string,
   fallbackNote: string
-): any {
+): string | Part[] {
   if (snippetPath && fs.existsSync(snippetPath)) {
     try {
       const audioBuffer = fs.readFileSync(snippetPath);
@@ -1320,7 +1339,8 @@ REQUISITOS OBLIGATORIOS:
       if (response && response.text) {
         transText = response.text.trim();
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn('[Transcribe Speech AI fallback]:', aiErr.message);
     }
 
@@ -1328,7 +1348,8 @@ REQUISITOS OBLIGATORIOS:
       success: true,
       transcription: transText,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Transcribe Speech Error]:", err);
     res.status(500).json({ error: err.message || "Error al transcribir discurso." });
   }
@@ -1356,7 +1377,8 @@ router.post("/preview-snippet", requireAuth, async (req, res) => {
       success: true,
       audioUrl: publicAudioUrl,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Snippet Preview Error]:", err);
     res.status(500).json({ error: err.message || "Error al generar la previsualización del trozo." });
   }
@@ -1411,10 +1433,10 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
         const jsonText = response.text || "";
         const match = jsonText.match(/\{[\s\S]*\}/);
         if (match) {
-          const aiData = JSON.parse(match[0]);
+          const aiData: ClasificacionPistasIA = JSON.parse(match[0]);
           if (aiData.classified && Array.isArray(aiData.classified)) {
             classifiedTracks = classifiedTracks.map((t) => {
-              const item = aiData.classified.find((c: any) => c.index === t.index);
+              const item = aiData.classified.find((c) => c.index === t.index);
               if (item) {
                 return {
                   ...t,
@@ -1426,7 +1448,8 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
             });
           }
         }
-      } catch (aiErr: any) {
+      } catch (aiErrCapturado) {
+        const aiErr = comoErrorCapturado(aiErrCapturado);
         console.warn("[Auto-Classify] AI Classification fallback to algorithmic:", aiErr.message);
       }
     } else {
@@ -1463,7 +1486,8 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
       success: true,
       tracks: classifiedTracks,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err.message || "Error al auto-clasificar pistas." });
   }
 });
@@ -1534,7 +1558,8 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
         if (resultData.bpm) bpm = Number(resultData.bpm) || 125;
         if (resultData.lyricsWithChords) lyricsWithChords = resultData.lyricsWithChords;
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn('[Transcribe Song AI fallback active]:', aiErr.message);
     }
 
@@ -1544,7 +1569,8 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
       bpm,
       lyricsWithChords,
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("[Transcribe Song Error]:", err);
     res.status(500).json({ error: err.message || "Error al transcribir letra y acordes." });
   }
@@ -1558,7 +1584,8 @@ router.post("/demo-audio", requireAuth, async (req, res) => {
     const demoPath = path.join(tempDir, `demo_concert_${Date.now()}.mp3`);
     await ejecutar(ffmpegStatic!, ["-f", "lavfi", "-i", "sine=frequency=440:duration=60", "-c:a", "libmp3lame", "-q:a", "4", demoPath]);
     res.json({ success: true, filePath: demoPath });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     res.status(500).json({ error: err.message });
   }
 });

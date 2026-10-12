@@ -39,6 +39,7 @@ Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
@@ -51,6 +52,7 @@ Scheduler, lector (Gmail/IMAP) y enviador con humano en el bucle.
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*

@@ -28,10 +28,10 @@ Exporta: EnergyChartPoint, EnergyChartZone, EnergyChart.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_dashboard_widgets_EnergyCurve|src/components/dashboard/widgets/EnergyCurve.tsx]] *(from #frontend)*
 - [[src_components_repertorio_EnergyMapCard|src/components/repertorio/EnergyMapCard.tsx]] *(from #frontend)*
 - [[src_components_repertorio_hooks_useSetlistItemPopovers|src/components/repertorio/hooks/useSetlistItemPopovers.ts]] *(from #frontend)*
 - [[src_components_repertorio_PerfectSetlistModal|src/components/repertorio/PerfectSetlistModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_RepertorioModalsContainer|src/components/repertorio/RepertorioModalsContainer.tsx]] *(from #frontend)*
 - [[src_components_repertorio_RepertorioSetlistsView|src/components/repertorio/RepertorioSetlistsView.tsx]] *(from #frontend)*
 - [[src_components_repertorio_SetlistAIAnalysisModal|src/components/repertorio/SetlistAIAnalysisModal.tsx]] *(from #frontend)*
 

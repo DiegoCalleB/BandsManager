@@ -70,7 +70,7 @@ export async function verifyEmailDeliverability(email: string): Promise<EmailDel
       mxValid = true;
       mxRecords = records.map(r => r.exchange);
     }
-  } catch (err) {
+  } catch {
     // Si falla resolveMx, intentamos resolver registros A / AAAA
     try {
       const aRecords = await dns.resolve4(domain);
@@ -78,7 +78,7 @@ export async function verifyEmailDeliverability(email: string): Promise<EmailDel
         mxValid = true;
         mxRecords = [`fallback-a:${aRecords[0]}`];
       }
-    } catch (_) {
+    } catch {
       mxValid = false;
     }
   }

@@ -40,7 +40,7 @@ export async function abrirModalDeImpresion(page: Page, ajustes: Record<string, 
 
   await page.goto('/');
   if (!(await page.getByPlaceholder('Correo electrónico o Usuario').isVisible().catch(() => false))) {
-    await page.getByText('Log in').first().click();
+    await page.getByRole('button', { name: 'Entrar', exact: true }).first().click();
   }
   await page.getByPlaceholder('Correo electrónico o Usuario').fill('diego');
   await page.getByPlaceholder('Contraseña').fill('demo2026');

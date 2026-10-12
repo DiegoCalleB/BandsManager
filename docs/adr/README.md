@@ -46,6 +46,10 @@ Usamos el formato [plantilla](./0000-plantilla.md) (inspirado en MADR).
 | [0037](./0037-modularizacion-calendar-sidebar-logistics.md) | Modularización de CalendarSidebarLogistics (1769 líneas, ~120 props) en vistas por pestaña que leen el contexto | Aceptada | nueva |
 | [0038](./0038-modularizacion-onboarding-wizard.md) | Modularización de OnboardingWizardModal.tsx (1736 → 52 líneas): un hook por paso, controlador, contexto y vistas | Aceptada | nueva |
 | [0039](./0039-modularizacion-user-profile-modal.md) | Modularización de UserProfileModal.tsx (1721 → 57 líneas): hooks, contexto y vistas por sección | Aceptada | nueva |
+| [0040](./0040-modularizacion-atril.md) | Modularización de Atril.tsx (1688 → 37 líneas): hooks por dominio, contexto y vistas por zona | Aceptada | nueva |
+| [0041](./0041-modularizacion-song-transition-preview.md) | Modularización de SongTransitionPreviewModal (1596 → 58 líneas) y rules-of-hooks a cero en CI | Aceptada | nueva |
+| [0042](./0042-modularizacion-ai-music.md) | Modularización de server/routes/ai_music.ts (4183 → 48 líneas) en sub-routers y motores; fuera una llamada a Gemini que no se usaba | Aceptada | nueva |
+| [0043](./0043-modularizacion-users.md) | Modularización de server/routes/users.ts (3652 → 42 líneas) en once sub-routers montados en el orden original | Aceptada | nueva |
 
 ## Cómo añadir uno
 

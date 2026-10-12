@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-  X,
-  Download,
-  Printer,
-  Sparkles,
-  Check,
-  Image as ImageIcon,
-  FileCode,
-  FileText,
-  Layers,
-  ShieldCheck,
-  Palette,
-} from "lucide-react";
+import { X, Download, Printer, Sparkles, Check, Image as ImageIcon, FileCode, FileText, Layers } from "lucide-react";
 import {
   downloadQrAsSvg,
   downloadQrAsHighResPng,
@@ -20,6 +8,7 @@ import {
 import { IconButton, Input } from './ui';
 import { QrCustomConfig, DEFAULT_QR_CUSTOM_CONFIG } from "./fans/qr/qrCustomizationConfig";
 import { CustomizableBandQr } from "./fans/qr/CustomizableBandQr";
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface QrExportModalProps {
   isOpen: boolean;
@@ -104,7 +93,8 @@ export const QrExportModal: React.FC<QrExportModalProps> = ({
         });
         setExportSuccess("¡Tarjeta/Pegatina HD descargada!");
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al exportar QR:", err);
       alert("Hubo un problema al exportar el código QR. Inténtalo de nuevo.");
     } finally {

@@ -1,4 +1,6 @@
-import type { CulturalOpportunityItem,MultiSourceVenueItem,SimilarVenueItem } from "../placesModel";
+import type { MultiSourceVenueItem,OportunidadCultural,SimilarVenueItem } from "../placesModel";
+import { oportunidadCulturalAPlace } from "../placesModel";
+import type { RespuestaRadarAfinidad, RespuestaRadarCultural, RespuestaRadarMultiFuente } from "../../tiposRespuestasApi";
 import { errorMessage } from "../placesModel";
 /**
  * Búsquedas por bandas similares, multifuente y cultural pública.
@@ -49,7 +51,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
         : ["Macaco", "La Pegatina"];
 
     try {
-      const res = await apiFetch("/api/leads/similar-artists-venues", {
+      const res = await apiFetch<RespuestaRadarAfinidad>("/api/leads/similar-artists-venues", {
         method: "POST",
         body: JSON.stringify({
           bandName: bandName || "Tu Banda",
@@ -135,7 +137,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
       selectedCity || activeCampaign?.targetCities?.[0] || "Madrid";
 
     try {
-      const res = await apiFetch("/api/leads/multi-source-venues", {
+      const res = await apiFetch<RespuestaRadarMultiFuente>("/api/leads/multi-source-venues", {
         method: "POST",
         body: JSON.stringify({
           query: searchQuery || `Salas de conciertos y música en vivo`,
@@ -223,7 +225,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
       selectedCity || activeCampaign?.targetCities?.[0] || "Madrid";
 
     try {
-      const res = await apiFetch("/api/leads/public-cultural-radar", {
+      const res = await apiFetch<RespuestaRadarCultural>("/api/leads/public-cultural-radar", {
         method: "POST",
         body: JSON.stringify({
           provinciaOrRegion: queryRegion,
@@ -233,7 +235,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
         }),
       });
 
-      if (res.success && Array.isArray(res.oportunidades)) {
+      if (res.success && Array.isArray(res.leads_publicos)) {
         const currentDiscarded = getStoredDiscarded();
         const isDiscarded = (name: string) => {
           const norm = (name || "").toLowerCase().trim();
@@ -242,10 +244,10 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
           );
         };
 
-        const mapped: PlaceResult[] = res.oportunidades
-          .filter((op: CulturalOpportunityItem) => !isDiscarded(op.entidad_o_evento))
-          .map((op: CulturalOpportunityItem, idx: number) => {
-            const normName = (op.entidad_o_evento || "").toLowerCase().trim();
+        const mapped: PlaceResult[] = res.leads_publicos
+          .filter((op: OportunidadCultural) => !isDiscarded(op.entidad_publica))
+          .map((op: OportunidadCultural, idx: number) => {
+            const normName = (op.entidad_publica || "").toLowerCase().trim();
             const existingMatch = existingLeads.find(
               (l) =>
                 l.nombre_sala &&
@@ -253,21 +255,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
             );
 
             return {
-              place_id: `cultural-${Date.now()}-${idx}`,
-              nombre_sala: op.entidad_o_evento,
-              ciudad: op.municipio || queryRegion,
-              region: op.provincia || queryRegion,
-              direccion: op.municipio || "",
-              telefono: op.telefono || "",
-              website: op.url_registro || "",
-              tipo: (op.tipo === "ayuntamiento"
-                ? "ayuntamiento"
-                : "sala") as LeadType,
-              aforo: undefined,
-              genero: bandGenre || "Cultural",
-              descripcion: `${op.programa_o_ciclo || ""} · ${op.requisitos_o_perfil || ""} (${op.plazo_presentacion || "Convocatoria"})`,
-              email_contacto: op.email_contacto || "",
-              fuente: `Radar Cultural Público (${op.fuente_datos || "Datos Abiertos & Municipios"})`,
+              ...oportunidadCulturalAPlace(op, idx, queryRegion, bandGenre),
               selected: !existingMatch,
               alreadyInCrm: !!existingMatch,
               crmStatus: existingMatch ? existingMatch.estado : null,
@@ -279,7 +267,7 @@ export function useAlternativePlaceSources({ setIsSearching, setSearchError, set
 
         setPlaces(mapped);
         setSearchSource(
-          `Radar Cultural Público: ${res.oportunidades.length} teatros, auditorios y convocatorias en ${queryRegion}`,
+          `Radar Cultural Público: ${res.leads_publicos.length} teatros, auditorios y convocatorias en ${queryRegion}`,
         );
       } else {
         setSearchError(

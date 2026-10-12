@@ -54,7 +54,7 @@ function claveDePeticion(req: Request, porUsuario: boolean, ambito: string): str
   if (!porUsuario) return `${ambito}|${ip}`;
   // Detrás de un NAT o de una red de móvil, muchos usuarios comparten IP: contar por usuario
   // evita que uno agote el cupo de toda su sala de ensayo.
-  const userId = (req as any).user?.id;
+  const userId = req.user?.id;
   return `${ambito}|${userId ? `u:${userId}` : ip}`;
 }
 

@@ -2,7 +2,7 @@
  * Tema, tipografía y colores de la aplicación.
  * Extraído de App.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-import React,{ useEffect,useState } from "react";
+import React,{ useEffect,useEffectEvent,useState } from "react";
 import { api } from "../../services/api";
 import type { User } from "../../types";
 import { ThemeColors,ThemeName } from "../../types";
@@ -48,8 +48,8 @@ export function useAppTheme({ currentUser, refreshSession, fetchState }: AppThem
     applyFontPreset(newFont);
   };
 
-  // Handle Stripe Payment Redirect
-  useEffect(() => {
+  // Handle Stripe Payment Redirect (solo al montar; lee la sesión y los refrescos más recientes)
+  const procesarVueltaDelPago = useEffectEvent(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get("payment");
     const planParam = urlParams.get("plan");
@@ -93,6 +93,10 @@ export function useAppTheme({ currentUser, refreshSession, fetchState }: AppThem
     } else if (paymentStatus === "cancelled") {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
+  });
+
+  useEffect(() => {
+    procesarVueltaDelPago();
   }, []);
 
   // Detecta cambios en data-theme para sincronizar colores Espectro

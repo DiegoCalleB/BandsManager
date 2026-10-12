@@ -21,6 +21,7 @@ Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[tabla_epk_configs|tabla epk_configs]] *(Layer: #schema, Domain: #epk)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*

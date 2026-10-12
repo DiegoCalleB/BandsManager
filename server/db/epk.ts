@@ -1,9 +1,10 @@
 // Configuración del EPK de la banda (`epk_configs`) y mapa de logos.
 
 import { escrituraTolerante } from './tolerantWrite.js';
-import { getSupabase, cleanBandId } from './core.js';
+import { getSupabase } from './core.js';
 import { ensureRegisteredBandExists } from './bands.js';
 import { invalidateBandStateCache } from './sync.js';
+import type { FilaEpk, EntradaEpk } from './tiposEpk.js';
 
 export async function dbGetEpkConfig(bandId: string) {
   const sb = getSupabase();
@@ -12,7 +13,7 @@ export async function dbGetEpkConfig(bandId: string) {
     new Set([bandId, `band-${rawClean}`, `reg-${rawClean}`, rawClean])
   ).filter(Boolean);
 
-  const { data, error } = await sb
+  const { data: fila, error } = await sb
     .from('epk_configs')
     .select('*')
     .in('band_id', candidateIds)
@@ -20,6 +21,7 @@ export async function dbGetEpkConfig(bandId: string) {
     .maybeSingle();
 
   if (error) throw new Error(`Supabase Error (epk_configs): ${error.message}`);
+  const data: FilaEpk | null = fila;
 
   if (!data) {
     return null;
@@ -61,9 +63,9 @@ export async function dbGetEpkConfig(bandId: string) {
     dossierDocumentName: data.dossier_document_name,
     dossierTextoExtra: data.dossier_texto_extra,
     bandPhotos: (Array.isArray(data.band_photos) ? data.band_photos : [])
-      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
-      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
-    miembros: (Array.isArray(data.miembros) ? data.miembros : []).map((m: any) => {
+      .map((p) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u) => typeof u === 'string' && u.trim() !== ''),
+    miembros: (Array.isArray(data.miembros) ? data.miembros : []).map((m) => {
       const foto = m?.fotoUrl || m?.foto_url || '';
       return {
         ...m,
@@ -82,7 +84,8 @@ export async function dbGetEpkConfig(bandId: string) {
     riderPdfUrl: data.rider_pdf_url,
     riderPdfName: data.rider_pdf_name,
     enlacesRedes: mergedRedes,
-    contactoBooking: data.contacto_booking || {},
+    // Un EPK recién creado puede no tener contacto aún: quien lo lee comprueba cada campo.
+    contactoBooking: (data.contacto_booking || {}) as NonNullable<FilaEpk['contacto_booking']>,
     temasDestacadosIds: data.temas_destacados_ids || [],
     incentivoFans: data.incentivo_fans || {},
     donacionRevolut: resolvedDonacionRevolut,
@@ -100,9 +103,9 @@ export async function dbGetEpkConfig(bandId: string) {
     idioma: data.idioma || undefined,
     fontStyle: data.font_style || undefined,
     tipografia: data.tipografia || undefined,
-    plantilla: (data.plantilla as any) || 'stage',
-    ordenSecciones: (data.orden_secciones as any) || undefined,
-    seccionesOcultas: (data.secciones_ocultas as any) || undefined,
+    plantilla: data.plantilla || 'stage',
+    ordenSecciones: data.orden_secciones || undefined,
+    seccionesOcultas: data.secciones_ocultas || undefined,
   };
 }
 
@@ -148,7 +151,7 @@ export async function dbGetEpkLogosMap(
       .select('band_id, logo_url')
       .in('band_id', candidateIds);
     if (error) throw error;
-    (data || []).forEach((row: any) => {
+    (data || []).forEach((row) => {
       const clean = (row.band_id || '')
         .replace(/^(band|reg)-/, '')
         .toLowerCase()
@@ -157,7 +160,7 @@ export async function dbGetEpkLogosMap(
         result[clean] = row.logo_url.trim();
       }
     });
-  } catch (_) {
+  } catch {
     // Non-blocking: si falla, el llamador se queda con el resto de fallbacks que ya tenía.
   }
 
@@ -174,7 +177,7 @@ export async function dbGetEpkLogosMap(
             candidateIds.map((id) => `id.eq.${id}`).join(',')
         );
       if (error) throw error;
-      (data || []).forEach((row: any) => {
+      (data || []).forEach((row) => {
         const cleanBid = (row.band_id || '')
           .replace(/^(band|reg)-/, '')
           .toLowerCase()
@@ -192,7 +195,7 @@ export async function dbGetEpkLogosMap(
           if (clean && !result[clean]) result[clean] = logo;
         });
       });
-    } catch (_) {
+    } catch {
       // Non-blocking
     }
   }
@@ -200,7 +203,7 @@ export async function dbGetEpkLogosMap(
   return result;
 }
 
-export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
+export async function dbUpsertEpkConfig(targetBandId: string, config: EntradaEpk) {
   const sb = getSupabase();
 
   const canonicalBandId =
@@ -208,10 +211,10 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   const bandIdToUse = canonicalBandId;
 
   // Fetch current config to merge partial updates safely without erasing existing fields
-  let existing: any = null;
+  let existing: Awaited<ReturnType<typeof dbGetEpkConfig>> = null;
   try {
     existing = await dbGetEpkConfig(bandIdToUse);
-  } catch (err) {
+  } catch {
     // Non-blocking
   }
 
@@ -267,13 +270,13 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   // sin que nadie los tocara. Quién SIGUE en la lista lo decide `config.miembros` (si alguien
   // se quita del formulario, desaparece); lo que se preserva es lo que el objeto nuevo no
   // incluye para un id que ya existía.
-  const existingMiembros: any[] = Array.isArray(existing?.miembros)
+  const existingMiembros: NonNullable<EntradaEpk['miembros']> = Array.isArray(existing?.miembros)
     ? existing.miembros
     : [];
   const mergedMiembros = Array.isArray(config.miembros)
-    ? config.miembros.map((m: any) => {
+    ? config.miembros.map((m) => {
         const prev = m?.id
-          ? existingMiembros.find((e: any) => e?.id === m.id)
+          ? existingMiembros.find((e) => e?.id === m.id)
           : null;
         const foto =
           m?.fotoUrl !== undefined
@@ -281,7 +284,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
             : m?.foto_url !== undefined
               ? m.foto_url
               : (prev?.fotoUrl || prev?.foto_url || '');
-        const normalizedM: any = {
+        const normalizedM = {
           ...(prev || {}),
           ...m,
           id: m?.id || prev?.id || `m-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -347,8 +350,8 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
           ? config.band_photos
           : existing?.bandPhotos) || []
     )
-      .map((p: any) => (typeof p === 'string' ? p : p?.url || ''))
-      .filter((u: any) => typeof u === 'string' && u.trim() !== ''),
+      .map((p) => (typeof p === 'string' ? p : p?.url || ''))
+      .filter((u) => typeof u === 'string' && u.trim() !== ''),
     miembros: mergedMiembros,
     videos:
       (config.videos !== undefined ? config.videos : existing?.videos) || [],
@@ -439,10 +442,9 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
           : existing?.seccionesOcultas) || null,
   };
 
-  let data: any = null;
-  let error: any = null;
+  let data: FilaEpk | null;
 
-  const currentPayload: Record<string, any> = { ...payload };
+  const currentPayload: Record<string, unknown> = { ...payload };
   // Si a la BD le falta alguna columna nueva (migración sin aplicar) se guarda sin ella, pero
   // queda registrado y el cliente lo ve como aviso (ver server/db/tolerantWrite.ts).
   const res = await escrituraTolerante('epk_configs', currentPayload, (p) =>
@@ -450,7 +452,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
   );
   for (const col of res.omitidas) delete currentPayload[col];
   data = res.data;
-  error = res.error;
+  const error = res.error;
 
   if (error)
     throw new Error(`Supabase Error (upsert epk_configs): ${error.message}`);
@@ -468,13 +470,13 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
       if (insertRes.data) {
         data = insertRes.data;
       }
-    } catch (_) {
+    } catch {
       // Non-blocking
     }
   }
 
   // Also sync band name into registered_bands table (logo_url lives in epk_configs)
-  const regUpdates: Record<string, any> = {};
+  const regUpdates: { nombre_banda?: string } = {};
   const providedName = (
     config.bandName ||
     config.nombre_banda ||
@@ -490,7 +492,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
         .from('registered_bands')
         .update(regUpdates)
         .eq('band_id', bandIdToUse);
-    } catch (regErr) {
+    } catch {
       // Non-blocking
     }
   }
@@ -500,7 +502,7 @@ export async function dbUpsertEpkConfig(targetBandId: string, config: any) {
     if (targetBandId && targetBandId !== bandIdToUse) {
       invalidateBandStateCache(targetBandId);
     }
-  } catch (_) {
+  } catch {
     // Non-blocking
   }
 

@@ -1,4 +1,9 @@
 import fs from "fs";
+import type { AppState } from './stateTypes.js';
+import type { EPKConfig, Song } from "../src/types.js";
+import type { AutonomyConfig } from "./db/autonomy.js";
+import type { ColumnasSong } from "./db/tiposRepertorio.js";
+import type { FilaGearChecklist, FilaRunOfShow } from "./db/production.js";
 import path from "path";
 import express from "express";
 import { INITIAL_LEADS, INITIAL_REHEARSALS, INITIAL_CONCERTS, INITIAL_SOCIAL_POSTS, INITIAL_PAYMENTS, INITIAL_MESSAGES, INITIAL_SOCIAL_METRICS, INITIAL_USERS, INITIAL_SONGS, INITIAL_SETLISTS, INITIAL_BANDS, INITIAL_TOURS } from "../src/db_seed.js";
@@ -8,7 +13,7 @@ import { ensureCategoryTemplatesInState } from "./promptsManager.js";
 
 const DATA_FILE = path.join(process.cwd(), "data.json");
 
-const INITIAL_RUN_OF_SHOW: Record<string, any[]> = {
+const INITIAL_RUN_OF_SHOW: Record<string, Array<Partial<FilaRunOfShow>>> = {
   '2026-07-23': [
     { id: 'ros-1', time: '17:00', activity: 'Llegada a la sala y descarga de bártulos', done: true },
     { id: 'ros-2', time: '17:30', activity: 'Montaje de escenario e in-ears', done: true },
@@ -25,7 +30,7 @@ const INITIAL_RUN_OF_SHOW: Record<string, any[]> = {
   ]
 };
 
-const INITIAL_GEAR_CHECKLISTS: Record<string, any[]> = {
+const INITIAL_GEAR_CHECKLISTS: Record<string, Array<Partial<FilaGearChecklist>>> = {
   '2026-07-23': [
     { id: 'gear-1', label: 'Teclado Korg SV-2 + Stand', checked: true },
     { id: 'gear-2', label: 'Estuche Violín electroacústico + Arco y resina', checked: true },
@@ -201,10 +206,10 @@ const VERTICE_REGISTERED_BAND = {
 const SEED_COLLECTIONS = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
 
 /** Asigna la banda de ejemplo a los datos semilla de una instalación nueva (que no traen band_id). */
-function stampSeedBand(state: any): void {
-  const stamp = (items: any) => {
+function stampSeedBand(state: AppState): void {
+  const stamp = (items: unknown) => {
     if (!Array.isArray(items)) return;
-    for (const item of items) if (!item.band_id) item.band_id = DEMO_BAND_ID;
+    for (const item of items as Array<{ band_id?: string }>) if (!item.band_id) item.band_id = DEMO_BAND_ID;
   };
   for (const key of SEED_COLLECTIONS) stamp(state[key]);
   for (const group of [state.runOfShow, state.gearChecklists]) {
@@ -212,7 +217,7 @@ function stampSeedBand(state: any): void {
   }
 }
 
-export function ensureSeedBands(state: any): boolean {
+export function ensureSeedBands(state: AppState): boolean {
   let changed = false;
 
   if (!state.registeredBands || !Array.isArray(state.registeredBands)) {
@@ -220,7 +225,7 @@ export function ensureSeedBands(state: any): boolean {
     changed = true;
   } else {
     const existingVertice = state.registeredBands.find(
-      (b: any) => b.band_id === "band-vertice" || b.band_id === "vertice" || b.id === "reg-vertice" || String(b.nombre_banda || "").toLowerCase() === "vertice" || String(b.nombre_banda || "").toLowerCase() === "vértice"
+      (b) => b.band_id === "band-vertice" || b.band_id === "vertice" || b.id === "reg-vertice" || String(b.nombre_banda || "").toLowerCase() === "vertice" || String(b.nombre_banda || "").toLowerCase() === "vértice"
     );
     if (!existingVertice) {
       state.registeredBands.push(VERTICE_REGISTERED_BAND);
@@ -257,23 +262,23 @@ export function ensureSeedBands(state: any): boolean {
       } else {
         // Find matching registered bands for this user
         const uEmail = u.email?.toLowerCase();
-        const matchingBands = state.registeredBands?.filter((b: any) =>
+        const matchingBands = state.registeredBands?.filter((b) =>
           (uEmail && b.email?.toLowerCase() === uEmail) || b.nombre_banda === u.name || b.nombre_banda === u.bandName
         ) || [];
 
         // Ensure user_id is linked on matching registered bands
-        matchingBands.forEach((b: any) => {
+        matchingBands.forEach((b) => {
           if (!b.user_id || b.user_id.startsWith("user-17")) {
             b.user_id = u.id;
             changed = true;
           }
         });
 
-        const currentBandValid = matchingBands.some((b: any) => b.band_id === u.band_id) ||
-          state.userBands?.some((ub: any) => ub.user_id === u.id && ub.band_id === u.band_id);
+        const currentBandValid = matchingBands.some((b) => b.band_id === u.band_id) ||
+          state.userBands?.some((ub) => ub.user_id === u.id && ub.band_id === u.band_id);
 
         if (!currentBandValid && matchingBands.length > 0) {
-          const nameMatchedBand = matchingBands.find((b: any) =>
+          const nameMatchedBand = matchingBands.find((b) =>
             b.nombre_banda && (b.nombre_banda.toLowerCase() === u.name?.toLowerCase() || b.nombre_banda.toLowerCase() === u.bandName?.toLowerCase())
           );
           const targetBandObj = nameMatchedBand || matchingBands[0];
@@ -296,10 +301,10 @@ export function ensureSeedBands(state: any): boolean {
   // Ensure all current users have their active bands in userBands. Un usuario sin band_id
   // todavía (cuenta nueva sin banda asignada) no tiene banda activa que registrar aquí.
   if (state.users && Array.isArray(state.users)) {
-    state.users.forEach((u: any) => {
+    state.users.forEach((u) => {
       if (!u.band_id) return;
       const bid = u.band_id;
-      const hasUB = state.userBands.some((ub: any) => ub.user_id === u.id && ub.band_id === bid);
+      const hasUB = state.userBands.some((ub) => ub.user_id === u.id && ub.band_id === bid);
       if (!hasUB) {
         state.userBands.push({
           id: `ub-${u.id}-${bid}`,
@@ -315,20 +320,20 @@ export function ensureSeedBands(state: any): boolean {
 
   // Ensure all registered bands have leader associations in userBands
   if (state.registeredBands && Array.isArray(state.registeredBands)) {
-    state.registeredBands.forEach((rb: any) => {
+    state.registeredBands.forEach((rb) => {
       if (!rb.band_id) return;
       const rbEmail = (rb.email || "").toLowerCase();
-      const matchingUsers = (state.users || []).filter((u: any) =>
+      const matchingUsers = (state.users || []).filter((u) =>
         u.id === rb.user_id ||
         (rbEmail && (u.email?.toLowerCase() === rbEmail || u.username?.toLowerCase() === rbEmail))
       );
 
       // If no user object matched yet, but rb has user_id, use that user_id
-      const userIdsToLink = new Set<string>(matchingUsers.map((u: any) => u.id));
+      const userIdsToLink = new Set<string>(matchingUsers.map((u) => u.id));
       if (rb.user_id) userIdsToLink.add(rb.user_id);
 
       userIdsToLink.forEach((uid) => {
-        const hasUB = state.userBands.some((ub: any) => ub.user_id === uid && ub.band_id === rb.band_id);
+        const hasUB = state.userBands.some((ub) => ub.user_id === uid && ub.band_id === rb.band_id);
         if (!hasUB) {
           state.userBands.push({
             id: `ub-${uid}-${rb.band_id}`,
@@ -380,13 +385,13 @@ export function ensureSeedBands(state: any): boolean {
   return changed;
 }
 
-export function ensureValidUserEmails(state: any): boolean {
+export function ensureValidUserEmails(state: AppState): boolean {
   let changed = false;
   if (!state.users || !Array.isArray(state.users)) return false;
 
   for (const u of state.users) {
     const initUser = INITIAL_USERS.find(
-      (iu: any) => iu.id === u.id || (iu.username && iu.username.toLowerCase() === u.username?.toLowerCase())
+      (iu) => iu.id === u.id || (iu.username && iu.username.toLowerCase() === u.username?.toLowerCase())
     );
     if (initUser?.email && (!u.email || !u.email.includes("@") || u.email.toLowerCase() === u.username?.toLowerCase())) {
       u.email = initUser.email;
@@ -400,12 +405,37 @@ export function ensureValidUserEmails(state: any): boolean {
   return changed;
 }
 
-function cleanBidStr(bid: any): string {
+function cleanBidStr(bid: unknown): string {
   if (!bid) return '';
   return String(bid).replace(/^(band|reg)-/, '').replace(/(-\d+)+$/, '');
 }
 
-export function ensureUniqueIdsInState(state: any): boolean {
+/** Campos que `ensureUniqueIdsInState` mira de un registro cualquiera para decidir si es un duplicado. */
+interface RegistroDeColeccion {
+  id?: string;
+  band_id?: string;
+  email?: string;
+  titulo?: string;
+  caption?: string;
+  nombreSetlist?: string;
+  nombre_banda?: string;
+  user_id?: string;
+  username?: string;
+  nombre?: string;
+  ciudad?: string;
+  nombre_sala?: string;
+  email_contacto?: string;
+  fecha?: string;
+  sala?: string;
+  lugar?: string;
+  concepto?: string;
+  monto?: number | string;
+  cantidad?: number | string;
+  importe?: number | string;
+  plataforma?: string;
+}
+
+export function ensureUniqueIdsInState(state: AppState): boolean {
   let changed = false;
 
   const collections = [
@@ -414,13 +444,15 @@ export function ensureUniqueIdsInState(state: any): boolean {
   ];
 
   for (const colKey of collections) {
-    if (Array.isArray(state[colKey])) {
-      const originalLen = state[colKey].length;
+    const lista: unknown = state[colKey];
+    if (Array.isArray(lista)) {
+      const items: RegistroDeColeccion[] = lista;
+      const originalLen = items.length;
       const seenIds = new Set<string>();
       const seenKeys = new Set<string>();
-      const cleanArray: any[] = [];
+      const cleanArray: RegistroDeColeccion[] = [];
 
-      state[colKey].forEach((item: any, idx: number) => {
+      items.forEach((item, idx) => {
         if (!item || typeof item !== 'object') return;
 
         const itemId = item.id ? String(item.id).trim() : null;
@@ -428,7 +460,7 @@ export function ensureUniqueIdsInState(state: any): boolean {
           return;
         }
 
-        let key = '';
+        let key: string;
         const bid = cleanBidStr(item.band_id || '');
 
         if (colKey === 'registeredBands') {
@@ -470,7 +502,6 @@ export function ensureUniqueIdsInState(state: any): boolean {
           const rlugar = (item.lugar || item.titulo || '').trim().toLowerCase();
           key = rfecha && rlugar ? `rehearsal:${rfecha}:${rlugar}:${bid}` : (item.id || `rehearsal-${idx}`);
         } else if (colKey === 'posts') {
-          const pfecha = (item.fecha || '').trim();
           const ptitle = (item.titulo || item.caption || '').trim().toLowerCase();
           key = ptitle ? `post:${ptitle}:${bid}` : (item.id || `post-${idx}`);
         } else if (colKey === 'payments') {
@@ -506,11 +537,11 @@ export function ensureUniqueIdsInState(state: any): boolean {
   return changed;
 }
 
-export function migrateTimestampIdsToPersonalized(state: any): boolean {
+export function migrateTimestampIdsToPersonalized(state: AppState): boolean {
   let changed = false;
   const existingIds = new Set<string>();
 
-  const isTimestampId = (id: any) => typeof id === "string" && /^(user|band|reg)-\d{8,}$/.test(id);
+  const isTimestampId = (id: unknown) => typeof id === "string" && /^(user|band|reg)-\d{8,}$/.test(id);
   const idMap = new Map<string, string>();
 
   // Register non-timestamp IDs
@@ -584,8 +615,9 @@ export function migrateTimestampIdsToPersonalized(state: any): boolean {
   if (idMap.size > 0) {
     const collections = ['leads', 'rehearsals', 'concerts', 'posts', 'payments', 'metrics', 'songs', 'setlists', 'tours', 'fans', 'bands', 'messages'];
     for (const colKey of collections) {
-      if (state[colKey] && Array.isArray(state[colKey])) {
-        for (const item of state[colKey]) {
+      const lista: unknown = state[colKey];
+      if (lista && Array.isArray(lista)) {
+        for (const item of lista as Array<{ band_id?: string; hilo_emails?: Array<{ band_id?: string }> }>) {
           if (item.band_id && idMap.has(item.band_id)) {
             item.band_id = idMap.get(item.band_id)!;
             changed = true;
@@ -624,7 +656,7 @@ export function migrateTimestampIdsToPersonalized(state: any): boolean {
   return changed;
 }
 
-export function getDefaultEpkConfig(bandName: string = "Tu Banda", email?: string): any {
+export function getDefaultEpkConfig(bandName: string = "Tu Banda", email?: string): EPKConfig {
   return {
     biografia: `${bandName} es una propuesta musical en directo.`,
     logoUrl: "",
@@ -651,7 +683,10 @@ export function getDefaultEpkConfig(bandName: string = "Tu Banda", email?: strin
   };
 }
 
-export function getEpkConfigForBand(state: any, bandId: string, bandName: string = "Tu Banda", email?: string): any {
+/** EPK del estado local: parcial, y los datos legados traen también `nombre_banda`. */
+export type EpkLocal = Partial<EPKConfig> & { nombre_banda?: string };
+
+export function getEpkConfigForBand(state: AppState, bandId: string, bandName: string = "Tu Banda", email?: string): EpkLocal {
   if (!bandId || typeof bandId !== 'string' || !bandId.trim()) {
     // Antes, un bandId vacío devolvía en silencio el EPK real de otra banda (email, teléfono y
     // logo) a cualquier llamador que se olvidara de pasar la banda. Mejor fallar alto.
@@ -669,7 +704,7 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
   ].filter(Boolean);
 
   let existing = possibleKeys
-    .map(k => state.epkConfigsByBand[k])
+    .map((k): EpkLocal => state.epkConfigsByBand[k])
     .find(cfg => cfg && (cfg.logoUrl || cfg.biografia || cfg.nombre_banda));
 
   if (!existing) {
@@ -682,7 +717,7 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
     // band_id con mayúsculas (p. ej. "band-STOMP") no encontraba aquí su propia fila en
     // registeredBands por comparación exacta, dejando el logo vacío aunque sí existiera guardado.
     const cleanIdLower = cleanId.toLowerCase().trim();
-    const regBand = (state.registeredBands || []).find((b: any) => {
+    const regBand = (state.registeredBands || []).find((b) => {
       const bBid = (b.band_id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       const bId = (b.id || '').replace(/^(band|reg)-/, '').toLowerCase().trim();
       return b.band_id === bandId || b.id === bandId || bBid === cleanIdLower || bId === cleanIdLower;
@@ -702,7 +737,10 @@ export function getEpkConfigForBand(state: any, bandId: string, bandName: string
   return existing;
 }
 
-export function getAutonomyConfigForBand(state: any, bandId: string): any {
+/** Autonomía de una banda en el estado local: la de la base de datos más los umbrales heredados. */
+export type ConfigAutonomiaLocal = AutonomyConfig & { minCacheThreshold?: number; maxCacheThreshold?: number };
+
+export function getAutonomyConfigForBand(state: AppState, bandId: string): ConfigAutonomiaLocal {
   if (!bandId || typeof bandId !== 'string' || !bandId.trim()) {
     throw new Error("getAutonomyConfigForBand: se requiere un band_id válido; no hay banda por defecto.");
   }
@@ -717,8 +755,11 @@ export function getAutonomyConfigForBand(state: any, bandId: string): any {
     `reg-${cleanId}`
   ].filter(Boolean);
 
+  // El estado guarda las configuraciones sin tipo (`Record<string, unknown>`): las escribe esta
+  // misma función y las rutas de autonomía con la forma de AutonomyConfig.
+  const configs = state.autonomyConfigsByBand as Record<string, ConfigAutonomiaLocal | undefined>;
   let existing = possibleKeys
-    .map(k => state.autonomyConfigsByBand[k])
+    .map(k => configs[k])
     .find(cfg => cfg && cfg.dispatchLevel);
 
   if (!existing) {
@@ -726,19 +767,19 @@ export function getAutonomyConfigForBand(state: any, bandId: string): any {
   }
 
   for (const k of possibleKeys) {
-    state.autonomyConfigsByBand[k] = existing;
+    configs[k] = existing;
   }
 
   return existing;
 }
 
-let inMemoryStateCache: any = null;
+let inMemoryStateCache: AppState | null = null;
 
 export function invalidateStateCache(): void {
   inMemoryStateCache = null;
 }
 
-export function loadState(): any {
+export function loadState(): AppState {
   if (inMemoryStateCache) {
     return inMemoryStateCache;
   }
@@ -749,8 +790,8 @@ export function loadState(): any {
       if (!content || content.trim() === "") {
         throw new Error("data.json is empty");
       }
-      const state = JSON.parse(content);
-      
+      const state: AppState = JSON.parse(content);
+
       let changed = false;
 
       if (!state.autonomyConfigsByBand) {
@@ -790,7 +831,8 @@ export function loadState(): any {
         changed = true;
       } else {
         for (const initSong of INITIAL_SONGS) {
-          const s = state.songs.find((es: any) => es.id === initSong.id);
+          // Los datos guardados duplican `energiaManual` como `energia_manual` (ver mapSongRecord).
+          const s: (Song & Pick<ColumnasSong, 'energia_manual'>) | undefined = state.songs.find((es) => es.id === initSong.id);
           if (s) {
             if (typeof s.energia !== 'number' || (initSong.energia && s.energia !== initSong.energia && !s.energiaManual)) {
               s.energia = initSong.energia;
@@ -819,14 +861,14 @@ export function loadState(): any {
         state.users = [];
       }
 
-      if (state.users.some((u: any) => u.username.toLowerCase() === 'larra')) {
-        state.users = state.users.filter((u: any) => u.username.toLowerCase() !== 'larra');
+      if (state.users.some((u) => u.username.toLowerCase() === 'larra')) {
+        state.users = state.users.filter((u) => u.username.toLowerCase() !== 'larra');
         changed = true;
       }
 
       for (const initUser of INITIAL_USERS) {
         const existing = state.users.find(
-          (u: any) => u.username.toLowerCase() === initUser.username.toLowerCase()
+          (u) => u.username.toLowerCase() === initUser.username.toLowerCase()
         );
         if (!existing) {
           const { hash, salt } = hashPassword(initUser.initialPassword);
@@ -856,7 +898,7 @@ export function loadState(): any {
       }
 
       if (state.leads) {
-        if (!state.leads.some((l: any) => l.id === "lead-14")) {
+        if (!state.leads.some((l) => l.id === "lead-14")) {
           const hebeLead = INITIAL_LEADS.find(l => l.id === "lead-14");
           if (hebeLead) {
             state.leads.push(hebeLead);
@@ -864,7 +906,7 @@ export function loadState(): any {
           }
         }
         
-        state.leads = state.leads.map((l: any) => {
+        state.leads = state.leads.map((l) => {
           const seedLead = INITIAL_LEADS.find((sl) => sl.id === l.id);
           if (seedLead && seedLead.hilo_emails && (!l.hilo_emails || l.hilo_emails.length === 0)) {
             l.hilo_emails = seedLead.hilo_emails;
@@ -918,7 +960,7 @@ export function loadState(): any {
     setlists: INITIAL_SETLISTS,
     bands: INITIAL_BANDS,
     tours: INITIAL_TOURS,
-    users: INITIAL_USERS.map((u: any) => {
+    users: INITIAL_USERS.map((u) => {
       const { hash, salt } = hashPassword(u.initialPassword);
       return {
         id: u.id,
@@ -931,8 +973,11 @@ export function loadState(): any {
         passwordHash: hash,
         salt: salt,
         createdAt: u.createdAt,
-        band_id: DEMO_BAND_ID,
-        bandName: "Banda Demo"
+        // Cada usuario semilla trae su propia banda (src/db_seed.ts): ninguna cuenta se mete en la
+        // banda de ejemplo solo por existir.
+        band_id: u.band_id,
+        main_band_id: u.main_band_id,
+        bandName: u.bandName
       };
     })
   };
@@ -944,7 +989,7 @@ export function loadState(): any {
   return defaultState;
 }
 
-export function saveState(state: any) {
+export function saveState(state: AppState) {
   try {
     ensureUniqueIdsInState(state);
     inMemoryStateCache = state;
@@ -953,11 +998,11 @@ export function saveState(state: any) {
     fs.writeFileSync(tmpFile, content, "utf-8");
     try {
       fs.renameSync(tmpFile, DATA_FILE);
-    } catch (renameErr) {
+    } catch {
       // Fallback si rename falla entre montajes o permisos de disco
       fs.writeFileSync(DATA_FILE, content, "utf-8");
       if (fs.existsSync(tmpFile)) {
-        try { fs.unlinkSync(tmpFile); } catch (_) {}
+        try { fs.unlinkSync(tmpFile); } catch { /* el temporal ya no existe: nada que limpiar */ }
       }
     }
   } catch (e) {

@@ -25,7 +25,10 @@ Exporta: TransitionStyle, TransitionConfig, DEFAULT_TRANSITION_CONFIG, Transitio
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_repertorio_SongTransitionPreviewModal|src/components/repertorio/SongTransitionPreviewModal.tsx]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useSongTransitionController|src/components/repertorio/song_transition/hooks/useSongTransitionController.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionPlayback|src/components/repertorio/song_transition/hooks/useTransitionPlayback.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_hooks_useTransitionSources|src/components/repertorio/song_transition/hooks/useTransitionSources.ts]] *(from #frontend)*
+- [[src_components_repertorio_song_transition_TransitionTrackCard|src/components/repertorio/song_transition/TransitionTrackCard.tsx]] *(from #frontend)*
 - [[src_utils_audioCueDetector|src/utils/audioCueDetector.ts]] *(from #service)*
 - [[src_utils_transitionSynthesizer|src/utils/transitionSynthesizer.ts]] *(from #service)*
 

@@ -1,5 +1,5 @@
 import { EPKConfig, Lead } from '../types';
-import { EpkLanguage, DEFAULT_EPK_LANGUAGE, idiomaEpkParaLead } from '../i18n/epkTranslations';
+import { EpkLanguage, DEFAULT_EPK_LANGUAGE } from '../i18n/epkTranslations';
 
 export interface EmailAttachment {
   filename: string;
@@ -87,7 +87,6 @@ export function buildEmailSignatureData(params: SignatureDataParams) {
   const email = firma?.email || booking?.email || defaultEmail;
 
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bandmanager.io';
-  const cleanBandId = (params.bandId || '').replace(/^(band|reg)-/, '').toLowerCase();
   const fallbackOnlineEpk = params.bandId ? `${origin}/epk?band=${encodeURIComponent(params.bandId)}` : `${origin}/epk`;
   const dossierPdfUrl = params.epkConfig?.dossierPdfUrl || params.epkConfig?.dossierDocumentUrl || '';
   const dossierPdfName = params.epkConfig?.dossierPdfName || 'Dossier Oficial & Kit de Prensa';
@@ -267,11 +266,11 @@ export async function copyRichSignatureToClipboard(params: SignatureDataParams):
 
   // Modern Clipboard API with rich text/html
   try {
-    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && (window as any).ClipboardItem) {
+    if (typeof navigator !== 'undefined' && navigator.clipboard && typeof window !== 'undefined' && window.ClipboardItem) {
       const htmlBlob = new Blob([html], { type: 'text/html' });
       const textBlob = new Blob([plainText], { type: 'text/plain' });
       await navigator.clipboard.write([
-        new (window as any).ClipboardItem({
+        new window.ClipboardItem({
           'text/html': htmlBlob,
           'text/plain': textBlob,
         }),

@@ -21,12 +21,13 @@ Curva de energía del audio para elegir highlights.
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
-- [[server_routes_ai_music|server/routes/ai_music.ts]] *(from #route)*
+- [[server_routes_ai_music_motorFfmpeg|server/routes/ai_music/motorFfmpeg.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*

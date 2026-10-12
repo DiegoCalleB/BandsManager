@@ -1,25 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Lead } from '../../types';
 import { ModalPortal } from '../common/ModalPortal';
-import { getPublicDealUrl } from '../../utils/bandHash';
-import {
-  X,
-  Zap,
-  Check,
-  Copy,
-  ExternalLink,
-  MessageCircle,
-  Calendar,
-  Clock,
-  Euro,
-  FileCheck,
-  Shield,
-  ShieldCheck,
-  Loader2,
-  Sparkles,
-  Info
-} from 'lucide-react';
-import { Button, Input } from '../ui';
+import { X, Zap, Check, Copy, ExternalLink, MessageCircle, Calendar, Euro, FileCheck, Shield, ShieldCheck, Loader2, Sparkles } from 'lucide-react';
+import { Button } from '../ui';
 import { ShowIcon } from '../ui/ShowIcon';
 
 /** % que viene marcado por defecto y opciones rápidas. El importe real lo calcula el servidor. */
@@ -32,6 +15,8 @@ const apoyoAproximado = (cache: number, pct: number) =>
   pct > 0 && cache > 0 ? Math.min(500, Math.max(1, Math.round((cache * pct) / 100))) : 0;
 import { useApoyableDeals } from '../../hooks/useApoyableDeals';
 import { DealSupportCard } from './DealSupportCard';
+import { leerTokenDeSesion } from '../../services/sesionLocal';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface FastDealModalProps {
   isOpen: boolean;
@@ -40,6 +25,9 @@ interface FastDealModalProps {
   bandName?: string;
   onDealConfirmed?: () => void;
 }
+
+/** Fecha de evento sugerida: dentro de un mes. */
+const fechaPorDefecto = () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
 export const FastDealModal: React.FC<FastDealModalProps> = ({
   isOpen,
@@ -77,26 +65,30 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
   const [copiedOfficial, setCopiedOfficial] = useState(false);
   const [copiedAiStudio, setCopiedAiStudio] = useState(false);
 
+  // Al abrir (o cambiar de lead) se vuelve a los valores por defecto. Se ajusta en el propio render
+  // —patrón de React— y no en un efecto; la consulta del acuerdo existente sigue en el efecto.
+  const sesion = isOpen && lead ? lead.id : null;
+  const [sesionPrevia, setSesionPrevia] = useState<string | null>(null);
+  if (sesion !== sesionPrevia) {
+    setSesionPrevia(sesion);
+    if (sesion && lead) {
+      setErrorMsg(null);
+      setCopiedOfficial(false);
+      setCopiedAiStudio(false);
+      setFechaEvento(lead.fecha_envio?.slice(0, 10) || fechaPorDefecto());
+      setCacheBase(lead.cache_habitual || 500);
+    }
+  }
+
   // Pre-fill when opening
   useEffect(() => {
     if (!isOpen || !lead) return;
-
-    setErrorMsg(null);
-    setCopiedOfficial(false);
-    setCopiedAiStudio(false);
-
-    // Initial date pre-fill: next month or from lead notes/context
-    const today = new Date();
-    const futureDate = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const defaultDateStr = futureDate.toISOString().slice(0, 10);
-
-    setFechaEvento(lead.fecha_envio?.slice(0, 10) || defaultDateStr);
-    setCacheBase(lead.cache_habitual || 500);
+    const defaultDateStr = fechaPorDefecto();
 
     // Fetch existing deal if any
     const fetchExistingDeal = async () => {
       try {
-        const token = localStorage.getItem('bandmanager_token');
+        const token = leerTokenDeSesion();
         const res = await fetch(`/api/deals/lead/${lead.id}`, {
           headers: token ? { Authorization: `Bearer ${token}` } : {}
         });
@@ -124,7 +116,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
             setDealGenerated(null);
           }
         }
-      } catch (_) {
+      } catch {
         setDealGenerated(null);
       }
     };
@@ -143,7 +135,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
     setErrorMsg(null);
 
     try {
-      const token = localStorage.getItem('bandmanager_token');
+      const token = leerTokenDeSesion();
       const res = await fetch('/api/deals', {
         method: 'POST',
         headers: {
@@ -184,7 +176,8 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
       if (onDealConfirmed) {
         onDealConfirmed();
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setErrorMsg(err.message || 'Error al crear la hoja de acuerdo');
     } finally {
       setIsSubmitting(false);
@@ -344,7 +337,7 @@ export const FastDealModal: React.FC<FastDealModalProps> = ({
                   <label className="text-[11px] text-[var(--ink-2)] block mb-1">Forma de Pago</label>
                   <select
                     value={formaPago}
-                    onChange={(e: any) => setFormaPago(e.target.value)}
+                    onChange={(e) => setFormaPago(e.target.value as typeof formaPago)}
                     className="w-full px-2.5 py-1.5 rounded-[var(--r-s)] bg-[var(--card)] border border-[var(--hair)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--acc)]"
                   >
                     <option value="efectivo"><ShowIcon inline emoji="💵" />Efectivo al terminar (sobre)</option>

@@ -1,5 +1,5 @@
 import { getSupabase } from "../server/db/core.js";
-import { findDuplicateLeads, mergeTwoLeads, normalizeEmail, normalizeVenueName, normalizeText } from "../src/utils/duplicateLeads.js";
+import { findDuplicateLeads, mergeTwoLeads, normalizeVenueName } from "../src/utils/duplicateLeads.js";
 import { Lead } from "../src/types.js";
 
 // Master dictionary for high quality logos of iconic Spanish venues / festivals / media

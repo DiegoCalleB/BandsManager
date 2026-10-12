@@ -20,6 +20,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_repertoire|Repertoire DB Handlers]] *(Layer: #db, Domain: #repertoire)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[ext_gemini|Gemini (Google GenAI)]] *(Layer: #external, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
@@ -29,6 +30,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_services_profesorArmonia|server/services/profesorArmonia.ts]] *(Layer: #service, Domain: #system)*
+- [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandStyleContext|server/utils/bandStyleContext.ts]] *(Layer: #service, Domain: #system)*
@@ -40,7 +42,9 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_setlistFeedback|server/utils/setlistFeedback.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_valoresIA|server/utils/valoresIA.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_lineaTiempoAcordes|src/utils/lineaTiempoAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_songTitleMatch|src/utils/songTitleMatch.ts]] *(Layer: #service, Domain: #repertoire)*
@@ -51,10 +55,10 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilEditing|src/components/atril/hooks/useAtrilEditing.ts]] *(from #frontend)*
 - [[src_components_booking_venue_panel_hooks_buildVenuePanelActions|src/components/booking/venue_panel/hooks/buildVenuePanelActions.ts]] *(from #frontend)*
 - [[src_components_chatbot_hooks_useChatAudioGeneration|src/components/chatbot/hooks/useChatAudioGeneration.ts]] *(from #frontend)*
-- [[src_components_chords_ModalOido|src/components/chords/ModalOido.tsx]] *(from #frontend)*
+- [[src_components_chords_progresoOido|src/components/chords/progresoOido.ts]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_repertorio_BulkAlbumAudioUploaderModal|src/components/repertorio/BulkAlbumAudioUploaderModal.tsx]] *(from #frontend)*
 - [[src_components_repertorio_DiscografiaView|src/components/repertorio/DiscografiaView.tsx]] *(from #frontend)*

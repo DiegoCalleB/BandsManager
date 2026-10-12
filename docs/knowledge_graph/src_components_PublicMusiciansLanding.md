@@ -22,12 +22,13 @@ Exporta: PublicMusiciansLanding.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_i18n_fansTranslations|src/i18n/fansTranslations.ts]] *(Layer: #service, Domain: #social)*
 - [[src_i18n_musiciansTranslations|src/i18n/musiciansTranslations.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_app_lazyViews|src/app/lazyViews.ts]] *(from #service)*
-- [[src_main|src/main.tsx]] *(from #service)*
+- [[src_app_rutasPublicasLazy|src/app/rutasPublicasLazy.tsx]] *(from #service)*
 
 ---
 

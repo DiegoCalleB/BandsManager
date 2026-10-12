@@ -15,6 +15,9 @@ interface EmailDeliveryTicksProps {
  * - ✓✓ Doble tick azul: ¡Abierto / Leído por el programador!
  * - ✓✓ Doble tick azul + 🔥: ¡Clic en el EPK / Dossier!
  */
+/** Lead con el array `mensajes` que usaban versiones antiguas en lugar de `hilo_emails`. */
+type LeadConMensajesLegacy = Lead & { mensajes?: { remitente?: string }[] };
+
 export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, size = 'md', showLabel = false }) => {
   const isSent = Boolean(
     lead.fecha_envio || ['contactado', 'esperando_respuesta', 'respondido', 'negociando', 'confirmado', 'enviado'].includes(lead.estado)
@@ -23,8 +26,8 @@ export const EmailDeliveryTicks: React.FC<EmailDeliveryTicksProps> = ({ lead, si
   const hasReceivedReply = Boolean(
     lead.fecha_ultima_respuesta ||
     ['respondido', 'negociando', 'confirmado'].includes(lead.estado) ||
-    (Array.isArray((lead as any).hilo_emails) && (lead as any).hilo_emails.some((m: any) => m.remitente === 'sala')) ||
-    (Array.isArray((lead as any).mensajes) && (lead as any).mensajes.some((m: any) => m.remitente === 'sala'))
+    (Array.isArray(lead.hilo_emails) && lead.hilo_emails.some((m) => m.remitente === 'sala')) ||
+    (Array.isArray((lead as LeadConMensajesLegacy).mensajes) && (lead as LeadConMensajesLegacy).mensajes.some((m) => m.remitente === 'sala'))
   );
 
   const hasClicked = Boolean(lead.clics_epk && lead.clics_epk > 0);

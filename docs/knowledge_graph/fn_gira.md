@@ -20,6 +20,7 @@ Planificación de giras, logística y rutas entre bolos.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_controllers_tours_controller|server/controllers/tours.controller.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tours|server/db/tours.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tours|server/routes/tours.ts]] *(Layer: #route, Domain: #system)*

@@ -52,7 +52,7 @@ const EVENTOS_CIUDADES: Record<string, Array<{ nombre: string; tipo: 'festival' 
 
 export async function detectLocalEventsAndClashes(
   ciudad: string = 'Madrid',
-  generoBanda: string = 'Indie Rock'
+  _generoBanda: string = 'Indie Rock'
 ): Promise<LocalEventsClashResult> {
   const normalizedCity = ciudad.toLowerCase().trim();
   

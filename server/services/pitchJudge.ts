@@ -8,6 +8,7 @@
 
 import { generateUnifiedAI } from "../ai.js";
 import { sanitizePitchDeterministically, auditPitchQuality, PitchQualityAudit, getRecommendedWordRange } from "../utils/promptSafety.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface JudgeEvaluation {
   score: number; // 0 a 100
@@ -30,7 +31,7 @@ export async function evaluateAndRefinePitch(params: {
   minCacheThreshold?: number;
   skipRefinement?: boolean;
 }): Promise<JudgeEvaluation> {
-  const { pitchText, leadName, leadCategory, city, bandName, minCacheThreshold, skipRefinement = false } = params;
+  const { pitchText, leadName, leadCategory, city, minCacheThreshold, skipRefinement = false } = params;
 
   // 1. Auditoría heurística determinista (0ms)
   const audit = auditPitchQuality(pitchText, leadCategory);
@@ -76,7 +77,7 @@ export async function evaluateAndRefinePitch(params: {
   }
 
   // Chequeo de adjuntos pesados prometidos o archivos comprimidos
-  if (/(zip|.mp3|.wav|adjuntamos|te adjunto|adjunto archivo|descarga el archivo)/i.test(pitchText)) {
+  if (/(\bzip\b|.mp3|.wav|adjuntamos|te adjunto|adjunto archivo|descarga el archivo)/i.test(pitchText)) {
     critique.push('Promesa de archivos adjuntos o descargas pesadas (Regla Zero Attachments incumplida).');
     heuristicScore -= 25;
   }
@@ -103,7 +104,7 @@ export async function evaluateAndRefinePitch(params: {
 
 
   // 1. Prohibición de anglicismos forzados de la industria anglosajona no habituales en salas españolas (ej: curfew -> hora límite de cierre / fin de show)
-  if (/curfew/i.test(pitchText)) {
+  if (/\bcurfew\b/i.test(pitchText)) {
     critique.push('Anglicismo no natural detectado ("curfew"). En España usar "hora límite", "fin de concierto" o "cierre de show".');
     heuristicScore -= 10;
   }
@@ -120,7 +121,7 @@ export async function evaluateAndRefinePitch(params: {
   }
 
   // 4. Prohibición de inventar merchandising si no consta stock en el perfil de la banda
-  if (/merchandising|merch/i.test(pitchText)) {
+  if (/merchandising|merch\b/i.test(pitchText)) {
     // Si la banda no tiene merch explícito, advertir al redactor
     critique.push('Verificación de Merchandising: No asumir venta de merch si la banda no tiene productos físicos o stock registrado.');
   }
@@ -198,7 +199,8 @@ Responde ÚNICAMENTE con el texto final corregido:`;
         audit: refinedAudit
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[PitchJudge] Notice during LLM refinement:", err?.message || err);
   }
 

@@ -25,6 +25,7 @@ Chatbot con herramientas que lee y actúa sobre los datos de la banda.
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(Layer: #route, Domain: #booking)*
 - [[route_leads_reply|Leads Reply Route]] *(Layer: #route, Domain: #booking)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
+- [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_chat|server/routes/chat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_leads|server/routes/leads.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_emailValidation|server/routes/leads/emailValidation.ts]] *(Layer: #route, Domain: #booking)*
@@ -34,13 +35,13 @@ Chatbot con herramientas que lee y actúa sobre los datos de la banda.
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_simulation|server/routes/leads/simulation.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_templates|server/routes/leads/templates.ts]] *(Layer: #route, Domain: #booking)*
+- [[server_routes_tiposChat|server/routes/tiposChat.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[src_components_Chatbot|src/components/Chatbot.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[tabla_agent_execution_logs|tabla agent_execution_logs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_booking_campaigns|tabla booking_campaigns]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_campaigns|tabla campaigns]] *(Layer: #schema, Domain: #system)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
-- [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 
 ---
 

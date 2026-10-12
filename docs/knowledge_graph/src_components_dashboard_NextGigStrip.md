@@ -18,7 +18,7 @@ Exporta: NextGigStrip.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_executiveSummaryUtils|src/components/dashboard/executiveSummaryUtils.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 
 ---

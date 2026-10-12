@@ -18,6 +18,8 @@ Exporta: CalendarWidgetProps, CalendarWidget.
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_calendar_calendarTypes|src/components/calendar/calendarTypes.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*

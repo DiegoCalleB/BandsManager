@@ -13,12 +13,13 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: EMAIL_TEMPLATES, EmailTemplatesModal.
+Exporta: EmailTemplatesModal.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_emailTemplates|src/components/dashboard/emailTemplates.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---

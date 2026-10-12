@@ -1,29 +1,5 @@
 import React, { useState } from "react";
-import {
-  Heart,
-  Flame,
-  Sparkles,
-  MessageCircle,
-  Send,
-  Plus,
-  Trash2,
-  MapPin,
-  Calendar,
-  Music,
-  Instagram,
-  Award,
-  ExternalLink,
-  Check,
-  Share2,
-  Mail,
-  Filter,
-  Search,
-  ShieldCheck,
-  UserCheck,
-  Megaphone,
-  Pin,
-  Star,
-} from "lucide-react";
+import { Flame, MessageCircle, Send, Plus, Trash2, MapPin, Calendar, Music, Instagram, Award, Mail, ShieldCheck, Megaphone, Pin, Star } from "lucide-react";
 import { Fan, Concert, ThemeColors } from "../../types";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton, Input, Select, Textarea } from '../ui';
@@ -57,14 +33,12 @@ interface FansCommunityViewProps {
 
 export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
   fans = [],
-  concerts = [],
   effectiveBandName,
   effectiveBandLogo,
-  colors,
   onUpdateFan,
   onDeleteFan,
   onOpenAddModal,
-  selectedCityFilter,
+  selectedCityFilter
 }) => {
   // Local announcements from the band
   const [announcements, setAnnouncements] = useState<BandAnnouncement[]>(() => {
@@ -73,7 +47,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         `bandmanager_community_announcements_${effectiveBandName}`,
       );
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
     // Sin comunicados propios el muro arranca vacío. Antes se sembraba un comunicado de
     // bienvenida firmado por la banda (con 24 likes y 18 fuegos inventados) que nadie había
     // publicado: la banda veía como suyo un texto y unas reacciones que no existían.
@@ -169,7 +143,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
           `bandmanager_community_announcements_${effectiveBandName}`,
           JSON.stringify(updated),
         );
-      } catch {}
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       return updated;
     });
   };
@@ -195,7 +169,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
         `bandmanager_community_announcements_${effectiveBandName}`,
         JSON.stringify(updated),
       );
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
 
     setNewPostTitle("");
     setNewPostContent("");
@@ -650,7 +624,7 @@ export const FansCommunityView: React.FC<FansCommunityViewProps> = ({
                       onChange={(e) => {
                         if (onUpdateFan) {
                           onUpdateFan(fan.id, {
-                            nivelFan: e.target.value as any,
+                            nivelFan: e.target.value as Fan["nivelFan"],
                           });
                         }
                       }}

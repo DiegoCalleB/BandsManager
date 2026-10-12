@@ -19,7 +19,7 @@ export function MobileBottomTabBar() {
  slots fijos, solo iconos (sin texto), siempre visibles sin scroll ni gestos.
  Resumen/Calendario navegan directo; Música/Promoción abren un sheet con sus
  sub-módulos; Más abre el drawer completo (Contactos, Negocio, Herramientas,
- Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.tsx. */}
+ Chat, perfil...). Ver NAV_BOTTOM_BAR_SLOTS en config/navGroups.ts. */}
         <nav data-grupo={grupoActivo} className="lg:hidden fixed inset-x-0 bottom-0 z-40 h-16 flex bg-[var(--surface)]">
           {NAV_BOTTOM_BAR_SLOTS.map((slot) => {
             let isActive = false;

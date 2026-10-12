@@ -26,7 +26,8 @@ Exporta: getSongIrisStemIdea, esIdeaIris, irisPrimero, hasIrisStems, getIdeaTrac
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
-- [[src_components_Atril|src/components/Atril.tsx]] *(from #frontend)*
+- [[src_components_atril_AtrilToolbar|src/components/atril/AtrilToolbar.tsx]] *(from #frontend)*
+- [[src_components_atril_hooks_useAtrilAudio|src/components/atril/hooks/useAtrilAudio.ts]] *(from #frontend)*
 - [[src_components_repertorio_SongCardRow|src/components/repertorio/SongCardRow.tsx]] *(from #frontend)*
 - [[src_components_setlist_performance_hooks_usePracticeLaunch|src/components/setlist_performance/hooks/usePracticeLaunch.ts]] *(from #frontend)*
 - [[src_components_setlist_performance_hooks_useSetlistNavigation|src/components/setlist_performance/hooks/useSetlistNavigation.ts]] *(from #frontend)*

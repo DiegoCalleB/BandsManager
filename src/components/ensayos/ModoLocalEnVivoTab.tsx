@@ -1,54 +1,18 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useEffectEvent, useRef, useMemo } from "react";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
 import { useAutoScroll } from "../../hooks/useAutoScroll";
 import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
-import { useVistaAcordes } from "../chords/AcordeEnInstrumento";
+import { useVistaAcordes } from "../chords/useVistaAcordes";
 import { DrawerDiagramas } from "../chords/DrawerDiagramas";
 import { useAcordesDeLaHoja } from "../../hooks/useAcordesDeLaHoja";
-import {
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  Disc3,
-  Clock,
-  Sparkles,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  AlertCircle,
-  RotateCcw,
-  ThumbsUp,
-  Flame,
-  Music,
-  Maximize2,
-  Minimize2,
-  FileText,
-  CheckSquare,
-  List,
-  BookOpen,
-  Sliders,
-  Type,
-  ArrowDown,
-  Edit3,
-  X,
-  Eye,
-} from "lucide-react";
-import {
-  Rehearsal,
-  RehearsalAgendaItem,
-  Song,
-  ThemeColors,
-  SongSubstituteGuide,
-} from "../../types";
-import { formatTime } from "./EnsayoCronometro";
-import {
-  processChordText,
-  transposeChordToken,
-} from "../../utils/chordUtils";
-import { Atril, renderFormattedChordSheet } from "../Atril";
+import { ChevronLeft, ChevronRight, Disc3, Clock, Volume2, VolumeX, Flame, Music, Maximize2, Minimize2, BookOpen, Edit3 } from "lucide-react";
+import { Rehearsal, Song, ThemeColors } from "../../types";
+import { formatTime } from "./formatTime";
+import { processChordText } from "../../utils/chordUtils";
+import { Atril } from "../Atril";
+import { renderFormattedChordSheet } from "../atril/chordSheetRender";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton } from '../ui';
+import { Button } from '../ui';
 import { useMetronomo } from '../../hooks/useMetronomo';
 import { useNavegacionItems } from "../../hooks/useNavegacionItems";
 import { useSeguimientoEnsayo } from "../../hooks/useSeguimientoEnsayo";
@@ -69,8 +33,7 @@ export function ModoLocalEnVivoTab({
   rehearsal,
   onUpdateRehearsal,
   songs = [],
-  colors,
-  onUpdateSong,
+  onUpdateSong
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
   const {
@@ -116,8 +79,6 @@ export function ModoLocalEnVivoTab({
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
-  const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
-    useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
   const autoScroll = useAutoScroll(atrilScrollRef, 1, viewMode === "atril");
@@ -182,31 +143,32 @@ export function ModoLocalEnVivoTab({
   };
 
   // Keyboard navigation (pedals, arrows, space)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
-        return;
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
+      return;
 
-      const accion = accionDeTecla(e.key);
-      if (accion === "adelante") {
-        if (activeIndex < agenda.length - 1) {
-          e.preventDefault();
-          irSiguiente();
-        }
-      } else if (accion === "atras") {
-        if (activeIndex > 0) {
-          e.preventDefault();
-          irAnterior();
-        }
-      } else if (accion === "espacio" && viewMode === "atril") {
+    const accion = accionDeTecla(e.key);
+    if (accion === "adelante") {
+      if (activeIndex < agenda.length - 1) {
         e.preventDefault();
-        autoScroll.alternar();
+        irSiguiente();
       }
-    };
+    } else if (accion === "atras") {
+      if (activeIndex > 0) {
+        e.preventDefault();
+        irAnterior();
+      }
+    } else if (accion === "espacio" && viewMode === "atril") {
+      e.preventDefault();
+      autoScroll.alternar();
+    }
+  });
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, agenda.length, viewMode]);
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => handleKeyDown(e);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   // Font sizes classes for Atril mode
   const FONT_SIZE_CLASSES = [
@@ -220,10 +182,13 @@ export function ModoLocalEnVivoTab({
   useWakeLock(isFullscreen || isTrackTimerActive);
 
   // Al cambiar de pista se reinicia la transposición y se para el autoscroll
-  useEffect(() => {
+  const claveDePista = `${activeIndex}|${currentSong?.bpm}`;
+  const [prevClaveDePista, setPrevClaveDePista] = useState(claveDePista);
+  if (prevClaveDePista !== claveDePista) {
+    setPrevClaveDePista(claveDePista);
     setTranspose(0);
     autoScroll.setActivo(false);
-  }, [activeIndex, currentSong?.bpm]);
+  }
 
   // Current chord text
   // Sin cifrado guardado se muestra vacío: antes caía en una letra

@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { buscarFormaGuitarra } from '../../utils/chordUtils';
 import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
-import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
 import { CUERDAS_BAJO, COLOR_FUNCION, lineaDeBajo, notasParaDibujar, type ContextoAcorde, type VistaAcorde } from '../../utils/vistaAcordes';
+import { ETIQUETA_VISTA } from './useVistaAcordes';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
 
@@ -99,8 +99,6 @@ export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; c
   );
 };
 
-export const ETIQUETA_VISTA: Record<VistaAcorde, string> = { guitarra: 'Guitarra', teclado: 'Piano', bajo: 'Bajo' };
-
 /** Pastillas para elegir cómo se dibujan los acordes (guitarra / piano / bajo). */
 export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: VistaAcorde) => void }> = ({ vista, onCambio }) => (
   <span className="flex items-center gap-1 bg-[var(--surface)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Instrumento de los diagramas">
@@ -134,42 +132,6 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
     ))}
   </span>
 );
-
-const CLAVE_NIVEL = 'bm_nivel_acordes';
-
-export function useNivelAcordes(): [NivelAcorde, (n: NivelAcorde) => void] {
-  const [nivel, setNivel] = useState<NivelAcorde>(() => {
-    try {
-      const g = localStorage.getItem(CLAVE_NIVEL);
-      if (g === 'basico' || g === 'normal' || g === 'pro') return g;
-    } catch { /* sin almacenamiento */ }
-    return 'normal';
-  });
-  const cambiar = (n: NivelAcorde) => {
-    setNivel(n);
-    try { localStorage.setItem(CLAVE_NIVEL, n); } catch { /* vale solo esta sesión */ }
-  };
-  return [nivel, cambiar];
-}
-
-const CLAVE_VISTA = 'bm_vista_acordes';
-
-/** Instrumento con el que se dibujan los acordes: el último que eligió el usuario o, si no, el de su perfil. */
-export function useVistaAcordes(): [VistaAcorde, (v: VistaAcorde) => void] {
-  const [vista, setVista] = useState<VistaAcorde>(() => {
-    try {
-      const g = localStorage.getItem(CLAVE_VISTA);
-      if (g === 'guitarra' || g === 'teclado' || g === 'bajo') return g;
-    } catch { /* sin almacenamiento */ }
-    const i = instrumentoDelUsuario();
-    return i === 'teclado' || i === 'bajo' ? i : 'guitarra';
-  });
-  const cambiar = (v: VistaAcorde) => {
-    setVista(v);
-    try { localStorage.setItem(CLAVE_VISTA, v); } catch { /* vale solo esta sesión */ }
-  };
-  return [vista, cambiar];
-}
 
 /** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
 export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal' }) => {

@@ -4,7 +4,7 @@
  * Extraído de UserProfileModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import React,{ useState } from "react";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "../../../context/idioma";
 import {
 leerPreferencia as leerPreferenciaEspectro,
 PreferenciaTema
@@ -14,6 +14,7 @@ import type { ResolvedUserProfileProps } from "../../UserProfileModal";
 import { usePlanSummary } from "./usePlanSummary";
 import { useProfileBands } from "./useProfileBands";
 import { useProfileIdentity } from "./useProfileIdentity";
+import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
 /**
  * Estado y acciones del perfil de usuario.
@@ -84,7 +85,7 @@ export function useUserProfileController({
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("bandmanager_token");
+      const token = leerTokenDeSesion();
       if (
         selectedMainBandId &&
         selectedMainBandId !==

@@ -13,14 +13,16 @@ tags: ["security", "auth", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/auth`
 
 ## 📖 Descripción
-Exporta: useAuth.
+Exporta: BandaDeLaSesion, useAuth.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_users|server/routes/users.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(Layer: #route, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_referido|src/utils/referido.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_sessionCookie|src/utils/sessionCookie.ts]] *(Layer: #service, Domain: #auth)*
@@ -31,6 +33,11 @@ Exporta: useAuth.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[src_app_hooks_useAppController|src/app/hooks/useAppController.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/hooks/__tests__/useAuth.behavior.test.ts`
 
 ---
 

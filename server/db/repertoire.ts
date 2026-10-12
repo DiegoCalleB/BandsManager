@@ -1,6 +1,7 @@
 // Repertorio: canciones (`songs`), setlists y atajos; análisis de dinámica, acordes y tonalidad
 // persistidos junto a la canción.
 
+import { bandaDe } from '../utils/bandAccess.js';
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 import {
@@ -16,6 +17,8 @@ import {
 
 import { INITIAL_SONGS, INITIAL_SETLISTS } from "../../src/db_seed.js";
 import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
+import type { AnalisisAcordes, AudioTrack, SongAudioIdea, StemsMeta } from "../../src/types.js";
+import type { EntradaAtajo, EntradaSetlist, ErrorPostgrest, FilaSong, SongMapeada } from "./tiposRepertorio.js";
 
 /**
  * Analiza y persiste la dinámica interna del audio de un tema — y de paso, BPM y tonalidad
@@ -41,12 +44,12 @@ import { pistasDeIdeas, metaStemsDeIdeas } from "../../src/utils/irisTracks.js";
  * para no enviar una columna que no existe.
  */
 export function pistasParaGuardar(
-  incomingIdeas: any[] | undefined,
-  existing: any,
-  incomingPistas?: any[] | null,
-): any[] | undefined {
+  incomingIdeas: SongAudioIdea[] | undefined,
+  existing: { pistas?: AudioTrack[] } | null | undefined,
+  incomingPistas?: AudioTrack[] | null,
+): AudioTrack[] | undefined {
   const deIdeas = Array.isArray(incomingIdeas) ? pistasDeIdeas(incomingIdeas) : [];
-  let propias: any[] | undefined;
+  let propias: AudioTrack[] | undefined;
   if (Array.isArray(incomingPistas)) propias = incomingPistas;
   else if (deIdeas.length > 0) propias = deIdeas;
   else if (Array.isArray(existing?.pistas)) propias = existing.pistas;
@@ -61,13 +64,13 @@ export function pistasParaGuardar(
  * canción; si no, el espejo de la idea de Iris (datos sin limpiar); si no, lo ya guardado. Sin valor → undefined (no se envía).
  */
 export function stemsMetaParaGuardar(
-  incomingIdeas: any[] | undefined,
-  existing: any,
-  incomingMeta?: any,
-): Record<string, unknown> | undefined {
+  incomingIdeas: SongAudioIdea[] | undefined,
+  existing: { stems_meta?: StemsMeta } | null | undefined,
+  incomingMeta?: StemsMeta,
+): StemsMeta | undefined {
   if (incomingMeta && typeof incomingMeta === "object") return incomingMeta;
   const deIdeas = Array.isArray(incomingIdeas) ? metaStemsDeIdeas(incomingIdeas) : undefined;
-  if (deIdeas) return deIdeas as Record<string, unknown>;
+  if (deIdeas) return deIdeas;
   if (existing?.stems_meta && typeof existing.stems_meta === "object") return existing.stems_meta;
   return undefined;
 }
@@ -121,7 +124,7 @@ export async function analizarYGuardarDinamicaCancion(
   ).filter(Boolean);
 
   const ahora = new Date().toISOString();
-  const cambios: Record<string, any> = {};
+  const cambios: Record<string, number | string | null> = {};
   if (audioAnalizable) {
     cambios.energia_db_promedio = energiaDbPromedio;
     cambios.energia_variacion = variacion;
@@ -225,7 +228,7 @@ export async function dbSetSongEnergiaManual(
 export async function dbGuardarAnalisisAcordes(
   songId: string,
   bandId: string,
-  analisis: any,
+  analisis: AnalisisAcordes,
 ) {
   const sb = getSupabase();
   const rawClean = (bandId || "").trim();
@@ -391,12 +394,12 @@ const ORDEN_PREFERENCIA_STEM_TONALIDAD = [
  * aparezca según `ORDEN_PREFERENCIA_STEM_TONALIDAD`.
  */
 function encontrarMejorStemNuevoParaTonalidad(
-  existingIdeas: any[],
-  incomingIdeas: any[],
+  existingIdeas: SongAudioIdea[],
+  incomingIdeas: SongAudioIdea[],
 ): string | null {
   const idsExistentes = new Set(
-    (existingIdeas || []).flatMap((idea: any) =>
-      (idea.pistas || []).map((p: any) => p?.id),
+    (existingIdeas || []).flatMap((idea) =>
+      (idea.pistas || []).map((p) => p?.id),
     ),
   );
   const urlPorInstrumento = new Map<string, string>();
@@ -493,20 +496,19 @@ function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(
   );
 }
 
-function parseJsonArray(val: any): any[] {
+function parseJsonArray<T = unknown>(val: unknown): T[] {
   if (!val) return [];
-  if (Array.isArray(val)) return val;
+  if (Array.isArray(val)) return val as T[];
   if (typeof val === "string" && val.trim()) {
     try {
       const parsed = JSON.parse(val);
-      if (Array.isArray(parsed)) return parsed;
-    } catch {}
+      if (Array.isArray(parsed)) return parsed as T[];
+    } catch { /* texto no JSON: se trata como valor suelto */ }
   }
   return [];
 }
 
-export function mapSongRecord(s: any) {
-  if (!s || typeof s !== "object") return s;
+export function mapSongRecord(s: FilaSong): SongMapeada {
   const audioUrl =
     s.audio_principal_url ||
     s.audioPrincipalUrl ||
@@ -515,7 +517,7 @@ export function mapSongRecord(s: any) {
     "";
   const portada = s.portada_url || s.portadaUrl || "";
   const albumDisco = s.album_disco || s.albumDisco || s.album || "";
-  const parsedIdeas = parseJsonArray(s.audio_ideas || s.audioIdeas);
+  const parsedIdeas = parseJsonArray<SongAudioIdea>(s.audio_ideas || s.audioIdeas);
   const audioIdeas =
     parsedIdeas.length > 0
       ? parsedIdeas
@@ -535,7 +537,7 @@ export function mapSongRecord(s: any) {
   return {
     ...s,
     id: s.id,
-    band_id: s.band_id || s.bandId,
+    band_id: bandaDe(s),
     titulo: s.titulo || "Sin Título",
     duracion: s.duracion || "03:30",
     duracionSegundos: Number(s.duracion_segundos ?? s.duracionSegundos ?? 210),
@@ -647,7 +649,9 @@ export function mapSongRecord(s: any) {
     estructura_verificada: Boolean(
       s.estructura_verificada ?? s.estructuraVerificada,
     ),
-  };
+    // Las columnas son texto libre (estado_tema...) y `Song` las tipa como uniones: el cast
+    // declara esa promesa una sola vez, aquí, en vez de en cada llamador.
+  } as SongMapeada;
 }
 
 export async function dbGetSongs(bandId: string) {
@@ -681,7 +685,7 @@ export async function dbGetSongs(bandId: string) {
           console.warn("Could not seed song to Supabase:", s.titulo, e);
         }
       }
-      songsData = seedForBand as any;
+      songsData = seedForBand;
     }
   }
 
@@ -694,8 +698,8 @@ export async function dbGetSongs(bandId: string) {
 // Aquí se distingue "el campo vino en el payload" (aunque sea "") de "no vino" con `!==
 // undefined`, así un borrado intencional sí se respeta.
 function preferClearableString(
-  camelValue: any,
-  snakeValue: any,
+  camelValue: string | null | undefined,
+  snakeValue: string | null | undefined,
   fallback = "",
 ): string {
   if (camelValue !== undefined && camelValue !== null) return camelValue;
@@ -704,7 +708,7 @@ function preferClearableString(
 }
 
 export async function dbUpsertSong(
-  song: any,
+  song: FilaSong,
   bandId: string,
   isAdmin: boolean = false,
 ) {
@@ -720,10 +724,13 @@ export async function dbUpsertSong(
     id: string;
     band_id: string;
     audio_principal_url?: string;
-    audio_ideas?: any[];
-    notas_miembros?: any;
-    notas_por_miembro?: any[];
-    guia_sustituto?: any;
+    audio_ideas?: SongAudioIdea[] | string;
+    notas_miembros?: FilaSong["notas_miembros"];
+    notas_por_miembro?: FilaSong["notas_por_miembro"];
+    guia_sustituto?: FilaSong["guia_sustituto"];
+    created_at?: string;
+    pistas?: AudioTrack[];
+    stems_meta?: StemsMeta;
   } | null = null;
   if (finalSongId) {
     const { data } = await sb
@@ -758,21 +765,21 @@ export async function dbUpsertSong(
 
   // Gestión de audio_ideas: si la petición envió explícitamente audioIdeas/audio_ideas (incluso si está vacío o se eliminaron elementos),
   // se respeta la decisión del usuario sin resucitar ideas eliminadas. Si la petición no incluyó el campo (actualización parcial), se conservan las existentes.
-  const existingIdeas = parseJsonArray(existing?.audio_ideas);
+  const existingIdeas = parseJsonArray<SongAudioIdea>(existing?.audio_ideas);
   const hasExplicitIdeas =
     song.audioIdeas !== undefined || song.audio_ideas !== undefined;
-  let incomingIdeas: any[];
+  let incomingIdeas: SongAudioIdea[];
 
   if (!hasExplicitIdeas) {
     incomingIdeas = existingIdeas;
   } else {
-    incomingIdeas = parseJsonArray(
+    incomingIdeas = parseJsonArray<SongAudioIdea>(
       song.audioIdeas !== undefined ? song.audioIdeas : song.audio_ideas,
     );
     if (incomingIdeas.length > 0 && existingIdeas.length > 0) {
-      incomingIdeas = incomingIdeas.map((incIdea: any) => {
+      incomingIdeas = incomingIdeas.map((incIdea) => {
         const existingMatch = existingIdeas.find(
-          (e: any) =>
+          (e) =>
             e.id === incIdea.id || (e.titulo && e.titulo === incIdea.titulo),
         );
         if (
@@ -802,7 +809,7 @@ export async function dbUpsertSong(
   // pierde. Si el cliente no trae el análisis de acordes, se rescata el que ya tenía la fila.
   // La lectura es aparte y tolerante: si la migración aún no se ha ejecutado la columna no
   // existe, la consulta falla y simplemente no hay nada que preservar.
-  let analisisAcordesFinal: any = song.analisisAcordes ?? song.analisis_acordes;
+  let analisisAcordesFinal: AnalisisAcordes | undefined = song.analisisAcordes ?? song.analisis_acordes;
   if (existing && (analisisAcordesFinal === undefined || (analisisAcordesFinal && typeof analisisAcordesFinal === "object"))) {
     try {
       const { data: previo, error: previoErr } = await sb
@@ -821,7 +828,7 @@ export async function dbUpsertSong(
   const pistasFinal = pistasParaGuardar(incomingIdeas, existing, song.pistas);
   const stemsMetaFinal = stemsMetaParaGuardar(incomingIdeas, existing, song.stemsMeta);
 
-  const payload: any = {
+  const payload = {
     id:
       finalSongId ||
       `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -931,7 +938,7 @@ export async function dbUpsertSong(
       song.estructuraVerificada ?? song.estructura_verificada,
     ),
     created_at: existing
-      ? (existing as any).created_at || song.created_at || nowIso
+      ? existing.created_at || song.created_at || nowIso
       : song.created_at || nowIso,
     updated_at: nowIso,
   };
@@ -943,7 +950,7 @@ export async function dbUpsertSong(
   if (existing) {
     try {
       await sb.from("songs").delete().eq("id", payload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila previa del tema antes de reinsertar:", err); }
   }
 
   let { data, error } = await sb
@@ -955,7 +962,7 @@ export async function dbUpsertSong(
     // Si por concurrencia la fila seguía existiendo, forzar delete y reinsertar
     try {
       await sb.from("songs").delete().eq("id", payload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema tras el conflicto:", err); }
     const retryIns = await sb.from("songs").insert(payload).select().single();
     data = retryIns.data;
     error = retryIns.error;
@@ -976,7 +983,7 @@ export async function dbUpsertSong(
     delete fallbackPayload.energia_variacion_calculada_en;
     try {
       await sb.from("songs").delete().eq("id", fallbackPayload.id);
-    } catch {}
+    } catch (err) { console.warn("[Repertorio] No se pudo borrar la fila del tema antes del guardado reducido:", err); }
     const retry = await sb
       .from("songs")
       .insert(fallbackPayload)
@@ -987,7 +994,6 @@ export async function dbUpsertSong(
         `Supabase Error (insert song fallback): ${retry.error.message}`,
       );
     data = retry.data;
-    error = null;
   } else if (error) {
     throw new Error(`Supabase Error (upsert song): ${error.message}`);
   }
@@ -1007,7 +1013,7 @@ export async function dbUpsertSong(
     if (!String(payload.cifrado_texto || "").trim()) {
       import("../services/colaLetras.js")
         .then((m) => m.encolarLetraAutomatica(targetBandId, finalSongId))
-        .catch(() => {});
+        .catch((err: unknown) => console.warn("[Repertorio] No se pudo encolar la transcripción automática del tema:", err));
     }
   }
 
@@ -1072,7 +1078,7 @@ export async function dbGetSetlists(bandId: string) {
           console.warn("Could not seed setlist to Supabase:", sl.nombre, e);
         }
       }
-      setlistData = seedForBand as any;
+      setlistData = seedForBand;
     }
   }
 
@@ -1082,7 +1088,7 @@ export async function dbGetSetlists(bandId: string) {
   }));
 }
 
-export async function dbUpsertSetlist(setlist: any, bandId: string) {
+export async function dbUpsertSetlist(setlist: EntradaSetlist, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
@@ -1147,7 +1153,7 @@ export async function dbDeleteSetlist(id: string, bandId: string) {
 }
 
 // --- SETLIST SHORTCUTS (per-band custom "quick add" presets, see RepertorioSetlists.tsx) ---
-function isMissingTableOrColumnError(error: any): boolean {
+function isMissingTableOrColumnError(error: ErrorPostgrest | null | undefined): boolean {
   if (!error) return false;
   const msg = String(error.message || "").toLowerCase();
   return (
@@ -1187,7 +1193,7 @@ export async function dbGetSetlistShortcuts(bandId: string) {
   }));
 }
 
-export async function dbUpsertSetlistShortcut(shortcut: any, bandId: string) {
+export async function dbUpsertSetlistShortcut(shortcut: EntradaAtajo, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); ver la misma
   // nota en dbUpsertSong/dbUpsertSetlist más arriba.
@@ -1279,10 +1285,13 @@ export async function dbDeleteSetlistShortcut(id: string, bandId: string) {
  * (la pantalla no siempre tiene la última). Los campos que solo escribe el servidor —la verdad de
  * las correcciones y lo que dijo el detector antes de corregir— no se pierden por eso.
  */
-export function fusionarAnalisisGuardado(entrante: any, guardado: any): any {
+export function fusionarAnalisisGuardado(
+  entrante: AnalisisAcordes | undefined,
+  guardado: AnalisisAcordes | undefined,
+): AnalisisAcordes | undefined {
   if (entrante === undefined) return guardado;
   if (!entrante || typeof entrante !== "object" || !guardado || typeof guardado !== "object") return entrante;
-  const salida = { ...entrante };
+  const salida: AnalisisAcordes = { ...entrante };
   if (!salida.referenciaManual && guardado.referenciaManual) salida.referenciaManual = guardado.referenciaManual;
   if (!salida.profesor && guardado.profesor && salida.analizadoEn === guardado.analizadoEn) salida.profesor = guardado.profesor;
   if (!salida.segmentosOriginales && guardado.segmentosOriginales && salida.analizadoEn === guardado.analizadoEn) {

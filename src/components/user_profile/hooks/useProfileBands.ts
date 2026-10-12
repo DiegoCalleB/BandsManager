@@ -3,9 +3,6 @@ import { SIMPLE_PROMO_ONLY_BAND_CREATION } from "../profileModel";
  * Bandas del usuario en el perfil: alta de una banda nueva y baja de una existente.
  * Extraído de UserProfileModal.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
-/* eslint-disable
- react-hooks/exhaustive-deps
-*/
 import React,{ Dispatch,SetStateAction,useEffect,useState } from "react";
 import { api } from "../../../services/api";
 import { User } from "../../../types";
@@ -30,6 +27,7 @@ export interface ProfileBandsParams {
 export function useProfileBands({ setLocalAvailableBands, availableBands, currentUser, setError, setSuccessMsg, onUpdateUser, setSelectedMainBandId, onRefreshData }: ProfileBandsParams) {
   useEffect(() => {
     setLocalAvailableBands(availableBands);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- el setter de useState es estable; se resincroniza solo cuando cambian las bandas
   }, [availableBands]);
 
   // Band creation inside Profile Modal
