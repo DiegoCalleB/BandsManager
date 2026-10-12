@@ -1,7 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { detectarAcordesDesdePcm, detectarAcordesConDiagnostico, estimarTonalidadDesdeAcordes, estimarTonalidadesPorTramos } from '../chordDetection';
 import { motivoAnalisisPocoFiable } from '../analisisAcordes';
 import { calcularPulso, ajustarAPulso } from '../pulso';
+
+// Con la CI cargada superan los 5 s por defecto (en local tardan 1-2 s).
+vi.setConfig({ testTimeout: 30_000 });
 
 /**
  * Audio sintético que se parece a una canción de rock real, no a un tono limpio: power chords
