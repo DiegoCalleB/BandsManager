@@ -1251,7 +1251,7 @@ import direccion
 direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
-PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
+PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': 'viernes', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
           'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
