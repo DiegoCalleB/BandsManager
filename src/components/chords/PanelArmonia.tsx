@@ -9,6 +9,7 @@ import {
 import { CLASE_FUNCION, LETRA_FUNCION, gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import { construirCuadricula } from '../../utils/cuadriculaCompases';
 import { guiasDelProfesor } from '../../utils/guiasArmonia';
+import { DiagramaEscala } from './DiagramaEscala';
 
 interface Props {
   armonia: AnalisisArmonico;
@@ -210,6 +211,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
             <li key={g.id} className="bg-[var(--sunken)] rounded-[var(--r-m)] p-3 text-[var(--ink)]">
               {g.tipo === 'idea' && <span className="mr-2 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs font-bold">Idea</span>}
               <b className="font-bold">{g.titulo}.</b> {g.texto.replace(/\{n:(\d+)\}/g, (_m, pc) => nota(Number(pc)))}
+              {g.diagrama && <DiagramaEscala {...g.diagrama} nombre={nota} />}
             </li>
           ))}
         </ul>
