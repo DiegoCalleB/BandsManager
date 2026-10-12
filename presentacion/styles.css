@@ -2082,3 +2082,7 @@ body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both
 .cover .art.foto .foto-pie { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 26px 22px; font: 600 22px/1.2 'Helvetica Neue', Arial, sans-serif; color: #fff; background: linear-gradient(to top, rgba(0,0,0,.78), transparent); text-align: center; }
 @keyframes fotoin { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
 .cover .art.foto::before { display: none; }
+.cover .art.foto .foto-lema { position: absolute; left: 0; right: 0; bottom: 64px; margin: 0; padding: 70px 28px 14px; text-align: center; font: 600 28px/1.25 'Helvetica Neue', Arial, sans-serif; color: #fff; background: linear-gradient(to top, rgba(0,0,0,.88) 55%, transparent); opacity: 0; animation: lema 1.2s var(--ease) 2.6s both; text-shadow: 0 2px 14px rgba(0,0,0,.8); }
+.cover .art.foto .foto-lema b { display: block; font: 400 52px/1.05 Anton, Oswald, Impact, sans-serif; letter-spacing: .02em; text-transform: uppercase; color: #ffd596; margin-bottom: 8px; }
+.cover .art.foto .foto-pie { padding-top: 6px; background: rgba(0,0,0,.88); font-size: 17px; font-weight: 500; color: rgba(255,255,255,.7); }
+@keyframes lema { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
