@@ -30,7 +30,7 @@
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
-                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', estabilidad: 1 } },
+                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
                 tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0 } },
@@ -53,7 +53,7 @@
     // Diego de la Calle, el bajista de verdad (el giro: Iago era él). Habla él, no el personaje, en «El reto» y «La invitación»
     diego:    { nombre: 'Diego', rol: 'bajo', cargo: 'El bajista de verdad', foto: 'img/diego-bajista.jpg', color: '#ffcf6b',
                 mov: 'calma',
-                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', estabilidad: 1 } },
+                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
     locutor:  { nombre: 'Rock FM', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
                 tts: { motor: 'elevenlabs', voz: '4L2A19qwD3pMcNlt484F', estabilidad: 0.3, efecto: 'radio' } },
   };

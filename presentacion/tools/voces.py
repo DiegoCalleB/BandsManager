@@ -180,12 +180,17 @@ class Motores:
     def wav(self, tts, texto, ruta):
         if tts['motor'] == 'elevenlabs':
             # etiqueta: indicación de actuación de eleven_v3, p. ej. «[excited]», que no se escribe en la frase
-            texto = (tts.get('etiqueta', '') + ' ' + texto).strip()
-            if tts.get('modelo', 'eleven_v3') == 'eleven_v3':
+            v3 = tts.get('modelo', 'eleven_v3') == 'eleven_v3'
+            if v3:
+                texto = (tts.get('etiqueta', '') + ' ' + texto).strip()
                 texto += ' [pause]'  # sin esto, v3 a veces se come la última palabra
+            else:
+                texto = re.sub(r'\s*\[[a-z ]+\]\s*', ' ', texto).strip()  # v2 no entiende las etiquetas de actuación: las leería en voz alta
+            ajustes = {'stability': float(tts.get('estabilidad', 0.5)), 'similarity_boost': float(tts.get('similitud', 0.75))}
+            if not v3:
+                ajustes['style'] = float(tts.get('estilo', 0)); ajustes['use_speaker_boost'] = True
             mp3 = eleven(f"/text-to-speech/{tts['voz']}?output_format=mp3_44100_128", 'POST', {
-                'text': texto, 'model_id': tts.get('modelo', 'eleven_v3'),
-                'voice_settings': {'stability': float(tts.get('estabilidad', 0.5)), 'similarity_boost': 0.75}})
+                'text': texto, 'model_id': tts.get('modelo', 'eleven_v3'), 'voice_settings': ajustes})
             with open(ruta + '.mp3', 'wb') as f:
                 f.write(mp3)
             subprocess.check_call(['ffmpeg', '-y', '-loglevel', 'error', '-i', ruta + '.mp3', ruta])
