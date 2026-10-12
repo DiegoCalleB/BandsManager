@@ -1249,6 +1249,24 @@ for _i, _x in enumerate(S):
 sys.path.insert(0, AQUI)
 import direccion
 direccion.aplicar(S)
+# Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
+# (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
+PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
+          'Prólogo · Sábado, 11:00 en el local': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
+          'Otro jueves, 23:47': 'otro-jueves'}
+_ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
+def _vid(k, extra=''):
+    return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
+            + (f' poster="video/actores/{k}.jpg"' if os.path.exists(os.path.join(_ACT, k + '.jpg')) else '')
+            + f'><source src="video/actores/{k}.mp4" type="video/mp4"></video>')
+for _i, _x in enumerate(S):
+    _t = re.search(r'data-title="([^"]+)"', _x)
+    _k = _t and PLANOS.get(_t.group(1))
+    if _k and os.path.exists(os.path.join(_ACT, _k + '.mp4')):
+        S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _vid(_k) + '<i class="actor-velo"></i>', _x, count=1)
+    for _m in ('brais', 'xandre', 'alvaro', 'iago'):
+        if 'data-title="Prólogo · La banda"' in S[_i] and os.path.exists(os.path.join(_ACT, f'miembro-{_m}.mp4')):
+            S[_i] = re.sub(rf'<img[^>]*src="img/miembro-{_m}.jpg"[^>]*>', lambda mm: mm.group(0) + _vid(f'miembro-{_m}'), S[_i], count=1)
 import json as _json
 _json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
