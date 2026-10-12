@@ -927,7 +927,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Limando</dt><dd>A los 20 · Pradoluengo, Burgos</dd>
       <dt>Walter Sax Big Band</dt><dd>A los 25 · hasta el Santiago Bernabéu</dd>
       <dt>Repercusión</dt><dd>De los 30 a los 33 · fiestas del PCE (2015) y Batalla Naval de Vallekas (2018)</dd>
-      <dt>Master of Prompts</dt><dd>A los 41 · la primera gira · foto generada con IA</dd>
+      <dt>Master of Prompts</dt><dd>A los 40 · la primera gira · foto generada con IA</dd>
       <dt>Fer</dt><dd>Su hermano, al fondo de la foto de THC</dd>
     </dl>
     </div>
