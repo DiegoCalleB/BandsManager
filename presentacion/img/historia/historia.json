@@ -22,8 +22,7 @@
   "foto": "bajo-bn.jpg",
   "edad": 20,
   "texto": "Limando",
-  "logro": "Bajo en mano",
-  "provisional": true,
+  "logro": "Pradoluengo (Burgos)",
   "foco": [
    0.42,
    0.5,
@@ -35,7 +34,7 @@
  {
   "foto": "bigband-bernabeu.jpg",
   "edad": 25,
-  "texto": "Big Band WSB",
+  "texto": "Walter Sax Big Band",
   "logro": "Estadio Santiago Bernabéu",
   "foco": [
    0.38,
@@ -48,9 +47,8 @@
  {
   "foto": "bajo-contraluz.jpg",
   "edad": 25,
-  "texto": "Big Band WSB",
-  "logro": "A contraluz",
-  "provisional": true
+  "texto": "Walter Sax Big Band",
+  "logro": "A contraluz"
  },
  {
   "foto": "repercusion.jpg",
