@@ -20,13 +20,13 @@ export const DiagramaGuitarra: React.FC<{
   const abierta = max <= 4;
   const inicio = abierta ? 1 : min;
   const trastes = Math.max(4, max - inicio + 1);
-  const dx = 14, dy = 15, izq = 14, arriba = 16;
+  const dx = 12, dy = 11, izq = 12, arriba = 14;
   const ancho = izq + 5 * dx + 10;
   const alto = arriba + trastes * dy + 6;
   const x = (cuerda: number) => izq + cuerda * dx;
   const y = (traste: number) => arriba + (traste - inicio + 0.5) * dy;
   return (
-    <svg viewBox={`0 0 ${ancho} ${alto}`} className="w-full max-w-[120px] mx-auto" role="img" aria-label={etiqueta}>
+    <svg viewBox={`0 0 ${ancho} ${alto}`} className="w-full max-w-[88px] mx-auto" role="img" aria-label={etiqueta}>
       {!abierta && <text x={3} y={arriba + dy * 0.62} fontSize={7} fontWeight="bold" fill="var(--acc-ink)">{inicio}</text>}
       {NOMBRE_CUERDA.map((c, i) => (
         <text key={i} x={x(i)} y={8} textAnchor="middle" fontSize={7} fill={forma.trastes[i] < 0 ? 'var(--ink-3)' : 'var(--ink-2)'}>
@@ -45,15 +45,15 @@ export const DiagramaGuitarra: React.FC<{
           <circle key={i} cx={x(n.cuerda)} cy={arriba - 5} r={3} fill="none" stroke="var(--ok)" strokeWidth={1.2} />
         ) : (
           <g key={i}>
-            <circle cx={x(n.cuerda)} cy={y(n.traste)} r={5.6} fill={color} opacity={n.intervalo === '1' ? 1 : 0.75} />
-            {intervalos && <text x={x(n.cuerda)} y={y(n.traste) + 2.4} textAnchor="middle" fontSize={6.5} fontWeight="bold" fill="var(--surface)">{n.intervalo}</text>}
+            <circle cx={x(n.cuerda)} cy={y(n.traste)} r={4.8} fill={color} opacity={n.intervalo === '1' ? 1 : 0.75} />
+            {intervalos && <text x={x(n.cuerda)} y={y(n.traste) + 2.4} textAnchor="middle" fontSize={5.6} fontWeight="bold" fill="var(--surface)">{n.intervalo}</text>}
           </g>
         )
       )}
       {paso && paso.traste > 0 && (
         <g>
-          <circle cx={x(paso.cuerda)} cy={y(paso.traste)} r={5.6} fill="var(--tentative-soft)" stroke="var(--tentative)" strokeWidth={1.2} strokeDasharray="2 1.5" />
-          <text x={x(paso.cuerda)} y={y(paso.traste) + 2.4} textAnchor="middle" fontSize={6.5} fontWeight="bold" fill="var(--tentative)">→</text>
+          <circle cx={x(paso.cuerda)} cy={y(paso.traste)} r={4.8} fill="var(--tentative-soft)" stroke="var(--tentative)" strokeWidth={1.2} strokeDasharray="2 1.5" />
+          <text x={x(paso.cuerda)} y={y(paso.traste) + 2.4} textAnchor="middle" fontSize={5.6} fontWeight="bold" fill="var(--tentative)">→</text>
         </g>
       )}
     </svg>
