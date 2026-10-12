@@ -35,3 +35,7 @@ test-results/
 # Sesión reutilizable de la suite visual (token, no se versiona)
 e2e/.auth/
 __pycache__/
+
+# Herramientas de la presentación (generador del guion, voces, foco de fotos…): sí van al repo
+!presentacion/tools/*.py
+!presentacion/tools/**/*.py
