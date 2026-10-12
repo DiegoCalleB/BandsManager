@@ -5,6 +5,7 @@
 import { Dispatch,SetStateAction } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { apiFetch } from "../../../utils/api";
+import { mensajeDeError } from "../../../utils/mensajeDeError";
 import { guardarOReverter } from "../../../utils/guardarConReversion";
 import { leerTokenDeSesion } from '../../../services/sesionLocal';
 
@@ -123,7 +124,7 @@ export function useAtrilEditing({ song, analisisAcordes, onUpdateSong, setAiSucc
       setTimeout(() => setAiSuccessMsg(null), 9000);
     } catch (err) {
       console.error("Error generating with AI:", err);
-      setAiSuccessMsg(`⚠️ ${(err instanceof Error && err.message) || "No se pudo transcribir la letra"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudo transcribir la letra. Prueba en un momento.")}`);
       setTimeout(() => setAiSuccessMsg(null), 12000);
     } finally {
       setIsGeneratingAi(false);

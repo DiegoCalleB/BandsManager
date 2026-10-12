@@ -12,7 +12,7 @@ import { useAtril } from "./AtrilContext";
  * @returns Sección de interfaz.
  */
 export function AtrilHeader() {
-  const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab } = useAtril();
+  const { handleToggleAudio, isPlayingAudio, audioUrl, song, handleGenerateWithAi, isGeneratingAi, analisisAcordes, isAnalyzingChords, setShowAnalisisAcordes, handleAnalyzeChordsFromAudio, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setActiveTab, esMovil } = useAtril();
   return (
     <>
       <div className="bg-[var(--sunken)] p-4 pr-24 flex flex-wrap items-center justify-between gap-3 shrink-0">
@@ -44,7 +44,7 @@ export function AtrilHeader() {
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-bold text-[var(--ink)]">
+              <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] leading-tight">
                 {formatSongTitle(song.titulo)}
               </h2>
               {song.esVersionCovers && (
@@ -59,15 +59,15 @@ export function AtrilHeader() {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {/* AI Generate — the main action, keeps its label */}
+        <div className="flex items-center gap-1.5 absolute top-3 right-14 z-20 sm:static">
+          {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}
           <Button
             variant="primary"
             size="xs"
             type="button"
             onClick={handleGenerateWithAi}
             disabled={isGeneratingAi}
-            className="items-center gap-1.5"
+            className="hidden sm:inline-flex items-center gap-1.5"
             title={
               song.audioPrincipalUrl
                 ? "Transcribir la letra de la voz con tiempos y sincronizarla con los acordes (reconocimiento de voz; nunca se inventa a partir del título)"
@@ -88,7 +88,7 @@ export function AtrilHeader() {
               type="button"
               onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio()}
               disabled={isAnalyzingChords}
-              className="items-center gap-1.5"
+              className="hidden sm:inline-flex items-center gap-1.5"
               title={
                 analisisAcordes
                   ? "Jamify: ver los acordes detectados en el audio"
@@ -104,6 +104,8 @@ export function AtrilHeader() {
           <ActionMenu
             label="Más acciones de la canción"
             items={[
+              { label: isGeneratingAi ? "Escuchando…" : "Letra del audio", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
+              { label: isAnalyzingChords ? "Analizando..." : "Acordes del audio", icon: Music, onSelect: analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio(), hidden: !esMovil || !audioUrl },
               { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
               { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
               { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },

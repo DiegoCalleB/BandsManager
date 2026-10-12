@@ -11,7 +11,6 @@ import { AtrilBody } from "./AtrilBody";
 import { AtrilHeader } from "./AtrilHeader";
 import { AtrilModals } from "./AtrilModals";
 import { AtrilToolbar } from "./AtrilToolbar";
-import { acordesDelCifrado } from "../../utils/alineacionAcordes";
 import { AcordeActual } from "../chords/AcordeActual";
 import { DetectedChordsPanel } from "./DetectedChordsPanel";
 
@@ -23,7 +22,7 @@ import { useAtril } from "./AtrilContext";
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, processedText, contextoAcordes, vistaAcordes, setVistaAcordes, estiloArmonia } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio } = useAtril();
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
@@ -46,7 +45,7 @@ export function AtrilView() {
       size="xs"
       type="button"
       onClick={alternarPantallaCompleta}
-      className="absolute top-3 right-14 z-20"
+      className="absolute top-3 right-14 z-20 hidden sm:inline-flex"
       title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
       aria-pressed={pantallaCompleta}
     >
@@ -64,16 +63,18 @@ export function AtrilView() {
 
     {/* ACORDE ACTUAL: el diagrama del que suena, sin buscarlo en el cajón lateral */}
     {activeTab === "chords" && (
-      <div className="px-4 pt-3 shrink-0">
-        <AcordeActual
-          sonando={acordeSonando}
-          siguiente={sincronizado && acordeActivo >= 0 ? acordesDelCifrado(processedText)[acordeActivo + 1] ?? null : null}
-          contexto={contextoAcordes}
-          vista={vistaAcordes}
-          onVista={setVistaAcordes}
-          estiloArmonia={estiloArmonia}
-        />
-      </div>
+      <AcordeActual
+        sonando={acordeSonando}
+        proximos={sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined}
+        contexto={contextoAcordes}
+        vista={vistaAcordes}
+        onVista={setVistaAcordes}
+        nivel={nivelAcordes}
+        onNivel={setNivelAcordes}
+        estiloArmonia={estiloArmonia}
+        reproduciendo={isPlayingAudio}
+        onToggle={audioUrl ? handleToggleAudio : undefined}
+      />
     )}
 
     {/* ACORDES DETECTADOS DEL AUDIO */}

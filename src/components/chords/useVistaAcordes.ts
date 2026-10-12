@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { instrumentoDelUsuario } from '../../utils/instrumentoProfesor';
 import type { VistaAcorde } from '../../utils/vistaAcordes';
+import type { NivelAcorde } from '../../utils/voicings';
 
 /** Nombre visible de cada vista de acorde. */
 export const ETIQUETA_VISTA: Record<VistaAcorde, string> = { guitarra: 'Guitarra', teclado: 'Piano', bajo: 'Bajo' };
@@ -26,4 +27,22 @@ export function useVistaAcordes(): [VistaAcorde, (v: VistaAcorde) => void] {
     try { localStorage.setItem(CLAVE_VISTA, v); } catch { /* vale solo esta sesión */ }
   };
   return [vista, cambiar];
+}
+
+const CLAVE_NIVEL = 'bm_nivel_acordes';
+
+/** Nivel de detalle de los diagramas (Básico · Normal · Pro), recordado entre sesiones. */
+export function useNivelAcordes(): [NivelAcorde, (n: NivelAcorde) => void] {
+  const [nivel, setNivel] = useState<NivelAcorde>(() => {
+    try {
+      const g = localStorage.getItem(CLAVE_NIVEL);
+      if (g === 'basico' || g === 'normal' || g === 'pro') return g;
+    } catch { /* sin almacenamiento */ }
+    return 'normal';
+  });
+  const cambiar = (n: NivelAcorde) => {
+    setNivel(n);
+    try { localStorage.setItem(CLAVE_NIVEL, n); } catch { /* vale solo esta sesión */ }
+  };
+  return [nivel, cambiar];
 }

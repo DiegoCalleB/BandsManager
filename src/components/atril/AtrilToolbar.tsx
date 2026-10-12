@@ -65,7 +65,7 @@ export function AtrilToolbar() {
         {activeTab === "chords" && (
           <div className="flex flex-wrap items-center gap-3">
             {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
-            <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
+            <div className={`${audioUrl ? "flex" : "hidden"} items-center gap-2 bg-[var(--acc)]/10 px-3 py-1 rounded-[var(--r-s)] w-full sm:w-auto`}>
               {audioUrl ? (
                 <>
                   <IconButton
@@ -88,7 +88,7 @@ export function AtrilToolbar() {
                     step={0.1}
                     value={audioCurrentTime}
                     onChange={handleSeekAudio}
-                    className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
+                    className="flex-1 sm:flex-none sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
                     title="Barra de posición de reproducción"
                   />
 
@@ -96,11 +96,7 @@ export function AtrilToolbar() {
                     {formatAudioTime(audioDuration)}
                   </span>
                 </>
-              ) : (
-                <span className="text-micro text-[var(--ink-2)] italic">
-                  Sin audio
-                </span>
-              )}
+              ) : null}
             </div>
 
 
@@ -160,8 +156,10 @@ export function AtrilToolbar() {
               )}
             </div>
 
-            <ControlAutoscroll auto={autoScroll} />
-            <ControlMetronomo metronomo={metronomo} />
+            <div className={masControles ? 'contents' : 'hidden sm:contents'}>
+              <ControlAutoscroll auto={autoScroll} />
+              <ControlMetronomo metronomo={metronomo} />
+            </div>
 
             <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
               {masControles ? 'Menos' : 'Más'}

@@ -13,15 +13,17 @@ tags: ["frontend", "repertoire", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/repertoire`
 
 ## 📖 Descripción
-Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, CajaAcorde.
+Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, SelectorNivel, CajaAcorde.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_chords_DiagramaGuitarra|src/components/chords/DiagramaGuitarra.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

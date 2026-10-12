@@ -23,6 +23,7 @@ Exporta: DrawerDiagramas.
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

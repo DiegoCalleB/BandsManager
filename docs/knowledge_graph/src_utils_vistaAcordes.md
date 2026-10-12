@@ -33,6 +33,7 @@ Exporta: VistaAcorde, NotasParaDibujar, notasParaDibujar, CUERDAS_BAJO, RolBajo,
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(from #frontend)*
 - [[src_components_ensayos_ModoLocalEnVivoTab|src/components/ensayos/ModoLocalEnVivoTab.tsx]] *(from #frontend)*
 - [[src_hooks_useAcordesDeLaHoja|src/hooks/useAcordesDeLaHoja.ts]] *(from #hook)*
+- [[src_utils_voicings|src/utils/voicings.ts]] *(from #service)*
 
 ---
 

@@ -20,6 +20,7 @@ Exporta: LineaTiempoAcordes.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chords_AroAcorde|src/components/chords/AroAcorde.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_RegletaCompases|src/components/chords/RegletaCompases.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_ui_ActionMenu|src/components/ui/ActionMenu.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(Layer: #service, Domain: #system)*

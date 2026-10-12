@@ -20,6 +20,7 @@ Análisis de acordes a partir del audio del tema.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_analisisAcordesCliente|src/utils/analisisAcordesCliente.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_mensajeDeError|src/utils/mensajeDeError.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

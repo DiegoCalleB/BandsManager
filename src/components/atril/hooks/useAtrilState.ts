@@ -3,12 +3,12 @@
  * Extraído de Atril.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
  
-import { useEffect,useMemo,useRef,useState } from "react";
+import { useEffect,useMemo,useRef,useState,useSyncExternalStore } from "react";
 import { useAutoScroll } from "../../../hooks/useAutoScroll";
 import { useMetronomo } from "../../../hooks/useMetronomo";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
 import { ajustesDeModoAtril,ModoAtril } from "../../../utils/modosAtril";
-import { useVistaAcordes } from "../../chords/useVistaAcordes";
+import { useNivelAcordes,useVistaAcordes } from "../../chords/useVistaAcordes";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface AtrilStateParams {
@@ -39,6 +39,12 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
+  const [nivelAcordes, setNivelAcordes] = useNivelAcordes();
+  // Móvil (<640px): decide qué acciones van al menú ⋯ en lugar de a la cabecera
+  const esMovil = useSyncExternalStore(
+    (cb) => { const mq = window.matchMedia?.("(max-width: 639px)"); mq?.addEventListener?.("change", cb); return () => mq?.removeEventListener?.("change", cb); },
+    () => window.matchMedia?.("(max-width: 639px)").matches ?? false,
+  );
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(ajustes.diagramas);
 
   // Edit form state
@@ -88,5 +94,5 @@ export function useAtrilState({ modo, song }: AtrilStateParams) {
   const [showStructureUploadModal, setShowStructureUploadModal] =
     useState<boolean>(false);
 
-  return { ajustes, transpose, setAiSuccessMsg, setCifradoTexto, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setShowAnalisisAcordes, analisisAcordes, isAnalyzingChords, setIsGeneratingAi, cifradoTexto, guiaSustituto, setActiveTab, notation, seguirEnCifrado, showAnalisisAcordes, scrollContainerRef, activeTab, autoScroll, setCopiedText, pantallaCompleta, alternarPantallaCompleta, isGeneratingAi, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setTranspose, metronomo, setNotation, showChordDiagrams, setShowChordDiagrams, copiedText, aiSuccessMsg, setSeguirEnCifrado, vistaAcordes, setVistaAcordes, showShareModal, showMetronomeModal, showTunerModal, oidoOculto, showStructureUploadModal };
+  return { ajustes, transpose, setAiSuccessMsg, setCifradoTexto, setGuiaSustituto, setIsAnalyzingChords, setOidoOculto, setShowAnalisisAcordes, analisisAcordes, isAnalyzingChords, setIsGeneratingAi, cifradoTexto, guiaSustituto, setActiveTab, notation, seguirEnCifrado, showAnalisisAcordes, scrollContainerRef, activeTab, autoScroll, setCopiedText, pantallaCompleta, alternarPantallaCompleta, isGeneratingAi, setShowStructureUploadModal, setShowShareModal, setShowMetronomeModal, setShowTunerModal, setTranspose, metronomo, setNotation, showChordDiagrams, setShowChordDiagrams, copiedText, aiSuccessMsg, setSeguirEnCifrado, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, esMovil, showShareModal, showMetronomeModal, showTunerModal, oidoOculto, showStructureUploadModal };
 }

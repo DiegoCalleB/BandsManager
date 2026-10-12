@@ -4,6 +4,7 @@
  */
 import { Dispatch,SetStateAction,useEffect,useRef } from "react";
 import { AnalisisAcordes,Song,SongSubstituteGuide } from "../../../types";
+import { mensajeDeError } from "../../../utils/mensajeDeError";
 import { analizarAcordesDelAudio,resumenAnalisisAcordes } from "../../../utils/analisisAcordesCliente";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
@@ -48,7 +49,7 @@ export function useChordAnalysis({ setCifradoTexto, song, setGuiaSustituto, setI
       setShowAnalisisAcordes(true);
       setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err) {
-      setAiSuccessMsg(`⚠️ ${(err instanceof Error && err.message) || "No se pudieron analizar los acordes del audio"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudieron analizar los acordes del audio. Prueba en un momento.")}`);
     } finally {
       setIsAnalyzingChords(false);
       setTimeout(() => setAiSuccessMsg(null), 7000);

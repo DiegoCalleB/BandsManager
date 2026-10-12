@@ -16,7 +16,7 @@ import { renderFormattedChordSheet } from "./chordSheetRender";
  * @returns Sección de interfaz.
  */
 export function AtrilBody() {
-  const { buscarEnAudio, scrollContainerRef, activeTab, guiaSustituto, setActiveTab, armonia, estiloArmonia, cambiarEstiloArmonia, funcionesPresentes, acordesPorFuncion, nombreTonalidadVista, processedText, lineasConLetra, letraTranscrita, seguirEnCifrado, letraActiva, audioRef, sincronizado, alineacion, analisisAcordes, tiemposAcordes, acordeActivo, transpose, song, notation, pedirProfesor, handleSaveEdits, cifradoTexto, setCifradoTexto, setGuiaSustituto, showChordDiagrams, uniqueChords, contextoAcordes, vistaAcordes, setVistaAcordes, setShowChordDiagrams, acordeSonando } = useAtril();
+  const { buscarEnAudio, scrollContainerRef, activeTab, guiaSustituto, setActiveTab, armonia, estiloArmonia, cambiarEstiloArmonia, funcionesPresentes, acordesPorFuncion, nombreTonalidadVista, processedText, lineasConLetra, letraTranscrita, seguirEnCifrado, letraActiva, audioRef, sincronizado, alineacion, analisisAcordes, tiemposAcordes, acordeActivo, transpose, song, notation, pedirProfesor, handleSaveEdits, cifradoTexto, setCifradoTexto, setGuiaSustituto, showChordDiagrams, uniqueChords, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, setShowChordDiagrams, acordeSonando } = useAtril();
   return (
     <>
       <div className="shrink-0 h-[75vh] md:h-auto md:flex-1 md:shrink overflow-hidden flex flex-col md:flex-row relative">
@@ -52,6 +52,7 @@ export function AtrilBody() {
               {/* THE CHORD SHEET DISPLAY */}
               {armonia && (
                 <SelectorArmonia
+                  compacto
                   estilo={estiloArmonia}
                   onCambio={cambiarEstiloArmonia}
                   resumen={`${armonia.tonalidad.nombre.replace("m", " menor").replace(/^([A-G]#?)$/, "$1 mayor")} · ${armonia.modo.nombre}${armonia.tonalidadEstimada ? " (estimado)" : ""}`}
@@ -333,6 +334,8 @@ export function AtrilBody() {
             contexto={contextoAcordes}
             vista={vistaAcordes}
             onVista={setVistaAcordes}
+            nivel={nivelAcordes}
+            onNivel={setNivelAcordes}
             onCerrar={() => setShowChordDiagrams(false)}
             sonando={acordeSonando}
             estiloArmonia={estiloArmonia}

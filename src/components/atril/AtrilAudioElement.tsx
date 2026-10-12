@@ -15,7 +15,6 @@ export function AtrilAudioElement() {
       {audioUrl && (
         <audio
           ref={audioRef}
-          src={audioUrl}
           crossOrigin="anonymous"
           preload="metadata"
           onTimeUpdate={() => {

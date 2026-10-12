@@ -12,6 +12,7 @@ import { useSeparacionIris } from "../../../hooks/useSeparacionIris";
 import { useTonoAudio } from "../../../hooks/useTonoAudio";
 import { Song } from "../../../types";
 import { getActiveBandId } from "../../../utils/api";
+import { safeMediaSrc } from "../../../utils/safeUrl";
 import { uploadFileToServer } from "../../../utils/audioStorage";
 import { carpetaDeIdea,ficheroDeToma,tituloDeToma } from "../../../utils/grabarIdea";
 import { crearIdeaDeAtril,pistasParaToma,tomasDeCancion } from "../../../utils/ideaDeAtril";
@@ -72,6 +73,14 @@ export function useAtrilAudio({ song, onUpdateSong, ajustes, transpose, setAiSuc
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // src por ref (no por JSX): pasa por safeMediaSrc y deja de ser un sumidero directo de datos del usuario
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    const seguro = safeMediaSrc(audioUrl);
+    if (seguro) el.src = seguro;
+    else if (el.hasAttribute("src")) { el.removeAttribute("src"); el.load(); }
+  }, [audioUrl]);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
   const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);

@@ -21,6 +21,7 @@ Exporta: AcordeActual.
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: GuiaProfesor, guiasDelProfesor.
+Exporta: GuiaProfesor, DiagramaEscalaDatos, guiasDelProfesor.
 
 ---
 
@@ -23,6 +23,7 @@ Exporta: GuiaProfesor, guiasDelProfesor.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_chords_DiagramaEscala|src/components/chords/DiagramaEscala.tsx]] *(from #frontend)*
 - [[src_components_chords_PanelArmonia|src/components/chords/PanelArmonia.tsx]] *(from #frontend)*
 
 ---
