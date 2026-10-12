@@ -26,7 +26,7 @@
 | Tú decides / ideas locas | La decisión | Post-créditos (Claudio y Guglio) |
 | La Ribeira y la balada | Curva de energía | Del concierto al disco |
 | Las madres como público | Bandas amigas | Capítulo 3, Merchan / reels («mi vieja») |
-| Hoja con el tono | Una hoja para cada músico | Festival («Mi menor, en tu hoja»), Otro jueves, Gracias («Traed vuestras hojas») |
+| Hoja con el tono | Una hoja para cada músico | Festival («Mi menor, en tu hoja»), Otro jueves, Gracias («Os llevo vuestros setlists personalizados») |
 | Abren el dossier | La IA escribe | Qué viene (el Resurrection abre el dossier) |
 | Miami | Esto lo necesitan todos | Para darlo a conocer (el Lambo) |
 | Nos falta batería | Date Swap (voz_mop) | Un sueño (h2), El reto |
