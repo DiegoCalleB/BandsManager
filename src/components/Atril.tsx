@@ -1421,7 +1421,7 @@ export function Atril({
         {audioUrl && (
           <audio
             ref={audioRef}
-            src={audioUrl}
+            src={/^(https?:|blob:|\/(?!\/))/i.test(audioUrl.trim()) ? audioUrl.trim() : undefined}
             crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
