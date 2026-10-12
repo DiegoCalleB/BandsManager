@@ -2075,3 +2075,10 @@ body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both
 .slide[data-title="Gracias"] .sub.inv { margin-top: 12px; color: var(--ink); }
 .slide[data-title="Gracias"] .sign-msg { margin-top: 24px; font-size: 28px; }
 .slide[data-title="Gracias"] .foot { position: static; margin-top: 22px; font-size: 20px; }
+
+/* Foto final de «Gracias»: Brais y Diego, cerveza en mano, ya en Master of Prompts (montaje con IA, así se dice en pantalla) */
+.cover .art.foto { background: #0b0c10; overflow: hidden; }
+.cover .art.foto .foto-mop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; animation: fotoin 2.4s var(--ease) both; }
+.cover .art.foto .foto-pie { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 26px 22px; font: 600 22px/1.2 'Helvetica Neue', Arial, sans-serif; color: #fff; background: linear-gradient(to top, rgba(0,0,0,.78), transparent); text-align: center; }
+@keyframes fotoin { from { opacity: 0; transform: scale(1.06); } to { opacity: 1; transform: none; } }
+.cover .art.foto::before { display: none; }
