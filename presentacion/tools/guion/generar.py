@@ -855,8 +855,8 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECTION FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
   <p class="gr-c" style="--t:4.2s;--d:3.2s">¿Os habéis fijado en el reloj?</p>
-  <p class="gr-c" style="--t:7.6s;--d:3s">No contaba para un festival.</p>
-  <p class="gr-c" style="--t:11s;--d:2.9s">Contaba para esto.</p>
+  <p class="gr-c" style="--t:7.6s;--d:3s">No solo contaba para un festival.</p>
+  <p class="gr-c" style="--t:11s;--d:2.9s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
   <p class="gr-c" style="--t:18s;--d:3.4s">En la de verdad, sois el festival.</p>
@@ -908,7 +908,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>{bajo}</dt><dd>{bajo:cargo} · el que nadie oye</dd>
       <dt>{bateria}</dt><dd>{bateria:cargo} · y las birras. En dos bandas, desde que lo ficharon</dd>
       <dt>{voz}</dt><dd>{voz:cargo} · la cara bonita</dd>
-      <dt>{guitarra}</dt><dd>{guitarra:cargo} · y las palabrotas</dd>
+      <dt>{guitarra}</dt><dd>{guitarra:cargo} · los solos y los rifs</dd>
       <dt>{manager}</dt><dd>Siempre al teléfono</dd>
       <dt>{voz_mop}</dt><dd>El rival. Y luego, el amigo</dd>
       <dt>{sello}</dt><dd>Discos Cuarzo · quería el 30 % y el repertorio</dd>

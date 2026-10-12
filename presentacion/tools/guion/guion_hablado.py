@@ -175,7 +175,7 @@ ACT_SAY = {
 EXTRA_SAY = {
  'cast_bateria': 'Soy {bateria}, a la {bateria:rol}. El que marca el ritmo. Y el que se bebe las birras.',
  'cast_voz': '{voz}. {voz:cargo}. Che, la cara bonita de la banda.',
- 'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos, los rifs, y las palabrotas.',
+ 'cast_guitarra': '{guitarra}. {guitarra:cargo}. Los solos y los rifs.',
  'cast_bajo': 'Y yo soy {bajo}, de San Blas de toda la vida. Toco el {bajo:rol}. Ese instrumento que nadie oye. Hasta hoy.',
  'excel': 'Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y el setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!',
  'sala': 'Esto es Band Mánayer. Os voy a contar qué hace por cada uno de vosotros. Así que abrid bien las orejas, chavales, que esto mola mazo.',
