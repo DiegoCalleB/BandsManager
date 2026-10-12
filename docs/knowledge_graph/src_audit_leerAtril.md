@@ -29,6 +29,7 @@ _Sin llamadas entrantes indexadas._
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/letrasHonestas.test.ts`
+- `src/audit/acordeActual.test.tsx`
 - `src/audit/bucleABCompartido.test.tsx`
 - `src/audit/grabarIdeaAtril.test.tsx`
 - `src/audit/irisStudioAtril.test.tsx`

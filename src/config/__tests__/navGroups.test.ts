@@ -33,8 +33,8 @@ describe('navGroups config', () => {
     expect(Object.keys(NAV_ITEMS)).not.toContain('metronome');
     expect(Object.keys(NAV_ITEMS)).not.toContain('tuner');
     const atril = leerAtril();
-    expect(atril).toContain('label="Metrónomo"');
-    expect(atril).toContain('label="Afinador"');
+    expect(atril).toContain('label: "Metrónomo"');
+    expect(atril).toContain('label: "Afinador"');
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {

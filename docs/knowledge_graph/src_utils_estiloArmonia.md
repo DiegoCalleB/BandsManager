@@ -25,6 +25,7 @@ Exporta: EstiloArmonia, ESTILO_POR_DEFECTO, leerEstiloArmonia, guardarEstiloArmo
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(from #frontend)*
 - [[src_components_atril_hooks_useAtrilHarmony|src/components/atril/hooks/useAtrilHarmony.ts]] *(from #frontend)*
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 - [[src_components_chords_LineaTiempoAcordes|src/components/chords/LineaTiempoAcordes.tsx]] *(from #frontend)*

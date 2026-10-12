@@ -26,6 +26,7 @@ Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, CajaAcorde.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 - [[src_components_chords_DrawerDiagramas|src/components/chords/DrawerDiagramas.tsx]] *(from #frontend)*
 
 ---

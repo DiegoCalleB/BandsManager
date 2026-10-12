@@ -79,8 +79,9 @@ describe('Iris no se ofrece dos veces', () => {
 });
 
 describe('Atril en Estudiar: controles secundarios tras «Más»', () => {
-  it('cifrado, diagramas y copiar solo salen siempre fuera de Estudiar', () => {
+  it('los controles secundarios salen tras «Más» en todos los modos', () => {
     const atril = leerAtril();
-    expect(atril).toContain("(modo !== 'Estudiar' || masControles)");
+    expect(atril).toContain("masControles ? 'contents' : 'hidden'");
+    expect(atril).not.toContain("(modo !== 'Estudiar' || masControles)");
   });
 });

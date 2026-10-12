@@ -2,7 +2,7 @@
  * Barra de controles: transposición, notación, audio, bucle, autoscroll y herramientas.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Check,Copy,Edit3,FileText,GraduationCap,Pause,Play,RotateCcw,UserCheck } from "lucide-react";
+import { Check,Copy,Edit3,FileText,GraduationCap,RotateCcw,UserCheck } from "lucide-react";
 import { ideasConFondo } from "../../utils/ideaDeAtril";
 import { cancionConIdeas,metaStemsDeCancion } from "../../utils/irisTracks";
 import { ControlAutoscroll } from "../chords/ControlAutoscroll";
@@ -24,7 +24,7 @@ import { useAtril } from "./AtrilContext";
  * @returns Sección de interfaz.
  */
 export function AtrilToolbar() {
-  const { activeTab, setActiveTab, isPlayingAudio, handleToggleAudio, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText } = useAtril();
+  const { activeTab, setActiveTab, audioUrl, handleRestartAudio, formatAudioTime, audioCurrentTime, audioDuration, handleSeekAudio, stems, song, iris, separarConIris, modoEscucha, setModoEscucha, miId, setMiPistaId, velocidad, setVelocidad, transpose, audioSigueTono, setAudioSigueTono, bucle, marcarBucle, limpiarBucle, tomas, tomaActivaId, setTomaActivaId, onUpdateSong, pistasSonando, ajustesPistas, setAjustesPistas, modo, grabacion, guardandoIdea, guardarIdea, setTranspose, autoScroll, metronomo, setMasControles, masControles, setNotation, notation, showChordDiagrams, setShowChordDiagrams, handleCopyChords, copiedText } = useAtril();
   return (
     <>
       <div className="bg-[var(--surface)]/80 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-sans shrink-0">
@@ -53,29 +53,12 @@ export function AtrilToolbar() {
             <span>Armonía</span>
           </Button>
 
-          <Button
-            variant={activeTab === "substitute" ? "selected" : "ghost"}
-            size="xs"
-            type="button"
-            onClick={() => setActiveTab("substitute")}
-            className="items-center gap-1.5"
-          >
-            <UserCheck className="w-3.5 h-3.5" />
-            <span>Ficha Sustituto URGENTE</span>
-          </Button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("edit")}
-            className={`px-3 py-1.5 rounded-[var(--r-pill)] font-bold flex items-center gap-1.5 transition cursor-pointer ${
-              activeTab === "edit"
-                ? "bg-[var(--surface)]/80 text-[var(--ink)] "
-                : "text-[var(--ink-2)] hover:text-[var(--ink)]"
-            }`}
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            <span>Editar</span>
-          </button>
+          {(activeTab === "substitute" || activeTab === "edit") && (
+            <Button variant="selected" size="xs" type="button" className="items-center gap-1.5">
+              {activeTab === "edit" ? <Edit3 className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
+              <span>{activeTab === "edit" ? "Editar" : "Ficha sustituto urgente"}</span>
+            </Button>
+          )}
         </div>
 
         {/* INTERACTIVE CONTROLS (Only visible on chords tab) */}
@@ -83,27 +66,6 @@ export function AtrilToolbar() {
           <div className="flex flex-wrap items-center gap-3">
             {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
             <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
-              <Button
-                variant={isPlayingAudio ? "primary" : "neutral"}
-                size="xs"
-                type="button"
-                onClick={handleToggleAudio}
-                className="items-center justify-center"
-                title={
-                  isPlayingAudio
-                    ? "Pausar audio de la canción"
-                    : audioUrl
-                      ? "Reproducir audio de la canción"
-                      : "Sin archivo de audio adjunto"
-                }
-              >
-                {isPlayingAudio ? (
-                  <Pause className="w-3.5 h-3.5 fill-current" />
-                ) : (
-                  <Play className="w-3.5 h-3.5 fill-current pl-0.5" />
-                )}
-              </Button>
-
               {audioUrl ? (
                 <>
                   <IconButton
@@ -141,31 +103,6 @@ export function AtrilToolbar() {
               )}
             </div>
 
-            <IrisStudio
-              pistas={stems.length}
-              motor={metaStemsDeCancion(song)?.motor?.split("(")[0].trim()}
-              tieneAudio={!!audioUrl}
-              separando={iris.isSeparatingStemsAi}
-              onSeparar={separarConIris}
-            />
-            {stems.length > 1 && (
-              <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
-            )}
-            {audioUrl && (
-              <div className="flex flex-wrap items-center gap-2">
-                <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
-                <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
-                <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
-              </div>
-            )}
-            <TomasConFondo
-              tomas={tomas}
-              stems={stems}
-              activaId={tomaActivaId}
-              onActiva={setTomaActivaId}
-              onFondo={(ideaId, ids) => onUpdateSong(cancionConIdeas(song, ideasConFondo(song.audioIdeas || [], ideaId, ids)))}
-            />
-            <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
 
             {modo === 'Ensayar' && (
               <GrabarIdea
@@ -226,13 +163,39 @@ export function AtrilToolbar() {
             <ControlAutoscroll auto={autoScroll} />
             <ControlMetronomo metronomo={metronomo} />
 
-            {modo === 'Estudiar' && (
-              <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
-                {masControles ? 'Menos' : 'Más'}
-              </Button>
+            <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
+              {masControles ? 'Menos' : 'Más'}
+            </Button>
+            {/* Todo lo demás sigue montado (sus atajos y estados no se pierden) pero oculto hasta pulsar «Más». */}
+            <div className={masControles ? 'contents' : 'hidden'}>
+            <IrisStudio
+              pistas={stems.length}
+              motor={metaStemsDeCancion(song)?.motor?.split("(")[0].trim()}
+              tieneAudio={!!audioUrl}
+              separando={iris.isSeparatingStemsAi}
+              onSeparar={separarConIris}
+            />
+            {stems.length > 1 && (
+              <SelectorEscucha modo={modoEscucha} onModo={setModoEscucha} pistas={stems} miId={miId} onMiPista={setMiPistaId} />
             )}
-            {(modo !== 'Estudiar' || masControles) && (
-              <>
+            {audioUrl && (
+              <div className="flex flex-wrap items-center gap-2">
+                <ControlVelocidad velocidad={velocidad} onVelocidad={setVelocidad} />
+                <ControlTonoAudio transpose={transpose} sigue={audioSigueTono} onSigue={setAudioSigueTono} />
+                <ControlBucle bucle={bucle} onMarcar={marcarBucle} onLimpiar={limpiarBucle} />
+              </div>
+            )}
+            <TomasConFondo
+              tomas={tomas}
+              stems={stems}
+              activaId={tomaActivaId}
+              onActiva={setTomaActivaId}
+              onFondo={(ideaId, ids) => onUpdateSong(cancionConIdeas(song, ideasConFondo(song.audioIdeas || [], ideaId, ids)))}
+            />
+            <MezclaPistas pistas={pistasSonando} ajustes={ajustesPistas} onAjustes={setAjustesPistas} />
+            </div>
+
+            <div className={masControles ? 'contents' : 'hidden'}>
             {/* NOTATION TOGGLE (Latino / C-D-E) */}
             <Button
               variant="neutral"
@@ -273,8 +236,7 @@ export function AtrilToolbar() {
                 <Copy className="w-4 h-4" />
               )}
             </button>
-              </>
-            )}
+            </div>
           </div>
         )}
       </div>

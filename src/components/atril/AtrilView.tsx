@@ -11,6 +11,8 @@ import { AtrilBody } from "./AtrilBody";
 import { AtrilHeader } from "./AtrilHeader";
 import { AtrilModals } from "./AtrilModals";
 import { AtrilToolbar } from "./AtrilToolbar";
+import { acordesDelCifrado } from "../../utils/alineacionAcordes";
+import { AcordeActual } from "../chords/AcordeActual";
 import { DetectedChordsPanel } from "./DetectedChordsPanel";
 
 
@@ -21,7 +23,7 @@ import { useAtril } from "./AtrilContext";
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, processedText, contextoAcordes, vistaAcordes, setVistaAcordes, estiloArmonia } = useAtril();
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
@@ -59,6 +61,20 @@ export function AtrilView() {
 
     {/* AI SUCCESS NOTIFICATION BANNER */}
     <AiSuccessBanner />
+
+    {/* ACORDE ACTUAL: el diagrama del que suena, sin buscarlo en el cajón lateral */}
+    {activeTab === "chords" && (
+      <div className="px-4 pt-3 shrink-0">
+        <AcordeActual
+          sonando={acordeSonando}
+          siguiente={sincronizado && acordeActivo >= 0 ? acordesDelCifrado(processedText)[acordeActivo + 1] ?? null : null}
+          contexto={contextoAcordes}
+          vista={vistaAcordes}
+          onVista={setVistaAcordes}
+          estiloArmonia={estiloArmonia}
+        />
+      </div>
+    )}
 
     {/* ACORDES DETECTADOS DEL AUDIO */}
     <DetectedChordsPanel />
