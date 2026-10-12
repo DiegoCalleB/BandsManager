@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, lazy, Suspense, useSyncExternalStore } from "react";
 import { guardarOReverter } from "../utils/guardarConReversion";
+import { safeMediaSrc } from "../utils/safeUrl";
 import {
   X,
   Play,
@@ -1421,7 +1422,7 @@ export function Atril({
         {audioUrl && (
           <audio
             ref={audioRef}
-            src={/^(https?:|blob:|\/(?!\/))/i.test(audioUrl.trim()) ? audioUrl.trim() : undefined}
+            src={safeMediaSrc(audioUrl)}
             crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
