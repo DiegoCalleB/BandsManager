@@ -43,6 +43,11 @@ Exporta: PracticeModePanel.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/__tests__/PracticeModePanel.behavior.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

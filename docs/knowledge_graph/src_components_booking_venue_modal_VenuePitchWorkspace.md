@@ -35,6 +35,11 @@ Exporta: VenuePitchWorkspace.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

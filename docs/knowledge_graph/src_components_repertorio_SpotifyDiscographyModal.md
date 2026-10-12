@@ -36,6 +36,11 @@ Exporta: SpotifyDiscographyModal.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/repertorio/__tests__/SpotifyDiscographyModal.behavior.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

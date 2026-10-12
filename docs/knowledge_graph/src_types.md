@@ -597,9 +597,12 @@ _Sin dependencias salientes directas._
 - `src/audit/mezclaPistasAtril.test.tsx`
 - `src/audit/tomasConFondoAtril.test.tsx`
 - `src/audit/transcripcionMasiva.test.tsx`
+- `src/components/__tests__/PracticeModePanel.behavior.test.tsx`
 - `src/components/atril/hooks/__tests__/useAtrilAudio.behavior.test.ts`
 - `src/components/booking/__tests__/CRMContactEnricherModal.test.tsx`
 - `src/components/booking/__tests__/ExportLeadsModal.test.ts`
+- `src/components/booking/__tests__/ReinicioPorLead.behavior.test.tsx`
+- `src/components/booking/__tests__/VenueEmailThread.behavior.test.tsx`
 - `src/components/booking/crm/__tests__/leadTypeMatchers.test.ts`
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
@@ -610,6 +613,7 @@ _Sin dependencias salientes directas._
 - `src/components/onboarding/wizard/hooks/__tests__/onboardingSave.behavior.test.ts`
 - `src/components/repertorio/__tests__/SetlistModal.behavior.test.tsx`
 - `src/components/repertorio/__tests__/SetlistShowItemRowContracts.test.ts`
+- `src/components/repertorio/__tests__/SpotifyDiscographyModal.behavior.test.tsx`
 - `src/components/repertorio/__tests__/showItemForm.test.ts`
 - `src/components/repertorio/live_concert_album/__tests__/liveConcertAlbumContracts.test.ts`
 - `src/components/repertorio/song_transition/__tests__/songTransitionContracts.test.ts`
