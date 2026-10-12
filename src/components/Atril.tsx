@@ -222,6 +222,14 @@ export function Atril({
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // src por ref (no por JSX): pasa por safeMediaSrc y deja de ser un sumidero directo de datos del usuario
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    const seguro = safeMediaSrc(audioUrl);
+    if (seguro) { if (el.getAttribute("src") !== seguro) el.src = seguro; }
+    else if (el.hasAttribute("src")) { el.removeAttribute("src"); el.load(); }
+  }, [audioUrl]);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
   const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
@@ -1422,7 +1430,6 @@ export function Atril({
         {audioUrl && (
           <audio
             ref={audioRef}
-            src={safeMediaSrc(audioUrl)}
             crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {
