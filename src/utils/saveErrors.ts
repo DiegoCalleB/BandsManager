@@ -69,7 +69,7 @@ export function instalarAvisoDeGuardados(
   ventana.__avisoGuardadosInstalado = true;
   const original = ventana.fetch.bind(ventana);
 
-  ventana.fetch = async (entrada: RequestInfo | URL, init?: RequestInit) => {
+  const envuelto = async (entrada: RequestInfo | URL, init?: RequestInit) => {
     const url = typeof entrada === 'string' ? entrada : entrada instanceof URL ? entrada.href : entrada.url;
     const metodo = (init?.method || (typeof entrada === 'object' && 'method' in entrada ? entrada.method : 'GET') || 'GET').toUpperCase();
 
@@ -121,4 +121,13 @@ export function instalarAvisoDeGuardados(
     }
     return respuesta;
   };
+
+  // Algunos entornos (vistas previas en iframes, WebViews) dejan `fetch` solo como getter: asignarlo
+  // lanza TypeError y, al llamarse en el arranque, dejaba la app en blanco. Sin el envoltorio solo
+  // se pierde el aviso de guardados fallidos.
+  try {
+    ventana.fetch = envuelto;
+  } catch {
+    ventana.__avisoGuardadosInstalado = false;
+  }
 }
