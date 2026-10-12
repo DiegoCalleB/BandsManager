@@ -80,5 +80,15 @@
    0.4
   ],
   "hito": "Vallekas"
+ },
+ {
+  "foto": "mop-gira.jpg",
+  "edad": 41,
+  "texto": "Master of Prompts",
+  "logro": "Yo ya estoy preparado para la primera gira. ¿Y tú, Brais?",
+  "dur": 5.6,
+  "gran": true,
+  "hito": "Gira",
+  "pos": "50% 35%"
  }
 ]
