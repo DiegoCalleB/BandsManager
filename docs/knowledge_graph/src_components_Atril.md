@@ -72,6 +72,7 @@ Exporta: AtrilProps, Atril, renderFormattedChordSheet.
 - [[src_utils_lineaTiempoAcordes|src/utils/lineaTiempoAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_modosAtril|src/utils/modosAtril.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_safeUrl|src/utils/safeUrl.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_separacionIris|src/utils/separacionIris.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_shareUtils|src/utils/shareUtils.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_teoriaArmonica|src/utils/teoriaArmonica.ts]] *(Layer: #service, Domain: #system)*

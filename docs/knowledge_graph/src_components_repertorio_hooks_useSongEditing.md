@@ -24,6 +24,7 @@ Edición de canciones: análisis automático de acordes, guardado desde el formu
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_guardarConReversion|src/utils/guardarConReversion.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_repertorioUtils|src/utils/repertorioUtils.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_safeUrl|src/utils/safeUrl.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_stageTimeFormat|src/utils/stageTimeFormat.ts]] *(Layer: #service, Domain: #system)*
 
 ---

@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useRef, useMemo, lazy, Suspense, useSyncExternalStore } from "react";
 import { guardarOReverter } from "../utils/guardarConReversion";
+import { safeMediaSrc } from "../utils/safeUrl";
 import {
   X,
   Play,
@@ -40,7 +41,7 @@ import { SelectorArmonia } from "./chords/SelectorArmonia";
 import { PanelArmonia } from "./chords/PanelArmonia";
 import { ProfesorIA } from "./chords/ProfesorIA";
 import { normalizarAcorde } from "../utils/lineaTiempoAcordes";
-import { useVistaAcordes } from "./chords/AcordeEnInstrumento";
+import { useNivelAcordes, useVistaAcordes } from "./chords/AcordeEnInstrumento";
 import { DrawerDiagramas } from "./chords/DrawerDiagramas";
 import { AcordeActual } from "./chords/AcordeActual";
 import { useAcordesDeLaHoja } from "../hooks/useAcordesDeLaHoja";
@@ -94,6 +95,12 @@ import { ActionMenu, Button, IconButton, Input, LinkButton, Textarea } from './u
 const MetronomeModal = lazy(() => import("./MetronomeModal").then((m) => ({ default: m.MetronomeModal })));
 const TunerModal = lazy(() => import("./TunerModal").then((m) => ({ default: m.TunerModal })));
 
+/** Un error técnico del servidor («Error 404: Not Found», «Failed to fetch») no se le enseña tal cual a un músico. */
+function mensajeDeError(err: unknown, amable: string): string {
+  const m = err instanceof Error ? err.message : '';
+  return !m || /^(error\s*)?\d{3}\b|not found|failed to fetch|networkerror|load failed/i.test(m) ? amable : m;
+}
+
 export interface AtrilProps {
   cancion: Song;
   /** Estudiar / Ensayar / Tocar: decide qué se ve y qué suena al abrir. */
@@ -125,6 +132,7 @@ export function Atril({
 
   // Show Chord Diagrams drawer/panel
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
+  const [nivelAcordes, setNivelAcordes] = useNivelAcordes();
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(ajustes.diagramas);
 
   // Edit form state
@@ -196,6 +204,10 @@ export function Atril({
     if (idea) void iris.handlePerformAiStemSeparation(idea, motor);
   };
   const [masControles, setMasControles] = useState(false);
+  const esMovil = useSyncExternalStore(
+    (cb) => { const mq = window.matchMedia?.('(max-width: 639px)'); mq?.addEventListener?.('change', cb); return () => mq?.removeEventListener?.('change', cb); },
+    () => window.matchMedia?.('(max-width: 639px)').matches ?? false,
+  );
   const [modoEscucha, setModoEscucha] = useState<ModoEscucha>(ajustes.escucha);
   const [miPistaId, setMiPistaId] = useState<string | null>(null);
   const miId = miPistaId && stems.some((p) => p.id === miPistaId) ? miPistaId : (pistaDelUsuario(stems, instrumentoDelUsuario())?.id ?? null);
@@ -210,6 +222,14 @@ export function Atril({
     song.duracionSegundos || 0,
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // src por ref (no por JSX): pasa por safeMediaSrc y deja de ser un sumidero directo de datos del usuario
+  useEffect(() => {
+    const el = audioRef.current;
+    if (!el) return;
+    const seguro = safeMediaSrc(audioUrl);
+    if (seguro) el.src = seguro;
+    else if (el.hasAttribute("src")) { el.removeAttribute("src"); el.load(); }
+  }, [audioUrl]);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
   useEffect(() => { if (audioRef.current) audioRef.current.playbackRate = velocidad; }, [velocidad, audioUrl]);
   const [audioSigueTono, setAudioSigueTono] = useState<boolean>(true);
@@ -340,7 +360,7 @@ export function Atril({
       setShowAnalisisAcordes(true);
       setAiSuccessMsg(resumenAnalisisAcordes(analisis));
     } catch (err: any) {
-      setAiSuccessMsg(`⚠️ ${err.message || "No se pudieron analizar los acordes del audio"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudieron analizar los acordes del audio. Prueba en un momento.")}`);
     } finally {
       setIsAnalyzingChords(false);
       setTimeout(() => setAiSuccessMsg(null), 7000);
@@ -437,7 +457,7 @@ export function Atril({
       setTimeout(() => setAiSuccessMsg(null), 9000);
     } catch (err: any) {
       console.error("Error generating with AI:", err);
-      setAiSuccessMsg(`⚠️ ${err.message || "No se pudo transcribir la letra"}`);
+      setAiSuccessMsg(`⚠️ ${mensajeDeError(err, "No se pudo transcribir la letra. Prueba en un momento.")}`);
       setTimeout(() => setAiSuccessMsg(null), 12000);
     } finally {
       setIsGeneratingAi(false);
@@ -526,6 +546,21 @@ export function Atril({
     return k ? extractUniqueChords(processedText).find((c) => normalizarAcorde(c) === k) ?? null : null;
   }, [acordeActivo, isPlayingAudio, processedText]);
 
+  // Los próximos acordes distintos (para la tira de diagramas de la barra fija).
+  const proximosAcordes = useMemo(() => {
+    if (acordeActivo < 0) return [] as string[];
+    const todos = acordesDelCifrado(processedText);
+    const actual = todos[acordeActivo];
+    // Los nombres salen normalizados (inglés): se devuelven con la grafía de la hoja (Do, Sol…) como el actual.
+    const visibles = extractUniqueChords(processedText);
+    const comoSeVe = (c: string) => visibles.find((v) => normalizarAcorde(v) === c) ?? c;
+    const out: string[] = [];
+    for (let i = acordeActivo + 1; i < todos.length && out.length < 3; i++) {
+      if (todos[i] !== actual && todos[i] !== out[out.length - 1]) out.push(todos[i]);
+    }
+    return out.map(comoSeVe);
+  }, [acordeActivo, processedText]);
+
   // Al cambiar de pestaña se empieza arriba: el scroll de la anterior dejaba la nueva a medias.
   useEffect(() => { scrollContainerRef.current?.scrollTo({ top: 0 }); }, [activeTab]);
 
@@ -613,7 +648,7 @@ export function Atril({
             size="xs"
             type="button"
             onClick={alternarPantallaCompleta}
-            className="absolute top-3 right-14 z-20"
+            className="absolute top-3 right-14 z-20 hidden sm:inline-flex"
             title={pantallaCompleta ? "Salir de pantalla completa" : "Pantalla completa"}
             aria-pressed={pantallaCompleta}
           >
@@ -650,7 +685,7 @@ export function Atril({
               </button>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-xl font-bold text-[var(--ink)]">
+                  <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)] leading-tight">
                     {formatSongTitle(song.titulo)}
                   </h2>
                   {song.esVersionCovers && (
@@ -665,15 +700,15 @@ export function Atril({
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              {/* AI Generate — the main action, keeps its label */}
+            <div className="flex items-center gap-1.5 absolute top-3 right-14 z-20 sm:static">
+              {/* AI Generate — la acción principal en pantalla ancha; en móvil vive en ⋯ para dejar sitio al cifrado */}
               <Button
                 variant="primary"
                 size="xs"
                 type="button"
                 onClick={handleGenerateWithAi}
                 disabled={isGeneratingAi}
-                className="items-center gap-1.5"
+                className="hidden sm:inline-flex items-center gap-1.5"
                 title={
                   song.audioPrincipalUrl
                     ? "Transcribir la letra de la voz con tiempos y sincronizarla con los acordes (reconocimiento de voz; nunca se inventa a partir del título)"
@@ -694,7 +729,7 @@ export function Atril({
                   type="button"
                   onClick={analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio()}
                   disabled={isAnalyzingChords}
-                  className="items-center gap-1.5"
+                  className="hidden sm:inline-flex items-center gap-1.5"
                   title={
                     analisisAcordes
                       ? "Jamify: ver los acordes detectados en el audio"
@@ -710,6 +745,8 @@ export function Atril({
               <ActionMenu
                 label="Más acciones de la canción"
                 items={[
+                  { label: isGeneratingAi ? "Escuchando…" : "Letra del audio", icon: Wand2, onSelect: handleGenerateWithAi, hidden: !esMovil },
+                  { label: isAnalyzingChords ? "Analizando..." : "Acordes del audio", icon: Music, onSelect: analisisAcordes && !isAnalyzingChords ? () => setShowAnalisisAcordes((v) => !v) : () => handleAnalyzeChordsFromAudio(), hidden: !esMovil || !audioUrl },
                   { label: "Subir PDF, imagen o Word con acordes", icon: Upload, onSelect: () => setShowStructureUploadModal(true) },
                   { label: "Compartir por WhatsApp o app", icon: MessageSquare, onSelect: () => setShowShareModal(true) },
                   { label: "Metrónomo", icon: Timer, onSelect: () => setShowMetronomeModal(true) },
@@ -761,7 +798,7 @@ export function Atril({
             {activeTab === "chords" && (
               <div className="flex flex-wrap items-center gap-3">
                 {/* MINI AUDIO PLAYER (REPRODUCTOR DE AUDIO INTEGRADO) */}
-                <div className="flex items-center gap-2 bg-[var(--scrim)]/60 px-3 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/10">
+                <div className={`${audioUrl ? "flex" : "hidden"} items-center gap-2 bg-[var(--acc)]/10 px-3 py-1 rounded-[var(--r-s)] w-full sm:w-auto`}>
                   {audioUrl ? (
                     <>
                       <IconButton
@@ -784,7 +821,7 @@ export function Atril({
                         step={0.1}
                         value={audioCurrentTime}
                         onChange={handleSeekAudio}
-                        className="w-20 sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
+                        className="flex-1 sm:flex-none sm:w-28 h-1.5 bg-[var(--sunken)] rounded-[var(--r-s)] appearance-none cursor-pointer accent-[var(--acc)]"
                         title="Barra de posición de reproducción"
                       />
 
@@ -792,11 +829,7 @@ export function Atril({
                         {formatAudioTime(audioDuration)}
                       </span>
                     </>
-                  ) : (
-                    <span className="text-micro text-[var(--ink-2)] italic">
-                      Sin audio
-                    </span>
-                  )}
+                  ) : null}
                 </div>
 
                 {modo === 'Ensayar' && (
@@ -855,8 +888,10 @@ export function Atril({
                   )}
                 </div>
 
-                <ControlAutoscroll auto={autoScroll} />
-                <ControlMetronomo metronomo={metronomo} />
+                <div className={masControles ? 'contents' : 'hidden sm:contents'}>
+                  <ControlAutoscroll auto={autoScroll} />
+                  <ControlMetronomo metronomo={metronomo} />
+                </div>
 
                 <Button variant="neutral" size="xs" type="button" onClick={() => setMasControles((v) => !v)} aria-expanded={masControles}>
                   {masControles ? 'Menos' : 'Más'}
@@ -967,16 +1002,18 @@ export function Atril({
           )}
 
           {activeTab === "chords" && (
-            <div className="px-4 pt-3 shrink-0">
-              <AcordeActual
-                sonando={acordeSonando}
-                siguiente={sincronizado && acordeActivo >= 0 ? acordesDelCifrado(processedText)[acordeActivo + 1] ?? null : null}
-                contexto={contextoAcordes}
-                vista={vistaAcordes}
-                onVista={setVistaAcordes}
-                estiloArmonia={estiloArmonia}
-              />
-            </div>
+            <AcordeActual
+              sonando={acordeSonando}
+              proximos={sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined}
+              contexto={contextoAcordes}
+              vista={vistaAcordes}
+              onVista={setVistaAcordes}
+              nivel={nivelAcordes}
+              onNivel={setNivelAcordes}
+              estiloArmonia={estiloArmonia}
+              reproduciendo={isPlayingAudio}
+              onToggle={audioUrl ? handleToggleAudio : undefined}
+            />
           )}
 
           {/* ACORDES DETECTADOS DEL AUDIO */}
@@ -1044,6 +1081,7 @@ export function Atril({
                   {/* THE CHORD SHEET DISPLAY */}
                   {armonia && (
                     <SelectorArmonia
+                      compacto
                       estilo={estiloArmonia}
                       onCambio={cambiarEstiloArmonia}
                       resumen={`${armonia.tonalidad.nombre.replace("m", " menor").replace(/^([A-G]#?)$/, "$1 mayor")} · ${armonia.modo.nombre}${armonia.tonalidadEstimada ? " (estimado)" : ""}`}
@@ -1331,6 +1369,8 @@ export function Atril({
                 contexto={contextoAcordes}
                 vista={vistaAcordes}
                 onVista={setVistaAcordes}
+                nivel={nivelAcordes}
+                onNivel={setNivelAcordes}
                 onCerrar={() => setShowChordDiagrams(false)}
                 sonando={acordeSonando}
                 estiloArmonia={estiloArmonia}
@@ -1390,7 +1430,6 @@ export function Atril({
         {audioUrl && (
           <audio
             ref={audioRef}
-            src={audioUrl}
             crossOrigin="anonymous"
             preload="metadata"
             onTimeUpdate={() => {

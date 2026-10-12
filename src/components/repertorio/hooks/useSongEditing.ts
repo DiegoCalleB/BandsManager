@@ -8,6 +8,7 @@ import { Setlist,Song } from "../../../types";
 import { analizarAcordesDelAudio } from "../../../utils/analisisAcordesCliente";
 import { saveSongsToLocalStorageSafely,uploadFileToServer } from "../../../utils/audioStorage";
 import { guardarOReverter } from "../../../utils/guardarConReversion";
+import { safeMediaSrc } from "../../../utils/safeUrl";
 import { withSongFlagsForMember } from "../../../utils/repertorioUtils";
 import { formatSecondsToMmSs } from "../../../utils/stageTimeFormat";
 
@@ -133,8 +134,10 @@ export function useSongEditing({ setStatusBanner, setSongs, editingSong, activeP
         return base;
       }
     };
+    // El campo oculto del formulario es texto del DOM: solo se guarda si es una fuente de audio válida.
+    const audioDelFormulario = String(formData.get("audioPrincipalUrl") ?? "");
     let audioPrincipalUrl =
-      (formData.get("audioPrincipalUrl") as string) ||
+      (audioDelFormulario.startsWith("indexeddb:") ? audioDelFormulario : safeMediaSrc(audioDelFormulario)) ||
       editingSong?.audioPrincipalUrl ||
       "";
     let portadaUrl =
