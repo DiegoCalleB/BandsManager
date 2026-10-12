@@ -339,6 +339,19 @@
     sig.classList.toggle('on', on);
   };
   setInterval(function () { if (body.classList.contains('pelicula') && !body.classList.contains('scroll')) pintarSig(); else sig.classList.remove('on'); }, 250);
+  // «Continuar viendo»: se guarda dónde te quedaste y al volver a entrar se ofrece seguir ahí unos segundos
+  var cont = document.createElement('button'); cont.type = 'button'; cont.className = 'nf-sig-ep nf-cont';
+  cont.innerHTML = '<span><small>Continuar viendo</small><em></em></span>'; if (stage) stage.appendChild(cont);
+  var posGuardada = 0, contT = 0;
+  try { posGuardada = +(localStorage.getItem('bm_pos') || 0); } catch (e) { /* sin almacenamiento */ }
+  cont.addEventListener('click', function () { var d = D(); if (d) d.irA(posGuardada); cont.classList.remove('on'); posGuardada = 0; });
+  setInterval(function () {
+    var d = D(); if (!d || !d.total || !body.classList.contains('pelicula') || body.classList.contains('scroll')) { cont.classList.remove('on'); return; }
+    var t = d.tiempo();
+    if (posGuardada > 20 && posGuardada < d.total() - 20 && t < 15 && !contT) { contT = Date.now(); cont.querySelector('em').textContent = 'Seguir en ' + mmss(posGuardada); cont.classList.add('on'); }
+    if (contT && (Date.now() - contT > 9000 || t > 30)) { cont.classList.remove('on'); posGuardada = 0; }
+    if (!posGuardada || !cont.classList.contains('on')) try { if (t > 20) localStorage.setItem('bm_pos', String(Math.round(t))); } catch (e) { /* da igual */ }
+  }, 1000);
   // Doble toque en móvil: izquierda −15 s, derecha +15 s, como en Netflix
   var ultimoToque = { t: 0, x: 0 };
   addEventListener('touchend', function (e) {
