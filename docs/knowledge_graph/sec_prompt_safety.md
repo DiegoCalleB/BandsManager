@@ -29,6 +29,7 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 - [[route_leads_pitch|Leads Pitch Generation Route]] *(from #route)*
 - [[route_leads_reply|Leads Reply Route]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*

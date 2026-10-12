@@ -19,6 +19,7 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
@@ -41,6 +42,11 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server|server.ts]] *(from #route)*
 - [[src_components_chatbot_hooks_useChatSend|src/components/chatbot/hooks/useChatSend.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/chatPromptInyeccion.test.ts`
 
 ---
 

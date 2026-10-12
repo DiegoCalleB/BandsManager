@@ -25,6 +25,7 @@ Módulo sin exportaciones con nombre.
 - [[server_auth|server/auth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_limiteCuerpo|server/middleware/limiteCuerpo.ts]] *(Layer: #security, Domain: #system)*
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_agent|server/routes/agent.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_routes_agentQueue|server/routes/agentQueue.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_routes_ai_music|server/routes/ai_music.ts]] *(Layer: #route, Domain: #system)*
