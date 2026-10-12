@@ -789,12 +789,13 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 </section>
 
 <!--MIS-BANDAS-->
-<section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-transition="fade">
+<section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-transition="fade" data-dur="12500">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
   <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
   <h2>Y ya estamos montando un grupo de metal. Nos falta batería…</h2>
   <p class="sub">Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.</p>
+  <p class="sub sub2 hijas">Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles.</p>
   <p class="sub sub3 dream-line">Un sueño hecho realidad.</p>
 </section>
 ''')
@@ -803,26 +804,40 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 # [{"foto": "big-band-2015.jpg", "texto": "Big Band · 2015", "logro": "Primer concierto"}…]. Sin fotos, la escena no sale.
 _hj = os.path.join(AQUI, '..', '..', 'img', 'historia', 'historia.json')
 FOTOS = [f for f in (json.load(open(_hj, encoding='utf-8')) if os.path.exists(_hj) else [])
-         if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto']))]
+         if f.get('tarjeta') or os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto']))]
 if [f for f in FOTOS if f.get('provisional')]:
-    print('OJO: «Mis bandas» lleva fotos y textos inventados (provisional: true en img/historia/historia.json). Cámbialos por los reales antes de entregar.')
+    print('OJO: «Mis bandas» tiene fotos sin confirmar (provisional: true en img/historia/historia.json): ' + ', '.join(f['foto'] for f in FOTOS if f.get('provisional')))
 if FOTOS:
+    # Cronología: cada banda con la edad que tenía Diego (la edad va en grande, y una línea de tiempo abajo se va encendiendo)
     pasos, t = [], 0.4
     for k, f in enumerate(FOTOS):
-        d = f.get('dur', 1.9)  # 1,9 s por foto; la del público (la última), más: «gran» lleva efecto
+        d = f.get('dur', 2.6 if f.get('tarjeta') else 2.4)  # la del público (la última), más: «gran» lleva efecto
         pasos.append((t, d, f)); t += d
     from PIL import Image  # las fotos casi cuadradas o verticales se ven enteras sobre su propio fondo desenfocado
     def _vert(f):
         w, h = Image.open(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto'])).size
         return w / h < 1.25
-    cuerpo = ''.join(f'''<figure class="mb-foto{' vert' if _vert(f) else ''}{' gran' if f.get('gran') else ''}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f['foto']});--pos:{f.get('pos', '50% 50%')}"><img src="img/historia/{f['foto']}" alt="{f.get('texto', '')}">'''
-                     f'''<figcaption><b>{f.get('texto', '')}</b>{('<span>' + f['logro'] + '</span>') if f.get('logro') else ''}</figcaption></figure>'''
-                     for t0, d, f in pasos)
+    def _fig(t0, d, f):
+        edad = f'<em class="mb-edad"><i>{f["edad"]}</i><u>años</u></em>' if f.get('edad') else ''
+        cap = f'<figcaption><b>{f.get("texto", "")}</b>{("<span>" + f["logro"] + "</span>") if f.get("logro") else ""}</figcaption>'
+        if f.get('tarjeta'):
+            return f'<figure class="mb-foto tarjeta" style="--t:{t0:.2f}s;--d:{d:.2f}s">{edad}{cap}</figure>'
+        return (f'<figure class="mb-foto{" vert" if _vert(f) else ""}{" gran" if f.get("gran") else ""}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f["foto"]});--pos:{f.get("pos", "50% 50%")}">'
+                f'<img src="img/historia/{f["foto"]}" alt="{f.get("texto", "")}">{edad}{cap}</figure>')
+    cuerpo = ''.join(_fig(t0, d, f) for t0, d, f in pasos)
+    # línea de tiempo: un punto por edad distinta; se enciende cuando llega su primera foto y ya no se apaga
+    hitos = []
+    for t0, d, f in pasos:
+        if f.get('edad') and f['edad'] not in [h[0] for h in hitos]:
+            hitos.append((f['edad'], t0, f.get('texto', '')))
+    linea = ('<div class="mb-linea" aria-hidden="true">' + ''.join(
+        f'<span style="--t:{t0:.2f}s"><i></i><b>{e}</b><u>{n}</u></span>' for e, t0, n in hitos) + '</div>')
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
-        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.6) * 1000)}" data-fin=".mb-fin">
+        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.8) * 1000)}" data-fin=".mb-fin">
   <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
   {cuerpo}
-  <p class="mb-fin" style="--t:{t:.2f}s">Y siempre, el bajo.</p>
+  {linea}
+  <p class="mb-fin" style="--t:{t:.2f}s"><small>Hoy, a los 41</small>Y siempre, la música.</p>
 </section>''')
 else:
     S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
