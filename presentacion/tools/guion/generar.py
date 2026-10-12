@@ -1383,9 +1383,8 @@ def _aplicar_guion(html):
             v = [l['voz'] for l in L]
             cuerpo = re.sub(r'<p class="sub">.*?</p>',
                 '<p class="sub" data-who="diego" data-say="' + esc(v[0]) + '">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>\n'
-                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación no es solo para Brais: si algún profesor quiere unirse a Master of Prompts, está invitado.</p>\n'
-                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[2]) + '">¿Que no tocáis ningún instrumento? Os pongo al bajo. Total, no lo oye nadie.</p>', cuerpo, 1, flags=re.S)
-            # Foto final con Brais (si existe img/gracias-mop.jpg): sustituye a la pantalla de la app. Es un montaje con IA y así consta en pantalla y en los créditos
+                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.</p>', cuerpo, 1, flags=re.S)
+            cuerpo = re.sub(r'<div class="sign-msg">', '<div class="sign-msg" data-who="diego" data-say="' + esc(v[2]) + '">', cuerpo, 1)
             if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'gracias-mop.jpg')):
                 _i = cuerpo.find('<div class="art">')
                 if _i >= 0:  # se quita entero el bloque de la pantalla de la app (div anidados: se cuentan las aperturas y los cierres)
@@ -1395,7 +1394,7 @@ def _aplicar_guion(html):
                         if _n == 0:
                             _j = _i + _m.end(); _j = cuerpo.index('>', _j) + 1; break
                     cuerpo = cuerpo[:_i] + '<div class="art foto"><img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts"><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
-            cuerpo = re.sub(r'<div class="sign-msg">', '<div class="sign-msg" data-who="diego" data-say="' + esc(v[3]) + '">', cuerpo, 1)
+
         else:
             avisos.append(f'{t}: estructura no soportada ({len(els)}→{len(L)})')
         html = html[:ini] + cuerpo + html[fin:]
