@@ -744,17 +744,17 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    console.error(`[Stripe Webhook] Signature verification failed: ${err.message}`);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    console.error("[Stripe Webhook] Signature verification failed: %s", err.message);
+    return res.status(400).type("text/plain").send(`Webhook Error: ${err.message}`);
   }
 
   // Idempotency check: Ignore duplicate events
   if (event.id && (await isEventProcessed(event.id))) {
-    console.log(`[Stripe Webhook] Event ${event.id} already processed. Skipping.`);
+    console.log("[Stripe Webhook] Event %s already processed. Skipping.", event.id);
     return res.json({ received: true, idempotent: true });
   }
 
-  console.log(`[Stripe Webhook] Processing event ${event.type} (${event.id})`);
+  console.log("[Stripe Webhook] Processing event %s (%s)", event.type, event.id);
 
   try {
     switch (event.type) {
@@ -769,7 +769,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
           const amountPaidCents = session.amount_total ?? 0;
           if (donorBandId && event.id) {
             const resultado = await dbSettleAiDonation(donorBandId, amountPaidCents, event.id);
-            console.log(`[Stripe Webhook] Donación IA liquidada para la banda ${donorBandId}:`, resultado);
+            console.log("[Stripe Webhook] Donación IA liquidada para la banda %s:", donorBandId, resultado);
           } else {
             console.warn("[Stripe Webhook] Sesión de donación sin bandId en metadata; se ignora.");
           }
@@ -804,7 +804,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
         const paymentIntentId = typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
         if (paymentIntentId) {
           const n = await dbRecordDealSupportRefund(paymentIntentId, charge.amount_refunded ?? 0);
-          if (n > 0) console.log(`[Stripe Webhook] Reembolso anotado en ${n} aportación(es) de bolo (${paymentIntentId}).`);
+          if (n > 0) console.log("[Stripe Webhook] Reembolso anotado en %s aportación(es) de bolo (%s).", n, paymentIntentId);
         }
         break;
       }
@@ -865,7 +865,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
       }
 
       default:
-        console.log(`[Stripe Webhook] Unhandled event type ${event.type}`);
+        console.log("[Stripe Webhook] Unhandled event type %s", event.type);
     }
 
     // Persist event in DB for permanent idempotency
@@ -875,7 +875,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
     }
   } catch (procErrCapturado) {
     const procErr = comoErrorCapturado(procErrCapturado);
-    console.error(`[Stripe Webhook] Error processing event ${event.type} (${event.id}):`, procErr);
+    console.error("[Stripe Webhook] Error processing event %s (%s):", event.type, event.id, procErr);
     // Stripe solo reintenta si no recibe un 2xx. Antes se respondía 200 siempre, así que un cobro
     // cuyo registro fallaba (BD caída, columna que falta...) se perdía sin dejar rastro.
     if (event.id) liberarEvento(event.id);

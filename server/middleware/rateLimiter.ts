@@ -111,6 +111,30 @@ export const publicoRateLimiter = createRateLimiter({
   mensaje: "Demasiadas peticiones seguidas. Espera un momento."
 });
 
+/** Flujo OAuth de Gmail (autorizar, callback, estado, desconectar): llegan a Google/BD y el callback es público. */
+export const gmailOAuthRateLimiter = createRateLimiter({
+  nombre: "gmail-oauth",
+  windowMs: 60 * 1000,
+  maxRequests: 30,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
+/** Webhooks de proveedores (firmados): tope holgado por IP, solo corta ráfagas anómalas antes de verificar la firma. */
+export const webhookRateLimiter = createRateLimiter({
+  nombre: "webhook",
+  windowMs: 60 * 1000,
+  maxRequests: 300,
+  mensaje: "Demasiadas peticiones seguidas."
+});
+
+/** Fallback de la SPA (sirve index.html desde disco): holgado para navegación normal, frena el barrido masivo. */
+export const paginaRateLimiter = createRateLimiter({
+  nombre: "pagina-spa",
+  windowMs: 60 * 1000,
+  maxRequests: 240,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
 /** Reenviar el acuerdo por email desde el enlace público: es envío de correo con la marca de la plataforma. */
 export const reenvioEmailRateLimiter = createRateLimiter({
   nombre: "reenvio-email",

@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import { descargarBufferSeguro, fetchUrlExternaSegura } from '../../utils/ssrfGuard.js';
 import { uploadBufferToSupabase, rutaAlmacenamientoStem } from '../../utils/storage.js';
+import { resolverDentroDe } from '../../utils/rutaContenida.js';
 import { esHostDeAlmacenamientoConfiable } from './formatoStems.js';
 import { transcodeBufferToMp3 } from './cacheStems.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
@@ -22,7 +23,7 @@ export async function ensurePublicAudioUrl(
   // Fast-path: Si audioUrl ya es una URL pública HTTPS directa en un CDN o Storage público
   if (esHostDeAlmacenamientoConfiable(audioUrl)) {
     console.log(
-      `[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN: ${audioUrl.substring(0, 60)}...`
+      "[Demucs Neural] URL de entrada ya es HTTPS pública directa en Supabase/CDN: %s...", audioUrl.substring(0, 60)
     );
     return audioUrl;
   }
@@ -51,28 +52,18 @@ export async function ensurePublicAudioUrl(
       );
     }
 
+    // Todo candidato debe quedar dentro de public/: audioUrl viene del cliente y un `..` (o un
+    // nombre como "..") no puede sacar la lectura de ahí.
+    const publicDir = path.join(process.cwd(), 'public');
     const candidatePaths = [
-      subRel ? path.join(process.cwd(), 'public', 'uploads', subRel) : '',
-      path.join(
-        process.cwd(),
-        'public',
-        urlWithoutQuery.startsWith('/')
-          ? urlWithoutQuery
-          : `/${urlWithoutQuery}`
-      ),
-      path.join(process.cwd(), 'public', 'uploads', filenameOnly),
-      path.join(
-        process.cwd(),
-        'public',
-        'uploads',
-        'stems',
-        'inputs',
-        filenameOnly
-      ),
-      path.join(process.cwd(), 'public', 'uploads', 'stems', filenameOnly),
-      path.join(process.cwd(), 'public', 'audio', filenameOnly),
-      path.join(process.cwd(), 'public', 'transposed', filenameOnly),
-    ].filter((p) => p && p.length > 0);
+      subRel ? resolverDentroDe(publicDir, 'uploads', subRel) : null,
+      resolverDentroDe(publicDir, urlWithoutQuery),
+      resolverDentroDe(publicDir, 'uploads', filenameOnly),
+      resolverDentroDe(publicDir, 'uploads', 'stems', 'inputs', filenameOnly),
+      resolverDentroDe(publicDir, 'uploads', 'stems', filenameOnly),
+      resolverDentroDe(publicDir, 'audio', filenameOnly),
+      resolverDentroDe(publicDir, 'transposed', filenameOnly),
+    ].filter((p): p is string => p !== null);
 
     const localPath = candidatePaths.find((p) => fs.existsSync(p));
     if (localPath) {
@@ -80,7 +71,7 @@ export async function ensurePublicAudioUrl(
         buffer = fs.readFileSync(localPath);
         ext = path.extname(localPath).replace('.', '') || 'mp3';
         console.log(
-          `[Demucs Neural] Archivo de entrada encontrado en disco local (${localPath}) - ${buffer.length} bytes`
+          "[Demucs Neural] Archivo de entrada encontrado en disco local (%s) - %s bytes", localPath, buffer.length
         );
       } catch (e) {
         console.warn(
@@ -129,7 +120,7 @@ export async function ensurePublicAudioUrl(
     );
     if (uploadedPublicUrl) {
       console.log(
-        `[Demucs Neural] Audio de entrada subido a Supabase Storage para Replicate: ${uploadedPublicUrl}`
+        "[Demucs Neural] Audio de entrada subido a Supabase Storage para Replicate: %s", uploadedPublicUrl
       );
       return uploadedPublicUrl;
     }
@@ -138,7 +129,7 @@ export async function ensurePublicAudioUrl(
     // Replicate acepta Data URIs base64 directamente en el parámetro audio
     if (buffer.length <= 12 * 1024 * 1024) {
       console.log(
-        `[Demucs Neural] Utilizando Data URI base64 directo para Replicate (${(buffer.length / 1024 / 1024).toFixed(2)} MB)...`
+        "[Demucs Neural] Utilizando Data URI base64 directo para Replicate (%s MB)...", (buffer.length / 1024 / 1024).toFixed(2)
       );
       return `data:${mimeType};base64,${buffer.toString('base64')}`;
     }
@@ -247,7 +238,7 @@ export async function ensureCompressedAudioForReplicate(
     );
     if (uploadedUrl) {
       console.log(
-        `[Replicate Input Compression] ${(original.length / 1024 / 1024).toFixed(1)}MB -> ${(compressed.length / 1024 / 1024).toFixed(1)}MB antes de enviar a Replicate (${storageSubPath}).`
+        "[Replicate Input Compression] %sMB -> %sMB antes de enviar a Replicate (%s).", (original.length / 1024 / 1024).toFixed(1), (compressed.length / 1024 / 1024).toFixed(1), storageSubPath
       );
       return uploadedUrl;
     }

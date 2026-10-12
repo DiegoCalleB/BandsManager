@@ -118,7 +118,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     normalizedAgentName.charAt(0).toUpperCase() + normalizedAgentName.slice(1);
 
   console.log(
-    `[Agente API] Solicitud para ejecutar agente: ${agentName} (normalizado a: ${normalizedAgentName}) con params:`,
+    "[Agente API] Solicitud para ejecutar agente: %s (normalizado a: %s) con params:", agentName, normalizedAgentName,
     params
   );
   const startTime = Date.now();
@@ -458,7 +458,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
               : `${tipo} recintos salas de conciertos música en vivo en ${targetLoc}`;
 
           console.log(
-            `[Agente Scout] Motor 1 (Google Places API): Consultando "${placesQuery}"...`
+            "[Agente Scout] Motor 1 (Google Places API): Consultando \"%s\"...", placesQuery
           );
           const placesRes = await fetch(
             'https://places.googleapis.com/v1/places:searchText',
@@ -550,7 +550,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       ) {
         try {
           console.log(
-            `[Agente Scout] Motor Serper Live Places: Descubriendo recintos en "${targetLoc}" (Tipo: ${tipo})...`
+            "[Agente Scout] Motor Serper Live Places: Descubriendo recintos en \"%s\" (Tipo: %s)...", targetLoc, tipo
           );
           const serperResults = await searchVenuesWithSerper({
             city: targetLoc,
@@ -596,7 +596,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
       if (ai) {
         try {
           console.log(
-            `[Agente Scout] Motor 2 (Gemini Live Search Grounding): Buscando en web en vivo para "${targetLoc}" (Tipo: ${tipo})...`
+            "[Agente Scout] Motor 2 (Gemini Live Search Grounding): Buscando en web en vivo para \"%s\" (Tipo: %s)...", targetLoc, tipo
           );
           const prompt = `Actúa como el Agente Scout Descubridor de recintos y entidades musicales.
 Busca y extrae entre ${Math.max(10, limit * 2)} entidades REALES, ACTIVAS Y OPERATIVAS en la ciudad/región: "${targetLoc}". Tipo objetivo: "${tipo}".
@@ -701,7 +701,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         // Comprobar si ya existe en Supabase
         if (existingNames.has(normName)) {
           console.log(
-            `[Agente Scout] Omitiendo lead ya existente en CRM: "${cand.nombre_sala}"`
+            "[Agente Scout] Omitiendo lead ya existente en CRM: \"%s\"", cand.nombre_sala
           );
           continue;
         }
@@ -713,7 +713,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         );
         if (isDeleted) {
           console.log(
-            `[Agente Scout] Omitiendo lead previamente descartado/eliminado por el usuario: "${cand.nombre_sala}"`
+            "[Agente Scout] Omitiendo lead previamente descartado/eliminado por el usuario: \"%s\"", cand.nombre_sala
           );
           continue;
         }
@@ -723,7 +723,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
             const domain = new URL(cand.website).hostname.replace(/^www\./, '');
             if (domain && existingWebsites.has(domain)) {
               console.log(
-                `[Agente Scout] Omitiendo lead con dominio web ya registrado: "${cand.website}"`
+                "[Agente Scout] Omitiendo lead con dominio web ya registrado: \"%s\"", cand.website
               );
               continue;
             }
@@ -815,14 +815,14 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
 
         // Enriquecer automáticamente con todas las herramientas disponibles (Google Places, Serper, Web Scraper, Gemini AI Fallback, Pitch) antes de guardar
         console.log(
-          `[Agente Scout] Ejecutando enriquecimiento completo pre-inserción para: '${initialLead.nombre_sala}'...`
+          "[Agente Scout] Ejecutando enriquecimiento completo pre-inserción para: '%s'...", initialLead.nombre_sala
         );
         let fullyEnriched = initialLead;
         try {
           fullyEnriched = await autoEnrichLead(initialLead, targetBandId);
         } catch (enrichErr) {
           console.error(
-            `[Agente Scout] Error en autoEnrichLead pre-inserción para ${initialLead.nombre_sala}:`,
+            "[Agente Scout] Error en autoEnrichLead pre-inserción para %s:", initialLead.nombre_sala,
             enrichErr
           );
         }
@@ -1328,7 +1328,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
           };
         } catch (err) {
           console.warn(
-            `[agent-funnel] No se pudieron leer los datos de ${bandId}, se excluye del cómputo:`,
+            "[agent-funnel] No se pudieron leer los datos de %s, se excluye del cómputo:", bandId,
             err
           );
           return { bandId, emailConectado: false, leadsEstados: [] };

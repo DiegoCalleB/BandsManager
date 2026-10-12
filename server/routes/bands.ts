@@ -2,6 +2,7 @@
 // `getTargetBandId` / `puedeEscribirEnBanda` (AGENTS.md §2.1).
 
 import express from "express";
+import { hostEsDeDominio } from '../utils/hostUrl.js';
 import { requireAuth } from "../state.js";
 import { loadState, saveState } from "../state.js";
 import { getSupabase } from "../db/core.js";
@@ -74,9 +75,11 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], _ema
   return null;
 }
 
+const HOSTS_LOGO_NO_FIABLES = ['googleusercontent.com', 'clearbit.com'];
+
 function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, instagram?: string): string {
   let cleaned = (imgUrl || '').trim();
-  if (cleaned.includes('googleusercontent.com') || cleaned.includes('clearbit.com')) cleaned = '';
+  if (hostEsDeDominio(cleaned, HOSTS_LOGO_NO_FIABLES)) cleaned = '';
   if (cleaned && (/\.(jpg|jpeg|png|webp|svg)($|\?)/i.test(cleaned) || cleaned.includes('icon.horse'))) return cleaned;
   if (instagram) {
     const handle = instagram.replace(/.*instagram\.com\//, '').replace(/^@/, '').split('/')[0].split('?')[0].trim();
@@ -863,7 +866,7 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
             }
           } catch (errCapturado) {
             const err = comoErrorCapturado(errCapturado);
-            console.error(`Error enviando email de recordatorio a ${targetEmail}:`, err?.message || err);
+            console.error("Error enviando email de recordatorio a %s:", targetEmail, err?.message || err);
             emailError = err?.message || "Error al despachar el correo.";
           }
         }

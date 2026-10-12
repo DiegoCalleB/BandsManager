@@ -108,7 +108,7 @@ export async function analizarYGuardarDinamicaCancion(
     },
   );
   console.log(
-    `[Repertorio] Análisis de audio de ${songId}: dinámica=${audioAnalizable ? "ok" : "no analizable"} bpm=${bpmDetectado ?? "-"} tonalidad=${tonalidadDetectada?.tonalidad ?? "-"} densidadOnsets=${onsetDensity?.toFixed(2) ?? "-"}`,
+    "[Repertorio] Análisis de audio de %s: dinámica=%s bpm=%s tonalidad=%s densidadOnsets=%s", songId, audioAnalizable ? "ok" : "no analizable", bpmDetectado ?? "-", tonalidadDetectada?.tonalidad ?? "-", onsetDensity?.toFixed(2) ?? "-",
   );
 
   // El filtro de band_id admite las mismas variantes de formato que dbGetSongs (candidateIds):
@@ -356,7 +356,7 @@ async function recalibrarEnergiasDelRepertorio(bandId: string): Promise<void> {
       .eq("id", song.id);
     if (updateError) {
       console.error(
-        `[Repertorio] Error updating energy for song ${song.id}:`,
+        "[Repertorio] Error updating energy for song %s:", song.id,
         updateError.message,
       );
     }
@@ -371,7 +371,7 @@ function dispararAnalisisDinamicaEnSegundoPlano(
 ): void {
   analizarYGuardarDinamicaCancion(songId, audioUrl, bandId).catch((err) => {
     console.error(
-      `[Repertorio] No se pudo analizar la dinámica interna de la canción ${songId}:`,
+      "[Repertorio] No se pudo analizar la dinámica interna de la canción %s:", songId,
       err?.message || err,
     );
   });
@@ -429,7 +429,7 @@ function encontrarMejorStemNuevoParaTonalidad(
     }
   }
   console.log(
-    `[Repertorio] Chequeo stem→tonalidad: pistas vistas=[${instrumentosVistos.join(", ")}] → elegido=${elegido ? elegido.slice(0, 60) + "…" : "ninguno"}`,
+    "[Repertorio] Chequeo stem→tonalidad: pistas vistas=[%s] → elegido=%s", instrumentosVistos.join(", "), elegido ? elegido.slice(0, 60) + "…" : "ninguno",
   );
   return elegido;
 }
@@ -446,13 +446,13 @@ export async function detectarYGuardarTonalidadDesdeStem(
   bandId: string,
 ): Promise<{ tonalidad: string } | null> {
   console.log(
-    `[Repertorio] Redetectando tonalidad desde stem para ${songId}: ${stemAudioUrl.slice(0, 80)}…`,
+    "[Repertorio] Redetectando tonalidad desde stem para %s: %s…", songId, stemAudioUrl.slice(0, 80),
   );
   const resultado = await detectarTonalidadDesdeAudio(stemAudioUrl, {
     timeoutMs: 90_000,
   });
   console.log(
-    `[Repertorio] Resultado tonalidad desde stem para ${songId}:`,
+    "[Repertorio] Resultado tonalidad desde stem para %s:", songId,
     resultado,
   );
   if (!resultado) return null;
@@ -489,7 +489,7 @@ function dispararDeteccionTonalidadDesdeStemEnSegundoPlano(
   detectarYGuardarTonalidadDesdeStem(songId, stemAudioUrl, bandId).catch(
     (err) => {
       console.error(
-        `[Repertorio] No se pudo redetectar la tonalidad desde el stem de la canción ${songId}:`,
+        "[Repertorio] No se pudo redetectar la tonalidad desde el stem de la canción %s:", songId,
         err?.message || err,
       );
     },
