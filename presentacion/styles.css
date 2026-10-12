@@ -2092,7 +2092,7 @@ body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both
 
 /* Actores en movimiento (ACTORES.md): el clip tapa el fondo fijo y conserva el degradado para que se lean los diálogos */
 .slide.scene .scene-bg .actor-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.slide.scene .scene-bg:has(.actor-vid) { background: #05070d; isolation: isolate; }
-.slide.scene .scene-bg .actor-vid + .actor-velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,7,13,.4), rgba(5,7,13,.9)); }
+.slide.scene .scene-bg:has(.actor-vid) { background: #05070d; isolation: isolate; opacity: 1 !important; }
+.slide.scene .scene-bg .actor-vid + .actor-velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,7,13,.5) 0%, rgba(5,7,13,.12) 35%, rgba(5,7,13,.25) 60%, rgba(5,7,13,.85) 100%); }
 .cast figure .actor-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .cast figure figcaption { z-index: 1; }

@@ -1252,13 +1252,14 @@ direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
 PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
-          'Prólogo · Sábado, 11:00 en el local': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
+          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
           'Otro jueves, 23:47': 'otro-jueves'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
             + (f' poster="video/actores/{k}.jpg"' if os.path.exists(os.path.join(_ACT, k + '.jpg')) else '')
-            + f'><source src="video/actores/{k}.mp4" type="video/mp4"></video>')
+            + '>' + (f'<source src="video/actores/{k}.webm" type="video/webm">' if os.path.exists(os.path.join(_ACT, k + '.webm')) else '')
+            + f'<source src="video/actores/{k}.mp4" type="video/mp4"></video>')
 for _i, _x in enumerate(S):
     _t = re.search(r'data-title="([^"]+)"', _x)
     _k = _t and PLANOS.get(_t.group(1))
