@@ -2043,16 +2043,28 @@ body.pelicula:not(.scroll) .slide.active .prisma { display: grid; animation: prf
 .pr-svg { width: 100%; height: 100%; }
 .pr-beam { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 26px rgba(255,255,255,.7)); stroke-dasharray: 1; stroke-dashoffset: 1; }
 .pr-prisma { fill: none; stroke: #fff; stroke-width: 3; stroke-linejoin: round; opacity: .9; filter: drop-shadow(0 0 14px rgba(190,205,255,.8)); }
-.pr-r { fill: none; stroke: var(--c); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 8px var(--c)); }
+.pr-b { stroke: var(--c); stroke-width: 3.6; stroke-linecap: round; filter: drop-shadow(0 0 5px var(--c)); transform-box: fill-box; transform-origin: center; opacity: 0; }
 .pr-l { fill: var(--c); font: 700 22px/1 'Helvetica Neue', Arial, sans-serif; opacity: 0; letter-spacing: .04em; text-shadow: 0 0 10px #000; }
 body.pelicula:not(.scroll) .slide.active .pr-beam { animation: prbeam 1.3s ease-out .9s both; }
 body.pelicula:not(.scroll) .slide.active .pr-prisma-in { animation: prglow 1.8s ease-in-out 2s both; }
-body.pelicula:not(.scroll) .slide.active .pr-r { animation: prray 1.4s ease-out calc(2.4s + var(--k) * .22s) both, prflow 2.2s linear calc(3.8s + var(--k) * .22s) infinite; stroke-dasharray: .035 .02; }
-body.pelicula:not(.scroll) .slide.active .pr-l { animation: prlab .6s ease-out calc(3.6s + var(--k) * .22s) both; }
+body.pelicula:not(.scroll) .slide.active .pr-b { animation: prin .25s ease-out calc(2.4s + var(--k) * .2s + var(--d) * .006s) both, prlate var(--p) ease-in-out calc(2.7s + var(--k) * .2s + var(--d) * .006s) infinite alternate; }
+body.pelicula:not(.scroll) .slide.active .pr-l { animation: prlab .6s ease-out calc(3.6s + var(--k) * .2s) both; }
 @keyframes prfade { 0% { opacity: 0 } 6% { opacity: 1 } 88% { opacity: 1 } 100% { opacity: 0 } }
 @keyframes prbeam { from { stroke-dashoffset: 1 } to { stroke-dashoffset: 0 } }
 @keyframes prglow { 0%, 100% { opacity: 0; } 40%, 70% { opacity: 1; } }
-@keyframes prray { from { stroke-dasharray: 0 1 } to { stroke-dasharray: .035 .02 } }
-@keyframes prflow { to { stroke-dashoffset: -.11 } }
+@keyframes prin { from { opacity: 0 } to { opacity: 1 } }
+@keyframes prlate { from { transform: scaleY(var(--s)) } to { transform: scaleY(1.25) } }
 @keyframes prlab { from { opacity: 0; transform: translateX(14px) } to { opacity: 1; transform: none } }
 @media (prefers-reduced-motion: reduce) { .prisma { display: none !important; } }
+
+/* Dolor → solución: mientras Iago enseña la función, abajo a la izquierda sale lo que dolía y lo que hay ahora */
+.dolor { position: absolute; left: 150px; bottom: 36px; z-index: 6; display: none; flex-direction: column; gap: 10px; pointer-events: none; }
+body.pelicula:not(.scroll) .slide.active .dolor { display: flex; }
+.dolor p { margin: 0; display: flex; align-items: center; gap: 14px; padding: 12px 22px 12px 14px; background: rgba(8,8,10,.86); border-radius: 8px; font: 600 26px/1.15 'Helvetica Neue', Arial, sans-serif; color: #fff; opacity: 0; box-shadow: 0 6px 24px rgba(0,0,0,.5); }
+.dolor i { font: 700 15px/1 'Helvetica Neue', Arial, sans-serif; font-style: normal; letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 4px; }
+.dl-a { border-left: 5px solid #ff5d6c; } .dl-a i { background: rgba(255,93,108,.2); color: #ff8791; }
+.dl-b { border-left: 5px solid #46d37b; } .dl-b i { background: rgba(70,211,123,.2); color: #7fe5a4; }
+body.pelicula:not(.scroll) .slide.active .dl-a { animation: dolor 8.4s ease both 1.2s; }
+body.pelicula:not(.scroll) .slide.active .dl-b { animation: dolor 5.8s ease both 3.8s; }
+@keyframes dolor { 0% { opacity: 0; transform: translateX(-24px) } 6% { opacity: 1; transform: none } 86% { opacity: 1; transform: none } 100% { opacity: 0; transform: translateX(-12px) } }
+@media (prefers-reduced-motion: reduce) { .dolor { display: none !important; } }

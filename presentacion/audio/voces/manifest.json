@@ -139,15 +139,6 @@
   "v": "9cdaef6c39cf",
   "who": "bateria"
  },
- "1126b959": {
-  "d": 5.14,
-  "e": "0136567688757515531033100000035999323973563100011000025521069218572112479953110000238536689963253554431101439649714535211111100",
-  "f": "1126b959.mp3",
-  "h": "a44439fc",
-  "say": "Mañana a las once. Traed birras. Fresquitas, Brais, no como la última vez, que vaya tela.",
-  "v": "52b1e2534b3f",
-  "who": "bajo"
- },
  "1172b07c": {
   "d": 7.44,
   "e": "0584328989743575653246743321000000000000563284564221136412555665531000000000000002731169943221013456797434422114554213210025411101100000000000000000009963221100019999975213443421100000",
@@ -371,15 +362,6 @@
   "v": "c5ebeb5e2e0f",
   "who": "voz"
  },
- "33219f95": {
-  "d": 3.34,
-  "e": "001597898964200000489309757851111267899989821155001221100000000000067521297211210",
-  "f": "33219f95.mp3",
-  "h": "3171bc49",
-  "say": "Sin mí, no tenéis ni una fecha. Pensadlo.",
-  "v": "91e0cc941cc2",
-  "who": "sello"
- },
  "37dc866d": {
   "d": 4.13,
   "e": "01443100000048596153514442100000000000493299752241167799962110000000000000003556564321696210693110000",
@@ -550,26 +532,6 @@
   "say": "[gasps] ¡Ai, mi madriña! ¡Pero si no le falta de nada!",
   "v": "9269f538c50d",
   "who": "bateria"
- },
- "4b49374c": {
-  "d": 4.39,
-  "e": "048589990186431853026513223453751262462882067210353200287355213431046444215133221013221000002654999877466611",
-  "f": "4b49374c.mp3",
-  "h": "671b20cd",
-  "oido": "Seguro que ha encontrado una base de datos con todas las alas de Galicia. Lo veo venir.",
-  "qa": 0.94,
-  "say": "Seguro que ha encontrado una base de datos con todas las salas de Galicia. Lo veo venir.",
-  "v": "b0f37a7e8bd0",
-  "who": "guitarra"
- },
- "4cbeb6f8": {
-  "d": 3.0,
-  "e": "1293965976895436752104996877856433211125653134311385412431136441242111111",
-  "f": "4cbeb6f8.mp3",
-  "h": "e77d8406",
-  "say": "Eso también, Brais. Ya llegaremos. Tranqui, tronco, tranqui.",
-  "v": "48383592275a",
-  "who": "bajo"
  },
  "4e4c7ca6": {
   "d": 2.83,
@@ -775,17 +737,6 @@
   "say": "[softly] Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
   "v": "752e6374551f",
   "who": "diego"
- },
- "5dfb6df2": {
-  "d": 7.01,
-  "e": "09996665310000001299148778543210000000000199897532000000000000000486777697300983101531329754210000000885166117458693118311961265654561129979756557422000000011677433244210000",
-  "f": "5dfb6df2.mp3",
-  "h": "0c7b1a94",
-  "oido": "¿Cómo? ¿De qué va? ¿Qué es? No me harás esto, Che, que el que genera expectativa en esta banda soy yo.",
-  "qa": 0.95,
-  "say": "¿Cómo? ¿De qué va? ¿Qué es? No me hagás esto, che, que el que genera expectativa en esta banda soy yo.",
-  "v": "647249d38c76",
-  "who": "voz"
  },
  "5e6a90bd": {
   "d": 2.18,
@@ -1044,15 +995,6 @@
   "v": "f3cdbeac3110",
   "who": "bajo"
  },
- "7ae9636f": {
-  "d": 8.83,
-  "e": "114872114534896411111111111101110146259821976731652158656652115453124865311111111111142698731972187211376841420541134211111110144129983187237798741189321010266795897113311231241799754139873142111114652142112753311001101",
-  "f": "7ae9636f.mp3",
-  "h": "f02dce68",
-  "say": "Casi, Brais. Aquí están los ensayos y los bolos. Y cada fecha tiene su ficha: el tiempo que va a hacer, y el aviso de si cae en puente o en festivo.",
-  "v": "7d651dee01ea",
-  "who": "bajo"
- },
  "7afde513": {
   "d": 3.34,
   "e": "022345752100195200000000000002234367611666761281126775399794108644457956954543110",
@@ -1117,15 +1059,6 @@
   "say": "[softly] Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.",
   "v": "4175d9989d00",
   "who": "bajo"
- },
- "7ee99ac6": {
-  "d": 12.62,
-  "e": "0541792895994984631853396003322100016686574121133110000001654333101662001211000002643223220055310121100000355679937741000353135432333015530012110000000000000000089931992245543100001883117866311898104310035567643211154156551288995564221100000000000000000006858517824543332100000000002730069568964781385349997431000",
-  "f": "7ee99ac6.mp3",
-  "h": "275dee13",
-  "say": "Así llevábamos el buquin: en un Excel. Sin respuesta. Sin respuesta. Leído, y sin respuesta. Y el setlist: versión siete, final, definitiva dos. ¿Cuál es la buena? ¡Esto no es rocanrol!",
-  "v": "3d9db4eafbd4",
-  "who": "guitarra"
  },
  "80a1e97c": {
   "d": 4.63,
@@ -1217,15 +1150,6 @@
   "h": "c0a82a5c",
   "say": "Mira el calendario, Brais. Mira el calendario.",
   "v": "9014a16406de",
-  "who": "bajo"
- },
- "8591df66": {
-  "d": 4.66,
-  "e": "113569947988985885769721111124574146565544225444457641243123333433322223189579614556579456459455561373113111111111",
-  "f": "8591df66.mp3",
-  "h": "560a0729",
-  "say": "Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa.",
-  "v": "dc86c4e22ad0",
   "who": "bajo"
  },
  "85bb20f9": {
@@ -1694,17 +1618,6 @@
   "v": "64ae20a5ed62",
   "who": "voz"
  },
- "c031420a": {
-  "d": 2.95,
-  "e": "056631296446411599973398499541275431112213220000033014211037521110002100",
-  "f": "c031420a.mp3",
-  "h": "81abe277",
-  "oido": "Pues yo dije Google Calendare, que conste en acta.",
-  "qa": 0.74,
-  "say": "[mischievously] Pues yo dije Gúgel Calendar, eh. Que conste en acta.",
-  "v": "b68480464c98",
-  "who": "bateria"
- },
  "c1e2e030": {
   "d": 1.9,
   "e": "0645569986987310000000000000007775203516884110",
@@ -1782,17 +1695,6 @@
   "say": "[calmly] Herdeiros, os escribí hace tres meses, y nadie contestó. Os ofrezco contrato. Yo os llevo los bolos, me quedo el treinta por ciento de cada uno, y el repertorio, naturalmente, lo decido yo.",
   "v": "5b20748b73dd",
   "who": "sello"
- },
- "cda5d1b3": {
-  "d": 3.53,
-  "e": "03521099138925523671974117875422274211238495122008420099411129647555411387255633454200",
-  "f": "cda5d1b3.mp3",
-  "h": "374a509c",
-  "oido": "Esto es lo de Google Calendar. Mira, acerté, soy un visionario.",
-  "qa": 0.91,
-  "say": "[excited] ¡Esto es lo de Gúgel Calendar! ¡Mira, acerté! ¡Soy un visionario!",
-  "v": "4099b519c4b2",
-  "who": "bateria"
  },
  "cdd74ca5": {
   "d": 4.56,
@@ -1918,15 +1820,6 @@
   "say": "Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia.",
   "v": "731a1cd0e868",
   "who": "bajo"
- },
- "e5e98d9c": {
-  "d": 4.75,
-  "e": "039358213946641000019989662194153116654643111000000135520022100233211475576520000000257777479852559875443101486632100",
-  "f": "e5e98d9c.mp3",
-  "h": "e11e7a86",
-  "say": "[shouts] ¿Que decides tú lo que tocamos? ¿Nuestras canciones? ¡Ni de broma, che!",
-  "v": "9fda27d6cc0a",
-  "who": "voz"
  },
  "e653a37f": {
   "d": 3.29,
@@ -2090,17 +1983,6 @@
   "say": "[worried] Y ojo: mañana a las dos cierran el cartel del Resurrection Fest. Si no mandamos nada, no tocamos.",
   "v": "382538576f79",
   "who": "guitarra"
- },
- "f98c8caa": {
-  "d": 3.67,
-  "e": "068989942172346310574200001116952563202774411111100000000000000217212000359937821478632100",
-  "f": "f98c8caa.mp3",
-  "h": "656f300a",
-  "oido": "o ha descubierto Google Calendar. Rock and Roll.",
-  "qa": 0.57,
-  "say": "O ha descubierto Gúgel Calendar. [laughs] ¡Rocanrol!",
-  "v": "c199ae459ee7",
-  "who": "bateria"
  },
  "fa4b3302": {
   "d": 4.87,
