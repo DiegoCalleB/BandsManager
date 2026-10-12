@@ -1191,6 +1191,22 @@ direccion.aplicar(S)
 import json as _json
 _json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
+# Defensa técnica: el panel (tecla D) y presentacion/DEFENSA.md salen del mismo contenido (defensa.py)
+import defensa as _df, re as _re
+def _md(t): return _re.sub(r'`([^`]+)`', r'<code>\1</code>', t)
+_tabs = ''.join(f'<button type="button" data-df="{i}">{t}</button>' for i, t, _ in _df.SECCIONES) + '<button type="button" data-df="preg">Preguntas del tribunal</button>'
+_secs = ''.join(f'<section data-df="{i}" hidden>' + ''.join(f'<article><h3>{a}</h3><p>{_md(b)}</p></article>' for a, b in cs) + '</section>' for i, t, cs in _df.SECCIONES)
+_secs += '<section data-df="preg" hidden>' + ''.join(f'<details><summary>{q}</summary><p>{_md(a)}</p></details>' for q, a in _df.PREGUNTAS) + '</section>'
+_panel = f'<div id="defensa" role="dialog" aria-label="Defensa técnica" hidden><div class="df-cab"><b>Defensa técnica</b><nav class="df-tabs">{_tabs}</nav><button type="button" class="df-x">Cerrar · Esc</button></div><div class="df-cuerpo">{_secs}</div></div>'
+_md_doc = ['# Defensa técnica · guion de 5 minutos', '', 'Para después de la película. Pulsa **D** en la presentación para abrir el panel de apoyo (pestañas por tema y preguntas del tribunal). Todo sale de `AGENTS.md`; si algo cambia allí, se cambia en `tools/guion/defensa.py` y se regenera.', '', '## Guion', '']
+for _m, _t, _d, _e in _df.GUION:
+    _md_doc += [f'**{_m} · {_t}**', f'- Dices: {_d}', f'- Enseñas: {_e}', '']
+_md_doc += ['## Preguntas probables del tribunal', '']
+for _q, _a in _df.PREGUNTAS:
+    _md_doc += [f'**{_q}**', '', _a, '']
+_md_doc += ['## Una idea por tema', '', *[f'- **{t}** · {a}: {b}' for i, t, cs in _df.SECCIONES for a, b in cs[:1]], '']
+open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write('\n'.join(_md_doc))
+html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
 html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
@@ -1222,7 +1238,7 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
   <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
   <div class="nx-top"><span class="nx-logo">BANDMANAGER</span><span class="nx-orig">ORIGINALS</span></div>
   <div class="nx-hero">
-    <div class="nx-sello"><i>B</i> PELÍCULA ORIGINAL</div>
+    <div class="nx-sello"><i>N</i> PELÍCULA ORIGINAL</div>
     <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
     <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
     <p class="nx-gen">Comedia · Rock · Tecnología · Basada en hechos casi reales</p>

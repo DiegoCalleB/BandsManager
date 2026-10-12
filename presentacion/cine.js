@@ -182,7 +182,7 @@
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
-  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span><button type="button" class="nf-def" aria-label="Defensa técnica (tecla D)">Defensa técnica · D</button></div>' +
     '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Tiempo de la película" tabindex="0"><div class="nf-buffer"></div><div class="nf-lleno"></div><div class="nf-caps"></div><div class="nf-bola"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
     '<div class="nf-centro"><button class="nf-c" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button><button class="nf-c gran" data-nf="play" aria-label="Pausa"></button><button class="nf-c" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button></div>' +
     '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button>' +
@@ -354,6 +354,33 @@
     if (contT && (Date.now() - contT > 9000 || t > 30)) { cont.classList.remove('on'); posGuardada = 0; }
     if (!posGuardada || !cont.classList.contains('on')) try { if (t > 20) localStorage.setItem('bm_pos', String(Math.round(t))); } catch (e) { /* da igual */ }
   }, 1000);
+  // «Defensa técnica» (tecla D o botón de arriba): panel de apoyo con arquitectura, seguridad, agentes, calidad, negocio y preguntas del tribunal.
+  // Pausa la película al abrirse y la reanuda al cerrarse. El contenido lo genera tools/guion/defensa.py
+  var df = document.getElementById('defensa'), dfPausada = false;
+  var dfPestana = function (id) {
+    df.querySelectorAll('.df-tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.df === id); });
+    df.querySelectorAll('.df-cuerpo section').forEach(function (x) { x.hidden = x.dataset.df !== id; });
+  };
+  var dfAbrir = function () {
+    if (!df) return; var d = D();
+    dfPausada = !!(d && d.pelicula && !d.pausado); if (dfPausada) d.pausar(true);
+    df.hidden = false; document.body.classList.add('df-abierto'); dfPestana(df.dataset.ult || 'arq'); df.querySelector('.df-x').focus();
+  };
+  var dfCerrar = function () {
+    if (!df || df.hidden) return; df.dataset.ult = (df.querySelector('.df-tabs .on') || {}).dataset ? df.querySelector('.df-tabs .on').dataset.df : 'arq';
+    df.hidden = true; document.body.classList.remove('df-abierto'); var d = D(); if (dfPausada && d) d.pausar(false); dfPausada = false;
+  };
+  if (df) {
+    df.querySelectorAll('.df-tabs button').forEach(function (b) { b.addEventListener('click', function () { dfPestana(b.dataset.df); }); });
+    df.querySelector('.df-x').addEventListener('click', dfCerrar);
+    var dfBtn = nf.querySelector('.nf-def'); if (dfBtn) dfBtn.addEventListener('click', function (e) { e.stopPropagation(); dfAbrir(); });
+    addEventListener('keydown', function (e) {
+      if (e.ctrlKey || e.metaKey || e.altKey || /input|textarea/i.test((e.target || {}).tagName || '')) return;
+      if (e.key === 'Escape' && !df.hidden) { e.preventDefault(); e.stopImmediatePropagation(); dfCerrar(); }
+      else if ((e.key === 'd' || e.key === 'D') && (body.classList.contains('pelicula') || body.classList.contains('scroll') || document.getElementById('stage'))) { e.preventDefault(); e.stopImmediatePropagation(); if (df.hidden) dfAbrir(); else dfCerrar(); }
+      else if (!df.hidden && /^(ArrowLeft|ArrowRight|ArrowUp|ArrowDown| |PageUp|PageDown)$/.test(e.key) && !/button|summary/i.test((e.target || {}).tagName || '')) { e.stopImmediatePropagation(); }
+    }, true);
+  }
   // Doble toque en móvil: izquierda −15 s, derecha +15 s, como en Netflix
   var ultimoToque = { t: 0, x: 0 };
   addEventListener('touchend', function (e) {
