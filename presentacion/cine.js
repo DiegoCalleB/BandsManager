@@ -251,7 +251,7 @@
   var salto = function () {
     var d = D(); if (!d) return null; var t = titulo(d.cur);
     var idx = function (n) { return d.slides.findIndex(function (s) { return s.dataset.title === n; }); };
-    if (t === 'Tráiler' || t === 'Prólogo · La banda') { var j = idx('Prólogo · Jueves, 23:47'); return j > d.cur ? { txt: 'Saltar intro', i: j } : null; }
+    if (t === 'Título' || t === 'Prólogo · La banda') { var j = idx('Prólogo · La decisión'); return j > d.cur ? { txt: 'Saltar intro', i: j } : null; }
     if (t === 'Créditos') { var p = idx('Escena post-créditos'); return p > d.cur ? { txt: 'Saltar créditos', i: p } : null; }
     return null;
   };

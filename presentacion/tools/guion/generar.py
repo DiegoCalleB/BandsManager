@@ -33,6 +33,13 @@ REBOBINA = ['concierto-3', 'd-h-finanzas', 'd-h-dossier', 'd-h-calendario', 'd-h
 _rw = '<div class="tr-rewind" aria-hidden="true">' + ''.join(f'<img src="img/{n}.jpg" alt="" style="--k:{k}">' for k, n in enumerate(REBOBINA)) + '</div>'
 _i = trailer.index('<div class="tr-beat tr-photo" style="--t:3.6s')
 trailer = trailer[:_i] + _rw + '\n  ' + trailer[_i:]
+# Cold open: el tráiler se queda en el gancho (festival → rebobinado → «Seis meses antes») y entra directo en el chat del jueves.
+# El título (¿Qué había hecho Iago? + logo) va después de la llamada de Peláez, como en las series: gancho, título y reparto.
+_c0 = trailer.index('<div class="tr-beat tr-photo" style="--t:7.4s'); _c1 = trailer.index('<div class="tr-beat tr-collage"'); _c2 = trailer.index('<div class="tr-sound-hint">')
+titulo = (trailer[:trailer.index('>') + 1].replace('data-title="Tráiler"', 'data-title="Título" data-tr-off="9.6" data-dur="7200"') + '\n  '
+          + trailer[_c1:_c2].replace('--t:9.6s', '--t:0s').replace('--t:13.4s', '--t:3.8s').replace('data-delay="12500"', 'data-delay="2900"') + '</section>')
+trailer = (trailer[:_c0].replace('data-title="Tráiler"', 'data-title="Tráiler" data-dur="7700"', 1)
+           .replace('--t:3.6s;--d:4.0s', '--t:3.6s;--d:4.1s') + trailer[_c2:])
 cast = section('Prólogo · La banda')
 excel = section('Prólogo · La hoja de cálculo')
 room = section('Prólogo · Sábado, 11:00 en el local')
@@ -170,7 +177,6 @@ add = S.append
 
 # ───────── Tráiler y prólogo ─────────
 add(trailer + '\n')
-add(cast + '\n')
 
 add(scene('Prólogo · Jueves, 23:47', 'Prólogo · Os Herdeiros do Código', 'Un jueves cualquiera, a las 23:47.', 'img/concierto-3.jpg',
           dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', '23:47'),
@@ -186,6 +192,9 @@ add(scene('Prólogo · La llamada', 'Prólogo · Jueves · 00:09', 'Y entonces, 
               m('alvaro', 'Es que el correo… se nos pierde.', '00:10', say='[sighs] Es que el correo… se nos pierde, tío.'),
               m('iago', 'No firméis nada. Las canciones son nuestras, y los bolos los podemos llevar nosotros. El sábado os lo demuestro.', '00:12',
                 say='[firmly] No firméis nada, chavales. Las canciones son nuestras. Y los bolos, los podemos llevar nosotros. El sábado os lo demuestro.'), cls='tight'), tr='zoom'))
+
+add(titulo + '\n')
+add(cast + '\n')
 
 add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-transition="rise">
   <div class="scene-bg" style="--bg-img:url(img/concierto-2.jpg)"></div>
@@ -954,6 +963,8 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     <h3>Buyer persona del TFM</h3>
     <dl class="cr-dl">
       <dt>Brais Moure</dt><dd>Quien lo ve, lo juzga y, si le apetece, se sube a un escenario</dd>
+      <dt>Paula</dt><dd>Directora de marketing digital. Si lo ve, igual cae el máster de regalo</dd>
+      <dt>Romuald Fons</dt><dd>Que el posicionamiento de esta película lo apruebe él</dd>
     </dl>
     <h3>Buyer persona de BandManager · B2C</h3>
     <dl class="cr-dl">
@@ -1264,7 +1275,7 @@ html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
-CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'El correo llega a la sala', 'Cambio de perfil',
+CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Título', 'Prólogo · La decisión', 'La IA escribe, tú apruebas', 'El correo llega a la sala', 'Cambio de perfil',
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
          'Un sueño hecho realidad', 'El reloj', 'El reto', 'La invitación', 'Gracias', 'Créditos']
 if FOTOS:
@@ -1310,7 +1321,7 @@ html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label=
 # j: se oye antes de verse · l: la voz del plano anterior sigue sobre este · rampa: rampa de velocidad con golpe en el pulso
 # golpe: corte seco · negro: fundido a negro (saltos de tiempo, capítulos) · fundido: encadenado
 CORTES = {
-    'Prólogo · La banda': 'negro', 'Prólogo · Jueves, 23:47': 'negro', 'Prólogo · La llamada': 'golpe',
+    'Prólogo · Jueves, 23:47': 'negro', 'Prólogo · La llamada': 'golpe', 'Título': 'golpe', 'Prólogo · La banda': 'golpe',
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'El correo llega a la sala': 'golpe', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
@@ -1325,7 +1336,7 @@ CORTES = {
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
-MUSICA = {'Tráiler': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
+MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
           'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'noches', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:

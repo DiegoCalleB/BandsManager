@@ -285,8 +285,10 @@
     return scene;
   }
 
-  function playTrailer(elapsed) {
+  // El título reutiliza la partitura del tráiler desde su segundo 9,6 (data-tr-off): el cold open se queda con el principio
+  function playTrailer(elapsed, off) {
     if (!ensure()) return;
+    elapsed += off || 0;
     const bus = newScene(), t0 = ctx.currentTime + 0.04 - elapsed;
     const k = kit(ctx, bus);
     const shifted = Object.fromEntries(Object.entries(k).map(([n, fn]) => [n, (t, ...a) => fn(t0 + t, ...a)]));
@@ -304,7 +306,7 @@
 
   function play(el, elapsed) {
     if (!enabled || !ensure() || !el) return;
-    if (el.classList.contains('trailer')) { playTrailer(elapsed); return; }
+    if (el.classList.contains('trailer')) { playTrailer(elapsed, +el.dataset.trOff || 0); return; }
     const k = kit(ctx, newScene()), t0 = ctx.currentTime + 0.04;
     const at = (t) => t0 + t;
     const peli = document.body.classList.contains('pelicula');
