@@ -27,7 +27,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 * **Reglas Clave de Autenticación y Autorización:**
   * `/auth/google` verifica tokens de acceso criptográficamente con Google (`server/utils/googleVerify.ts`) contra el Client ID configurado.
   * Contraseña del administrador global proviene únicamente de `ADMIN_PASSWORD` (≥ 12 caracteres).
-  * Cuentas privilegiadas se validan por ID o email exacto (`server/utils/cuentaBrais.ts`).
+  * Ninguna banda ni cuenta es especial en el código: no hay privilegios por ID ni email (ver `docs/adr/0027-ninguna-banda-privilegiada.md`).
   * Los líderes de banda solo pueden restablecer credenciales de miembros exclusivos de su banda (`puedeRestablecerContrasenaDe`).
   * Rate limiting de IP usa la última entrada no falsificable de `X-Forwarded-For` (`ipDelCliente`).
   * Tracking y telemetría (`/api/tracking/*`, `/public/epk`) operan exclusivamente con tokens firmados (`server/utils/trackingSeguro.ts`).

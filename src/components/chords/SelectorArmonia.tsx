@@ -13,6 +13,8 @@ interface Props {
   acordesPorFuncion?: Partial<Record<Funcion, Array<{ nombre: string; grado: string }>>>;
   /** Tonalidad tal como se ve («Mi mayor»), para decir respecto a qué se colorea. */
   nombreTonalidad?: string;
+  /** Esconde los selectores tras «Vista» y deja solo el resumen y la leyenda (móvil y Atril). */
+  compacto?: boolean;
 }
 
 const Opcion = <T extends string>({ valor, actual, etiqueta, onElegir, titulo }: { valor: T; actual: T; etiqueta: string; onElegir: (v: T) => void; titulo?: string }) => (
@@ -33,12 +35,19 @@ const Opcion = <T extends string>({ valor, actual, etiqueta, onElegir, titulo }:
  * Selector de cómo se ven los acordes (nombre, grado romano o ambos; con o sin color por función) y
  * leyenda de las funciones presentes en la canción. El color nunca va solo: cada función lleva su letra.
  */
-export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, presentes, acordesPorFuncion, nombreTonalidad }) => {
+export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, presentes, acordesPorFuncion, nombreTonalidad, compacto = false }) => {
   const [explicar, setExplicar] = useState(false);
+  const [ajustes, setAjustes] = useState(!compacto);
   return (
   <div className="space-y-2" translate="no">
   <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-sans">
     {resumen && <span className="font-bold text-[var(--ink)]">{resumen}</span>}
+    {compacto && (
+      <button type="button" onClick={() => setAjustes((v) => !v)} aria-expanded={ajustes} className="text-[var(--acc-ink)] font-bold cursor-pointer hover:underline">
+        {ajustes ? 'Ocultar vista' : 'Vista'}
+      </button>
+    )}
+    {ajustes && <>
     <span className="flex items-center gap-1 bg-[var(--sunken)] rounded-[var(--r-pill)] p-0.5" role="group" aria-label="Mostrar acordes como">
       <Opcion valor="nombre" actual={estilo.mostrar} etiqueta="Acorde" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} />
       <Opcion valor="grado" actual={estilo.mostrar} etiqueta="Grado" onElegir={(mostrar) => onCambio({ ...estilo, mostrar })} titulo="Números romanos: I, IV, V, VII…" />
@@ -54,7 +63,8 @@ export const SelectorArmonia: React.FC<Props> = ({ estilo, onCambio, resumen, pr
       <Opcion valor="funcion" actual={estilo.colorear} etiqueta="Color por función" onElegir={(colorear) => onCambio({ ...estilo, colorear })} titulo="Tónica, subdominante, dominante y color modal" />
       <Opcion valor="nada" actual={estilo.colorear} etiqueta="Sin color" onElegir={(colorear) => onCambio({ ...estilo, colorear })} />
     </span>
-    {estilo.colorear === 'funcion' && presentes.length > 0 && (
+    </>}
+    {ajustes && estilo.colorear === 'funcion' && presentes.length > 0 && (
       <span className="flex flex-wrap items-center gap-1.5" aria-label="Leyenda de funciones">
         {presentes.map((f) => (
           <span key={f} title={`${NOMBRE_FUNCION[f]}: ${SENSACION_FUNCION[f]}`} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[f]}`}>

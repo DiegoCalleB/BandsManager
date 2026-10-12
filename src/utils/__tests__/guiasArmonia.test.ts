@@ -18,6 +18,14 @@ describe('guiasDelProfesor', () => {
     expect(g.find((x) => x.id === 'prestado-D')!.texto).toMatch(/otro modo/);
   });
 
+  it('la escala base lleva diagrama: 7 notas, tónica y la nota que da carácter al modo', () => {
+    const d = guiasDelProfesor(bt).find((x) => x.id === 'escala-base')!.diagrama!;
+    expect(d.raiz).toBe(4);
+    expect(d.notas).toHaveLength(7);
+    expect(d.distintiva).toBe(2); // 7.ª menor de E mixolidio = D
+    expect(guiasDelProfesor(pop).find((x) => x.id === 'escala-base')!.diagrama!.distintiva).toBeUndefined();
+  });
+
   it('los datos y las ideas están separados y las ideas llevan su etiqueta', () => {
     const g = guiasDelProfesor(pop);
     expect(g.filter((x) => x.tipo === 'idea').length).toBeGreaterThanOrEqual(2);

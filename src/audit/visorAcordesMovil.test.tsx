@@ -17,8 +17,8 @@ describe('Visor de acordes en móvil: siempre se puede llegar a la letra', () =>
     expect(visor).toMatch(/shrink-0 h-\[75vh\] md:h-auto md:flex-1 md:shrink overflow-hidden/);
   });
 
-  it('los diagramas empiezan cerrados en pantallas estrechas', () => {
-    expect(modos).toContain('anchoPantalla >= 768');
+  it('los diagramas empiezan cerrados (la barra fija ya enseña el que suena)', () => {
+    expect(modos).toContain('diagramas: false, oido: true, escucha: \'todo\'');
     expect(visor).toContain('ajustes.diagramas');
   });
 });
