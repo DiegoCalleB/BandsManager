@@ -948,6 +948,28 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Músicos en lista de espera</dt><dd>Los próximos Herdeiros</dd>
     </dl>
     </div>
+    <div class="cr-extra">
+    <h2 class="cr-seccion">Marketing digital</h2>
+    <p class="cr-nota" style="margin-top:6px">Máster de Marketing Digital con IA · The Big School</p>
+    <h3>Buyer persona del TFM</h3>
+    <dl class="cr-dl">
+      <dt>Brais Moure</dt><dd>Quien lo ve, lo juzga y, si le apetece, se sube a un escenario</dd>
+    </dl>
+    <h3>Buyer persona de BandManager · B2C</h3>
+    <dl class="cr-dl">
+      <dt>Músicos y grupos</dt><dd>Los que tocan y no tienen tiempo de gestionarlo</dd>
+      <dt>Pequeños mánagers</dt><dd>Los que llevan varias bandas a la vez</dd>
+      <dt>Profesores de música</dt><dd>Los que enseñan y organizan a sus alumnos</dd>
+      <dt>Estudiantes de música</dt><dd>Los próximos Herdeiros</dd>
+    </dl>
+    <h3>Buyer persona de BandManager · B2B</h3>
+    <dl class="cr-dl">
+      <dt>Promotoras musicales grandes</dt><dd>Los que programan los carteles</dd>
+      <dt>Productoras</dt><dd>Los que montan los conciertos</dd>
+      <dt>Sellos discográficos</dt><dd>Los que fichan</dd>
+      <dt>Ojeadores de nuevos talentos</dt><dd>Los que descubren a la próxima banda</dd>
+    </dl>
+    </div>
     <h2 class="cr-seccion">Departamentos técnicos</h2>
     <h3>Los agentes</h3>
     <dl class="cr-dl">
