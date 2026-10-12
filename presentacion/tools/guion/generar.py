@@ -1391,6 +1391,8 @@ html = re.sub(r'\bGuglio\b', '{ia_gemini}', html)
 
 # ───────── Guion final (guion_final.json): diálogos pulidos de cada escena, pantalla y voz ─────────
 import json as _jg, html as _hg
+_GRACIAS_VID = ('<video class="foto-mop" data-ambient data-restart muted loop playsinline preload="auto" poster="img/gracias-mop.jpg" aria-label="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">'
+                '<source src="video/actores/gracias.webm" type="video/webm"><source src="video/actores/gracias.mp4" type="video/mp4"></video>')
 def _aplicar_guion(html):
     datos = _jg.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8'))
     esc = lambda t: _hg.escape(t, quote=True)
@@ -1445,7 +1447,7 @@ def _aplicar_guion(html):
                         _n += -1 if _m.group(1) else 1
                         if _n == 0:
                             _j = _i + _m.end(); _j = cuerpo.index('>', _j) + 1; break
-                    cuerpo = cuerpo[:_i] + '<div class="art foto"><img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts"><p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">Con BandManager es posible esto y mucho más.</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
+                    cuerpo = cuerpo[:_i] + '<div class="art foto">' + (_GRACIAS_VID if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'actores', 'gracias.mp4')) else '<img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">') + '<p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">Con BandManager es posible esto y mucho más.</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
 
         else:
             avisos.append(f'{t}: estructura no soportada ({len(els)}→{len(L)})')
