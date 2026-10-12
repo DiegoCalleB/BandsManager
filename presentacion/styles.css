@@ -1245,7 +1245,7 @@ body.pelicula:not(.scroll) .bs-grid span, body.pelicula:not(.scroll) .slide.bigs
 #ident.on { opacity: 1; pointer-events: auto; }
 #ident .id-mark { font: 400 min(34vw, 360px)/1 Anton, Oswald, Impact, sans-serif; letter-spacing: .04em; color: #e50914; text-shadow: 0 0 60px rgba(229,9,20,.55); transform: scale(.82); opacity: 0; }
 #ident.on .id-mark { animation: idmark 3.4s cubic-bezier(.2,.7,.2,1) both; }
-#ident .id-sub { position: absolute; bottom: 30%; left: 0; right: 0; text-align: center; font: 600 min(2.2vw, 26px)/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .5em; color: rgba(255,255,255,.85); opacity: 0; }
+#ident .id-sub { position: absolute; bottom: 12%; left: 0; right: 0; text-align: center; font: 600 min(2.2vw, 26px)/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .5em; color: rgba(255,255,255,.85); opacity: 0; }
 #ident.on .id-sub { animation: idsub 3.4s ease both; }
 #ident::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,.28) 50%, transparent 62%); transform: translateX(-120%); }
 #ident.on::after { animation: idbrillo 1.4s ease-in-out .5s both; }
@@ -1467,6 +1467,15 @@ body.pelicula:not(.scroll) .slide.feat.active .ft-copy > .tag { animation: sobre
   color: #fff; background: rgba(42,42,42,.72); border: 2px solid rgba(255,255,255,.75); border-radius: 6px; cursor: pointer; pointer-events: auto !important; }
 body.pelicula:not(.scroll) .nf-saltar.on { display: block; }
 .nf-saltar:hover { background: #fff; color: #000; }
+/* Botones centrales como en el móvil: −15 s · pausa · +15 s. En pantallas táctiles o estrechas sustituyen a los de la barra */
+.nf-centro { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; z-index: 1; display: none; justify-content: center; align-items: center; gap: 190px; pointer-events: none !important; }
+.nf-c { width: 150px; height: 150px; display: grid; place-items: center; background: none; border: 0; color: rgba(255,255,255,.92); cursor: pointer; padding: 0; border-radius: 50%; pointer-events: auto; transition: transform 120ms; }
+.nf-c svg { width: 118px; height: 118px; fill: currentColor; } .nf-c.gran svg { width: 140px; height: 140px; }
+.nf-c:active { transform: scale(.9); }
+@media (pointer: coarse), (max-width: 800px) {
+  body.pelicula:not(.scroll) .nf-centro { display: flex; }
+  .nf-ctrl .nf-b[data-nf="menos"], .nf-ctrl .nf-b[data-nf="mas"], .nf-ctrl .nf-b[data-nf="play"] { display: none; }
+}
 /* Icono central que salta un momento (pausa, ±15 s, volumen, velocidad) */
 .nf-flash { position: absolute; left: 50%; top: 50%; z-index: 3; translate: -50% -50%; display: grid; place-items: center; gap: 6px; width: 170px; height: 170px;
   border-radius: 50%; background: rgba(0,0,0,.5); opacity: 0; pointer-events: none !important; }

@@ -73,7 +73,7 @@
 
   // Logotipo animado con su «ta-dum», antes de empezar: un golpe grave, otro más bajo y un brillo, sintetizados con WebAudio
   var ident = document.createElement('div'); ident.id = 'ident'; ident.setAttribute('aria-hidden', 'true');
-  ident.innerHTML = '<div class="id-mark">BM</div><div class="id-sub">BANDMANAGER ORIGINALS</div>';
+  ident.innerHTML = '<div class="id-mark">N</div><div class="id-sub">BANDMANAGER ORIGINALS</div>';
   document.body.appendChild(ident);
   var sting = function () {
     try {
@@ -85,13 +85,20 @@
         a.gain.setValueAtTime(0.0001, t0); a.gain.exponentialRampToValueAtTime(g, t0 + 0.012); a.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
         o.connect(a); a.connect(out); o.start(t0); o.stop(t0 + dur + 0.05);
       };
-      golpe(t, 110, 44, 1.8, 0.85); golpe(t + 0.5, 82, 38, 2.6, 0.95); golpe(t + 0.5, 164, 82, 1.2, 0.25);
-      var ruido = c.createBufferSource(), n = c.createBuffer(1, c.sampleRate * 2.4, c.sampleRate), d = n.getChannelData(0);
+      // «Tu-dum»: dos golpes graves seguidos (el segundo, más hondo y largo), con ataque seco y una cola que se abre
+      var ataque = function (t0, g) {
+        var b = c.createBufferSource(), nb = c.createBuffer(1, c.sampleRate * 0.12, c.sampleRate), dd = nb.getChannelData(0);
+        for (var j = 0; j < dd.length; j++) dd[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / dd.length, 3);
+        b.buffer = nb; var lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900;
+        var ga = c.createGain(); ga.gain.value = g; b.connect(lp); lp.connect(ga); ga.connect(out); b.start(t0);
+      };
+      golpe(t, 98, 49, 1.1, 0.8); golpe(t, 196, 98, 0.5, 0.3); ataque(t, 0.5);
+      golpe(t + 0.36, 73, 36, 2.8, 1.0); golpe(t + 0.36, 146, 73, 1.4, 0.35); golpe(t + 0.36, 293, 146, 0.8, 0.12); ataque(t + 0.36, 0.7);
+      var ruido = c.createBufferSource(), n = c.createBuffer(1, c.sampleRate * 2.6, c.sampleRate), d = n.getChannelData(0);
       for (var i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2);
-      ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(400, t + 0.5); f.frequency.exponentialRampToValueAtTime(1600, t + 1.9);
-      var g = c.createGain(); g.gain.setValueAtTime(0.0001, t + 0.4); g.gain.exponentialRampToValueAtTime(0.18, t + 1.0); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.3);
+      ruido.buffer = n; var f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.setValueAtTime(500, t + 0.4); f.frequency.exponentialRampToValueAtTime(2400, t + 2.2);
+      var g = c.createGain(); g.gain.setValueAtTime(0.0001, t + 0.4); g.gain.exponentialRampToValueAtTime(0.14, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.7);
       ruido.connect(f); f.connect(g); g.connect(out); ruido.start(t + 0.4);
-      golpe(t + 1.5, 55, 30, 2.4, 0.5); // cola grave en vez del brillo
       setTimeout(function () { c.close(); }, 4500);
     } catch (e) { /* sin audio: solo se ve */ }
   };
@@ -175,8 +182,9 @@
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
-  nf.innerHTML = '<div class="nf-top"><span class="nf-n">B</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span></div>' +
     '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Tiempo de la película" tabindex="0"><div class="nf-buffer"></div><div class="nf-lleno"></div><div class="nf-caps"></div><div class="nf-bola"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
+    '<div class="nf-centro"><button class="nf-c" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button><button class="nf-c gran" data-nf="play" aria-label="Pausa"></button><button class="nf-c" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button></div>' +
     '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button>' +
     '<button class="nf-b" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button>' +
     '<button class="nf-b" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button>' +
@@ -256,8 +264,7 @@
     $n('.nf-titulo').innerHTML = '<b>BandManager.io</b> <span></span>'; $n('.nf-titulo span').textContent = pre + esc;
     $n('.nf-cap').textContent = ca ? ca.nombre : '';
     $n('.nf-pcap').textContent = pre + esc;
-    $n('[data-nf="play"]').innerHTML = d.pausado ? ico.play : ico.pausa;
-    $n('[data-nf="play"]').setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa');
+    nf.querySelectorAll('[data-nf="play"]').forEach(function (b) { b.innerHTML = d.pausado ? ico.play : ico.pausa; b.setAttribute('aria-label', d.pausado ? 'Reproducir' : 'Pausa'); });
     var son = !!(window.DeckSound && window.DeckSound.enabled) && vol > 0;
     $n('[data-nf="sonido"]').innerHTML = son ? ico.sonido : ico.mudo;
     $n('[data-nf="sig"]').disabled = d.proximo(d.cur) === null;
