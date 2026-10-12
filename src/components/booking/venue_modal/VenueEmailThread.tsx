@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useEffectEvent, useCallback, useMemo } from 'react';
 import { Mail, Clock, Send, Sparkles, RefreshCw, Eye, MousePointerClick, ArrowUpDown, Copy, Check, Building2, User, ChevronDown, ChevronUp, ExternalLink, Zap, Download } from 'lucide-react';
 import { Lead, EmailMessage, InteractionLog } from '../../../types';
 import { isLeadNeedsFollowup, getDaysSinceContact, generateFollowupTemplate } from '../../../utils/bookingFollowup';
@@ -39,40 +39,55 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   const needsFollowup = isLeadNeedsFollowup(lead);
   const daysSince = getDaysSinceContact(lead);
 
-  const [dbMessages, setDbMessages] = useState<MensajeHilo[]>([]);
-  const [loadingMessages, setLoadingMessages] = useState(false);
+  // Mensajes del backend, asociados al lead al que pertenecen (no se arrastran al cambiar de lead).
+  const [mensajesCargados, setMensajesCargados] = useState<{ leadId: string; mensajes: MensajeHilo[] }>({ leadId: '', mensajes: [] });
+  const [cargaTerminadaDe, setCargaTerminadaDe] = useState<string | null>(null);
+  const [recargando, setRecargando] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncFeedback, setSyncFeedback] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // 'desc' = newest first (default)
   const [expandedMessageIds, setExpandedMessageIds] = useState<Record<string, boolean>>({});
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Fetch real conversation messages from backend
-  const fetchMessages = useCallback(async () => {
-    if (!lead?.id) return;
-    try {
-      setLoadingMessages(true);
-      const res = await apiFetch<{ success?: boolean; messages?: MensajeHilo[] }>(`/api/leads/${lead.id}/messages`);
-      if (res?.success && Array.isArray(res.messages)) {
-        setDbMessages(res.messages);
-      }
-    } catch (err) {
-      console.warn('Error fetching lead messages:', err);
-    } finally {
-      setLoadingMessages(false);
-    }
-  }, [lead?.id]);
+  const loadingMessages = recargando || (Boolean(lead?.id) && cargaTerminadaDe !== lead.id);
+
+  // Trae los mensajes reales del hilo. Solo toca estado tras el await, así que puede lanzarse desde un efecto.
+  const cargarMensajes = (leadId: string) =>
+    apiFetch<{ success?: boolean; messages?: MensajeHilo[] }>(`/api/leads/${leadId}/messages`)
+      .then((res) => {
+        if (res?.success && Array.isArray(res.messages)) {
+          setMensajesCargados({ leadId, mensajes: res.messages });
+        }
+      })
+      .catch((err) => {
+        console.warn('Error fetching lead messages:', err);
+      })
+      .finally(() => {
+        setCargaTerminadaDe(leadId);
+        setRecargando(false);
+      });
+
+  const fetchMessages = () => {
+    if (!lead?.id) return Promise.resolve();
+    setRecargando(true);
+    return cargarMensajes(lead.id);
+  };
+
+  const cargarMensajesInicial = useEffectEvent((leadId: string) => {
+    void cargarMensajes(leadId);
+  });
 
   useEffect(() => {
-    fetchMessages();
-  }, [fetchMessages]);
+    if (lead?.id) cargarMensajesInicial(lead.id);
+  }, [lead?.id]);
 
   // Combine lead.mensajes with dbMessages
   const rawMessages: MensajeHilo[] = useMemo(() => {
+    const dbMessages = mensajesCargados.leadId === lead.id ? mensajesCargados.mensajes : [];
     return dbMessages.length > 0
       ? dbMessages
       : (lead as LeadConHiloLegacy).mensajes || (lead as LeadConHiloLegacy).email_thread || [];
-  }, [dbMessages, lead]);
+  }, [mensajesCargados, lead]);
 
   // Sort messages (Newest first by default)
   const sortedMessages = useMemo(() => {
@@ -83,16 +98,15 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
     });
   }, [rawMessages, sortOrder]);
 
-  // Expand newest message by default
-  useEffect(() => {
+  // Al cambiar el número de mensajes, el más reciente queda expandido (ajuste durante el render).
+  const [totalVisto, setTotalVisto] = useState<number | null>(null);
+  if (totalVisto !== sortedMessages.length) {
+    setTotalVisto(sortedMessages.length);
     if (sortedMessages.length > 0) {
       const newestId = sortedMessages[0].id || 'msg-0';
-      setExpandedMessageIds((prev) => ({
-        ...prev,
-        [newestId]: true,
-      }));
+      setExpandedMessageIds((prev) => ({ ...prev, [newestId]: true }));
     }
-  }, [sortedMessages.length]);
+  }
 
   const toggleExpand = (id: string) => {
     setExpandedMessageIds((prev) => ({
@@ -323,7 +337,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
   /**
    * Calcula la telemetría específica vinculada a cada mensaje individual del hilo
    */
-  const getMessageTelemetry = (msg: MensajeHilo, msgIndex: number) => {
+  const getMessageTelemetry = useCallback((msg: MensajeHilo, msgIndex: number) => {
     if (msg.remitente !== 'banda') return null;
     const historial = Array.isArray(lead.historial_contacto) ? lead.historial_contacto : [];
     const msgTime = msg.fecha ? new Date(msg.fecha).getTime() : 0;
@@ -381,7 +395,7 @@ export const VenueEmailThread: React.FC<VenueEmailThreadProps> = ({
       events: matchingEvents,
       lastActivity: matchingEvents[0]?.fecha
     };
-  };
+  }, [lead.historial_contacto, sortedMessages]);
 
   // Mensaje más reciente enviado por la banda
   const latestBandMsg = useMemo(() => {
