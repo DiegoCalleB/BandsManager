@@ -54,13 +54,13 @@
   "foto": "repercusion.jpg",
   "edad": 30,
   "texto": "Repercusión",
-  "logro": "Subido al escenario"
+  "logro": "Fiestas del PCE · 2015"
  },
  {
   "foto": "miles.jpg",
-  "edad": 30,
+  "edad": 33,
   "texto": "Repercusión",
-  "logro": "Delante de miles de personas",
+  "logro": "Batalla Naval de Vallekas · La Karmela · 2018",
   "pos": "50% 78%",
   "dur": 5.2,
   "gran": true,
@@ -70,6 +70,7 @@
    0.15,
    0.27,
    0.4
-  ]
+  ],
+  "hito": "Vallekas"
  }
 ]

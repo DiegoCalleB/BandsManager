@@ -836,7 +836,7 @@ if FOTOS:
     hitos = []
     for t0, d, f in pasos:
         if f.get('edad') and f['edad'] not in [h[0] for h in hitos]:
-            hitos.append((f['edad'], t0, f.get('texto', '')))
+            hitos.append((f['edad'], t0, f.get('hito', f.get('texto', ''))))
     linea = ('<div class="mb-linea" aria-hidden="true">' + ''.join(
         f'<span style="--t:{t0:.2f}s"><i></i><b>{e}</b><u>{n}</u></span>' for e, t0, n in hitos) + '</div>')
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
@@ -926,7 +926,7 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Arritmia</dt><dd>A los 17 · al teclado · su primera maqueta</dd>
       <dt>Limando</dt><dd>A los 20 · Pradoluengo, Burgos</dd>
       <dt>Walter Sax Big Band</dt><dd>A los 25 · hasta el Santiago Bernabéu</dd>
-      <dt>Repercusión</dt><dd>A los 30 · delante de miles de personas</dd>
+      <dt>Repercusión</dt><dd>De los 30 a los 33 · fiestas del PCE (2015) y Batalla Naval de Vallekas (2018)</dd>
       <dt>Fer</dt><dd>Su hermano, al fondo de la foto de THC</dd>
     </dl>
     </div>

@@ -1964,7 +1964,7 @@ body.pelicula:not(.scroll) .dirigida.active .dr-lab:not(.mov) { left: 400px; }
 @keyframes mbedad { from { opacity: 0; translate: 0 26px; scale: .94; } to { opacity: 1; translate: 0 0; scale: 1; } }
 .mis-bandas .mb-linea { position: absolute; left: 50%; bottom: 44px; translate: -50% 0; z-index: 5; display: flex; gap: 0; width: 1180px; justify-content: space-between; }
 .mis-bandas .mb-linea::before { content: ''; position: absolute; left: 3%; right: 3%; top: 8px; height: 2px; background: rgba(255,255,255,.22); }
-.mis-bandas .mb-linea span { position: relative; width: 20%; text-align: center; opacity: .38; }
+.mis-bandas .mb-linea span { position: relative; flex: 1; text-align: center; opacity: .38; }
 .mis-bandas .mb-linea i { display: block; width: 18px; height: 18px; margin: 0 auto 10px; border-radius: 50%; background: #3b3b44; box-shadow: 0 0 0 4px #000; position: relative; }
 .mis-bandas .mb-linea b { display: block; font: 600 30px/1 Oswald, Onest, sans-serif; color: #fff; letter-spacing: .04em; }
 .mis-bandas .mb-linea u { display: block; margin-top: 4px; font: 500 17px/1.2 Onest, sans-serif; text-decoration: none; color: rgba(255,255,255,.7); }
