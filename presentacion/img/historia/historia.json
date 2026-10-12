@@ -1,9 +1,77 @@
 [
- {"tarjeta": true, "edad": 15, "texto": "THC", "logro": "Donde todo empezó"},
- {"tarjeta": true, "edad": 17, "texto": "Arritmia", "logro": "Al teclado"},
- {"foto": "bajo-bn.jpg", "edad": 20, "texto": "Limando", "logro": "Bajo en mano", "provisional": true},
- {"foto": "bigband-bernabeu.jpg", "edad": 25, "texto": "Big Band WSB", "logro": "Estadio Santiago Bernabéu"},
- {"foto": "bajo-contraluz.jpg", "edad": 25, "texto": "Big Band WSB", "logro": "A contraluz", "provisional": true},
- {"foto": "repercusion.jpg", "edad": 30, "texto": "Repercusión", "logro": "Subido al escenario"},
- {"foto": "miles.jpg", "edad": 30, "texto": "Repercusión", "logro": "Delante de miles de personas", "pos": "50% 78%", "dur": 5.2, "gran": true}
+ {
+  "foto": "thc.jpg",
+  "edad": 15,
+  "texto": "THC",
+  "logro": "Con mi hermano Fer detrás",
+  "foco": [
+   0.32,
+   0.62,
+   0.3,
+   0.5,
+   0.42
+  ]
+ },
+ {
+  "tarjeta": true,
+  "edad": 17,
+  "texto": "Arritmia",
+  "logro": "Al teclado"
+ },
+ {
+  "foto": "bajo-bn.jpg",
+  "edad": 20,
+  "texto": "Limando",
+  "logro": "Bajo en mano",
+  "provisional": true,
+  "foco": [
+   0.42,
+   0.5,
+   0.38,
+   0.62,
+   0.5
+  ]
+ },
+ {
+  "foto": "bigband-bernabeu.jpg",
+  "edad": 25,
+  "texto": "Big Band WSB",
+  "logro": "Estadio Santiago Bernabéu",
+  "foco": [
+   0.38,
+   0.55,
+   0.34,
+   0.8,
+   0.5
+  ]
+ },
+ {
+  "foto": "bajo-contraluz.jpg",
+  "edad": 25,
+  "texto": "Big Band WSB",
+  "logro": "A contraluz",
+  "provisional": true
+ },
+ {
+  "foto": "repercusion.jpg",
+  "edad": 30,
+  "texto": "Repercusión",
+  "logro": "Subido al escenario"
+ },
+ {
+  "foto": "miles.jpg",
+  "edad": 30,
+  "texto": "Repercusión",
+  "logro": "Delante de miles de personas",
+  "pos": "50% 78%",
+  "dur": 5.2,
+  "gran": true,
+  "foco": [
+   0.5,
+   0.64,
+   0.15,
+   0.27,
+   0.4
+  ]
+ }
 ]

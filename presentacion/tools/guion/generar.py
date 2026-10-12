@@ -813,17 +813,24 @@ if FOTOS:
     for k, f in enumerate(FOTOS):
         d = f.get('dur', 2.6 if f.get('tarjeta') else 2.4)  # la del público (la última), más: «gran» lleva efecto
         pasos.append((t, d, f)); t += d
+    # el foco sobre Diego (oscurece un poco al resto) va horneado en img/historia/_foco/
+    sys.path.insert(0, os.path.join(AQUI, '..'))
+    import historia_foco
+    historia_foco.main()
+    for f in FOTOS:
+        if f.get('foco') and f.get('foto'):
+            f['ruta'] = '_foco/' + f['foto']
     from PIL import Image  # las fotos casi cuadradas o verticales se ven enteras sobre su propio fondo desenfocado
     def _vert(f):
-        w, h = Image.open(os.path.join(AQUI, '..', '..', 'img', 'historia', f['foto'])).size
+        w, h = Image.open(os.path.join(AQUI, '..', '..', 'img', 'historia', f.get('ruta', f['foto']))).size
         return w / h < 1.25
     def _fig(t0, d, f):
         edad = f'<em class="mb-edad"><i>{f["edad"]}</i><u>años</u></em>' if f.get('edad') else ''
         cap = f'<figcaption><b>{f.get("texto", "")}</b>{("<span>" + f["logro"] + "</span>") if f.get("logro") else ""}</figcaption>'
         if f.get('tarjeta'):
             return f'<figure class="mb-foto tarjeta" style="--t:{t0:.2f}s;--d:{d:.2f}s">{edad}{cap}</figure>'
-        return (f'<figure class="mb-foto{" vert" if _vert(f) else ""}{" gran" if f.get("gran") else ""}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f["foto"]});--pos:{f.get("pos", "50% 50%")}">'
-                f'<img src="img/historia/{f["foto"]}" alt="{f.get("texto", "")}">{edad}{cap}</figure>')
+        return (f'<figure class="mb-foto{" vert" if _vert(f) else ""}{" gran" if f.get("gran") else ""}" style="--t:{t0:.2f}s;--d:{d:.2f}s;--bg:url(img/historia/{f.get("ruta", f["foto"])});--pos:{f.get("pos", "50% 50%")}">'
+                f'<img src="img/historia/{f.get("ruta", f["foto"])}" alt="{f.get("texto", "")}">{edad}{cap}</figure>')
     cuerpo = ''.join(_fig(t0, d, f) for t0, d, f in pasos)
     # línea de tiempo: un punto por edad distinta; se enciende cuando llega su primera foto y ya no se apaga
     hitos = []
