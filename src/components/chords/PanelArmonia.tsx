@@ -118,13 +118,13 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
         </div>}
         {armonia.bucle && (
           <p className="text-[var(--ink)]">
-            Bucle de la canción: <b className="font-bold">{armonia.bucle.grados.map(grado).join(' – ')}</b>
+            Bucle: <b className="font-bold">{armonia.bucle.grados.map(grado).join(' – ')}</b>
             {' '}(<span className="text-[var(--ink-2)]">{armonia.bucle.grados.map((g) => {
               const r = armonia.acordes.find((a) => a.grado === g);
               return r ? acorde(r.acorde) : g;
             }).join(' – ')}</span>)
-            {armonia.bucle.nombre ? <> — es {estilo?.grados === 'completo' ? armonia.bucle.nombre : armonia.bucle.nombre.replace(/(?<![A-Za-z])[b#](?=[ivIV])/g, '')}</> : null}. Se repite {armonia.bucle.veces} veces
-            {armonia.bucle.cobertura < 0.95 ? ` y encaja en el ${Math.round(armonia.bucle.cobertura * 100)} % de los cambios` : ''}.
+            {ext && armonia.bucle.nombre ? <> — es {estilo?.grados === 'completo' ? armonia.bucle.nombre : armonia.bucle.nombre.replace(/(?<![A-Za-z])[b#](?=[ivIV])/g, '')}</> : null}
+            {ext ? `. Se repite ${armonia.bucle.veces} veces${armonia.bucle.cobertura < 0.95 ? ` y encaja en el ${Math.round(armonia.bucle.cobertura * 100)} % de los cambios` : ''}.` : ` · ×${armonia.bucle.veces}`}
           </p>
         )}
       </section>
@@ -154,7 +154,7 @@ export const PanelArmonia: React.FC<Props> = ({ armonia, analisis, bpm, notation
         <section className="space-y-2" aria-label="Acordes principales">
           <h3 className="font-bold text-[var(--ink)]">Los acordes que mandan</h3>
           <div className="flex flex-wrap gap-2">
-            {armonia.acordes.slice(0, 6).map((r: ResumenAcorde) => (
+            {armonia.acordes.slice(0, 4).map((r: ResumenAcorde) => (
               <span key={r.acorde} className="inline-flex items-center gap-2 bg-[var(--sunken)] rounded-[var(--r-pill)] pl-1 pr-3 py-1">
                 <span className={`px-2.5 py-0.5 rounded-[var(--r-pill)] font-bold ${CLASE_FUNCION[r.funcion]}`}>{acorde(r.acorde)}</span>
                 <span className="font-bold text-[var(--ink)]">{grado(r.grado)}</span>

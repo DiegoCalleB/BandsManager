@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Repeat, X, Pencil } from 'lucide-react';
+import { Repeat, X, Pencil, Info } from 'lucide-react';
+import { ActionMenu } from '../ui/ActionMenu';
 import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
@@ -191,31 +192,26 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             })()}
           </span>
         </span>
-        <span className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => (bucle || modoBucle !== 'off' ? quitarBucle() : setModoBucle('elegirInicio'))}
-            className={`flex items-center gap-1 cursor-pointer ${bucle || modoBucle !== 'off' ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-            title="Repetir un fragmento: toca el primer y el último acorde"
-          >
-            <Repeat className="w-3.5 h-3.5" /> {bucle ? 'Quitar bucle' : modoBucle === 'off' ? 'Bucle' : 'Cancelar'}
-          </button>
-          <button
-            type="button"
-            onClick={() => { setCorrigiendo((v) => !v); cerrarEditor(); }}
-            className={`flex items-center gap-1 cursor-pointer ${corrigiendo ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-            title="Corregir acordes mal detectados"
-          >
-            <Pencil className="w-3.5 h-3.5" /> {corrigiendo ? 'Terminar' : 'Corregir'}
-          </button>
-          <button
-            type="button"
-            onClick={() => setDetalles((v) => !v)}
-            aria-expanded={detalles}
-            className={`cursor-pointer ${detalles ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-          >
-            Detalles
-          </button>
+        <span className="flex items-center gap-2 shrink-0">
+          {/* El estado activo sigue a la vista (un toque lo apaga); el resto de acciones vive tras «⋯» */}
+          {(bucle || modoBucle !== 'off') && (
+            <button type="button" onClick={quitarBucle} className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold cursor-pointer" title="Quitar el bucle">
+              <Repeat className="w-3.5 h-3.5" /> {bucle ? 'Quitar bucle' : 'Cancelar'}
+            </button>
+          )}
+          {corrigiendo && (
+            <button type="button" onClick={() => { setCorrigiendo(false); cerrarEditor(); }} className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold cursor-pointer">
+              <Pencil className="w-3.5 h-3.5" /> Terminar
+            </button>
+          )}
+          <ActionMenu
+            label="Más acciones de la línea de tiempo"
+            items={[
+              { label: 'Repetir un fragmento (bucle)', icon: Repeat, hidden: Boolean(bucle) || modoBucle !== 'off', onSelect: () => setModoBucle('elegirInicio') },
+              { label: 'Corregir acordes mal detectados', icon: Pencil, hidden: corrigiendo, onSelect: () => { setCorrigiendo(true); cerrarEditor(); } },
+              { label: detalles ? 'Ocultar detalles' : 'Ver detalles', icon: Info, onSelect: () => setDetalles((v) => !v) },
+            ]}
+          />
           <button type="button" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">
             <X className="w-4 h-4" />
           </button>
