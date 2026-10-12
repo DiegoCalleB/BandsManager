@@ -305,13 +305,49 @@
   $n('.nf-vr').addEventListener('input', function (e) { vol = +e.target.value / 100; if (vol && window.DeckSound && !window.DeckSound.enabled) window.DeckSound.toggle(); aplicarVol(); pintar(); });
   var prog = $n('.nf-prog');
   var tiempoEn = function (e) { var r = prog.getBoundingClientRect(), d = D(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * (d ? d.total() : 0); };
+  // Imagen de una escena para la vista previa: su fondo o su primera imagen
+  var miniatura = function (i) {
+    var d = D(), sl = d && d.slides[i]; if (!sl) return '';
+    var bg = sl.querySelector('.scene-bg, .act-bg'), m = bg && /url\(["']?([^"')]+)/.exec(bg.style.backgroundImage || getComputedStyle(bg).backgroundImage || '');
+    if (m) return m[1];
+    var im = sl.querySelector('img'); return im ? im.getAttribute('src') : '';
+  };
   var escenaEnTiempo = function (seg) { var d = D(), t = 0, L = d.lista(); for (var k = 0; k < L.length; k++) { t += d.durEscena(L[k]); if (seg < t) return L[k]; } return L[L.length - 1]; };
   prog.addEventListener('click', function (e) { var d = D(); if (d) { d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
   prog.addEventListener('mousemove', function (e) {
     var d = D(); if (!d) return; var seg = tiempoEn(e), tip = $n('.nf-tip'), r = prog.getBoundingClientRect();
-    tip.textContent = mmss(seg) + ' · ' + titulo(escenaEnTiempo(seg)); tip.style.left = ((e.clientX - r.left) / r.width * 100) + '%';
+    var ie = escenaEnTiempo(seg), th = miniatura(ie);
+    tip.innerHTML = (th ? '<img src="' + th + '" alt="">' : '') + '<span></span>'; tip.querySelector('span').textContent = mmss(seg) + ' · ' + titulo(ie);
+    var w = r.width, x = e.clientX - r.left; tip.style.left = Math.max(140, Math.min(w - 140, x)) / w * 100 + '%';
   });
   prog.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); saltar(e.key === 'ArrowLeft' ? -15 : 15); } });
+  // «Siguiente capítulo en 5…»: tarjeta con cuenta atrás en los últimos segundos de cada capítulo
+  var sig = document.createElement('button'); sig.type = 'button'; sig.className = 'nf-sig-ep'; sig.setAttribute('aria-live', 'polite');
+  sig.innerHTML = '<img alt=""><span><small>Siguiente capítulo · <b></b></small><em></em></span>'; if (stage) stage.appendChild(sig);
+  var sigI = -1;
+  sig.addEventListener('click', function () { var d = D(); if (d && sigI >= 0) d.show(sigI); });
+  var pintarSig = function () {
+    var d = D(), on = false;
+    if (d && d.total && !d.pausado) {
+      var t = d.tiempo(), cs = capitulos().filter(function (c) { return c.t > t; }), c = cs[0];
+      if (c && c.t - t <= 6 && c.t - t > 0.3 && t > 3) {
+        on = true; sigI = c.i; sig.querySelector('b').textContent = Math.ceil(c.t - t);
+        sig.querySelector('em').textContent = c.nombre.replace(/^Capítulo \d+ · /, '');
+        var th = miniatura(c.i), im = sig.querySelector('img'); if (th) im.src = th; im.style.display = th ? '' : 'none';
+      }
+    }
+    sig.classList.toggle('on', on);
+  };
+  setInterval(function () { if (body.classList.contains('pelicula') && !body.classList.contains('scroll')) pintarSig(); else sig.classList.remove('on'); }, 250);
+  // Doble toque en móvil: izquierda −15 s, derecha +15 s, como en Netflix
+  var ultimoToque = { t: 0, x: 0 };
+  addEventListener('touchend', function (e) {
+    if (!body.classList.contains('pelicula') || body.classList.contains('scroll') || !e.changedTouches[0]) return;
+    if (e.target.closest && e.target.closest('.nf-b, .nf-c, .nf-prog, .nf-menu, .nf-saltar, .nf-sig-ep, input')) return;
+    var x = e.changedTouches[0].clientX, ahora = Date.now(), w = innerWidth;
+    if (ahora - ultimoToque.t < 320 && Math.abs(x - ultimoToque.x) < 90) { saltar(x < w / 2 ? -15 : 15); ultimoToque.t = 0; }
+    else ultimoToque = { t: ahora, x: x };
+  }, { passive: true });
   setInterval(function () { if (body.classList.contains('pelicula') && !body.classList.contains('scroll')) pintar(); }, 250);
   // Se esconde a los 2,5 s sin mover el ratón, como en Netflix (en pausa o con un menú abierto se queda)
   var oculto = 0;

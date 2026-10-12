@@ -1164,6 +1164,8 @@ body.pelicula:not(.scroll) #nf { display: block; }
 .nf-caps i { position: absolute; top: 0; bottom: 0; width: 4px; background: rgba(0,0,0,.75); translate: -50% 0; }
 .nf-tip { position: absolute; bottom: 26px; translate: -50% 0; background: rgba(20,20,20,.95); padding: 8px 14px; border-radius: 4px; font-size: 20px; white-space: nowrap; opacity: 0; pointer-events: none; }
 .nf-prog:hover .nf-tip { opacity: 1; }
+.nf-tip { padding: 6px; text-align: center; } .nf-tip img { display: block; width: 260px; height: 146px; object-fit: cover; border-radius: 3px; margin-bottom: 6px; }
+.nf-tip:not(:has(img)) { padding: 8px 14px; }
 .nf-cuenta { font-size: 24px; min-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
 .nf-ctrl { position: absolute; left: 44px; right: 44px; bottom: 30px; display: flex; align-items: center; gap: 14px; z-index: 1; }
 .nf-b { width: 70px; height: 70px; display: grid; place-items: center; background: none; border: 0; color: #fff; cursor: pointer; border-radius: 50%; transition: transform 120ms; padding: 0; }
@@ -1989,3 +1991,13 @@ body.scroll .mis-bandas .mb-linea { display: none; }
 .mis-bandas .mb-linea { bottom: 34px; }
 .mis-bandas .mb-foto.vert .mb-edad { right: auto; left: 110px; }
 .mis-bandas .mb-foto.izq .mb-edad { right: auto; left: 110px; }
+
+/* «Siguiente capítulo» con cuenta atrás, abajo a la derecha, como «Siguiente episodio» de Netflix */
+.nf-sig-ep { position: absolute; z-index: 61; right: 70px; bottom: 210px; display: none; align-items: center; gap: 18px; padding: 10px 26px 10px 10px; max-width: 640px;
+  color: #fff; background: rgba(20,20,20,.88); border: 2px solid rgba(255,255,255,.75); border-radius: 6px; cursor: pointer; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; pointer-events: auto !important; }
+body.pelicula:not(.scroll) .nf-sig-ep.on { display: flex; animation: nfsig .4s ease both; }
+.nf-sig-ep img { width: 190px; height: 107px; object-fit: cover; border-radius: 3px; }
+.nf-sig-ep small { display: block; font-size: 22px; color: rgba(255,255,255,.75); } .nf-sig-ep small b { color: #fff; }
+.nf-sig-ep em { display: block; margin-top: 6px; font: 700 30px/1.15 'Helvetica Neue', Arial, sans-serif; font-style: normal; }
+.nf-sig-ep:hover { background: #fff; color: #000; } .nf-sig-ep:hover small { color: #333; } .nf-sig-ep:hover small b { color: #000; }
+@keyframes nfsig { from { opacity: 0; translate: 40px 0; } to { opacity: 1; translate: 0 0; } }
