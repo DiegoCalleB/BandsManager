@@ -21,6 +21,8 @@ export function safeMediaSrc(url?: string | null): string | undefined {
       return parsed.origin === 'https://app.invalid' ? `${parsed.pathname}${parsed.search}${parsed.hash}` : parsed.href;
     }
     if (parsed.protocol === 'blob:') return parsed.href;
+    // Subidas que cayeron al respaldo local de audioStorage: el audio va incrustado, no es ejecutable.
+    if (parsed.protocol === 'data:' && /^data:audio\//i.test(trimmed)) return trimmed;
   } catch {
     // dirección ilegible: se descarta
   }
