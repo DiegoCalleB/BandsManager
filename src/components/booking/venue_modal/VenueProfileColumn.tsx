@@ -32,12 +32,14 @@ export const VenueProfileColumn: React.FC<VenueProfileColumnProps> = ({
   const [isEnrichingScout, setIsEnrichingScout] = useState(false);
   const [scoutMsg, setScoutMsg] = useState<string | null>(null);
 
-  // Sync edit form when lead changes
-  React.useEffect(() => {
+  // Al cambiar de lead se reinicia el formulario (ajuste durante el render, sin efecto).
+  const [leadVistoId, setLeadVistoId] = useState(lead.id);
+  if (leadVistoId !== lead.id) {
+    setLeadVistoId(lead.id);
     setEditFormData({ ...lead });
     setIsEditing(false);
     setScoutMsg(null);
-  }, [lead.id]);
+  }
 
   const handleSave = () => {
     onUpdateLead(lead.id, editFormData);

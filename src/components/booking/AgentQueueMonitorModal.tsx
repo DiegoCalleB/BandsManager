@@ -21,28 +21,34 @@ export const AgentQueueMonitorModal: React.FC<AgentQueueMonitorModalProps> = ({ 
   const [isPruning, setIsPruning] = useState(false);
   const [pruneSuccessMsg, setPruneSuccessMsg] = useState<string | null>(null);
 
-  const fetchMetrics = async (isManual = false) => {
+  // Solo toca estado tras el await: se puede lanzar desde un efecto sin setState síncrono.
+  const cargarMetricas = () =>
+    apiFetch<RespuestaMetricasCola>('/api/agent-queue/metrics')
+      .then((data) => {
+        if (data && data.success) {
+          setStats(data.stats || { pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
+          setRecentJobs(data.recentJobs || []);
+          setWorkerOnline(data.workerOnline ?? true);
+        }
+      })
+      .catch((err) => {
+        console.warn('Error fetching agent queue metrics:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+        setRefreshing(false);
+      });
+
+  const fetchMetrics = (isManual = false) => {
     if (isManual) setRefreshing(true);
-    try {
-      const data = await apiFetch<RespuestaMetricasCola>('/api/agent-queue/metrics');
-      if (data && data.success) {
-        setStats(data.stats || { pending: 0, processing: 0, completed: 0, failed: 0, total: 0 });
-        setRecentJobs(data.recentJobs || []);
-        setWorkerOnline(data.workerOnline ?? true);
-      }
-    } catch (err) {
-      console.warn('Error fetching agent queue metrics:', err);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
+    return cargarMetricas();
   };
 
   useEffect(() => {
     if (!isOpen) return;
-    fetchMetrics();
+    void cargarMetricas();
     const interval = setInterval(() => {
-      fetchMetrics();
+      void cargarMetricas();
     }, 4000); // Auto refresco cada 4 segundos mientras el modal está abierto
     return () => clearInterval(interval);
   }, [isOpen]);

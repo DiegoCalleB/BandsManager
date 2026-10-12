@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useEffectEvent, useRef } from "react";
 import { Song, ThemeColors } from "../../types";
 import { Disc, Search, X, ExternalLink, Play, Pause, Sparkles, CheckSquare, Square, RefreshCw, AlertCircle, Radio, ChevronDown, ChevronUp, ShieldCheck } from "lucide-react";
 import { apiFetch } from "../../utils/api";
@@ -52,17 +52,6 @@ export const SpotifyDiscographyModal: React.FC<
   const [playingTrackId, setPlayingTrackId] = useState<string | null>(null);
   const audioPreviewRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initial fetch when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      const initialQuery = bandName || "";
-      setSearchQuery(initialQuery);
-      handleFetchDiscography(initialQuery);
-    } else {
-      stopAudioPreview();
-    }
-  }, [isOpen, bandName]);
-
   const [loadingPreviewTrackId, setLoadingPreviewTrackId] = useState<
     string | null
   >(null);
@@ -75,6 +64,21 @@ export const SpotifyDiscographyModal: React.FC<
     setPlayingTrackId(null);
     setLoadingPreviewTrackId(null);
   };
+
+  // Ajuste durante el render al abrir/cerrar o cambiar de banda (en vez de setState en un efecto).
+  const claveApertura = isOpen ? `abierto|${bandName}` : "cerrado";
+  const [claveVista, setClaveVista] = useState<string | null>(null);
+  if (claveVista !== claveApertura) {
+    setClaveVista(claveApertura);
+    if (isOpen) {
+      const q = bandName.trim();
+      setSearchQuery(bandName);
+      setErrorMsg(q ? null : "Por favor ingresa el nombre de la banda o enlace de Spotify.");
+      setIsFetchingDiscography(Boolean(q));
+    }
+    setPlayingTrackId(null);
+    setLoadingPreviewTrackId(null);
+  }
 
   const togglePlayTrackPreview = async (
     track: SpotifyTrack,
@@ -130,55 +134,75 @@ export const SpotifyDiscographyModal: React.FC<
     }
   };
 
-  const handleFetchDiscography = async (queryToFetch?: string) => {
-    const q = (queryToFetch || searchQuery).trim();
+  // Parte asíncrona de la búsqueda: solo toca estado tras el await, así que puede
+  // lanzarse desde un efecto sin setState síncrono.
+  const ejecutarBusqueda = (q: string) =>
+    apiFetch<RespuestaDiscografiaSpotify>(
+      `/api/spotify/artist-discography?query=${encodeURIComponent(q)}`,
+    )
+      .then((data) => {
+        if (!data || !data.success || !data.discography) {
+          throw new Error(
+            data?.error || "No se pudo encontrar la discografía en Spotify.",
+          );
+        }
+
+        const { artist, albums: fetchedAlbums } = data.discography;
+        setArtistProfile(artist);
+        setAlbums(fetchedAlbums || []);
+
+        // Default: Select all fetched albums
+        const initialSelected: Record<string, boolean> = {};
+        const initialExpanded: Record<string, boolean> = {};
+        (fetchedAlbums || []).forEach((alb: SpotifyAlbum, idx: number) => {
+          initialSelected[alb.id] = true;
+          // Expand first album by default
+          if (idx === 0) initialExpanded[alb.id] = true;
+        });
+
+        setSelectedAlbumIds(initialSelected);
+        setExpandedAlbumIds(initialExpanded);
+      })
+      .catch((errCapturado) => {
+        const err = comoErrorCapturado(errCapturado);
+        console.error("Error fetching Spotify discography:", err);
+        setErrorMsg(err.message || "Error al conectar con Spotify.");
+        setArtistProfile(null);
+        setAlbums([]);
+      })
+      .finally(() => setIsFetchingDiscography(false));
+
+  const handleFetchDiscography = () => {
+    const q = searchQuery.trim();
     if (!q) {
       setErrorMsg(
         "Por favor ingresa el nombre de la banda o enlace de Spotify.",
       );
       return;
     }
-
     setErrorMsg(null);
     setIsFetchingDiscography(true);
     stopAudioPreview();
-
-    try {
-      const data = await apiFetch<RespuestaDiscografiaSpotify>(
-        `/api/spotify/artist-discography?query=${encodeURIComponent(q)}`,
-      );
-
-      if (!data || !data.success || !data.discography) {
-        throw new Error(
-          data?.error || "No se pudo encontrar la discografía en Spotify.",
-        );
-      }
-
-      const { artist, albums: fetchedAlbums } = data.discography;
-      setArtistProfile(artist);
-      setAlbums(fetchedAlbums || []);
-
-      // Default: Select all fetched albums
-      const initialSelected: Record<string, boolean> = {};
-      const initialExpanded: Record<string, boolean> = {};
-      (fetchedAlbums || []).forEach((alb: SpotifyAlbum, idx: number) => {
-        initialSelected[alb.id] = true;
-        // Expand first album by default
-        if (idx === 0) initialExpanded[alb.id] = true;
-      });
-
-      setSelectedAlbumIds(initialSelected);
-      setExpandedAlbumIds(initialExpanded);
-    } catch (errCapturado) {
-      const err = comoErrorCapturado(errCapturado);
-      console.error("Error fetching Spotify discography:", err);
-      setErrorMsg(err.message || "Error al conectar con Spotify.");
-      setArtistProfile(null);
-      setAlbums([]);
-    } finally {
-      setIsFetchingDiscography(false);
-    }
+    void ejecutarBusqueda(q);
   };
+
+  const lanzarBusquedaInicial = useEffectEvent((q: string) => {
+    void ejecutarBusqueda(q);
+  });
+
+  // Abrir (o cambiar de banda) -> busca con bandName. Cerrar o cambiar -> la limpieza
+  // para el audio en curso (sistema externo: elemento <audio>).
+  useEffect(() => {
+    if (!isOpen) return;
+    const q = bandName.trim();
+    if (q) lanzarBusquedaInicial(q);
+    return () => {
+      if (audioPreviewRef.current) {
+        audioPreviewRef.current.pause();
+        audioPreviewRef.current = null;
+      }
+    };
+  }, [isOpen, bandName]);
 
   const toggleSelectAll = (select: boolean) => {
     const next: Record<string, boolean> = {};

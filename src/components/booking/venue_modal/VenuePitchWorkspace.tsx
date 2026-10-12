@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Send, CheckCircle2, Copy, Edit3, Star, MessageCircle, Loader2, Check, Layers, AlertCircle, Clock, Mail, Save } from 'lucide-react';
 import { Lead, LeadStatus, BookingCampaign } from '../../../types';
 import { Button, Textarea } from '../../ui';
@@ -44,13 +44,15 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
   const [feedbackComment, setFeedbackComment] = useState('');
   const [feedbackSuccess, setFeedbackSuccess] = useState<string | null>(null);
 
-  // Sync state when lead changes
-  useEffect(() => {
+  // Al cambiar de lead o de pitch guardado se reinicia el borrador (ajuste durante el render, sin efecto).
+  const [pitchVisto, setPitchVisto] = useState({ id: lead.id, pitch: lead.pitch_generado });
+  if (pitchVisto.id !== lead.id || pitchVisto.pitch !== lead.pitch_generado) {
+    setPitchVisto({ id: lead.id, pitch: lead.pitch_generado });
     setEditedPitch(lead.pitch_generado || '');
     setIsEditingText(false);
     setDraftError(null);
     setFeedbackSuccess(null);
-  }, [lead.id, lead.pitch_generado]);
+  }
 
   // Is this reply stage (negotiating / responded) or initial pitch?
   const isReplyStage =
