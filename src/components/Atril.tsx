@@ -227,7 +227,7 @@ export function Atril({
     const el = audioRef.current;
     if (!el) return;
     const seguro = safeMediaSrc(audioUrl);
-    if (seguro) { if (el.getAttribute("src") !== seguro) el.src = seguro; }
+    if (seguro) el.src = seguro;
     else if (el.hasAttribute("src")) { el.removeAttribute("src"); el.load(); }
   }, [audioUrl]);
   const { ajustes: ajustesPistas, setAjustes: setAjustesPistas, velocidad, setVelocidad } = useMezclaGuardada(song.id);
