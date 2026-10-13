@@ -11,6 +11,7 @@ import { Button, IconButton, Input, LinkButton } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 import { SocialButtons } from './login/GoogleSocialButton';
 import { PasswordStrengthBar } from './login/PasswordStrengthBar';
+import { registrarCuenta } from './login/registrarCuenta';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: BandaDisponible[]) => void;
@@ -390,28 +391,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          leaderName: regLeaderName.trim(),
-          bandName: regBandName.trim() || "Nueva Banda",
-          email: regEmail.trim() || `banda_${Date.now()}@bandmanager.app`,
-          password: regPassword || "123456",
-          plan: planKey,
-        }),
+      const data = await registrarCuenta({
+        leaderName: regLeaderName.trim(),
+        bandName: regBandName.trim() || "Nueva Banda",
+        email: regEmail.trim() || `banda_${Date.now()}@bandmanager.app`,
+        password: regPassword || "123456",
+        plan: planKey,
       });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(data.error || "Fallo en la creación de cuenta");
-      }
-
-      if (data.token) {
-        localStorage.setItem("bandmanager_token", data.token);
-        guardarCookieDeSesion(data.token);
-      }
 
       onLoginSuccess(data.user, data.token, data.availableBands);
     } catch (errCapturado) {

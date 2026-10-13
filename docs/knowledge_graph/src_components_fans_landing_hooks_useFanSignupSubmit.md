@@ -22,6 +22,7 @@ Envío del formulario de alta de fan (simulado en previsualización).
 - [[src_components_fans_landing_fanLandingTypes|src/components/fans_landing/fanLandingTypes.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_fans_landing_hooks_useFanLanguage|src/components/fans_landing/hooks/useFanLanguage.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_analitica|src/utils/analitica.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
 
 ---

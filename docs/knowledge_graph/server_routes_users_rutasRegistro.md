@@ -35,7 +35,7 @@ Alta de cuenta y banda nueva, y listado de bandas registradas.
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
 - [[src_components_bandCRM_bandCrmTypes|src/components/bandCRM/bandCrmTypes.ts]] *(from #frontend)*
 - [[src_components_bandCRM_hooks_useBandCrmData|src/components/bandCRM/hooks/useBandCrmData.ts]] *(from #frontend)*
-- [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
+- [[src_components_login_registrarCuenta|src/components/login/registrarCuenta.ts]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
 - [[src_components_user_profile_hooks_useUserProfileController|src/components/user_profile/hooks/useUserProfileController.ts]] *(from #frontend)*
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(from #frontend)*

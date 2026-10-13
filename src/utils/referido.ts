@@ -59,11 +59,12 @@ export function limpiarReferido(almacen: AlmacenReferido): void {
   }
 }
 
-/** Arranque de la app: si la URL trae `?ref=`, lo guarda. */
-export function capturarReferidoDeLaUrl(): void {
-  if (typeof window === 'undefined') return;
+/** Arranque de la app: si la URL trae `?ref=`, lo guarda. Devuelve si había un código válido. */
+export function capturarReferidoDeLaUrl(): boolean {
+  if (typeof window === 'undefined') return false;
   const codigo = leerCodigoDeUrl(window.location.search);
   if (codigo) guardarReferido(window.localStorage, codigo);
+  return codigo !== null;
 }
 
 /**

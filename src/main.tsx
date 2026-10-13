@@ -10,10 +10,14 @@ import '@fontsource-variable/onest';
 import './index.css';
 import { escucharSistema, leerPreferencia as leerPreferenciaEspectro } from './utils/temaEspectro';
 import { capturarReferidoDeLaUrl } from './utils/referido';
+import { iniciarAnalitica, registrarEvento } from './utils/analitica';
 import { LoadingFallback, PublicEPK, PublicMusiciansLanding } from './app/rutasPublicasLazy';
 
 // Inicializa el rastreo de errores del cliente si VITE_SENTRY_DSN está presente
 initFrontendErrorTracking();
+
+// Analítica sin cookies (Plausible): solo se activa si VITE_PLAUSIBLE_DOMAIN está definido.
+iniciarAnalitica();
 
 // Cualquier guardado (POST/PUT/PATCH/DELETE a /api) que falle muestra un aviso en pantalla.
 instalarAvisoDeGuardados();
@@ -27,7 +31,7 @@ instalarAvisoDeGuardados();
 escucharSistema(leerPreferenciaEspectro);
 
 // Invitación de otra banda (?ref=): se guarda 30 días y se atribuye cuando la persona tenga cuenta.
-capturarReferidoDeLaUrl();
+if (capturarReferidoDeLaUrl()) registrarEvento('Invitacion Recibida');
 
 // Rutas públicas accesibles sin autenticación
 const pathname = typeof window !== 'undefined' ? window.location.pathname.toLowerCase() : '';
