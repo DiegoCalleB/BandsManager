@@ -312,6 +312,21 @@ add(f'''<section class="slide feat dl mailscene" data-grupo="promocion" data-tit
 </section>
 ''')
 
+add(feat('Medios de comunicación', TAG1, 'Que hablen de la banda.',
+         [m('brais', '¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs?', say='¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs de música?'),
+          m('iago', 'Tengo también la base de datos de medios: radios, webs, prensa y podcasts, por ciudad y con su contacto.', say='Tengo también la base de datos de medios: radios, webs, prensa y pódcasts, por ciudad y con su contacto.'),
+          m('alvaro', '¡Hasta la radio y la tele de aquí! ¿Y cómo les escribimos?', say='[amazed] ¡Si hasta salen la radio y la tele de aquí! ¿Y cómo les escribimos?'),
+          m('iago', 'Con el mismo redactor de la IA, con el tono de la banda: para que hablen del grupo o promocionen un concierto o una fecha señalada. Y nada sale sin tu visto bueno.', say='Con el mismo redactor de la inteligencia artificial, con el tono de la banda. Para que hablen del grupo, o promocionen un concierto o una fecha señalada. Y nada sale sin tu visto bueno.'),
+          m('xandre', '¡Yo ya estoy ensayando la entrevista!', say='[excited] ¡Yo ya estoy ensayando la entrevista, che!')],
+         shot_img('img/d-h-medios.jpg')))
+
+add(feat('Afina el correo', TAG1, 'Afínalo con una instrucción.',
+         [m('alvaro', '¿Y si el correo no me convence? A mí me suena demasiado serio.', say='¿Y si el correo no me convence? A mí me suena demasiado serio, tío.'),
+          m('iago', 'Le escribes una instrucción sencilla, como «hazlo más directo y cita que tocamos en Revenidas», y la IA lo reescribe.', say='Le escribes una instrucción sencilla, como: hazlo más directo, y cita que tocamos en Revenidas. Y la inteligencia artificial lo reescribe.'),
+          m('xandre', '¿Y se acuerda para la próxima?', say='¿Y se acuerda para la próxima vez, che?'),
+          m('iago', 'Sí: calificas el tono y la estructura con estrellas y aprende cómo hablamos. Cada vez escribe más como vosotros.', say='Sí. Calificas el tono y la estructura con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.')],
+         shot_img('img/d-h-medio-pitch.jpg')))
+
 add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
          [m('iago', 'Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.'),
           m('mop', 'Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!'),
@@ -1232,6 +1247,8 @@ DOLOR = {
     'Un QR y el público se hace fan': ('El público se va sin dejar rastro', 'Un QR para que te sigan'),
     'Merchan en un minuto': ('Merchan sin diseño ni tiempo', 'Camisetas con vuestro QR en un minuto'),
     'Del directo al reel': ('Horas editando vídeos', 'Reels listos para cada red'),
+    'Medios de comunicación': ('Pedir una entrevista a cada medio', 'Radios, webs y prensa, con su contacto'),
+    'Afina el correo': ('Reescribir el correo una y otra vez', 'Una instrucción y la IA lo reescribe'),
     'El seguimiento de las redes': ('Apuntar los seguidores a mano', 'Una curva que sube mes a mes'),
     'Del concierto al disco': ('El directo, sin aprovechar', 'Del concierto sacas las canciones'),
     'Cuánto entra y cuánto queda': ('Cuentas en el aire tras cada bolo', 'Lo que entra y lo que queda, claro'),
@@ -1258,6 +1275,8 @@ FICHAS = {
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'Medios de comunicación': ('Medios', 'Radios, webs, prensa y podcasts a los que escribir para que hablen de la banda y de sus fechas.', ['Base de medios', 'Redactor con el tono de la banda', 'Tú das el visto bueno']),
+    'Afina el correo': ('Redactor que aprende', 'Pides un cambio con una frase y calificas con estrellas el tono y la estructura: aprende cómo habla la banda.', ['Instrucción sencilla', 'Estrellas de tono y estructura', 'La IA aprende']),
     'El seguimiento de las redes': ('Seguimiento de redes', 'Seguidores de Instagram, TikTok, YouTube y Spotify, mes a mes y con la subida de cada uno.', ['Curva de crecimiento', 'Subida de cada mes', 'Radar de redes']),
     'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
 }

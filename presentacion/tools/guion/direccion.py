@@ -476,6 +476,25 @@ DIRECCION = {
                ('zoom', '5', .62, .38, 1.9),
                ('marca', '5+0.3', 'fin-0.3', .545, .245, .165, .28, 'Cada reel, a su red, con su día y su hora')]),
 
+    # afinar el correo: una instrucción sencilla, regenerar y calificar con estrellas (la IA aprende)
+    'Afina el correo': dict(
+        img=(1200, 930), marco='esc', y0=.30,
+        pasos=[('zoom', 0.8, .56, .70, 1.0),
+               ('teclear', '2+0.3', .454, .774, .341, .041, 'hazlo más directo y cita que tocamos en Revenidas', {'fs': 11.5, 'color': '#e7e9ee', 'fondo': '#12151c'}),
+               ('clic', '2+3.4', .873, .789), ('pulsar', '2+3.4', .765, .762, .216, .05),
+               ('stream', '2+3.8', .441, .371, .518, .213, 'Hola, equipo de Nós Diario: tocamos en Revenidas y presentamos «Compila ou Morre» el 14 de noviembre. ¿Os cuento todo en una entrevista? Dossier: bandmanager.io/epk?b=os-herdeiros-do-codigo', {'fs': 12.5, 'color': '#e7e9ee', 'fondo': '#12151c', 'lh': 1.5}),
+               ('marca', '2+3.8', '3', .441, .371, .518, .213, 'La IA reescribe el correo con la instrucción'),
+               ('ir', '4-0.2', .54, .70), ('clic', '4+0.2', .575, .70),
+               ('tapa', '4+0.3', 'fin', .4625, .685, .17, .034, '<span style="color:#f5b301;letter-spacing:3px">★★★★</span><span style="color:#4a4f5c;letter-spacing:3px">★</span><span style="color:#8fd19e;margin-left:10px">Me gusta</span>', {'fondo': '#12151c', 'fs': 13, 'color': '#e7e9ee'}),
+               ('marca', '4+0.2', 'fin-0.3', .45, .64, .535, .12, 'Calificas el tono y la estructura y la IA aprende')]),
+
+    # bandas amigas: el vídeo ya trae su cursor; la cámara baja al reproductor de Spotify y sube a las métricas
+    'Bandas amigas': dict(
+        img=(1600, 900), marco='esc', y0=.04,
+        pasos=[('zoom', '3+0.5', .45, .62, 1.3), ('marca', '4', '5-0.3', .28, .93, .44, .07, 'Escuchas su tema más popular, sin salir de la app'),
+               ('zoom', '4+0.4', .50, .99, 2.0),
+               ('zoom', '5', .42, .45, 1.55), ('marca', '6-0.2', 'fin-0.3', .08, .27, .62, .12, 'Y sus métricas: seguidores en Spotify, suscriptores en YouTube')]),
+
     # el pitch: le da a «Regenerar» y la IA escribe el correo delante de todos; luego entrena el tono con estrellas
     'La IA escribe, tú apruebas': dict(
         img=(1920, 1650), marco='esc', y0=.07,
