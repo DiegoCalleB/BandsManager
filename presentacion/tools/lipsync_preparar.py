@@ -4,13 +4,9 @@ el audio de la frase, la imagen de referencia, la duración, un prompt y una fic
 (Hedra, HeyGen, Sync Labs, LatentSync/Wav2Lip en local…). Después, el vídeo resultante se guarda como lipsync/<id>/plano.mp4.
 
     python3 presentacion/tools/lipsync_preparar.py                 # prepara los planos
-    python3 presentacion/tools/lipsync_preparar.py --con-permiso 55.1,56.1   # desbloquea planos con cara de persona real
 
-Reglas:
-  · Un plano con «real»: true (cara de una persona real) NO se prepara sin --con-permiso: hace falta su consentimiento por escrito.
-    «real»: «propio» (la cara de Diego, que decide por sí mismo) se prepara sin más.
-    «real»: «confirmar» se prepara, pero la ficha lo avisa: confirma de quién es la foto antes de generar nada.
-  · El audio sale de audio/voces (el que genera tools/voces.py). Si aún no existe, el plano queda «pendiente de voz».
+Los planos con «real»: true (cara de persona real) se preparan igual, con un aviso en la ficha y en el índice.
+El audio sale de audio/voces (el que genera tools/voces.py). Si aún no existe, el plano queda «pendiente de voz».
 """
 import json
 import os
@@ -26,9 +22,6 @@ import voces  # noqa: E402
 
 
 def main():
-    permiso = set()
-    if '--con-permiso' in sys.argv:
-        permiso = set(sys.argv[sys.argv.index('--con-permiso') + 1].split(','))
     planos = json.load(open(os.path.join(AQUI, 'lipsync', 'planos.json'), encoding='utf-8'))['planos']
     R = voces.leer_reparto()
     man = json.load(open(os.path.join(DECK, 'audio', 'voces', 'manifest.json'), encoding='utf-8'))
@@ -47,9 +40,8 @@ def main():
         m = man.get(h)
         real = p.get('real')
         estado = []
-        if real is True and p['id'] not in permiso:
-            filas.append((p['id'], f['quien'], 'BLOQUEADO: cara de persona real, falta permiso por escrito', f['txt'][:60], ''))
-            continue
+        if real is True:
+            estado.append('aviso: cara de persona real (decisión de Diego)')
         d = os.path.join(salida, p['id'])
         os.makedirs(d, exist_ok=True)
         foto = pers.get('foto')

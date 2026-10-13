@@ -18,13 +18,9 @@ El resto de la película sigue con voz en off, clips en movimiento y avatares qu
 Están en `tools/lipsync/planos.json` (id = escena.frase). Si el guion cambia y los números se mueven, el script avisa de «NO EXISTE».
 Para añadir o quitar un plano, se edita ese fichero.
 
-## Consentimiento (importante)
-- `real: true`: el personaje lleva la cara de una **persona real**. El script **no prepara** ese plano sin `--con-permiso <id,id>`,
-  y solo debe usarse con su permiso por escrito (también para Diego con su propia cara, si lo decide él).
-- `real: "propio"`: la cara es la de Diego, que decide por sí mismo; se prepara sin bloqueo.
-- `real: "confirmar"`: se prepara, pero hay que confirmar de quién es la foto antes de generar nada.
-- `real: false`: personaje de ficción.
-- La presentación se ve fuera del círculo de la escuela en una URL pública: con caras reales y frases inventadas hace falta cuidado.
+## Caras reales
+Los planos con `real: true` se preparan igual: la ficha y el índice llevan un aviso, nada más. Las plataformas de lip-sync pueden pedir
+verificación del consentimiento de una cara real y negarse a generar, y si la película acaba en una URL pública, esas frases irán más lejos de la defensa.
 
 ## Límites
 - Hace falta GPU o una cuenta de pago en alguna de las herramientas anteriores: desde el entorno de Claude no se generan los planos.
