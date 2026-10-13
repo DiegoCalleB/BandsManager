@@ -27,6 +27,7 @@ Tabla de Supabase `epk_configs` (35 columnas).
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
+- [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 

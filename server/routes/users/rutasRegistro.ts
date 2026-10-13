@@ -159,6 +159,8 @@ router.post('/auth/register', registroRateLimiter, async (req, res) => {
       main_band_id: bandId,
       band_order: [cleanBandId(bandId)],
       createdAt: new Date().toISOString(),
+      // Idioma del navegador al registrarse: decide en qué idioma van los emails de onboarding.
+      ui_preferences: { idioma: /^en\b/i.test(String(req.headers['accept-language'] ?? '')) ? 'en' : 'es' },
     };
 
     state.users.push(userToUse);
