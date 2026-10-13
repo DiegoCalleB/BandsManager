@@ -2139,3 +2139,12 @@ body.scroll .faroapp { position: relative; left: auto; top: auto; width: 100%; m
 
 body.pelicula:not(.scroll) .slide.feat > .ft-copy > h2 { display: none; }
 body.pelicula:not(.scroll) .slide.feat > .ft-copy > .tag { animation: cartela 4200ms ease both; }
+
+/* Plano y contraplano en las escenas de la app: pregunta un músico → la banda mirando el portátil de Iago, encuadrada en quien habla */
+#reaccion { display: none; }
+body.pelicula:not(.scroll) #reaccion { display: block; position: absolute; inset: 0; z-index: 30; opacity: 0; pointer-events: none; overflow: hidden; background: #05060a; transition: opacity 140ms; }
+#reaccion video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: var(--ox, 50%) var(--oy, 40%); scale: var(--z, 2); translate: calc((50% - var(--ox, 50%)) * .55) calc((46% - var(--oy, 40%)) * .55); }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="bateria"].habla) #reaccion { --ox: 27%; --oy: 45%; --z: 1.7; opacity: 1; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz"].habla) #reaccion { --ox: 52%; --oy: 33%; --z: 1.8; opacity: 1; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="guitarra"].habla) #reaccion { --ox: 78%; --oy: 45%; --z: 1.7; opacity: 1; }
+body.pelicula:not(.scroll):has(#reaccion[style*="opacity: 1"]) .foco { opacity: 0 !important; }

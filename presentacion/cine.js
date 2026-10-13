@@ -130,6 +130,13 @@
   var SUBS_KEY = 'bm_subs2', subsLang = 'es', subsOn = true;
   try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch (e) { /* sin almacenamiento: español */ }
   var enIngles = function (t) { var m = window.SUBS_EN; return (m && m[t.replace(/\[[^\]]*\]\s*/g, '').trim()]) || ''; };
+  // Plano y contraplano: en las escenas de la app, cuando pregunta un músico se corta a la banda mirando el portátil de Iago
+  // (un solo clip, encuadrado en quien habla); cuando contesta Iago, vuelve la pantalla. El corte lo hace el CSS según quién habla.
+  var rx = document.createElement('div'); rx.id = 'reaccion'; rx.setAttribute('aria-hidden', 'true');
+  var rv = document.createElement('video'); rv.muted = true; rv.loop = true; rv.playsInline = true; rv.preload = 'auto'; rv.setAttribute('muted', ''); rv.setAttribute('playsinline', '');
+  rv.poster = 'video/actores/local.jpg'; rv.src = 'video/actores/local.mp4'; rx.appendChild(rv);
+  if (stage) stage.appendChild(rx);
+  var vivaReaccion = function () { if (body.classList.contains('pelicula') && rv.paused) { var pr = rv.play(); if (pr && pr.catch) pr.catch(function () { /* sin autoplay: se queda en el póster */ }); } else if (!body.classList.contains('pelicula') && !rv.paused) rv.pause(); };
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
   // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
@@ -163,7 +170,7 @@
   setInterval(function () { if (subsOn && body.classList.contains('pelicula')) pintarSubs(); }, 150);
   addEventListener('voz', function () { if (subsOn) pintarSubs(); }); // sin esperar al siguiente tic: el nombre sale con la primera palabra
   var raf2 = 0;
-  new MutationObserver(function () { if (!raf2) raf2 = requestAnimationFrame(function () { raf2 = 0; pintarSubs(); }); })
+  new MutationObserver(function () { if (!raf2) raf2 = requestAnimationFrame(function () { raf2 = 0; pintarSubs(); vivaReaccion(); }); })
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
   var ponerSubs = function (lang, guardar) {
     subsLang = lang; subsOn = lang !== 'off'; body.classList.toggle('subs', subsOn);
