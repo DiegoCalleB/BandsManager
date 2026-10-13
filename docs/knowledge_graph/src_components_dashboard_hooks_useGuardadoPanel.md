@@ -20,7 +20,7 @@ Exporta: ESPERA_GUARDADO_MS, useGuardadoPanel.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_services_sesionLocal|src/services/sesionLocal.ts]] *(Layer: #service, Domain: #system)*
-- [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

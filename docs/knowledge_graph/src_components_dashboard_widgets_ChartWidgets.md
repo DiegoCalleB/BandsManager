@@ -13,13 +13,12 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: ChartWidgetProps, RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget, SocialFansGrowthWidget.
+Exporta: ChartWidgetProps, RepertorioEnergyChartWidget, BookingFunnelChartWidget, FinancesChartWidget.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_dashboard_widgets_EnergyCurve|src/components/dashboard/widgets/EnergyCurve.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_ui_CurveSeries|src/components/ui/CurveSeries.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_Onda|src/components/ui/Onda.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_services_api|src/services/api.ts]] *(Layer: #service, Domain: #system)*

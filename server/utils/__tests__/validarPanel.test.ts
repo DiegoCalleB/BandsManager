@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validarPanel, validarPreferenciasUi, MAX_BYTES_PREFERENCIAS } from '../validarPanel.js';
+import { validarPanel, validarPanelGuardado, validarPreferenciasUi, MAX_BYTES_PREFERENCIAS } from '../validarPanel.js';
 
 const ok = { id: 'calendar-1', type: 'calendar', wSpan: 12, hSpan: 'normal', visible: true, order: 0, title: 'Agenda', settings: { calendarViewMode: 'list' } };
 
@@ -32,5 +32,24 @@ describe('validarPreferenciasUi', () => {
     expect(validarPreferenciasUi({ dashboard_widgets: [ok] })).toBeNull();
     expect(validarPreferenciasUi({ dashboard_widgets: 'x' })).not.toBeNull();
     expect(validarPreferenciasUi({ nota: 'x'.repeat(MAX_BYTES_PREFERENCIAS) })).not.toBeNull();
+  });
+});
+
+describe('validarPanelGuardado (formato v2)', () => {
+  it('acepta la lista antigua y el v2, con o sin paneles por banda', () => {
+    expect(validarPanelGuardado([ok])).toBeNull();
+    expect(validarPanelGuardado({ version: 2, base: [ok] })).toBeNull();
+    expect(validarPanelGuardado({ version: 2, base: [ok], porBanda: { 'band-a': [{ ...ok, movil: false }] } })).toBeNull();
+  });
+  it.each([
+    ['versión desconocida', { version: 3, base: [ok] }],
+    ['sin base', { version: 2 }],
+    ['base mal formada', { version: 2, base: [{ ...ok, wSpan: 5 }] }],
+    ['porBanda en lista', { version: 2, base: [ok], porBanda: [] }],
+    ['panel de banda mal formado', { version: 2, base: [ok], porBanda: { b: [{ ...ok, id: '' }] } }],
+    ['movil no booleano', { version: 2, base: [{ ...ok, movil: 'si' }] }],
+    ['demasiados paneles de banda', { version: 2, base: [ok], porBanda: Object.fromEntries(Array.from({ length: 31 }, (_, i) => [`b${i}`, [ok]])) }],
+  ])('rechaza: %s', (_m, v) => {
+    expect(validarPanelGuardado(v)).not.toBeNull();
   });
 });

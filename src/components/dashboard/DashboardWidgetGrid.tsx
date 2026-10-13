@@ -10,12 +10,11 @@ import { CalendarWidget } from "./widgets/CalendarWidget";
 import { RoiBandaWidget } from "./widgets/RoiBandaWidget";
 import { MarketingWidget } from "./widgets/MarketingWidget";
 import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
-import { CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget } from "./widgets/ModuleWidgets";
+import { CrmPipelineWidget, RepertorioWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget } from "./widgets/ModuleWidgets";
 import {
   RepertorioEnergyChartWidget,
   BookingFunnelChartWidget,
   FinancesChartWidget,
-  SocialFansGrowthWidget,
 } from "./widgets/ChartWidgets";
 import {
   Concert,
@@ -37,8 +36,9 @@ import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
+import { BotonMovil } from "./BotonMovil";
 import { useGuardadoPanel } from "./hooks/useGuardadoPanel";
-import { moverEntreVisibles } from "../../utils/panelWidgets";
+import { moverEntreVisibles, leerPanel, panelDeBanda, conPanel, visibleEnMovil, ESENCIALES_MOVIL, type PanelGuardado } from "../../utils/panelWidgets";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -104,9 +104,12 @@ export function DashboardWidgetGrid({
   const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
 
   // Load saved widgets from user preferences or use default, filtering by module access
-  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as
-    | DashboardWidgetConfig[]
-    | undefined;
+  // Lo guardado puede ser el formato antiguo (una lista) o el v2: se lee siempre como v2.
+  const guardadoCrudo = currentUser?.ui_preferences?.dashboard_widgets;
+  const leido = React.useMemo(() => leerPanel(guardadoCrudo), [guardadoCrudo]);
+  const savedWidgets = leido ? panelDeBanda(leido.panel) : undefined;
+  // Último panel completo conocido (con los paneles por banda, que hoy no se tocan desde aquí).
+  const panelRef = React.useRef<PanelGuardado | null>(leido?.panel ?? null);
 
   // Quita lo que el plan no permite y los tipos duplicados. Un tipo de widget solo puede estar
   // una vez en el panel — de guardados anteriores pueden quedar duplicados ("Añadir Otro" lo
@@ -166,7 +169,7 @@ export function DashboardWidgetGrid({
     const ordered = newWidgets.map((w, idx) => ({ ...w, order: idx }));
     setWidgets(ordered);
     setLayoutCustomized(true);
-    saveLayoutToDb(ordered);
+    saveLayoutToDb((panelRef.current = conPanel(panelRef.current, ordered)));
   };
 
   // Si el usuario llega con un panel más reciente que el que se pintó al montar (sesión refrescada
@@ -179,17 +182,16 @@ export function DashboardWidgetGrid({
     if (JSON.stringify(deduped) !== JSON.stringify(widgetsRef.current)) {
       setWidgets(deduped);
       setLayoutCustomized(true);
+      panelRef.current = leido?.panel ?? panelRef.current;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedWidgets]);
 
-  // Si la carga inicial tuvo que quitar duplicados (guardados antes de este cambio), persiste
+  // Si la carga inicial tuvo que quitar duplicados o migrar del formato antiguo, persiste
   // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
   // que el usuario tocara algo manualmente.
   React.useEffect(() => {
-    if (initialLayout.hadDuplicates) {
-      saveLayoutToDb(widgets);
-    }
+    if (initialLayout.hadDuplicates || leido?.migrado) saveLayoutToDb((panelRef.current = conPanel(panelRef.current, widgets)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -326,6 +328,7 @@ export function DashboardWidgetGrid({
       wSpan: meta.defaultWSpan,
       hSpan: meta.defaultHSpan || "normal",
       visible: true,
+      movil: ESENCIALES_MOVIL.has(type),
       order: widgets.length,
       settings:
         type === "calendar"
@@ -423,19 +426,8 @@ export function DashboardWidgetGrid({
             isStitchLight={isStitchLight}
           />
         );
-      case "social_fans_chart":
-        return (
-          <SocialFansGrowthWidget
-            fans={fans}
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-            isStitchLight={isStitchLight}
-          />
-        );
       case "repertorio_summary":
         return <RepertorioWidget onNavigate={onNavigate} />;
-      case "finances_summary":
-        return <FinancesWidget concerts={concerts} onNavigate={onNavigate} />;
       case "social_fans":
         return <SocialFansWidget fans={fans} onNavigate={onNavigate} />;
       case "epk_status":
@@ -529,7 +521,7 @@ export function DashboardWidgetGrid({
                 variant="neutral"
                 size="xs"
                 type="button"
-                onClick={() => saveLayoutToDb(widgets, { inmediato: true })}
+                onClick={() => saveLayoutToDb(conPanel(panelRef.current, widgets), { inmediato: true })}
                 className="items-center gap-1"
               >
                 No se pudo guardar · Reintentar
@@ -632,7 +624,7 @@ export function DashboardWidgetGrid({
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              className={`${colSpanClass} relative transition-ui duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
+              className={`${colSpanClass} ${!isEditMode && !visibleEnMovil(widget) ? "max-md:hidden" : ""} relative transition-ui duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
                 isDragOver
                   ? "ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10"
                   : ""
@@ -702,6 +694,12 @@ export function DashboardWidgetGrid({
                         </button>
                       ))}
                     </div>
+
+                    {/* Móvil — en el móvil caben pocos bloques: aquí se decide cuáles salen */}
+                    <BotonMovil
+                      activo={visibleEnMovil(widget)}
+                      onClick={() => updateAndSaveWidgets(widgets.map((w) => (w.id === widget.id ? { ...w, movil: !visibleEnMovil(w) } : w)))}
+                    />
 
                     {/* Order buttons */}
                     <div className="flex items-center gap-0.5">

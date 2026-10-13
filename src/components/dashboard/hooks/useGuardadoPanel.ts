@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { DashboardWidgetConfig } from '../../../types/dashboardWidgets';
+import type { PanelGuardado } from '../../../utils/panelWidgets';
 import { api } from '../../../services/api';
 import { leerUsuarioDeSesion } from '../../../services/sesionLocal';
 
@@ -16,7 +16,7 @@ export const ESPERA_GUARDADO_MS = 600;
 export function useGuardadoPanel() {
   const [error, setError] = useState(false);
   const [guardado, setGuardado] = useState(false);
-  const pendienteRef = useRef<DashboardWidgetConfig[] | null>(null);
+  const pendienteRef = useRef<PanelGuardado | null>(null);
   const temporizadorRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const enviandoRef = useRef(false);
   /** En cuanto el usuario toca algo en este montaje, lo local manda sobre una sesión refrescada. */
@@ -60,7 +60,7 @@ export function useGuardadoPanel() {
   }, []);
 
   const guardar = useCallback(
-    (panel: DashboardWidgetConfig[], opciones?: { inmediato?: boolean }) => {
+    (panel: PanelGuardado, opciones?: { inmediato?: boolean }) => {
       haGuardadoRef.current = true;
       pendienteRef.current = panel;
       if (temporizadorRef.current) clearTimeout(temporizadorRef.current);

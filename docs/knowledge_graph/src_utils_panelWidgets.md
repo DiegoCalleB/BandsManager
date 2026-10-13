@@ -13,21 +13,23 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Orden del panel de widgets: funciones puras para poder probarlas sin pintar el Dashboard.
+Exporta: moverEntreVisibles, PanelGuardado, TIPOS_RETIRADOS, ESENCIALES_MOVIL, visibleEnMovil, leerPanel, panelDeBanda, conPanel.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
+- [[src_components_dashboard_hooks_useGuardadoPanel|src/components/dashboard/hooks/useGuardadoPanel.ts]] *(from #frontend)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `src/components/dashboard/hooks/__tests__/useGuardadoPanel.test.tsx`
 - `src/utils/__tests__/panelWidgets.test.ts`
 
 ---

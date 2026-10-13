@@ -7,9 +7,9 @@ vi.mock('../../../../services/api', () => ({ api: { saveUiPreferences: guardarAp
 vi.mock('../../../../services/sesionLocal', () => ({ leerUsuarioDeSesion: () => null }));
 
 import { useGuardadoPanel, ESPERA_GUARDADO_MS } from '../useGuardadoPanel';
-import type { DashboardWidgetConfig } from '../../../../types/dashboardWidgets';
+import type { PanelGuardado } from '../../../../utils/panelWidgets';
 
-const panel = (n: number) => [{ id: `w${n}`, type: 'calendar', wSpan: 12, visible: true, order: n }] as DashboardWidgetConfig[];
+const panel = (n: number) => ({ version: 2, base: [{ id: `w${n}`, type: 'calendar', wSpan: 12, visible: true, order: n }], porBanda: {} }) as PanelGuardado;
 
 beforeEach(() => {
   vi.useFakeTimers();
