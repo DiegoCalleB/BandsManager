@@ -19,6 +19,7 @@ import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
 import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
+import { responderError } from "./server/utils/errorHttp.js";
 import { getAppInfo } from "./server/utils/version.js";
 
 import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
@@ -551,9 +552,7 @@ app.use("/api/*", (req, res) => {
 // aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error("[UnhandledRouteError] %s %s:", req.method, req.originalUrl, err);
-  captureError(err, { method: req.method, url: req.originalUrl });
-  if (res.headersSent) return;
-  res.status(500).json({ error: "Error interno del servidor." });
+  responderError(res, err);
 });
 
 // Vite middleware integration for full-stack SPA

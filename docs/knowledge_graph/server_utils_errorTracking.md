@@ -33,6 +33,7 @@ Red de errores del servidor: hasta ahora, un fallo no anticipado (uno que ningú
 - [[server_services_agentQueueWorker|server/services/agentQueueWorker.ts]] *(from #agent)*
 - [[server_services_calendarConflictService|server/services/calendarConflictService.ts]] *(from #service)*
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(from #service)*
 
 ---
 

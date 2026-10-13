@@ -17,6 +17,7 @@ import {
 } from "../utils/dealSupport.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
+import { responderError } from '../utils/errorHttp.js';
 const router = express.Router();
 
 const getStripe = () => {
@@ -136,7 +137,7 @@ router.post("/donations/create-checkout-session", requireAuth, donationRateLimit
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Donations] Error creando la sesión de Checkout:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
+    return responderError(res, err, "Error al crear la sesión de pago.");
   }
 });
 
@@ -237,7 +238,7 @@ router.post("/donations/deal-support/create-checkout-session", requireAuth, dona
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Donations] Error creando la sesión de apoyo al bolo:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error al crear la sesión de pago." });
+    return responderError(res, err, "Error al crear la sesión de pago.");
   }
 });
 

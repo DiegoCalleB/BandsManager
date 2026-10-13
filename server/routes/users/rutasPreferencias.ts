@@ -8,6 +8,7 @@ import { puedeEscribirEnBanda } from '../../utils/bandAccess.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 // Set main / primary band
@@ -109,9 +110,7 @@ router.post(
       res.json({ success: true, user: safeUser, availableBands });
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
-      res.status(500).json({
-        error: err.message || 'Error al establecer la banda principal',
-      });
+      responderError(res, err, 'Error al establecer la banda principal');
     }
   }
 );
@@ -165,9 +164,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error setting band order:', err);
-      res
-        .status(500)
-        .json({ error: err.message || 'Error al guardar el orden de bandas' });
+      responderError(res, err, 'Error al guardar el orden de bandas');
     }
   }
 );
@@ -238,9 +235,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error saving ui-preferences:', err);
-      res.status(500).json({
-        error: err.message || 'Error al guardar preferencias de usuario',
-      });
+      responderError(res, err, 'Error al guardar preferencias de usuario');
     }
   }
 );
@@ -271,9 +266,7 @@ router.get(
       res.json({ success: true, ui_preferences: user.ui_preferences || {} });
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
-      res
-        .status(500)
-        .json({ error: err.message || 'Error al obtener preferencias' });
+      responderError(res, err, 'Error al obtener preferencias');
     }
   }
 );
