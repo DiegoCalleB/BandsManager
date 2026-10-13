@@ -785,7 +785,7 @@ add(scene('Otro jueves, 23:47', 'Otro jueves · 23:47', 'El grupo seguía existi
 add('''<section class="slide scene reveal" data-title="El giro: el bajista soy yo" data-transition="fade">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
-  <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
+  <figure class="rv-photo"><img src="img/historia/mop-gira.jpg" alt="Diego de la Calle tocando el bajo con Master of Prompts (imagen generada con IA)"><figcaption><b>Diego de la Calle</b><span>El bajista · imagen generada con IA</span></figcaption></figure>
   <h2>El bajista soy yo.<br><span class="acc">Necesito volver a tocar.</span></h2>
   <p class="sub">Toqué en varios grupos. Los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado.</p>
   <p class="sub sub2">Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.</p>
@@ -795,7 +795,7 @@ add('''<section class="slide scene reveal" data-title="El giro: el bajista soy y
 <section class="slide scene reveal dream" data-title="Un sueño hecho realidad" data-transition="fade" data-dur="12500">
   <div class="scene-bg" style="--bg-img:url(img/concierto-1.jpg);opacity:.5"></div>
   <span class="tag">Fin de la historia · Diego de la Calle</span>
-  <figure class="rv-photo"><img src="img/diego-bajista.jpg" alt="Diego de la Calle tocando el bajo"><figcaption><b>Diego de la Calle</b><span>El bajista</span></figcaption></figure>
+  <figure class="rv-photo"><img src="img/historia/mop-gira.jpg" alt="Diego de la Calle tocando el bajo con Master of Prompts (imagen generada con IA)"><figcaption><b>Diego de la Calle</b><span>El bajista · imagen generada con IA</span></figcaption></figure>
   <h2>Y ya estamos montando un grupo de metal. Nos falta batería…</h2>
   <p class="sub">Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.</p>
   <p class="sub sub2 hijas">Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles.</p>
