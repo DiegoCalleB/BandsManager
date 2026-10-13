@@ -1,6 +1,7 @@
 /**
  * Preferencias de la cuenta: banda principal, orden de bandas y preferencias de interfaz.
  */
+import { validarPreferenciasUi } from '../../utils/validarPanel.js';
 import express from 'express';
 import { loadState, saveState, requireAuth } from '../../state.js';
 import { dbUpsertUser, normalizePlan } from '../../db.js';
@@ -177,6 +178,8 @@ router.post(
     try {
       const user_id = req.user.id;
       const { calendar_default_months, ...otherPrefs } = req.body || {};
+      const motivo = validarPreferenciasUi(req.body || {});
+      if (motivo) return res.status(400).json({ success: false, error: motivo });
 
       const state = loadState();
       const reqEmail = (
@@ -224,14 +227,18 @@ router.post(
       }
 
       saveState(state);
+      // `persistido: false` = quedó solo en el estado local del servidor (que se pierde al
+      // reiniciar). Sin Supabase configurado (desarrollo, e2e) no hay a dónde persistir y no es un fallo.
+      let persistido = true;
       try {
         await dbUpsertUser(user);
       } catch (err) {
         console.warn('Could not sync ui_preferences to Supabase:', err);
+        persistido = !(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL);
       }
 
       const { passwordHash, salt, ...safeUser } = user;
-      res.json({ success: true, ui_preferences: updatedPrefs, user: safeUser });
+      res.json({ success: true, persistido, ui_preferences: updatedPrefs, user: safeUser });
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error saving ui-preferences:', err);

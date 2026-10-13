@@ -25,6 +25,12 @@ _Sin dependencias salientes directas._
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
+- [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/panelWidgets.test.ts`
 
 ---
 

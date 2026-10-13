@@ -144,8 +144,8 @@ export const api = {
     });
   },
 
-  async saveUiPreferences(preferences: Partial<PreferenciasUi>): Promise<{ success: boolean; ui_preferences: PreferenciasUi; user: User }> {
-    return request<{ success: boolean; ui_preferences: PreferenciasUi; user: User }>('/api/users/ui-preferences', {
+  async saveUiPreferences(preferences: Partial<PreferenciasUi>): Promise<{ success: boolean; persistido?: boolean; ui_preferences: PreferenciasUi; user: User }> {
+    return request<{ success: boolean; persistido?: boolean; ui_preferences: PreferenciasUi; user: User }>('/api/users/ui-preferences', {
       method: 'POST',
       body: JSON.stringify(preferences),
     });
