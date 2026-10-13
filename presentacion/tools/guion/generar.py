@@ -959,24 +959,25 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     <p class="cr-nota" style="margin-top:6px">Máster de Marketing Digital con IA · The Big School</p>
     <h3>Buyer persona del TFM</h3>
     <dl class="cr-dl">
-      <dt>Brais Moure</dt><dd>Quien lo ve, lo juzga y, si le apetece, se sube a un escenario</dd>
-      <dt>Paula</dt><dd>Directora de marketing digital. Si lo ve, igual cae el máster de regalo</dd>
-      <dt>Romuald Fons</dt><dd>Que el posicionamiento de esta película lo apruebe él</dd>
+      <dt>Principal</dt><dd>Brais Moure</dd>
+      <dt>Secundario</dt><dd>Profesorado del Máster de Desarrollo con IA de The Big School</dd>
+      <dt>Secundario</dt><dd>Paula González · Directora del Máster de Marketing Digital con IA</dd>
+      <dt>Secundario</dt><dd>Romuald Fons · Fundador y presidente de The Big School y cantante de Master of Prompts</dd>
+      <dt>Negativo, el real</dt><dd>Quien ya tiene mánager, agencia y oficina de booking: nadie le falta por gestionar</dd>
+      <dt>Negativo, el real</dt><dd>Quien solo quiere subir su música a Spotify: eso lo hace una distribuidora</dd>
+      <dt>Negativo, de coña</dt><dd>Peláez: quiere el 30 % y que no se note</dd>
+      <dt>Negativo, de coña</dt><dd>La sala del fax: «mándanos un fax y ya vemos»</dd>
     </dl>
-    <h3>Buyer persona de BandManager · B2C</h3>
+    <h3>Modelos de negocio de BandManager</h3>
     <dl class="cr-dl">
-      <dt>Músicos y grupos</dt><dd>Los que tocan y no tienen tiempo de gestionarlo</dd>
-      <dt>Pequeños mánagers</dt><dd>Los que llevan varias bandas a la vez</dd>
-      <dt>Profesores de música</dt><dd>Los que enseñan y organizan a sus alumnos</dd>
-      <dt>Estudiantes de música</dt><dd>Los próximos Herdeiros</dd>
+      <dt>B2C</dt><dd>Músicos y grupos con su cuota de 0 a 79 €. El Lambo, de momento, no</dd>
+      <dt>B2B</dt><dd>Mánagers, agencias, salas, festivales y productoras. Los que contestan al correo… a veces</dd>
+      <dt>B2B2C</dt><dd>BandManager, la banda y su público: el fan escanea el QR y nosotros ni nos enteramos</dd>
+      <dt>C2C</dt><dd>Date Swap: entre músicos nos entendemos. Y nos llamamos traidores</dd>
+      <dt>C2B</dt><dd>La banda se ofrece a la sala con su dossier, y sin pasar por Peláez</dd>
+      <dt>B2G</dt><dd>Ayuntamientos y fiestas patronales. Idea, aún sin construir: la licencia de actividad, otro día</dd>
     </dl>
-    <h3>Buyer persona de BandManager · B2B</h3>
-    <dl class="cr-dl">
-      <dt>Promotoras musicales grandes</dt><dd>Los que programan los carteles</dd>
-      <dt>Productoras</dt><dd>Los que montan los conciertos</dd>
-      <dt>Sellos discográficos</dt><dd>Los que fichan</dd>
-      <dt>Ojeadores de nuevos talentos</dt><dd>Los que descubren a la próxima banda</dd>
-    </dl>
+    <p class="cr-nota" style="margin-top:6px">C2B2C, descartado: no queremos un modelo de negocio con más letras que la banda</p>
     </div>
     <h2 class="cr-seccion">Departamentos técnicos</h2>
     <h3>Los agentes</h3>
