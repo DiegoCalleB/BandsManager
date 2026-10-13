@@ -8,6 +8,7 @@ import {
 } from "../../types/dashboardWidgets";
 import { CalendarWidget } from "./widgets/CalendarWidget";
 import { RoiBandaWidget } from "./widgets/RoiBandaWidget";
+import { MarketingWidget } from "./widgets/MarketingWidget";
 import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
 import {
   CrmPipelineWidget,
@@ -518,6 +519,8 @@ export function DashboardWidgetGrid({
             onNavigate={onNavigate}
           />
         );
+      case "marketing":
+        return <MarketingWidget fans={fans} leads={leads} onNavigate={onNavigate} />;
       default:
         return null;
     }
