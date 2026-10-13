@@ -1807,20 +1807,20 @@ body.pelicula:not(.scroll) .dirigida.active .dr-lab { display: flex; position: a
 /* campos que se escriben, texto que redacta la IA, trozos de pantalla cambiados, números que cuentan */
 .dr-campo, .dr-stream, .dr-tapa, .dr-num, .dr-pulsa, .dr-hover, .dr-firma { position: absolute; box-sizing: border-box; pointer-events: none; font-family: var(--font); }
 .dr-campo { display: flex; align-items: center; white-space: nowrap; overflow: hidden; opacity: 0; }
-.dirigida.active .dr-campo { animation: drsale .01s step-end var(--t) forwards, drfoco .4s ease-out var(--t) both; }
+.dirigida.active .dr-campo { animation: drsale .01s step-start var(--t) forwards, drfoco .4s ease-out var(--t) both; }
 @keyframes drsale { to { opacity: 1; } }
 @keyframes drfoco { from { box-shadow: 0 0 0 0 rgba(61,139,255,.0); border-color: #3d8bff; } to { box-shadow: 0 0 0 3px rgba(61,139,255,.45); border-color: #3d8bff; } }
 .dr-stream { white-space: pre-wrap; overflow: hidden; opacity: 0; }
-.dirigida.active .dr-stream { animation: drsale .01s step-end var(--t) forwards; }
+.dirigida.active .dr-stream { animation: drsale .01s step-start var(--t) forwards; }
 .dr-tx > span { visibility: hidden; position: relative; }
-.dirigida.active .dr-tx > span { animation: drletra .01s step-end var(--t) forwards; }
+.dirigida.active .dr-tx > span { animation: drletra .01s step-start var(--t) forwards; }
 @keyframes drletra { to { visibility: visible; } }
 /* el cursor de texto: va detrás de la última letra y parpadea al acabar */
 .dr-tx > span::after { content: ''; position: absolute; right: -2px; top: .12em; bottom: .08em; width: 2px; background: #5b9cff; opacity: 0; }
-.dirigida.active .dr-tx > span::after { animation: drcaret var(--g, .12s) step-end var(--t) forwards; }
+.dirigida.active .dr-tx > span::after { animation: drcaret var(--g, .12s) linear var(--t) forwards; }
 .dr-stream { --g: .03s; }
 .dirigida.active .dr-tx > span:last-child::after { animation: drcaretfin 1s step-end var(--t) infinite; }
-@keyframes drcaret { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes drcaret { 0%, 90% { opacity: 1; } 91%, 100% { opacity: 0; } }
 @keyframes drcaretfin { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
 .dr-tapa { display: flex; align-items: center; justify-content: flex-start; overflow: hidden; opacity: 0; white-space: nowrap; }
 .dirigida.active .dr-tapa { animation: drtapa var(--d) linear var(--t) forwards; }
