@@ -152,3 +152,10 @@ Total: **~21 clips de ≤ 8 s ≈ 2,5–3 min de vídeo**. Plan B si Veo da prob
 - **Revisión.** Ver cada clip a 1× y a 0,5×: los labios deben cerrarse en P, B y M, y la boca debe quedarse quieta en los silencios.
 - **Vestuario fijo** en todos los prompts (para que no cambie de un plano a otro): Iago, camiseta gris; Brais, gorra negra y camiseta negra sin mangas; Alan, camisa de flores; Álvaro, chaleco vaquero con parches sobre camiseta negra; Peláez, traje. Referencias en `ACTORES.md` y `img/miembro-*.jpg`.
 - **Fonética de las voces** (ya aplicada en el guion): «Band Mánayer», «sétlist», «ráider», «la Big Scul», «Máster of Prompts», «Resurrécshon Fest».
+
+## Continuidad de personajes (fijada)
+- **Alan (voz):** pelo rizado oscuro, **bigote siempre**, camisa de flores de manga corta. Añadir "thick moustache" en cada prompt donde salga su cara.
+- **Álvaro (guitarra):** chaleco vaquero con parches (calavera en la espalda), camiseta negra, barba corta.
+- **Iago (bajo):** calvo, gorra negra, barba, camiseta negra sin mangas, tatuaje en el brazo.
+- **Brais (batería):** pelo corto oscuro, barba, camiseta negra.
+- Luz del local: baja, fría de pantalla + luces de guirnalda cálidas al fondo (los clips luminosos se oscurecen al montar).
