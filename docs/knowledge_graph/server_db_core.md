@@ -42,6 +42,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(from #db)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(from #db)*
+- [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(from #db)*
 - [[server_db_enlacesBandas|server/db/enlacesBandas.ts]] *(from #db)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*

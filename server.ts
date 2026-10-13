@@ -49,7 +49,7 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
-import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
+import paginaConciertoRouter, { startEmailsCicloVidaScheduler } from "./server/routes/paginaConcierto.js";
 import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
 import { referidosRouter } from "./server/routes/referidos.js";
 import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
@@ -625,7 +625,7 @@ async function startServer() {
     }
     // Barrido diario de choques de calendario (aviso por email, ver server/services/calendarConflictService.ts)
     try {
-      startCalendarConflictScheduler();
+      startCalendarConflictScheduler(); startEmailsCicloVidaScheduler(); // el 2.º está apagado salvo EMAILS_CICLO_VIDA=true
     } catch (e) {
       console.error("Error starting Calendar Conflict Scheduler:", e);
     }

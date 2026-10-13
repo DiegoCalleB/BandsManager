@@ -37,6 +37,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
+- [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
