@@ -626,10 +626,10 @@ add(f'''<section class="slide scene biz" data-title="A quién se lo vendemos" da
   <span class="tag">Cómo lo hacemos · A quién</span>
   <h2>A quién se lo vendemos.</h2>
   <div class="biz-cols">
-    <div class="biz-col"><span class="badge">B2C</span><h3>Bandas y músicos</h3><p>Una cuota por banda, de 0 a 79 € al mes</p></div>
+    <div class="biz-col"><span class="badge">B2C</span><h3>Bandas, músicos, DJs y solistas</h3><p>Una cuota por banda, de 0 a 79 € al mes</p></div>
     <div class="biz-col"><span class="badge b2b">B2B</span><h3>Mánagers, agencias, salas, festivales y productoras</h3><p>Los que llevan varias bandas y los que programan</p></div>
   </div>
-  {dlg(m('iago', 'Dos tipos de cliente. B2C: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda.'),
+  {dlg(m('iago', 'Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros. Pagan una cuota por banda.'),
        m('brais', '¿Y B2B?'),
        m('iago', 'Mánagers y agencias, que llevan varias bandas a la vez. Y salas, festivales y productoras, que son las que programan.'),
        m('xandre', '¿Y por qué iba a querer una sala usar esto?'),
@@ -1207,6 +1207,16 @@ _r = ('<div class="rafaga" aria-hidden="true">' + ''.join(
     f'<figure class="rf" style="--k:{k}">{_rf_medio(src)}<figcaption><b>{t}</b><span>{s}</span></figcaption></figure>' for k, (t, s, src) in enumerate(RAFAGA))
     + f'<p class="rf rf-fin" style="--k:{len(RAFAGA)}">Y todo, en la misma app.</p></div>\n')
 _x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rindex('</section>'):]
+
+# Orden del capítulo 1: salas → la IA escribe → afina el correo → llega a la sala → medios → bandas amigas (Spotify) → Date Swap → cambio de perfil → acuerdo → respuesta
+def _mover(titulo, tras):
+    i = [k for k, x in enumerate(S) if f'data-title="{titulo}"' in x]
+    j = [k for k, x in enumerate(S) if f'data-title="{tras}"' in x]
+    assert len(i) == 1 and len(j) == 1, ('reorden', titulo, tras)
+    x = S.pop(i[0]); j = [k for k, y in enumerate(S) if f'data-title="{tras}"' in y][0]; S.insert(j + 1, x)
+_mover('Afina el correo', 'La IA escribe, tú apruebas')
+_mover('Medios de comunicación', 'El correo llega a la sala')
+_mover('Bandas amigas', 'Medios de comunicación')
 
 # Orden de la recta final del capítulo 4: la ráfaga de funciones va antes del momento íntimo (así «Las noches» no se pisa)
 _ym = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]

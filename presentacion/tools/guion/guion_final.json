@@ -235,8 +235,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes. Y a la IA la entrenas con estrellas: aprende cómo hablamos.",
-    "voz": "Porque la app te avisa: cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes. Y a la IA la entrenas con estrellas, para que aprenda cómo hablamos."
+    "txt": "Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes.",
+    "voz": "Porque la app te avisa: cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes."
    }
   ],
   "nota": "Mismas 6 líneas e ideas. Los dolores los dicen ellos (una tarde por correo, gritar en un pozo). 'Abren el dossier' queda plantado para el pago de «Qué viene»."
@@ -388,8 +388,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Sí. Nos conectamos a su Spotify y a su YouTube para sacar un preview de sus temas más populares.",
-    "voz": "Sí. Nos conectamos a su Spótifai y a su Yutub. Le das a escuchar, y suena un trocito de sus temas más populares."
+    "txt": "Sí. Le das a «Escuchar» y suena en el reproductor de abajo, sin salir de la app: sacamos un preview de su Spotify y su YouTube.",
+    "voz": "Sí. Le das a escuchar, y suena en el reproductor de abajo, sin salir de la app. Nos conectamos a su Spótifai y a su Yutub, y sacamos un trocito de sus temas más populares."
    },
    {
     "who": "bateria",
@@ -949,24 +949,34 @@
   "h2": null,
   "lines": [
    {
+    "who": "bateria",
+    "txt": "Pero, ¿cuándo, Iago? ¿A qué hora?",
+    "voz": "[curious] Pero, ¿cuándo, Iago? ¿A qué hora, si no paras?",
+    "t": "02:46"
+   },
+   {
     "who": "bajo",
     "txt": "Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.",
-    "voz": "Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo."
+    "voz": "Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.",
+    "t": "02:47"
    },
    {
     "who": "bateria",
     "txt": "Neno… no teníamos ni idea.",
-    "voz": "[softly] Neno… no teníamos ni idea."
+    "voz": "[softly] Neno… no teníamos ni idea.",
+    "t": "02:48"
    },
    {
     "who": "guitarra",
     "txt": "Y nosotros, discutiendo por las birras.",
-    "voz": "[sighs] Y nosotros, discutiendo por las birras."
+    "voz": "[sighs] Y nosotros, discutiendo por las birras.",
+    "t": "02:48"
    },
    {
     "who": "voz",
     "txt": "Gracias, Iago. De verdad.",
-    "voz": "[softly] Gracias, Iago. De verdad."
+    "voz": "[softly] Gracias, Iago. De verdad.",
+    "t": "02:49"
    }
   ],
   "nota": "Quitada la etiqueta [softly] de Iago (lo pide la regla). Brais habla como Brais ('neno', no 'tío')."
@@ -1090,8 +1100,8 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Dos tipos de cliente. B2C: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda.",
-    "voz": "Hay dos tipos de cliente. El primero, be tu ci: las bandas y los músicos. O sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes."
+    "txt": "Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros. Pagan una cuota por banda.",
+    "voz": "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes."
    },
    {
     "who": "bateria",
@@ -1181,8 +1191,8 @@
   "lines": [
    {
     "who": "manager",
-    "txt": "Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.",
-    "voz": "Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Agua, toallas, birras frías. Y croquetas."
+    "txt": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El rider está en el camerino, tal y como firmamos.",
+    "voz": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El ráider está en el camerino, tal y como firmamos. Agua, toallas, birras frías. Y croquetas."
    },
    {
     "who": "sello",
