@@ -520,6 +520,14 @@ add(feat('Del directo al reel', TAG3, 'Del directo al reel.',
           m('iago', 'No: programas cada reel en cada red, con su día y su hora.', say='Qué va. Programas la publicación de cada reel, en cada red, con su día y su hora. Y vosotros, a tocar.')],
          shot_img('img/d-h-reels.jpg')))
 
+add(feat('El seguimiento de las redes', TAG3, 'Cuánto crece la banda, mes a mes.',
+         [m('brais', '¿Y cómo sabemos si todo esto funciona? ¿Si nos sigue más gente?', say='¿Y cómo sabemos si todo esto funciona? ¿Si de verdad nos sigue más gente?'),
+          m('iago', 'Con este panel: apuntas los seguidores de Instagram, TikTok, YouTube y Spotify cada mes. Mirad cómo se rellena.', say='Con este panel. Apuntas los seguidores de Instagram, TikTok, Yutub y Spótifai, cada mes. Mirad cómo se rellena la curva.'),
+          m('alvaro', '¡Y la curva sube! ¡Instagram, de 1.385 a 4.580!', say='[amazed] ¡Y la curva sube, tío! ¡Instagram, de mil trescientos a más de cuatro mil quinientos!'),
+          m('xandre', '¡Y TikTok pegando el petardazo!', say='[excited] ¡Y TikTok pegando el petardazo, che!'),
+          m('iago', 'Abajo, cuánto ha subido cada mes. Son datos de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.', say='Y abajo, cuánto ha subido cada mes. Estos números son de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.')],
+         shot_vid('video/v-metricas.mp4', 'video/v-metricas.jpg'), grupo='promocion'))
+
 add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
          [m('alvaro', '¿Y la grabación entera del bolo de la Ribeira?', say='¿Y la grabación entera del bolo de la Ribeira? ¿Eso no vale para nada?'),
           m('iago', 'La subes y la IA separa las canciones de lo que hablamos con el público.', say='La subes, y la inteligencia artificial separa las canciones de lo que hablamos con el público. Y saca hasta la letra y los acordes.'),
@@ -1224,6 +1232,7 @@ DOLOR = {
     'Un QR y el público se hace fan': ('El público se va sin dejar rastro', 'Un QR para que te sigan'),
     'Merchan en un minuto': ('Merchan sin diseño ni tiempo', 'Camisetas con vuestro QR en un minuto'),
     'Del directo al reel': ('Horas editando vídeos', 'Reels listos para cada red'),
+    'El seguimiento de las redes': ('Apuntar los seguidores a mano', 'Una curva que sube mes a mes'),
     'Del concierto al disco': ('El directo, sin aprovechar', 'Del concierto sacas las canciones'),
     'Cuánto entra y cuánto queda': ('Cuentas en el aire tras cada bolo', 'Lo que entra y lo que queda, claro'),
     'La gira, con gasolina y todo': ('Las cuentas de la gira, a ojo', 'La gasolina de la ruta, calculada'),
@@ -1249,6 +1258,7 @@ FICHAS = {
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'El seguimiento de las redes': ('Seguimiento de redes', 'Seguidores de Instagram, TikTok, YouTube y Spotify, mes a mes y con la subida de cada uno.', ['Curva de crecimiento', 'Subida de cada mes', 'Radar de redes']),
     'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
 }
 _nf = 0
