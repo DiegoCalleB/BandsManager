@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_login_registrarCuenta|src/components/login/registrarCuenta.ts]] *(from #frontend)*
 - [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
 - [[src_components_SimplePromoLoginModal|src/components/SimplePromoLoginModal.tsx]] *(from #frontend)*
 - [[src_hooks_useAuth|src/hooks/useAuth.ts]] *(from #security)*
