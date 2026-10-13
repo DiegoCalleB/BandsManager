@@ -199,6 +199,16 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Revisión con datos reales:** revisado con datos simulados (21 salas, conciertos, fans) en claro y oscuro: Booking, Panel, Fans, Calendario, Management, Agente Mánager, Ensayos y Discografía. Finanzas y Merchandising también revisadas (simulando líder y plan Cabeza de Cartel): títulos al estilo `page-title`, importes con `formatEur`, cifras en tinta (sin verde-sube/rojo-baja). Falta solo verlas con los números reales de Ruta 66.
 * **Estado:** F3 a F9 hechas; solo falta contrastar con los números reales de Ruta 66.
 
+### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
+
+* **Qué:**
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. Candidatos: subir su `testTimeout` o precargar el módulo de `auto_enrichment` en un `beforeAll`.
+  2. Cinco ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/DashboardWidgetGrid.tsx` (849), `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (757), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617).
+* **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
+* **Estado:** pendiente. Para (2), trocear primero `DashboardWidgetGrid.tsx` (barra de edición, selector de widgets y modal «Añadir»), en un PR que no mezcle refactor con comportamiento.
+
+---
+
 ### Deuda: datos de bandas concretas (Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
 * **Hecho en fase 1b/2 (parcial, octubre 2026):** fuera el texto de una banda concreta de las rutas de lectura y prompts del servidor (`emailTemplate.ts` ya no inventa teléfono/email/logo y usa el nombre de la banda; scout, radar, matcher y audiencia usan «la banda»; ejemplos de `metrics.ts`); el EPK de la banda de ejemplo (`band-demo`) vive aislado en `server/seeds/demoEpk.ts` (con test) y `sync.ts` solo pregunta `defaultEpkConfigFor(bandId)`; variables de tono de `ReelsCenter.tsx` sin nombre de banda.
