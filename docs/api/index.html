@@ -3268,10 +3268,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:28",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/chat.ts:29",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "chatRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/analyze": {
@@ -12797,7 +12803,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:678",
+        "x-source": "server/routes/chat.ts:642",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
