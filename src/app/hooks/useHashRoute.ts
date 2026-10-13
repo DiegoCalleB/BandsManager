@@ -82,6 +82,7 @@ export function useHashRoute({ isLoggedIn }: HashRouteParams) {
       p === "/landingpage_oficial" ||
       p === "/oficial" ||
       p === "/home" ||
+      p === "/en" ||
       p === "/info" ||
       search.get("landing") === "true" ||
       search.get("ver") === "landing"
@@ -106,6 +107,7 @@ export function useHashRoute({ isLoggedIn }: HashRouteParams) {
       p === "/landingpage_oficial" ||
       p === "/oficial" ||
       p === "/home" ||
+      p === "/en" ||
       p === "/info" ||
       p.startsWith("/landingpage_tfm") ||
       p.startsWith("/landingpage-tfm") ||

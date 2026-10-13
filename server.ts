@@ -2,6 +2,8 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import path from "path";
+import { servirIndex } from "./server/utils/cabeceraIdioma.js";
+import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
 
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
@@ -590,10 +592,8 @@ async function startServer() {
         }
       }
     }));
-    app.get("*", paginaRateLimiter, (req, res) => {
-      res.setHeader("Cache-Control", "no-store");
-      res.sendFile(path.join(distPath, "index.html"));
-    });
+    // La landing en español (/) y en inglés (/en) llevan su <head> por idioma (canonical + hreflang).
+    app.get("*", paginaRateLimiter, servirIndex(distPath, baseUrlPublica()));
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
