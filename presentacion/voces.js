@@ -90,7 +90,7 @@
   function foco(el) {
     var slide = el.closest('.slide'), m = window.REPARTO && window.REPARTO[el.dataset.who];
     if (!slide || document.body.classList.contains('scroll')) return;
-    var h = m && m.foto && hueco(slide);
+    var h = m && m.foto && !slide.hasAttribute('data-sin-plato') && hueco(slide); // data-sin-plato: el vídeo de fondo ya es ese personaje
     var f = slide.querySelector('.foco');
     if (!h) { if (f) f.classList.remove('in'); return; }
     if (!f) {

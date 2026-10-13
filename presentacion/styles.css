@@ -912,6 +912,7 @@ body.scroll .dlg .bub { font-size: 16px; padding: 8px 14px; } body.scroll .dlg {
 
 /* Diapositivas de producto con diálogo: el chat manda, la pantalla es la prueba */
 .slide.feat.dl .ft-copy { left: 100px; top: 84px; width: 960px; }
+.slide.feat.dl.mailscene .ft-copy { width: 560px; } .slide.feat.dl.mailscene .dlg .bub { font-size: 22px; } /* el correo ocupa la derecha desde x=660: el chat no debe taparlo */
 .feat.dl h2 { font-size: 62px; margin-top: 20px; max-width: 900px; }
 .feat.dl .dlg { margin-top: 26px; }
 .feat.dl .dlg .bub { font-size: 28px; }
@@ -1698,8 +1699,6 @@ body.scroll .mailscene .ms { display: none; }
 .mailscene.active .ms-read { animation: msread 600ms ease-out 8s both; }
 @keyframes msread { from { opacity: 0; translate: 40px 0; } to { opacity: 1; translate: 0 0; } }
 .ms-rd-in { position: absolute; left: 70px; right: 70px; top: 40px; }
-.mailscene.active .ms-rd-in { animation: msscroll 1.5s cubic-bezier(.4, 0, .2, 1) 10.8s both; }
-@keyframes msscroll { to { translate: 0 -330px; } }
 .ms-rd-h { margin: 0 0 22px; font: 400 36px/1.2 Onest, sans-serif; color: #1f2430; opacity: 0; }
 .ms-rd-from { display: flex; align-items: center; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid #e3e7ef; opacity: 0; font-size: 20px; color: #1f2430; }
 .ms-rd-from img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #111; }

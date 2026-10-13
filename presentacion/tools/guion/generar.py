@@ -1265,6 +1265,7 @@ for _i, _x in enumerate(S):
     _k = _t and PLANOS.get(_t.group(1))
     if _k and os.path.exists(os.path.join(_ACT, _k + '.mp4')):
         S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _vid(_k) + '<i class="actor-velo"></i>', _x, count=1)
+        if _k == 'manager': S[_i] = re.sub(r'(<section [^>]*)>', r'\1 data-sin-plato>', S[_i], count=1)  # el vídeo ya es el mánager: sin su retrato encima
     for _m in ('brais', 'xandre', 'alvaro', 'iago'):
         if 'data-title="Prólogo · La banda"' in S[_i] and os.path.exists(os.path.join(_ACT, f'miembro-{_m}.mp4')):
             S[_i] = re.sub(rf'<img[^>]*src="img/miembro-{_m}.jpg"[^>]*>', lambda mm: mm.group(0) + _vid(f'miembro-{_m}'), S[_i], count=1)
