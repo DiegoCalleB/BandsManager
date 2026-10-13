@@ -214,9 +214,11 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 **Brais:** ¡Pero si no le falta de nada! 🤯  
 
 ## Lo han visto todo
-**Álvaro:** ¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas!  
+**Álvaro:** ¡¿Pero cuándo has podido hacer esto?! Si cuando no estás en el trabajo, ¡estás con tus dos hijas! 🤯  
+**Iago:** Pues han sido unos meses duros: no he podido dedicarles tiempo de calidad al 100 %, he estado muy distraído construyendo todo esto.  
+**Iago:** ¡Y encima Netflix me ha pedido una peli documental con la historia de BandManager! No sé cómo se han enterado, ¡estoy flipando! 🎬  
 **Alan:** ¡Sos un genio, Iago! 🙌  
-**Iago:** Por las noches, con Claudio y Guglio.  
+**Iago:** Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.  
 
 ## Las noches
 **Iago:** Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.  

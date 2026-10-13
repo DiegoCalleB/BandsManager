@@ -908,8 +908,18 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¡¿Pero cuándo has hecho esto?! ¡Si tienes trabajo y dos hijas!",
-    "voz": "Pero, Iago, ¿cuándo has hecho todo esto? ¡Si tienes curro y dos hijas!"
+    "txt": "¡¿Pero cuándo has podido hacer esto?! Si cuando no estás en el trabajo, ¡estás con tus dos hijas! 🤯",
+    "voz": "Pero, Iago, ¿cuándo has podido hacer todo esto? ¡Si cuando no estás en el curro, estás con tus dos hijas!"
+   },
+   {
+    "who": "bajo",
+    "txt": "Pues han sido unos meses duros: no he podido dedicarles tiempo de calidad al 100 %, he estado muy distraído construyendo todo esto.",
+    "voz": "Pues han sido unos meses duros, la verdad. No he podido dedicarles tiempo de calidad al cien por cien a las niñas. He estado muy distraído construyendo todo esto."
+   },
+   {
+    "who": "bajo",
+    "txt": "¡Y encima Netflix me ha pedido una peli documental con la historia de BandManager! No sé cómo se han enterado, ¡estoy flipando! 🎬",
+    "voz": "¡Y encima Netflix me ha pedido una peli documental con la historia de Band Mánayer! No sé cómo se han enterado, ¡estoy flipando!"
    },
    {
     "who": "voz",
@@ -918,11 +928,11 @@
    },
    {
     "who": "bajo",
-    "txt": "Por las noches, con Claudio y Guglio.",
-    "voz": "Por las noches, con Claudio y Guglio. Y mucho café. Muchísimo café."
+    "txt": "Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.",
+    "voz": "Pero no me da la vida, chavales. Quiero estar al cien por cien con mi familia y con vosotros."
    }
   ],
-  "nota": "Sin cambios: el café cierra el 'y yo, un café' de La decisión."
+  "nota": "Respuesta de Iago a «¿cuándo?»: meses duros, Netflix (chiste) y remate sincero. Enlaza con «Las noches»."
  },
  {
   "title": "Las noches",
