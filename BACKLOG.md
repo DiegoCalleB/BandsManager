@@ -138,6 +138,18 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 💡 Ideas por explorar
 
+### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (preguntas abiertas, 2026-10-13)
+
+* **Qué:** cuatro preguntas sobre el agente del chat, anotadas tal cual y **sin investigar todavía**:
+  1. ¿Tiene sentido que el agente del chat tenga **deshabilitados los agentes/herramientas de Supabase**?
+  2. ¿Tiene sentido que el botón de **«aprobar todas las acciones»** salga **arriba** de la conversación y no abajo del todo?
+  3. ¿El chat **tiene memoria**? (qué recuerda entre mensajes y entre sesiones, y dónde se guarda)
+  4. ¿Se podría **limpiar el historial cada X tiempo**? (cada cuánto, y qué se borra y qué se conserva)
+* **Por qué importa:** sin comprobar. Las preguntas 1 y 4 tocan seguridad y privacidad (qué puede hacer el agente sobre la base de datos y cuánto tiempo se guardan las conversaciones); la 2 es de uso; la 3 decide si el agente puede ser coherente a lo largo del tiempo.
+* **Estado:** pendiente de investigar y decidir. Mirar antes `server/routes/chat.ts`, `server/utils/conversacionChat.ts` y `src/components/chatbot/`.
+
+---
+
 ### Subida de vídeo de fans vía QR como gancho de conversión hacia el landing
 * **Qué:** en el QR del concierto (cartel, entrada, escenario), añadir la opción de que el asistente suba su propio clip de 15" grabado durante el show.
 * **Por qué importa:** el valor principal no es el vídeo en sí — es que **da un motivo activo para escanear el QR** más allá de "mirar el dossier". Alguien que quiere subir su clip entra sí o sí a la landing, y una vez dentro ve el resto: fan landing, EPK/dossier, próximos conciertos. Convierte una acción pasiva (escanear por curiosidad) en una con intención, y de paso aumenta las visitas reales a todo lo demás que ya tenéis montado en esa página (captación de fans, calendario).
