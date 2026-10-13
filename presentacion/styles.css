@@ -1175,7 +1175,7 @@ body.pelicula:not(.scroll) #nf { display: block; }
 .nf-titulo { flex: 1; text-align: center; font-size: 26px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nf-titulo b { font-weight: 700; } .nf-titulo span { color: rgba(255,255,255,.65); margin-left: 6px; }
 .nf-menu { position: absolute; right: 120px; bottom: 120px; z-index: 2; display: none; gap: 60px; padding: 30px 48px; background: rgba(38,38,38,.97); border-radius: 6px; font-size: 26px; box-shadow: 0 10px 40px rgba(0,0,0,.6); }
-#nf.menu .nf-menu { display: flex; }
+#nf.menu .nf-m-subs { display: flex; }
 .nf-menu h4 { margin: 0 0 16px; font-size: 30px; }
 .nf-menu p { margin: 0; padding: 10px 0 10px 40px; color: rgba(255,255,255,.65); cursor: pointer; position: relative; }
 .nf-menu p:hover { color: #fff; }
@@ -1191,6 +1191,7 @@ body.pausado #stage .slide.active { filter: brightness(.45); transition: filter 
 .nf-rep { margin: 18px 0 0; font-size: 22px; color: rgba(255,255,255,.65); } .nf-rep b { display: inline; font-size: inherit; color: rgba(255,255,255,.45); font-weight: 400; margin: 0 8px 0 0; } .nf-pausa em { display: block; margin-top: 18px; font-size: 24px; color: rgba(255,255,255,.65); font-style: normal; }
 /* El HUD de la presentación sobra mientras se ve la película */
 body.pelicula:not(.scroll) #hud { opacity: 0; pointer-events: none; }
+body.pelicula:not(.scroll) #hud > * { pointer-events: none; } /* invisible no es inclicable: sus botones tapaban la barra de Netflix (subtítulos, volumen…) */
 body.pelicula.nf-ver { cursor: default; } body.pelicula:not(.nf-ver):not(.pausado) { cursor: none; }
 body.pelicula:not(.scroll) #edgeL, body.pelicula:not(.scroll) #edgeR, body.pelicula:not(.scroll) #aL, body.pelicula:not(.scroll) #aR { display: none; }
 body.pelicula:not(.scroll) .feat > .foco b { background: rgba(0,0,0,.72); padding: 4px 16px; border-radius: 99px; }
@@ -1458,7 +1459,7 @@ body.pelicula:not(.scroll) .slide.feat.active .ft-copy > .tag { animation: sobre
 .nf-b:disabled { opacity: .35; cursor: default; transform: none; }
 .nf-b svg text { fill: currentColor; }
 #nf.menu .nf-m-subs, #nf.menu-vel .nf-m-vel, #nf.menu-caps .nf-m-caps { display: flex; }
-#nf.menu-vel, #nf.menu-caps { opacity: 1; } #nf.menu-vel > *, #nf.menu-caps > * { pointer-events: auto; }
+#nf.menu, #nf.menu-vel, #nf.menu-caps { opacity: 1; } #nf.menu > *, #nf.menu-vel > *, #nf.menu-caps > * { pointer-events: auto; }
 .nf-m-vel .nf-vels { display: flex; gap: 34px; } .nf-m-vel p { padding-left: 34px; }
 .nf-m-caps { max-height: 620px; overflow: auto; min-width: 640px; }
 .nf-lista { list-style: none; margin: 0; padding: 0; }
