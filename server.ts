@@ -75,13 +75,8 @@ process.on("unhandledRejection", (reason) => {
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// CSP restringida a las directivas que no dependen de qué orígenes carga la página: la CSP
-// completa (default-src/script-src/...) no se puede fijar porque el panel embebe Stripe Checkout,
-// reproductores de Spotify/YouTube/Vimeo y el widget de Google Translate (inyecta <script>/<style>
-// inline), todos ajenos al origen propio, y habla con Supabase y APIs de terceros. Aquí se cierra
-// lo que no rompe nada: sin <object>/<embed> (object-src), sin <base> inyectado (base-uri) y sin
-// ser embebida desde otro origen (frame-ancestors, coherente con X-Frame-Options: SAMEORIGIN).
-// COEP sigue desactivado por los mismos iframes ajenos.
+// CSP mínima (object-src, base-uri, frame-ancestors): la completa no se puede fijar porque el panel
+// embebe Stripe, Spotify/YouTube/Vimeo y Google Translate (scripts inline ajenos). COEP sigue desactivado.
 //
 // Referrer-Policy SÍ hay que fijarlo a mano: el "no-referrer" por defecto de helmet hace que el
 // navegador no mande cabecera Referer al pedir el iframe de YouTube del EPK público, y el
@@ -91,14 +86,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 // navegadores modernos: manda el origen (no la URL completa) a otros sitios, nada a HTTP en
 // claro, y es suficiente para que YouTube/Vimeo/Spotify carguen bien.
 app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: false,
-    directives: {
-      objectSrc: ["'none'"],
-      baseUri: ["'self'"],
-      frameAncestors: ["'self'"]
-    }
-  },
+  contentSecurityPolicy: { useDefaults: false, directives: { objectSrc: ["'none'"], baseUri: ["'self'"], frameAncestors: ["'self'"] } },
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
   referrerPolicy: { policy: "strict-origin-when-cross-origin" },

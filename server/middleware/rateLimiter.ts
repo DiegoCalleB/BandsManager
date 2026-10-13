@@ -164,7 +164,11 @@ export const ficherosRateLimiter = createRateLimiter({
   nombre: "ficheros",
   windowMs: 60 * 1000,
   maxRequests: 60,
+  porUsuario: true,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
+});
 
+/**
  * Límite para el enriquecimiento de leads: cada llamada hace peticiones salientes (scraping de
  * webs, Google Places, Jina, Apify) y a veces consume tokens de IA. El tope es holgado para no
  * romper los lotes legítimos de la interfaz, pero impide convertir el servidor en un martillo.

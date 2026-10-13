@@ -38,6 +38,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_seguridadConcertToAlbum|server/routes/seguridadConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposCalendarioIcs|server/routes/tiposCalendarioIcs.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*

@@ -442,8 +442,6 @@ router.get("/calendar-feed-url", requireAuth, (req, res) => {
 // Export Band Calendar as standard iCalendar (.ics) feed
 router.get("/calendar.ics", async (req, res) => {
   try {
-    // Los query params pueden llegar como array u objeto (?band_id=a&band_id=b, ?band_id[x]=1):
-    // solo se aceptan cadenas, el resto se trata como ausente.
     const bandIdQuery = [req.query.band_id, req.query.band].find((v): v is string => typeof v === "string" && v !== "") ?? "";
     if (!bandIdQuery) {
       return res.status(400).type("text/plain").send("Falta el identificador de banda en la petición.");

@@ -34,7 +34,6 @@ function toIsoDateString(val?: string | null): string {
 export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
-  // Se acota la longitud antes de la regex: sobre texto libre, «\s*\(» + «[^)]*» es de coste cuadrático.
   const cleanCity = (lead.ciudad || '').slice(0, 200).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
   const cleanVenue = (lead.nombre_sala || '').trim();
 

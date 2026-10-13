@@ -99,8 +99,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
       // isBadDirectoryUrl solo filtra dominios de directorios/redes conocidos, no IPs privadas ni
       // el endpoint de metadatos de la nube: sin esto, un website/dominio de email apuntando a la
       // red interna haría que el servidor hiciera esa petición y devolviera lo encontrado (SSRF).
-      // La petición va por el guard: DNS a IP pública anclada al socket, redirecciones revalidadas,
-      // tope de tamaño y timeout. Una URL no segura lanza y se pasa al siguiente candidato.
+      // Va por el guard (IP pública anclada, redirecciones revalidadas, tope de tamaño y timeout).
       const res = await fetchUrlExternaSegura(siteUrl, {
         timeoutMs: 3500,
         maxBytes: 2 * 1024 * 1024,

@@ -18,7 +18,6 @@ import { iaRateLimiter } from "../middleware/rateLimiter.js";
 import responseStrategiesRouter from "./bands/responseStrategies.js";
 
 const router = express.Router();
-
 // Montar router de response strategies
 router.use(responseStrategiesRouter);
 
@@ -75,11 +74,9 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], _ema
   return null;
 }
 
-const HOSTS_LOGO_NO_FIABLES = ['googleusercontent.com', 'clearbit.com'];
-
 function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, instagram?: string): string {
   let cleaned = (imgUrl || '').trim();
-  if (hostEsDeDominio(cleaned, HOSTS_LOGO_NO_FIABLES)) cleaned = '';
+  if (hostEsDeDominio(cleaned, ['googleusercontent.com', 'clearbit.com'])) cleaned = '';
   if (cleaned && (/\.(jpg|jpeg|png|webp|svg)($|\?)/i.test(cleaned) || cleaned.includes('icon.horse'))) return cleaned;
   if (instagram) {
     const handle = instagram.replace(/.*instagram\.com\//, '').replace(/^@/, '').split('/')[0].split('?')[0].trim();

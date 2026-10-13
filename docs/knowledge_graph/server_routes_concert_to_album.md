@@ -24,6 +24,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_seguridadConcertToAlbum|server/routes/seguridadConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
