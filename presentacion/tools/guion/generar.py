@@ -551,7 +551,7 @@ add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
 
 # ───────── Capítulo 4 · Después del concierto ─────────
 add(feat('La discografía, desde Spotify', TAG3, 'Y tu discografía, desde Spotify.',
-         [], shot_vid('video/v-discografia.mp4', 'video/v-discografia.jpg'), grupo='musica').replace('<section ', '<section data-dur="8500" ', 1))
+         [], shot_vid('video/v-discografia.mp4', 'video/v-discografia.jpg'), grupo='musica').replace('<section ', '<section data-dur="15500" ', 1))
 
 add(act('Capítulo 4 · Después del concierto', 'IV', 'Capítulo 4 de 5 · Después del concierto', 'Y al final, las cuentas.',
         'Cuánto entra, cuánto sale y cuánto queda para la banda.', 'iago',
