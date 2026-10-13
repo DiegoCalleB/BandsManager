@@ -1382,21 +1382,21 @@
     "t": "03:13"
    },
    {
-    "who": "ia_claude",
-    "txt": "Aviso: acaba de escribir Netflix. Quieren más planos del bajista y menos de la batería.",
-    "voz": "[calmly] Aviso: acaba de escribir Netflix. Dicen que quieren más planos del bajista y menos de la batería.",
+    "who": "bajo",
+    "txt": "Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.",
+    "voz": "Acaba de escribirme Netflix. Quieren más planos del batería y menos del bajista.",
     "t": "03:14"
    },
    {
     "who": "bateria",
-    "txt": "¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!",
-    "voz": "[shouts] ¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!",
+    "txt": "¡Estos de Netflix tienen ojo! 😎",
+    "voz": "[laughs] ¡Estos de Netflix tienen ojo, chaval!",
     "t": "03:14"
    },
    {
     "who": "bajo",
-    "txt": "Dicen que el bajista es «el corazón de la banda». Lo he leído tres veces.",
-    "voz": "Dicen que el bajista es el corazón de la banda. Lo he leído tres veces.",
+    "txt": "Brais… la peli va de mí.",
+    "voz": "Brais… la peli va de mí.",
     "t": "03:14"
    },
    {

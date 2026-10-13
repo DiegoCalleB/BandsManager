@@ -325,8 +325,8 @@ _En pantalla:_ Os Herdeiros do Código en BandManager.io Una película de rock, 
 **Álvaro:** ¡Pues que las pague la IA! 🤘  
 **Claudio:** Propuesta: las paga Brais. Pero tú decides, Iago.  
 **Guglio:** Idea loca: que las pague Peláez.  
-**Claudio:** Aviso: acaba de escribir Netflix. Quieren más planos del bajista y menos de la batería.  
-**Brais:** ¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!  
-**Iago:** Dicen que el bajista es «el corazón de la banda». Lo he leído tres veces.  
+**Iago:** Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.  
+**Brais:** ¡Estos de Netflix tienen ojo! 😎  
+**Iago:** Brais… la peli va de mí.  
 **Brais:** Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
 **Iago:** Mira el calendario, Brais.  
