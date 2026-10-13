@@ -208,6 +208,8 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
 
 👉 *Detalles completos de lógica, edge cases y contratos en [docs/referencia/SUBSISTEMAS.md](./docs/referencia/SUBSISTEMAS.md).*
 
+📚 *Buenas prácticas del Máster en Desarrollo con IA y su estado en este repo: [docs/master/MATRIZ_APLICACION.md](./docs/master/MATRIZ_APLICACION.md). Plan por fases: [docs/plan/PLAN_MEJORA.md](./docs/plan/PLAN_MEJORA.md). Marketing (landings, TFM y promoción de las bandas clientes): [docs/master/marketing/MATRIZ_MARKETING.md](./docs/master/marketing/MATRIZ_MARKETING.md).*
+
 ---
 
 ## 🛠️ 5. Estándares de Código y Calidad (Fullstack)

@@ -98,6 +98,8 @@ export function traducirConGoogle(targetLang: SupportedLanguage, alTerminar: () 
   }, 450);
 
   const selectCombo = () => {
+    // Sin document (pestaña cerrándose, tests ya terminados) no hay nada que buscar.
+    if (typeof document === 'undefined') return true;
     const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
     if (combo) {
       if (combo.value !== targetLang) {

@@ -26,6 +26,7 @@ Facturación con Stripe: checkout, portal de cliente, webhook, confirmación de 
 - [[server_routes_tiposBilling|server/routes/tiposBilling.ts]] *(Layer: #route, Domain: #finances)*
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_users|tabla users]] *(Layer: #schema, Domain: #system)*

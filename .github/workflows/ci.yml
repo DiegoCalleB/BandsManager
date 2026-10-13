@@ -115,6 +115,14 @@ jobs:
       - name: Verify docs references
         run: npm run verify:docs
 
+      # Ratchet: el número de ciclos de importación solo puede bajar (scripts/ciclos.mjs).
+      - name: Dependencias circulares
+        run: npm run verify:ciclos
+
+      # Falla con vulnerabilidades altas/críticas en dependencias de producción.
+      - name: Auditoría de dependencias
+        run: npm run audit:deps
+
       # Con cobertura: falla si baja del umbral de vite.config.ts (ratchet, solo sube).
       - name: Tests
         run: npm run test:coverage
@@ -138,6 +146,17 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  # Busca secretos (claves, tokens) en todo el historial del PR.
+  secretos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # La versión se calcula a partir de los commits (AGENTS.md §7.6): un mensaje sin prefijo
   # (feat:, fix:, docs:...) no cuenta para el siguiente release. Solo se revisan los commits del PR.

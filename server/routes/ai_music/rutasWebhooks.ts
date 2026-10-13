@@ -8,6 +8,7 @@ import { webhookRateLimiter } from '../../middleware/rateLimiter.js';
 import { verifyReplicateWebhook, isPredictionWebhookProcessed, recordPredictionJob } from '../../services/stemPredictionReconciler.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 /**
@@ -93,9 +94,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('[Stem Webhook] Error procesando webhook:', err);
-      return res
-        .status(500)
-        .json({ error: err?.message || 'Error procesando webhook' });
+      return responderError(res, err, 'Error procesando webhook');
     }
   }
 );

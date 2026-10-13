@@ -4,6 +4,8 @@ import { montarWidgetDeGoogle, quitarMarcaDeTraduccion, traducirConGoogle } from
 
 /** Idioma guardado, si no el del navegador (si está soportado) y si no español. */
 function idiomaInicial(): SupportedLanguage {
+  // /en es la landing en inglés: manda la URL sobre lo guardado, para que lo que ve Google coincida.
+  if (window.location.pathname.replace(/\/+$/, '').toLowerCase() === '/en') return 'en';
   const saved = localStorage.getItem('bandmanager_language') as SupportedLanguage | null;
   if (saved && TRANSLATIONS[saved]) {
     return saved;

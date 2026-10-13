@@ -30,6 +30,11 @@ Envía el mensaje del usuario al asistente y encadena la respuesta con sus accio
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/chatbot/hooks/__tests__/useChatSendAvisos.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

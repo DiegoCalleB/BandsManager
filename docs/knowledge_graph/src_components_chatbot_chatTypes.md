@@ -41,6 +41,11 @@ Contratos del chat del asistente: acciones propuestas y mensajes.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/components/chatbot/hooks/__tests__/useChatSendAvisos.test.tsx`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?
