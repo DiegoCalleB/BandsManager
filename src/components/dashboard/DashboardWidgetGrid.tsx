@@ -37,6 +37,11 @@ import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOver
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
 import { BotonMovil } from "./BotonMovil";
+import { ControlesTamano } from "./ControlesTamano";
+import { TiradorWidget } from "./TiradorWidget";
+import { useRedimensionar } from "./hooks/useRedimensionar";
+import { useReordenTactil } from "./hooks/useReordenTactil";
+import { pasoAncho, pasoAlto } from "../../utils/redimensionarWidget";
 import { useGuardadoPanel } from "./hooks/useGuardadoPanel";
 import { moverEntreVisibles, leerPanel, panelDeBanda, conPanel, visibleEnMovil, ESENCIALES_MOVIL, type PanelGuardado } from "../../utils/panelWidgets";
 
@@ -214,24 +219,18 @@ export function DashboardWidgetGrid({
     setDragOverWidgetId(null);
   };
 
+  const moverA = (origen: string, destino: string) => {
+    const copy = [...widgets];
+    const fromIdx = copy.findIndex((w) => w.id === origen);
+    const toIdx = copy.findIndex((w) => w.id === destino);
+    if (fromIdx === -1 || toIdx === -1) return;
+    copy.splice(toIdx, 0, copy.splice(fromIdx, 1)[0]);
+    updateAndSaveWidgets(copy);
+  };
+
   const handleDrop = (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
-    if (!draggedWidgetId || draggedWidgetId === targetId) {
-      setDraggedWidgetId(null);
-      setDragOverWidgetId(null);
-      return;
-    }
-
-    const copy = [...widgets];
-    const fromIdx = copy.findIndex((w) => w.id === draggedWidgetId);
-    const toIdx = copy.findIndex((w) => w.id === targetId);
-
-    if (fromIdx !== -1 && toIdx !== -1) {
-      const [movedItem] = copy.splice(fromIdx, 1);
-      copy.splice(toIdx, 0, movedItem);
-      updateAndSaveWidgets(copy);
-    }
-
+    if (draggedWidgetId && draggedWidgetId !== targetId) moverA(draggedWidgetId, targetId);
     setDraggedWidgetId(null);
     setDragOverWidgetId(null);
   };
@@ -240,6 +239,10 @@ export function DashboardWidgetGrid({
     setDraggedWidgetId(null);
     setDragOverWidgetId(null);
   };
+
+  const { iniciar: arrastrarConDedo } = useReordenTactil({ setArrastrado: setDraggedWidgetId, setSobre: setDragOverWidgetId, alSoltar: moverA });
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const { previa, iniciar: iniciarTirador } = useRedimensionar((id, c) => updateAndSaveWidgets(widgets.map((w) => (w.id === id ? { ...w, ...c } : w))));
 
   // Move widget up/down manually
   const handleMoveWidget = (index: number, direction: "up" | "down") => {
@@ -603,8 +606,10 @@ export function DashboardWidgetGrid({
       )}
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
-        {visibleWidgets.map((widget, index) => {
+      <div ref={gridRef} data-panel-grid className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
+        {visibleWidgets.map((original, index) => {
+          // Mientras se arrastra el tirador el widget se pinta ya con el tamaño nuevo
+          const widget = previa?.id === original.id ? { ...original, wSpan: previa.wSpan, hSpan: previa.hSpan } : original;
           // Determine grid col span class
           let colSpanClass = "md:col-span-12";
           if (widget.wSpan === 3) colSpanClass = "md:col-span-3";
@@ -618,6 +623,7 @@ export function DashboardWidgetGrid({
           return (
             <div
               key={widget.id}
+              data-widget-id={widget.id}
               draggable={isEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
@@ -633,7 +639,7 @@ export function DashboardWidgetGrid({
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-[var(--r-m)] mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
-                  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
+                  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing touch-none" onPointerDown={(e) => arrastrarConDedo(e, widget.id)}>
                     <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
                     <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
                       {widget.title || widget.type}
@@ -641,59 +647,7 @@ export function DashboardWidgetGrid({
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
-                    {/* Ancho — 3 tamaños con icono de proporción, no 5 porcentajes en texto */}
-                    <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
-                      {[
-                        { span: 4 as const, w: 6, label: "Estrecho" },
-                        { span: 6 as const, w: 10, label: "Mitad" },
-                        { span: 12 as const, w: 14, label: "Completo" },
-                      ].map(({ span, w, label }) => (
-                        <button
-                          key={span}
-                          type="button"
-                          onClick={() => handleChangeWSpan(widget.id, span)}
-                          title={label}
-                          aria-label={`Ancho: ${label}`}
-                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
-                            widget.wSpan === span
-                              ? "bg-[var(--acc)]"
-                              : "hover:bg-[var(--sunken)]"
-                          }`}
-                        >
-                          <span
-                            className={`block h-2.5 rounded-[2px] ${widget.wSpan === span ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
-                            style={{ width: w }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Alto — mismo patrón visual, icono de proporción vertical */}
-                    <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
-                      {[
-                        { val: "compact" as const, h: 6, label: "Bajo" },
-                        { val: "normal" as const, h: 10, label: "Medio" },
-                        { val: "tall" as const, h: 14, label: "Alto" },
-                      ].map(({ val, h, label }) => (
-                        <button
-                          key={val}
-                          type="button"
-                          onClick={() => handleChangeHSpan(widget.id, val)}
-                          title={label}
-                          aria-label={`Alto: ${label}`}
-                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
-                            (widget.hSpan || "normal") === val
-                              ? "bg-[var(--acc)]"
-                              : "hover:bg-[var(--sunken)]"
-                          }`}
-                        >
-                          <span
-                            className={`block w-2.5 rounded-[2px] ${(widget.hSpan || "normal") === val ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
-                            style={{ height: h }}
-                          />
-                        </button>
-                      ))}
-                    </div>
+                    <ControlesTamano wSpan={widget.wSpan} hSpan={widget.hSpan} onAncho={(span) => handleChangeWSpan(widget.id, span)} onAlto={(val) => handleChangeHSpan(widget.id, val)} />
 
                     {/* Móvil — en el móvil caben pocos bloques: aquí se decide cuáles salen */}
                     <BotonMovil
@@ -739,6 +693,13 @@ export function DashboardWidgetGrid({
 
               {/* Render actual widget */}
               {renderWidgetContent(widget)}
+              {isEditMode && (
+                <TiradorWidget
+                  titulo={widget.title || widget.type}
+                  onPointerDown={(e) => iniciarTirador(e, widget, gridRef.current, e.currentTarget.parentElement)}
+                  onPaso={(eje, dir) => (eje === "ancho" ? handleChangeWSpan(widget.id, pasoAncho(widget.wSpan, dir)) : handleChangeHSpan(widget.id, pasoAlto(widget.hSpan, dir)))}
+                />
+              )}
             </div>
           );
         })}

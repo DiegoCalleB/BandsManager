@@ -21,8 +21,12 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_BotonMovil|src/components/dashboard/BotonMovil.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_ControlesTamano|src/components/dashboard/ControlesTamano.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_TiradorWidget|src/components/dashboard/TiradorWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_hooks_useGuardadoPanel|src/components/dashboard/hooks/useGuardadoPanel.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_hooks_useRedimensionar|src/components/dashboard/hooks/useRedimensionar.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_hooks_useReordenTactil|src/components/dashboard/hooks/useReordenTactil.ts]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -35,6 +39,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_redimensionarWidget|src/utils/redimensionarWidget.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
