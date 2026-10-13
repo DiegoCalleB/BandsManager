@@ -858,11 +858,11 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
   <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECTION FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
   <p class="gr-c" style="--t:4.2s;--d:3.2s">¿Os habéis fijado en el reloj?</p>
-  <p class="gr-c" style="--t:7.6s;--d:3s">No solo contaba para un festival.</p>
+  <p class="gr-c" style="--t:7.6s;--d:3s">No solo contaba para el cierre del cartel del Resu.</p>
   <p class="gr-c" style="--t:11s;--d:2.9s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
   <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
-  <p class="gr-c" style="--t:18s;--d:3.4s">En la de verdad, sois el festival.</p>
+  <p class="gr-c" style="--t:18s;--d:3.4s">Pero en la de verdad, el festival sois vosotros.</p>
   <p class="gr-c gr-ask" style="--t:22s">Y ahora… un reto.</p>
 </section>
 ''')

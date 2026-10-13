@@ -296,7 +296,7 @@ _En pantalla:_ Fin de la historia · Diego de la Calle 15 años THC Con mi herma
 _En pantalla:_ Fin de la historia · Diego de la Calle Diego de la Calle El bajista Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada. Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.
 
 ## El reloj
-_En pantalla:_ Fin de la historia · El reloj CIERRE DEL CARTEL · RESURRECTION FEST ENTREGA DEL TFM · THE BIG SCHOOL -00:00:03 -00:00:02 -00:00:01 00:00:00 ¿Os habéis fijado en el reloj? No solo contaba para un festival. También contaba para esto. 🔔 BandManager · ahora Alguien está viendo tu TFM Ahora mismo. Desde el principio. Brais: en esta historia eras el batería. En la de verdad, sois el festival. Y ahora… un reto.
+_En pantalla:_ Fin de la historia · El reloj CIERRE DEL CARTEL · RESURRECTION FEST ENTREGA DEL TFM · THE BIG SCHOOL -00:00:03 -00:00:02 -00:00:01 00:00:00 ¿Os habéis fijado en el reloj? No solo contaba para el cierre del cartel del Resu. También contaba para esto. 🔔 BandManager · ahora Alguien está viendo tu TFM Ahora mismo. Desde el principio. Brais: en esta historia eras el batería. Pero en la de verdad, el festival sois vosotros. Y ahora… un reto.
 
 ## El reto
 **Diego:** Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.  
