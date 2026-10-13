@@ -159,6 +159,12 @@ def act(title, roman, tag, h2, sub, who, msg, done, bg):
 '''
 
 
+def plano(title, base, dur):
+    """Plano mudo a pantalla completa (respiro entre capítulos, cierre): sin rótulo ni diálogo."""
+    return (f'<section class="slide plano" data-title="{title}" data-transition="fade" data-dur="{dur}">'
+            f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="{base}.jpg"><source src="{base}.mp4" type="video/mp4"></video></section>\n')
+
+
 def shot_img(src, pos='50% 0', cls=''):
     return f'<div class="ft-shot{" " + cls if cls else ""}"><img src="{src}" alt="" style="object-position:{pos}"></div>'
 
@@ -486,6 +492,7 @@ add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.'
          shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
 
 # ───────── Capítulo 3 · Que te conozcan ─────────
+add(plano('Plano · Furgoneta (tras el ensayo)', 'video/actores/furgoneta', 4500))
 add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 5 · Que te conozcan', 'Que nos conozcan.',
         'Un dossier, un QR y un vídeo para que la gente nos siga.', 'iago',
         '¡Y ahora, que nos conozca más gente! 🌍', 3, 'img/concierto-3.jpg'))
@@ -591,6 +598,7 @@ add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', '
               m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
+add(plano('Plano · Furgoneta (hacia el negocio)', 'video/actores/furgoneta', 4000))
 add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 5 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
         'De qué vivimos, y cómo está hecho por dentro.', 'iago',
         'Vamos por partes. Os cuento mi estrategia.', 5, 'img/concierto-1.jpg'))
@@ -911,6 +919,7 @@ add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" da
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
+add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 6500))
 add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="150000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>

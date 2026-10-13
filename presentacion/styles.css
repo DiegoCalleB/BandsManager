@@ -2148,3 +2148,7 @@ body.pelicula:not(.scroll):has(.slide.feat.active [data-who="bateria"].habla) #r
 body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz"].habla) #reaccion { --ox: 52%; --oy: 33%; --z: 1.8; opacity: 1; }
 body.pelicula:not(.scroll):has(.slide.feat.active [data-who="guitarra"].habla) #reaccion { --ox: 78%; --oy: 45%; --z: 1.7; opacity: 1; }
 body.pelicula:not(.scroll):has(#reaccion[style*="opacity: 1"]) .foco { opacity: 0 !important; }
+
+/* Planos mudos (furgoneta, local vacío): vídeo a pantalla completa, sin rótulos */
+.slide.plano { padding: 0; background: #000; }
+.slide.plano > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
