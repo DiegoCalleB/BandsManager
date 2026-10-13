@@ -75,7 +75,7 @@ process.on("unhandledRejection", (reason) => {
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// CSP mínima (object-src, base-uri, frame-ancestors): la completa no se puede fijar porque el panel
+// CSP mínima (object-src, base-uri, frame-ancestors; helmet exige default-src, de ahí la marca): la completa no se puede fijar porque el panel
 // embebe Stripe, Spotify/YouTube/Vimeo y Google Translate (scripts inline ajenos). COEP sigue desactivado.
 //
 // Referrer-Policy SÍ hay que fijarlo a mano: el "no-referrer" por defecto de helmet hace que el
@@ -86,7 +86,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 // navegadores modernos: manda el origen (no la URL completa) a otros sitios, nada a HTTP en
 // claro, y es suficiente para que YouTube/Vimeo/Spotify carguen bien.
 app.use(helmet({
-  contentSecurityPolicy: { useDefaults: false, directives: { objectSrc: ["'none'"], baseUri: ["'self'"], frameAncestors: ["'self'"] } },
+  contentSecurityPolicy: { useDefaults: false, directives: { defaultSrc: helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc, objectSrc: ["'none'"], baseUri: ["'self'"], frameAncestors: ["'self'"] } },
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
   referrerPolicy: { policy: "strict-origin-when-cross-origin" },
