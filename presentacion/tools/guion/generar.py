@@ -550,6 +550,9 @@ add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
          shot_img('img/d-h-concierto-disco.jpg')))
 
 # ───────── Capítulo 4 · Después del concierto ─────────
+add(feat('La discografía, desde Spotify', TAG3, 'Y tu discografía, desde Spotify.',
+         [], shot_vid('video/v-discografia.mp4', 'video/v-discografia.jpg'), grupo='musica').replace('<section ', '<section data-dur="8500" ', 1))
+
 add(act('Capítulo 4 · Después del concierto', 'IV', 'Capítulo 4 de 5 · Después del concierto', 'Y al final, las cuentas.',
         'Cuánto entra, cuánto sale y cuánto queda para la banda.', 'iago',
         'Lo último. Y creo que es lo que más os va a sorprender.', 4, 'img/concierto-1.jpg'))
@@ -1257,6 +1260,7 @@ DOLOR = {
     'Un QR y el público se hace fan': ('El público se va sin dejar rastro', 'Un QR para que te sigan'),
     'Merchan en un minuto': ('Merchan sin diseño ni tiempo', 'Camisetas con vuestro QR en un minuto'),
     'Del directo al reel': ('Horas editando vídeos', 'Reels listos para cada red'),
+    'La discografía, desde Spotify': ('Subir cada disco a mano', 'Álbumes, portadas y temas importados de Spotify'),
     'Medios de comunicación': ('Pedir una entrevista a cada medio', 'Radios, webs y prensa, con su contacto'),
     'Afina el correo': ('Reescribir el correo una y otra vez', 'Una instrucción y la IA lo reescribe'),
     'El seguimiento de las redes': ('Apuntar los seguidores a mano', 'Una curva que sube mes a mes'),
@@ -1285,6 +1289,7 @@ FICHAS = {
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'La discografía, desde Spotify': ('Discografía', 'Trae de Spotify tus álbumes y sencillos, con portadas, duraciones, tonalidad y BPM, y los vincula al dossier.', ['Álbumes y singles', 'Portadas y duraciones', 'Enlace al dossier']),
     'Medios de comunicación': ('Medios', 'Radios, webs, prensa y podcasts a los que escribir para que hablen de la banda y de sus fechas.', ['Base de medios', 'Redactor con el tono de la banda', 'Tú das el visto bueno']),
     'Afina el correo': ('Redactor que aprende', 'Pides un cambio con una frase y calificas con estrellas el tono y la estructura: aprende cómo habla la banda.', ['Instrucción sencilla', 'Estrellas de tono y estructura', 'La IA aprende']),
     'El seguimiento de las redes': ('Seguimiento de redes', 'Seguidores de Instagram, TikTok, YouTube y Spotify, mes a mes y con la subida de cada uno.', ['Curva de crecimiento', 'Subida de cada mes', 'Radar de redes']),
