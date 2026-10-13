@@ -10,15 +10,7 @@ import { CalendarWidget } from "./widgets/CalendarWidget";
 import { RoiBandaWidget } from "./widgets/RoiBandaWidget";
 import { MarketingWidget } from "./widgets/MarketingWidget";
 import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
-import {
-  CrmPipelineWidget,
-  RepertorioWidget,
-  FinancesWidget,
-  SocialFansWidget,
-  EpkStatusWidget,
-  AiAgentWidget,
-  TourStatusWidget,
-} from "./widgets/ModuleWidgets";
+import { CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget } from "./widgets/ModuleWidgets";
 import {
   RepertorioEnergyChartWidget,
   BookingFunnelChartWidget,
