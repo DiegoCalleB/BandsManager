@@ -82,6 +82,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { AppState } from '../stateTypes.js';
 import type { BandaFacturable, FacturaStripeLegada, SesionCheckoutLegada, SuscripcionStripeLegada } from './tiposBilling.js';
 
+import { responderError } from '../utils/errorHttp.js';
 export function resolveValidEmail(userEmail?: string, bandId?: string): string | undefined {
   if (userEmail && isValidEmail(userEmail)) {
     return userEmail.trim().toLowerCase();
@@ -538,7 +539,7 @@ router.post(["/billing/confirm-success", "/stripe/confirm-success"], requireAuth
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in /billing/confirm-success:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error confirming plan upgrade" });
+    return responderError(res, err, "Error confirming plan upgrade");
   }
 });
 
@@ -651,7 +652,7 @@ router.post(["/billing/create-checkout-session", "/stripe/create-checkout-sessio
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe checkout session:", error);
-    res.status(500).json({ success: false, error: error.message || "Error al crear la sesión de pago con Stripe" });
+    responderError(res, error, "Error al crear la sesión de pago con Stripe");
   }
 });
 
@@ -719,10 +720,7 @@ router.post(["/billing/create-portal-session", "/stripe/create-portal-session"],
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error creating Stripe billing portal session:", error);
-    return res.status(500).json({
-      success: false,
-      error: error.message || "Error al abrir el Portal de Clientes de Stripe"
-    });
+    return responderError(res, error, "Error al abrir el Portal de Clientes de Stripe");
   }
 });
 
@@ -946,7 +944,7 @@ router.post(["/billing/consume-credits", "/stripe/consume-credits"], requireAuth
     });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ success: false, error: err.message || "Error al consumir créditos" });
+    return responderError(res, err, "Error al consumir créditos");
   }
 });
 
@@ -981,7 +979,7 @@ router.get(["/billing/credits-status", "/stripe/credits-status"], requireAuth, a
     });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ success: false, error: err.message || "Error al obtener estado de créditos" });
+    return responderError(res, err, "Error al obtener estado de créditos");
   }
 });
 

@@ -23,6 +23,7 @@ import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, to
 import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
+import { responderError } from '../utils/errorHttp.js';
 const router = express.Router();
 
 // gmail.compose: crear/leer/enviar borradores (crearBorradorGmailApi, enviarEmailGmailApi,
@@ -150,7 +151,7 @@ router.get("/authorize-url", gmailOAuthRateLimiter, requireAuth, (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error generando URL de autorización de Gmail OAuth:", err);
-    res.status(500).json({ error: err.message || "Error al generar la URL de autorización." });
+    responderError(res, err, "Error al generar la URL de autorización.");
   }
 });
 
