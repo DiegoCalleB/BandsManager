@@ -54,7 +54,7 @@
     diego:    { nombre: 'Diego', rol: 'bajo', cargo: 'El bajista de verdad', foto: 'img/diego-bajista.jpg', color: '#ffcf6b',
                 mov: 'calma',
                 tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
-    locutor:  { nombre: 'Rock FM', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
+    locutor:  { nombre: 'Radio Riff', rol: 'locutor', cargo: 'Locutor', foto: null, color: '#ffb36a',
                 tts: { motor: 'elevenlabs', voz: '4L2A19qwD3pMcNlt484F', estabilidad: 0.3, efecto: 'radio' } },
   };
 
