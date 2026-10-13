@@ -2127,8 +2127,10 @@ body.pelicula:not(.scroll) .slide.scene:not(.reveal):not(.creditos-post) > .tag 
 @keyframes cartela { 0% { opacity: 0; translate: 0 8px; } 10%, 82% { opacity: 1; translate: 0 0; } 100% { opacity: 0; } }
 body.pelicula:not(.scroll) .slide.feat.active > .ficha, body.pelicula:not(.scroll) .dolor { display: none !important; }
 
-/* «La sala contestó»: la app con la sala confirmada (antes salía un Excel) */
-.faroapp { position: absolute; left: 70px; top: 470px; width: 1500px; margin: 0; z-index: 8; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 80px rgba(0,0,0,.65), 0 0 0 6px rgba(10,12,18,.65); }
+/* «La sala contestó»: primero el programador (plano limpio); cuando contestan los chicos, corte a la app con la sala confirmada */
+.faroapp { position: absolute; left: 210px; top: 80px; width: 1500px; margin: 0; z-index: 8; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 0 0 100vmax rgba(5,6,9,.78), 0 30px 90px rgba(0,0,0,.7); opacity: 0; animation: faroin 500ms ease 6.2s forwards; }
 .faroapp img { display: block; width: 100%; height: auto; }
-.faroapp figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px; font: 600 24px/1.2 Onest, sans-serif; color: #8fd19e; background: linear-gradient(0deg, rgba(8,10,14,.92), rgba(8,10,14,0)); }
-body.scroll .faroapp { position: relative; left: auto; top: auto; width: 100%; margin: 12px 0; }
+@keyframes faroin { to { opacity: 1; } }
+body.pelicula:not(.scroll) .slide:has([data-who="manager"].habla) .faroapp { opacity: 0; animation: none; transition: opacity 250ms; }
+body.scroll .faroapp { position: relative; left: auto; top: auto; width: 100%; margin: 12px 0; opacity: 1; animation: none; box-shadow: none; }
