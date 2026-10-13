@@ -229,7 +229,7 @@ add(act('Capítulo 1 · Conseguir el bolo', 'I', 'Capítulo 1 de 5 · Conseguir 
         'Empezamos por lo que más nos dolía: las salas.', 1, 'img/concierto-2.jpg'))
 
 TAG1 = 'Sábado · 11:00 · Conseguir el bolo'
-add(feat('Todas las salas, en un sitio', TAG1, 'Todas las salas, en un sitio.',
+add(feat('Todas las salas, en un sitio', TAG1, 'Salas y festivales, en un sitio.',
          [m('xandre', '¡¿Esto lo has hecho tú?!'),
           m('iago', 'Con ayuda. Aquí tengo las salas y los festivales, y cada conversación queda guardada.'),
           m('alvaro', '¡Una base de datos de salas!'),
@@ -514,8 +514,10 @@ add(feat('Del directo al reel', TAG3, 'Del directo al reel.',
          [m('xandre', '¿Y esto qué es?'),
           m('iago', 'Se me ocurrió hacer un generador automático de reels para Instagram, TikTok y YouTube. Todo personalizado y generado con IA.'),
           m('brais', '¿O sea, que le subes el vídeo entero del concierto y te saca los trozos más virales para cada red?'),
-          m('iago', '¡Eso es! Y te los deja listos, con el formato de cada plataforma.')],
-         '<div class="ft-shot phone"><video data-ambient muted loop playsinline preload="auto" poster="video/reel-demo.jpg"><source src="video/reel-demo.mp4" type="video/mp4"></video></div>'))
+          m('iago', '¡Eso es! Y te los deja listos, con el formato de cada plataforma.'),
+          m('alvaro', '¿Y luego los subimos uno a uno, a mano?', say='¿Y luego los vamos subiendo uno a uno, a mano? ¡Que yo me aburro!'),
+          m('iago', 'No: programas cada reel en cada red, con su día y su hora.', say='Qué va. Programas la publicación de cada reel, en cada red, con su día y su hora. Y vosotros, a tocar.')],
+         shot_img('img/d-h-reels.jpg')))
 
 add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
          [m('alvaro', '¿Y la grabación entera del bolo de la Ribeira?', say='¿Y la grabación entera del bolo de la Ribeira? ¿Eso no vale para nada?'),
@@ -1182,7 +1184,7 @@ S[:] = [x for x in S if x] + [scene('Anexo', 'Anexo · Para las preguntas', 'Lo 
                                          'data-title="Anexo"', 'data-title="Anexo" data-anexo', 1)] + fuera
 # Dolores de la banda, contados mientras Iago enseña la app: una etiqueta «antes → ahora» que entra al segundo y medio y se va sola (solo modo película)
 DOLOR = {
-    'Todas las salas, en un sitio': ('Las salas, apuntadas en un Excel', 'Todas en un sitio, con su historial'),
+    'Todas las salas, en un sitio': ('Salas y festivales, apuntados en un Excel', 'Todos en un sitio, con su historial'),
     'La IA escribe, tú apruebas': ('Horas escribiendo el mismo correo', 'La IA lo escribe; tú solo apruebas'),
     'El correo llega a la sala': ('Correos que se pierden sin respuesta', 'Sabes cuándo abren tu correo y tu dossier'),
     'Date Swap': ('Tocar siempre en tu ciudad', 'Cambias fecha con otra banda amiga'),
@@ -1212,7 +1214,7 @@ for _i, _x in enumerate(S):
 # Fichas de cada función (solo en modo película): el titular dice qué es; la ficha, qué hace. Como el rótulo de una keynote:
 # entra cuando la cámara sube hacia la pantalla y luego se queda pequeña, con su número. Todo lo que dicen existe en la app.
 FICHAS = {
-    'Todas las salas, en un sitio': ('Booking', 'Todas las salas y festivales, en el mapa y con cada conversación guardada.', ['Agente Scout: busca salas nuevas', 'Mapa de toda España', 'Historial de cada sala']),
+    'Todas las salas, en un sitio': ('Booking', 'Todas las salas y festivales, en el mapa y con cada conversación guardada.', ['Agente Scout: busca salas y festivales nuevos', 'Mapa de toda España', 'Historial de cada contacto']),
     'La IA escribe, tú apruebas': ('Pitch con IA', 'Escribe a cada sala con el tono de la banda. Nada sale sin tu visto bueno.', ['Gemini o DeepSeek', 'Aprobación humana', 'Avisa cuando lo abren']),
     'Date Swap': ('Date Swap', 'Cambia fechas con otra banda: tú tocas en su ciudad y ella en la tuya.', ['Propuesta redactada por IA', 'Cartel doble']),
     'Cambio de perfil': ('Varias bandas, una cuenta', 'Cambias de banda como de perfil. Lo de una banda nunca se ve en otra.', ['Hasta cinco bandas', 'Aislamiento por banda']),

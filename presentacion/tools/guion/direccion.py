@@ -460,8 +460,21 @@ DIRECCION = {
     'Cambio de perfil': dict(
         img=(1600, 900), marco='esc', y0=.09,
         pasos=[('zoom', '1+1.2', .12, .14, 1.65), ('marca', '1+1.5', '3-0.3', .02, .05, .17, .07, 'Una cuenta, varias bandas'),
-               ('zoom', '3+0.4', .5, .5, 1.08), ('zoom', '5-0.4', .47, .45, 1.8), ('marca', '5-0.2', '6', .33, .22, .30, .48, '¿Quién toca hoy? Cambias de banda como de perfil'),
+               ('zoom', '3+0.4', .5, .5, 1.08), ('zoom', '5-0.4', .31, .50, 2.0), ('marca', '5-0.2', '6', .09, .33, .45, .45, '¿Quién toca hoy? Cambias de banda como de perfil'),
                ('zoom', '6+0.3', .5, .45, 1.12), ('marca', '6+0.5', 'fin-0.4', .01, .05, .13, .12, 'Cambia todo: logo, calendario y salas')]),
+
+    # los reels: se cuenta la idea, la IA escribe la publicación, se ve la vista previa y se programa cada red
+    'Del directo al reel': dict(
+        img=(1920, 1650), marco='esc', y0=.10,
+        pasos=[('scroll', '2-0.8', .43), ('zoom', '2-0.5', .46, .74, 1.3),
+               ('marca', '2', '3+0.5', .21, .55, .50, .39, 'Cuentas la idea y la IA escribe el reel'),
+               ('teclear', '2+0.2', .228, .665, .47, .075, 'Brais reventando la caja en el solo de Compila ou Morre', {'fs': 21, 'color': '#e7e9ee', 'fondo': '#1a1d23', 'lh': 1.5}),
+               ('clic', '3-0.5', .30, .805), ('pulsar', '3-0.5', .228, .787, .147, .036),
+               ('stream', '3', .39, .775, .31, .14, '¡Compila ou Morre en directo! 🤘 Brais le dio caña a la batería y la sala se vino abajo. #OsHerdeiros #Rock', {'fs': 20, 'color': '#e7e9ee', 'fondo': '#1a1d23', 'lh': 1.5}),
+               ('scroll', '4-0.5', .14), ('zoom', '4-0.3', .86, .45, 1.25),
+               ('marca', '4', '5-0.2', .745, .24, .225, .52, 'Vista previa con el formato de cada red'),
+               ('zoom', '5', .46, .34, 1.3),
+               ('marca', '5+0.3', 'fin-0.3', .21, .16, .50, .36, 'Cada reel, a su red, con su día y su hora')]),
 
     # el pitch: le da a «Regenerar» y la IA escribe el correo delante de todos; luego entrena el tono con estrellas
     'La IA escribe, tú apruebas': dict(

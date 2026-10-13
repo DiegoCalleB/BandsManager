@@ -193,13 +193,13 @@
    },
    {
     "who": "bajo",
-    "txt": "Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.",
-    "voz": "Casi. Y además tenemos un agente, el Scaut, que busca salas nuevas por nosotros. Como un ojeador. Pero que no se bebe el caché."
+    "txt": "Casi. Y hay un agente, el Scout, que busca salas y festivales nuevos por nosotros.",
+    "voz": "Casi. Y además tenemos un agente, el Scaut, que busca salas y festivales nuevos por nosotros. Como un ojeador. Pero que no se bebe el caché."
    },
    {
     "who": "bajo",
-    "txt": "Y todas, en el mapa de toda España.",
-    "voz": "Y todas, en el mapa de toda España. La del catorce, también."
+    "txt": "Y todos, en el mapa de toda España.",
+    "voz": "Y todos, en el mapa de toda España. La del catorce, también."
    }
   ],
   "nota": "Misma estructura de 5 líneas. El '¡Te lo dije!' ahora tiene setup (viernes) y el 'Casi' arranca el gag de Álvaro adivinando a medias. Cierre con callback a la sala del 14."
@@ -805,6 +805,16 @@
     "who": "bajo",
     "txt": "¡Eso es! Y te los deja listos, con el formato de cada plataforma.",
     "voz": "¡Eso es! Y te los deja listos, con el formato de cada plataforma. Tu solo también, Brais. Los tres minutos."
+   },
+   {
+    "who": "guitarra",
+    "txt": "¿Y luego los subimos uno a uno, a mano?",
+    "voz": "¿Y luego los vamos subiendo uno a uno, a mano? ¡Que yo me aburro!"
+   },
+   {
+    "who": "bajo",
+    "txt": "No: programas cada reel en cada red, con su día y su hora.",
+    "voz": "Qué va. Programas la publicación de cada reel, en cada red, con su día y su hora. Y vosotros, a tocar."
    }
   ],
   "nota": "Alan pone el dolor (nadie ve sus vídeos). Recortado el 'se me ocurrió hacer...' de Iago y otro '¡Ai, mi madriña!'."

@@ -1784,8 +1784,8 @@ body.pelicula:not(.scroll) .mailscene.active .ms { animation: mscam 23s ease-in-
 .feat.dirigida .ft-shot .dr-pag > img, .feat.dirigida .ft-shot .dr-pag > video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: fill !important; animation: none !important; transform: none !important; }
 body.pelicula:not(.scroll) .slide.feat.dirigida.active .ft-shot { animation: none !important; }
 .feat.dirigida .raton { display: none !important; }
-.dr-box { position: absolute; border: 3px solid #ffd596; border-radius: 12px; opacity: 0; pointer-events: none;
-  box-shadow: 0 0 0 4000px rgba(2, 4, 10, .38), 0 0 44px rgba(255, 213, 150, .4); }
+.dr-box { position: absolute; border: 0; border-radius: 16px; opacity: 0; pointer-events: none; /* sin borde duro: con el zoom de cámara se cortaba y solo quedaban dos barras verticales */
+  box-shadow: 0 0 0 4000px rgba(2, 4, 10, .5), 0 0 70px rgba(255, 213, 150, .22); }
 .dirigida.active .dr-box { animation: drbox var(--d) ease-in-out var(--t) both; }
 @keyframes drbox { 0% { opacity: 0; } 9%, 90% { opacity: 1; } 100% { opacity: 0; } }
 .dr-lab { display: none; margin: 0; }
