@@ -619,12 +619,12 @@ add(f'''<section class="slide scene biz" data-title="Cómo ganamos dinero" data-
   <h2>Y de qué vivimos.</h2>
   <div class="biz-cols">
     <div class="biz-col"><span class="badge">Construido, desactivado a propósito</span><h3>Suscripción por banda</h3><p>Seis planes, de gratis a 79 € al mes</p></div>
-    <div class="biz-col"><span class="badge b2b">Voluntaria, de momento</span><h3>Pequeña comisión por concierto</h3><p>De los conciertos que se cierran por la plataforma</p></div>
+    <div class="biz-col"><span class="badge b2b">Ya habilitado, voluntario</span><h3>Apoyo de los usuarios</h3><p>Para pagar la IA, la base de datos y los servidores</p></div>
   </div>
   {dlg(m('alvaro', '¿Y de qué vivimos, entonces?'),
-       m('iago', 'Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y una pequeña comisión de cada concierto que se cierra por la plataforma.'),
-       m('brais', '¿Y esa comisión cuánto es?'),
-       m('iago', 'De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos.'), cls='tight')}
+       m('iago', 'Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.'),
+       m('brais', '¿Y cuánto es ese apoyo?', say='¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?'),
+       m('iago', 'Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.', say='Muchísimo menos: lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la inteligencia artificial, la base de datos y los servidores. Si vosotros tocáis y cobráis, nosotros ganamos.'), cls='tight')}
 </section>
 ''')
 

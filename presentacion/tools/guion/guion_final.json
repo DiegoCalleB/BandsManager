@@ -1137,18 +1137,18 @@
    },
    {
     "who": "bajo",
-    "txt": "Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y una pequeña comisión de cada concierto que se cierra por la plataforma.",
-    "voz": "De dos motores. El primero, una suscripción por banda, con seis planes. Ya está construida, pero de momento la tengo apagada a propósito. El segundo, una pequeña comisión por cada concierto que se cierra en la plataforma."
+    "txt": "Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.",
+    "voz": "De dos motores. El primero, una suscripción por banda, con seis planes. Ya está construida, pero de momento la tengo apagada a propósito. Y el segundo, el apoyo voluntario de quien use la app."
    },
    {
     "who": "bateria",
-    "txt": "¿Y esa comisión cuánto es? ¿Más que Peláez?",
-    "voz": "¿Y esa comisión cuánto es? ¿Más o menos que Peláez?"
+    "txt": "¿Y cuánto es ese apoyo? ¿Más que Peláez?",
+    "voz": "¿Y cuánto es ese apoyo? ¿Más o menos que Peláez?"
    },
    {
     "who": "bajo",
-    "txt": "Muchísimo menos. De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos.",
-    "voz": "Muchísimo menos. De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos. Como tiene que ser."
+    "txt": "Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.",
+    "voz": "Muchísimo menos: lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la inteligencia artificial, la base de datos y los servidores. Si vosotros tocáis y cobráis, nosotros ganamos."
    }
   ],
   "nota": "La pregunta de Brais se convierte en callback al 30 % de Peláez, que es la comparación que hace entender el modelo."

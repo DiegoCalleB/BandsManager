@@ -256,9 +256,9 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 
 ## Cómo ganamos dinero
 **Álvaro:** ¿Y de qué vivimos, entonces?  
-**Iago:** Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y una pequeña comisión de cada concierto que se cierra por la plataforma.  
-**Brais:** ¿Y esa comisión cuánto es? ¿Más que Peláez?  
-**Iago:** Muchísimo menos. De momento, voluntaria. Si vosotros tocáis y cobráis, nosotros ganamos.  
+**Iago:** Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.  
+**Brais:** ¿Y cuánto es ese apoyo? ¿Más que Peláez?  
+**Iago:** Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.
 
 ## Qué viene
 **Iago:** Y ahora, lo que viene: probarlo con una banda real. La nuestra.  
