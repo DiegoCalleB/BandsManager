@@ -1,332 +1,269 @@
-# Os Herdeiros do Código · guion completo
+# Os Herdeiros do Código · guion completo (película de ≤ 15 min)
 
-_En el orden de la película, con los subtítulos tal y como salen en pantalla. Versión en curso: el pase del guionista aún no ha terminado._
+_Generado desde la película actual. Las escenas del anexo (para preguntas) no entran en la película._
 
-## Tráiler
-_En pantalla:_ Resurrection Fest · Sábado noche · 02:14 Esta banda iba a separarse. Seis meses antes · Jueves · 23:47 ¿Alguien ha contestado a la sala? Sin respuesta de las salas Sin repertorio Sin fechas Sonido: pulsa M
+## 01 · Tráiler
 
-## Prólogo · Jueves, 23:47
-**Alan:** ¿Alguien ha contestado a la sala del 14?  
-**Álvaro:** Yo pensaba que contestabas tú.  
-**Brais:** ¿Sala del 14? Yo pensaba que el 14 era el día del bolo.  
-**Iago:** Y yo pensaba que éramos una banda. No un chat.  
-**Iago:** Así no vamos a ningún lado. Ya he dejado varios grupos por esto. Con vosotros, no.  
+## 02 · Prólogo · Jueves, 23:47
+**02.1 Alan:** ¿Alguien ha contestado a la sala del 14?  
+**02.2 Brais:** ¿Sala del 14? Yo pensaba que el 14 era el día del bolo.  
+**02.3 Iago:** Y yo pensaba que éramos una banda. No cuatro tíos que se pasan la pelota. Ya he dejado varios grupos por esto. Con vosotros, no.  
 
-## Prólogo · La llamada
-**Peláez:** Os escribí hace tres meses y nadie contestó. Contrato: os llevo los bolos, me quedo el 30 % y elijo qué tocáis.  
-**Álvaro:** ¿Tres meses? Es que el correo… se nos pierde.  
-**Iago:** No firméis nada. Las canciones son nuestras y los bolos los llevamos nosotros. El sábado os lo demuestro.  
+## 03 · Prólogo · La llamada
+**03.1 Peláez:** Os escribí hace tres meses y nadie contestó. Me quedo el 30 % y elijo qué tocáis.  
+**03.2 Iago:** No firméis nada. Los bolos los llevamos nosotros. El sábado os lo demuestro.  
 
-## Título
-_En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con IA Menos gestión, más música . TFM · Máster de Desarrollo con IA · The Big School by Brais Moure Pulsa → para empezar
+## 04 · Título
 
-## Prólogo · La banda
-**Brais:** Soy Brais, a la batería. El que marca el ritmo. Y el que se bebe las birras.  
-**Alan:** Alan. Voz y guitarra. Che, la cara bonita de la banda.  
-**Álvaro:** Álvaro. Guitarra solista. Los solos, los riffs y las predicciones. Nunca fallo.  
-**Iago:** Y yo soy Iago, de San Blas de toda la vida. Toco el bajo. Ese instrumento que nadie oye. Hasta hoy.  
+## 05 · Prólogo · La banda
+**05.1 Brais:** Brais Brais  
+**05.2 Alan:** Alan Alan  
+**05.3 Álvaro:** Álvaro Álvaro  
+**05.4 Iago:** Iago Iago  
 
-## Prólogo · La decisión
-**Iago:** Para acabar el máster necesito un proyecto. Y mi banda necesita un milagro.  
-**Claudio:** ¿Y si el proyecto es el milagro?  
-**Guglio:** Yo pongo las ideas locas. Claudio las discute.  
-**Claudio:** Y tú decides, Iago. Nosotros proponemos y tú revisas cada respuesta.  
-**Iago:** Hecho, tronco. Empezamos esta noche.  
+## 06 · Prólogo · La decisión
+**06.1 Iago:** Para acabar el máster necesito un proyecto. Y mi banda necesita un milagro.  
+**06.2 Claudio:** ¿Y si el proyecto es el milagro? Tú decides, Iago: nosotros proponemos y tú revisas.  
+**06.3 Guglio:** Yo pongo las ideas locas. Claudio las discute.  
+**06.4 Iago:** Hecho, tronco. Empezamos esta noche.  
 
-## Prólogo · Viernes, 22:10
-**Iago:** Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me lo creo.  
-**Álvaro:** Seguro que es una base de datos de salas.  
-**Brais:** O que ha descubierto el calendario compartido.  
-**Álvaro:** Y ojo: mañana a las 14:00 cierran el cartel del Resurrection Fest. Si no mandamos nada, no tocamos.  
+## 07 · Prólogo · Viernes, 22:10
+**07.1 Iago:** Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me lo creo.  
+**07.2 Álvaro:** Seguro que es una base de datos de salas.  
+**07.3 Brais:** O el calendario compartido, neno.  
+**07.4 Álvaro:** Y ojo: mañana a las 14:00 cierran el cartel del Resurrection Fest. Si no mandamos nada, no tocamos.  
 
-## Prólogo · Sábado, 11:00 en el local
-**Iago:** Esto es BandManager. Os cuento qué hace por cada uno.  
-**Brais:** A ver, enséñanos eso que ni tú te crees.  
+## 08 · Prólogo · Sábado, 11:00 en el local
+**08.1 Iago:** Iago · bajo Esto es BandManager. Os cuento qué hace por cada uno.  
+**08.2 Brais:** Brais · batería A ver, enséñanos eso que ni tú te crees.  
 
-## Capítulo 1 · Conseguir el bolo
-**Iago:** Empezamos por lo que más nos dolía: las salas.  
+## 09 · Capítulo 1 · Conseguir el bolo
+**09.1 Iago:** Iago · bajo Empezamos por lo que más nos dolía: las salas.  
 
-## Todas las salas, en un sitio
-**Alan:** ¡¿Esto lo has hecho tú?!  
-**Iago:** Con ayuda. Aquí tengo las salas y los festivales, y cada conversación queda guardada.  
-**Álvaro:** ¡Una base de datos de salas!  
-**Iago:** Casi. Y hay un agente, el Scout, que busca salas nuevas por nosotros.  
-**Iago:** Y todas, en el mapa de toda España.  
+## 10 · Todas las salas, en un sitio
+**10.1 Alan:** ¡¿Esto lo has hecho tú?!  
+**10.2 Iago:** Con ayuda. Aquí tengo las salas y los festivales, y cada conversación queda guardada.  
+**10.3 Álvaro:** ¡Una base de datos de salas!  
+**10.4 Iago:** Casi. Y hay un agente, el Scout, que busca salas y festivales nuevos por nosotros.  
+**10.5 Iago:** Y todos, en el mapa de toda España.  
 
-## La IA escribe, tú apruebas
-**Álvaro:** ¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba!  
-**Iago:** Cada correo suena a nosotros: la IA lo escribe con el estilo de la banda y lo adapta a cada sala.  
-**Brais:** ¿Y si se le va la mano y escribe una burrada?  
-**Iago:** Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.  
-**Álvaro:** ¿Y cómo sabemos si lo han leído?  
-**Iago:** Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes. Y a la IA la entrenas con estrellas: aprende cómo hablamos.  
+## 11 · La IA escribe, tú apruebas
+**11.1 Álvaro:** ¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba!  
+**11.2 Iago:** Cada correo suena a nosotros, y la IA lo adapta a cada sala.  
+**11.3 Brais:** ¿Y si le escribe una burrada al de la sala?  
+**11.4 Iago:** Nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente me avisa.  
+**11.5 Álvaro:** ¿Y cómo sabemos si lo han leído?  
+**11.6 Iago:** La app te avisa cuando abren el correo o el dossier. Y a la IA la entrenas con estrellas.  
 
-## El correo llega a la sala
-**Iago:** Lo repasas, lo apruebas y le das a enviar.  
-**Álvaro:** ¿Y cómo le llega a la sala?  
-**Iago:** Así: en su bandeja de entrada, con vuestro logo y el botón al dossier.  
-**Brais:** ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!  
-**Iago:** Con tu firma, tu cargo y tus redes. Y el dossier, a un clic.  
-**Alan:** ¡Y yo firmando los correos con un besito!  
+## 12 · El correo llega a la sala
+**12.1 Iago:** Así le llega a la sala, con vuestro logo y el botón al dossier.  
+**12.2 Brais:** ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!  
+**12.3 Alan:** ¡Y yo firmando los correos con un besito!  
 
-## Date Swap
-**Iago:** Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.  
-**Cantante de MoP:** Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!  
-**Brais:** ¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolling!  
-**Alan:** ¿Y quién es ese?  
-**Iago:** El cantante de Master of Prompts. Guardaos el nombre, que va a volver.  
-**Cantante de MoP:** Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?  
-**Brais:** ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.  
-**Alan:** ¡Traidor! ¡Nos deja por unos metaleros!  
+## 13 · Bandas amigas
+**13.1 Alan:** ¿Y las otras bandas? Siempre acabamos con los mismos contactos.  
+**13.2 Iago:** Aquí las tengo todas: estilo, ciudad, contacto y el público que llevan.  
+**13.3 Álvaro:** ¿Y puedo escucharlas antes de proponerles nada?  
+**13.4 Iago:** Sí: le das a «Escuchar» y suena abajo, desde su Spotify, sin salir de la app.  
+**13.5 Brais:** ¿Y cómo les va? ¿Tienen público de verdad?  
+**13.6 Iago:** Ves sus métricas del mes, en Spotify y en YouTube.  
 
-## Cambio de perfil
-**Iago:** Tranquilo, Alan: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.  
-**Brais:** Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?  
-**Iago:** Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.  
-**Álvaro:** ¿Y cómo cambias de una banda a otra?  
-**Iago:** Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.  
-**Alan:** ¡Cambió todo! ¡El logo, el calendario, hasta las salas!  
-**Iago:** Lo de una banda no se ve nunca en la otra. Es la primera regla de la casa. Solo se juntan en tu calendario.  
+## 14 · Date Swap
+**14.1 Iago:** Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra.  
+**14.2 Voz de Master of Prompts:** Os leo. Nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!  
+**14.3 Brais:** ¡Cartel doble! ¡Esto no lo tenían ni los Rolling!  
+**14.4 Alan:** ¿Y quién es ese?  
+**14.5 Iago:** El cantante de Master of Prompts. Guardaos el nombre, que va a volver.  
+**14.6 Voz de Master of Prompts:** Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?  
+**14.7 Brais:** ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.  
+**14.8 Alan:** ¡Traidor! ¡Nos deja por unos metaleros!  
 
-## Bandas amigas
-**Alan:** ¿Y las otras bandas? Siempre acabamos con los mismos contactos en el móvil.  
-**Iago:** Aquí las tengo todas: estilo, ciudad, contacto y el público que suelen llevar.  
-**Álvaro:** ¿Y puedo escucharlas antes de proponerles nada?  
-**Iago:** Sí. Nos conectamos a su Spotify y a su YouTube para sacar un preview de sus temas más populares.  
-**Brais:** ¿Y cómo les va? ¿Tienen público de verdad?  
-**Iago:** Ves sus métricas del mes: seguidores en Spotify y suscriptores en YouTube.  
+## 15 · Cambio de perfil
+**15.1 Iago:** Tranquilo, Alan: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.  
+**15.2 Brais:** Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?  
+**15.3 Iago:** Claro: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.  
+**15.4 Álvaro:** ¿Y cómo cambias de una banda a otra?  
+**15.5 Iago:** Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.  
+**15.6 Alan:** ¡Cambió todo! ¡El logo, el calendario, hasta las salas!  
+**15.7 Iago:** Y lo de una banda no se ve nunca en la otra. Es la primera regla de la casa.  
 
-## El acuerdo, firmado desde BandManager
-**Brais:** ¿Y si la sala nos cambia el caché el mismo día del bolo?  
-**Iago:** Por eso el acuerdo se cierra desde la plataforma: fecha, caché, rider y camerino, por escrito.  
-**Álvaro:** ¿Y la sala tiene que instalarse algo?  
-**Iago:** Nada: solo abrir un enlace y firmar con el dedo. Y le llega su copia.  
-**Brais:** ¡Se acabaron las sorpresas el día del bolo!  
+## 16 · El acuerdo, firmado desde BandManager
+**16.1 Brais:** ¿Y si la sala nos cambia el caché el mismo día del bolo?  
+**16.2 Iago:** Por eso el acuerdo se cierra desde la plataforma: fecha, caché, rider y camerino, por escrito.  
+**16.3 Álvaro:** ¿Y la sala tiene que instalarse algo?  
+**16.4 Iago:** Nada: abrir un enlace y firmar con el dedo.  
+**16.5 Brais:** ¡Se acabaron las sorpresas el día del bolo!  
 
-## La sala contestó
-**Programador:** Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!  
-**Alan:** ¡La sala del 14! ¡Y encima el día 14!  
-**Brais:** ¿En 35 minutos? La última vez tardaron tres semanas. Y era para decir que no.  
-**Programador:** Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.  
+## 17 · La sala contestó
+**17.1 Programador (Sala El Faro):** Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!  
+**17.2 Alan:** ¡La sala del 14! ¡Y encima el día 14!  
+**17.3 Brais:** ¿En 35 minutos? La última vez tardaron tres semanas. Y era para decir que no.  
 
-## Capítulo 2 · Antes del concierto
-**Iago:** Ahora lo bueno: lo que os toca a cada uno.  
+## 18 · Capítulo 2 · Antes del concierto
+**18.1 Iago:** Iago · bajo Ahora lo bueno: lo que os toca a cada uno.  
 
-## Una hoja para cada músico
-**Álvaro:** Vale, ¿y lo de los ensayos? Llevamos tres sin saber qué tocamos.  
-**Iago:** Imprimo el setlist y sale una hoja distinta para cada uno. Con el logo de la banda detrás.  
-**Brais:** ¡Mi hoja! ¡Con mis notas! ¡Solo las mías!  
-**Alan:** Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!  
+## 19 · Una hoja para cada músico
+**19.1 Álvaro:** Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos.  
+**19.2 Iago:** Imprimo el setlist y sale una hoja distinta para cada uno.  
+**19.3 Alan:** Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!  
 
-## La curva de energía
-**Iago:** Cada tema tiene su energía. La app dibuja la curva del concierto.  
-**Álvaro:** ¿Y si la curva se cae a mitad del bolo?  
-**Iago:** Le das a «Optimizar orden» y te propone el setlist perfecto.  
-**Iago:** Y vigila las transiciones: energía y tonalidad, tema a tema.  
-**Alan:** ¡Un setlist que sube como un cohete! 🚀  
+## 20 · La curva de energía
+**20.1 Iago:** Cada tema tiene su energía: la app dibuja la curva del concierto y te propone el setlist perfecto.  
+**20.2 Alan:** ¡Un setlist que sube como un cohete! 🚀  
 
-## Los acordes pasan solos
-**Iago:** Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.  
-**Álvaro:** ¡Pero tío! ¡Es como Ultimate Guitar, pero con nuestras canciones! ¡Mejor que un solo de Slash!  
-**Brais:** ¡Estoy flipando, neno!  
-**Iago:** Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!  
+## 21 · Los acordes pasan solos
+**21.1 Iago:** Dale al play, Álvaro. Los acordes y la letra siguen la canción solos.  
+**21.2 Álvaro:** ¡Pero tío! ¡Es como Ultimate Guitar, pero con nuestras canciones! ¡Mejor que un solo de Slash!  
+**21.3 Iago:** Espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!  
 
-## El profesor de armonía
-**Álvaro:** ¿Y si no sé qué escala tocar encima?  
-**Iago:** Para eso está el profesor de armonía: lee los acordes de la canción y te explica cómo funciona.  
-**Iago:** Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar y cómo componer encima.  
-**Álvaro:** ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!  
-**Iago:** Eso sí: lo marca como idea. Las notas las saca la app; la IA solo las explica.  
+## 22 · Iris separa los instrumentos
+**22.1 Iago:** Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.  
+**22.2 Alan:** ¡Mi voz sola! ¡Nunca me había oído así!  
+**22.3 Álvaro:** ¿Esto no será un Moises?  
+**22.4 Iago:** ¡Sí, tío! Por fin aciertas una. Y encima, ¡por fin se oye el bajo!  
 
-## Iris separa los instrumentos
-**Iago:** Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.  
-**Alan:** ¡Mi voz sola! ¡Nunca me había oído así!  
-**Álvaro:** ¡Parece un Cubase! ¡Y cada pista de un color del arcoíris! 🌈  
-**Álvaro:** ¡Espera, espera! ¿Esto no será un Moises?  
-**Iago:** ¡Sí, tío! Por fin aciertas una. Un Moises metido en nuestro repertorio.  
-**Iago:** Y encima grabamos nuestras ideas sobre nuestras propias pistas. ¡Y por fin se oye el bajo!  
+## 23 · Calendario de la banda
+**23.1 Iago:** Y aquí se juntan las bandas: un calendario con los ensayos y bolos de todas, sincronizado con Google Calendar.  
+**23.2 Brais:** ¡Te lo dije! ¡Google Calendar!  
+**23.3 Iago:** Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.  
+**23.4 Alan:** ¡Por fin sé cuándo ensayamos y cuándo tocamos!  
 
-## Calendario de la banda
-**Iago:** Y aquí, y solo aquí, se juntan las bandas: tu calendario muestra los ensayos y bolos de todas. Y se sincroniza con Google Calendar.  
-**Brais:** ¡Te lo dije! ¡Google Calendar! 🤣  
-**Iago:** Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.  
-**Alan:** ¡Por fin sé cuándo ensayamos y cuándo tocamos!  
+## 24 · Capítulo 3 · Que te conozcan
+**24.1 Iago:** Iago · bajo ¡Y ahora, que nos conozca más gente! 🌍  
 
-## Choques en el calendario
-**Brais:** Oye… ¿y si me coinciden dos ensayos a la vez, uno con cada banda?  
-**Iago:** El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.  
-**Brais:** ¡Ai, mi madriña! ¡Me ha salvado el miércoles!  
-**Alan:** El miércoles. El de los metaleros.  
-**Iago:** Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.  
+## 25 · El dossier de la banda
+**25.1 Álvaro:** ¿Que ahora tenemos una web? ¡Como los de verdad!  
+**25.2 Brais:** ¡Pero si está guapísima! ¡¿Qué me estás contando?!  
+**25.3 Iago:** Es el dossier de la banda: fotos, formación y contacto. Se edita desde la app.  
+**25.4 Álvaro:** Esto ya no es un local de ensayo, es una discográfica. Una que no se queda el 30 %.  
 
-## Capítulo 3 · Que te conozcan
-**Iago:** ¡Y ahora, que nos conozca más gente!  
+## 26 · Un QR y el público se hace fan
+**26.1 Álvaro:** ¿Que ponemos este QR y la gente nos sigue en redes?  
+**26.2 Iago:** ¡Sí! Y pueden apoyarnos, comprar merchan, ver los próximos bolos y entrar en nuestra web.  
+**26.3 Iago:** Y dejan su correo, con su permiso, y se llevan un regalo: un descuento o una descarga.  
+**26.4 Alan:** ¿Una lista de gente que nos quiere? ¡Dónde firmo, che!  
 
-## El dossier de la banda
-**Álvaro:** ¿Pero qué…? ¿Que ahora tenemos una web? ¡Como los de verdad!  
-**Brais:** ¡Pero si está guapísima! ¡¿Qué me estás contando?!  
-**Iago:** Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la app.  
-**Álvaro:** Yo ya no sé si esto es un local de ensayo o una discográfica.  
+## 27 · Del directo al reel
+**27.1 Alan:** ¿Y esto qué es?  
+**27.2 Iago:** Un generador de reels para Instagram, TikTok y YouTube, hecho con IA.  
+**27.3 Brais:** ¿O sea que le subes el concierto entero y te saca los trozos más virales?  
+**27.4 Iago:** ¡Eso es! Y los deja listos, con el formato de cada red.  
+**27.5 Álvaro:** ¿Y luego los subimos a mano?  
+**27.6 Iago:** Qué va. Programas cada reel en cada red, con su día y su hora.  
 
-## Un QR y el público se hace fan
-**Álvaro:** ¿Que si ponemos este QR en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?  
-**Iago:** ¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.  
-**Iago:** Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.  
-**Alan:** ¿Una lista de gente que nos quiere? ¡Dónde firmo, che!  
+## 28 · Del concierto al disco
+**28.1 Iago:** Con la grabación entera del bolo de la Ribeira, la IA separa las canciones de lo que hablamos con el público.  
+**28.2 Alan:** ¡Un disco en directo sin mis chistes malos! 💿  
+**28.3 Brais:** Y sin la balada que vació el bar.  
 
-## Merchan en un minuto
-**Alan:** ¿Merchan? ¡Si no tenemos!  
-**Iago:** Ahora sí: camisetas y pegatinas con nuestro logo y el QR.  
-**Brais:** ¡Yo quiero la roja! 👕  
-**Alan:** Y yo, una con mi cara.  
+## 29 · Capítulo 4 · Después del concierto
+**29.1 Iago:** Iago · bajo Lo último. Y creo que es lo que más os va a sorprender.  
 
-## Del directo al reel
-**Alan:** ¿Y esto qué es?  
-**Iago:** Un generador automático de reels para Instagram, TikTok y YouTube. Todo personalizado y generado con IA.  
-**Brais:** ¿O sea, que le subes el vídeo entero del concierto y te saca los trozos más virales para cada red?  
-**Iago:** ¡Eso es! Y te los deja listos, con el formato de cada plataforma.  
+## 30 · Cuánto entra y cuánto queda
+**30.1 Iago:** Lo que entra por cada bolo, los gastos y lo que le toca a cada uno.  
+**30.2 Álvaro:** ¡Las cuentas claras! ¡Y salen números positivos! 💰  
+**30.3 Iago:** Y para las giras le meteré algo tipo Tricount, para que Brais no nos haga el lío de las birras.  
+**30.4 Brais:** ¡Oye! ¡Que fue solo una vez!  
 
-## Del concierto al disco
-**Álvaro:** ¿Y la grabación entera del bolo de la Ribeira?  
-**Iago:** La subes y la IA separa las canciones de lo que hablamos con el público.  
-**Alan:** ¡Un disco en directo sin mis chistes malos! 💿  
-**Brais:** Y sin la balada que vació el bar.  
+## 31 · Y mucho más
+**31.1 Iago:** Y hay más: medios, métricas de redes, tu discografía de Spotify, las ideas, la ficha de cada bolo…  
+**31.2 Álvaro:** Vale, ya lo tengo: es una base de datos de salas. Con cosas.  
+**31.3 Iago:** Casi, tío. Casi.  
+**31.4 Brais:** ¡Pero si no le falta de nada! 🤯  
 
-## Capítulo 4 · Después del concierto
-**Iago:** Y al final, lo que nunca nos cuadra: las cuentas.  
+## 32 · Lo han visto todo
+**32.1 Álvaro:** ¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?  
+**32.2 Iago:** Han sido unos meses duros, la verdad. No he podido dedicarles el tiempo que quería.  
+**32.3 Iago:** ¡Y encima Netflix me ha pedido una peli documental sobre BandManager! ¡Estoy flipando!  
+**32.4 Alan:** ¡Sos un genio! ¡Yo voy a la alfombra roja con la camisa de flores!  
+**32.5 Iago:** Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.  
 
-## Cuánto entra y cuánto queda
-**Iago:** Lo que entra por cada bolo, los gastos y lo que le toca a cada uno, en una sola pantalla.  
-**Álvaro:** ¡Las cuentas claras! ¡Y salen números positivos! 💰  
-**Iago:** Y para las giras mi idea es meterle algo tipo Tricount o Splitwise, para que Brais no nos haga el lío como siempre.  
-**Brais:** ¡Oye!  
+## 33 · Las noches
+**33.1 Brais:** Pero, ¿cuándo, Iago? ¿A qué hora?  
+**33.2 Iago:** Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.  
+**33.3 Brais:** Neno… no teníamos ni idea.  
+**33.4 Álvaro:** Y nosotros, discutiendo por las birras.  
+**33.5 Alan:** Gracias, Iago. De verdad.  
 
-## La gira, con gasolina y todo
-**Brais:** ¿Y la gasolina de la furgo y de mi coche?  
-**Iago:** Metes los coches que van en ruta y calcula el gasto de cada parada.  
-**Iago:** Y lo que queda limpio de cada bolo.  
-**Álvaro:** ¡Ni una discusión más en la gasolinera! ⛽  
+## 34 · Esto lo necesitan todos
+**34.1 Alan:** Iago, esto es una locura. Lo necesitan todos los grupos, los mánagers, las productoras.  
+**34.2 Brais:** ¡Te vas a forrar! Ya te veo en Miami, en descapotable.  
+**34.3 Iago:** Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!  
+**34.4 Brais:** ¿Una buena parte de cuánto?  
 
-## Y mucho más
-**Iago:** Y hay más: ensayos, ideas, la ficha de cada bolo…  
-**Álvaro:** Vale, ya lo tengo: es una base de datos de salas. Con cosas.  
-**Iago:** Casi, tío. Casi.  
-**Brais:** ¡Pero si no le falta de nada! 🤯  
+## 35 · Capítulo 5 · Cómo lo hacemos
+**35.1 Iago:** Iago · bajo Vamos por partes. Os cuento mi estrategia.  
 
-## Lo han visto todo
-**Álvaro:** ¡¿Pero cuándo has podido hacer esto?! Si cuando no estás en el trabajo, ¡estás con tus dos hijas! 🤯  
-**Iago:** Pues han sido unos meses duros: no he podido dedicarles tiempo de calidad al 100 %, he estado muy distraído construyendo todo esto.  
-**Iago:** ¡Y encima Netflix me ha pedido una peli documental con la historia de BandManager! No sé cómo se han enterado, ¡estoy flipando! 🎬  
-**Alan:** ¡Sos un genio, Iago! ¿Una peli en Netflix? ¡Yo voy a la alfombra roja con la camisa de flores! 🙌  
-**Iago:** Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.  
+## 36 · Para darlo a conocer
+**36.1 Iago:** Primero, que se entere todo el mundo. Por eso me acabo de apuntar al máster de Marketing Digital de la Big School.  
+**36.2 Brais:** ¿Otro máster? ¿Pero tú cuándo duermes?  
+**36.3 Iago:** Dormir está en mi lista de pendientes. Y sale más barato que darle el 30 % a Peláez.  
 
-## Las noches
-**Iago:** Casi siempre de noche, cuando las niñas ya dormían. Cerraba el portátil, las miraba un momento… y volvía a abrirlo.  
-**Brais:** Neno… no teníamos ni idea.  
-**Álvaro:** Y nosotros, discutiendo por las birras.  
-**Alan:** Gracias, Iago. De verdad.  
+## 37 · A quién se lo vendemos
+**37.1 Iago:** Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros.  
+**37.2 Brais:** ¿Y B2B?  
+**37.3 Iago:** No: B2B son los profesionales. Mánagers y agencias, y las salas y festivales que programan.  
+**37.4 Iago:** Y si es fácil trabajar con nosotros, contestan antes. Mirad El Faro: 35 minutos.  
 
-## Esto lo necesitan todos
-**Alan:** Iago, esto es una locura. Lo necesitan todos los grupos, todos los mánagers, todas las productoras. ¡Todos!  
-**Álvaro:** ¿Y si lo vendemos? Además de dar conciertos, ayudamos a los músicos de todo el mundo.  
-**Iago:** ¿En serio? ¿Creéis que esto se puede vender?  
-**Brais:** ¡Te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol.  
-**Iago:** Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!  
-**Brais:** ¿Una buena parte de cuánto?  
+## 38 · Cómo ganamos dinero
+**38.1 Álvaro:** ¿Y de qué vivimos? ¿De los aplausos?  
+**38.2 Iago:** Dos motores: una suscripción por banda, ya construida pero apagada a propósito, y el apoyo voluntario de quien use la app.  
+**38.3 Brais:** ¿Y cuánto es ese apoyo? ¿Más que Peláez?  
+**38.4 Iago:** Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la IA y los servidores.  
 
-## Capítulo 5 · Cómo lo hacemos
-**Iago:** Vamos por partes.  
+## 39 · Qué viene
+**39.1 Iago:** Y ahora, lo que viene: probarlo con una banda real. La nuestra.  
+**39.2 Álvaro:** ¡Iago! ¡El móvil! ¡El Resurrection Fest acaba de abrir el dossier!  
+**39.3 Iago:** Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.  
 
-## Para darlo a conocer
-**Iago:** Primero, que se entere todo el mundo. Por eso me acabo de apuntar al máster de Marketing Digital de la Big School.  
-**Brais:** ¿Otro máster? ¿Pero tú cuándo duermes?  
-**Iago:** Dormir está en mi lista de pendientes.  
-**Iago:** Es una pasta que flipas. Pero sale más barato que darle el 30 % a Peláez.  
-**Brais:** ¡Neno, tú de marketing sabes lo que yo de cuentas!  
-**Iago:** Tú ríete. Cuando esté en Miami con el Lambo, iré gritando: «¡Estos másteres son el mejor dinero que he gastado!»  
+## 40 · El festival, 02:14
+**40.1 Programador (Sala El Faro):** Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El rider está en el camerino, tal y como firmamos.  
+**40.2 Peláez:** Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.  
+**40.3 Iago:** Gracias, Peláez. Pero los bolos ya los llevamos nosotros.  
+**40.4 Iago:** Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.  
+**40.5 Brais:** Hace seis meses no sabíamos ni quién contestaba a las salas.  
 
-## A quién se lo vendemos
-**Iago:** Dos tipos de cliente. B2C: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda.  
-**Brais:** ¿Y B2B?  
-**Iago:** Ojalá, con lo que facturan. B2B son los profesionales: mánagers y agencias, que llevan varias bandas a la vez.  
-**Alan:** Yo de coreano daría el pego.  
-**Iago:** Y salas, festivales y productoras, que son las que programan.  
-**Alan:** ¿Y por qué iba a querer una sala usar esto?  
-**Iago:** Porque si es fácil trabajar con nosotros, contestan antes. Quien toca paga; quien programa hace que el producto funcione.  
+## 41 · En la radio
+**41.1 Radio Riff:** La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.  
 
-## Cómo ganamos dinero
-**Álvaro:** ¿Y de qué vivimos, entonces?  
-**Iago:** Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.  
-**Brais:** ¿Y cuánto es ese apoyo? ¿Más que Peláez?  
-**Iago:** Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.
+## 42 · Otro jueves, 23:47
+**42.1 Alan:** ¿Alguien ha contestado a la sala del 14?  
+**42.2 Iago:** Cerrao y bien cerrao, chaval. Mirad el calendario. ✅  
+**42.3 Brais:** Entonces ensayamos el sábado. Y el miércoles, con los metaleros. 🥁  
+**42.4 Alan:** Traidor.  
 
-## Qué viene
-**Iago:** Y ahora, lo que viene: probarlo con una banda real. La nuestra.  
-**Álvaro:** ¡Iago! ¡El móvil! ¡El Resurrection Fest acaba de abrir el dossier!  
-**Iago:** Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.  
+## 43 · El giro: el bajista soy yo
 
-## El festival, 02:14
-**Programador:** Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.  
-**Peláez:** Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.  
-**Iago:** Gracias, Peláez. Pero los bolos ya los llevamos nosotros.  
-**Programador:** Que conste, Peláez: los bolos los llevan ellos solitos.  
-**Alan:** ¿Tengo el tono de la primera?  
-**Iago:** Em, en tu hoja, como siempre.  
-**Iago:** Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.  
-**Programador:** ¡Y ahora, a tocar!  
-**Brais:** Hace seis meses no sabíamos ni quién contestaba a las salas.  
+## 44 · Mis bandas
 
-## En la radio
-**Locutor:** La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.  
+## 45 · Un sueño hecho realidad
 
-## Otro jueves, 23:47
-**Alan:** ¿Alguien ha contestado a la sala del 14?  
-**Iago:** Cerrao y bien cerrao, chaval. Mirad el calendario. ✅  
-**Álvaro:** Y ya tenemos los setlists, cada uno en su hoja.  
-**Brais:** Entonces ensayamos el sábado. Y el miércoles, con los metaleros. 🥁  
-**Alan:** Traidor.  
+## 46 · El reloj
 
-## El giro: el bajista soy yo
-_En pantalla:_ Fin de la historia · Diego de la Calle Diego de la Calle El bajista El bajista soy yo. Necesito volver a tocar. Toqué en varios grupos. Los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.
+## 47 · El reto
+**47.1 Diego:** Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.  
+**47.2 Diego:** Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.  
+**47.3 Diego:** Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
 
-## Mis bandas
-_En pantalla:_ Fin de la historia · Diego de la Calle 15 años THC Con mi hermano Fer detrás 17 años Arritmia Grabando nuestra primera maqueta 20 años Limando Pradoluengo (Burgos) 25 años Walter Sax Big Band Estadio Santiago Bernabéu 25 años Walter Sax Big Band A contraluz 30 años Repercusión Fiestas del PCE · 2015 · compartiendo cartel con Siniestro Total 33 años Repercusión Batalla Naval de Vallekas · La Karmela · 2018 40 años Master of Prompts Yo ya estoy preparado para la primera gira. ¿Y tú, Brais? 15 THC 17 Arritmia 20 Limando 25 Walter Sax Big Band 30 Repercusión 33 Vallekas 40 Gira Hoy, a los 41 Y siempre, la música.
+## 48 · La invitación
+**48.1 Diego:** Brais… yo había dejado de tocar. Este máster me devolvió las ganas.  
+**48.2 Diego:** Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.  
 
-## Un sueño hecho realidad
-_En pantalla:_ Fin de la historia · Diego de la Calle Diego de la Calle El bajista Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada. Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.
+## 49 · Gracias
+**49.1 Diego:** A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.  
+**49.2 Diego:** Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
+**49.3 Diego:** Diego · bajo Ensayamos el sábado. Os llevo vuestros setlists personalizados. 🎸  
 
-## El reloj
-_En pantalla:_ Fin de la historia · El reloj CIERRE DEL CARTEL · RESURRECTION FEST ENTREGA DEL TFM · THE BIG SCHOOL -00:00:03 -00:00:02 -00:00:01 00:00:00 ¿Os habéis fijado en el reloj? No solo contaba para el cierre del cartel del Resu. También contaba para esto. 🔔 BandManager · ahora Alguien está viendo tu TFM Ahora mismo. Desde el principio. Brais: en esta historia eras el batería. Pero en la de verdad, el festival sois vosotros. Y ahora… un reto.
+## 50 · Créditos
 
-## El reto
-**Diego:** Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.  
-**Diego:** Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.  
-**Diego:** Así que te he preparado el setlist del primer ensayo de Master of Prompts, la banda que estoy montando: metal, con letras de coña sobre programar.  
-**Álvaro:** ¡Psychosocket! ¡Freak on a Branch! ¡Eso hay que tocarlo!  
-**Alan:** ¡Y Fear of the Deadline, che! Esa, Brais, te la cantan todos tus alumnos.  
-**Diego:** Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
-
-## La invitación
-**Diego:** Brais… yo había dejado de tocar. Este máster me devolvió las ganas.  
-**Diego:** Tú me enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.  
-**Diego:** Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.  
-
-## Gracias
-**Diego:** Gracias, Brais. Y gracias a todo el profesorado de The Big School.  
-**Diego:** Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
-**Diego:** Ensayamos el sábado, Brais. Te llevo tu setlist: tu hoja, con tus notas. Solo las tuyas.  
-
-## Créditos
-_En pantalla:_ Os Herdeiros do Código en BandManager.io Una película de rock, código y café Reparto Iago  · el que nadie oye Brais  · y las birras. En dos bandas, desde que lo ficharon Alan  · la cara bonita Álvaro  · los solos y los riffs {manager} Siempre al teléfono {voz_mop} El rival. Y luego, el amigo {sello} Discos Cuarzo · quería el 30 % y el repertorio {ia_claude} Claude Code · el que discute {ia_gemini} Gemini · el de las ideas locas {locutor} En directo Escrita, programada y dirigida por Diego de la Calle Las bandas de Diego Antes de BandManager, ya había música THC A los 15 años · con su hermano Fer al fondo Arritmia A los 17 · al teclado · su primera maqueta Limando A los 20 · Pradoluengo, Burgos Walter Sax Big Band A los 25 · hasta el Santiago Bernabéu Repercusión De los 30 a los 33 · fiestas del PCE (2015) y Batalla Naval de Vallekas (2018) Master of Prompts A los 40 · la primera gira · foto generada con IA Foto final de «Gracias» Montaje con IA: Brais y Diego, ya en Master of Prompts Fer Su hermano, al fondo de la foto de THC Los que aparecen en BandManager.io Los que tocan Bandas y músicos Booking, repertorio, ensayos, finanzas y giras Líderes y miembros El líder manda; los miembros ven y colaboran Cabeza de Cartel Mánagers con hasta cinco bandas a la vez Los que programan Salas y clubs Reciben el pitch y firman el acuerdo con un enlace Festivales Cada uno con su ficha, su mapa y su historial Medios Prensa, radio y podcast Representantes y sellos Los que llevan varias bandas
-
-## Escena post-créditos
-**Brais:** ¿Ya se ha acabado la peli? 🍿  
-**Iago:** Dividir gastos está en mi lista de pendientes.  
-**Álvaro:** ¡Pues que las pague la IA! 🤘  
-**Claudio:** Propuesta: las paga Brais. Pero tú decides, Iago.  
-**Guglio:** Idea loca: que las pague Peláez.  
-**Iago:** Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.  
-**Brais:** ¡Estos de Netflix tienen ojo! 😎  
-**Iago:** Brais… la peli va de mí.  
-**Brais:** Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
-**Iago:** Mira el calendario, Brais.  
+## 51 · Escena post-créditos
+**51.1 Brais:** ¿Ya se ha acabado la peli? 🍿  
+**51.2 Iago:** Dividir gastos está en mi lista de pendientes.  
+**51.3 Álvaro:** ¡Pues que las pague la IA! 🤘  
+**51.4 Claudio:** Propuesta: las paga Brais. Pero tú decides, Iago.  
+**51.5 Guglio:** Idea loca: que las pague Peláez.  
+**51.6 Iago:** Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.  
+**51.7 Brais:** ¡Estos de Netflix tienen ojo! 😎  
+**51.8 Iago:** Brais… la peli va de mí.  
+**51.9 Brais:** Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
+**51.10 Iago:** Mira el calendario, Brais.  

@@ -58,11 +58,28 @@ def _voces():
     return _VOZ
 
 
+_GF = None
+
+
+def _guion_final():
+    global _GF
+    if _GF is None:
+        _GF = {x['title']: x['lines'] for x in json.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8'))}
+    return _GF
+
+
 def frases(seccion):
     """[(inicio, duración, quién)] de cada frase de la escena, encadenadas como lo hace voces.js."""
     V, R, man = _voces()
     out, t, prev = [], ARRANQUE, None
-    for who, say in re.findall(r'data-who="([^"]+)"[^>]*?data-say="([^"]*)"', seccion):
+    pares = re.findall(r'data-who="([^"]+)"[^>]*?data-say="([^"]*)"', seccion)
+    # guion_final.json se aplica después de dirigir la pantalla: las voces de verdad son las del json, así que el reloj se saca de ahí
+    tt = re.search(r'data-title="([^"]*)"', seccion)
+    if tt and tt.group(1) in _guion_final():
+        L = _guion_final()[tt.group(1)]
+        if len(L) == len(pares):
+            pares = [(l['who'], _html.escape(l['voz'], quote=True)) for l in L]
+    for who, say in pares:
         texto = V.sustituir(_html.unescape(say), R)
         m = man.get(V.fnv1a(who + '|' + texto))
         d = m['d'] / VEL_VOZ if m else max(0.9, len(texto) * 0.042)

@@ -179,11 +179,11 @@ add = S.append
 add(trailer + '\n')
 
 add(scene('Prólogo · Jueves, 23:47', 'Prólogo · Os Herdeiros do Código', 'Un jueves cualquiera, a las 23:47.', 'img/concierto-3.jpg',
-          dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', '23:47'),
-              m('alvaro', 'Llevamos tres ensayos sin saber qué tocamos.', '23:52', 'cold'),
-              m('brais', 'Así no llegamos a ningún lado.', '23:58', 'cold'),
-              m('iago', 'Ya he dejado dos grupos por esto y no quiero que me vuelva a pasar.', '00:01'),
-              m('iago', 'Dadme hasta el sábado.', '00:03'))))
+          dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?'),
+              m('alvaro', 'Llevamos tres ensayos sin saber qué tocamos.', 'cold'),
+              m('brais', 'Así no llegamos a ningún lado.', 'cold'),
+              m('iago', 'Ya he dejado dos grupos por esto y no quiero que me vuelva a pasar.'),
+              m('iago', 'Dadme hasta el sábado.'))))
 
 add(scene('Prólogo · La llamada', 'Prólogo · Jueves · 00:09', 'Y entonces, sonó el teléfono.', 'img/concierto-1.jpg',
           '<div class="callcard"><i class="cc-ico" aria-hidden="true">☎</i><div><small>Llamada entrante · 00:09</small><b>Discos Cuarzo</b><span>Sr. Peláez</span></div></div>' +
@@ -313,18 +313,16 @@ add(f'''<section class="slide feat dl mailscene" data-grupo="promocion" data-tit
 ''')
 
 add(feat('Medios de comunicación', TAG1, 'Que hablen de la banda.',
-         [m('brais', '¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs?', say='¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs de música?'),
-          m('iago', 'Tengo también la base de datos de medios: radios, webs, prensa y podcasts, por ciudad y con su contacto.', say='Tengo también la base de datos de medios: radios, webs, prensa y pódcasts, por ciudad y con su contacto.'),
-          m('alvaro', '¡Hasta la radio y la tele de aquí! ¿Y cómo les escribimos?', say='[amazed] ¡Si hasta salen la radio y la tele de aquí! ¿Y cómo les escribimos?'),
-          m('iago', 'Con el mismo redactor de la IA, con el tono de la banda: para que hablen del grupo o promocionen un concierto o una fecha señalada. Y nada sale sin tu visto bueno.', say='Con el mismo redactor de la inteligencia artificial, con el tono de la banda. Para que hablen del grupo, o promocionen un concierto o una fecha señalada. Y nada sale sin tu visto bueno.'),
+         [m('brais', '¿Y para que hablen de nosotros? ¿La radio, la tele, las webs?', say='¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs de música?'),
+          m('iago', 'Tengo también la base de datos de medios: radios, webs, prensa y podcasts. Con el mismo redactor de la IA y nada sale sin tu visto bueno.', say='Tengo también la base de datos de medios: radios, webs, prensa y pódcasts. Y el mismo redactor de la inteligencia artificial les escribe con el tono de la banda. Nada sale sin tu visto bueno.'),
           m('xandre', '¡Yo ya estoy ensayando la entrevista!', say='[excited] ¡Yo ya estoy ensayando la entrevista, che!')],
          shot_img('img/d-h-medios.jpg')))
 
 add(feat('Afina el correo', TAG1, 'Afínalo con una instrucción.',
-         [m('alvaro', '¿Y si el correo no me convence? A mí me suena demasiado serio.', say='¿Y si el correo no me convence? A mí me suena demasiado serio, tío.'),
-          m('iago', 'Le escribes una instrucción sencilla, como «hazlo más directo y cita que tocamos en Revenidas», y la IA lo reescribe.', say='Le escribes una instrucción sencilla, como: hazlo más directo, y cita que tocamos en Revenidas. Y la inteligencia artificial lo reescribe.'),
+         [m('alvaro', '¿Y si el correo me suena demasiado serio?', say='¿Y si el correo me suena demasiado serio, tío?'),
+          m('iago', 'Le escribes una instrucción, como «hazlo más directo», y la IA lo reescribe.', say='Le escribes una instrucción sencilla, como: hazlo más directo. Y la inteligencia artificial lo reescribe.'),
           m('xandre', '¿Y se acuerda para la próxima?', say='¿Y se acuerda para la próxima vez, che?'),
-          m('iago', 'Sí: calificas el tono y la estructura con estrellas y aprende cómo hablamos. Cada vez escribe más como vosotros.', say='Sí. Calificas el tono y la estructura con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.')],
+          m('iago', 'Sí: lo calificas con estrellas y aprende cómo hablamos.', say='Sí. Lo calificas con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.')],
          shot_img('img/d-h-medio-pitch.jpg')))
 
 add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
@@ -536,11 +534,9 @@ add(feat('Del directo al reel', TAG3, 'Del directo al reel.',
          shot_img('img/d-h-reels.jpg')))
 
 add(feat('El seguimiento de las redes', TAG3, 'Cuánto crece la banda, mes a mes.',
-         [m('brais', '¿Y cómo sabemos si todo esto funciona? ¿Si nos sigue más gente?', say='¿Y cómo sabemos si todo esto funciona? ¿Si de verdad nos sigue más gente?'),
-          m('iago', 'Con este panel: apuntas los seguidores de Instagram, TikTok, YouTube y Spotify cada mes. Mirad cómo se rellena.', say='Con este panel. Apuntas los seguidores de Instagram, TikTok, Yutub y Spótifai, cada mes. Mirad cómo se rellena la curva.'),
-          m('alvaro', '¡Y la curva sube! ¡Instagram, de 1.385 a 4.580!', say='[amazed] ¡Y la curva sube, tío! ¡Instagram, de mil trescientos a más de cuatro mil quinientos!'),
-          m('xandre', '¡Y TikTok pegando el petardazo!', say='[excited] ¡Y TikTok pegando el petardazo, che!'),
-          m('iago', 'Abajo, cuánto ha subido cada mes. Son datos de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.', say='Y abajo, cuánto ha subido cada mes. Estos números son de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.')],
+         [m('brais', '¿Y cómo sabemos si todo esto funciona?', say='¿Y cómo sabemos si todo esto funciona? ¿Si de verdad nos sigue más gente?'),
+          m('iago', 'Con este panel: apuntas los seguidores de cada red cada mes. Mirad cómo se rellena.', say='Con este panel. Apuntas los seguidores de cada red, cada mes. Mirad cómo se rellena la curva.'),
+          m('alvaro', '¡Y la curva sube! ¡Instagram, de 1.385 a 4.580!', say='[amazed] ¡Y la curva sube, tío! ¡Instagram, de mil trescientos a más de cuatro mil quinientos!')],
          shot_vid('video/v-metricas.mp4', 'video/v-metricas.jpg'), grupo='promocion'))
 
 add(feat('Del concierto al disco', TAG3, 'Del concierto, al disco.',
@@ -803,9 +799,9 @@ add(f'''<section class="slide scene" data-title="En la radio" data-transition="f
 ''')
 
 add(scene('Otro jueves, 23:47', 'Otro jueves · 23:47', 'El grupo seguía existiendo.', 'img/concierto-2.jpg',
-          dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', '23:47', say=EXTRA_SAY['otro_jueves']),
-              m('iago', 'Cerrao y bien cerrao, chaval. Mirad el calendario. ✅', '23:48'),
-              m('alvaro', 'Y ya tenemos los setlists, cada uno en su hoja.', '23:49'),
+          dlg(m('xandre', '¿Alguien ha contestado a la sala del 14?', say=EXTRA_SAY['otro_jueves']),
+              m('iago', 'Cerrao y bien cerrao, chaval. Mirad el calendario. ✅'),
+              m('alvaro', 'Y ya tenemos los setlists, cada uno en su hoja.'),
               m('brais', 'Entonces ensayamos el sábado. 🥁', '23:51'))))
 
 # El giro: dos diapositivas, el punto álgido
@@ -1199,14 +1195,16 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
 ''')
 
 # «Y mucho más»: las funciones del anexo vuelven en ráfaga (modo película), una cada 4 pulsos de «Compila ou Morre» (1,3 s)
-RAFAGA = [('Ideas', 'Cada idea, en su canción', 'video/v-ideas.mp4'), ('Ficha del bolo', 'Tiempo, rider y logística', 'img/d-h-evento.jpg')]
+RAFAGA = [('Medios', 'Radios, webs, prensa y podcasts', 'img/d-h-medios.jpg'), ('Afina el correo', 'Una instrucción y estrellas: la IA aprende', 'img/d-h-medio-pitch.jpg'),
+          ('Redes', 'Cuánto crece la banda, mes a mes', 'video/v-metricas.mp4'), ('Discografía', 'Tus discos, desde Spotify', 'video/v-discografia.mp4'),
+          ('Ideas', 'Cada idea, en su canción', 'video/v-ideas.mp4'), ('Ficha del bolo', 'Tiempo, rider y logística', 'img/d-h-evento.jpg')]
 def _rf_medio(src):  # los .mp4 se ven en movimiento (data-ambient: deck.js los arranca y los pausa al salir)
     if src.endswith('.mp4'):
         return f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="{src[:-4]}.jpg"><source src="{src}" type="video/mp4"></video>'
     return f'<img src="{src}" alt="">'
 _k = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
 assert len(_k) == 1
-_r = ('<div class="rafaga" aria-hidden="true">' + ''.join(
+_r = ('<div class="rafaga" aria-hidden="true" style="--n:' + str(len(RAFAGA)) + '">' + ''.join(
     f'<figure class="rf" style="--k:{k}">{_rf_medio(src)}<figcaption><b>{t}</b><span>{s}</span></figcaption></figure>' for k, (t, s, src) in enumerate(RAFAGA))
     + f'<p class="rf rf-fin" style="--k:{len(RAFAGA)}">Y todo, en la misma app.</p></div>\n')
 _x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rindex('</section>'):]
@@ -1229,7 +1227,9 @@ if _ym and _lh and _ym[0] > _lh[0]:
 
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
-ANEXO = ['Las ideas, en su sitio', 'La ficha del bolo',
+ANEXO = ['Medios de comunicación', 'Afina el correo', 'El seguimiento de las redes', 'La discografía, desde Spotify',
+         'El profesor de armonía', 'Choques en el calendario', 'Merchan en un minuto', 'La gira, con gasolina y todo',
+         'Las ideas, en su sitio', 'La ficha del bolo',
          'El mapa que lee la IA', 'Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras']
 fuera = []
 for t in ANEXO:
@@ -1285,14 +1285,9 @@ FICHAS = {
     'Los acordes pasan solos': ('Atril', 'La letra y los acordes avanzan solos mientras suena la canción.', ['Sincronizado con el audio', 'Para cada tema del repertorio']),
     'Iris separa los instrumentos': ('Iris', 'Separa la voz, la batería, el bajo y las guitarras de cualquier canción.', ['Pistas separadas con IA', 'Ideas sobre vuestras pistas']),
     'Calendario de la banda': ('Calendario', 'Ensayos y bolos en un calendario, cada fecha con su ficha.', ['El tiempo de cada bolo', 'Aviso de puentes y festivos']),
-    'Choques en el calendario': ('Aviso de choques', 'Avisa si dos eventos se pisan o si no da tiempo a llegar.', ['Músicos en varias bandas', 'Solo avisa si afecta a alguien']),
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
-    'La discografía, desde Spotify': ('Discografía', 'Trae de Spotify tus álbumes y sencillos, con portadas, duraciones, tonalidad y BPM, y los vincula al dossier.', ['Álbumes y singles', 'Portadas y duraciones', 'Enlace al dossier']),
-    'Medios de comunicación': ('Medios', 'Radios, webs, prensa y podcasts a los que escribir para que hablen de la banda y de sus fechas.', ['Base de medios', 'Redactor con el tono de la banda', 'Tú das el visto bueno']),
-    'Afina el correo': ('Redactor que aprende', 'Pides un cambio con una frase y calificas con estrellas el tono y la estructura: aprende cómo habla la banda.', ['Instrucción sencilla', 'Estrellas de tono y estructura', 'La IA aprende']),
-    'El seguimiento de las redes': ('Seguimiento de redes', 'Seguidores de Instagram, TikTok, YouTube y Spotify, mes a mes y con la subida de cada uno.', ['Curva de crecimiento', 'Subida de cada mes', 'Radar de redes']),
     'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
 }
 _nf = 0
@@ -1476,8 +1471,8 @@ def _aplicar_guion(html):
         pat = re.compile(r'<(li|div|figure|p|span)\b([^>]*\bdata-who="([^"]*)"[^>]*)>')
         els = [m for m in pat.finditer(cuerpo) if 'data-say=' in m.group(2)]
         L = sc['lines']
-        if len(els) == len(L):
-            # misma cantidad: se actualiza cada elemento en su sitio (la animación de pantalla va ligada a esas líneas)
+        if len(els) == len(L) and all(m.group(3) == l['who'] for m, l in zip(els, L)):
+            # misma cantidad y mismos personajes: se actualiza cada elemento en su sitio (la animación de pantalla va ligada a esas líneas)
             nuevo, pos = [], 0
             for m, l in zip(els, L):
                 if m.group(3) != l['who']:

@@ -6,7 +6,7 @@
    {
     "who": "bateria",
     "txt": "BraisBatería",
-    "voz": "Soy Brais, a la batería. El que marca el ritmo. Y el que se bebe las birras."
+    "voz": "Soy Brais, batería. El que marca el ritmo. Y el que se bebe las birras."
    },
    {
     "who": "voz",
@@ -16,12 +16,12 @@
    {
     "who": "guitarra",
     "txt": "ÁlvaroGuitarra solista",
-    "voz": "Álvaro. Guitarra solista. Los solos, los riffs y las predicciones. Nunca fallo."
+    "voz": "Álvaro, guitarra solista. Nunca fallo."
    },
    {
     "who": "bajo",
     "txt": "IagoBajo",
-    "voz": "Y yo soy Iago, de San Blas de toda la vida. Toco el bajo. Ese instrumento que nadie oye. Hasta hoy."
+    "voz": "Y yo, Iago, el bajo. Ese instrumento que nadie oye. Hasta hoy."
    }
   ],
   "nota": "Álvaro se presenta como el que 'nunca falla' adivinando: planta el gag de que siempre adivina mal lo que es la app. El txt (nombre+cargo) no se toca."
@@ -33,27 +33,17 @@
    {
     "who": "voz",
     "txt": "¿Alguien ha contestado a la sala del 14?",
-    "voz": "¿Alguien le ha contestado ya a la sala del catorce? Che, que yo soy la voz, no la secretaria."
-   },
-   {
-    "who": "guitarra",
-    "txt": "Yo pensaba que contestabas tú.",
-    "voz": "[sighs] Yo pensaba que contestabas tú, tío."
+    "voz": "¿Alguien le ha contestado a la sala del catorce? Che, que yo soy la voz, no la secretaria."
    },
    {
     "who": "bateria",
     "txt": "¿Sala del 14? Yo pensaba que el 14 era el día del bolo.",
-    "voz": "[confused] ¿Sala del catorce? Rapaces, yo pensaba que el catorce era el día del bolo."
+    "voz": "[confused] ¿Sala del catorce? Yo pensaba que el catorce era el día del bolo."
    },
    {
     "who": "bajo",
-    "txt": "Y yo pensaba que éramos una banda. No un chat.",
-    "voz": "Y yo pensaba que éramos una banda. No un chat."
-   },
-   {
-    "who": "bajo",
-    "txt": "Así no vamos a ningún lado. Ya he dejado varios grupos por esto. Con vosotros, no.",
-    "voz": "Así no vamos a ningún lado. Ya he dejado varios grupos por esto. Con vosotros, no."
+    "txt": "Y yo pensaba que éramos una banda. No cuatro tíos que se pasan la pelota. Ya he dejado varios grupos por esto. Con vosotros, no.",
+    "voz": "Y yo pensaba que éramos una banda. No cuatro tíos que se pasan la pelota. Ya he dejado varios grupos por esto. Con vosotros, no."
    }
   ],
   "nota": "Cold open: cadena de tres 'yo pensaba que…' (nadie contesta, nadie sabe si el 14 es la sala o el día, nadie ensaya: solo chatean). Brais planta la confusión del 14, que se paga en «La sala contestó» ('¡y encima el día 14!'). 'Dadme hasta el sábado' sale de aquí: la promesa pasa a ser el botón de «La llamada», justo antes del título. 'No vamos a ningún lado' rima con el giro final."
@@ -64,18 +54,13 @@
   "lines": [
    {
     "who": "sello",
-    "txt": "Os escribí hace tres meses y nadie contestó. Contrato: os llevo los bolos, me quedo el 30 % y elijo qué tocáis.",
-    "voz": "[calmly] Herdeiros. Os escribí hace tres meses, y nadie contestó. Así que os llamo. Os ofrezco contrato: yo os llevo los bolos, me quedo el treinta por ciento de cada uno… y el repertorio, naturalmente, lo decido yo."
-   },
-   {
-    "who": "guitarra",
-    "txt": "¿Tres meses? Es que el correo… se nos pierde.",
-    "voz": "[sighs] ¿Tres meses? Es que el correo… se nos pierde, tío."
+    "txt": "Os escribí hace tres meses y nadie contestó. Me quedo el 30 % y elijo qué tocáis.",
+    "voz": "[calmly] Herdeiros. Os escribí hace tres meses, y nadie contestó. Me quedo el treinta por ciento, y el repertorio lo decido yo."
    },
    {
     "who": "bajo",
-    "txt": "No firméis nada. Las canciones son nuestras y los bolos los llevamos nosotros. El sábado os lo demuestro.",
-    "voz": "No firméis nada, chavales. Las canciones son nuestras. Y los bolos, los llevamos nosotros. El sábado os lo demuestro."
+    "txt": "No firméis nada. Los bolos los llevamos nosotros. El sábado os lo demuestro.",
+    "voz": "No firméis nada, chavales. Los bolos los llevamos nosotros. El sábado os lo demuestro."
    }
   ],
   "nota": "Con el nuevo orden (Jueves → La llamada → Título) la promesa del sábado es el botón que pide título: se dice una sola vez y aquí. Peláez remarca que llama porque nadie contesta (el dolor del jueves, dicho por el villano)."
@@ -91,23 +76,18 @@
    },
    {
     "who": "ia_claude",
-    "txt": "¿Y si el proyecto es el milagro?",
-    "voz": "[calmly] ¿Y si el proyecto es el milagro, Iago?"
+    "txt": "¿Y si el proyecto es el milagro? Tú decides, Iago: nosotros proponemos y tú revisas.",
+    "voz": "[calmly] ¿Y si el proyecto es el milagro, Iago? Tú decides: nosotros proponemos, y tú revisas."
    },
    {
     "who": "ia_gemini",
     "txt": "Yo pongo las ideas locas. Claudio las discute.",
-    "voz": "[excited] Yo pongo las ideas locas. Claudio las discute. Y luego discutimos los dos. Como un grupo de verdad."
-   },
-   {
-    "who": "ia_claude",
-    "txt": "Y tú decides, Iago. Nosotros proponemos y tú revisas cada respuesta.",
-    "voz": "Y tú decides, Iago. Nosotros proponemos, y tú revisas cada respuesta. Tú firmas el disco."
+    "voz": "[excited] Yo pongo las ideas locas. Claudio las discute."
    },
    {
     "who": "bajo",
     "txt": "Hecho, tronco. Empezamos esta noche.",
-    "voz": "Hecho, tronco. Empezamos esta noche. Por fin una banda que contesta a la primera."
+    "voz": "Hecho, tronco. Empezamos esta noche."
    }
   ],
   "nota": "Remate de Iago ligado al dolor del cold open (nadie contesta): las IAs sí. 'Tú decides' queda plantado para el post-créditos. Tonos de actuación para Claudio (calmado) y Guglio (eufórico)."
@@ -119,19 +99,19 @@
    {
     "who": "bajo",
     "txt": "Chicos, mañana a las 11 en el local. Tengo que enseñaros algo que ni yo me lo creo.",
-    "voz": "Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis. Ni yo me lo creo.",
+    "voz": "Chavales, mañana a las once en el local. Tengo que enseñaros algo que flipáis.",
     "t": "22:10"
    },
    {
     "who": "guitarra",
     "txt": "Seguro que es una base de datos de salas.",
-    "voz": "[mischievously] Ya verás. Seguro que es una base de datos de salas. Lo veo venir.",
+    "voz": "Seguro que es una base de datos de salas.",
     "t": "22:12"
    },
    {
     "who": "bateria",
-    "txt": "O que ha descubierto el calendario compartido.",
-    "voz": "[laughs] O que ha descubierto el calendario compartido. Bienvenido al siglo veintiuno, neno.",
+    "txt": "O el calendario compartido, neno.",
+    "voz": "[laughs] O el calendario compartido, neno.",
     "t": "22:15"
    },
    {
@@ -150,12 +130,12 @@
    {
     "who": "bajo",
     "txt": "Esto es BandManager. Os cuento qué hace por cada uno.",
-    "voz": "Esto es Band Mánayer. Os voy a enseñar lo que hace por cada uno de vosotros. Abrid bien las orejas."
+    "voz": "Esto es Band Mánayer. Os voy a enseñar lo que hace por cada uno."
    },
    {
     "who": "bateria",
     "txt": "A ver, enséñanos eso que ni tú te crees.",
-    "voz": "A ver, neno, enséñanos eso que ni tú te crees. Y rápido, que se calienta la birra."
+    "voz": "A ver, neno, enséñanos eso que ni tú te crees."
    }
   ],
   "nota": "Recortada la presentación de Iago (sobraba el 'esto mola mazo', ya dicho con 'flipáis')."
@@ -167,7 +147,7 @@
    {
     "who": "bajo",
     "txt": "Empezamos por lo que más nos dolía: las salas.",
-    "voz": "Empezamos por la herida: la sala del catorce. Y todas las que nunca contestamos."
+    "voz": "Empezamos por la herida: la sala del catorce."
    }
   ],
   "nota": "El capítulo arranca con el dolor concreto del jueves (callback), no con una categoría abstracta."
@@ -179,27 +159,27 @@
    {
     "who": "voz",
     "txt": "¡¿Esto lo has hecho tú?!",
-    "voz": "[gasps] Pará, pará, pará. ¿Esto lo hiciste vos? ¿El bajista?"
+    "voz": "[gasps] Pará. ¿Esto lo hiciste vos? ¿El bajista?"
    },
    {
     "who": "bajo",
     "txt": "Con ayuda. Aquí tengo las salas y los festivales, y cada conversación queda guardada.",
-    "voz": "Con un poco de ayuda. Aquí están todas las salas y festivales, y cada conversación con ellos queda guardada. Se acabó buscar en el correo como quien busca una púa dentro de la guitarra."
+    "voz": "Con un poco de ayuda. Aquí están las salas y festivales, y cada conversación queda guardada."
    },
    {
     "who": "guitarra",
     "txt": "¡Una base de datos de salas!",
-    "voz": "[shouts] ¡Una base de datos de salas! ¡Te lo dije ayer! ¡Te lo dije, tío!"
+    "voz": "[shouts] ¡Una base de datos de salas! ¡Te lo dije, tío!"
    },
    {
     "who": "bajo",
     "txt": "Casi. Y hay un agente, el Scout, que busca salas y festivales nuevos por nosotros.",
-    "voz": "Casi. Y además tenemos un agente, el Scaut, que busca salas y festivales nuevos por nosotros. Como un ojeador. Pero que no se bebe el caché."
+    "voz": "Casi. Y un agente, el Scaut, busca salas y festivales nuevos por nosotros."
    },
    {
     "who": "bajo",
     "txt": "Y todos, en el mapa de toda España.",
-    "voz": "Y todos, en el mapa de toda España. La del catorce, también."
+    "voz": "Y todos, en el mapa de toda España."
    }
   ],
   "nota": "Misma estructura de 5 líneas. El '¡Te lo dije!' ahora tiene setup (viernes) y el 'Casi' arranca el gag de Álvaro adivinando a medias. Cierre con callback a la sala del 14."
@@ -211,32 +191,32 @@
    {
     "who": "guitarra",
     "txt": "¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba!",
-    "voz": "¡Pero si ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Yo tardaba una tarde en cada correo!"
+    "voz": "¡Ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba!"
    },
    {
     "who": "bajo",
-    "txt": "Cada correo suena a nosotros: la IA lo escribe con el estilo de la banda y lo adapta a cada sala.",
-    "voz": "Y cada correo suena a nosotros. La inteligencia artificial lo escribe con el rollo de la banda, y lo adapta a cada sala."
+    "txt": "Cada correo suena a nosotros, y la IA lo adapta a cada sala.",
+    "voz": "Cada correo suena a nosotros, y la inteligencia artificial lo adapta a cada sala."
    },
    {
     "who": "bateria",
-    "txt": "¿Y si se le va la mano y escribe una burrada?",
-    "voz": "¿Y si se le va la mano y le escribe una burrada al de la sala? Que para eso ya estoy yo, home."
+    "txt": "¿Y si le escribe una burrada al de la sala?",
+    "voz": "¿Y si le escribe una burrada al de la sala?"
    },
    {
     "who": "bajo",
-    "txt": "Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa.",
-    "voz": "Por eso nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente lee la respuesta y me avisa. Nunca más una sala sin contestar."
+    "txt": "Nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente me avisa.",
+    "voz": "Nada sale sin mi visto bueno. Y cuando la sala contesta, otro agente me avisa."
    },
    {
     "who": "guitarra",
     "txt": "¿Y cómo sabemos si lo han leído?",
-    "voz": "[curious] ¿Y cómo sabemos si lo han leído? Porque yo mandaba correos y era como gritar dentro de un pozo."
+    "voz": "[curious] ¿Y cómo sabemos si lo han leído?"
    },
    {
     "who": "bajo",
-    "txt": "Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes.",
-    "voz": "Porque la app te avisa: cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes."
+    "txt": "La app te avisa cuando abren el correo o el dossier. Y a la IA la entrenas con estrellas.",
+    "voz": "La app te avisa cuando abren el correo o el dossier. Y a la inteligencia artificial la entrenas con estrellas."
    }
   ],
   "nota": "Mismas 6 líneas e ideas. Los dolores los dicen ellos (una tarde por correo, gritar en un pozo). 'Abren el dossier' queda plantado para el pago de «Qué viene»."
@@ -247,28 +227,13 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Lo repasas, lo apruebas y le das a enviar.",
-    "voz": "Lo repasas, lo apruebas, y le das a enviar. Así de fácil."
-   },
-   {
-    "who": "guitarra",
-    "txt": "¿Y cómo le llega a la sala?",
-    "voz": "[curious] ¿Y cómo le llega eso a la sala? ¿Con un pdf adjunto que pesa más que mi ampli, como la última vez?"
-   },
-   {
-    "who": "bajo",
-    "txt": "Así: en su bandeja de entrada, con vuestro logo y el botón al dossier.",
-    "voz": "Así. En su bandeja de entrada, con vuestro logo, y el botón al dossier."
+    "txt": "Así le llega a la sala, con vuestro logo y el botón al dossier.",
+    "voz": "Así le llega a la sala: en su bandeja, con vuestro logo y el botón al dossier."
    },
    {
     "who": "bateria",
     "txt": "¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!",
     "voz": "[amazed] ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!"
-   },
-   {
-    "who": "bajo",
-    "txt": "Con tu firma, tu cargo y tus redes. Y el dossier, a un clic.",
-    "voz": "Con tu firma, tu cargo, y tus redes. Y el dossier, a un clic."
    },
    {
     "who": "voz",
@@ -284,18 +249,18 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.",
-    "voz": "Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra. La propuesta la escribe la inteligencia artificial."
+    "txt": "Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra.",
+    "voz": "Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra."
    },
    {
     "who": "voz_mop",
-    "txt": "Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!",
-    "voz": "Os leo, Herdeiros. Me encanta: nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble, colegas!"
+    "txt": "Os leo. Nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!",
+    "voz": "Os leo, Herdeiros. Nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble!"
    },
    {
     "who": "bateria",
-    "txt": "¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolling!",
-    "voz": "[excited] ¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolin!"
+    "txt": "¡Cartel doble! ¡Esto no lo tenían ni los Rolling!",
+    "voz": "[excited] ¡Cartel doble! ¡Esto no lo tenían ni los Rolin!"
    },
    {
     "who": "voz",
@@ -315,7 +280,7 @@
    {
     "who": "bateria",
     "txt": "¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.",
-    "voz": "[gasps] ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro."
+    "voz": "[gasps] ¿Yo? Pero si ya tengo banda… Bueno, los miércoles libro."
    },
    {
     "who": "voz",
@@ -341,8 +306,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Claro, Brais: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.",
-    "voz": "Claro, Brais. Es tu cuenta de Cabeza de Cartel: una cuenta, y varias bandas."
+    "txt": "Claro: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.",
+    "voz": "Claro: tu cuenta de Cabeza de Cartel. Una cuenta, y varias bandas."
    },
    {
     "who": "guitarra",
@@ -361,8 +326,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Lo de una banda no se ve nunca en la otra. Es la primera regla de la casa. Solo se juntan en tu calendario.",
-    "voz": "Primera regla de la casa: lo que pasa en Máster of Prompts, se queda en Máster of Prompts. Las bandas solo se juntan en tu calendario."
+    "txt": "Y lo de una banda no se ve nunca en la otra. Es la primera regla de la casa.",
+    "voz": "Y lo de una banda no se ve nunca en la otra. Primera regla de la casa."
    }
   ],
   "nota": "7 líneas intactas. El guiño 'Brais Moure' remata con '¿desde cuándo tengo apellido?'. La regla de oro se dice como frase de Las Vegas, que se recuerda sola, y deja el calendario como única excepción."
@@ -373,23 +338,23 @@
   "lines": [
    {
     "who": "voz",
-    "txt": "¿Y las otras bandas? Siempre acabamos con los mismos contactos en el móvil.",
-    "voz": "¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular. Y uno ya ni toca."
+    "txt": "¿Y las otras bandas? Siempre acabamos con los mismos contactos.",
+    "voz": "¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular."
    },
    {
     "who": "bajo",
-    "txt": "Aquí las tengo todas: estilo, ciudad, contacto y el público que suelen llevar.",
-    "voz": "Aquí las tengo todas: su estilo, su ciudad, el contacto, y el público que suelen llevar a los bolos."
+    "txt": "Aquí las tengo todas: estilo, ciudad, contacto y el público que llevan.",
+    "voz": "Aquí las tengo todas: su estilo, su ciudad, el contacto y el público que llevan."
    },
    {
     "who": "guitarra",
     "txt": "¿Y puedo escucharlas antes de proponerles nada?",
-    "voz": "¿Y puedo escucharlas antes de proponerles nada? Que yo no comparto escenario con cualquiera."
+    "voz": "¿Y puedo escucharlas antes de proponerles nada?"
    },
    {
     "who": "bajo",
-    "txt": "Sí. Le das a «Escuchar» y suena en el reproductor de abajo, sin salir de la app: sacamos un preview de su Spotify y su YouTube.",
-    "voz": "Sí. Le das a escuchar, y suena en el reproductor de abajo, sin salir de la app. Nos conectamos a su Spótifai y a su Yutub, y sacamos un trocito de sus temas más populares."
+    "txt": "Sí: le das a «Escuchar» y suena abajo, desde su Spotify, sin salir de la app.",
+    "voz": "Sí. Le das a escuchar, y suena abajo, desde su Spótifai, sin salir de la app."
    },
    {
     "who": "bateria",
@@ -398,8 +363,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Ves sus métricas del mes: seguidores en Spotify y suscriptores en YouTube.",
-    "voz": "Ves sus métricas del mes: los seguidores en Spótifai y los suscriptores en Yutub. Así sabes con quién te juntas."
+    "txt": "Ves sus métricas del mes, en Spotify y en YouTube.",
+    "voz": "Ves sus métricas del mes, en Spótifai y en Yutub."
    }
   ],
   "nota": "Sin cambios de fondo: ya funcionaba (dolor dicho por Alan, solución en pantalla)."
@@ -411,27 +376,27 @@
    {
     "who": "bateria",
     "txt": "¿Y si la sala nos cambia el caché el mismo día del bolo?",
-    "voz": "¿Y si la sala nos cambia el caché el mismo día del bolo, como la última vez? Que acabamos cobrando en croquetas, home."
+    "voz": "¿Y si la sala nos cambia el caché el mismo día del bolo? Que acabamos cobrando en croquetas."
    },
    {
     "who": "bajo",
     "txt": "Por eso el acuerdo se cierra desde la plataforma: fecha, caché, rider y camerino, por escrito.",
-    "voz": "Por eso el acuerdo se cierra desde la plataforma: fecha, caché, ráider y camerino. Todo por escrito. Croquetas incluidas, si hace falta."
+    "voz": "Por eso el acuerdo se cierra desde la plataforma: fecha, caché, ráider y camerino, por escrito."
    },
    {
     "who": "guitarra",
     "txt": "¿Y la sala tiene que instalarse algo?",
-    "voz": "¿Y la sala tiene que instalarse algo? Porque el de El Faro todavía usa fax."
+    "voz": "¿Y la sala tiene que instalarse algo?"
    },
    {
     "who": "bajo",
-    "txt": "Nada: solo abrir un enlace y firmar con el dedo. Y le llega su copia.",
-    "voz": "Nada. Solo abrir un enlace y firmar con el dedo. Y le llega su copia."
+    "txt": "Nada: abrir un enlace y firmar con el dedo.",
+    "voz": "Nada. Abrir un enlace y firmar con el dedo."
    },
    {
     "who": "bateria",
     "txt": "¡Se acabaron las sorpresas el día del bolo!",
-    "voz": "[excited] ¡Se acabaron las sorpresas el día del bolo! ¡Por fin, home!"
+    "voz": "[excited] ¡Se acabaron las sorpresas el día del bolo!"
    }
   ],
   "nota": "Intacta salvo micro-ajustes: ya planta las croquetas y El Faro, que vuelven después."
@@ -448,17 +413,12 @@
    {
     "who": "voz",
     "txt": "¡La sala del 14! ¡Y encima el día 14!",
-    "voz": "[excited] ¡La sala del catorce! ¡Y encima el día catorce! ¡Esto es el destino, che!"
+    "voz": "[excited] ¡La sala del catorce! ¡Y encima el día catorce!"
    },
    {
     "who": "bateria",
     "txt": "¿En 35 minutos? La última vez tardaron tres semanas. Y era para decir que no.",
     "voz": "[amazed] ¿En treinta y cinco minutos? La última vez tardaron tres semanas. Y era para decir que no."
-   },
-   {
-    "who": "manager",
-    "txt": "Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.",
-    "voz": "Y qué gusto, de verdad: un correo con dossier y con rider. Aquí la mayoría ni dice quiénes son. Eso sí: el caché se cobra en croquetas."
    }
   ],
   "nota": "Se cierra el hilo del jueves: El Faro ES la sala del 14, y el bolo cae el día 14 (paga la confusión de Brais en el cold open; sustituye a 'del rojo al verde', que dependía de la hoja de cálculo). Brais pone el contraste de tiempo (35 minutos frente a tres semanas). 'Mánayer' en mayúscula para que el subtítulo salga bien."
@@ -470,7 +430,7 @@
    {
     "who": "bajo",
     "txt": "Ahora lo bueno: lo que os toca a cada uno.",
-    "voz": "Y ahora, lo bueno: la música. Lo que os toca a cada uno."
+    "voz": "Y ahora, lo bueno: la música."
    }
   ],
   "nota": "Ajuste mínimo para casar con el titular 'Ahora, la música'."
@@ -481,23 +441,18 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "Vale, ¿y lo de los ensayos? Llevamos tres sin saber qué tocamos.",
-    "voz": "Vale, ¿y lo de los ensayos? Llevamos tres sin saber qué tocamos, porque cada uno trae su setlist."
+    "txt": "Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos.",
+    "voz": "Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos."
    },
    {
     "who": "bajo",
-    "txt": "Imprimo el setlist y sale una hoja distinta para cada uno. Con el logo de la banda detrás.",
-    "voz": "Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes."
-   },
-   {
-    "who": "bateria",
-    "txt": "¡Mi hoja! ¡Con mis notas! ¡Solo las mías!",
-    "voz": "[excited] ¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio, home!"
+    "txt": "Imprimo el setlist y sale una hoja distinta para cada uno.",
+    "voz": "Imprimo el setlist, y sale una hoja distinta para cada uno."
    },
    {
     "who": "voz",
     "txt": "Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!",
-    "voz": "Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar."
+    "voz": "Y la mía, con el tono de cada tema. Por fin sé en qué tono canto."
    }
   ],
   "nota": "El dolor del setlist (antes en el prólogo) se dice aquí, justo antes de la solución. Fuera 'carallo' (sin palabrotas). La hoja con el tono se paga en el festival ('Mi menor, en tu hoja')."
@@ -508,23 +463,8 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Cada tema tiene su energía. La app dibuja la curva del concierto.",
-    "voz": "Mirad: cada tema tiene su energía, y la app dibuja la curva del concierto entero."
-   },
-   {
-    "who": "guitarra",
-    "txt": "¿Y si la curva se cae a mitad del bolo?",
-    "voz": "[curious] ¿Y si a mitad del bolo la curva se cae? Como en la Ribeira, que después de la balada se nos fue medio bar."
-   },
-   {
-    "who": "bajo",
-    "txt": "Le das a «Optimizar orden» y te propone el setlist perfecto.",
-    "voz": "Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas."
-   },
-   {
-    "who": "bajo",
-    "txt": "Y vigila las transiciones: energía y tonalidad, tema a tema.",
-    "voz": "Y vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente."
+    "txt": "Cada tema tiene su energía: la app dibuja la curva del concierto y te propone el setlist perfecto.",
+    "voz": "Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto."
    },
    {
     "who": "voz",
@@ -540,8 +480,8 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.",
-    "voz": "Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos."
+    "txt": "Dale al play, Álvaro. Los acordes y la letra siguen la canción solos.",
+    "voz": "Dale al play, Álvaro. Los acordes y la letra siguen la canción solos."
    },
    {
     "who": "guitarra",
@@ -549,14 +489,9 @@
     "voz": "¡Pero tío! ¡Es como Últimeit Guitar, pero con nuestras canciones! ¡Pellízcame! ¡Esto es mejor que un solo de Eslash!"
    },
    {
-    "who": "bateria",
-    "txt": "¡Estoy flipando, neno!",
-    "voz": "[laughs] ¡Estoy flipando, neno! ¡Flipando en colores!"
-   },
-   {
     "who": "bajo",
-    "txt": "Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!",
-    "voz": "Espera, espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!"
+    "txt": "Espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!",
+    "voz": "Espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!"
    }
   ],
   "nota": "'Te has copiado de Ultimate Guitar' pasa a 'es como Ultimate Guitar, pero con nuestras canciones': mismo chiste, sin sugerir copia ante un tribunal."
@@ -600,32 +535,22 @@
    {
     "who": "bajo",
     "txt": "Subo una canción y Iris separa la voz, la batería, el bajo y las guitarras.",
-    "voz": "Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras. Pista a pista."
+    "voz": "Subo una canción, e Iris separa la voz, la batería, el bajo y las guitarras."
    },
    {
     "who": "voz",
     "txt": "¡Mi voz sola! ¡Nunca me había oído así!",
-    "voz": "[amazed] ¡Mi voz sola! ¡Nunca me había escuchado así! ¡Canto como un ángel, boludo!"
+    "voz": "[amazed] ¡Mi voz sola! ¡Canto como un ángel, boludo!"
    },
    {
     "who": "guitarra",
-    "txt": "¡Parece un Cubase! ¡Y cada pista de un color del arcoíris! 🌈",
-    "voz": "[amazed] ¡Pero si parece un Cubase! ¡Y cada pista con un color del arcoíris!"
-   },
-   {
-    "who": "guitarra",
-    "txt": "¡Espera, espera! ¿Esto no será un Moises?",
-    "voz": "¡Espera, espera! ¿Esto no será un Moisés?"
+    "txt": "¿Esto no será un Moises?",
+    "voz": "¡Espera! ¿Esto no será un Moisés?"
    },
    {
     "who": "bajo",
-    "txt": "¡Sí, tío! Por fin aciertas una. Un Moises metido en nuestro repertorio.",
-    "voz": "¡Sí, tío! Por fin aciertas una. Un Moisés metido en nuestro repertorio."
-   },
-   {
-    "who": "bajo",
-    "txt": "Y encima grabamos nuestras ideas sobre nuestras propias pistas. ¡Y por fin se oye el bajo!",
-    "voz": "Y encima grabamos nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas. ¡Pero por fin se oye el bajo!"
+    "txt": "¡Sí, tío! Por fin aciertas una. Y encima, ¡por fin se oye el bajo!",
+    "voz": "¡Sí, tío! Por fin aciertas una. Y encima, ¡por fin se oye el bajo!"
    }
   ],
   "nota": "La línea final, demasiado larga, se parte en dos. 'Por fin aciertas una' remata el gag de las adivinanzas de Álvaro y 'por fin se oye el bajo' cierra el 'nadie lo oye. Hasta hoy' del prólogo."
@@ -636,23 +561,23 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Y aquí, y solo aquí, se juntan las bandas: tu calendario muestra los ensayos y bolos de todas. Y se sincroniza con Google Calendar.",
-    "voz": "Y aquí, y solo aquí, se juntan las bandas: tu calendario muestra los ensayos y los bolos de todas. Y se sincroniza con Gúgel Calendar."
+    "txt": "Y aquí se juntan las bandas: un calendario con los ensayos y bolos de todas, sincronizado con Google Calendar.",
+    "voz": "Y aquí se juntan las bandas: un calendario con los ensayos y los bolos de todas, sincronizado con Gúgel Calendar."
    },
    {
     "who": "bateria",
-    "txt": "¡Te lo dije! ¡Google Calendar! 🤣",
-    "voz": "[excited] ¡Te lo dije! ¡Gúgel Calendar! ¡Soy un visionario!"
+    "txt": "¡Te lo dije! ¡Google Calendar!",
+    "voz": "[excited] ¡Te lo dije! ¡Gúgel Calendar!"
    },
    {
     "who": "bajo",
     "txt": "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo.",
-    "voz": "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo. Que en puente no viene ni el técnico."
+    "voz": "Cada fecha tiene su ficha, con la meteo y el aviso de puente o festivo."
    },
    {
     "who": "voz",
     "txt": "¡Por fin sé cuándo ensayamos y cuándo tocamos!",
-    "voz": "[excited] ¡Por fin sé cuándo ensayamos y cuándo tocamos! Se terminó llegar al show en jogging."
+    "voz": "[excited] ¡Por fin sé cuándo ensayamos y cuándo tocamos!"
    }
   ],
   "nota": "4 líneas intactas. Se subraya que el calendario es la ÚNICA excepción a la regla de la casa. Es la única escena donde se nombra Google Calendar, y el '¡Te lo dije!' de Brais ya tiene setup (viernes: 'el calendario compartido')."
@@ -696,7 +621,7 @@
    {
     "who": "bajo",
     "txt": "¡Y ahora, que nos conozca más gente!",
-    "voz": "Y ahora, que nos conozca más gente. Bastante más que nuestras madres."
+    "voz": "Y ahora, que nos conozca más gente."
    }
   ],
   "nota": "Callback a 'llevan público o solo a sus madres'. Quitado el emoji."
@@ -707,23 +632,23 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¿Pero qué…? ¿Que ahora tenemos una web? ¡Como los de verdad!",
-    "voz": "¿Pero qué es esto? ¿Que ahora tenemos una web? ¡Como los de verdad! ¡Y yo mandando el Instagram de hace cinco años!"
+    "txt": "¿Que ahora tenemos una web? ¡Como los de verdad!",
+    "voz": "¿Que ahora tenemos una web? ¡Como los de verdad!"
    },
    {
     "who": "bateria",
     "txt": "¡Pero si está guapísima! ¡¿Qué me estás contando?!",
-    "voz": "[gasps] ¡Pero si está guapísima! ¡Salgo con mi mejor perfil! ¿Qué me estás contando?"
+    "voz": "[gasps] ¡Pero si está guapísima! ¡Salgo con mi mejor perfil!"
    },
    {
     "who": "bajo",
-    "txt": "Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la app.",
-    "voz": "Es el dossier de la banda: fotos, formación y contacto para contratarnos. Y se edita en un momento desde la aplicación."
+    "txt": "Es el dossier de la banda: fotos, formación y contacto. Se edita desde la app.",
+    "voz": "Es el dossier de la banda: fotos, formación y contacto. Se edita desde la aplicación."
    },
    {
     "who": "guitarra",
-    "txt": "Yo ya no sé si esto es un local de ensayo o una discográfica.",
-    "voz": "[amazed] Yo ya no sé si esto es un local de ensayo o una discográfica. Una que no se queda el treinta por ciento."
+    "txt": "Esto ya no es un local de ensayo, es una discográfica. Una que no se queda el 30 %.",
+    "voz": "[amazed] Esto ya no es un local de ensayo, es una discográfica. Una que no se queda el treinta por ciento."
    }
   ],
   "nota": "4 líneas intactas. Fuera el 'co[pi]' (sin palabrotas, ni siquiera tapadas) y entra el dolor del enlace viejo. Remate con callback a Peláez."
@@ -734,18 +659,18 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¿Que si ponemos este QR en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?",
-    "voz": "¿Cómo? ¿Que ponemos el cú-erre en el concierto, la gente lo escanea y nos sigue en redes? ¿Y los flyers que acababan de posavasos?"
+    "txt": "¿Que ponemos este QR y la gente nos sigue en redes?",
+    "voz": "¿Cómo? ¿Que ponemos este cú-erre y la gente nos sigue en redes?"
    },
    {
     "who": "bajo",
-    "txt": "¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.",
-    "voz": "¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos, y entrar en nuestra nueva web."
+    "txt": "¡Sí! Y pueden apoyarnos, comprar merchan, ver los próximos bolos y entrar en nuestra web.",
+    "voz": "¡Sí! Y pueden apoyarnos, comprar merchan, ver los próximos bolos y entrar en nuestra web."
    },
    {
     "who": "bajo",
-    "txt": "Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.",
-    "voz": "Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento, o una descarga exclusiva. Y tú te quedas la lista, para avisarles de los bolos."
+    "txt": "Y dejan su correo, con su permiso, y se llevan un regalo: un descuento o una descarga.",
+    "voz": "Y dejan su correo, con su permiso, y se llevan un regalo: un descuento o una descarga."
    },
    {
     "who": "voz",
@@ -789,32 +714,32 @@
    {
     "who": "voz",
     "txt": "¿Y esto qué es?",
-    "voz": "[gasps] ¿Y esto qué es? Porque yo subo un vídeo y lo ven dos bots y el camarero del bar de abajo."
+    "voz": "[gasps] ¿Y esto qué es?"
    },
    {
     "who": "bajo",
-    "txt": "Un generador automático de reels para Instagram, TikTok y YouTube. Todo personalizado y generado con IA.",
-    "voz": "Es un generador automático de reels para Instagram, TikTok y Yutub. Todo personalizado, y generado con inteligencia artificial."
+    "txt": "Un generador de reels para Instagram, TikTok y YouTube, hecho con IA.",
+    "voz": "Un generador de reels para Instagram, TikTok y Yutub, hecho con inteligencia artificial."
    },
    {
     "who": "bateria",
-    "txt": "¿O sea, que le subes el vídeo entero del concierto y te saca los trozos más virales para cada red?",
-    "voz": "[gasps] ¿O sea, que le subes el vídeo entero del concierto, y te saca los trocitos más virales para cada red? ¿Incluido mi solo de batería?"
+    "txt": "¿O sea que le subes el concierto entero y te saca los trozos más virales?",
+    "voz": "[gasps] ¿O sea que le subes el concierto entero y te saca los trozos más virales?"
    },
    {
     "who": "bajo",
-    "txt": "¡Eso es! Y te los deja listos, con el formato de cada plataforma.",
-    "voz": "¡Eso es! Y te los deja listos, con el formato de cada plataforma. Tu solo también, Brais. Los tres minutos."
+    "txt": "¡Eso es! Y los deja listos, con el formato de cada red.",
+    "voz": "¡Eso es! Y los deja listos, con el formato de cada red."
    },
    {
     "who": "guitarra",
-    "txt": "¿Y luego los subimos uno a uno, a mano?",
-    "voz": "¿Y luego los vamos subiendo uno a uno, a mano? ¡Que yo me aburro!"
+    "txt": "¿Y luego los subimos a mano?",
+    "voz": "¿Y luego los subimos a mano?"
    },
    {
     "who": "bajo",
-    "txt": "No: programas cada reel en cada red, con su día y su hora.",
-    "voz": "Qué va. Programas la publicación de cada reel, en cada red, con su día y su hora. Y vosotros, a tocar."
+    "txt": "Qué va. Programas cada reel en cada red, con su día y su hora.",
+    "voz": "Qué va. Programas cada reel en cada red, con su día y su hora."
    }
   ],
   "nota": "Alan pone el dolor (nadie ve sus vídeos). Recortado el 'se me ocurrió hacer...' de Iago y otro '¡Ai, mi madriña!'."
@@ -824,14 +749,9 @@
   "h2": null,
   "lines": [
    {
-    "who": "guitarra",
-    "txt": "¿Y la grabación entera del bolo de la Ribeira?",
-    "voz": "¿Y la grabación entera del bolo de la Ribeira? ¿Eso no vale para nada?"
-   },
-   {
     "who": "bajo",
-    "txt": "La subes y la IA separa las canciones de lo que hablamos con el público.",
-    "voz": "La subes, y la inteligencia artificial separa las canciones de lo que hablamos con el público. Y saca hasta la letra y los acordes."
+    "txt": "Con la grabación entera del bolo de la Ribeira, la IA separa las canciones de lo que hablamos con el público.",
+    "voz": "Con la grabación entera del bolo de la Ribeira, la inteligencia artificial separa las canciones de lo que hablamos con el público."
    },
    {
     "who": "voz",
@@ -864,23 +784,23 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Lo que entra por cada bolo, los gastos y lo que le toca a cada uno, en una sola pantalla.",
-    "voz": "Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno. En una sola pantalla."
+    "txt": "Lo que entra por cada bolo, los gastos y lo que le toca a cada uno.",
+    "voz": "Aquí está lo que entra por cada bolo, los gastos, y lo que le toca a cada uno."
    },
    {
     "who": "guitarra",
     "txt": "¡Las cuentas claras! ¡Y salen números positivos! 💰",
-    "voz": "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!"
+    "voz": "¡Las cuentas claras! ¡Y salen números positivos!"
    },
    {
     "who": "bajo",
-    "txt": "Y para las giras mi idea es meterle algo tipo Tricount o Splitwise, para que Brais no nos haga el lío como siempre.",
-    "voz": "Y para las giras, mi idea es meterle algo tipo Traicaunt o Splitguais. Para que Brais no nos haga el lío de las birras como siempre."
+    "txt": "Y para las giras le meteré algo tipo Tricount, para que Brais no nos haga el lío de las birras.",
+    "voz": "Y para las giras le meteré algo tipo Traicaunt, para que Brais no nos haga el lío de las birras."
    },
    {
     "who": "bateria",
-    "txt": "¡Oye!",
-    "voz": "[laughs] ¡Oye! ¡Que fue solo una vez! Bueno, dos. ¡Pero eran de importación!"
+    "txt": "¡Oye! ¡Que fue solo una vez!",
+    "voz": "[laughs] ¡Oye! ¡Que fue solo una vez!"
    }
   ],
   "nota": "4 líneas intactas. [laughs nervously] no es una etiqueta de la lista: pasa a [laughs]."
@@ -918,23 +838,23 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¡¿Pero cuándo has podido hacer esto?! Si cuando no estás en el trabajo, ¡estás con tus dos hijas! 🤯",
-    "voz": "Pero, Iago, ¿cuándo has podido hacer todo esto? ¡Si cuando no estás en el curro, estás con tus dos hijas!"
+    "txt": "¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?",
+    "voz": "¿Pero cuándo has podido hacer todo esto, si cuando no estás en el curro estás con tus dos hijas?"
    },
    {
     "who": "bajo",
-    "txt": "Pues han sido unos meses duros: no he podido dedicarles tiempo de calidad al 100 %, he estado muy distraído construyendo todo esto.",
-    "voz": "Pues han sido unos meses duros, la verdad. No he podido dedicarles tiempo de calidad al cien por cien a las niñas. He estado muy distraído construyendo todo esto."
+    "txt": "Han sido unos meses duros, la verdad. No he podido dedicarles el tiempo que quería.",
+    "voz": "Han sido unos meses duros, la verdad. No he podido dedicarles a las niñas el tiempo que quería."
    },
    {
     "who": "bajo",
-    "txt": "¡Y encima Netflix me ha pedido una peli documental con la historia de BandManager! No sé cómo se han enterado, ¡estoy flipando! 🎬",
-    "voz": "¡Y encima Netflix me ha pedido una peli documental con la historia de Band Mánayer! No sé cómo se han enterado, ¡estoy flipando!"
+    "txt": "¡Y encima Netflix me ha pedido una peli documental sobre BandManager! ¡Estoy flipando!",
+    "voz": "¡Y encima Netflix me ha pedido una peli documental sobre Band Mánayer! ¡Estoy flipando!"
    },
    {
     "who": "voz",
-    "txt": "¡Sos un genio, Iago! ¿Una peli en Netflix? ¡Yo voy a la alfombra roja con la camisa de flores! 🙌",
-    "voz": "[gasps] ¡Sos un genio, Iago! ¡El bajista! ¿Una peli en Netflix, boludo? ¡Yo voy a la alfombra roja con la camisa de flores!"
+    "txt": "¡Sos un genio! ¡Yo voy a la alfombra roja con la camisa de flores!",
+    "voz": "[gasps] ¡Sos un genio, Iago! ¡Yo voy a la alfombra roja con la camisa de flores!"
    },
    {
     "who": "bajo",
@@ -987,8 +907,8 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Y hay más: ensayos, ideas, la ficha de cada bolo…",
-    "voz": "Y esto no acaba aquí, chavales: los ensayos, las ideas de cada canción, la ficha de cada bolo… Todo en la misma app."
+    "txt": "Y hay más: medios, métricas de redes, tu discografía de Spotify, las ideas, la ficha de cada bolo…",
+    "voz": "Y hay más, chavales: los medios de comunicación, las métricas de redes, tu discografía de Spótifai, las ideas de cada canción, la ficha de cada bolo… Todo en la misma app."
    },
    {
     "who": "guitarra",
@@ -1014,23 +934,13 @@
   "lines": [
    {
     "who": "voz",
-    "txt": "Iago, esto es una locura. Lo necesitan todos los grupos, todos los mánagers, todas las productoras. ¡Todos!",
-    "voz": "[gasps] Iago, esto es una locura. Lo necesitan todos los grupos, todos los mánayers, todas las productoras. ¡Todos!"
-   },
-   {
-    "who": "guitarra",
-    "txt": "¿Y si lo vendemos? Además de dar conciertos, ayudamos a los músicos de todo el mundo.",
-    "voz": "¿Y si lo vendemos? Además de dar conciertos, nos forramos ayudando a los músicos de todo el mundo."
-   },
-   {
-    "who": "bajo",
-    "txt": "¿En serio? ¿Creéis que esto se puede vender?",
-    "voz": "¿En serio, tronco? ¿Creéis que esto se puede vender?"
+    "txt": "Iago, esto es una locura. Lo necesitan todos los grupos, los mánagers, las productoras.",
+    "voz": "[gasps] Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras."
    },
    {
     "who": "bateria",
-    "txt": "¡Te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol.",
-    "voz": "[laughs] ¡Pero neno, te vas a forrar! Ya te veo en Miami, en descapotable, con traje y gafas de sol."
+    "txt": "¡Te vas a forrar! Ya te veo en Miami, en descapotable.",
+    "voz": "[laughs] ¡Pero neno, te vas a forrar! Ya te veo en Miami, en descapotable."
    },
    {
     "who": "bajo",
@@ -1073,23 +983,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Dormir está en mi lista de pendientes.",
-    "voz": "Dormir está en mi lista de pendientes, neno. Justo después del máster."
-   },
-   {
-    "who": "bajo",
-    "txt": "Es una pasta que flipas. Pero sale más barato que darle el 30 % a Peláez.",
-    "voz": "Es una pasta que flipas, eh. Pero sale más barato que darle el treinta por ciento a Peláez."
-   },
-   {
-    "who": "bateria",
-    "txt": "¡Neno, tú de marketing sabes lo que yo de cuentas!",
-    "voz": "[laughs] ¡Neno, tú de marketing sabes lo mismo que yo de cuentas!"
-   },
-   {
-    "who": "bajo",
-    "txt": "Tú ríete. Cuando esté en Miami con el Lambo, iré gritando: «¡Estos másteres son el mejor dinero que he gastado!»",
-    "voz": "Tú ríete. Cuando esté en Miami con el Lambo, iré gritando que estos másteres son el mejor dinero que he gastado en mi vida. Después de mi primer bajo."
+    "txt": "Dormir está en mi lista de pendientes. Y sale más barato que darle el 30 % a Peláez.",
+    "voz": "Dormir está en mi lista de pendientes, neno. Y sale más barato que darle el treinta por ciento a Peláez."
    }
   ],
   "nota": "Fuera el premio y Paula (pasa a créditos). Sus dos líneas se rellenan con 'Dormir está en mi lista de pendientes' (planta el 'lista de pendientes' del post-créditos) y el máster 'más barato que el 30 % de Peláez'. Brais contesta con su fama de cuentas en lugar de '¡Sueña!'. Miami y el Lambo se mantienen."
@@ -1100,8 +995,8 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros. Pagan una cuota por banda.",
-    "voz": "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes."
+    "txt": "Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros.",
+    "voz": "Hay dos tipos de cliente. El primero, be tu ci: las bandas, los músicos, los deyeis y los solistas. O sea, nosotros."
    },
    {
     "who": "bateria",
@@ -1110,28 +1005,13 @@
    },
    {
     "who": "bajo",
-    "txt": "Ojalá, con lo que facturan. B2B son los profesionales: mánagers y agencias, que llevan varias bandas a la vez.",
-    "voz": "Ojalá, Brais, con lo que facturan esos. No: be tu bi son los profesionales. Los mánayers y las agencias, que llevan varias bandas a la vez."
-   },
-   {
-    "who": "voz",
-    "txt": "Yo de coreano daría el pego.",
-    "voz": "[mischievously] Pues yo de coreano daría el pego, eh. Tengo el flequillo."
+    "txt": "No: B2B son los profesionales. Mánagers y agencias, y las salas y festivales que programan.",
+    "voz": "No, Brais: be tu bi son los profesionales. Los mánayers y las agencias, y las salas y festivales, que son los que programan."
    },
    {
     "who": "bajo",
-    "txt": "Y salas, festivales y productoras, que son las que programan.",
-    "voz": "Y las salas, los festivales y las productoras, que son los que programan."
-   },
-   {
-    "who": "voz",
-    "txt": "¿Y por qué iba a querer una sala usar esto?",
-    "voz": "¿Y por qué iba a querer una sala usar esto? Si no nos cogen ni el teléfono."
-   },
-   {
-    "who": "bajo",
-    "txt": "Porque si es fácil trabajar con nosotros, contestan antes. Quien toca paga; quien programa hace que el producto funcione.",
-    "voz": "Porque si es fácil trabajar con nosotros, contestan antes. Mirad El Faro: treinta y cinco minutos. Quien toca, paga. Y quien programa, hace que todo esto funcione."
+    "txt": "Y si es fácil trabajar con nosotros, contestan antes. Mirad El Faro: 35 minutos.",
+    "voz": "Y si es fácil trabajar con nosotros, contestan antes. Mirad El Faro: treinta y cinco minutos."
    }
   ],
   "nota": "El gag K-pop se remata ('Ojalá, con lo que facturan') y Alan lo estira con su vanidad. B2B se parte en dos líneas cortas (quién gestiona / quién programa) para que se entienda a la primera, y el porqué de las salas se demuestra con El Faro."
@@ -1142,13 +1022,13 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¿Y de qué vivimos, entonces?",
+    "txt": "¿Y de qué vivimos? ¿De los aplausos?",
     "voz": "¿Y de qué vivimos, entonces? ¿De los aplausos?"
    },
    {
     "who": "bajo",
-    "txt": "Dos motores. Una suscripción por banda, que ya está construida aunque la tengo desactivada a propósito. Y el apoyo voluntario de quien use la app.",
-    "voz": "De dos motores. El primero, una suscripción por banda, con seis planes. Ya está construida, pero de momento la tengo apagada a propósito. Y el segundo, el apoyo voluntario de quien use la app."
+    "txt": "Dos motores: una suscripción por banda, ya construida pero apagada a propósito, y el apoyo voluntario de quien use la app.",
+    "voz": "De dos motores. Una suscripción por banda, ya construida pero apagada a propósito. Y el apoyo voluntario de quien use la app."
    },
    {
     "who": "bateria",
@@ -1157,8 +1037,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la IA, la base de datos y los servidores.",
-    "voz": "Muchísimo menos: lo que cada uno quiera. Ya he habilitado que los usuarios apoyen el proyecto, para pagar la inteligencia artificial, la base de datos y los servidores. Si vosotros tocáis y cobráis, nosotros ganamos."
+    "txt": "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la IA y los servidores.",
+    "voz": "Muchísimo menos: lo que cada uno quiera. Ya lo he habilitado, para pagar la inteligencia artificial y los servidores."
    }
   ],
   "nota": "La pregunta de Brais se convierte en callback al 30 % de Peláez, que es la comparación que hace entender el modelo."
@@ -1192,7 +1072,7 @@
    {
     "who": "manager",
     "txt": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El rider está en el camerino, tal y como firmamos.",
-    "voz": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El ráider está en el camerino, tal y como firmamos. Agua, toallas, birras frías. Y croquetas."
+    "voz": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El ráider está en el camerino, tal y como firmamos. Y croquetas."
    },
    {
     "who": "sello",
@@ -1205,29 +1085,9 @@
     "voz": "Gracias, Peláez. Pero los bolos ya los llevamos nosotros. Y el repertorio, también."
    },
    {
-    "who": "manager",
-    "txt": "Que conste, Peláez: los bolos los llevan ellos solitos.",
-    "voz": "Y que conste, Peláez: aquí los bolos los llevan ellos solitos. Yo solo pongo el camerino."
-   },
-   {
-    "who": "voz",
-    "txt": "¿Tengo el tono de la primera?",
-    "voz": "[worried] ¿Cuál era el tono de la primera? Que con los nervios me olvido hasta de mi nombre, che."
-   },
-   {
-    "who": "bajo",
-    "txt": "Em, en tu hoja, como siempre.",
-    "voz": "Mi menor. En tu hoja, como siempre. Respira, estrella."
-   },
-   {
     "who": "bajo",
     "txt": "Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.",
     "voz": "Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros."
-   },
-   {
-    "who": "manager",
-    "txt": "¡Y ahora, a tocar!",
-    "voz": "[shouts] ¡Y ahora, a tocar!"
    },
    {
     "who": "bateria",
@@ -1244,7 +1104,7 @@
    {
     "who": "locutor",
     "txt": "La banda que casi se separa por problemas de gestión interna acaba tocando en el Resurrection Fest gracias a su bajista Iago y a bandmanager.io, la increíble app que ha creado y que va a revolucionar la industria musical.",
-    "voz": "Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io. ¡Sube el volumen!"
+    "voz": "Buenos días, rockeros. Esto es Radio Riff. Una banda que casi se separa por no saber ni quién contestaba el correo acaba de tocar en el Resurrécshon Fest. ¿El secreto? Su bajista, Iago, y la app que ha creado: Band Mánayer punto io."
    }
   ],
   "nota": "La frase de 45 palabras se parte en cuatro de ritmo radiofónico. 'Band Mánayer' con mayúscula para que el subtítulo salga como BandManager.io (el original en minúscula no lo corregía ESCRITO)."
@@ -1256,32 +1116,22 @@
    {
     "who": "voz",
     "txt": "¿Alguien ha contestado a la sala del 14?",
-    "voz": "¿Alguien ha contestado a la sala del catorce?",
-    "t": "23:47"
+    "voz": "¿Alguien ha contestado a la sala del catorce?"
    },
    {
     "who": "bajo",
     "txt": "Cerrao y bien cerrao, chaval. Mirad el calendario. ✅",
-    "voz": "Cerrao y bien cerrao, chaval. Mirad el calendario.",
-    "t": "23:48"
-   },
-   {
-    "who": "guitarra",
-    "txt": "Y ya tenemos los setlists, cada uno en su hoja.",
-    "voz": "Y ya tenemos los setlists, cada uno en su hoja.",
-    "t": "23:49"
+    "voz": "Cerrao y bien cerrao, chaval. Mirad el calendario."
    },
    {
     "who": "bateria",
     "txt": "Entonces ensayamos el sábado. Y el miércoles, con los metaleros. 🥁",
-    "voz": "Entonces, ensayamos el sábado. Y el miércoles, con los metaleros. ¡Rocanrol!",
-    "t": "23:51"
+    "voz": "Entonces, ensayamos el sábado. Y el miércoles, con los metaleros. ¡Rocanrol!"
    },
    {
     "who": "voz",
     "txt": "Traidor.",
-    "voz": "[laughs] Traidor.",
-    "t": "23:52"
+    "voz": "[laughs] Traidor."
    }
   ],
   "nota": "El espejo del jueves ahora responde a cada dolor del principio (sala sin contestar, setlist de cada uno). El cierre suma el último callback de Brais en dos bandas (hora sugerida para Alan: 23:52)."
@@ -1292,8 +1142,8 @@
   "lines": [
    {
     "who": "diego",
-    "txt": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería.",
-    "voz": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería."
+    "txt": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.",
+    "voz": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad."
    },
    {
     "who": "diego",
