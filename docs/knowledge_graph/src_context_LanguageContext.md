@@ -30,6 +30,7 @@ Exporta: LanguageProvider.
 
 ## 🧪 Tests que lo cubren
 - `src/components/__tests__/LandingChatWidget.test.tsx`
+- `src/components/__tests__/PublicLandingDatosEstructurados.test.tsx`
 - `src/context/__tests__/LanguageContext.behavior.test.tsx`
 
 ---
