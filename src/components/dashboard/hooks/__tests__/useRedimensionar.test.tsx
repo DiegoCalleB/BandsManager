@@ -14,14 +14,15 @@ afterEach(cleanup);
 describe('useRedimensionar', () => {
   // rejilla de 1200 px, widget de 600 px (mitad)
   const widget = { id: 'w1', wSpan: 6, hSpan: 'normal' as const };
-  const empezar = (alSoltar: ReturnType<typeof vi.fn>) => {
+  const nuevoMock = () => vi.fn<(id: string, c: { wSpan: number; hSpan: string }) => void>();
+  const empezar = (alSoltar: ReturnType<typeof nuevoMock>) => {
     const { result } = renderHook(() => useRedimensionar(alSoltar));
     act(() => result.current.iniciar(evento(100, 100), widget, caja(1200), caja(600)));
     return result;
   };
 
   it('mientras se arrastra da una previa en vivo y al soltar guarda una sola vez', () => {
-    const alSoltar = vi.fn();
+    const alSoltar = nuevoMock();
     const result = empezar(alSoltar);
     act(() => mover(100 + 600, 100)); // +600 px → ancho 1200 → completo
     expect(result.current.previa).toEqual({ id: 'w1', wSpan: 12, hSpan: 'normal' });
@@ -35,7 +36,7 @@ describe('useRedimensionar', () => {
   });
 
   it('si el tamaño final es el de partida no guarda nada', () => {
-    const alSoltar = vi.fn();
+    const alSoltar = nuevoMock();
     empezar(alSoltar);
     act(() => mover(130, 110));
     act(() => soltar());
@@ -43,7 +44,7 @@ describe('useRedimensionar', () => {
   });
 
   it('Escape cancela sin guardar y deja de escuchar', () => {
-    const alSoltar = vi.fn();
+    const alSoltar = nuevoMock();
     const result = empezar(alSoltar);
     act(() => mover(700, 100));
     act(() => { window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); });
@@ -54,7 +55,7 @@ describe('useRedimensionar', () => {
   });
 
   it('ignora el botón derecho del ratón y la falta de rejilla', () => {
-    const alSoltar = vi.fn();
+    const alSoltar = nuevoMock();
     const { result } = renderHook(() => useRedimensionar(alSoltar));
     act(() => result.current.iniciar(evento(0, 0, { button: 2 }), widget, caja(1200), caja(600)));
     act(() => result.current.iniciar(evento(0, 0), widget, null, caja(600)));
