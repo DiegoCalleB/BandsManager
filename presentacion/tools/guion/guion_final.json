@@ -249,18 +249,13 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra.",
-    "voz": "Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra."
+    "txt": "Esto es Date Swap: le propongo a otra banda cambiar fechas. Nosotros en su ciudad, y ellos en la nuestra.",
+    "voz": "Esto es Deit Suap. Le propongo a otra banda cambiar fechas: nosotros en su ciudad, y ellos en la nuestra."
    },
    {
     "who": "voz_mop",
     "txt": "Os leo. Nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!",
     "voz": "Os leo, Herdeiros. Nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble!"
-   },
-   {
-    "who": "bateria",
-    "txt": "¡Cartel doble! ¡Esto no lo tenían ni los Rolling!",
-    "voz": "[excited] ¡Cartel doble! ¡Esto no lo tenían ni los Rolin!"
    },
    {
     "who": "voz",
@@ -296,28 +291,18 @@
   "lines": [
    {
     "who": "bajo",
-    "txt": "Tranquilo, Alan: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.",
-    "voz": "Tranquilo, Alan: Brais puede tocar en las dos bandas, y sin liarse. Mirad su cuenta."
+    "txt": "Tranquilo, Alan: Brais toca en las dos bandas sin liarse. Mirad su cuenta.",
+    "voz": "Tranquilo, Alan: Brais toca en las dos bandas, sin liarse. Mirad su cuenta."
    },
    {
     "who": "bateria",
     "txt": "Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?",
-    "voz": "[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta? ¿Desde cuándo tengo apellido?"
+    "voz": "[curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?"
    },
    {
     "who": "bajo",
-    "txt": "Claro: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.",
-    "voz": "Claro: tu cuenta de Cabeza de Cartel. Una cuenta, y varias bandas."
-   },
-   {
-    "who": "guitarra",
-    "txt": "¿Y cómo cambias de una banda a otra?",
-    "voz": "¿Y cómo cambias de una banda a otra?"
-   },
-   {
-    "who": "bajo",
-    "txt": "Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.",
-    "voz": "Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts."
+    "txt": "Sí: una cuenta, varias bandas. Se cambia como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.",
+    "voz": "Sí, Brais: una cuenta, y varias bandas. Se cambia como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts."
    },
    {
     "who": "voz",
@@ -839,12 +824,12 @@
    {
     "who": "guitarra",
     "txt": "¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?",
-    "voz": "¿Pero cuándo has podido hacer todo esto, si cuando no estás en el curro estás con tus dos hijas?"
+    "voz": "¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?"
    },
    {
     "who": "bajo",
-    "txt": "Han sido unos meses duros, la verdad. No he podido dedicarles el tiempo que quería.",
-    "voz": "Han sido unos meses duros, la verdad. No he podido dedicarles a las niñas el tiempo que quería."
+    "txt": "Han sido unos meses duros, la verdad.",
+    "voz": "Han sido unos meses duros, la verdad."
    },
    {
     "who": "bajo",
@@ -858,8 +843,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.",
-    "voz": "Pero no me da la vida, chavales. Quiero estar al cien por cien con mi familia y con vosotros."
+    "txt": "Pero no me da la vida. Quiero estar con mi familia y con vosotros.",
+    "voz": "Pero no me da la vida, chavales. Quiero estar con mi familia y con vosotros."
    }
   ],
   "nota": "Respuesta de Iago a «¿cuándo?»: meses duros, Netflix (chiste) y remate sincero. Enlaza con «Las noches»."
@@ -1071,8 +1056,8 @@
   "lines": [
    {
     "who": "manager",
-    "txt": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El rider está en el camerino, tal y como firmamos.",
-    "voz": "Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El ráider está en el camerino, tal y como firmamos. Y croquetas."
+    "txt": "Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.",
+    "voz": "Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Y croquetas."
    },
    {
     "who": "sello",

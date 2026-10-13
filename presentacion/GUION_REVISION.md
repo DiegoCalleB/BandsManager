@@ -210,28 +210,25 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Sábado · 11:00 · Conseguir el bolo  
 **Titular:** Date Swap: cambio de fecha.  
 
-**14.1** · **Iago**: Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra.  
-   _Voz:_ Esto es Deit Suap. Le propongo a otra banda cambiarnos las fechas: nosotros tocamos en su ciudad, y ellos en la nuestra.
+**14.1** · **Iago**: Esto es Date Swap: le propongo a otra banda cambiar fechas. Nosotros en su ciudad, y ellos en la nuestra.  
+   _Voz:_ Esto es Deit Suap. Le propongo a otra banda cambiar fechas: nosotros en su ciudad, y ellos en la nuestra.
 
 **14.2** · **Voz de Master of Prompts**: Os leo. Nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!  
    _Voz:_ Os leo, Herdeiros. Nosotros vamos a Santiago, y vosotros venís a Vigo. ¡Cartel doble!
 
-**14.3** · **Brais**: ¡Cartel doble! ¡Esto no lo tenían ni los Rolling!  
-   _Voz:_ [excited] ¡Cartel doble! ¡Esto no lo tenían ni los Rolin!
-
-**14.4** · **Alan**: ¿Y quién es ese?  
+**14.3** · **Alan**: ¿Y quién es ese?  
    _Voz:_ [curious] ¿Y quién es ese? ¿Tiene más pelo que yo?
 
-**14.5** · **Iago**: El cantante de Master of Prompts. Guardaos el nombre, que va a volver.  
+**14.4** · **Iago**: El cantante de Master of Prompts. Guardaos el nombre, que va a volver.  
    _Voz:_ El cantante de Máster of Prompts. Guardaos el nombre, que va a volver.
 
-**14.6** · **Voz de Master of Prompts**: Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?  
+**14.5** · **Voz de Master of Prompts**: Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?  
    _Voz:_ [laughs] Y oye, Brais: nos falta batería. ¿Te vienes a Máster of Prompts?
 
-**14.7** · **Brais**: ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.  
+**14.6** · **Brais**: ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.  
    _Voz:_ [gasps] ¿Yo? Pero si ya tengo banda… Bueno, los miércoles libro.
 
-**14.8** · **Alan**: ¡Traidor! ¡Nos deja por unos metaleros!  
+**14.7** · **Alan**: ¡Traidor! ¡Nos deja por unos metaleros!  
    _Voz:_ [shouts] ¡Traidor! ¡Nos deja por unos metaleros, che!
 
 ---
@@ -241,24 +238,19 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Sábado · 11:00 · Conseguir el bolo  
 **Titular:** Una cuenta, varias bandas.  
 
-**15.1** · **Iago**: Tranquilo, Alan: Brais puede tocar en las dos bandas sin liarse. Mirad su cuenta.  
-   _Voz:_ Tranquilo, Alan: Brais puede tocar en las dos bandas, y sin liarse. Mirad su cuenta.
+**15.1** · **Iago**: Tranquilo, Alan: Brais toca en las dos bandas sin liarse. Mirad su cuenta.  
+   _Voz:_ Tranquilo, Alan: Brais toca en las dos bandas, sin liarse. Mirad su cuenta.
 
 **15.2** · **Brais**: Un momento… arriba pone Brais Moure. ¿Esa es mi cuenta?  
-   _Voz:_ [curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta? ¿Desde cuándo tengo apellido?
+   _Voz:_ [curious] Un momento… ahí arriba pone Brais Moure. ¿Esa es mi cuenta?
 
-**15.3** · **Iago**: Claro: tu cuenta de Cabeza de Cartel. Una cuenta, varias bandas.  
-   _Voz:_ Claro: tu cuenta de Cabeza de Cartel. Una cuenta, y varias bandas.
+**15.3** · **Iago**: Sí: una cuenta, varias bandas. Se cambia como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.  
+   _Voz:_ Sí, Brais: una cuenta, y varias bandas. Se cambia como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.
 
-**15.4** · **Álvaro**: ¿Y cómo cambias de una banda a otra?
-
-**15.5** · **Iago**: Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.  
-   _Voz:_ Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.
-
-**15.6** · **Alan**: ¡Cambió todo! ¡El logo, el calendario, hasta las salas!  
+**15.4** · **Alan**: ¡Cambió todo! ¡El logo, el calendario, hasta las salas!  
    _Voz:_ [amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!
 
-**15.7** · **Iago**: Y lo de una banda no se ve nunca en la otra. Es la primera regla de la casa.  
+**15.5** · **Iago**: Y lo de una banda no se ve nunca en la otra. Es la primera regla de la casa.  
    _Voz:_ Y lo de una banda no se ve nunca en la otra. Primera regla de la casa.
 
 ---
@@ -517,11 +509,9 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Sábado · 13:00 · El local de ensayo  
 **Titular:** Lo han visto todo.  
 
-**32.1** · **Álvaro**: ¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?  
-   _Voz:_ ¿Pero cuándo has podido hacer todo esto, si cuando no estás en el curro estás con tus dos hijas?
+**32.1** · **Álvaro**: ¿Pero cuándo has podido hacer todo esto, si estás con tus dos hijas?
 
-**32.2** · **Iago**: Han sido unos meses duros, la verdad. No he podido dedicarles el tiempo que quería.  
-   _Voz:_ Han sido unos meses duros, la verdad. No he podido dedicarles a las niñas el tiempo que quería.
+**32.2** · **Iago**: Han sido unos meses duros, la verdad.
 
 **32.3** · **Iago**: ¡Y encima Netflix me ha pedido una peli documental sobre BandManager! ¡Estoy flipando!  
    _Voz:_ ¡Y encima Netflix me ha pedido una peli documental sobre Band Mánayer! ¡Estoy flipando!
@@ -529,8 +519,8 @@ _(escena visual, sin diálogo)_
 **32.4** · **Alan**: ¡Sos un genio! ¡Yo voy a la alfombra roja con la camisa de flores!  
    _Voz:_ [gasps] ¡Sos un genio, Iago! ¡Yo voy a la alfombra roja con la camisa de flores!
 
-**32.5** · **Iago**: Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.  
-   _Voz:_ Pero no me da la vida, chavales. Quiero estar al cien por cien con mi familia y con vosotros.
+**32.5** · **Iago**: Pero no me da la vida. Quiero estar con mi familia y con vosotros.  
+   _Voz:_ Pero no me da la vida, chavales. Quiero estar con mi familia y con vosotros.
 
 ---
 
@@ -655,8 +645,8 @@ _(escena visual, sin diálogo)_
 **Rótulo:** Seis meses después · Sábado noche · 02:09 · Backstage  
 **Titular:** Cinco minutos para salir.  
 
-**40.1** · **Programador (Sala El Faro)**: Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El rider está en el camerino, tal y como firmamos.  
-   _Voz:_ Cinco minutos, chicos. El Faro me ha prestado al festival esta noche. El ráider está en el camerino, tal y como firmamos. Y croquetas.
+**40.1** · **Programador (Sala El Faro)**: Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.  
+   _Voz:_ Cinco minutos, chicos. El ráider está en el camerino, tal y como firmamos. Y croquetas.
 
 **40.2** · **Peláez**: Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.  
    _Voz:_ Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento.

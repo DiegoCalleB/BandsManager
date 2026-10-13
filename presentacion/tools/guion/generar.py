@@ -829,7 +829,7 @@ if FOTOS:
     # Cronología: cada banda con la edad que tenía Diego (la edad va en grande, y una línea de tiempo abajo se va encendiendo)
     pasos, t = [], 0.4
     for k, f in enumerate(FOTOS):
-        d = f.get('dur', 2.6 if f.get('tarjeta') else 2.4)  # la del público (la última), más: «gran» lleva efecto
+        d = f.get("dur", 2.2 if f.get("tarjeta") else 2.0)  # la del público (la última), más: «gran» lleva efecto
         pasos.append((t, d, f)); t += d
     # el foco sobre Diego (oscurece un poco al resto) va horneado en img/historia/_foco/
     sys.path.insert(0, os.path.join(AQUI, '..'))
@@ -868,17 +868,17 @@ else:
     S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
 
 # El giro final (Nolan): el reloj de toda la película no contaba para el festival
-add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="27500" data-fin=".gr-ask">
+add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="22000" data-fin=".gr-ask">
   <span class="tag" style="opacity:0">Fin de la historia · El reloj</span>
   <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECTION FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
-  <p class="gr-c" style="--t:4.2s;--d:3.2s">¿Os habéis fijado en el reloj?</p>
-  <p class="gr-c" style="--t:7.6s;--d:3s">No solo contaba para el cierre del cartel del Resu.</p>
-  <p class="gr-c" style="--t:11s;--d:2.9s">También contaba para esto.</p>
+  <p class="gr-c" style="--t:3.8s;--d:2.8s">¿Os habéis fijado en el reloj?</p>
+  <p class="gr-c" style="--t:6.6s;--d:2.7s">No solo contaba para el cierre del cartel del Resu.</p>
+  <p class="gr-c" style="--t:9.3s;--d:2.7s">También contaba para esto.</p>
   <div class="notif" aria-hidden="true"><i>🔔</i><div><small>BandManager · ahora</small><b>Alguien está viendo tu TFM</b><span>Ahora mismo. Desde el principio.</span></div></div>
-  <p class="gr-c" style="--t:14.3s;--d:3.4s">Brais: en esta historia eras el batería.</p>
-  <p class="gr-c" style="--t:18s;--d:3.4s">Pero en la de verdad, el festival sois vosotros.</p>
-  <p class="gr-c gr-ask" style="--t:22s">Y ahora… un reto.</p>
+  <p class="gr-c" style="--t:12.3s;--d:3s">Brais: en esta historia eras el batería.</p>
+  <p class="gr-c" style="--t:15.2s;--d:3s">Pero en la de verdad, el festival sois vosotros.</p>
+  <p class="gr-c gr-ask" style="--t:18.4s">Y ahora… un reto.</p>
 </section>
 ''')
 

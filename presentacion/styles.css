@@ -1375,17 +1375,17 @@ body.pelicula:not(.scroll) .slide.active { filter: contrast(1.04) saturate(.92);
 .giro-reloj .gr-t i { position: absolute; inset: 0; font: 600 180px/1 Oswald, Onest, sans-serif; font-style: normal; letter-spacing: .04em; opacity: 0; }
 .giro-reloj .gr-c { position: absolute; left: 0; right: 0; top: 560px; margin: 0; font: 500 64px/1.25 Onest, sans-serif; letter-spacing: .01em; opacity: 0; }
 .giro-reloj .gr-c.gr-ask { font: 600 92px/1.1 Oswald, Onest, sans-serif; letter-spacing: .04em; text-transform: uppercase; color: #ffb37a; top: 520px; }
-.slide.giro-reloj.active .gr-reloj { animation: grentra 600ms ease-out 200ms both, grsale 1600ms ease-in 21.4s both; }
+.slide.giro-reloj.active .gr-reloj { animation: grentra 600ms ease-out 200ms both, grsale 1600ms ease-in 18.4s both; }
 .slide.giro-reloj.active .gr-t i { animation: grnum 1000ms steps(1) forwards; }
 .slide.giro-reloj.active .gr-t i:nth-child(1) { animation-delay: .3s; } .slide.giro-reloj.active .gr-t i:nth-child(2) { animation-delay: 1.3s; }
 .slide.giro-reloj.active .gr-t i:nth-child(3) { animation-delay: 2.3s; }
 .slide.giro-reloj.active .gr-t i:nth-child(4) { animation: grcero 1ms 3.3s both; color: #ff5a4f; }
-.slide.giro-reloj.active .gr-l1 { animation: grlabel1 600ms ease-in 10.6s both; }
-.slide.giro-reloj.active .gr-l2 { animation: grlabel2 900ms ease-out 11.0s both; }
+.slide.giro-reloj.active .gr-l1 { animation: grlabel1 600ms ease-in 9.0s both; }
+.slide.giro-reloj.active .gr-l2 { animation: grlabel2 900ms ease-out 9.4s both; }
 .slide.giro-reloj.active .gr-c { animation: grcard var(--d, 3s) ease-in-out var(--t) both; }
 .slide.giro-reloj.active .gr-c.gr-ask { animation: grask 5s ease-out var(--t) both; }
 .slide.giro-reloj .notif { left: 50% !important; right: auto !important; top: 760px !important; translate: -50% 0; opacity: 0; }
-.slide.giro-reloj.active .notif { animation: grnotif 7.2s ease-out 13.8s both !important; }
+.slide.giro-reloj.active .notif { animation: grnotif 7.2s ease-out 11.6s both !important; }
 @keyframes grentra { from { opacity: 0; scale: .96; } to { opacity: 1; scale: 1; } }
 @keyframes grsale { to { opacity: 0; filter: blur(6px); } }
 @keyframes grnum { 0% { opacity: 1; } 100% { opacity: 0; } }

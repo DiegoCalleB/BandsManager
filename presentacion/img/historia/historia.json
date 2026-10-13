@@ -70,7 +70,7 @@
   "texto": "Repercusión",
   "logro": "Batalla Naval de Vallekas · La Karmela · 2018",
   "pos": "50% 78%",
-  "dur": 5.2,
+  "dur": 4.2,
   "gran": true,
   "foco": [
    0.5,
@@ -86,7 +86,7 @@
   "edad": 40,
   "texto": "Master of Prompts",
   "logro": "Yo ya estoy preparado para la primera gira. ¿Y tú, Brais?",
-  "dur": 5.6,
+  "dur": 4.6,
   "gran": true,
   "hito": "Gira",
   "pos": "50% 35%"
