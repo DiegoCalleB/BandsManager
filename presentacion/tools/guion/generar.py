@@ -364,16 +364,7 @@ add(feat('El acuerdo, firmado desde BandManager', TAG1, 'Un acuerdo firmado, sin
          '<div class="ft-shot phone acuerdo"><img src="img/md-h-acuerdo.jpg" alt="Hoja de acuerdo de la sala con la firma"></div>'))
 
 add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala contestó. Por fin.', 'img/concierto-2.jpg',
-          '''<table class="sheet" style="width:1180px;margin-top:26px">
-    <thead><tr><th>bolos_2026_DEF_v7(1).xlsx</th><th>Enviado</th><th>Respuesta</th><th>Fecha</th></tr></thead>
-    <tbody>
-      <tr><td>Sala del puerto</td><td>12 mar</td><td class="no">sin respuesta</td><td>-</td></tr>
-      <tr><td>Festival de verano</td><td>14 mar</td><td class="no">sin respuesta</td><td>-</td></tr>
-      <tr><td>Bar de la plaza</td><td>20 abr</td><td class="no">leído, sin respuesta</td><td>-</td></tr>
-      <tr><td>Sala El Faro</td><td>02 may</td><td class="yes">«Nos encaja el 14»</td><td class="yes">14 nov</td></tr>
-    </tbody>
-  </table>
-  ''' + dlg(m('manager', 'Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!', say='Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!'),
+          '<figure class="faroapp"><img src="img/d-h-faro.jpg" alt="BandManager: la Sala El Faro, confirmada"></figure>' + dlg(m('manager', 'Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!', say='Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!'),
             m('xandre', '¡Por fin! ¡Del rojo al verde!'),
             m('manager', 'Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.', say='Y qué gusto, de verdad: un correo con dossier y con rider. Aquí la mayoría ni dice quiénes son. Eso sí: el caché se cobra en croquetas.'), cls='tight')))
 

@@ -126,7 +126,8 @@
     [/Slípnot/g, 'Slipknot'], [/\bCorn\b/g, 'Korn'], [/sétlist/g, 'setlist'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
   var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
   var SUBS_KEY = 'bm_subs', subsOn = false;
-  try { subsOn = localStorage.getItem(SUBS_KEY) === 'es'; } catch (e) { /* sin almacenamiento: desactivados */ }
+  subsOn = true; // en una película el diálogo va subtitulado (sin burbujas de chat); el espectador puede quitarlo
+  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado) subsOn = guardado === 'es'; } catch (e) { /* sin almacenamiento: activados */ }
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
   // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
