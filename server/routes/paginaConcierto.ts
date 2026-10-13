@@ -23,6 +23,7 @@ import {
   slugConcierto,
   type EntradaSitemap,
 } from '../utils/paginaConcierto.js';
+import { alternativasLanding } from '../utils/cabeceraIdioma.js';
 import { urlInsignia } from '../utils/referidos.js';
 import { obtenerPerfilPublicoBandaCacheado } from '../services/perfilPublicoBanda.js';
 import { captureError } from '../utils/errorTracking.js';
@@ -120,7 +121,11 @@ async function construirSitemap(base: string): Promise<string> {
       })
     );
   }
-  const entradas: EntradaSitemap[] = [{ loc: `${base}/` }];
+  const alternativas = alternativasLanding(base);
+  const entradas: EntradaSitemap[] = [
+    { loc: `${base}/`, alternativas },
+    { loc: `${base}/en`, alternativas },
+  ];
   for (const c of filas as Array<FilaConcierto & { id: string; sala: string; fecha: string }>) {
     const nombre = nombres.get(String(c.band_id));
     if (!nombre) continue;

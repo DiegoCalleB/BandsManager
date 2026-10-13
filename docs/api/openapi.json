@@ -4320,7 +4320,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:267",
+        "x-source": "server.ts:269",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -5215,7 +5215,7 @@
             }
           }
         },
-        "x-source": "server.ts:166",
+        "x-source": "server.ts:168",
         "x-autenticacion": "ninguna",
         "summary": "Salud del servicio",
         "x-esquemas": "curado"
@@ -11172,7 +11172,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:509",
+        "x-source": "server.ts:511",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -13593,7 +13593,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:39",
+        "x-source": "server/routes/paginaConcierto.ts:40",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13613,7 +13613,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:166",
+        "x-source": "server.ts:168",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13630,7 +13630,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:180",
+        "x-source": "server.ts:182",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13678,7 +13678,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:150",
+        "x-source": "server/routes/paginaConcierto.ts:155",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13817,7 +13817,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:132",
+        "x-source": "server/routes/paginaConcierto.ts:137",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13837,7 +13837,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:222",
+        "x-source": "server.ts:224",
         "x-autenticacion": "ninguna"
       }
     },
