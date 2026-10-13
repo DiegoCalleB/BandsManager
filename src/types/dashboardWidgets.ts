@@ -13,7 +13,8 @@ export type WidgetType =
   | 'ai_agent_status'
   | 'tour_status'
   | 'growth_guidance'
-  | 'roi_banda';
+  | 'roi_banda'
+  | 'marketing';
 
 export type CalendarWidgetViewMode = 'list' | 'mini_month' | 'weekly_grid';
 
@@ -104,6 +105,15 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
     visible: true,
     order: 6,
   },
+  {
+    id: 'marketing-widget',
+    type: 'marketing',
+    title: 'Tu marketing',
+    wSpan: 6,
+    hSpan: 'normal',
+    visible: true,
+    order: 7,
+  },
 ];
 
 export interface ModuleWidgetMeta {
@@ -176,6 +186,16 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     defaultWSpan: 6,
     defaultHSpan: 'normal',
     iconName: 'TrendingUp',
+    requiredModule: 'resumen',
+  },
+  {
+    type: 'marketing',
+    title: 'Tu marketing',
+    category: 'Público & Redes',
+    description: 'Clics en tus enlaces, fans nuevos y salas que contestan o dicen que sí, comparados con los 30 días anteriores.',
+    defaultWSpan: 6,
+    defaultHSpan: 'normal',
+    iconName: 'Megaphone',
     requiredModule: 'resumen',
   },
   {
