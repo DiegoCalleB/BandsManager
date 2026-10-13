@@ -14,10 +14,11 @@ import { loadBandProfile, buildBandContextBlock, displayBandName, baseHashtags, 
 import { computeMusicalDna } from "../utils/musicalDna.js";
 import { sanearIdeasMelodicas } from "../utils/melodicIdeaValidator.js";
 import { textoDeDatos, nombreEnPrompt, umbralSeguro, bloqueAutonomiaPrompt } from "../utils/chatPromptBloques.js";
-import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import { iaRateLimiter, chatRateLimiter } from "../middleware/rateLimiter.js";
+import { acotarHistorial, agregarTurno, mensajeAceptable, MAX_TOKENS_RESPUESTA_CHAT } from "../utils/conversacionChat.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
-import type { AccionPropuesta, CancionParaChat, MensajeHistorialChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
+import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
 
 
 const router = express.Router();
@@ -25,8 +26,9 @@ const router = express.Router();
 // requireAuth: el chatbot responde con los leads, los ensayos, los conciertos y el EPK de la
 // banda. Sin sesión, `userReq` salía null y todo eso se contestaba sobre la banda por defecto a
 // quien preguntara.
-router.post("/chat", requireAuth, async (req, res) => {
+router.post("/chat", requireAuth, chatRateLimiter, async (req, res) => {
   const { message, chatHistory, agentsEnabled: agentsEnabledBody, autonomyConfig } = req.body;
+  if (!mensajeAceptable(message)) return res.status(400).json({ error: "El mensaje no es válido o es demasiado largo." });
   const agentsEnabled = agentsEnabledBody !== false;
   const userReq = getUserFromRequestLocal(req);
   // requireAuth ya garantiza que hay banda activa (getUserFromRequest devuelve null si no la
@@ -455,51 +457,11 @@ Si no hay ninguna acción lógica que proponer, devuelve 'proposedActions' como 
 Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON de estado, indícale amablemente que no tienes registro de ello.`;
 
     const contents: TurnoChat[] = [];
-    
-    if (chatHistory && chatHistory.length > 0) {
-      (chatHistory as MensajeHistorialChat[]).forEach((h) => {
-        const role = h.sender === 'user' ? 'user' : 'model';
-        if (contents.length === 0 && role === 'model') return;
-
-        if (contents.length === 0) {
-          contents.push({
-            role: 'user',
-            parts: [{ text: typeof h.text === 'string' ? h.text : JSON.stringify(h.text) }]
-          });
-        } else {
-          const lastIndex = contents.length - 1;
-          const lastRole = contents[lastIndex].role;
-          if (lastRole === role) {
-            contents[lastIndex].parts.push({
-              text: typeof h.text === 'string' ? h.text : JSON.stringify(h.text)
-            });
-          } else {
-            contents.push({
-              role: role,
-              parts: [{ text: typeof h.text === 'string' ? h.text : JSON.stringify(h.text) }]
-            });
-          }
-        }
-      });
+    for (const h of acotarHistorial(chatHistory)) {
+      if (contents.length === 0 && h.role === 'model') continue;
+      agregarTurno(contents, h.role, h.text);
     }
-
-    if (contents.length === 0) {
-      contents.push({
-        role: 'user',
-        parts: [{ text: message }]
-      });
-    } else {
-      const lastIndex = contents.length - 1;
-      const lastRole = contents[lastIndex].role;
-      if (lastRole === 'user') {
-        contents[lastIndex].parts.push({ text: message });
-      } else {
-        contents.push({
-          role: 'user',
-          parts: [{ text: message }]
-        });
-      }
-    }
+    agregarTurno(contents, 'user', message);
 
     let response: VistaRespuestaIA | null = null;
     let lastError: ErrorDeFailover | null = null;
@@ -507,8 +469,10 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     try {
       response = await generateContentWithFallback(client, {
         contents: contents,
+        bandId: userReq.band_id,
         config: {
           systemInstruction: systemPrompt,
+          maxOutputTokens: MAX_TOKENS_RESPUESTA_CHAT,
           tools: [{ functionDeclarations: chatFunctionDeclarations }]
         }
       });

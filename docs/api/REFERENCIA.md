@@ -200,8 +200,8 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/chat` | Sesión | — |  | [`server/routes/chat.ts:28`](../../server/routes/chat.ts#L28) |
-| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:678`](../../server/routes/chat.ts#L678) |
+| `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:29`](../../server/routes/chat.ts#L29) |
+| `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:642`](../../server/routes/chat.ts#L642) |
 
 ### concert_to_album
 
