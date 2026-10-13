@@ -586,10 +586,10 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 | `POST` | `/api/create-band` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:100`](../../server/routes/users/rutasBandas.ts#L100) |
 | `DELETE` | `/api/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users/rutasSalidaBanda.ts:13`](../../server/routes/users/rutasSalidaBanda.ts#L13) |
 | `GET` | `/api/registered-bands` | Sesión | — |  | [`server/routes/users/rutasRegistro.ts:315`](../../server/routes/users/rutasRegistro.ts#L315) |
-| `POST` | `/api/set-band-order` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:120`](../../server/routes/users/rutasPreferencias.ts#L120) |
-| `POST` | `/api/set-main-band` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:14`](../../server/routes/users/rutasPreferencias.ts#L14) |
-| `GET` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:249`](../../server/routes/users/rutasPreferencias.ts#L249) |
-| `POST` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:176`](../../server/routes/users/rutasPreferencias.ts#L176) |
+| `POST` | `/api/set-band-order` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:121`](../../server/routes/users/rutasPreferencias.ts#L121) |
+| `POST` | `/api/set-main-band` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:15`](../../server/routes/users/rutasPreferencias.ts#L15) |
+| `GET` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:256`](../../server/routes/users/rutasPreferencias.ts#L256) |
+| `POST` | `/api/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:177`](../../server/routes/users/rutasPreferencias.ts#L177) |
 | `POST` | `/api/upload-logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:15`](../../server/routes/users/rutasBandas.ts#L15) |
 | `GET` | `/api/users` | Sesión | — |  | [`server/routes/users/rutasMiembros.ts:104`](../../server/routes/users/rutasMiembros.ts#L104) |
 | `POST` | `/api/users` | Sesión + líder | — |  | [`server/routes/users/rutasMiembros.ts:147`](../../server/routes/users/rutasMiembros.ts#L147) |
@@ -597,10 +597,10 @@ Autenticación (login, registro, Google, invitaciones, cambio de banda) y gesti�
 | `POST` | `/api/users/create-band` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:100`](../../server/routes/users/rutasBandas.ts#L100) |
 | `DELETE` | `/api/users/leave-band/{bandId}` | Sesión | — |  | [`server/routes/users/rutasSalidaBanda.ts:13`](../../server/routes/users/rutasSalidaBanda.ts#L13) |
 | `GET` | `/api/users/registered-bands` | Sesión | — |  | [`server/routes/users/rutasRegistro.ts:316`](../../server/routes/users/rutasRegistro.ts#L316) |
-| `POST` | `/api/users/set-band-order` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:120`](../../server/routes/users/rutasPreferencias.ts#L120) |
-| `POST` | `/api/users/set-main-band` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:14`](../../server/routes/users/rutasPreferencias.ts#L14) |
-| `GET` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:249`](../../server/routes/users/rutasPreferencias.ts#L249) |
-| `POST` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:176`](../../server/routes/users/rutasPreferencias.ts#L176) |
+| `POST` | `/api/users/set-band-order` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:121`](../../server/routes/users/rutasPreferencias.ts#L121) |
+| `POST` | `/api/users/set-main-band` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:15`](../../server/routes/users/rutasPreferencias.ts#L15) |
+| `GET` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:256`](../../server/routes/users/rutasPreferencias.ts#L256) |
+| `POST` | `/api/users/ui-preferences` | Sesión | — |  | [`server/routes/users/rutasPreferencias.ts:177`](../../server/routes/users/rutasPreferencias.ts#L177) |
 | `POST` | `/api/users/upload-logo` | Sesión | — |  | [`server/routes/users/rutasBandas.ts:15`](../../server/routes/users/rutasBandas.ts#L15) |
 | `PUT` | `/api/users/{id}` | Sesión | — |  | [`server/routes/users/rutasMiembrosEdicion.ts:15`](../../server/routes/users/rutasMiembrosEdicion.ts#L15) |
 | `DELETE` | `/api/users/{id}` | Sesión + líder | — |  | [`server/routes/users/rutasMiembrosEdicion.ts:228`](../../server/routes/users/rutasMiembrosEdicion.ts#L228) |

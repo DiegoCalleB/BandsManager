@@ -39,13 +39,13 @@ import {
   User,
 } from "../../types";
 import type { NavigationOptions } from "../Dashboard";
-import { api } from "../../services/api";
 import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
-import { leerUsuarioDeSesion } from '../../services/sesionLocal';
+import { useGuardadoPanel } from "./hooks/useGuardadoPanel";
+import { moverEntreVisibles } from "../../utils/panelWidgets";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -158,56 +158,16 @@ export function DashboardWidgetGrid({
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [, setIsSaving] = useState(false);
-  const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
 
   // Drag and drop state
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
   const [dragOverWidgetId, setDragOverWidgetId] = useState<string | null>(null);
 
-  const [saveError, setSaveError] = useState(false);
-  const pendingSavesRef = React.useRef(0);
-  // Tras guardar algo en este montaje, lo local manda: una sesión refrescada que estuviera en
-  // vuelo (y por tanto sin el último cambio) no debe deshacerlo.
-  const hasSavedRef = React.useRef(false);
+  const { guardar: saveLayoutToDb, error: saveError, guardado: saveSuccessMsg, haGuardado, hayCambiosEnCurso } = useGuardadoPanel();
   const widgetsRef = React.useRef(widgets);
   React.useEffect(() => {
     widgetsRef.current = widgets;
   }, [widgets]);
-
-  // Sync to database — y al usuario en caché (estado de la app + localStorage), para que al salir
-  // del dashboard y volver, o al recargar antes de que la sesión se refresque, no reaparezca el
-  // panel antiguo.
-  const saveLayoutToDb = async (newLayout: DashboardWidgetConfig[]) => {
-    setIsSaving(true);
-    setSaveError(false);
-    pendingSavesRef.current += 1;
-    hasSavedRef.current = true;
-    try {
-      const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
-      const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
-      try {
-        const user = leerUsuarioDeSesion();
-        if (user) {
-          user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
-          localStorage.setItem("bandmanager_user", JSON.stringify(user));
-        }
-      } catch {
-        /* sin localStorage: la copia del servidor sigue siendo la buena */
-      }
-      window.dispatchEvent(
-        new CustomEvent("bm:ui-preferences-saved", { detail: prefs }),
-      );
-      setSaveSuccessMsg(true);
-      setTimeout(() => setSaveSuccessMsg(false), 2000);
-    } catch (err) {
-      console.error("Error al guardar disposición de widgets:", err);
-      setSaveError(true);
-    } finally {
-      pendingSavesRef.current -= 1;
-      setIsSaving(false);
-    }
-  };
 
   const updateAndSaveWidgets = (newWidgets: DashboardWidgetConfig[]) => {
     const ordered = newWidgets.map((w, idx) => ({ ...w, order: idx }));
@@ -221,7 +181,7 @@ export function DashboardWidgetGrid({
   // vuelo, que ya son lo último que el usuario ha hecho.
   React.useEffect(() => {
     if (!Array.isArray(savedWidgets) || savedWidgets.length === 0) return;
-    if (isEditMode || hasSavedRef.current || pendingSavesRef.current > 0) return;
+    if (isEditMode || haGuardado() || hayCambiosEnCurso()) return;
     const { deduped } = sanitizeLayout(savedWidgets);
     if (JSON.stringify(deduped) !== JSON.stringify(widgetsRef.current)) {
       setWidgets(deduped);
@@ -235,7 +195,6 @@ export function DashboardWidgetGrid({
   // que el usuario tocara algo manualmente.
   React.useEffect(() => {
     if (initialLayout.hadDuplicates) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- persistir la limpieza inicial en el servidor al montar; los setState son los del indicador de guardado de saveLayoutToDb
       saveLayoutToDb(widgets);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -289,15 +248,7 @@ export function DashboardWidgetGrid({
 
   // Move widget up/down manually
   const handleMoveWidget = (index: number, direction: "up" | "down") => {
-    const targetIdx = direction === "up" ? index - 1 : index + 1;
-    if (targetIdx < 0 || targetIdx >= widgets.length) return;
-
-    const copy = [...widgets];
-    const temp = copy[index];
-    copy[index] = copy[targetIdx];
-    copy[targetIdx] = temp;
-
-    updateAndSaveWidgets(copy);
+    updateAndSaveWidgets(moverEntreVisibles(widgets, visibleWidgets, index, direction));
   };
 
   // Change width span (wSpan)
@@ -583,7 +534,7 @@ export function DashboardWidgetGrid({
                 variant="neutral"
                 size="xs"
                 type="button"
-                onClick={() => saveLayoutToDb(widgets)}
+                onClick={() => saveLayoutToDb(widgets, { inmediato: true })}
                 className="items-center gap-1"
               >
                 No se pudo guardar · Reintentar
