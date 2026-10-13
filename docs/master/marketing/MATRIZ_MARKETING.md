@@ -4,6 +4,23 @@ Qué enseña el [Máster en Marketing Digital con IA](./TEMARIO_MARKETING_DIGITA
 
 > Principio: igual que en la [matriz del máster de desarrollo](../MATRIZ_APLICACION.md), solo se adopta lo que resuelve un problema real de este proyecto con un coste proporcionado (una persona con IA, producto en fase temprana, sin presupuesto publicitario). El máster cubre mucho canal de pago y de comercio electrónico que no encaja con un SaaS para músicos independientes.
 
+## Lo esencial: 8 conceptos que sí se aplican (alcance acordado)
+
+Decisión del 13/10/2026: aplicar **lo más importante y lo más útil**, de forma que se note que se estudia el máster de marketing, sin convertirlo en un segundo proyecto. Todo lo demás de este documento es detalle de consulta.
+
+| # | Concepto del máster | Dónde se nota en la app | En la película del TFM |
+|---|---|---|---|
+| 1 | **Buyer persona** | Perfil de banda con público objetivo; los textos y reels lo usan. Landings con mensaje por audiencia (ya hay cuatro). | Iago *es* el buyer persona hecho personaje: líder de banda que lo lleva todo con una hoja de cálculo. |
+| 2 | **Propuesta de valor** | Una frase y tres beneficios en landing, EPK y dossier («el mánager que llevas en el bolsillo»). | La frase que cierra el capítulo «Cómo lo hacemos». |
+| 3 | **Embudo / customer journey** | Visita → registro gratuito → primer EPK publicado → compartido → plan de pago. | Capítulo 5, con las cifras reales de cada paso. |
+| 4 | **Copywriting** (PAS, AIDA, ganchos) | Hero y llamadas a la acción de las landings; «hook doctor» y campaña de cuenta atrás de los reels. | Los ganchos de cierre de cada capítulo ya son esta técnica. |
+| 5 | **SEO básico y GEO**, en español e inglés | `title`/`description`/`h1`, `hreflang` es/en, `FAQPage` y `MusicEvent`, Search Console. Fuera la valoración falsa. | Una línea en «Para el tribunal»: cómo se encuentra el producto. |
+| 6 | **Analítica y KPIs** | Analítica web sin cookies, 5 eventos, una métrica estrella y un panel de 4 indicadores por banda. | Solo cifras que existan. Sin datos inventados. |
+| 7 | **Inbound y email** | Incentivo para fans (ya existe) y correo de bienvenida con Resend. | Capítulo 3, «Que te conozcan». |
+| 8 | **IA en marketing, con honestidad** | Todo es borrador revisable; nada falso; contenido de IA etiquetado. Un experimento por semana (Growth). | La regla del guion: «todo lo que se promete existe». |
+
+---
+
 ## «BandManager tiene que venderse solo»: qué significa aquí
 
 El producto crece sin que nadie lo empuje cuando **cada uso genera visibilidad y nuevos registros**. Hay tres condiciones, y las tres se pueden comprobar:
@@ -14,13 +31,33 @@ El producto crece sin que nadie lo empuje cuando **cada uso genera visibilidad y
 
 ---
 
+## La película del TFM (presentación estilo Netflix)
+
+La presentación (`presentacion/`, guion en `GUION.md`) ya sigue una estructura narrativa: tráiler, tres actos, ganchos al cierre de cada capítulo y la regla de que todo lo que se promete existe. El marketing aplicado **no debe interrumpir la historia**: aparece como parte de ella.
+
+| Dónde en el guion | Qué aporta el máster | Cómo se hace sin romper el relato |
+|---|---|---|
+| **Acto I:** la banda y el Excel | Buyer persona | Iago ya es el personaje: no hay que explicarlo, se nota. |
+| **Cap. 3 «Que te conozcan»:** dossier, QR de fans, reels | Branding, copywriting, lead magnet, embudo de fans | Se enseñan en pantalla: el gancho del reel, el QR del setlist, el alta con incentivo. |
+| **Cap. 5 «Cómo lo hacemos»:** a quién se lo vendemos, cómo ganamos dinero | Propuesta de valor, embudo, KPIs, canales | Una sola diapositiva de embudo con **cifras reales** y una frase de propuesta de valor. |
+| **«Para el tribunal»:** técnica y siguientes pasos | Método de marketing aplicado | Una diapositiva «Marketing aplicado» con los 8 conceptos en una línea cada uno y el dato que lo respalda. |
+
+Reglas para la película:
+- **Cifras solo reales.** Si un número no se puede medir hoy, se dice «lo vamos a medir así» en vez de inventarlo. Es coherente con la regla del guion y con haber quitado la valoración falsa.
+- **El máster es método, no clase.** Se nombra el concepto una vez y se ve funcionando; no se explica la teoría.
+- **El marketing de la película es el del producto:** el propio generador de Reels y las páginas públicas son la prueba.
+
+*Esto es una propuesta: no se ha tocado la presentación.*
+
+---
+
 ## 1. Hallazgos antes de nada
 
 | # | Hallazgo | Gravedad | Evidencia | Propuesta |
 |---|---|:-:|---|---|
 | 1 | **Valoración fija en los datos estructurados de la landing:** `ratingValue: '4.9'`, `ratingCount: '312'`. No hay ninguna fuente de datos detrás, es un literal en el código. Si no son valoraciones reales y verificables, es una reseña inventada: incumple las directrices de Google para datos estructurados (riesgo de acción manual sobre el sitio) y puede ser publicidad engañosa. Contradice además la regla del guion del TFM: «todo lo que se promete del producto existe». | **Alta** | `src/components/PublicLanding.tsx` (bloque JSON-LD `SoftwareApplication`) | Quitar `aggregateRating` hasta que haya valoraciones reales y enlazables. Es un cambio de 5 líneas. |
 | 2 | **Sin analítica web.** No hay GA4, GTM, Plausible, PostHog ni similar. Los enlaces cortos y la insignia registran clics con UTM, pero no se puede saber cuántas visitas tiene la landing ni cuántas acaban en registro. | Alta | Búsqueda en `index.html`, `src/` y `package.json` sin resultados | Medición mínima y compatible con RGPD (§6). |
-| 3 | **Las landings no declaran idiomas alternativos.** Hay textos en es/en/ca/eu/gl pero no hay `hreflang`. | Media | Búsqueda de `hreflang` sin resultados *(sin verificar a fondo)* | Solo si se quiere posicionar en más de un idioma (§3.3, SEO internacional). |
+| 3 | **Las landings no declaran idiomas alternativos.** Hay textos en es/en/ca/eu/gl pero no hay `hreflang`. | Media | Búsqueda de `hreflang` sin resultados *(sin verificar a fondo)* | Español e inglés decididos (§6): declarar `hreflang` es/en. |
 
 ---
 
@@ -214,7 +251,7 @@ Mismas fases cortas que el plan técnico. Cada una cabe en uno o dos PR pequeño
 
 ### Fase M0 — Honestidad y medición (esta semana)
 1. **Quitar el `aggregateRating` falso** de la landing (§1, hallazgo 1).
-2. **Medición mínima:** una herramienta de analítica y 5 eventos (visita a landing, registro, primer EPK publicado, enlace corto compartido, plan de pago). Decisión pendiente de herramienta y de aviso de cookies (§6).
+2. **Medición mínima:** Plausible y 5 eventos (visita a landing, registro, primer EPK publicado, enlace corto compartido, plan de pago). Pendiente de crear la cuenta (§6).
 3. **Search Console:** verificar la propiedad y enviar `sitemap.xml`.
 
 ### Fase M1 — La landing convierte (2 semanas)
@@ -239,13 +276,15 @@ Publicidad de pago, link building, CRM comercial, ActiveCampaign o similares, we
 
 ---
 
-## 6. Decisiones que necesito de ti
+## 6. Decisiones tomadas (13/10/2026)
 
-1. **Analítica:** ¿una herramienta sin cookies (Plausible, Umami) o GA4 con aviso de consentimiento? La primera evita el banner; la segunda es la que enseña el máster.
-2. **Valoración de la landing:** ¿hay valoraciones reales de algún sitio (tiendas de apps, reseñas de bandas) que se puedan enlazar? Si no, se elimina.
-3. **TFM de marketing:** ¿se hace sobre BandManager.io? Si sí, ¿qué formato exige la dirección (documento, presentación, cuenta real)?
-4. **Presupuesto:** ¿hay algún presupuesto de publicidad previsto? Si no, el bloque SEM queda como plan teórico.
-5. **Idioma principal de captación:** ¿solo español o también inglés? Decide `hreflang` y la inversión en SEO internacional.
+| # | Tema | Decisión | Motivo |
+|---|---|---|---|
+| 1 | **Analítica** | Plausible (sin cookies, alojado en la UE) o Umami; recomendado **Plausible**. Cinco eventos: visita a landing, registro, primer EPK publicado, enlace corto compartido, plan de pago. | No exige banner de cookies, es sencilla y encaja con el RGPD. Queda pendiente crear la cuenta; con ella se añade el script en una línea. |
+| 2 | **Valoración de la landing** | **Se quita** el `aggregateRating` hasta tener valoraciones reales y enlazables. | No tiene fuente de datos; es un riesgo con Google y de publicidad engañosa. |
+| 3 | **Alcance** | Los **8 conceptos esenciales** de arriba. El resto es consulta. | Que se note el máster sin convertirlo en otro proyecto. |
+| 4 | **Publicidad de pago** | Sin campañas ahora. Hay presupuesto disponible, pero 🔵 **cuando el embudo esté medido** (al menos 4 semanas de datos de registro → activación) y se haya fijado un coste máximo por alta. Primero Meta Ads a pequeña escala para retargeting. | Gastar antes de medir no enseña nada. |
+| 5 | **Idiomas** | **Español e inglés.** `hreflang` es/en, textos de landing y de correos en ambos, y `og:locale` por idioma. | Las landings ya tienen i18n; falta declararlo a los buscadores. |
 
 ---
 
