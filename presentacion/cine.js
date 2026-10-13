@@ -186,7 +186,7 @@
     fs: '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>'
   };
   var nf = document.createElement('div'); nf.id = 'nf'; nf.setAttribute('aria-label', 'Controles de la película');
-  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span><button type="button" class="nf-def" aria-label="Defensa técnica (tecla D)">Defensa técnica · D</button></div>' +
+  nf.innerHTML = '<div class="nf-top"><span class="nf-n">N</span><span class="nf-serie">Os Herdeiros do Código</span><span class="nf-cap"></span><a class="nf-ir" href="https://bandmanager.io" target="_blank" rel="noopener" aria-label="Ir a BandManager.io (se abre en una pestaña nueva)">BandManager.io ↗</a><button type="button" class="nf-def" aria-label="Defensa técnica (tecla D)">Defensa técnica · D</button></div>' +
     '<div class="nf-bar"><div class="nf-prog" role="slider" aria-label="Tiempo de la película" tabindex="0"><div class="nf-buffer"></div><div class="nf-lleno"></div><div class="nf-caps"></div><div class="nf-bola"></div><div class="nf-tip"></div></div><span class="nf-cuenta"></span></div>' +
     '<div class="nf-centro"><button class="nf-c" data-nf="menos" aria-label="Retroceder 15 segundos">' + ico.menos + '</button><button class="nf-c gran" data-nf="play" aria-label="Pausa"></button><button class="nf-c" data-nf="mas" aria-label="Avanzar 15 segundos">' + ico.mas + '</button></div>' +
     '<div class="nf-ctrl"><button class="nf-b" data-nf="play" aria-label="Pausa"></button>' +
@@ -423,7 +423,7 @@
   var ultimoToque = { t: 0, x: 0 };
   addEventListener('touchend', function (e) {
     if (!body.classList.contains('pelicula') || body.classList.contains('scroll') || !e.changedTouches[0]) return;
-    if (e.target.closest && e.target.closest('.nf-b, .nf-c, .nf-prog, .nf-menu, .nf-saltar, .nf-web, .nf-sig-ep, input')) return;
+    if (e.target.closest && e.target.closest('.nf-b, .nf-c, .nf-prog, .nf-menu, .nf-saltar, .nf-web, .nf-ir, .nf-sig-ep, input')) return;
     var x = e.changedTouches[0].clientX, ahora = Date.now(), w = innerWidth;
     if (ahora - ultimoToque.t < 320 && Math.abs(x - ultimoToque.x) < 90) { saltar(x < w / 2 ? -15 : 15); ultimoToque.t = 0; }
     else ultimoToque = { t: ahora, x: x };
