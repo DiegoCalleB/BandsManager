@@ -11,6 +11,7 @@ import { Button, IconButton, Input, LinkButton } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 import { SocialButtons } from './login/GoogleSocialButton';
 import { PasswordStrengthBar } from './login/PasswordStrengthBar';
+import { registrarEvento } from '../utils/analitica';
 
 interface LoginModalProps {
   onLoginSuccess: (user: UserType, token: string, bandsList?: BandaDisponible[]) => void;
@@ -413,6 +414,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onLoginSuccess }) => {
         guardarCookieDeSesion(data.token);
       }
 
+      registrarEvento("Registro");
       onLoginSuccess(data.user, data.token, data.availableBands);
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);

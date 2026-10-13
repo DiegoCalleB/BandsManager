@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight, ChevronDown, Music2, QrCode, Rocket, ShieldCheck, Sparkles, Users } from 'lucide-react';
 import { Button } from './ui';
 import { useLanguage, SupportedLanguage } from '../context/idioma';
+import { registrarEvento } from '../utils/analitica';
 import { LandingChatWidget } from './LandingChatWidget';
 
 interface PublicLandingProps {
@@ -57,6 +58,10 @@ const Captura: React.FC<{
 
 export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   const { language, setLanguage, t } = useLanguage();
+  const entrar = () => {
+    registrarEvento('CTA Landing');
+    onEntrar();
+  };
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [fotoError, setFotoError] = useState(false);
 
@@ -143,6 +148,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
   }, [language, t]);
 
   const handleLangChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    registrarEvento('Idioma Cambiado', { idioma: e.target.value });
     setLanguage(e.target.value as SupportedLanguage);
   };
 
@@ -192,7 +198,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
               ))}
             </select>
 
-            <Button variant="primary" size="md" onClick={onEntrar} id="landing-entrar">
+            <Button variant="primary" size="md" onClick={entrar} id="landing-entrar">
               {t('landing.nav.enter')}
             </Button>
           </div>
@@ -217,7 +223,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button variant="primary" size="lg" onClick={onEntrar}>
+              <Button variant="primary" size="lg" onClick={entrar}>
                 {t('landing.hero.cta.primary')} <ArrowRight className="size-4" aria-hidden />
               </Button>
               <a
@@ -533,7 +539,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             </h2>
 
             <div className="mt-8 flex justify-center">
-              <Button onClick={onEntrar} variant="primary" size="lg">
+              <Button onClick={entrar} variant="primary" size="lg">
                 {t('landing.cta.button')} <ArrowRight className="size-4" aria-hidden />
               </Button>
             </div>
@@ -555,7 +561,7 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              onClick={onEntrar}
+              onClick={entrar}
               className="cursor-pointer font-medium text-[var(--ink)] hover:underline"
             >
               {t('landing.nav.enter')}
