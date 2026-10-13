@@ -204,7 +204,7 @@
     '<div class="nf-flash" aria-hidden="true"></div>' +
     '<div class="nf-pausa" aria-hidden="true"><small>Estás viendo</small><b>BandManager.io</b><span class="nf-pcap"></span><em>Os Herdeiros do Código</em>' +
     '<p class="nf-sinop">Cuatro amigos, una banda de rock y una sala que no contesta. Hasta que uno decide construir la herramienta que lo cambie todo.</p>' +
-    '<p class="nf-rep"><b>Reparto</b> Iago · Brais · Alan · Álvaro · Mánager &nbsp;|&nbsp; <b>Género</b> Rock, código y café</p></div>';
+    '<p class="nf-rep"><b>Reparto</b> Iago · Brais · Alan · Álvaro · Programador &nbsp;|&nbsp; <b>Género</b> Rock, código y café</p></div>';
   if (stage) stage.appendChild(nf);
   // el botón de saltar va fuera de la barra: se ve aunque los controles estén escondidos
   var saltarBtn = nf.querySelector('.nf-saltar'); if (stage) stage.appendChild(saltarBtn);

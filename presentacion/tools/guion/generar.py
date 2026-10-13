@@ -89,7 +89,7 @@ P = {
     'brais': ('Brais · batería', 'img/miembro-brais.jpg', False),
     'xandre': ('Xandre · voz', 'img/miembro-xandre.jpg', False),
     'alvaro': ('Álvaro · guitarra', 'img/miembro-alvaro.jpg', False),
-    'manager': ('Manager · Os Herdeiros do Código', 'img/personaje-manager.jpg', False),
+    'manager': ('Programador · Sala El Faro', 'img/personaje-manager.jpg', False),
     'mop': ('Master of Prompts · voz', 'img/personaje-cantante.jpg', False),
     'claudio': ('Claudio · Claude Code', None, False),
     'guglio': ('Guglio · Gemini', None, False),
@@ -360,9 +360,9 @@ add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala
       <tr><td>Sala El Faro</td><td>02 may</td><td class="yes">«Nos encaja el 14»</td><td class="yes">14 nov</td></tr>
     </tbody>
   </table>
-  ''' + dlg(m('manager', 'Chicos, soy el mánager de Master of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!'),
+  ''' + dlg(m('manager', 'Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!', say='Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!'),
             m('xandre', '¡Por fin! ¡Del rojo al verde!'),
-            m('manager', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.'), cls='tight')))
+            m('manager', 'Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.', say='Y qué gusto, de verdad: un correo con dossier y con rider. Aquí la mayoría ni dice quiénes son. Eso sí: el caché se cobra en croquetas.'), cls='tight')))
 
 # ───────── Capítulo 2 · Antes del concierto ─────────
 add(act('Capítulo 2 · Antes del concierto', 'II', 'Capítulo 2 de 5 · Antes del concierto', 'Ahora, la música.',
@@ -756,7 +756,7 @@ add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transi
   {dlg(m('manager', 'Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.'),
        m('sello', 'Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.', say='Iago, soy Peláez. Os estoy viendo desde la mesa de mezclas. Mi oferta sigue en pie: el treinta por ciento.'),
        m('iago', 'Gracias, Peláez. Pero los bolos ya los llevamos nosotros.', say='[softly] Gracias, Peláez. Pero los bolos ya los llevamos nosotros. Y el repertorio, también.'),
-       m('manager', 'Y sin quedarme el 30 %.', say='Y sin quedarme el treinta por ciento.'),
+       m('manager', 'Que conste, Peláez: los bolos los llevan ellos solitos.', say='Y que conste, Peláez: aquí los bolos los llevan ellos solitos. Yo solo pongo el camerino.'),
        m('xandre', '¿Tengo el tono de la primera?'),
        m('iago', 'Em, en tu hoja, como siempre.'),
        m('iago', 'Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.', say='[softly] Escuchad ahí fuera. La app organiza, chavales. Pero esto lo hacéis vosotros.'),

@@ -442,8 +442,8 @@
   "lines": [
    {
     "who": "manager",
-    "txt": "Chicos, soy el mánager de Master of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!",
-    "voz": "Chicos, soy el Mánayer de Máster of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!"
+    "txt": "Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!",
+    "voz": "Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!"
    },
    {
     "who": "voz",
@@ -457,8 +457,8 @@
    },
    {
     "who": "manager",
-    "txt": "Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.",
-    "voz": "Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el treinta por ciento. Eso sí: se cobra en croquetas."
+    "txt": "Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.",
+    "voz": "Y qué gusto, de verdad: un correo con dossier y con rider. Aquí la mayoría ni dice quiénes son. Eso sí: el caché se cobra en croquetas."
    }
   ],
   "nota": "Se cierra el hilo del jueves: El Faro ES la sala del 14, y el bolo cae el día 14 (paga la confusión de Brais en el cold open; sustituye a 'del rojo al verde', que dependía de la hoja de cálculo). Brais pone el contraste de tiempo (35 minutos frente a tres semanas). 'Mánayer' en mayúscula para que el subtítulo salga bien."
@@ -1196,8 +1196,8 @@
    },
    {
     "who": "manager",
-    "txt": "Y sin quedarme el 30 %.",
-    "voz": "Y sin quedarme el treinta por ciento."
+    "txt": "Que conste, Peláez: los bolos los llevan ellos solitos.",
+    "voz": "Y que conste, Peláez: aquí los bolos los llevan ellos solitos. Yo solo pongo el camerino."
    },
    {
     "who": "voz",

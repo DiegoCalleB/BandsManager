@@ -104,10 +104,10 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 **Brais:** ¡Se acabaron las sorpresas el día del bolo!  
 
 ## La sala contestó
-**Mánager:** Chicos, soy el mánager de Master of Prompts, y llevo la programación de El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!  
+**Programador:** Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!  
 **Alan:** ¡La sala del 14! ¡Y encima el día 14!  
 **Brais:** ¿En 35 minutos? La última vez tardaron tres semanas. Y era para decir que no.  
-**Mánager:** Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el 30 %.  
+**Programador:** Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.  
 
 ## Capítulo 2 · Antes del concierto
 **Iago:** Ahora lo bueno: lo que os toca a cada uno.  
@@ -266,14 +266,14 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 **Iago:** Tres veces en una hora. Están leyendo. Y el cartel cierra… ahora.  
 
 ## El festival, 02:14
-**Mánager:** Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.  
+**Programador:** Cinco minutos, chicos. El rider está en el camerino, tal y como firmamos.  
 **Peláez:** Iago, soy Peláez. Os veo desde la mesa de mezclas. Mi oferta sigue en pie: el 30 %.  
 **Iago:** Gracias, Peláez. Pero los bolos ya los llevamos nosotros.  
-**Mánager:** Y sin quedarme el 30 %.  
+**Programador:** Que conste, Peláez: los bolos los llevan ellos solitos.  
 **Alan:** ¿Tengo el tono de la primera?  
 **Iago:** Em, en tu hoja, como siempre.  
 **Iago:** Escuchad ahí fuera: la app organiza, pero esto lo hacéis vosotros.  
-**Mánager:** ¡Y ahora, a tocar!  
+**Programador:** ¡Y ahora, a tocar!  
 **Brais:** Hace seis meses no sabíamos ni quién contestaba a las salas.  
 
 ## En la radio
