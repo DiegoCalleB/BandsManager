@@ -749,8 +749,8 @@
    },
    {
     "who": "voz",
-    "txt": "En serio, che… creo que estoy soñando. ¡Que alguien me pase el micro!",
-    "voz": "[amazed] En serio, che. Creo que estoy soñando. Que alguien me pase el micro, que tengo que decir algo."
+    "txt": "¿Una lista de gente que nos quiere? ¡Dónde firmo, che!",
+    "voz": "[excited] ¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che!"
    }
   ],
   "nota": "4 líneas intactas. El dolor (flyers que acaban de posavasos) sustituye a la repetición '¿así, sin más?'. 'el cú-erre' se mantiene para que el subtítulo diga 'el QR'."
@@ -777,7 +777,7 @@
    {
     "who": "voz",
     "txt": "Y yo, una con mi cara.",
-    "voz": "[mischievously] Y yo, una con mi cara. Para los fans. Y para mi vieja."
+    "voz": "[mischievously] Y yo, una con mi cara. Para los fans. Y para que me reconozcan por la calle."
    }
   ],
   "nota": "Añadido el remate de diva de Alan. Fuera el '¡Ai, mi madriña!' de Brais."
@@ -789,7 +789,7 @@
    {
     "who": "voz",
     "txt": "¿Y esto qué es?",
-    "voz": "[gasps] ¿Y esto qué es? Porque yo subo un vídeo y lo ven mi vieja y dos bots."
+    "voz": "[gasps] ¿Y esto qué es? Porque yo subo un vídeo y lo ven dos bots y el camarero del bar de abajo."
    },
    {
     "who": "bajo",

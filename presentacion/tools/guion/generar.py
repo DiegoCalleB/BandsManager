@@ -497,7 +497,7 @@ add(f'''<section class="slide feat dl" data-grupo="promocion" data-title="Un QR 
     {dlg(m('alvaro', '¿Cómo? ¿Que si ponemos este QR en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?'),
          m('iago', '¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.'),
          m('iago', 'Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.', say='Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento, o una descarga exclusiva. Y tú te quedas con la lista, para avisarles de los bolos.'),
-         m('xandre', 'En serio, che… creo que estoy soñando. ¡Que alguien me pase el micro!'))}
+         m('xandre', '¿Una lista de gente que nos quiere? ¡Dónde firmo, che!', say='[excited] ¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che!'))}
   </div>
   <div class="qrcard">{QR}<b>Os Herdeiros do Código</b><span>Escanea y únete a la banda</span></div>
   <div class="ft-shot phone"><img src="img/md-h-fans-full.jpg" alt="Página de fans de la banda en el móvil" style="object-position:50% 0"></div>
@@ -1155,11 +1155,15 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
 ''')
 
 # «Y mucho más»: las funciones del anexo vuelven en ráfaga (modo película), una cada 4 pulsos de «Compila ou Morre» (1,3 s)
-RAFAGA = [('Ideas', 'Cada idea, en su canción', 'video/v-ideas.jpg'), ('Ficha del bolo', 'Tiempo, rider y logística', 'img/d-h-evento.jpg')]
+RAFAGA = [('Ideas', 'Cada idea, en su canción', 'video/v-ideas.mp4'), ('Ficha del bolo', 'Tiempo, rider y logística', 'img/d-h-evento.jpg')]
+def _rf_medio(src):  # los .mp4 se ven en movimiento (data-ambient: deck.js los arranca y los pausa al salir)
+    if src.endswith('.mp4'):
+        return f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="{src[:-4]}.jpg"><source src="{src}" type="video/mp4"></video>'
+    return f'<img src="{src}" alt="">'
 _k = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
 assert len(_k) == 1
 _r = ('<div class="rafaga" aria-hidden="true">' + ''.join(
-    f'<figure class="rf" style="--k:{k}"><img src="{src}" alt=""><figcaption><b>{t}</b><span>{s}</span></figcaption></figure>' for k, (t, s, src) in enumerate(RAFAGA))
+    f'<figure class="rf" style="--k:{k}">{_rf_medio(src)}<figcaption><b>{t}</b><span>{s}</span></figcaption></figure>' for k, (t, s, src) in enumerate(RAFAGA))
     + f'<p class="rf rf-fin" style="--k:{len(RAFAGA)}">Y todo, en la misma app.</p></div>\n')
 _x = S[_k[0]]; S[_k[0]] = _x[:_x.rindex('</section>')] + '  ' + _r + _x[_x.rindex('</section>'):]
 

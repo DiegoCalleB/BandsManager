@@ -172,7 +172,7 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 **Álvaro:** ¿Que si ponemos este QR en el concierto, la gente lo escanea y nos sigue en redes? ¿Así, sin más?  
 **Iago:** ¡Sí! Y también pueden echarnos una mano con dinero, comprarnos merchan cuando lo tengamos, ver los próximos bolos y entrar en nuestra nueva web.  
 **Iago:** Y dejan su correo, con su permiso, y se llevan un regalo nuestro: un descuento o una descarga exclusiva.  
-**Alan:** En serio, che… creo que estoy soñando. ¡Que alguien me pase el micro!  
+**Alan:** ¿Una lista de gente que nos quiere? ¡Dónde firmo, che!  
 
 ## Merchan en un minuto
 **Alan:** ¿Merchan? ¡Si no tenemos!  

@@ -1603,11 +1603,11 @@ body.pelicula:not(.scroll) .slide.feat.active > .ficha span:nth-of-type(3) { ani
 /* «Y mucho más» (modo película): ráfaga de funciones, una cada 1,3 s (4 pulsos de «Compila ou Morre»), cada una con su golpe grave */
 .rafaga { display: none; }
 body.pelicula:not(.scroll) .slide.feat.active > .rafaga { display: block; position: absolute; inset: 0; z-index: 7; pointer-events: none;
-  background: radial-gradient(1200px 700px at 60% 45%, rgba(22,26,38,.94), rgba(4,5,9,.98) 70%); animation: rafagafondo 12200ms linear 4400ms both; }
+  background: radial-gradient(1200px 700px at 60% 45%, rgba(22,26,38,.94), rgba(4,5,9,.98) 70%); animation: rafagafondo 4800ms linear 4400ms both; } /* dura lo que sus elementos (2×1,3 s + 1,6 s): antes eran 12 s y quedaba la pantalla en negro */
 @keyframes rafagafondo { 0% { opacity: 0; } 3%, 94% { opacity: 1; } 100% { opacity: 0; } }
 .rafaga .rf { position: absolute; margin: 0; opacity: 0; animation: rafagaentra 1300ms cubic-bezier(.2, .8, .3, 1) calc(4400ms + var(--k) * 1300ms) both; }
 .rafaga figure.rf { left: 640px; top: 150px; width: 1150px; height: 650px; }
-.rafaga figure.rf img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; border-radius: 12px;
+.rafaga figure.rf img, .rafaga figure.rf video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; border-radius: 12px;
   box-shadow: 0 0 0 10px #0b0c10, 0 0 0 12px #262833, 0 40px 120px rgba(0,0,0,.8); }
 .rafaga figcaption { position: absolute; left: -600px; top: 200px; width: 550px; text-align: right; }
 .rafaga figcaption b { display: block; font: 400 72px/1 Anton, Oswald, sans-serif; text-transform: uppercase; color: #fff; text-shadow: 0 6px 30px rgba(0,0,0,.7); }
