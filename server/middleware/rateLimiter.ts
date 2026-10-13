@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { rateLimit, type RateLimitInfo, type Store } from "express-rate-limit";
 
 interface RateLimitStore {
   [clave: string]: { count: number; resetTime: number };
@@ -59,6 +60,36 @@ function claveDePeticion(req: Request, porUsuario: boolean, ambito: string): str
 }
 
 /**
+ * Contador de `express-rate-limit` sobre el mismo mapa en memoria de siempre: así los tests, la
+ * limpieza periódica y el comportamiento no cambian, y el analizador de CodeQL reconoce el
+ * limitador como tal (no entiende los propios).
+ */
+class AlmacenEnMemoria implements Store {
+  localKeys = true;
+  constructor(private readonly windowMs: number) {}
+
+  async increment(clave: string) {
+    const ahora = Date.now();
+    const actual = rateLimitStore[clave];
+    if (!actual || actual.resetTime < ahora) {
+      rateLimitStore[clave] = { count: 1, resetTime: ahora + this.windowMs };
+    } else {
+      actual.count += 1;
+    }
+    const { count, resetTime } = rateLimitStore[clave];
+    return { totalHits: count, resetTime: new Date(resetTime) };
+  }
+
+  async decrement(clave: string) {
+    if (rateLimitStore[clave]) rateLimitStore[clave].count -= 1;
+  }
+
+  async resetKey(clave: string) {
+    delete rateLimitStore[clave];
+  }
+}
+
+/**
  * Rate limiter middleware for sensitive endpoints like login.
  * Limits IP requests within a time window.
  */
@@ -72,25 +103,27 @@ export function createRateLimiter(
   const mensaje =
     options.mensaje || "Demasiadas peticiones. Por favor, espera un momento antes de volver a intentarlo.";
 
-  return function rateLimiter(req: Request, res: Response, next: NextFunction) {
-    const clave = claveDePeticion(req, porUsuario, ambito);
-    const now = Date.now();
-
-    if (!rateLimitStore[clave] || rateLimitStore[clave].resetTime < now) {
-      rateLimitStore[clave] = { count: 1, resetTime: now + windowMs };
-      return next();
-    }
-
-    rateLimitStore[clave].count += 1;
-
-    if (rateLimitStore[clave].count > maxRequests) {
-      const esperaSeg = Math.max(1, Math.ceil((rateLimitStore[clave].resetTime - now) / 1000));
+  const limitador = rateLimit({
+    windowMs,
+    limit: maxRequests,
+    store: new AlmacenEnMemoria(windowMs),
+    keyGenerator: (req: Request) => claveDePeticion(req, porUsuario, ambito),
+    // La IP real se calcula en `ipDelCliente` (última entrada de X-Forwarded-For): se apagan las
+    // validaciones de la librería, que miran `trust proxy` y la IP por defecto.
+    validate: false,
+    standardHeaders: false,
+    legacyHeaders: false,
+    handler: (req: Request, res: Response) => {
+      const info = (req as Request & { rateLimit?: RateLimitInfo }).rateLimit;
+      const reinicio = info?.resetTime?.getTime() ?? Date.now() + windowMs;
+      const esperaSeg = Math.max(1, Math.ceil((reinicio - Date.now()) / 1000));
       res.setHeader("Retry-After", String(esperaSeg));
-      return res.status(429).json({ success: false, error: mensaje, retryAfter: esperaSeg });
+      res.status(429).json({ success: false, error: mensaje, retryAfter: esperaSeg });
     }
-
-    next();
-  };
+  });
+  // Los tests y los avisos de la capa de rutas identifican el limitador por este nombre.
+  Object.defineProperty(limitador, "name", { value: "rateLimiter" });
+  return limitador;
 }
 
 export const loginRateLimiter = createRateLimiter({ nombre: "login", windowMs: 60 * 1000, maxRequests: 10 });
