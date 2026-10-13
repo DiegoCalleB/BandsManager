@@ -1282,28 +1282,13 @@
   "lines": [
    {
     "who": "diego",
-    "txt": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.",
-    "voz": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti. El de verdad."
+    "txt": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería.",
+    "voz": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería."
    },
    {
     "who": "diego",
-    "txt": "Sabemos que en casa le das caña a la batería. Y nos da que te falta algo: subirte a un escenario.",
-    "voz": "Sabemos que en casa le das caña a la batería. Y muy bien. Pero nos da que te falta algo: subirte a un escenario."
-   },
-   {
-    "who": "diego",
-    "txt": "Así que te he preparado el setlist del primer ensayo de Master of Prompts, la banda que estoy montando: metal, con letras de coña sobre programar.",
-    "voz": "Así que te he preparado el sétlist del primer ensayo de Máster of Prompts, la banda que estoy montando. Metálica, Áci Dici, ÁironMéiden, Slípnot y Corn. Con letras de coña sobre programar."
-   },
-   {
-    "who": "guitarra",
-    "txt": "¡Psychosocket! ¡Freak on a Branch! ¡Eso hay que tocarlo!",
-    "voz": "[excited] ¡Sáicosóket! ¡Frík on a Bránch! ¡Eso hay que tocarlo, tío!"
-   },
-   {
-    "who": "voz",
-    "txt": "¡Y Fear of the Deadline, che! Esa, Brais, te la cantan todos tus alumnos.",
-    "voz": "[laughs] ¡Y Fíar of de Dédlain, che! Esa, Brais, te la cantan todos tus alumnos."
+    "txt": "Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.",
+    "voz": "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar."
    },
    {
     "who": "diego",
@@ -1321,11 +1306,6 @@
     "who": "diego",
     "txt": "Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
     "voz": "Brais… yo había dejado de tocar. Este máster me devolvió las ganas."
-   },
-   {
-    "who": "diego",
-    "txt": "Tú me enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario.",
-    "voz": "Tú me enseñaste a construir la herramienta. Ahora falta lo más bonito: subirse al escenario."
    },
    {
     "who": "diego",
