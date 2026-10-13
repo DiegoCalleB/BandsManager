@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Music, DollarSign, Users, BookOpen, Bot, Truck, ArrowRight, QrCode, Disc3 } from 'lucide-react';
+import { Building2, Music, Users, BookOpen, Bot, Truck, ArrowRight, QrCode, Disc3 } from 'lucide-react';
 import { Lead, Concert, Rehearsal, Tour, Fan, SocialPost, EPKConfig, ThemeColors, User } from '../../../types';
 import type { NavigationOptions } from '../../Dashboard';
 import { api } from '../../../services/api';
@@ -138,48 +138,6 @@ export function RepertorioWidget({ onNavigate }: ModuleWidgetProps) {
 }
 
 /* 3. FINANCES WIDGET */
-export function FinancesWidget({ concerts = [], onNavigate }: ModuleWidgetProps) {
-  const totalCache = concerts.reduce((acc, c) => acc + (Number(c.cache) || 0), 0);
-
-  return (
-    <div className="p-5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-4">
-      <div className="flex items-center justify-between pb-3">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-[var(--r-m)] bg-[var(--ok)]/15 text-[var(--ink)]">
-            <DollarSign className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-base font-bold font-display text-[var(--ink-2)]">Balance y cachés</h3>
-            <p className="text-xs font-sans text-[var(--ink-2)]">Recaudación bruta proyectada</p>
-          </div>
-        </div>
-        {onNavigate && (
-          <LinkButton
-            type="button"
-            onClick={() => onNavigate('finanzas')}
-          >
-            <span>Finanzas</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </LinkButton>
-        )}
-      </div>
-
-      <div className="p-3.5 rounded-[var(--r-m)] bg-[var(--sunken)] flex items-center justify-between">
-        <div>
-          <span className="text-2xl font-sans font-black text-[var(--ok)]">{totalCache.toLocaleString('es-ES')} €</span>
-          <p className="text-micro font-sans text-[var(--ink-2)] mt-0.5">Suma de cachés de bolos</p>
-        </div>
-        <div className="text-right">
-          <span className="text-xs font-sans text-[var(--ink-2)] font-bold">{concerts.length} conciertos</span>
-          <p className="text-micro font-sans text-[var(--ink-2)]">
-            Caché medio: {concerts.length > 0 ? Math.round(totalCache / concerts.length) : 0} €
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* 4. SOCIAL & FANS WIDGET */
 export function SocialFansWidget({ fans = [], onNavigate }: ModuleWidgetProps) {
   return (

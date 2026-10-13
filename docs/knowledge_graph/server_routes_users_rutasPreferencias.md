@@ -23,6 +23,7 @@ Preferencias de la cuenta: banda principal, orden de bandas y preferencias de in
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_users_bandasDisponibles|server/routes/users/bandasDisponibles.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_validarPanel|server/utils/validarPanel.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -30,6 +31,11 @@ Preferencias de la cuenta: banda principal, orden de bandas y preferencias de in
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_acceso_sesion|Acceso y sesión]] *(from #feature)*
 - [[server_routes_users|server/routes/users.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/preferenciasUi.test.ts`
 
 ---
 

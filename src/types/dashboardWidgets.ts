@@ -5,15 +5,13 @@ export type WidgetType =
   | 'crm_pipeline'
   | 'booking_funnel_chart'
   | 'finances_chart'
-  | 'social_fans_chart'
   | 'repertorio_summary'
-  | 'finances_summary'
   | 'social_fans'
   | 'epk_status'
   | 'ai_agent_status'
   | 'tour_status'
-  | 'growth_guidance'
-  | 'roi_banda';
+  | 'roi_banda'
+  | 'marketing';
 
 export type CalendarWidgetViewMode = 'list' | 'mini_month' | 'weekly_grid';
 
@@ -24,6 +22,8 @@ export interface DashboardWidgetConfig {
   wSpan: 3 | 4 | 6 | 8 | 12; // Grid column span out of 12 (12 = full, 6 = half, 4 = 1/3)
   hSpan?: 'compact' | 'normal' | 'tall'; // Height mode
   visible: boolean;
+  /** Se ve en el móvil. Sin valor = sí; en el móvil caben pocos bloques antes del primer scroll. */
+  movil?: boolean;
   order: number;
   settings?: {
     calendarViewMode?: CalendarWidgetViewMode;
@@ -60,40 +60,13 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
     order: 1,
   },
   {
-    id: 'repertorio-energy-widget',
-    type: 'repertorio_energy',
-    title: 'Flujo de Energía del Repertorio',
-    wSpan: 6,
-    hSpan: 'normal',
-    visible: true,
-    order: 2,
-  },
-  {
     id: 'crm-pipeline-widget',
     type: 'crm_pipeline',
     title: 'Borradores & Acciones CRM',
     wSpan: 6,
     hSpan: 'normal',
     visible: true,
-    order: 3,
-  },
-  {
-    id: 'booking-funnel-chart-widget',
-    type: 'booking_funnel_chart',
-    title: 'Embudo de Contrataciones',
-    wSpan: 6,
-    hSpan: 'normal',
-    visible: true,
-    order: 4,
-  },
-  {
-    id: 'finances-chart-widget',
-    type: 'finances_chart',
-    title: 'Evolución Financiera & Cachés',
-    wSpan: 6,
-    hSpan: 'normal',
-    visible: true,
-    order: 5,
+    order: 2,
   },
   {
     id: 'roi-banda-widget',
@@ -102,7 +75,17 @@ export const DEFAULT_DASHBOARD_WIDGETS: DashboardWidgetConfig[] = [
     wSpan: 6,
     hSpan: 'normal',
     visible: true,
-    order: 6,
+    order: 3,
+  },
+  {
+    id: 'marketing-widget',
+    type: 'marketing',
+    title: 'Tu marketing',
+    wSpan: 6,
+    hSpan: 'normal',
+    visible: true,
+    movil: false,
+    order: 4,
   },
 ];
 
@@ -179,6 +162,16 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     requiredModule: 'resumen',
   },
   {
+    type: 'marketing',
+    title: 'Tu marketing',
+    category: 'Público & Redes',
+    description: 'Clics en tus enlaces, fans nuevos y salas que contestan o dicen que sí, comparados con los 30 días anteriores.',
+    defaultWSpan: 6,
+    defaultHSpan: 'normal',
+    iconName: 'Megaphone',
+    requiredModule: 'resumen',
+  },
+  {
     type: 'finances_chart',
     title: 'Gráfico Financiero & Caché',
     category: 'Negocio & Finanzas',
@@ -189,16 +182,6 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     requiredModule: 'finanzas',
   },
   {
-    type: 'social_fans_chart',
-    title: 'Gráfico Captación Fans & QR',
-    category: 'Público & Redes',
-    description: 'Evolución temporal del registro de seguidores y escaneos de código QR en directo.',
-    defaultWSpan: 6,
-    defaultHSpan: 'normal',
-    iconName: 'Users',
-    requiredModule: 'fans',
-  },
-  {
     type: 'repertorio_summary',
     title: 'Resumen Canciones & Setlists',
     category: 'Música & Repertorio',
@@ -207,16 +190,6 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     defaultHSpan: 'normal',
     iconName: 'Music',
     requiredModule: 'repertorio',
-  },
-  {
-    type: 'finances_summary',
-    title: 'Balance Contable Compacto',
-    category: 'Negocio & Finanzas',
-    description: 'Resumen rápido de entradas, gastos y recaudación total de conciertos.',
-    defaultWSpan: 4,
-    defaultHSpan: 'compact',
-    iconName: 'DollarSign',
-    requiredModule: 'finanzas',
   },
   {
     type: 'social_fans',
@@ -257,15 +230,5 @@ export const AVAILABLE_MODULE_WIDGETS: ModuleWidgetMeta[] = [
     defaultHSpan: 'normal',
     iconName: 'Truck',
     requiredModule: 'giras',
-  },
-  {
-    type: 'growth_guidance',
-    title: 'Guía de Crecimiento & Promoción',
-    category: 'Promoción & IA',
-    description: 'Plan proactivo semanal y recomendaciones paso a paso para llenar conciertos y ganar audiencia.',
-    defaultWSpan: 6,
-    defaultHSpan: 'normal',
-    iconName: 'Rocket',
-    requiredModule: 'reels',
   },
 ];
