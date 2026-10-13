@@ -42,3 +42,6 @@ __pycache__/
 
 # música opcional con derechos (la pone cada uno en local)
 presentacion/audio/musica/dramatica.*
+
+# planos de sincronía de labios generados (tools/lipsync_preparar.py)
+presentacion/lipsync/

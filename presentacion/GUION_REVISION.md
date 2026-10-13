@@ -1,6 +1,6 @@
 # Guion completo para revisar
 
-_Generado desde la película tal y como está ahora. Cada frase lleva un número (escena.frase): dime «corrige 12.3: …» y la localizo. **Pantalla** = texto que se ve. **Voz** = lo que dice el audio cuando difiere de lo que se lee (los `[corchetes]` son indicaciones de actuación; las palabras escritas como suenan, p. ej. «Spótifai», son para la pronunciación)._
+_Generado desde la película tal y como está ahora (`python3 presentacion/tools/guion/revision.py`). Cada frase lleva un número (escena.frase): di «corrige 12.3: …» y se localiza. **Voz** = lo que dice el audio cuando difiere de lo que se lee (los `[corchetes]` son indicaciones de actuación; las palabras escritas como suenan, p. ej. «Spótifai», son para la pronunciación)._
 
 
 ---
@@ -158,8 +158,6 @@ _(escena visual, sin diálogo)_
 **10.5** · **Iago**: Y todos, en el mapa de toda España.  
    _Voz:_ Y todos, en el mapa de toda España. La del catorce, también.
 
-**Otros textos en pantalla:** Antes Salas y festivales, apuntados en un Excel · Ahora Todos en un sitio, con su historial
-
 ---
 
 ## 11 · La IA escribe, tú apruebas
@@ -185,8 +183,6 @@ _(escena visual, sin diálogo)_
 **11.6** · **Iago**: Porque la app te avisa: cuando abren el correo, el dossier o nuestras redes.  
    _Voz:_ Porque la app te avisa: cuando abren el correo, cuando abren el dossier, y cuando se pasan por nuestras redes.
 
-**Otros textos en pantalla:** Antes Horas escribiendo el mismo correo · Ahora La IA lo escribe; tú solo apruebas
-
 ---
 
 ## 12 · Afina el correo
@@ -205,8 +201,6 @@ _(escena visual, sin diálogo)_
 
 **12.4** · **Iago**: Sí: calificas el tono y la estructura con estrellas y aprende cómo hablamos. Cada vez escribe más como vosotros.  
    _Voz:_ Sí. Calificas el tono y la estructura con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.
-
-**Otros textos en pantalla:** Antes Reescribir el correo una y otra vez · Ahora Una instrucción y la IA lo reescribe
 
 ---
 
@@ -254,8 +248,6 @@ _(escena visual, sin diálogo)_
 **14.5** · **Alan**: ¡Yo ya estoy ensayando la entrevista!  
    _Voz:_ [excited] ¡Yo ya estoy ensayando la entrevista, che!
 
-**Otros textos en pantalla:** Antes Pedir una entrevista a cada medio · Ahora Radios, webs y prensa, con su contacto
-
 ---
 
 ## 15 · Bandas amigas
@@ -280,8 +272,6 @@ _(escena visual, sin diálogo)_
 
 **15.6** · **Iago**: Ves sus métricas del mes: seguidores en Spotify y suscriptores en YouTube.  
    _Voz:_ Ves sus métricas del mes: los seguidores en Spótifai y los suscriptores en Yutub. Así sabes con quién te juntas.
-
-**Otros textos en pantalla:** Antes Siempre los mismos contactos · Ahora Escuchas a otras bandas y ves sus números
 
 ---
 
@@ -313,8 +303,6 @@ _(escena visual, sin diálogo)_
 **16.8** · **Alan**: ¡Traidor! ¡Nos deja por unos metaleros!  
    _Voz:_ [shouts] ¡Traidor! ¡Nos deja por unos metaleros, che!
 
-**Otros textos en pantalla:** Antes Tocar siempre en tu ciudad · Ahora Cambias fecha con otra banda amiga
-
 ---
 
 ## 17 · Cambio de perfil
@@ -342,8 +330,6 @@ _(escena visual, sin diálogo)_
 **17.7** · **Iago**: Lo de una banda no se ve nunca en la otra. Es la primera regla de la casa. Solo se juntan en tu calendario.  
    _Voz:_ Primera regla de la casa: lo que pasa en Máster of Prompts, se queda en Máster of Prompts. Las bandas solo se juntan en tu calendario.
 
-**Otros textos en pantalla:** Antes Una cuenta distinta por cada banda · Ahora Una cuenta, varias bandas
-
 ---
 
 ## 18 · El acuerdo, firmado desde BandManager
@@ -365,8 +351,6 @@ _(escena visual, sin diálogo)_
 
 **18.5** · **Brais**: ¡Se acabaron las sorpresas el día del bolo!  
    _Voz:_ [excited] ¡Se acabaron las sorpresas el día del bolo! ¡Por fin, home!
-
-**Otros textos en pantalla:** Antes El caché cambia el día del bolo · Ahora Fecha, caché y rider, por escrito
 
 ---
 
@@ -416,8 +400,6 @@ _(escena visual, sin diálogo)_
 **21.4** · **Alan**: Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!  
    _Voz:_ Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.
 
-**Otros textos en pantalla:** Antes El mismo setlist para todos · Ahora Una hoja para cada músico, con sus notas
-
 ---
 
 ## 22 · La curva de energía
@@ -440,8 +422,6 @@ _(escena visual, sin diálogo)_
 **22.5** · **Alan**: ¡Un setlist que sube como un cohete! 🚀  
    _Voz:_ [amazed] ¡Ché, un setlist que sube como un cohete!
 
-**Otros textos en pantalla:** Antes Un setlist ordenado a ojo · Ahora La IA ordena el setlist por energía
-
 ---
 
 ## 23 · Los acordes pasan solos
@@ -459,8 +439,6 @@ _(escena visual, sin diálogo)_
 
 **23.4** · **Iago**: Espera, espera, que esto es solo la intro. ¡Todavía no ha entrado la batería!  
    _Voz:_ Espera, espera, chaval, que esto es solo la intro. ¡Todavía no ha entrado la batería!
-
-**Otros textos en pantalla:** Antes Buscar los acordes en otra web · Ahora Acordes y letra siguen la canción
 
 ---
 
@@ -482,8 +460,6 @@ _(escena visual, sin diálogo)_
 
 **24.5** · **Iago**: Eso sí: lo marca como idea. Las notas las saca la app; la IA solo las explica.  
    _Voz:_ Eso sí: te lo marca como idea, no como verdad. Las notas las saca la app. La inteligencia artificial solo te las explica.
-
-**Otros textos en pantalla:** Antes Sin saber qué escala tocar · Ahora El profesor te sugiere la escala
 
 ---
 
@@ -510,8 +486,6 @@ _(escena visual, sin diálogo)_
 **25.6** · **Iago**: Y encima grabamos nuestras ideas sobre nuestras propias pistas. ¡Y por fin se oye el bajo!  
    _Voz:_ Y encima grabamos nuestras ideas sobre nuestras propias pistas. Me ha costado sangre, sudor y cuerdas rotas. ¡Pero por fin se oye el bajo!
 
-**Otros textos en pantalla:** Antes Sin pistas separadas, no se oye el bajo · Ahora Iris separa cada instrumento
-
 ---
 
 ## 26 · Calendario de la banda
@@ -530,8 +504,6 @@ _(escena visual, sin diálogo)_
 
 **26.4** · **Alan**: ¡Por fin sé cuándo ensayamos y cuándo tocamos!  
    _Voz:_ [excited] ¡Por fin sé cuándo ensayamos y cuándo tocamos! Se terminó llegar al show en jogging.
-
-**Otros textos en pantalla:** Antes Ensayos y bolos, en sitios distintos · Ahora Todos tus eventos, en un calendario
 
 ---
 
@@ -553,8 +525,6 @@ _(escena visual, sin diálogo)_
    _Voz:_ [mischievously] El miércoles. El de los metaleros, ¿no, traidor?
 
 **27.5** · **Iago**: Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.
-
-**Otros textos en pantalla:** Antes Dos ensayos a la vez, sin enterarte · Ahora El calendario avisa de los choques
 
 ---
 
@@ -585,8 +555,6 @@ _(escena visual, sin diálogo)_
 **29.4** · **Álvaro**: Yo ya no sé si esto es un local de ensayo o una discográfica.  
    _Voz:_ [amazed] Yo ya no sé si esto es un local de ensayo o una discográfica. Una que no se queda el treinta por ciento.
 
-**Otros textos en pantalla:** Antes Sin web para que te contraten · Ahora Un dossier que se edita en un momento
-
 ---
 
 ## 30 · Un QR y el público se hace fan
@@ -606,8 +574,6 @@ _(escena visual, sin diálogo)_
 **30.4** · **Alan**: ¿Una lista de gente que nos quiere? ¡Dónde firmo, che!  
    _Voz:_ [excited] ¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che!
 
-**Otros textos en pantalla:** Antes El público se va sin dejar rastro · Ahora Un QR para que te sigan
-
 ---
 
 ## 31 · Merchan en un minuto
@@ -626,8 +592,6 @@ _(escena visual, sin diálogo)_
 
 **31.4** · **Alan**: Y yo, una con mi cara.  
    _Voz:_ [mischievously] Y yo, una con mi cara. Para los fans. Y para que me reconozcan por la calle.
-
-**Otros textos en pantalla:** Antes Merchan sin diseño ni tiempo · Ahora Camisetas con vuestro QR en un minuto
 
 ---
 
@@ -654,8 +618,6 @@ _(escena visual, sin diálogo)_
 **32.6** · **Iago**: No: programas cada reel en cada red, con su día y su hora.  
    _Voz:_ Qué va. Programas la publicación de cada reel, en cada red, con su día y su hora. Y vosotros, a tocar.
 
-**Otros textos en pantalla:** Antes Horas editando vídeos · Ahora Reels listos para cada red
-
 ---
 
 ## 33 · El seguimiento de las redes
@@ -678,8 +640,6 @@ _(escena visual, sin diálogo)_
 **33.5** · **Iago**: Abajo, cuánto ha subido cada mes. Son datos de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.  
    _Voz:_ Y abajo, cuánto ha subido cada mes. Estos números son de demo, pero el panel es el de verdad. Y el Radar de redes los puede traer solo, leyendo vuestros perfiles públicos.
 
-**Otros textos en pantalla:** Antes Apuntar los seguidores a mano · Ahora Una curva que sube mes a mes
-
 ---
 
 ## 34 · Del concierto al disco
@@ -697,8 +657,6 @@ _(escena visual, sin diálogo)_
    _Voz:_ [laughs] ¡Un disco en vivo, sin mis chistes malos! ¡Qué genio!
 
 **34.4** · **Brais**: Y sin la balada que vació el bar.
-
-**Otros textos en pantalla:** Antes El directo, sin aprovechar · Ahora Del concierto sacas las canciones
 
 ---
 
@@ -740,8 +698,6 @@ _(escena visual, sin diálogo)_
 **37.4** · **Brais**: ¡Oye!  
    _Voz:_ [laughs] ¡Oye! ¡Que fue solo una vez! Bueno, dos. ¡Pero eran de importación!
 
-**Otros textos en pantalla:** Antes Cuentas en el aire tras cada bolo · Ahora Lo que entra y lo que queda, claro
-
 ---
 
 ## 38 · La gira, con gasolina y todo
@@ -760,8 +716,6 @@ _(escena visual, sin diálogo)_
 
 **38.4** · **Álvaro**: ¡Ni una discusión más en la gasolinera! ⛽  
    _Voz:_ [laughs] ¡Ni una discusión más en la gasolinera!
-
-**Otros textos en pantalla:** Antes Las cuentas de la gira, a ojo · Ahora La gasolina de la ruta, calculada
 
 ---
 
@@ -1063,8 +1017,6 @@ _(escena visual, sin diálogo)_
 
 **55.3** · **Diego**: Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
    _Voz:_ Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.
-
-**Otros textos en pantalla:** Tributo metal con letras de programador · Metallica, AC/DC, Iron Maiden, Slipknot y Korn · sábado, 11:00
 
 ---
 
