@@ -28,6 +28,7 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server_services_chatTools|server/services/chatTools.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(Layer: #service, Domain: #system)*
 - [[src_constants_regions|src/constants/regions.ts]] *(Layer: #service, Domain: #system)*
@@ -41,6 +42,11 @@ Chatbot de la app (`/chat`) y generación de copys para Reels (`/write-reels-cop
 - [[server|server.ts]] *(from #route)*
 - [[src_components_chatbot_hooks_useChatSend|src/components/chatbot/hooks/useChatSend.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/chatPromptInyeccion.test.ts`
 
 ---
 

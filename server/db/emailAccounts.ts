@@ -34,13 +34,13 @@ export async function dbGetBandEmailAccount(bandId: string): Promise<BandEmailAc
       .maybeSingle();
 
     if (error) {
-      console.warn(`Notice leyendo cuenta de email para '${cleanId}':`, error.message || error);
+      console.warn("Notice leyendo cuenta de email para '%s':", cleanId, error.message || error);
       return null;
     }
 
     return data ? { ...data, app_password: decryptSecret(data.app_password) } : null;
   } catch (e) {
-    console.warn(`Fallo leyendo cuenta de email para '${cleanId}':`, e);
+    console.warn("Fallo leyendo cuenta de email para '%s':", cleanId, e);
     return null;
   }
 }

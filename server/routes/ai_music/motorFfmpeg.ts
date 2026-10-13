@@ -5,6 +5,7 @@ import ffmpeg from './ffmpegConfigurado.js';
 import path from 'path';
 import fs from 'fs';
 import crypto from 'crypto';
+import { resolverDentroDe } from '../../utils/rutaContenida.js';
 import { descargarBufferSeguro } from '../../utils/ssrfGuard.js';
 import { uploadToSupabaseIfAvailable, rutaAlmacenamientoStem } from '../../utils/storage.js';
 import { preprocesarAudioDirecto } from '../../utils/audioEnergy.js';
@@ -68,8 +69,8 @@ export async function processServerStemsFfmpeg(
       );
     }
   } else if (audioUrl.startsWith('/')) {
-    const localPublic = path.join(process.cwd(), 'public', audioUrl);
-    if (fs.existsSync(localPublic)) {
+    const localPublic = resolverDentroDe(path.join(process.cwd(), 'public'), audioUrl);
+    if (localPublic && fs.existsSync(localPublic)) {
       inputPath = localPublic;
     }
   }
@@ -217,14 +218,14 @@ export async function processServerStemsFfmpeg(
             })
             .on('error', (err) => {
               console.warn(
-                `Aviso procesando stem FFmpeg ${cfg.key}:`,
+                "Aviso procesando stem FFmpeg %s:", cfg.key,
                 err?.message || err
               );
               resolve();
             })
             .run();
         } catch (procErr) {
-          console.warn(`Error al lanzar FFmpeg para ${cfg.key}:`, procErr);
+          console.warn("Error al lanzar FFmpeg para %s:", cfg.key, procErr);
           resolve();
         }
       });

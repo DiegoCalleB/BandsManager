@@ -1,7 +1,8 @@
 import { getAiClient, generateContentWithFallback, type RespuestaIA } from "./ai.js";
 import { dbUpsertLead, dbUpsertBandContact, dbDeleteLead } from "./db.js";
 import { loadState, saveState, getAutonomyConfigForBand } from "./state.js";
-import { esUrlExternaSegura } from "./utils/ssrfGuard.js";
+import { fetchUrlExternaSegura } from "./utils/ssrfGuard.js";
+import { hostEnDominio, emailEnDominio } from "./utils/urlHost.js";
 import { getBandDnaProfile, buildEnhancedPitchSystemPrompt, generateSmartDnaPitchFallback } from "./utils/bandDna.js";
 import { formatGlobalPitchFeedbackForPrompt } from "./promptsManager.js";
 import { limpiarCampoContacto } from "./utils/scoutLeads.js";
@@ -33,7 +34,7 @@ function toIsoDateString(val?: string | null): string {
 export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciudad'>): Promise<{ startDate?: string; endDate?: string; email?: string; telefono?: string; website?: string; instagram?: string; genero?: string; aforo?: number; region?: string; imagen_url?: string }> {
   if (!lead.nombre_sala) return {};
 
-  const cleanCity = (lead.ciudad || '').replace(/\s*\([^)]*\)/g, '').trim();
+  const cleanCity = (lead.ciudad || '').slice(0, 200).replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
   const cleanVenue = (lead.nombre_sala || '').trim();
 
   // STAGE 1: Búsqueda en base de datos local (ultra-rápida, < 1 ms)
@@ -42,7 +43,7 @@ export async function extractFestivalDates(lead: Pick<Lead, 'nombre_sala' | 'ciu
     const localMatch = searchFestivalByName(cleanVenue, cleanCity) || searchFestivalByName(cleanVenue);
     if (localMatch) {
       const dates = formatFestivalDates(localMatch);
-      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "${cleanVenue}" → ${dates.start} a ${dates.end}`);
+      console.log(`[FestivalDates] ✓ FOUND EN BD LOCAL: "%s" → %s a %s`, cleanVenue, dates.start, dates.end);
       const fallbackFavicon = localMatch.website ? `https://www.google.com/s2/favicons?domain=${localMatch.website.replace(/^https?:\/\//, '').split('/')[0]}&sz=128` : undefined;
       return {
         startDate: dates.start,
@@ -78,7 +79,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
 {"es_festival": true, "festival_start_date": "2026-07-05", "festival_end_date": "2026-07-06"}`;
 
   try {
-    console.log(`[FestivalDates] Consulta a Gemini AI para "${cleanVenue}" (${cleanCity})...`);
+    console.log(`[FestivalDates] Consulta a Gemini AI para "%s" (%s)...`, cleanVenue, cleanCity);
     let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
@@ -130,7 +131,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
     const endIso = toIsoDateString(rawEnd) || startIso;
 
     if (startIso) {
-      console.log(`[FestivalDates] ✓ AI FOUND: "${cleanVenue}" → ${startIso} a ${endIso}`);
+      console.log(`[FestivalDates] ✓ AI FOUND: "%s" → %s a %s`, cleanVenue, startIso, endIso);
       return {
         startDate: startIso,
         endDate: endIso
@@ -144,7 +145,7 @@ Ejemplo para festival del 5 al 6 de julio de 2026:
   return {};
 }
 
-async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
+export async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: string; phone?: string; instagram?: string }> {
   if (!websiteUrl || !websiteUrl.startsWith("http")) return {};
 
   const results: { email?: string; phone?: string; instagram?: string } = {};
@@ -168,33 +169,32 @@ async function scrapeWebsiteForContact(websiteUrl: string): Promise<{ email?: st
     try {
       // websiteUrl es texto libre del lead: sin esto, un valor apuntando a una IP privada o al
       // endpoint de metadatos de la nube haría que el servidor hiciera esa petición interna y
-      // devolviera lo encontrado (SSRF).
-      if (!(await esUrlExternaSegura(targetUrl))) continue;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout
-      const res = await fetch(targetUrl, {
-        signal: controller.signal,
+      // devolviera lo encontrado (SSRF). La petición va por el guard: DNS a IP pública anclada al
+      // socket, redirecciones revalidadas, tope de tamaño y timeout; una URL no segura lanza y el
+      // catch pasa a la siguiente.
+      const res = await fetchUrlExternaSegura(targetUrl, {
+        timeoutMs: 3500,
+        maxBytes: 2 * 1024 * 1024,
+        maxRedirects: 3,
         headers: {
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
       });
-      clearTimeout(timeoutId);
 
-      if (!res.ok) continue;
-      const html = await res.text();
+      if (res.statusCode < 200 || res.statusCode >= 300) continue;
+      const html = res.text();
 
       // 1. Extract email via mailto: or regex
       if (!results.email) {
-        const mailtoMatch = html.match(/href=["']mailto:([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})["']/i);
+        const mailtoMatch = html.match(/href=["']mailto:([a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24})["']/i);
         if (mailtoMatch) {
           results.email = mailtoMatch[1];
         } else {
-          const emailMatches = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
+          const emailMatches = html.match(/[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{1,255}\.[a-zA-Z]{2,24}/g);
           if (emailMatches) {
             const validEmails = emailMatches.filter(e => 
               !e.endsWith(".png") && !e.endsWith(".jpg") && !e.endsWith(".webp") && !e.endsWith(".svg") && !e.endsWith(".js") && !e.endsWith(".css") &&
-              !e.includes("example.com") && !e.includes("domain.com") && !e.includes("schema.org") &&
-              !e.includes("sentry.io") && !e.includes("w3.org") && !e.includes("wordpress") && !e.includes("gravatar")
+              !emailEnDominio(e, "example.com", "domain.com", "schema.org", "sentry.io", "w3.org") && !e.includes("wordpress") && !e.includes("gravatar")
             );
             const priorityEmail = validEmails.find(e => /info|booking|contacto|programacion|prensa|sala/i.test(e));
             if (priorityEmail) {
@@ -266,7 +266,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
       if (matchFest && matchFest.instagram) {
         lead.instagram = matchFest.instagram;
         modified = true;
-        console.log(`[AutoEnrich Stage 0] ✓ Instagram de festival recuperado de DB local: ${matchFest.instagram}`);
+        console.log(`[AutoEnrich Stage 0] ✓ Instagram de festival recuperado de DB local: %s`, matchFest.instagram);
       }
 
       if (!lead.instagram) {
@@ -274,7 +274,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
         if (nameLower.includes("riviera") || webLower.includes("salariviera")) lead.instagram = "@salariviera";
         else if (nameLower.includes("panda club") || webLower.includes("pandamadrid")) lead.instagram = "@pandaclubmadrid";
         else if (nameLower.includes("kasba")) lead.instagram = "@kasbamusic";
-        else if (nameLower.includes("rockville") || webLower.includes("rockville.es")) lead.instagram = "@salarockville";
+        else if (nameLower.includes("rockville") || hostEnDominio(webLower, "rockville.es")) lead.instagram = "@salarockville";
         else if (nameLower.includes("ferrara buskers")) lead.instagram = "@ferrarabuskersfestival";
         else if (nameLower.includes("candlelight") || webLower.includes("feverup")) lead.instagram = "@candlelight.concerts";
         else if (nameLower.includes("movistar arena") || webLower.includes("movistararena")) lead.instagram = "@movistararena_es";
@@ -291,7 +291,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
   if (placesApiKey && placesApiKey.trim() !== "") {
     try {
       const searchQuery = `${lead.nombre_sala} ${lead.ciudad || ''} España`;
-      console.log(`[AutoEnrich Places] Consultando Google Places API (New) para: "${searchQuery}"...`);
+      console.log(`[AutoEnrich Places] Consultando Google Places API (New) para: "%s"...`, searchQuery);
       const placesRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
         method: "POST",
         headers: {
@@ -311,7 +311,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
           const topPlace = placesData.places[0];
 
           if (topPlace.businessStatus === "CLOSED_PERMANENTLY" || topPlace.businessStatus === "CLOSED_TEMPORARILY") {
-            console.log(`[AutoEnrich Places] ELIMINANDO SALA CERRADA: La sala "${lead.nombre_sala}" está CERRADA (${topPlace.businessStatus}) en Google Maps. Eliminando de la BD y guardando en lista negra...`);
+            console.log(`[AutoEnrich Places] ELIMINANDO SALA CERRADA: La sala "%s" está CERRADA (%s) en Google Maps. Eliminando de la BD y guardando en lista negra...`, lead.nombre_sala, topPlace.businessStatus);
             try {
               await dbDeleteLead(lead.id, userBandId);
             } catch (e) {
@@ -341,7 +341,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
             try {
               const urlObj = new URL(topPlace.websiteUri);
               const domain = urlObj.hostname.replace(/^www\./, '');
-              if (domain && (!lead.imagen_url || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.includes("ui-avatars") || lead.imagen_url.includes("clearbit"))) {
+              if (domain && (!lead.imagen_url || hostEnDominio(lead.imagen_url, "places.googleapis.com", "ui-avatars.com", "clearbit.com"))) {
                 lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
                 modified = true;
               }
@@ -365,18 +365,18 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
   // STAGE 1.5: Serper Live Google Search Contact Enrichment (Ultra-fast contact and capacity intelligence)
   if (process.env.SERPER_API_KEY && (!lead.email_contacto || !lead.aforo || !lead.telefono || !lead.website)) {
     try {
-      console.log(`[AutoEnrich Serper] Consultando Serper Live Contact para: "${lead.nombre_sala}" (${lead.ciudad || 'España'})...`);
+      console.log(`[AutoEnrich Serper] Consultando Serper Live Contact para: "%s" (%s)...`, lead.nombre_sala, lead.ciudad || 'España');
       const serperContact = await enrichVenueDetailsWithSerper(lead.nombre_sala, lead.ciudad);
       if (serperContact) {
         if (serperContact.email && !lead.email_contacto) {
           lead.email_contacto = serperContact.email;
           modified = true;
-          console.log(`[AutoEnrich Serper] ✓ Email de booking detectado vía Serper: ${serperContact.email}`);
+          console.log(`[AutoEnrich Serper] ✓ Email de booking detectado vía Serper: %s`, serperContact.email);
         }
         if (serperContact.aforo && (!lead.aforo || lead.aforo === 0)) {
           lead.aforo = serperContact.aforo;
           modified = true;
-          console.log(`[AutoEnrich Serper] ✓ Aforo verificado vía Serper: ${serperContact.aforo} personas`);
+          console.log(`[AutoEnrich Serper] ✓ Aforo verificado vía Serper: %s personas`, serperContact.aforo);
         }
         if (serperContact.telefono && !lead.telefono) {
           lead.telefono = serperContact.telefono;
@@ -387,7 +387,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
           modified = true;
           try {
             const domain = new URL(serperContact.website).hostname.replace(/^www\./, '');
-            if (domain && (!lead.imagen_url || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.includes("ui-avatars"))) {
+            if (domain && (!lead.imagen_url || hostEnDominio(lead.imagen_url, "places.googleapis.com", "ui-avatars.com"))) {
               lead.imagen_url = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
               modified = true;
             }
@@ -406,7 +406,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
 
   // STAGE 2: Direct Website Scraping & Jina Reader (0 Gemini tokens spent!)
   if (lead.website && (!lead.email_contacto || !lead.instagram || !lead.telefono || !lead.aforo)) {
-    console.log(`[AutoEnrich Jina/Scraper] Consultando web oficial mediante Jina Reader y scraping directo: ${lead.website}...`);
+    console.log(`[AutoEnrich Jina/Scraper] Consultando web oficial mediante Jina Reader y scraping directo: %s...`, lead.website);
     try {
       const { scrapeVenueWithJina } = await import("./services/jinaReaderService.js");
       const jinaData = await scrapeVenueWithJina(lead.website);
@@ -414,7 +414,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
         if (jinaData.email_contacto && !lead.email_contacto) {
           lead.email_contacto = jinaData.email_contacto;
           modified = true;
-          console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: ${jinaData.email_contacto}`);
+          console.log(`[AutoEnrich Jina] ✓ Email extraído con Jina Reader: %s`, jinaData.email_contacto);
         }
         if (jinaData.email_secundario && !lead.email_secundario) {
           lead.email_secundario = jinaData.email_secundario;
@@ -448,7 +448,7 @@ export async function autoEnrichLead<L extends object>(entrada: L, userBandId: s
     if (scrapedInfo.email && !lead.email_contacto) {
       lead.email_contacto = scrapedInfo.email;
       modified = true;
-      console.log(`[AutoEnrich Scraper] ¡Email extraído mediante scraping directo!: ${scrapedInfo.email}`);
+      console.log(`[AutoEnrich Scraper] ¡Email extraído mediante scraping directo!: %s`, scrapedInfo.email);
     }
     if (scrapedInfo.instagram && !lead.instagram) {
       lead.instagram = scrapedInfo.instagram;
@@ -489,7 +489,7 @@ Devuelve EXCLUSIVAMENTE un JSON válido con la siguiente estructura exacta:
 Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inventes información ficticia.`;
 
       try {
-        console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '${lead.nombre_sala}'...`);
+        console.log(`[AutoEnrich Gemini] Ejecutando consulta Gemini AI (Fallback) para Lead: '%s'...`, lead.nombre_sala);
         let response: RespuestaIA | null = null;
         try {
           response = await generateContentWithFallback(client, {
@@ -534,11 +534,11 @@ Usa cadena vacía "" para textos no encontrados y 0 para aforo numérico. No inv
         if (data.notas && (!lead.notas || lead.notas.length < 10)) { lead.notas = data.notas; modified = true; }
       } catch (errCapturado) {
         const err = comoErrorCapturado(errCapturado);
-        console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '${lead.nombre_sala}':`, err?.message || err);
+        console.warn(`[AutoEnrich Gemini] Error enriqueciendo Lead '%s':`, lead.nombre_sala, err?.message || err);
       }
     }
   } else {
-    console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '${lead.nombre_sala}' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`);
+    console.log(`[AutoEnrich] AHORRO DE TOKENS: Lead '%s' completado con Google Places + Web Scraping. No se necesitó Gemini AI.`, lead.nombre_sala);
   }
 
   // STAGE 4: Festival/Event Data Extraction (detect festivals & extract all data)
@@ -626,7 +626,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
         if (pitchRes && pitchRes.text) {
           lead.pitch_generado = pitchRes.text.trim();
           modified = true;
-          console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '${lead.nombre_sala}'.`);
+          console.log(`[AutoEnrich] Pitch inicial de alta calidad generado para '%s'.`, lead.nombre_sala);
         }
       } catch (eCapturado) {
         const e = comoErrorCapturado(eCapturado);
@@ -644,7 +644,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
   }
 
   // Ensure official corporate logo / favicon is assigned if website exists and image is missing/placeholder
-  if (lead.website && (!lead.imagen_url || lead.imagen_url.includes("google.com/maps") || lead.imagen_url.includes("place") || lead.imagen_url.includes("clearbit") || lead.imagen_url.includes("ui-avatars") || lead.imagen_url.includes("places.googleapis.com") || lead.imagen_url.trim() === "")) {
+  if (lead.website && (!lead.imagen_url || lead.imagen_url.includes("google.com/maps") || lead.imagen_url.includes("place") || hostEnDominio(lead.imagen_url, "clearbit.com", "ui-avatars.com", "places.googleapis.com") || lead.imagen_url.trim() === "")) {
     try {
       const urlObj = new URL(lead.website);
       const domain = urlObj.hostname.replace(/^www\./, '');
@@ -661,7 +661,7 @@ Devuelve ÚNICAMENTE el texto final redactado del email listo para ser revisado 
   }
 
   if (modified) {
-    console.log(`[AutoEnrich] Lead '${lead.nombre_sala}' enriquecido y guardado con éxito.`);
+    console.log(`[AutoEnrich] Lead '%s' enriquecido y guardado con éxito.`, lead.nombre_sala);
     const savedEnriched = await dbUpsertLead(lead, userBandId, { permitirVaciar: respetarVacios.size > 0 });
     const state = loadState();
     const idx = (state.leads || []).findIndex((l) => l.id === lead.id);
@@ -723,7 +723,7 @@ Devuelve EXCLUSIVAMENTE un JSON válido con la estructura exacta:
 Usa cadena vacía "" para textos no encontrados. No inventes información sin base real.`;
 
   try {
-    console.log(`[AutoEnrich] Buscando información automática para Banda: '${band.nombre_banda}'...`);
+    console.log(`[AutoEnrich] Buscando información automática para Banda: '%s'...`, band.nombre_banda);
     let response: RespuestaIA | null = null;
     try {
       response = await generateContentWithFallback(client, {
@@ -734,7 +734,7 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
       });
     } catch (searchErrCapturado) {
       const searchErr = comoErrorCapturado(searchErrCapturado);
-      console.warn(`[AutoEnrich] Google Search no disponible (${searchErr?.message || searchErr}), reintentando con conocimiento Gemini...`);
+      console.warn(`[AutoEnrich] Google Search no disponible (%s), reintentando con conocimiento Gemini...`, searchErr?.message || searchErr);
       response = await generateContentWithFallback(client, {
         contents: prompt
       });
@@ -774,12 +774,12 @@ Usa cadena vacía "" para textos no encontrados. No inventes información sin ba
     if (data.icono && (!band.icono || band.icono === '🎸')) { band.icono = data.icono; modified = true; }
 
     if (modified) {
-      console.log(`[AutoEnrich] Banda '${band.nombre_banda}' enriquecida con éxito.`);
+      console.log(`[AutoEnrich] Banda '%s' enriquecida con éxito.`, band.nombre_banda);
       return await persistirBandaEnriquecida(band, userBandId);
     }
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    console.warn(`[AutoEnrich] Error enriqueciendo Banda '${band.nombre_banda}':`, err?.message || err);
+    console.warn(`[AutoEnrich] Error enriqueciendo Banda '%s':`, band.nombre_banda, err?.message || err);
   }
 
   return band;

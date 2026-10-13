@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { rateLimit, type RateLimitInfo, type Store } from "express-rate-limit";
 
 interface RateLimitStore {
   [clave: string]: { count: number; resetTime: number };
@@ -59,6 +60,36 @@ function claveDePeticion(req: Request, porUsuario: boolean, ambito: string): str
 }
 
 /**
+ * Contador de `express-rate-limit` sobre el mismo mapa en memoria de siempre: así los tests, la
+ * limpieza periódica y el comportamiento no cambian, y el analizador de CodeQL reconoce el
+ * limitador como tal (no entiende los propios).
+ */
+class AlmacenEnMemoria implements Store {
+  localKeys = true;
+  constructor(private readonly windowMs: number) {}
+
+  async increment(clave: string) {
+    const ahora = Date.now();
+    const actual = rateLimitStore[clave];
+    if (!actual || actual.resetTime < ahora) {
+      rateLimitStore[clave] = { count: 1, resetTime: ahora + this.windowMs };
+    } else {
+      actual.count += 1;
+    }
+    const { count, resetTime } = rateLimitStore[clave];
+    return { totalHits: count, resetTime: new Date(resetTime) };
+  }
+
+  async decrement(clave: string) {
+    if (rateLimitStore[clave]) rateLimitStore[clave].count -= 1;
+  }
+
+  async resetKey(clave: string) {
+    delete rateLimitStore[clave];
+  }
+}
+
+/**
  * Rate limiter middleware for sensitive endpoints like login.
  * Limits IP requests within a time window.
  */
@@ -72,25 +103,27 @@ export function createRateLimiter(
   const mensaje =
     options.mensaje || "Demasiadas peticiones. Por favor, espera un momento antes de volver a intentarlo.";
 
-  return function rateLimiter(req: Request, res: Response, next: NextFunction) {
-    const clave = claveDePeticion(req, porUsuario, ambito);
-    const now = Date.now();
-
-    if (!rateLimitStore[clave] || rateLimitStore[clave].resetTime < now) {
-      rateLimitStore[clave] = { count: 1, resetTime: now + windowMs };
-      return next();
-    }
-
-    rateLimitStore[clave].count += 1;
-
-    if (rateLimitStore[clave].count > maxRequests) {
-      const esperaSeg = Math.max(1, Math.ceil((rateLimitStore[clave].resetTime - now) / 1000));
+  const limitador = rateLimit({
+    windowMs,
+    limit: maxRequests,
+    store: new AlmacenEnMemoria(windowMs),
+    keyGenerator: (req: Request) => claveDePeticion(req, porUsuario, ambito),
+    // La IP real se calcula en `ipDelCliente` (última entrada de X-Forwarded-For): se apagan las
+    // validaciones de la librería, que miran `trust proxy` y la IP por defecto.
+    validate: false,
+    standardHeaders: false,
+    legacyHeaders: false,
+    handler: (req: Request, res: Response) => {
+      const info = (req as Request & { rateLimit?: RateLimitInfo }).rateLimit;
+      const reinicio = info?.resetTime?.getTime() ?? Date.now() + windowMs;
+      const esperaSeg = Math.max(1, Math.ceil((reinicio - Date.now()) / 1000));
       res.setHeader("Retry-After", String(esperaSeg));
-      return res.status(429).json({ success: false, error: mensaje, retryAfter: esperaSeg });
+      res.status(429).json({ success: false, error: mensaje, retryAfter: esperaSeg });
     }
-
-    next();
-  };
+  });
+  // Los tests y los avisos de la capa de rutas identifican el limitador por este nombre.
+  Object.defineProperty(limitador, "name", { value: "rateLimiter" });
+  return limitador;
 }
 
 export const loginRateLimiter = createRateLimiter({ nombre: "login", windowMs: 60 * 1000, maxRequests: 10 });
@@ -108,6 +141,30 @@ export const publicoRateLimiter = createRateLimiter({
   nombre: "publico",
   windowMs: 60 * 1000,
   maxRequests: 30,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
+/** Flujo OAuth de Gmail (autorizar, callback, estado, desconectar): llegan a Google/BD y el callback es público. */
+export const gmailOAuthRateLimiter = createRateLimiter({
+  nombre: "gmail-oauth",
+  windowMs: 60 * 1000,
+  maxRequests: 30,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento."
+});
+
+/** Webhooks de proveedores (firmados): tope holgado por IP, solo corta ráfagas anómalas antes de verificar la firma. */
+export const webhookRateLimiter = createRateLimiter({
+  nombre: "webhook",
+  windowMs: 60 * 1000,
+  maxRequests: 300,
+  mensaje: "Demasiadas peticiones seguidas."
+});
+
+/** Fallback de la SPA (sirve index.html desde disco): holgado para navegación normal, frena el barrido masivo. */
+export const paginaRateLimiter = createRateLimiter({
+  nombre: "pagina-spa",
+  windowMs: 60 * 1000,
+  maxRequests: 240,
   mensaje: "Demasiadas peticiones seguidas. Espera un momento."
 });
 
@@ -129,6 +186,44 @@ export const iaRateLimiter = createRateLimiter({
   maxRequests: 20,
   porUsuario: true,
   mensaje: "Has lanzado muchos análisis seguidos. Espera un momento antes de volver a intentarlo."
+});
+
+/**
+ * Límite para las rutas que tocan el disco del servidor (cookies de yt-dlp, recortes de audio,
+ * temporales del flujo Concierto → Álbum). Es holgado para el uso normal de la UI, que lanza
+ * una petición por pista, pero corta un bucle que llene el disco o la CPU de ffmpeg.
+ */
+export const ficherosRateLimiter = createRateLimiter({
+  nombre: "ficheros",
+  windowMs: 60 * 1000,
+  maxRequests: 60,
+  porUsuario: true,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
+});
+
+/**
+ * Límite para el enriquecimiento de leads: cada llamada hace peticiones salientes (scraping de
+ * webs, Google Places, Jina, Apify) y a veces consume tokens de IA. El tope es holgado para no
+ * romper los lotes legítimos de la interfaz, pero impide convertir el servidor en un martillo.
+ */
+export const enriquecimientoRateLimiter = createRateLimiter({
+  nombre: "enriquecimiento",
+  windowMs: 5 * 60 * 1000,
+  maxRequests: 120,
+  porUsuario: true,
+  mensaje: "Has lanzado muchos enriquecimientos seguidos. Espera un momento antes de volver a intentarlo."
+});
+
+/**
+ * Límite general para las rutas autenticadas de lectura/escritura en BD (leads, campañas): no
+ * protege de un abuso fino, pero acota un bucle descontrolado de un cliente o una sesión robada.
+ */
+export const apiAutenticadaRateLimiter = createRateLimiter({
+  nombre: "api-autenticada",
+  windowMs: 60 * 1000,
+  maxRequests: 300,
+  porUsuario: true,
+  mensaje: "Demasiadas peticiones seguidas. Espera un momento antes de volver a intentarlo."
 });
 
 /**

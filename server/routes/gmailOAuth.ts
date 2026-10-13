@@ -17,6 +17,7 @@ import express from "express";
 import crypto from "crypto";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
+import { gmailOAuthRateLimiter } from "../middleware/rateLimiter.js";
 import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
@@ -44,6 +45,12 @@ const ESTADO_VALIDEZ_MS = 10 * 60 * 1000; // 10 minutos: tiempo de sobra para co
 const NOMBRE_COOKIE_NONCE = "gmail_oauth_nonce";
 const noncesConsumidos = new Map<string, number>();
 
+/**
+ * Firma HMAC-SHA256 del `state` de OAuth. CodeQL la marca como «hash de contraseña con esfuerzo
+ * insuficiente» (falso positivo): no se hashea ninguna contraseña, `secreto` es CRON_SECRET (clave
+ * del servidor, alta entropía) y HMAC con clave es el primitivo correcto para autenticar un mensaje;
+ * un KDF lento (scrypt/bcrypt) solo tiene sentido para secretos de baja entropía.
+ */
 function firmaEstado(secreto: string, bandId: string, ts: string, nonce: string): string {
   return crypto.createHmac("sha256", secreto).update(`gmail-oauth:${bandId}:${ts}:${nonce}`).digest("hex").slice(0, 32);
 }
@@ -116,7 +123,7 @@ function oauthConfigured(): boolean {
 }
 
 // GET /api/gmail-oauth/authorize-url
-router.get("/authorize-url", requireAuth, (req, res) => {
+router.get("/authorize-url", gmailOAuthRateLimiter, requireAuth, (req, res) => {
   if (!oauthConfigured()) {
     return res.status(503).json({ error: "El servidor no tiene configurado el OAuth de Gmail (GOOGLE_OAUTH_CLIENT_ID/SECRET/REDIRECT_URI)." });
   }
@@ -148,7 +155,7 @@ router.get("/authorize-url", requireAuth, (req, res) => {
 });
 
 // GET /api/gmail-oauth/callback (público a propósito - ver comentario de arriba)
-router.get("/callback", async (req, res) => {
+router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
   const redirigirConError = (motivo: string) => res.redirect(`/?gmail_oauth=error&motivo=${encodeURIComponent(motivo)}`);
 
   const bandId = validarYConsumirEstadoOAuth(req.query.state, leerCookie(req, NOMBRE_COOKIE_NONCE));
@@ -261,7 +268,7 @@ router.get("/callback", async (req, res) => {
 });
 
 // GET /api/gmail-oauth/status
-router.get("/status", requireAuth, async (req, res) => {
+router.get("/status", gmailOAuthRateLimiter, requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const account = await dbGetBandGmailOAuth(bandId);
@@ -274,7 +281,7 @@ router.get("/status", requireAuth, async (req, res) => {
 });
 
 // POST /api/gmail-oauth/disconnect
-router.post("/disconnect", requireAuth, async (req, res) => {
+router.post("/disconnect", gmailOAuthRateLimiter, requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const cuenta = await dbGetBandGmailOAuth(bandId);

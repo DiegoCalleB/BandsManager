@@ -22,6 +22,7 @@ Motor DSP local con FFmpeg: separación por filtros de frecuencia, gratuita y si
 - [[sec_ssrf_guard|SSRF URL Validator]] *(Layer: #security, Domain: #system)*
 - [[server_routes_ai_music_ffmpegConfigurado|server/routes/ai_music/ffmpegConfigurado.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_rutaContenida|server/utils/rutaContenida.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
 
 ---
