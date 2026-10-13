@@ -18,7 +18,7 @@ export default defineConfig(() => {
     test: {
       // e2e/*.spec.ts son tests de Playwright, no de Vitest - el include por defecto de Vitest
       // (**/*.spec.ts) los pillaba igual y explotaba porque usan el test() de @playwright/test.
-      exclude: [...configDefaults.exclude, 'e2e/**'],
+      exclude: [...configDefaults.exclude, 'e2e/**', '.claude/**'],
       // Umbral de cobertura que solo sube (ratchet): el suelo vive en coverage-thresholds.json (la
       // cobertura real del 2026-10-11) y `npm run coverage:ratchet` lo sube tras mejorarla. Commitea
       // ese cambio; no lo bajes a mano para que pase un PR.
