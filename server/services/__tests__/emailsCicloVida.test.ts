@@ -13,7 +13,7 @@ vi.mock('../../db/emailsCicloVida.js', () => db);
 vi.mock('../transactionalEmail.js', () => envio);
 vi.mock('../../utils/errorTracking.js', () => ({ captureError: vi.fn() }));
 
-import { procesarEmailsCicloVida } from '../emailsCicloVida.js';
+import { procesarEmailsCicloVida, MAX_POR_PASADA } from '../emailsCicloVida.js';
 
 const AHORA = new Date('2026-10-20T12:00:00Z');
 const usuario = (id: string, dias: number, extra = {}) => ({
@@ -23,6 +23,7 @@ const usuario = (id: string, dias: number, extra = {}) => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  delete process.env.EMAILS_CICLO_VIDA_SOLO;
   db.dbEmailsEnviados.mockResolvedValue(new Map());
   db.dbBandasConConcierto.mockResolvedValue(new Set());
   db.dbBandasConEpk.mockResolvedValue(new Set());
@@ -62,5 +63,16 @@ describe('procesarEmailsCicloVida', () => {
     db.dbUsuariosRecientes.mockResolvedValue([usuario('a', 3), usuario('b', 3)]);
     db.dbReservarEmail.mockRejectedValueOnce(new Error('BD'));
     expect((await procesarEmailsCicloVida(AHORA)).enviados).toBe(1);
+  });
+  it('en modo prueba solo escribe a las direcciones de la lista', async () => {
+    process.env.EMAILS_CICLO_VIDA_SOLO = ' B@x.com ';
+    db.dbUsuariosRecientes.mockResolvedValue([usuario('a', 3), usuario('b', 3)]);
+    expect((await procesarEmailsCicloVida(AHORA)).enviados).toBe(1);
+    expect(envio.sendTransactionalEmail.mock.calls[0][0].to).toBe('b@x.com');
+    expect(db.dbReservarEmail).not.toHaveBeenCalledWith('a', expect.anything());
+  });
+  it('nunca envía más del tope por pasada', async () => {
+    db.dbUsuariosRecientes.mockResolvedValue(Array.from({ length: MAX_POR_PASADA + 10 }, (_, i) => usuario(`u${i}`, 3)));
+    expect((await procesarEmailsCicloVida(AHORA)).enviados).toBe(MAX_POR_PASADA);
   });
 });

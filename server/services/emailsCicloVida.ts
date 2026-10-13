@@ -13,6 +13,20 @@ import { elegirEmail, idiomaDeUsuario, renderizarEmail, VENTANA_MAX_DIAS } from 
 import { captureError } from '../utils/errorTracking.js';
 
 const CADA_MS = 60 * 60 * 1000;
+/** Tope de envíos por pasada: un error de lógica no puede escribir a toda la base de usuarios. */
+export const MAX_POR_PASADA = 25;
+
+/**
+ * Modo de prueba: con EMAILS_CICLO_VIDA_SOLO="a@x.com,b@y.com" solo se escribe a esas direcciones,
+ * aunque EMAILS_CICLO_VIDA esté activado. Vacío = sin restricción.
+ */
+function soloEstos(): Set<string> | null {
+  const lista = (process.env.EMAILS_CICLO_VIDA_SOLO ?? '')
+    .split(',')
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return lista.length > 0 ? new Set(lista) : null;
+}
 const DIA_MS = 24 * 60 * 60 * 1000;
 
 export interface ResultadoCiclo {
@@ -32,8 +46,11 @@ export async function procesarEmailsCicloVida(ahora = new Date()): Promise<Resul
   ]);
   const base = getProductionAppUrl(process.env.APP_URL);
 
+  const permitidos = soloEstos();
   let total = 0;
   for (const u of usuarios) {
+    if (total >= MAX_POR_PASADA) break;
+    if (permitidos && !permitidos.has((u.email ?? '').toLowerCase())) continue;
     const tipo = elegirEmail({
       creadoEn: u.created_at,
       ahora,
