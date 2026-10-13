@@ -142,3 +142,13 @@ Total: **~21 clips de ≤ 8 s ≈ 2,5–3 min de vídeo**. Plan B si Veo da prob
 - **Texto en pantalla:** nunca en Veo (lo escribe mal). Rótulos `23:47`, `02:47`, `02:14` van en postproducción.
 - **Niñas:** solo siluetas o de espaldas.
 - **Music:** la épica tipo *Bohemian Rhapsody* y el «Nothing Else Matters» siguen siendo música opcional (`audio/musica/`), nada de eso va en Veo.
+
+
+## Reglas de rodaje para que el lip-sync no falle
+
+- **Encuadre.** Todo plano con diálogo y lip-sync: plano medio corto o primer plano, con la cara ocupando al menos un tercio del encuadre. En planos generales o de grupo, la boca no tiene píxeles suficientes y sale borrosa. Los planos de grupo (como `local.mp4`) sirven de reacción, sin lip-sync.
+- **Boca despejada.** Sin manos en la cara, sin micrófonos de pie delante de los labios y sin sombras densas sobre la boca. Ángulos frontales o de tres cuartos suaves; los perfiles extremos duplican dientes.
+- **24 fps.** Montar a 24 fps exactos (Veo genera a 24). Mezclar 24, 25 y 30 fps provoca deriva del audio. No desvincular el audio del vídeo para moverlo unos fotogramas.
+- **Revisión.** Ver cada clip a 1× y a 0,5×: los labios deben cerrarse en P, B y M, y la boca debe quedarse quieta en los silencios.
+- **Vestuario fijo** en todos los prompts (para que no cambie de un plano a otro): Iago, camiseta gris; Brais, gorra negra y camiseta negra sin mangas; Alan, camisa de flores; Álvaro, chaleco vaquero con parches sobre camiseta negra; Peláez, traje. Referencias en `ACTORES.md` y `img/miembro-*.jpg`.
+- **Fonética de las voces** (ya aplicada en el guion): «Band Mánayer», «sétlist», «ráider», «la Big Scul», «Máster of Prompts», «Resurrécshon Fest».

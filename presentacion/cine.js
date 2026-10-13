@@ -125,9 +125,11 @@
     [/Máster of Pul Ricuests/g, 'Master of Pull Requests'], [/Fíar of de Dédlain/g, 'Fear of the Deadline'], [/Sáicosóket/g, 'Psychosocket'], [/Frík on a Bránch/g, 'Freak on a Branch'],
     [/Slípnot/g, 'Slipknot'], [/\bCorn\b/g, 'Korn'], [/sétlist/g, 'setlist'], [/\[pi\]/g, '***'], [/\[[a-z ]+\]\s*/g, '']];
   var escrito = function (t) { ESCRITO.forEach(function (r) { t = t.replace(r[0], r[1]); }); return t.replace(/\s+/g, ' ').trim(); };
-  var SUBS_KEY = 'bm_subs', subsOn = false;
-  subsOn = true; // en una película el diálogo va subtitulado (sin burbujas de chat); el espectador puede quitarlo
-  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado) subsOn = guardado === 'es'; } catch (e) { /* sin almacenamiento: activados */ }
+  // Subtítulos: español por defecto (en una película el diálogo va subtitulado, sin burbujas); también en inglés o desactivados.
+  // La preferencia solo se guarda cuando el espectador la cambia (bm_subs2), así el valor por defecto manda mientras no toque nada.
+  var SUBS_KEY = 'bm_subs2', subsLang = 'es', subsOn = true;
+  try { var guardado = localStorage.getItem(SUBS_KEY); if (guardado === 'es' || guardado === 'en' || guardado === 'off') { subsLang = guardado; subsOn = guardado !== 'off'; } } catch (e) { /* sin almacenamiento: español */ }
+  var enIngles = function (t) { var m = window.SUBS_EN; return (m && m[t.replace(/\[[^\]]*\]\s*/g, '').trim()]) || ''; };
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
   // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
@@ -145,7 +147,7 @@
     if (!hablan.length) { if (sub.childNodes.length) sub.textContent = ''; return; }
     var html = hablan.map(function (el) {
       var nom = window.REPARTO && window.REPARTO[el.dataset.who];
-      var frase = escrito(el.dataset.say || ''); if (!frase) return '';
+      var frase = (subsLang === 'en' && enIngles(el.dataset.say || '')) || escrito(el.dataset.say || ''); if (!frase) return '';
       var ts = el._trozos && el._fr === frase ? el._trozos : (el._fr = frase, el._trozos = trozos(frase, hablan.length > 1 ? 52 : 84));
       // el trozo que toca: reparte la duración del audio según lo largo que es cada trozo
       var total = ts.join('').length, pasado = el._dur ? (performance.now() - el._t0) / el._dur * total : 0, k = 0, suma = 0;
@@ -163,9 +165,9 @@
   var raf2 = 0;
   new MutationObserver(function () { if (!raf2) raf2 = requestAnimationFrame(function () { raf2 = 0; pintarSubs(); }); })
     .observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
-  var ponerSubs = function (on) {
-    subsOn = on; body.classList.toggle('subs', on);
-    try { localStorage.setItem(SUBS_KEY, on ? 'es' : 'off'); } catch (e) { /* da igual */ }
+  var ponerSubs = function (lang, guardar) {
+    subsLang = lang; subsOn = lang !== 'off'; body.classList.toggle('subs', subsOn);
+    if (guardar) { try { localStorage.setItem(SUBS_KEY, lang); } catch (e) { /* da igual */ } }
     pintarMenu();
   };
 
@@ -201,7 +203,7 @@
     '<button class="nf-b" data-nf="vel" aria-label="Velocidad de reproducción" aria-haspopup="true">' + ico.vel + '</button>' +
     '<button class="nf-b" data-nf="fs" aria-label="Pantalla completa">' + ico.fs + '</button></div>' +
     '<div class="nf-menu nf-m-subs" role="menu"><div><h4>Audio</h4><p class="on">Español (original)</p></div><div><h4>Subtítulos</h4>' +
-    '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p></div></div>' +
+    '<p role="menuitemradio" data-s="off">Desactivados</p><p role="menuitemradio" data-s="es">Español</p><p role="menuitemradio" data-s="en">English</p></div></div>' +
     '<div class="nf-menu nf-m-vel" role="menu"><div><h4>Velocidad de reproducción</h4><div class="nf-vels">' +
     [0.75, 1, 1.25, 1.5].map(function (v) { return '<p role="menuitemradio" data-v="' + v + '">' + String(v).replace('.', ',') + '×' + (v === 1 ? ' (normal)' : '') + '</p>'; }).join('') + '</div></div></div>' +
     '<div class="nf-menu nf-m-caps" role="menu"><div><h4>Os Herdeiros do Código</h4><ol class="nf-lista"></ol></div></div>' +
@@ -247,7 +249,7 @@
     try { localStorage.setItem('bm_vol', String(vol)); } catch (e) { /* da igual */ }
   };
   var pintarMenu = function () {
-    nf.querySelectorAll('.nf-menu [data-s]').forEach(function (p) { p.classList.toggle('on', (p.dataset.s === 'es') === subsOn); p.setAttribute('aria-checked', String((p.dataset.s === 'es') === subsOn)); });
+    nf.querySelectorAll('.nf-menu [data-s]').forEach(function (p) { var act = p.dataset.s === subsLang; p.classList.toggle('on', act); p.setAttribute('aria-checked', String(act)); });
     nf.querySelectorAll('.nf-menu [data-v]').forEach(function (p) { p.classList.toggle('on', +p.dataset.v === velocidad); });
     $n('[data-nf="subs"]').classList.toggle('activo', subsOn);
     var d = D(), lista = $n('.nf-lista'), ca = capActual(); lista.textContent = '';
@@ -310,7 +312,7 @@
   };
   nf.addEventListener('click', function (e) {
     var b = e.target.closest('[data-nf]'), s = e.target.closest('[data-s]'), v = e.target.closest('[data-v]'), c = e.target.closest('.nf-lista li');
-    if (s) { ponerSubs(s.dataset.s === 'es'); cerrarMenus(); return; }
+    if (s) { ponerSubs(s.dataset.s, true); cerrarMenus(); return; }
     if (v) { velocidad = +v.dataset.v; if (window.DeckVoces && window.DeckVoces.velocidad) window.DeckVoces.velocidad(velocidad); pintarMenu(); cerrarMenus(); flash(ico.vel, String(velocidad).replace('.', ',') + '×'); return; }
     if (c) { var d = D(); cerrarMenus(); if (d) d.show(+c.dataset.i); return; }
     if (b) { e.stopPropagation(); acciones[b.dataset.nf](); pintar(); pintarMenu(); despierta(); }
@@ -537,7 +539,7 @@
   // N siguiente escena · S saltar intro o créditos · F pantalla completa · C subtítulos · Esc cierra los menús
   addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA/.test(e.target.tagName) || body.classList.contains('gate')) return;
-    if ((e.key === 'c' || e.key === 'C')) { ponerSubs(!subsOn); despierta(); return; }
+    if ((e.key === 'c' || e.key === 'C')) { ponerSubs(subsOn ? 'off' : (subsLang === 'off' ? 'es' : subsLang), true); despierta(); return; }
     if (!body.classList.contains('pelicula') || body.classList.contains('scroll')) return;
     var k = e.key, hecho = true;
     if (k === ' ' || k === 'k' || k === 'K' || k === 'Enter') acciones.play();
@@ -551,7 +553,7 @@
     else hecho = false;
     if (hecho) { e.preventDefault(); e.stopImmediatePropagation(); pintar(); despierta(); }
   }, true);
-  ponerSubs(subsOn); aplicarVol();
+  ponerSubs(subsLang); aplicarVol();
   setTimeout(pintar, 0); addEventListener('load', pintar);
 
   new MutationObserver(despertar).observe(body, { attributes: true, attributeFilter: ['class'] });

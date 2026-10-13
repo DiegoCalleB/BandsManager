@@ -364,7 +364,8 @@ add(feat('El acuerdo, firmado desde BandManager', TAG1, 'Un acuerdo firmado, sin
          '<div class="ft-shot phone acuerdo"><img src="img/md-h-acuerdo.jpg" alt="Hoja de acuerdo de la sala con la firma"></div>'))
 
 add(scene('La sala contestó', 'Sábado · 11:35 · Conseguir el bolo', 'La sala contestó. Por fin.', 'img/concierto-2.jpg',
-          '<figure class="faroapp"><img src="img/d-h-faro.jpg" alt="BandManager: la Sala El Faro, confirmada"></figure>' + dlg(m('manager', 'Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!', say='Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!'),
+          '<figure class="faroapp"><img src="img/d-h-faro.jpg" alt="BandManager: la Sala El Faro, confirmada"></figure>'
+          '<div class="reaccion" aria-hidden="true"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/local.jpg"><source src="video/actores/local.mp4" type="video/mp4"></video></div>' + dlg(m('manager', 'Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el 14 de noviembre es vuestro!', say='Chicos, soy el programador de la Sala El Faro. Me ha llegado vuestro correo: ¡el catorce de noviembre es vuestro!'),
             m('xandre', '¡Por fin! ¡Del rojo al verde!'),
             m('manager', 'Y qué gusto: un correo con dossier y rider. Aquí la mayoría ni dice quién es.', say='Y qué gusto, de verdad: un correo con dossier y con rider. Aquí la mayoría ni dice quiénes son. Eso sí: el caché se cobra en croquetas.'), cls='tight')))
 
@@ -1345,7 +1346,7 @@ open(os.path.join(AQUI, '..', '..', 'DEFENSA.md'), 'w', encoding='utf-8').write(
 _tec = ''.join('<h3>' + _t + '</h3><dl class="cr-dl">' + ''.join('<dt>' + _a + '</dt><dd>' + _md(_b) + '</dd>' for _a, _b in _cs) + '</dl>' for _i, _t, _cs in _df.SECCIONES)
 html = html.replace('<!--TECNICA-->', _tec, 1)
 html = html.replace('<script src="sound.js"></script>', _panel + '\n<script src="sound.js"></script>', 1)
-html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="cine.js"></script>')
+html = html.replace('<script src="sound.js"></script>', '<script src="reparto.js"></script>\n<script src="sound.js"></script>\n<script src="voces.js"></script>\n<script src="subs-en.js"></script>\n<script src="cine.js"></script>')
 for k, r, say in (('brais', 'bateria', EXTRA_SAY['cast_bateria']), ('xandre', 'voz', EXTRA_SAY['cast_voz']),
                   ('alvaro', 'guitarra', EXTRA_SAY['cast_guitarra']), ('iago', 'bajo', EXTRA_SAY['cast_bajo'])):
     html = html.replace(f'<figure><img src="img/miembro-{k}.jpg"', f'<figure data-who="{r}" data-say="{say}"><img src="img/miembro-{k}.jpg"', 1)
@@ -1514,3 +1515,5 @@ if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'gracias-mop.jpg')):
     html = html.replace('<dt>Fer</dt>', '<dt>Foto final de «Gracias»</dt><dd>Montaje con IA: Brais y Diego, ya en Master of Prompts</dd>\n      <dt>Fer</dt>', 1)
 open(os.path.join(AQUI, '..', '..', 'index.html'), 'w', encoding='utf-8').write(html)
 print('slides', html.count('<section class="slide'))
+import subs_en
+subs_en.main()

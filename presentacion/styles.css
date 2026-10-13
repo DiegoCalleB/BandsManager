@@ -2127,10 +2127,15 @@ body.pelicula:not(.scroll) .slide.scene:not(.reveal):not(.creditos-post) > .tag 
 @keyframes cartela { 0% { opacity: 0; translate: 0 8px; } 10%, 82% { opacity: 1; translate: 0 0; } 100% { opacity: 0; } }
 body.pelicula:not(.scroll) .slide.feat.active > .ficha, body.pelicula:not(.scroll) .dolor { display: none !important; }
 
-/* «La sala contestó»: primero el programador (plano limpio); cuando contestan los chicos, corte a la app con la sala confirmada */
+/* «La sala contestó»: plano del programador; cuando habla Alan, corte a la app con la sala confirmada; cuando habla Brais, la banda mirando el portátil de Iago */
 .faroapp { position: absolute; left: 210px; top: 80px; width: 1500px; margin: 0; z-index: 8; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.14);
-  box-shadow: 0 0 0 100vmax rgba(5,6,9,.78), 0 30px 90px rgba(0,0,0,.7); opacity: 0; animation: faroin 500ms ease 6.2s forwards; }
+  box-shadow: 0 0 0 100vmax rgba(5,6,9,.78), 0 30px 90px rgba(0,0,0,.7); opacity: 0; transition: opacity 260ms ease; pointer-events: none; }
 .faroapp img { display: block; width: 100%; height: auto; }
-@keyframes faroin { to { opacity: 1; } }
-body.pelicula:not(.scroll) .slide:has([data-who="manager"].habla) .faroapp { opacity: 0; animation: none; transition: opacity 250ms; }
-body.scroll .faroapp { position: relative; left: auto; top: auto; width: 100%; margin: 12px 0; opacity: 1; animation: none; box-shadow: none; }
+.reaccion { position: absolute; inset: 0; z-index: 7; opacity: 0; transition: opacity 260ms ease; pointer-events: none; background: #05060a; }
+.reaccion video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; object-fit: cover; border-radius: 0 !important; scale: 1 !important; }
+body.pelicula:not(.scroll) .slide:has([data-who="voz"].habla) .faroapp, body.pelicula:not(.scroll) .slide:has([data-who="bateria"].habla) .reaccion { opacity: 1; }
+body.scroll .reaccion { display: none; }
+body.scroll .faroapp { position: relative; left: auto; top: auto; width: 100%; margin: 12px 0; opacity: 1; box-shadow: none; }
+
+body.pelicula:not(.scroll) .slide.feat > .ft-copy > h2 { display: none; }
+body.pelicula:not(.scroll) .slide.feat > .ft-copy > .tag { animation: cartela 4200ms ease both; }
