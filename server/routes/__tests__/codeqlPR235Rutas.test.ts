@@ -78,7 +78,7 @@ describe('OAuth de Gmail: límite de ritmo', () => {
 describe('feed .ics: parámetros de consulta', () => {
   it('band_id solo se acepta como cadena (typeof) y no se castea con as string', () => {
     const codigo = fs.readFileSync(path.join(__dirname, '..', 'concerts.ts'), 'utf-8');
-    expect(codigo).toContain('typeof v === "string"');
+    expect(codigo).toContain('typeof req.query.band_id === "string"');
     expect(codigo).not.toContain('(req.query.band_id as string)');
   });
 });

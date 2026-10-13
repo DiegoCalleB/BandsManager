@@ -442,7 +442,7 @@ router.get("/calendar-feed-url", requireAuth, (req, res) => {
 // Export Band Calendar as standard iCalendar (.ics) feed
 router.get("/calendar.ics", async (req, res) => {
   try {
-    const bandIdQuery = [req.query.band_id, req.query.band].find((v): v is string => typeof v === "string" && v !== "") ?? "";
+    const bandIdQuery = typeof req.query.band_id === "string" && req.query.band_id ? req.query.band_id : typeof req.query.band === "string" ? req.query.band : "";
     if (!bandIdQuery) {
       return res.status(400).type("text/plain").send("Falta el identificador de banda en la petición.");
     }

@@ -745,7 +745,7 @@ async function handleWebhook(req: express.Request, res: express.Response) {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Stripe Webhook] Signature verification failed: %s", err.message);
-    return res.status(400).type("text/plain").send(`Webhook Error: ${err.message}`);
+    return res.status(400).type("text/plain").send("Webhook Error: firma no válida.");
   }
 
   // Idempotency check: Ignore duplicate events
