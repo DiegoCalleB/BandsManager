@@ -21,6 +21,7 @@ Para añadir o quitar un plano, se edita ese fichero.
 ## Consentimiento (importante)
 - `real: true`: el personaje lleva la cara de una **persona real**. El script **no prepara** ese plano sin `--con-permiso <id,id>`,
   y solo debe usarse con su permiso por escrito (también para Diego con su propia cara, si lo decide él).
+- `real: "propio"`: la cara es la de Diego, que decide por sí mismo; se prepara sin bloqueo.
 - `real: "confirmar"`: se prepara, pero hay que confirmar de quién es la foto antes de generar nada.
 - `real: false`: personaje de ficción.
 - La presentación se ve fuera del círculo de la escuela en una URL pública: con caras reales y frases inventadas hace falta cuidado.

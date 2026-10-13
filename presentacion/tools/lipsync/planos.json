@@ -1,15 +1,55 @@
 {
-  "_nota": "Planos clave para sincronía de labios. «id» = escena.frase de GUION_REVISION.md (se regenera con el guion). «real» = el personaje lleva la cara de una persona real: no se genera sin su permiso por escrito.",
-  "planos": [
-    { "id": "03.1", "por_que": "La llamada de Peláez: el villano, primer plano de teléfono", "real": false },
-    { "id": "48.2", "por_que": "Peláez en el festival: «el 30 %»", "real": false },
-    { "id": "05.4", "por_que": "Iago se presenta («el bajo, ese instrumento que nadie oye»)", "real": "confirmar" },
-    { "id": "06.1", "por_que": "La decisión: Iago abre el portátil", "real": "confirmar" },
-    { "id": "19.1", "por_que": "El programador de El Faro: «el 14 de noviembre es vuestro»", "real": true },
-    { "id": "40.3", "por_que": "Iago: «Netflix me ha pedido una peli»", "real": "confirmar" },
-    { "id": "55.1", "por_que": "Diego a Brais: el reto", "real": true },
-    { "id": "56.1", "por_que": "Diego: «yo había dejado de tocar»", "real": true },
-    { "id": "56.2", "por_que": "Diego: «nos falta batería, Brais»", "real": true },
-    { "id": "57.1", "por_que": "Gracias: Diego mira a cámara", "real": true }
-  ]
+ "_nota": "Planos clave para sincronía de labios. «id» = escena.frase de GUION_REVISION.md (se regenera con el guion). «real» = el personaje lleva la cara de una persona real: no se genera sin su permiso por escrito.",
+ "planos": [
+  {
+   "id": "03.1",
+   "por_que": "La llamada de Peláez: el villano, primer plano de teléfono",
+   "real": false
+  },
+  {
+   "id": "48.2",
+   "por_que": "Peláez en el festival: «el 30 %»",
+   "real": false
+  },
+  {
+   "id": "05.4",
+   "por_que": "Iago se presenta («el bajo, ese instrumento que nadie oye»)",
+   "real": "confirmar"
+  },
+  {
+   "id": "06.1",
+   "por_que": "La decisión: Iago abre el portátil",
+   "real": "confirmar"
+  },
+  {
+   "id": "19.1",
+   "por_que": "El programador de El Faro: «el 14 de noviembre es vuestro»",
+   "real": true
+  },
+  {
+   "id": "40.3",
+   "por_que": "Iago: «Netflix me ha pedido una peli»",
+   "real": "confirmar"
+  },
+  {
+   "id": "55.1",
+   "por_que": "Diego a Brais: el reto",
+   "real": "propio"
+  },
+  {
+   "id": "56.1",
+   "por_que": "Diego: «yo había dejado de tocar»",
+   "real": "propio"
+  },
+  {
+   "id": "56.2",
+   "por_que": "Diego: «nos falta batería, Brais»",
+   "real": "propio"
+  },
+  {
+   "id": "57.1",
+   "por_que": "Gracias: Diego mira a cámara",
+   "real": "propio"
+  }
+ ]
 }

@@ -8,6 +8,7 @@ el audio de la frase, la imagen de referencia, la duración, un prompt y una fic
 
 Reglas:
   · Un plano con «real»: true (cara de una persona real) NO se prepara sin --con-permiso: hace falta su consentimiento por escrito.
+    «real»: «propio» (la cara de Diego, que decide por sí mismo) se prepara sin más.
     «real»: «confirmar» se prepara, pero la ficha lo avisa: confirma de quién es la foto antes de generar nada.
   · El audio sale de audio/voces (el que genera tools/voces.py). Si aún no existe, el plano queda «pendiente de voz».
 """
