@@ -969,23 +969,33 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
       <dt>Negativo, de coña</dt><dd>Peláez: quiere el 30 % y que no se note</dd>
       <dt>Negativo, de coña</dt><dd>Quien salta los créditos y se pierde la escena final</dd>
     </dl>
-    <h3>Buyer persona de BandManager.io</h3>
-    <p class="cr-nota" style="margin-top:4px">A quién sirve el producto</p>
+    <h3>Buyer persona principal de BandManager.io</h3>
+    <p class="cr-nota" style="margin-top:4px">El organizador de la banda. Es el perfil de Diego en sus seis grupos</p>
     <dl class="cr-dl">
-      <dt>Principal</dt><dd>Músico de una banda de directo que compagina la música con otro trabajo y gestiona conciertos, ensayos y repertorio con mensajes, hojas de cálculo y memoria</dd>
-      <dt>Secundario</dt><dd>Mánagers y bookers pequeños que llevan varias bandas a la vez (plan Cabeza de Cartel: hasta cinco)</dd>
-      <dt>Secundario</dt><dd>Salas, festivales y productoras: reciben propuestas ordenadas y confirman el bolo por escrito</dd>
-      <dt>Secundario</dt><dd>Profesores y escuelas de música con grupos de alumnos</dd>
+      <dt>Quién es</dt><dd>De 30 a 45 años. Toca en uno o dos grupos de directo, tiene otro trabajo y, a menudo, familia. En cada banda hay uno así: el que acaba organizándolo todo</dd>
+      <dt>Qué hace hoy</dt><dd>Escribe a las salas, cuadra fechas, reparte setlists y lleva las cuentas con WhatsApp, hojas de cálculo y memoria</dd>
+      <dt>Qué le duele</dt><dd>Correos sin respuesta, fechas que chocan, un setlist distinto para cada uno y cuentas poco claras después del bolo</dd>
+      <dt>Qué quiere</dt><dd>Pasar menos tiempo organizando y más tiempo tocando</dd>
+      <dt>Cómo decide</dt><dd>Decide él por toda la banda. Empieza en un plan gratuito y, si le compensa, paga una cuota por banda</dd>
+      <dt>Dónde está</dt><dd>Grupos de WhatsApp, Instagram, salas, festivales y otras bandas</dd>
+    </dl>
+    <h3>Otros buyer persona de BandManager.io</h3>
+    <dl class="cr-dl">
+      <dt>Secundario · B2C</dt><dd>DJs, solistas y cantautores: tocan solos, pero sufren los mismos correos, fechas, contratos y cuentas</dd>
+      <dt>Secundario · B2C</dt><dd>Orquestas y grupos de fiestas: muchas fechas, muchas rutas y muchas cuentas por gestionar</dd>
+      <dt>Secundario · B2B</dt><dd>Mánagers y bookers pequeños que llevan varias bandas a la vez (plan Cabeza de Cartel, hasta cinco)</dd>
+      <dt>Secundario · B2B</dt><dd>Salas, festivales y productoras: reciben propuestas ordenadas y confirman el bolo por escrito</dd>
+      <dt>Canal</dt><dd>Radios y medios musicales: reciben el dossier y el material de prensa de cada banda ya preparados</dd>
       <dt>Negativo</dt><dd>Artistas que no tocan en directo: no tienen conciertos que gestionar</dd>
       <dt>Negativo</dt><dd>Grandes estructuras con su propio sistema de booking y contratación: no necesitan sustituirlo</dd>
     </dl>
     <h3>Modelos de negocio de BandManager.io</h3>
     <dl class="cr-dl">
-      <dt>B2C</dt><dd>Suscripción por banda, de 0 a 79 € al mes. Construida y desactivada a propósito</dd>
+      <dt>B2C</dt><dd>Músicos, DJs, solistas y orquestas con su suscripción, de 0 a 79 € al mes. Construida y desactivada a propósito</dd>
       <dt>B2B</dt><dd>Mánagers, agencias, salas, festivales y productoras, con planes para varias bandas</dd>
       <dt>B2B2C</dt><dd>La plataforma sirve a la banda y esta llega a su público: QR de fans, apoyo y entradas</dd>
       <dt>C2C</dt><dd>Entre bandas: Date Swap y bandas amigas, con intercambio de fechas</dd>
-      <dt>C2B</dt><dd>La banda se ofrece a salas y festivales con su dossier, su rider y su acuerdo firmado</dd>
+      <dt>C2B</dt><dd>La banda se ofrece a salas, festivales, radios y medios con su dossier, su rider y su acuerdo firmado</dd>
       <dt>B2G</dt><dd>Ayuntamientos que contratan bandas para fiestas. Hipótesis, aún sin construir</dd>
       <dt>Hoy</dt><dd>Apoyo voluntario de los usuarios para pagar IA, base de datos y servidores</dd>
     </dl>
