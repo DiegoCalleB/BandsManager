@@ -42,7 +42,10 @@ export default defineConfig(() => {
       target: 'esnext',
       sourcemap: false,
       reportCompressedSize: false,
-      minify: false,
+      // Minificado con esbuild (el de Vite por defecto): antes estaba apagado sin motivo escrito y
+      // cada JS viajaba sin minificar, lo que pesa en móvil con mala cobertura (sala de ensayo).
+      // Sin mapas de código públicos: servirlos expondría el código fuente (PRIVATE-CORE.md).
+      minify: 'esbuild' as const,
     },
     server: {
       hmr: false as const,
