@@ -1362,8 +1362,8 @@ CORTES = {
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
-MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'Un sueño hecho realidad': 'noches', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'noches', 'Gracias': 'lostrego',
+MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'noches', 'Y mucho más': 'tema',
+          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

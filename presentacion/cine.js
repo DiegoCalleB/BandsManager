@@ -29,7 +29,11 @@
   var activo = function () {
     return body.classList.contains('pelicula') && !body.classList.contains('scroll') && !!(window.DeckSound && window.DeckSound.enabled);
   };
-  var quiere = function () { var sl = document.querySelector('.slide.active'); return sl ? (sl.dataset.musica || '') : ''; };
+  // «dramatica»: pieza opcional (audio/musica/dramatica.mp3) para los momentos más emotivos. No va en el repositorio (derechos):
+  // quien la tenga la deja ahí y suena; si no está, esas escenas usan «noches».
+  var hayDramatica = false;
+  try { fetch('audio/musica/dramatica.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.dramatica = 46; hayDramatica = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
+  var quiere = function () { var sl = document.querySelector('.slide.active'), q = sl ? (sl.dataset.musica || '') : ''; return q === 'dramatica' && !hayDramatica ? 'noches' : q; };
   var objetivo = function () { return !activo() || body.classList.contains('pausado') ? 0 : document.querySelector('.habla, .habla-l') ? BAJO : ALTO; };
   var vol = 0;
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
