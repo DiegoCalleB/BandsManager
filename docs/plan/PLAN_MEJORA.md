@@ -16,6 +16,7 @@ Una advertencia honesta: ningún plan garantiza «100 %» por buena voluntad. Lo
 6. **Los ratchets solo bajan.** Ningún PR sube un baseline; si uno falla, se arregla el código, no el umbral.
 7. **Cada monolito tiene dueño y fecha.** Congelar no es lo mismo que resolver.
 8. **Reversible siempre.** Cada PR dice cómo se revierte (un `git revert` basta o hace falta migración inversa).
+9. **Solo lo que tiene sentido aquí.** Una práctica entra en el plan si resuelve un problema medido en este repo, con un coste proporcionado (una persona con IA, un servicio) y sin añadir capas o dependencias sin necesidad. El resto queda como «cuando duela» (con disparador) o «no aplicar» (con motivo) en [`docs/master/MATRIZ_APLICACION.md`](../master/MATRIZ_APLICACION.md). Microservicios, outbox, Docker/Kubernetes, DDD formal, LangChain o CodeRabbit **no** son parte de este plan.
 
 ## 2. Línea base actual (medida; se actualiza al cerrar cada fase)
 
@@ -78,7 +79,7 @@ Orden pensado para que cada paso reduzca el riesgo del siguiente.
 1. **Contrato de respuesta** `{ error: { code, message } }` y helper `responder.ok/err` (ADR). Migrar por router.
 2. **Validación con zod** + middleware `validar(schema)`. Empezar por `bands.ts` (asignación masiva), `agent.ts` y `billing.ts`. Los esquemas alimentan OpenAPI.
 3. **Romper los 9 ciclos.** Primero `db → services` (colaLetras, sentimentAnalysis), invirtiendo la dependencia con eventos o callbacks.
-4. **Ruta fina → servicio → db** en los 5 monolitos más dañinos: `leads/enrichment.ts`, `concert_to_album.ts`, `agent.ts`, `db/repertoire.ts`, `state.ts`. Un PR por servicio extraído, con test de caracterización.
+4. **Ruta fina → servicio → db** en los 5 monolitos más dañinos: `leads/enrichment.ts`, `concert_to_album.ts`, `agent.ts`, `db/repertoire.ts`, `state.ts`. Un PR por servicio extraído, con test de caracterización. Es la versión **ligera** de Clean Architecture: capas en un solo sentido, sin entidades ni casos de uso formales. Los puertos y adaptadores se introducen solo donde ya haya dos implementaciones reales (proveedores de IA, almacenamiento). Los otros ~89 monolitos se trocean cuando se toquen por una funcionalidad, no por sí mismos.
 5. **IA con coste atribuido:** `bandId` obligatorio en `generateContentWithFallback`; cuota mensual por banda con comprobación previa; ledger persistente (no solo buffer en memoria).
 6. **Salida estructurada:** helper `generateJson<T>(schema)` con `responseSchema` + zod + un reintento; migrar `bands.ts`, `agent.ts`, `metrics.ts`.
 7. **Planificadores fiables:** tabla `scheduler_runs` con `last_run_at` y advisory lock; ejecutar al arrancar si venció.
@@ -123,9 +124,9 @@ Estrangulamiento por dominio. Nunca «todo a la vez».
 1. **`strict` por fases:** `tsconfig.strict.json` con carpetas ya limpias + ratchet; orden: `server/db` y `server/utils` → `server/services` → `server/routes` → `src/hooks` y `src/utils` → componentes por carpeta (963 errores, ~85 % de nulos).
 2. **Cobertura por módulo crítico:** suelo para `billing`, `auth`, `bandAccess`, `agentEngine`, webhooks de Stripe.
 3. **E2E de flujos de dinero y directo:** checkout, envío de pitch, Atril en directo; dejarlos bloqueantes.
-4. **CI paralelo:** typecheck, unit con shards y E2E en jobs separados; caché de Playwright.
+4. **CI paralelo** *(cuando duela)*: solo si el tiempo de CI (~10 min) empieza a estorbar; entonces typecheck, unit con shards y E2E en jobs separados, y caché de Playwright.
 5. **Tests que leen código como texto** (`src/audit/*`, 35 ficheros) → render real.
-6. **Higiene del repo:** una sola fuente de `skills/` (hoy 4 copias), grafo generado fuera del repo, mover `presentacion/` (22 MB) y los SQL de la raíz.
+6. **Higiene del repo:** mover `presentacion/` (22 MB) y los SQL de la raíz. Las 4 copias de `skills/` se dejan: son intencionales (varias herramientas) y `sync-skills --check` ya garantiza que son idénticas. El grafo generado fuera del repo queda para *cuando duela*.
 7. **Commits:** `header-max-length` como error.
 
 ---
