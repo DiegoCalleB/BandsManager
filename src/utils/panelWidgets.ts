@@ -48,7 +48,12 @@ export const ESENCIALES_MOVIL: ReadonlySet<string> = new Set(['calendar', 'execu
 
 export const visibleEnMovil = (w: { movil?: boolean }) => w.movil !== false;
 
-const sinRetirados = (lista: DashboardWidgetConfig[]) => lista.filter((w) => !TIPOS_RETIRADOS.has(w.type));
+/** Quita los retirados y deja el `order` seguido (0, 1, 2…): al quitar widgets quedaban huecos. */
+const sinRetirados = (lista: DashboardWidgetConfig[]) =>
+  lista
+    .filter((w) => !TIPOS_RETIRADOS.has(w.type))
+    .sort((a, b) => a.order - b.order)
+    .map((w, i) => ({ ...w, order: i }));
 const esLista = (v: unknown): v is DashboardWidgetConfig[] => Array.isArray(v);
 
 /**

@@ -45,6 +45,11 @@ describe('leerPanel', () => {
     expect(leerPanel(sinMarketing)!.panel.base.some((w) => w.type === 'marketing')).toBe(false);
   });
 
+  it('deja el orden seguido, sin huecos ni repetidos, tras quitar widgets', () => {
+    const r = leerPanel([cfg('calendar', 'a', { order: 0 }), cfg('growth_guidance', 'b', { order: 1 }), cfg('epk_status', 'c', { order: 5 }), cfg('tour_status', 'd', { order: 9 })])!;
+    expect(r.panel.base.map((w) => [w.type, w.order])).toEqual([['calendar', 0], ['epk_status', 1], ['tour_status', 2], ['marketing', 3]]);
+  });
+
   it('no duplica la novedad si ya la tenían', () => {
     const r = leerPanel([cfg('marketing'), cfg('calendar')])!;
     expect(r.panel.base.filter((w) => w.type === 'marketing')).toHaveLength(1);
