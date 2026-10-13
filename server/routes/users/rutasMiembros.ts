@@ -12,6 +12,7 @@ import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from '../../ut
 import { generateUniqueSlugId } from '../../utils/slug.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 // Associate an existing user to the leader's band using exact email match
@@ -93,9 +94,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error in /users/associate:', err);
-      res.status(500).json({
-        error: err?.message || 'Error al asociar el músico a la banda',
-      });
+      responderError(res, err, 'Error al asociar el músico a la banda');
     }
   }
 );

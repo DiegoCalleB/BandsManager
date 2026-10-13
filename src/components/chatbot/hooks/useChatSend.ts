@@ -44,6 +44,8 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
     };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
+    // Aviso del servidor cuando el chat se rechaza a propósito (demasiados mensajes, mensaje demasiado largo).
+    let avisoServidor: string | undefined;
 
     try {
       const token = leerTokenDeSesion();
@@ -67,6 +69,10 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
       });
 
       if (!response.ok) {
+        if (response.status === 429 || response.status === 400) {
+          const cuerpo = await response.json().catch(() => null);
+          avisoServidor = typeof cuerpo?.error === 'string' ? cuerpo.error : undefined;
+        }
         throw new Error('Response error from server');
       }
 
@@ -93,7 +99,9 @@ export function useChatSend({ inputText, isLoading, setInputText, setMessages, s
       const errMsg: ChatMessage = {
         id: `err-${Date.now()}`,
         sender: 'bot',
-        text: '**Error de Conexión:** Ha habido un problema conectando con el servicio de Inteligencia Artificial. Por favor, inténtalo de nuevo.',
+        text: avisoServidor
+          ? `**Aviso:** ${avisoServidor}`
+          : '**Error de Conexión:** Ha habido un problema conectando con el servicio de Inteligencia Artificial. Por favor, inténtalo de nuevo.',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errMsg]);

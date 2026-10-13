@@ -27,6 +27,11 @@ Exporta: quitarMarcaDeTraduccion, traducirConGoogle, montarWidgetDeGoogle.
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/context/__tests__/googleTranslateTemporizadores.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

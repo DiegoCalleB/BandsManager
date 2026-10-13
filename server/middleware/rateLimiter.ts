@@ -189,6 +189,19 @@ export const iaRateLimiter = createRateLimiter({
 });
 
 /**
+ * Límite del chat del Mánager Virtual: cada mensaje es una llamada de pago al modelo. Tiene cupo
+ * propio (30 mensajes por 5 minutos y usuario) para que charlar no gaste el cupo de los análisis
+ * de IA, ni al revés; una conversación normal queda muy por debajo.
+ */
+export const chatRateLimiter = createRateLimiter({
+  nombre: "chat",
+  windowMs: 5 * 60 * 1000,
+  maxRequests: 30,
+  porUsuario: true,
+  mensaje: "Estás enviando muchos mensajes seguidos. Espera un momento antes de volver a escribir."
+});
+
+/**
  * Límite para las rutas que tocan el disco del servidor (cookies de yt-dlp, recortes de audio,
  * temporales del flujo Concierto → Álbum). Es holgado para el uso normal de la UI, que lanza
  * una petición por pista, pero corta un bucle que llene el disco o la CPU de ffmpeg.

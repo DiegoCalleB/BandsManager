@@ -2,6 +2,8 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import path from "path";
+import { servirIndex } from "./server/utils/cabeceraIdioma.js";
+import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
 
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
@@ -19,6 +21,7 @@ import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
 import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
+import { responderError } from "./server/utils/errorHttp.js";
 import { getAppInfo } from "./server/utils/version.js";
 
 import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
@@ -551,9 +554,7 @@ app.use("/api/*", (req, res) => {
 // aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error("[UnhandledRouteError] %s %s:", req.method, req.originalUrl, err);
-  captureError(err, { method: req.method, url: req.originalUrl });
-  if (res.headersSent) return;
-  res.status(500).json({ error: "Error interno del servidor." });
+  responderError(res, err);
 });
 
 // Vite middleware integration for full-stack SPA
@@ -590,10 +591,8 @@ async function startServer() {
         }
       }
     }));
-    app.get("*", paginaRateLimiter, (req, res) => {
-      res.setHeader("Cache-Control", "no-store");
-      res.sendFile(path.join(distPath, "index.html"));
-    });
+    // La landing en español (/) y en inglés (/en) llevan su <head> por idioma (canonical + hreflang).
+    app.get("*", paginaRateLimiter, servirIndex(distPath, baseUrlPublica()));
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {

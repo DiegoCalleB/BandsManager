@@ -109,12 +109,6 @@ export const PublicLanding: React.FC<PublicLandingProps> = ({ onEntrar }) => {
             priceCurrency: 'EUR',
             description: language === 'es' ? 'Plan gratuito disponible' : 'Free plan available',
           },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.9',
-            ratingCount: '312',
-            bestRating: '5',
-          },
         },
         {
           '@type': 'FAQPage',
