@@ -24,7 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_fans_landing_hooks_useFanSignupSubmit|src/components/fans_landing/hooks/useFanSignupSubmit.ts]] *(from #frontend)*
-- [[src_components_LoginModal|src/components/LoginModal.tsx]] *(from #frontend)*
+- [[src_components_login_registrarCuenta|src/components/login/registrarCuenta.ts]] *(from #frontend)*
 - [[src_components_PublicLanding|src/components/PublicLanding.tsx]] *(from #frontend)*
 - [[src_main|src/main.tsx]] *(from #service)*
 
