@@ -34,7 +34,7 @@
   var hayDramatica = false;
   try { fetch('audio/musica/dramatica.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.dramatica = 46; hayDramatica = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
   var quiere = function () { var sl = document.querySelector('.slide.active'), q = sl ? (sl.dataset.musica || '') : ''; return q === 'dramatica' && !hayDramatica ? 'noches' : q; };
-  var objetivo = function () { return !activo() || body.classList.contains('pausado') ? 0 : document.querySelector('.habla, .habla-l') ? BAJO : ALTO; };
+  var objetivo = function () { return !activo() || body.classList.contains('pausado') || body.classList.contains('fin-peli') ? 0 : document.querySelector('.habla, .habla-l') ? BAJO : ALTO; };
   var vol = 0;
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
   function paso() {
@@ -318,6 +318,34 @@
     if (m) return m[1];
     var im = sl.querySelector('img'); return im ? im.getAttribute('src') : '';
   };
+  // ── Final de película (estilo Netflix): negro, la N y «Más como esta»; se para todo (voces, música y vídeos) ──
+  var finEl = document.createElement('div'); finEl.id = 'nf-fin'; finEl.setAttribute('aria-hidden', 'true');
+  finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button>';
+  if (stage) stage.appendChild(finEl);
+  var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
+  var montarFin = function () {
+    var d = D(), fila = finEl.querySelector('.nff-fila'); if (!d || fila.childNodes.length) return;
+    d.slides.forEach(function (sl, i) {
+      var t = sl.dataset.title; if (ANEXO_FIN.indexOf(t) < 0) return;
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'nff-card'; b.dataset.i = i;
+      var th = miniatura(i); if (th) b.style.backgroundImage = 'linear-gradient(transparent 40%, rgba(0,0,0,.85)), url("' + th + '")';
+      b.innerHTML = '<b></b><small>Defensa técnica</small>'; b.firstChild.textContent = t; fila.appendChild(b);
+    });
+  };
+  var acabar = function () {
+    if (body.classList.contains('fin-peli')) return;
+    montarFin(); body.classList.add('fin-peli');
+    if (window.DeckVoces && window.DeckVoces.stop) window.DeckVoces.stop();
+    document.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    despertar();
+  };
+  var reanudar = function () { body.classList.remove('fin-peli'); delete body.dataset.fin; };
+  new MutationObserver(function () { if (body.dataset.fin === '1' && body.classList.contains('pelicula')) acabar(); }).observe(body, { attributes: true, attributeFilter: ['data-fin'] });
+  finEl.addEventListener('click', function (e) {
+    var d = D(), card = e.target.closest('.nff-card'), otra = e.target.closest('.nff-otra'); if (!d) return;
+    if (otra) { reanudar(); d.show(0); }
+    else if (card) { reanudar(); var p = document.getElementById('bPeli'); if (p && body.classList.contains('pelicula')) p.click(); d.show(+card.dataset.i); }
+  });
   var escenaEnTiempo = function (seg) { var d = D(), t = 0, L = d.lista(); for (var k = 0; k < L.length; k++) { t += d.durEscena(L[k]); if (seg < t) return L[k]; } return L[L.length - 1]; };
   prog.addEventListener('click', function (e) { var d = D(); if (d) { d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
   prog.addEventListener('mousemove', function (e) {
