@@ -923,8 +923,8 @@
    },
    {
     "who": "voz",
-    "txt": "¡Sos un genio, Iago! 🙌",
-    "voz": "[gasps] ¡Sos un genio, Iago! ¡El bajista! ¡El que nadie mira, boludo!"
+    "txt": "¡Sos un genio, Iago! ¿Una peli en Netflix? ¡Yo voy a la alfombra roja con la camisa de flores! 🙌",
+    "voz": "[gasps] ¡Sos un genio, Iago! ¡El bajista! ¿Una peli en Netflix, boludo? ¡Yo voy a la alfombra roja con la camisa de flores!"
    },
    {
     "who": "bajo",
@@ -1380,6 +1380,24 @@
     "txt": "Idea loca: que las pague Peláez.",
     "voz": "[mischievously] Idea loca: que las pague Peláez. Con su treinta por ciento.",
     "t": "03:13"
+   },
+   {
+    "who": "ia_claude",
+    "txt": "Aviso: acaba de escribir Netflix. Quieren más planos del bajista y menos de la batería.",
+    "voz": "[calmly] Aviso: acaba de escribir Netflix. Dicen que quieren más planos del bajista y menos de la batería.",
+    "t": "03:14"
+   },
+   {
+    "who": "bateria",
+    "txt": "¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!",
+    "voz": "[shouts] ¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!",
+    "t": "03:14"
+   },
+   {
+    "who": "bajo",
+    "txt": "Dicen que el bajista es «el corazón de la banda». Lo he leído tres veces.",
+    "voz": "Dicen que el bajista es el corazón de la banda. Lo he leído tres veces.",
+    "t": "03:14"
    },
    {
     "who": "bateria",

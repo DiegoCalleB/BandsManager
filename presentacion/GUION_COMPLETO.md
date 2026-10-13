@@ -217,7 +217,7 @@ _En pantalla:_ ¿Qué había hecho Iago? Booking Calendario Setlists Correos con
 **Álvaro:** ¡¿Pero cuándo has podido hacer esto?! Si cuando no estás en el trabajo, ¡estás con tus dos hijas! 🤯  
 **Iago:** Pues han sido unos meses duros: no he podido dedicarles tiempo de calidad al 100 %, he estado muy distraído construyendo todo esto.  
 **Iago:** ¡Y encima Netflix me ha pedido una peli documental con la historia de BandManager! No sé cómo se han enterado, ¡estoy flipando! 🎬  
-**Alan:** ¡Sos un genio, Iago! 🙌  
+**Alan:** ¡Sos un genio, Iago! ¿Una peli en Netflix? ¡Yo voy a la alfombra roja con la camisa de flores! 🙌  
 **Iago:** Pero no me da la vida. Quiero estar al 100 % con mi familia y con vosotros.  
 
 ## Las noches
@@ -325,5 +325,8 @@ _En pantalla:_ Os Herdeiros do Código en BandManager.io Una película de rock, 
 **Álvaro:** ¡Pues que las pague la IA! 🤘  
 **Claudio:** Propuesta: las paga Brais. Pero tú decides, Iago.  
 **Guglio:** Idea loca: que las pague Peláez.  
+**Claudio:** Aviso: acaba de escribir Netflix. Quieren más planos del bajista y menos de la batería.  
+**Brais:** ¡¿Cómo?! ¡Eso lo ha pedido Peláez, seguro!  
+**Iago:** Dicen que el bajista es «el corazón de la banda». Lo he leído tres veces.  
 **Brais:** Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
 **Iago:** Mira el calendario, Brais.  
