@@ -2115,3 +2115,12 @@ body.fin-peli #nf, body.fin-peli #subtitulo, body.fin-peli .nf-pausa { display: 
 .nff-otra:hover { background: rgba(255,255,255,.28); }
 @keyframes nffaparece { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
 @media (prefers-reduced-motion: reduce) { .nff-n, .nff-t, .nff-fila, .nff-otra { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* Botón a la web en créditos y post-créditos, sobre «Saltar créditos» */
+.nf-web { position: absolute; z-index: 61; right: 70px; bottom: 300px; display: none; flex-direction: column; gap: 6px; padding: 16px 34px; border-radius: 6px; text-decoration: none; pointer-events: auto !important;
+  font-family: 'Helvetica Neue', Arial, sans-serif; color: #000; background: #fff; border: 2px solid #fff; }
+.nf-web b { font-size: 28px; line-height: 1.1; color: #000; } .nf-web:hover b { color: #fff; } .nf-web small { font-size: 19px; font-weight: 600; color: #444; }
+body.pelicula:not(.scroll) .nf-web.on { display: flex; } .nf-web:hover { background: #e50914; border-color: #e50914; color: #fff; } .nf-web:hover small { color: #fff; }
+.grabando .nf-web { display: none !important; }
+.nff-web { color: #aaa; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; text-decoration: none; opacity: 0; animation: nffaparece 900ms ease-out 3600ms both; }
+.nff-web:hover { color: #fff; text-decoration: underline; }

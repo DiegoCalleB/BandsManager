@@ -213,6 +213,11 @@
   // el botón de saltar va fuera de la barra: se ve aunque los controles estén escondidos
   var saltarBtn = nf.querySelector('.nf-saltar'); if (stage) stage.appendChild(saltarBtn);
   saltarBtn.addEventListener('click', function () { var d = D(); if (d) d.show(+saltarBtn.dataset.i); });
+  // Botón a la web (créditos y post-créditos): BandManager.io, para que Brais entre a su perfil
+  var WEB = 'https://bandmanager.io';
+  var webBtn = document.createElement('a'); webBtn.className = 'nf-web'; webBtn.href = WEB; webBtn.target = '_blank'; webBtn.rel = 'noopener';
+  webBtn.innerHTML = '<b>Ir a BandManager.io</b><small>Accede a tu perfil, Brais</small>';
+  if (stage) stage.appendChild(webBtn);
   var $n = function (q) { return nf.querySelector(q); };
   var D = function () { return window.Deck; };
   var mmss = function (s) { s = Math.max(0, Math.round(s)); var h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ':' + ('0' + m).slice(-2) : m) + ':' + ('0' + x).slice(-2); };
@@ -281,6 +286,7 @@
     }
     var sl = salto(), b = saltarBtn;
     b.classList.toggle('on', !!sl && body.classList.contains('pelicula')); if (sl) { b.textContent = sl.txt; b.dataset.i = sl.i; }
+    var tt = titulo(d.cur); webBtn.classList.toggle('on', body.classList.contains('pelicula') && (tt === 'Créditos' || tt === 'Escena post-créditos'));
   };
   // El icono que salta un momento en el centro, como en Netflix
   var flash = function (svg, txt) { var f = $n('.nf-flash'); f.innerHTML = svg + (txt ? '<b>' + txt + '</b>' : ''); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); };
@@ -320,7 +326,7 @@
   };
   // ── Final de película (estilo Netflix): negro, la N y «Más como esta»; se para todo (voces, música y vídeos) ──
   var finEl = document.createElement('div'); finEl.id = 'nf-fin'; finEl.setAttribute('aria-hidden', 'true');
-  finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button>';
+  finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button><a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil, Brais → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
   var montarFin = function () {
@@ -417,7 +423,7 @@
   var ultimoToque = { t: 0, x: 0 };
   addEventListener('touchend', function (e) {
     if (!body.classList.contains('pelicula') || body.classList.contains('scroll') || !e.changedTouches[0]) return;
-    if (e.target.closest && e.target.closest('.nf-b, .nf-c, .nf-prog, .nf-menu, .nf-saltar, .nf-sig-ep, input')) return;
+    if (e.target.closest && e.target.closest('.nf-b, .nf-c, .nf-prog, .nf-menu, .nf-saltar, .nf-web, .nf-sig-ep, input')) return;
     var x = e.changedTouches[0].clientX, ahora = Date.now(), w = innerWidth;
     if (ahora - ultimoToque.t < 320 && Math.abs(x - ultimoToque.x) < 90) { saltar(x < w / 2 ? -15 : 15); ultimoToque.t = 0; }
     else ultimoToque = { t: ahora, x: x };
