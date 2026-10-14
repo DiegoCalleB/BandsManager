@@ -23,6 +23,8 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_credencialesInstagram|server/services/credencialesInstagram.ts]] *(from #service)*
+- [[server_services_publicadores_instagramInsights|server/services/publicadores/instagramInsights.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 
 ---

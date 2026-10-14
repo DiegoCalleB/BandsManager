@@ -18,7 +18,7 @@ import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
-import { startSocialPublisherScheduler } from "./server/services/socialPublisher.js";
+import { iniciarWorkersDeReels } from "./server/services/workersReels.js";
 import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { responderError } from "./server/utils/errorHttp.js";
@@ -619,7 +619,7 @@ async function startServer() {
     }
     // Start booking agents scheduler (Enviador/Lector, ver server/services/agentScheduler.ts)
     try {
-      startAgentScheduler(); startSocialPublisherScheduler(); // el 2.º publica los Reels programados a su hora
+      startAgentScheduler(); iniciarWorkersDeReels(); // el 2.º publica los Reels a su hora y mide lo publicado
     } catch (e) {
       console.error("Error starting Agent/Social Publisher Scheduler:", e);
     }

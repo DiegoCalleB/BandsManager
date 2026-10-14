@@ -15,7 +15,9 @@ describe("medicionesPendientes", () => {
     expect(medicionesPendientes(publicado, [], new Date("2026-10-10T20:30:00Z"))).toEqual([]);
     expect(medicionesPendientes(publicado, [], new Date("2026-10-10T21:05:00Z"))).toEqual([1]);
     expect(medicionesPendientes(publicado, [1], new Date("2026-10-11T21:00:00Z"))).toEqual([24]);
-    expect(medicionesPendientes(publicado, [1, 24], new Date("2026-10-20T00:00:00Z"))).toEqual([72, 168]);
+    // Si se acumulan (worker parado), solo la más reciente: repetir la lectura en las anteriores las falsearía.
+    expect(medicionesPendientes(publicado, [1, 24], new Date("2026-10-20T00:00:00Z"))).toEqual([168]);
+    expect(medicionesPendientes(publicado, [], new Date("2026-10-12T00:00:00Z"))).toEqual([24]);
     expect(medicionesPendientes(publicado, [1, 24, 72, 168], new Date("2026-11-20T00:00:00Z"))).toEqual([]);
   });
   it("una fecha de publicación inválida no genera mediciones", () => {
@@ -91,5 +93,17 @@ describe("cuantilBeta (valores conocidos)", () => {
     expect(cuantilBeta(0.3, 1, 1)).toBeCloseTo(0.3, 6);
     expect(cuantilBeta(0.25, 2, 1)).toBeCloseTo(0.5, 6);
     expect(cuantilBeta(0.75, 1, 2)).toBeCloseTo(0.5, 6);
+  });
+});
+
+describe("bloqueAprendizajeParaPrompt", () => {
+  it("mientras explora no mete nada en el prompt; con datos, cita lo medido y el formato", async () => {
+    const { bloqueAprendizajeParaPrompt } = await import("../aprendizajeReels.js");
+    const resumen = { reelsMedidos: 6, rewatchMediano: 1.4, tasaCompartirMediana: 0.02, tasaGuardarMediana: 0.01 };
+    expect(bloqueAprendizajeParaPrompt(resumen, { formato: "corto", modo: "explorando", muestras: 1, explicacion: "" })).toBe("");
+    const bloque = bloqueAprendizajeParaPrompt(resumen, { formato: "loop_corto", modo: "aprovechando", muestras: 6, explicacion: "5 de 6 se vieron enteros" });
+    expect(bloque).toContain("6 reels medidos");
+    expect(bloque).toContain("1.40");
+    expect(bloque).toContain("loop corto");
   });
 });

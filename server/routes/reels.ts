@@ -14,45 +14,17 @@ import { dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight,
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import { buildBandContextBlock, displayBandName, baseHashtags } from "../utils/bandProfile.js";
-import {
-  descargarConYtDlp,
-  urlDeAudioDirecta,
-  urlDeVideoDirecta,
-} from "../utils/youtubeSource.js";
-import {
-  analizarEnergiaAudio,
-  ventanasConMasEnergia,
-  resumirEnergiaParaPrompt
-} from "../utils/audioEnergy.js";
+import { descargarConYtDlp, urlDeAudioDirecta, urlDeVideoDirecta } from "../utils/youtubeSource.js";
+import { analizarEnergiaAudio, ventanasConMasEnergia, resumirEnergiaParaPrompt } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
-import {
-  detectarCambiosDePlano,
-  detectarTipoContenido,
-  esTipoContenido,
-  ventanasMasVirales,
-  resumirSenalesParaPrompt,
-  type TipoContenido,
-  type VentanaViral
-} from "../utils/viralSignals.js";
-import {
-  parseRange,
-  formatMMSS,
-  extractJsonObject,
-  normalizeHighlights,
-  buildFallbackHighlights,
-  buildSubtitleCues,
-  buildVtt,
-  buildWordOffsets,
-  buildAssSubtitles,
-  buildKaraokeAssSubtitles,
-  decodeTranscriptText,
-  type CropMode,
-  type TranscriptItem,
-  type NormalizedHighlight
-} from "../utils/reelsCore.js";
+import { detectarCambiosDePlano, detectarTipoContenido, esTipoContenido, ventanasMasVirales, resumirSenalesParaPrompt, type TipoContenido, type VentanaViral } from "../utils/viralSignals.js";
+import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFallbackHighlights, buildSubtitleCues, buildVtt, buildWordOffsets, buildAssSubtitles, buildKaraokeAssSubtitles, decodeTranscriptText, type CropMode, type TranscriptItem, type NormalizedHighlight } from "../utils/reelsCore.js";
 import { renderizarClip } from "../services/clipRenderer.js";
 import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
 import reelsTextoRouter from "./reelsTexto.js";
+import reelsAprendizajeRouter from "./reelsAprendizaje.js";
+import { aprendizajeDeBanda } from "../services/metricasReels.js";
+import { bloqueAprendizajeParaPrompt } from "../utils/aprendizajeReels.js";
 import { duracionDeLoopAjustada, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
 import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
 import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
@@ -370,11 +342,15 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     let frasesDirectoExtraidas: string[] = [];
 
     if (ai) {
+      // Lo medido en los Reels ya publicados de la banda orienta el formato. Best-effort.
+      const aprendizaje = await aprendizajeDeBanda(getTargetBandId(req)).catch(() => null);
       const prompt = `Eres quien decide qué trozo de un vídeo se convierte en Reel para una banda de música. Trabajas con material REAL y con señales medidas sobre él, no con suposiciones.
 
 ${buildBandContextBlock(perfil)}
 
 ${buildEstrategiaBlock(tipoContenido)}
+
+${aprendizaje ? bloqueAprendizajeParaPrompt(aprendizaje.resumen, aprendizaje.recomendacion) : ""}
 
 DATOS REALES DEL VÍDEO:
 - Título: "${tituloReal}"
@@ -690,7 +666,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
         youtubeDeLaBanda: perfil.youtube,
         nombreDeLaBanda: displayBandName(perfil),
         declaradoPorLaBanda: Boolean(derechosDeclarados),
-        loopPerfecto: plan.loopAplicado,
+        loopPerfecto: plan.loopAplicado, duracionSeg: plan.duracionFinal,
         hookText: String(hookText || "")
       }
     });
@@ -911,8 +887,8 @@ Responde ÚNICAMENTE con JSON válido:
   }
 });
 
-// Hook Doctor y copy perfecto: trabajan sobre el TEXTO del reel, no sobre el vídeo.
-router.use(reelsTextoRouter);
+// Texto del reel (Hook Doctor, copy perfecto) y aprendizaje con métricas reales.
+router.use(reelsTextoRouter, reelsAprendizajeRouter);
 
 export { parseRange };
 export default router;

@@ -42,6 +42,7 @@ export interface ProcedenciaClip {
   declaradoPorLaBanda: boolean;
   loopPerfecto: boolean;
   hookText: string;
+  duracionSeg: number;
 }
 
 export interface ClipGuardado {
@@ -107,7 +108,8 @@ async function registrarProcedenciaClip(bandId: string, clipUrl: string, p: Proc
         derechos,
         loop_perfecto: p.loopPerfecto,
         hook_text: p.hookText,
-        control_calidad: calidad
+        control_calidad: calidad,
+        duracion_seg: p.duracionSeg
       },
       bandId
     );

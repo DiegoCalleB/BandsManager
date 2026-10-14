@@ -19,10 +19,10 @@ Publicación de posts sociales en las plataformas reales.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_reelClips|server/db/reelClips.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_schedule|server/db/schedule.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
+- [[server_services_credencialesInstagram|server/services/credencialesInstagram.ts]] *(Layer: #service, Domain: #social)*
 - [[server_services_publicadores_instagramReels|server/services/publicadores/instagramReels.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(Layer: #service, Domain: #system)*
@@ -33,8 +33,8 @@ Publicación de posts sociales en las plataformas reales.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
-- [[server|server.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
+- [[server_services_workersReels|server/services/workersReels.ts]] *(from #service)*
 
 ---
 

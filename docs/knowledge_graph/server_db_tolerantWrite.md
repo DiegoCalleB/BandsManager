@@ -30,7 +30,6 @@ Escritura tolerante a columnas que aún no existen.
 - [[fn_ensayos|Ensayos]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_db_concerts|server/db/concerts.ts]] *(from #db)*
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*

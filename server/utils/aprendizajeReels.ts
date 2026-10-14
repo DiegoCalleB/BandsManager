@@ -26,11 +26,18 @@ export const NOMBRE_FORMATO: Record<Formato, string> = {
 /** Con menos reels medidos que esto no se presume de saber nada. */
 export const MIN_MUESTRAS = 3;
 
+/**
+ * Medición que toca ahora (como mucho una). Si se acumulan varias porque el worker estuvo parado,
+ * solo la más reciente: apuntar la misma lectura en la de 1 h y en la de 24 h falsearía la de 1 h.
+ * Las anteriores se pierden, que es la verdad: no se midieron a su hora.
+ */
 export function medicionesPendientes(publicadoEn: string, tomadas: number[], ahora: Date): HorasMedicion[] {
   const inicio = Date.parse(publicadoEn);
   if (Number.isNaN(inicio)) return [];
   const horas = (ahora.getTime() - inicio) / 3_600_000;
-  return MEDICIONES_H.filter((h) => horas >= h && !tomadas.includes(h));
+  const ultimaTomada = Math.max(0, ...tomadas);
+  const vencidas = MEDICIONES_H.filter((h) => horas >= h && h > ultimaTomada);
+  return vencidas.length ? [vencidas[vencidas.length - 1]] : [];
 }
 
 export interface MetricasCrudas {

@@ -17,6 +17,8 @@ export interface ReelClip {
   hook_text: string;
   /** null = no se pudo medir; el publicador no lo autopublica. */
   control_calidad: InformeCalidad | null;
+  /** Duración real del MP4 final (tras el loop). La usa el KPI de rewatch. */
+  duracion_seg: number | null;
 }
 
 export async function dbRegistrarReelClip(clip: Omit<ReelClip, "id" | "band_id">, bandId: string): Promise<void> {
@@ -32,7 +34,8 @@ export async function dbRegistrarReelClip(clip: Omit<ReelClip, "id" | "band_id">
     derechos: clip.derechos,
     loop_perfecto: clip.loop_perfecto,
     hook_text: clip.hook_text,
-    control_calidad: clip.control_calidad
+    control_calidad: clip.control_calidad,
+    duracion_seg: clip.duracion_seg
   });
   if (error) throw new Error(`Supabase Error (reel_clips): ${error.message}`);
 }

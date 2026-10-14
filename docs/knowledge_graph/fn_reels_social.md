@@ -24,15 +24,14 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 - [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_reelClips|server/db/reelClips.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_schedule|server/db/schedule.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
-- [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
-- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(Layer: #db, Domain: #epk)*
-- [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
+- [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(Layer: #route, Domain: #social)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(Layer: #route, Domain: #social)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(Layer: #service, Domain: #social)*

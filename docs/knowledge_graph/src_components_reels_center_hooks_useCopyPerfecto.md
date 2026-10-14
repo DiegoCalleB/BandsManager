@@ -18,7 +18,6 @@ Copy perfecto del corte seleccionado: pide candidatos al servidor (generar → a
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(Layer: #route, Domain: #social)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

@@ -23,7 +23,9 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
+- [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 
 ---
 

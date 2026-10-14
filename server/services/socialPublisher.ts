@@ -9,11 +9,11 @@
  * marcarlo como publicado).
  */
 import { dbGetSocialPosts, dbUpsertSocialPost, dbReclamarPostParaPublicar, dbGetPostsPorPublicar } from "../db/social.js";
-import { dbGetEpkConfig } from "../db/epk.js";
 import { dbGetBandSchedule } from "../db/schedule.js";
 import { dbBuscarReelClip, type ReelClip } from "../db/reelClips.js";
 import { cleanBandId } from "../db/core.js";
 import { publicarReelInstagram, type CredencialesInstagram } from "./publicadores/instagramReels.js";
+import { credencialesInstagram } from "./credencialesInstagram.js";
 import { postsVencidos, estaColgadoPublicando } from "../utils/programacionPosts.js";
 import { captureError } from "../utils/errorTracking.js";
 import { comoErrorCapturado } from "../../src/utils/errorCapturado.js";
@@ -72,16 +72,6 @@ export function motivoParaNoAutopublicar(
   return null;
 }
 
-async function credencialesInstagram(bandId: string): Promise<CredencialesInstagram | null> {
-  const epk = await dbGetEpkConfig(bandId).catch((e: unknown) => {
-    console.warn("[Social Publisher] No se pudo leer la conexión de Instagram:", e);
-    return null;
-  });
-  const redes = (epk?.enlacesRedes || {}) as Record<string, unknown>;
-  const token = typeof redes.instagram_access_token === "string" ? redes.instagram_access_token : "";
-  const igUserId = typeof redes.instagram_account_id === "string" ? redes.instagram_account_id : "";
-  return token && igUserId ? { token, igUserId } : null;
-}
 
 async function evaluar(post: SocialPost, bandId: string): Promise<{ motivo: string | null; credenciales: CredencialesInstagram | null }> {
   const credenciales = await credencialesInstagram(bandId);

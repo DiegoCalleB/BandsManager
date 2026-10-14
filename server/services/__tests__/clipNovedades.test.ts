@@ -27,7 +27,8 @@ const entrada = {
     nombreDeLaBanda: "Los Peregrinos",
     declaradoPorLaBanda: false,
     loopPerfecto: true,
-    hookText: "Nadie lo vio venir"
+    hookText: "Nadie lo vio venir",
+    duracionSeg: 11.6
   }
 };
 
@@ -50,7 +51,7 @@ describe("guardarClipRenderizado", () => {
     const r = await guardarClipRenderizado(entrada);
     expect(r).toEqual({ clipUrl: "https://x.supabase.co/clip.mp4", guardadoPermanente: true, derechos: "canal_de_la_banda", calidad: INFORME });
     expect(m.registrar).toHaveBeenCalledWith(
-      expect.objectContaining({ clip_url: "https://x.supabase.co/clip.mp4", derechos: "canal_de_la_banda", control_calidad: INFORME, loop_perfecto: true }),
+      expect.objectContaining({ clip_url: "https://x.supabase.co/clip.mp4", derechos: "canal_de_la_banda", control_calidad: INFORME, loop_perfecto: true, duracion_seg: 11.6 }),
       "band-a"
     );
   });

@@ -25,7 +25,6 @@ Tipos de `epk_configs`: la fila tal como está en Supabase (snake_case) y lo que
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
-- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
 
 ---
