@@ -33,6 +33,13 @@ describe('DiagramasAcordeActual', () => {
     expect(h).toContain('aria-label="Diagramas de los acordes que vienen"');
     expect(h).not.toMatch(/\bborder/);
   });
+  it('los repetidos salen tantas veces como vienen: Am, Am, G no se resume en G', () => {
+    const h = renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am')} sonando="Am" proximos={['Am', 'Am', 'G']} indices={[1, 2, 3]} onIr={() => {}} {...base} />);
+    expect(h.match(/aria-label="Ir al acorde Am"/g)).toHaveLength(2);
+    expect(h.match(/aria-label="Ir al acorde G"/g)).toHaveLength(1);
+    const barra = renderToStaticMarkup(<BarraAcordeActual estado={estado('Am')} proximos={['Am', 'Am', 'G']} />);
+    expect(barra.match(/>Am</g)).toHaveLength(3); // el actual y los dos que vienen
+  });
   it('con onIr cada próximo es un botón que salta a su sitio del cifrado; sin él, no', () => {
     const con = renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am')} sonando="Am" proximos={['G', 'C']} indices={[3, 5]} onIr={() => {}} {...base} />);
     expect(con).toContain('aria-label="Ir al acorde G"');

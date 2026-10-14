@@ -56,7 +56,7 @@ const NOMBRE_ROL: Record<string, string> = { raiz: 'raíz', tercera: '3.ª', qui
 
 /** Mástil de bajo (4 cuerdas) con una línea de un compás: raíz – 3.ª – 5.ª – nota de paso hacia el acorde siguiente. */
 export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; color?: string; nivel?: NivelAcorde; inversion?: number }> = ({ acorde, siguiente, color = 'var(--acc)', nivel = 'normal', inversion }) => {
-  const completa = lineaDeBajo(acorde, siguiente, inversion);
+  const completa = lineaDeBajo(acorde, siguiente, inversion, nivel === 'pro');
   // Básico: solo la raíz (lo que sostiene el acorde). Normal: la línea del compás. Pro: la línea con su intervalo.
   const linea = completa && nivel === 'basico' ? completa.slice(0, 1) : completa;
   const raiz = notasParaDibujar(acorde)?.raiz ?? 0;
@@ -97,7 +97,7 @@ export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; c
       </svg>
       {nivel !== 'basico' && (
         <p className="text-micro text-[var(--ink-2)] font-sans leading-tight">
-          {linea.map((p, i) => `${i + 1} ${NOMBRE_ROL[p.rol]}`).join(' · ')}{siguiente && linea[3]?.rol === 'paso' ? ` → ${siguiente}` : ''}
+          {linea.map((p, i) => `${i + 1} ${NOMBRE_ROL[p.rol]}`).join(' · ')}{siguiente && linea[linea.length - 1]?.rol === 'paso' ? ` → ${siguiente}` : ''}
         </p>
       )}
     </div>
@@ -160,6 +160,8 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
   const sugerida = previo ? recomendada : null;
   const invT = invElegida ?? recomendada;
   const invBajo = invElegida ?? (fija ?? 0);
+  // Pro: el bajo arranca en la inversión recomendada (como piano y guitarra) y suma la 7.ª si el acorde la tiene.
+  const invBajoPro = fija ?? invT;
   const inversiones = useMemo(() => (vista === 'guitarra' && nivel !== 'basico' ? inversionesGuitarra(chord) : []), [vista, nivel, chord]);
   const invGuitarra = nivel === 'pro' ? invT : invElegida;
   const shape = vista === 'guitarra' && nivel === 'normal' && invGuitarra === null ? buscarFormaGuitarra(chord) : undefined;
@@ -184,8 +186,8 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
         </div>
       ) : vista === 'bajo' ? (
         <div className="space-y-1">
-          <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} inversion={invElegida === null && fija === null ? undefined : invBajo} />
-          {totalInv >= 3 && fija === null && <ChipsInversion opciones={Array.from({ length: totalInv }, (_, i) => i)} activa={invBajo} recomendada={sugerida} onElige={setInvElegida} />}
+          <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} inversion={nivel === 'pro' ? invBajoPro : invElegida === null && fija === null ? undefined : invBajo} />
+          {totalInv >= 3 && fija === null && <ChipsInversion opciones={Array.from({ length: totalInv }, (_, i) => i)} activa={nivel === 'pro' ? invBajoPro : invBajo} recomendada={sugerida} onElige={setInvElegida} />}
         </div>
       ) : forma ? (
         <div className="space-y-1">

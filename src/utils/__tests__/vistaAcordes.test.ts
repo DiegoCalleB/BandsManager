@@ -23,6 +23,12 @@ describe('vistaAcordes', () => {
     // inversión pedida: la 1.ª de Am arranca en la tercera (C)
     expect(lineaDeBajo('Am', undefined, 1)![0].rol).toBe('tercera');
   });
+  it('bajo Pro: suma la 7.ª si el acorde la tiene; Normal no cambia', () => {
+    expect(lineaDeBajo('G7', 'C', 0, true)!.map((n) => n.rol)).toEqual(['raiz', 'tercera', 'quinta', 'septima', 'paso']);
+    expect(lineaDeBajo('G7', 'C', 0)!.map((n) => n.rol)).toEqual(['raiz', 'tercera', 'quinta', 'paso']);
+    expect(lineaDeBajo('Am', 'G', 0, true)!.map((n) => n.rol)).toEqual(['raiz', 'tercera', 'quinta', 'paso']);
+    expect(lineaDeBajo('G7', undefined, 1, true)![0].rol).toBe('tercera');
+  });
   it('contexto: función por grado y acorde que más veces sigue', () => {
     const texto = '[E] [A] [E] [A] [E] [B]';
     const m = contextoDeAcordes(texto, ['E', 'A', 'B'], parseTonalidad('E'), 0);
