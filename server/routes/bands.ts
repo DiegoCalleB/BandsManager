@@ -89,7 +89,6 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, instagram?: string
   return '';
 }
 
-
 router.get("/bands", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   try {

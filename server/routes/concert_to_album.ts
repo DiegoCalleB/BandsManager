@@ -31,8 +31,6 @@ if (ffmpegStatic) {
 
 const router = express.Router();
 
-
-
 /**
  * URL de vídeo utilizable. Además de rechazar lo que no sea http(s) (un `file://` haría que
  * yt-dlp leyera del disco del servidor), evita que una URL que empiece por guión se cuele como

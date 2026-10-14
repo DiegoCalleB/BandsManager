@@ -255,10 +255,9 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
     promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true, (e, d) => avanzarProgreso(clave, e, d))
       .then((r) => { terminarProgreso(clave, r.status === 200 ? undefined : String(r.body?.error || "No se pudo analizar")); return r; })
       .catch((errCapturado): ResultadoAnalisisAcordes => {
-        const err = comoErrorCapturado(errCapturado);
-        terminarProgreso(clave, err?.message || "No se pudieron analizar los acordes del audio.");
-        console.error("Error analizando acordes del audio:", err);
-        return { status: 500, body: { error: err?.message || "No se pudieron analizar los acordes del audio." } };
+        console.error("Error analizando acordes del audio:", comoErrorCapturado(errCapturado));
+        terminarProgreso(clave, "No se pudieron analizar los acordes del audio.");
+        return { status: 500, body: { error: "No se pudieron analizar los acordes del audio." } };
       })
       .finally(() => {
         analisisAcordesEnCurso.delete(clave);
