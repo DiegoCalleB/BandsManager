@@ -109,18 +109,11 @@ export function useAgentRuns() {
 
       try {
         const token = leerTokenDeSesion();
-        const pat = localStorage.getItem('bandmanager_github_pat') || '';
-        const owner = localStorage.getItem('bandmanager_github_owner') || '';
-        const repo = localStorage.getItem('bandmanager_github_repo') || '';
-
         const headers: Record<string, string> = {};
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
           headers['x-auth-token'] = token;
         }
-        if (pat) headers['x-github-pat'] = pat;
-        if (owner) headers['x-github-owner'] = owner;
-        if (repo) headers['x-github-repo'] = repo;
 
         if (!activeRun?.id) {
           // Find newly started run
