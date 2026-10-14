@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Maximize2, Check, LayoutGrid, X, GripVertical, Info, Monitor } from "lucide-react";
+import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Check, LayoutGrid, X, GripVertical, Info } from "lucide-react";
 import {
   DashboardWidgetConfig,
   DEFAULT_DASHBOARD_WIDGETS,
@@ -500,7 +500,7 @@ export function DashboardWidgetGrid({
     <div className="space-y-4 w-full">
       {/* Top Customization Bar - Only shown in edit mode */}
       {isEditMode && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
+        <div className="sticky top-2 z-30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
               <LayoutGrid className="w-5 h-5" />
@@ -516,7 +516,8 @@ export function DashboardWidgetGrid({
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-0.5">
                 {visibleWidgets.length} de {allVisibleWidgets.length} módulos
-                visibles · se guardan solos
+                visibles · asa para mover, esquina para el tamaño · se guarda
+                solo (en móvil se apila a 1 columna)
               </p>
             </div>
           </div>
@@ -572,38 +573,6 @@ export function DashboardWidgetGrid({
               <Check className="w-4 h-4" />
               <span>Finalizar edición</span>
             </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Mode Instructions Banner */}
-      {isEditMode && (
-        <div className="p-4 rounded-[var(--r-l)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs space-y-1.5">
-          <div className="flex items-center gap-2 font-semibold text-[var(--acc-ink)]">
-            <Info className="w-4 h-4 shrink-0" />
-            <span>Modo de edición activo:</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[var(--acc-ink)]/85 pt-1">
-            <div className="flex items-center gap-1.5">
-              <GripVertical className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Arrastra:</strong> Usa el asa para mover libremente.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Tamaño:</strong> Tira de la esquina inferior de cada
-                widget.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Multi-dispositivo:</strong> En móvil se apila a 1
-                columna.
-              </span>
-            </div>
           </div>
         </div>
       )}
