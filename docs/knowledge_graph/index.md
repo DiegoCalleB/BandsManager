@@ -29,7 +29,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 ## 🌐 Servicios externos
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 4 ficheros lo usan
 - [[ext_fal|fal.ai]] — 9 ficheros lo usan
-- [[ext_ffmpeg|FFmpeg]] — 29 ficheros lo usan
+- [[ext_ffmpeg|FFmpeg]] — 31 ficheros lo usan
 - [[ext_gemini|Gemini (Google GenAI)]] — 16 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
@@ -73,14 +73,14 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1587 nodos: 52 agent · 45 db · 12 external · 14 feature · 925 frontend · 43 hook · 82 route · 63 schema · 10 security · 341 service.
+1589 nodos: 52 agent · 45 db · 12 external · 14 feature · 925 frontend · 43 hook · 82 route · 63 schema · 10 security · 343 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 567 ficheros dependen de él
 - [[src_components_ui_index|src/components/ui/index.ts]] — 350 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
-- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 166 ficheros dependen de él
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 167 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 90 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 69 ficheros dependen de él
@@ -95,7 +95,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 32 ficheros dependen de él
-- [[ext_ffmpeg|FFmpeg]] — 29 ficheros dependen de él
+- [[ext_ffmpeg|FFmpeg]] — 31 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
 
 ---

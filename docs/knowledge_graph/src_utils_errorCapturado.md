@@ -103,6 +103,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_services_clipArchivos|server/services/clipArchivos.ts]] *(from #service)*
 - [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
+- [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
 - [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*

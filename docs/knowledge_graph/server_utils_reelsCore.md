@@ -28,6 +28,7 @@ Núcleo puro del generador de Reels: parseo de tiempos, saneado de lo que devuel
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
 - [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(from #service)*
+- [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(from #service)*
 - [[server_utils_hookRotulo|server/utils/hookRotulo.ts]] *(from #service)*
 
 ---
