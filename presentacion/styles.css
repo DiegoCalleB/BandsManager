@@ -2280,7 +2280,7 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .av { position: relative; display: block; box-sizing: border-box; background: #0071eb; overflow: hidden; }
 .av::before { content: ''; position: absolute; left: 26%; top: 34%; width: 11%; height: 11%; border-radius: 50%; background: #fff; box-shadow: calc(var(--av, 170px) * .0) 0 0 #fff, 0 0 0 0 #fff; }
 .av::after { content: ''; position: absolute; left: 26%; top: 56%; width: 48%; height: 20%; border-radius: 0 0 100px 100px / 0 0 100% 100%; border: 0 solid #fff; background: #fff; clip-path: ellipse(50% 100% at 50% 0); }
-.av.brais { background: #0071eb; } .av.profes { background: #f5c518; } .av.diego { background: #e50914; } .av.invitados { background: #5fb946; }
+.av.brais { background: #0071eb; } .av.profes { background: #f5c518; } .av.diego { background: #e50914; } .av.pelaez { background: #5fb946; }
 .av.mini { width: 40px; height: 40px; border-radius: 4px; }
 .nx-top nav { display: flex; gap: 26px; margin-left: 34px; font: 500 19px/1 'Helvetica Neue', Arial, sans-serif; color: rgba(255,255,255,.85); }
 .nx-top nav .on { color: #fff; font-weight: 700; }
@@ -2338,3 +2338,14 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .nx-mder dd { display: inline; margin: 0; color: #fff; }
 .nx-mder dd::after { content: ''; display: block; height: 10px; }
 @media (max-height: 800px) { .nx-mfoto { height: 40vh; } .nx-mizq p { font-size: 17px; margin-top: 10px; } .nx-mizq .nx-peq { font-size: 14px; } .nx-mder { font-size: 14px; } .nx-mcuerpo { padding-bottom: 24px; } }
+
+/* Perfiles con foto (si el fichero existe, el generador añade .foto y desaparece la carita) */
+.av.foto { background: var(--foto) center / cover no-repeat; }
+.av.foto::before, .av.foto::after { display: none; }
+.av.diego.foto { background-position: 50% 8%; }
+.av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
+.av.profes.foto { background-color: #fff; background-size: 78%; }
+.av.brais.foto { background-position: 50% 20%; }
+.nx-perfil span { text-align: center; }
+.nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
+.av.foto { background-origin: border-box; }

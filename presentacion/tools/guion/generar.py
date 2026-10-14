@@ -1442,8 +1442,15 @@ PROXIMAMENTE = [
     ('Cuatro acordes y un solo', 'img/historia/thc.jpg'), ('Dadme hasta el domingo', 'img/concierto-3.jpg'),
 ]
 filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
-perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}"><i class="av {k}"></i><span>{n}</span></button>'
-                   for k, n in [('brais', 'Brais'), ('profes', 'Profesorado'), ('diego', 'Diego'), ('invitados', 'Invitados')])
+# Fotos de los perfiles (si falta un fichero, se queda la carita de color; lo de Brais y el logo de The Big School los aporta Diego)
+import os
+PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado', 'img/perfil-tbs.png'),
+            ('pelaez', 'Invitado Peláez', 'video/actores/pelaez.jpg'), ('diego', 'Diego', 'img/diego-bajista.jpg')]
+def _av(k, foto, extra=''):
+    ok = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', foto))
+    return f'<i class="av {k}{" foto" if ok else ""}{extra}"' + (f' style="--foto:url({foto})"' if ok else '') + '></i>'
+perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}">{_av(k, f)}<span>{n}</span></button>' for k, n, f in PERFILES)
+AV_BRAIS = _av('brais', PERFILES[0][2], ' mini')
 i0 = html.index('<div id="gate"'); i1 = html.index('<div id="prog">')
 html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-modal="true" aria-label="Empezar la película">
   <div class="nx-perfiles">
@@ -1459,7 +1466,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     <div class="nx-top">
       <span class="nx-logo">NETFLIX</span>
       <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
-      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i><i class="av brais mini"></i></div>
+      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i>' + AV_BRAIS + '</div>
     </div>
     <div class="nx-hero">
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
