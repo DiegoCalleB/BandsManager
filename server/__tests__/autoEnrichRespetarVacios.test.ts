@@ -30,6 +30,10 @@ vi.mock('../services/jinaReaderService.js', () => ({
 
 vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('sin red en tests'); }));
 
+// autoEnrichLead carga esta base con import() la primera vez. Cargarla aquí, fuera del límite de 5 s
+// de cada test, evita que el primero pague su transformación en un ejecutor cargado (CI).
+await import('../utils/spanishFestivalsDB.js');
+
 import { autoEnrichLead } from '../auto_enrichment.js';
 
 const ficha = () => ({
