@@ -44,6 +44,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { Concert, RegisteredBand, Song } from '../../src/types.js';
 import type { EpkLanguage } from '../../src/i18n/epkTranslations.js';
 import type { RespuestaTraduccionEpk } from '../tiposRespuestasIA.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -95,10 +96,7 @@ router.post('/autonomy', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
-    res.status(500).json({
-      error:
-        err?.message || 'Error al actualizar la configuración de autonomía.',
-    });
+    responderError(res, err, 'Error al actualizar la configuración de autonomía.');
   }
 });
 
@@ -129,10 +127,7 @@ router.put('/autonomy', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error updating autonomy config:', err);
-    res.status(500).json({
-      error:
-        err?.message || 'Error al actualizar la configuración de autonomía.',
-    });
+    responderError(res, err, 'Error al actualizar la configuración de autonomía.');
   }
 });
 
@@ -226,9 +221,7 @@ router.put('/epk', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error updating EPK config:', err);
-    res.status(500).json({
-      error: err?.message || 'Error al actualizar la configuración del EPK.',
-    });
+    responderError(res, err, 'Error al actualizar la configuración del EPK.');
   }
 });
 
@@ -461,9 +454,7 @@ router.post('/epk/traducir', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error traduciendo el EPK:', err);
-    res
-      .status(500)
-      .json({ error: err?.message || 'Error al traducir el EPK.' });
+    responderError(res, err, 'Error al traducir el EPK.');
   }
 });
 
@@ -820,7 +811,7 @@ router.post('/fans', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error adding fan:', err);
-    res.status(500).json({ error: err?.message || 'Error al registrar fan.' });
+    responderError(res, err, 'Error al registrar fan.');
   }
 });
 
@@ -854,7 +845,7 @@ router.patch('/fans/:id', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error updating fan:', err);
-    res.status(500).json({ error: err?.message || 'Error al actualizar fan.' });
+    responderError(res, err, 'Error al actualizar fan.');
   }
 });
 

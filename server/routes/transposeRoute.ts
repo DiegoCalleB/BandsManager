@@ -5,6 +5,7 @@ import { requireAuth } from '../state.js';
 import { getTargetBandId } from '../utils/bandAccess.js';
 import { processAudioTransposition } from '../services/audioTransposeService.js';
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.post(['/transpose-audio', '/api/transpose-audio'], requireAuth, async (re
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('[TransposeRoute Error]:', err);
-    res.status(500).json({ success: false, error: err.message || 'Error al procesar trasposición de audio.' });
+    responderError(res, err, 'Error al procesar trasposición de audio.');
   }
 });
 

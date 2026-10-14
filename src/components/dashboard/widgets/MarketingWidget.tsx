@@ -15,12 +15,13 @@ interface CifraProps {
   etiqueta: string;
   valor: number;
   detalle: string;
+  className?: string;
   children?: React.ReactNode;
 }
 
-function Cifra({ etiqueta, valor, detalle, children }: CifraProps) {
+function Cifra({ etiqueta, valor, detalle, className = '', children }: CifraProps) {
   return (
-    <div className="rounded-[var(--r-m)] bg-[var(--sunken)] p-4 space-y-1">
+    <div className={`rounded-[var(--r-m)] bg-[var(--sunken)] p-4 space-y-1 ${className}`}>
       <p className="text-xs text-[var(--ink-2)]">{etiqueta}</p>
       <p className="text-3xl font-semibold text-[var(--ink)] tabular-nums">{valor.toLocaleString('es-ES')}</p>
       <p className="text-xs text-[var(--ink-2)]">{detalle}</p>
@@ -30,8 +31,8 @@ function Cifra({ etiqueta, valor, detalle, children }: CifraProps) {
 }
 
 /**
- * «Tu marketing»: a cuánta gente llegas, cuántos fans apuntas, cuántas salas contestan y cuántas
- * dicen que sí. Mismo criterio honesto que «Lo que has cobrado»: solo hechos con fecha, comparados
+ * «Tu marketing»: a cuánta gente llegas, cuántos fans apuntas, cuántas salas abren tu dossier, cuántas
+ * contestan y cuántas dicen que sí. Mismo criterio honesto que «Lo que has cobrado»: solo hechos con fecha, comparados
  * con los 30 días anteriores, sin flechas ni colores de bolsa (ver src/utils/indicadoresMarketing.ts).
  */
 export function MarketingWidget({ fans, leads, onNavigate }: MarketingWidgetProps) {
@@ -82,7 +83,8 @@ export function MarketingWidget({ fans, leads, onNavigate }: MarketingWidgetProp
           </Cifra>
           <Cifra etiqueta="Fans nuevos" valor={ind.fans.actual} detalle={par(ind.fans)} />
           <Cifra etiqueta="Salas que han contestado" valor={ind.respondieron.actual} detalle={`de ${ind.enviados.actual} a las que has escrito`} />
-          <Cifra etiqueta="Salas que han dicho que sí" valor={ind.dijeronSi.actual} detalle={par(ind.dijeronSi)} />
+          <Cifra etiqueta="Salas que han abierto tu dossier" valor={ind.abrieronDossier.actual} detalle={par(ind.abrieronDossier)} />
+          <Cifra etiqueta="Salas que han dicho que sí" valor={ind.dijeronSi.actual} detalle={par(ind.dijeronSi)} className="sm:col-span-2" />
         </div>
       )}
     </Card>

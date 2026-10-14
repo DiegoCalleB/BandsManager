@@ -27,6 +27,7 @@ Migración Concierto → Álbum: análisis y procesado de grabaciones en vivo (Y
 - [[server_routes_seguridadConcertToAlbum|server/routes/seguridadConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_tiposConcertToAlbum|server/routes/tiposConcertToAlbum.ts]] *(Layer: #route, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*

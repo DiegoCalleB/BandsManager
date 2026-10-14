@@ -73,12 +73,12 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1612 nodos: 52 agent · 46 db · 12 external · 14 feature · 930 frontend · 43 hook · 85 route · 64 schema · 10 security · 356 service.
+1614 nodos: 52 agent · 46 db · 12 external · 14 feature · 932 frontend · 43 hook · 85 route · 64 schema · 10 security · 356 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 570 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 351 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 353 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 169 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 93 ficheros dependen de él
@@ -92,11 +92,11 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_services_api|src/services/api.ts]] — 44 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 43 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 32 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
-- [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
 
 ---
 

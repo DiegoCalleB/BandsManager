@@ -202,10 +202,16 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
 
 * **Qué:**
-  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. Candidatos: subir su `testTimeout` o precargar el módulo de `auto_enrichment` en un `beforeAll`.
-  2. Cinco ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/DashboardWidgetGrid.tsx` (849), `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (757), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617).
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026):** `autoEnrichLead` carga `spanishFestivalsDB` con `import()` en la primera llamada y ese módulo no estaba simulado; ahora el test lo carga antes, fuera del límite de 5 s (no se reprodujo el timeout en local: la causa es la más probable, no una medida).
+  2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
 * **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
-* **Estado:** pendiente. Para (2), trocear primero `DashboardWidgetGrid.tsx` (barra de edición, selector de widgets y modal «Añadir»), en un PR que no mezcle refactor con comportamiento.
+* **Estado:** (1) arreglado; (2) pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
+
+---
+
+### Hecho: una release ya no pone `main` en rojo por `docs/api`
+* **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
+* **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
 
 ---
 

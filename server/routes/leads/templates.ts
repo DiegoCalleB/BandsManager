@@ -36,6 +36,7 @@ import {
   isValidEmailCached,
 } from '../../utils/emailValidator.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -223,10 +224,7 @@ INSTRUCCIONES CLAVE:
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/preview:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al generar vista previa del pitch.',
-    });
+    responderError(res, error, 'Error al generar vista previa del pitch.');
   }
 });
 
@@ -322,10 +320,7 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/optimize:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al optimizar la plantilla con IA.',
-    });
+    responderError(res, error, 'Error al optimizar la plantilla con IA.');
   }
 });
 
@@ -423,12 +418,7 @@ router.post('/templates/generate-all', requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/generate-all:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al generar las 7 plantillas con IA.',
-      });
+    responderError(res, error, 'Error al generar las 7 plantillas con IA.');
   }
 });
 
@@ -571,10 +561,7 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('Error in GET /api/templates/stats:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al obtener estadísticas.',
-    });
+    responderError(res, error, 'Error al obtener estadísticas.');
   }
 });
 
@@ -609,10 +596,7 @@ router.post('/templates/reset', requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/reset:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al resetear plantilla.',
-    });
+    responderError(res, error, 'Error al resetear plantilla.');
   }
 });
 

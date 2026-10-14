@@ -4,6 +4,7 @@ import { loadState, saveState } from "../state.js";
 import { Tour } from "../../src/types.js";
 import { dbGetTours, dbUpsertTour, dbDeleteTour } from "../db.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 export const toursController = {
   async getTours(req: Request, res: Response) {
@@ -47,7 +48,7 @@ export const toursController = {
       res.json(saved);
     } catch (errorCapturado) {
       const error = comoErrorCapturado(errorCapturado);
-      res.status(500).json({ error: error.message || "Error al crear la gira" });
+      responderError(res, error, "Error al crear la gira");
     }
   },
 
@@ -69,7 +70,7 @@ export const toursController = {
       res.json(saved);
     } catch (errorCapturado) {
       const error = comoErrorCapturado(errorCapturado);
-      res.status(500).json({ error: error.message || "Error al actualizar la gira" });
+      responderError(res, error, "Error al actualizar la gira");
     }
   },
 
@@ -90,7 +91,7 @@ export const toursController = {
       res.json({ success: true });
     } catch (errorCapturado) {
       const error = comoErrorCapturado(errorCapturado);
-      res.status(500).json({ error: error.message || "Error al eliminar la gira" });
+      responderError(res, error, "Error al eliminar la gira");
     }
   }
 };
