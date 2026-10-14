@@ -77,7 +77,7 @@
 
   // Logotipo animado con su «ta-dum», antes de empezar: un golpe grave, otro más bajo y un brillo, sintetizados con WebAudio
   var ident = document.createElement('div'); ident.id = 'ident'; ident.setAttribute('aria-hidden', 'true');
-  ident.innerHTML = '<div class="id-mark">N</div><div class="id-sub">BANDMANAGER ORIGINALS</div>';
+  ident.innerHTML = '<div class="id-mark">N</div><div class="id-sub">UNA PELÍCULA ORIGINAL</div>';
   document.body.appendChild(ident);
   var sting = function () {
     try {

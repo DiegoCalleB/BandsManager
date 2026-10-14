@@ -1435,23 +1435,47 @@ html = html.replace('F para pantalla completa · M para el sonido', 'F para pant
 html = html.replace('T tema · F pantalla completa</div>', 'T tema · F pantalla completa · V voces · P película</div>')
 html = html.replace('>Empezar con sonido</button>', '>Empezar con sonido y voces</button>')
 html = html.replace('<button id="gateSound" class="gate-btn primary">Empezar con sonido y voces</button>', '<button id="gatePeli" class="gate-btn primary">🎬 Ver como película</button>\n      <button id="gateSound" class="gate-btn">Empezar con sonido y voces</button>', 1)
-# Pantalla de entrada a lo plataforma de cine: cartel, sinopsis y «Reproducir»
+# Pantalla de entrada a lo Netflix: ¿quién está viendo? → inicio con la película destacada (el tráiler arranca solo) y el resto «Próximamente»
+PROXIMAMENTE = [
+    ('Setlist_v7_FINAL_def2', 'img/concierto-1.jpg'), ('El cantante que no leía los correos', 'img/historia/bajo-contraluz.jpg'),
+    ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg'), ('Ensayo a las siete de la mañana', 'img/historia/bajo-bn.jpg'),
+    ('Cuatro acordes y un solo', 'img/historia/thc.jpg'), ('Dadme hasta el domingo', 'img/concierto-3.jpg'),
+]
+filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
+perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}"><i class="av {k}"></i><span>{n}</span></button>'
+                   for k, n in [('brais', 'Brais'), ('profes', 'Profesorado'), ('diego', 'Diego'), ('invitados', 'Invitados')])
 i0 = html.index('<div id="gate"'); i1 = html.index('<div id="prog">')
-html = html[:i0] + '''<div id="gate" role="dialog" aria-modal="true" aria-label="Empezar la película">
-  <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
-  <div class="nx-top"><span class="nx-logo">BANDMANAGER</span><span class="nx-orig">ORIGINALS</span></div>
-  <div class="nx-hero">
-    <div class="nx-sello"><i>N</i> PELÍCULA ORIGINAL</div>
-    <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
-    <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
-    <p class="nx-gen">Comedia · Rock · Tecnología · Basada en hechos casi reales</p>
-    <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
-    <div class="gate-btns">
-      <button id="gatePeli" class="gate-btn primary">▶ Reproducir</button>
-      <button id="gateCorto" class="gate-btn">Corte de 5 min</button>
-      <button id="gateSound" class="gate-btn">Ver como presentación</button>
-      <button id="gateSilent" class="gate-btn">Sin sonido</button>
+html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-modal="true" aria-label="Empezar la película">
+  <div class="nx-perfiles">
+    <span class="nx-logo nx-logo-g">NETFLIX</span>
+    <h2>¿Quién está viendo ahora?</h2>
+    <div class="nx-pf">''' + perfiles + '''</div>
+    <span class="nx-admin">ADMINISTRAR PERFILES</span>
+  </div>
+  <div class="nx-home">
+    <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
+    <video class="nx-vid" muted loop playsinline preload="auto" poster="video/actores/concierto.jpg" aria-hidden="true"><source src="video/actores/concierto.mp4" type="video/mp4"></video>
+    <div class="nx-velo"></div>
+    <div class="nx-top">
+      <span class="nx-logo">NETFLIX</span>
+      <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
+      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i><i class="av brais mini"></i></div>
     </div>
+    <div class="nx-hero">
+      <div class="nx-sello"><i>N</i> PELÍCULA</div>
+      <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
+      <div class="nx-top10"><b>TOP<br>10</b><span>N.º 1 en películas hoy</span></div>
+      <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+      <div class="gate-btns">
+        <button id="gatePeli" class="gate-btn primary">&#9654; Reproducir</button>
+        <button class="gate-btn nx-info" tabindex="-1" aria-hidden="true">&#9432; Más información</button>
+      </div>
+      <div class="nx-alt"><button id="gateCorto" class="gate-btn">Corte de 5 min</button><button id="gateSound" class="gate-btn">Ver como presentación</button><button id="gateSilent" class="gate-btn">Sin sonido</button></div>
+      <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
+      <p class="nx-gen">Comedia · Rock · Tecnología · Basada en hechos casi reales</p>
+    </div>
+    <div class="nx-lado"><i class="nx-mute"></i><span class="nx-edad">+12</span></div>
+    <div class="nx-filas"><h3>Próximamente</h3><div class="nx-row">''' + filas + '''</div></div>
     <div class="gate-note">TFM · Máster de Desarrollo con IA · The Big School by Brais Moure — F pantalla completa · espacio pausa · C subtítulos</div>
   </div>
 </div>

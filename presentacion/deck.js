@@ -404,7 +404,20 @@
       if ($('#gatePeli')) $('#gatePeli').onclick = peli(false);
       if ($('#gateCorto')) $('#gateCorto').onclick = peli(true);
       $('#gateSilent').onclick = () => go(false);
-      ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
+      // ¿Quién está viendo? → inicio con la película destacada: a los pocos segundos arranca el tráiler solo
+      const vid = $('.nx-vid');
+      const aInicio = (btn) => {
+        if (gate.dataset.fase !== 'perfiles') return;
+        btn.classList.add('elegido');
+        setTimeout(() => {
+          gate.dataset.fase = 'home';
+          ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
+          if (vid) setTimeout(() => { vid.play().then(() => gate.classList.add('trailer')).catch(() => {}); }, 2600);
+        }, 700);
+      };
+      $$('.nx-perfil').forEach((b) => { b.onclick = () => aInicio(b); });
+      if ($('.nx-perfil')) $('.nx-perfil').focus({ preventScroll: true });
+      else ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
       if (corte) document.body.classList.add('corte');
     } else gate.remove();
   }
@@ -459,7 +472,11 @@
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (document.body.classList.contains('gate')) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); ($('#gatePeli') || $('#gateSound')).click(); }
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (gate && gate.dataset.fase === 'perfiles') ($('.nx-perfil.elegido') || $('.nx-perfil')).click();
+        else ($('#gatePeli') || $('#gateSound')).click();
+      }
       return;
     }
     if (e.target.tagName === 'VIDEO' && (e.key === ' ' || e.key === 'Enter')) return;

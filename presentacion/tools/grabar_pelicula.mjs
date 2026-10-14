@@ -33,10 +33,11 @@ const ctx = await browser.newContext({ viewport: { width: W, height: H }, record
 const t0 = Date.now(); // el vídeo empieza al crear la página
 const page = await ctx.newPage();
 const t1 = Date.now();
-await page.route(/\/video\/[^/]+\.mp4$/, async (r) => {
+await page.route(/\/video\/(?:actores\/)?[^/]+\.mp4$/, async (r) => {
   const n = r.request().url().split('/').pop().replace('.mp4', '.webm');
-  const f = path.join(WEBM, n);
-  if (fs.existsSync(f)) await r.fulfill({ path: f, contentType: 'video/webm' }); else await r.continue();
+  // los de video/actores ya traen su copia .webm al lado (el tráiler de la pantalla de Netflix usa uno)
+  const f = [path.join(WEBM, n), path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'video', 'actores', n)].find((x) => fs.existsSync(x));
+  if (f) await r.fulfill({ path: f, contentType: 'video/webm' }); else await r.continue();
 });
 await page.addInitScript(() => {
   try { localStorage.setItem('bm_subs', 'es'); } catch (e) { /* sin almacenamiento */ }
@@ -72,7 +73,7 @@ await page.addInitScript(() => {
 });
 await page.goto(DECK);
 const PUERTA = process.env.GATE || 'gatePeli'; // gateCorto = el corte de 5 minutos
-await page.waitForSelector('#' + PUERTA);
+await page.waitForSelector('#' + PUERTA, { state: 'attached' });
 // Claqueta: medio segundo en magenta con su hora exacta en el reloj de la página. Luego se busca en el vídeo, y así
 // imagen y sonido se alinean midiendo (el inicio real del vídeo de Playwright varía con la carga de la máquina)
 const claqueta = () => page.evaluate(() => new Promise((res) => {
@@ -81,6 +82,15 @@ const claqueta = () => page.evaluate(() => new Promise((res) => {
   requestAnimationFrame(() => requestAnimationFrame(() => { const t = performance.now(); setTimeout(() => { d.remove(); requestAnimationFrame(() => res(t)); }, 500); }));
 }));
 const claq1 = await claqueta();
+// Pantalla de Netflix: se elige el perfil, se ve el inicio y arranca el tráiler solo (INTRO=0 la salta y el MP4 empieza en «Reproducir»)
+let tIntroPag = null;
+if (process.env.INTRO !== '0' && await page.$('.nx-perfil')) {
+  tIntroPag = await page.evaluate(() => performance.now());
+  await page.waitForTimeout(1800); // los perfiles, un momento a la vista
+  await page.click('.nx-perfil');
+  await page.waitForSelector('#gate.trailer', { timeout: 15000 }).catch(() => {});
+  await page.waitForTimeout(3500); // el tráiler rueda y la sinopsis se recoge
+} else if (await page.$('.nx-perfil')) { await page.click('.nx-perfil'); await page.waitForTimeout(900); }
 const tClick = Date.now();
 const tClickPag = await page.evaluate(() => performance.now());
 await page.click('#' + PUERTA);
@@ -126,8 +136,8 @@ const v1 = magenta(0), v2 = v1 === null ? null : magenta(Math.max(v1 + 2, v1 + (
 const off = v1 === null ? (t1 - t0) / 1000 + 0.15 : v1 - claq1 / 1000;
 if (v1 !== null && v2 !== null) console.log(`claquetas: desfase ${off.toFixed(3)} s · deriva en ${((claq2 - claq1) / 60000).toFixed(1)} min: ${((v2 - claq2 / 1000) - off).toFixed(3)} s`);
 else console.log('OJO: sin claqueta en el vídeo; sincronía estimada');
-// el MP4 empieza al pulsar «Reproducir» (justo con el logotipo), sin la pantalla de entrada ni la claqueta
-const inicio = Math.max(0, tClickPag / 1000 + off + 0.1);
+// el MP4 empieza en la pantalla de perfiles de Netflix (o, con INTRO=0, al pulsar «Reproducir», justo con el logotipo), sin la claqueta
+const inicio = Math.max(0, (tIntroPag !== null ? tIntroPag : tClickPag) / 1000 + off + 0.1);
 fs.writeFileSync(path.join(tmp, 'eventos.json'), JSON.stringify({ off, audio: datos.audio, ahora: datos.ahora }));
 datos.taps.forEach((t, i) => fs.writeFileSync(path.join(tmp, `tap${i}.webm`), Buffer.from(t.b64, 'base64')));
 fs.writeFileSync(path.join(tmp, 'taps.json'), JSON.stringify(datos.taps.map((t, i) => ({ f: `tap${i}.webm`, t: t.t }))));
