@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { moverEntreVisibles, leerPanel, panelDeBanda, conPanel, visibleEnMovil, ESENCIALES_MOVIL } from '../panelWidgets';
+import { moverEntreVisibles, leerPanel, panelDeBanda, conPanel, visibleEnMovil, widgetNuevo, ESENCIALES_MOVIL } from '../panelWidgets';
+import { AVAILABLE_MODULE_WIDGETS } from '../../types/dashboardWidgets';
 import type { DashboardWidgetConfig } from '../../types/dashboardWidgets';
 
 const w = (id: string) => ({ id });
@@ -90,5 +91,26 @@ describe('visibleEnMovil', () => {
     expect(visibleEnMovil({ movil: false })).toBe(false);
     expect(ESENCIALES_MOVIL.has('calendar')).toBe(true);
     expect(ESENCIALES_MOVIL.has('marketing')).toBe(false);
+  });
+});
+
+describe('widgetNuevo', () => {
+  const meta = (tipo: string) => AVAILABLE_MODULE_WIDGETS.find((m) => m.type === tipo)!;
+
+  it('sale visible, al final del orden y con el tamaño del catálogo', () => {
+    const m = meta('crm_pipeline');
+    const n = widgetNuevo('crm_pipeline', m, 7, 123);
+    expect(n).toMatchObject({ id: 'crm_pipeline-123', type: 'crm_pipeline', title: m.title, wSpan: m.defaultWSpan, visible: true, order: 7 });
+    expect(n.hSpan).toBe(m.defaultHSpan || 'normal');
+  });
+
+  it('en el móvil solo entra si es de los esenciales', () => {
+    expect(widgetNuevo('crm_pipeline', meta('crm_pipeline'), 0).movil).toBe(ESENCIALES_MOVIL.has('crm_pipeline'));
+    expect(widgetNuevo('repertorio_summary', meta('repertorio_summary'), 0).movil).toBe(false);
+  });
+
+  it('el calendario arranca en lista y sin filtro; el resto sin ajustes', () => {
+    expect(widgetNuevo('calendar', meta('calendar'), 0).settings).toEqual({ calendarViewMode: 'list', calendarFilter: 'all' });
+    expect(widgetNuevo('crm_pipeline', meta('crm_pipeline'), 0).settings).toBeUndefined();
   });
 });
