@@ -158,18 +158,18 @@
   "lines": [
    {
     "who": "voz",
-    "txt": "¡¿Esto lo has hecho tú?!",
-    "voz": "[gasps] Pará. ¿Esto lo hiciste vos? ¿El bajista?"
+    "txt": "¡¿Esto lo has hecho tú?! 😱",
+    "voz": "[gasps] ¡Pará, pará, pará! ¿Esto lo hiciste vos? ¿El bajista? ¡Pero esto es de empresa grande, boludo!"
    },
    {
     "who": "bajo",
     "txt": "Con ayuda. Aquí tengo las salas y los festivales, y cada conversación queda guardada.",
-    "voz": "Con un poco de ayuda. Aquí están las salas y festivales, y cada conversación queda guardada."
+    "voz": "Con un poco de ayuda. Aquí están las salas y festivales, y cada conversación queda guardada. Ni una sala se pierde ya."
    },
    {
     "who": "guitarra",
-    "txt": "¡Una base de datos de salas!",
-    "voz": "[shouts] ¡Una base de datos de salas! ¡Te lo dije, tío!"
+    "txt": "¡Una base de datos de salas! ¡Te lo dije, tío! 🔮",
+    "voz": "[shouts] ¡Una base de datos de salas! ¡Te lo dije, tío! ¡Te lo dije! ¡Soy un vidente, soy Nostradamus con pedales!"
    },
    {
     "who": "bajo",
@@ -180,6 +180,11 @@
     "who": "bajo",
     "txt": "Y todos, en el mapa de toda España.",
     "voz": "Y todos, en el mapa de toda España."
+   },
+   {
+    "who": "bateria",
+    "txt": "¡Todas las salas de España en un mapa! ¡Y yo, con el Excel de las siete versiones, llorando! 😭",
+    "voz": "[excited] ¡Todas las salas de España en un mapa! ¡Y yo, con el Excel de las siete versiones, llorando!"
    }
   ],
   "nota": "Misma estructura de 5 líneas. El '¡Te lo dije!' ahora tiene setup (viernes) y el 'Casi' arranca el gag de Álvaro adivinando a medias. Cierre con callback a la sala del 14."
@@ -190,8 +195,8 @@
   "lines": [
    {
     "who": "guitarra",
-    "txt": "¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba!",
-    "voz": "¡Ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba!"
+    "txt": "¡Ha escrito a tres salas y al Resurrection Fest mientras yo afinaba! 🤯",
+    "voz": "[shouts] ¡Ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Mientras yo afinaba, tío! ¡Esto es magia negra!"
    },
    {
     "who": "bajo",
@@ -232,13 +237,13 @@
    },
    {
     "who": "bateria",
-    "txt": "¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!",
-    "voz": "[amazed] ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad!"
+    "txt": "¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad! ¡De las que cobran el treinta por ciento!",
+    "voz": "[amazed] ¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad! ¡De las que cobran el treinta por ciento!"
    },
    {
     "who": "voz",
-    "txt": "¡Y yo firmando los correos con un besito!",
-    "voz": "[laughs] ¡Y yo, que firmaba los correos con un besito, boludo!"
+    "txt": "¡Y yo, que firmaba los correos con un besito! 😂 ¡Ahora tengo hasta cargo!",
+    "voz": "[laughs] ¡Y yo, que firmaba los correos con un besito, boludo! ¡Ahora tengo hasta cargo!"
    }
   ],
   "nota": "Remate de Alan más visual (firmar con un besito). Quitado un '¡Ai, mi madriña!' de Brais: lo guardo para cuando más pesa (los choques del calendario)."
@@ -306,8 +311,8 @@
    },
    {
     "who": "voz",
-    "txt": "¡Cambió todo! ¡El logo, el calendario, hasta las salas!",
-    "voz": "[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!"
+    "txt": "¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas! ¡Esto es magia, boludo!",
+    "voz": "[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas! ¡Esto es magia, boludo, magia!"
    },
    {
     "who": "bajo",
@@ -350,6 +355,11 @@
     "who": "bajo",
     "txt": "Ves sus métricas del mes, en Spotify y en YouTube.",
     "voz": "Ves sus métricas del mes, en Spótifai y en Yutub."
+   },
+   {
+    "who": "guitarra",
+    "txt": "¡Esto es como Tinder, pero para bandas! 🔥",
+    "voz": "[excited] ¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!"
    }
   ],
   "nota": "Sin cambios de fondo: ya funcionaba (dolor dicho por Alan, solución en pantalla)."
@@ -380,8 +390,8 @@
    },
    {
     "who": "bateria",
-    "txt": "¡Se acabaron las sorpresas el día del bolo!",
-    "voz": "[excited] ¡Se acabaron las sorpresas el día del bolo!"
+    "txt": "¡Se acabaron las sorpresas el día del bolo! ¡Todo firmado y por escrito! 🙌",
+    "voz": "[excited] ¡Se acabaron las sorpresas el día del bolo! ¡Todo firmado, todo por escrito! ¡Ya no cobramos en croquetas!"
    }
   ],
   "nota": "Intacta salvo micro-ajustes: ya planta las croquetas y El Faro, que vuelven después."
@@ -441,8 +451,13 @@
    },
    {
     "who": "voz",
-    "txt": "Y la mía, con el tono de cada tema.",
-    "voz": "[amazed] Y la mía, con el tono de cada tema, che."
+    "txt": "¡Y la mía, con el tono de cada tema, che! ¡Esto es de banda de estadio!",
+    "voz": "[excited] ¡Y la mía, con el tono de cada tema, che! ¡Esto es de banda de estadio!"
+   },
+   {
+    "who": "bateria",
+    "txt": "¡Mi hoja, con mis notas! ¡Solo las mías! ¡Nunca había tenido una hoja propia! 🥁",
+    "voz": "[excited] ¡Mi hoja, con mis notas! ¡Solo las mías! ¡Nunca había tenido una hoja propia en mi vida!"
    }
   ],
   "nota": "Fusiona «La curva de energía»: la pantalla ordena el setlist y, al imprimirlo, entran las hojas. El remate del tono lo da Alan en su entrevista (doce años cantando sin saber en qué tono)."
@@ -490,8 +505,8 @@
    },
    {
     "who": "guitarra",
-    "txt": "¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!",
-    "voz": "[amazed] ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!"
+    "txt": "¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo! ¡Y la vida!",
+    "voz": "[amazed] ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo! ¡Me acaba de arreglar la vida!"
    },
    {
     "who": "bajo",
@@ -571,8 +586,8 @@
    },
    {
     "who": "bateria",
-    "txt": "¡Ai, mi madriña! ¡Me ha salvado el miércoles!",
-    "voz": "[amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles!"
+    "txt": "¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale oro, neno!",
+    "voz": "[amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!"
    },
    {
     "who": "voz",
@@ -620,8 +635,8 @@
    },
    {
     "who": "guitarra",
-    "txt": "Esto ya no es un local de ensayo, es una discográfica. Una que no se queda el 30 %.",
-    "voz": "[amazed] Esto ya no es un local de ensayo, es una discográfica. Una que no se queda el treinta por ciento."
+    "txt": "Esto ya no es un local de ensayo, es una discográfica. ¡Una que no se queda el treinta por ciento! ¡Que alguien me pellizque!",
+    "voz": "[amazed] Esto ya no es un local de ensayo, es una discográfica. ¡Una que no se queda el treinta por ciento! ¡Que alguien me pellizque!"
    }
   ],
   "nota": "4 líneas intactas. Fuera el 'co[pi]' (sin palabrotas, ni siquiera tapadas) y entra el dolor del enlace viejo. Remate con callback a Peláez."
@@ -647,8 +662,8 @@
    },
    {
     "who": "voz",
-    "txt": "¿Una lista de gente que nos quiere? ¡Dónde firmo, che!",
-    "voz": "[excited] ¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che!"
+    "txt": "¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che! ¡Esto es oro puro!",
+    "voz": "[excited] ¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che! ¡Esto es oro puro!"
    }
   ],
   "nota": "4 líneas intactas. El dolor (flyers que acaban de posavasos) sustituye a la repetición '¿así, sin más?'. 'el cú-erre' se mantiene para que el subtítulo diga 'el QR'."
@@ -696,8 +711,8 @@
    },
    {
     "who": "bateria",
-    "txt": "¿O sea que le subes el concierto entero y te saca los trozos más virales?",
-    "voz": "[gasps] ¿O sea que le subes el concierto entero y te saca los trozos más virales?"
+    "txt": "¿O sea que le subes el concierto entero y te saca los trozos más virales? ¿Incluido mi solo de batería? 🤩",
+    "voz": "[gasps] ¿O sea que le subes el concierto entero y te saca los trozos más virales? ¿Incluido mi solo de batería? ¡Ai, mi madriña!"
    },
    {
     "who": "bajo",
@@ -713,6 +728,11 @@
     "who": "bajo",
     "txt": "Qué va. Programas cada reel en cada red, con su día y su hora.",
     "voz": "Qué va. Programas cada reel en cada red, con su día y su hora."
+   },
+   {
+    "who": "voz",
+    "txt": "¡Esto es tener un equipo de marketing entero en el bolsillo! 🚀",
+    "voz": "[excited] ¡Esto es tener un equipo de marketing entero metido en el bolsillo!"
    }
   ],
   "nota": "Alan pone el dolor (nadie ve sus vídeos). Recortado el 'se me ocurrió hacer...' de Iago y otro '¡Ai, mi madriña!'."
@@ -762,8 +782,8 @@
    },
    {
     "who": "guitarra",
-    "txt": "¡Las cuentas claras! ¡Y salen números positivos!",
-    "voz": "¡Las cuentas claras! ¡Y salen números positivos!"
+    "txt": "¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!",
+    "voz": "[excited] ¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!"
    },
    {
     "who": "bajo",
@@ -799,8 +819,8 @@
    },
    {
     "who": "guitarra",
-    "txt": "¡Ni una discusión más en la gasolinera!",
-    "voz": "[laughs] ¡Ni una discusión más en la gasolinera!"
+    "txt": "¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío! ❤️",
+    "voz": "[laughs] ¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!"
    }
   ],
   "nota": "Brais sigue con su desastre de cuentas ('la puse yo. Creo.')."
@@ -880,8 +900,8 @@
    },
    {
     "who": "bateria",
-    "txt": "¡Pero si no le falta de nada!",
-    "voz": "[gasps] ¡Pero si no le falta de nada!"
+    "txt": "¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas! 🤯",
+    "voz": "[gasps] ¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas!"
    }
   ],
   "nota": "La lista ya no repite lo enseñado (reels, dossier, armonías): nombra lo que sale en la ráfaga de pantalla (ideas, ficha del bolo). Vuelve la adivinanza de Álvaro con su 'Casi'."
@@ -892,8 +912,8 @@
   "lines": [
    {
     "who": "voz",
-    "txt": "Iago, esto es una locura. Lo necesitan todos los grupos, los mánagers, las productoras.",
-    "voz": "[gasps] Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras."
+    "txt": "Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!",
+    "voz": "[gasps] Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!"
    },
    {
     "who": "bateria",

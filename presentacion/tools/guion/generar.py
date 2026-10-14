@@ -1444,8 +1444,15 @@ PROXIMAMENTE = [
     ('Cuatro acordes y un solo', 'img/historia/thc.jpg'), ('Dadme hasta el domingo', 'img/concierto-3.jpg'),
 ]
 filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
-perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}"><i class="av {k}"></i><span>{n}</span></button>'
-                   for k, n in [('brais', 'Brais'), ('profes', 'Profesorado'), ('diego', 'Diego'), ('invitados', 'Invitados')])
+# Fotos de los perfiles (si falta un fichero, se queda la carita de color; lo de Brais y el logo de The Big School los aporta Diego)
+import os
+PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado', 'img/perfil-tbs.png'),
+            ('pelaez', 'Invitado Peláez', 'video/actores/pelaez.jpg'), ('diego', 'Diego', 'img/diego-bajista.jpg')]
+def _av(k, foto, extra=''):
+    ok = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', foto))
+    return f'<i class="av {k}{" foto" if ok else ""}{extra}"' + (f' style="--foto:url({foto})"' if ok else '') + '></i>'
+perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}">{_av(k, f)}<span>{n}</span></button>' for k, n, f in PERFILES)
+AV_BRAIS = _av('brais', PERFILES[0][2], ' mini')
 i0 = html.index('<div id="gate"'); i1 = html.index('<div id="prog">')
 html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-modal="true" aria-label="Empezar la película">
   <div class="nx-perfiles">
@@ -1461,16 +1468,16 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     <div class="nx-top">
       <span class="nx-logo">NETFLIX</span>
       <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
-      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i><i class="av brais mini"></i></div>
+      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i>' + AV_BRAIS + '</div>
     </div>
     <div class="nx-hero">
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
       <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
       <div class="nx-top10"><b>TOP<br>10</b><span>N.º 1 en películas hoy</span></div>
-      <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+      <p class="nx-sin">Una banda a punto de separarse. Un bajista que promete arreglarlo antes del sábado. Y una aplicación que ni él se cree que haya hecho.</p>
       <div class="gate-btns">
         <button id="gatePeli" class="gate-btn primary">&#9654; Reproducir</button>
-        <button class="gate-btn nx-info" tabindex="-1" aria-hidden="true">&#9432; Más información</button>
+        <button id="gateInfo" class="gate-btn nx-info">&#9432; Más información</button>
       </div>
       <div class="nx-alt"><button id="gateCorto" class="gate-btn">Corte de 5 min</button><button id="gateSound" class="gate-btn">Ver como presentación</button><button id="gateSilent" class="gate-btn">Sin sonido</button></div>
       <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
@@ -1478,6 +1485,27 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     </div>
     <div class="nx-lado"><i class="nx-mute"></i><span class="nx-edad">+12</span></div>
     <div class="nx-filas"><h3>Próximamente</h3><div class="nx-row">''' + filas + '''</div></div>
+    <div class="nx-modal" id="nxModal" role="dialog" aria-label="Más información" hidden>
+      <div class="nx-mcard">
+        <div class="nx-mfoto" style="--img:url(img/concierto-2.jpg)"><button class="nx-cerrar" id="nxCerrar" aria-label="Cerrar">&#10005;</button>
+          <h2>Os Herdeiros<br>do Código</h2>
+          <div class="gate-btns"><button class="gate-btn primary" id="nxModalPeli">&#9654; Reproducir</button></div>
+        </div>
+        <div class="nx-mcuerpo">
+          <div class="nx-mizq">
+            <div class="nx-meta"><span class="nx-verde">98 % para ti</span><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span></div>
+            <p>Una banda a punto de separarse. Un bajista que promete arreglarlo antes del sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+            <p class="nx-peq">Cuatro amigos, un Excel con siete versiones de cada cosa y una pregunta que nadie sabía contestar: ¿quién se ocupa de la banda? La respuesta es una aplicación que hizo el bajista.</p>
+          </div>
+          <dl class="nx-mder">
+            <dt>Reparto:</dt><dd>{voz}, {guitarra}, {bateria}, {bajo}</dd>
+            <dt>Géneros:</dt><dd>Comedias de rock, Películas sobre tecnología</dd>
+            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo</dd>
+            <dt>Dirección:</dt><dd>Diego de la Calle</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
     <div class="gate-note">TFM · Máster de Desarrollo con IA · The Big School by Brais Moure — F pantalla completa · espacio pausa · C subtítulos</div>
   </div>
 </div>
