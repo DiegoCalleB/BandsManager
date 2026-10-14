@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Tabla de Supabase `reel_clips` (10 columnas).
+Tabla de Supabase `reel_clips` (11 columnas).
 
 ---
 
@@ -39,8 +39,9 @@ Tabla de Supabase `reel_clips` (10 columnas).
 - `loop_perfecto`
 - `hook_text`
 - `created_at`
+- `control_calidad`
 
-**Definida en:** `supabase/migrations/20261104_reels_publicacion_real.sql`
+**Definida en:** `supabase/migrations/20261104_reels_publicacion_real.sql`, `supabase/migrations/20261105_reel_clips_control_calidad.sql`
 
 ---
 

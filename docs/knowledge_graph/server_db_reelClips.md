@@ -19,6 +19,7 @@ Procedencia de los clips renderizados: de qué vídeo sale cada uno y si sus der
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_core|server/db/core.ts]] *(Layer: #db, Domain: #system)*
+- [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_reel_clips|tabla reel_clips]] *(Layer: #schema, Domain: #social)*
 
 ---

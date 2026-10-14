@@ -32,7 +32,6 @@ import {
   resumirEnergiaParaPrompt
 } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
-import { uploadToSupabaseIfAvailable, rutaAlmacenamientoClip } from "../utils/storage.js";
 import {
   detectarCambiosDePlano,
   detectarTipoContenido,
@@ -60,7 +59,7 @@ import {
 } from "../utils/reelsCore.js";
 import { renderizarClip } from "../services/clipRenderer.js";
 import { diagnosticarHook } from "../services/hookDoctor.js";
-import { duracionDeLoopAjustada, escribirRotuloHook, registrarProcedenciaClip } from "../services/clipNovedades.js";
+import { duracionDeLoopAjustada, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
 import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
 import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -698,38 +697,14 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
 
     const tamano = fs.statSync(rutaSalida).size;
 
-    // Se intenta subir a Supabase Storage para que el clip sobreviva al próximo despliegue:
-    // public/clips/ vive en el disco EFÍMERO de Railway, y se pierde en cada redeploy.
-    // Best-effort: si Supabase no responde, se sigue sirviendo desde el disco local exactamente
-    // como antes (mismo comportamiento, solo que ese clip no sobrevivirá a un redeploy).
-    let clipUrl = `/clips/${nombreSalida}`;
-    let guardadoPermanente = false;
-    try {
-      const bandId = getTargetBandId(req);
-      const urlPermanente = await uploadToSupabaseIfAvailable(
-        rutaSalida,
-        rutaAlmacenamientoClip(bandId, nombreSalida),
-        "video/mp4"
-      );
-      if (urlPermanente) {
-        clipUrl = urlPermanente;
-        guardadoPermanente = true;
-        // Ya no hace falta servirlo desde el disco local: subido con éxito, se libera el
-        // espacio ya mismo en vez de esperar a la barrida periódica.
-        await borrarSiExiste([rutaSalida]);
-      }
-    } catch (errCapturado) {
-      const err = comoErrorCapturado(errCapturado);
-      console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
-    }
-
-    // Procedencia y derechos: solo un clip guardado de forma permanente se puede autopublicar.
-    let derechos: string | null = null;
-    if (guardadoPermanente) {
-      const perfil = await perfilDeLaPeticion(req);
-      derechos = await registrarProcedenciaClip({
-        bandId: getTargetBandId(req),
-        clipUrl,
+    // Control de calidad + subida a Storage + procedencia/derechos (ver guardarClipRenderizado).
+    const perfil = await perfilDeLaPeticion(req);
+    const { clipUrl, guardadoPermanente, derechos, calidad } = await guardarClipRenderizado({
+      bandId: getTargetBandId(req),
+      rutaLocal: rutaSalida,
+      nombreFichero: nombreSalida,
+      esperado: { hookPedido: Boolean(String(hookText || "").trim()), hookQuemado: Boolean(rutaHook), volumenNormalizado: normalizarVolumen !== false },
+      procedencia: {
         sourceUrl: canonicalYouTubeUrl(videoId),
         canalOrigen: metaOrigen.author,
         youtubeDeLaBanda: perfil.youtube,
@@ -737,8 +712,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
         declaradoPorLaBanda: Boolean(derechosDeclarados),
         loopPerfecto: plan.loopAplicado,
         hookText: String(hookText || "")
-      });
-    }
+      }
+    });
 
     // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
     // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
@@ -754,6 +729,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       loopApplied: plan.loopAplicado,
       hookBurned: Boolean(rutaHook),
       rights: derechos,
+      quality: calidad,
       cropMode,
       burnedSubtitles: incrustarSubs,
       subtitles: cues,

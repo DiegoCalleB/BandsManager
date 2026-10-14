@@ -24,6 +24,8 @@ Control de calidad de un clip antes de publicarlo (Fase 6 del plan de Reels).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_db_reelClips|server/db/reelClips.ts]] *(from #db)*
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(from #service)*
 
 ---

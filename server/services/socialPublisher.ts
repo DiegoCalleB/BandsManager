@@ -48,7 +48,7 @@ const ESTADOS_PUBLICACION_PROGRAMADA: SocialPost["estado"][] = ["aprobado", "en_
 export function motivoParaNoAutopublicar(
   post: SocialPost,
   credenciales: CredencialesInstagram | null,
-  clip: Pick<ReelClip, "derechos"> | null
+  clip: Pick<ReelClip, "derechos" | "control_calidad"> | null
 ): string | null {
   if ((post.plataforma || "Instagram") !== "Instagram") {
     return `La publicación automática en ${post.plataforma} aún no está disponible: descarga el vídeo, súbelo desde la app y marca el post como publicado.`;
@@ -61,6 +61,13 @@ export function motivoParaNoAutopublicar(
   }
   if (!clip?.derechos) {
     return "No consta que el vídeo de origen sea de la banda (su canal no coincide con el YouTube de la banda). Para evitar un strike de copyright no se publica solo: súbelo tú si tienes los derechos.";
+  }
+  if (!clip.control_calidad) {
+    return "No se pudo comprobar la calidad del clip al renderizarlo: vuelve a renderizarlo antes de publicarlo.";
+  }
+  if (!clip.control_calidad.aprobado) {
+    const motivos = clip.control_calidad.bloqueantes.map((p) => p.mensaje).join(" ");
+    return `El clip no ha pasado el control de calidad: ${motivos} Corrige el corte y vuelve a renderizarlo.`;
   }
   return null;
 }

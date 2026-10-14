@@ -25,7 +25,7 @@ Mide un clip renderizado con ffmpeg y lo juzga con `evaluarCalidadClip`. Una sol
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 
 ---
 

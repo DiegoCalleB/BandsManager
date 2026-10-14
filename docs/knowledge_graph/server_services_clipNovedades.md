@@ -19,17 +19,26 @@ Pasos de /cut-video-clip que salieron del render clásico: cierre de loop, rótu
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_db_reelClips|server/db/reelClips.ts]] *(Layer: #db, Domain: #social)*
+- [[server_services_clipArchivos|server/services/clipArchivos.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_derechosClip|server/utils/derechosClip.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_hookRotulo|server/utils/hookRotulo.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_loopPerfecto|server/utils/loopPerfecto.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/clipNovedades.test.ts`
 
 ---
 

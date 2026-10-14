@@ -1,6 +1,7 @@
 // Procedencia de los clips renderizados: de qué vídeo sale cada uno y si sus derechos son de la banda.
 
 import { getSupabase, cleanBandId } from "./core.js";
+import type { InformeCalidad } from "../utils/controlCalidadClip.js";
 
 export type DerechosClip = "canal_de_la_banda" | "declarado_por_la_banda";
 
@@ -14,6 +15,8 @@ export interface ReelClip {
   derechos: DerechosClip | null;
   loop_perfecto: boolean;
   hook_text: string;
+  /** null = no se pudo medir; el publicador no lo autopublica. */
+  control_calidad: InformeCalidad | null;
 }
 
 export async function dbRegistrarReelClip(clip: Omit<ReelClip, "id" | "band_id">, bandId: string): Promise<void> {
@@ -28,7 +31,8 @@ export async function dbRegistrarReelClip(clip: Omit<ReelClip, "id" | "band_id">
     source_author_url: clip.source_author_url,
     derechos: clip.derechos,
     loop_perfecto: clip.loop_perfecto,
-    hook_text: clip.hook_text
+    hook_text: clip.hook_text,
+    control_calidad: clip.control_calidad
   });
   if (error) throw new Error(`Supabase Error (reel_clips): ${error.message}`);
 }
