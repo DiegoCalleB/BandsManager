@@ -2254,6 +2254,15 @@ body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .
 .con-paso.paso2 .ft-shot { filter: brightness(.45) blur(2px); transition: filter 600ms ease; }
 body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
 
+/* El contraplano de los músicos ya no tapa la app: en las diapositivas de producto es una ventanita (imagen dentro de
+   imagen) y la pantalla de BandManager se ve siempre. Con la tele del local, arriba a la derecha, justo bajo la banda de
+   cine y sobre el marco; con el móvil, en el lado izquierdo, que está vacío en la película. */
+body.pelicula:not(.scroll) #reaccion { inset: auto; right: 56px; top: 56px; width: 280px; height: 158px; border-radius: 14px;
+  border: 3px solid rgba(255,255,255,.85); box-shadow: 0 18px 50px rgba(0,0,0,.7); }
+body.pelicula:not(.scroll):has(.slide.feat.active .ft-shot.phone) #reaccion { right: auto; left: 120px; top: 300px; width: 560px; height: 315px; }
+/* el correo ocupa toda la pantalla (cámara incluida): ahí no hay contraplano, que se vea el correo */
+body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display: none; }
+
 /* ── Netflix: ¿quién está viendo? y pantalla de inicio con la película destacada ── */
 #gate { background: #141414; }
 .nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
