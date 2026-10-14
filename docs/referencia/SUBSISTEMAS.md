@@ -10,6 +10,9 @@ Documentación técnica y operativa de los 13 subsistemas clave de la plataforma
 * Filtra fragmentos virales analizando la energía del audio.
 * Almacena clips generados en **Supabase Storage**.
 * Utiliza el "Tone DNA" persistente y configurable por banda para generar copias alineadas con la identidad de la banda.
+* **Render** (`server/services/clipRenderer.ts` + `server/utils/clipFiltros.ts`): el plan de filtros es una función pura (encuadre → subtítulos → hook → loop). Hook de 2,5 s (`hookRotulo.ts`), −14 LUFS, calidad alta y loop opcional con cruce final→inicio (`loopPerfecto.ts`). `clipFiltros.ffmpeg.test.ts` renderiza con el ffmpeg real: `xfade` exige frame rate constante y `acrossfade` no emite audio con dos ramas de un mismo `asplit`.
+* **Publicación** (`server/services/socialPublisher.ts`): solo Instagram Reels es real (Graph API, token de la propia banda); nunca se marca `publicado` sin el id de la plataforma. El worker corre cada 60 s, reclama cada post con un UPDATE atómico y solo publica lo `aprobado`/`en_cola` con `auto_publish` activo, interpretando fecha y hora en la zona de la banda. El resto se explica y queda para publicación asistida.
+* **Derechos** (`utils/derechosClip.ts`, tabla `reel_clips`): un clip solo se autopublica si el canal de origen es de la banda o la banda declara que tiene los derechos.
 
 ---
 

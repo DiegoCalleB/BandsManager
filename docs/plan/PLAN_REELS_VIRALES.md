@@ -9,6 +9,33 @@
 
 ---
 
+## Estado de ejecución (2026-10-14)
+
+| Bloque | Estado | Dónde |
+|--------|--------|-------|
+| D1 publicación simulada | ✅ eliminada: solo `publicado` con el id real de Instagram | `server/services/socialPublisher.ts`, `publicadores/instagramReels.ts` |
+| D2/D4 cron + claim atómico | ✅ worker cada 60 s, `UPDATE … WHERE estado IN (…)` | `socialPublisher.ts`, `db/social.ts` |
+| D3 zona horaria | ✅ hora de pared en la zona de la banda, con cambio de hora | `utils/programacionPosts.ts` |
+| D5 hook quemado | ✅ | `utils/hookRotulo.ts`, `utils/clipFiltros.ts` |
+| D6/D7 volumen y codificación | ✅ −14 LUFS, crf 19, 30 fps, GOP 2 s | `utils/clipFiltros.ts` |
+| D8 loop perfecto | ✅ cruce final→inicio + ajuste del corte ±1,5 s | `utils/clipFiltros.ts`, `utils/loopPerfecto.ts` |
+| D9/D10 Hook Doctor | ✅ fallback de modelo, ledger, retención `null` sin IA | `services/hookDoctor.ts` |
+| D12 copyright | ✅ solo se autopublica con canal de la banda o declaración expresa | `utils/derechosClip.ts`, tabla `reel_clips` |
+| Seguridad (hallazgo nuevo) | ✅ `/public/epk` devolvía el token de Instagram de la banda | `utils/enlacesPublicos.ts` |
+| Interruptores del estudio sin efecto (hallazgo nuevo) | ✅ loop, zoom y smart-pan ya llegan al render | `useClipRendering.ts` |
+
+**Pendiente** (en orden): beat-drop alineado a compases reales (hoy parpadea cada 4 s, por eso no se
+conecta) · YouTube Shorts y TikTok reales · Fases 3 (copy con juez), 4 (hora óptima con datos),
+5 (métricas por Reel y KPI de rewatch) y 6 (quality gate con `blackdetect`/`silencedetect`) ·
+tras desplegar: aplicar `20261104_reels_publicacion_real.sql` y probar con una cuenta real de
+Instagram Business (la API de Meta solo se ha probado con respuestas simuladas).
+
+**Lección:** el plan de filtros pasó los tests de texto y aun así fallaba en el ffmpeg de producción
+(`xfade` exige frame rate constante; `acrossfade` no emite audio). Por eso existe
+`clipFiltros.ffmpeg.test.ts`, que renderiza de verdad.
+
+---
+
 ## 0. Diagnóstico del estado actual (verificado en código, 2026-10-14)
 
 | # | Hallazgo | Dónde | Gravedad |
