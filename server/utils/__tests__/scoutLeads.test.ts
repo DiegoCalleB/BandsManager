@@ -42,6 +42,19 @@ describe('limpiarCampoContacto', () => {
     expect(limpiarCampoContacto('desconocido')).toBe('');
   });
 
+  it('vacía los ejemplos de la plantilla actual del prompt del Scout (routes/agent.ts)', () => {
+    expect(limpiarCampoContacto('+34 000 000 000')).toBe('');
+    expect(limpiarCampoContacto('@usuario_oficial')).toBe('');
+    expect(limpiarCampoContacto('https://sitio-oficial.com')).toBe('');
+    expect(esLeadDescubiertoValido({ nombre_sala: 'Nombre oficial exacto' })).toBe(false);
+  });
+
+  it('vacía cualquier teléfono hecho solo de ceros, con o sin prefijo', () => {
+    expect(limpiarCampoContacto('000 00 00 00')).toBe('');
+    expect(limpiarCampoContacto('+351 000 000 000')).toBe('');
+    expect(limpiarCampoContacto('+34 959 21 01 00')).toBe('+34 959 21 01 00');
+  });
+
   it('vacía lo que no es texto', () => {
     expect(limpiarCampoContacto(undefined)).toBe('');
     expect(limpiarCampoContacto(null)).toBe('');

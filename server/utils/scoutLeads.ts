@@ -105,13 +105,18 @@ const RELLENOS = [
   '+34 900 000 000', '+34 912 34 56 78', '900000000', '000000000',
   'https://sala.com', 'http://sala.com', '@sala_oficial', 'n/a', 'na', 'null',
   'desconocido', 'no disponible', 'nombre de la sala',
+  // Ejemplos de la plantilla del prompt del Scout (routes/agent.ts): si vuelven, el modelo no sabía.
+  'nombre oficial exacto', '@usuario_oficial', 'https://sitio-oficial.com', 'http://sitio-oficial.com',
 ];
+
+/** Teléfono hecho solo de ceros (con o sin prefijo internacional): siempre es relleno. */
+const TELEFONO_DE_CEROS = /^(\+\d{1,3})?[\s0]+$/;
 
 function esRelleno(valor: unknown): boolean {
   if (typeof valor !== 'string') return true;
   const v = valor.trim().toLowerCase();
   if (!v) return true;
-  return RELLENOS.includes(v);
+  return RELLENOS.includes(v) || TELEFONO_DE_CEROS.test(v);
 }
 
 /** Limpia un campo de contacto: si es relleno o va vacío, devuelve "" en vez de inventar. */

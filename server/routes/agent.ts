@@ -395,14 +395,12 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
   }
 
   // --- EJECUCIÓN NATIVA SUPABASE PARA EL AGENTE SCOUT DESCUBRIDOR ---
-  if (
-    normalizedAgentName === 'scout' ||
-    normalizedAgentName === 'scout_descubridor'
-  ) {
+  if (normalizedAgentName === 'scout' || normalizedAgentName === 'scout_descubridor') {
     try {
       const sb = getSupabase();
-
-      const targetLoc = params?.ciudad || params?.region || 'Huelva';
+      // Sin ciudad no se busca (antes caía en 'Huelva', una ciudad que nadie había pedido).
+      const targetLoc = String(params?.ciudad || params?.region || '').trim();
+      if (!targetLoc) return res.status(400).json({ success: false, error: 'Indica la ciudad o región donde buscar salas.' });
       const tipo = params?.tipo || 'sala';
       const limit = Math.max(2, Math.min(10, Number(params?.limit) || 4));
       const state = loadState();
@@ -617,13 +615,13 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
       "nombre_sala": "Nombre oficial exacto",
       "ciudad": "${targetLoc}",
       "region": "${targetLoc}",
-      "aforo": 350,
+      "aforo": 0,
       "genero": "Estilo musical o línea de programación",
       "tipo": "${tipo}",
       "email_contacto": "",
-      "telefono": "+34 000 000 000",
-      "instagram": "@usuario_oficial",
-      "website": "https://sitio-oficial.com",
+      "telefono": "",
+      "instagram": "",
+      "website": "",
       "notas": "Descripción breve del recinto o entidad."
     }
   ]
