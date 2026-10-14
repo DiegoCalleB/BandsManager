@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { leerAtril } from './leerAtril';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { BarraAcordeActual, DiagramasAcordeActual, type EstadoAcordeActual } from '../components/chords/AcordeActual';
+import { BarraAcordeActual, DiagramasAcordeActual } from '../components/chords/AcordeActual';
+import type { EstadoAcordeActual } from '../components/chords/acordeActualEstado';
 
 const estado = (acorde: string | null, diagramas = true): EstadoAcordeActual => ({ acorde, previo: null, diagramas, alternarDiagramas: () => {} });
 const base = { contexto: new Map(), vista: 'guitarra' as const, onVista: () => {} };

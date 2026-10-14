@@ -11,7 +11,8 @@ import { AtrilBody } from "./AtrilBody";
 import { AtrilHeader } from "./AtrilHeader";
 import { AtrilModals } from "./AtrilModals";
 import { AtrilToolbar } from "./AtrilToolbar";
-import { BarraAcordeActual, DiagramasAcordeActual, useAcordeActual } from "../chords/AcordeActual";
+import { BarraAcordeActual, DiagramasAcordeActual } from "../chords/AcordeActual";
+import { useAcordeActual } from "../chords/acordeActualEstado";
 import { DetectedChordsPanel } from "./DetectedChordsPanel";
 
 
