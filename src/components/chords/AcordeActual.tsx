@@ -4,54 +4,63 @@ import type { ContextoAcorde, VistaAcorde } from '../../utils/vistaAcordes';
 import { gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import type { NivelAcorde } from '../../utils/voicings';
 import { CajaAcorde, SelectorNivel, SelectorVistaAcorde } from './AcordeEnInstrumento';
-
-interface Props {
-  /** Acorde que suena ahora (transpuesto, como se ve en la hoja). */
-  sonando: string | null;
-  /** Los que vienen después (el primero es «Siguiente»), si la hoja está sincronizada con el audio. */
-  proximos?: string[];
-  /** Compatibilidad: un solo siguiente. */
-  siguiente?: string | null;
-  contexto: Map<string, ContextoAcorde>;
-  vista: VistaAcorde;
-  onVista: (v: VistaAcorde) => void;
-  nivel?: NivelAcorde;
-  onNivel?: (n: NivelAcorde) => void;
-  estiloArmonia?: EstiloArmonia;
-  /** Play/pausa siempre a mano: la barra se queda pegada arriba aunque se baje por la hoja. */
-  reproduciendo?: boolean;
-  onToggle?: () => void;
-}
+import { RelojEnAcorde } from './RelojEnAcorde';
 
 const CLAVE_DIAGRAMAS = 'bm_acorde_actual_diagramas';
 
+export interface EstadoAcordeActual {
+  /** El que suena o, en pausa, el último que sonó. */
+  acorde: string | null;
+  /** El que sonó antes (para recomendar la inversión que menos mueve la mano). */
+  previo: string | null;
+  diagramas: boolean;
+  alternarDiagramas: () => void;
+}
+
 /**
- * Barra fija sobre la hoja (se queda pegada arriba al hacer scroll): play/pausa, el acorde que suena y los
- * que vienen, como una tira de diagramas que avanza con la canción. Se pliega a solo nombres para ganar sitio.
- * Al pausar conserva el último acorde para poder mirarlo con calma.
+ * Estado compartido de la barra y de los diagramas del acorde actual (viven en sitios distintos del Atril).
+ * Al pausar conserva el último acorde para mirarlo con calma. Los diagramas arrancan abiertos.
  */
-export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reproduciendo, onToggle }) => {
+export function useAcordeActual(sonando: string | null): EstadoAcordeActual {
   const [ultimo, setUltimo] = useState<string | null>(sonando);
+  const [previo, setPrevio] = useState<string | null>(null);
   // Recuerda el último acorde que sonó: se ajusta durante el render, sin efecto.
-  if (sonando && sonando !== ultimo) setUltimo(sonando);
+  if (sonando && sonando !== ultimo) { setPrevio(ultimo); setUltimo(sonando); }
   const [diagramas, setDiagramas] = useState<boolean>(() => {
-    try { return localStorage.getItem(CLAVE_DIAGRAMAS) === '1'; } catch { return false; }
+    try { return localStorage.getItem(CLAVE_DIAGRAMAS) !== '0'; } catch { return true; }
   });
   const alternarDiagramas = () => {
     const v = !diagramas;
     setDiagramas(v);
     try { localStorage.setItem(CLAVE_DIAGRAMAS, v ? '1' : '0'); } catch { /* vale solo esta sesión */ }
   };
+  return { acorde: sonando ?? ultimo, previo, diagramas, alternarDiagramas };
+}
 
-  const acorde = sonando ?? ultimo;
-  const lista = (proximos ?? (siguiente ? [siguiente] : [])).filter((c) => c !== acorde).slice(0, 3);
-  const gradoDe = (c: string) => {
-    const info = contexto.get(c)?.info;
-    return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
-  };
+/** Los tres que vienen después del actual (el primero es «Siguiente»). */
+export const proximosVisibles = (acorde: string | null, proximos?: string[], siguiente?: string | null): string[] =>
+  (proximos ?? (siguiente ? [siguiente] : [])).filter((c) => c !== acorde).slice(0, 3);
 
+interface BarraProps {
+  estado: EstadoAcordeActual;
+  /** Los que vienen después, si la hoja está sincronizada con el audio. */
+  proximos?: string[];
+  /** Compatibilidad: un solo siguiente. */
+  siguiente?: string | null;
+  /** Play/pausa siempre a mano: la barra se queda pegada arriba aunque se baje por la hoja. */
+  reproduciendo?: boolean;
+  onToggle?: () => void;
+}
+
+/**
+ * Barra fija sobre la hoja (se queda pegada arriba al hacer scroll): play/pausa, el acorde que suena y los
+ * que vienen. Los diagramas van aparte, debajo de la línea de acordes del audio.
+ */
+export const BarraAcordeActual: React.FC<BarraProps> = ({ estado, proximos, siguiente, reproduciendo, onToggle }) => {
+  const { acorde, diagramas, alternarDiagramas } = estado;
+  const lista = proximosVisibles(acorde, proximos, siguiente);
   return (
-    <section translate="no" aria-label="Acorde actual" className="notranslate sticky top-0 z-10 mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
+    <section translate="no" aria-label="Acorde actual" className="notranslate sticky top-0 z-10 mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 shrink-0">
       <div className="flex items-center gap-2">
         {onToggle && (
           <button
@@ -84,17 +93,51 @@ export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, co
           {diagramas ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
-      {diagramas && acorde && (
-        <>
-          <div className="flex items-start gap-2 overflow-x-auto pb-1" aria-label="Diagramas de los acordes que vienen">
-            <div className="w-32 shrink-0"><CajaAcorde chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} /></div>
-            {lista.map((c, i) => (
-              <div key={`${c}-${i}`} className={`w-28 shrink-0 ${i > 0 ? 'opacity-70' : ''}`}><CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} /></div>
-            ))}
+    </section>
+  );
+};
+
+interface DiagramasProps {
+  estado: EstadoAcordeActual;
+  proximos?: string[];
+  siguiente?: string | null;
+  /** ¿Suena ahora? (en pausa se enseña el último sin iluminarlo). */
+  sonando: string | null;
+  contexto: Map<string, ContextoAcorde>;
+  vista: VistaAcorde;
+  onVista: (v: VistaAcorde) => void;
+  nivel?: NivelAcorde;
+  onNivel?: (n: NivelAcorde) => void;
+  estiloArmonia?: EstiloArmonia;
+  /** Con la hoja sincronizada, el borde del acorde actual es un reloj que se llena hasta el cambio. */
+  reloj?: { indice: number; tiempos: number[]; duracion: number; audioRef: React.RefObject<HTMLAudioElement | null> };
+}
+
+/** El acorde actual y los que vienen, como diagramas que avanzan con la canción. */
+export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proximos, siguiente, sonando, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reloj }) => {
+  const { acorde, previo, diagramas } = estado;
+  if (!diagramas || !acorde) return null;
+  const lista = proximosVisibles(acorde, proximos, siguiente);
+  const gradoDe = (c: string) => {
+    const info = contexto.get(c)?.info;
+    return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
+  };
+  const actual = <CajaAcorde key={acorde} chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} previo={previo} conReloj={Boolean(reloj)} />;
+  return (
+    <section translate="no" aria-label="Diagramas de los acordes que vienen" className="notranslate mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
+      <div className="flex items-start gap-2 overflow-x-auto pb-1">
+        <div className="w-32 shrink-0">
+          {reloj ? (
+            <RelojEnAcorde diagrama activo={Boolean(sonando)} indice={reloj.indice} tiempos={reloj.tiempos} duracionTotal={reloj.duracion} audioRef={reloj.audioRef}>{actual}</RelojEnAcorde>
+          ) : actual}
+        </div>
+        {lista.map((c, i) => (
+          <div key={`${c}-${i}`} id={reloj && i === 0 ? `diagrama-acorde-${reloj.indice + 1}` : undefined} className={`w-28 shrink-0 rounded-[var(--r-m)] ${i > 0 ? 'opacity-70' : ''}`}>
+            <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1]} />
           </div>
-          <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
-        </>
-      )}
+        ))}
+      </div>
+      <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
     </section>
   );
 };

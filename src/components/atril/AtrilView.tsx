@@ -11,7 +11,7 @@ import { AtrilBody } from "./AtrilBody";
 import { AtrilHeader } from "./AtrilHeader";
 import { AtrilModals } from "./AtrilModals";
 import { AtrilToolbar } from "./AtrilToolbar";
-import { AcordeActual } from "../chords/AcordeActual";
+import { BarraAcordeActual, DiagramasAcordeActual, useAcordeActual } from "../chords/AcordeActual";
 import { DetectedChordsPanel } from "./DetectedChordsPanel";
 
 
@@ -22,7 +22,9 @@ import { useAtril } from "./AtrilContext";
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef } = useAtril();
+  const estadoActual = useAcordeActual(acordeSonando);
+  const proximos = sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined;
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
@@ -61,17 +63,11 @@ export function AtrilView() {
     {/* AI SUCCESS NOTIFICATION BANNER */}
     <AiSuccessBanner />
 
-    {/* ACORDE ACTUAL: el diagrama del que suena, sin buscarlo en el cajón lateral */}
+    {/* ACORDE ACTUAL: barra fija con play y el que viene; los diagramas van debajo de la línea de acordes */}
     {activeTab === "chords" && (
-      <AcordeActual
-        sonando={acordeSonando}
-        proximos={sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined}
-        contexto={contextoAcordes}
-        vista={vistaAcordes}
-        onVista={setVistaAcordes}
-        nivel={nivelAcordes}
-        onNivel={setNivelAcordes}
-        estiloArmonia={estiloArmonia}
+      <BarraAcordeActual
+        estado={estadoActual}
+        proximos={proximos}
         reproduciendo={isPlayingAudio}
         onToggle={audioUrl ? handleToggleAudio : undefined}
       />
@@ -79,6 +75,21 @@ export function AtrilView() {
 
     {/* ACORDES DETECTADOS DEL AUDIO */}
     <DetectedChordsPanel />
+
+    {activeTab === "chords" && (
+      <DiagramasAcordeActual
+        estado={estadoActual}
+        sonando={acordeSonando}
+        proximos={proximos}
+        contexto={contextoAcordes}
+        vista={vistaAcordes}
+        onVista={setVistaAcordes}
+        nivel={nivelAcordes}
+        onNivel={setNivelAcordes}
+        estiloArmonia={estiloArmonia}
+        reloj={proximos && analisisAcordes ? { indice: acordeActivo, tiempos: tiemposAcordes, duracion: analisisAcordes.duracionSegundos, audioRef } : undefined}
+      />
+    )}
 
     {/* MODAL BODY */}
     {/* En móvil la cabecera y los paneles de acordes ocupan casi toda la pantalla: el cuerpo tiene
