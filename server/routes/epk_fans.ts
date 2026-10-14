@@ -28,6 +28,7 @@ import {
 } from '../db.js';
 import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
+import { enlacesRedesPublicos } from '../utils/enlacesPublicos.js';
 import {
   recopilarTextosTraducibles,
   hayAlgoQueTraducir,
@@ -742,7 +743,7 @@ router.get('/public/epk', async (req, res) => {
     const cleanEpkConfig = {
       ...epkConfig,
       logoUrl,
-      enlacesRedes,
+      enlacesRedes: enlacesRedesPublicos(enlacesRedes),
       audioPreview: resolvedAudioPreview || epkConfig?.audioPreview,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
