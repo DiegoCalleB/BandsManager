@@ -14,6 +14,7 @@ import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { dbGetBandGmailOAuth, dbMarkGmailNeedsReauth } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
 import { classifyGmailError } from "../utils/emailDeliveryTracker.js";
+import { esRespuestaAutomatica } from "../utils/respuestaEntrante.js";
 
 const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 const DRAFTS_ENDPOINT = "https://gmail.googleapis.com/gmail/v1/users/me/drafts";
@@ -399,6 +400,12 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
       : undefined;
     const threadId = msg.threadId || undefined;
     const text = extraerTextoPlano(msg.payload).trim();
+    const automatico = esRespuestaAutomatica({
+      subject, from: fromAddress, text,
+      autoSubmitted: headerValue(headers, "Auto-Submitted"), precedence: headerValue(headers, "Precedence"),
+      xAutoreply: headerValue(headers, "X-Autoreply") || headerValue(headers, "X-Autorespond"),
+      listUnsubscribe: headerValue(headers, "List-Unsubscribe")
+    });
 
     console.log(`[Gmail API] Mensaje: From=${fromAddress}, Subject=${subject?.substring(0, 40)}, ThreadId=${threadId}, Text length=${text.length}`);
 
@@ -413,7 +420,8 @@ export async function leerRespuestasGmailApi(bandId: string, maxResults = 25): P
       date: dateHeader ? new Date(dateHeader) : null,
       inReplyTo: inReplyTo || undefined,
       references,
-      threadId
+      threadId,
+      ...(automatico ? { automatico: true } : {})
     });
   }
 

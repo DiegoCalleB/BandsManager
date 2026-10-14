@@ -23,6 +23,7 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_utils_emailDeliveryTracker|server/utils/emailDeliveryTracker.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_respuestaEntrante|server/utils/respuestaEntrante.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

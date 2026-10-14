@@ -31,6 +31,7 @@ Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el sche
 - [[server_utils_email|server/utils/email.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_emailDeliveryTracker|server/utils/emailDeliveryTracker.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_leadLanguage|server/utils/leadLanguage.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_utils_respuestaEntrante|server/utils/respuestaEntrante.ts]] *(Layer: #service, Domain: #system)*
 - [[tabla_lead_messages|tabla lead_messages]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 
@@ -49,6 +50,7 @@ Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el sche
 - `server/services/__tests__/lectorAgent.test.ts`
 - `server/services/__tests__/lectorAgentOrder.test.ts`
 - `server/services/__tests__/lectorClassification.test.ts`
+- `server/services/__tests__/lectorFiltroPrevio.test.ts`
 - `server/services/__tests__/lectorMultiVectorMatching.test.ts`
 
 ---

@@ -9,6 +9,7 @@
 // propia cuenta con una contraseña de aplicación (nunca un buzón compartido), y antes de
 // enviar se verifica que esa cuenta coincide con el email oficial de la banda.
 
+import { esRespuestaAutomatica } from "../utils/respuestaEntrante.js";
 import nodemailer from "nodemailer";
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { ImapFlow } from "imapflow";
@@ -221,6 +222,8 @@ export interface RespuestaEntrante {
   inReplyTo?: string; // Header In-Reply-To para emparejar respuestas con emails originales
   references?: string[]; // Header References con Message-IDs de la cadena
   threadId?: string; // Gmail Thread ID si está disponible
+  /** Autoresponder, newsletter o aviso de sistema (cabeceras/asunto/remitente): no cambia el estado de un lead. */
+  automatico?: boolean;
 }
 
 // Igual que leerNoLeidos, pero trae el CUERPO real del mensaje (parseado con mailparser a
@@ -272,6 +275,14 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): 
           else if (typeof parsed.references === "string") refArray = [parsed.references];
         }
 
+        const cab = (nombre: string) => String(parsed.headers?.get(nombre) ?? "");
+        const texto = (parsed.text || "").trim() || (parsed.html ? parsed.html.replace(/<[^>]+>/g, " ").trim() : "");
+        const automatico = esRespuestaAutomatica({
+          subject: parsed.subject || "", from: fromAddress, text: texto,
+          autoSubmitted: cab("auto-submitted"), precedence: cab("precedence"),
+          xAutoreply: cab("x-autoreply") || cab("x-autorespond"), listUnsubscribe: cab("list-unsubscribe")
+        });
+
         results.push({
           uid: Number(uid),
           messageId: parsed.messageId || `imap-uid-${uid}`,
@@ -279,10 +290,11 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): 
           fromName: fromName || undefined,
           to: toAddress || undefined,
           subject: parsed.subject || "",
-          text: (parsed.text || "").trim() || (parsed.html ? parsed.html.replace(/<[^>]+>/g, " ").trim() : ""),
+          text: texto,
           date: parsed.date || null,
           inReplyTo: parsed.inReplyTo || undefined,
-          references: refArray.length > 0 ? refArray : undefined
+          references: refArray.length > 0 ? refArray : undefined,
+          ...(automatico ? { automatico: true } : {})
         });
       }
     } finally {

@@ -17,6 +17,7 @@ import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, dbGetAutonomyConfig, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
+import { quitarTextoCitado } from "../utils/respuestaEntrante.js";
 import type { LeadConCorreo } from "./tiposLeadCorreo.js";
 
 // Clasificador de precisión para respuestas entrantes de salas/festivales/medios:
@@ -99,6 +100,8 @@ export interface LectorAgentResult {
   borradorIaGenerados: number;
   borradorIaFallidos: number;
   borradorIaBloqueadosPorLimite: number;
+  /** Autoresponders, newsletters y avisos de sistema: se ignoran, sin cambiar estados ni gastar IA. */
+  automaticosIgnorados: number;
 }
 
 function cleanMessageId(id?: string): string {
@@ -311,7 +314,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   }
 
   if (mensajes.length === 0) {
-    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0 };
+    return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0, automaticosIgnorados: 0 };
   }
 
   const leads: LeadConCorreo[] = await dbGetLeads(bandId);
@@ -320,6 +323,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   let borradorIaGenerados = 0;
   let borradorIaFallidos = 0;
   let borradorIaBloqueadosPorLimite = 0;
+  let automaticosIgnorados = 0;
 
   for (const msg of mensajes) {
     // Un bounce/NDR llega DESPUÉS de que el Enviador ya diera el pitch por enviado
@@ -335,6 +339,14 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
         }, bandId);
         leadsActualizados.push(String(leadBounce.id));
       }
+      uidsProcesados.push(msg.uid);
+      continue;
+    }
+
+    // Un autoresponder ("fuera de la oficina"), una newsletter o un aviso de sistema no es una
+    // respuesta de la sala: no cambia el estado de ningún lead ni gasta una llamada de IA.
+    if (msg.automatico) {
+      automaticosIgnorados++;
       uidsProcesados.push(msg.uid);
       continue;
     }
@@ -380,12 +392,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     const messageRowId = `imap-${msg.messageId}`;
     const yaRegistrado = await dbLeadMessageExists(messageRowId);
     if (!yaRegistrado) {
+      // Se clasifica y se redacta sobre lo que escribió la sala; lo citado es nuestro propio pitch
+      // ("caché", "fecha"...) y el clasificador lo leía como si lo dijera ella. En lead_messages se
+      // guarda el mensaje completo, tal como llegó.
+      const textoPropio = quitarTextoCitado(msg.text);
       const hiloPrevio = await dbGetLeadMessages(String(lead.id), bandId);
       const threadSoFar = hiloPrevio.map((m) => ({ remitente: m.remitente, mensaje: m.mensaje }));
 
       // Análisis de sentimiento, intención y temperatura comercial por el Agente Lector
       const leadLang = detectPitchLanguage(lead);
-      const sentimentAnalysis = await analyzeIncomingMessageSentiment(msg.text, leadLang.code, {
+      const sentimentAnalysis = await analyzeIncomingMessageSentiment(textoPropio, leadLang.code, {
         name: lead.nombre_sala,
         city: lead.ciudad,
         tipo: lead.tipo
@@ -421,14 +437,14 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       });
 
       // Auto-Contestador: Redactar respuesta de alta precisión en 'pendiente_aprobacion'
-      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, msg.text, leadLang.code);
+      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, textoPropio, leadLang.code);
       let borradorGenerado: string | null = null;
       if (puedeGenerarBorradorIA(bandId)) {
         try {
           const { draftReply } = await generarBorradorRespuesta(
             bandId,
             lead,
-            msg.text,
+            textoPropio,
             threadSoFar,
             undefined,
             undefined,
@@ -506,5 +522,5 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     console.log(`[Lector] Banda ${bandId}: ${uidsProcesados.length} mensaje(s) procesados manteniendo su estado SIN LEER en la bandeja de entrada.`);
   }
 
-  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite };
+  return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite, automaticosIgnorados };
 }
