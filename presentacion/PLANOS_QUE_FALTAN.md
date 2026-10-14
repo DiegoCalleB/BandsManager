@@ -16,15 +16,15 @@ Solo lo que **todavía no existe** como clip. Todo lo demás de la película ya 
 | 7 | `ent-iago-nadie` | Iago | 9 · Nadie lo sabía | 7 s | 1 | `iago-cu.mp4` |
 | 8 | `ent-brais-commits` | Brais | 40 · Los commits | 13 s (2 clips) | 1 | `brais-cu.mp4` |
 | 9 | `ent-alvaro-okupa` | Álvaro | 7 · El treinta por ciento | 7 s | 2 | `alvaro-cu.mp4` |
-| 10 | `ent-programador-cafe` | Programador de El Faro | 20 · Treinta y cinco minutos | 8 s (2 clips) | 2 | `programador-sonrie.mp4` |
+| 10 | `ent-programador-cafe` | Programador de El Faro | 20 · Treinta y cinco minutos | 9 s | 2 | `programador-sonrie.mp4` |
 | 11 | `ent-brais-madre` | Brais | 20 · Treinta y cinco minutos | 6 s | 2 | `brais-cu.mp4` |
 | 12 | `ent-alan-tono` | Alan | 27 · El tono | 7 s | 2 | `alan-cu.mp4` |
 | 13 | `ent-alvaro-hoja` | Álvaro | 27 · El tono | 7 s | 2 | `alvaro-cu.mp4` |
 | 14 | `ent-pelaez` | Peláez | 51 · Peláez | 7 s | 2 | `pelaez.mp4` |
-| 15 | `ent-alan-aviso` | Alan | 20 · Treinta y cinco minutos | 8 s (2 clips) | 3 | `alan-cu.mp4` |
+| 15 | `ent-alan-aviso` | Alan | 20 · Treinta y cinco minutos | 8 s | 3 | `alan-cu.mp4` |
 | 16 | `ent-brais-calendario` | Brais | 27 · El tono | 7 s | 3 | `brais-cu.mp4` |
 | 17 | `ent-alvaro-fans` | Álvaro | 34 · Los fans | 7 s | 3 | `alvaro-cu.mp4` |
-| 18 | `ent-alan-reels` | Alan | 34 · Los fans | 8 s (2 clips) | 3 | `alan-cu.mp4` |
+| 18 | `ent-alan-reels` | Alan | 34 · Los fans | 8 s | 3 | `alan-cu.mp4` |
 
 **Prioridad 1** = lo que más pesa en el efecto documental y en la emoción (la apertura, las noches y Diego). **2** = el cuerpo de la película. **3** = las frases que venden funciones concretas.
 
@@ -48,15 +48,24 @@ Cuatro clips con el mismo encuadre y luz que las demás entrevistas, para que al
 
 ## 2. Entrevistas de los músicos (Veo 3, imagen a vídeo)
 
-**Antes de empezar**, tres cosas que mejoran el resultado:
+**Hecho para Omni 1.1 Flash**, que es con lo que están hechos los clips que ya tenemos: así toda la película comparte el mismo aspecto (grano, color, piel). También valen en Veo 3.1 tal cual; la única diferencia es la duración (Omni, 10 s; Veo, 8 s).
 
-- **Los prompts van en inglés** (Veo los entiende mejor), **pero la frase que dice cada persona va en español entre comillas**: así la boca se mueve con las palabras reales. El audio de Veo se tira después y se pone la voz de ElevenLabs con lip-sync.
-- **Cada prompt es autónomo** (describe al personaje entero y la cámara): copia y pega uno entero. Sube además la imagen de referencia indicada (*image-to-video* / *Ingredients*) para que la cara sea la misma.
-- **Pega siempre el «Negative prompt»** (más abajo) en el campo de negativos de Flow, o añádelo al final del prompt como «Avoid: …» si tu herramienta no tiene el campo.
+**Antes de empezar**, cuatro cosas que mejoran el resultado:
 
-**Los planos en dos partes (A y B)** se unen después en un solo archivo con el nombre de la tabla (`ent-brais-commits.mp4`, `ent-programador-cafe.mp4`): `ffmpeg -i A.mp4 -i B.mp4 -filter_complex "[0:v][1:v]concat=n=2:v=1:a=0" -r 24 ent-brais-commits.mp4`. La parte B empieza con «CONTINUATION»: sube como referencia el **último fotograma bueno de la A**.
+- **Los prompts van en inglés** (se entienden mejor), **pero la frase que dice cada persona va en español entre comillas**.
+- **Cada prompt es autónomo** (describe al personaje entero y la cámara): copia y pega uno entero y sube además la imagen de referencia indicada, para que la cara sea la misma.
+- **Omni no genera voz** (según lo que he podido comprobar). Si la boca no se mueve con las palabras, no pasa nada: el lip-sync de después se encarga. Si sale hablando raro o con la boca muy abierta, usa la versión tranquila: cambia la frase «He says in Spanish…» por «He does not speak aloud: subtle breathing, tiny jaw movements, lips mostly closed.» y deja el resto igual.
+- **Pega siempre el «Negative prompt»** de más abajo, o añádelo al final como «Avoid: …» si no hay campo para negativos.
 
-**Ajustes:** 16:9, 8 s (o 4 s donde se indica), 1080p, con audio activado (se descarta). Genera **3 o 4 variantes** de cada plano y quédate con la que tenga mejor cara y boca. Revísalas a 1× y a 0,5×: la boca debe cerrarse en M, B y P y quedarse quieta al final, la cabeza no debe girar y no puede haber ninguna mano delante de los labios.
+**Ajustes:** 16:9, 10 s (la frase más larga es de ~9 s), 1080p. Genera **3 o 4 variantes** de cada plano y quédate con la que tenga mejor cara y mejor boca. Revísalas a 1× y a 0,5×: la boca debe cerrarse en M, B y P y quedarse quieta al final, la cabeza no debe girar y ninguna mano puede tapar los labios.
+
+**Lo bueno de Omni es que se edita conversando.** En vez de regenerar desde cero, escribe en el mismo chat, por ejemplo:
+- `Same shot, but keep his hands out of frame and away from his mouth.`
+- `Same shot, but he never looks into the camera: eyeline stays just off-lens.`
+- `Same shot, but remove all camera movement: locked-off tripod.`
+- `Same shot, but make the light softer and warmer on the face, keep the dark background.`
+- `Same shot, but start with his mouth closed and end with his mouth closed.`
+- `Continue the same shot for 4 more seconds, same framing, light and wardrobe.` (para los planos de más de 10 s)
 
 **Negative prompt (común a todos):**
 
@@ -93,7 +102,7 @@ Cinematic documentary interview, medium close-up framed from the chest up, shot 
 Cinematic documentary interview, medium close-up framed from the chest up, shot on a full-frame cinema camera with a 50mm prime lens at T2, locked-off tripod, absolutely no camera movement, no zoom, no pan. 16:9, 24 fps, natural 180-degree shutter motion blur. The subject sits slightly left of centre, with his eyeline just off-lens toward an unseen interviewer on the right of the frame. Soft large key light from a window-sized softbox at 45 degrees on the right side (short lighting), a gentle cool rim light separating the head from a dark background, warm practical lights glowing out of focus behind him. Shallow depth of field. Realistic skin with visible pores and fine stubble, true-to-life micro-expressions, natural blinking and breathing. Slightly desaturated teal-and-amber grade, fine 35mm film grain, subtle halation on the highlights. Iago, 38: short dark textured hair with tapered sides, a short neatly trimmed beard, a plain charcoal-grey crew-neck t-shirt. Quiet, thoughtful, with tired but kind eyes. Behind him, out of focus: a grey rehearsal room with Marshall amplifier stacks, a black flight case and a laptop with its screen glowing faintly. Performance, timed over the clip: 0.0-0.8 s: he looks down, then up toward the interviewer. On «No se lo conté a nadie.» quiet, almost a confession. On «Si salía mal,» a slight shrug of the shoulders. On «mejor que siguieran pensando que el bajo no se oye.» a small self-deprecating smile, he glances away and back. Last second: a soft exhale through the nose, mouth closing. He says in Spanish, in a soft, humble and self-mocking tone, with a soft, calm, low voice with a light Galician accent: "No se lo conté a nadie. Si salía mal, mejor que siguieran pensando que el bajo no se oye." Natural mouth movement that matches the Spanish words, lips fully visible, head turned no more than 15 degrees. Audio: only quiet room tone and his natural voice, no music, no sound effects.
 ```
 
-### ent-brais-commits-A
+### ent-brais-commits-A (parte 1 de 2: esta + la B se unen en `ent-brais-commits.mp4`; o genera la A y pídele «Continue the same shot for 4 more seconds» con la frase B)
 - **Referencia:** `video/actores/brais-cu.jpg`
 - **Frase:** «Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez.»
 - **Duración:** ~7 s
@@ -120,22 +129,13 @@ Cinematic documentary interview, medium close-up framed from the chest up, shot 
 Cinematic documentary interview, medium close-up framed from the chest up, shot on a full-frame cinema camera with a 50mm prime lens at T2, locked-off tripod, absolutely no camera movement, no zoom, no pan. 16:9, 24 fps, natural 180-degree shutter motion blur. The subject sits slightly right of centre, with his eyeline just off-lens toward an unseen interviewer on the left of the frame. Soft large key light from a window-sized softbox at 45 degrees on the left side (short lighting), a gentle cool rim light separating the head from a dark background, warm practical lights glowing out of focus behind him. Shallow depth of field. Realistic skin with visible pores and fine stubble, true-to-life micro-expressions, natural blinking and breathing. Slightly desaturated teal-and-amber grade, fine 35mm film grain, subtle halation on the highlights. Álvaro, 40: short dark textured hair, thick expressive eyebrows, a neatly trimmed dark beard, a worn black denim vest covered in heavy-metal patches and pins (red embroidered patches, a skull patch) over a black t-shirt. Dry, sarcastic, quick to smirk. Behind him, out of focus: a dim rehearsal room, a window with soft cool light, and warm fairy lights as bokeh. Performance, timed over the clip: 0.0-0.8 s: a slow breath, one eyebrow already raised. On «Treinta por ciento, tío.» a slight incredulous tilt of the head. On «Y elegir lo que tocamos.» both eyebrows rise. On «Eso no es un mánager:» a beat of silence. On «es un okupa.» delivered completely flat, then a one-sided smirk. Last 0.5 s: he holds the smirk, mouth closed. He says in Spanish, in a deadpan tone, with a dry, deadpan Spanish with a light Galician lilt: "Treinta por ciento, tío. Y elegir lo que tocamos. Eso no es un mánager: es un okupa." Natural mouth movement that matches the Spanish words, lips fully visible, head turned no more than 15 degrees. Audio: only quiet room tone and his natural voice, no music, no sound effects.
 ```
 
-### ent-programador-cafe-A
+### ent-programador-cafe
 - **Referencia:** `video/actores/programador-sonrie.jpg`
-- **Frase:** «Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider.»
-- **Duración:** ~6 s
+- **Frase:** «Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider. Contesté antes de acabarme el café.»
+- **Duración:** ~9 s (cabe en un clip de 10 s)
 
 ```
-Cinematic documentary interview, medium close-up framed from the chest up, shot on a full-frame cinema camera with a 50mm prime lens at T2, locked-off tripod, absolutely no camera movement, no zoom, no pan. 16:9, 24 fps, natural 180-degree shutter motion blur. The subject sits right of centre, with his eyeline just off-lens toward an unseen interviewer on the left of the frame. Soft large key light from a window-sized softbox at 45 degrees on the left side (short lighting), a gentle cool rim light separating the head from a dark background, warm practical lights glowing out of focus behind him. Shallow depth of field. Realistic skin with visible pores and fine stubble, true-to-life micro-expressions, natural blinking and breathing. Slightly desaturated teal-and-amber grade, fine 35mm film grain, subtle halation on the highlights. The venue programmer, 47: short greying hair, salt-and-pepper stubble, fine lines around pale blue-grey eyes, a black jacket over a black t-shirt. Dry, busy, quietly amused. Behind him, out of focus: a small cluttered venue office, gig posters on the wall, a warm desk lamp, a desktop monitor, a landline phone and papers. Performance, timed over the clip: 0.0-0.8 s: he sits back in his chair and rubs one eye with the back of his wrist (hand away from the mouth). On «Me llegan cien correos a la semana.» exasperated, eyebrows up. On «Ese era el único con fecha, dossier y rider.» he nods slowly, appreciative, a spark in his eyes. Last 0.6 s: mouth closes, a small satisfied nod. He says in Spanish, in a tired, then appreciative tone, with a relaxed Castilian Spanish, friendly and a little sarcastic: "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider." Natural mouth movement that matches the Spanish words, lips fully visible, head turned no more than 15 degrees. Audio: only quiet room tone and his natural voice, no music, no sound effects.
-```
-
-### ent-programador-cafe-B
-- **Referencia:** `video/actores/programador-sonrie.jpg`
-- **Frase:** «Contesté antes de acabarme el café.»
-- **Duración:** ~2 s · **genera 4 s**
-
-```
-Cinematic documentary interview, medium close-up framed from the chest up, shot on a full-frame cinema camera with a 50mm prime lens at T2, locked-off tripod, absolutely no camera movement, no zoom, no pan. 16:9, 24 fps, natural 180-degree shutter motion blur. The subject sits right of centre, with his eyeline just off-lens toward an unseen interviewer on the left of the frame. Soft large key light from a window-sized softbox at 45 degrees on the left side (short lighting), a gentle cool rim light separating the head from a dark background, warm practical lights glowing out of focus behind him. Shallow depth of field. Realistic skin with visible pores and fine stubble, true-to-life micro-expressions, natural blinking and breathing. Slightly desaturated teal-and-amber grade, fine 35mm film grain, subtle halation on the highlights. The venue programmer, 47: short greying hair, salt-and-pepper stubble, fine lines around pale blue-grey eyes, a black jacket over a black t-shirt. Dry, busy, quietly amused. Behind him, out of focus: a small cluttered venue office, gig posters on the wall, a warm desk lamp, a desktop monitor, a landline phone and papers. Performance, timed over the clip: CONTINUATION of the previous clip: identical framing, lighting, wardrobe and position; he starts with his mouth closed and a small nod. 0.0-1.0 s: a beat. On «Contesté antes de acabarme el café.» a growing smile, his eyes flick to a mug just out of frame. Last 2 s: he keeps smiling and gives a small shrug, mouth closed. (Short line: generate 4 s.) He says in Spanish, in a amused and proud tone, with a relaxed Castilian Spanish, friendly and a little sarcastic: "Contesté antes de acabarme el café." Natural mouth movement that matches the Spanish words, lips fully visible, head turned no more than 15 degrees. Audio: only quiet room tone and his natural voice, no music, no sound effects.
+Cinematic documentary interview, medium close-up framed from the chest up, shot on a full-frame cinema camera with a 50mm prime lens at T2, locked-off tripod, absolutely no camera movement, no zoom, no pan. 16:9, 24 fps, natural 180-degree shutter motion blur. The subject sits right of centre, with his eyeline just off-lens toward an unseen interviewer on the left of the frame. Soft large key light from a window-sized softbox at 45 degrees on the left side (short lighting), a gentle cool rim light separating the head from a dark background, warm practical lights glowing out of focus behind him. Shallow depth of field. Realistic skin with visible pores and fine stubble, true-to-life micro-expressions, natural blinking and breathing. Slightly desaturated teal-and-amber grade, fine 35mm film grain, subtle halation on the highlights. The venue programmer, 47: short greying hair, salt-and-pepper stubble, fine lines around pale blue-grey eyes, a black jacket over a black t-shirt. Dry, busy, quietly amused. Behind him, out of focus: a small cluttered venue office, gig posters on the wall, a warm desk lamp, a desktop monitor, a landline phone and papers. Performance, timed over the clip: 0.0-0.8 s: he sits back in his chair and rubs one eye with the back of his wrist (hand away from the mouth). 0.8-3.0 s, on «Me llegan cien correos a la semana.» exasperated, eyebrows up. 3.0-6.0 s, on «Ese era el único con fecha, dossier y rider.» he nods slowly, appreciative, a spark in his eyes. 6.0-8.8 s, on «Contesté antes de acabarme el café.» a growing smile, his eyes flick to a mug just out of frame. Last 1.2 s: a small shrug, the smile held, mouth closed. He says in Spanish, in a tired, then amused tone, with a relaxed Castilian Spanish, friendly and a little sarcastic: "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider. Contesté antes de acabarme el café." Natural mouth movement that matches the Spanish words, lips fully visible, head turned no more than 15 degrees. Audio: only quiet room tone and his natural voice, no music, no sound effects.
 ```
 
 ### ent-brais-madre
