@@ -43,6 +43,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
 - [[server_routes_users_rutasGoogle|server/routes/users/rutasGoogle.ts]] *(from #route)*

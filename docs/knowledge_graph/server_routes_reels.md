@@ -24,10 +24,11 @@ Reels & Social Content Generator: metadatos de YouTube, análisis de momentos vi
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(Layer: #route, Domain: #social)*
 - [[server_services_clipArchivos|server/services/clipArchivos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_clipRenderer|server/services/clipRenderer.ts]] *(Layer: #service, Domain: #system)*
-- [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(Layer: #service, Domain: #system)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*

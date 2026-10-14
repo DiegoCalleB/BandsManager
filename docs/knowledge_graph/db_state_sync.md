@@ -73,6 +73,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(from #route)*
@@ -94,6 +95,7 @@ Copia en memoria de alta velocidad sincronizada con Supabase al arranque.
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
 - [[server_routes_users_rutasSesion|server/routes/users/rutasSesion.ts]] *(from #route)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*
 
 ---

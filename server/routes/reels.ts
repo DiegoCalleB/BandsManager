@@ -1,26 +1,19 @@
 // Reels & Social Content Generator: metadatos de YouTube, análisis de momentos virales, corte de
-// clips (ffmpeg, con `renderRateLimiter`) y hook doctor con IA.
+// clips (ffmpeg, con `renderRateLimiter`). El texto del reel (hook doctor, copy) vive en reelsTexto.ts.
 
-import express, { Request, Response } from "express";
+import express from "express";
 import fs from "fs";
 import path from "path";
 import os from "os";
 import ytdl from "@distube/ytdl-core";
 import { YoutubeTranscript } from "youtube-transcript";
 import ffmpegStatic from "ffmpeg-static";
-import { requireAuth, loadState } from "../state.js";
+import { requireAuth } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases, dbLogReelFeedback } from "../db.js";
+import { dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases, dbLogReelFeedback } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
-import {
-  loadBandProfile,
-  buildBandContextBlock,
-  displayBandName,
-  baseHashtags,
-  emptyBandProfile,
-  type BandProfile
-} from "../utils/bandProfile.js";
+import { buildBandContextBlock, displayBandName, baseHashtags } from "../utils/bandProfile.js";
 import {
   descargarConYtDlp,
   urlDeAudioDirecta,
@@ -58,7 +51,8 @@ import {
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
 import { renderizarClip } from "../services/clipRenderer.js";
-import { diagnosticarHook } from "../services/hookDoctor.js";
+import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
+import reelsTextoRouter from "./reelsTexto.js";
 import { duracionDeLoopAjustada, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
 import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
 import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
@@ -88,20 +82,6 @@ function resolverVideoKey(youtubeUrl?: string, videoKeyExplicita?: unknown): str
 
 /* ------------------------------------------------------------ contexto de banda */
 
-async function perfilDeLaPeticion(req: express.Request): Promise<BandProfile> {
-  try {
-    const bandId = getTargetBandId(req);
-    return await loadBandProfile(bandId, {
-      getBand: (id) => dbGetRegisteredBandById(id),
-      getEpk: (id) => dbGetEpkConfig(id),
-      getState: () => loadState()
-    });
-  } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    console.warn("[Reels] No se pudo cargar el perfil de la banda:", err?.message || err);
-    return emptyBandProfile();
-  }
-}
 
 /** Transcripción del vídeo completo, probando español y cayendo al idioma por defecto. */
 async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
@@ -931,26 +911,8 @@ Responde ÚNICAMENTE con JSON válido:
   }
 });
 
-/**
- * POST /api/reels/ai-hook-doctor
- * Escanea el gancho visual y el copy para calcular el Cringe Score (0-100),
- * la retención estimada a los 3 segundos, una mejora automática con el Tone DNA
- * y el "Primer Comentario Fijado (Pinned Comment)" para disparar el debate en el algoritmo.
- */
-router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
-  try {
-    const bandId = getTargetBandId(req); // exige banda activa en la sesión (falla con 500 si falta)
-    const { generatedByAI, diagnosis } = await diagnosticarHook(await perfilDeLaPeticion(req), bandId, req.body || {});
-    return res.json({ success: true, generatedByAI, diagnosis });
-  } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    console.error("[AI Hook Doctor Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error ejecutando AI Hook Doctor: ${err?.message || err}`
-    });
-  }
-});
+// Hook Doctor y copy perfecto: trabajan sobre el TEXTO del reel, no sobre el vídeo.
+router.use(reelsTextoRouter);
 
 export { parseRange };
 export default router;

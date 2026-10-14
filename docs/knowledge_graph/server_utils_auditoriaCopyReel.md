@@ -24,7 +24,7 @@ Auditoría determinista del copy de un Reel (Fase 3 del plan): lo que se puede c
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 
 ---
 

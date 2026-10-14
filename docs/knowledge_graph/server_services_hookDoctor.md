@@ -26,7 +26,7 @@ Hook Doctor: audita el gancho y el copy de un Reel y propone una versión mejor.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 
 ---
 

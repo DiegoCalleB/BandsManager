@@ -26,6 +26,7 @@ Núcleo puro del generador de Reels: parseo de tiempos, saneado de lo que devuel
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
 - [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(from #service)*
 - [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(from #service)*
