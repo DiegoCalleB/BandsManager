@@ -84,6 +84,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
+- [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
 - [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
@@ -594,7 +595,9 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/calendarConflictService.test.ts`
+- `server/services/__tests__/socialPublisher.test.ts`
 - `server/utils/__tests__/perfectSetlistPlanner.test.ts`
+- `server/utils/__tests__/programacionPosts.test.ts`
 - `src/audit/mezclaBaseIdea.test.ts`
 - `src/audit/mezclaPistasAtril.test.tsx`
 - `src/audit/tomasConFondoAtril.test.tsx`

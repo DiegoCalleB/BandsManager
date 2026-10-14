@@ -25,7 +25,9 @@ Horario comercial de la banda (`band_schedules`).
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
+- [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 
 ---
 

@@ -945,6 +945,7 @@ export interface SocialPost {
   published_id?: string;
   published_at?: string;
   publish_error?: string;
+  publish_started_at?: string; // reclamado para publicar: detecta publicaciones interrumpidas
   account_handle?: string;
   hashtags?: string[];
   metrics?: {

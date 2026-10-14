@@ -21,9 +21,15 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[ext_supabase_storage|Supabase Storage]] *(Layer: #external, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_epk|server/db/epk.ts]] *(Layer: #db, Domain: #epk)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_reelClips|server/db/reelClips.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_schedule|server/db/schedule.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_social|server/db/social.ts]] *(Layer: #db, Domain: #social)*
+- [[server_db_sync|server/db/sync.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_tiposAdn|server/db/tiposAdn.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_tiposEpk|server/db/tiposEpk.ts]] *(Layer: #db, Domain: #epk)*
+- [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*

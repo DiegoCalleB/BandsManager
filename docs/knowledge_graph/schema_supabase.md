@@ -59,6 +59,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_reel_analyses|tabla reel_analyses]] *(Layer: #schema, Domain: #social)*
+- [[tabla_reel_clips|tabla reel_clips]] *(Layer: #schema, Domain: #social)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_run_of_show|tabla run_of_show]] *(Layer: #schema, Domain: #system)*

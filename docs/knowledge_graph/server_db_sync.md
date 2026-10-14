@@ -46,6 +46,7 @@ Carga del estado en memoria desde Supabase (`loadStateFromSupabase`) e invalidac
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
 - [[fn_fans_epk|Fans y EPK]] *(from #feature)*
 - [[fn_finanzas_planes|Finanzas, merchan y planes]] *(from #feature)*
+- [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_db|server/db.ts]] *(from #db)*
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*

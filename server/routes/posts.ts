@@ -190,10 +190,11 @@ router.post("/social/publish-now/:id", requireAuth, async (req, res) => {
 
   try {
     const result = await publishSocialPostNow(id, userBandId);
-    if (!result.success) {
-      return res.status(400).json({ success: false, error: result.error });
-    }
-    res.json({ success: true, result, message: `¡Publicación despachada a ${result.platform} con éxito!` });
+    if (result.platform === "unknown") return res.status(404).json({ success: false, error: result.error });
+    // 'asistido' y 'fallido' son resultados de negocio, no errores de la petición: el cliente
+    // enseña el motivo (qué conectar, por qué no se autopublica) en vez de un "error de conexión".
+    if (!result.success) return res.json({ success: false, modo: result.modo, error: result.error });
+    res.json({ success: true, result, publishedUrl: result.publishedUrl, message: `Publicado en ${result.platform}.` });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en publish-now:", err);

@@ -53,6 +53,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_printSettings|server/db/printSettings.ts]] *(from #db)*
 - [[server_db_production|server/db/production.ts]] *(from #db)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
+- [[server_db_reelClips|server/db/reelClips.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*

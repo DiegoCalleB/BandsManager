@@ -132,4 +132,7 @@ export interface SocialAccountsResponse {
 export interface PublishNowResponse {
   success?: boolean;
   error?: string;
+  /** 'asistido': no se puede publicar solo y `error` explica qué hacer. */
+  modo?: "publicado" | "asistido" | "fallido";
+  publishedUrl?: string;
 }
