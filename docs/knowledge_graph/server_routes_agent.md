@@ -22,6 +22,7 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[agent_lector|Lector Agent (Listener)]] *(Layer: #agent, Domain: #booking)*
 - [[agent_scout|Scout Discovery Agent]] *(Layer: #agent, Domain: #booking)*
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*

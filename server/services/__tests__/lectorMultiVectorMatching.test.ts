@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { findMatchingLeadForIncomingMessage } from '../lectorAgent.js';
+import { findMatchingLeadForIncomingMessage, patronIlikeMessageId } from '../lectorAgent.js';
 
 // Mock Supabase to avoid real network calls during unit testing
 vi.mock('../../db.js', () => ({
@@ -10,7 +10,7 @@ vi.mock('../../db.js', () => ({
           eq: () => ({
             maybeSingle: async () => ({ data: null })
           }),
-          or: () => ({
+          ilike: () => ({
             limit: () => ({
               maybeSingle: async () => ({ data: null })
             })
@@ -131,5 +131,25 @@ describe('findMatchingLeadForIncomingMessage (Multi-Vector Matching Engine)', ()
     expect(res).not.toBeNull();
     expect(res?.lead.id).toBe('lead-baobao-123');
     expect(res?.matchReason).toContain('Subject');
+  });
+});
+
+describe('patronIlikeMessageId (cabeceras de un tercero en un filtro de Supabase)', () => {
+  it('construye el patrón para un Message-ID normal', () => {
+    expect(patronIlikeMessageId('cab123xyz@mail.gmail.com')).toBe('imap-%cab123xyz@mail.gmail.com%');
+  });
+
+  it('escapa los comodines de LIKE y el * de PostgREST', () => {
+    expect(patronIlikeMessageId('a%b_c\\d*e@x.com')).toBe('imap-%a\\%b\\_c\\\\d_e@x.com%');
+  });
+
+  it('una referencia con comas o paréntesis no puede alterar el filtro (va como valor, no como sintaxis)', () => {
+    const malicioso = 'x@y.com),id.neq.(nada';
+    expect(patronIlikeMessageId(malicioso)).toBe(`imap-%${malicioso}%`);
+  });
+
+  it('descarta referencias vacías o demasiado cortas, que casarían con cualquier id', () => {
+    expect(patronIlikeMessageId('')).toBeNull();
+    expect(patronIlikeMessageId('abc')).toBeNull();
   });
 });

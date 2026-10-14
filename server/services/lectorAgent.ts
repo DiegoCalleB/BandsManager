@@ -106,6 +106,19 @@ function cleanMessageId(id?: string): string {
   return id.replace(/^imap-/, "").replace(/^<+/, "").replace(/>+$/, "").trim().toLowerCase();
 }
 
+/**
+ * Patrón ILIKE para buscar en lead_messages el mensaje cuyo id (`imap-<Message-ID>`) contiene la
+ * referencia. La referencia viene de las cabeceras In-Reply-To/References, que escribe un tercero:
+ * antes se interpolaba en un filtro `.or(...)` de PostgREST, donde una coma o un paréntesis
+ * cambiaban el filtro. Se escapan los comodines de LIKE (y `*`, que PostgREST trata como `%`), y
+ * una referencia corta se descarta porque como subcadena casaría con cualquier id.
+ */
+export function patronIlikeMessageId(ref: string): string | null {
+  if (!ref || ref.length < 8) return null;
+  const escapada = ref.replace(/[\\%_]/g, (c) => `\\${c}`).replace(/\*/g, "_");
+  return `imap-%${escapada}%`;
+}
+
 function cleanEmailAddress(addr?: string): string {
   if (!addr) return "";
   const match = addr.match(/<([^>]+)>/);
@@ -185,12 +198,14 @@ export async function findMatchingLeadForIncomingMessage(
     }
 
     // Comprobar en lead_messages
+    const patron = patronIlikeMessageId(ref);
+    if (!patron) continue;
     try {
       const { data: origMsg } = await sb
         .from("lead_messages")
         .select("lead_id")
         .eq("band_id", bandId)
-        .or(`id.eq.imap-${ref},id.eq.imap-<${ref}>,id.ilike.%${ref}%`)
+        .ilike("id", patron)
         .limit(1)
         .maybeSingle();
 
