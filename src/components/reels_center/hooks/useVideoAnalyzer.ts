@@ -9,6 +9,7 @@ import { HighlightClip, OptimalTime } from "../../../utils/reelsUtils";
 import type { AnalyzeVideoResponse } from "../reelsApiTypes";
 import type { YoutubeVideoMeta } from "../reelsHelpers";
 import { copyForPlatform, videoKeyDeArchivo } from "../reelsHelpers";
+import { pedirProximoHueco } from "./pedirProximoHueco";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface VideoAnalyzerParams {
@@ -160,6 +161,13 @@ export function useVideoAnalyzer({ inputType, selectedFile, youtubeUrl, setRende
       if (data.optimalTime) {
         setScheduledDate(data.optimalTime.date || "2026-07-30");
         setScheduledTime(data.optimalTime.time || "20:30");
+      }
+      // La cadencia manda sobre la hora genérica del análisis: un Reel por día, 48 h entre clips del mismo vídeo.
+      const hueco = await pedirProximoHueco(selectedPlatform, inputType === "youtube" ? youtubeUrl : "");
+      if (hueco) {
+        setScheduledDate(hueco.fecha);
+        setScheduledTime(hueco.hora);
+        setOptimalTime((previo) => ({ day: previo?.day ?? "", date: hueco.fecha, time: hueco.hora, reason: hueco.motivo }));
       }
     } catch (err) {
       clearInterval(stepInterval);

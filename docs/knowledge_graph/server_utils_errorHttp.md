@@ -51,6 +51,9 @@ Respuestas de error seguras.
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(from #route)*
+- [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_spotify|server/routes/spotify.ts]] *(from #route)*
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(from #route)*
 - [[server_routes_upload|server/routes/upload.ts]] *(from #route)*

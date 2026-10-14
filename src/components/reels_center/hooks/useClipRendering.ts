@@ -6,11 +6,17 @@ import { Dispatch, SetStateAction } from "react";
 import { apiFetch } from "../../../utils/api";
 import { getErrorMessage } from "../../../utils/errorMessage";
 import { getYouTubeId, HighlightClip, OptimalTime } from "../../../utils/reelsUtils";
-import type { CutClipResponse } from "../reelsApiTypes";
+import type { CutClipResponse, InformeCalidadClip } from "../reelsApiTypes";
 import { formatTime, parseRangeTimes } from "../reelsHelpers";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface ClipRenderingParams {
+  setRenderedQuality: Dispatch<SetStateAction<InformeCalidadClip | null | undefined>>;
+  isSeamlessLoop: boolean;
+  isPunchInZoom: boolean;
+  beatDropFx: boolean;
+  smartPan: boolean;
+  derechosDeclarados: boolean;
   highlights: HighlightClip[];
   selectedHighlightIndex: number;
   youtubeUrl: string;
@@ -46,7 +52,7 @@ export interface ClipRenderingParams {
  * @param params Estado y callbacks del contenedor ({@link ClipRenderingParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
+export function useClipRendering({ setRenderedQuality, isSeamlessLoop, isPunchInZoom, beatDropFx, smartPan, derechosDeclarados, highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
   const handleCutPhysicalVideo = async () => {
     const activeClip = highlights[selectedHighlightIndex];
     if (!activeClip || !youtubeUrl) return;
@@ -55,6 +61,7 @@ export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUr
     setCuttingError(null);
     setCuttingProgressText("Conectando con el servidor...");
     setWordOffsets([]);
+    setRenderedQuality(undefined); // el informe anterior no vale para el clip nuevo
     setSinTranscripcionReal(false);
 
     const { start, duration } = parseRangeTimes(activeClip.range);
@@ -98,6 +105,13 @@ export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUr
           cropMode,
           burnSubtitles,
           karaokeSubtitles,
+          // Lo que el estudio activa tiene que acabar en el MP4, no solo en la maqueta del móvil.
+          hookText: activeClip.hookText || "",
+          loopPerfecto: isSeamlessLoop,
+          punchInZoom: isPunchInZoom,
+          beatDropFx, // golpe de luz en los compases reales del tema (server/utils/rejillaBeats.ts)
+          smartPan,
+          derechosDeclarados,
           // Flag antiguo, por si el servidor todavía no está actualizado.
           cropVertical: cropMode !== "none",
         }),
@@ -144,6 +158,7 @@ export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUr
       setRenderedClipSize(Number(data.fileSize) || 0);
       setRenderedBurnedSubs(Boolean(data.burnedSubtitles));
       setRenderedStoredPermanently(Boolean(data.storedPermanently));
+      setRenderedQuality(data.quality);
 
       if (data.vttContent) {
         const vttBlob = new Blob([data.vttContent], { type: "text/vtt" });

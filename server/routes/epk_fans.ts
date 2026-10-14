@@ -3,13 +3,7 @@
 
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
-import {
-  loadState,
-  saveState,
-  requireAuth,
-  getEpkConfigForBand,
-  getAutonomyConfigForBand,
-} from '../state.js';
+import { loadState, saveState, requireAuth, getEpkConfigForBand, getAutonomyConfigForBand } from '../state.js';
 import { EPKConfig, Fan } from '../../src/types.js';
 import {
   dbGetAutonomyConfig,
@@ -28,6 +22,7 @@ import {
 } from '../db.js';
 import { getAiClient, generateContentWithFallback } from '../ai.js';
 import { safeParseJson } from '../utils.js';
+import { enlacesRedesPublicos } from '../utils/enlacesPublicos.js';
 import {
   recopilarTextosTraducibles,
   hayAlgoQueTraducir,
@@ -733,7 +728,7 @@ router.get('/public/epk', async (req, res) => {
     const cleanEpkConfig = {
       ...epkConfig,
       logoUrl,
-      enlacesRedes,
+      enlacesRedes: enlacesRedesPublicos(enlacesRedes),
       audioPreview: resolvedAudioPreview || epkConfig?.audioPreview,
       contactoBooking: {
         ...(epkConfig?.contactoBooking || {}),
