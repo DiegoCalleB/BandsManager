@@ -158,6 +158,12 @@ function extractEmailDomain(addr?: string): string {
   return parts.length === 2 ? parts[1].trim().toLowerCase() : "";
 }
 
+/** Estados en los que una sala puede estar respondiendo: ya se le escribió (o se está respondiendo). */
+const ESTADOS_EN_CONVERSACION: string[] = [
+  "contactado", "esperando_respuesta", "borrador_creado", "respondido", "negociando",
+  "pendiente_aprobacion", "aprobado_respuesta", "enviado"
+];
+
 const GENERIC_EMAIL_DOMAINS = new Set([
   "gmail.com", "googlemail.com", "hotmail.com", "outlook.com", "live.com",
   "yahoo.com", "yahoo.es", "icloud.com", "me.com", "proton.me", "protonmail.com"
@@ -169,8 +175,8 @@ const GENERIC_EMAIL_DOMAINS = new Set([
  * 1. Gmail Thread ID (100% determinista si se envió por Gmail)
  * 2. In-Reply-To & References RFC 5322 (cadena de Message-IDs)
  * 3. Email principal / secundario / normalizado
- * 4. Dominio corporativo de la sala/festival (ej: @baobaoclub.com -> Sala BaoBao)
- * 5. Asunto y mención del nombre del recinto con estado activo
+ * 4. Dominio corporativo de la sala/festival, solo si una única sala lo tiene
+ * 5. Asunto de respuesta (Re:) con el nombre de una única sala en conversación
  */
 export async function findMatchingLeadForIncomingMessage(
   msg: RespuestaEntrante,
@@ -187,19 +193,6 @@ export async function findMatchingLeadForIncomingMessage(
     if (leadByThread) {
       return { lead: leadByThread, matchReason: `Gmail Thread ID (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
     }
-
-    try {
-      const { data: msgByThread } = await sb
-        .from("lead_messages")
-        .select("lead_id")
-        .eq("band_id", bandId)
-        .eq("asunto", msg.subject || "")
-        .maybeSingle();
-      if (msgByThread) {
-        const matched = leads.find((l) => String(l.id) === String(msgByThread.lead_id));
-        if (matched) return { lead: matched, matchReason: `Lead Message Thread/Subject (${msg.threadId})`, shouldAutoEnrichEmail: fromClean };
-      }
-    } catch (err) { console.warn("[Lector] Fallo buscando el lead por asunto del hilo; se prueba el siguiente criterio:", err); }
   }
 
   // --- VECTOR 2: In-Reply-To & References RFC 5322 ---
@@ -217,7 +210,7 @@ export async function findMatchingLeadForIncomingMessage(
     // Comprobar con leads.gmail_message_id
     const leadByMsgId = leads.find((l) => {
       const gId = cleanMessageId(l.gmail_message_id);
-      return gId && (gId === ref || ref.includes(gId) || gId.includes(ref));
+      return gId && gId === ref; // exacto: por subcadena, un id corto casaba con cualquier referencia
     });
     if (leadByMsgId) {
       return { lead: leadByMsgId, matchReason: `RFC References Match (${ref})`, shouldAutoEnrichEmail: fromClean };
@@ -249,9 +242,8 @@ export async function findMatchingLeadForIncomingMessage(
     const leadByEmail = leads.find((l) => {
       const main = cleanEmailAddress(l.email_contacto);
       const sec = cleanEmailAddress(l.email_secundario);
-      if (main && (main === fromClean || fromClean.includes(main) || main.includes(fromClean))) return true;
-      if (sec && (sec === fromClean || fromClean.includes(sec) || sec.includes(fromClean))) return true;
-      return false;
+      // Exacto: por subcadena, "aa@x.com" casaba con "a@x.com" y la respuesta acababa en otra sala.
+      return Boolean(main && main === fromClean) || Boolean(sec && sec === fromClean);
     });
 
     if (leadByEmail) {
@@ -259,9 +251,9 @@ export async function findMatchingLeadForIncomingMessage(
     }
   }
 
-  // --- VECTOR 4: Dominio Corporativo del Recinto ---
+  // --- VECTOR 4: Dominio Corporativo del Recinto (solo si UNA sala tiene ese dominio) ---
   if (fromDomain && !GENERIC_EMAIL_DOMAINS.has(fromDomain)) {
-    const leadByDomain = leads.find((l) => {
+    const leadsPorDominio = leads.filter((l) => {
       const mainDom = extractEmailDomain(l.email_contacto);
       const secDom = extractEmailDomain(l.email_secundario);
       let webDom = "";
@@ -270,32 +262,27 @@ export async function findMatchingLeadForIncomingMessage(
           webDom = new URL(l.website.startsWith("http") ? l.website : `https://${l.website}`).hostname.replace(/^www\./, "").toLowerCase();
         } catch { /* web del lead mal formada: no cuenta para emparejar por dominio */ }
       }
-      return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.includes(webDom) || webDom.includes(fromDomain)));
+      return (mainDom && mainDom === fromDomain) || (secDom && secDom === fromDomain) || (webDom && (webDom === fromDomain || fromDomain.endsWith(`.${webDom}`)));
     });
 
-    if (leadByDomain) {
-      return { lead: leadByDomain, matchReason: `Domain Match (@${fromDomain})` };
+    // Dos salas del mismo grupo comparten dominio: elegir una sería adivinar.
+    if (leadsPorDominio.length === 1) {
+      return { lead: leadsPorDominio[0], matchReason: `Domain Match (@${fromDomain})` };
     }
   }
 
-  // --- VECTOR 5: Asunto & Nombre de la Sala (Fuzzy Matching Inteligente) ---
-  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(re|fwd|rv|aw|respuesta|sv):\s*/gi, "").trim();
-  if (subjectClean.length >= 3) {
+  // --- VECTOR 5: Asunto con el nombre de la sala (el más débil: solo si es una respuesta, la sala
+  // ya está en conversación y es la ÚNICA candidata). Un correo nuevo, una newsletter o un lead
+  // aún sin contactar que casan por nombre no son una respuesta de esa sala.
+  const esRespuesta = /^\s*(re|rv|aw|sv|respuesta)\s*:/i.test(msg.subject || "");
+  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(\s*(re|fwd|rv|aw|respuesta|sv)\s*:)+\s*/gi, "").trim();
+  if (esRespuesta && subjectClean.length >= 3) {
     const candidateLeads = leads.filter((l) => {
       const nombre = (l.nombre_sala || "").toLowerCase().trim();
-      return nombre.length >= 3 && subjectClean.includes(nombre);
+      return nombre.length >= 3 && subjectClean.includes(nombre) && ESTADOS_EN_CONVERSACION.includes(l.estado);
     });
-
     if (candidateLeads.length === 1) {
       return { lead: candidateLeads[0], matchReason: `Subject Name Match ("${candidateLeads[0].nombre_sala}")` };
-    }
-
-    if (candidateLeads.length > 1) {
-      // Priorizar el que esté en un estado de conversación activa
-      const active = candidateLeads.find((l) => ["contactado", "esperando_respuesta", "borrador_creado", "negociando"].includes(l.estado));
-      if (active) {
-        return { lead: active, matchReason: `Subject Active Conversation Match ("${active.nombre_sala}")` };
-      }
     }
   }
 

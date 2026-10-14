@@ -153,3 +153,56 @@ describe('patronIlikeMessageId (cabeceras de un tercero en un filtro de Supabase
     expect(patronIlikeMessageId('abc')).toBeNull();
   });
 });
+
+describe('findMatchingLeadForIncomingMessage: sin falsos emparejamientos', () => {
+  const lead = (extra: any) => ({ id: 'l', nombre_sala: 'Sala', email_contacto: '', email_secundario: null, website: '', estado: 'contactado', ...extra });
+  const msg = (extra: any) => ({ uid: 'u', messageId: 'm', from: 'x@otro.com', subject: 'Hola', text: 'texto', date: new Date(), ...extra });
+
+  it('el email se compara exacto, no por subcadena: aa@x.com NO es a@x.com', async () => {
+    const leads = [lead({ id: 'corto', email_contacto: 'a@x.com' }), lead({ id: 'largo', nombre_sala: 'Otra', email_contacto: 'aa@x.com' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ from: 'aa@x.com' }), leads as any, 'b');
+    expect(r?.lead.id).toBe('largo');
+    // booking.a@x.com contiene a@x.com como subcadena: ya no empareja por email (sí podría por dominio).
+    const r2 = await findMatchingLeadForIncomingMessage(msg({ from: 'booking.a@x.com' }), [leads[0]] as any, 'b');
+    expect(r2?.matchReason ?? '').not.toContain('Email Address');
+  });
+
+  it('una referencia que solo CONTIENE el id del lead no empareja: tiene que ser el mismo Message-ID', async () => {
+    const leads = [lead({ id: 'a', gmail_message_id: 'abc123xyz' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ inReplyTo: '<zzabc123xyzzz@mail.gmail.com>' }), leads as any, 'b');
+    expect(r).toBeNull();
+  });
+
+  it('dominio compartido por dos salas: no es una pista fiable, no empareja por dominio', async () => {
+    const leads = [
+      lead({ id: 'a', nombre_sala: 'Sala Uno', email_contacto: 'uno@grupo.es' }),
+      lead({ id: 'b', nombre_sala: 'Sala Dos', email_contacto: 'dos@grupo.es' }),
+    ];
+    const r = await findMatchingLeadForIncomingMessage(msg({ from: 'programacion@grupo.es', subject: 'Hola' }), leads as any, 'b');
+    expect(r).toBeNull();
+  });
+
+  it('asunto: sin "Re:" (un correo nuevo que menciona a la sala) no empareja', async () => {
+    const leads = [lead({ id: 'a', nombre_sala: 'Sala Siroco' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ subject: 'Novedades de Sala Siroco este mes' }), leads as any, 'b');
+    expect(r).toBeNull();
+  });
+
+  it('asunto: un lead que aún no se ha contactado no puede estar respondiendo', async () => {
+    const leads = [lead({ id: 'a', nombre_sala: 'Sala Siroco', estado: 'nuevo' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ subject: 'Re: Sala Siroco' }), leads as any, 'b');
+    expect(r).toBeNull();
+  });
+
+  it('asunto: dos salas candidatas es ambiguo, no se elige una al azar', async () => {
+    const leads = [lead({ id: 'a', nombre_sala: 'Sala Rock' }), lead({ id: 'b', nombre_sala: 'Rock Club' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ subject: 'Re: concierto en Sala Rock y Rock Club' }), leads as any, 'b');
+    expect(r).toBeNull();
+  });
+
+  it('asunto: un candidato único, con Re: y en conversación, sí empareja', async () => {
+    const leads = [lead({ id: 'a', nombre_sala: 'Sala Siroco', estado: 'esperando_respuesta' })];
+    const r = await findMatchingLeadForIncomingMessage(msg({ subject: 'RE: Propuesta Sala Siroco' }), leads as any, 'b');
+    expect(r?.lead.id).toBe('a');
+  });
+});
