@@ -34,6 +34,11 @@ Exporta: TUTORIAL_STORAGE_PREFIX, ONBOARDING_GLOBAL_KEY, PROFILE_WIZARD_GLOBAL_K
 
 ---
 
+## 🧪 Tests que lo cubren
+- `src/utils/__tests__/asistentesAlEntrar.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

@@ -6,7 +6,7 @@ import React,{ Dispatch,SetStateAction,useEffect,useEffectEvent } from "react";
 import type { SwitcherBand } from "../../components/band_switcher/bandSwitcherTypes";
 import type { EPKConfig,User } from "../../types";
 import { normalizePlan } from "../../utils/planPermissions";
-import { isOnboardingCompleted } from "../../utils/userPreferences";
+import { asistentesAlEntrar, isOnboardingCompleted } from "../../utils/userPreferences";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface ActiveBandParams {
@@ -132,13 +132,14 @@ export function useActiveBand({ currentUser, availableBands, epkConfig, isLogged
   useEffect(() => {
     if (isLoggedIn && cleanActiveBandId) {
       try {
-        const { wizardCompleted, onboardingCompleted } = isOnboardingCompleted(
+        const { onboardingCompleted } = isOnboardingCompleted(
           cleanActiveBandId,
           currentUser,
         );
 
-        // Si es una banda nueva o sin asistente completado para este usuario, abrir el asistente
-        abrirAsistentes(!wizardCompleted, !onboardingCompleted);
+        // Banda nueva o sin bienvenida vista: se abre solo la bienvenida corta (nunca los dos a la vez)
+        const abrir = asistentesAlEntrar({ onboardingCompleted });
+        abrirAsistentes(abrir.perfil, abrir.bienvenida);
       } catch {
         // En caso de modo incógnito o localStorage restringido
       }

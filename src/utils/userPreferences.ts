@@ -273,3 +273,11 @@ export async function markOnboardingCompleted(
 
   return false;
 }
+
+/**
+ * Qué asistentes se abren solos al entrar. Solo la bienvenida corta («¿Por dónde empezamos?»);
+ * el asistente de 14 pasos del perfil ya no se apila encima: se abre desde la bienvenida o desde el perfil.
+ */
+export function asistentesAlEntrar(estado: { onboardingCompleted: boolean }): { perfil: boolean; bienvenida: boolean } {
+  return { perfil: false, bienvenida: !estado.onboardingCompleted };
+}
