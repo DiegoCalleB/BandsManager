@@ -1267,7 +1267,7 @@ for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), enc
         _media = (f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/{_c}.jpg"><source src="video/actores/{_c}.mp4" type="video/mp4"></video>'
                   if _c else f'<img src="{_l["foto"]}" alt="">')  # sin clip rodado aún: su foto real, entera sobre su propio fondo desenfocado, con el mismo rótulo
         _fa = '' if _c else f' ent-foto" style="--bg:url({_l["foto"]})'
-        _pl.append(f'<figure class="ent ent-{_pl_c}{_fa}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
+        _pl.append(f'<figure class="ent ent-{_pl_c}{_fa}" data-who="{_l["who"]}" data-efecto="ninguno" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
                    f'{_media}{_rot}{_inserto(_l)}<p class="ent-txt">{_l["txt"]}</p></figure>')
     _sec = (f'<section class="slide entrevista" data-title="{_e["title"]}" data-transition="fade">\n  ' + '\n  '.join(_pl) + '\n</section>\n')
     _tras = _e['entrevista']['tras']

@@ -108,7 +108,7 @@ class Frases(HTMLParser):
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if a.get('data-who') and a.get('data-say'):
-            self.frases.append((a['data-who'], a['data-say']))
+            self.frases.append((a['data-who'], a['data-say'], a.get('data-efecto')))
 
 
 def limpiar(texto):
@@ -317,10 +317,13 @@ def main():
     ruta_man = os.path.join(SALIDA, 'manifest.json')
     viejo = json.load(open(ruta_man, encoding='utf-8')) if os.path.exists(ruta_man) else {}
     nuevo, motores, oido, agotado = {}, None, None, False
-    for who, say in p.frases:
+    for who, say, efecto in p.frases:
         if who not in R or 'tts' not in R[who]:
             print(f'⚠ {who} no tiene voz en reparto.js', file=sys.stderr)
             continue
+        tts = dict(R[who]['tts'])
+        if efecto == 'ninguno':  # p. ej. entrevistas a cámara de quien en la historia habla por teléfono
+            tts.pop('efecto', None)
         texto = sustituir(html.unescape(say), R)
         clave = fnv1a(who + '|' + texto)
         # pron (reparto.js): cómo se pronuncia un nombre; la burbuja y la clave del audio siguen con el nombre escrito
@@ -328,7 +331,7 @@ def main():
         for p_ in R.values():
             if p_.get('pron'):
                 habla = re.sub(r'\b%s\b' % re.escape(p_['nombre']), p_['pron'], habla)
-        firma = hashlib.sha1(json.dumps([VERSION, R[who]['tts'], limpiar(habla)], sort_keys=True).encode()).hexdigest()[:12]
+        firma = hashlib.sha1(json.dumps([VERSION, tts, limpiar(habla)], sort_keys=True).encode()).hexdigest()[:12]
         fichero = f'{clave}.mp3'
         ruta = os.path.join(SALIDA, fichero)
         previo = viejo.get(clave)
@@ -347,8 +350,8 @@ def main():
                     if i:
                         b = os.path.join(tmp, f'pi{i}.wav'); pitido(b); entradas.append(b)
                     if trozo.strip():
-                        w = os.path.join(tmp, f'{i}.wav'); motores.wav(R[who]['tts'], trozo.strip(), w); entradas.append(w)
-                dur = procesar(entradas, R[who]['tts'], ruta)
+                        w = os.path.join(tmp, f'{i}.wav'); motores.wav(tts, trozo.strip(), w); entradas.append(w)
+                dur = procesar(entradas, tts, ruta)
         except SinCreditos:
             if not agotado:
                 print('⚠ ElevenLabs sin créditos: lo que falta conserva su audio anterior', file=sys.stderr)
