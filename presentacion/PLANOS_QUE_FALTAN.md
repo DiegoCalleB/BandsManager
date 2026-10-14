@@ -26,6 +26,7 @@ Solo lo que **todavía no existe** como clip. Todo lo demás de la película ya 
 | 17 | `ent-alvaro-fans` | Álvaro | 34 · Los fans | 7 s | 3 | `alvaro-cu.mp4` |
 | 18 | `ent-alan-reels` | Alan | 34 · Los fans | 8 s | 3 | `alan-cu.mp4` |
 
+| 20 | `pelaez.mp4` (La llamada) + retrato nuevo | Peláez | 4 · La llamada | 8 s | 1 | El clip con la cara negra |
 | 19 | `gracias-mop.jpg` (imagen) + `gracias.mp4` (vídeo) | Diego + Brais | 59 · Gracias | 6–8 s | 1 | Imagen de IA con un Diego que no eres tú |
 
 **Prioridad 1** = lo que más pesa en el efecto documental y en la emoción (la apertura, las noches y Diego). **2** = el cuerpo de la película. **3** = las frases que venden funciones concretas.
@@ -66,6 +67,35 @@ Vertical 9:16, cinematic handheld selfie-style shot from the edge of the barrier
 ```
 
 Cuando los tengas, súbelos y los monto. Hasta entonces la película usa los actuales.
+
+---
+
+## 1c. Peláez nuevo, con la cara visible · prioridad 1
+
+El clip actual (`pelaez.mp4`) tiene la cara completamente negra: no parece contraluz, parece pintada. Probé a levantarle la luz y queda peor (una máscara gris), así que se rehace. Son tres pasos, en Omni, y el orden importa: **primero la cara, después todo lo demás con esa misma cara.**
+
+**Paso 1: el retrato de referencia (imagen).** Genera 3 o 4 y elige el Peláez que más te guste: es el que se usará siempre.
+
+```
+Photorealistic cinematic portrait of Mr. Peláez, a 55-year-old Spanish record-label executive. Clean-shaven, a strong jaw, sharp cheekbones, dark slicked-back hair with silver at the temples, calm hooded eyes, a faint knowing half-smile. A tailored dark charcoal suit, a white open-collar shirt without a tie, an expensive watch. He sits in a black leather chair, shoulders slightly angled, face in three-quarter view, looking just off-lens. A glass-walled corner office at night behind him: the city skyline as soft out-of-focus bokeh, framed gold records on the wall. Lighting: soft warm key light on his face from the front-left so his whole face is clearly visible and well exposed, cool blue rim light from the window on the back of his head and shoulders. NOT a silhouette: every feature of his face is readable, natural skin with pores and fine lines. 50mm lens at T2, shallow depth of field, teal-and-amber grade, fine 35mm film grain, 16:9.
+```
+
+**Paso 2: el plano de «La llamada» (imagen, con la misma cara).** Sube el retrato elegido como imagen 1 y pide:
+
+```
+Same man as in image 1, same suit, same office. He is sitting in the black leather chair in profile to the window, holding a smartphone to his ear, the city skyline glowing behind him and the gold records on the wall. It is a backlit night shot, but his face is NOT black: the cool glow of the phone screen lights his cheek, jaw and nose, and a thin warm edge light catches the line of his face and his slicked-back hair, so his profile is clearly readable in soft shadow. Cinematic, same grade and film grain as image 1, 16:9.
+```
+
+**Paso 3: los vídeos** (con esas imágenes como primer fotograma):
+- **La llamada** (`pelaez.mp4`, 8 s): con la imagen del paso 2.
+
+```
+Static cinematic shot, locked-off tripod, 50mm lens, shallow depth of field. The man from the reference image sits in his black leather chair in profile to the window, a smartphone at his ear. The city lights twinkle softly behind him. 0.0-2.0 s: he listens, perfectly still, only a slow blink. 2.0-5.0 s: a tiny confident smile appears, he shifts his weight slightly and leans back. 5.0-8.0 s: he speaks calmly into the phone, lips moving naturally, then stops with a satisfied half-smile. The glow of the phone keeps lighting his cheek, his face stays readable in soft shadow, never black. Fine 35mm film grain, no on-screen text, no logos. Audio: faint room tone only.
+```
+
+- **La entrevista** (`ent-pelaez.mp4`): usa el prompt que ya está más abajo, pero con el **retrato del paso 1** como imagen de referencia, no `pelaez.jpg`.
+
+Cuando los tengas, súbelos (la imagen elegida, `pelaez.mp4` y `ent-pelaez.mp4`) y los monto. Si Omni te saca la cara muy oscura de nuevo, añade al prompt «face lit by a soft key light, exposure on the face at least middle grey».
 
 ---
 
@@ -189,7 +219,7 @@ Cinematic documentary interview, medium close-up framed from the chest up, shot 
 ```
 
 ### ent-pelaez
-- **Referencia:** `video/actores/pelaez.jpg` (en la imagen sale casi en silueta: conserva el traje, el sillón y la ciudad de fondo, pero la cara se genera nueva. Cuando una te guste, usa ese fotograma como referencia en sus siguientes planos para que sea siempre el mismo.)
+- **Referencia:** el **retrato nuevo del paso 1 de la sección 1c** (el `pelaez.jpg` actual sale casi en silueta: conserva el traje, el sillón y la ciudad de fondo, pero la cara se genera nueva. Cuando una te guste, usa ese fotograma como referencia en sus siguientes planos para que sea siempre el mismo.)
 - **Frase:** «Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?»
 - **Duración:** ~7 s
 
