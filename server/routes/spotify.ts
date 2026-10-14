@@ -4,6 +4,7 @@ import express from "express";
 import { requireAuth, loadState, saveState } from "../state.js";
 import { searchSpotifyArtists, getArtistCompleteDiscography, bulkImportSpotifyDiscographyToBand, findAudioPreview } from "../services/spotifyService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -35,7 +36,7 @@ router.get("/preview", requireAuth, async (req, res) => {
     res.json({ success: true, previewUrl });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err.message || "Error al buscar preview." });
+    responderError(res, err, "Error al buscar preview.");
   }
 });
 
@@ -55,7 +56,7 @@ router.get("/search", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Search error:", err);
-    res.status(500).json({ error: err.message || "Error al buscar en Spotify." });
+    responderError(res, err, "Error al buscar en Spotify.");
   }
 });
 
@@ -75,7 +76,7 @@ router.get("/artist-discography", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Discography error:", err);
-    res.status(500).json({ error: err.message || "Error al obtener la discografía de Spotify." });
+    responderError(res, err, "Error al obtener la discografía de Spotify.");
   }
 });
 
@@ -107,7 +108,7 @@ router.post("/import-discography", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[SpotifyRoute] Import error:", err);
-    res.status(500).json({ error: err.message || "Error al importar la discografía de Spotify." });
+    responderError(res, err, "Error al importar la discografía de Spotify.");
   }
 });
 

@@ -20,6 +20,7 @@ Integración con Spotify: estado, previsualización, búsqueda e importación de
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

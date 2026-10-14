@@ -93,10 +93,10 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_ai|server/ai.ts]] — 41 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 34 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 32 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
-- [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] — 28 ficheros dependen de él
 
 ---
 

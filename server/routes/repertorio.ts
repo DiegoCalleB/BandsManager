@@ -51,6 +51,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { Part } from '@google/genai';
 import type { RespuestaCifradoIA, RespuestaIdeaArreglo } from '../tiposRespuestasIA.js';
 import { unoDe } from '../utils/valoresIA.js';
+import { responderError } from '../utils/errorHttp.js';
 
 // Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
 // descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
@@ -202,7 +203,7 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error analizando dinámica interna de la canción:", err);
-    res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
+    responderError(res, err, "No se pudo analizar la dinámica del audio.");
   }
 });
 
@@ -292,7 +293,7 @@ router.get("/letras/cola", requireAuth, async (req, res) => {
     res.json(await resumenCola(getTargetBandId(req)));
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err?.message || "No se pudo leer la cola de letras." });
+    responderError(res, err, "No se pudo leer la cola de letras.");
   }
 });
 
@@ -302,7 +303,7 @@ router.post("/letras/cola", requireAuth, async (req, res) => {
     res.json(await encolarLetras(getTargetBandId(req), { songIds, origen: "manual" }));
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err?.message || "No se pudo encolar las letras." });
+    responderError(res, err, "No se pudo encolar las letras.");
   }
 });
 
@@ -311,7 +312,7 @@ router.delete("/letras/cola", requireAuth, async (req, res) => {
     res.json({ canceladas: await cancelarCola(getTargetBandId(req)) });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err?.message || "No se pudo cancelar la cola." });
+    responderError(res, err, "No se pudo cancelar la cola.");
   }
 });
 
@@ -322,7 +323,7 @@ router.put("/letras/auto", requireAuth, async (req, res) => {
     res.json({ activado: req.body.activado });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err?.message || "No se pudo guardar el ajuste." });
+    responderError(res, err, "No se pudo guardar el ajuste.");
   }
 });
 
@@ -348,7 +349,7 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando la corrección de acordes:", err);
-    res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
+    responderError(res, err, "No se pudo guardar la corrección.");
   }
 });
 
@@ -405,7 +406,7 @@ router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en el profesor de armonía:", err);
-    res.status(500).json({ error: err?.message || "No se pudo generar la explicación." });
+    responderError(res, err, "No se pudo generar la explicación.");
   }
 });
 
@@ -426,7 +427,7 @@ router.patch("/songs/:id/energia", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error fijando energía manual de la canción:", err);
-    res.status(500).json({ error: err?.message || "No se pudo actualizar la energía." });
+    responderError(res, err, "No se pudo actualizar la energía.");
   }
 });
 
@@ -759,7 +760,7 @@ Responde ÚNICAMENTE con JSON válido:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-song-chords:", err);
-    res.status(500).json({ error: err?.message || "Error al generar los acordes." });
+    responderError(res, err, "Error al generar los acordes.");
   }
 });
 
@@ -821,7 +822,7 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in ai-composer-arrangement:", err);
-    res.status(500).json({ error: err?.message || "Error al generar arreglo con IA." });
+    responderError(res, err, "Error al generar arreglo con IA.");
   }
 });
 
@@ -875,7 +876,7 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in analyze-setlist-with-ai:", err);
-    res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
+    responderError(res, err, "Error al analizar setlist con IA");
   }
 });
 
@@ -913,7 +914,7 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-perfect-setlist:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
+    responderError(res, err, "Error al generar el plan de setlist perfecto");
   }
 });
 
@@ -967,7 +968,7 @@ router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in import-from-image:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al leer el repertorio de la imagen/PDF" });
+    responderError(res, err, "Error al leer el repertorio de la imagen/PDF");
   }
 });
 
@@ -981,7 +982,7 @@ router.post("/optimize-wavs", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in /optimize-wavs:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error optimizando audios WAV" });
+    responderError(res, err, "Error optimizando audios WAV");
   }
 });
 
@@ -995,7 +996,7 @@ router.post("/enrich-missing-audio", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in /enrich-missing-audio:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error enriqueciendo canciones sin audio" });
+    responderError(res, err, "Error enriqueciendo canciones sin audio");
   }
 });
 

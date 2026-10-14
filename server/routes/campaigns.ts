@@ -15,6 +15,7 @@ import {
 } from "../db.js";
 import { syncActiveCampaignsRadar } from "../services/campaignRadarScheduler.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get("/campaigns", requireAuth, apiAutenticadaRateLimiter, async (req, res
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/campaigns:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al obtener campañas" });
+    responderError(res, error, "Error al obtener campañas");
   }
 });
 
@@ -51,7 +52,7 @@ router.post("/campaigns", requireAuth, apiAutenticadaRateLimiter, async (req, re
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/campaigns:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al guardar campaña" });
+    responderError(res, error, "Error al guardar campaña");
   }
 });
 
@@ -71,7 +72,7 @@ router.put("/campaigns/:id", requireAuth, apiAutenticadaRateLimiter, async (req,
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error(`Error in PUT /api/campaigns/%s:`, req.params.id, error);
-    res.status(500).json({ success: false, error: error?.message || "Error al actualizar campaña" });
+    responderError(res, error, "Error al actualizar campaña");
   }
 });
 
@@ -85,7 +86,7 @@ router.delete("/campaigns/:id", requireAuth, apiAutenticadaRateLimiter, async (r
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error(`Error in DELETE /api/campaigns/%s:`, req.params.id, error);
-    res.status(500).json({ success: false, error: error?.message || "Error al eliminar campaña" });
+    responderError(res, error, "Error al eliminar campaña");
   }
 });
 
@@ -109,7 +110,7 @@ router.post("/campaigns/active", requireAuth, apiAutenticadaRateLimiter, async (
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/campaigns/active:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al activar campaña" });
+    responderError(res, error, "Error al activar campaña");
   }
 });
 
@@ -141,7 +142,7 @@ router.post("/campaigns/:id/record-training", requireAuth, apiAutenticadaRateLim
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error(`Error in POST /api/campaigns/%s/record-training:`, req.params.id, error);
-    res.status(500).json({ success: false, error: error?.message || "Error al registrar entrenamiento de campaña" });
+    responderError(res, error, "Error al registrar entrenamiento de campaña");
   }
 });
 
@@ -164,7 +165,7 @@ router.post("/campaigns/:id/train-tone-dna", requireAuth, apiAutenticadaRateLimi
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error(`Error in POST /api/campaigns/%s/train-tone-dna:`, req.params.id, error);
-    res.status(500).json({ success: false, error: error?.message || "Error al entrenar ADN de tono de campaña" });
+    responderError(res, error, "Error al entrenar ADN de tono de campaña");
   }
 });
 

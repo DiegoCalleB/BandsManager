@@ -26,6 +26,7 @@ import {
 import { programarRevisionDeBanda, choquesVisiblesPara } from "../services/calendarConflictService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CancionDeFeed, ConciertoDeFeed, EnsayoDeFeed, MaterialFeed, PuntoRunOfShowFeed, SalaDeFeed, SetlistDeFeed, TemaDeSetlistFeed } from './tiposCalendarioIcs.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -64,7 +65,7 @@ router.get("/calendar/conflicts", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error calculando choques de calendario:", err);
-    res.status(500).json({ error: err?.message || "Error al calcular choques de calendario." });
+    responderError(res, err, "Error al calcular choques de calendario.");
   }
 });
 
@@ -90,7 +91,7 @@ router.put("/rehearsals/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating rehearsal:", err);
-    res.status(500).json({ error: err?.message || "Error al actualizar ensayo." });
+    responderError(res, err, "Error al actualizar ensayo.");
   }
 });
 
@@ -113,7 +114,7 @@ router.post("/rehearsals", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error creating rehearsal:", err);
-    res.status(500).json({ error: err?.message || "Error al crear ensayo." });
+    responderError(res, err, "Error al crear ensayo.");
   }
 });
 
@@ -147,7 +148,7 @@ router.delete("/rehearsals/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting rehearsal:", err);
-    res.status(500).json({ error: err?.message || "Error al eliminar ensayo." });
+    responderError(res, err, "Error al eliminar ensayo.");
   }
 });
 
@@ -173,7 +174,7 @@ router.put("/concerts/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating concert:", err);
-    res.status(500).json({ error: err?.message || "Error al actualizar concierto." });
+    responderError(res, err, "Error al actualizar concierto.");
   }
 });
 
@@ -196,7 +197,7 @@ router.post("/concerts", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error creating concert:", err);
-    res.status(500).json({ error: err?.message || "Error al crear concierto." });
+    responderError(res, err, "Error al crear concierto.");
   }
 });
 
@@ -230,7 +231,7 @@ router.delete("/concerts/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting concert:", err);
-    res.status(500).json({ error: err?.message || "Error al eliminar concierto." });
+    responderError(res, err, "Error al eliminar concierto.");
   }
 });
 
@@ -251,10 +252,7 @@ router.post("/concerts/sync", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/concerts/sync:", error);
-    res.status(500).json({
-      success: false,
-      error: `Error al sincronizar con Supabase: ${error.message || error}`
-    });
+    responderError(res, error, "Error al sincronizar con Supabase.");
   }
 });
 
@@ -396,10 +394,7 @@ router.post("/payments/sync", requireAuth, requireLeader, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/payments/sync:", error);
-    res.status(500).json({
-      success: false,
-      error: `Error al sincronizar con Supabase: ${error.message || error}`
-    });
+    responderError(res, error, "Error al sincronizar con Supabase.");
   }
 });
 
