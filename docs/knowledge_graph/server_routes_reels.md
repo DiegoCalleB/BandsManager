@@ -26,6 +26,7 @@ Reels & Social Content Generator: metadatos de YouTube, análisis de momentos vi
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*

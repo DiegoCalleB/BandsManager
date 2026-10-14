@@ -22,6 +22,7 @@ CRUD de hilos de ejemplo que alimentan el tono del Redactor.
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
 - [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

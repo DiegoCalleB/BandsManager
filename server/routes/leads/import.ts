@@ -5,6 +5,7 @@ import { Lead, LeadStatus } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbUpsertLead, dbCheckDeletedLead } from "../../db.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -162,7 +163,7 @@ router.post("/import-excel", requireAuth, async (req: Request, res: Response) =>
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-excel:", error);
-    res.status(500).json({ error: error?.message || "Error al procesar el archivo Excel / CSV." });
+    responderError(res, error, "Error al procesar el archivo Excel / CSV.");
   }
 });
 

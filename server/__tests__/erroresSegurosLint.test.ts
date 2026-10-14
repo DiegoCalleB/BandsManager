@@ -1,10 +1,8 @@
 /**
- * La regla «no devolver err.message en un 5xx» (eslint.config.js) vive con una lista de ficheros
- * con deuda que solo puede encoger. Estas pruebas leen la configuración real y comprueban dos cosas:
- * que la regla detecta lo que debe y que la lista de deuda no conserva ficheros ya limpios.
+ * La regla «no devolver err.message en un 5xx» (eslint.config.js) rige sin excepciones: la lista de
+ * ficheros con deuda se vació en octubre de 2026. Estas pruebas leen la configuración real y comprueban
+ * que la regla detecta lo que debe y que nadie vuelve a abrir una excepción.
  */
-import fs from 'node:fs';
-import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { Linter } from 'eslint';
 import tseslint from 'typescript-eslint';
@@ -14,7 +12,6 @@ type Entrada = { files?: string[]; ignores?: string[]; rules?: Record<string, un
 const entradas = config as unknown as Entrada[];
 const reglaActiva = entradas.find((e) => Array.isArray(e.rules?.['no-restricted-syntax']));
 const reglaApagada = entradas.find((e) => e.rules?.['no-restricted-syntax'] === 'off');
-const deuda = reglaApagada?.files ?? [];
 
 function infracciones(codigo: string, fichero = 'server/routes/ejemplo.ts') {
   const linter = new Linter({ configType: 'flat' });
@@ -27,9 +24,9 @@ function infracciones(codigo: string, fichero = 'server/routes/ejemplo.ts') {
 }
 
 describe('regla de errores seguros', () => {
-  it('existe la regla y la lista de deuda', () => {
+  it('existe la regla y no hay ningún fichero exceptuado', () => {
     expect(reglaActiva).toBeTruthy();
-    expect(deuda.length).toBeGreaterThan(0);
+    expect(reglaApagada, 'Una entrada que apaga no-restricted-syntax reabre la fuga de err.message: arregla el fichero en su lugar').toBeUndefined();
   });
 
   it('detecta err.message en respuestas 5xx, con o sin return, con ? y en plantillas', () => {
@@ -43,15 +40,5 @@ describe('regla de errores seguros', () => {
     expect(infracciones('res.status(500).json({ error: "Error interno" });')).toHaveLength(0);
     expect(infracciones('responderError(res, err, "Error al guardar");')).toHaveLength(0);
     expect(infracciones('console.error(err.message);')).toHaveLength(0);
-  });
-
-  it('cada fichero de la lista de deuda sigue teniendo la infracción (si no, hay que quitarlo)', () => {
-    const limpios = deuda.filter((f) => infracciones(fs.readFileSync(path.resolve(process.cwd(), f), 'utf8'), f).length === 0);
-    expect(limpios, `Ya no tienen la infracción, quítalos de la lista de eslint.config.js: ${limpios.join(', ')}`).toEqual([]);
-  });
-
-  it('los ficheros de la lista existen', () => {
-    const faltan = deuda.filter((f) => !fs.existsSync(path.resolve(process.cwd(), f)));
-    expect(faltan).toEqual([]);
   });
 });
