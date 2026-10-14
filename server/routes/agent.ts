@@ -692,11 +692,9 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         const normName = normalizeVenueName(cand.nombre_sala);
         if (!normName) continue;
 
-        // Comprobar si ya existe en Supabase
-        if (existingNames.has(normName)) {
-          console.log(
-            "[Agente Scout] Omitiendo lead ya existente en CRM: \"%s\"", cand.nombre_sala
-          );
+        // Ya está en el CRM: mismo lugar de Google Places (aunque el nombre difiera) o mismo nombre.
+        if ((cand.place_id && existingPlaceIds.has(cand.place_id)) || existingNames.has(normName)) {
+          console.log("[Agente Scout] Omitiendo lead ya existente en CRM: \"%s\"", cand.nombre_sala);
           continue;
         }
 
@@ -706,9 +704,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           targetBandId
         );
         if (isDeleted) {
-          console.log(
-            "[Agente Scout] Omitiendo lead previamente descartado/eliminado por el usuario: \"%s\"", cand.nombre_sala
-          );
+          console.log("[Agente Scout] Omitiendo lead previamente descartado/eliminado por el usuario: \"%s\"", cand.nombre_sala);
           continue;
         }
 
@@ -716,9 +712,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           try {
             const domain = new URL(cand.website).hostname.replace(/^www\./, '');
             if (domain && existingWebsites.has(domain)) {
-              console.log(
-                "[Agente Scout] Omitiendo lead con dominio web ya registrado: \"%s\"", cand.website
-              );
+              console.log("[Agente Scout] Omitiendo lead con dominio web ya registrado: \"%s\"", cand.website);
               continue;
             }
           } catch { /* web del candidato mal formada: no se puede comparar por dominio */ }
@@ -727,6 +721,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
         // Si sobrevive todas las comprobaciones, es un lead nuevo y real
         deduplicatedLeads.push(cand);
         existingNames.add(normName);
+        if (cand.place_id) existingPlaceIds.add(cand.place_id);
         if (deduplicatedLeads.length >= limit) break;
       }
 
@@ -799,6 +794,9 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
           telefono: raw.telefono || '',
           instagram: raw.instagram || '',
           website: raw.website || '',
+          place_id: raw.place_id || undefined,
+          direccion: raw.direccion || undefined,
+          imagen_url: raw.imagen_url || undefined,
           festival_start_date: startD,
           festival_end_date: endD,
           fuente: `Agente Scout: ${targetLoc}`,

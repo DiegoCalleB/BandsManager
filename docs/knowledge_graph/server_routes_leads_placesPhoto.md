@@ -27,8 +27,10 @@ GET /api/places/photo: foto de Google Places sin exponer la API key (ver server/
 - [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
 - [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
 - [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
 - [[server_utils_placesPhoto|server/utils/placesPhoto.ts]] *(from #service)*
+- [[server_utils_scoutLeads|server/utils/scoutLeads.ts]] *(from #service)*
 
 ---
 

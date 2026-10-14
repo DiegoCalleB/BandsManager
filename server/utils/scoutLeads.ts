@@ -19,6 +19,10 @@ export interface LeadDescubierto {
   instagram: string;
   website: string;
   notas: string;
+  /** Datos de Google Places (no del LLM): place_id deduplica entre búsquedas. */
+  place_id?: string;
+  direccion?: string;
+  imagen_url?: string;
   corredor_gira?: string;
   tier_aforo?: "intimo" | "medio" | "grande" | "macro";
   afinidad_musical?: number;
@@ -124,6 +128,15 @@ export function limpiarCampoContacto(valor: unknown): string {
   return esRelleno(valor) ? '' : String(valor).trim();
 }
 
+/** Foto aceptable: la de nuestro proxy de Places (sin API key) o el favicon de Google de la web. */
+function fotoSegura(valor: unknown): string {
+  if (typeof valor !== 'string') return '';
+  const url = valor.trim();
+  return url.startsWith('/api/places/photo?') || url.startsWith('https://www.google.com/s2/favicons?') ? url : '';
+}
+
+const textoOVacio = (valor: unknown): string => (typeof valor === 'string' ? valor.trim() : '');
+
 /** Recinto tal y como lo devuelve la IA, ya comprobado que trae un nombre de texto. */
 export type LeadDescubiertoBruto = { nombre_sala: string; [campo: string]: unknown };
 
@@ -159,6 +172,9 @@ export function normalizarLeadDescubierto(bruto: LeadDescubiertoBruto, ciudadPor
     instagram: limpiarCampoContacto(bruto?.instagram),
     website: limpiarCampoContacto(bruto?.website),
     notas: (typeof bruto?.notas === 'string' && bruto.notas.trim()) || '',
+    place_id: textoOVacio(bruto?.place_id),
+    direccion: textoOVacio(bruto?.direccion),
+    imagen_url: fotoSegura(bruto?.imagen_url),
   };
 }
 

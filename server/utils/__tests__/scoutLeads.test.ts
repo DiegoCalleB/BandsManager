@@ -123,3 +123,23 @@ describe('prepararLeadsDescubiertos', () => {
     }
   });
 });
+
+describe('datos de Google Places que sobreviven a la normalización', () => {
+  it('conserva place_id y dirección para deduplicar y localizar la sala', () => {
+    const r = normalizarLeadDescubierto(
+      { nombre_sala: 'Sala Caracol', place_id: 'ChIJ123', direccion: 'Calle Bernardino Obregón 18, Madrid' },
+      'Madrid', 'sala'
+    );
+    expect(r.place_id).toBe('ChIJ123');
+    expect(r.direccion).toBe('Calle Bernardino Obregón 18, Madrid');
+  });
+
+  it('solo acepta fotos servidas por nuestro proxy o favicons de Google, nunca una URL cualquiera del modelo', () => {
+    const foto = (imagen_url: unknown) => normalizarLeadDescubierto({ nombre_sala: 'X', imagen_url }, 'M', 'sala').imagen_url;
+    expect(foto('/api/places/photo?name=places%2Fa%2Fphotos%2Fb')).toBe('/api/places/photo?name=places%2Fa%2Fphotos%2Fb');
+    expect(foto('https://www.google.com/s2/favicons?domain=caracol.es&sz=128')).toBe('https://www.google.com/s2/favicons?domain=caracol.es&sz=128');
+    expect(foto('https://places.googleapis.com/v1/places/a/photos/b/media?key=SECRETA')).toBe('');
+    expect(foto('javascript:alert(1)')).toBe('');
+    expect(foto(undefined)).toBe('');
+  });
+});

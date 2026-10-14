@@ -5,7 +5,7 @@
   "server/routes/concert_to_album.ts": 1585,
   "src/components/VenueMap.tsx": 1384,
   "src/components/LoginModal.tsx": 1348,
-  "server/routes/agent.ts": 1345,
+  "server/routes/agent.ts": 1343,
   "src/components/PublicEPK.tsx": 1340,
   "src/components/bandCRM/BandToneModal.tsx": 1319,
   "server/routes/reels.ts": 1312,
