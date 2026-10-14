@@ -101,9 +101,11 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
 - [[server_services_bandsintownVenueService|server/services/bandsintownVenueService.ts]] *(from #service)*
 - [[server_services_clipArchivos|server/services/clipArchivos.ts]] *(from #service)*
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
+- [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
 - [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
 - [[server_services_multiSourceVenueDiscoveryService|server/services/multiSourceVenueDiscoveryService.ts]] *(from #service)*

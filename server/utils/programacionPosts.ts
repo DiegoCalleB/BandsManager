@@ -53,13 +53,15 @@ export function instanteProgramado(fecha: string, hora: string | undefined, zona
 }
 
 /**
- * Posts que ya deben salir. Solo los que un humano aprobó ('aprobado' o 'en_cola'): un borrador
- * con `auto_publish` ya no se publica solo — publicar en nombre de la banda es tan público como
- * un email comercial y necesita la misma aprobación explícita (AGENTS.md §3).
+ * Posts que ya deben salir. Solo los que un humano aprobó ('aprobado' o 'en_cola') Y dejó con la
+ * autopublicación activada: un borrador con `auto_publish` no sale solo (publicar en nombre de la
+ * banda es tan público como un email comercial y necesita aprobación explícita, AGENTS.md §3), y
+ * un post aprobado con la autopublicación apagada solo se publica si la banda pulsa "publicar ya".
  */
 export function postsVencidos(posts: SocialPost[], zona: string | undefined, ahora: Date): SocialPost[] {
   return posts.filter((p) => {
     if (p.estado !== "aprobado" && p.estado !== "en_cola") return false;
+    if (p.auto_publish !== true) return false;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(p.fecha || "")) return false;
     return instanteProgramado(p.fecha, p.hora_programada, zona).getTime() <= ahora.getTime();
   });

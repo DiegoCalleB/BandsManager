@@ -30,6 +30,7 @@ Curva de energía del audio para elegir highlights.
 - [[server_routes_ai_music_motorFfmpeg|server/routes/ai_music/motorFfmpeg.ts]] *(from #route)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_loopPerfecto|server/utils/loopPerfecto.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*

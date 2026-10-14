@@ -24,6 +24,7 @@ Plan de ffmpeg para un clip vertical: qué filtros y qué opciones de salida lle
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_clipRenderer|server/services/clipRenderer.ts]] *(from #service)*
 - [[server_utils_loopPerfecto|server/utils/loopPerfecto.ts]] *(from #service)*
 

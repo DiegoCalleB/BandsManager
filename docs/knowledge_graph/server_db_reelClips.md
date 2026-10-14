@@ -25,6 +25,7 @@ Procedencia de los clips renderizados: de qué vídeo sale cada uno y si sus der
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 - [[server_utils_derechosClip|server/utils/derechosClip.ts]] *(from #service)*
 

@@ -8,6 +8,7 @@ const post = (p: Partial<SocialPost>): SocialPost => ({
   plataforma: "Instagram",
   contenido: "",
   estado: "aprobado",
+  auto_publish: true,
   responsable: "",
   ...p
 });
@@ -45,12 +46,16 @@ describe("postsVencidos", () => {
       post({ id: "ya", hora_programada: "20:30" }),
       post({ id: "luego", hora_programada: "20:45" }),
       post({ id: "cola", estado: "en_cola", hora_programada: "08:00" }),
-      post({ id: "borrador-auto", estado: "borrador", auto_publish: true, hora_programada: "08:00" }),
+      post({ id: "borrador-auto", estado: "borrador", hora_programada: "08:00" }),
       post({ id: "hecho", estado: "publicado", hora_programada: "08:00" }),
       post({ id: "fallo", estado: "fallido", hora_programada: "08:00" }),
       post({ id: "enCurso", estado: "publicando", hora_programada: "08:00" })
     ];
     expect(postsVencidos(lista, "Europe/Madrid", ahora).map((p) => p.id)).toEqual(["ya", "cola"]);
+  });
+
+  it("con la autopublicación apagada no sale solo, aunque esté aprobado y vencido", () => {
+    expect(postsVencidos([post({ auto_publish: false }), post({ auto_publish: undefined })], "Europe/Madrid", ahora)).toEqual([]);
   });
 
   it("un post sin fecha válida no se publica nunca solo", () => {

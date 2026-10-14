@@ -32,6 +32,7 @@ const post = (p: Partial<SocialPost> = {}): SocialPost => ({
   plataforma: "Instagram",
   contenido: "Copy",
   estado: "aprobado",
+  auto_publish: true,
   responsable: "",
   video_url: CLIP,
   ...p

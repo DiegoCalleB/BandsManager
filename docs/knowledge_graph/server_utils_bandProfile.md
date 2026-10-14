@@ -28,11 +28,13 @@ Perfil de banda para los prompts de IA.
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/hookDoctor.test.ts`
 - `server/utils/__tests__/bandProfile.test.ts`
 
 ---
