@@ -28,7 +28,7 @@ const router = express.Router();
 
 // gmail.compose: crear/leer/enviar borradores (crearBorradorGmailApi, enviarEmailGmailApi,
 // comprobarBorradorEnviado). gmail.modify: leer la bandeja y quitar la etiqueta UNREAD de lo ya
-// procesado (leerRespuestasGmailApi/marcarComoLeidoGmailApi en gmailApiClient.ts) - lo que
+// procesado (leerBandejaGmailIncremental/marcarComoLeidoGmailApi en gmailApiClient.ts) - lo que
 // necesita el Agente Lector para detectar respuestas de una banda conectada solo por OAuth, sin
 // IMAP. Una banda que conectó antes de este cambio solo tiene gmail.compose concedido y necesita
 // reconectar (botón "Desconectar" + "Conectar con Google" de nuevo) para que el Lector funcione.

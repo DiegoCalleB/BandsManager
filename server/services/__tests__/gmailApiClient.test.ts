@@ -11,7 +11,6 @@ import {
   crearBorradorGmailApi,
   tieneGmailOAuthConectado,
   comprobarBorradorEnviado,
-  leerRespuestasGmailApi,
   marcarComoLeidoGmailApi,
   enviarEmailGmailApi
 } from '../gmailApiClient';
@@ -101,7 +100,7 @@ describe('gmailApiClient', () => {
     const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
     fetchMock.mockResolvedValueOnce({ ok: false, status: 400, text: async () => JSON.stringify({ error: 'invalid_grant' }) });
 
-    const fallo = await leerRespuestasGmailApi('band-reauth').catch((e) => e);
+    const fallo = await crearBorradorGmailApi('band-reauth', { to: 's@x.es', subject: 'x', body: 'x' }).catch((e) => e);
     expect(fallo).toBeInstanceOf(EmailAgentError);
     expect(fallo.code).toBe('reauth_required');
     expect(dbMarkGmailNeedsReauthMock).toHaveBeenCalledWith('band-reauth');
@@ -112,7 +111,7 @@ describe('gmailApiClient', () => {
     const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
     fetchMock.mockResolvedValueOnce({ ok: false, status: 500, text: async () => 'boom' });
 
-    const fallo = await leerRespuestasGmailApi('band-500').catch((e) => e);
+    const fallo = await crearBorradorGmailApi('band-500', { to: 's@x.es', subject: 'x', body: 'x' }).catch((e) => e);
     expect(fallo.code).toBe('api_error');
     expect(dbMarkGmailNeedsReauthMock).not.toHaveBeenCalled();
   });
@@ -131,39 +130,6 @@ describe('gmailApiClient', () => {
     const [, existeCall, borradoCall] = fetchMock.mock.calls;
     expect(existeCall[0]).toBe('https://gmail.googleapis.com/gmail/v1/users/me/drafts/draft-1');
     expect(borradoCall[0]).toBe('https://gmail.googleapis.com/gmail/v1/users/me/drafts/draft-1');
-  });
-
-  it('leerRespuestasGmailApi lista mensajes no leídos y extrae remitente/asunto/texto', async () => {
-    dbGetBandGmailOAuthMock.mockResolvedValue({ ...account, band_id: 'band-leer-respuestas' });
-    const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
-    const cuerpoBase64 = Buffer.from('Hola, nos interesa la propuesta.').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-    fetchMock
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: 'access-leer', expires_in: 3600 }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ messages: [{ id: 'msg-1' }] }) })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          payload: {
-            mimeType: 'text/plain',
-            headers: [
-              { name: 'From', value: 'Sala de Conciertos <sala@example.com>'},
-              { name: 'Subject', value: 'Re: Propuesta' },
-              { name: 'Message-ID', value: '<abc123@mail.gmail.com>'},
-              { name: 'Date', value: 'Mon, 01 Sep 2026 10:00:00 +0200' }
-            ],
-            body: { data: cuerpoBase64 }
-          }
-        })
-      });
-
-    const resultados = await leerRespuestasGmailApi('band-leer-respuestas');
-
-    expect(resultados).toHaveLength(1);
-    expect(resultados[0].uid).toBe('msg-1');
-    expect(resultados[0].from).toBe('sala@example.com');
-    expect(resultados[0].subject).toBe('Re: Propuesta');
-    expect(resultados[0].text).toBe('Hola, nos interesa la propuesta.');
   });
 
   it('marcarComoLeidoGmailApi llama a batchModify quitando la etiqueta UNREAD', async () => {

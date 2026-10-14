@@ -10,7 +10,7 @@
 
 import { esEmailValido } from "../utils/email.js";
 import { leerRespuestasEntrantes, marcarComoLeido, type RespuestaEntrante } from "./emailAgentClient.js";
-import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
+import { leerBandejaGmailIncremental, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
 import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
@@ -316,7 +316,16 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
     }
   }
 
-  const mensajes = usarGmailOAuth ? await leerRespuestasGmailApi(bandId) : await leerRespuestasEntrantes(bandId);
+  // Gmail se lee con cursor (solo lo nuevo, sin tope de 25); el cursor avanza al terminar de procesar.
+  let avanzarCursor: () => Promise<void> = async () => {};
+  let mensajes: RespuestaEntrante[];
+  if (usarGmailOAuth) {
+    const lectura = await leerBandejaGmailIncremental(bandId);
+    mensajes = lectura.mensajes;
+    avanzarCursor = lectura.avanzarCursor;
+  } else {
+    mensajes = await leerRespuestasEntrantes(bandId);
+  }
 
   console.log(`[Lector] Banda ${bandId}: encontrados ${mensajes.length} mensaje(s). Usando ${usarGmailOAuth ? "Gmail API" : "IMAP"}`);
   if (mensajes.length > 0) {
@@ -324,6 +333,7 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   }
 
   if (mensajes.length === 0) {
+    await avanzarCursor();
     return { mensajesLeidos: 0, leadsActualizados, sinEmparejar: 0, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados: 0, borradorIaFallidos: 0, borradorIaBloqueadosPorLimite: 0, automaticosIgnorados: 0 };
   }
 
@@ -536,6 +546,8 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
   } else if (uidsProcesados.length > 0) {
     console.log(`[Lector] Banda ${bandId}: ${uidsProcesados.length} mensaje(s) procesados manteniendo su estado SIN LEER en la bandeja de entrada.`);
   }
+
+  await avanzarCursor();
 
   return { mensajesLeidos: mensajes.length, leadsActualizados, sinEmparejar, borradoresEnviadosDetectados, borradoresTodaviaSinEnviar, erroresComprobandoBorradores, cuentaGmailReal, borradorIaGenerados, borradorIaFallidos, borradorIaBloqueadosPorLimite, automaticosIgnorados };
 }

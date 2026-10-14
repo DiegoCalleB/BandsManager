@@ -4,9 +4,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // clasificar solo el texto PROPIO de la sala (no el pitch nuestro que viaja citado en la respuesta).
 
 const leerRespuestasGmailApiMock = vi.fn();
+const avanzarCursorMock = vi.fn();
 vi.mock('../gmailApiClient.js', () => ({
   tieneGmailOAuthConectado: async () => true,
-  leerRespuestasGmailApi: (...a: any[]) => leerRespuestasGmailApiMock(...a),
+  leerBandejaGmailIncremental: async (...a: any[]) => ({ mensajes: await leerRespuestasGmailApiMock(...a), modo: 'completa', avanzarCursor: avanzarCursorMock }),
   marcarComoLeidoGmailApi: vi.fn()
 }));
 vi.mock('../agentEngine.js', () => ({
@@ -93,5 +94,25 @@ describe('Lector: un rechazo confirmado no se pisa con la cola de aprobación', 
     await runLectorAgent('band-test');
     expect(generarBorradorRespuestaMock).toHaveBeenCalledTimes(1);
     expect(dbUpsertLeadMock.mock.calls[0][0].estado).toBe('pendiente_aprobacion');
+  });
+});
+
+describe('Lector: cursor de la bandeja', () => {
+  it('avanza el cursor al terminar de procesar, también cuando no había nada nuevo', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([]);
+    await runLectorAgent('band-test');
+    expect(avanzarCursorMock).toHaveBeenCalledTimes(1);
+
+    avanzarCursorMock.mockClear();
+    leerRespuestasGmailApiMock.mockResolvedValue([msg({ text: 'Nos encaja.' })]);
+    await runLectorAgent('band-test');
+    expect(avanzarCursorMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('si procesar falla a medias, el cursor NO avanza (la siguiente lectura repite, sin perder nada)', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([msg({ text: 'Nos encaja.' })]);
+    dbUpsertLeadMock.mockRejectedValueOnce(new Error('Supabase caído'));
+    await expect(runLectorAgent('band-test')).rejects.toThrow('Supabase caído');
+    expect(avanzarCursorMock).not.toHaveBeenCalled();
   });
 });

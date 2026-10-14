@@ -13,6 +13,8 @@ export interface BandGmailOAuthAccount {
   updated_at?: string;
   /** Cuándo Google rechazó el refresh token (invalid_grant). Null = la conexión funciona. */
   needs_reauth_at?: string | null;
+  /** historyId de Gmail del último estado de la bandeja ya procesado por el Lector. */
+  gmail_history_id?: string | null;
 }
 
 // Sin respaldo en memoria a propósito, igual que dbGetBandEmailAccount: un refresh token es
@@ -55,7 +57,9 @@ export async function dbUpsertBandGmailOAuth(account: {
     scope: account.scope,
     updated_at: new Date().toISOString(),
     // Reconectar con un token nuevo limpia el aviso de "hay que reconectar".
-    needs_reauth_at: null
+    needs_reauth_at: null,
+    // Cuenta (re)conectada: el cursor anterior puede ser de otra cuenta, se empieza de cero.
+    gmail_history_id: null
   };
 
   const sb = getSupabase();
@@ -70,6 +74,19 @@ export async function dbUpsertBandGmailOAuth(account: {
   }
 
   return { ...(data || payload), refresh_token: account.refresh_token };
+}
+
+/** Guarda el cursor de lectura incremental. Devuelve false si no se pudo (se reintentará de cero, sin perder nada). */
+export async function dbSetGmailHistoryId(bandId: string, historyId: string): Promise<boolean> {
+  try {
+    const { error } = await getSupabase()
+      .from("band_gmail_oauth_accounts")
+      .update({ gmail_history_id: historyId })
+      .eq("band_id", cleanBandId(bandId));
+    return !error;
+  } catch {
+    return false;
+  }
 }
 
 /**

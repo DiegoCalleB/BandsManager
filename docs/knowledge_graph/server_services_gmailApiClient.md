@@ -38,6 +38,7 @@ Cliente de la API REST de Gmail para el servidor, con refresh token por banda (O
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/gmailApiClient.test.ts`
+- `server/services/__tests__/gmailBandejaIncremental.test.ts`
 
 ---
 
