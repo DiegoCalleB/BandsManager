@@ -7,7 +7,6 @@ import path from "path";
 import os from "os";
 import ytdl from "@distube/ytdl-core";
 import { YoutubeTranscript } from "youtube-transcript";
-import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
 import { requireAuth, loadState } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
@@ -62,13 +61,12 @@ import {
   buildWordOffsets,
   buildAssSubtitles,
   buildKaraokeAssSubtitles,
-  buildVerticalFilter,
-  escapeFilterPath,
   decodeTranscriptText,
   type CropMode,
   type TranscriptItem,
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
+import { renderizarClip } from "../services/clipRenderer.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /** Respuesta de oEmbed de YouTube. */
@@ -86,10 +84,6 @@ interface MomentoOptimo {
 }
 
 const router = express.Router();
-
-if (ffmpegStatic) {
-  ffmpeg.setFfmpegPath(ffmpegStatic);
-}
 
 /** Dónde se sirven los clips renderizados (server.ts ya expone /clips como estático). */
 const CLIPS_DIR = path.join(process.cwd(), "public", "clips");
@@ -886,59 +880,17 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     }
 
     console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos incrustados: ${incrustarSubs}`);
-    await new Promise<void>((resolve, reject) => {
-      // Seek híbrido: un salto rápido de entrada hasta 5 s antes del corte (barato, salta al
-      // keyframe) y el resto como seek de salida (exacto al fotograma). Con solo el seek de
-      // salida, un corte del minuto 12 obligaba a decodificar 12 minutos de vídeo.
-      const saltoEntrada = Math.max(0, inicioEnFichero - 5);
-      const ajusteSalida = inicioEnFichero - saltoEntrada;
-
-      const comando = ffmpeg(rutaDescarga);
-      if (saltoEntrada > 0) comando.seekInput(saltoEntrada);
-      if (ajusteSalida > 0) comando.setStartTime(ajusteSalida);
-      comando.setDuration(duracion);
-
-      const filtros = buildVerticalFilter(cropMode, 1080, 1920, { 
-        punchInZoom: Boolean(punchInZoom),
-        beatDropFx: Boolean(beatDropFx),
-        smartPan: Boolean(smartPan)
-      });
-      if (incrustarSubs) {
-        const filtroSubs = `subtitles='${escapeFilterPath(rutaAss)}'`;
-        if (filtros.length) {
-          // La última etiqueta de salida del encadenado vertical es [v].
-          filtros[filtros.length - 1] = `${filtros[filtros.length - 1].replace(/\[v\]$/, "[vpre]")}`;
-          filtros.push(`[vpre]${filtroSubs}[v]`);
-        } else {
-          filtros.push(`[0:v]${filtroSubs}[v]`);
-        }
-      }
-
-      if (filtros.length) {
-        comando.complexFilter(filtros, "v");
-        comando.outputOptions(["-map 0:a?"]);
-      }
-
-      comando
-        .outputOptions([
-          "-c:v libx264",
-          "-preset veryfast",
-          "-crf 23",
-          "-pix_fmt yuv420p",
-          "-c:a aac",
-          "-b:a 128k",
-          "-ar 44100",
-          "-movflags +faststart"
-        ])
-        .output(rutaSalida)
-        .on("error", (err) => reject(err))
-        .on("end", () => resolve())
-        .run();
+    await renderizarClip({
+      rutaEntrada: rutaDescarga,
+      rutaSalida,
+      inicioEnFichero,
+      duracion,
+      cropMode,
+      punchInZoom: Boolean(punchInZoom),
+      beatDropFx: Boolean(beatDropFx),
+      smartPan: Boolean(smartPan),
+      rutaSubtitulos: incrustarSubs ? rutaAss : undefined
     });
-
-    if (!fs.existsSync(rutaSalida) || fs.statSync(rutaSalida).size === 0) {
-      throw new Error("ffmpeg no generó ningún archivo de salida.");
-    }
 
     const tamano = fs.statSync(rutaSalida).size;
 
