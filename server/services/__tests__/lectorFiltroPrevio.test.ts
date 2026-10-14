@@ -76,3 +76,22 @@ describe('Lector: filtro previo', () => {
     expect(dbCreateLeadMessageMock.mock.calls[0][0].mensaje).toBe(cita);
   });
 });
+
+describe('Lector: un rechazo confirmado no se pisa con la cola de aprobación', () => {
+  const rechazoIA = { ...analisis, sentimiento: 'rechazo', intencion: 'rechazo_estilo', confianza: 0.9, motor: 'gemini_flash' };
+
+  it('rechazo (palabras clave + IA): estado no_interesado y NO se redacta réplica', async () => {
+    analizarMock.mockResolvedValue(rechazoIA);
+    leerRespuestasGmailApiMock.mockResolvedValue([msg({ text: 'Lo sentimos, no nos interesa vuestra propuesta.' })]);
+    await runLectorAgent('band-test');
+    expect(generarBorradorRespuestaMock).not.toHaveBeenCalled();
+    expect(dbUpsertLeadMock.mock.calls[0][0].estado).toBe('no_interesado');
+  });
+
+  it('respuesta normal: sigue generando el borrador y pasa a pendiente_aprobacion', async () => {
+    leerRespuestasGmailApiMock.mockResolvedValue([msg({ text: 'Nos encaja, ¿qué caché pedís?' })]);
+    await runLectorAgent('band-test');
+    expect(generarBorradorRespuestaMock).toHaveBeenCalledTimes(1);
+    expect(dbUpsertLeadMock.mock.calls[0][0].estado).toBe('pendiente_aprobacion');
+  });
+});

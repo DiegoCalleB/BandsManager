@@ -13,7 +13,7 @@ import { leerRespuestasEntrantes, marcarComoLeido, type RespuestaEntrante } from
 import { leerRespuestasGmailApi, marcarComoLeidoGmailApi, tieneGmailOAuthConectado } from "./gmailApiClient.js";
 import { comprobarBorradoresGmailEnviados } from "./agentEngine.js";
 import { generarBorradorRespuesta, getNegotiationKeywords, matchesKeyword, detectResponseType } from "./replyDrafting.js";
-import { analyzeIncomingMessageSentiment } from "./sentimentAnalysis.js";
+import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 import { dbGetLeads, dbUpsertLead, dbLeadMessageExists, dbCreateLeadMessage, dbGetLeadMessages, dbGetAutonomyConfig, getSupabase } from "../db.js";
 import { isBounceMessage, extractFailedRecipientEmail } from "../utils/emailDeliveryTracker.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
@@ -22,8 +22,8 @@ import type { LeadConCorreo } from "./tiposLeadCorreo.js";
 
 // Clasificador de precisión para respuestas entrantes de salas/festivales/medios:
 // Evalúa el contenido del mensaje entrante en el idioma del lead y determina la transición de estado óptima:
-// 1. 'rejection' -> 'no_interesado'
-// 2. 'confirmation' -> 'confirmado'
+// 1. 'rejection' -> 'no_interesado' (ver decidirEstadoTrasRespuesta: exige también a la IA)
+// 2. 'confirmation' -> 'negociando': que la sala diga que sí NO cierra el bolo solo, lo confirma una persona
 // 3. 'price_negotiation' o palabras clave de negociación -> 'negociando'
 // 4. 'follow_up' / 'neutral' -> 'respondido'
 export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode?: string): string {
@@ -47,7 +47,7 @@ export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta
     return "no_interesado";
   }
   if (resType === "confirmation") {
-    return "confirmado";
+    return "negociando";
   }
   if (resType === "price_negotiation" || getNegotiationKeywords(lang).some((k) => matchesKeyword(t, k))) {
     return "negociando";
@@ -56,6 +56,29 @@ export function detectarEstadoTrasRespuesta(estadoActual: string, textoRespuesta
     return "respondido";
   }
   return estadoActual;
+}
+
+type SenalesIA = Pick<MessageSentimentAnalysis, "intencion" | "sentimiento" | "confianza" | "motor">;
+
+/**
+ * Estado del lead tras una respuesta, combinando las palabras clave con el análisis de la IA.
+ * Descartar un lead (`no_interesado`) o aplazarlo es difícil de deshacer sin darse cuenta, así que
+ * exige las DOS señales y que la IA sea de verdad (no el clasificador heurístico de respaldo) y
+ * esté segura. Con una sola, queda en `respondido` y decide una persona. `confirmado` nunca sale de aquí.
+ */
+export function decidirEstadoTrasRespuesta(estadoActual: string, textoRespuesta: string, languageCode: string | undefined, ia: SenalesIA): string {
+  const porPalabras = detectarEstadoTrasRespuesta(estadoActual, textoRespuesta, languageCode);
+  if (estadoActual === "descartado" || estadoActual === "confirmado") return estadoActual;
+
+  const iaFiable = ia.motor === "gemini_flash" && ia.confianza >= 0.7;
+  const iaRechaza = String(ia.intencion).startsWith("rechazo") || ia.sentimiento === "rechazo" || ia.sentimiento === "negativo";
+  if (porPalabras === "no_interesado") {
+    if (iaFiable && iaRechaza) return ia.intencion === "rechazo_programacion_llena" ? "aplazado" : "no_interesado";
+    // Un falso rechazo (una disculpa, una frase suelta) no hace retroceder a quien ya negocia.
+    return ["contactado", "esperando_respuesta", "nuevo"].includes(estadoActual) ? "respondido" : estadoActual;
+  }
+  if (iaFiable && ia.intencion === "confirmar_fecha" && porPalabras === "respondido") return "negociando";
+  return porPalabras;
 }
 
 // Tope de borradores de respuesta generados con IA por banda y hora: a diferencia de los
@@ -437,9 +460,14 @@ export async function runLectorAgent(bandId: string): Promise<LectorAgentResult>
       });
 
       // Auto-Contestador: Redactar respuesta de alta precisión en 'pendiente_aprobacion'
-      let nuevoEstado = detectarEstadoTrasRespuesta(lead.estado, textoPropio, leadLang.code);
+      let nuevoEstado = decidirEstadoTrasRespuesta(lead.estado, textoPropio, leadLang.code, sentimentAnalysis);
       let borradorGenerado: string | null = null;
-      if (puedeGenerarBorradorIA(bandId)) {
+      // Un rechazo o un aplazamiento confirmado no se contesta ni vuelve a la cola de aprobación:
+      // sería pisar su estado y redactarle una réplica a quien ha dicho que no.
+      const cierraElHilo = nuevoEstado === "no_interesado" || nuevoEstado === "aplazado";
+      if (cierraElHilo) {
+        console.log(`[Lector] Lead ${lead.id} -> ${nuevoEstado}: no se redacta réplica.`);
+      } else if (puedeGenerarBorradorIA(bandId)) {
         try {
           const { draftReply } = await generarBorradorRespuesta(
             bandId,

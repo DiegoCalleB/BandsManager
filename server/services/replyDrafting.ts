@@ -51,7 +51,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
       "vale", "de acuerdo", "acuerdo", "date confirmed", "fecha confirmada", "será genial",
       "nos encanta", "os parece bien"],
     rejection: ["no nos interesa", "no encaja", "no podemos", "no disponible", "rechaz",
-      "disculpa", "lo siento", "no es posible", "desafortunadamente", "lamentablemente",
+      "no es posible", "desafortunadamente", "lamentablemente",
       "no tenemos disponibilidad", "no procede", "no aplica"],
     followUp: ["cuándo", "cuando", "fecha", "disponibilidad", "directo", "show",
       "más información", "preguntas", "detalles", "cómo"],
@@ -62,14 +62,14 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     confirmation: ["confirm", "great", "perfect", "sounds good", "agreed", "yes", "awesome",
       "sounds great", "we'd love", "works for us"],
     rejection: ["not interested", "doesn't fit", "we can't", "not available", "decline",
-      "unfortunately", "we're sorry", "not possible", "no longer"],
+      "unfortunately", "not possible", "no longer"],
     followUp: ["when", "availability", "show", "more information", "questions", "details", "how"],
     negotiationExtra: ["date", "availability", "when can you", "contract", "rider"]
   },
   it: {
     price: ["prezzo", "cachet", "budget", "tariffa", "quanto", "condizioni economiche", "compenso", "preventivo"],
     confirmation: ["confermiamo", "perfetto", "ottimo", "d'accordo", "va bene", "sì", "grande", "ci piace"],
-    rejection: ["non ci interessa", "non è possibile", "purtroppo", "siamo spiacenti",
+    rejection: ["non ci interessa", "non è possibile", "purtroppo",
       "non disponibile", "non possiamo", "non rientra"],
     followUp: ["quando", "disponibilità", "data", "maggiori informazioni", "domande", "dettagli", "come"],
     negotiationExtra: ["data", "disponibilità", "quando potete", "contratto", "rider"]
@@ -78,7 +78,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["prix", "cachet", "budget", "tarif", "combien", "conditions financières", "devis", "honoraires"],
     confirmation: ["confirmons", "parfait", "génial", "d'accord", "avec plaisir", "oui", "excellent", "ça nous va"],
     rejection: ["ne nous intéresse pas", "malheureusement", "ce n'est pas possible", "pas disponible",
-      "nous ne pouvons pas", "désolé", "ne correspond pas"],
+      "nous ne pouvons pas", "ne correspond pas"],
     followUp: ["quand", "disponibilité", "date", "plus d'informations", "questions", "détails", "comment"],
     negotiationExtra: ["date", "disponibilité", "quand pouvez-vous", "contrat", "rider"]
   },
@@ -86,7 +86,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["preço", "cachê", "orçamento", "tarifa", "quanto", "condições financeiras", "honorários"],
     confirmation: ["confirmamos", "perfeito", "ótimo", "combinado", "sim", "excelente", "adoramos"],
     rejection: ["não nos interessa", "infelizmente", "não é possível", "não disponível",
-      "não podemos", "lamentamos", "não se encaixa"],
+      "não podemos", "não se encaixa"],
     followUp: ["quando", "disponibilidade", "data", "mais informações", "perguntas", "detalhes", "como"],
     negotiationExtra: ["data", "disponibilidade", "quando podem", "contrato", "rider"]
   },
@@ -94,7 +94,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["preis", "gage", "budget", "honorar", "wie viel", "konditionen", "kostenvoranschlag"],
     confirmation: ["bestätigen", "perfekt", "super", "einverstanden", "gerne", "ja", "ausgezeichnet", "passt für uns"],
     rejection: ["kein interesse", "leider", "nicht möglich", "nicht verfügbar", "können wir nicht",
-      "tut uns leid", "passt nicht"],
+      "passt nicht"],
     followUp: ["wann", "verfügbarkeit", "termin", "weitere informationen", "fragen", "details", "wie"],
     negotiationExtra: ["termin", "verfügbarkeit", "wann könnt ihr", "vertrag", "rider"]
   },
@@ -102,7 +102,7 @@ const KEYWORDS_BY_LANGUAGE: Record<string, ResponseKeywordSet> = {
     price: ["prijs", "gage", "budget", "tarief", "hoeveel", "financiële voorwaarden", "offerte"],
     confirmation: ["bevestigen", "perfect", "geweldig", "akkoord", "ja", "uitstekend", "past ons goed"],
     rejection: ["geen interesse", "helaas", "niet mogelijk", "niet beschikbaar", "kunnen we niet",
-      "sorry", "past niet"],
+      "past niet"],
     followUp: ["wanneer", "beschikbaarheid", "datum", "meer informatie", "vragen", "details", "hoe"],
     negotiationExtra: ["datum", "beschikbaarheid", "wanneer kunnen jullie", "contract", "rider"]
   }
