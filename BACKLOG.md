@@ -138,15 +138,15 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 💡 Ideas por explorar
 
-### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (preguntas abiertas, 2026-10-13)
+### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (investigado 2026-10-14)
 
-* **Qué:** cuatro preguntas sobre el agente del chat, anotadas tal cual y **sin investigar todavía**:
-  1. ¿Tiene sentido que el agente del chat tenga **deshabilitados los agentes/herramientas de Supabase**?
-  2. ¿Tiene sentido que el botón de **«aprobar todas las acciones»** salga **arriba** de la conversación y no abajo del todo?
-  3. ¿El chat **tiene memoria**? (qué recuerda entre mensajes y entre sesiones, y dónde se guarda)
-  4. ¿Se podría **limpiar el historial cada X tiempo**? (cada cuánto, y qué se borra y qué se conserva)
-* **Por qué importa:** sin comprobar. Las preguntas 1 y 4 tocan seguridad y privacidad (qué puede hacer el agente sobre la base de datos y cuánto tiempo se guardan las conversaciones); la 2 es de uso; la 3 decide si el agente puede ser coherente a lo largo del tiempo.
-* **Estado:** pendiente de investigar y decidir. Mirar antes `server/routes/chat.ts`, `server/utils/conversacionChat.ts` y `src/components/chatbot/`.
+* **Las cuatro preguntas, con lo que se comprobó en el código** (`server/routes/chat.ts`, `server/utils/conversacionChat.ts`, `src/components/chatbot/`):
+  1. **¿Agentes/herramientas de Supabase deshabilitados?** No lo están. El modelo puede *proponer* escrituras (`propose_add_lead`, `propose_concert`, `propose_tour`, ensayos, logos, disparar un agente…) y **nada se ejecuta hasta que la persona pulsa confirmar**; el servidor decide la banda por la sesión (`bandaDelAgente`) y la configuración de autonomía la lee de su propio estado (`getAutonomyConfigForBand`), no de lo que manda el navegador. Lo que sí está apagado por defecto es el **atajo por palabras clave** («ejecuta el scout en Sevilla»): el interruptor `agentsEnabled` vive en `localStorage` con valor `false` y el servidor lo respeta; el camino del modelo (`propose_agent_trigger`) sigue disponible. Sin auditar todavía: qué roles pueden confirmar cada acción (el chat dice «poder absoluto de escritura» en su prompt) y que cada endpoint al que llama el botón compruebe rol y banda.
+  2. **«Aprobar todos» arriba o abajo.** El botón ya está en la cabecera de la tarjeta «Propuestas del Manager» de cada mensaje (`ChatMessageBubble.tsx`), solo con más de una propuesta pendiente. Esa tarjeta sale *debajo* del texto de la respuesta, así que en la última respuesta queda al final de la conversación. Mejorarlo (barra fija sobre la conversación, o encima del texto) es decisión de diseño.
+  3. **Memoria.** No hay memoria en el servidor: no se guarda ninguna conversación. El historial vive en el `localStorage` del navegador (`bandmanager_chat_messages_<usuario>_<banda>`); al servidor le llegan como mucho los últimos 20 turnos de 4.000 caracteres (`acotarHistorial`) y el cliente manda los últimos 8. Entre dispositivos no se comparte y al borrar los datos del navegador se pierde. Lo único que «aprende» es el resumen global de feedback de pitches que se mete en el prompt.
+  4. **Limpiar el historial cada X tiempo.** Hoy **nunca caduca y sobrevive al cierre de sesión**: `handleLogout` borra token y usuario pero no las claves del chat, así que en un ordenador compartido el siguiente usuario del navegador puede abrir la conversación anterior (con salas, borradores de correo y datos de contacto). No hay nada que limpiar en el servidor. Solo hay un botón manual de reiniciar en la cabecera del chat.
+* **Arreglado en esta tanda:** (a) el chat ya no enseña al usuario el mensaje interno del proveedor de IA cuando falla (iba en el texto de una respuesta 200 que el lint de `err.message` no ve); ahora da un código de error y el detalle va al log y a Sentry. (b) Fuera los restos de los agentes de GitHub Actions: el cliente leía `bandmanager_github_pat/owner/repo/ref` de `localStorage` y los mandaba como cabeceras `x-github-*` que el servidor ya ignoraba, y nadie guardaba esas claves; un test lo vigila.
+* **Pendiente de decidir (producto/privacidad):** política de retención del historial: borrarlo al cerrar sesión, y/o caducarlo a los N días (propuesta: borrar al cerrar sesión y caducar a los 30 días). Colocación de «Aprobar todos». Y revisar el valor por defecto `"Huelva"` que el atajo de agentes pone cuando no detecta región (`chat.ts`): es un dato de una zona concreta en código multi-banda.
 
 ---
 
