@@ -1,55 +1,53 @@
 {
- "_nota": "Planos clave para sincronía de labios. «id» = escena.frase de GUION_REVISION.md (se regenera con el guion). «real» = el personaje lleva la cara de una persona real: no se genera sin su permiso por escrito.",
+ "_nota": "Planos clave para sincronía de labios. «id» = escena.frase de GUION_REVISION.md (se regenera con el guion). «real» = el personaje lleva la cara de una persona real: no se genera sin su permiso por escrito. Ids remapeados el 14-oct al guion cerrado (campo id_anterior).",
  "planos": [
   {
-   "id": "03.1",
+   "id": "04.1",
    "por_que": "La llamada de Peláez: el villano, primer plano de teléfono",
-   "real": false
-  },
-  {
-   "id": "40.2",
-   "por_que": "Peláez en el festival: «el 30 %»",
-   "real": false
-  },
-  {
-   "id": "05.4",
-   "por_que": "Iago se presenta («el bajo, ese instrumento que nadie oye»)",
-   "real": "confirmar"
-  },
-  {
-   "id": "06.1",
-   "por_que": "La decisión: Iago abre el portátil",
-   "real": "confirmar"
-  },
-  {
-   "id": "17.1",
-   "por_que": "El programador de El Faro: «el 14 de noviembre es vuestro»",
-   "real": true
-  },
-  {
-   "id": "32.3",
-   "por_que": "Iago: «Netflix me ha pedido una peli»",
-   "real": "confirmar"
-  },
-  {
-   "id": "47.1",
-   "por_que": "Diego a Brais: el reto",
-   "real": "propio"
-  },
-  {
-   "id": "48.1",
-   "por_que": "Diego: «yo había dejado de tocar»",
-   "real": "propio"
+   "real": false,
+   "id_anterior": "03.1"
   },
   {
    "id": "48.2",
-   "por_que": "Diego: «nos falta batería, Brais»",
-   "real": "propio"
+   "por_que": "Peláez en el festival: «el 30 %»",
+   "real": false,
+   "id_anterior": "40.2"
   },
   {
-   "id": "49.1",
+   "id": "19.1",
+   "por_que": "El programador de El Faro: «el 14 de noviembre es vuestro»",
+   "real": true,
+   "id_anterior": "17.1"
+  },
+  {
+   "id": "61.6",
+   "por_que": "Iago: «Netflix me ha pedido una peli»",
+   "real": "confirmar",
+   "id_anterior": "32.3"
+  },
+  {
+   "id": "56.1",
+   "por_que": "Diego a Brais: el reto",
+   "real": "propio",
+   "id_anterior": "47.1"
+  },
+  {
+   "id": "57.1",
+   "por_que": "Diego: «yo había dejado de tocar»",
+   "real": "propio",
+   "id_anterior": "48.1"
+  },
+  {
+   "id": "57.2",
+   "por_que": "Diego: «nos falta batería, Brais»",
+   "real": "propio",
+   "id_anterior": "48.2"
+  },
+  {
+   "id": "58.1",
    "por_que": "Gracias: Diego mira a cámara",
-   "real": "propio"
+   "real": "propio",
+   "id_anterior": "49.1"
   }
  ]
 }
