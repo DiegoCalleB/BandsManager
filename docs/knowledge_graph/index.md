@@ -73,15 +73,15 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1594 nodos: 52 agent · 45 db · 12 external · 14 feature · 926 frontend · 43 hook · 83 route · 63 schema · 10 security · 346 service.
+1596 nodos: 52 agent · 45 db · 12 external · 14 feature · 928 frontend · 43 hook · 83 route · 63 schema · 10 security · 346 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
 - [[src_types|src/types.ts]] — 567 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 350 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 351 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 169 ficheros dependen de él
-- [[src_utils_api|src/utils/api.ts]] — 90 ficheros dependen de él
+- [[src_utils_api|src/utils/api.ts]] — 91 ficheros dependen de él
 - [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 69 ficheros dependen de él
 - [[db_state_sync|In-Memory State & Supabase Sync]] — 65 ficheros dependen de él
@@ -93,8 +93,8 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_ai|server/ai.ts]] — 43 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
-- [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 32 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 31 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
 

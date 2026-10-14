@@ -281,6 +281,7 @@ BandManager UI Component Library
 - [[src_components_reels_center_ClipReanalysisPanel|src/components/reels_center/ClipReanalysisPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ConnectAccountDialog|src/components/reels_center/ConnectAccountDialog.tsx]] *(from #frontend)*
 - [[src_components_reels_center_CopyEditor|src/components/reels_center/CopyEditor.tsx]] *(from #frontend)*
+- [[src_components_reels_center_CopyPerfectoPanel|src/components/reels_center/CopyPerfectoPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_EditorActions|src/components/reels_center/EditorActions.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterHeader|src/components/reels_center/ReelsCenterHeader.tsx]] *(from #frontend)*

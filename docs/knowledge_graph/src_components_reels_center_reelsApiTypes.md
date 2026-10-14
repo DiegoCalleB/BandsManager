@@ -22,6 +22,7 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(Layer: #route, Domain: #social)*
 - [[src_components_bandCRM_BandToneModal|src/components/bandCRM/BandToneModal.tsx]] *(Layer: #frontend, Domain: #booking)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
@@ -31,12 +32,14 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_reels_center_ClipQualityReport|src/components/reels_center/ClipQualityReport.tsx]] *(from #frontend)*
+- [[src_components_reels_center_CopyPerfectoPanel|src/components/reels_center/CopyPerfectoPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_HighlightsLighttable|src/components/reels_center/HighlightsLighttable.tsx]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useClipReanalysis|src/components/reels_center/hooks/useClipReanalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useCopyPerfecto|src/components/reels_center/hooks/useCopyPerfecto.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useReelsSync|src/components/reels_center/hooks/useReelsSync.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useReelStyleOptions|src/components/reels_center/hooks/useReelStyleOptions.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useRenderedClipState|src/components/reels_center/hooks/useRenderedClipState.ts]] *(from #frontend)*

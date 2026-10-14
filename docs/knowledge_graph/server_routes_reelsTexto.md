@@ -34,6 +34,8 @@ Reels · texto: lo que trabaja sobre el copy y el gancho del reel, no sobre el v
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[src_components_reels_center_hooks_useCopyPerfecto|src/components/reels_center/hooks/useCopyPerfecto.ts]] *(from #frontend)*
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(from #frontend)*
 
 ---
 

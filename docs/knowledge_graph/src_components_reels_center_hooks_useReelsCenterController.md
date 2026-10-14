@@ -25,6 +25,7 @@ Compone todos los hooks del Centro de Reels y expone el estado y los handlers qu
 - [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useCopyDraftState|src/components/reels_center/hooks/useCopyDraftState.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useCopyPerfecto|src/components/reels_center/hooks/useCopyPerfecto.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useHighlightEditing|src/components/reels_center/hooks/useHighlightEditing.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useReelStyleOptions|src/components/reels_center/hooks/useReelStyleOptions.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useReelsSync|src/components/reels_center/hooks/useReelsSync.ts]] *(Layer: #frontend, Domain: #social)*

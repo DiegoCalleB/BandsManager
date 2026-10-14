@@ -149,3 +149,27 @@ export interface PublishNowResponse {
   modo?: "publicado" | "asistido" | "fallido";
   publishedUrl?: string;
 }
+
+/** Un candidato de copy perfecto (server/services/copyPerfecto.ts). */
+export interface CandidatoCopyApi {
+  copy: {
+    hookText: string;
+    recommendedCopy: string;
+    copyTikTok: string;
+    copyYouTube: string;
+    copyFacebook: string;
+    hashtags: string[];
+  };
+  arquetipo: string;
+  auditoria: { puntuacion: number; apto: boolean; problemas: Array<{ campo: string; codigo: string; gravedad: "error" | "aviso"; mensaje: string }> };
+}
+
+/** Respuesta de `/api/reels/copy-perfecto`. */
+export interface CopyPerfectoResponse {
+  success?: boolean;
+  error?: string;
+  generatedByAI?: boolean;
+  ganador?: CandidatoCopyApi;
+  alternativas?: CandidatoCopyApi[];
+  motivo?: string;
+}
