@@ -1472,7 +1472,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
       <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
       <div class="nx-top10"><b>TOP<br>10</b><span>N.º 1 en películas hoy</span></div>
-      <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+      <p class="nx-sin">Una banda a punto de separarse. Un bajista que promete arreglarlo antes del sábado. Y una aplicación que ni él se cree que haya hecho.</p>
       <div class="gate-btns">
         <button id="gatePeli" class="gate-btn primary">&#9654; Reproducir</button>
         <button id="gateInfo" class="gate-btn nx-info">&#9432; Más información</button>
@@ -1492,7 +1492,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
         <div class="nx-mcuerpo">
           <div class="nx-mizq">
             <div class="nx-meta"><span class="nx-verde">98 % para ti</span><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span></div>
-            <p>Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+            <p>Una banda a punto de separarse. Un bajista que promete arreglarlo antes del sábado. Y una aplicación que ni él se cree que haya hecho.</p>
             <p class="nx-peq">Cuatro amigos, un Excel con siete versiones de todo y una pregunta que nadie contestaba: ¿quién gestiona la banda? La respuesta cabe en una presentación de trabajo fin de máster.</p>
           </div>
           <dl class="nx-mder">
