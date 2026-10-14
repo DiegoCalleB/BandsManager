@@ -975,11 +975,16 @@
    },
    {
     "who": "bajo",
-    "txt": "Los profesionales: mánagers, agencias, salas y festivales. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.",
-    "voz": "No, Brais: los profesionales. Mánayers, agencias, salas y festivales. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro."
+    "txt": "Los que llevan a varias bandas a la vez: mánagers, agencias y productoras.",
+    "voz": "No, Brais: los que llevan a varias bandas a la vez. Mánayers, agencias y productoras."
+   },
+   {
+    "who": "bajo",
+    "txt": "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.",
+    "voz": "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro."
    }
   ],
-  "nota": "Tres líneas: el chiste coreano se queda, y el porqué de las salas lo demuestra El Faro (y su entrevista)."
+  "nota": "Corregido a petición de Diego: las salas y festivales NO son clientes (reciben correo, dossier y acuerdo por enlace, sin cuenta); son el canal. Clientes B2B: mánagers, agencias y productoras (llevan varias bandas)."
  },
  {
   "title": "Cómo ganamos dinero",

@@ -120,9 +120,9 @@ SAY = [
  # Cap. 5 · clientes
  ('Dos tipos de cliente', 'Hay dos tipos de cliente. Be tu ci: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes.'),
  ('¿Y B2B?', '[confused] ¿Y be tu bi? ¿Eso qué es, un grupo coreano?'),
- ('Mánagers y agencias, que llevan', 'Los mánayers y las agencias, que llevan varias bandas a la vez. Y las salas, los festivales y las productoras, que son los que programan.'),
+ ('Los que llevan a varias bandas', 'Los que llevan a varias bandas a la vez: mánayers, agencias y productoras.'),
  ('¿Y por qué iba a querer una sala', '¿Y por qué iba a querer una sala usar esto? Si no nos atienden ni el teléfono.'),
- ('Porque si es fácil trabajar con nosotros', 'Porque si es fácil trabajar con nosotros, contestan antes. Quien toca, paga. Y quien programa, hace que todo esto funcione.'),
+ ('Las salas y los festivales no son clientes', 'Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.'),
  # Cap. 5 · dinero
  ('¿Y de qué vivimos, entonces?', '¿Y de qué vivimos, entonces? ¿De los aplausos?'),
  ('Dos motores.', 'De dos motores. El primero, una suscripción por banda, con cinco planes. Ya está construida, aunque de momento la tengo apagada a propósito. El segundo, una pequeña comisión de cada concierto que se cierra por la plataforma.'),

@@ -626,13 +626,12 @@ add(f'''<section class="slide scene biz" data-title="A quién se lo vendemos" da
   <h2>A quién se lo vendemos.</h2>
   <div class="biz-cols">
     <div class="biz-col"><span class="badge">B2C</span><h3>Bandas, músicos, DJs y solistas</h3><p>Una cuota por banda, de 0 a 79 € al mes</p></div>
-    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Mánagers, agencias, salas, festivales y productoras</h3><p>Los que llevan varias bandas y los que programan</p></div>
+    <div class="biz-col"><span class="badge b2b">B2B</span><h3>Mánagers, agencias y productoras</h3><p>Los que llevan varias bandas a la vez</p></div>
   </div>
   {dlg(m('iago', 'Dos tipos de cliente. B2C: bandas, músicos, DJs y solistas, o sea, nosotros. Pagan una cuota por banda.'),
        m('brais', '¿Y B2B?'),
-       m('iago', 'Mánagers y agencias, que llevan varias bandas a la vez. Y salas, festivales y productoras, que son las que programan.'),
-       m('xandre', '¿Y por qué iba a querer una sala usar esto?'),
-       m('iago', 'Porque si es fácil trabajar con nosotros, contestan antes. Quien toca paga; quien programa hace que el producto funcione.'), cls='tight')}
+       m('iago', 'Los que llevan a varias bandas a la vez: mánagers, agencias y productoras.'),
+       m('iago', 'Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.'), cls='tight')}
 </section>
 ''')
 

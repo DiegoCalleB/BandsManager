@@ -385,6 +385,10 @@ EN = {
     "And we're already putting together a metal band. We need a drummer… With huge excitement, and knowing that with BandManager the whole management side will run smoothly.",
 "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.":
     "And who knows, one day my daughters might want to start their own bands… and this makes their beginnings so much easier. A dream come true.",
+"No, Brais: los que llevan a varias bandas a la vez. Mánayers, agencias y productoras.":
+    "No, Brais: the ones who run several bands at once. Managers, agencies and production companies.",
+"Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.":
+    "Venues and festivals aren't customers: they're the channel. If we're easy to work with, they answer sooner. Look at El Faro.",
 }
 
 def main():
