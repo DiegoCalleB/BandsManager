@@ -22,7 +22,7 @@ import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFa
 import { renderizarClip } from "../services/clipRenderer.js";
 import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
 import reelsTextoRouter from "./reelsTexto.js";
-import reelsAprendizajeRouter from "./reelsAprendizaje.js";
+import reelsAprendizajeRouter from "./reelsAprendizaje.js"; import reelsProgramacionRouter from "./reelsProgramacion.js";
 import { aprendizajeDeBanda } from "../services/metricasReels.js";
 import { bloqueAprendizajeParaPrompt } from "../utils/aprendizajeReels.js";
 import { analizarTramo, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
@@ -888,7 +888,7 @@ Responde ÚNICAMENTE con JSON válido:
 });
 
 // Texto del reel (Hook Doctor, copy perfecto) y aprendizaje con métricas reales.
-router.use(reelsTextoRouter, reelsAprendizajeRouter);
+router.use(reelsTextoRouter, reelsAprendizajeRouter, reelsProgramacionRouter);
 
 export { parseRange };
 export default router;

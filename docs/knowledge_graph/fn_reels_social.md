@@ -32,6 +32,7 @@ Generación de reels virales, publicaciones y plan de crecimiento.
 - [[server_routes_posts|server/routes/posts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
 - [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(Layer: #route, Domain: #social)*
+- [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(Layer: #route, Domain: #social)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(Layer: #route, Domain: #social)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(Layer: #service, Domain: #social)*

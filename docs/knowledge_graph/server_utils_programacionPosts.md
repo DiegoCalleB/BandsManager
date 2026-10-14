@@ -24,6 +24,7 @@ Cuándo toca publicar un post programado.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
+- [[server_utils_cadenciaReels|server/utils/cadenciaReels.ts]] *(from #service)*
 
 ---
 

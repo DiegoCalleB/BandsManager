@@ -81,6 +81,7 @@ _Sin dependencias salientes directas._
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
+- [[server_utils_cadenciaReels|server/utils/cadenciaReels.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
@@ -599,6 +600,7 @@ _Sin dependencias salientes directas._
 - `server/services/__tests__/calendarConflictService.test.ts`
 - `server/services/__tests__/metricasReels.test.ts`
 - `server/services/__tests__/socialPublisher.test.ts`
+- `server/utils/__tests__/cadenciaReels.test.ts`
 - `server/utils/__tests__/perfectSetlistPlanner.test.ts`
 - `server/utils/__tests__/programacionPosts.test.ts`
 - `src/audit/mezclaBaseIdea.test.ts`

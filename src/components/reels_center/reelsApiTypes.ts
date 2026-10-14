@@ -180,3 +180,12 @@ export interface AprendizajeReelsResponse {
   resumen?: { reelsMedidos: number; rewatchMediano: number | null; tasaCompartirMediana: number | null; tasaGuardarMediana: number | null };
   recomendacion?: { formato: "loop_corto" | "corto" | "medio" | "largo"; modo: "explorando" | "aprovechando"; muestras: number; explicacion: string };
 }
+
+/** Respuesta de `/api/reels/proximo-hueco` (server/utils/cadenciaReels.ts). */
+export interface ProximoHuecoResponse {
+  success?: boolean;
+  fecha?: string;
+  hora?: string;
+  origenHora?: "datos" | "fallback";
+  motivo?: string;
+}

@@ -28,7 +28,9 @@
 | Fase 6 · control de calidad | ✅ negro, congelado, silencio, volumen, formato, duración, hook y pista de audio; bloquea la autopublicación | `utils/controlCalidadClip.ts`, `services/controlCalidad.ts`, `ClipQualityReport.tsx` |
 | Interruptores del estudio sin efecto (hallazgo nuevo) | ✅ loop, zoom y smart-pan ya llegan al render | `useClipRendering.ts` |
 
-**Pendiente** (en orden): YouTube Shorts y TikTok reales · Fase 4 (hora óptima con datos) · aplicar la
+**Fase 4 (parcial):** cadencia (1 Reel/día/plataforma, 48 h entre clips del mismo vídeo) y hueco propuesto en `cadenciaReels.ts` + `GET /api/reels/proximo-hueco`. La hora sale de `online_followers` cuando se ingiera (hoy siempre fallback 20:30, y se dice en pantalla). Faltan cross-post escalonado, Trial Reels y choques con el calendario.
+
+**Pendiente** (en orden): YouTube Shorts y TikTok reales · ingesta de `online_followers` · aplicar la
 auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
 métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·
 tras desplegar: aplicar `20261104_reels_publicacion_real.sql` y probar con una cuenta real de

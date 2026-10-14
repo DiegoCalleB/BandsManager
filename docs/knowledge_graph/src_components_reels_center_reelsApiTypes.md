@@ -33,6 +33,7 @@ Contratos tipados de las respuestas de la API del Centro de Reels.
 - [[src_components_reels_center_ClipQualityReport|src/components/reels_center/ClipQualityReport.tsx]] *(from #frontend)*
 - [[src_components_reels_center_CopyPerfectoPanel|src/components/reels_center/CopyPerfectoPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_HighlightsLighttable|src/components/reels_center/HighlightsLighttable.tsx]] *(from #frontend)*
+- [[src_components_reels_center_hooks_pedirProximoHueco|src/components/reels_center/hooks/pedirProximoHueco.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useAprendizajeReels|src/components/reels_center/hooks/useAprendizajeReels.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(from #frontend)*

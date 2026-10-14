@@ -53,3 +53,12 @@ export async function dbBuscarReelClip(bandId: string, clipUrl: string): Promise
   if (error) throw new Error(`Supabase Error (reel_clips): ${error.message}`);
   return (data as ReelClip | null) || null;
 }
+
+/** Vídeo de origen (`source_url`) de cada clip pedido, por `clip_url`. Una sola consulta, no una por post. */
+export async function dbOrigenesDeClips(bandId: string, clipUrls: string[]): Promise<Record<string, string>> {
+  if (clipUrls.length === 0) return {};
+  const sb = getSupabase();
+  const { data, error } = await sb.from("reel_clips").select("clip_url, source_url").eq("band_id", cleanBandId(bandId)).in("clip_url", clipUrls);
+  if (error) throw new Error(`Supabase Error (reel_clips): ${error.message}`);
+  return Object.fromEntries((data || []).map((c: { clip_url: string; source_url: string }) => [c.clip_url, c.source_url]));
+}
