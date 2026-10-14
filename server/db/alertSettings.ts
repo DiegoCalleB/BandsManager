@@ -27,7 +27,7 @@ export async function dbGetAlertSettings(bandId: string): Promise<DbAlertSetting
     .maybeSingle();
 
   if (error && error.code !== 'PGRST116') {
-    console.error(`[AlertSettings DB] Error consultando alertas para ${targetBand}:`, error);
+    console.error("[AlertSettings DB] Error consultando alertas para %s:", targetBand, error);
     return null;
   }
 
@@ -57,7 +57,7 @@ export async function dbUpsertAlertSettings(bandId: string, config: Partial<DbAl
     .upsert(payload, { onConflict: 'band_id' });
 
   if (error) {
-    console.error(`[AlertSettings DB] Error guardando alertas para ${targetBand}:`, error);
+    console.error("[AlertSettings DB] Error guardando alertas para %s:", targetBand, error);
     return false;
   }
 

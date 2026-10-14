@@ -62,7 +62,7 @@ async function separarEnSegundoPlano(ctx: ContextoSeparacion, inicio: number): P
       : undefined;
     if (isDegraded) {
       console.warn(
-        `[STEM_SEPARATION_DEGRADED_FALLBACK] ⚠️ Alerta: Fallback a DSP activado para banda "${ctx.bandId}", tema "${ctx.songTitle || 'sin-titulo'}". Motor solicitado: ${ctx.selectedEngine}. Razón: IA no disponible.`,
+        "[STEM_SEPARATION_DEGRADED_FALLBACK] ⚠️ Alerta: Fallback a DSP activado para banda \"%s\", tema \"%s\". Motor solicitado: %s. Razón: IA no disponible.", ctx.bandId, ctx.songTitle || 'sin-titulo', ctx.selectedEngine,
       );
     }
 
@@ -112,7 +112,7 @@ async function separarEnSegundoPlano(ctx: ContextoSeparacion, inicio: number): P
 
   const totalSec = `${((Date.now() - inicio) / 1000).toFixed(1)}s`;
   console.log(
-    `[Stem Separator] ✅ Job en segundo plano completado para ${ctx.cacheKey} en ${totalSec} (motor: ${resultado.separationEngine}, degradado: ${!resultado.isNeural && !ctx.isUserExplicitDsp}).`,
+    "[Stem Separator] ✅ Job en segundo plano completado para %s en %s (motor: %s, degradado: %s).", ctx.cacheKey, totalSec, resultado.separationEngine, !resultado.isNeural && !ctx.isUserExplicitDsp,
   );
 }
 
@@ -126,7 +126,7 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
     const persistentEntry = await getStemsFromPersistentCache(ctx.bandId, ctx.songHash, ctx.selectedEngine);
     if (persistentEntry && persistentEntry.stemsMap && Object.keys(persistentEntry.stemsMap).length > 0) {
       console.log(
-        `[Stem Separator] ⚡ Cache HIT persistente (L1/L2 Supabase) para ${ctx.cacheKey}. 0 llamadas GPU / Replicate. Coste: $0.00.`,
+        "[Stem Separator] ⚡ Cache HIT persistente (L1/L2 Supabase) para %s. 0 llamadas GPU / Replicate. Coste: $0.00.", ctx.cacheKey,
       );
       return res.json(
         respuestaDesdeCache(
@@ -147,7 +147,7 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
       }
       if (lockResult.reason === 'in_progress_by_other_instance') {
         console.log(
-          `[Stem Separator] ⏳ Trabajo ya en progreso (otra instancia o petición previa) para ${ctx.cacheKey}. El cliente hará polling de estado.`,
+          "[Stem Separator] ⏳ Trabajo ya en progreso (otra instancia o petición previa) para %s. El cliente hará polling de estado.", ctx.cacheKey,
         );
         return res.status(202).json(respuestaProcesando(ctx));
       }
@@ -173,14 +173,14 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
     // 3. Deduplicación en esta instancia.
     if (inFlightSeparations.has(ctx.cacheKey)) {
       console.log(
-        `[Stem Separator] ⏳ Deduplicación activa: Petición en curso para ${ctx.cacheKey}. El cliente consultará el estado mediante polling.`,
+        "[Stem Separator] ⏳ Deduplicación activa: Petición en curso para %s. El cliente consultará el estado mediante polling.", ctx.cacheKey,
       );
       return res.status(202).json(respuestaProcesando(ctx));
     }
 
     res.status(202).json(respuestaProcesando(ctx));
     console.log(
-      `[AI Stem Separation] Invocando separación de stems (Modo: ${ctx.selectedEngine}). URL: ${ctx.audioUrl?.substring(0, 50)}... Host: ${ctx.requestHost}. Replicate Token?: ${!!ctx.effectiveReplicateToken} Fal Key?: ${!!(process.env.FAL_KEY || process.env.FAL_API_KEY)}`,
+      "[AI Stem Separation] Invocando separación de stems (Modo: %s). URL: %s... Host: %s. Replicate Token?: %s Fal Key?: %s", ctx.selectedEngine, ctx.audioUrl?.substring(0, 50), ctx.requestHost, !!ctx.effectiveReplicateToken, !!(process.env.FAL_KEY || process.env.FAL_API_KEY),
     );
     await separarEnSegundoPlano(ctx, inicio);
   } catch (err) {
@@ -190,7 +190,7 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
     const diag = diagnosticarErrorDeSeparacion(err, selectedEngine);
 
     if (res.headersSent) {
-      console.error(`[Stem Separator] ❌ Job en segundo plano falló para banda "${bandId}":`, err);
+      console.error("[Stem Separator] ❌ Job en segundo plano falló para banda \"%s\":", bandId, err);
       await failStemsJob(bandId, songHash, selectedEngine, {
         provider: diag.provider,
         error: diag.errorTitle,

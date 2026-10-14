@@ -9,6 +9,7 @@ import { ACTIVE_FAL_KEY } from '../../services/audioSeparator/FalAiService.js';
 import { buildFormattedStems } from './formatoStems.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 /**
@@ -100,9 +101,7 @@ router.get('/ai-stem-separation/status', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error consultando estado de separación de stems:', err);
-    return res
-      .status(500)
-      .json({ error: err?.message || 'Error consultando estado' });
+    return responderError(res, err, 'Error consultando estado');
   }
 });
 
@@ -179,7 +178,7 @@ router.get('/ai-stem-separation/fal-diagnostic', requireAuth, async (req, res) =
     });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err.message });
+    responderError(res, err);
   }
 });
 

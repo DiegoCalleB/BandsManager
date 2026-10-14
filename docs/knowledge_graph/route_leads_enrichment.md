@@ -26,6 +26,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(Layer: #db, Domain: #system)*
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_leads_helpers|server/routes/leads/helpers.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_routes_leads_tiposScout|server/routes/leads/tiposScout.ts]] *(Layer: #route, Domain: #booking)*
 - [[server_services_apifyInstagramService|server/services/apifyInstagramService.ts]] *(Layer: #service, Domain: #social)*
@@ -44,6 +45,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 - [[server_services_venueEventsRadarService|server/services/venueEventsRadarService.ts]] *(Layer: #service, Domain: #booking)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_urlHost|server/utils/urlHost.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
@@ -72,6 +74,7 @@ Busca datos públicos de una sala (web, redes) para completar su ficha. Pasa por
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/routes/__tests__/leadsCampanasRateLimit.test.ts`
 - `server/routes/__tests__/seguridadAutorizacion.test.ts`
 - `server/routes/leads/__tests__/numeroConDefecto.test.ts`
 

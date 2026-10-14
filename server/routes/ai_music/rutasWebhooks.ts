@@ -4,9 +4,11 @@
  * registraba nadie y solo escribía en el log lo que le enviaran, sin firma).
  */
 import express from 'express';
+import { webhookRateLimiter } from '../../middleware/rateLimiter.js';
 import { verifyReplicateWebhook, isPredictionWebhookProcessed, recordPredictionJob } from '../../services/stemPredictionReconciler.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 /**
@@ -14,6 +16,7 @@ const router = express.Router();
  */
 router.post(
   ['/webhooks/replicate-stems', '/api/webhooks/replicate-stems'],
+  webhookRateLimiter,
   async (req, res) => {
     try {
       const webhookHeaders = {
@@ -50,7 +53,7 @@ router.post(
       );
       if (!verification.valid) {
         console.warn(
-          `[Stem Webhook] ❌ Firma HMAC inválida en webhook de Replicate: ${verification.reason}`
+          "[Stem Webhook] ❌ Firma HMAC inválida en webhook de Replicate: %s", verification.reason
         );
         return res
           .status(401)
@@ -68,7 +71,7 @@ router.post(
       const alreadyProcessed = await isPredictionWebhookProcessed(predictionId);
       if (alreadyProcessed) {
         console.log(
-          `[Stem Webhook] ⚡ Webhook ${predictionId} ya procesado anteriormente (Idempotencia).`
+          "[Stem Webhook] ⚡ Webhook %s ya procesado anteriormente (Idempotencia).", predictionId
         );
         return res.json({ status: 'already_processed', id: predictionId });
       }
@@ -85,15 +88,13 @@ router.post(
       });
 
       console.log(
-        `[Stem Webhook] ✅ Webhook ${predictionId} procesado exitosamente con estado: ${prediction.status}`
+        "[Stem Webhook] ✅ Webhook %s procesado exitosamente con estado: %s", predictionId, prediction.status
       );
       return res.json({ status: 'processed', id: predictionId });
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('[Stem Webhook] Error procesando webhook:', err);
-      return res
-        .status(500)
-        .json({ error: err?.message || 'Error procesando webhook' });
+      return responderError(res, err, 'Error procesando webhook');
     }
   }
 );

@@ -288,6 +288,8 @@ export function renderizarNoEncontrado(baseUrl: string): string {
 export interface EntradaSitemap {
   loc: string;
   lastmod?: string;
+  /** Versiones en otros idiomas de la misma página (incluida ella misma), como `xhtml:link`. */
+  alternativas?: Array<{ hreflang: string; href: string }>;
 }
 
 /** Máximo del protocolo sitemap.org por fichero. */
@@ -297,7 +299,14 @@ export function renderizarSitemap(entradas: EntradaSitemap[]): string {
   const filas = entradas
     .slice(0, MAX_URLS_SITEMAP)
     .filter((e) => urlHttpSegura(e.loc))
-    .map((e) => `<url><loc>${escapeHtml(e.loc)}</loc>${e.lastmod ? `<lastmod>${escapeHtml(e.lastmod)}</lastmod>` : ''}</url>`)
+    .map((e) => {
+      const lastmod = e.lastmod ? `<lastmod>${escapeHtml(e.lastmod)}</lastmod>` : '';
+      const alternativas = (e.alternativas ?? [])
+        .filter((a) => urlHttpSegura(a.href))
+        .map((a) => `<xhtml:link rel="alternate" hreflang="${escapeHtml(a.hreflang)}" href="${escapeHtml(a.href)}"/>`)
+        .join('');
+      return `<url><loc>${escapeHtml(e.loc)}</loc>${lastmod}${alternativas}</url>`;
+    })
     .join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${filas}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${filas}\n</urlset>\n`;
 }

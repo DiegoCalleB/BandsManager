@@ -226,6 +226,7 @@ export function AppModalsHost() {
               }
             }}
             onSelectMission={(targetView) => handleNavigate(targetView)}
+            onOpenProfileWizard={() => setShowProfileWizardModal(true)}
             bandName={currentActiveBandName}
           />
 

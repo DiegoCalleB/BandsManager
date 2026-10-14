@@ -38,6 +38,7 @@ _Sin dependencias salientes directas._
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_chatTools|server/services/chatTools.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
+- [[server_utils_conversacionChat|server/utils/conversacionChat.ts]] *(from #service)*
 
 ---
 

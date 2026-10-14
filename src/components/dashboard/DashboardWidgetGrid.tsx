@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Maximize2, Check, LayoutGrid, X, GripVertical, Info, Monitor } from "lucide-react";
+import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Check, LayoutGrid, X, GripVertical, Info } from "lucide-react";
 import {
   DashboardWidgetConfig,
   DEFAULT_DASHBOARD_WIDGETS,
@@ -8,21 +8,13 @@ import {
 } from "../../types/dashboardWidgets";
 import { CalendarWidget } from "./widgets/CalendarWidget";
 import { RoiBandaWidget } from "./widgets/RoiBandaWidget";
+import { MarketingWidget } from "./widgets/MarketingWidget";
 import { ExecutiveSummaryHero } from "./ExecutiveSummaryHero";
-import {
-  CrmPipelineWidget,
-  RepertorioWidget,
-  FinancesWidget,
-  SocialFansWidget,
-  EpkStatusWidget,
-  AiAgentWidget,
-  TourStatusWidget,
-} from "./widgets/ModuleWidgets";
+import { CrmPipelineWidget, RepertorioWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget } from "./widgets/ModuleWidgets";
 import {
   RepertorioEnergyChartWidget,
   BookingFunnelChartWidget,
   FinancesChartWidget,
-  SocialFansGrowthWidget,
 } from "./widgets/ChartWidgets";
 import {
   Concert,
@@ -39,13 +31,19 @@ import {
   User,
 } from "../../types";
 import type { NavigationOptions } from "../Dashboard";
-import { api } from "../../services/api";
 import { hasModuleAccess } from "../../utils/planPermissions";
 import { useScrollLock } from "../../hooks/useScrollLock";
 import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOverlayStyle";
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
-import { leerUsuarioDeSesion } from '../../services/sesionLocal';
+import { BotonMovil } from "./BotonMovil";
+import { claseColumnas, columnasRellenando } from "../../utils/rellenarFila";
+import { TiradorWidget } from "./TiradorWidget";
+import { useRedimensionar } from "./hooks/useRedimensionar";
+import { useReordenTactil } from "./hooks/useReordenTactil";
+import { pasoAncho, pasoAlto } from "../../utils/redimensionarWidget";
+import { useGuardadoPanel } from "./hooks/useGuardadoPanel";
+import { moverEntreVisibles, leerPanel, panelDeBanda, conPanel, visibleEnMovil, ESENCIALES_MOVIL, type PanelGuardado } from "../../utils/panelWidgets";
 
 // Espectro resuelve claro/oscuro en tokens: las ramas `isStitchLight` que llegan de main no deben
 // activarse nunca (traerían de vuelta slate/indigo). Se eliminan en el restyle de este fichero.
@@ -111,9 +109,12 @@ export function DashboardWidgetGrid({
   const setIsEditMode = externalSetIsEditMode ?? setInternalEditMode;
 
   // Load saved widgets from user preferences or use default, filtering by module access
-  const savedWidgets = currentUser?.ui_preferences?.dashboard_widgets as
-    | DashboardWidgetConfig[]
-    | undefined;
+  // Lo guardado puede ser el formato antiguo (una lista) o el v2: se lee siempre como v2.
+  const guardadoCrudo = currentUser?.ui_preferences?.dashboard_widgets;
+  const leido = React.useMemo(() => leerPanel(guardadoCrudo), [guardadoCrudo]);
+  const savedWidgets = leido ? panelDeBanda(leido.panel) : undefined;
+  // Último panel completo conocido (con los paneles por banda, que hoy no se tocan desde aquí).
+  const panelRef = React.useRef<PanelGuardado | null>(leido?.panel ?? null);
 
   // Quita lo que el plan no permite y los tipos duplicados. Un tipo de widget solo puede estar
   // una vez en el panel — de guardados anteriores pueden quedar duplicados ("Añadir Otro" lo
@@ -158,62 +159,22 @@ export function DashboardWidgetGrid({
   useScrollLock(isAddModalOpen);
   const addModalOverlayStyle = useVisualViewportOverlayStyle();
   const [selectedCategory, setSelectedCategory] = useState<string>("Todos");
-  const [, setIsSaving] = useState(false);
-  const [saveSuccessMsg, setSaveSuccessMsg] = useState(false);
 
   // Drag and drop state
   const [draggedWidgetId, setDraggedWidgetId] = useState<string | null>(null);
   const [dragOverWidgetId, setDragOverWidgetId] = useState<string | null>(null);
 
-  const [saveError, setSaveError] = useState(false);
-  const pendingSavesRef = React.useRef(0);
-  // Tras guardar algo en este montaje, lo local manda: una sesión refrescada que estuviera en
-  // vuelo (y por tanto sin el último cambio) no debe deshacerlo.
-  const hasSavedRef = React.useRef(false);
+  const { guardar: saveLayoutToDb, error: saveError, guardado: saveSuccessMsg, haGuardado, hayCambiosEnCurso } = useGuardadoPanel();
   const widgetsRef = React.useRef(widgets);
   React.useEffect(() => {
     widgetsRef.current = widgets;
   }, [widgets]);
 
-  // Sync to database — y al usuario en caché (estado de la app + localStorage), para que al salir
-  // del dashboard y volver, o al recargar antes de que la sesión se refresque, no reaparezca el
-  // panel antiguo.
-  const saveLayoutToDb = async (newLayout: DashboardWidgetConfig[]) => {
-    setIsSaving(true);
-    setSaveError(false);
-    pendingSavesRef.current += 1;
-    hasSavedRef.current = true;
-    try {
-      const res = await api.saveUiPreferences({ dashboard_widgets: newLayout });
-      const prefs = res?.ui_preferences ?? { dashboard_widgets: newLayout };
-      try {
-        const user = leerUsuarioDeSesion();
-        if (user) {
-          user.ui_preferences = { ...(user.ui_preferences || {}), ...prefs };
-          localStorage.setItem("bandmanager_user", JSON.stringify(user));
-        }
-      } catch {
-        /* sin localStorage: la copia del servidor sigue siendo la buena */
-      }
-      window.dispatchEvent(
-        new CustomEvent("bm:ui-preferences-saved", { detail: prefs }),
-      );
-      setSaveSuccessMsg(true);
-      setTimeout(() => setSaveSuccessMsg(false), 2000);
-    } catch (err) {
-      console.error("Error al guardar disposición de widgets:", err);
-      setSaveError(true);
-    } finally {
-      pendingSavesRef.current -= 1;
-      setIsSaving(false);
-    }
-  };
-
   const updateAndSaveWidgets = (newWidgets: DashboardWidgetConfig[]) => {
     const ordered = newWidgets.map((w, idx) => ({ ...w, order: idx }));
     setWidgets(ordered);
     setLayoutCustomized(true);
-    saveLayoutToDb(ordered);
+    saveLayoutToDb((panelRef.current = conPanel(panelRef.current, ordered)));
   };
 
   // Si el usuario llega con un panel más reciente que el que se pintó al montar (sesión refrescada
@@ -221,23 +182,21 @@ export function DashboardWidgetGrid({
   // vuelo, que ya son lo último que el usuario ha hecho.
   React.useEffect(() => {
     if (!Array.isArray(savedWidgets) || savedWidgets.length === 0) return;
-    if (isEditMode || hasSavedRef.current || pendingSavesRef.current > 0) return;
+    if (isEditMode || haGuardado() || hayCambiosEnCurso()) return;
     const { deduped } = sanitizeLayout(savedWidgets);
     if (JSON.stringify(deduped) !== JSON.stringify(widgetsRef.current)) {
       setWidgets(deduped);
       setLayoutCustomized(true);
+      panelRef.current = leido?.panel ?? panelRef.current;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedWidgets]);
 
-  // Si la carga inicial tuvo que quitar duplicados (guardados antes de este cambio), persiste
+  // Si la carga inicial tuvo que quitar duplicados o migrar del formato antiguo, persiste
   // la limpieza una sola vez — si no, el duplicado seguiría reapareciendo en cada recarga hasta
   // que el usuario tocara algo manualmente.
   React.useEffect(() => {
-    if (initialLayout.hadDuplicates) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- persistir la limpieza inicial en el servidor al montar; los setState son los del indicador de guardado de saveLayoutToDb
-      saveLayoutToDb(widgets);
-    }
+    if (initialLayout.hadDuplicates || leido?.migrado) saveLayoutToDb((panelRef.current = conPanel(panelRef.current, widgets)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -260,24 +219,18 @@ export function DashboardWidgetGrid({
     setDragOverWidgetId(null);
   };
 
+  const moverA = (origen: string, destino: string) => {
+    const copy = [...widgets];
+    const fromIdx = copy.findIndex((w) => w.id === origen);
+    const toIdx = copy.findIndex((w) => w.id === destino);
+    if (fromIdx === -1 || toIdx === -1) return;
+    copy.splice(toIdx, 0, copy.splice(fromIdx, 1)[0]);
+    updateAndSaveWidgets(copy);
+  };
+
   const handleDrop = (e: React.DragEvent, targetId: string) => {
     e.preventDefault();
-    if (!draggedWidgetId || draggedWidgetId === targetId) {
-      setDraggedWidgetId(null);
-      setDragOverWidgetId(null);
-      return;
-    }
-
-    const copy = [...widgets];
-    const fromIdx = copy.findIndex((w) => w.id === draggedWidgetId);
-    const toIdx = copy.findIndex((w) => w.id === targetId);
-
-    if (fromIdx !== -1 && toIdx !== -1) {
-      const [movedItem] = copy.splice(fromIdx, 1);
-      copy.splice(toIdx, 0, movedItem);
-      updateAndSaveWidgets(copy);
-    }
-
+    if (draggedWidgetId && draggedWidgetId !== targetId) moverA(draggedWidgetId, targetId);
     setDraggedWidgetId(null);
     setDragOverWidgetId(null);
   };
@@ -287,17 +240,13 @@ export function DashboardWidgetGrid({
     setDragOverWidgetId(null);
   };
 
+  const { iniciar: arrastrarConDedo } = useReordenTactil({ setArrastrado: setDraggedWidgetId, setSobre: setDragOverWidgetId, alSoltar: moverA });
+  const gridRef = React.useRef<HTMLDivElement>(null);
+  const { previa, iniciar: iniciarTirador } = useRedimensionar((id, c) => updateAndSaveWidgets(widgets.map((w) => (w.id === id ? { ...w, ...c } : w))));
+
   // Move widget up/down manually
   const handleMoveWidget = (index: number, direction: "up" | "down") => {
-    const targetIdx = direction === "up" ? index - 1 : index + 1;
-    if (targetIdx < 0 || targetIdx >= widgets.length) return;
-
-    const copy = [...widgets];
-    const temp = copy[index];
-    copy[index] = copy[targetIdx];
-    copy[targetIdx] = temp;
-
-    updateAndSaveWidgets(copy);
+    updateAndSaveWidgets(moverEntreVisibles(widgets, visibleWidgets, index, direction));
   };
 
   // Change width span (wSpan)
@@ -382,6 +331,7 @@ export function DashboardWidgetGrid({
       wSpan: meta.defaultWSpan,
       hSpan: meta.defaultHSpan || "normal",
       visible: true,
+      movil: ESENCIALES_MOVIL.has(type),
       order: widgets.length,
       settings:
         type === "calendar"
@@ -479,19 +429,8 @@ export function DashboardWidgetGrid({
             isStitchLight={isStitchLight}
           />
         );
-      case "social_fans_chart":
-        return (
-          <SocialFansGrowthWidget
-            fans={fans}
-            onNavigate={onNavigate}
-            heightMode={heightMode}
-            isStitchLight={isStitchLight}
-          />
-        );
       case "repertorio_summary":
         return <RepertorioWidget onNavigate={onNavigate} />;
-      case "finances_summary":
-        return <FinancesWidget concerts={concerts} onNavigate={onNavigate} />;
       case "social_fans":
         return <SocialFansWidget fans={fans} onNavigate={onNavigate} />;
       case "epk_status":
@@ -518,6 +457,8 @@ export function DashboardWidgetGrid({
             onNavigate={onNavigate}
           />
         );
+      case "marketing":
+        return <MarketingWidget fans={fans} leads={leads} onNavigate={onNavigate} />;
       default:
         return null;
     }
@@ -552,11 +493,14 @@ export function DashboardWidgetGrid({
           .slice(0, 4)
       : allVisibleWidgets;
 
+  // Cada fila se rellena hasta el borde: el último widget se estira (con el tirador a medias, ya con el ancho nuevo)
+  const columnasEnFila = columnasRellenando(visibleWidgets.map((w) => (previa?.id === w.id ? previa.wSpan : w.wSpan)));
+
   return (
     <div className="space-y-4 w-full">
       {/* Top Customization Bar - Only shown in edit mode */}
       {isEditMode && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
+        <div className="sticky top-2 z-30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
               <LayoutGrid className="w-5 h-5" />
@@ -572,7 +516,8 @@ export function DashboardWidgetGrid({
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-0.5">
                 {visibleWidgets.length} de {allVisibleWidgets.length} módulos
-                visibles · se guardan solos
+                visibles · asa para mover, esquina para el tamaño · se guarda
+                solo (en móvil se apila a 1 columna)
               </p>
             </div>
           </div>
@@ -583,7 +528,7 @@ export function DashboardWidgetGrid({
                 variant="neutral"
                 size="xs"
                 type="button"
-                onClick={() => saveLayoutToDb(widgets)}
+                onClick={() => saveLayoutToDb(conPanel(panelRef.current, widgets), { inmediato: true })}
                 className="items-center gap-1"
               >
                 No se pudo guardar · Reintentar
@@ -632,47 +577,12 @@ export function DashboardWidgetGrid({
         </div>
       )}
 
-      {/* Edit Mode Instructions Banner */}
-      {isEditMode && (
-        <div className="p-4 rounded-[var(--r-l)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs space-y-1.5">
-          <div className="flex items-center gap-2 font-semibold text-[var(--acc-ink)]">
-            <Info className="w-4 h-4 shrink-0" />
-            <span>Modo de edición activo:</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[var(--acc-ink)]/85 pt-1">
-            <div className="flex items-center gap-1.5">
-              <GripVertical className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Arrastra:</strong> Usa el asa para mover libremente.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Ancho y Alto:</strong> Elige tamaño con los iconos de
-                barra.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Multi-dispositivo:</strong> En móvil se apila a 1
-                columna.
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
-        {visibleWidgets.map((widget, index) => {
-          // Determine grid col span class
-          let colSpanClass = "md:col-span-12";
-          if (widget.wSpan === 3) colSpanClass = "md:col-span-3";
-          else if (widget.wSpan === 4) colSpanClass = "md:col-span-4";
-          else if (widget.wSpan === 6) colSpanClass = "md:col-span-6";
-          else if (widget.wSpan === 8) colSpanClass = "md:col-span-8";
+      <div ref={gridRef} data-panel-grid className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
+        {visibleWidgets.map((original, index) => {
+          // Mientras se arrastra el tirador el widget se pinta ya con el tamaño nuevo
+          const widget = previa?.id === original.id ? { ...original, wSpan: previa.wSpan, hSpan: previa.hSpan } : original;
+          const colSpanClass = claseColumnas(columnasEnFila[index]);
 
           const isDragging = draggedWidgetId === widget.id;
           const isDragOver = dragOverWidgetId === widget.id;
@@ -680,13 +590,14 @@ export function DashboardWidgetGrid({
           return (
             <div
               key={widget.id}
+              data-widget-id={widget.id}
               draggable={isEditMode}
               onDragStart={(e) => handleDragStart(e, widget.id)}
               onDragOver={(e) => handleDragOver(e, widget.id)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, widget.id)}
               onDragEnd={handleDragEnd}
-              className={`${colSpanClass} relative transition-ui duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
+              className={`${colSpanClass} ${!isEditMode && !visibleEnMovil(widget) ? "max-md:hidden" : ""} relative transition-ui duration-200 ${isDragging ? "opacity-40 scale-[0.98]" : ""} ${
                 isDragOver
                   ? "ring-2 ring-[var(--acc)] ring-offset-2 ring-offset-[var(--bg)] rounded-[var(--r-l)] bg-[var(--acc)]/10"
                   : ""
@@ -695,7 +606,7 @@ export function DashboardWidgetGrid({
               {/* Edit Controls Bar overlayed on widget when in Edit Mode */}
               {isEditMode && (
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between bg-[var(--sunken)] p-2 rounded-t-[var(--r-m)] mb-1 text-xs font-sans text-[var(--ink-2)] gap-2">
-                  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing">
+                  <div className="flex items-center gap-2 cursor-grab active:cursor-grabbing touch-none" onPointerDown={(e) => arrastrarConDedo(e, widget.id)}>
                     <GripVertical className="w-4 h-4 text-[var(--acc)] shrink-0" />
                     <span className="font-bold text-[var(--acc)]/70 text-xs truncate max-w-[150px]">
                       {widget.title || widget.type}
@@ -703,59 +614,11 @@ export function DashboardWidgetGrid({
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
-                    {/* Ancho — 3 tamaños con icono de proporción, no 5 porcentajes en texto */}
-                    <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
-                      {[
-                        { span: 4 as const, w: 6, label: "Estrecho" },
-                        { span: 6 as const, w: 10, label: "Mitad" },
-                        { span: 12 as const, w: 14, label: "Completo" },
-                      ].map(({ span, w, label }) => (
-                        <button
-                          key={span}
-                          type="button"
-                          onClick={() => handleChangeWSpan(widget.id, span)}
-                          title={label}
-                          aria-label={`Ancho: ${label}`}
-                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
-                            widget.wSpan === span
-                              ? "bg-[var(--acc)]"
-                              : "hover:bg-[var(--sunken)]"
-                          }`}
-                        >
-                          <span
-                            className={`block h-2.5 rounded-[2px] ${widget.wSpan === span ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
-                            style={{ width: w }}
-                          />
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Alto — mismo patrón visual, icono de proporción vertical */}
-                    <div className="flex items-center gap-1 bg-[var(--surface)]/80 p-0.5 rounded-[var(--r-s)]">
-                      {[
-                        { val: "compact" as const, h: 6, label: "Bajo" },
-                        { val: "normal" as const, h: 10, label: "Medio" },
-                        { val: "tall" as const, h: 14, label: "Alto" },
-                      ].map(({ val, h, label }) => (
-                        <button
-                          key={val}
-                          type="button"
-                          onClick={() => handleChangeHSpan(widget.id, val)}
-                          title={label}
-                          aria-label={`Alto: ${label}`}
-                          className={`p-1.5 rounded transition-ui cursor-pointer flex items-center justify-center ${
-                            (widget.hSpan || "normal") === val
-                              ? "bg-[var(--acc)]"
-                              : "hover:bg-[var(--sunken)]"
-                          }`}
-                        >
-                          <span
-                            className={`block w-2.5 rounded-[2px] ${(widget.hSpan || "normal") === val ? "bg-[var(--on-acc)]" : "bg-[var(--ink-2)]"}`}
-                            style={{ height: h }}
-                          />
-                        </button>
-                      ))}
-                    </div>
+                    {/* Móvil — en el móvil caben pocos bloques: aquí se decide cuáles salen */}
+                    <BotonMovil
+                      activo={visibleEnMovil(widget)}
+                      onClick={() => updateAndSaveWidgets(widgets.map((w) => (w.id === widget.id ? { ...w, movil: !visibleEnMovil(w) } : w)))}
+                    />
 
                     {/* Order buttons */}
                     <div className="flex items-center gap-0.5">
@@ -795,6 +658,13 @@ export function DashboardWidgetGrid({
 
               {/* Render actual widget */}
               {renderWidgetContent(widget)}
+              {isEditMode && (
+                <TiradorWidget
+                  titulo={widget.title || widget.type}
+                  onPointerDown={(e) => iniciarTirador(e, widget, gridRef.current, e.currentTarget.parentElement)}
+                  onPaso={(eje, dir) => (eje === "ancho" ? handleChangeWSpan(widget.id, pasoAncho(widget.wSpan, dir)) : handleChangeHSpan(widget.id, pasoAlto(widget.hSpan, dir)))}
+                />
+              )}
             </div>
           );
         })}

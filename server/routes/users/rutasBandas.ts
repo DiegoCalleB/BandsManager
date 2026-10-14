@@ -9,6 +9,7 @@ import { generateUniqueSlugId } from '../../utils/slug.js';
 import { cleanBandId, buildAvailableBandsForUser } from './bandasDisponibles.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
+import { responderError } from '../../utils/errorHttp.js';
 const router = express.Router();
 
 // Upload / Update Band Logo
@@ -89,9 +90,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error updating band logo:', err);
-      res.status(500).json({
-        error: err.message || 'Error al actualizar el logotipo de la banda',
-      });
+      responderError(res, err, 'Error al actualizar el logotipo de la banda');
     }
   }
 );
@@ -297,9 +296,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error creating new band:', err);
-      res
-        .status(500)
-        .json({ error: err.message || 'Error al crear el nuevo proyecto' });
+      responderError(res, err, 'Error al crear el nuevo proyecto');
     }
   }
 );

@@ -291,6 +291,7 @@ _Sin dependencias salientes directas._
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*
 - [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
@@ -560,6 +561,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_growthPlanEngine|src/utils/growthPlanEngine.ts]] *(from #service)*
 - [[src_utils_harmonicAnalysis|src/utils/harmonicAnalysis.ts]] *(from #service)*
 - [[src_utils_ideaDeAtril|src/utils/ideaDeAtril.ts]] *(from #service)*
+- [[src_utils_indicadoresMarketing|src/utils/indicadoresMarketing.ts]] *(from #service)*
 - [[src_utils_instrumentSynth|src/utils/instrumentSynth.ts]] *(from #service)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(from #service)*
 - [[src_utils_leadReliability|src/utils/leadReliability.ts]] *(from #service)*
@@ -607,6 +609,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
+- `src/components/dashboard/widgets/__tests__/MarketingWidget.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
 - `src/components/onboarding/wizard/hooks/__tests__/musicSetlistStep.behavior.test.ts`
@@ -638,6 +641,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/formatSongTitle.test.ts`
 - `src/utils/__tests__/grabarIdea.test.ts`
 - `src/utils/__tests__/harmonicAnalysis.test.ts`
+- `src/utils/__tests__/indicadoresMarketing.test.ts`
 - `src/utils/__tests__/instrumentSynth.test.ts`
 - `src/utils/__tests__/irisTracks.test.ts`
 - `src/utils/__tests__/lineaTiempoAcordes.test.ts`

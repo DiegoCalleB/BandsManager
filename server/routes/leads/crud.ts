@@ -2,6 +2,8 @@
 // `checkRecordLimit`.
 
 import express from "express";
+import { hostEnDominio } from "../../utils/urlHost.js";
+import { apiAutenticadaRateLimiter } from "../../middleware/rateLimiter.js";
 import { puedeEntrarEnColaDeEnvio } from "../../utils/email.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
@@ -20,7 +22,7 @@ import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
 const router = express.Router();
 
-router.get("/ai/providers", requireAuth, async (req, res) => {
+router.get("/ai/providers", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const providers = getAvailableAIProviders();
     res.json({ success: true, providers });
@@ -32,12 +34,12 @@ router.get("/ai/providers", requireAuth, async (req, res) => {
 });
 
 // Re-align headers (no-op compatibility)
-router.post("/leads/realign-headers", requireAuth, async (req, res) => {
+router.post("/leads/realign-headers", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   res.json({ success: true, message: "Cabeceras sincronizadas en Supabase PostgreSQL." });
 });
 
 // GET all leads (supports optional server pagination & filtering)
-router.get("/leads", requireAuth, async (req, res) => {
+router.get("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   const userBandId = getTargetBandId(req);
   try {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
@@ -70,11 +72,11 @@ router.get("/leads", requireAuth, async (req, res) => {
       let web = l.website || '';
 
       // Specific auto-repair for Sala Siroco domain & logo
-      if (l.nombre_sala?.toLowerCase().includes('siroco') || web.includes('salasiroco.es') || web.includes('siroco.es')) {
+      if (l.nombre_sala?.toLowerCase().includes('siroco') || hostEnDominio(web, 'salasiroco.es', 'siroco.es')) {
         web = 'https://siroco.es/';
         img = 'https://siroco.es/wp-content/uploads/2019/03/logo_-blanco_250px.png';
       } else {
-        if (img.includes('ui-avatars.com') || img.includes('clearbit.com')) {
+        if (hostEnDominio(img, 'ui-avatars.com', 'clearbit.com')) {
           img = '';
           if (web && !isBadDirectoryUrl(web)) {
             const domain = getDomainFromUrl(web);
@@ -98,7 +100,7 @@ router.get("/leads", requireAuth, async (req, res) => {
 });
 
 // GET a single lead by ID
-router.get("/leads/:id", requireAuth, async (req, res) => {
+router.get("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const { id } = req.params;
     const bandId = getTargetBandId(req);
@@ -119,7 +121,7 @@ router.get("/leads/:id", requireAuth, async (req, res) => {
 // distinto de leads.hilo_emails, un campo aparte que el frontend rellena por su cuenta (sync de
 // Gmail por popup) y que nunca se cruza con esto. Sin esta ruta, todo lo que los agentes
 // registran en lead_messages era invisible en el CRM.
-router.get("/leads/:id/messages", requireAuth, async (req, res) => {
+router.get("/leads/:id/messages", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const { id } = req.params;
     const bandId = getTargetBandId(req);
@@ -133,7 +135,7 @@ router.get("/leads/:id/messages", requireAuth, async (req, res) => {
 });
 
 // Update a single lead
-router.put("/leads/:id", requireAuth, async (req, res) => {
+router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -202,7 +204,7 @@ router.put("/leads/:id", requireAuth, async (req, res) => {
 });
 
 // Create a lead
-router.post("/leads", requireAuth, async (req, res) => {
+router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
 
@@ -334,7 +336,7 @@ router.post("/leads", requireAuth, async (req, res) => {
 });
 
 // Bulk delete leads
-router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
+router.post("/leads/bulk-delete", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { ids } = req.body;
@@ -360,7 +362,7 @@ router.post("/leads/bulk-delete", requireAuth, async (req, res) => {
 });
 
 // Delete a lead
-router.delete("/leads/:id", requireAuth, async (req, res) => {
+router.delete("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;

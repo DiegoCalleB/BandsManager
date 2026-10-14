@@ -47,6 +47,18 @@ describe('LanguageProvider', () => {
     expect(ctx.t('clave.inexistente')).toBe('clave.inexistente');
   });
 
+  it('en la URL /en manda el inglés sobre el idioma guardado, sin sobrescribirlo', () => {
+    localStorage.setItem('bandmanager_language', 'es');
+    window.history.pushState({}, '', '/en');
+    try {
+      montar();
+      expect(ctx.language).toBe('en');
+      expect(localStorage.getItem('bandmanager_language')).toBe('es');
+    } finally {
+      window.history.pushState({}, '', '/');
+    }
+  });
+
   it('con idioma guardado distinto de es arranca traduciendo y marca el documento', () => {
     localStorage.setItem('bandmanager_language', 'ca');
     montar();

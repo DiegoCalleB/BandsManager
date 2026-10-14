@@ -27,6 +27,7 @@ Donaciones (Stripe Checkout) y apoyo a acuerdos (`deal-support`). Con `donationR
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
 - [[server_routes_billing|server/routes/billing.ts]] *(Layer: #route, Domain: #finances)*
 - [[server_utils_dealSupport|server/utils/dealSupport.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---

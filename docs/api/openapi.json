@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "2.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (357) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (358) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -146,7 +146,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1296",
+        "x-source": "server/routes/agent.ts:1304",
         "x-autenticacion": "middleware"
       }
     },
@@ -181,7 +181,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1223",
+        "x-source": "server/routes/agent.ts:1231",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -214,7 +214,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1248",
+        "x-source": "server/routes/agent.ts:1256",
         "x-autenticacion": "middleware"
       }
     },
@@ -389,7 +389,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1025",
+        "x-source": "server/routes/agent.ts:1033",
         "x-autenticacion": "middleware"
       }
     },
@@ -432,7 +432,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1095",
+        "x-source": "server/routes/agent.ts:1103",
         "x-autenticacion": "middleware"
       }
     },
@@ -467,7 +467,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:985",
+        "x-source": "server/routes/agent.ts:993",
         "x-autenticacion": "middleware"
       }
     },
@@ -502,7 +502,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:757",
+        "x-source": "server/routes/repertorio.ts:767",
         "x-autenticacion": "middleware"
       }
     },
@@ -617,7 +617,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/ai_music/rutasEstadoStems.ts:113",
+        "x-source": "server/routes/ai_music/rutasEstadoStems.ts:112",
         "x-autenticacion": "middleware"
       }
     },
@@ -652,7 +652,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/ai_music/rutasEstadoStems.ts:19",
+        "x-source": "server/routes/ai_music/rutasEstadoStems.ts:20",
         "x-autenticacion": "middleware"
       }
     },
@@ -684,10 +684,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:22",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/crud.ts:25",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/analyze-video-highlights": {
@@ -723,7 +729,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:481",
+        "x-source": "server/routes/reels.ts:495",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -764,7 +770,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:1174",
+        "x-source": "server/routes/reels.ts:1188",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -850,12 +856,18 @@
         "responses": {
           "200": {
             "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutasWebhooks.ts:15",
+        "x-source": "server/routes/ai_music/rutasWebhooks.ts:17",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma webhook"
+        ],
+        "x-rate-limiters": [
+          "webhookRateLimiter"
         ]
       }
     },
@@ -958,7 +970,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users/rutasGoogle.ts:18",
+        "x-source": "server/routes/users/rutasGoogle.ts:19",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1048,7 +1060,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users/rutasLogin.ts:15",
+        "x-source": "server/routes/users/rutasLogin.ts:16",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1116,7 +1128,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:320",
+        "x-source": "server/routes/users/rutasSesion.ts:321",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1154,7 +1166,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:13",
+        "x-source": "server/routes/users/rutasSesion.ts:14",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1193,7 +1205,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users/rutasRegistro.ts:18",
+        "x-source": "server/routes/users/rutasRegistro.ts:19",
         "x-autenticacion": "handler-opcional",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1219,7 +1231,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users/rutasRecuperacion.ts:203",
+        "x-source": "server/routes/users/rutasRecuperacion.ts:204",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "secreto compartido"
@@ -1245,7 +1257,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/users/rutasRecuperacion.ts:16",
+        "x-source": "server/routes/users/rutasRecuperacion.ts:17",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "loginRateLimiter"
@@ -1283,7 +1295,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasSesion.ts:135",
+        "x-source": "server/routes/users/rutasSesion.ts:136",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "lee el token de sesión"
@@ -1321,7 +1333,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasRecuperacion.ts:326",
+        "x-source": "server/routes/users/rutasRecuperacion.ts:327",
         "x-autenticacion": "middleware"
       }
     },
@@ -1356,7 +1368,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:55",
+        "x-source": "server/routes/epk_fans.ts:58",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1389,7 +1401,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:73",
+        "x-source": "server/routes/epk_fans.ts:76",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1421,7 +1433,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:107",
+        "x-source": "server/routes/epk_fans.ts:110",
         "x-autenticacion": "middleware"
       }
     },
@@ -1590,7 +1602,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:889",
+        "x-source": "server/routes/bands.ts:891",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1623,7 +1635,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:902",
+        "x-source": "server/routes/bands.ts:904",
         "x-autenticacion": "middleware"
       }
     },
@@ -1725,7 +1737,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:760",
+        "x-source": "server/routes/bands.ts:762",
         "x-autenticacion": "middleware"
       }
     },
@@ -1768,7 +1780,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:743",
+        "x-source": "server/routes/bands.ts:745",
         "x-autenticacion": "middleware"
       }
     },
@@ -1806,7 +1818,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/bands.ts:1011",
+        "x-source": "server/routes/bands.ts:1014",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -1844,7 +1856,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:15",
+        "x-source": "server/routes/users/rutasBandas.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -1984,7 +1996,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:918",
+        "x-source": "server/routes/bands.ts:921",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -2051,7 +2063,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:715",
+        "x-source": "server/routes/bands.ts:717",
         "x-autenticacion": "middleware"
       }
     },
@@ -2094,7 +2106,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:698",
+        "x-source": "server/routes/bands.ts:700",
         "x-autenticacion": "middleware"
       }
     },
@@ -2129,7 +2141,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:799",
+        "x-source": "server/routes/bands.ts:801",
         "x-autenticacion": "middleware"
       }
     },
@@ -2233,7 +2245,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:580",
+        "x-source": "server/routes/bands.ts:582",
         "x-autenticacion": "middleware"
       },
       "patch": {
@@ -2265,7 +2277,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:592",
+        "x-source": "server/routes/bands.ts:594",
         "x-autenticacion": "middleware"
       }
     },
@@ -2300,7 +2312,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:644",
+        "x-source": "server/routes/bands.ts:646",
         "x-autenticacion": "middleware"
       }
     },
@@ -2335,7 +2347,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/bands.ts:931",
+        "x-source": "server/routes/bands.ts:934",
         "x-autenticacion": "middleware"
       }
     },
@@ -2370,7 +2382,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:15",
+        "x-source": "server/routes/users/rutasBandas.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -2528,10 +2540,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:953",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:955",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/billing/confirm-success": {
@@ -2565,7 +2583,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:476",
+        "x-source": "server/routes/billing.ts:479",
         "x-autenticacion": "middleware"
       }
     },
@@ -2600,7 +2618,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:887",
+        "x-source": "server/routes/billing.ts:888",
         "x-autenticacion": "middleware"
       }
     },
@@ -2635,7 +2653,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:548",
+        "x-source": "server/routes/billing.ts:551",
         "x-autenticacion": "middleware"
       }
     },
@@ -2670,7 +2688,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:662",
+        "x-source": "server/routes/billing.ts:665",
         "x-autenticacion": "middleware"
       }
     },
@@ -2705,7 +2723,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:955",
+        "x-source": "server/routes/billing.ts:956",
         "x-autenticacion": "middleware"
       }
     },
@@ -2722,7 +2740,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/billing.ts:986",
+        "x-source": "server/routes/billing.ts:987",
         "x-handler": "handleWebhook",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
@@ -2761,7 +2779,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:416",
+        "x-source": "server/routes/concerts.ts:417",
         "x-autenticacion": "middleware"
       }
     },
@@ -2778,7 +2796,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/concerts.ts:442",
+        "x-source": "server/routes/concerts.ts:443",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma HMAC en la URL"
@@ -2816,7 +2834,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:57",
+        "x-source": "server/routes/concerts.ts:58",
         "x-autenticacion": "middleware"
       }
     },
@@ -2851,7 +2869,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:412",
+        "x-source": "server/routes/leads/places.ts:413",
         "x-autenticacion": "middleware"
       }
     },
@@ -2884,10 +2902,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:21",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:22",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       },
       "post": {
         "tags": [
@@ -2917,10 +2941,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:34",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:35",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/campaigns/active": {
@@ -2952,10 +2982,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:92",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:93",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/campaigns/{id}": {
@@ -2995,10 +3031,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:58",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:59",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       },
       "delete": {
         "tags": [
@@ -3036,10 +3078,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:78",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:79",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/campaigns/{id}/record-training": {
@@ -3079,10 +3127,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:117",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:118",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/campaigns/{id}/train-tone-dna": {
@@ -3122,10 +3176,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campaigns.ts:149",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/campaigns.ts:150",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/campana-concierto/redactar": {
@@ -3161,7 +3221,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/campanaConcierto.ts:101",
+        "x-source": "server/routes/campanaConcierto.ts:102",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -3197,10 +3257,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:25",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/chat.ts:29",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "chatRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/analyze": {
@@ -3232,10 +3298,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:463",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:452",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/classify-tracks": {
@@ -3267,10 +3339,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1386",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1379",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/cookies-status": {
@@ -3302,10 +3380,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:234",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:223",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/delete-cookies": {
@@ -3336,10 +3420,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:275",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:264",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/demo-audio": {
@@ -3371,10 +3461,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1578",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1571",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/detect-cues": {
@@ -3406,10 +3502,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1021",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1010",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/preview-snippet": {
@@ -3441,10 +3543,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1357",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1349",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/process": {
@@ -3476,10 +3584,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:767",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:756",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/save-cookies": {
@@ -3510,10 +3624,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:251",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:240",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/transcribe-song": {
@@ -3545,10 +3665,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1494",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1487",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concert-to-album/transcribe-speech": {
@@ -3580,10 +3706,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/concert_to_album.ts:1300",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/concert_to_album.ts:1292",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
+        ]
       }
     },
     "/api/concerts": {
@@ -3617,7 +3749,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:180",
+        "x-source": "server/routes/concerts.ts:181",
         "x-autenticacion": "middleware"
       }
     },
@@ -3652,7 +3784,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:237",
+        "x-source": "server/routes/concerts.ts:238",
         "x-autenticacion": "middleware"
       }
     },
@@ -3695,7 +3827,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:154",
+        "x-source": "server/routes/concerts.ts:155",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -3736,7 +3868,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:203",
+        "x-source": "server/routes/concerts.ts:204",
         "x-autenticacion": "middleware"
       }
     },
@@ -3771,7 +3903,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:100",
+        "x-source": "server/routes/users/rutasBandas.ts:99",
         "x-autenticacion": "middleware"
       }
     },
@@ -3846,7 +3978,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:807",
+        "x-source": "server/routes/reels.ts:821",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "renderRateLimiter",
@@ -3885,7 +4017,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/deals.ts:58",
+        "x-source": "server/routes/deals.ts:69",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -3918,7 +4050,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/deals.ts:137",
+        "x-source": "server/routes/deals.ts:149",
         "x-autenticacion": "middleware"
       }
     },
@@ -3961,7 +4093,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/deals.ts:115",
+        "x-source": "server/routes/deals.ts:127",
         "x-autenticacion": "middleware"
       }
     },
@@ -3994,10 +4126,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:876",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:878",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/donations/create-checkout-session": {
@@ -4034,7 +4172,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/donations.ts:83",
+        "x-source": "server/routes/donations.ts:84",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "donationRateLimiter"
@@ -4072,7 +4210,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/donations.ts:152",
+        "x-source": "server/routes/donations.ts:153",
         "x-autenticacion": "middleware"
       }
     },
@@ -4110,7 +4248,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/donations.ts:183",
+        "x-source": "server/routes/donations.ts:184",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "donationRateLimiter"
@@ -4148,7 +4286,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/donations.ts:45",
+        "x-source": "server/routes/donations.ts:46",
         "x-autenticacion": "middleware"
       }
     },
@@ -4182,10 +4320,32 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:255",
+        "x-source": "server.ts:269",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
+        ]
+      }
+    },
+    "/api/emails/baja": {
+      "get": {
+        "tags": [
+          "paginaConcierto"
+        ],
+        "operationId": "getApiEmailsBaja",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/emailsCicloVida.ts:13",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "publicoRateLimiter"
         ]
       }
     },
@@ -4220,7 +4380,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:979",
+        "x-source": "server/routes/repertorio.ts:989",
         "x-autenticacion": "middleware"
       }
     },
@@ -4255,7 +4415,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:144",
+        "x-source": "server/routes/epk_fans.ts:147",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4288,7 +4448,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:164",
+        "x-source": "server/routes/epk_fans.ts:167",
         "x-autenticacion": "middleware"
       }
     },
@@ -4323,7 +4483,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1081",
+        "x-source": "server/routes/epk_fans.ts:1085",
         "x-autenticacion": "middleware"
       }
     },
@@ -4358,7 +4518,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:242",
+        "x-source": "server/routes/epk_fans.ts:245",
         "x-autenticacion": "middleware"
       }
     },
@@ -4393,7 +4553,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/exampleThreads.ts:24",
+        "x-source": "server/routes/leads/exampleThreads.ts:31",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -4425,7 +4585,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/exampleThreads.ts:37",
+        "x-source": "server/routes/leads/exampleThreads.ts:44",
         "x-autenticacion": "middleware"
       }
     },
@@ -4467,7 +4627,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/exampleThreads.ts:69",
+        "x-source": "server/routes/leads/exampleThreads.ts:76",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -4507,7 +4667,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/exampleThreads.ts:94",
+        "x-source": "server/routes/leads/exampleThreads.ts:101",
         "x-autenticacion": "middleware"
       }
     },
@@ -4542,7 +4702,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:820",
+        "x-source": "server/routes/leads/places.ts:822",
         "x-autenticacion": "middleware"
       }
     },
@@ -4577,7 +4737,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:771",
+        "x-source": "server/routes/epk_fans.ts:775",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -4610,7 +4770,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:790",
+        "x-source": "server/routes/epk_fans.ts:794",
         "x-autenticacion": "middleware"
       }
     },
@@ -4653,7 +4813,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:829",
+        "x-source": "server/routes/epk_fans.ts:833",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -4694,7 +4854,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:863",
+        "x-source": "server/routes/epk_fans.ts:867",
         "x-autenticacion": "middleware"
       }
     },
@@ -4770,7 +4930,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:731",
+        "x-source": "server/routes/metrics.ts:732",
         "x-autenticacion": "middleware"
       }
     },
@@ -4880,7 +5040,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:558",
+        "x-source": "server/routes/repertorio.ts:568",
         "x-autenticacion": "middleware"
       }
     },
@@ -4913,10 +5073,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:119",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/gmailOAuth.ts:127",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "gmailOAuthRateLimiter"
+        ]
       }
     },
     "/api/gmail-oauth/callback": {
@@ -4930,10 +5096,16 @@
         "responses": {
           "200": {
             "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:151",
-        "x-autenticacion": "ninguna"
+        "x-source": "server/routes/gmailOAuth.ts:159",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "gmailOAuthRateLimiter"
+        ]
       }
     },
     "/api/gmail-oauth/disconnect": {
@@ -4965,10 +5137,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:277",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/gmailOAuth.ts:285",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "gmailOAuthRateLimiter"
+        ]
       }
     },
     "/api/gmail-oauth/status": {
@@ -5000,10 +5178,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/gmailOAuth.ts:264",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/gmailOAuth.ts:272",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "gmailOAuthRateLimiter"
+        ]
       }
     },
     "/api/health": {
@@ -5053,7 +5237,7 @@
             }
           }
         },
-        "x-source": "server.ts:166",
+        "x-source": "server.ts:168",
         "x-autenticacion": "ninguna",
         "summary": "Salud del servicio",
         "x-esquemas": "curado"
@@ -5125,7 +5309,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:953",
+        "x-source": "server/routes/leads/places.ts:955",
         "x-autenticacion": "middleware"
       }
     },
@@ -5163,7 +5347,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:940",
+        "x-source": "server/routes/agent.ts:948",
         "x-autenticacion": "middleware"
       }
     },
@@ -5269,6 +5453,9 @@
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
           },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          },
           "500": {
             "description": "Error al leer de Supabase.",
             "content": {
@@ -5280,8 +5467,11 @@
             }
           }
         },
-        "x-source": "server/routes/leads/crud.ts:39",
+        "x-source": "server/routes/leads/crud.ts:42",
         "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ],
         "summary": "Listar salas de la banda activa",
         "x-esquemas": "curado"
       },
@@ -5342,6 +5532,9 @@
               }
             }
           },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          },
           "500": {
             "description": "Error al crear la sala.",
             "content": {
@@ -5353,8 +5546,11 @@
             }
           }
         },
-        "x-source": "server/routes/leads/crud.ts:204",
+        "x-source": "server/routes/leads/crud.ts:207",
         "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ],
         "summary": "Crear una sala",
         "requestBody": {
           "required": true,
@@ -5397,10 +5593,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:217",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:216",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/audit-pitch": {
@@ -5467,10 +5669,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:953",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:955",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/bulk-delete": {
@@ -5502,10 +5710,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:336",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/crud.ts:339",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/leads/campaign-mass-search": {
@@ -5539,7 +5753,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:412",
+        "x-source": "server/routes/leads/places.ts:413",
         "x-autenticacion": "middleware"
       }
     },
@@ -5572,10 +5786,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:876",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:878",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/enrich-addresses": {
@@ -5607,10 +5827,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:618",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:620",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/enrich-all-band": {
@@ -5642,10 +5868,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:450",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:452",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/enrich-lead": {
@@ -5677,10 +5909,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:394",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:396",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/extract-emails": {
@@ -5714,7 +5952,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:820",
+        "x-source": "server/routes/leads/places.ts:822",
         "x-autenticacion": "middleware"
       }
     },
@@ -5749,7 +5987,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:953",
+        "x-source": "server/routes/leads/places.ts:955",
         "x-autenticacion": "middleware"
       }
     },
@@ -5784,7 +6022,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1107",
+        "x-source": "server/routes/leads/places.ts:1109",
         "x-autenticacion": "middleware"
       }
     },
@@ -5818,7 +6056,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:36",
+        "x-source": "server/routes/leads/places.ts:37",
         "x-autenticacion": "middleware"
       }
     },
@@ -5853,7 +6091,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1171",
+        "x-source": "server/routes/leads/places.ts:1173",
         "x-autenticacion": "middleware"
       }
     },
@@ -5886,10 +6124,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:34",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/crud.ts:37",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/leads/similar-artists-venues": {
@@ -5923,7 +6167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1132",
+        "x-source": "server/routes/leads/places.ts:1134",
         "x-autenticacion": "middleware"
       }
     },
@@ -6032,10 +6276,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:100",
+        "x-source": "server/routes/leads/crud.ts:103",
         "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ],
         "summary": "Obtener una sala",
         "x-esquemas": "curado"
       },
@@ -6122,10 +6372,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:135",
+        "x-source": "server/routes/leads/crud.ts:138",
         "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ],
         "summary": "Actualizar una sala (y aprobar)",
         "requestBody": {
           "required": true,
@@ -6188,10 +6444,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:362",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/crud.ts:365",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/analyze-sentiment": {
@@ -6274,10 +6536,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1533",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1535",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/detect-dates": {
@@ -6317,10 +6585,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:825",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:827",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-all-apis": {
@@ -6360,10 +6634,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1269",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1271",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-booking-window": {
@@ -6403,10 +6683,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1587",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1589",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-co-booking": {
@@ -6446,10 +6732,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1671",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1673",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-google-places": {
@@ -6489,10 +6781,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1152",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1154",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-instagram": {
@@ -6532,10 +6830,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1054",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1056",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-jina": {
@@ -6575,10 +6879,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:762",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:764",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-local-events": {
@@ -6618,10 +6928,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1611",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1613",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-logistics": {
@@ -6661,10 +6977,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1453",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1455",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-press-media": {
@@ -6704,10 +7026,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1641",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1643",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-setlist": {
@@ -6747,10 +7075,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1192",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1194",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-social": {
@@ -6790,10 +7124,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1491",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1493",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/enrich-spotify": {
@@ -6833,10 +7173,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1106",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1108",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/generate-multi-pitch": {
@@ -6961,10 +7307,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/crud.ts:121",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/crud.ts:124",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
       }
     },
     "/api/leads/{id}/regenerate-pitch": {
@@ -7133,10 +7485,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1230",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1232",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/leave-band/{bandId}": {
@@ -7211,7 +7569,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:308",
+        "x-source": "server/routes/repertorio.ts:318",
         "x-autenticacion": "middleware"
       }
     },
@@ -7246,7 +7604,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:280",
+        "x-source": "server/routes/repertorio.ts:290",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -7278,7 +7636,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:289",
+        "x-source": "server/routes/repertorio.ts:299",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -7310,7 +7668,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:299",
+        "x-source": "server/routes/repertorio.ts:309",
         "x-autenticacion": "middleware"
       }
     },
@@ -7345,7 +7703,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:261",
+        "x-source": "server/routes/concerts.ts:262",
         "x-autenticacion": "middleware"
       }
     },
@@ -7380,7 +7738,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:311",
+        "x-source": "server/routes/concerts.ts:312",
         "x-autenticacion": "middleware"
       }
     },
@@ -7415,7 +7773,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:284",
+        "x-source": "server/routes/concerts.ts:285",
         "x-autenticacion": "middleware"
       }
     },
@@ -7450,7 +7808,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:406",
+        "x-source": "server/routes/concerts.ts:407",
         "x-autenticacion": "middleware"
       }
     },
@@ -7553,7 +7911,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:229",
+        "x-source": "server/routes/metrics.ts:230",
         "x-autenticacion": "middleware"
       }
     },
@@ -7588,7 +7946,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:461",
+        "x-source": "server/routes/metrics.ts:462",
         "x-autenticacion": "middleware"
       }
     },
@@ -7623,7 +7981,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:578",
+        "x-source": "server/routes/metrics.ts:579",
         "x-autenticacion": "middleware"
       }
     },
@@ -7658,7 +8016,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:362",
+        "x-source": "server/routes/metrics.ts:363",
         "x-autenticacion": "middleware"
       }
     },
@@ -7693,7 +8051,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:107",
+        "x-source": "server/routes/metrics.ts:108",
         "x-autenticacion": "middleware"
       }
     },
@@ -7728,7 +8086,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/metrics.ts:605",
+        "x-source": "server/routes/metrics.ts:606",
         "x-autenticacion": "middleware"
       }
     },
@@ -7886,7 +8244,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1107",
+        "x-source": "server/routes/leads/places.ts:1109",
         "x-autenticacion": "middleware"
       }
     },
@@ -7921,7 +8279,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1191",
+        "x-source": "server/routes/epk_fans.ts:1195",
         "x-autenticacion": "middleware"
       }
     },
@@ -7956,7 +8314,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:965",
+        "x-source": "server/routes/repertorio.ts:975",
         "x-autenticacion": "middleware"
       }
     },
@@ -7994,7 +8352,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:338",
+        "x-source": "server/routes/concerts.ts:339",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       },
@@ -8031,7 +8389,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:350",
+        "x-source": "server/routes/concerts.ts:351",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -8070,7 +8428,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:382",
+        "x-source": "server/routes/concerts.ts:383",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -8117,7 +8475,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/concerts.ts:363",
+        "x-source": "server/routes/concerts.ts:364",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -8152,7 +8510,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:36",
+        "x-source": "server/routes/leads/places.ts:37",
         "x-autenticacion": "middleware"
       }
     },
@@ -8220,7 +8578,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:87",
+        "x-source": "server/routes/posts.ts:88",
         "x-autenticacion": "middleware"
       }
     },
@@ -8255,7 +8613,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:217",
+        "x-source": "server/routes/posts.ts:218",
         "x-autenticacion": "middleware"
       }
     },
@@ -8290,7 +8648,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:241",
+        "x-source": "server/routes/posts.ts:242",
         "x-autenticacion": "middleware"
       }
     },
@@ -8374,7 +8732,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:106",
+        "x-source": "server/routes/posts.ts:107",
         "x-autenticacion": "middleware"
       }
     },
@@ -8409,7 +8767,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1171",
+        "x-source": "server/routes/leads/places.ts:1173",
         "x-autenticacion": "middleware"
       }
     },
@@ -8436,7 +8794,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/deals.ts:213",
+        "x-source": "server/routes/deals.ts:225",
         "x-autenticacion": "ninguna"
       }
     },
@@ -8466,7 +8824,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/deals.ts:440",
+        "x-source": "server/routes/deals.ts:452",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "reenvioEmailRateLimiter"
@@ -8548,7 +8906,7 @@
             }
           }
         },
-        "x-source": "server/routes/deals.ts:293",
+        "x-source": "server/routes/deals.ts:305",
         "x-autenticacion": "ninguna",
         "summary": "Firmar un acuerdo de concierto",
         "requestBody": {
@@ -8602,7 +8960,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:473",
+        "x-source": "server/routes/epk_fans.ts:476",
         "x-autenticacion": "ninguna"
       }
     },
@@ -8654,7 +9012,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:877",
+        "x-source": "server/routes/epk_fans.ts:881",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -8753,7 +9111,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1123",
+        "x-source": "server/routes/epk_fans.ts:1127",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -8776,7 +9134,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:989",
+        "x-source": "server/routes/epk_fans.ts:993",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -8848,7 +9206,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:997",
+        "x-source": "server/routes/reels.ts:1011",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -8885,7 +9243,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:443",
+        "x-source": "server/routes/reels.ts:457",
         "x-autenticacion": "middleware"
       }
     },
@@ -8923,7 +9281,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:1174",
+        "x-source": "server/routes/reels.ts:1188",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -9028,7 +9386,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasRegistro.ts:314",
+        "x-source": "server/routes/users/rutasRegistro.ts:317",
         "x-handler": "handleGetRegisteredBands",
         "x-autenticacion": "middleware"
       }
@@ -9064,7 +9422,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:97",
+        "x-source": "server/routes/concerts.ts:98",
         "x-autenticacion": "middleware"
       }
     },
@@ -9107,7 +9465,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:71",
+        "x-source": "server/routes/concerts.ts:72",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -9148,7 +9506,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/concerts.ts:120",
+        "x-source": "server/routes/concerts.ts:121",
         "x-autenticacion": "middleware"
       }
     },
@@ -9186,7 +9544,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/agent.ts:1192",
+        "x-source": "server/routes/agent.ts:1200",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -9329,10 +9687,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:503",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:505",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/set-band-order": {
@@ -9401,7 +9765,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:14",
+        "x-source": "server/routes/users/rutasPreferencias.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -9436,7 +9800,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:511",
+        "x-source": "server/routes/repertorio.ts:521",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9469,7 +9833,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:524",
+        "x-source": "server/routes/repertorio.ts:534",
         "x-autenticacion": "middleware"
       }
     },
@@ -9512,7 +9876,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:544",
+        "x-source": "server/routes/repertorio.ts:554",
         "x-autenticacion": "middleware"
       }
     },
@@ -9547,7 +9911,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:439",
+        "x-source": "server/routes/repertorio.ts:449",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -9580,7 +9944,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:452",
+        "x-source": "server/routes/repertorio.ts:462",
         "x-autenticacion": "middleware"
       }
     },
@@ -9618,7 +9982,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/repertorio.ts:928",
+        "x-source": "server/routes/repertorio.ts:938",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -9664,7 +10028,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:478",
+        "x-source": "server/routes/repertorio.ts:488",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -9705,7 +10069,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:496",
+        "x-source": "server/routes/repertorio.ts:506",
         "x-autenticacion": "middleware"
       }
     },
@@ -9748,7 +10112,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:819",
+        "x-source": "server/routes/repertorio.ts:829",
         "x-autenticacion": "middleware"
       }
     },
@@ -9794,7 +10158,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/repertorio.ts:875",
+        "x-source": "server/routes/repertorio.ts:885",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -9952,7 +10316,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1132",
+        "x-source": "server/routes/leads/places.ts:1134",
         "x-autenticacion": "middleware"
       }
     },
@@ -9987,7 +10351,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:127",
+        "x-source": "server/routes/posts.ts:128",
         "x-autenticacion": "middleware"
       }
     },
@@ -10022,7 +10386,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:140",
+        "x-source": "server/routes/posts.ts:141",
         "x-autenticacion": "middleware"
       }
     },
@@ -10065,7 +10429,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:172",
+        "x-source": "server/routes/posts.ts:173",
         "x-autenticacion": "middleware"
       }
     },
@@ -10108,7 +10472,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:186",
+        "x-source": "server/routes/posts.ts:187",
         "x-autenticacion": "middleware"
       }
     },
@@ -10143,7 +10507,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:204",
+        "x-source": "server/routes/posts.ts:205",
         "x-autenticacion": "middleware"
       }
     },
@@ -10178,7 +10542,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:129",
+        "x-source": "server/routes/repertorio.ts:132",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -10211,7 +10575,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:144",
+        "x-source": "server/routes/repertorio.ts:147",
         "x-autenticacion": "middleware"
       }
     },
@@ -10254,7 +10618,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:167",
+        "x-source": "server/routes/repertorio.ts:170",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -10295,7 +10659,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:424",
+        "x-source": "server/routes/repertorio.ts:434",
         "x-autenticacion": "middleware"
       }
     },
@@ -10338,7 +10702,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:322",
+        "x-source": "server/routes/repertorio.ts:332",
         "x-autenticacion": "middleware"
       }
     },
@@ -10380,7 +10744,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:237",
+        "x-source": "server/routes/repertorio.ts:246",
         "x-autenticacion": "middleware"
       }
     },
@@ -10423,7 +10787,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:188",
+        "x-source": "server/routes/repertorio.ts:191",
         "x-autenticacion": "middleware"
       }
     },
@@ -10466,7 +10830,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:406",
+        "x-source": "server/routes/repertorio.ts:416",
         "x-autenticacion": "middleware"
       }
     },
@@ -10509,7 +10873,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:270",
+        "x-source": "server/routes/repertorio.ts:280",
         "x-autenticacion": "middleware"
       }
     },
@@ -10552,7 +10916,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:349",
+        "x-source": "server/routes/repertorio.ts:359",
         "x-autenticacion": "middleware"
       }
     },
@@ -10595,7 +10959,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/repertorio.ts:263",
+        "x-source": "server/routes/repertorio.ts:273",
         "x-autenticacion": "middleware"
       }
     },
@@ -10638,7 +11002,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/songs/structureUpload.ts:158",
+        "x-source": "server/routes/songs/structureUpload.ts:159",
         "x-autenticacion": "middleware"
       }
     },
@@ -10830,7 +11194,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server.ts:497",
+        "x-source": "server.ts:511",
         "x-autenticacion": "handler",
         "x-comprobaciones-handler": [
           "getUserFromRequest"
@@ -10868,7 +11232,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:476",
+        "x-source": "server/routes/billing.ts:479",
         "x-autenticacion": "middleware"
       }
     },
@@ -10903,7 +11267,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:887",
+        "x-source": "server/routes/billing.ts:888",
         "x-autenticacion": "middleware"
       }
     },
@@ -10938,7 +11302,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:548",
+        "x-source": "server/routes/billing.ts:551",
         "x-autenticacion": "middleware"
       }
     },
@@ -10973,7 +11337,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:662",
+        "x-source": "server/routes/billing.ts:665",
         "x-autenticacion": "middleware"
       }
     },
@@ -11008,7 +11372,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/billing.ts:955",
+        "x-source": "server/routes/billing.ts:956",
         "x-autenticacion": "middleware"
       }
     },
@@ -11024,7 +11388,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/billing.ts:987",
+        "x-source": "server/routes/billing.ts:988",
         "x-handler": "handleWebhook",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
@@ -11564,7 +11928,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:89",
+        "x-source": "server/routes/agent.ts:94",
         "x-autenticacion": "middleware"
       }
     },
@@ -11599,7 +11963,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:249",
+        "x-source": "server/routes/users/rutasPreferencias.ts:251",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -11632,7 +11996,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:176",
+        "x-source": "server/routes/users/rutasPreferencias.ts:174",
         "x-autenticacion": "middleware"
       }
     },
@@ -11666,7 +12030,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:509",
+        "x-source": "server/routes/upload.ts:508",
         "x-autenticacion": "middleware"
       }
     },
@@ -11701,7 +12065,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:15",
+        "x-source": "server/routes/users/rutasBandas.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -11736,7 +12100,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:647",
+        "x-source": "server/routes/upload.ts:646",
         "x-autenticacion": "middleware"
       }
     },
@@ -11806,7 +12170,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:409",
+        "x-source": "server/routes/upload.ts:410",
         "x-autenticacion": "middleware"
       }
     },
@@ -11841,7 +12205,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:337",
+        "x-source": "server/routes/upload.ts:338",
         "x-autenticacion": "middleware"
       }
     },
@@ -11876,7 +12240,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasMiembros.ts:104",
+        "x-source": "server/routes/users/rutasMiembros.ts:103",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -11912,7 +12276,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users/rutasMiembros.ts:147",
+        "x-source": "server/routes/users/rutasMiembros.ts:146",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -11951,7 +12315,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/users/rutasMiembros.ts:18",
+        "x-source": "server/routes/users/rutasMiembros.ts:19",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -11987,7 +12351,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:100",
+        "x-source": "server/routes/users/rutasBandas.ts:99",
         "x-autenticacion": "middleware"
       }
     },
@@ -12063,7 +12427,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasRegistro.ts:315",
+        "x-source": "server/routes/users/rutasRegistro.ts:318",
         "x-handler": "handleGetRegisteredBands",
         "x-autenticacion": "middleware"
       }
@@ -12134,7 +12498,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:14",
+        "x-source": "server/routes/users/rutasPreferencias.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -12169,7 +12533,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:249",
+        "x-source": "server/routes/users/rutasPreferencias.ts:251",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -12202,7 +12566,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasPreferencias.ts:176",
+        "x-source": "server/routes/users/rutasPreferencias.ts:174",
         "x-autenticacion": "middleware"
       }
     },
@@ -12237,7 +12601,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/users/rutasBandas.ts:15",
+        "x-source": "server/routes/users/rutasBandas.ts:16",
         "x-autenticacion": "middleware"
       }
     },
@@ -12375,12 +12739,18 @@
         "responses": {
           "200": {
             "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/ai_music/rutasWebhooks.ts:15",
+        "x-source": "server/routes/ai_music/rutasWebhooks.ts:17",
         "x-autenticacion": "firma",
         "x-comprobaciones-handler": [
           "firma webhook"
+        ],
+        "x-rate-limiters": [
+          "webhookRateLimiter"
         ]
       }
     },
@@ -12444,7 +12814,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:676",
+        "x-source": "server/routes/chat.ts:642",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -12481,7 +12851,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:404",
+        "x-source": "server/routes/reels.ts:418",
         "x-autenticacion": "middleware"
       }
     },
@@ -12522,10 +12892,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1533",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1535",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/detect-dates": {
@@ -12565,10 +12941,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:825",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:827",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-all-apis": {
@@ -12608,10 +12990,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1269",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1271",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-booking-window": {
@@ -12651,10 +13039,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1587",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1589",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-co-booking": {
@@ -12694,10 +13088,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1671",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1673",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-google-places": {
@@ -12737,10 +13137,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1152",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1154",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-instagram": {
@@ -12780,10 +13186,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1054",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1056",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-jina": {
@@ -12823,10 +13235,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:762",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:764",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-local-events": {
@@ -12866,10 +13284,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1611",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1613",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-logistics": {
@@ -12909,10 +13333,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1453",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1455",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-press-media": {
@@ -12952,10 +13382,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1641",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1643",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-setlist": {
@@ -12995,10 +13431,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1192",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1194",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-social": {
@@ -13038,10 +13480,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1491",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1493",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/enrich-spotify": {
@@ -13081,10 +13529,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1106",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1108",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/api/{id}/verify-email": {
@@ -13124,10 +13578,16 @@
           },
           "401": {
             "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/leads/enrichment.ts:1230",
-        "x-autenticacion": "middleware"
+        "x-source": "server/routes/leads/enrichment.ts:1232",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "enriquecimientoRateLimiter"
+        ]
       }
     },
     "/e/{slug}": {
@@ -13155,7 +13615,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:39",
+        "x-source": "server/routes/paginaConcierto.ts:44",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13175,7 +13635,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:166",
+        "x-source": "server.ts:168",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13192,7 +13652,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:180",
+        "x-source": "server.ts:182",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13240,7 +13700,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:150",
+        "x-source": "server/routes/paginaConcierto.ts:159",
         "x-autenticacion": "ninguna"
       }
     },
@@ -13379,7 +13839,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/paginaConcierto.ts:132",
+        "x-source": "server/routes/paginaConcierto.ts:141",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -13399,7 +13859,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server.ts:222",
+        "x-source": "server.ts:224",
         "x-autenticacion": "ninguna"
       }
     },

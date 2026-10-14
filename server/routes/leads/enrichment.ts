@@ -4,6 +4,7 @@
 
 import { getBandDnaProfile } from '../../utils/bandDna.js';
 import express from "express";
+import { enriquecimientoRateLimiter } from "../../middleware/rateLimiter.js";
 import { Lead } from "../../../src/types.js";
 import { loadState, saveState, requireAuth } from "../../state.js";
 import { dbGetLeadById, dbUpsertLead, dbGetLeads } from "../../db.js";
@@ -12,7 +13,8 @@ import { getAiClient, generateContentWithFallback, isSpendCapOrQuotaError } from
 import { autoEnrichLead } from "../../auto_enrichment.js";
 import { safeParseJson } from "../../utils.js";
 import { isBadDirectoryUrl, getDomainFromUrl } from "./helpers.js";
-import { esUrlExternaSegura } from "../../utils/ssrfGuard.js";
+import { fetchUrlExternaSegura } from "../../utils/ssrfGuard.js";
+import { hostEnDominio } from "../../utils/urlHost.js";
 import { getTargetBandId, mismaBanda } from "../../utils/bandAccess.js";
 import { scrapeVenueWithJina } from "../../services/jinaReaderService.js";
 import { detectVenueEventsAndFreeDates } from "../../services/venueEventsRadarService.js";
@@ -76,7 +78,7 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
 
   // If venue name is known, e.g. Siroco
   if (nombreSala && nombreSala.toLowerCase().includes('siroco')) {
-    if (!candidateUrls.includes('https://siroco.es')) candidateUrls.unshift('https://siroco.es');
+    if (!candidateUrls.some((c) => c === 'https://siroco.es')) candidateUrls.unshift('https://siroco.es');
   }
 
   // Try extracting domain from email if websiteUrl failed or wasn't provided
@@ -97,20 +99,18 @@ async function scrapeWebsiteLogo(candidateWebsites: (string | undefined)[], emai
       // isBadDirectoryUrl solo filtra dominios de directorios/redes conocidos, no IPs privadas ni
       // el endpoint de metadatos de la nube: sin esto, un website/dominio de email apuntando a la
       // red interna haría que el servidor hiciera esa petición y devolviera lo encontrado (SSRF).
-      if (!(await esUrlExternaSegura(siteUrl))) continue;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3500);
-
-      const res = await fetch(siteUrl, {
-        signal: controller.signal,
+      // Va por el guard (IP pública anclada, redirecciones revalidadas, tope de tamaño y timeout).
+      const res = await fetchUrlExternaSegura(siteUrl, {
+        timeoutMs: 3500,
+        maxBytes: 2 * 1024 * 1024,
+        maxRedirects: 3,
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
       });
-      clearTimeout(timeout);
 
-      if (!res.ok) continue;
-      const html = await res.text();
+      if (res.statusCode < 200 || res.statusCode >= 300) continue;
+      const html = res.text();
 
       // 1. Look for explicit apple-touch-icon
       const appleIcon = html.match(/<link\s+[^>]*rel=["']apple-touch-icon["'][^>]*href=["']([^"']+)["']/i) ||
@@ -172,11 +172,7 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
 
   // Reject raw venue/map photos or googleusercontent or ui-avatars / clearbit
   if (
-    cleaned.includes('places.googleapis.com') ||
-    cleaned.includes('googleusercontent.com') ||
-    cleaned.includes('ui-avatars.com') ||
-    cleaned.includes('clearbit.com') ||
-    cleaned.includes('icon.horse')
+    hostEnDominio(cleaned, 'places.googleapis.com', 'googleusercontent.com', 'ui-avatars.com', 'clearbit.com', 'icon.horse')
   ) {
     cleaned = '';
   }
@@ -184,10 +180,8 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
   // If valid direct image URL
   if (cleaned && (
     /\.(jpg|jpeg|png|webp|svg)($|\?)/i.test(cleaned) || 
-    cleaned.includes('unavatar.io') ||
-    cleaned.includes('wikimedia.org') ||
-    cleaned.includes('supabase.co') ||
-    cleaned.includes('google.com/s2/favicons') ||
+    hostEnDominio(cleaned, 'unavatar.io', 'wikimedia.org', 'supabase.co') ||
+    (hostEnDominio(cleaned, 'google.com') && cleaned.includes('/s2/favicons')) ||
     cleaned.includes('/uploads/')
   )) {
     return cleaned;
@@ -195,7 +189,11 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
 
   // If Instagram handle is available, unavatar provides exact profile image
   if (instagram) {
-    const handle = instagram.replace(/.*instagram\.com\//, '').replace(/^@/, '').split('/')[0].split('?')[0].trim();
+    // Sin regex con «.*» delante: sobre texto libre es de coste cuadrático. Se corta tras la última «instagram.com/».
+    const marca = 'instagram.com/';
+    const posMarca = instagram.toLowerCase().lastIndexOf(marca);
+    const sinHost = posMarca >= 0 ? instagram.slice(posMarca + marca.length) : instagram;
+    const handle = sinHost.replace(/^@/, '').split('/')[0].split('?')[0].trim();
     if (handle.length > 1) {
       return `https://unavatar.io/instagram/${handle}`;
     }
@@ -215,7 +213,7 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, name?: string, ins
 
 // Custom simulation endpoint to generate custom venue or band negotiation emails using Gemini
 
-router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
+router.post("/leads/ai-lookup", requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   const { ciudad, leadId } = req.body;
   let nombre_sala = req.body.nombre_sala || req.body.nombre || req.body.nombreSala || req.body.name || req.body.sala_o_medio;
 
@@ -273,7 +271,7 @@ router.post("/leads/ai-lookup", requireAuth, async (req, res) => {
             else if (topPlace.types.includes("radio")) placesIcon = "📻";
           }
         } else {
-          console.warn(`[AILookup] Rejected Places match '${placeName}' for searched venue '${nombre_sala}' (non-relevant)`);
+          console.warn(`[AILookup] Rejected Places match '%s' for searched venue '%s' (non-relevant)`, placeName, nombre_sala);
         }
       }
     } catch (e) {
@@ -307,9 +305,11 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 
       const text = response.text || "{}";
       try {
-        const match = text.match(/\{[\s\S]*\}/);
-        if (match) {
-          parsed = JSON.parse(match[0]);
+        // indexOf/lastIndexOf en vez de /\{[\s\S]*\}/: sobre texto de la IA esa regex es de coste cuadrático.
+        const ini = text.indexOf('{');
+        const fin = text.lastIndexOf('}');
+        if (ini >= 0 && fin > ini) {
+          parsed = JSON.parse(text.slice(ini, fin + 1));
         } else {
           parsed = JSON.parse(text);
         }
@@ -319,7 +319,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 
       // Reject Gemini candidate if nombre_oficial belongs to another venue
       if (parsed.nombre_oficial && !isMatchRelevant(nombre_sala, parsed.nombre_oficial)) {
-        console.warn(`[AILookup] Rejecting Gemini match '${parsed.nombre_oficial}' for searched venue '${nombre_sala}'`);
+        console.warn(`[AILookup] Rejecting Gemini match '%s' for searched venue '%s'`, parsed.nombre_oficial, nombre_sala);
         parsed = {};
       }
     } catch (errCapturado) {
@@ -393,7 +393,7 @@ Si no encuentras información exacta para "${nombre_sala}", usa cadenas vacías.
 });
 
 // Endpoint to trigger direct on-demand enrichment of a single lead (Scout Enriquecedor)
-router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
+router.post("/leads/enrich-lead", requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { leadId, name } = req.body;
@@ -416,7 +416,7 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
       return res.status(404).json({ success: false, error: "Lead no encontrado." });
     }
 
-    console.log(`[Scout Enriquecedor] Enriqueciendo datos para ${lead.nombre_sala} (${lead.ciudad || 'España'})...`);
+    console.log(`[Scout Enriquecedor] Enriqueciendo datos para %s (%s)...`, lead.nombre_sala, lead.ciudad || 'España');
     
     // Call autoEnrichLead
     const enrichedLead = await autoEnrichLead(lead, userBandId);
@@ -449,7 +449,7 @@ router.post("/leads/enrich-lead", requireAuth, async (req, res) => {
 });
 
 // Endpoint to enrich all leads belonging to the current band
-router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
+router.post("/leads/enrich-all-band", requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const state = loadState();
@@ -483,7 +483,7 @@ router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
           results.push({ id: lead.id, name: lead.nombre_sala, updatedFields });
         }
       } catch (err) {
-        console.warn(`[EnrichAll] Error en lead ${lead.nombre_sala}:`, err);
+        console.warn(`[EnrichAll] Error en lead %s:`, lead.nombre_sala, err);
       }
     }
 
@@ -502,7 +502,7 @@ router.post("/leads/enrich-all-band", requireAuth, async (req, res) => {
   }
 });
 
-router.post("/scrape-contact", requireAuth, async (req, res) => {
+router.post("/scrape-contact", requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   const { nombre_sala, ciudad, region } = req.body;
   if (!nombre_sala) {
     return res.status(400).json({ error: "Falta el nombre de la sala." });
@@ -617,7 +617,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
 });
 
 // Bulk address enrichment endpoint for venues & festivals
-router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
+router.post("/leads/enrich-addresses", requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const state = loadState();
     const leads = state.leads || [];
@@ -737,7 +737,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
           try {
             await dbUpsertLead(updatedLead, userBandId);
           } catch (err) {
-            console.warn(`[EnrichAddresses] Supabase sync notice for ${updatedLead.id}:`, err);
+            console.warn(`[EnrichAddresses] Supabase sync notice for %s:`, updatedLead.id, err);
           }
         }
       })();
@@ -761,7 +761,7 @@ router.post("/leads/enrich-addresses", requireAuth, async (req, res) => {
  * Utiliza Jina Reader (r.jina.ai) para parsear el sitio web de la sala sin gastar tokens.
  * Extrae móviles (WhatsApp), fijos, emails de programación, aforo y rider.
  */
-router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -824,7 +824,7 @@ router.post(["/leads/:id/enrich-jina", "/:id/enrich-jina"], requireAuth, async (
  * POST /api/leads/:id/detect-dates
  * Radar de Wegow y ticketing: detecta conciertos ocupados y calcula fines de semana libres detectados.
  */
-router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -875,7 +875,7 @@ router.post(["/leads/:id/detect-dates", "/:id/detect-dates"], requireAuth, async
  * POST /api/leads/detect-all-dates
  * Escanea la disponibilidad y cartelera de Wegow de forma masiva para todos los leads o un lote de la campaña.
  */
-router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async (req, res) => {
+router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const { leadIds } = req.body || {};
@@ -929,7 +929,7 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
         totalFreeDates += (radar.fechas_libres_detectadas?.length || 0);
         totalOccupiedDates += (radar.fechas_ocupadas?.length || 0);
       } catch (err) {
-        console.warn(`Error escaneando fechas para ${lead.nombre_sala}:`, err);
+        console.warn(`Error escaneando fechas para %s:`, lead.nombre_sala, err);
       }
     }
 
@@ -952,7 +952,7 @@ router.post(["/leads/detect-all-dates", "/detect-all-dates"], requireAuth, async
  * Ejecuta la actualización y enriquecimiento omnicanal masivo (Radar Multi-fuente, fechas objetivo de la campaña activa, contactos)
  * para todos los leads filtrados por la campaña activa de la banda.
  */
-router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireAuth, async (req, res) => {
+router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const { campaignId, forceAll = false } = req.body || {};
@@ -1029,7 +1029,7 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
         if (radar.disponible_para_campana) totalAvailableForCampaign++;
         totalFreeDates += (radar.fechas_libres_detectadas?.length || 0);
       } catch (err) {
-        console.warn(`[Batch Campaign Enrich] Error actualizando lead "${lead.nombre_sala}":`, err);
+        console.warn(`[Batch Campaign Enrich] Error actualizando lead "%s":`, lead.nombre_sala, err);
       }
     }
 
@@ -1053,7 +1053,7 @@ router.post(["/leads/batch-enrich-campaign", "/batch-enrich-campaign"], requireA
  * POST /api/leads/:id/enrich-instagram
  * Extrae WhatsApp y datos comerciales de Instagram mediante Apify (con fallback gratuito).
  */
-router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1105,7 +1105,7 @@ router.post(["/leads/:id/enrich-instagram", "/:id/enrich-instagram"], requireAut
  * POST /api/leads/:id/enrich-spotify
  * Analiza audiencia de Spotify for Artists / Soundcharts para la ciudad del recinto.
  */
-router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1151,7 +1151,7 @@ router.post(["/leads/:id/enrich-spotify", "/:id/enrich-spotify"], requireAuth, a
  * POST /api/leads/:id/enrich-google-places
  * Extrae fotos del escenario, valoración en Google Maps y detalles de acceso/carga.
  */
-router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1191,7 +1191,7 @@ router.post(["/leads/:id/enrich-google-places", "/:id/enrich-google-places"], re
  * POST /api/leads/:id/enrich-setlist
  * Extrae historial de conciertos, bandas similares y referencias de booking de Setlist.fm.
  */
-router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1229,7 +1229,7 @@ router.post(["/leads/:id/enrich-setlist", "/:id/enrich-setlist"], requireAuth, a
  * POST /api/leads/:id/verify-email
  * Valida entregabilidad DNS/MX y reputación anti-spam del correo de contacto.
  */
-router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1268,7 +1268,7 @@ router.post(["/leads/:id/verify-email", "/:id/verify-email"], requireAuth, async
  * POST /api/leads/:id/enrich-all-apis
  * Dispara todas las herramientas API en paralelo para una sala (Spotify + Google Places + Setlist.fm + Verificación MX).
  */
-router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1452,7 +1452,7 @@ router.post(["/leads/:id/enrich-all-apis", "/:id/enrich-all-apis"], requireAuth,
  * POST /api/leads/:id/enrich-logistics
  * Calcula rutas, kilometraje, combustible y peajes para la furgoneta.
  */
-router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1490,7 +1490,7 @@ router.post(["/leads/:id/enrich-logistics", "/:id/enrich-logistics"], requireAut
  * POST /api/leads/:id/enrich-social
  * Radar de interacción en Instagram / TikTok y calidad de co-promoción.
  */
-router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-social", "/:id/enrich-social"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1532,7 +1532,7 @@ export function numeroConDefecto(valor: unknown, defecto: number): number {
  * POST /api/leads/:id/calculate-break-even
  * Simulador financiero P&L y punto de equilibrio de entradas.
  */
-router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1586,7 +1586,7 @@ router.post(["/leads/:id/calculate-break-even", "/:id/calculate-break-even"], re
  * POST /api/leads/:id/enrich-booking-window
  * Ventana de programación óptima y antelación recomendada para cerrar fechas.
  */
-router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1610,7 +1610,7 @@ router.post(["/leads/:id/enrich-booking-window", "/:id/enrich-booking-window"], 
  * POST /api/leads/:id/enrich-local-events
  * Radar de eventos locales, macrofestivales y riesgos de solapamiento.
  */
-router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1640,7 +1640,7 @@ router.post(["/leads/:id/enrich-local-events", "/:id/enrich-local-events"], requ
  * POST /api/leads/:id/enrich-press-media
  * Radar de medios locales, radios y fanzines culturales en la provincia.
  */
-router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);
@@ -1670,7 +1670,7 @@ router.post(["/leads/:id/enrich-press-media", "/:id/enrich-press-media"], requir
  * POST /api/leads/:id/enrich-co-booking
  * Bandas locales afines para co-booking y taquilla compartida.
  */
-router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireAuth, async (req, res) => {
+router.post(["/leads/:id/enrich-co-booking", "/:id/enrich-co-booking"], requireAuth, enriquecimientoRateLimiter, async (req, res) => {
   try {
     const targetBandId = getTargetBandId(req);
     const lead = await dbGetLeadById(req.params.id, targetBandId);

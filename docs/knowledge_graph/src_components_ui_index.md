@@ -201,6 +201,7 @@ BandManager UI Component Library
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*
 - [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*

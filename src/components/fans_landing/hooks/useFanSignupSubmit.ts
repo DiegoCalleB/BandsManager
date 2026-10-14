@@ -7,6 +7,7 @@ import { EPKConfig } from "../../../types";
 import { getErrorMessage } from "../../../utils/errorMessage";
 import type { FanSignupResult } from "../fanLandingTypes";
 import type { FanFormTranslate } from "./useFanLanguage";
+import { registrarEvento } from "../../../utils/analitica";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface FanSignupSubmitParams {
@@ -78,6 +79,7 @@ export function useFanSignupSubmit({ formData, setError, t, setLoading, isPrevie
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || t("errorGenericSignup"));
 
+      registrarEvento("Fan Suscrito");
       setSuccessData(data);
     } catch (err) {
       setError(getErrorMessage(err, t("errorGenericSignup")));

@@ -13,7 +13,7 @@ tags: ["security", "system", "auto"]
 > **Capa:** `#layer/security` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimiter, registroRateLimiter, publicoRateLimiter, reenvioEmailRateLimiter, iaRateLimiter.
+Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimiter, registroRateLimiter, publicoRateLimiter, gmailOAuthRateLimiter, webhookRateLimiter.
 
 ---
 
@@ -23,16 +23,24 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[route_leads_crud|Leads CRUD Route]] *(from #route)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server|server.ts]] *(from #route)*
 - [[server_routes_ai_music_rutaSeparacion|server/routes/ai_music/rutaSeparacion.ts]] *(from #route)*
 - [[server_routes_ai_music_rutasGeneracion|server/routes/ai_music/rutasGeneracion.ts]] *(from #route)*
+- [[server_routes_ai_music_rutasWebhooks|server/routes/ai_music/rutasWebhooks.ts]] *(from #route)*
 - [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
+- [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
+- [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*
+- [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
+- [[server_routes_gmailOAuth|server/routes/gmailOAuth.ts]] *(from #security)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*

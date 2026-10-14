@@ -316,7 +316,7 @@ for (const k of Object.keys(overrides.operations || {})) {
 const sombreadas = [];
 {
   const lista = [...operaciones.entries()];
-  const aRegex = (p) => new RegExp("^" + p.replace(/[.*+?^$()|[\]\\]/g, "\\const total = operaciones.size;").replace(/\{[^}]+\}/g, "[^/]+") + "$");
+  const aRegex = (p) => new RegExp("^" + p.replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{[^}]+\}/g, "[^/]+") + "$");
   for (let i = 0; i < lista.length; i++) {
     const [kB, b] = lista[i];
     for (let j = 0; j < i; j++) {
@@ -404,7 +404,7 @@ const ETIQUETA_ACCESO = {
   ninguna: "Pública",
   desconocida: "No determinado",
 };
-const celda = (t) => String(t ?? "").replace(/\|/g, "\\|").replace(/\n/g, " ");
+const celda = (t) => String(t ?? "").replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\n/g, " ");
 const enlaceFuente = (x) => { const [fichero, linea] = x.split(":"); return `[\`${x}\`](../../${fichero}#L${linea})`; };
 const accesoDe = (op) => ETIQUETA_ACCESO[op["x-autenticacion"]] + (op["x-requires-leader"] ? " + líder" : "");
 const filaDe = (metodo, ruta, op) =>

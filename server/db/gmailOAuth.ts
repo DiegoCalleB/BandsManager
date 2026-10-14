@@ -28,13 +28,13 @@ export async function dbGetBandGmailOAuth(bandId: string): Promise<BandGmailOAut
       .maybeSingle();
 
     if (error) {
-      console.warn(`Notice leyendo OAuth de Gmail para '${cleanId}':`, error.message || error);
+      console.warn("Notice leyendo OAuth de Gmail para '%s':", cleanId, error.message || error);
       return null;
     }
 
     return data ? { ...data, refresh_token: decryptSecret(data.refresh_token) } : null;
   } catch (e) {
-    console.warn(`Fallo leyendo OAuth de Gmail para '${cleanId}':`, e);
+    console.warn("Fallo leyendo OAuth de Gmail para '%s':", cleanId, e);
     return null;
   }
 }

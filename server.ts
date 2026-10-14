@@ -2,6 +2,8 @@ import express from "express";
 import compression from "compression";
 import helmet from "helmet";
 import path from "path";
+import { servirIndex } from "./server/utils/cabeceraIdioma.js";
+import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
 
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
@@ -9,6 +11,7 @@ import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./
 
 import { getUserFromRequest } from "./server/auth.js";
 import { jsonSegunSesion } from "./server/middleware/limiteCuerpo.js";
+import { paginaRateLimiter } from "./server/middleware/rateLimiter.js";
 import { mismaBanda, bandaDe } from "./server/utils/bandAccess.js";
 import { loadState } from "./server/state.js";
 import { loadStateFromSupabase, invalidarCachePorEscritura } from "./server/db.js";
@@ -18,6 +21,7 @@ import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
 import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
+import { responderError } from "./server/utils/errorHttp.js";
 import { getAppInfo } from "./server/utils/version.js";
 
 import usersRouter, { ensureAdminUserExists } from "./server/routes/users.js";
@@ -45,7 +49,7 @@ import gmailOAuthRouter from "./server/routes/gmailOAuth.js";
 import songsRouter from "./server/routes/songs/index.js";
 import transposeRouter from "./server/routes/transposeRoute.js";
 import trackingRouter from "./server/routes/tracking.js";
-import paginaConciertoRouter from "./server/routes/paginaConcierto.js";
+import paginaConciertoRouter, { startEmailsCicloVidaScheduler } from "./server/routes/paginaConcierto.js";
 import { enlacesCortosApiRouter, enlacesCortosPublicoRouter } from "./server/routes/enlacesCortos.js";
 import { referidosRouter } from "./server/routes/referidos.js";
 import { campanaConciertoRouter } from "./server/routes/campanaConcierto.js";
@@ -74,10 +78,8 @@ process.on("unhandledRejection", (reason) => {
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-// CSP y COEP desactivados: el panel embebe Stripe Checkout, reproductores de Spotify/YouTube
-// y el widget de Google Translate (inyecta <script>/<style> inline), todos ajenos al origen
-// propio. El resto de cabeceras de helmet (HSTS, X-Frame-Options, nosniff, X-Powered-By oculto)
-// no rompen nada de eso y sí cierran clickjacking y fuga de metadata.
+// CSP mínima (object-src, base-uri, frame-ancestors; helmet exige default-src, de ahí la marca): la completa no se puede fijar porque el panel
+// embebe Stripe, Spotify/YouTube/Vimeo y Google Translate (scripts inline ajenos). COEP sigue desactivado.
 //
 // Referrer-Policy SÍ hay que fijarlo a mano: el "no-referrer" por defecto de helmet hace que el
 // navegador no mande cabecera Referer al pedir el iframe de YouTube del EPK público, y el
@@ -87,7 +89,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 // navegadores modernos: manda el origen (no la URL completa) a otros sitios, nada a HTTP en
 // claro, y es suficiente para que YouTube/Vimeo/Spotify carguen bien.
 app.use(helmet({
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: { useDefaults: false, directives: { defaultSrc: helmet.contentSecurityPolicy.dangerouslyDisableDefaultSrc, objectSrc: ["'none'"], baseUri: ["'self'"], frameAncestors: ["'self'"] } },
   crossOriginEmbedderPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },
   referrerPolicy: { policy: "strict-origin-when-cross-origin" },
@@ -551,10 +553,8 @@ app.use("/api/*", (req, res) => {
 // ni en consola con contexto ni en Sentry). Va DESPUÉS de las rutas para que Express lo enrute
 // aquí en cuanto algo llama a next(err) o lanza de forma síncrona.
 app.use((err: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(`[UnhandledRouteError] ${req.method} ${req.originalUrl}:`, err);
-  captureError(err, { method: req.method, url: req.originalUrl });
-  if (res.headersSent) return;
-  res.status(500).json({ error: "Error interno del servidor." });
+  console.error("[UnhandledRouteError] %s %s:", req.method, req.originalUrl, err);
+  responderError(res, err);
 });
 
 // Vite middleware integration for full-stack SPA
@@ -591,14 +591,12 @@ async function startServer() {
         }
       }
     }));
-    app.get("*", (req, res) => {
-      res.setHeader("Cache-Control", "no-store");
-      res.sendFile(path.join(distPath, "index.html"));
-    });
+    // La landing en español (/) y en inglés (/en) llevan su <head> por idioma (canonical + hreflang).
+    app.get("*", paginaRateLimiter, servirIndex(distPath, baseUrlPublica()));
   }
 
   const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`BandManager.io v${getAppInfo().version} server running on http://localhost:${PORT}`);
+    console.log("BandManager.io v%s server running on http://localhost:%s", getAppInfo().version, PORT);
     // Ampliación de socket timeout para procesos de inferencia pesados (GPU neural)
     server.timeout = 420000;
     server.keepAliveTimeout = 430000;
@@ -627,7 +625,7 @@ async function startServer() {
     }
     // Barrido diario de choques de calendario (aviso por email, ver server/services/calendarConflictService.ts)
     try {
-      startCalendarConflictScheduler();
+      startCalendarConflictScheduler(); startEmailsCicloVidaScheduler(); // el 2.º está apagado salvo EMAILS_CICLO_VIDA=true
     } catch (e) {
       console.error("Error starting Calendar Conflict Scheduler:", e);
     }
@@ -641,7 +639,7 @@ async function startServer() {
 
   server.on("error", (err: NodeJS.ErrnoException) => {
     if (err.code === "EADDRINUSE") {
-      console.error(`Port ${PORT} is already in use. Exiting process so process manager can restart.`);
+      console.error("Port %s is already in use. Exiting process so process manager can restart.", PORT);
       process.exit(1);
     } else {
       console.error("Server error:", err);

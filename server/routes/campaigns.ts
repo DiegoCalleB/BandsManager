@@ -2,6 +2,7 @@
 // `band_id` de sesión.
 
 import express from "express";
+import { apiAutenticadaRateLimiter } from "../middleware/rateLimiter.js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import {
@@ -18,7 +19,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 const router = express.Router();
 
 // GET /api/campaigns
-router.get("/campaigns", requireAuth, async (req, res) => {
+router.get("/campaigns", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const campaigns = await dbGetCampaigns(userBandId);
@@ -31,7 +32,7 @@ router.get("/campaigns", requireAuth, async (req, res) => {
 });
 
 // POST /api/campaigns
-router.post("/campaigns", requireAuth, async (req, res) => {
+router.post("/campaigns", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const campaignData = req.body;
@@ -55,7 +56,7 @@ router.post("/campaigns", requireAuth, async (req, res) => {
 });
 
 // PUT /api/campaigns/:id
-router.put("/campaigns/:id", requireAuth, async (req, res) => {
+router.put("/campaigns/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -69,13 +70,13 @@ router.put("/campaigns/:id", requireAuth, async (req, res) => {
     res.json({ success: true, campaign: savedCampaign });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    console.error(`Error in PUT /api/campaigns/${req.params.id}:`, error);
+    console.error(`Error in PUT /api/campaigns/%s:`, req.params.id, error);
     res.status(500).json({ success: false, error: error?.message || "Error al actualizar campaña" });
   }
 });
 
 // DELETE /api/campaigns/:id
-router.delete("/campaigns/:id", requireAuth, async (req, res) => {
+router.delete("/campaigns/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -83,13 +84,13 @@ router.delete("/campaigns/:id", requireAuth, async (req, res) => {
     res.json({ success: true, message: "Campaña eliminada correctamente" });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    console.error(`Error in DELETE /api/campaigns/${req.params.id}:`, error);
+    console.error(`Error in DELETE /api/campaigns/%s:`, req.params.id, error);
     res.status(500).json({ success: false, error: error?.message || "Error al eliminar campaña" });
   }
 });
 
 // POST /api/campaigns/active
-router.post("/campaigns/active", requireAuth, async (req, res) => {
+router.post("/campaigns/active", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.body;
@@ -114,7 +115,7 @@ router.post("/campaigns/active", requireAuth, async (req, res) => {
 
 // POST /api/campaigns/:id/record-training
 // Records campaign-specific pitch training (for tone/content refinement)
-router.post("/campaigns/:id/record-training", requireAuth, async (req, res) => {
+router.post("/campaigns/:id/record-training", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -139,14 +140,14 @@ router.post("/campaigns/:id/record-training", requireAuth, async (req, res) => {
     });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    console.error(`Error in POST /api/campaigns/${req.params.id}/record-training:`, error);
+    console.error(`Error in POST /api/campaigns/%s/record-training:`, req.params.id, error);
     res.status(500).json({ success: false, error: error?.message || "Error al registrar entrenamiento de campaña" });
   }
 });
 
 // POST /api/campaigns/:id/train-tone-dna
 // Forces immediate campaign tone DNA training if enough examples exist
-router.post("/campaigns/:id/train-tone-dna", requireAuth, async (req, res) => {
+router.post("/campaigns/:id/train-tone-dna", requireAuth, apiAutenticadaRateLimiter, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
     const { id } = req.params;
@@ -162,7 +163,7 @@ router.post("/campaigns/:id/train-tone-dna", requireAuth, async (req, res) => {
     }
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    console.error(`Error in POST /api/campaigns/${req.params.id}/train-tone-dna:`, error);
+    console.error(`Error in POST /api/campaigns/%s/train-tone-dna:`, req.params.id, error);
     res.status(500).json({ success: false, error: error?.message || "Error al entrenar ADN de tono de campaña" });
   }
 });
