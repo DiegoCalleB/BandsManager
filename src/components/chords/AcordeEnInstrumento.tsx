@@ -7,6 +7,9 @@ import { useModoEnsayo } from './modoEnsayo';
 import { sonarAcorde } from '../../utils/sonarAcorde';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
+import { Pentagrama } from './Pentagrama';
+import { midiDeAcorde } from '../../utils/sonarAcorde';
+import { prefiereBemoles } from '../../utils/pentagrama';
 import { ETIQUETA_INVERSION, inversionRecomendada, inversionesDe, nombreInversion, vozTeclado } from '../../utils/inversiones';
 
 const BLANCAS = [0, 2, 4, 5, 7, 9, 11];
@@ -167,6 +170,7 @@ const ChipsInversion: React.FC<{ opciones: number[]; activa: number | null; reco
 export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde; previo?: string | null; conReloj?: boolean; id?: string; /** false si tocar la ficha ya hace otra cosa (saltar la canción a ese acorde). */ sonar?: boolean }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal', previo, conReloj, id, sonar = true }) => {
   const [ensayo] = useModoEnsayo();
   const [visto, setVisto] = useState(false);
+  const [conNotas, setConNotas] = useState(false);
   // La inversión que menos mueve la mano desde el acorde anterior viene puesta en piano y en guitarra Pro (y se puede cambiar);
   // en guitarra Normal sale la forma de siempre y en bajo la raíz, hasta que se elige otra.
   const [invElegida, setInvElegida] = useState<number | null>(null);
@@ -243,6 +247,12 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
           </div>
         </div>
       ) : <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde estándar]</p>}
+      {!tapar && (
+        <>
+          <button type="button" aria-pressed={conNotas} title="Ver las notas en el pentagrama" onClick={() => setConNotas((v) => !v)} className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer ${conNotas ? 'bg-[var(--surface)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)]'}`}>Pentagrama</button>
+          {conNotas && <Pentagrama midi={midiDeAcorde(chord, vista, nivel, invSonido).map((m) => (vista === 'bajo' ? m + 12 : m))} modo="acorde" bemoles={prefiereBemoles(chord)} etiqueta={`Pentagrama: ${chord}`} />}
+        </>
+      )}
     </div>
   );
 };
