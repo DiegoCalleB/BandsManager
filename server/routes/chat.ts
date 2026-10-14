@@ -483,8 +483,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     }
 
     if (!response) {
-      // El detalle del proveedor queda en el log y en Sentry con este código; al usuario no se le enseña
-      // el mensaje interno (puede traer rutas, ids de proyecto o fragmentos de la petición).
+      // El detalle queda en el log y en Sentry con este código; al usuario no se le enseña el mensaje interno.
       const idError = registrarErrorInesperado(req, lastError);
 
       // generateContentWithFallback ya intentó automáticamente el failover a DeepSeek antes de
@@ -517,8 +516,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
                  `3. **Reinicio de cuota**: Si estás usando la clave por defecto, la cuota se restablecerá automáticamente.\n\n` +
                  `*Nota: Todas las demás funciones del panel (Supabase, gestión de salas, agenda de ensayos y gestión de propuestas) siguen funcionando con normalidad.*`;
       } else {
-        reply += `Ha ocurrido un error inesperado al conectar con el servicio de IA. ` +
-                 `Por favor, inténtalo de nuevo en unos instantes.`;
+        reply += `Ha ocurrido un error inesperado al conectar con el servicio de IA. Por favor, inténtalo de nuevo en unos instantes.`;
       }
       reply += `\n\n_Código de error: ${idError}_`;
 
@@ -630,8 +628,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     res.json(parsed);
 
   } catch (errorCapturado) {
-    const error = comoErrorCapturado(errorCapturado);
-    const idError = registrarErrorInesperado(req, error);
+    const idError = registrarErrorInesperado(req, errorCapturado);
     res.json({
       text: `⚠️ **Aviso del Mánager Virtual AI:** Ocurrió un inconveniente al procesar tu consulta. Por favor, vuelve a intentarlo. _Código de error: ${idError}_`,
       proposedActions: []
