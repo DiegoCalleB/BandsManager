@@ -336,8 +336,7 @@ Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts`
 | `npm run typecheck` | `tsc --noEmit`. |
 | `npm test` | Tests unitarios (Vitest). |
 | `npm run check:fast` | Typecheck + test de la frontera de confianza `band_id`. |
-| `npm run test:e2e` | Smoke suite y journey de onboarding (Playwright, sin credenciales). |
-| `npm run test:visual` | Regresión visual (`:update` solo para cambios de diseño deliberados). |
+| `npm run test:e2e` | Smoke y recorridos (Playwright, sin credenciales; ver `e2e/README.md`). |
 | `npm run lint:eslint` | ESLint (la deuda existente va con ratchet en CI). |
 | `npm run migrate:check` | Lista las migraciones SQL pendientes. |
 | `npm run verify:docs` | Comprueba que las rutas citadas en la documentación existen. |
@@ -349,7 +348,7 @@ Sin `.env` la app también arranca, con los usuarios semilla de `src/db_seed.ts`
 server/        Express: routes/ (HTTP) · services/ (agentes, scheduler, emails) · db/ (Supabase) · utils/ · middleware/
 src/           React: components/ · hooks/ · utils/ · services/api.ts (cliente HTTP único) · context/
 supabase/      Migraciones SQL idempotentes (el esquema completo está en supabase_schema.sql)
-e2e/           Playwright: smoke, journey y regresión visual
+e2e/           Playwright: smoke y recorridos (ver e2e/README.md)
 scripts/       Migraciones, auditorías de diseño y utilidades de desarrollo
 skills/        Skills para agentes de código (espejadas en .claude/, .gemini/, .opencode/ y .cursor/)
 docs/          planes/ (especificaciones) · referencia/ (arquitectura, diseño) · knowledge_graph/ (Obsidian)
@@ -372,7 +371,7 @@ El mapa detallado está en [AGENTS.md §7](./AGENTS.md). El backlog de producto,
 
 *Situación a 6 de octubre de 2026.* La aplicación es completa y funciona de punta a punta; lo que queda es validar con bandas reales, reactivar el cobro y cerrar riesgos legales.
 
-**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 358 rutas HTTP (307 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 48 migraciones SQL en el runner, 676 componentes React y 2.838 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de los E2E de Playwright y 15 capturas de regresión visual. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
+**Tamaño del proyecto:** unas 270.000 líneas de TypeScript (≈197.000 en `src/`, ≈76.000 en `server/`), 358 rutas HTTP (307 declaraciones de handler; el resto son alias, ver [docs/api](./docs/api/index.html)), 57 tablas en producción (con RLS activo en todas), 48 migraciones SQL en el runner, 676 componentes React y 2.838 tests unitarios declarados (casos `it`/`test` del código; Vitest ejecuta más por los parametrizados), además de las pruebas E2E de Playwright. Las cifras las comprueba `npm run verify:docs` en cada cambio de documentación.
 
 ### Construido y funcionando
 
