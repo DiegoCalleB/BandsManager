@@ -127,6 +127,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_services_transcripcionLetra|server/services/transcripcionLetra.ts]] *(from #service)*
 - [[server_services_venueEventsRadarService|server/services/venueEventsRadarService.ts]] *(from #service)*
 - [[server_services_venueIntelligenceService|server/services/venueIntelligenceService.ts]] *(from #service)*
+- [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_emailValidator|server/utils/emailValidator.ts]] *(from #service)*
