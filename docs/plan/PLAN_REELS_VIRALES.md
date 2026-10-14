@@ -23,12 +23,14 @@
 | D12 copyright | ✅ solo se autopublica con canal de la banda o declaración expresa | `utils/derechosClip.ts`, tabla `reel_clips` |
 | Seguridad (hallazgo nuevo) | ✅ `/public/epk` devolvía el token de Instagram de la banda | `utils/enlacesPublicos.ts` |
 | Fase 3 · copy perfecto | ✅ auditoría determinista + set dorado; 5 candidatos con arquetipos, juez con rúbrica, el copy de la banda compite; botón "Mejorar copy" | `utils/auditoriaCopyReel.ts`, `services/copyPerfecto.ts`, `routes/reelsTexto.ts`, `CopyPerfectoPanel.tsx` |
+| Fase 5 · métricas y aprendizaje | ✅ worker de métricas reales (1/24/72/168 h), KPI de rewatch, Thompson sampling de formato por banda; se inyecta en el análisis y el selector solo marca "recomendado" con datos | `services/metricasReels.ts`, `utils/aprendizajeReels.ts`, tabla `reel_metricas`, `routes/reelsAprendizaje.ts` |
 | Fase 6 · control de calidad | ✅ negro, congelado, silencio, volumen, formato, duración, hook y pista de audio; bloquea la autopublicación | `utils/controlCalidadClip.ts`, `services/controlCalidad.ts`, `ClipQualityReport.tsx` |
 | Interruptores del estudio sin efecto (hallazgo nuevo) | ✅ loop, zoom y smart-pan ya llegan al render | `useClipRendering.ts` |
 
 **Pendiente** (en orden): beat-drop alineado a compases reales (hoy parpadea cada 4 s, por eso no se
-conecta) · YouTube Shorts y TikTok reales · Fases 4 (hora óptima con datos) y 5 (métricas por
-Reel y KPI de rewatch) · aplicar la auditoría de copy también al análisis inicial ·
+conecta) · YouTube Shorts y TikTok reales · Fase 4 (hora óptima con datos) · aplicar la
+auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
+métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·
 tras desplegar: aplicar `20261104_reels_publicacion_real.sql` y probar con una cuenta real de
 Instagram Business (la API de Meta solo se ha probado con respuestas simuladas).
 
