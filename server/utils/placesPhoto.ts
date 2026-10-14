@@ -22,3 +22,21 @@ export function urlFotoPlaces(nombre: string): string {
 export function urlMediaPlaces(nombre: string): string {
   return `https://places.googleapis.com/v1/${nombre}/media?maxHeightPx=600&maxWidthPx=800&skipHttpRedirect=true`;
 }
+
+/**
+ * Destino al que se redirige: solo imágenes de Google (https y host googleusercontent.com o un
+ * subdominio). Comprobar solo "empieza por https://" dejaría redirigir a cualquier sitio si Google
+ * devolviera una URL inesperada. Devuelve la URL normalizada o null.
+ */
+export function destinoFotoPlacesSeguro(photoUri: unknown): string | null {
+  if (typeof photoUri !== "string") return null;
+  let url: URL;
+  try {
+    url = new URL(photoUri);
+  } catch {
+    return null;
+  }
+  const hostValido = url.hostname === "googleusercontent.com" || url.hostname.endsWith(".googleusercontent.com");
+  if (url.protocol !== "https:" || !hostValido || url.username || url.password) return null;
+  return url.toString();
+}

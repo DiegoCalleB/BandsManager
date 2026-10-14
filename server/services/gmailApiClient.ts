@@ -335,7 +335,8 @@ export function parsearMensajeGmail(msg: MensajeGmail, id: string): RespuestaEnt
   const fromRaw = headerValue(headers, "From");
   const fromMatch = fromRaw.match(/<([^>]+)>/);
   const fromAddress = (fromMatch ? fromMatch[1] : fromRaw).toLowerCase().trim();
-  const fromName = fromRaw.replace(/<.*?>/, "").replace(/"/g, "").trim();
+  // El nombre es lo que hay antes de la dirección entre < >; nada de "limpiar" etiquetas a medias.
+  const fromName = fromRaw.includes("<") ? fromRaw.split("<")[0].replace(/"/g, "").trim() : "";
   const toAddress = headerValue(headers, "To");
   const dateHeader = headerValue(headers, "Date");
   const subject = headerValue(headers, "Subject");

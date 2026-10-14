@@ -164,3 +164,17 @@ describe('gmailApiClient', () => {
     expect(sendCall[0]).toBe('https://gmail.googleapis.com/gmail/v1/users/me/messages/send');
   });
 });
+
+import { parsearMensajeGmail } from '../gmailApiClient';
+describe('parsearMensajeGmail: nombre del remitente', () => {
+  const con = (from: string) => parsearMensajeGmail({ payload: { headers: [{ name: 'From', value: from }] } }, 'id1');
+  it('separa nombre y dirección en los formatos habituales', () => {
+    expect(con('"Sala Caracol" <booking@caracol.es>')).toMatchObject({ from: 'booking@caracol.es', fromName: 'Sala Caracol' });
+    expect(con('Sala Caracol <booking@caracol.es>')).toMatchObject({ from: 'booking@caracol.es', fromName: 'Sala Caracol' });
+    expect(con('booking@caracol.es')).toMatchObject({ from: 'booking@caracol.es', fromName: undefined });
+  });
+  it('un nombre con marcas HTML no se "limpia" a medias: se queda como texto, sin enlaces de dirección', () => {
+    const r = con('<script>x <b@c.es>');
+    expect(r.fromName ?? '').not.toContain('<');
+  });
+});

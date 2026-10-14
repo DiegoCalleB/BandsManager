@@ -140,6 +140,9 @@ describe('datos de Google Places que sobreviven a la normalización', () => {
     expect(foto('https://www.google.com/s2/favicons?domain=caracol.es&sz=128')).toBe('https://www.google.com/s2/favicons?domain=caracol.es&sz=128');
     expect(foto('https://places.googleapis.com/v1/places/a/photos/b/media?key=SECRETA')).toBe('');
     expect(foto('javascript:alert(1)')).toBe('');
+    expect(foto('https://www.google.com.evil.com/s2/favicons?domain=x')).toBe('');
+    expect(foto('https://evil.com/?https://www.google.com/s2/favicons?domain=x')).toBe('');
+    expect(foto('https://www.google.com/other')).toBe('');
     expect(foto(undefined)).toBe('');
   });
 });

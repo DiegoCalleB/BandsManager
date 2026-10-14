@@ -1,7 +1,7 @@
 // GET /api/places/photo: foto de Google Places sin exponer la API key (ver server/utils/placesPhoto.ts).
 import express from "express";
 import { createRateLimiter } from "../../middleware/rateLimiter.js";
-import { esNombreFotoPlacesValido, urlMediaPlaces } from "../../utils/placesPhoto.js";
+import { esNombreFotoPlacesValido, urlMediaPlaces, destinoFotoPlacesSeguro } from "../../utils/placesPhoto.js";
 
 const router = express.Router();
 
@@ -20,9 +20,10 @@ router.get("/places/photo", fotoPlacesRateLimiter, async (req, res) => {
       signal: AbortSignal.timeout(10_000)
     });
     const datos = r.ok ? ((await r.json()) as { photoUri?: string }) : null;
-    if (!datos?.photoUri?.startsWith("https://")) return res.status(404).end();
+    const destino = destinoFotoPlacesSeguro(datos?.photoUri);
+    if (!destino) return res.status(404).end();
     res.setHeader("Cache-Control", "public, max-age=3600");
-    return res.redirect(302, datos.photoUri);
+    return res.redirect(302, destino);
   } catch {
     return res.status(502).end();
   }

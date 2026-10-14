@@ -131,8 +131,14 @@ export function limpiarCampoContacto(valor: unknown): string {
 /** Foto aceptable: la de nuestro proxy de Places (sin API key) o el favicon de Google de la web. */
 function fotoSegura(valor: unknown): string {
   if (typeof valor !== 'string') return '';
-  const url = valor.trim();
-  return url.startsWith('/api/places/photo?') || url.startsWith('https://www.google.com/s2/favicons?') ? url : '';
+  const texto = valor.trim();
+  if (texto.startsWith('/api/places/photo?')) return texto;
+  try {
+    const url = new URL(texto);
+    return url.protocol === 'https:' && url.hostname === 'www.google.com' && url.pathname === '/s2/favicons' && !url.username && !url.password ? texto : '';
+  } catch {
+    return '';
+  }
 }
 
 const textoOVacio = (valor: unknown): string => (typeof valor === 'string' ? valor.trim() : '');
