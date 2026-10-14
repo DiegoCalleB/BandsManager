@@ -222,7 +222,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
   * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
   * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
   * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
-  * **Pendiente:** `leads/enrichment.ts` devuelve `details: String(error)` en un 500 (se hace al fusionar el PR de `responderError`, para no pisar su código).
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
 * **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
 
 ---
