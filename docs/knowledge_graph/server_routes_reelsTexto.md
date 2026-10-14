@@ -21,15 +21,24 @@ Reels · texto: lo que trabaja sobre el copy y el gancho del reel, no sobre el v
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(Layer: #service, Domain: #system)*
 - [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_auditoriaCopyReel|server/utils/auditoriaCopyReel.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/routes/__tests__/reelsTexto.test.ts`
 
 ---
 

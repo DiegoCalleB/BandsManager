@@ -58,6 +58,7 @@ Exporta: _vaciarRateLimitStore, ipDelCliente, createRateLimiter, loginRateLimite
 - `server/middleware/__tests__/rateLimiter.test.ts`
 - `server/middleware/__tests__/rateLimiterIp.test.ts`
 - `server/routes/__tests__/reelsRoute.test.ts`
+- `server/routes/__tests__/reelsTexto.test.ts`
 
 ---
 

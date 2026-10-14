@@ -31,7 +31,7 @@ Copy perfecto de un Reel (Fase 3 del plan): generar → auditar → juzgar → e
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-_Sin llamadas entrantes indexadas._
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 
 ---
 
