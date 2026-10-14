@@ -1232,21 +1232,27 @@ if _ym and _lh and _ym[0] > _lh[0]:
 # el rótulo con nombre y cargo la primera vez que sale cada persona, y la frase (en la película la dicen los subtítulos).
 _ACTD = os.path.join(AQUI, '..', '..', 'video', 'actores')
 _ROT = {'bateria': ('Brais', 'Batería'), 'voz': ('Alan', 'Voz y guitarra'), 'guitarra': ('Álvaro', 'Guitarra solista'), 'bajo': ('Iago', 'Bajo'),
-        'manager': ('Programador', 'Sala El Faro'), 'sello': ('Sr. Peláez', 'Discos Cuarzo')}
+        'manager': ('Programador', 'Sala El Faro'), 'sello': ('Sr. Peláez', 'Discos Cuarzo'), 'diego': ('Diego de la Calle', 'El bajista')}
 _vistos = set()
 for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8')) if e.get('entrevista')]:
     _pl = []
     for _l in _e['lines']:
         _c = _l['clip'] if os.path.exists(os.path.join(_ACTD, _l['clip'] + '.mp4')) else _l['reserva']
+        _pl_c = _c or _l['clip']
         _n, _r = _ROT[_l['who']]
         _rot = '' if _l['who'] in _vistos else f'<figcaption class="ent-rot"><b>{_n}</b><span>{_r}</span></figcaption>'
         _vistos.add(_l['who'])
-        _pl.append(f'<figure class="ent ent-{_c}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
-                   f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/{_c}.jpg"><source src="video/actores/{_c}.mp4" type="video/mp4"></video>'
-                   f'{_rot}<p class="ent-txt">{_l["txt"]}</p></figure>')
+        _media = (f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/{_c}.jpg"><source src="video/actores/{_c}.mp4" type="video/mp4"></video>'
+                  if _c else f'<img src="{_l["foto"]}" alt="">')  # sin clip rodado aún: su foto, con el mismo encuadre y rótulo
+        _pl.append(f'<figure class="ent ent-{_pl_c}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
+                   f'{_media}{_rot}<p class="ent-txt">{_l["txt"]}</p></figure>')
     _sec = (f'<section class="slide entrevista" data-title="{_e["title"]}" data-transition="fade">\n  ' + '\n  '.join(_pl) + '\n</section>\n')
     _tras = _e['entrevista']['tras']
-    if _tras.startswith('ANTES:'):
+    if _tras.startswith('REEMPLAZA:'):
+        _tt = _tras[10:]; _j = [k for k, x in enumerate(S) if f'data-title="{_tt}"' in x]; assert len(_j) == 1, _tras
+        _n = len(re.findall(r'<section\b[^>]*data-title="' + re.escape(_tt) + '"', S[_j[0]])); assert _n == 1, (_tt, _n)
+        S[_j[0]] = re.sub(r'<section\b[^>]*data-title="' + re.escape(_tt) + r'".*?</section>', lambda _m: _sec.rstrip('\n'), S[_j[0]], count=1, flags=re.S)
+    elif _tras.startswith('ANTES:'):
         _j = [k for k, x in enumerate(S) if f'data-title="{_tras[6:]}"' in x]; assert len(_j) == 1, _tras; S.insert(_j[0], _sec)
     else:
         _j = [k for k, x in enumerate(S) if f'data-title="{_tras}"' in x]; assert len(_j) == 1, _tras; S.insert(_j[0] + 1, _sec)
@@ -1444,7 +1450,7 @@ CORTES = {
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
     'Entrevista · Un correo': 'negro', 'Entrevista · El treinta por ciento': 'golpe', 'Entrevista · Nadie lo sabía': 'golpe',
     'Entrevista · Treinta y cinco minutos': 'golpe', 'Entrevista · El tono': 'golpe', 'Entrevista · Los fans': 'golpe',
-    'Entrevista · Los commits': 'fundido', 'Entrevista · Peláez': 'golpe', 'Entrevista · Lo que no me he inventado': 'fundido',
+    'Entrevista · Los commits': 'fundido', 'Entrevista · Peláez': 'golpe',
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)

@@ -227,10 +227,39 @@ Son el hilo documental de la película: cada músico habla a cámara, sentado, d
 - **Frase (la voz final es la de ElevenLabs):** «Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?»
 - **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A well-groomed man in his 50s in a dark tailored suit and open-collar white shirt sits in a leather chair, left of centre, looking just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a calm, self-satisfied tone: "Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?". Behind him, a glass office at night, out of focus: city lights, gold records on the wall. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
 
-### E12 · Iago · `ent-iago-noches` — Lo que no me he inventado (~8 s)
-- **Referencia:** `video/actores/iago-cu.jpg`
-- **Frase (la voz final es la de ElevenLabs):** «Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.»
-- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard and a plain grey t-shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a soft, quiet tone: "Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches". Behind him, his kitchen at night, out of focus: a window, a closed laptop on the table, one warm lamp. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+### Frases añadidas (funciones de la app)
+
+### E13 · Alan · Treinta y cinco minutos · `ent-alan-aviso`
+- **Referencia:** `video/actores/alan-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A a man in his late 30s with dark curly shoulder-length hair, a thick moustache and a short-sleeved floral shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a relaxed, amused tone: "Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente.". Behind him, the rehearsal room, out of focus: acoustic foam, a microphone stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E14 · Brais · El tono · `ent-brais-calendario`
+- **Referencia:** `video/actores/brais-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «El calendario me avisa si mis dos bandas se pisan. Es el mejor mánager que he tenido.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A bald man in his early 40s with a long full beard, a black cap worn backwards, a black sleeveless t-shirt and tattooed arms sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish with an amused, laughing tone: "El calendario me avisa si mis dos bandas se pisan. Es el mejor mánager que he tenido.". Behind him, the rehearsal room, out of focus: acoustic foam, a drum kit, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E15 · Alan · Los fans · `ent-alan-reels`
+- **Referencia:** `video/actores/alan-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Y los reels: subes el concierto entero y la IA te saca los mejores trozos. Yo solo tuve que salir guapo.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A a man in his late 30s with dark curly shoulder-length hair, a thick moustache and a short-sleeved floral shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a playful, vain tone: "Y los reels: subes el concierto entero y la IA te saca los mejores trozos. Yo solo tuve que salir guapo.". Behind him, the rehearsal room, out of focus: acoustic foam, a microphone stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+## Diego a cámara (lo grabas tú)
+
+Dos entrevistas, con el mismo encuadre y luz que las demás para que al cortar sean «una más» (la diferencia la marca el rótulo **DIEGO DE LA CALLE · El bajista**). Mientras no estén grabadas, el montaje usa tu foto del escenario, y en cuanto dejes los archivos en `video/actores/` con estos nombres y vuelvas a generar, entran solos.
+
+- **Cómo grabar:** móvil en horizontal sobre trípode, a la altura de los ojos, plano de pecho para arriba. Mira **justo al lado de la lente** (no a la lente), ligeramente a la izquierda del encuadre. Luz suave de ventana de lado, fondo oscuro y ordenado con alguna luz cálida; mismo tono sereno y bajito que un testimonio, sin gesticular delante de la boca. Graba la frase entera dos o tres veces y deja un segundo de silencio al principio y al final.
+- **Camiseta:** negra lisa o la del grupo; sin logos grandes.
+- **Archivos** (`.mp4` 1080p, horizontal; el audio de tu clip se descarta y se pone la voz final, o sirve tu voz si prefieres la tuya):
+
+| Archivo | Frase | Va |
+|---|---|---|
+| `ent-diego-giro.mp4` | «El bajista soy yo. Necesito volver a tocar.» | Después de «Otro jueves» (el giro) |
+| `ent-diego-giro-b.mp4` | «Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.» | Sigue al anterior |
+| `ent-diego-sueno.mp4` | «Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager toda la gestión va a ir rodada.» | Después de «Mis bandas» |
+| `ent-diego-sueno-b.mp4` | «Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos, y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.» | Sigue al anterior |
+
+Puedes grabar cada pareja de seguido, como un solo clip: dime y los parto en dos.
 
 ### Repetir · Iago en la cocina de noche (`noches`)
 - El clip actual deforma la cara al mirar a cámara. Mismo plano, pero **sin mirar al objetivo**: mirando el portátil, la cara iluminada por la pantalla.

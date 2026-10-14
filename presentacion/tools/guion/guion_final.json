@@ -1307,6 +1307,13 @@
     "voz": "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café."
    },
    {
+    "who": "voz",
+    "clip": "ent-alan-aviso",
+    "reserva": "alan-cu",
+    "txt": "Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente.",
+    "voz": "Y la app me avisó en el momento en que lo abrió. [laughs] Yo, mirando el móvil como un adolescente, che."
+   },
+   {
     "who": "bateria",
     "clip": "ent-brais-madre",
     "reserva": "brais-cu",
@@ -1336,6 +1343,13 @@
     "reserva": "alvaro-cu",
     "txt": "Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.",
     "voz": "[sarcastic] Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja."
+   },
+   {
+    "who": "bateria",
+    "clip": "ent-brais-calendario",
+    "reserva": "brais-cu",
+    "txt": "El calendario me avisa si mis dos bandas se pisan. Es el mejor mánager que he tenido.",
+    "voz": "El calendario me avisa si mis dos bandas se pisan. [laughs] Es el mejor mánayer que he tenido."
    }
   ],
   "nota": "Dúo cómico a dos entrevistas (se contradicen, como en los documentales). Cierra el capítulo 2."
@@ -1353,6 +1367,13 @@
     "reserva": "alvaro-cu",
     "txt": "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.",
     "voz": "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. [laughs] Ella sigue siendo la más pesada."
+   },
+   {
+    "who": "voz",
+    "clip": "ent-alan-reels",
+    "reserva": "alan-cu",
+    "txt": "Y los reels: subes el concierto entero y la IA te saca los mejores trozos. Yo solo tuve que salir guapo.",
+    "voz": "[mischievously] Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo."
    }
   ],
   "nota": "Testimonio del capítulo 3: el QR y la lista de fans, dicho como lo diría un músico."
@@ -1392,20 +1413,55 @@
   "nota": "El villano se convierte en cliente: el mejor testimonio de un anuncio."
  },
  {
-  "title": "Entrevista · Lo que no me he inventado",
+  "title": "El giro: el bajista soy yo",
   "h2": null,
   "entrevista": {
-   "tras": "Otro jueves, 23:47"
+   "tras": "REEMPLAZA:El giro: el bajista soy yo"
   },
   "lines": [
    {
-    "who": "bajo",
-    "clip": "ent-iago-noches",
-    "reserva": "iago-cu",
-    "txt": "Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.",
-    "voz": "[softly] Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches."
+    "who": "diego",
+    "clip": "ent-diego-giro",
+    "reserva": null,
+    "foto": "img/historia/mop-gira.jpg",
+    "txt": "El bajista soy yo. Necesito volver a tocar.",
+    "voz": "[softly] El bajista soy yo. Necesito volver a tocar."
+   },
+   {
+    "who": "diego",
+    "clip": "ent-diego-giro-b",
+    "reserva": null,
+    "foto": "img/historia/mop-gira.jpg",
+    "txt": "Toqué en varios grupos y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.",
+    "voz": "Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música."
    }
   ],
-  "nota": "Puente al giro: Iago confiesa la ficción y deja en pie lo verdadero. Corte a negro y «El bajista soy yo»."
+  "nota": "El giro dentro del lenguaje documental: la misma entrevista a cámara, con el rótulo «Diego de la Calle · El bajista». Lo grabará Diego; mientras, se usa su foto."
+ },
+ {
+  "title": "Un sueño hecho realidad",
+  "h2": null,
+  "entrevista": {
+   "tras": "REEMPLAZA:Un sueño hecho realidad"
+  },
+  "lines": [
+   {
+    "who": "diego",
+    "clip": "ent-diego-sueno",
+    "reserva": null,
+    "foto": "img/historia/mop-gira.jpg",
+    "txt": "Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager toda la gestión va a ir rodada.",
+    "voz": "Y ya estamos montando un grupo de metal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada."
+   },
+   {
+    "who": "diego",
+    "clip": "ent-diego-sueno-b",
+    "reserva": null,
+    "foto": "img/historia/mop-gira.jpg",
+    "txt": "Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos, y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.",
+    "voz": "[softly] Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad."
+   }
+  ],
+  "nota": "Segunda entrevista de Diego (el texto que antes salía en pantalla, dicho a cámara)."
  }
 ]

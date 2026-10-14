@@ -371,6 +371,20 @@ EN = {
     "I still think thirty percent was a fair price. By the way… how do you download that app?",
 "Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.":
     "I made this story up, a little. The band, the festival, Peláez… What I didn't make up are the nights.",
+"Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente, che.":
+    "And the app pinged me the moment he opened it. Me, staring at my phone like a teenager, che.",
+"El calendario me avisa si mis dos bandas se pisan. Es el mejor mánayer que he tenido.":
+    "The calendar warns me when my two bands clash. Best manager I've ever had.",
+"Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo.":
+    "And the reels: you upload the whole gig and the AI picks the best bits. All I had to do was look good.",
+"El bajista soy yo. Necesito volver a tocar.":
+    "I'm the bassist. I need to play again.",
+"Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.":
+    "I played in several bands, and left them one by one: no organisation, no management, no time, we weren't going anywhere. I built BandManager to get back on a stage, in front of thousands of people, and make them enjoy our music.",
+"Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.":
+    "And we're already putting together a metal band. We need a drummer… With huge excitement, and knowing that with BandManager the whole management side will run smoothly.",
+"Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.":
+    "And who knows, one day my daughters might want to start their own bands… and this makes their beginnings so much easier. A dream come true.",
 }
 
 def main():

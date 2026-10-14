@@ -85,3 +85,5 @@ Copia completa de lo anterior en `archivo/` (`guion_final_antes_de_la_definitiva
 - **Una hoja para cada músico:** Alan ya no dice «¡Por fin sé en qué tono canto!»: el remate pasa a su entrevista.
 - **La llamada:** Peláez añade «Y fuera baladas».
 - **La decisión:** ahora es «Ocho meses antes» (antes, «Jueves · 00:20»).
+- **Entrevista de Iago antes del giro** («Esta historia me la he inventado un poco… Lo que no me he inventado son las noches»): quitada a petición de Diego, para que el giro caiga en frío. Está en el commit `26bcdd2a` (`tools/guion/guion_final.json`) y su prompt de Veo, en la historia de `VEO3_PLANOS.md`.
+- **Giro y sueño:** antes eran titulares y texto en pantalla («El bajista soy yo. Necesito volver a tocar.», «Toqué en varios grupos…», «Y ya estamos montando un grupo de metal…», con sus hijas). Ahora son dos entrevistas de Diego a cámara con las mismas frases en primera persona. La versión en diapositiva está en `archivo/generar_antes_de_la_definitiva.py.txt`.

@@ -301,7 +301,10 @@ _(escena visual, sin diálogo)_
 **20.1** · **Programador (Sala El Faro)**: Programador Sala El Faro Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider. Contesté antes de acabarme el café.  
    _Voz:_ Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café.
 
-**20.2** · **Brais**: Treinta y cinco minutos. Yo tardo más en contestar al WhatsApp de mi madre.  
+**20.2** · **Alan**: Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente.  
+   _Voz:_ Y la app me avisó en el momento en que lo abrió. [laughs] Yo, mirando el móvil como un adolescente, che.
+
+**20.3** · **Brais**: Treinta y cinco minutos. Yo tardo más en contestar al WhatsApp de mi madre.  
    _Voz:_ Treinta y cinco minutos, neno. Yo tardo más en contestar al guasap de mi madre.
 
 ---
@@ -402,6 +405,9 @@ _(escena visual, sin diálogo)_
 
 **27.2** · **Álvaro**: Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.
 
+**27.3** · **Brais**: El calendario me avisa si mis dos bandas se pisan. Es el mejor mánager que he tenido.  
+   _Voz:_ El calendario me avisa si mis dos bandas se pisan. [laughs] Es el mejor mánayer que he tenido.
+
 ---
 
 ## 28 · Plano · Furgoneta (tras el ensayo)
@@ -495,6 +501,9 @@ _(escena visual, sin diálogo)_
 
 
 **34.1** · **Álvaro**: Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.
+
+**34.2** · **Alan**: Y los reels: subes el concierto entero y la IA te saca los mejores trozos. Yo solo tuve que salir guapo.  
+   _Voz:_ [mischievously] Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo.
 
 ---
 
@@ -739,25 +748,18 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 52 · Entrevista · Lo que no me he inventado
+## 52 · El giro: el bajista soy yo
 
 
-**52.1** · **Iago**: Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.
+**52.1** · **Diego**: Diego de la Calle El bajista El bajista soy yo. Necesito volver a tocar.  
+   _Voz:_ [softly] El bajista soy yo. Necesito volver a tocar.
 
----
-
-## 53 · El giro: el bajista soy yo
-
-**Rótulo:** Fin de la historia · Diego de la Calle  
-**Titular:** El bajista soy yo. Necesito volver a tocar.  
-
-**Texto en pantalla:**
-- Toqué en varios grupos. Los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado.
-- Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.
+**52.2** · **Diego**: Toqué en varios grupos y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.  
+   _Voz:_ Toqué en varios grupos, y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice Band Mánayer para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.
 
 ---
 
-## 54 · Mis bandas
+## 53 · Mis bandas
 
 **Rótulo:** Fin de la historia · Diego de la Calle  
 
@@ -765,19 +767,18 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 55 · Un sueño hecho realidad
+## 54 · Un sueño hecho realidad
 
-**Rótulo:** Fin de la historia · Diego de la Calle  
-**Titular:** Y ya estamos montando un grupo de metal. Nos falta batería…  
 
-**Texto en pantalla:**
-- Con muchísima ilusión, y sabiendo que con BandManager.io toda la gestión va a ir rodada.
-- Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y les ayuda a que los comienzos sean mucho más fáciles.
-- Un sueño hecho realidad.
+**54.1** · **Diego**: Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager toda la gestión va a ir rodada.  
+   _Voz:_ Y ya estamos montando un grupo de metal. Nos falta batería… [softly] Con muchísima ilusión, y sabiendo que con Band Mánayer toda la gestión va a ir rodada.
+
+**54.2** · **Diego**: Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos, y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.  
+   _Voz:_ [softly] Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos… y esto les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.
 
 ---
 
-## 56 · El reloj
+## 55 · El reloj
 
 **Rótulo:** Fin de la historia · El reloj  
 
@@ -791,55 +792,55 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 57 · El reto
+## 56 · El reto
 
 **Rótulo:** Fin de la historia · El reto  
 **Titular:** Brais, un reto.  
 
-**57.1** · **Diego**: Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.
+**56.1** · **Diego**: Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.
 
-**57.2** · **Diego**: Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.  
+**56.2** · **Diego**: Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.  
    _Voz:_ Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.
 
-**57.3** · **Diego**: Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
+**56.3** · **Diego**: Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
    _Voz:_ Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.
 
 ---
 
-## 58 · La invitación
+## 57 · La invitación
 
 **Rótulo:** Fin de la historia · La invitación  
 **Titular:** Te guardamos el sitio.  
 
-**58.1** · **Diego**: Brais… yo había dejado de tocar. Este máster me devolvió las ganas.
+**57.1** · **Diego**: Brais… yo había dejado de tocar. Este máster me devolvió las ganas.
 
-**58.2** · **Diego**: Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.
+**57.2** · **Diego**: Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.
 
 ---
 
-## 59 · Gracias
+## 58 · Gracias
 
 **Titular:** Gracias.  
 
-**59.1** · **Diego**: A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.  
+**58.1** · **Diego**: A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.  
    _Voz:_ Gracias, Brais. Y gracias a todo el profesorado de la Big Scul, por un máster que acaba en una aplicación de verdad.
 
-**59.2** · **Diego**: Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
+**58.2** · **Diego**: Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
    _Voz:_ Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar.
 
-**59.3** · **Diego**: Diego · bajo Ensayamos el sábado. Os llevo vuestros setlists personalizados. 🎸  
+**58.3** · **Diego**: Diego · bajo Ensayamos el sábado. Os llevo vuestros setlists personalizados. 🎸  
    _Voz:_ Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.
 
 ---
 
-## 60 · Plano · El local, vacío
+## 59 · Plano · El local, vacío
 
 
 _(escena visual, sin diálogo)_
 
 ---
 
-## 61 · Créditos
+## 60 · Créditos
 
 **Titular:** BandManager.io  
 
@@ -855,41 +856,41 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 62 · Escena post-créditos
+## 61 · Escena post-créditos
 
 **Rótulo:** Escena post-créditos · Domingo, 03:12  
 
-**62.1** · **Brais** (03:12): ¿Ya se ha acabado la peli?  
+**61.1** · **Brais** (03:12): ¿Ya se ha acabado la peli?  
    _Voz:_ [laughs] ¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?
 
-**62.2** · **Iago** (03:12): Dividir gastos está en mi lista de pendientes.  
+**61.2** · **Iago** (03:12): Dividir gastos está en mi lista de pendientes.  
    _Voz:_ Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.
 
-**62.3** · **Álvaro** (03:13): ¡Pues que las pague la IA!  
+**61.3** · **Álvaro** (03:13): ¡Pues que las pague la IA!  
    _Voz:_ [shouts] ¡Pues que las pague la inteligencia artificial!
 
-**62.4** · **Claudio** (03:13): Propuesta: las paga Brais. Pero tú decides, Iago.
+**61.4** · **Claudio** (03:13): Propuesta: las paga Brais. Pero tú decides, Iago.
 
-**62.5** · **Guglio** (03:13): Idea loca: que las pague Peláez.  
+**61.5** · **Guglio** (03:13): Idea loca: que las pague Peláez.  
    _Voz:_ [mischievously] Idea loca: que las pague Peláez. Con su treinta por ciento.
 
-**62.6** · **Iago** (03:14): Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.  
+**61.6** · **Iago** (03:14): Acaba de escribirme Netflix: quieren más planos del batería y menos del bajista.  
    _Voz:_ Acaba de escribirme Netflix. Quieren más planos del batería y menos del bajista.
 
-**62.7** · **Brais** (03:14): ¡Estos de Netflix tienen ojo!  
+**61.7** · **Brais** (03:14): ¡Estos de Netflix tienen ojo!  
    _Voz:_ [laughs] ¡Estos de Netflix tienen ojo, chaval!
 
-**62.8** · **Iago** (03:14): Brais… la peli va de mí.
+**61.8** · **Iago** (03:14): Brais… la peli va de mí.
 
-**62.9** · **Brais** (03:14): Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
+**61.9** · **Brais** (03:14): Por cierto, el miércoles ensayo con Master of Prompts. ¿A qué hora era?  
    _Voz:_ Por cierto, el miércoles ensayo con Máster of Prompts. ¿A qué hora era?
 
-**62.10** · **Iago** (03:14): Mira el calendario, Brais.  
+**61.10** · **Iago** (03:14): Mira el calendario, Brais.  
    _Voz:_ Mira el calendario, Brais. Mira el calendario.
 
 ---
 
-## 63 · Anexo _(anexo: solo en preguntas)_
+## 62 · Anexo _(anexo: solo en preguntas)_
 
 **Rótulo:** Anexo · Para las preguntas  
 **Titular:** Lo que no cupo en la película.  
@@ -898,82 +899,82 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 64 · Medios de comunicación _(anexo: solo en preguntas)_
+## 63 · Medios de comunicación _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:00 · Conseguir el bolo  
 **Titular:** Que hablen de la banda.  
 
-**64.1** · **Brais**: ¿Y para que hablen de nosotros? ¿La radio, la tele, las webs?  
+**63.1** · **Brais**: ¿Y para que hablen de nosotros? ¿La radio, la tele, las webs?  
    _Voz:_ ¿Y cómo hacemos para que hablen de nosotros? ¿La radio, la tele, las webs de música?
 
-**64.2** · **Iago**: Tengo también la base de datos de medios: radios, webs, prensa y podcasts. Con el mismo redactor de la IA y nada sale sin tu visto bueno.  
+**63.2** · **Iago**: Tengo también la base de datos de medios: radios, webs, prensa y podcasts. Con el mismo redactor de la IA y nada sale sin tu visto bueno.  
    _Voz:_ Tengo también la base de datos de medios: radios, webs, prensa y pódcasts. Y el mismo redactor de la inteligencia artificial les escribe con el tono de la banda. Nada sale sin tu visto bueno.
 
-**64.3** · **Alan**: ¡Yo ya estoy ensayando la entrevista!  
+**63.3** · **Alan**: ¡Yo ya estoy ensayando la entrevista!  
    _Voz:_ [excited] ¡Yo ya estoy ensayando la entrevista, che!
 
 ---
 
-## 65 · Afina el correo _(anexo: solo en preguntas)_
+## 64 · Afina el correo _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:00 · Conseguir el bolo  
 **Titular:** Afínalo con una instrucción.  
 
-**65.1** · **Álvaro**: ¿Y si el correo me suena demasiado serio?  
+**64.1** · **Álvaro**: ¿Y si el correo me suena demasiado serio?  
    _Voz:_ ¿Y si el correo me suena demasiado serio, tío?
 
-**65.2** · **Iago**: Le escribes una instrucción, como «hazlo más directo», y la IA lo reescribe.  
+**64.2** · **Iago**: Le escribes una instrucción, como «hazlo más directo», y la IA lo reescribe.  
    _Voz:_ Le escribes una instrucción sencilla, como: hazlo más directo. Y la inteligencia artificial lo reescribe.
 
-**65.3** · **Alan**: ¿Y se acuerda para la próxima?  
+**64.3** · **Alan**: ¿Y se acuerda para la próxima?  
    _Voz:_ ¿Y se acuerda para la próxima vez, che?
 
-**65.4** · **Iago**: Sí: lo calificas con estrellas y aprende cómo hablamos.  
+**64.4** · **Iago**: Sí: lo calificas con estrellas y aprende cómo hablamos.  
    _Voz:_ Sí. Lo calificas con estrellas, y aprende cómo hablamos. Cada vez escribe más como vosotros.
 
 ---
 
-## 66 · Bandas amigas _(anexo: solo en preguntas)_
+## 65 · Bandas amigas _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:00 · Conseguir el bolo  
 **Titular:** Bandas amigas, a la escucha.  
 
-**66.1** · **Alan**: ¿Y las otras bandas? Siempre acabamos con los mismos contactos.  
+**65.1** · **Alan**: ¿Y las otras bandas? Siempre acabamos con los mismos contactos.  
    _Voz:_ ¿Y las otras bandas? Siempre terminamos llamando a los mismos tres amigos del celular.
 
-**66.2** · **Iago**: Aquí las tengo todas: estilo, ciudad, contacto y el público que llevan.  
+**65.2** · **Iago**: Aquí las tengo todas: estilo, ciudad, contacto y el público que llevan.  
    _Voz:_ Aquí las tengo todas: su estilo, su ciudad, el contacto y el público que llevan.
 
-**66.3** · **Álvaro**: ¿Y puedo escucharlas antes de proponerles nada?
+**65.3** · **Álvaro**: ¿Y puedo escucharlas antes de proponerles nada?
 
-**66.4** · **Iago**: Sí: le das a «Escuchar» y suena abajo, desde su Spotify, sin salir de la app.  
+**65.4** · **Iago**: Sí: le das a «Escuchar» y suena abajo, desde su Spotify, sin salir de la app.  
    _Voz:_ Sí. Le das a escuchar, y suena abajo, desde su Spótifai, sin salir de la app.
 
-**66.5** · **Brais**: ¿Y cómo les va? ¿Tienen público de verdad?  
+**65.5** · **Brais**: ¿Y cómo les va? ¿Tienen público de verdad?  
    _Voz:_ ¿Y cómo les va? ¿Llevan público de verdad, o solo a sus madres?
 
-**66.6** · **Iago**: Ves sus métricas del mes, en Spotify y en YouTube.  
+**65.6** · **Iago**: Ves sus métricas del mes, en Spotify y en YouTube.  
    _Voz:_ Ves sus métricas del mes, en Spótifai y en Yutub.
 
 ---
 
-## 67 · El seguimiento de las redes _(anexo: solo en preguntas)_
+## 66 · El seguimiento de las redes _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 12:20 · Que te conozcan  
 **Titular:** Cuánto crece la banda, mes a mes.  
 
-**67.1** · **Brais**: ¿Y cómo sabemos si todo esto funciona?  
+**66.1** · **Brais**: ¿Y cómo sabemos si todo esto funciona?  
    _Voz:_ ¿Y cómo sabemos si todo esto funciona? ¿Si de verdad nos sigue más gente?
 
-**67.2** · **Iago**: Con este panel: apuntas los seguidores de cada red cada mes. Mirad cómo se rellena.  
+**66.2** · **Iago**: Con este panel: apuntas los seguidores de cada red cada mes. Mirad cómo se rellena.  
    _Voz:_ Con este panel. Apuntas los seguidores de cada red, cada mes. Mirad cómo se rellena la curva.
 
-**67.3** · **Álvaro**: ¡Y la curva sube! ¡Instagram, de 1.385 a 4.580!  
+**66.3** · **Álvaro**: ¡Y la curva sube! ¡Instagram, de 1.385 a 4.580!  
    _Voz:_ [amazed] ¡Y la curva sube, tío! ¡Instagram, de mil trescientos a más de cuatro mil quinientos!
 
 ---
 
-## 68 · La discografía, desde Spotify _(anexo: solo en preguntas)_
+## 67 · La discografía, desde Spotify _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 12:20 · Que te conozcan  
 **Titular:** Y tu discografía, desde Spotify.  
@@ -984,206 +985,206 @@ _(escena visual, sin diálogo)_
 
 ---
 
-## 69 · El profesor de armonía _(anexo: solo en preguntas)_
+## 68 · El profesor de armonía _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:40 · Antes del concierto  
 **Titular:** El profesor de armonía.  
 
-**69.1** · **Álvaro**: ¿Y si no sé qué escala tocar encima?  
+**68.1** · **Álvaro**: ¿Y si no sé qué escala tocar encima?  
    _Voz:_ [curious] ¿Y si no sé qué escala tocar encima? Porque yo improviso por intuición. Y mi intuición desafina.
 
-**69.2** · **Iago**: Para eso está el profesor de armonía: lee los acordes de la canción y te explica cómo funciona.  
+**68.2** · **Iago**: Para eso está el profesor de armonía: lee los acordes de la canción y te explica cómo funciona.  
    _Voz:_ Para eso está el profesor de armonía. Lee los acordes de la canción, y te explica cómo funciona.
 
-**69.3** · **Iago**: Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar y cómo componer encima.  
+**68.3** · **Iago**: Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar y cómo componer encima.  
    _Voz:_ Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar. Y cómo componer encima.
 
-**69.4** · **Álvaro**: ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!
+**68.4** · **Álvaro**: ¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo!
 
-**69.5** · **Iago**: Eso sí: lo marca como idea. Las notas las saca la app; la IA solo las explica.  
+**68.5** · **Iago**: Eso sí: lo marca como idea. Las notas las saca la app; la IA solo las explica.  
    _Voz:_ Eso sí: te lo marca como idea, no como verdad. Las notas las saca la app. La inteligencia artificial solo te las explica.
 
 ---
 
-## 70 · Choques en el calendario _(anexo: solo en preguntas)_
+## 69 · Choques en el calendario _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:40 · Antes del concierto  
 **Titular:** El calendario avisa de los choques.  
 
-**70.1** · **Brais**: Oye… ¿y si me coinciden dos ensayos a la vez, uno con cada banda?  
+**69.1** · **Brais**: Oye… ¿y si me coinciden dos ensayos a la vez, uno con cada banda?  
    _Voz:_ [worried] Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.
 
-**70.2** · **Iago**: El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.  
+**69.2** · **Iago**: El calendario te avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.  
    _Voz:_ El calendario te avisa. Si dos eventos se pisan, si no da tiempo a llegar de un sitio a otro, o si vas justo para montar.
 
-**70.3** · **Brais**: ¡Ai, mi madriña! ¡Me ha salvado el miércoles!  
+**69.3** · **Brais**: ¡Ai, mi madriña! ¡Me ha salvado el miércoles!  
    _Voz:_ [amazed] ¡Ai, mi madriña! ¡Me acaba de salvar el miércoles!
 
-**70.4** · **Alan**: El miércoles. El de los metaleros.  
+**69.4** · **Alan**: El miércoles. El de los metaleros.  
    _Voz:_ [mischievously] El miércoles. El de los metaleros, ¿no, traidor?
 
-**70.5** · **Iago**: Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.
+**69.5** · **Iago**: Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.
 
 ---
 
-## 71 · Merchan en un minuto _(anexo: solo en preguntas)_
+## 70 · Merchan en un minuto _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 12:20 · Que te conozcan  
 **Titular:** El merchan, diseñado en un minuto.  
 
-**71.1** · **Alan**: ¿Merchan? ¡Si no tenemos!  
+**70.1** · **Alan**: ¿Merchan? ¡Si no tenemos!  
    _Voz:_ [gasps] ¿Merchan? ¡Pero si no tenemos, boludo!
 
-**71.2** · **Iago**: Ahora sí: camisetas y pegatinas con nuestro logo y el QR.  
+**70.2** · **Iago**: Ahora sí: camisetas y pegatinas con nuestro logo y el QR.  
    _Voz:_ Ahora sí, chaval: camisetas y pegatinas con nuestro logo y el cú-erre de los fans. Listas para imprimir.
 
-**71.3** · **Brais**: ¡Yo quiero la roja!
+**70.3** · **Brais**: ¡Yo quiero la roja!
 
-**71.4** · **Alan**: Y yo, una con mi cara.  
+**70.4** · **Alan**: Y yo, una con mi cara.  
    _Voz:_ [mischievously] Y yo, una con mi cara. Para los fans. Y para que me reconozcan por la calle.
 
 ---
 
-## 72 · La gira, con gasolina y todo _(anexo: solo en preguntas)_
+## 71 · La gira, con gasolina y todo _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 12:55 · Después del concierto  
 **Titular:** La gira, con la gasolina calculada.  
 
-**72.1** · **Brais**: ¿Y la gasolina de la furgo y de mi coche?  
+**71.1** · **Brais**: ¿Y la gasolina de la furgo y de mi coche?  
    _Voz:_ Home, ¿y la gasolina de la furgo y de mi coche? Que la última gira la puse yo. Creo.
 
-**72.2** · **Iago**: Metes los coches que van en ruta y calcula el gasto de cada parada.  
+**71.2** · **Iago**: Metes los coches que van en ruta y calcula el gasto de cada parada.  
    _Voz:_ Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.
 
-**72.3** · **Iago**: Y lo que queda limpio de cada bolo.  
+**71.3** · **Iago**: Y lo que queda limpio de cada bolo.  
    _Voz:_ Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.
 
-**72.4** · **Álvaro**: ¡Ni una discusión más en la gasolinera!
+**71.4** · **Álvaro**: ¡Ni una discusión más en la gasolinera!
 
 ---
 
-## 73 · Las ideas, en su sitio _(anexo: solo en preguntas)_
+## 72 · Las ideas, en su sitio _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:40 · Antes del concierto  
 **Titular:** Las ideas, en su sitio.  
 
-**73.1** · **Brais**: ¿Y el break que grabé en el móvil?  
+**72.1** · **Brais**: ¿Y el break que grabé en el móvil?  
    _Voz:_ [softly] Neno, ¿y el break de batería que grabé el otro día en el móvil?
 
-**73.2** · **Iago**: Va a su canción y a su sección: intro, verso, estribillo o solo.  
+**72.2** · **Iago**: Va a su canción y a su sección: intro, verso, estribillo o solo.  
    _Voz:_ Va a su canción y a su sección: intro, verso, estribillo o solo. Con tu nombre, tronco.
 
-**73.3** · **Alan**: ¡Y cada uno comenta la idea! 💬  
+**72.3** · **Alan**: ¡Y cada uno comenta la idea! 💬  
    _Voz:_ [excited] ¡Y encima le podemos dejar comentarios a cada idea! ¡Me encanta, boludo!
 
-**73.4** · **Álvaro**: ¡Se acabó el audio perdido en el WhatsApp! 🙌  
+**72.4** · **Álvaro**: ¡Se acabó el audio perdido en el WhatsApp! 🙌  
    _Voz:_ [laughs] ¡Se acabó el audio perdido en el guasap!
 
 ---
 
-## 74 · La ficha del bolo _(anexo: solo en preguntas)_
+## 73 · La ficha del bolo _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 11:40 · Antes del concierto  
 **Titular:** Cada bolo, con su ficha.  
 
-**74.1** · **Alan**: ¿Y esto? ¿También sabe qué tiempo hará en el bolo?  
+**73.1** · **Alan**: ¿Y esto? ¿También sabe qué tiempo hará en el bolo?  
    _Voz:_ [amazed] ¿Y esto? ¿También sabe qué tiempo va a hacer en el bolo?
 
-**74.2** · **Iago**: Cada bolo tiene su ficha: el aviso de puente, el tiempo, la logística, el rider, los contactos, el merchan y cuánto os queda limpio.  
+**73.2** · **Iago**: Cada bolo tiene su ficha: el aviso de puente, el tiempo, la logística, el rider, los contactos, el merchan y cuánto os queda limpio.  
    _Voz:_ Cada bolo tiene su ficha. El aviso si cae en puente, y la ciudad se vacía. El tiempo que va a hacer. La logística, el rider, los contactos, el merchan… Y cuánto os queda limpio. Todo, en un clic.
 
-**74.3** · **Brais**: Y yo sin enterarme del puente. 🤦  
+**73.3** · **Brais**: Y yo sin enterarme del puente. 🤦  
    _Voz:_ [laughs] Y yo, sin enterarme nunca del puente.
 
 ---
 
-## 75 · El mapa que lee la IA _(anexo: solo en preguntas)_
+## 74 · El mapa que lee la IA _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 13:40 · Por dentro  
 **Titular:** Un mapa del código que lee la IA.  
 
-**75.1** · **Álvaro**: ¿Y eso qué es? ¿Un plato de espaguetis?  
+**74.1** · **Álvaro**: ¿Y eso qué es? ¿Un plato de espaguetis?  
    _Voz:_ ¿Y eso qué es? ¿Un plato de espaguetis? ¿O el cableado de mi pedalera?
 
-**75.2** · **Iago**: Es el mapa de nuestro código: 776 módulos y 3.142 conexiones, sacadas de los imports reales. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya funciona.  
+**74.2** · **Iago**: Es el mapa de nuestro código: 776 módulos y 3.142 conexiones, sacadas de los imports reales. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya funciona.  
    _Voz:_ Es el mapa de nuestro código: setecientos setenta y seis módulos y más de tres mil conexiones, sacadas del código real. Claudio y Guglio lo leen antes de tocar nada, para no romper lo que ya suena bien.
 
-**75.3** · **Brais**: ¡Qué listos!  
+**74.3** · **Brais**: ¡Qué listos!  
    _Voz:_ ¡Qué listos! Más que el técnico de sonido.
 
-**75.4** · **Iago**: Los puntos dorados son las funciones clave, como Booking o Iris: cada una enlaza pantalla, ruta, servicio, tabla y proveedor.  
+**74.4** · **Iago**: Los puntos dorados son las funciones clave, como Booking o Iris: cada una enlaza pantalla, ruta, servicio, tabla y proveedor.  
    _Voz:_ Los puntos dorados son las funciones clave, como el buquin o Iris. Cada una enlaza la pantalla, la ruta, el servicio, la tabla y el proveedor.
 
 ---
 
-## 76 · Arquitectura _(anexo: solo en preguntas)_
+## 75 · Arquitectura _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 13:40 · Por dentro  
 **Titular:** Un monolito sensato.  
 
-**76.1** · **Brais**: Vale, pero… ¿y por dentro cómo funciona todo esto?  
+**75.1** · **Brais**: Vale, pero… ¿y por dentro cómo funciona todo esto?  
    _Voz:_ Vale, pero, ¿y por dentro cómo funciona este monstruo?
 
-**76.2** · **Iago**: Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.  
+**75.2** · **Iago**: Delante, React con Vite. Detrás, Express y TypeScript. Supabase guarda los datos y la IA solo vive en los bordes.  
    _Voz:_ Delante, Riact con Vit. Detrás, Express y Taipscript. Supabeis guarda todos los datos, y la inteligencia artificial solo vive en los bordes.
 
-**76.3** · **Brais**: Pues como si me hablas en chino.  
+**75.3** · **Brais**: Pues como si me hablas en chino.  
    _Voz:_ Pues como si me hablas en chino. O en jevi metal noruego.
 
-**76.4** · **Álvaro**: Yo no entiendo nada…  
+**75.4** · **Álvaro**: Yo no entiendo nada…  
    _Voz:_ Yo no entiendo nada de nada. Y eso que leo partituras.
 
-**76.5** · **Iago**: Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Una pasada! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.  
+**75.5** · **Iago**: Yo tampoco tenía ni idea, pero desde que hago el máster de MoureDev lo entiendo casi todo. ¡Una pasada! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.  
    _Voz:_ Yo tampoco tenía ni pajolera idea. Pero desde que hago el máster de Mure Dev, lo entiendo casi todo. ¡Flipante! Aunque, la verdad, casi todo esto lo ha tocado mi colega Claudio.
 
 ---
 
-## 77 · Cómo se construyó con IA _(anexo: solo en preguntas)_
+## 76 · Cómo se construyó con IA _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 13:40 · Por dentro  
 **Titular:** Construido con IA y gobernado por reglas.  
 
-**77.1** · **Brais**: Y si Claudio y Guglio programan, ¿quién manda aquí?  
+**76.1** · **Brais**: Y si Claudio y Guglio programan, ¿quién manda aquí?  
    _Voz:_ Y si Claudio y Guglio programan, ¿quién manda aquí? ¿Quién es el líder de la banda?
 
-**77.2** · **Iago**: Un fichero: AGENTS.md. Es el contrato que leen antes de tocar nada, y tiene tres reglas que no se negocian.  
+**76.2** · **Iago**: Un fichero: AGENTS.md. Es el contrato que leen antes de tocar nada, y tiene tres reglas que no se negocian.  
    _Voz:_ Manda un fichero: agents punto eme de. Es el contrato que leen antes de tocar nada. Y tiene tres reglas que no se negocian: ningún dato de una banda visible para otra, ningún correo automático sin aprobación humana, y cero errores nuevos de Taipscript.
 
-**77.3** · **Alan**: ¿Y si se las saltan?  
+**76.3** · **Alan**: ¿Y si se las saltan?  
    _Voz:_ [laughs] ¿Y si se las saltan? Porque nosotros nos las saltamos todas.
 
-**77.4** · **Iago**: Se rompe el build. Un test lo vigila en cada commit; hay 22 skills y un hook que avisa cuando se toca algo sensible.  
+**76.4** · **Iago**: Se rompe el build. Un test lo vigila en cada commit; hay 22 skills y un hook que avisa cuando se toca algo sensible.  
    _Voz:_ Se rompe el bild. Hay un test que lo vigila en cada commit, veintidós skills, y un hook que avisa en cuanto alguien toca algo sensible.
 
 ---
 
-## 78 · Seguridad _(anexo: solo en preguntas)_
+## 77 · Seguridad _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 13:40 · Por dentro  
 **Titular:** Defensa por capas.  
 
-**78.1** · **Brais**: Y con esto, ¿ni el mejor hacker del mundo nos va a poder tumbar la aplicación?  
+**77.1** · **Brais**: Y con esto, ¿ni el mejor hacker del mundo nos va a poder tumbar la aplicación?  
    _Voz:_ Y con todo esto, ¿ni el mejor hacker del mundo nos va a tumbar la aplicación?
 
-**78.2** · **Iago**: Esa es la idea. Hay varias capas y ninguna es la única barrera: si una falla, queda otra detrás.  
+**77.2** · **Iago**: Esa es la idea. Hay varias capas y ninguna es la única barrera: si una falla, queda otra detrás.  
    _Voz:_ Esa es la idea. Hay varias capas, y ninguna es la única barrera: si una falla, queda otra detrás. Como llevar cuerdas de repuesto.
 
-**78.3** · **Iago**: La banda se saca de la sesión en el servidor, nunca de lo que manda el navegador. Y lo que llega de las salas es un dato, no una orden.  
+**77.3** · **Iago**: La banda se saca de la sesión en el servidor, nunca de lo que manda el navegador. Y lo que llega de las salas es un dato, no una orden.  
    _Voz:_ La banda se saca de la sesión, en el servidor, nunca de lo que manda el navegador. Y lo que llega de las salas se trata como un dato, nunca como una orden.
 
-**78.4** · **Álvaro**: ¿Y eso es lo que hace que no nos hackeen?
+**77.4** · **Álvaro**: ¿Y eso es lo que hace que no nos hackeen?
 
-**78.5** · **Iago**: Una parte. Tú toca la guitarra, que de lo demás me encargo yo.  
+**77.5** · **Iago**: Una parte. Tú toca la guitarra, que de lo demás me encargo yo.  
    _Voz:_ Es una parte. Tú toca la guitarra, que de lo demás me encargo yo. Como siempre: el bajo sujetándolo todo.
 
 ---
 
-## 79 · Calidad en cifras _(anexo: solo en preguntas)_
+## 78 · Calidad en cifras _(anexo: solo en preguntas)_
 
 **Rótulo:** Sábado · 13:40 · Por dentro  
 **Titular:** Un producto con tests de verdad.  
 
-**79.1** · **Álvaro**: ¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!
+**78.1** · **Álvaro**: ¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!
 
-**79.2** · **Iago**: Más de dos mil, y se ejecutan solos en cada commit y en cada push. Y en producción, un control de salud y Sentry vigilando los errores.  
+**78.2** · **Iago**: Más de dos mil, y se ejecutan solos en cada commit y en cada push. Y en producción, un control de salud y Sentry vigilando los errores.  
    _Voz:_ Más de dos mil. Y se ejecutan solos: en cada commit, en cada push. Y en producción, un control de salud y Séntri vigilando los errores. Como un roadie que nunca duerme.
