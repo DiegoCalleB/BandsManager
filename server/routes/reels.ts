@@ -70,6 +70,7 @@ import {
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 /** Respuesta de oEmbed de YouTube. */
 interface OembedYoutube {
@@ -807,10 +808,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Highlights AI Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al procesar el vídeo: ${err?.message || err}`
-    });
+    return responderError(res, err, "Error al procesar el vídeo.");
   }
 });
 
@@ -1172,10 +1170,7 @@ Responde ÚNICAMENTE con JSON válido:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Reanalyze Clip Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al reanalizar el fragmento: ${err?.message || err}`
-    });
+    return responderError(res, err, "Error al reanalizar el fragmento.");
   }
 });
 
@@ -1300,10 +1295,7 @@ Responde ÚNICAMENTE con JSON válido:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[AI Hook Doctor Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error ejecutando AI Hook Doctor: ${err?.message || err}`
-    });
+    return responderError(res, err, "Error ejecutando AI Hook Doctor.");
   }
 });
 

@@ -209,10 +209,9 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
-### Deuda: cada release deja `docs/api` con la versión anterior
-* **Qué:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionarlo `verify:docs` (`generate-openapi --check`) se pone rojo en `main` y en todos los PR (pasó con la 3.0.0, octubre 2026; se arregló regenerando a mano).
-* **Candidatos:** declarar `docs/api/openapi.json` en `extra-files` de `release-please-config.json` (`$.info.version`) y que `index.html` no lleve la versión; o quitar la versión del documento generado; o regenerar en el propio PR de release.
-* **Estado:** pendiente. Hasta entonces, tras fusionar una release: `node scripts/generate-openapi.mjs` y commit.
+### Hecho: una release ya no pone `main` en rojo por `docs/api`
+* **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
+* **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
 
 ---
 

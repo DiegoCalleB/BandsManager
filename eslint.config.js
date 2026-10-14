@@ -106,38 +106,5 @@ export default tseslint.config(
         },
       ],
     },
-  },
-  {
-    // DEUDA conocida: ficheros que aún devuelven `err.message` en algún 5xx. Esta lista solo puede
-    // ENCOGER: al migrar un fichero a `responderError`, se quita de aquí. Un fichero que no esté en
-    // la lista no puede volver a filtrar mensajes internos.
-    files: [
-      'server/controllers/tours.controller.ts',
-      'server/routes/agent.ts',
-      'server/routes/agentQueue.ts',
-      'server/routes/bands.ts',
-      'server/routes/campaigns.ts',
-      'server/routes/concert_to_album.ts',
-      'server/routes/concerts.ts',
-      'server/routes/epk_fans.ts',
-      'server/routes/leads/crud.ts',
-      'server/routes/leads/emailValidation.ts',
-      'server/routes/leads/enrichment.ts',
-      'server/routes/leads/exampleThreads.ts',
-      'server/routes/leads/import.ts',
-      'server/routes/leads/pitch.ts',
-      'server/routes/leads/places.ts',
-      'server/routes/leads/reply.ts',
-      'server/routes/leads/templates.ts',
-      'server/routes/metrics.ts',
-      'server/routes/posts.ts',
-      'server/routes/reels.ts',
-      'server/routes/repertorio.ts',
-      'server/routes/spotify.ts',
-      'server/routes/transposeRoute.ts',
-    ],
-    rules: {
-      'no-restricted-syntax': 'off',
-    },
   }
 );
