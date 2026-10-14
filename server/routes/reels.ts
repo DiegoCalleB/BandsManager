@@ -22,7 +22,7 @@ import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFa
 import { renderizarClip } from "../services/clipRenderer.js";
 import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
 import reelsTextoRouter from "./reelsTexto.js";
-import reelsAprendizajeRouter from "./reelsAprendizaje.js"; import reelsProgramacionRouter from "./reelsProgramacion.js";
+import { sanearYAuditarHighlights } from "../utils/auditarHighlights.js"; import reelsAprendizajeRouter from "./reelsAprendizaje.js"; import reelsProgramacionRouter from "./reelsProgramacion.js";
 import { aprendizajeDeBanda } from "../services/metricasReels.js";
 import { bloqueAprendizajeParaPrompt } from "../utils/aprendizajeReels.js";
 import { analizarTramo, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
@@ -429,7 +429,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         });
 
         if (candidatos.length > 0) {
-          highlights = candidatos;
+          highlights = sanearYAuditarHighlights(candidatos);
           optimalTime = parsed?.optimalTime || null;
           generadoPorIa = true;
         } else {

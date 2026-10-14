@@ -35,6 +35,7 @@ Reels & Social Content Generator: metadatos de YouTube, análisis de momentos vi
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_aprendizajeReels|server/utils/aprendizajeReels.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[server_utils_auditarHighlights|server/utils/auditarHighlights.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(Layer: #service, Domain: #social)*

@@ -102,7 +102,7 @@ export function CopyEditor() {
           </Button>
         </div>
 
-        <CopyPerfectoPanel mejorando={mejorandoCopy} opciones={opcionesCopy} motivo={motivoCopy} error={errorCopy} onMejorar={mejorarCopy} onAplicar={aplicarCopy} />
+        <CopyPerfectoPanel mejorando={mejorandoCopy} opciones={opcionesCopy} motivo={motivoCopy} error={errorCopy} avisos={highlights[selectedHighlightIndex]?.auditoriaCopy?.problemas} onMejorar={mejorarCopy} onAplicar={aplicarCopy} />
       </div>
     </>
   );

@@ -42,3 +42,16 @@ describe("CopyPerfectoPanel", () => {
     expect(screen.getByRole("alert").textContent).toBe("Sin cuota de IA");
   });
 });
+
+describe("CopyPerfectoPanel · avisos del auditor", () => {
+  it("lista los problemas del copy del análisis, errores primero como 'Corrige'", () => {
+    render(<CopyPerfectoPanel {...base} avisos={[{ gravedad: "error", mensaje: "Pide interacción a cambio de nada." }, { gravedad: "aviso", mensaje: "Demasiados emojis." }]} />);
+    expect(screen.getByText(/Corrige: Pide interacción/)).toBeTruthy();
+    expect(screen.getByText(/Ojo: Demasiados emojis/)).toBeTruthy();
+  });
+
+  it("sin problemas no pinta la lista", () => {
+    render(<CopyPerfectoPanel {...base} avisos={[]} />);
+    expect(screen.queryByLabelText("Avisos del copy")).toBeNull();
+  });
+});

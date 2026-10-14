@@ -22,13 +22,24 @@ interface Props {
   opciones: CandidatoCopyApi[];
   motivo: string;
   error: string;
+  /** Problemas que el auditor encontró en el copy del análisis (vacío = nada que avisar). */
+  avisos?: { gravedad: "error" | "aviso"; mensaje: string }[];
   onMejorar: () => void;
   onAplicar: (opcion: CandidatoCopyApi) => void;
 }
 
-export function CopyPerfectoPanel({ mejorando, opciones, motivo, error, onMejorar, onAplicar }: Props) {
+export function CopyPerfectoPanel({ mejorando, opciones, motivo, error, avisos = [], onMejorar, onAplicar }: Props) {
   return (
     <div className="space-y-2">
+      {avisos.length > 0 && (
+        <ul aria-label="Avisos del copy" className="space-y-0.5">
+          {avisos.map((a, i) => (
+            <li key={`${a.mensaje}-${i}`} className={`text-xs ${a.gravedad === "error" ? "text-[var(--alert)]" : "text-[var(--ink-2)]"}`}>
+              {a.gravedad === "error" ? "Corrige: " : "Ojo: "}{a.mensaje}
+            </li>
+          ))}
+        </ul>
+      )}
       <Button variant="neutral" size="xs" type="button" onClick={onMejorar} disabled={mejorando} className="items-center gap-1.5" title="Genera varias versiones, descarta las que rompen las reglas de las redes y elige la mejor">
         {mejorando ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-[var(--acc-ink)]" />}
         <span>{mejorando ? "Probando versiones…" : "Mejorar copy"}</span>
