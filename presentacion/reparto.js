@@ -30,10 +30,10 @@
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
-                tts: { motor: 'elevenlabs', voz: 'U1qYNY0pKaPbq2VSGpif', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
+                tts: { motor: 'elevenlabs', voz: '7QQzpAyzlKTVrRzQJmTE', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
-                tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0 } },
+                tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0.5 } },
     voz:      { nombre: 'Alan',    rol: 'voz',       cargo: 'Voz y guitarra',  foto: 'img/miembro-xandre.jpg',  color: '#ff9ec4',
                 mov: 'diva',
                 tts: { motor: 'elevenlabs', voz: 'SxiIZdPt3fsiAenlubTX', estabilidad: 0 } },
