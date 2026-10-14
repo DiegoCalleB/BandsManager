@@ -420,23 +420,15 @@ back = paper('back', 'Xandre · Voz', [
     (7, 'Localhost non é produción', 'Gm', ''),
 ])
 
-add(f'''<section class="slide feat dl" data-grupo="musica" data-title="Una hoja para cada músico" data-transition="rise">
-  <div class="ft-copy"><span class="tag">{TAG2}</span><h2>Cada músico, su hoja.</h2>
-    {dlg(m('iago', 'Imprimo el setlist y sale una hoja distinta para cada uno. Con el logo de la banda detrás.'),
-         m('brais', '¡Mi hoja! ¡Con mis notas! ¡Solo las mías!'),
-         m('xandre', 'Y la mía, con el tono de cada tema. ¡Por fin sé en qué tono canto!'))}
-  </div>
-  <div class="paperwrap" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>
-</section>
-''')
-
-add(feat('La curva de energía', TAG2, 'La curva de energía.',
-         [m('iago', 'Cada tema tiene su energía. La app dibuja la curva del concierto.', say='Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.'),
-          m('alvaro', '¿Y si la curva se cae a mitad del bolo?', say='[curious] ¿Y si a mitad del bolo la curva se cae?'),
-          m('iago', 'Le das a «Optimizar orden» y te propone el setlist perfecto.', say='Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.'),
-          m('iago', 'Y vigila las transiciones: energía y tonalidad, tema a tema.', say='Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.'),
-          m('xandre', '¡Un setlist que sube como un cohete! 🚀', say='[amazed] ¡Ché, un setlist que sube como un cohete!')],
-         shot_vid('video/v-energia.mp4', 'video/v-energia.jpg'), grupo='musica'))
+# Fusión de «La curva de energía» y «Una hoja para cada músico»: la app ordena el setlist por energía (pantalla)
+# y, al imprimirlo (línea «paso»), entran encima las hojas de cada músico.
+add(feat('Una hoja para cada músico', TAG2, 'El setlist, ordenado e impreso.',
+         [m('alvaro', 'Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos.'),
+          m('iago', 'Cada tema tiene su energía: la app dibuja la curva del concierto y te propone el setlist perfecto.'),
+          m('iago', 'Y al imprimirlo, sale una hoja distinta para cada uno.', cls='paso'),
+          m('xandre', 'Y la mía, con el tono de cada tema.')],
+         shot_vid('video/v-energia.mp4', 'video/v-energia.jpg') + f'''
+  <div class="paperwrap paso2-in" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>''', grupo='musica', cls='con-paso'))
 
 add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
          [m('iago', 'Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.'),
@@ -1313,7 +1305,6 @@ DOLOR = {
     'Bandas amigas': ('Siempre los mismos contactos', 'Escuchas a otras bandas y ves sus números'),
     'El acuerdo, firmado desde BandManager': ('El caché cambia el día del bolo', 'Fecha, caché y rider, por escrito'),
     'Una hoja para cada músico': ('El mismo setlist para todos', 'Una hoja para cada músico, con sus notas'),
-    'La curva de energía': ('Un setlist ordenado a ojo', 'La IA ordena el setlist por energía'),
     'Los acordes pasan solos': ('Buscar los acordes en otra web', 'Acordes y letra siguen la canción'),
     'El profesor de armonía': ('Sin saber qué escala tocar', 'El profesor te sugiere la escala'),
     'Iris separa los instrumentos': ('Sin pistas separadas, no se oye el bajo', 'Iris separa cada instrumento'),
@@ -1473,7 +1464,7 @@ CORTES = {
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'El correo llega a la sala': 'golpe', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
-    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
+    'Una hoja para cada músico': 'rampa', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
     'Iris separa los instrumentos': 'l', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
     'Choques en el calendario': 'l', 'El dossier de la banda': 'rampa', 'Un QR y el público se hace fan': 'j', 'Merchan en un minuto': 'rampa',
     'Del directo al reel': 'rampa', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',

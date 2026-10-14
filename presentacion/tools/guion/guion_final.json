@@ -431,8 +431,13 @@
    },
    {
     "who": "bajo",
-    "txt": "Imprimo el setlist y sale una hoja distinta para cada uno.",
-    "voz": "Imprimo el setlist, y sale una hoja distinta para cada uno."
+    "txt": "Cada tema tiene su energía: la app dibuja la curva del concierto y te propone el setlist perfecto.",
+    "voz": "Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto."
+   },
+   {
+    "who": "bajo",
+    "txt": "Y al imprimirlo, sale una hoja distinta para cada uno.",
+    "voz": "Y al imprimirlo, sale una hoja distinta para cada uno."
    },
    {
     "who": "voz",
@@ -440,24 +445,7 @@
     "voz": "[amazed] Y la mía, con el tono de cada tema, che."
    }
   ],
-  "nota": "El remate del tono lo da Alan en su entrevista (doce años cantando sin saber en qué tono)."
- },
- {
-  "title": "La curva de energía",
-  "h2": null,
-  "lines": [
-   {
-    "who": "bajo",
-    "txt": "Cada tema tiene su energía: la app dibuja la curva del concierto y te propone el setlist perfecto.",
-    "voz": "Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto."
-   },
-   {
-    "who": "voz",
-    "txt": "¡Un setlist que sube como un cohete!",
-    "voz": "[amazed] ¡Ché, un setlist que sube como un cohete!"
-   }
-  ],
-  "nota": "Dolor concreto (la balada que vació el bar en la Ribeira) que vuelve en «Del concierto al disco». Las transiciones las vigila la app, no 'la IA': así no contradice al profesor de armonía ('los datos los calcula el código')."
+  "nota": "Fusiona «La curva de energía»: la pantalla ordena el setlist y, al imprimirlo, entran las hojas. El remate del tono lo da Alan en su entrevista (doce años cantando sin saber en qué tono)."
  },
  {
   "title": "Los acordes pasan solos",

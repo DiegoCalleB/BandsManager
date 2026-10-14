@@ -2244,3 +2244,9 @@ body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .
 .ent-ins::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent 26%, transparent 74%, rgba(0,0,0,.6)); }
 .ent-ins-rot { z-index: 1; padding: 12px 22px 12px 18px; background: rgba(8,9,12,.82); backdrop-filter: blur(6px); border-radius: 0 6px 6px 0; }
 @media (prefers-reduced-motion: reduce) { .ent-ins img { animation: none !important; } }
+
+/* Escena en dos pasos: las hojas impresas entran sobre la pantalla cuando Iago dice que lo imprime */
+.con-paso .paso2-in { opacity: 0; translate: 0 60px; transition: opacity 500ms ease, translate 700ms cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.con-paso.paso2 .paso2-in { opacity: 1; translate: 0 0; }
+.con-paso.paso2 .ft-shot { filter: brightness(.45) blur(2px); transition: filter 600ms ease; }
+body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }

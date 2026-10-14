@@ -159,6 +159,9 @@
   };
   // Insertos de la app en las entrevistas: a mitad de la frase se corta a la pantalla de BandManager de la que se habla
   // (data-a/data-b: fracción de la duración de la voz) y, si queda remate, se vuelve a la cara para decirlo.
+  // Escenas en dos pasos (clase con-paso): la línea «paso» cambia de plano (p. ej. de la curva en pantalla a las hojas impresas)
+  addEventListener('voz', function () { var e = document.querySelector('.slide.active.con-paso li.paso.habla'); if (e) e.closest('.slide').classList.add('paso2'); });
+  addEventListener('hashchange', function () { document.querySelectorAll('.slide.paso2:not(.active)').forEach(function (s) { s.classList.remove('paso2'); }); });
   var insT = [];
   addEventListener('voz', function () {
     var f = document.querySelector('.slide.entrevista.active .ent.habla'); if (!f) return;

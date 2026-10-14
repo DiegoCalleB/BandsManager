@@ -65,6 +65,9 @@ SAY = [
  ('¡Por fin! ¡Del rojo al verde!', '[excited] ¡Por fin! ¡Del rojo al verde! ¡Esto hay que festejarlo arriba de un escenario!'),
  ('Y si queréis, os llevo también los bolos', 'Y si queréis, os llevo también los bolos. Desde la app, y sin quedarme el treinta por ciento. Eso sí: se cobra en croquetas.'),
  # Cap. 2 · hoja
+ ('Vale, ¿y los ensayos?', 'Vale, ¿y los ensayos? Llevamos tres sin saber qué tocamos.'),
+ ('Cada tema tiene su energía:', 'Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto.'),
+ ('Y al imprimirlo', 'Y al imprimirlo, sale una hoja distinta para cada uno.'),
  ('Imprimo el setlist', 'Imprimo el setlist, y sale una hoja distinta para cada uno. Con el logo de la banda detrás, como los grandes.'),
  ('¡Mi hoja! ¡Con mis notas', '[excited] ¡Mi hoja! ¡Con mis notas! ¡Solo las mías! ¡Esto es de banda de estadio, carallo!'),
  ('Y la mía, con el tono', 'Y la mía con el tono de cada tema. Por fin sé en qué tono canto. Bueno, en qué tono debería cantar.'),

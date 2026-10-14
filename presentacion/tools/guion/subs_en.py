@@ -137,6 +137,8 @@ EN = {
     "Right, and what about rehearsals? We've gone three without knowing what we're playing.",
 "Imprimo el setlist, y sale una hoja distinta para cada uno.":
     "I print the setlist, and each of you gets a different sheet.",
+"Y al imprimirlo, sale una hoja distinta para cada uno.":
+    "And when you print it, each of you gets a different sheet.",
 "Y la mía, con el tono de cada tema. Por fin sé en qué tono canto.":
     "And mine, with the key of each song. Finally I know what key I sing in.",
 "Cada tema tiene su energía. La app dibuja la curva del concierto, y te propone el setlist perfecto.":
