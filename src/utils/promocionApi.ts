@@ -62,3 +62,8 @@ export const obtenerReferidos = () => apiFetch<EstadoReferidos>('/api/referidos'
 
 export const atribuirReferido = (codigo: string) =>
   apiFetch<{ atribuido: boolean }>('/api/referidos/atribuir', { method: 'POST', body: JSON.stringify({ codigo }) });
+
+export type EstiloCartel = 'gigposter' | 'neon' | 'collage' | 'minimal' | 'vintage';
+
+export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string }) =>
+  apiFetch<{ url: string; estilo: EstiloCartel }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });

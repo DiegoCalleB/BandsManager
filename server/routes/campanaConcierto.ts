@@ -29,8 +29,11 @@ import {
   type HitoId,
 } from '../../src/utils/campanaConcierto.js';
 import type { RespuestaVariantesCampana } from '../tiposRespuestasIA.js';
+import { cartelriaRouter } from './cartelria.js';
 
 export const campanaConciertoRouter = express.Router();
+// Cartelería: otra pieza de promoción de un concierto; cuelga de aquí para no inflar server.ts (§5.6).
+campanaConciertoRouter.use(cartelriaRouter);
 
 const HITOS: readonly HitoId[] = ['anuncio', 'recordatorio', 'ultima_llamada', 'dia_d'];
 const OBJETIVO: Record<HitoId, string> = {

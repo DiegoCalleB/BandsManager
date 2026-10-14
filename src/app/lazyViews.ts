@@ -49,6 +49,8 @@ export const RepertorioSetlists = safeLazy(
   () => import("../components/RepertorioSetlists"),
 );
 
+export const CarteleriaView = safeLazy(() => import("../components/cartel/CarteleriaView"));
+
 export const Merchan = safeLazy(() => import("../components/Merchan"));
 
 export const Chatbot = safeLazy(() => import("../components/Chatbot"));

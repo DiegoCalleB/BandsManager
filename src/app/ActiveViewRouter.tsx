@@ -10,7 +10,7 @@ import { SkeletonDashboard } from "../components/ui/Skeleton";
 import type { Rehearsal } from "../types";
 import { LeadStatus } from "../types";
 import { useApp } from "./AppContext";
-import { BandCRM,BookingCRM,CalendarView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
+import { BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
 
 /**
  * Vista activa de la aplicación interna (resumen, CRM, calendario, repertorio…).
@@ -192,6 +192,15 @@ export function ActiveViewRouter() {
                       view={currentView}
                       currentUser={currentUser}
                       onNavigate={handleNavigate}
+                    />
+                  </ErrorBoundary>
+                )}
+                {currentView === "carteleria" && (
+                  <ErrorBoundary fallbackTitle="Cartelería">
+                    <CarteleriaView
+                      key={currentActiveBandId}
+                      concerts={activeBandConcerts || concerts}
+                      bandName={currentActiveBandName}
                     />
                   </ErrorBoundary>
                 )}

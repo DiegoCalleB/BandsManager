@@ -252,6 +252,18 @@ export const renderRateLimiter = createRateLimiter({
 });
 
 /**
+ * Límite para generar imágenes con IA (carteles): cada llamada cuesta unas 5 veces más que un
+ * análisis de texto, así que tiene cupo propio y más estricto que `iaRateLimiter`.
+ */
+export const imagenRateLimiter = createRateLimiter({
+  nombre: "imagen",
+  windowMs: 5 * 60 * 1000,
+  maxRequests: 6,
+  porUsuario: true,
+  mensaje: "Has generado muchos fondos seguidos. Espera un momento antes de probar otro."
+});
+
+/**
  * Límite para crear sesiones de Checkout de donación: cada llamada pega
  * contra la API de Stripe (coste real y cuota), y sin tope un usuario podría
  * generar sesiones sin fin sin llegar nunca a pagar ninguna.
