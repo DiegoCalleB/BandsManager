@@ -19,6 +19,7 @@ Compone todos los hooks del Centro de Reels y expone el estado y los handlers qu
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useAprendizajeReels|src/components/reels_center/hooks/useAprendizajeReels.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useClipFeedbackState|src/components/reels_center/hooks/useClipFeedbackState.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useClipReanalysis|src/components/reels_center/hooks/useClipReanalysis.ts]] *(Layer: #frontend, Domain: #social)*

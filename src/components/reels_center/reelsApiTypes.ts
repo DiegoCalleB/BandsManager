@@ -173,3 +173,10 @@ export interface CopyPerfectoResponse {
   alternativas?: CandidatoCopyApi[];
   motivo?: string;
 }
+
+/** Respuesta de `/api/reels/aprendizaje` (server/utils/aprendizajeReels.ts). */
+export interface AprendizajeReelsResponse {
+  success?: boolean;
+  resumen?: { reelsMedidos: number; rewatchMediano: number | null; tasaCompartirMediana: number | null; tasaGuardarMediana: number | null };
+  recomendacion?: { formato: "loop_corto" | "corto" | "medio" | "largo"; modo: "explorando" | "aprovechando"; muestras: number; explicacion: string };
+}

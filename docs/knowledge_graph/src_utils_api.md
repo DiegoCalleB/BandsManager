@@ -80,6 +80,7 @@ Exporta: ApiRequestError, getActiveBandId, apiFetchRaw, apiFetch, safeJsonFetch.
 - [[src_components_onboarding_wizard_hooks_useMusicSetlistStep|src/components/onboarding/wizard/hooks/useMusicSetlistStep.ts]] *(from #frontend)*
 - [[src_components_PracticeModePanel|src/components/PracticeModePanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useAprendizajeReels|src/components/reels_center/hooks/useAprendizajeReels.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useClipReanalysis|src/components/reels_center/hooks/useClipReanalysis.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(from #frontend)*

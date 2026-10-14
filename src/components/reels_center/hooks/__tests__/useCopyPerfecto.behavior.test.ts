@@ -24,7 +24,9 @@ function montar(platform: "Instagram" | "TikTok" = "TikTok") {
   return { ...hook, setHighlights, setEditedCopy };
 }
 
-beforeEach(() => apiFetch.mockReset());
+beforeEach(() => {
+  apiFetch.mockReset();
+});
 
 describe("useCopyPerfecto", () => {
   it("manda el copy actual del corte y deja ganador + alternativas listos para elegir", async () => {
