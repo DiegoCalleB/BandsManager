@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { currentHourAndDay, claveEjecucionProgramada, triggerManualSchedulerTick } from '../agentScheduler';
+import { currentHourAndDay, claveEjecucionProgramada, triggerManualSchedulerTick, bandHasEmailConfigured } from '../agentScheduler';
 
 describe('agentScheduler currentHourAndDay', () => {
   it('calcula la hora y el día ISO (1=lunes..7=domingo) correctos en Europe/Madrid', () => {
@@ -117,5 +117,29 @@ describe('tick del planificador', () => {
     vi.setSystemTime(new Date('2026-08-18T08:05:00Z'));
     await triggerManualSchedulerTick();
     expect(tiposEncolados()).toEqual([]);
+  });
+});
+
+describe('bandHasEmailConfigured con Gmail revocado', () => {
+  beforeEach(() => {
+    process.env.GOOGLE_OAUTH_CLIENT_ID = 'id';
+    process.env.GOOGLE_OAUTH_CLIENT_SECRET = 'secret';
+    mocks.dbGetBandEmailAccount.mockResolvedValue(null);
+  });
+
+  it('Gmail conectado y válido cuenta como correo configurado', async () => {
+    mocks.dbGetBandGmailOAuth.mockResolvedValue({ refresh_token: 'r', needs_reauth_at: null });
+    expect(await bandHasEmailConfigured('b1')).toBe(true);
+  });
+
+  it('Gmail marcado para reconectar NO cuenta: no se encolan agentes que fallarían cada vez', async () => {
+    mocks.dbGetBandGmailOAuth.mockResolvedValue({ refresh_token: 'r', needs_reauth_at: '2026-10-11T06:00:00Z' });
+    expect(await bandHasEmailConfigured('b1')).toBe(false);
+  });
+
+  it('Gmail marcado pero con IMAP válido sigue contando (el IMAP funciona)', async () => {
+    mocks.dbGetBandGmailOAuth.mockResolvedValue({ refresh_token: 'r', needs_reauth_at: '2026-10-11T06:00:00Z' });
+    mocks.dbGetBandEmailAccount.mockResolvedValue({ email: 'a@b.es', imap_host: 'imap.b.es' });
+    expect(await bandHasEmailConfigured('b1')).toBe(true);
   });
 });

@@ -11,7 +11,7 @@
 // que la banda tenga que volver a intervenir.
 
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
-import { dbGetBandGmailOAuth } from "../db/gmailOAuth.js";
+import { dbGetBandGmailOAuth, dbMarkGmailNeedsReauth } from "../db/gmailOAuth.js";
 import { EmailAgentError, RespuestaEntrante } from "./emailAgentClient.js";
 import { classifyGmailError } from "../utils/emailDeliveryTracker.js";
 
@@ -86,14 +86,18 @@ async function getValidAccessToken(bandId: string): Promise<string> {
 
   if (!res.ok) {
     const errBody = await res.text().catch(() => "");
-    let friendlyMessage = errBody;
+    let revocado = false;
     try {
-      const parsed = JSON.parse(errBody);
-      if (parsed.error === "invalid_grant") {
-        friendlyMessage = "Token de Google revocado o caducado (invalid_grant). Es necesario reconectar con 'Conectar con Google'.";
-      }
-    } catch { /* cuerpo de error no JSON: se queda el mensaje genérico */ }
-    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${friendlyMessage || res.status}`, "api_error");
+      revocado = JSON.parse(errBody).error === "invalid_grant";
+    } catch { /* cuerpo de error no JSON: no es una revocación */ }
+    if (revocado) {
+      // Google revocó el permiso (caduca a los 7 días con la app OAuth en modo Testing): reintentar
+      // no sirve. Se marca la cuenta para que el planificador pare y la pantalla pida reconectar.
+      accessTokenCache.delete(bandId);
+      await dbMarkGmailNeedsReauth(bandId);
+      throw new EmailAgentError(`Google ha revocado el acceso de Gmail de '${bandId}' (invalid_grant). Hay que reconectar con 'Conectar con Google'.`, "reauth_required");
+    }
+    throw new EmailAgentError(`No se pudo renovar el token de Gmail para '${bandId}': ${errBody || res.status}`, "api_error");
   }
 
   const data = await res.json();
@@ -104,9 +108,11 @@ async function getValidAccessToken(bandId: string): Promise<string> {
   return accessToken;
 }
 
+// Una cuenta marcada para reconectar (Google revocó el permiso) no cuenta como conectada: los
+// agentes caen al camino IMAP si lo hay, en vez de fallar cada vez con un token muerto.
 export async function tieneGmailOAuthConectado(bandId: string): Promise<boolean> {
   const account = await dbGetBandGmailOAuth(bandId);
-  return !!account;
+  return !!account && !account.needs_reauth_at;
 }
 
 // Diagnóstico: a qué cuenta de Gmail pertenece de verdad el access token que se está usando.

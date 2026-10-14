@@ -36,7 +36,8 @@ export async function bandHasEmailConfigured(bandId: string): Promise<boolean> {
     
     // Gmail OAuth requiere que exista el refresh_token y que las credenciales de Google estén en las variables de entorno
     const hasValidGmail = Boolean(
-      oauth?.refresh_token && 
+      oauth?.refresh_token &&
+      !oauth.needs_reauth_at && 
       process.env.GOOGLE_OAUTH_CLIENT_ID && 
       process.env.GOOGLE_OAUTH_CLIENT_SECRET
     );

@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 const dbGetBandGmailOAuthMock = vi.fn();
+const dbMarkGmailNeedsReauthMock = vi.fn();
 vi.mock('../../db/gmailOAuth.js', () => ({
-  dbGetBandGmailOAuth: (...args: any[]) => dbGetBandGmailOAuthMock(...args)
+  dbGetBandGmailOAuth: (...args: any[]) => dbGetBandGmailOAuthMock(...args),
+  dbMarkGmailNeedsReauth: (...args: any[]) => dbMarkGmailNeedsReauthMock(...args)
 }));
 
 import {
@@ -25,6 +27,7 @@ const account = {
 describe('gmailApiClient', () => {
   beforeEach(() => {
     dbGetBandGmailOAuthMock.mockReset();
+    dbMarkGmailNeedsReauthMock.mockReset();
     process.env.GOOGLE_OAUTH_CLIENT_ID = 'client-id';
     process.env.GOOGLE_OAUTH_CLIENT_SECRET = 'client-secret';
     vi.stubGlobal('fetch', vi.fn());
@@ -39,6 +42,11 @@ describe('gmailApiClient', () => {
     expect(await tieneGmailOAuthConectado('band-test')).toBe(true);
 
     dbGetBandGmailOAuthMock.mockResolvedValueOnce(null);
+    expect(await tieneGmailOAuthConectado('band-test')).toBe(false);
+  });
+
+  it('tieneGmailOAuthConectado es false si la cuenta está marcada para reconectar', async () => {
+    dbGetBandGmailOAuthMock.mockResolvedValueOnce({ ...account, needs_reauth_at: '2026-10-11T06:00:00Z' });
     expect(await tieneGmailOAuthConectado('band-test')).toBe(false);
   });
 
@@ -86,6 +94,27 @@ describe('gmailApiClient', () => {
       subject: 'Propuesta',
       body: 'Hola'
     })).rejects.toBeInstanceOf(EmailAgentError);
+  });
+
+  it('invalid_grant: lanza reauth_required y marca la cuenta para reconectar (sin reintentos)', async () => {
+    dbGetBandGmailOAuthMock.mockResolvedValue({ ...account, band_id: 'band-reauth' });
+    const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
+    fetchMock.mockResolvedValueOnce({ ok: false, status: 400, text: async () => JSON.stringify({ error: 'invalid_grant' }) });
+
+    const fallo = await leerRespuestasGmailApi('band-reauth').catch((e) => e);
+    expect(fallo).toBeInstanceOf(EmailAgentError);
+    expect(fallo.code).toBe('reauth_required');
+    expect(dbMarkGmailNeedsReauthMock).toHaveBeenCalledWith('band-reauth');
+  });
+
+  it('otros fallos del token endpoint (red, 500) siguen siendo api_error y NO marcan la cuenta', async () => {
+    dbGetBandGmailOAuthMock.mockResolvedValue({ ...account, band_id: 'band-500' });
+    const fetchMock = fetch as unknown as ReturnType<typeof vi.fn>;
+    fetchMock.mockResolvedValueOnce({ ok: false, status: 500, text: async () => 'boom' });
+
+    const fallo = await leerRespuestasGmailApi('band-500').catch((e) => e);
+    expect(fallo.code).toBe('api_error');
+    expect(dbMarkGmailNeedsReauthMock).not.toHaveBeenCalled();
   });
 
   it('comprobarBorradorEnviado devuelve true si el borrador sigue existiendo y false si Google responde 404', async () => {

@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/auth`
 
 ## 📖 Descripción
-Tabla de Supabase `band_gmail_oauth_accounts` (6 columnas).
+Tabla de Supabase `band_gmail_oauth_accounts` (7 columnas).
 
 ---
 
@@ -35,8 +35,9 @@ Tabla de Supabase `band_gmail_oauth_accounts` (6 columnas).
 - `scope`
 - `connected_at`
 - `updated_at`
+- `needs_reauth_at`
 
-**Definida en:** `supabase_schema.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261105_gmail_needs_reauth.sql`
 
 ---
 

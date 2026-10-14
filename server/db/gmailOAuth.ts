@@ -11,6 +11,8 @@ export interface BandGmailOAuthAccount {
   scope: string;
   connected_at?: string;
   updated_at?: string;
+  /** Cuándo Google rechazó el refresh token (invalid_grant). Null = la conexión funciona. */
+  needs_reauth_at?: string | null;
 }
 
 // Sin respaldo en memoria a propósito, igual que dbGetBandEmailAccount: un refresh token es
@@ -51,7 +53,9 @@ export async function dbUpsertBandGmailOAuth(account: {
     gmail_email: account.gmail_email,
     refresh_token: encryptSecret(account.refresh_token),
     scope: account.scope,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
+    // Reconectar con un token nuevo limpia el aviso de "hay que reconectar".
+    needs_reauth_at: null
   };
 
   const sb = getSupabase();
@@ -66,6 +70,31 @@ export async function dbUpsertBandGmailOAuth(account: {
   }
 
   return { ...(data || payload), refresh_token: account.refresh_token };
+}
+
+/**
+ * Marca que Google rechazó el refresh token de la banda (invalid_grant): el planificador deja de
+ * encolar agentes para ella y la pantalla de correo pide reconectar. Solo marca la primera vez.
+ * Devuelve true si es la primera vez que se marca.
+ */
+export async function dbMarkGmailNeedsReauth(bandId: string): Promise<boolean> {
+  const cleanId = cleanBandId(bandId);
+  try {
+    const { data, error } = await getSupabase()
+      .from("band_gmail_oauth_accounts")
+      .update({ needs_reauth_at: new Date().toISOString() })
+      .eq("band_id", cleanId)
+      .is("needs_reauth_at", null)
+      .select("band_id");
+    if (error) {
+      console.warn("Notice marcando reconexión de Gmail para '%s':", cleanId, error.message || error);
+      return false;
+    }
+    return Boolean(data?.length);
+  } catch (e) {
+    console.warn("Fallo marcando reconexión de Gmail para '%s':", cleanId, e);
+    return false;
+  }
 }
 
 export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {

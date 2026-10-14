@@ -31,7 +31,7 @@ let workerLoopTimeout: NodeJS.Timeout | null = null;
 /**
  * Procesa un trabajo individual según su tipo de agente.
  */
-async function processSingleJob(job: AgentJob): Promise<void> {
+export async function processSingleJob(job: AgentJob): Promise<void> {
   const startTime = Date.now();
   console.log(`[AgentQueueWorker] [${WORKER_ID}] Iniciando trabajo ${job.id} (${job.agent_type}) para banda ${job.band_id}...`);
 
@@ -99,6 +99,23 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     const err = comoErrorCapturado(errCapturado);
     const durationMs = Date.now() - startTime;
     const errorMsg = err?.message || String(err);
+
+    // Google revocó el permiso de Gmail: reintentar con backoff no sirve y llenaba los logs de
+    // errores idénticos cada día. El cliente ya marcó la cuenta (el planificador deja de encolar
+    // y la pantalla de correo pide reconectar): se cierra el trabajo y se avisa una sola vez.
+    if (err instanceof EmailAgentError && err.code === "reauth_required") {
+      await logAgentExecution({
+        band_id: job.band_id,
+        agente: job.agent_type.split("_")[0] || "sistema",
+        motor: "worker_queue",
+        disparado_por_tipo: "queue",
+        estado: "warning",
+        mensaje: "Gmail desconectado: Google ha revocado el acceso. Reconecta Gmail en Configuración de correo; los agentes están en pausa hasta entonces.",
+        duracion_ms: durationMs
+      });
+      await completeAgentJob(job.id, { skipped: true, reason: "gmail_reauth_required", duration_ms: durationMs });
+      return;
+    }
 
     console.error(`[AgentQueueWorker] [${WORKER_ID}] Error procesando trabajo ${job.id}:`, errorMsg);
     const isRateLimit = String(errorMsg).includes("429") || String(errorMsg).includes("RESOURCE_EXHAUSTED") || String(errorMsg).includes("Rate Limit");

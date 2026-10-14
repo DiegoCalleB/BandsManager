@@ -22,7 +22,8 @@ export class EmailAgentError extends Error {
   /** Tipo de fallo de entrega que adjunta el cliente de Gmail para que agentEngine lo registre. */
   deliveryFailureReason?: EmailDeliveryFailureReason;
 
-  constructor(message: string, public code: "no_token" | "identity_mismatch" | "api_error") {
+  /** `reauth_required`: Google revocó el permiso (invalid_grant); reintentar no sirve, hay que reconectar. */
+  constructor(message: string, public code: "no_token" | "identity_mismatch" | "api_error" | "reauth_required") {
     super(message);
     this.name = "EmailAgentError";
   }
