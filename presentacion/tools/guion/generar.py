@@ -1246,6 +1246,24 @@ _ACTD = os.path.join(AQUI, '..', '..', 'video', 'actores')
 _ROT = {'bateria': ('Brais', 'Batería'), 'voz': ('Alan', 'Voz y guitarra'), 'guitarra': ('Álvaro', 'Guitarra solista'), 'bajo': ('Iago', 'Bajo'),
         'manager': ('Programador', 'Sala El Faro'), 'sello': ('Sr. Peláez', 'Discos Cuarzo'), 'diego': ('Diego de la Calle', 'El bajista')}
 _vistos = set()
+
+
+def _inserto(l):
+    """Inserto de la app mientras habla (recurso de documental): la frase empieza en su cara, a mitad corta a la pantalla
+    de BandManager de la que habla y, si queda remate, vuelve a la cara. desde/hasta son trozos de la frase; su posición
+    en el texto da el momento (fracción de la duración de la voz: cine.js lo cuadra con el audio real)."""
+    i = l.get('inserto')
+    if not i:
+        return ''
+    t = l['txt']; a = t.index(i['desde']) / len(t); b = (t.index(i['hasta']) + len(i['hasta'])) / len(t) if i.get('hasta') else 1
+    from PIL import Image
+    iw, ih = Image.open(os.path.join(AQUI, '..', '..', i['img'])).size
+    cx, cy, z = i['foco']; w = 1920 * z; h = w * ih / iw
+    x = min(0, max(1920 - w, 960 - cx * w)); y = min(0, max(1080 - h, 540 - cy * h))
+    return (f'<div class="ent-ins" data-a="{a:.3f}" data-b="{b:.3f}"><img src="{i["img"]}" alt="" style="width:{w:.0f}px;left:{x:.0f}px;top:{y:.0f}px">'
+            f'<span class="ent-ins-rot"><b>BandManager.io</b>{i["rot"]}</span></div>')
+
+
 for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8')) if e.get('entrevista')]:
     _pl = []
     for _l in _e['lines']:
@@ -1258,7 +1276,7 @@ for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), enc
                   if _c else f'<img src="{_l["foto"]}" alt="">')  # sin clip rodado aún: su foto real, entera sobre su propio fondo desenfocado, con el mismo rótulo
         _fa = '' if _c else f' ent-foto" style="--bg:url({_l["foto"]})'
         _pl.append(f'<figure class="ent ent-{_pl_c}{_fa}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
-                   f'{_media}{_rot}<p class="ent-txt">{_l["txt"]}</p></figure>')
+                   f'{_media}{_rot}{_inserto(_l)}<p class="ent-txt">{_l["txt"]}</p></figure>')
     _sec = (f'<section class="slide entrevista" data-title="{_e["title"]}" data-transition="fade">\n  ' + '\n  '.join(_pl) + '\n</section>\n')
     _tras = _e['entrevista']['tras']
     if _tras.startswith('REEMPLAZA:'):

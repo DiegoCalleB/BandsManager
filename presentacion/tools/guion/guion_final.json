@@ -1336,14 +1336,36 @@
     "clip": "ent-programador-cafe",
     "reserva": "programador-sonrie",
     "txt": "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y rider. Contesté antes de acabarme el café.",
-    "voz": "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café."
+    "voz": "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café.",
+    "inserto": {
+     "img": "img/d-h-dossier-top.jpg",
+     "rot": "El dossier que recibe la sala",
+     "desde": "Ese era",
+     "hasta": "rider.",
+     "foco": [
+      0.5,
+      0.36,
+      1.12
+     ]
+    }
    },
    {
     "who": "voz",
     "clip": "ent-alan-aviso",
     "reserva": "alan-cu",
     "txt": "Y la app me avisó en el momento en que lo abrió. Yo, mirando el móvil como un adolescente.",
-    "voz": "Y la app me avisó en el momento en que lo abrió. [laughs] Yo, mirando el móvil como un adolescente, che."
+    "voz": "Y la app me avisó en el momento en que lo abrió. [laughs] Yo, mirando el móvil como un adolescente, che.",
+    "inserto": {
+     "img": "img/d-h-telemetria.jpg",
+     "rot": "Aviso de lectura",
+     "desde": "me avisó",
+     "hasta": "lo abrió.",
+     "foco": [
+      0.78,
+      0.27,
+      1.9
+     ]
+    }
    },
    {
     "who": "bateria",
@@ -1374,14 +1396,35 @@
     "clip": "ent-alvaro-hoja",
     "reserva": "alvaro-cu",
     "txt": "Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.",
-    "voz": "[sarcastic] Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja."
+    "voz": "[sarcastic] Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.",
+    "inserto": {
+     "img": "img/d-h-repertorio.jpg",
+     "rot": "Una hoja para cada músico",
+     "desde": "Pero ahora",
+     "foco": [
+      0.42,
+      0.33,
+      1.7
+     ]
+    }
    },
    {
     "who": "bateria",
     "clip": "ent-brais-calendario",
     "reserva": "brais-cu",
     "txt": "El calendario me avisa si mis dos bandas se pisan. Es el mejor mánager que he tenido.",
-    "voz": "El calendario me avisa si mis dos bandas se pisan. [laughs] Es el mejor mánayer que he tenido."
+    "voz": "El calendario me avisa si mis dos bandas se pisan. [laughs] Es el mejor mánayer que he tenido.",
+    "inserto": {
+     "img": "img/d-h-calendario.jpg",
+     "rot": "Calendario de todas tus bandas",
+     "desde": "El calendario",
+     "hasta": "se pisan.",
+     "foco": [
+      0.5,
+      0.4,
+      1.55
+     ]
+    }
    }
   ],
   "nota": "Dúo cómico a dos entrevistas (se contradicen, como en los documentales). Cierra el capítulo 2."
@@ -1398,14 +1441,36 @@
     "clip": "ent-alvaro-fans",
     "reserva": "alvaro-cu",
     "txt": "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.",
-    "voz": "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. [laughs] Ella sigue siendo la más pesada."
+    "voz": "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. [laughs] Ella sigue siendo la más pesada.",
+    "inserto": {
+     "img": "img/d-h-fans.jpg",
+     "rot": "Captura QR y fans",
+     "desde": "Ahora tenemos",
+     "hasta": "lista entera.",
+     "foco": [
+      0.42,
+      0.55,
+      1.5
+     ]
+    }
    },
    {
     "who": "voz",
     "clip": "ent-alan-reels",
     "reserva": "alan-cu",
     "txt": "Y los reels: subes el concierto entero y la IA te saca los mejores trozos. Yo solo tuve que salir guapo.",
-    "voz": "[mischievously] Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo."
+    "voz": "[mischievously] Y los reels: subes el concierto entero, y la inteligencia artificial te saca los mejores trozos. Yo solo tuve que salir guapo.",
+    "inserto": {
+     "img": "img/d-h-reels.jpg",
+     "rot": "Reels Center",
+     "desde": "subes el concierto",
+     "hasta": "mejores trozos.",
+     "foco": [
+      0.62,
+      0.6,
+      1.5
+     ]
+    }
    }
   ],
   "nota": "Testimonio del capítulo 3: el QR y la lista de fans, dicho como lo diría un músico."

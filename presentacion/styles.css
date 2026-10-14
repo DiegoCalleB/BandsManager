@@ -2231,3 +2231,16 @@ body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1
 
 /* «Y esta parte es cierta…» sube para no pisarse con los subtítulos */
 body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .scene-foot { position: absolute; left: 120px; right: 120px; bottom: auto; top: 720px; margin: 0; font-size: 26px; opacity: .85; }
+
+/* Insertos de la app en las entrevistas (recurso de documental): la voz sigue y se ve la pantalla de BandManager de la que habla */
+.ent-ins { position: absolute; inset: 0; z-index: 2; overflow: hidden; opacity: 0; background: #0b0c10; transition: opacity 160ms linear; pointer-events: none; }
+.entrevista .ent .ent-ins img { position: absolute; inset: auto; max-width: none; height: auto; object-fit: fill; transform-origin: 50% 50%; filter: brightness(1.12) contrast(1.04); }
+.slide.entrevista.active .ent.ins .ent-ins { opacity: 1; }
+.slide.entrevista.active .ent.ins .ent-ins img { animation: entins 7s cubic-bezier(.2, .6, .3, 1) both; }
+@keyframes entins { from { transform: scale(1); } to { transform: scale(1.06); } }
+.ent.ins .ent-rot { visibility: hidden; }
+.ent-ins-rot { position: absolute; left: 150px; top: 110px; padding-left: 18px; border-left: 3px solid #ffb35c; color: #fff; font: 500 24px/1.25 Onest, sans-serif; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 2px 16px rgba(0,0,0,.95); }
+.ent-ins-rot b { display: block; font: 600 30px/1.1 Oswald, Onest, sans-serif; letter-spacing: .08em; color: #ffb35c; }
+.ent-ins::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent 26%, transparent 74%, rgba(0,0,0,.6)); }
+.ent-ins-rot { z-index: 1; padding: 12px 22px 12px 18px; background: rgba(8,9,12,.82); backdrop-filter: blur(6px); border-radius: 0 6px 6px 0; }
+@media (prefers-reduced-motion: reduce) { .ent-ins img { animation: none !important; } }

@@ -155,8 +155,19 @@
       hab.parentNode.querySelectorAll('.ent.on').forEach(function (f) { f.classList.remove('on'); });
       hab.classList.add('on');
     }
-    document.querySelectorAll('.slide.entrevista:not(.active) .ent.on').forEach(function (f) { f.classList.remove('on'); });
+    document.querySelectorAll('.slide.entrevista:not(.active) .ent.on, .slide.entrevista:not(.active) .ent.ins').forEach(function (f) { f.classList.remove('on', 'ins'); });
   };
+  // Insertos de la app en las entrevistas: a mitad de la frase se corta a la pantalla de BandManager de la que se habla
+  // (data-a/data-b: fracción de la duración de la voz) y, si queda remate, se vuelve a la cara para decirlo.
+  var insT = [];
+  addEventListener('voz', function () {
+    var f = document.querySelector('.slide.entrevista.active .ent.habla'); if (!f) return;
+    insT.forEach(clearTimeout); insT = [];
+    document.querySelectorAll('.ent.ins').forEach(function (x) { x.classList.remove('ins'); });
+    var ins = f.querySelector('.ent-ins'), d = f._dur || 0; if (!ins || !d) return;
+    insT.push(setTimeout(function () { if (f.closest('.slide.active')) f.classList.add('ins'); }, d * +ins.dataset.a));
+    if (+ins.dataset.b < 0.97) insT.push(setTimeout(function () { f.classList.remove('ins'); }, d * +ins.dataset.b + 300));
+  });
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
   // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
