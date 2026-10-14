@@ -156,6 +156,6 @@ Total: **~21 clips de ≤ 8 s ≈ 2,5–3 min de vídeo**. Plan B si Veo da prob
 ## Continuidad de personajes (fijada)
 - **Alan (voz):** pelo rizado oscuro, **bigote siempre**, camisa de flores de manga corta. Añadir "thick moustache" en cada prompt donde salga su cara.
 - **Álvaro (guitarra):** chaleco vaquero con parches (calavera en la espalda), camiseta negra, barba corta.
-- **Iago (bajo):** calvo, gorra negra, barba, camiseta negra sin mangas, tatuaje en el brazo.
-- **Brais (batería):** pelo corto oscuro, barba, camiseta negra.
+- **Iago (bajo):** pelo corto oscuro, barba corta, camiseta gris o negra lisa. Es el de `miembro-iago` e `iago-cu`.
+- **Brais (batería):** calvo, gorra negra hacia atrás, barba larga, camiseta negra sin mangas, tatuajes en los brazos. Es el de `miembro-brais` y `brais-cu`.
 - Luz del local: baja, fría de pantalla + luces de guirnalda cálidas al fondo (los clips luminosos se oscurecen al montar).
