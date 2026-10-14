@@ -11,7 +11,7 @@
  *    corto; el detalle queda en el log y en Sentry con ese mismo id para poder encontrarlo.
  */
 import { randomUUID } from 'node:crypto';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { captureError } from './errorTracking.js';
 
 /** Error esperado, con estado HTTP y un mensaje apto para mostrar a la persona. */
@@ -47,8 +47,18 @@ export function responderError(res: Response, err: unknown, mensaje: string = ME
   if (err instanceof ErrorHttp) {
     return res.status(err.status).json({ success: false, error: err.message, codigo: err.codigo });
   }
+  const idError = registrarErrorInesperado(req, err);
+  return res.status(500).json({ success: false, error: mensaje, idError });
+}
+
+/**
+ * Registra un error inesperado en el log y en Sentry y devuelve su `idError` corto, para poder
+ * decírselo a la persona sin enseñarle el mensaje interno. Lo usa `responderError` y cualquier
+ * respuesta que no sea un 5xx (por ejemplo, el chat contesta con un 200 y un texto de disculpa).
+ */
+export function registrarErrorInesperado(req: Request | undefined, err: unknown): string {
   const idError = randomUUID().slice(0, 8);
   console.error('[idError=%s] %s %s', idError, req?.method ?? '-', req?.originalUrl ?? '-');
   captureError(err, { idError, method: req?.method, url: req?.originalUrl });
-  return res.status(500).json({ success: false, error: mensaje, idError });
+  return idError;
 }
