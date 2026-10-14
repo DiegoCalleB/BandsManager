@@ -2152,3 +2152,55 @@ body.pelicula:not(.scroll):has(#reaccion[style*="opacity: 1"]) .foco { opacity: 
 /* Planos mudos (furgoneta, local vacío): vídeo a pantalla completa, sin rótulos */
 .slide.plano { padding: 0; background: #000; }
 .slide.plano > video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* ───────── Look documental (versión definitiva) ─────────
+   Entrevistas a cámara con rótulo, contraplano con la cara de quien habla y menos rótulos de presentación. */
+.slide.entrevista { padding: 0; background: #05060a; overflow: hidden; }
+.entrevista .ent { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 120ms linear; }
+.entrevista .ent:first-of-type, .entrevista .ent.on { opacity: 1; }
+.entrevista:has(.ent.on) .ent:not(.on) { opacity: 0; }
+.entrevista .ent video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+/* el operador de cámara: un acercamiento lento mientras habla, como en una entrevista rodada */
+.slide.entrevista.active .ent.on video { animation: entpush 14s linear both; }
+@keyframes entpush { from { scale: 1; } to { scale: 1.07; } }
+/* los planos de reserva se igualan al resto: Alan sale más claro y cálido */
+.ent-alan-cu video, #reaccion video[data-who="voz"] { filter: brightness(.8) saturate(.82) contrast(1.05) hue-rotate(-8deg); }
+.ent-programador-sonrie video { filter: brightness(.9) saturate(.9); }
+/* rótulo inferior: nombre y cargo, la primera vez que sale cada uno */
+.ent-rot { position: absolute; left: 150px; bottom: 210px; z-index: 3; padding-left: 22px; border-left: 3px solid #ffb35c; opacity: 0; color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,.9); }
+.ent-rot b { display: block; font: 600 46px/1.05 Oswald, Onest, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+.ent-rot span { display: block; margin-top: 6px; font: 500 24px/1.2 Onest, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.78); }
+.slide.entrevista.active .ent:is(:first-of-type, .on) .ent-rot { animation: entrot 5.2s ease 500ms both; }
+.entrevista:has(.ent.on) .ent:first-of-type:not(.on) .ent-rot { animation: none; opacity: 0; }
+@keyframes entrot { 0% { opacity: 0; translate: -18px 0; } 10%, 82% { opacity: 1; translate: 0 0; } 100% { opacity: 0; } }
+/* fuera de la película (presentación), la frase se lee abajo, como un subtítulo */
+.ent-txt { position: absolute; left: 50%; bottom: 70px; translate: -50% 0; z-index: 3; width: min(1400px, 86%); margin: 0; text-align: center; font: 500 38px/1.3 Onest, sans-serif; color: #fff; text-shadow: 0 2px 14px #000, 0 0 2px #000; }
+body.pelicula:not(.scroll) .ent-txt { display: none; }
+body.scroll .slide.entrevista { min-height: 60vh; }
+@media (prefers-reduced-motion: reduce) { .slide.entrevista .ent video, .ent-rot { animation: none !important; } .ent-rot { opacity: 1; } }
+
+/* En la película no hay retratos tipo videollamada: cuando habla un músico se corta a su cara (contraplano) */
+body.pelicula:not(.scroll) .foco { display: none !important; }
+#reaccion video[data-who] { scale: 1; translate: none; opacity: 0; transition: opacity 90ms; }
+#reaccion video[data-who] { object-position: 50% 35%; }
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="bateria"].habla) #reaccion video[data-who="bateria"],
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="voz"].habla) #reaccion video[data-who="voz"],
+body.pelicula:not(.scroll):has(.slide.feat.active [data-who="guitarra"].habla) #reaccion video[data-who="guitarra"] { opacity: 1; }
+#reaccion.con-caras > video:not([data-who]) { opacity: 0; }
+
+/* Menos rótulos: el diálogo ya cuenta el «antes y ahora» y la explicación de cada pantalla */
+body.pelicula:not(.scroll) .dolor, body.pelicula:not(.scroll) .dr-aviso { display: none !important; }
+body.pelicula:not(.scroll) .noche-reloj span { display: none; }
+body.pelicula:not(.scroll) .slide.slide > .noche-reloj { left: 120px; top: auto; bottom: 150px; }
+body.pelicula:not(.scroll) .noche-reloj b { font-size: 64px; letter-spacing: .08em; opacity: .85; text-shadow: none; animation: none; }
+body.pelicula:not(.scroll) .radio .head { display: none; }
+
+/* El lema final, sobre el local vacío */
+.slide.plano > .lema { position: absolute; left: 0; right: 0; top: 50%; translate: 0 -50%; z-index: 2; margin: 0; text-align: center; color: #fff;
+  font: 400 104px/1 Anton, Oswald, sans-serif; letter-spacing: .01em; text-shadow: 0 6px 40px rgba(0,0,0,.85); opacity: 0; }
+.slide.plano > .lema small { display: block; margin-top: 26px; font: 500 34px/1 Onest, sans-serif; letter-spacing: .32em; text-transform: uppercase; color: #ffd596; }
+.slide.plano.active > .lema { animation: lema 7.5s ease 1.2s both; }
+@keyframes lema { 0% { opacity: 0; letter-spacing: .05em; } 18%, 88% { opacity: 1; letter-spacing: .01em; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .slide.plano.active > .lema { animation: none; opacity: 1; } }
+/* Capturas de la app: el resalte y el nombre de la función se quedan; las etiquetas numeradas, los chips y el contador, no */
+body.pelicula:not(.scroll) .dr-lab, body.pelicula:not(.scroll) .slide.feat.active > .ficha span, body.pelicula:not(.scroll) .slide.feat.active > .ficha > i { display: none !important; }

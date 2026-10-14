@@ -135,8 +135,28 @@
   var rx = document.createElement('div'); rx.id = 'reaccion'; rx.setAttribute('aria-hidden', 'true');
   var rv = document.createElement('video'); rv.muted = true; rv.loop = true; rv.playsInline = true; rv.preload = 'auto'; rv.setAttribute('muted', ''); rv.setAttribute('playsinline', '');
   rv.poster = 'video/actores/local.jpg'; rv.src = 'video/actores/local.mp4'; rx.appendChild(rv);
+  // Contraplano con la cara de quien pregunta: su primer plano (video/actores/<x>-cu.mp4). El plano de grupo queda de reserva.
+  var CARAS = { bateria: 'brais-cu', voz: 'alan-cu', guitarra: 'alvaro-cu' }, vids = [rv];
+  Object.keys(CARAS).forEach(function (w) {
+    var v = document.createElement('video'); v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.dataset.who = w;
+    v.poster = 'video/actores/' + CARAS[w] + '.jpg'; v.src = 'video/actores/' + CARAS[w] + '.mp4'; rx.appendChild(v); vids.push(v);
+  });
+  rx.classList.add('con-caras');
   if (stage) stage.appendChild(rx);
-  var vivaReaccion = function () { if (body.classList.contains('pelicula') && rv.paused) { var pr = rv.play(); if (pr && pr.catch) pr.catch(function () { /* sin autoplay: se queda en el póster */ }); } else if (!body.classList.contains('pelicula') && !rv.paused) rv.pause(); };
+  var vivaReaccion = function () {
+    var peli = body.classList.contains('pelicula');
+    vids.forEach(function (v) {
+      if (peli && v.paused) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () { /* sin autoplay: se queda en el póster */ }); } else if (!peli && !v.paused) v.pause();
+    });
+    // Entrevistas: el plano de quien habla se queda puesto hasta que habla otro (sin volver al primero en las pausas)
+    var hab = document.querySelector('.slide.entrevista.active .ent.habla, .slide.entrevista.active .ent.habla-l');
+    if (hab && !hab.classList.contains('on')) {
+      hab.parentNode.querySelectorAll('.ent.on').forEach(function (f) { f.classList.remove('on'); });
+      hab.classList.add('on');
+    }
+    document.querySelectorAll('.slide.entrevista:not(.active) .ent.on').forEach(function (f) { f.classList.remove('on'); });
+  };
   var sub = document.createElement('div'); sub.id = 'subtitulo'; sub.setAttribute('aria-live', 'polite');
   if (stage) stage.appendChild(sub);
   // Como en Netflix, la frase va en trozos de dos líneas como mucho, y cada trozo sale cuando toca según el audio
@@ -463,7 +483,7 @@
     var txt = (tag ? tag.textContent : '') + ' ' + (sl ? sl.dataset.title || '' : '');
     var fuera = /Seis meses|Domingo|Otro jueves|Fin de la historia|Prólogo|Gracias|Créditos|Escena post|El reloj/.test(txt) && !mt;
     if (mt && /Seis meses/.test(tag.textContent)) fuera = true;
-    if (sl && sl.classList.contains('noches')) { reloj.classList.remove('on'); return; } // la escena íntima va sin cuenta atrás; el reloj sigue corriendo debajo
+    if (sl && (sl.classList.contains('noches') || sl.classList.contains('entrevista') || sl.classList.contains('plano'))) { reloj.classList.remove('on'); return; } // la escena íntima va sin cuenta atrás; el reloj sigue corriendo debajo
     if (fuera || (!mt && !relojT0)) { reloj.classList.remove('on', 'fin'); relojT0 = 0; return; }
     if (!mt) return; // plano sin hora (capítulos, negocio…): el reloj sigue corriendo
     relojRest = Math.max(0, (14 * 60 - (+mt[1] * 60 + +mt[2])) * 60); relojT0 = Date.now(); reloj.classList.add('on'); pintarReloj();

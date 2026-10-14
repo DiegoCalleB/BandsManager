@@ -204,8 +204,8 @@ add(cast + '\n')
 
 add(f'''<section class="slide scene" data-title="Prólogo · La decisión" data-transition="rise">
   <div class="scene-bg" style="--bg-img:url(img/concierto-2.jpg)"></div>
-  <span class="tag">Prólogo · Jueves · 00:20</span>
-  <h2 style="font-size:78px">Esa noche, Iago abrió el portátil.</h2>
+  <span class="tag">Ocho meses antes · 00:20</span>
+  <h2 style="font-size:78px">Ocho meses antes, Iago abrió el portátil.</h2>
   <div class="enrol slim">
     <div class="en-top"><div class="mono" aria-hidden="true">TBS</div><div><b>Máster de Desarrollo con IA</b><span>The Big School by Brais Moure · Requisito para acabar: un Trabajo Fin de Máster</span></div></div>
   </div>
@@ -919,7 +919,8 @@ add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" da
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
-add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 6500))
+add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 7500).replace('</section>',
+    '<p class="lema" aria-hidden="true">Los bolos, los llevas tú.<small>bandmanager.io</small></p></section>'))
 add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="150000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>
@@ -1226,9 +1227,33 @@ _lh = [i for i, x in enumerate(S) if 'data-title="Lo han visto todo"' in x]
 if _ym and _lh and _ym[0] > _lh[0]:
     _x = S.pop(_ym[0]); S.insert(_lh[0], _x)
 
+# Entrevistas a cámara (hilo documental): grabadas «seis meses después», van entre escenas. Salen de guion_final.json
+# (las escenas con «entrevista»). Cada frase es un plano: su clip (video/actores/<clip>.mp4, o el de reserva si aún no existe),
+# el rótulo con nombre y cargo la primera vez que sale cada persona, y la frase (en la película la dicen los subtítulos).
+_ACTD = os.path.join(AQUI, '..', '..', 'video', 'actores')
+_ROT = {'bateria': ('Brais', 'Batería'), 'voz': ('Alan', 'Voz y guitarra'), 'guitarra': ('Álvaro', 'Guitarra solista'), 'bajo': ('Iago', 'Bajo'),
+        'manager': ('Programador', 'Sala El Faro'), 'sello': ('Sr. Peláez', 'Discos Cuarzo')}
+_vistos = set()
+for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), encoding='utf-8')) if e.get('entrevista')]:
+    _pl = []
+    for _l in _e['lines']:
+        _c = _l['clip'] if os.path.exists(os.path.join(_ACTD, _l['clip'] + '.mp4')) else _l['reserva']
+        _n, _r = _ROT[_l['who']]
+        _rot = '' if _l['who'] in _vistos else f'<figcaption class="ent-rot"><b>{_n}</b><span>{_r}</span></figcaption>'
+        _vistos.add(_l['who'])
+        _pl.append(f'<figure class="ent ent-{_c}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
+                   f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/{_c}.jpg"><source src="video/actores/{_c}.mp4" type="video/mp4"></video>'
+                   f'{_rot}<p class="ent-txt">{_l["txt"]}</p></figure>')
+    _sec = (f'<section class="slide entrevista" data-title="{_e["title"]}" data-transition="fade">\n  ' + '\n  '.join(_pl) + '\n</section>\n')
+    _tras = _e['entrevista']['tras']
+    if _tras.startswith('ANTES:'):
+        _j = [k for k, x in enumerate(S) if f'data-title="{_tras[6:]}"' in x]; assert len(_j) == 1, _tras; S.insert(_j[0], _sec)
+    else:
+        _j = [k for k, x in enumerate(S) if f'data-title="{_tras}"' in x]; assert len(_j) == 1, _tras; S.insert(_j[0] + 1, _sec)
+
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
-ANEXO = ['Medios de comunicación', 'Afina el correo', 'El seguimiento de las redes', 'La discografía, desde Spotify',
+ANEXO = ['Medios de comunicación', 'Afina el correo', 'Bandas amigas', 'El seguimiento de las redes', 'La discografía, desde Spotify',
          'El profesor de armonía', 'Choques en el calendario', 'Merchan en un minuto', 'La gira, con gasolina y todo',
          'Las ideas, en su sitio', 'La ficha del bolo',
          'El mapa que lee la IA', 'Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras']
@@ -1417,6 +1442,9 @@ CORTES = {
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
     'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
+    'Entrevista · Un correo': 'negro', 'Entrevista · El treinta por ciento': 'golpe', 'Entrevista · Nadie lo sabía': 'golpe',
+    'Entrevista · Treinta y cinco minutos': 'golpe', 'Entrevista · El tono': 'golpe', 'Entrevista · Los fans': 'golpe',
+    'Entrevista · Los commits': 'fundido', 'Entrevista · Peláez': 'golpe', 'Entrevista · Lo que no me he inventado': 'fundido',
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)

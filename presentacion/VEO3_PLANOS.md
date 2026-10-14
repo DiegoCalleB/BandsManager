@@ -159,3 +159,79 @@ Total: **~21 clips de ≤ 8 s ≈ 2,5–3 min de vídeo**. Plan B si Veo da prob
 - **Iago (bajo):** pelo corto oscuro, barba corta, camiseta gris o negra lisa. Es el de `miembro-iago` e `iago-cu`.
 - **Brais (batería):** calvo, gorra negra hacia atrás, barba larga, camiseta negra sin mangas, tatuajes en los brazos. Es el de `miembro-brais` y `brais-cu`.
 - Luz del local: baja, fría de pantalla + luces de guirnalda cálidas al fondo (los clips luminosos se oscurecen al montar).
+
+## Entrevistas a cámara («seis meses después»)
+
+Son el hilo documental de la película: cada músico habla a cámara, sentado, después del festival. En la película van en las escenas «Entrevista · …» (ver `GUION_REVISION.md`). Mientras no estén, el montaje usa los primeros planos que ya tenemos (`brais-cu`, `alan-cu`…), así que se pueden ir subiendo de una en una: guarda cada clip como `video/actores/<nombre>.mp4` (+ un `.jpg` del primer fotograma) y vuelve a generar.
+
+**Rodaje de una entrevista de documental** (igual para todas, para que parezcan de la misma película):
+- **Imagen de referencia:** el `.jpg` indicado (image-to-video), para que la cara sea la misma que en el resto de planos.
+- **Encuadre:** plano medio corto (de pecho para arriba), la persona en un tercio y mirando **justo al lado del objetivo**, hacia el entrevistador que no se ve. Brais y Álvaro miran a la izquierda del encuadre; Alan, Iago y Peláez, a la derecha. Así, al cortar de uno a otro parece que se contestan.
+- **Cámara fija en trípode**, sin zoom ni movimientos (el acercamiento lento lo pone el montaje).
+- **Luz:** suave de ventana o caja de luz a 45°, contra suave por detrás; fondo oscuro con luces cálidas desenfocadas. 50 mm, f/2, fondo desenfocado.
+- **Actuación:** natural, como quien recuerda algo; pequeñas pausas, sin gesticular delante de la boca (por el lip-sync).
+- Cada frase cabe en un clip de 8 s, salvo la de los commits (dos clips o «extender»).
+
+### E1 · Brais · `ent-brais-correo` — Un correo (~7 s)
+- **Referencia:** `video/actores/brais-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Casi nos separamos. Y no fue por la música. Ni por las birras… Bueno, un poco por las birras.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A bald man in his early 40s with a long full beard, a black cap worn backwards, a black sleeveless t-shirt and tattooed arms sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish with a sigh, in a tired tone: "Casi nos separamos. Y no fue por la música. Ni por las birras… Bueno, un poco por las birras". Behind him, the rehearsal room, out of focus: acoustic foam, a drum kit, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E2 · Alan · `ent-alan-correo` — Un correo (~4 s)
+- **Referencia:** `video/actores/alan-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Fue por un correo, che. Un correo que no contestó nadie.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with dark curly shoulder-length hair, a thick moustache and a short-sleeved floral shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a relaxed, natural tone: "Fue por un correo, che. Un correo que no contestó nadie". Behind him, the rehearsal room, out of focus: acoustic foam, a microphone stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E3 · Álvaro · `ent-alvaro-okupa` — El treinta por ciento (~7 s)
+- **Referencia:** `video/actores/alvaro-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Treinta por ciento, tío. Y elegir lo que tocamos. Eso no es un mánayer: es un okupa.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard, a denim vest covered in metal band patches over a black t-shirt sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish with an amused, laughing tone: "Treinta por ciento, tío. Y elegir lo que tocamos. Eso no es un mánayer: es un okupa". Behind him, the rehearsal room, out of focus: amplifiers, a guitar on a stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E4 · Iago · `ent-iago-nadie` — Nadie lo sabía (~7 s)
+- **Referencia:** `video/actores/iago-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «No se lo conté a nadie. Si salía mal, mejor que siguieran pensando que el bajo no se oye.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard and a plain grey t-shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish with an amused, laughing tone: "No se lo conté a nadie. Si salía mal, mejor que siguieran pensando que el bajo no se oye". Behind him, his kitchen at night, out of focus: a window, a closed laptop on the table, one warm lamp. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E5 · Programador · `ent-programador-cafe` — Treinta y cinco minutos (~8 s)
+- **Referencia:** `video/actores/programador-sonrie.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 40s with greying stubble and a black jacket over a black t-shirt sits right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish in a relaxed, natural tone: "Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café". Behind him, his small venue office, out of focus: gig posters, a desk lamp, a computer screen. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E6 · Brais · `ent-brais-madre` — Treinta y cinco minutos (~6 s)
+- **Referencia:** `video/actores/brais-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Treinta y cinco minutos, neno. Yo tardo más en contestar al guasap de mi madre.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A bald man in his early 40s with a long full beard, a black cap worn backwards, a black sleeveless t-shirt and tattooed arms sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish in a relaxed, natural tone: "Treinta y cinco minutos, neno. Yo tardo más en contestar al guasap de mi madre". Behind him, the rehearsal room, out of focus: acoustic foam, a drum kit, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E7 · Alan · `ent-alan-tono` — El tono (~7 s)
+- **Referencia:** `video/actores/alan-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Doce años cantando, che. Y me vengo a enterar en un local de ensayo de en qué tono canto.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with dark curly shoulder-length hair, a thick moustache and a short-sleeved floral shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish with an amused, laughing tone: "Doce años cantando, che. Y me vengo a enterar en un local de ensayo de en qué tono canto". Behind him, the rehearsal room, out of focus: acoustic foam, a microphone stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E8 · Álvaro · `ent-alvaro-hoja` — El tono (~7 s)
+- **Referencia:** `video/actores/alvaro-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard, a denim vest covered in metal band patches over a black t-shirt sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish in a dry, sarcastic tone: "Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja". Behind him, the rehearsal room, out of focus: amplifiers, a guitar on a stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E9 · Álvaro · `ent-alvaro-fans` — Los fans (~7 s)
+- **Referencia:** `video/actores/alvaro-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard, a denim vest covered in metal band patches over a black t-shirt sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish with an amused, laughing tone: "Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada". Behind him, the rehearsal room, out of focus: amplifiers, a guitar on a stand, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E10 · Brais · `ent-brais-commits` — Los commits (~13 s)
+- **Referencia:** `video/actores/brais-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez. Y el sábado a las once estaba en el local. El primero. Con los cafés.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A bald man in his early 40s with a long full beard, a black cap worn backwards, a black sleeveless t-shirt and tattooed arms sits slightly right of centre and looks just off-lens to frame-left, at an unseen interviewer, and speaks in Spanish in a soft, quiet tone: "Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez. Y el sábado a las once estaba en el local. El primero. Con los cafés". Behind him, the rehearsal room, out of focus: acoustic foam, a drum kit, warm fairy lights. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E11 · Peláez · `ent-pelaez` — Peláez (~7 s)
+- **Referencia:** `video/actores/pelaez.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A well-groomed man in his 50s in a dark tailored suit and open-collar white shirt sits in a leather chair, left of centre, looking just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a calm, self-satisfied tone: "Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?". Behind him, a glass office at night, out of focus: city lights, gold records on the wall. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### E12 · Iago · `ent-iago-noches` — Lo que no me he inventado (~8 s)
+- **Referencia:** `video/actores/iago-cu.jpg`
+- **Frase (la voz final es la de ElevenLabs):** «Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.»
+- **Prompt:** `Documentary interview, medium close-up, locked-off tripod, 50mm lens at f/2, shallow depth of field. A man in his late 30s with short dark hair, a short beard and a plain grey t-shirt sits slightly left of centre and looks just off-lens to frame-right, at an unseen interviewer, and speaks in Spanish in a soft, quiet tone: "Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches". Behind him, his kitchen at night, out of focus: a window, a closed laptop on the table, one warm lamp. Soft key light from 45 degrees, gentle rim light, dark background, realistic skin texture, subtle natural breathing and blinking, no hand gestures in front of the mouth. 35mm Kodak film grain, 24fps, no on-screen text, no logos, subtitles off.`
+
+### Repetir · Iago en la cocina de noche (`noches`)
+- El clip actual deforma la cara al mirar a cámara. Mismo plano, pero **sin mirar al objetivo**: mirando el portátil, la cara iluminada por la pantalla.
+- **Prompt:** `Night, a dark home kitchen, a man in his late 30s with short dark hair, a short beard and a plain dark t-shirt sits at the table typing on a laptop, face lit only by the cold screen glow, eyes on the screen, never looking at the camera. He stops, rubs his eyes, glances towards a hallway with a child's nightlight, then goes back to typing. Static camera, 35mm lens, realistic, 35mm Kodak film grain, 24fps, no on-screen text, no logos.`

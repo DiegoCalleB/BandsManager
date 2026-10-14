@@ -333,6 +333,44 @@ EN = {
     "By the way, on Wednesday I rehearse with Master of Prompts. What time was it?",
 "Mira el calendario, Brais. Mira el calendario.":
     "Check the calendar, Brais. Check the calendar.",
+"Casi nos separamos. Y no fue por la música. Ni por las birras… Bueno, un poco por las birras.":
+    "We almost broke up. And it wasn't the music. Or the beers… Well, a bit the beers.",
+"Fue por un correo, che. Un correo que no contestó nadie.":
+    "It was an email, che. An email nobody answered.",
+"Herdeiros. Os escribí hace tres meses, y nadie contestó. Me quedo el treinta por ciento, y el repertorio lo decido yo. Y fuera baladas.":
+    "Herdeiros. I wrote to you three months ago and nobody answered. I take thirty percent, and I pick the setlist. And no ballads.",
+"Treinta por ciento, tío. Y elegir lo que tocamos. Eso no es un mánayer: es un okupa.":
+    "Thirty percent, man. And choosing what we play. That's not a manager: that's a squatter.",
+"Hecho, tronco. Empezamos esta noche. Y no se lo decimos a nadie.":
+    "Deal, mate. We start tonight. And we don't tell anyone.",
+"No se lo conté a nadie. Si salía mal, mejor que siguieran pensando que el bajo no se oye.":
+    "I didn't tell anyone. If it went wrong, better they kept thinking you can't hear the bass.",
+"Me llegan cien correos a la semana. Ese era el único con fecha, dossier y ráider. Contesté antes de acabarme el café.":
+    "I get a hundred emails a week. That was the only one with a date, a press kit and a rider. I replied before I'd finished my coffee.",
+"Treinta y cinco minutos, neno. Yo tardo más en contestar al guasap de mi madre.":
+    "Thirty-five minutes, neno. It takes me longer to answer my mum on WhatsApp.",
+"Y la mía, con el tono de cada tema, che.":
+    "And mine, with the key of every song, che.",
+"Doce años cantando, che. Y me vengo a enterar en un local de ensayo de en qué tono canto.":
+    "Twelve years singing, che. And I find out in a rehearsal room what key I sing in.",
+"Sigue cantando en el que le da la gana. Pero ahora, por lo menos, sale en la hoja.":
+    "He still sings in whatever key he likes. But at least now it's on the sheet.",
+"Antes, nuestra única fan era mi madre. Ahora tenemos una lista entera. Ella sigue siendo la más pesada.":
+    "Our only fan used to be my mum. Now we've got a whole list. She's still the most annoying one.",
+"¿Pero cuándo has podido hacer todo esto, Iago? Con el curro, y dos niñas en casa.":
+    "But when did you manage to do all this, Iago? With your job, and two little girls at home.",
+"Luego miré el historial del código. La hora de cada cambio. Las dos… Las tres… Las cinco menos diez. Y el sábado a las once estaba en el local. El primero. Con los cafés.":
+    "Later I looked at the code history. The time of every change. Two a.m.… Three… Ten to five. And on Saturday at eleven he was at the rehearsal room. First one there. With the coffees.",
+"No, Brais: los profesionales. Mánayers, agencias, salas y festivales. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.":
+    "No, Brais: the professionals. Managers, agencies, venues and festivals. If we're easy to work with, they answer sooner. Look at El Faro.",
+"Cinco minutos, chicos. Me han pedido que os avise yo: fui el primero en contestaros. El ráider, en el camerino, como firmamos. Y croquetas.":
+    "Five minutes, guys. They asked me to be the one to tell you: I was the first to answer you. The rider's in the dressing room, as we signed. And croquetas.",
+"Y esta noche, che… abrimos con la balada.":
+    "And tonight, che… we open with the ballad.",
+"Sigo pensando que el treinta por ciento era un precio justo. Por cierto… ¿esa app cómo se descarga?":
+    "I still think thirty percent was a fair price. By the way… how do you download that app?",
+"Esta historia me la he inventado un poco. La banda, el festival, Peláez… Lo que no me he inventado son las noches.":
+    "I made this story up, a little. The band, the festival, Peláez… What I didn't make up are the nights.",
 }
 
 def main():

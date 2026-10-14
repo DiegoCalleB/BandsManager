@@ -71,3 +71,17 @@ Antes: fotos de 2,4 s (por defecto), `miles.jpg` 5,2 s, `mop-gira.jpg` 5,6 s (es
 ## El reloj
 Antes: `data-dur="27500"`; frases de pantalla en t = 4.2, 7.6, 11, 14.3, 18, 22 s (duraciones 3.2, 3, 2.9, 3.4, 3.4 s) y notificación sincronizada con la tercera.
 
+
+---
+
+## Versión definitiva (14 oct.): lo que sale y dónde está
+
+Copia completa de lo anterior en `archivo/` (`guion_final_antes_de_la_definitiva.json`, `GUION_REVISION_antes_de_la_definitiva.md`, `generar_antes_de_la_definitiva.py.txt`) y en el commit `c29cb1e8`.
+
+- **Bandas amigas** pasa al anexo (no se borra: sigue en la presentación para las preguntas).
+- **Lo han visto todo:** fuera el chiste de Netflix («¡Y encima Netflix me ha pedido una peli documental…!»), la alfombra roja de Alan («¡Sos un genio, Iago! ¡Yo voy a la alfombra roja con la camisa de flores!») y «Pero no me da la vida, chavales. Quiero estar con mi familia y con vosotros.». El momento queda en silencio antes de «Las noches»; Netflix sigue en el post-créditos.
+- **A quién se lo vendemos:** de cuatro frases a tres (la de El Faro se une a la de los profesionales).
+- **El festival:** el programador explica por qué está allí («fui el primero en contestaros») y entra Alan con la balada.
+- **Una hoja para cada músico:** Alan ya no dice «¡Por fin sé en qué tono canto!»: el remate pasa a su entrevista.
+- **La llamada:** Peláez añade «Y fuera baladas».
+- **La decisión:** ahora es «Ocho meses antes» (antes, «Jueves · 00:20»).
