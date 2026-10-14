@@ -975,8 +975,8 @@
    },
    {
     "who": "bajo",
-    "txt": "Los que llevan a varias bandas a la vez: mánagers, agencias y productoras.",
-    "voz": "No, Brais: los que llevan a varias bandas a la vez. Mánayers, agencias y productoras."
+    "txt": "Los que llevan a varias bandas: mánagers, agencias y productoras. Para ellos, una cuenta con todas sus bandas y planes de empresa, más caros.",
+    "voz": "No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros."
    },
    {
     "who": "bajo",
@@ -984,7 +984,7 @@
     "voz": "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro."
    }
   ],
-  "nota": "Corregido a petición de Diego: las salas y festivales NO son clientes (reciben correo, dossier y acuerdo por enlace, sin cuenta); son el canal. Clientes B2B: mánagers, agencias y productoras (llevan varias bandas)."
+  "nota": "Corregido a petición de Diego: las salas y festivales NO son clientes (reciben correo, dossier y acuerdo por enlace, sin cuenta); son el canal. Clientes B2B: mánagers, agencias y productoras (llevan varias bandas). B2B: una cuenta con varias bandas y planes de empresa más caros (se cuenta como estrategia, no como algo ya construido)."
  },
  {
   "title": "Cómo ganamos dinero",

@@ -60,7 +60,7 @@ Al final de la película se revela que:
 12. **Capítulo 4 · Después del concierto.** Cuentas, reparto, gastos de gira (gasolina).
 13. **Y mucho más / Lo han visto todo.** Álvaro: «¿Cuándo has podido hacer esto, si estás con tus hijas?» Iago confiesa meses duros y suelta, riéndose, que **Netflix le ha pedido una peli documental** (la propia película, en clave meta). Alan: «¡Yo voy a la alfombra roja con la camisa de flores!» Pero: «Me gustaría estar al 100 % con mi familia y con vosotros.»
 14. **Las noches.** Escena íntima: las noches de código mientras las niñas duermen. «Gracias, Iago. De verdad.»
-15. **Esto lo necesitan todos → Capítulo 5 · Cómo lo hacemos.** Marketing, **a quién se lo vendemos** (B2C bandas/músicos; B2B mánagers, agencias y productoras; las salas y festivales no son clientes, son el canal), **cómo ganamos dinero** (suscripción por banda, desactivada a propósito, y apoyo voluntario de usuarios, ya habilitado).
+15. **Esto lo necesitan todos → Capítulo 5 · Cómo lo hacemos.** Marketing, **a quién se lo vendemos** (B2C bandas/músicos; B2B mánagers, agencias y productoras (una cuenta con varias bandas y planes de empresa más caros); las salas y festivales no son clientes, son el canal), **cómo ganamos dinero** (suscripción por banda, desactivada a propósito, y apoyo voluntario de usuarios, ya habilitado).
 16. **Qué viene.** El Resurrection Fest abre el dossier tres veces en una hora. El cartel cierra «ahora».
 17. **El festival, 02:14.** Backstage. Peláez insiste con el 30 % y Iago lo rechaza. «La app organiza, pero esto lo hacéis vosotros.» «¡Un, dos, tres, cuatro!»
 18. **En la radio.** «La banda que casi se separa… gracias a su bajista Iago y a bandmanager.io.»

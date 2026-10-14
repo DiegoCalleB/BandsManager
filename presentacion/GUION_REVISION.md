@@ -651,8 +651,8 @@ _(escena visual, sin diálogo)_
 **45.2** · **Brais**: ¿Y B2B? ¿Eso qué es, un grupo coreano?  
    _Voz:_ [confused] ¿Y el be tu bi? ¿Eso qué es, un grupo coreano?
 
-**45.3** · **Iago**: Los que llevan a varias bandas a la vez: mánagers, agencias y productoras.  
-   _Voz:_ No, Brais: los que llevan a varias bandas a la vez. Mánayers, agencias y productoras.
+**45.3** · **Iago**: Los que llevan a varias bandas: mánagers, agencias y productoras. Para ellos, una cuenta con todas sus bandas y planes de empresa, más caros.  
+   _Voz:_ No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.
 
 **45.4** · **Iago**: Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.
 

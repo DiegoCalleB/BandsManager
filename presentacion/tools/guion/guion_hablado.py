@@ -120,7 +120,7 @@ SAY = [
  # Cap. 5 · clientes
  ('Dos tipos de cliente', 'Hay dos tipos de cliente. Be tu ci: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes.'),
  ('¿Y B2B?', '[confused] ¿Y be tu bi? ¿Eso qué es, un grupo coreano?'),
- ('Los que llevan a varias bandas', 'Los que llevan a varias bandas a la vez: mánayers, agencias y productoras.'),
+ ('Los que llevan a varias bandas', 'No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.'),
  ('¿Y por qué iba a querer una sala', '¿Y por qué iba a querer una sala usar esto? Si no nos atienden ni el teléfono.'),
  ('Las salas y los festivales no son clientes', 'Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.'),
  # Cap. 5 · dinero
