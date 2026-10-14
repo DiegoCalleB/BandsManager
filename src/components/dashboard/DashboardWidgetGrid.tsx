@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Maximize2, Check, LayoutGrid, X, GripVertical, Info, Monitor } from "lucide-react";
+import { Plus, RotateCcw, Trash2, ArrowUp, ArrowDown, Check, LayoutGrid, X, GripVertical, Info } from "lucide-react";
 import {
   DashboardWidgetConfig,
   DEFAULT_DASHBOARD_WIDGETS,
@@ -37,7 +37,7 @@ import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOver
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
 import { BotonMovil } from "./BotonMovil";
-import { ControlesTamano } from "./ControlesTamano";
+import { claseColumnas, columnasRellenando } from "../../utils/rellenarFila";
 import { TiradorWidget } from "./TiradorWidget";
 import { useRedimensionar } from "./hooks/useRedimensionar";
 import { useReordenTactil } from "./hooks/useReordenTactil";
@@ -493,11 +493,14 @@ export function DashboardWidgetGrid({
           .slice(0, 4)
       : allVisibleWidgets;
 
+  // Cada fila se rellena hasta el borde: el último widget se estira (con el tirador a medias, ya con el ancho nuevo)
+  const columnasEnFila = columnasRellenando(visibleWidgets.map((w) => (previa?.id === w.id ? previa.wSpan : w.wSpan)));
+
   return (
     <div className="space-y-4 w-full">
       {/* Top Customization Bar - Only shown in edit mode */}
       {isEditMode && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
+        <div className="sticky top-2 z-30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 rounded-[var(--r-l)] bg-[var(--surface)] animate-fade-in">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-[var(--r-m)] bg-[var(--acc-soft)] text-[var(--acc-ink)]">
               <LayoutGrid className="w-5 h-5" />
@@ -513,7 +516,8 @@ export function DashboardWidgetGrid({
               </div>
               <p className="text-xs text-[var(--ink-2)] mt-0.5">
                 {visibleWidgets.length} de {allVisibleWidgets.length} módulos
-                visibles · se guardan solos
+                visibles · asa para mover, esquina para el tamaño · se guarda
+                solo (en móvil se apila a 1 columna)
               </p>
             </div>
           </div>
@@ -573,49 +577,12 @@ export function DashboardWidgetGrid({
         </div>
       )}
 
-      {/* Edit Mode Instructions Banner */}
-      {isEditMode && (
-        <div className="p-4 rounded-[var(--r-l)] bg-[var(--acc-soft)] text-[var(--acc-ink)] text-xs space-y-1.5">
-          <div className="flex items-center gap-2 font-semibold text-[var(--acc-ink)]">
-            <Info className="w-4 h-4 shrink-0" />
-            <span>Modo de edición activo:</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs text-[var(--acc-ink)]/85 pt-1">
-            <div className="flex items-center gap-1.5">
-              <GripVertical className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Arrastra:</strong> Usa el asa para mover libremente.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Ancho y Alto:</strong> Elige tamaño con los iconos de
-                barra.
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Monitor className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
-              <span>
-                <strong>Multi-dispositivo:</strong> En móvil se apila a 1
-                columna.
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Grid Layout */}
       <div ref={gridRef} data-panel-grid className="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6">
         {visibleWidgets.map((original, index) => {
           // Mientras se arrastra el tirador el widget se pinta ya con el tamaño nuevo
           const widget = previa?.id === original.id ? { ...original, wSpan: previa.wSpan, hSpan: previa.hSpan } : original;
-          // Determine grid col span class
-          let colSpanClass = "md:col-span-12";
-          if (widget.wSpan === 3) colSpanClass = "md:col-span-3";
-          else if (widget.wSpan === 4) colSpanClass = "md:col-span-4";
-          else if (widget.wSpan === 6) colSpanClass = "md:col-span-6";
-          else if (widget.wSpan === 8) colSpanClass = "md:col-span-8";
+          const colSpanClass = claseColumnas(columnasEnFila[index]);
 
           const isDragging = draggedWidgetId === widget.id;
           const isDragOver = dragOverWidgetId === widget.id;
@@ -647,8 +614,6 @@ export function DashboardWidgetGrid({
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
-                    <ControlesTamano wSpan={widget.wSpan} hSpan={widget.hSpan} onAncho={(span) => handleChangeWSpan(widget.id, span)} onAlto={(val) => handleChangeHSpan(widget.id, val)} />
-
                     {/* Móvil — en el móvil caben pocos bloques: aquí se decide cuáles salen */}
                     <BotonMovil
                       activo={visibleEnMovil(widget)}
