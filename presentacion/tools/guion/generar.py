@@ -945,6 +945,11 @@ add('''<section class="slide creditos" data-title="Créditos" data-transition="f
     </dl>
     <h3>Escrita, programada y dirigida por</h3>
     <p class="cr-nombre">Diego de la Calle</p>
+    <h3>Música</h3>
+    <dl class="cr-musica">
+      <dt>«Compila nu bravu»</dt><dd>Os Herdeiros do Código</dd>
+      <dt>«Cabalga o lóstrego»</dt><dd>Master of Prompts</dd>
+    </dl>
     <div class="cr-extra">
     <h2 class="cr-seccion">Las bandas de Diego</h2>
     <p class="cr-nota" style="margin-top:6px">Antes de BandManager, ya había música</p>
@@ -1533,7 +1538,7 @@ CORTES = {
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'Confirmados': 'tema', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego',
+          'Qué viene': 'tension', 'Confirmados': 'tema', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego', 'Plano · El local, vacío': 'cabalga',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

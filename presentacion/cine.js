@@ -6,7 +6,10 @@
   // Cada diapositiva lleva data-musica (tension · tema · noches · lostrego · «-» silencio); al cambiar de pieza se funden.
   // Va por WebAudio: así baja de volumen cuando alguien habla (ducking) y la grabación del MP4 la recoge tal cual.
   // Los BPM coinciden con tools/musica.py: el montaje usa el pulso para que el golpe de cada rampa caiga a tiempo.
-  var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200 };
+  var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200, compila: 210, cabalga: 218 };
+  // Canciones de verdad (no bucles): «Compila nu bravu» (Os Herdeiros do Código) y «Cabalga o lóstrego» (Master of Prompts).
+  // Arrancan desde el segundo indicado cada vez que entra la escena y no se repiten si acaban antes que ella.
+  var CANCION = { compila: 0, cabalga: 0 };
   var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
@@ -21,7 +24,7 @@
   }, true); });
   var pista = function (n) {
     if (pistas[n]) return pistas[n];
-    var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = true; a.preload = 'auto'; a.dataset.tap = '1';
+    var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = !(n in CANCION); a.preload = 'auto'; a.dataset.tap = '1';
     var p = { a: a, g: null, v: 0 };
     if (crearAudio()) { try { var src = ac.createMediaElementSource(a); p.g = ac.createGain(); p.g.gain.value = 0; src.connect(p.g); p.g.connect(master); } catch (e) { p.g = null; } }
     pistas[n] = p; return p;
@@ -39,15 +42,16 @@
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
   function paso() {
     var o = objetivo(); vol += (o - vol) * 0.07; if (Math.abs(o - vol) < 0.003) vol = o;
-    var q = activo() ? quiere() : '';
+    var q = activo() ? quiere() : '', antes = actual;
     if (q && q !== '-' && MUSICA[q]) actual = q; else if (q === '-') actual = '';
+    if (actual && actual !== antes && actual in CANCION) { try { pista(actual).a.currentTime = CANCION[actual]; } catch (e) { /* aún sin cargar */ } }
     var vivo = false;
     Object.keys(MUSICA).forEach(function (n) {
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
       if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
-      if (p.v > 0 && p.a.paused) p.a.play().catch(function () { /* sin gesto: no suena */ });
+      if (p.v > 0 && p.a.paused && !p.a.ended) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
     });
