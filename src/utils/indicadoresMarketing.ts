@@ -3,6 +3,9 @@
  * salas contestan y cuántas dicen que sí. Todo se calcula con datos que la app ya tiene cargados
  * (fans y leads); los clics de los enlaces cortos llegan aparte, de /api/short-links.
  *
+ * Las aperturas del dossier salen de las visitas que el servidor apunta en el historial de cada sala
+ * (`epk-view-*`, con fecha). Una sala cuenta una vez por ventana, vuelva las veces que vuelva.
+ *
  * Honesto por diseño: solo cuenta hechos con fecha, y compara una ventana con la anterior de la
  * misma longitud. Sin estimaciones ni «potencial».
  */
@@ -22,6 +25,8 @@ export interface IndicadoresMarketing {
   enviados: ParActual;
   respondieron: ParActual;
   dijeronSi: ParActual;
+  /** Salas distintas que han abierto el dossier web (EPK) desde un enlace de tu correo. */
+  abrieronDossier: ParActual;
   /** Todo a cero en las dos ventanas: la banda aún no ha movido nada. */
   vacio: boolean;
 }
@@ -46,6 +51,23 @@ function contar(fechas: Array<string | undefined>, hoy: number): ParActual {
   return { actual, anterior };
 }
 
+/** Fechas de las visitas al dossier de una sala. Solo las que el servidor marca como `epk-view-*`. */
+function visitasDossier(l: Lead): string[] {
+  return (l.historial_contacto ?? []).filter((h) => h.id?.startsWith('epk-view-')).map((h) => h.fecha);
+}
+
+/** Cuenta salas distintas con al menos una visita en cada ventana. */
+function contarSalas(leads: Lead[], hoy: number): ParActual {
+  let actual = 0;
+  let anterior = 0;
+  for (const l of leads) {
+    const p = contar(visitasDossier(l), hoy);
+    if (p.actual > 0) actual++;
+    if (p.anterior > 0) anterior++;
+  }
+  return { actual, anterior };
+}
+
 export function calcularIndicadores(entrada: { fans: Fan[]; leads: Lead[]; hoy?: Date }): IndicadoresMarketing {
   const hoy = (entrada.hoy ?? new Date()).getTime();
   const fans = contar(entrada.fans.map((f) => f.fechaCaptura), hoy);
@@ -55,8 +77,9 @@ export function calcularIndicadores(entrada: { fans: Fan[]; leads: Lead[]; hoy?:
     entrada.leads.filter((l) => l.estado === 'confirmado').map((l) => l.fecha_ultima_respuesta),
     hoy,
   );
-  const todos = [fans, enviados, respondieron, dijeronSi];
-  return { fans, enviados, respondieron, dijeronSi, vacio: todos.every((p) => p.actual === 0 && p.anterior === 0) };
+  const abrieronDossier = contarSalas(entrada.leads, hoy);
+  const todos = [fans, enviados, respondieron, dijeronSi, abrieronDossier];
+  return { fans, enviados, respondieron, dijeronSi, abrieronDossier, vacio: todos.every((p) => p.actual === 0 && p.anterior === 0) };
 }
 
 /** Compara con la ventana anterior en texto llano. Sin flechas ni colores de «sube/baja». */
