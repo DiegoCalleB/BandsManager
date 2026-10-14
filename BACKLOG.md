@@ -203,9 +203,9 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 * **Qué:**
   1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. Candidatos: subir su `testTimeout` o precargar el módulo de `auto_enrichment` en un `beforeAll`.
-  2. Cinco ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/DashboardWidgetGrid.tsx` (849), `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (757), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617).
+  2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
 * **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
-* **Estado:** pendiente. Para (2), trocear primero `DashboardWidgetGrid.tsx` (barra de edición, selector de widgets y modal «Añadir»), en un PR que no mezcle refactor con comportamiento.
+* **Estado:** pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
 
 ---
 
