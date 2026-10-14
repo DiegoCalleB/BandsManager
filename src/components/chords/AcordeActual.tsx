@@ -24,7 +24,7 @@ interface BarraProps {
  */
 export const BarraAcordeActual: React.FC<BarraProps> = ({ estado, proximos, siguiente, reproduciendo, onToggle }) => {
   const { acorde, diagramas, alternarDiagramas } = estado;
-  const lista = proximosVisibles(acorde, proximos, siguiente);
+  const lista = proximosVisibles(proximos, siguiente);
   return (
     <section translate="no" aria-label="Acorde actual" className="notranslate sticky top-0 z-10 mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 shrink-0">
       <div className="flex items-center gap-2">
@@ -88,7 +88,7 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
   const { acorde, previo, diagramas } = estado;
   if (!diagramas || !acorde) return null;
   const origen = proximos ?? (siguiente ? [siguiente] : []);
-  const lista = origen.map((c, k) => ({ c, indice: indices?.[k] })).filter((x) => x.c !== acorde).slice(0, 3);
+  const lista = origen.map((c, k) => ({ c, indice: indices?.[k] })).slice(0, 3);
   const gradoDe = (c: string) => {
     const info = contexto.get(c)?.info;
     return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;

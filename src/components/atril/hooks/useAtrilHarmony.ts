@@ -74,18 +74,17 @@ export function useAtrilHarmony({ cifradoTexto, transpose, notation, analisisAco
     return k ? extractUniqueChords(processedText).find((c) => normalizarAcorde(c) === k) ?? null : null;
   }, [acordeActivo, isPlayingAudio, processedText]);
 
-  // Los próximos acordes distintos (para la tira de diagramas de la barra fija) y su posición en el cifrado.
+  // Los próximos acordes tal como vienen, repetidos incluidos (Mi, Mi, Sol: si no, el músico creería que ya llega el Sol) (para la tira de diagramas de la barra fija) y su posición en el cifrado.
   const proximos = useMemo(() => {
     if (acordeActivo < 0) return { acordes: [] as string[], indices: [] as number[] };
     const todos = acordesDelCifrado(processedText);
-    const actual = todos[acordeActivo];
     // Los nombres salen normalizados (inglés): se devuelven con la grafía de la hoja (Do, Sol…) como el actual.
     const visibles = extractUniqueChords(processedText);
     const comoSeVe = (c: string) => visibles.find((v) => normalizarAcorde(v) === c) ?? c;
     const out: string[] = [];
     const indices: number[] = [];
     for (let i = acordeActivo + 1; i < todos.length && out.length < 3; i++) {
-      if (todos[i] !== actual && todos[i] !== out[out.length - 1]) { out.push(todos[i]); indices.push(i); }
+      out.push(todos[i]); indices.push(i);
     }
     return { acordes: out.map(comoSeVe), indices };
   }, [acordeActivo, processedText]);
