@@ -3,7 +3,7 @@
 // AGENTS.md §3.
 
 import express from 'express';
-import { estadosARedactar } from '../utils/redactorAlcance.js';
+import { estadosARedactar, guardarPitchSiSigueRedactable } from '../utils/redactorAlcance.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { prepararLeadsDescubiertos, determinarCorredorGira, clasificarAforoRecinto, calcularAfinidadMusical } from '../utils/scoutLeads.js';
 import {
@@ -215,20 +215,12 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
     try {
       const sb = getSupabase();
 
-      // El filtro por banda no es opcional: sin él, el Redactor leía los leads de TODAS las
-      // bandas y les escribía encima el pitch generado, incluido el lead suelto que llegara
-      // por params.id.
-      // Nunca reescribe leads con conversación en curso (ver redactorAlcance.ts).
+      // Filtro por banda obligatorio (antes leía y reescribía leads de TODAS las bandas) y solo
+      // leads sin conversación en curso (ver redactorAlcance.ts).
       const estadosRedactables = estadosARedactar(params);
       let query = sb.from('leads').select('*').eq('band_id', targetBandId).in('estado', estadosRedactables);
-      if (params?.id || params?.lead_id) {
-        query = query.eq('id', params.id || params.lead_id);
-      }
-      if (params?.limit) {
-        query = query.limit(parseInt(params.limit, 10));
-      } else {
-        query = query.limit(10);
-      }
+      if (params?.id || params?.lead_id) query = query.eq('id', params.id || params.lead_id);
+      query = query.limit(params?.limit ? parseInt(params.limit, 10) : 10);
 
       const { data: leadsToDraft, error: fetchErr } = await query;
       if (fetchErr) throw fetchErr;
@@ -350,24 +342,13 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
           ? `${lead.notas ? lead.notas + ' | ' : ''}[${new Date().toISOString().slice(0, 10)}] Pitch de PLANTILLA: la IA no respondió, revísalo y reescríbelo antes de aprobar.`
           : undefined;
 
-        // Condicionado al estado: si mientras se redactaba el lead pasó a una conversación (el
-        // Lector registró una respuesta, alguien lo aprobó), no se pisa.
-        const { data: actualizado, error: errGuardar } = await sb
-          .from('leads')
-          .update({
-            pitch_generado: generatedPitch,
-            estado: 'pendiente_aprobacion',
-            ...(notaPlantilla ? { notas: notaPlantilla } : {}),
-          })
-          .eq('id', lead.id)
-          .eq('band_id', targetBandId)
-          .in('estado', estadosRedactables)
-          .select('id');
-        if (errGuardar || !actualizado?.length) {
-          console.warn(
-            '[Agente Redactor] Pitch de %s no guardado: %s', lead.id,
-            errGuardar?.message || 'el lead cambió de estado mientras se redactaba'
-          );
+        const noGuardado = await guardarPitchSiSigueRedactable(sb, lead.id, targetBandId, estadosRedactables, {
+          pitch_generado: generatedPitch,
+          estado: 'pendiente_aprobacion',
+          ...(notaPlantilla ? { notas: notaPlantilla } : {}),
+        });
+        if (noGuardado) {
+          console.warn('[Agente Redactor] Pitch de %s no guardado: %s', lead.id, noGuardado);
           continue;
         }
 

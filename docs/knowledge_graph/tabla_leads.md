@@ -37,6 +37,7 @@ Tabla de Supabase `leads` (65 columnas).
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
 - [[server_routes_tracking|server/routes/tracking.ts]] *(from #route)*
+- [[server_utils_redactorAlcance|server/utils/redactorAlcance.ts]] *(from #service)*
 - [[tabla_concert_deals|tabla concert_deals]] *(from #schema)*
 - [[tabla_lead_messages|tabla lead_messages]] *(from #schema)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(from #schema)*

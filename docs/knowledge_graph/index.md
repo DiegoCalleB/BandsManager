@@ -37,7 +37,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 - [[ext_sentry|Sentry]] — 2 ficheros lo usan
 - [[ext_spotify|Spotify]] — 7 ficheros lo usan
 - [[ext_stripe|Stripe]] — 4 ficheros lo usan
-- [[ext_supabase|Supabase (Postgres)]] — 3 ficheros lo usan
+- [[ext_supabase|Supabase (Postgres)]] — 4 ficheros lo usan
 - [[ext_supabase_storage|Supabase Storage]] — 8 ficheros lo usan
 
 ---
@@ -73,7 +73,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1574 nodos: 52 agent · 44 db · 12 external · 14 feature · 925 frontend · 43 hook · 82 route · 62 schema · 10 security · 330 service.
+1576 nodos: 52 agent · 44 db · 12 external · 14 feature · 925 frontend · 43 hook · 83 route · 62 schema · 10 security · 331 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
@@ -96,7 +96,7 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 32 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
-- [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] — 28 ficheros dependen de él
+- [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] — 28 ficheros dependen de él
 
 ---
 

@@ -18,7 +18,8 @@ Qué leads puede reescribir el Agente Redactor por lotes (POST /api/trigger-agen
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[ext_supabase|Supabase (Postgres)]] *(Layer: #external, Domain: #system)*
+- [[tabla_leads|tabla leads]] *(Layer: #schema, Domain: #booking)*
 
 ---
 
