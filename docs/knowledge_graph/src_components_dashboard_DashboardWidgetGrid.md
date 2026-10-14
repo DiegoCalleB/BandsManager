@@ -19,7 +19,9 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_AddWidgetModal|src/components/dashboard/AddWidgetModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_dashboard_BarraEdicionPanel|src/components/dashboard/BarraEdicionPanel.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_BotonMovil|src/components/dashboard/BotonMovil.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_TiradorWidget|src/components/dashboard/TiradorWidget.tsx]] *(Layer: #frontend, Domain: #system)*
@@ -32,8 +34,6 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
-- [[src_hooks_useScrollLock|src/hooks/useScrollLock.ts]] *(Layer: #hook, Domain: #system)*
-- [[src_hooks_useVisualViewportOverlayStyle|src/hooks/useVisualViewportOverlayStyle.ts]] *(Layer: #hook, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types_dashboardWidgets|src/types/dashboardWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(Layer: #service, Domain: #system)*

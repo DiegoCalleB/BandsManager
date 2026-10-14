@@ -1,4 +1,4 @@
-import { DEFAULT_DASHBOARD_WIDGETS, type DashboardWidgetConfig } from '../types/dashboardWidgets';
+import { DEFAULT_DASHBOARD_WIDGETS, type AVAILABLE_MODULE_WIDGETS, type DashboardWidgetConfig, type WidgetType } from '../types/dashboardWidgets';
 
 /** Orden del panel de widgets: funciones puras para poder probarlas sin pintar el Dashboard. */
 
@@ -92,4 +92,27 @@ export function panelDeBanda(panel: PanelGuardado, bandId?: string): DashboardWi
 /** Guarda un panel nuevo. Hoy siempre en `base` (mismo panel en todas las bandas). */
 export function conPanel(panel: PanelGuardado | null, widgets: DashboardWidgetConfig[]): PanelGuardado {
   return { version: 2, base: widgets, porBanda: panel?.porBanda ?? {} };
+}
+
+/**
+ * El widget que se añade desde el catálogo: tamaño por defecto del catálogo, visible, al final del
+ * orden y en el móvil solo si es de los esenciales. El calendario arranca en lista y sin filtro.
+ */
+export function widgetNuevo(
+  tipo: WidgetType,
+  meta: (typeof AVAILABLE_MODULE_WIDGETS)[number],
+  orden: number,
+  ahora: number = Date.now(),
+): DashboardWidgetConfig {
+  return {
+    id: `${tipo}-${ahora}`,
+    type: tipo,
+    title: meta.title,
+    wSpan: meta.defaultWSpan,
+    hSpan: meta.defaultHSpan || 'normal',
+    visible: true,
+    movil: ESENCIALES_MOVIL.has(tipo),
+    order: orden,
+    settings: tipo === 'calendar' ? { calendarViewMode: 'list', calendarFilter: 'all' } : undefined,
+  };
 }

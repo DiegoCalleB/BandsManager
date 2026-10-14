@@ -610,7 +610,7 @@ Devuelve strictly un objeto JSON con esta estructura exacta:
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in Gemini Search Grounding for contact scraping:", error);
-    return res.status(500).json({ error: "Fallo al realizar búsqueda con IA", details: String(error) });
+    return responderError(res, error, "Fallo al realizar búsqueda con IA");
   }
 });
 
