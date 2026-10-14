@@ -2,7 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 
-export type DerechosClip = "canal_de_la_banda";
+export type DerechosClip = "canal_de_la_banda" | "declarado_por_la_banda";
 
 export interface ReelClip {
   id: string;
