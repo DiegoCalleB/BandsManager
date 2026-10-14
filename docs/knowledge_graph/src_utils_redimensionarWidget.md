@@ -23,7 +23,6 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[src_components_dashboard_ControlesTamano|src/components/dashboard/ControlesTamano.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_hooks_useRedimensionar|src/components/dashboard/hooks/useRedimensionar.ts]] *(from #frontend)*
 

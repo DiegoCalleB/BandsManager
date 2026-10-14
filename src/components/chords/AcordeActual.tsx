@@ -1,57 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Pause, Play, ChevronDown, ChevronUp } from 'lucide-react';
 import type { ContextoAcorde, VistaAcorde } from '../../utils/vistaAcordes';
 import { gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import type { NivelAcorde } from '../../utils/voicings';
 import { CajaAcorde, SelectorNivel, SelectorVistaAcorde } from './AcordeEnInstrumento';
+import { RelojEnAcorde } from './RelojEnAcorde';
+import { proximosVisibles, type EstadoAcordeActual } from './acordeActualEstado';
 
-interface Props {
-  /** Acorde que suena ahora (transpuesto, como se ve en la hoja). */
-  sonando: string | null;
-  /** Los que vienen después (el primero es «Siguiente»), si la hoja está sincronizada con el audio. */
+interface BarraProps {
+  estado: EstadoAcordeActual;
+  /** Los que vienen después, si la hoja está sincronizada con el audio. */
   proximos?: string[];
   /** Compatibilidad: un solo siguiente. */
   siguiente?: string | null;
-  contexto: Map<string, ContextoAcorde>;
-  vista: VistaAcorde;
-  onVista: (v: VistaAcorde) => void;
-  nivel?: NivelAcorde;
-  onNivel?: (n: NivelAcorde) => void;
-  estiloArmonia?: EstiloArmonia;
   /** Play/pausa siempre a mano: la barra se queda pegada arriba aunque se baje por la hoja. */
   reproduciendo?: boolean;
   onToggle?: () => void;
 }
 
-const CLAVE_DIAGRAMAS = 'bm_acorde_actual_diagramas';
-
 /**
  * Barra fija sobre la hoja (se queda pegada arriba al hacer scroll): play/pausa, el acorde que suena y los
- * que vienen, como una tira de diagramas que avanza con la canción. Se pliega a solo nombres para ganar sitio.
- * Al pausar conserva el último acorde para poder mirarlo con calma.
+ * que vienen. Los diagramas van aparte, debajo de la línea de acordes del audio.
  */
-export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reproduciendo, onToggle }) => {
-  const [ultimo, setUltimo] = useState<string | null>(sonando);
-  // Recuerda el último acorde que sonó: se ajusta durante el render, sin efecto.
-  if (sonando && sonando !== ultimo) setUltimo(sonando);
-  const [diagramas, setDiagramas] = useState<boolean>(() => {
-    try { return localStorage.getItem(CLAVE_DIAGRAMAS) === '1'; } catch { return false; }
-  });
-  const alternarDiagramas = () => {
-    const v = !diagramas;
-    setDiagramas(v);
-    try { localStorage.setItem(CLAVE_DIAGRAMAS, v ? '1' : '0'); } catch { /* vale solo esta sesión */ }
-  };
-
-  const acorde = sonando ?? ultimo;
-  const lista = (proximos ?? (siguiente ? [siguiente] : [])).filter((c) => c !== acorde).slice(0, 3);
-  const gradoDe = (c: string) => {
-    const info = contexto.get(c)?.info;
-    return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
-  };
-
+export const BarraAcordeActual: React.FC<BarraProps> = ({ estado, proximos, siguiente, reproduciendo, onToggle }) => {
+  const { acorde, diagramas, alternarDiagramas } = estado;
+  const lista = proximosVisibles(acorde, proximos, siguiente);
   return (
-    <section translate="no" aria-label="Acorde actual" className="notranslate sticky top-0 z-10 mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
+    <section translate="no" aria-label="Acorde actual" className="notranslate sticky top-0 z-10 mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 shrink-0">
       <div className="flex items-center gap-2">
         {onToggle && (
           <button
@@ -84,17 +59,67 @@ export const AcordeActual: React.FC<Props> = ({ sonando, proximos, siguiente, co
           {diagramas ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
       </div>
-      {diagramas && acorde && (
-        <>
-          <div className="flex items-start gap-2 overflow-x-auto pb-1" aria-label="Diagramas de los acordes que vienen">
-            <div className="w-32 shrink-0"><CajaAcorde chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} /></div>
-            {lista.map((c, i) => (
-              <div key={`${c}-${i}`} className={`w-28 shrink-0 ${i > 0 ? 'opacity-70' : ''}`}><CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} /></div>
-            ))}
-          </div>
-          <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
-        </>
-      )}
+    </section>
+  );
+};
+
+interface DiagramasProps {
+  estado: EstadoAcordeActual;
+  proximos?: string[];
+  siguiente?: string | null;
+  /** ¿Suena ahora? (en pausa se enseña el último sin iluminarlo). */
+  sonando: string | null;
+  contexto: Map<string, ContextoAcorde>;
+  vista: VistaAcorde;
+  onVista: (v: VistaAcorde) => void;
+  nivel?: NivelAcorde;
+  onNivel?: (n: NivelAcorde) => void;
+  estiloArmonia?: EstiloArmonia;
+  /** Con la hoja sincronizada, el borde del acorde actual es un reloj que se llena hasta el cambio. */
+  reloj?: { indice: number; tiempos: number[]; duracion: number; audioRef: React.RefObject<HTMLAudioElement | null> };
+  /** Posición en el cifrado de cada uno de `proximos` (mismo orden), para saltar el audio al tocarlos. */
+  indices?: number[];
+  /** Tocar un diagrama lleva el audio a ese acorde. */
+  onIr?: (indiceCifrado: number) => void;
+}
+
+/** El acorde actual y los que vienen, como diagramas que avanzan con la canción. */
+export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proximos, siguiente, sonando, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reloj, indices, onIr }) => {
+  const { acorde, previo, diagramas } = estado;
+  if (!diagramas || !acorde) return null;
+  const origen = proximos ?? (siguiente ? [siguiente] : []);
+  const lista = origen.map((c, k) => ({ c, indice: indices?.[k] })).filter((x) => x.c !== acorde).slice(0, 3);
+  const gradoDe = (c: string) => {
+    const info = contexto.get(c)?.info;
+    return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
+  };
+  const actual = <CajaAcorde key={acorde} chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} previo={previo} conReloj={Boolean(reloj)} />;
+  return (
+    <section translate="no" aria-label="Diagramas de los acordes que vienen" className="notranslate mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
+      <div className="flex items-start gap-2 overflow-x-auto p-1">
+        <div className="w-32 shrink-0">
+          {reloj ? (
+            <RelojEnAcorde diagrama activo={Boolean(sonando)} indice={reloj.indice} tiempos={reloj.tiempos} duracionTotal={reloj.duracion} audioRef={reloj.audioRef}>{actual}</RelojEnAcorde>
+          ) : actual}
+        </div>
+        {lista.map(({ c, indice }, i) => {
+          const ir = onIr && indice !== undefined ? () => onIr(indice) : undefined;
+          return (
+            <div
+              key={`${c}-${i}`}
+              role={ir ? 'button' : undefined}
+              tabIndex={ir ? 0 : undefined}
+              aria-label={ir ? `Ir al acorde ${c}` : undefined}
+              onClick={ir && ((e) => { if (!(e.target as HTMLElement).closest('button')) ir(); })}
+              onKeyDown={ir && ((e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(); } })}
+              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
+            >
+              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} />
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
     </section>
   );
 };

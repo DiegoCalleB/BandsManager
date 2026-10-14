@@ -21,7 +21,6 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_AiUsageSupportWidget|src/components/dashboard/AiUsageSupportWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_BotonMovil|src/components/dashboard/BotonMovil.tsx]] *(Layer: #frontend, Domain: #system)*
-- [[src_components_dashboard_ControlesTamano|src/components/dashboard/ControlesTamano.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_ExecutiveSummaryHero|src/components/dashboard/ExecutiveSummaryHero.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_TiradorWidget|src/components/dashboard/TiradorWidget.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_dashboard_hooks_useGuardadoPanel|src/components/dashboard/hooks/useGuardadoPanel.ts]] *(Layer: #frontend, Domain: #system)*
@@ -40,6 +39,7 @@ Exporta: DashboardWidgetGridProps, DashboardWidgetGrid.
 - [[src_utils_panelWidgets|src/utils/panelWidgets.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_planPermissions|src/utils/planPermissions.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_redimensionarWidget|src/utils/redimensionarWidget.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_rellenarFila|src/utils/rellenarFila.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
