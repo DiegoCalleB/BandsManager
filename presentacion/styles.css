@@ -2204,3 +2204,23 @@ body.pelicula:not(.scroll) .radio .head { display: none; }
 @media (prefers-reduced-motion: reduce) { .slide.plano.active > .lema { animation: none; opacity: 1; } }
 /* Capturas de la app: el resalte y el nombre de la función se quedan; las etiquetas numeradas, los chips y el contador, no */
 body.pelicula:not(.scroll) .dr-lab, body.pelicula:not(.scroll) .slide.feat.active > .ficha span, body.pelicula:not(.scroll) .slide.feat.active > .ficha > i { display: none !important; }
+
+/* ───────── Capítulo 5 en la película: tipografía sobre planos en movimiento, sin tarjetas de diapositiva ───────── */
+body.pelicula:not(.scroll) .slide.scene.biz .actor-velo, body.pelicula:not(.scroll) #stage .slide.scene:is(.biz, [data-title="Para darlo a conocer"], [data-title="Qué viene"]) .actor-velo { background: linear-gradient(90deg, rgba(3,5,10,.86) 0%, rgba(3,5,10,.55) 55%, rgba(3,5,10,.25) 100%); opacity: 1; }
+body.pelicula:not(.scroll) .slide.scene.biz h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; max-width: none; margin-top: 8px; }
+body.pelicula:not(.scroll) .slide.scene > .biz-cols { left: 150px; right: 150px; top: 300px; width: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 90px; }
+body.pelicula:not(.scroll) .biz-col { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 4px 0 4px 36px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .biz-col .badge { display: block; padding: 0; background: none; margin-bottom: 18px; font-size: 24px; letter-spacing: .28em; text-transform: uppercase; color: #ffd596; }
+body.pelicula:not(.scroll) .biz-col .badge.b2b { color: #7fe2d4; }
+body.pelicula:not(.scroll) .biz-col h3 { font: 400 92px/1 Anton, Oswald, sans-serif; text-transform: uppercase; letter-spacing: .01em; color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .biz-col p { margin-top: 20px; font-size: 36px; color: rgba(255,255,255,.88); text-shadow: 0 2px 16px rgba(0,0,0,.9); }
+/* «Y para darlo a conocer»: el máster, como un rótulo y no como una tarjeta */
+body.pelicula:not(.scroll) .slide.scene .enrol.slim { background: none; border: 0; border-left: 4px solid #ffb35c; border-radius: 0; padding: 0 0 0 28px; margin-top: 30px; backdrop-filter: none; }
+body.pelicula:not(.scroll) .enrol.slim .mono { display: none; }
+body.pelicula:not(.scroll) .enrol.slim .en-top b { font: 400 74px/1.05 Anton, Oswald, sans-serif; text-transform: uppercase; text-shadow: 0 4px 30px rgba(0,0,0,.8); }
+body.pelicula:not(.scroll) .enrol.slim .en-top span { font-size: 30px; color: rgba(255,255,255,.85); }
+/* «Qué viene»: la hoja de ruta es material de defensa (créditos y tecla D); en la película queda la notificación */
+body.pelicula:not(.scroll) .slide.scene.tech .steps, body.pelicula:not(.scroll) .slide.scene > .tech-vis.steps { display: none !important; }
+body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; }
+/* Los dos planos más oscuros del capítulo 5 se aclaran un poco (se ven el portátil y las caras) */
+.slide[data-title="Qué viene"] .actor-vid, .slide[data-title="Cómo ganamos dinero"] .actor-vid { filter: brightness(1.7) contrast(1.05); }
