@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "2.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (358) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (359) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -146,7 +146,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1304",
+        "x-source": "server/routes/agent.ts:1300",
         "x-autenticacion": "middleware"
       }
     },
@@ -181,7 +181,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1231",
+        "x-source": "server/routes/agent.ts:1227",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -214,7 +214,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1256",
+        "x-source": "server/routes/agent.ts:1252",
         "x-autenticacion": "middleware"
       }
     },
@@ -389,7 +389,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1033",
+        "x-source": "server/routes/agent.ts:1029",
         "x-autenticacion": "middleware"
       }
     },
@@ -432,7 +432,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:1103",
+        "x-source": "server/routes/agent.ts:1099",
         "x-autenticacion": "middleware"
       }
     },
@@ -467,7 +467,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:993",
+        "x-source": "server/routes/agent.ts:989",
         "x-autenticacion": "middleware"
       }
     },
@@ -2869,7 +2869,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:413",
+        "x-source": "server/routes/leads/places.ts:414",
         "x-autenticacion": "middleware"
       }
     },
@@ -4702,7 +4702,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:822",
+        "x-source": "server/routes/leads/places.ts:823",
         "x-autenticacion": "middleware"
       }
     },
@@ -5309,7 +5309,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:955",
+        "x-source": "server/routes/leads/places.ts:956",
         "x-autenticacion": "middleware"
       }
     },
@@ -5347,7 +5347,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:948",
+        "x-source": "server/routes/agent.ts:944",
         "x-autenticacion": "middleware"
       }
     },
@@ -5753,7 +5753,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:413",
+        "x-source": "server/routes/leads/places.ts:414",
         "x-autenticacion": "middleware"
       }
     },
@@ -5952,7 +5952,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:822",
+        "x-source": "server/routes/leads/places.ts:823",
         "x-autenticacion": "middleware"
       }
     },
@@ -5987,7 +5987,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:955",
+        "x-source": "server/routes/leads/places.ts:956",
         "x-autenticacion": "middleware"
       }
     },
@@ -6022,7 +6022,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1109",
+        "x-source": "server/routes/leads/places.ts:1110",
         "x-autenticacion": "middleware"
       }
     },
@@ -6056,7 +6056,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:37",
+        "x-source": "server/routes/leads/places.ts:38",
         "x-autenticacion": "middleware"
       }
     },
@@ -6091,7 +6091,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1173",
+        "x-source": "server/routes/leads/places.ts:1174",
         "x-autenticacion": "middleware"
       }
     },
@@ -6167,7 +6167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1134",
+        "x-source": "server/routes/leads/places.ts:1135",
         "x-autenticacion": "middleware"
       }
     },
@@ -8244,7 +8244,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1109",
+        "x-source": "server/routes/leads/places.ts:1110",
         "x-autenticacion": "middleware"
       }
     },
@@ -8510,8 +8510,30 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:37",
+        "x-source": "server/routes/leads/places.ts:38",
         "x-autenticacion": "middleware"
+      }
+    },
+    "/api/places/photo": {
+      "get": {
+        "tags": [
+          "leads"
+        ],
+        "operationId": "getApiPlacesPhoto",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/leads/placesPhoto.ts:12",
+        "x-autenticacion": "ninguna",
+        "x-rate-limiters": [
+          "fotoPlacesRateLimiter"
+        ]
       }
     },
     "/api/posts": {
@@ -8767,7 +8789,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1173",
+        "x-source": "server/routes/leads/places.ts:1174",
         "x-autenticacion": "middleware"
       }
     },
@@ -9544,7 +9566,7 @@
             "$ref": "#/components/responses/SoloLider"
           }
         },
-        "x-source": "server/routes/agent.ts:1200",
+        "x-source": "server/routes/agent.ts:1196",
         "x-autenticacion": "middleware",
         "x-requires-leader": true
       }
@@ -10316,7 +10338,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/leads/places.ts:1134",
+        "x-source": "server/routes/leads/places.ts:1135",
         "x-autenticacion": "middleware"
       }
     },
@@ -11928,7 +11950,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/agent.ts:94",
+        "x-source": "server/routes/agent.ts:97",
         "x-autenticacion": "middleware"
       }
     },

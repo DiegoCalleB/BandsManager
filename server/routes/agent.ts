@@ -3,6 +3,7 @@
 // AGENTS.md §3.
 
 import express from 'express';
+import { urlFotoPlaces } from '../utils/placesPhoto.js';
 import { estadosARedactar, guardarPitchSiSigueRedactable } from '../utils/redactorAlcance.js';
 import { sanitizeExternalText } from '../utils/promptSafety.js';
 import { prepararLeadsDescubiertos, determinarCorredorGira, clasificarAforoRecinto, calcularAfinidadMusical } from '../utils/scoutLeads.js';
@@ -489,7 +490,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
                   place.photos.length > 0 &&
                   place.photos[0].name
                 ) {
-                  photoUrl = `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=600&maxWidthPx=800&key=${placesApiKey}`;
+                  photoUrl = urlFotoPlaces(place.photos[0].name);
                 }
                 const domain = place.websiteUri
                   ? new URL(place.websiteUri).hostname.replace(/^www\./, '')

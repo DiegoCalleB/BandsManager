@@ -23,6 +23,7 @@ Fotos de Google Places sin exponer la API key.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_leads_places|server/routes/leads/places.ts]] *(from #route)*
 - [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(from #route)*
 
