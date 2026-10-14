@@ -21,30 +21,30 @@ export const MusicianOnboardingModal: React.FC<
 
   if (!isOpen) return null;
 
-  const handleChooseMission = (view: NavItemId) => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
-      () => {},
-    );
-    if (typeof window !== "undefined") {
+  /** Deja guardado que la bienvenida ya se vio; avisa al resto de la app salvo que siga el asistente largo. */
+  const marcarVista = (avisar: boolean) => {
+    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {
+      // Sin conexión: se guarda también en este navegador y se reintenta en la próxima sesión.
+    });
+    if (avisar && typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
     }
+  };
+
+  const handleChooseMission = (view: NavItemId) => {
+    marcarVista(true);
     onSelectMission(view);
     onClose();
   };
 
   const handleOpenProfileWizard = () => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(() => {});
+    marcarVista(false);
     onClose();
     onOpenProfileWizard?.();
   };
 
   const handleDismiss = () => {
-    markOnboardingCompleted(undefined, { onboarding: true }, true).catch(
-      () => {},
-    );
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("bandmanager_onboarding_finished"));
-    }
+    marcarVista(true);
     onClose();
   };
 
