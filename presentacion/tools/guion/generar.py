@@ -720,10 +720,10 @@ add(f'''<section class="slide scene tech" data-title="Seguridad" data-transition
   <div class="tech-vis mini">
     <div class="pn"><h3>Aislamiento por banda</h3><p>Test estático en cada CI</p></div>
     <div class="pn"><h3>Inyección de prompt</h3><p>Texto externo saneado</p></div>
-    <div class="pn"><h3>SSRF y abuso</h3><p>IP validada y límites de ritmo</p></div>
+    <div class="pn"><h3>SSRF y abuso</h3><p>IP validada y límites de ritmo, también en el chat de IA</p></div>
     <div class="pn"><h3>Autenticación</h3><p>PBKDF2-SHA512 y sesiones que caducan</p></div>
     <div class="pn"><h3>Obra del músico</h3><p>Una ruta por banda, sin URLs predecibles</p></div>
-    <div class="pn"><h3>Errores</h3><p>Panel propio y Sentry</p></div>
+    <div class="pn"><h3>Errores</h3><p>Panel propio y Sentry. Un lint impide filtrar datos internos</p></div>
   </div>
 </section>
 ''')
@@ -735,12 +735,12 @@ add(f'''<section class="slide bigstats dl" data-title="Calidad en cifras">
   {dlg(m('alvaro', '¡Madre mía! ¡Esto tiene más pruebas que en la época del Covid!'),
        m('iago', 'Más de dos mil, y se ejecutan solos en cada commit y en cada push. Y en producción, un control de salud y Sentry vigilando los errores.'), cls='tight')}
   <div class="bs-grid">
-    <div class="bs"><b class="bs-n" data-count="270" data-suffix="k">270k</b><span>líneas de TypeScript, entre cliente y servidor</span></div>
+    <div class="bs"><b class="bs-n" data-count="284" data-suffix="k">284k</b><span>líneas de TypeScript, entre cliente y servidor, sin tests</span></div>
     <div class="bs"><b class="bs-n" data-count="358">358</b><span>rutas HTTP, de las que 307 son handlers propios</span></div>
-    <div class="bs"><b class="bs-n" data-count="57">57</b><span>tablas en producción con RLS, y 45 migraciones SQL</span></div>
-    <div class="bs"><b class="bs-n" data-count="2172">2172</b><span>tests unitarios declarados, además de E2E y 15 capturas de regresión visual</span></div>
+    <div class="bs"><b class="bs-n" data-count="60">60</b><span>tablas en producción con RLS, y 48 migraciones SQL</span></div>
+    <div class="bs"><b class="bs-n" data-count="2820">2820</b><span>tests unitarios declarados, además de 29 pruebas E2E con Playwright</span></div>
   </div>
-  <p class="bs-foot"><i>Cifras comprobadas en el repositorio con <span class="mono">npm run verify:docs</span> el 10 de octubre de 2026.</i></p>
+  <p class="bs-foot"><i>Medido el 14 de octubre de 2026 con <span class="mono">wc -l</span>, <span class="mono">npm run verify:docs</span> y la base de datos de producción.</i></p>
 </section>
 ''')
 
