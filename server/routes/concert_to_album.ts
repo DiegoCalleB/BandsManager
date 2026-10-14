@@ -23,14 +23,13 @@ import { rutaFuenteSegura, rutaEnDirectorio, indicePistaSeguro, esUrlYoutube, ex
 export { rutaFuenteSegura, rutaEnDirectorio, indicePistaSeguro, esUrlYoutube, extraerObjetoJson };
 import type { Part } from '@google/genai';
 import type { AnalisisConciertoIA, CapituloYoutube, ClasificacionPistasIA } from './tiposConcertToAlbum.js';
+import { responderError } from '../utils/errorHttp.js';
 
 if (ffmpegStatic) {
   ffmpeg.setFfmpegPath(ffmpegStatic);
 }
 
 const router = express.Router();
-
-
 
 /**
  * URL de vídeo utilizable. Además de rechazar lo que no sea http(s) (un `file://` haría que
@@ -233,7 +232,7 @@ router.get("/cookies-status", requireAuth, ficherosRateLimiter, (req, res) => {
     return res.json({ hasCookies: false, size: 0, updatedAt: null });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ error: err.message });
+    return responderError(res, err);
   }
 });
 
@@ -257,7 +256,7 @@ router.post("/save-cookies", requireAuth, ficherosRateLimiter, (req, res) => {
     });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ error: err.message });
+    return responderError(res, err);
   }
 });
 
@@ -269,7 +268,7 @@ router.post("/delete-cookies", requireAuth, ficherosRateLimiter, (req, res) => {
     return res.json({ success: true, message: "Cookies eliminadas." });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ error: err.message });
+    return responderError(res, err);
   }
 });
 
@@ -747,7 +746,7 @@ Responde ÚNICAMENTE con un JSON válido con este esquema exacto:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Concert Analyzer] Error:", err);
-    res.status(500).json({ error: err.message || "Error al analizar el concierto." });
+    responderError(res, err, "Error al analizar el concierto.");
   }
 });
 
@@ -1002,7 +1001,7 @@ router.post("/process", requireAuth, ficherosRateLimiter, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Concert Slicer Error]:", err);
-    res.status(500).json({ error: err.message || "Error al trocear y generar el disco en el servidor." });
+    responderError(res, err, "Error al trocear y generar el disco en el servidor.");
   }
 });
 
@@ -1070,7 +1069,7 @@ router.post("/detect-cues", requireAuth, ficherosRateLimiter, async (req, res) =
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[CUE Detection API Error]:", err);
-    return res.status(500).json({ error: err.message || "Error al autodetectar CUEs de los temas." });
+    return responderError(res, err, "Error al autodetectar CUEs de los temas.");
   }
 });
 
@@ -1341,7 +1340,7 @@ REQUISITOS OBLIGATORIOS:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Transcribe Speech Error]:", err);
-    res.status(500).json({ error: err.message || "Error al transcribir discurso." });
+    responderError(res, err, "Error al transcribir discurso.");
   }
 });
 
@@ -1371,7 +1370,7 @@ router.post("/preview-snippet", requireAuth, ficherosRateLimiter, async (req, re
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Snippet Preview Error]:", err);
-    res.status(500).json({ error: err.message || "Error al generar la previsualización del trozo." });
+    responderError(res, err, "Error al generar la previsualización del trozo.");
   }
 });
 
@@ -1479,7 +1478,7 @@ Responde ÚNICAMENTE con un JSON con este formato exacto:
     });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err.message || "Error al auto-clasificar pistas." });
+    responderError(res, err, "Error al auto-clasificar pistas.");
   }
 });
 
@@ -1563,7 +1562,7 @@ Responde ÚNICAMENTE con un JSON válido con esta estructura exacta:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Transcribe Song Error]:", err);
-    res.status(500).json({ error: err.message || "Error al transcribir letra y acordes." });
+    responderError(res, err, "Error al transcribir letra y acordes.");
   }
 });
 
@@ -1577,7 +1576,7 @@ router.post("/demo-audio", requireAuth, ficherosRateLimiter, async (req, res) =>
     res.json({ success: true, filePath: demoPath });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ error: err.message });
+    responderError(res, err);
   }
 });
 
