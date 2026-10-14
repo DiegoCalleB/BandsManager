@@ -13,7 +13,7 @@ tags: ["agent", "scheduler", "cron"]
 > **Capa:** `#layer/agent` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Bucle in-process (tick de 24 h por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.
+Bucle in-process (tick de 5 min por defecto, AGENT_SCHEDULER_INTERVAL_MS) que orquesta el Scout, Enviador y Lector.
 
 ---
 

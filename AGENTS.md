@@ -180,7 +180,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
          * Protocolo Phone-to-Email / Conversión de redes: traslación inmediata de chats a correo ("¿Te parece bien si te lo dejo por mail para fijar la ventana de fechas?").
    * **Usuario (Human-in-the-Loop):** Lee/edita el borrador y aprueba explícitamente, transicionando a `aprobado_propuesta` (pitch inicial) o `aprobado_respuesta` (réplica a sala).
    * **Enviador** (`server/services/agentEngine.ts`): Lee leads en estado aprobado, despacha respetando ventana comercial de la banda y rate-limits. Registra el envío en `lead_messages`.
-   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes cada ~60s (vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
+   * **Lector** (`server/services/lectorAgent.ts`): Monitoriza respuestas entrantes en las horas de lectura de la banda (`horas_lector`/`dias_lector`, tick del planificador cada 5 min; vía Gmail OAuth2 o IMAP), actualiza `lead_messages`, y marca el lead como `respondido` si hay respuesta de la sala.
 
 4. **Conexión de Correo por Banda (Gmail OAuth2 vs IMAP):**
    * Cada banda conecta su propio buzón. El sistema prefiere automáticamente **Gmail OAuth2** (`band_gmail_oauth_accounts`) sobre IMAP/SMTP (`band_email_accounts`).

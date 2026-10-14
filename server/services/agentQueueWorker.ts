@@ -20,9 +20,11 @@ import { bandHasEmailConfigured } from "./agentScheduler.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(2, 6)}`;
-// En reposo, duerme por defecto 24 horas (o configurable con AGENT_WORKER_POLL_MS).
-// Cuando se encola un trabajo, onAgentJobEnqueued() despierta al worker inmediatamente.
-const POLL_INTERVAL_MS = Number(process.env.AGENT_WORKER_POLL_MS) || (24 * 60 * 60 * 1000);
+// En reposo consulta la cola cada minuto (configurable con AGENT_WORKER_POLL_MS). Encolar despierta
+// al worker al instante (onAgentJobEnqueued), pero los reintentos con backoff de failAgentJob
+// (2, 8... min) y los trabajos recuperados tras un reinicio no encolan nada: con el sondeo de 24 h
+// de antes esperaban un día entero.
+const POLL_INTERVAL_MS = Number(process.env.AGENT_WORKER_POLL_MS) || 60 * 1000;
 let isWorkerRunning = false;
 let workerLoopTimeout: NodeJS.Timeout | null = null;
 
@@ -144,7 +146,7 @@ async function workerLoop(): Promise<void> {
     console.warn(`[AgentQueueWorker] Error en el loop del worker:`, err);
   }
 
-  // Si no hay trabajos o hubo un error transitorio, esperar al siguiente intervalo (24h en reposo)
+  // Si no hay trabajos o hubo un error transitorio, esperar al siguiente sondeo
   if (isWorkerRunning) {
     workerLoopTimeout = setTimeout(workerLoop, POLL_INTERVAL_MS);
   }
@@ -172,7 +174,7 @@ export function wakeWorker(): void {
 export function startAgentQueueWorker(): void {
   if (isWorkerRunning) return;
   isWorkerRunning = true;
-  console.log(`[AgentQueueWorker] Iniciado worker ${WORKER_ID} - cola reactiva basada en eventos (sondeo reposo: ${Math.round(POLL_INTERVAL_MS / (60 * 60 * 1000))}h).`);
+  console.log(`[AgentQueueWorker] Iniciado worker ${WORKER_ID} - cola reactiva basada en eventos (sondeo en reposo: ${Math.round(POLL_INTERVAL_MS / 1000)} s).`);
 
   // Conectar con el publicador: despertar al worker en cuanto entre cualquier trabajo
   onAgentJobEnqueued(() => {

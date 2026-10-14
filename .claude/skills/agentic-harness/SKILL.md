@@ -51,10 +51,10 @@ graph TD
 
 ## ⏱️ 3. Operación del Scheduler In-Process (`agentScheduler.ts`)
 
-- El planificador corre un bucle in-process (por defecto cada 24 h; configurable con `AGENT_SCHEDULER_INTERVAL_MS`; ver ADR 0007).
+- El planificador corre un bucle in-process (tick cada 5 min por defecto, más uno a los 30 s de arrancar; configurable con `AGENT_SCHEDULER_INTERVAL_MS`; ver ADR 0007). El tick solo mira la hora: cada agente se encola una vez por hora de su ventana.
 - Mantiene estado de ejecución en la tabla `agent_schedule_state` para evitar duplicidad de envíos tras un despliegue en Railway.
 - **Enviador:** Respeta la ventana comercial de la banda (`horas_enviador`, `dias_enviador`).
-- **Lector:** Corre incondicionalmente en cada tick para detectar inmediatamente respuestas entrantes o borradores enviados a mano en Gmail.
+- **Lector:** Respeta las horas de lectura de la banda (`horas_lector`, `dias_lector`); detecta respuestas entrantes y borradores enviados a mano en Gmail.
 
 ---
 
