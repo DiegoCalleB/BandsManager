@@ -60,4 +60,18 @@ describe.skipIf(!hayFfmpeg)("render de clip con ffmpeg real", () => {
     expect(Number(lufs![1])).toBeGreaterThan(-15);
     expect(Number(lufs![1])).toBeLessThan(-13);
   }, 90_000);
+
+  it("beat-drop: el golpe de luz cae solo en el compás indicado (no aclara todo el vídeo)", () => {
+    const plan = planearRenderClip({ cropMode: "crop", duracion: 4, beatDropFx: true, golpes: [2], calidad: "rapida" });
+    const salida = path.join(dir, "flash.mp4");
+    ejecutar(["-i", path.join(dir, "src.mp4"), "-t", "4", "-filter_complex", plan.filtroComplejo.join(";"),
+      ...plan.mapas.flatMap((m) => m.split(" ")), ...plan.opcionesSalida.flatMap((o) => o.split(" ")), salida]);
+    // Luminancia media por fotograma, en orden.
+    const lum = [...medir(salida, "-map 0:v -vf signalstats,metadata=print:key=lavfi.signalstats.YAVG").matchAll(/YAVG=([\d.]+)/g)].map((m) => Number(m[1]));
+    const fps = 30;
+    const base = (i: number) => lum[i];
+    const enGolpe = lum.slice(Math.round(2 * fps), Math.round(2.1 * fps));
+    const lejos = [base(15), base(30), base(90), base(105)];
+    expect(Math.min(...enGolpe)).toBeGreaterThan(Math.max(...lejos) + 5);
+  }, 90_000);
 });

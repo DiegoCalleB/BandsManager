@@ -24,15 +24,17 @@
 | Seguridad (hallazgo nuevo) | ✅ `/public/epk` devolvía el token de Instagram de la banda | `utils/enlacesPublicos.ts` |
 | Fase 3 · copy perfecto | ✅ auditoría determinista + set dorado; 5 candidatos con arquetipos, juez con rúbrica, el copy de la banda compite; botón "Mejorar copy" | `utils/auditoriaCopyReel.ts`, `services/copyPerfecto.ts`, `routes/reelsTexto.ts`, `CopyPerfectoPanel.tsx` |
 | Fase 5 · métricas y aprendizaje | ✅ worker de métricas reales (1/24/72/168 h), KPI de rewatch, Thompson sampling de formato por banda; se inyecta en el análisis y el selector solo marca "recomendado" con datos | `services/metricasReels.ts`, `utils/aprendizajeReels.ts`, tabla `reel_metricas`, `routes/reelsAprendizaje.ts` |
+| Montaje al beat | ✅ rejilla de pulsos y compases (onsets + BPM de `audioKey`); el flash cae solo en los compases reales; el cierre del loop se encaja en un pulso | `utils/rejillaBeats.ts`, `services/clipNovedades.ts` (`analizarTramo`) |
 | Fase 6 · control de calidad | ✅ negro, congelado, silencio, volumen, formato, duración, hook y pista de audio; bloquea la autopublicación | `utils/controlCalidadClip.ts`, `services/controlCalidad.ts`, `ClipQualityReport.tsx` |
 | Interruptores del estudio sin efecto (hallazgo nuevo) | ✅ loop, zoom y smart-pan ya llegan al render | `useClipRendering.ts` |
 
-**Pendiente** (en orden): beat-drop alineado a compases reales (hoy parpadea cada 4 s, por eso no se
-conecta) · YouTube Shorts y TikTok reales · Fase 4 (hora óptima con datos) · aplicar la
+**Pendiente** (en orden): YouTube Shorts y TikTok reales · Fase 4 (hora óptima con datos) · aplicar la
 auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
 métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·
 tras desplegar: aplicar `20261104_reels_publicacion_real.sql` y probar con una cuenta real de
 Instagram Business (la API de Meta solo se ha probado con respuestas simuladas).
+
+**Lección 2:** el beat-drop original (`eq=…mod(t,4)`) sin `eval=frame` no parpadeaba cada 4 s: ffmpeg evalúa la expresión una vez y aclaraba TODO el vídeo. Medido: 172 fotogramas a luminancia 126 contra 202 en los de golpe solo con `eval=frame`.
 
 **Lección:** el plan de filtros pasó los tests de texto y aun así fallaba en el ffmpeg de producción
 (`xfade` exige frame rate constante; `acrossfade` no emite audio). Por eso existe

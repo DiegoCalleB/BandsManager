@@ -48,7 +48,8 @@ export function useReelStyleOptions({ highlights, handleSelectHighlight, selecte
     "full",
   );
 
-  const [beatDropFx, setBeatDropFx] = useState<boolean>(true);
+  // Apagado por defecto: ahora sí pone un golpe de luz en cada compás real, y en una balada sobra.
+  const [beatDropFx, setBeatDropFx] = useState<boolean>(false);
 
   const [smartPan, setSmartPan] = useState<boolean>(false);
 

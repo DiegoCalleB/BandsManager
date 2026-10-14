@@ -20,6 +20,7 @@ Plan de ffmpeg para un clip vertical: qué filtros y qué opciones de salida lle
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(Layer: #service, Domain: #social)*
+- [[server_utils_rejillaBeats|server/utils/rejillaBeats.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

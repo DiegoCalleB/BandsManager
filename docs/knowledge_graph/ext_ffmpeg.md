@@ -49,6 +49,7 @@ _Sin dependencias salientes directas._
 - [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(from #service)*
+- [[server_utils_rejillaBeats|server/utils/rejillaBeats.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(from #service)*
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*

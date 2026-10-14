@@ -1,11 +1,13 @@
 /**
- * Pasos de /cut-video-clip que salieron del render clásico: cierre de loop, rótulo de enganche
- * control de calidad, guardado permanente y registro de procedencia (derechos) del clip. Cada uno
- * es best-effort salvo que se indique.
+ * Pasos de /cut-video-clip que salieron del render clásico: análisis del tramo (loop y pulsos),
+ * rótulo de enganche, control de calidad, guardado permanente y registro de procedencia (derechos)
+ * del clip. Cada uno es best-effort salvo que se indique.
  */
 import fs from "fs";
 import { analizarEnergiaAudio } from "../utils/audioEnergy.js";
 import { elegirDuracionDeLoop } from "../utils/loopPerfecto.js";
+import { extraerPcmMono, detectarOnsetsDesdePcm, detectarBpmDesdeOnsets, SAMPLE_RATE } from "../utils/audioKey.js";
+import { rejillaDeBeats, ajustarAlBeat } from "../utils/rejillaBeats.js";
 import { loopViable } from "../utils/clipFiltros.js";
 import { buildHookAss } from "../utils/hookRotulo.js";
 import { derechosDelClip } from "../utils/derechosClip.js";
@@ -19,11 +21,45 @@ import { comoErrorCapturado } from "../../src/utils/errorCapturado.js";
 /** La descarga de un tramo trae este margen (s) de más por cada lado (`tramoDeDescarga`). */
 const MARGEN_DESCARGA_SEG = 2;
 
-/** Duración con la que el final del clip mejor enlaza con su principio (la pedida si no se puede medir). */
-export async function duracionDeLoopAjustada(rutaVideo: string, inicioEnFichero: number, duracion: number): Promise<number> {
-  if (!loopViable(duracion)) return duracion;
-  const curva = await analizarEnergiaAudio(rutaVideo, { timeoutMs: 60_000 });
-  return elegirDuracionDeLoop(curva, { inicio: inicioEnFichero, duracion, finDisponible: inicioEnFichero + duracion + MARGEN_DESCARGA_SEG });
+export interface AnalisisTramo {
+  /** Duración final del clip: la pedida, o la que mejor cierra el loop (encajada en un pulso). */
+  duracionClip: number;
+  /** Compases reales (segundos del clip) para el golpe de luz del beat-drop. */
+  golpes: number[];
+}
+
+/**
+ * Lo que hay que saber del audio del tramo antes de renderizar. Best-effort: si no se puede medir,
+ * se renderiza con la duración pedida y sin flash, nunca se bloquea el render.
+ *  - Loop: final elegido por volumen (`elegirDuracionDeLoop`) y encajado en el pulso más cercano.
+ *  - Beat-drop: compases reales a partir de los onsets y el BPM de `audioKey.ts`.
+ */
+export async function analizarTramo(
+  rutaVideo: string,
+  inicioEnFichero: number,
+  duracion: number,
+  quiero: { loop: boolean; beats: boolean }
+): Promise<AnalisisTramo> {
+  const loop = quiero.loop && loopViable(duracion);
+  if (!loop && !quiero.beats) return { duracionClip: duracion, golpes: [] };
+  const finDisponible = inicioEnFichero + duracion + MARGEN_DESCARGA_SEG;
+
+  const [curva, pcm] = await Promise.all([
+    loop ? analizarEnergiaAudio(rutaVideo, { timeoutMs: 60_000 }) : Promise.resolve([]),
+    extraerPcmMono(rutaVideo, { timeoutMs: 60_000, maxDuracionSeg: Math.ceil(finDisponible) + 1 })
+  ]);
+  const onsets = pcm ? detectarOnsetsDesdePcm(pcm, SAMPLE_RATE) : [];
+  const bpm = detectarBpmDesdeOnsets(onsets);
+  const pulsos = rejillaDeBeats(onsets, bpm, inicioEnFichero, finDisponible).pulsos;
+
+  let duracionClip = duracion;
+  if (loop) {
+    const porVolumen = elegirDuracionDeLoop(curva, { inicio: inicioEnFichero, duracion, finDisponible });
+    const enPulso = ajustarAlBeat(porVolumen, pulsos);
+    duracionClip = loopViable(enPulso) && inicioEnFichero + enPulso <= finDisponible ? enPulso : porVolumen;
+  }
+  const golpes = quiero.beats ? pulsos.filter((_, i) => i % 4 === 0).filter((t) => t < duracionClip) : [];
+  return { duracionClip, golpes };
 }
 
 /** Escribe el rótulo de enganche como ASS. Devuelve la ruta, o undefined si no hay texto que poner. */

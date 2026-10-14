@@ -18,6 +18,16 @@ describe("planearRenderClip", () => {
     expect(p.mapas).toEqual(["-map [vh]", "-map 0:a?"]);
   });
 
+  it("beat-drop: golpe de luz solo en los compases dados, animado por fotograma; sin golpes no hay flash", () => {
+    const con = planearRenderClip({ cropMode: "crop", duracion: 20, beatDropFx: true, golpes: [0.5, 2.5] });
+    expect(con.filtroComplejo.join(";")).toMatch(/\[v\]eq=brightness='if\(between\(t,0\.500,0\.620\)\+between\(t,2\.500,2\.620\),0\.07,0\)'.*:eval=frame\[vb\]/);
+    expect(con.mapas[0]).toBe("-map [vb]");
+    // Nunca el flash ciego de buildVerticalFilter (mod(t,4) sin eval=frame).
+    expect(con.filtroComplejo.join(";")).not.toContain("mod(t,4)");
+    const sin = planearRenderClip({ cropMode: "crop", duracion: 20, beatDropFx: true });
+    expect(sin.filtroComplejo.join(";")).not.toContain("eq=");
+  });
+
   it("calidad alta: 30 fps constantes, keyframe cada 2 s, crf 19, AAC 192k/48k", () => {
     const o = planearRenderClip({ cropMode: "crop", duracion: 20, calidad: "alta" }).opcionesSalida;
     expect(o).toEqual(expect.arrayContaining(["-preset medium", "-crf 19", "-r 30", "-g 60", "-b:a 192k", "-ar 48000"]));

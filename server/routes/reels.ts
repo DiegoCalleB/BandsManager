@@ -25,7 +25,7 @@ import reelsTextoRouter from "./reelsTexto.js";
 import reelsAprendizajeRouter from "./reelsAprendizaje.js";
 import { aprendizajeDeBanda } from "../services/metricasReels.js";
 import { bloqueAprendizajeParaPrompt } from "../utils/aprendizajeReels.js";
-import { duracionDeLoopAjustada, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
+import { analizarTramo, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
 import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
 import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -617,8 +617,8 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     // Si solo se bajó el tramo, dentro del fichero nuestro corte empieza mucho antes.
     const inicioEnFichero = Math.max(0, inicio - offsetDescarga);
 
-    // Con loop, el final se ajusta (±1,5 s) al punto que mejor enlaza con el arranque.
-    const duracionClip = loopPerfecto ? await duracionDeLoopAjustada(rutaDescarga, inicioEnFichero, duracion) : duracion;
+    // Loop: el final se ajusta (±1,5 s) al punto que mejor enlaza y cae en un pulso. Beat-drop: compases reales.
+    const { duracionClip, golpes } = await analizarTramo(rutaDescarga, inicioEnFichero, duracion, { loop: Boolean(loopPerfecto), beats: Boolean(beatDropFx) });
 
     // Subtítulos ANTES de codificar: si se van a incrustar, ffmpeg los necesita en disco.
     const transcript = await fetchTranscript(videoId).catch(() => [] as TranscriptItem[]);
@@ -642,7 +642,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       duracion: duracionClip,
       cropMode,
       punchInZoom: Boolean(punchInZoom),
-      beatDropFx: Boolean(beatDropFx),
+      beatDropFx: Boolean(beatDropFx), golpes,
       smartPan: Boolean(smartPan),
       rutaSubtitulos: incrustarSubs ? rutaAss : undefined,
       rutaHook,

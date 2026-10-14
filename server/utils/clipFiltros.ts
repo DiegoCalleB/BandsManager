@@ -6,6 +6,7 @@
  * queman ANTES del loop para que el cierre cruzado mezcle también lo que se ve en pantalla.
  */
 import { buildVerticalFilter, escapeFilterPath, type CropMode, type VerticalFilterOptions } from "./reelsCore.js";
+import { expresionFlash } from "./rejillaBeats.js";
 
 /** Cuánto dura el cruce entre el final y el principio del bucle (s). */
 export const FUNDIDO_LOOP_SEG = 0.4;
@@ -26,6 +27,12 @@ export interface OpcionesPlanClip extends VerticalFilterOptions {
   normalizarVolumen?: boolean;
   /** Cierra el clip fundiendo su final con su principio para que al repetirse no se note el salto. */
   loop?: boolean;
+  /**
+   * Segundos del clip (compases reales) donde poner el golpe de luz del beat-drop. Sin golpes no
+   * hay flash: el de `buildVerticalFilter` parpadeaba cada 4 s a ciegas y, sin `eval=frame`, en
+   * realidad aclaraba el vídeo entero.
+   */
+  golpes?: number[];
   /** El fichero de origen no trae pista de audio: no se construye cadena de audio. */
   sinAudio?: boolean;
   /** Calidad de salida: `alta` para lo que se va a publicar; `rapida` conserva el comportamiento anterior. */
@@ -57,10 +64,16 @@ function opcionesDeCodificacion(calidad: "alta" | "rapida"): string[] {
 function cadenaDeVideo(o: OpcionesPlanClip): { filtros: string[]; etiqueta: string } {
   const filtros = buildVerticalFilter(o.cropMode, 1080, 1920, {
     punchInZoom: Boolean(o.punchInZoom),
-    beatDropFx: Boolean(o.beatDropFx),
+    beatDropFx: false, // ver `golpes`: el flash de buildVerticalFilter no está sincronizado ni animado
     smartPan: Boolean(o.smartPan)
   });
   let etiqueta = filtros.length ? "v" : "0:v";
+
+  const flash = o.beatDropFx ? expresionFlash(o.golpes || []) : "";
+  if (flash) {
+    filtros.push(`[${etiqueta}]${flash}[vb]`);
+    etiqueta = "vb";
+  }
 
   // Ambas capas son ASS; `subtitles` las pinta igual. Se encadenan desde la salida del encuadre.
   const capa = (ruta: string, destino: string) => {

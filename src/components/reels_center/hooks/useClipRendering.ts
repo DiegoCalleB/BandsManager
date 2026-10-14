@@ -14,6 +14,7 @@ export interface ClipRenderingParams {
   setRenderedQuality: Dispatch<SetStateAction<InformeCalidadClip | null | undefined>>;
   isSeamlessLoop: boolean;
   isPunchInZoom: boolean;
+  beatDropFx: boolean;
   smartPan: boolean;
   derechosDeclarados: boolean;
   highlights: HighlightClip[];
@@ -51,7 +52,7 @@ export interface ClipRenderingParams {
  * @param params Estado y callbacks del contenedor ({@link ClipRenderingParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useClipRendering({ setRenderedQuality, isSeamlessLoop, isPunchInZoom, smartPan, derechosDeclarados, highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
+export function useClipRendering({ setRenderedQuality, isSeamlessLoop, isPunchInZoom, beatDropFx, smartPan, derechosDeclarados, highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
   const handleCutPhysicalVideo = async () => {
     const activeClip = highlights[selectedHighlightIndex];
     if (!activeClip || !youtubeUrl) return;
@@ -108,6 +109,7 @@ export function useClipRendering({ setRenderedQuality, isSeamlessLoop, isPunchIn
           hookText: activeClip.hookText || "",
           loopPerfecto: isSeamlessLoop,
           punchInZoom: isPunchInZoom,
+          beatDropFx, // golpe de luz en los compases reales del tema (server/utils/rejillaBeats.ts)
           smartPan,
           derechosDeclarados,
           // Flag antiguo, por si el servidor todavía no está actualizado.
