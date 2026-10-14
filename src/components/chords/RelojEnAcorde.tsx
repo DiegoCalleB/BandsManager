@@ -10,6 +10,8 @@ interface Props {
   duracionTotal: number;
   audioRef: React.RefObject<HTMLAudioElement | null>;
   children: React.ReactNode;
+  /** Diagramas: el reloj ocupa todo el ancho, con las esquinas de la ficha, y no ilumina al siguiente (en la letra sí). */
+  diagrama?: boolean;
 }
 
 /**
@@ -18,7 +20,7 @@ interface Props {
  * propio acorde. En el último tramo el reloj cambia de color y el chip SIGUIENTE se ilumina para
  * ir preparando la mano. Va por animación directa del DOM (sin re-renderizar la letra a 60 fps).
  */
-export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duracionTotal, audioRef, children }) => {
+export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duracionTotal, audioRef, children, diagrama }) => {
   const anillo = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
           const color = e.avisando ? 'var(--tentative)' : 'var(--acc)';
           // Esfera del reloj: el barrido avanza como una aguja sobre una pista tenue del mismo color.
           el.style.background = `conic-gradient(from 0deg, ${color} ${gradosDeProgreso(e.progreso)}deg, color-mix(in srgb, var(--acc) 22%, transparent) 0)`;
-          siguiente ??= document.getElementById(`cifrado-acorde-${indice + 1}`);
+          if (!diagrama) siguiente ??= document.getElementById(`cifrado-acorde-${indice + 1}`);
           if (siguiente) {
             siguiente.style.outline = e.avisando ? '2px solid var(--tentative)' : '';
             siguiente.style.outlineOffset = e.avisando ? '2px' : '';
@@ -53,11 +55,11 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
       apagarSiguiente();
       if (elAnillo) elAnillo.style.background = '';
     };
-  }, [activo, indice, tiempos, duracionTotal, audioRef]);
+  }, [activo, indice, tiempos, duracionTotal, audioRef, diagrama]);
 
   // Siempre con el mismo relleno (3 px) para que activarse no desplace la letra.
   return (
-    <span ref={anillo} className="inline-flex rounded-[var(--r-s)] p-[3px] align-bottom" data-reloj={activo ? 'activo' : undefined}>
+    <span ref={anillo} className={diagrama ? 'flex rounded-[calc(var(--r-m)+3px)] p-[3px]' : 'inline-flex rounded-[var(--r-s)] p-[3px] align-bottom'} data-reloj={activo ? 'activo' : undefined}>
       {children}
     </span>
   );

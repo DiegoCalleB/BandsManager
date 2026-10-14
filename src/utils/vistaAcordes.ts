@@ -40,7 +40,7 @@ export const CUERDAS_BAJO = [
   { nombre: 'G', pc: 7, base: 43 },
 ] as const;
 
-export type RolBajo = 'raiz' | 'tercera' | 'quinta' | 'octava' | 'paso';
+export type RolBajo = 'raiz' | 'tercera' | 'quinta' | 'septima' | 'octava' | 'paso';
 export interface NotaBajo { cuerda: number; traste: number; rol: RolBajo; pitch: number }
 
 /** Color (token) de cada función armónica, para pintar los diagramas igual que los acordes de la canción. */
@@ -65,17 +65,24 @@ const pitchSobre = (pc: number, minimo: number) => minimo + (((pc - minimo) % 12
 /**
  * Línea de bajo de un compás sobre el acorde: raíz – 3.ª – 5.ª y, al final, una nota de paso que
  * llega por semitono al acorde siguiente (si se conoce; si no, la octava). Es el «walking» básico.
+ * Con `inversion` la línea arranca en esa nota del acorde (0 = raíz, 1 = 3.ª…) y sigue por las demás hacia arriba.
  */
-export function lineaDeBajo(acorde: string, siguiente?: string | null): NotaBajo[] | null {
+export function lineaDeBajo(acorde: string, siguiente?: string | null, inversion?: number): NotaBajo[] | null {
   const n = notasParaDibujar(acorde);
   if (!n) return null;
-  const raizPc = n.bajo ?? n.raiz;
+  const rolDe = (pc: number): RolBajo => (pc === n.raiz ? 'raiz' : pc === n.tercera ? 'tercera' : pc === n.quinta ? 'quinta' : 'septima');
+  const tonos = inversion === undefined ? null : [...n.notas.slice(inversion), ...n.notas.slice(0, inversion)].slice(0, 3);
+  const raizPc = tonos ? tonos[0] : n.bajo ?? n.raiz;
   const pitchRaiz = pitchSobre(raizPc, 28);
-  const notas: Array<{ pitch: number; rol: RolBajo }> = [{ pitch: pitchRaiz, rol: 'raiz' }];
+  const notas: Array<{ pitch: number; rol: RolBajo }> = [{ pitch: pitchRaiz, rol: tonos ? rolDe(raizPc) : 'raiz' }];
   let ultimo = pitchRaiz;
-  if (n.tercera !== null) { ultimo = pitchSobre(n.tercera, ultimo + 1); notas.push({ pitch: ultimo, rol: 'tercera' }); }
-  ultimo = pitchSobre(n.quinta, ultimo + 1);
-  notas.push({ pitch: ultimo, rol: 'quinta' });
+  if (tonos) {
+    for (const pc of tonos.slice(1)) { ultimo = pitchSobre(pc, ultimo + 1); notas.push({ pitch: ultimo, rol: rolDe(pc) }); }
+  } else {
+    if (n.tercera !== null) { ultimo = pitchSobre(n.tercera, ultimo + 1); notas.push({ pitch: ultimo, rol: 'tercera' }); }
+    ultimo = pitchSobre(n.quinta, ultimo + 1);
+    notas.push({ pitch: ultimo, rol: 'quinta' });
+  }
   const sig = siguiente ? notasParaDibujar(siguiente) : null;
   if (sig && sig.raiz !== n.raiz) {
     const candidatos = [(sig.raiz + 11) % 12, (sig.raiz + 1) % 12].map((pc) => {
@@ -92,7 +99,7 @@ export function lineaDeBajo(acorde: string, siguiente?: string | null): NotaBajo
   for (const { pitch, rol } of notas) {
     const pos = posicionDe(pitch, centro);
     if (!pos) return null;
-    if (rol === 'raiz') centro = pos.traste + 2;
+    if (salida.length === 0) centro = pos.traste + 2;
     salida.push({ ...pos, rol, pitch });
   }
   return salida;

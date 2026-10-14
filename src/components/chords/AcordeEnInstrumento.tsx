@@ -5,6 +5,7 @@ import { CUERDAS_BAJO, COLOR_FUNCION, lineaDeBajo, notasParaDibujar, type Contex
 import { ETIQUETA_VISTA } from './useVistaAcordes';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
+import { ETIQUETA_INVERSION, inversionRecomendada, inversionesDe, nombreInversion, vozTeclado } from '../../utils/inversiones';
 
 const BLANCAS = [0, 2, 4, 5, 7, 9, 11];
 /** Teclas negras: clase de nota y posición (en teclas blancas) del borde izquierdo de la negra. */
@@ -15,7 +16,7 @@ const OCTAVAS = 2;
  * Teclado de 2 octavas con las notas del acorde iluminadas con el color de su función (la raíz, más fuerte).
  * Básico: solo la tríada · Normal: con 7.ª · Pro: el intervalo escrito en cada tecla y la nota de paso hacia el siguiente.
  */
-export const TecladoAcorde: React.FC<{ acorde: string; color?: string; nivel?: NivelAcorde; siguiente?: string | null; bajo?: number | null }> = ({ acorde, color = 'var(--acc)', nivel = 'normal', siguiente, bajo }) => {
+export const TecladoAcorde: React.FC<{ acorde: string; color?: string; nivel?: NivelAcorde; siguiente?: string | null; bajo?: number | null; inversion?: number }> = ({ acorde, color = 'var(--acc)', nivel = 'normal', siguiente, bajo, inversion }) => {
   const completo = notasParaDibujar(acorde);
   if (!completo) return <p className="text-micro text-[var(--ink-2)] font-sans">[Acorde no reconocido]</p>;
   const n = nivel === 'basico' ? { ...completo, notas: completo.notas.filter((pc) => pc === completo.raiz || pc === completo.tercera || pc === completo.quinta) } : completo;
@@ -23,35 +24,39 @@ export const TecladoAcorde: React.FC<{ acorde: string; color?: string; nivel?: N
   const intervalos = nivel === 'pro';
   const w = 10, h = 40, hn = 24;
   const total = BLANCAS.length * OCTAVAS;
+  const tecla = (i: number, pc: number) => Math.floor(i / 7) * 12 + pc;
   // Las teclas son claras y oscuras en cualquier tema (como un piano de verdad): tokens que no cambian con el tema.
-  const relleno = (pc: number, base: string) => (n.notas.includes(pc) ? color : pc === paso ? 'var(--tentative-soft)' : base);
-  const opacidad = (pc: number) => (pc === n.raiz || pc === bajo ? 1 : 0.62);
-  const marca = (pc: number) => (n.notas.includes(pc) ? etiquetaIntervalo(pc, n.raiz) : pc === paso ? '→' : null);
+  // Con inversión se encienden las teclas exactas de esa voz (la nota grave primero); sin ella, todas las del acorde.
+  const voz = inversion === undefined ? null : vozTeclado(n.notas, Math.min(inversion, n.notas.length - 1));
+  const suena = (pc: number, tecla: number) => (voz ? voz.includes(tecla) : n.notas.includes(pc));
+  const relleno = (pc: number, tecla: number, base: string) => (suena(pc, tecla) ? color : pc === paso ? 'var(--tentative-soft)' : base);
+  const opacidad = (pc: number, tecla: number) => (voz ? (tecla === voz[0] || pc === n.raiz ? 1 : 0.62) : pc === n.raiz || pc === bajo ? 1 : 0.62);
+  const marca = (pc: number, tecla: number) => (suena(pc, tecla) ? etiquetaIntervalo(pc, n.raiz) : pc === paso ? '→' : null);
   return (
     <svg viewBox={`0 0 ${total * w} ${h}`} className="w-full" role="img" aria-label={`Teclado: ${acorde}`}>
       {Array.from({ length: total }, (_, i) => (
-        <rect key={`b${i}`} x={i * w + 0.4} y={0} width={w - 0.8} height={h} rx={1} fill={relleno(BLANCAS[i % 7], 'var(--on-scrim)')} opacity={n.notas.includes(BLANCAS[i % 7]) ? opacidad(BLANCAS[i % 7]) : 1} />
+        <rect key={`b${i}`} x={i * w + 0.4} y={0} width={w - 0.8} height={h} rx={1} fill={relleno(BLANCAS[i % 7], tecla(i, BLANCAS[i % 7]), 'var(--on-scrim)')} opacity={suena(BLANCAS[i % 7], tecla(i, BLANCAS[i % 7])) ? opacidad(BLANCAS[i % 7], tecla(i, BLANCAS[i % 7])) : 1} />
       ))}
-      {intervalos && Array.from({ length: OCTAVAS }, (_, o) => BLANCAS.map((pc, i) => marca(pc) && (
-        <text key={`tb${o}-${pc}`} x={(o * 7 + i) * w + w / 2} y={h - 4} textAnchor="middle" fontSize={4.6} fontWeight="bold" fill={pc === paso ? 'var(--tentative)' : 'var(--surface)'}>{marca(pc)}</text>
+      {intervalos && Array.from({ length: OCTAVAS }, (_, o) => BLANCAS.map((pc, i) => marca(pc, o * 12 + pc) && (
+        <text key={`tb${o}-${pc}`} x={(o * 7 + i) * w + w / 2} y={h - 4} textAnchor="middle" fontSize={4.6} fontWeight="bold" fill={pc === paso ? 'var(--tentative)' : 'var(--surface)'}>{marca(pc, o * 12 + pc)}</text>
       )))}
       {Array.from({ length: OCTAVAS }, (_, o) =>
         NEGRAS.map(([pc, x]) => (
-          <rect key={`n${o}-${pc}`} x={(o * 7 + x) * w} y={0} width={w * 0.7} height={hn} rx={1} fill={relleno(pc, 'var(--scrim)')} opacity={n.notas.includes(pc) ? opacidad(pc) : 1} />
+          <rect key={`n${o}-${pc}`} x={(o * 7 + x) * w} y={0} width={w * 0.7} height={hn} rx={1} fill={relleno(pc, o * 12 + pc, 'var(--scrim)')} opacity={suena(pc, o * 12 + pc) ? opacidad(pc, o * 12 + pc) : 1} />
         ))
       )}
-      {intervalos && Array.from({ length: OCTAVAS }, (_, o) => NEGRAS.map(([pc, x]) => marca(pc) && (
-        <text key={`tn${o}-${pc}`} x={(o * 7 + x) * w + w * 0.35} y={hn - 4} textAnchor="middle" fontSize={4.6} fontWeight="bold" fill={pc === paso ? 'var(--tentative)' : 'var(--surface)'}>{marca(pc)}</text>
+      {intervalos && Array.from({ length: OCTAVAS }, (_, o) => NEGRAS.map(([pc, x]) => marca(pc, o * 12 + pc) && (
+        <text key={`tn${o}-${pc}`} x={(o * 7 + x) * w + w * 0.35} y={hn - 4} textAnchor="middle" fontSize={4.6} fontWeight="bold" fill={pc === paso ? 'var(--tentative)' : 'var(--surface)'}>{marca(pc, o * 12 + pc)}</text>
       )))}
     </svg>
   );
 };
 
-const NOMBRE_ROL: Record<string, string> = { raiz: 'raíz', tercera: '3.ª', quinta: '5.ª', octava: '8.ª', paso: 'paso' };
+const NOMBRE_ROL: Record<string, string> = { raiz: 'raíz', tercera: '3.ª', quinta: '5.ª', septima: '7.ª', octava: '8.ª', paso: 'paso' };
 
 /** Mástil de bajo (4 cuerdas) con una línea de un compás: raíz – 3.ª – 5.ª – nota de paso hacia el acorde siguiente. */
-export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; color?: string; nivel?: NivelAcorde }> = ({ acorde, siguiente, color = 'var(--acc)', nivel = 'normal' }) => {
-  const completa = lineaDeBajo(acorde, siguiente);
+export const BajoAcorde: React.FC<{ acorde: string; siguiente?: string | null; color?: string; nivel?: NivelAcorde; inversion?: number }> = ({ acorde, siguiente, color = 'var(--acc)', nivel = 'normal', inversion }) => {
+  const completa = lineaDeBajo(acorde, siguiente, inversion);
   // Básico: solo la raíz (lo que sostiene el acorde). Normal: la línea del compás. Pro: la línea con su intervalo.
   const linea = completa && nivel === 'basico' ? completa.slice(0, 1) : completa;
   const raiz = notasParaDibujar(acorde)?.raiz ?? 0;
@@ -133,17 +138,38 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
   </span>
 );
 
+/** Fila de pastillas para elegir la inversión; el puntito marca la que menos mueve la mano desde el acorde anterior. */
+const ChipsInversion: React.FC<{ opciones: number[]; activa: number | null; recomendada: number | null; onElige: (i: number) => void }> = ({ opciones, activa, recomendada, onElige }) => (
+  <div className="flex justify-center gap-1" role="group" aria-label="Inversión">
+    {opciones.map((i) => (
+      <button key={i} type="button" aria-pressed={i === activa} title={`${nombreInversion(i)}${i === recomendada ? ' · la que menos mueve la mano' : ''}`} onClick={() => onElige(i)} className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer ${i === activa ? 'bg-[var(--surface)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)]'}`}>
+        {ETIQUETA_INVERSION[i]}{i === recomendada && <span aria-hidden className="ml-0.5 inline-block w-1 h-1 rounded-full bg-[var(--ok)] align-middle" />}
+      </button>
+    ))}
+  </div>
+);
+
 /** Una ficha de acorde en el instrumento elegido (guitarra: tabla de formas; piano y bajo: calculados). */
-export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal' }) => {
-  const [inv, setInv] = useState(0);
-  const shape = vista === 'guitarra' && nivel === 'normal' ? buscarFormaGuitarra(chord) : undefined;
-  const inversiones = useMemo(() => (vista === 'guitarra' && nivel === 'pro' ? inversionesGuitarra(chord) : []), [vista, nivel, chord]);
-  const forma = vista === 'guitarra' ? (nivel === 'basico' ? powerChord(chord) : inversiones[Math.min(inv, inversiones.length - 1)] ?? null) : null;
+export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?: ContextoAcorde; grado?: string; sonando?: boolean; nivel?: NivelAcorde; previo?: string | null; conReloj?: boolean; id?: string }> = ({ chord, vista, contexto, grado, sonando, nivel = 'normal', previo, conReloj, id }) => {
+  // La inversión que menos mueve la mano desde el acorde anterior viene puesta en piano y en guitarra Pro (y se puede cambiar);
+  // en guitarra Normal sale la forma de siempre y en bajo la raíz, hasta que se elige otra.
+  const [invElegida, setInvElegida] = useState<number | null>(null);
+  const { total: totalMax, fija } = inversionesDe(chord);
+  const totalInv = nivel === 'basico' ? Math.min(totalMax, 3) : totalMax;
+  const recomendada = inversionRecomendada(chord, previo);
+  const sugerida = previo ? recomendada : null;
+  const invT = invElegida ?? recomendada;
+  const invBajo = invElegida ?? (fija ?? 0);
+  const inversiones = useMemo(() => (vista === 'guitarra' && nivel !== 'basico' ? inversionesGuitarra(chord) : []), [vista, nivel, chord]);
+  const invGuitarra = nivel === 'pro' ? invT : invElegida;
+  const shape = vista === 'guitarra' && nivel === 'normal' && invGuitarra === null ? buscarFormaGuitarra(chord) : undefined;
+  const formaInv = invGuitarra === null ? null : inversiones.find((f) => f.inversion === invGuitarra) ?? inversiones[0] ?? null;
+  const forma = vista === 'guitarra' ? (nivel === 'basico' ? powerChord(chord) : shape ? null : formaInv) : null;
   const paso = nivel === 'pro' && forma ? (() => { const p = notaDePasoHacia(chord, contexto?.siguiente); return p ? pasoEnGuitarra(forma, p.pc) : null; })() : null;
   const fn = contexto?.info?.funcion;
   const color = fn ? COLOR_FUNCION[fn] : undefined;
   return (
-    <div translate="no" data-sonando={sonando ? 'true' : undefined} className={`notranslate p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition-all duration-150 ${sonando ? 'bg-[var(--acc-soft)] ring-2 ring-[var(--acc)] scale-[1.03]' : `bg-[var(--sunken)] ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}`}>
+    <div id={id} translate="no" data-sonando={sonando ? 'true' : undefined} className={`notranslate p-2.5 rounded-[var(--r-m)] text-center space-y-1.5 transition-all duration-150 ${sonando ? `bg-[var(--acc-soft)] ${conReloj ? '' : 'ring-2 ring-[var(--acc)] scale-[1.03]'}` : `bg-[var(--sunken)] ${contexto?.tonica ? 'ring-2 ring-[var(--ok)]' : ''}`}`}>
       <div className="flex items-center justify-center gap-1.5 text-xs font-bold font-sans">
         <span
           className={contexto?.tonica ? 'px-2 py-0.5 rounded-[var(--r-s)] bg-[var(--ok)] text-[var(--on-ok)]' : fn ? `px-2 py-0.5 rounded-[var(--r-pill)] ${CLASE_FUNCION[fn]}` : 'text-[var(--acc)]'}
@@ -151,17 +177,21 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
         >{chord}</span>
         {grado && <span className="text-micro font-normal text-[var(--ink-2)]">{grado}</span>}
       </div>
-      {vista === 'teclado' ? <TecladoAcorde acorde={chord} color={color} nivel={nivel} siguiente={contexto?.siguiente} bajo={inversiones.length ? null : notasParaDibujar(chord)?.bajo} /> : vista === 'bajo' ? <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} /> : forma ? (
+      {vista === 'teclado' ? (
+        <div className="space-y-1">
+          <TecladoAcorde acorde={chord} color={color} nivel={nivel} siguiente={contexto?.siguiente} bajo={inversiones.length ? null : notasParaDibujar(chord)?.bajo} inversion={invT} />
+          {totalInv >= 3 && fija === null && <ChipsInversion opciones={Array.from({ length: totalInv }, (_, i) => i)} activa={invT} recomendada={sugerida} onElige={setInvElegida} />}
+        </div>
+      ) : vista === 'bajo' ? (
+        <div className="space-y-1">
+          <BajoAcorde acorde={chord} siguiente={contexto?.siguiente} color={color} nivel={nivel} inversion={invElegida === null && fija === null ? undefined : invBajo} />
+          {totalInv >= 3 && fija === null && <ChipsInversion opciones={Array.from({ length: totalInv }, (_, i) => i)} activa={invBajo} recomendada={sugerida} onElige={setInvElegida} />}
+        </div>
+      ) : forma ? (
         <div className="space-y-1">
           <DiagramaGuitarra forma={forma} intervalos={nivel === 'pro'} paso={paso} color={color} etiqueta={`Guitarra: ${chord}, ${forma.nombre}`} />
           {nivel === 'basico' && <p className="text-micro text-[var(--ink-2)] font-sans">Power chord</p>}
-          {nivel === 'pro' && inversiones.length > 1 && (
-            <div className="flex justify-center gap-1" role="group" aria-label="Inversión">
-              {inversiones.map((f, i) => (
-                <button key={f.nombre} type="button" aria-pressed={i === inv} title={f.nombre} onClick={() => setInv(i)} className={`px-1.5 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer ${i === inv ? 'bg-[var(--surface)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)]'}`}>{f.inversion === 0 ? 'Fund.' : `${f.inversion}.ª`}</button>
-              ))}
-            </div>
-          )}
+          {inversiones.length > 1 && <ChipsInversion opciones={inversiones.map((f) => f.inversion)} activa={forma && formaInv ? formaInv.inversion : null} recomendada={sugerida} onElige={setInvElegida} />}
         </div>
       ) : shape ? (
         <div className="flex justify-center pt-1">
