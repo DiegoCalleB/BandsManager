@@ -119,7 +119,7 @@
     if (/\[(shouts|gasps|amazed)\]/.test(say) || (say.match(/!/g) || []).length >= 3) {
       var bd = document.body; bd.classList.remove('golpe-voz'); void bd.offsetWidth; bd.classList.add('golpe-voz'); clearTimeout(bd._golpe); bd._golpe = setTimeout(function () { bd.classList.remove('golpe-voz'); }, 700);
     }
-    el.classList.add('habla'); el._t0 = performance.now(); el._dur = m ? m.d / VEL * 1000 : Math.max(900, say.length * 42);
+    el.classList.add('habla'); el._t0 = performance.now(); el._dur = m ? m.d / VEL * 1000 : Math.max(900, say.length * 52);
     dispatchEvent(new Event('voz'));
     if (el.matches('.dlg li')) foco(el);
     // línea con clase «sync»: arranca desde el principio el vídeo de la diapositiva (data-sync) para que lo que se ve cuadre con lo que se dice
@@ -127,7 +127,7 @@
       var vs = el.closest('.slide') && el.closest('.slide').querySelector('video[data-sync]');
       if (vs) { vs.currentTime = 0; var pp = vs.play(); if (pp && pp.catch) pp.catch(function () { /* sin gesto: se queda el cartel */ }); }
     }
-    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 42)); };
+    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 52)); };
     if (m) {
       var audio = libre(); audio._el = el; audio.volume = volumen;
       audio.onended = acabar; audio.onerror = function () { leer(); };
@@ -137,16 +137,21 @@
       return;
     }
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
-    var v = 'speechSynthesis' in window && speechSynthesis.getVoices().filter(function (x) { return /^es(-|_)?ES/i.test(x.lang); })[0];
-    if (v) { // respaldo: voz del navegador, con el tono y la velocidad del personaje
+    // En la película no se usa la voz del navegador (suena a robot y, si no avisa de que ha terminado, la película se queda parada):
+    // la frase se lee con sus subtítulos y el tiempo de hablarla hasta que exista su audio de ElevenLabs.
+    var enPeli = document.body.classList.contains('pelicula') && !document.body.classList.contains('scroll');
+    var v = !enPeli && 'speechSynthesis' in window && speechSynthesis.getVoices().filter(function (x) { return /^es(-|_)?ES/i.test(x.lang); })[0];
+    if (v) { // respaldo (solo en la presentación): voz del navegador, con el tono y la velocidad del personaje
       var u = new SpeechSynthesisUtterance(say.replace(/\[pi\]/g, '…').replace(/\[[a-z ]+\]/g, ''));
       u.lang = 'es-ES';
       u.voice = v;
       var t = (window.REPARTO && window.REPARTO[who] && window.REPARTO[who].tts) || {};
       u.pitch = Math.max(0, Math.min(2, 1 + (t.tono || 0) / 10));
       u.rate = t.vel || 1;
+      // guardia: algunos navegadores nunca avisan del final de la voz; sin ella la presentación se quedaría esperando
+      var guardia = setTimeout(acabar, Math.max(2500, say.length * 95));
       u.onstart = function () { mover(el, null); };
-      u.onend = acabar; u.onerror = leer;
+      u.onend = function () { clearTimeout(guardia); acabar(); }; u.onerror = function () { clearTimeout(guardia); leer(); };
       speechSynthesis.speak(u);
       return;
     }
@@ -216,7 +221,7 @@
     lineas: function (slide) {
       return Array.prototype.map.call(slide.querySelectorAll('[data-who][data-say]'), function (el) {
         var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)];
-        return (m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.042)) + retardo(el) / 1000;
+        return (m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.052)) + retardo(el) / 1000;
       });
     },
     get listo() { return Object.keys(manifest).length > 0; },
@@ -230,7 +235,7 @@
     duracion: function (slide) {
       var t = 0;
       slide.querySelectorAll('[data-who][data-say]').forEach(function (el) {
-        var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)]; t += m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.042);
+        var m = manifest[fnv(el.dataset.who + '|' + el.dataset.say)]; t += m ? m.d / VEL : Math.max(0.9, el.dataset.say.length * 0.052);
       });
       return t;
     },
