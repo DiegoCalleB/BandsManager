@@ -1538,7 +1538,7 @@ CORTES = {
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'Confirmados': 'tema', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego', 'Plano · El local, vacío': 'cabalga',
+          'Qué viene': 'tension', 'Confirmados': 'tema', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'giro', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego', 'Plano · El local, vacío': 'cabalga',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

@@ -9,7 +9,7 @@
   var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200, compila: 210, cabalga: 218 };
   // Canciones de verdad (no bucles): «Compila nu bravu» (Os Herdeiros do Código) y «Cabalga o lóstrego» (Master of Prompts).
   // Arrancan desde el segundo indicado cada vez que entra la escena y no se repiten si acaban antes que ella.
-  var CANCION = { compila: 0, cabalga: 0 };
+  var CANCION = { compila: 0, cabalga: 0, giro: 0 }; // giro: segundo desde el que empieza (cámbialo al punto que quieras)
   var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
@@ -34,9 +34,16 @@
   };
   // «dramatica»: pieza opcional (audio/musica/dramatica.mp3) para los momentos más emotivos. No va en el repositorio (derechos):
   // quien la tenga la deja ahí y suena; si no está, esas escenas usan «noches».
-  var hayDramatica = false;
+  var hayDramatica = false, hayGiro = false;
+  // «giro»: la canción del momento «el bajista soy yo» (audio/musica/giro.mp3). Tampoco va en el repositorio (derechos): quien la tenga la
+  // deja ahí y suena solo en esa escena; si no está, esa escena usa «dramatica» y, si tampoco, «noches».
   try { fetch('audio/musica/dramatica.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.dramatica = 46; hayDramatica = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
-  var quiere = function () { var sl = document.querySelector('.slide.active'), q = sl ? (sl.dataset.musica || '') : ''; return q === 'dramatica' && !hayDramatica ? 'noches' : q; };
+  try { fetch('audio/musica/giro.mp3', { method: 'HEAD' }).then(function (r) { if (r.ok) { MUSICA.giro = 100; hayGiro = true; } }).catch(function () { /* sin ella */ }); } catch (e) { /* sin fetch */ }
+  var quiere = function () {
+    var sl = document.querySelector('.slide.active'), q = sl ? (sl.dataset.musica || '') : '';
+    if (q === 'giro' && !hayGiro) q = 'dramatica';
+    return q === 'dramatica' && !hayDramatica ? 'noches' : q;
+  };
   var objetivo = function () { return !activo() || body.classList.contains('pausado') || body.classList.contains('fin-peli') ? 0 : document.querySelector('.habla, .habla-l') ? BAJO : ALTO; };
   var vol = 0;
   // Volumen general (ducking) y fundido entre piezas (~1,6 s)
