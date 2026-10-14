@@ -399,6 +399,42 @@ EN = {
     "Fine, but there'd better be croquetas in the dressing room.",
 "Esta vez, nos han contestado.":
     "This time, they answered us.",
+"¡Pará, pará, pará! ¿Esto lo hiciste vos? ¿El bajista? ¡Pero esto es de empresa grande, boludo!":
+    "Wait, wait, wait! You made this? The bassist? But this is big-company stuff, man!",
+"Con un poco de ayuda. Aquí están las salas y festivales, y cada conversación queda guardada. Ni una sala se pierde ya.":
+    "With a little help. Here are the venues and festivals, and every conversation is saved. Not one venue gets lost anymore.",
+"¡Una base de datos de salas! ¡Te lo dije, tío! ¡Te lo dije! ¡Soy un vidente, soy Nostradamus con pedales!":
+    "A venue database! I told you, man! I told you! I'm a seer, I'm Nostradamus with pedals!",
+"¡Todas las salas de España en un mapa! ¡Y yo, con el Excel de las siete versiones, llorando!":
+    "Every venue in Spain on one map! And me, with the seven-version Excel, crying!",
+"¡Ha escrito a tres salas y al Resurrécshon Fest mientras yo afinaba! ¡Mientras yo afinaba, tío! ¡Esto es magia negra!":
+    "He wrote to three venues and Resurrection Fest while I was tuning! While I was tuning, man! This is black magic!",
+"¡Pero qué bonito! ¡Si parece el correo de una agencia de verdad! ¡De las que cobran el treinta por ciento!":
+    "How beautiful! It looks like an email from a real agency! The kind that takes thirty percent!",
+"¡Y yo, que firmaba los correos con un besito, boludo! ¡Ahora tengo hasta cargo!":
+    "And I used to sign emails with a little kiss, man! Now I even have a job title!",
+"¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas! ¡Esto es magia, boludo, magia!":
+    "Che, everything changed! The logo, the calendar, even the venues! This is magic, man, magic!",
+"¡Se acabaron las sorpresas el día del bolo! ¡Todo firmado, todo por escrito! ¡Ya no cobramos en croquetas!":
+    "No more surprises on gig day! Everything signed, everything in writing! We're done getting paid in croquettes!",
+"¡Y la mía, con el tono de cada tema, che! ¡Esto es de banda de estadio!":
+    "And mine, with the key of every song, che! This is stadium-band stuff!",
+"¡Mi hoja, con mis notas! ¡Solo las mías! ¡Nunca había tenido una hoja propia en mi vida!":
+    "My sheet, with my notes! Only mine! I'd never had a sheet of my own in my life!",
+"Esto ya no es un local de ensayo, es una discográfica. ¡Una que no se queda el treinta por ciento! ¡Que alguien me pellizque!":
+    "This isn't a rehearsal room anymore, it's a record label. One that doesn't take thirty percent! Somebody pinch me!",
+"¿Una lista de gente que nos quiere de verdad? ¡Dónde firmo, che! ¡Esto es oro puro!":
+    "A list of people who really love us? Where do I sign, che! This is pure gold!",
+"¿O sea que le subes el concierto entero y te saca los trozos más virales? ¿Incluido mi solo de batería? ¡Ai, mi madriña!":
+    "So you upload the whole gig and it picks out the most viral bits? Including my drum solo? Oh my goodness!",
+"¡Esto es tener un equipo de marketing entero metido en el bolsillo!":
+    "This is having a whole marketing team in your pocket!",
+"¡Las cuentas claras! ¡Y salen números positivos! ¡Por primera vez en la historia de esta banda!":
+    "The books are clear! And the numbers are positive! For the first time in this band's history!",
+"¡Pero si no le falta de nada! ¡Es la navaja suiza de las bandas!":
+    "It's missing nothing! It's the Swiss army knife of bands!",
+"Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
+    "Iago, this is crazy. Every band needs it, the managers, the production companies. Everyone!",
 }
 
 def main():
