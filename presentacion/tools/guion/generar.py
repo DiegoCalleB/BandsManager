@@ -1468,7 +1468,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
       <p class="nx-sin">Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
       <div class="gate-btns">
         <button id="gatePeli" class="gate-btn primary">&#9654; Reproducir</button>
-        <button class="gate-btn nx-info" tabindex="-1" aria-hidden="true">&#9432; Más información</button>
+        <button id="gateInfo" class="gate-btn nx-info">&#9432; Más información</button>
       </div>
       <div class="nx-alt"><button id="gateCorto" class="gate-btn">Corte de 5 min</button><button id="gateSound" class="gate-btn">Ver como presentación</button><button id="gateSilent" class="gate-btn">Sin sonido</button></div>
       <div class="nx-meta"><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span><span>Español</span><span class="nx-cc">CC</span></div>
@@ -1476,6 +1476,27 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     </div>
     <div class="nx-lado"><i class="nx-mute"></i><span class="nx-edad">+12</span></div>
     <div class="nx-filas"><h3>Próximamente</h3><div class="nx-row">''' + filas + '''</div></div>
+    <div class="nx-modal" id="nxModal" role="dialog" aria-label="Más información" hidden>
+      <div class="nx-mcard">
+        <div class="nx-mfoto" style="--img:url(img/concierto-2.jpg)"><button class="nx-cerrar" id="nxCerrar" aria-label="Cerrar">&#10005;</button>
+          <h2>Os Herdeiros<br>do Código</h2>
+          <div class="gate-btns"><button class="gate-btn primary" id="nxModalPeli">&#9654; Reproducir</button></div>
+        </div>
+        <div class="nx-mcuerpo">
+          <div class="nx-mizq">
+            <div class="nx-meta"><span class="nx-verde">98 % para ti</span><span>2026</span><span class="nx-edad">+12</span><span>15 min</span><span>HD</span></div>
+            <p>Una banda a punto de separarse. Un bajista con un portátil y hasta el sábado. Y una aplicación que ni él se cree que haya hecho.</p>
+            <p class="nx-peq">Cuatro amigos, un Excel con siete versiones de todo y una pregunta que nadie contestaba: ¿quién gestiona la banda? La respuesta cabe en una presentación de trabajo fin de máster.</p>
+          </div>
+          <dl class="nx-mder">
+            <dt>Reparto:</dt><dd>{voz}, {guitarra}, {bateria}, {bajo}</dd>
+            <dt>Géneros:</dt><dd>Comedias de rock, Películas sobre tecnología</dd>
+            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo</dd>
+            <dt>Dirección:</dt><dd>Diego de la Calle</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
     <div class="gate-note">TFM · Máster de Desarrollo con IA · The Big School by Brais Moure — F pantalla completa · espacio pausa · C subtítulos</div>
   </div>
 </div>

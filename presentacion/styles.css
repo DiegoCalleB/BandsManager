@@ -2256,7 +2256,7 @@ body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
 
 /* ── Netflix: ¿quién está viendo? y pantalla de inicio con la película destacada ── */
 #gate { background: #141414; }
-.nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: hidden; }
+.nx-home { position: absolute; inset: 0; display: flex; align-items: flex-end; overflow: clip; }
 #gate[data-fase="perfiles"] .nx-home, #gate[data-fase="home"] .nx-perfiles { display: none; }
 .nx-perfiles { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; font-family: 'Helvetica Neue', Arial, sans-serif; background: #141414; }
 .nx-perfiles .nx-logo-g { position: absolute; top: 44px; left: 64px; }
@@ -2311,3 +2311,21 @@ body.scroll .con-paso .paso2-in { opacity: 1; translate: none; }
   .nx-hero { padding-bottom: 32vh !important; } .nx-titulo { font-size: min(6.4vw, 8vh); margin: 10px 0 12px; } .nx-gen, .nx-meta { display: none; } .nx-sin { font-size: 17px; margin-top: 10px; } .nx-top10 { margin-top: 12px; font-size: 22px; } .nx-alt, .nx-meta { margin-top: 10px; }
   .nx-top nav, .nx-der { font-size: 15px; } .nx-card b { font-size: 14px; } .nx-card em { font-size: 11px; } .nx-filas h3 { font-size: 20px; }
 }
+
+/* Netflix · «Más información» */
+.nx-modal { position: absolute; inset: 0; z-index: 5; background: rgba(0,0,0,.72); display: grid; place-items: center; font-family: 'Helvetica Neue', Arial, sans-serif; }
+.nx-modal[hidden] { display: none; }
+.nx-mcard { width: min(1180px, 92vw); max-height: 92vh; overflow: hidden; background: #181818; border-radius: 10px; box-shadow: 0 20px 80px #000; animation: nxsube .45s cubic-bezier(.2,.7,.2,1) both; }
+.nx-mfoto { position: relative; height: min(52vh, 560px); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 38px; background: linear-gradient(to top, #181818 4%, transparent 55%), var(--img) center / cover; }
+.nx-mfoto h2 { font: 400 clamp(44px, 6vw, 84px)/.92 Anton, Oswald, Impact, sans-serif; text-transform: uppercase; margin: 0 0 20px; text-shadow: 0 6px 30px #000; }
+.nx-mfoto .gate-btns { margin: 0; }
+.nx-cerrar { position: absolute; top: 18px; right: 18px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: #181818; color: #fff; font-size: 20px; cursor: pointer; }
+.nx-mcuerpo { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; padding: 8px 48px 40px; }
+.nx-mizq p { font-size: 22px; line-height: 1.45; margin: 16px 0 0; }
+.nx-mizq .nx-peq { font-size: 18px; color: #bcbcbc; }
+.nx-verde { color: #46d369; font-weight: 700; }
+.nx-mder { margin: 16px 0 0; font-size: 17px; line-height: 1.5; }
+.nx-mder dt { color: #777; display: inline; margin-right: 8px; }
+.nx-mder dd { display: inline; margin: 0; color: #fff; }
+.nx-mder dd::after { content: ''; display: block; height: 10px; }
+@media (max-height: 800px) { .nx-mfoto { height: 40vh; } .nx-mizq p { font-size: 17px; margin-top: 10px; } .nx-mizq .nx-peq { font-size: 14px; } .nx-mder { font-size: 14px; } .nx-mcuerpo { padding-bottom: 24px; } }

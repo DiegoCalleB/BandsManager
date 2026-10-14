@@ -416,6 +416,14 @@
         }, 700);
       };
       $$('.nx-perfil').forEach((b) => { b.onclick = () => aInicio(b); });
+      // «Más información»: la ficha de la película, como en la plataforma; el tráiler de fondo se queda como está
+      const ficha = $('#nxModal');
+      const fichaAbrir = () => { if (ficha) { ficha.hidden = false; $('#nxCerrar').focus({ preventScroll: true }); } };
+      const fichaCerrar = () => { if (ficha) { ficha.hidden = true; $('#gatePeli').focus({ preventScroll: true }); } };
+      if ($('#gateInfo')) $('#gateInfo').onclick = fichaAbrir;
+      if ($('#nxCerrar')) $('#nxCerrar').onclick = fichaCerrar;
+      if ($('#nxModalPeli')) $('#nxModalPeli').onclick = () => { ficha.hidden = true; $('#gatePeli').click(); };
+      if (ficha) ficha.onclick = (e) => { if (e.target === ficha) fichaCerrar(); };
       if ($('.nx-perfil')) $('.nx-perfil').focus({ preventScroll: true });
       else ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
       if (corte) document.body.classList.add('corte');
@@ -472,6 +480,8 @@
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (document.body.classList.contains('gate')) {
+      const ficha = $('#nxModal');
+      if (ficha && !ficha.hidden) { if (e.key === 'Escape') { e.preventDefault(); $('#nxCerrar').click(); } return; } // con la ficha abierta, Enter pulsa el botón enfocado
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
         e.preventDefault();
         if (gate && gate.dataset.fase === 'perfiles') ($('.nx-perfil.elegido') || $('.nx-perfil')).click();
