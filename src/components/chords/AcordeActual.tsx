@@ -111,13 +111,18 @@ interface DiagramasProps {
   estiloArmonia?: EstiloArmonia;
   /** Con la hoja sincronizada, el borde del acorde actual es un reloj que se llena hasta el cambio. */
   reloj?: { indice: number; tiempos: number[]; duracion: number; audioRef: React.RefObject<HTMLAudioElement | null> };
+  /** Posición en el cifrado de cada uno de `proximos` (mismo orden), para saltar el audio al tocarlos. */
+  indices?: number[];
+  /** Tocar un diagrama lleva el audio a ese acorde. */
+  onIr?: (indiceCifrado: number) => void;
 }
 
 /** El acorde actual y los que vienen, como diagramas que avanzan con la canción. */
-export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proximos, siguiente, sonando, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reloj }) => {
+export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proximos, siguiente, sonando, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reloj, indices, onIr }) => {
   const { acorde, previo, diagramas } = estado;
   if (!diagramas || !acorde) return null;
-  const lista = proximosVisibles(acorde, proximos, siguiente);
+  const origen = proximos ?? (siguiente ? [siguiente] : []);
+  const lista = origen.map((c, k) => ({ c, indice: indices?.[k] })).filter((x) => x.c !== acorde).slice(0, 3);
   const gradoDe = (c: string) => {
     const info = contexto.get(c)?.info;
     return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
@@ -125,17 +130,28 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
   const actual = <CajaAcorde key={acorde} chord={acorde} vista={vista} contexto={contexto.get(acorde)} grado={gradoDe(acorde)} sonando={Boolean(sonando)} nivel={nivel} previo={previo} conReloj={Boolean(reloj)} />;
   return (
     <section translate="no" aria-label="Diagramas de los acordes que vienen" className="notranslate mx-4 mt-3 bg-[var(--sunken)] rounded-[var(--r-l)] p-2.5 space-y-2 shrink-0">
-      <div className="flex items-start gap-2 overflow-x-auto pb-1">
+      <div className="flex items-start gap-2 overflow-x-auto p-1">
         <div className="w-32 shrink-0">
           {reloj ? (
             <RelojEnAcorde diagrama activo={Boolean(sonando)} indice={reloj.indice} tiempos={reloj.tiempos} duracionTotal={reloj.duracion} audioRef={reloj.audioRef}>{actual}</RelojEnAcorde>
           ) : actual}
         </div>
-        {lista.map((c, i) => (
-          <div key={`${c}-${i}`} id={reloj && i === 0 ? `diagrama-acorde-${reloj.indice + 1}` : undefined} className={`w-28 shrink-0 rounded-[var(--r-m)] ${i > 0 ? 'opacity-70' : ''}`}>
-            <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1]} />
-          </div>
-        ))}
+        {lista.map(({ c, indice }, i) => {
+          const ir = onIr && indice !== undefined ? () => onIr(indice) : undefined;
+          return (
+            <div
+              key={`${c}-${i}`}
+              role={ir ? 'button' : undefined}
+              tabIndex={ir ? 0 : undefined}
+              aria-label={ir ? `Ir al acorde ${c}` : undefined}
+              onClick={ir && ((e) => { if (!(e.target as HTMLElement).closest('button')) ir(); })}
+              onKeyDown={ir && ((e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(); } })}
+              className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
+            >
+              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} />
+            </div>
+          );
+        })}
       </div>
       <div className="flex justify-end gap-2 flex-wrap"><SelectorVistaAcorde vista={vista} onCambio={onVista} />{onNivel && <SelectorNivel nivel={nivel} onCambio={onNivel} />}</div>
     </section>

@@ -22,9 +22,16 @@ import { useAtril } from "./AtrilContext";
  * @returns El modal del Atril.
  */
 export function AtrilView() {
-  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef } = useAtril();
+  const { pantallaCompleta, alternarPantallaCompleta, onClose, activeTab, acordeSonando, sincronizado, acordeActivo, proximosAcordes, proximosIndices, setAudioCurrentTime, contextoAcordes, vistaAcordes, setVistaAcordes, nivelAcordes, setNivelAcordes, estiloArmonia, isPlayingAudio, audioUrl, handleToggleAudio, tiemposAcordes, analisisAcordes, audioRef } = useAtril();
   const estadoActual = useAcordeActual(acordeSonando);
   const proximos = sincronizado && acordeActivo >= 0 ? proximosAcordes : undefined;
+
+  const irAlAcorde = (k: number) => {
+    const t = tiemposAcordes[k];
+    if (t === undefined) return;
+    if (audioRef.current) audioRef.current.currentTime = t;
+    setAudioCurrentTime(t);
+  };
 
   return (
     <ModalPortal isOpen={true} onClose={onClose}>
@@ -87,6 +94,8 @@ export function AtrilView() {
         nivel={nivelAcordes}
         onNivel={setNivelAcordes}
         estiloArmonia={estiloArmonia}
+        indices={proximosIndices}
+        onIr={sincronizado && audioUrl ? irAlAcorde : undefined}
         reloj={proximos && analisisAcordes ? { indice: acordeActivo, tiempos: tiemposAcordes, duracion: analisisAcordes.duracionSegundos, audioRef } : undefined}
       />
     )}

@@ -10,7 +10,7 @@ interface Props {
   duracionTotal: number;
   audioRef: React.RefObject<HTMLAudioElement | null>;
   children: React.ReactNode;
-  /** Diagramas: el reloj ocupa todo el ancho, con las esquinas de la ficha, y avisa al diagrama siguiente (no al de la letra). */
+  /** Diagramas: el reloj ocupa todo el ancho, con las esquinas de la ficha, y no ilumina al siguiente (en la letra sí). */
   diagrama?: boolean;
 }
 
@@ -40,7 +40,7 @@ export const RelojEnAcorde: React.FC<Props> = ({ activo, indice, tiempos, duraci
           const color = e.avisando ? 'var(--tentative)' : 'var(--acc)';
           // Esfera del reloj: el barrido avanza como una aguja sobre una pista tenue del mismo color.
           el.style.background = `conic-gradient(from 0deg, ${color} ${gradosDeProgreso(e.progreso)}deg, color-mix(in srgb, var(--acc) 22%, transparent) 0)`;
-          siguiente ??= document.getElementById(`${diagrama ? 'diagrama' : 'cifrado'}-acorde-${indice + 1}`);
+          if (!diagrama) siguiente ??= document.getElementById(`cifrado-acorde-${indice + 1}`);
           if (siguiente) {
             siguiente.style.outline = e.avisando ? '2px solid var(--tentative)' : '';
             siguiente.style.outlineOffset = e.avisando ? '2px' : '';

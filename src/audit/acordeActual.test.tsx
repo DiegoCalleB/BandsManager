@@ -32,6 +32,18 @@ describe('DiagramasAcordeActual', () => {
     expect(h).toContain('aria-label="Diagramas de los acordes que vienen"');
     expect(h).not.toMatch(/\bborder/);
   });
+  it('con onIr cada próximo es un botón que salta a su sitio del cifrado; sin él, no', () => {
+    const con = renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am')} sonando="Am" proximos={['G', 'C']} indices={[3, 5]} onIr={() => {}} {...base} />);
+    expect(con).toContain('aria-label="Ir al acorde G"');
+    expect(con).toContain('aria-label="Ir al acorde C"');
+    const sin = renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am')} sonando="Am" proximos={['G']} indices={[3]} {...base} />);
+    expect(sin).not.toContain('Ir al acorde');
+  });
+  it('sin recortes: el carril lleva relleno y no hay anillos ni ids de aviso', () => {
+    const h = renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am')} sonando="Am" proximos={['G']} {...base} />);
+    expect(h).toContain('overflow-x-auto p-1');
+    expect(h).not.toContain('diagrama-acorde-');
+  });
   it('cerrados o sin acorde no pintan nada', () => {
     expect(renderToStaticMarkup(<DiagramasAcordeActual estado={estado('Am', false)} sonando="Am" {...base} />)).toBe('');
     expect(renderToStaticMarkup(<DiagramasAcordeActual estado={estado(null)} sonando={null} {...base} />)).toBe('');

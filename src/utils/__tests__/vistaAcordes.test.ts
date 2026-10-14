@@ -20,6 +20,8 @@ describe('vistaAcordes', () => {
   it('bajo sin siguiente: cierra con la octava; slash usa el bajo', () => {
     expect(lineaDeBajo('Am')!.map((n) => n.rol)).toEqual(['raiz', 'tercera', 'quinta', 'octava']);
     expect(lineaDeBajo('C/E')![0]).toMatchObject({ cuerda: 0, traste: 0 });
+    // inversión pedida: la 1.ª de Am arranca en la tercera (C)
+    expect(lineaDeBajo('Am', undefined, 1)![0].rol).toBe('tercera');
   });
   it('contexto: función por grado y acorde que más veces sigue', () => {
     const texto = '[E] [A] [E] [A] [E] [B]';
