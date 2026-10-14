@@ -24,8 +24,7 @@ async function abrirEdicion(page: Page) {
   // El asistente de primera configuración tapa el panel la primera vez.
   const luego = page.getByText('Configurar más tarde');
   await luego.waitFor({ timeout: 15_000 }).then(() => luego.click()).catch(() => {});
-  await page.locator('#dashboard-settings-gear-btn').click();
-  await page.locator('#gear-menu-edit-layout-btn').click();
+  await page.locator('#quick-edit-layout-btn').click();
   await page.locator('[data-widget-id]').first().waitFor();
   // Un widget que no esté ya a ancho completo, para poder ensancharlo.
   const id = await page.evaluate(
@@ -91,8 +90,7 @@ test('en el móvil no hay tirador (la rejilla es de una columna)', async ({ page
   await page.locator('#dashboard-settings-gear-btn').waitFor({ timeout: 40_000 });
   const luego = page.getByText('Configurar más tarde');
   await luego.waitFor({ timeout: 15_000 }).then(() => luego.click()).catch(() => {});
-  await page.locator('#dashboard-settings-gear-btn').click();
-  await page.locator('#gear-menu-edit-layout-btn').click();
+  await page.locator('#quick-edit-layout-btn').click();
   await page.locator('[data-widget-id]').first().waitFor();
   const visibles = await page.evaluate(
     () => [...document.querySelectorAll('button[aria-label^="Cambiar el tamaño"]')].filter((e) => getComputedStyle(e).display !== 'none').length,

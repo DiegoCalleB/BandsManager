@@ -427,7 +427,7 @@ export default function Dashboard({
   return (
     <div
       data-modulo="panel"
-      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
+      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-clip"
     >
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex items-center justify-between gap-3 pb-1">
@@ -485,6 +485,19 @@ export default function Dashboard({
               </>
             )}
           </div>
+          <Button
+            variant={isEditDashboardMode ? "primary" : "neutral"}
+            size="xs"
+            type="button"
+            id="quick-edit-layout-btn"
+            aria-pressed={isEditDashboardMode}
+            onClick={() => setIsEditDashboardMode(!isEditDashboardMode)}
+            className="items-center gap-1.5"
+            title="Reordenar, redimensionar y quitar widgets"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span>{isEditDashboardMode ? "Terminar" : "Editar panel"}</span>
+          </Button>
           <Button
             variant="neutral"
             size="xs"
@@ -554,24 +567,6 @@ export default function Dashboard({
                   <span className="text-micro font-medium px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--sunken)] text-[var(--ink-2)]">
                     {viewDensityMode === "clean" ? "Esencial" : "Completa"}
                   </span>
-                </button>
-
-                <button
-                  type="button"
-                  id="gear-menu-edit-layout-btn"
-                  onClick={() => {
-                    setIsEditDashboardMode(!isEditDashboardMode);
-                    setIsDashboardSettingsOpen(false);
-                  }}
-                  className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Personalizar / reordenar</span>
-                  </div>
-                  {isEditDashboardMode && (
-                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
-                  )}
                 </button>
 
                 <button
