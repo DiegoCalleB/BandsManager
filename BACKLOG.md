@@ -209,6 +209,13 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+### Deuda: cada release deja `docs/api` con la versión anterior
+* **Qué:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionarlo `verify:docs` (`generate-openapi --check`) se pone rojo en `main` y en todos los PR (pasó con la 3.0.0, octubre 2026; se arregló regenerando a mano).
+* **Candidatos:** declarar `docs/api/openapi.json` en `extra-files` de `release-please-config.json` (`$.info.version`) y que `index.html` no lleve la versión; o quitar la versión del documento generado; o regenerar en el propio PR de release.
+* **Estado:** pendiente. Hasta entonces, tras fusionar una release: `node scripts/generate-openapi.mjs` y commit.
+
+---
+
 ### Deuda: datos de bandas concretas (Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
 * **Hecho en fase 1b/2 (parcial, octubre 2026):** fuera el texto de una banda concreta de las rutas de lectura y prompts del servidor (`emailTemplate.ts` ya no inventa teléfono/email/logo y usa el nombre de la banda; scout, radar, matcher y audiencia usan «la banda»; ejemplos de `metrics.ts`); el EPK de la banda de ejemplo (`band-demo`) vive aislado en `server/seeds/demoEpk.ts` (con test) y `sync.ts` solo pregunta `defaultEpkConfigFor(bandId)`; variables de tono de `ReelsCenter.tsx` sin nombre de banda.
