@@ -216,6 +216,13 @@ export async function runEnviadorAgent(opts: {
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: "El email de contacto rebotó antes. Corrígelo antes de volver a enviar." });
       continue;
     }
+    // Solo sale el texto que una persona aprobó. Antes, con el pitch vacío se enviaba el último
+    // mensaje recibido (se le devolvía a la sala su propio correo) o un texto genérico.
+    const textoAprobado = String(lead.pitch_generado || "").trim();
+    if (!textoAprobado) {
+      results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "error", error: "El lead no tiene texto aprobado que enviar. Redacta y aprueba el correo antes de despacharlo." });
+      continue;
+    }
     if (ENVIO_REAL && enviadosHoy >= TOPE_DIARIO) {
       results.push({ id: lead.id, nombre_sala: lead.nombre_sala, status: "omitido", error: `Se alcanzó el tope diario de ${TOPE_DIARIO} envíos. Continúa mañana.` });
       continue;
@@ -232,9 +239,8 @@ export async function runEnviadorAgent(opts: {
       .filter((e, i, todos) => todos.findIndex((x) => x.toLowerCase() === e.toLowerCase()) === i);
 
     const emailContacto = rawEmails.length > 0 ? rawEmails.join(", ") : (lead.email_contacto || lead.email);
-    const rawPitch = lead.pitch_generado || lead.ultimo_mensaje_recibido || "Hola, os dejamos nuestra propuesta de concierto.";
     const { html: emailHtml, text: emailText, cleanPitch } = buildServerEmailHtml({
-      pitchText: rawPitch,
+      pitchText: textoAprobado,
       bandName,
       bandId: opts.bandId,
       epkConfig,

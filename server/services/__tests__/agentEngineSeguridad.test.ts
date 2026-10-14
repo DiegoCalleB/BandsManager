@@ -187,3 +187,18 @@ describe('Enviador: fallos al guardar', () => {
     expect(u!.fila.estado).toBe('nuevo');
   });
 });
+
+describe('Enviador: solo sale texto aprobado', () => {
+  it.each([
+    ['sin pitch', { pitch_generado: '' }],
+    ['pitch en blanco', { pitch_generado: '   \n ' }],
+    ['sin pitch pero con el último mensaje de la sala', { pitch_generado: '', ultimo_mensaje_recibido: 'Hola, ¿qué caché pedís?' }],
+  ])('%s: no envía ni crea borrador y lo marca como error', async (_caso, cambios) => {
+    montarSupabase({ leads: [{ ...leadBase, ...cambios }] });
+    const r = await runEnviadorAgent({ bandId: 'band-test', triggerType: 'test' });
+    expect(enviarEmailMock).not.toHaveBeenCalled();
+    expect(crearBorradorMock).not.toHaveBeenCalled();
+    expect(r.results[0].status).toBe('error');
+    expect(r.results[0].error).toMatch(/no tiene texto aprobado/);
+  });
+});
