@@ -10,7 +10,7 @@ Solo lo que **todavía no existe** como clip. Todo lo demás de la película ya 
 
 | # | Archivo | Quién | Escena | ~Duración | Prioridad | Ahora usa |
 |---|---|---|---|---|---|---|
-| 1–4 | `ent-diego-giro`, `ent-diego-giro-b`, `ent-diego-sueno`, `ent-diego-sueno-b` | **Diego (lo grabas tú)** | 53 y 55 | 3 + 17 + 10 + 12 s | **1** | Tu foto en el escenario |
+| 1–4 | `ent-diego-giro`, `ent-diego-giro-b`, `ent-diego-sueno`, `ent-diego-sueno-b` | **Diego (lo grabas tú)** | 53 y 55 | 3 + 17 + 10 + 12 s | **1** | Tu foto real (blanco y negro) |
 | 5 | `ent-brais-correo` | Brais | 1 · Un correo | 7 s | 1 | `brais-cu.mp4` |
 | 6 | `ent-alan-correo` | Alan | 1 · Un correo | 4 s | 1 | `alan-cu.mp4` |
 | 7 | `ent-iago-nadie` | Iago | 9 · Nadie lo sabía | 7 s | 1 | `iago-cu.mp4` |
@@ -26,6 +26,8 @@ Solo lo que **todavía no existe** como clip. Todo lo demás de la película ya 
 | 17 | `ent-alvaro-fans` | Álvaro | 34 · Los fans | 7 s | 3 | `alvaro-cu.mp4` |
 | 18 | `ent-alan-reels` | Alan | 34 · Los fans | 8 s | 3 | `alan-cu.mp4` |
 
+| 19 | `gracias-mop.jpg` (imagen) + `gracias.mp4` (vídeo) | Diego + Brais | 59 · Gracias | 6–8 s | 1 | Imagen de IA con un Diego que no eres tú |
+
 **Prioridad 1** = lo que más pesa en el efecto documental y en la emoción (la apertura, las noches y Diego). **2** = el cuerpo de la película. **3** = las frases que venden funciones concretas.
 
 ---
@@ -34,7 +36,8 @@ Solo lo que **todavía no existe** como clip. Todo lo demás de la película ya 
 
 Cuatro clips con el mismo encuadre y luz que las demás entrevistas, para que al cortar sean «una más»: la diferencia la marca el rótulo **DIEGO DE LA CALLE · El bajista**.
 
-- **Cómo grabar:** móvil en horizontal sobre trípode, a la altura de los ojos, plano de pecho para arriba. Mira justo al lado de la lente, ligeramente a la izquierda del encuadre. Luz suave de ventana de lado, fondo oscuro y ordenado con alguna luz cálida. Tono sereno y bajito, como un testimonio. Graba cada frase dos o tres veces y deja un segundo de silencio al principio y al final. Camiseta negra lisa o la del grupo.
+- **Cómo grabar:** móvil en horizontal sobre trípode, a la altura de los ojos, plano de pecho para arriba. Mira justo al lado de la lente, ligeramente a la izquierda del encuadre. Luz suave de ventana de lado, fondo oscuro y ordenado con luces cálidas. Tono sereno y bajito, como un testimonio. Graba cada frase dos o tres veces y deja un segundo de silencio al principio y al final.
+- **Vestuario (importante):** **camiseta negra, chaleco vaquero negro con parches de metal y muñequera**, con tu pelo corto y tu perilla de siempre. El aire metalero lo da el chaleco, no el pelo: así eres tú, y es el mismo vestuario que llevará tu cara en la foto de «Gracias» (más abajo). Si tienes el bajo a mano, déjalo apoyado detrás, desenfocado.
 - Puedes grabar cada pareja de seguido como un solo clip; dime y los parto.
 
 | Archivo | Frase | Va |
@@ -43,6 +46,26 @@ Cuatro clips con el mismo encuadre y luz que las demás entrevistas, para que al
 | `ent-diego-giro-b.mp4` | «Toqué en varios grupos y los fui dejando uno a uno: sin organización, sin gestión y sin tiempo, no íbamos a ningún lado. Hice BandManager para volver a subirme a un escenario, delante de miles de personas, y hacerlas disfrutar con nuestra música.» | escena 53 · El giro: el bajista soy yo |
 | `ent-diego-sueno.mp4` | «Y ya estamos montando un grupo de metal. Nos falta batería… Con muchísima ilusión, y sabiendo que con BandManager toda la gestión va a ir rodada.» | escena 55 · Un sueño hecho realidad |
 | `ent-diego-sueno-b.mp4` | «Y quién sabe si el día de mañana a mis hijas les da por formar sus grupos, y les ayuda a que los comienzos sean mucho más fáciles. Un sueño hecho realidad.» | escena 55 · Un sueño hecho realidad |
+
+---
+
+## 1b. Rehacer «Gracias» con tu cara de verdad · prioridad 1
+
+El Diego de la foto actual (pelo largo y suelto) no eres tú. Esta escena es la última imagen de la historia, con Brais, así que tiene que ser tu cara. Se hace en dos pasos, en Omni:
+
+**Paso 1: la imagen.** Sube dos imágenes: la 1 es `presentacion/img/gracias-mop.jpg` (la escena) y la 2 es **una foto tuya de frente, bien iluminada, con el pelo corto y la perilla** (puede ser un fotograma de tu grabación). Prompt (Omni, edición de imagen):
+
+```
+Edit image 1. Keep absolutely everything the same: the Resurrection Fest 2027 stage at night with red flare smoke, the huge crowd, the black GitHub flag, the penguin flag and the orange flag, the two cardboard signs "TE QUIERO BRAIS" and "¡MENOS PROMPTS Y MÁS RITMO!", the bearded drummer on the right in a backwards black cap holding two drumsticks and making the horns sign with an Estrella Galicia bottle, the framing, the lens and the lighting. Replace ONLY the long-haired man on the left with the man from image 2: his face, his SHORT dark hair and his small goatee must match image 2 exactly, aged about 40. He keeps the same pose and wardrobe: a black t-shirt, a black denim battle vest covered in metal patches and pins, studded leather wristbands, a bass guitar slung over his shoulder, an Estrella Galicia bottle raised in one hand and a big natural smile. Photorealistic, same colour grade, same crowd. Do not change any text on the signs or the stage banner.
+```
+
+**Paso 2: el vídeo** (`gracias.mp4`, vertical 9:16, 6–8 s). Con la imagen nueva como primer fotograma (image-to-video):
+
+```
+Vertical 9:16, cinematic handheld selfie-style shot from the edge of the barrier in front of the Resurrection Fest 2027 main stage at night. Two men in the foreground: on the left, a man of about 40 with short dark hair and a small goatee, a black denim battle vest covered in metal patches, a bass guitar on his shoulder, raising an Estrella Galicia bottle with a big smile; on the right, a bearded drummer in a backwards black cap holding two drumsticks, making the horns sign and laughing. 0.0-2.0 s: they look at the lens and cheer. 2.0-5.0 s: the huge crowd behind them waves hands and flags, red flare smoke drifts across the stage lights, the signs "TE QUIERO BRAIS" and "¡MENOS PROMPTS Y MÁS RITMO!" sway slightly. 5.0-8.0 s: they clink bottles, laugh and shout toward the crowd. Slight natural camera sway, shallow depth of field, warm stage lights against the cool night, fine film grain. Keep the faces identical to the reference image for the whole clip. Audio: crowd roar and distant music, no speech. Do not change any text.
+```
+
+Cuando los tengas, súbelos y los monto. Hasta entonces la película usa los actuales.
 
 ---
 

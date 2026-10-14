@@ -39,7 +39,7 @@ Al final de la película se revela que:
 | **El programador de la Sala El Faro** | Programador de sala, no mánager de nadie. Contesta en 35 minutos (la última sala tardó 3 semanas para decir que no). | Cordial, bromea con las croquetas del rider. Después «presta» su cara al festival. |
 | **El cantante de Master of Prompts** | Rival primero, amigo después. Le propone a Iago un **Date Swap** (cambio de fechas) y ficha a Brais. | Entra en el capítulo 1; vuelve al final. |
 | **Claudio y Guglio** | Dos IAs en forma de personajes: Claudio (Claude Code) discute con juicio; Guglio (Gemini) pone «las ideas locas». | «Tú decides, Iago. Nosotros proponemos y tú revisas cada respuesta.» Símbolo del método de trabajo humano + IA. |
-| **Diego de la Calle** | Autor y bajista real, 41 años, desarrollador. Aparece solo en el giro final. | Habla a cámara, tranquilo, agradecido. |
+| **Diego de la Calle** | Autor y bajista real, 40 años, desarrollador. Aparece solo en el giro final. | Habla a cámara, tranquilo, agradecido. |
 | **Locutor de radio** | Voz en off «Radio Riff» que resume la historia. | Neutral, tono noticiero. |
 
 **Mis bandas reales** (salen en la película): THC (15 años, con mi hermano Fer), Arritmia (17, primera maqueta), Limando (20, Pradoluengo), Walter Sax Big Band (25, incluido un concierto en el Bernabéu), Repercusión (30–33; Fiestas del PCE 2015 compartiendo cartel con Siniestro Total, y Batalla Naval de Vallekas 2018) y **Master of Prompts** (40, la banda actual).

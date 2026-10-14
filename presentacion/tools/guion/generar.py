@@ -882,7 +882,7 @@ if FOTOS:
   <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
   {cuerpo}
   {linea}
-  <p class="mb-fin" style="--t:{t:.2f}s"><small>Hoy, a los 41</small>Y siempre, la música.</p>
+  <p class="mb-fin" style="--t:{t:.2f}s"><small>Hoy, a los 40</small>Y siempre, la música.</p>
 </section>''')
 else:
     S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
@@ -1255,8 +1255,9 @@ for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), enc
         _rot = '' if _l['who'] in _vistos else f'<figcaption class="ent-rot"><b>{_n}</b><span>{_r}</span></figcaption>'
         _vistos.add(_l['who'])
         _media = (f'<video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/{_c}.jpg"><source src="video/actores/{_c}.mp4" type="video/mp4"></video>'
-                  if _c else f'<img src="{_l["foto"]}" alt="">')  # sin clip rodado aún: su foto, con el mismo encuadre y rótulo
-        _pl.append(f'<figure class="ent ent-{_pl_c}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
+                  if _c else f'<img src="{_l["foto"]}" alt="">')  # sin clip rodado aún: su foto real, entera sobre su propio fondo desenfocado, con el mismo rótulo
+        _fa = '' if _c else f' ent-foto" style="--bg:url({_l["foto"]})'
+        _pl.append(f'<figure class="ent ent-{_pl_c}{_fa}" data-who="{_l["who"]}" data-say="{_l["voz"].replace(chr(34), "&quot;")}">'
                    f'{_media}{_rot}<p class="ent-txt">{_l["txt"]}</p></figure>')
     _sec = (f'<section class="slide entrevista" data-title="{_e["title"]}" data-transition="fade">\n  ' + '\n  '.join(_pl) + '\n</section>\n')
     _tras = _e['entrevista']['tras']

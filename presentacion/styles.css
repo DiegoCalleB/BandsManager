@@ -2224,3 +2224,8 @@ body.pelicula:not(.scroll) .slide.scene.tech .steps, body.pelicula:not(.scroll) 
 body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1 Onest, sans-serif; letter-spacing: .3em; text-transform: uppercase; color: #ffd596; }
 /* Los dos planos más oscuros del capítulo 5 se aclaran un poco (se ven el portátil y las caras) */
 .slide[data-title="Qué viene"] .actor-vid, .slide[data-title="Cómo ganamos dinero"] .actor-vid { filter: brightness(1.7) contrast(1.05); }
+
+/* Mientras Diego no haya grabado su clip: su foto real entera, sobre ella misma desenfocada (es vertical y pequeña) */
+.entrevista .ent.ent-foto::before { content: ''; position: absolute; inset: -60px; background: var(--bg) center / cover; filter: blur(46px) brightness(.45) saturate(.8); }
+.entrevista .ent.ent-foto img { object-fit: contain; object-position: 50% 50%; width: auto; height: 100%; left: 50%; right: auto; translate: -50% 0; }
+.slide.entrevista.active .ent.ent-foto.on img { animation: none; }
