@@ -128,7 +128,7 @@ export async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
       const e = comoErrorCapturado(eCapturado);
       // YouTube bloquea getBasicInfo desde IPs de datacenter. No es fatal: con la Data API
       // o yt-dlp por delante, aquí ya casi nunca hace falta llegar.
-      console.log(`[Reels] getBasicInfo no disponible para ${videoId}:`, e?.message || e);
+      console.log("[Reels] getBasicInfo no disponible para %s:", videoId, e?.message || e);
     }
   }
 
