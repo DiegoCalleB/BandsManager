@@ -59,6 +59,8 @@ import {
   type NormalizedHighlight
 } from "../utils/reelsCore.js";
 import { renderizarClip } from "../services/clipRenderer.js";
+import { diagnosticarHook } from "../services/hookDoctor.js";
+import { duracionDeLoopAjustada, escribirRotuloHook, registrarProcedenciaClip } from "../services/clipNovedades.js";
 import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
 import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
@@ -610,7 +612,12 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     punchInZoom = false,
     beatDropFx = false,
     smartPan = false,
-    inlineBase64 = false
+    inlineBase64 = false,
+    // Novedades de calidad: rótulo de enganche, bucle sin salto, volumen estándar y derechos.
+    hookText = "",
+    loopPerfecto = false,
+    derechosDeclarados = false,
+    normalizarVolumen = true
   } = req.body || {};
 
   if (!youtubeUrl) {
@@ -635,6 +642,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
   const reqId = `clip_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
   const rutaDescarga = path.join(os.tmpdir(), `${reqId}_raw.mp4`);
   const rutaAss = path.join(os.tmpdir(), `${reqId}_subs.ass`);
+  const rutaHookAss = path.join(os.tmpdir(), `${reqId}_hook.ass`);
   asegurarDirectorioClips();
   const nombreSalida = `${reqId}.mp4`;
   const rutaSalida = path.join(CLIPS_DIR, nombreSalida);
@@ -646,13 +654,20 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     const urlCanonica = canonicalYouTubeUrl(videoId);
 
     console.log(`[Reels] Descargando ${videoId} para recortar ${inicio}s +${duracion}s...`);
-    const offsetDescarga = await descargarVideo(urlCanonica, rutaDescarga, { start: inicio, duration: duracion });
+    // La ficha del vídeo (canal de origen) solo hace falta para acreditar los derechos del clip.
+    const [offsetDescarga, metaOrigen] = await Promise.all([
+      descargarVideo(urlCanonica, rutaDescarga, { start: inicio, duration: duracion }),
+      fetchYoutubeMeta(videoId).catch(() => metaVacia(videoId))
+    ]);
     // Si solo se bajó el tramo, dentro del fichero nuestro corte empieza mucho antes.
     const inicioEnFichero = Math.max(0, inicio - offsetDescarga);
 
+    // Con loop, el final se ajusta (±1,5 s) al punto que mejor enlaza con el arranque.
+    const duracionClip = loopPerfecto ? await duracionDeLoopAjustada(rutaDescarga, inicioEnFichero, duracion) : duracion;
+
     // Subtítulos ANTES de codificar: si se van a incrustar, ffmpeg los necesita en disco.
     const transcript = await fetchTranscript(videoId).catch(() => [] as TranscriptItem[]);
-    const cues = buildSubtitleCues(transcript, inicio, duracion);
+    const cues = buildSubtitleCues(transcript, inicio, duracionClip);
     const vttContent = buildVtt(cues);
     const words = buildWordOffsets(cues);
     const sinTranscripcionReal = cues.length === 0;
@@ -662,18 +677,23 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       const assContent = karaokeSubtitles ? buildKaraokeAssSubtitles(cues) : buildAssSubtitles(cues);
       await fs.promises.writeFile(rutaAss, assContent, "utf-8");
     }
+    const rutaHook = await escribirRotuloHook(rutaHookAss, hookText, duracionClip);
 
-    console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos incrustados: ${incrustarSubs}`);
-    await renderizarClip({
+    console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos: ${incrustarSubs}, hook: ${Boolean(rutaHook)}, loop: ${Boolean(loopPerfecto)}`);
+    const plan = await renderizarClip({
       rutaEntrada: rutaDescarga,
       rutaSalida,
       inicioEnFichero,
-      duracion,
+      duracion: duracionClip,
       cropMode,
       punchInZoom: Boolean(punchInZoom),
       beatDropFx: Boolean(beatDropFx),
       smartPan: Boolean(smartPan),
-      rutaSubtitulos: incrustarSubs ? rutaAss : undefined
+      rutaSubtitulos: incrustarSubs ? rutaAss : undefined,
+      rutaHook,
+      normalizarVolumen: normalizarVolumen !== false,
+      loop: Boolean(loopPerfecto),
+      calidad: "alta"
     });
 
     const tamano = fs.statSync(rutaSalida).size;
@@ -703,6 +723,23 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
     }
 
+    // Procedencia y derechos: solo un clip guardado de forma permanente se puede autopublicar.
+    let derechos: string | null = null;
+    if (guardadoPermanente) {
+      const perfil = await perfilDeLaPeticion(req);
+      derechos = await registrarProcedenciaClip({
+        bandId: getTargetBandId(req),
+        clipUrl,
+        sourceUrl: canonicalYouTubeUrl(videoId),
+        canalOrigen: metaOrigen.author,
+        youtubeDeLaBanda: perfil.youtube,
+        nombreDeLaBanda: displayBandName(perfil),
+        declaradoPorLaBanda: Boolean(derechosDeclarados),
+        loopPerfecto: plan.loopAplicado,
+        hookText: String(hookText || "")
+      });
+    }
+
     // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
     // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
     // viajaba por la red.
@@ -713,7 +750,10 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       fileSize: tamano,
       storedPermanently: guardadoPermanente,
       start: inicio,
-      duration: duracion,
+      duration: plan.duracionFinal,
+      loopApplied: plan.loopAplicado,
+      hookBurned: Boolean(rutaHook),
+      rights: derechos,
       cropMode,
       burnedSubtitles: incrustarSubs,
       subtitles: cues,
@@ -736,7 +776,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     await borrarSiExiste([rutaSalida]);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
   } finally {
-    await borrarSiExiste([rutaDescarga, rutaAss]);
+    await borrarSiExiste([rutaDescarga, rutaAss, rutaHookAss]);
   }
 });
 
@@ -923,116 +963,9 @@ Responde ÚNICAMENTE con JSON válido:
  */
 router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
   try {
-    // Sin datos de banda en esta ruta, pero exige banda activa en la sesión (falla con 500 si falta).
-    getTargetBandId(req);
-    const { 
-      hookText = "", 
-      copyText = "", 
-      songTitle = "", 
-      platform = "Instagram", 
-      contentType = "concierto" 
-    } = req.body || {};
-
-    const perfil = await perfilDeLaPeticion(req);
-    const nombreBanda = displayBandName(perfil) || "La Banda";
-
-    const hookLimpio = String(hookText || "").replace(/[\r\n\t]/g, " ").trim();
-    const copyLimpio = String(copyText || "").trim();
-    const temaLimpio = String(songTitle || "").replace(/[\r\n\t]/g, " ").trim();
-
-    const ai = getAiClient();
-    if (ai) {
-      const prompt = `Eres el Director de Virality & Anti-Cringe Strategist de BandManager.io.
-Tu misión es auditar un Reel de una banda de música independiente (${nombreBanda}), eliminar cualquier rastro de marketing amateur/cliché o 'cringe' (postureo falso, pedir favores, frases de teletienda) y maximizar la retención y comentarios orgánicos.
-
-${buildBandContextBlock(perfil)}
-
-DATOS DEL REEL:
-- Banda: "${nombreBanda}"
-- Canción/Tema: "${temaLimpio || 'Directo / Ensayo'}"
-- Plataforma: "${platform}"
-- Tipo de material: "${contentType}"
-- Gancho visual actual (0-3s): "${hookLimpio || '(Vacío)'}"
-- Copy actual: "${copyLimpio || '(Vacío)'}"
-
-TU AUDITORÍA DEBE DEVOLVER:
-1. "cringeScore": Número entero de 0 a 100.
-   - 0-20: Cero cringe, máxima autenticidad y misterio.
-   - 21-50: Aceptable pero con margen de mejora.
-   - 51-100: Cringe alto (suena a influencer de pacotilla, pide likes descaradamente, o suena aburrido).
-2. "estimatedRetention3s": Porcentaje estimado (ej: 88).
-3. "verdict": Dictamen corto y memorable en español (ej: "Potencial Viral Alto", "Demasiado Genérico", "Falta Curiosidad").
-4. "cringeReasons": Array de 1 a 3 motivos honestos de por qué falla o cómo se percibe.
-5. "improvedHook": Gancho de alto impacto (máximo 8 palabras) sin clichés, con curiosidad o debate real.
-6. "improvedCopy": Copy optimizado para ${platform}, con lore/conexión auténtica y llamada sutil.
-7. "pinnedComment": EL PRIMER COMENTARIO FIJADO (Pinned Comment). Una pregunta o reto polarizante para que la gente responda inmediatamente en los primeros 10 minutos de subida (crucial para el algoritmo).
-8. "pinnedCommentGoal": Explicación de por qué este comentario fuerza el debate.
-
-Responde ÚNICAMENTE con JSON válido:
-{
-  "cringeScore": 15,
-  "estimatedRetention3s": 89,
-  "verdict": "Gancho Magnético Auténtico",
-  "cringeReasons": ["..."],
-  "improvedHook": "...",
-  "improvedCopy": "...",
-  "pinnedComment": "...",
-  "pinnedCommentGoal": "..."
-}`;
-
-      try {
-        const response = await ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-            temperature: 0.7
-          }
-        });
-
-        const textoJson = response.text || "";
-        const parsed = extractJsonObject(textoJson);
-        if (parsed && typeof parsed === "object") {
-          return res.json({
-            success: true,
-            generatedByAI: true,
-            diagnosis: {
-              cringeScore: Math.min(100, Math.max(0, Number(parsed.cringeScore) || 20)),
-              estimatedRetention3s: Math.min(99, Math.max(30, Number(parsed.estimatedRetention3s) || 85)),
-              verdict: String(parsed.verdict || "Auditoría completada"),
-              cringeReasons: Array.isArray(parsed.cringeReasons) ? parsed.cringeReasons.map(String) : [],
-              improvedHook: String(parsed.improvedHook || hookLimpio),
-              improvedCopy: String(parsed.improvedCopy || copyLimpio),
-              pinnedComment: String(parsed.pinnedComment || "¿Qué nota le dais a este momento del 1 al 10? 👇🎸"),
-              pinnedCommentGoal: String(parsed.pinnedCommentGoal || "Dispara el debate orgánico en comentarios.")
-            }
-          });
-        }
-      } catch (errCapturado) {
-        const err = comoErrorCapturado(errCapturado);
-        console.warn("[AI Hook Doctor Error]:", err?.message || err);
-      }
-    }
-
-    // Fallback inteligente si la IA no está disponible
-    const fallbackDiagnosis = {
-      cringeScore: hookLimpio.includes("nuevo tema") || hookLimpio.includes("escucha") ? 65 : 25,
-      estimatedRetention3s: hookLimpio.length > 5 ? 82 : 60,
-      verdict: hookLimpio.length > 5 ? "Buen Gancho Rítmico" : "Gancho Mejorable",
-      cringeReasons: hookLimpio.includes("nuevo tema") 
-        ? ["Evita anunciar 'nuestro nuevo tema', es más efectivo abrir un hueco de misterio o debate."] 
-        : ["Asegúrate de que los primeros 2 segundos retienen con una pregunta o detalle inesperado."],
-      improvedHook: hookLimpio || `El momento exacto en que la sala entera explotó 🤯⚡`,
-      improvedCopy: copyLimpio || `Nadie en la sala se dio cuenta hasta el final... ¿Vosotros lo habéis visto? Dejadnos en comentarios 👇🎸\n\n#${nombreBanda.replace(/\s+/g, '')} #Directo`,
-      pinnedComment: `Sinceramente... ¿este solo os parece demasiado rápido o está en su punto exacto? Os leemos 👇🥁`,
-      pinnedCommentGoal: "Provoca opiniones polarizadas que aumentan el engagement en la primera hora."
-    };
-
-    return res.json({
-      success: true,
-      generatedByAI: false,
-      diagnosis: fallbackDiagnosis
-    });
+    const bandId = getTargetBandId(req); // exige banda activa en la sesión (falla con 500 si falta)
+    const { generatedByAI, diagnosis } = await diagnosticarHook(await perfilDeLaPeticion(req), bandId, req.body || {});
+    return res.json({ success: true, generatedByAI, diagnosis });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[AI Hook Doctor Route Error]:", err);

@@ -95,6 +95,10 @@ export interface CutClipResponse {
   fileSize?: number;
   burnedSubtitles?: boolean;
   storedPermanently?: boolean;
+  /** Con qué derechos se registró el clip; null = no autopublicable. */
+  rights?: "canal_de_la_banda" | "declarado_por_la_banda" | null;
+  loopApplied?: boolean;
+  hookBurned?: boolean;
   vttContent?: string;
   subtitles?: SubtitleCue[];
   words?: WordOffset[];

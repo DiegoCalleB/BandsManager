@@ -11,6 +11,10 @@ import { formatTime, parseRangeTimes } from "../reelsHelpers";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface ClipRenderingParams {
+  isSeamlessLoop: boolean;
+  isPunchInZoom: boolean;
+  smartPan: boolean;
+  derechosDeclarados: boolean;
   highlights: HighlightClip[];
   selectedHighlightIndex: number;
   youtubeUrl: string;
@@ -46,7 +50,7 @@ export interface ClipRenderingParams {
  * @param params Estado y callbacks del contenedor ({@link ClipRenderingParams}).
  * @returns Estado derivado y handlers expuestos al contenedor.
  */
-export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
+export function useClipRendering({ isSeamlessLoop, isPunchInZoom, smartPan, derechosDeclarados, highlights, selectedHighlightIndex, youtubeUrl, setIsCuttingVideo, setCuttingError, setCuttingProgressText, setWordOffsets, setSinTranscripcionReal, cropMode, burnSubtitles, karaokeSubtitles, renderedClipUrl, renderedSubUrl, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, bandName, setThumbnailCapturedSuccess, selectedPlatform, editedCopy, optimalTime, nombreBanda, copyObjective, subtitleCues, setPackDownloadedSuccess }: ClipRenderingParams) {
   const handleCutPhysicalVideo = async () => {
     const activeClip = highlights[selectedHighlightIndex];
     if (!activeClip || !youtubeUrl) return;
@@ -98,6 +102,12 @@ export function useClipRendering({ highlights, selectedHighlightIndex, youtubeUr
           cropMode,
           burnSubtitles,
           karaokeSubtitles,
+          // Lo que el estudio activa tiene que acabar en el MP4, no solo en la maqueta del móvil.
+          hookText: activeClip.hookText || "",
+          loopPerfecto: isSeamlessLoop,
+          punchInZoom: isPunchInZoom,
+          smartPan,
+          derechosDeclarados,
           // Flag antiguo, por si el servidor todavía no está actualizado.
           cropVertical: cropMode !== "none",
         }),
