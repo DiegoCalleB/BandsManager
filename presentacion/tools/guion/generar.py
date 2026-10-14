@@ -1427,6 +1427,8 @@ html = html.replace('data-title="Créditos" data-corto', 'data-title="Créditos"
 # en la película completa, sin los bloques .cr-extra: 48 s de rollo (styles.css), a la misma velocidad que en el corte
 html = html.replace('data-dur="150000"', 'data-dur="150000" data-dur-peli="146000" data-dur-corto="50000"', 1)
 html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="10500"', 1)
+# el correo tarda ~23 s en escribirse y enviarse (styles.css, .mailscene): la diapositiva no pasa a la siguiente antes
+html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-title="El correo llega a la sala" data-corto data-min="23500" data-dur-peli="23000"', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
 html = html.replace('<div class="react wow"><img src="img/miembro-brais.jpg"', '<div class="react wow" data-who="bateria" data-say="' + EXTRA_SAY['react'] + '"><img src="img/miembro-brais.jpg"', 1)
