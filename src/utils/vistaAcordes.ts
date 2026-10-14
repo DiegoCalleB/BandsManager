@@ -67,11 +67,11 @@ const pitchSobre = (pc: number, minimo: number) => minimo + (((pc - minimo) % 12
  * llega por semitono al acorde siguiente (si se conoce; si no, la octava). Es el «walking» básico.
  * Con `inversion` la línea arranca en esa nota del acorde (0 = raíz, 1 = 3.ª…) y sigue por las demás hacia arriba.
  */
-export function lineaDeBajo(acorde: string, siguiente?: string | null, inversion?: number): NotaBajo[] | null {
+export function lineaDeBajo(acorde: string, siguiente?: string | null, inversion?: number, conSeptima = false): NotaBajo[] | null {
   const n = notasParaDibujar(acorde);
   if (!n) return null;
   const rolDe = (pc: number): RolBajo => (pc === n.raiz ? 'raiz' : pc === n.tercera ? 'tercera' : pc === n.quinta ? 'quinta' : 'septima');
-  const tonos = inversion === undefined ? null : [...n.notas.slice(inversion), ...n.notas.slice(0, inversion)].slice(0, 3);
+  const tonos = inversion === undefined ? null : [...n.notas.slice(inversion), ...n.notas.slice(0, inversion)].slice(0, conSeptima && n.notas.length >= 4 ? 4 : 3);
   const raizPc = tonos ? tonos[0] : n.bajo ?? n.raiz;
   const pitchRaiz = pitchSobre(raizPc, 28);
   const notas: Array<{ pitch: number; rol: RolBajo }> = [{ pitch: pitchRaiz, rol: tonos ? rolDe(raizPc) : 'raiz' }];

@@ -32,5 +32,5 @@ export function useAcordeActual(sonando: string | null): EstadoAcordeActual {
 }
 
 /** Los tres que vienen después del actual (el primero es «Siguiente»). */
-export const proximosVisibles = (acorde: string | null, proximos?: string[], siguiente?: string | null): string[] =>
-  (proximos ?? (siguiente ? [siguiente] : [])).filter((c) => c !== acorde).slice(0, 3);
+export const proximosVisibles = (proximos?: string[], siguiente?: string | null): string[] =>
+  (proximos ?? (siguiente ? [siguiente] : [])).slice(0, 3);
