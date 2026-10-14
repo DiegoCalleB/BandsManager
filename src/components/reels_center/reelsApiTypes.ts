@@ -87,6 +87,13 @@ export interface ClipReanalysisResponse {
 }
 
 /** Respuesta del corte físico del vídeo. */
+/** Informe del control de calidad del clip (server/utils/controlCalidadClip.ts). */
+export interface InformeCalidadClip {
+  aprobado: boolean;
+  bloqueantes: Array<{ codigo: string; mensaje: string }>;
+  avisos: Array<{ codigo: string; mensaje: string }>;
+}
+
 export interface CutClipResponse {
   success?: boolean;
   error?: string;
@@ -99,6 +106,8 @@ export interface CutClipResponse {
   rights?: "canal_de_la_banda" | "declarado_por_la_banda" | null;
   loopApplied?: boolean;
   hookBurned?: boolean;
+  /** null = el servidor no pudo medirlo; ausente = servidor antiguo. */
+  quality?: InformeCalidadClip | null;
   vttContent?: string;
   subtitles?: SubtitleCue[];
   words?: WordOffset[];
