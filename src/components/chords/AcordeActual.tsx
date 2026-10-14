@@ -114,7 +114,7 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
               onKeyDown={ir && ((e) => { if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ir(); } })}
               className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
             >
-              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} />
+              <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} sonar={!ir} />
             </div>
           );
         })}

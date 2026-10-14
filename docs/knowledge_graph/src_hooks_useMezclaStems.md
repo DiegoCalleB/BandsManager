@@ -21,6 +21,7 @@ Exporta: useMezclaStems.
 - [[src_hooks_useTonePitchShift|src/hooks/useTonePitchShift.ts]] *(Layer: #hook, Domain: #booking)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(Layer: #service, Domain: #repertoire)*
+- [[src_utils_ducking|src/utils/ducking.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_mezclaStems|src/utils/mezclaStems.ts]] *(Layer: #service, Domain: #repertoire)*
 
 ---
