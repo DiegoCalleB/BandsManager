@@ -37,7 +37,7 @@ import { useVisualViewportOverlayStyle } from "../../hooks/useVisualViewportOver
 import { AiSupportWidget, AiUsageCard } from "./AiUsageSupportWidget";
 import { Button, IconButton } from '../ui';
 import { BotonMovil } from "./BotonMovil";
-import { ControlesTamano } from "./ControlesTamano";
+import { claseColumnas, columnasRellenando } from "../../utils/rellenarFila";
 import { TiradorWidget } from "./TiradorWidget";
 import { useRedimensionar } from "./hooks/useRedimensionar";
 import { useReordenTactil } from "./hooks/useReordenTactil";
@@ -493,6 +493,9 @@ export function DashboardWidgetGrid({
           .slice(0, 4)
       : allVisibleWidgets;
 
+  // Cada fila se rellena hasta el borde: el último widget se estira (con el tirador a medias, ya con el ancho nuevo)
+  const columnasEnFila = columnasRellenando(visibleWidgets.map((w) => (previa?.id === w.id ? previa.wSpan : w.wSpan)));
+
   return (
     <div className="space-y-4 w-full">
       {/* Top Customization Bar - Only shown in edit mode */}
@@ -590,8 +593,8 @@ export function DashboardWidgetGrid({
             <div className="flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-[var(--acc-ink)] shrink-0" />
               <span>
-                <strong>Ancho y Alto:</strong> Elige tamaño con los iconos de
-                barra.
+                <strong>Tamaño:</strong> Tira de la esquina inferior de cada
+                widget.
               </span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -610,12 +613,7 @@ export function DashboardWidgetGrid({
         {visibleWidgets.map((original, index) => {
           // Mientras se arrastra el tirador el widget se pinta ya con el tamaño nuevo
           const widget = previa?.id === original.id ? { ...original, wSpan: previa.wSpan, hSpan: previa.hSpan } : original;
-          // Determine grid col span class
-          let colSpanClass = "md:col-span-12";
-          if (widget.wSpan === 3) colSpanClass = "md:col-span-3";
-          else if (widget.wSpan === 4) colSpanClass = "md:col-span-4";
-          else if (widget.wSpan === 6) colSpanClass = "md:col-span-6";
-          else if (widget.wSpan === 8) colSpanClass = "md:col-span-8";
+          const colSpanClass = claseColumnas(columnasEnFila[index]);
 
           const isDragging = draggedWidgetId === widget.id;
           const isDragOver = dragOverWidgetId === widget.id;
@@ -647,8 +645,6 @@ export function DashboardWidgetGrid({
                   </div>
 
                   <div className="flex items-center gap-1.5 flex-wrap justify-between sm:justify-end">
-                    <ControlesTamano wSpan={widget.wSpan} hSpan={widget.hSpan} onAncho={(span) => handleChangeWSpan(widget.id, span)} onAlto={(val) => handleChangeHSpan(widget.id, val)} />
-
                     {/* Móvil — en el móvil caben pocos bloques: aquí se decide cuáles salen */}
                     <BotonMovil
                       activo={visibleEnMovil(widget)}
