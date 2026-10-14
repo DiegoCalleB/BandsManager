@@ -68,6 +68,7 @@ Endpoints REST para creación, actualización y filtrado de salas por banda.
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/routes/__tests__/leadsAprobacionSello.test.ts`
 - `server/routes/__tests__/leadsCampanasRateLimit.test.ts`
 - `server/routes/__tests__/leadsConcurrenciaEstado.test.ts`
 

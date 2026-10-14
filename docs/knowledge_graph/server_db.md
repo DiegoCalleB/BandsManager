@@ -38,6 +38,7 @@ Módulo sin exportaciones con nombre.
 - [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_fans|server/db/fans.ts]] *(Layer: #db, Domain: #social)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
+- [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(Layer: #db, Domain: #booking)*
 - [[server_db_production|server/db/production.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(Layer: #db, Domain: #social)*

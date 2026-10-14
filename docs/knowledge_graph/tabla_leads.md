@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/booking`
 
 ## 📖 Descripción
-Tabla de Supabase `leads` (65 columnas).
+Tabla de Supabase `leads` (68 columnas).
 
 ---
 
@@ -33,6 +33,7 @@ Tabla de Supabase `leads` (65 columnas).
 - [[fn_scout_salas|Búsqueda de salas y festivales]] *(from #feature)*
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
+- [[server_db_leadAprobacion|server/db/leadAprobacion.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_epk_fans|server/routes/epk_fans.ts]] *(from #route)*
@@ -110,8 +111,11 @@ Tabla de Supabase `leads` (65 columnas).
 - `email_abierto`
 - `veces_abierto`
 - `ultimo_abierto_at`
+- `aprobado_por`
+- `aprobado_at`
+- `pitch_aprobado_hash`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
+**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migration_add_email_secundario_to_leads.sql`, `supabase/migration_gmail_thread_id.sql`, `supabase/migrations/20260923_add_telefono_movil_fijo_to_leads.sql`, `supabase/migrations/20260924_add_ai_deal_analysis_to_leads.sql`, `supabase/migrations/20261009_sincronizar_esquema_auditoria.sql`, `supabase/migrations/20261106_aprobacion_leads.sql`, `supabase/postgres_trigger_respuesta_inmediata.sql`
 
 ---
 

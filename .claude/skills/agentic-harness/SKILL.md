@@ -44,6 +44,7 @@ graph TD
 
 ### Reglas Invariable de Seguridad Agéntica
 1. **NUNCA auto-enviar sin aprobación humana:** Ningún correo sale de la plataforma si el lead no ha sido marcado explícitamente como `aprobado_propuesta` o `aprobado_respuesta` por una persona en el panel web.
+1b. **Constancia de aprobación:** al aprobar, el servidor sella quién, cuándo y la huella sha256 del texto (`aprobado_por`, `aprobado_at`, `pitch_aprobado_hash`). El Enviador solo despacha si la huella coincide con el texto que sale; si no, el lead vuelve a `pendiente_aprobacion`. Editar un texto ya aprobado también lo devuelve a revisión.
 2. **Global Fail-Safe Switch:** El motor de despacho (`server/services/agentEngine.ts`) exige que `AGENT_EMAIL_MODE=send` esté configurado en el servidor para efectuar envíos reales. De lo contrario, opera en modo borrador seguro (`draft`).
 3. **Preferir Gmail OAuth2:** Al despachar o leer respuestas, el sistema debe consultar `tieneGmailOAuthConectado(bandId)` y dar prioridad a OAuth2 sobre credenciales SMTP/IMAP.
 

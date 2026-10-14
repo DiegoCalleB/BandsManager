@@ -133,6 +133,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
    * La aplicación web lee y actualiza el estado en **Supabase**.
    * Los envíos de correo se realizan únicamente cuando el registro en Supabase pasa a estado `aprobado_propuesta` o `aprobado_respuesta`.
    * La aplicación web no dispara envíos directos no autorizados sin la aprobación explícita humana.
+   * **Constancia de la aprobación:** al aprobar, `PUT /api/leads/:id` sella en `leads` quién (`aprobado_por`), cuándo (`aprobado_at`) y una huella sha256 del texto exacto (`pitch_aprobado_hash`; `server/utils/aprobacionLead.ts`, `server/db/leadAprobacion.ts`). El cliente no puede fijar esos campos. El Enviador solo despacha si la huella coincide con el texto que va a salir: si el texto cambió después de aprobarlo, o el lead llegó a la cola por otro camino, vuelve a `pendiente_aprobacion` y no sale. Editar el texto de un lead ya aprobado también lo devuelve a revisión.
    * `dispatch_mode` (`autonomy_configs`) decide solo qué pasa DESPUÉS de esa aprobación (borrador en Gmail/IMAP para revisión final o despacho directo). Nunca omite la aprobación.
    * **Interruptor de Seguridad Global:** `AGENT_EMAIL_MODE=send` en variables de entorno del servidor. Si no está en `send`, el sistema actúa en modo seguro (`draft`).
 
