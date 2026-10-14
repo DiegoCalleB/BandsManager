@@ -3,13 +3,7 @@
 
 import { publicoRateLimiter } from '../middleware/rateLimiter.js';
 import express from 'express';
-import {
-  loadState,
-  saveState,
-  requireAuth,
-  getEpkConfigForBand,
-  getAutonomyConfigForBand,
-} from '../state.js';
+import { loadState, saveState, requireAuth, getEpkConfigForBand, getAutonomyConfigForBand } from '../state.js';
 import { EPKConfig, Fan } from '../../src/types.js';
 import {
   dbGetAutonomyConfig,

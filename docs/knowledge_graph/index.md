@@ -29,7 +29,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 ## 🌐 Servicios externos
 - [[ext_correo_smtp_imap|Correo SMTP / IMAP]] — 4 ficheros lo usan
 - [[ext_fal|fal.ai]] — 9 ficheros lo usan
-- [[ext_ffmpeg|FFmpeg]] — 27 ficheros lo usan
+- [[ext_ffmpeg|FFmpeg]] — 29 ficheros lo usan
 - [[ext_gemini|Gemini (Google GenAI)]] — 16 ficheros lo usan
 - [[ext_google_oauth_gmail|Google OAuth / Gmail API]] — 7 ficheros lo usan
 - [[ext_replicate|Replicate]] — 11 ficheros lo usan
@@ -73,7 +73,7 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1578 nodos: 52 agent · 45 db · 12 external · 14 feature · 925 frontend · 43 hook · 82 route · 63 schema · 10 security · 332 service.
+1583 nodos: 52 agent · 45 db · 12 external · 14 feature · 925 frontend · 43 hook · 82 route · 63 schema · 10 security · 337 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
@@ -95,8 +95,8 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[src_components_calendar_CalendarContext|src/components/calendar/CalendarContext.ts]] — 32 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 32 ficheros dependen de él
+- [[ext_ffmpeg|FFmpeg]] — 29 ficheros dependen de él
 - [[route_repertoire|Repertoire & Setlists Route]] — 28 ficheros dependen de él
-- [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] — 28 ficheros dependen de él
 
 ---
 

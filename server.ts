@@ -5,7 +5,6 @@ import path from "path";
 import { servirIndex } from "./server/utils/cabeceraIdioma.js";
 import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
-
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
