@@ -389,6 +389,14 @@ EN = {
     "No, Brais: the ones who run several bands. Managers, agencies and production companies. For them, one account with all their bands, and business plans at a higher price.",
 "Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.":
     "Venues and festivals aren't customers: they're the channel. If we're easy to work with, they answer sooner. Look at El Faro.",
+"¡Iago! ¡Nos han contestado! ¡Estamos dentro!":
+    "Iago! They answered us! We're in!",
+"¡¿Escenario principal?! ¡Che, escenario principal!":
+    "The main stage?! Che, the main stage!",
+"Vale. Pero que haya croquetas en el camerino.":
+    "Fine, but there'd better be croquetas in the dressing room.",
+"Esta vez, nos han contestado.":
+    "This time, they answered us.",
 }
 
 def main():

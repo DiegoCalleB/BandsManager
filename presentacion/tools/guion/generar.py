@@ -765,6 +765,19 @@ add(f'''<section class="slide scene tech" data-title="Qué viene" data-transitio
 </section>
 ''')
 
+# «Confirmados»: el Resurrection Fest contesta justo cuando el reloj llega a cero (cierra el gancho de «nadie contestó»)
+add(f'''<section class="slide scene tech" data-title="Confirmados" data-transition="rise">
+  <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg)"></div>
+  <span class="tag">Sábado · 14:00 · Confirmados</span>
+  <h2>Esta vez, contestaron.</h2>
+  {dlg(m('alvaro', '¡Iago! ¡Nos han contestado! ¡Estamos dentro!'),
+       m('xandre', '¡¿Escenario principal?! ¡Che, escenario principal!'),
+       m('brais', 'Vale, pero que haya croquetas en el camerino.'),
+       m('iago', 'Esta vez, nos han contestado.'), cls='tight')}
+  <div class="notif" aria-hidden="true"><i>🔔</i><div><small>Resurrection Fest · ahora</small><b>Confirmados: escenario principal</b><span>Sábado · 02:14 · Viveiro</span></div></div>
+</section>
+''')
+
 # ───────── Convergencia: el festival, la radio, el espejo y el giro ─────────
 add(f'''<section class="slide scene" data-title="El festival, 02:14" data-transition="zoom">
   <div class="scene-bg" style="--bg-img:url(img/concierto-3.jpg)"></div>
@@ -919,7 +932,7 @@ add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>',
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
 add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 7500).replace('</section>',
-    '<p class="lema" aria-hidden="true">Los bolos, los llevas tú.<small>bandmanager.io</small></p></section>'))
+    '<p class="lema" aria-hidden="true">Los bolos, los llevas tú.<small>bandmanager.io · Pruébala con tu banda</small></p></section>'))
 add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="150000">
   <div class="rollo">
     <p class="cr-pre">Os Herdeiros do Código en</p>
@@ -1349,7 +1362,7 @@ PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': '
           'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
-          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago'}
+          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
@@ -1447,7 +1460,7 @@ CORTES = {
     'Del directo al reel': 'rampa', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',
     'Lo han visto todo': 'golpe', 'Las noches': 'l', 'Y mucho más': 'rampa', 'Esto lo necesitan todos': 'j',
     'Para darlo a conocer': 'rampa', 'A quién se lo vendemos': 'j', 'Cómo ganamos dinero': 'j', 'Arquitectura': 'rampa',
-    'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j',
+    'El mapa que lee la IA': 'j', 'Cómo se construyó con IA': 'j', 'Seguridad': 'l', 'Calidad en cifras': 'rampa', 'Qué viene': 'j', 'Confirmados': 'golpe',
     'El festival, 02:14': 'negro', 'En la radio': 'j', 'Otro jueves, 23:47': 'fundido', 'El giro: el bajista soy yo': 'negro',
     'Entrevista · Un correo': 'negro', 'Entrevista · El treinta por ciento': 'golpe', 'Entrevista · Nadie lo sabía': 'golpe',
     'Entrevista · Treinta y cinco minutos': 'golpe', 'Entrevista · El tono': 'golpe', 'Entrevista · Los fans': 'golpe',
@@ -1456,7 +1469,7 @@ CORTES = {
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
 MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'tema', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'noches', 'Y mucho más': 'tema',
-          'Qué viene': 'tension', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego',
+          'Qué viene': 'tension', 'Confirmados': 'tema', 'El festival, 02:14': 'lostrego', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'dramatica', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'lostrego',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):

@@ -264,3 +264,8 @@ Puedes grabar cada pareja de seguido, como un solo clip: dime y los parto en dos
 ### Repetir · Iago en la cocina de noche (`noches`)
 - El clip actual deforma la cara al mirar a cámara. Mismo plano, pero **sin mirar al objetivo**: mirando el portátil, la cara iluminada por la pantalla.
 - **Prompt:** `Night, a dark home kitchen, a man in his late 30s with short dark hair, a short beard and a plain dark t-shirt sits at the table typing on a laptop, face lit only by the cold screen glow, eyes on the screen, never looking at the camera. He stops, rubs his eyes, glances towards a hallway with a child's nightlight, then goes back to typing. Static camera, 35mm lens, realistic, 35mm Kodak film grain, 24fps, no on-screen text, no logos.`
+
+### E16 · Confirmados (celebración, opcional) · `confirmados`
+- Hoy usa un plano ya existente (`otro-jueves`). Si quieres uno propio: la banda alrededor del portátil estallando de alegría cuando llega el aviso del festival.
+- **Referencia:** `video/actores/otro-jueves.jpg` (misma sala, mismos cuatro).
+- **Prompt:** `Cinematic handheld medium shot in a dim rehearsal room with acoustic foam and warm fairy lights. Four bandmates around a laptop on a flight case: a bald bearded drummer with a backwards black cap and tattooed arms, a curly-haired man with a moustache in a floral shirt, a man in a denim vest covered in metal patches, and a short-haired bearded bassist in a grey t-shirt. The laptop screen lights their faces. They read the screen, freeze for a second, then explode: the vest guy screams with joy and punches the air, the floral-shirt man grabs his head, the drummer laughs and hugs the bassist. Natural, unforced reactions, 35mm Kodak film grain, 24fps, no on-screen text, no logos.`

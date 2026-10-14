@@ -1036,6 +1036,33 @@
   "nota": "Sin cambios de texto; quitada la etiqueta [softly] de Iago. Paga el aviso de 'cuando abren el dossier'."
  },
  {
+  "title": "Confirmados",
+  "h2": null,
+  "lines": [
+   {
+    "who": "guitarra",
+    "txt": "¡Iago! ¡Nos han contestado! ¡Estamos dentro!",
+    "voz": "[shouts] ¡Iago! ¡Nos han contestado! ¡Estamos dentro!"
+   },
+   {
+    "who": "voz",
+    "txt": "¡¿Escenario principal?! ¡Che, escenario principal!",
+    "voz": "[gasps] ¡¿Escenario principal?! ¡Che, escenario principal!"
+   },
+   {
+    "who": "bateria",
+    "txt": "Vale, pero que haya croquetas en el camerino.",
+    "voz": "Vale. Pero que haya croquetas en el camerino."
+   },
+   {
+    "who": "bajo",
+    "txt": "Esta vez, nos han contestado.",
+    "voz": "[softly] Esta vez, nos han contestado."
+   }
+  ],
+  "nota": "Cierra el gancho (nadie contestaba): el Resu contesta justo cuando el reloj llega a cero. Las croquetas de Brais preparan el «y croquetas» del festival. Iago cierra con el eco del principio, sin chiste, para respirar antes del salto."
+ },
+ {
   "title": "El festival, 02:14",
   "h2": null,
   "lines": [

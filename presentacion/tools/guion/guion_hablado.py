@@ -120,6 +120,10 @@ SAY = [
  # Cap. 5 · clientes
  ('Dos tipos de cliente', 'Hay dos tipos de cliente. Be tu ci: las bandas y los músicos, o sea, nosotros. Pagan una cuota por banda, de cero a setenta y nueve euros al mes.'),
  ('¿Y B2B?', '[confused] ¿Y be tu bi? ¿Eso qué es, un grupo coreano?'),
+ ('¡Iago! ¡Nos han contestado! ', '[shouts] ¡Iago! ¡Nos han contestado! ¡Estamos dentro!'),
+ ('¡¿Escenario principal?! ¡Che', '[gasps] ¡¿Escenario principal?! ¡Che, escenario principal!'),
+ ('Vale, pero que haya croqueta', 'Vale. Pero que haya croquetas en el camerino.'),
+ ('Esta vez, nos han contestado', '[softly] Esta vez, nos han contestado.'),
  ('Los que llevan a varias bandas', 'No, Brais: los que llevan a varias bandas. Mánayers, agencias y productoras. Para ellos, una cuenta con todas sus bandas, y planes de empresa, más caros.'),
  ('¿Y por qué iba a querer una sala', '¿Y por qué iba a querer una sala usar esto? Si no nos atienden ni el teléfono.'),
  ('Las salas y los festivales no son clientes', 'Las salas y los festivales no son clientes: son el canal. Si trabajar con nosotros es fácil, contestan antes. Mirad El Faro.'),
