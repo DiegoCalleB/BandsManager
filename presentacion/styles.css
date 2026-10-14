@@ -2349,3 +2349,7 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .nx-perfil span { text-align: center; }
 .nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
 .av.foto { background-origin: border-box; }
+
+/* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,
+   las de capítulo y la del cierre). Si una burbuja sigue saliendo en modo película, falta su clase aquí. */
+body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: none !important; }
