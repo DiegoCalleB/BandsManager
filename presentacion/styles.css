@@ -2170,8 +2170,7 @@ body.pelicula:not(.scroll):has(#reaccion[style*="opacity: 1"]) .foco { opacity: 
 .ent-rot { position: absolute; left: 150px; bottom: 210px; z-index: 3; padding-left: 22px; border-left: 3px solid #ffb35c; opacity: 0; color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,.9); }
 .ent-rot b { display: block; font: 600 46px/1.05 Oswald, Onest, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
 .ent-rot span { display: block; margin-top: 6px; font: 500 24px/1.2 Onest, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.78); }
-.slide.entrevista.active .ent:is(:first-of-type, .on) .ent-rot { animation: entrot 5.2s ease 500ms both; }
-.entrevista:has(.ent.on) .ent:first-of-type:not(.on) .ent-rot { animation: none; opacity: 0; }
+.slide.entrevista.active .ent.habla .ent-rot { animation: entrot 5.2s ease 300ms both; }
 @keyframes entrot { 0% { opacity: 0; translate: -18px 0; } 10%, 82% { opacity: 1; translate: 0 0; } 100% { opacity: 0; } }
 /* fuera de la película (presentación), la frase se lee abajo, como un subtítulo */
 .ent-txt { position: absolute; left: 50%; bottom: 70px; translate: -50% 0; z-index: 3; width: min(1400px, 86%); margin: 0; text-align: center; font: 500 38px/1.3 Onest, sans-serif; color: #fff; text-shadow: 0 2px 14px #000, 0 0 2px #000; }
@@ -2229,3 +2228,6 @@ body.pelicula:not(.scroll) .slide.scene.tech:has(> .notif) h2 { font: 600 34px/1
 .entrevista .ent.ent-foto::before { content: ''; position: absolute; inset: -60px; background: var(--bg) center / cover; filter: blur(46px) brightness(.45) saturate(.8); }
 .entrevista .ent.ent-foto img { object-fit: contain; object-position: 50% 50%; width: auto; height: 100%; left: 50%; right: auto; translate: -50% 0; }
 .slide.entrevista.active .ent.ent-foto.on img { animation: none; }
+
+/* «Y esta parte es cierta…» sube para no pisarse con los subtítulos */
+body.pelicula:not(.scroll) .slide.scene[data-title="Prólogo · La decisión"] .scene-foot { position: absolute; left: 120px; right: 120px; bottom: auto; top: 720px; margin: 0; font-size: 26px; opacity: .85; }

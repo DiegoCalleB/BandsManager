@@ -146,7 +146,7 @@
     else if (clicksOn()) { p.items.filter((it) => !tagsAndBrand.includes(it)).forEach((it) => it.el.classList.remove('in')); p.shown = 0; }
     else {
       // Con voces, los mensajes del chat no entran en cascada: aparecen cuando su personaje empieza a hablar
-      const voces = window.DeckVoces && window.DeckVoces.enabled() && !isScroll();
+      const voces = window.DeckVoces && window.DeckVoces.enabled() && !isScroll() && !document.body.classList.contains('gate'); // con la pantalla de entrada puesta, nadie habla todavía
       setIn(p.items.filter((it) => !tagsAndBrand.includes(it) && !(voces && it.el.matches('.dlg li'))), true, '380ms');
       p.shown = p.steps.length;
       const conVoz = voces && s.querySelector('[data-who][data-say]');
