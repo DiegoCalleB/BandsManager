@@ -3262,7 +3262,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:29",
+        "x-source": "server/routes/chat.ts:30",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "chatRateLimiter"
@@ -3978,7 +3978,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:517",
+        "x-source": "server/routes/reels.ts:515",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "renderRateLimiter",
@@ -8794,7 +8794,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/deals.ts:225",
+        "x-source": "server/routes/deals.ts:227",
         "x-autenticacion": "ninguna"
       }
     },
@@ -8824,7 +8824,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/deals.ts:452",
+        "x-source": "server/routes/deals.ts:454",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "reenvioEmailRateLimiter"
@@ -8906,7 +8906,7 @@
             }
           }
         },
-        "x-source": "server/routes/deals.ts:305",
+        "x-source": "server/routes/deals.ts:307",
         "x-autenticacion": "ninguna",
         "summary": "Firmar un acuerdo de concierto",
         "requestBody": {
@@ -9206,7 +9206,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:680",
+        "x-source": "server/routes/reels.ts:678",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -12291,7 +12291,7 @@
           "upload"
         ],
         "operationId": "getApiUploadTestSupabase",
-        "description": "Comentario en el código: requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.",
+        "description": "Comentario en el código: Solo admin: sube un fichero al bucket COMPARTIDO y devuelve su nombre y el error de Supabase; es de la plataforma.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -12316,7 +12316,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:338",
+        "x-source": "server/routes/upload.ts:337",
         "x-autenticacion": "middleware"
       }
     },

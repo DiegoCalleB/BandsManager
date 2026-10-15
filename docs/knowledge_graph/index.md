@@ -91,8 +91,8 @@ No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el t
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 44 ficheros dependen de él
 - [[server_ai|server/ai.ts]] — 43 ficheros dependen de él
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 38 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
-- [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
 - [[ext_ffmpeg|FFmpeg]] — 33 ficheros dependen de él
 - [[src_utils_errorMessage|src/utils/errorMessage.ts]] — 33 ficheros dependen de él

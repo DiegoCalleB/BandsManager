@@ -27,8 +27,6 @@ Guía detallada de pruebas unitarias, de integración y E2E para el proyecto. Do
 * **Comando:**
   ```bash
   npm run test:e2e                 # Ejecuta suite E2E en local
-  npm run test:visual              # Compara regresión visual de pantallas
-  npm run test:visual:update       # Regenera capturas de referencia visual
   ```
 * **Flujos cubiertos:**
   1. `health.spec.ts`: Healthcheck de despliegue en Railway (`/api/health`).
@@ -36,6 +34,7 @@ Guía detallada de pruebas unitarias, de integración y E2E para el proyecto. Do
   3. `epk-public.spec.ts`: Disponibilidad del dossier público de banda.
   4. `onboarding-journey.spec.ts`: Registro completo y asistente inicial multi-paso con banda temporal aislada.
   5. `setlist-impreso.spec.ts`: Verificación de invariantes en maquetación de repertorio (paginación, legibilidad y notas).
-  6. `visual.spec.ts`: Regresión visual en resoluciones de escritorio (1280×800) y móvil (390×844).
-* **Autenticación Reutilizable:** Las pruebas que requieren sesión usan `storageState` (`e2e/auth.setup.ts`) para realizar un único login por corrida y respetar el `loginRateLimiter` del backend.
+  6. `dashboard-tirador.spec.ts`, `setlist-ajustes.spec.ts`, `setlist-mis-dudas.spec.ts` y `superficies-publicas.spec.ts`: redimensionado del Dashboard, ajustes y dudas del setlist, y robots/sitemap/enlaces cortos/404.
+  Regresión visual: no hay (se quitó el proyecto `visual`; si vuelve, que lleve capturas guardadas y un comando que funcione).
+* **Sesión:** las pruebas que la necesitan inician sesión por la interfaz con un usuario semilla (`diego`); no hay `storageState` compartido, así que cada una hace su login y conviene no abusar de ellas por el `loginRateLimiter` del backend.
 * **Selectores Estables:** Localizar elementos por accesibilidad (`getByRole`, `getByPlaceholder` o texto visible), nunca por clases dinámicas de Tailwind.
