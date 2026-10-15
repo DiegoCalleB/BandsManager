@@ -6,6 +6,7 @@ import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { uploadToSupabaseIfAvailable } from '../utils/storage.js';
 import { esUrlExternaSegura } from '../utils/ssrfGuard.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const execFileAsync = promisify(execFile);
 
@@ -288,7 +289,8 @@ export async function processAudioTransposition({
           console.log('[AudioTransposeService Pedalboard Stdout]:', stdout || 'OK');
           processedSuccess = true;
         }
-      } catch (pythonErr: any) {
+      } catch (pythonErrCapturado) {
+        const pythonErr = comoErrorCapturado(pythonErrCapturado);
         pedalboardErrDetail = pythonErr?.stderr || pythonErr?.message || String(pythonErr);
         console.warn('[AudioTransposeService] Pedalboard Python no disponible o falló:', pedalboardErrDetail);
       }
@@ -301,7 +303,8 @@ export async function processAudioTransposition({
       console.log(`[AudioTransposeService] Ejecutando motor FFmpeg DSP para trasposición (${semitones} semitonos)...`);
       try {
         processedSuccess = await transposeWithFFmpeg(tempInputPath, localOutputPath, semitones);
-      } catch (ffmpegErr: any) {
+      } catch (ffmpegErrCapturado) {
+        const ffmpegErr = comoErrorCapturado(ffmpegErrCapturado);
         ffmpegErrDetail = ffmpegErr?.stderr || ffmpegErr?.message || String(ffmpegErr);
         console.error('[AudioTransposeService FFmpeg Error]:', ffmpegErrDetail);
       }
@@ -316,7 +319,8 @@ export async function processAudioTransposition({
     const finalUrl = supabaseUrl || publicLocalUrl;
 
     return { success: true, transposedUrl: finalUrl };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     const errorDetails = err.stderr || err.stdout || err.message || String(err);
     console.error('[AudioTransposeService Error]:', errorDetails);
     return { success: false, error: errorDetails };

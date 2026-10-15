@@ -10,6 +10,9 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaEngagementSocial } from '../tiposRespuestasIA.js';
+import { numeroFinito, textoNoVacio, unoDe } from '../utils/valoresIA.js';
 
 export interface SocialEngagementResult {
   success: boolean;
@@ -60,19 +63,21 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
       }
     });
 
-    const parsed = safeParseJson(response.text || "{}");
-    if (parsed && typeof parsed.instagram_followers === "number") {
+    const parsed = safeParseJson<RespuestaEngagementSocial>(response.text || "{}");
+    const seguidores = numeroFinito(parsed?.instagram_followers);
+    if (parsed && seguidores !== undefined) {
       return {
         success: true,
-        instagram_followers: Math.max(500, parsed.instagram_followers),
-        engagement_rate: Math.min(15, Math.max(1, parsed.engagement_rate || 3.5)),
-        promedio_views_reels: Math.max(200, parsed.promedio_views_reels || 1500),
-        promociona_bandas_activo: Boolean(parsed.promociona_bandas_activo),
-        calidad_promo_sala: ["alta", "media", "baja"].includes(parsed.calidad_promo_sala) ? parsed.calidad_promo_sala : "media",
-        resumen_social: parsed.resumen_social || `Comunidad activa con cartelera semanal difundida en redes.`
+        instagram_followers: Math.max(500, seguidores),
+        engagement_rate: Math.min(15, Math.max(1, numeroFinito(parsed.engagement_rate) || 3.5)),
+        promedio_views_reels: Math.max(200, numeroFinito(parsed.promedio_views_reels) || 1500),
+        promociona_bandas_activo: parsed.promociona_bandas_activo === true,
+        calidad_promo_sala: unoDe(parsed.calidad_promo_sala, ["alta", "media", "baja"] as const) ?? "media",
+        resumen_social: textoNoVacio(parsed.resumen_social) || `Comunidad activa con cartelera semanal difundida en redes.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error analyzing venue social engagement via AI:", err?.message);
   }
 

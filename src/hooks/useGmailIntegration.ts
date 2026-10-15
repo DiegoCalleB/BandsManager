@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { initAuth, googleSignIn, logout, fetchGmailThreadsForEmail } from '../utils/gmail';
 import { Lead } from '../types';
+import type { User as UsuarioFirebase } from 'firebase/auth';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 /** Conexión con Gmail y acciones sobre el hilo del lead seleccionado. */
 export function useGmailIntegration(
@@ -9,7 +11,7 @@ export function useGmailIntegration(
   onUpdateLead: (leadId: string, updatedFields: Partial<Lead>, expectedStatus?: string) => void
 ) {
   // Gmail integration states
-  const [gmailUser, setGmailUser] = useState<any>(null);
+  const [gmailUser, setGmailUser] = useState<UsuarioFirebase | null>(null);
   const [gmailToken, setGmailToken] = useState<string | null>(null);
   const [isSyncingGmail, setIsSyncingGmail] = useState(false);
   const [gmailStatusMsg, setGmailStatusMsg] = useState('');
@@ -39,7 +41,8 @@ export function useGmailIntegration(
         setGmailStatusMsg('Google conectado correctamente.');
         setTimeout(() => setGmailStatusMsg(''), 3000);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error logging in with Google:', err);
       const isIframeEnv = window.self !== window.top;
       if (
@@ -117,7 +120,8 @@ export function useGmailIntegration(
 
       setGmailStatusMsg(`¡Sincronización completada! Se añadieron ${addedCount} correos nuevos de Gmail.`);
       setTimeout(() => setGmailStatusMsg(''), 5000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error('Error during Gmail sync:', err);
       setGmailStatusMsg('Error al sincronizar con Gmail: ' + (err.message || String(err)));
     } finally {

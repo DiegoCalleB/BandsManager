@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Repeat, X, Pencil } from 'lucide-react';
+import { Repeat, X, Pencil, Info } from 'lucide-react';
+import { ActionMenu } from '../ui/ActionMenu';
 import type { AnalisisAcordes, SegmentoAcordeAnalizado } from '../../types';
 import { processChordText } from '../../utils/chordUtils';
 import { AroAcorde } from './AroAcorde';
@@ -53,11 +54,12 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
 }) => {
   const { segmentos } = analisis;
   const [tiempo, setTiempo] = useState(0);
+  const [detalles, setDetalles] = useState(false);
   const [modoBucle, setModoBucle] = useState<ModoBucle>('off');
   const [inicioBucle, setInicioBucle] = useState<number | null>(null);
   const [bucle, setBucle] = useState<RangoBucle | null>(null);
   const bucleRef = useRef<RangoBucle | null>(null);
-  bucleRef.current = bucle;
+  useEffect(() => { bucleRef.current = bucle; }, [bucle]);
   // Corrección manual
   const [corrigiendo, setCorrigiendo] = useState(false);
   const [editando, setEditando] = useState<number | null>(null);
@@ -177,8 +179,8 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
     <div className="px-4 py-2.5 bg-[var(--sunken)] text-xs font-sans space-y-2">
       <div className="flex items-center justify-between gap-2">
         <span className="font-bold text-[var(--ink)] min-w-0 truncate">
-          Acordes del audio
-          <span className="font-normal text-[var(--ink-2)]">
+          Acordes<span className="hidden sm:inline"> del audio</span>
+          <span className="hidden sm:inline font-normal text-[var(--ink-2)]">
             {' '}· {analisis.fuente === 'instrumental' ? 'pista instrumental' : analisis.fuente === 'armonia' ? 'stems de armonía (Iris)' : 'mezcla completa'}
             {(() => {
               // Con cambios de tono se muestra la tonalidad del tramo que suena y cuándo cambia.
@@ -190,45 +192,42 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             })()}
           </span>
         </span>
-        <span className="flex items-center gap-3 shrink-0">
-          <button
-            type="button"
-            onClick={() => (bucle || modoBucle !== 'off' ? quitarBucle() : setModoBucle('elegirInicio'))}
-            className={`flex items-center gap-1 cursor-pointer ${bucle || modoBucle !== 'off' ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-            title="Repetir un fragmento: toca el primer y el último acorde"
-          >
-            <Repeat className="w-3.5 h-3.5" /> {bucle ? 'Quitar bucle' : modoBucle === 'off' ? 'Bucle' : 'Cancelar'}
-          </button>
-          <button
-            type="button"
-            onClick={() => { setCorrigiendo((v) => !v); cerrarEditor(); }}
-            className={`flex items-center gap-1 cursor-pointer ${corrigiendo ? 'text-[var(--acc)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
-            title="Corregir acordes mal detectados"
-          >
-            <Pencil className="w-3.5 h-3.5" /> {corrigiendo ? 'Terminar' : 'Corregir'}
-          </button>
-          <button
-            type="button"
-            onClick={() => (corregidos > 0 ? setConfirmarReanalisis(true) : onReanalizar())}
-            disabled={isAnalyzing}
-            className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer"
-          >
-            {isAnalyzing ? 'Analizando…' : 'Reanalizar'}
-          </button>
+        <span className="flex items-center gap-2 shrink-0">
+          {/* El estado activo sigue a la vista (un toque lo apaga); el resto de acciones vive tras «⋯» */}
+          {(bucle || modoBucle !== 'off') && (
+            <button type="button" onClick={quitarBucle} className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold cursor-pointer" title="Quitar el bucle">
+              <Repeat className="w-3.5 h-3.5" /> {bucle ? 'Quitar bucle' : 'Cancelar'}
+            </button>
+          )}
+          {corrigiendo && (
+            <button type="button" onClick={() => { setCorrigiendo(false); cerrarEditor(); }} className="flex items-center gap-1 px-2 py-0.5 rounded-[var(--r-pill)] bg-[var(--acc-soft)] text-[var(--acc-ink)] font-bold cursor-pointer">
+              <Pencil className="w-3.5 h-3.5" /> Terminar
+            </button>
+          )}
+          <ActionMenu
+            label="Más acciones de la línea de tiempo"
+            items={[
+              { label: 'Repetir un fragmento (bucle)', icon: Repeat, hidden: Boolean(bucle) || modoBucle !== 'off', onSelect: () => setModoBucle('elegirInicio') },
+              { label: 'Corregir acordes mal detectados', icon: Pencil, hidden: corrigiendo, onSelect: () => { setCorrigiendo(true); cerrarEditor(); } },
+              { label: detalles ? 'Ocultar detalles' : 'Ver detalles', icon: Info, onSelect: () => setDetalles((v) => !v) },
+            ]}
+          />
           <button type="button" onClick={onClose} className="text-[var(--ink-2)] hover:text-[var(--ink)] cursor-pointer" aria-label="Cerrar">
             <X className="w-4 h-4" />
           </button>
         </span>
       </div>
 
-      {/* Ahora (aro con cuenta atrás) / siguiente */}
-      {(() => {
+      {/* Ahora (aro con cuenta atrás) / siguiente: detalle, el resumen vive en la barra fija */}
+      {detalles && (() => {
         const tramo = actual >= 0 ? segmentos[actual] : null;
         const { progreso, restante } = tramo ? progresoDeTramo(tramo.t0, tramo.t1, tiempo) : { progreso: 0, restante: 0 };
         const sigue = siguiente >= 0 ? segmentos[siguiente] : null;
         const hastaSiguiente = sigue ? Math.max(0, sigue.t0 - tiempo) : null;
         return (
           <div className="flex items-center gap-4 flex-wrap">
+            {/* En móvil el acorde de ahora y el siguiente ya están en la barra fija: no se repiten */}
+            <div className="hidden sm:contents">
             <AroAcorde
               etiqueta="Ahora"
               nombre={tramo ? nombre(tramo.acorde) : '·'}
@@ -244,6 +243,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
               tamano={60}
               tenue
             />
+            </div>
             <div className="min-w-0 flex-1 space-y-1">
               {cuadricula && posicion ? (
                 <>
@@ -273,7 +273,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
         );
       })()}
 
-      {cuadricula && (
+      {detalles && cuadricula && (
         <RegletaCompases cuadricula={cuadricula} posicion={posicion} nombre={nombre} seguir={isPlaying} onIr={(t) => ir(t)} />
       )}
 
@@ -284,7 +284,11 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
       )}
 
       {/* Estado de la fusión con el cifrado escrito */}
+      {detalles && (
       <div className="flex flex-wrap items-center gap-2 text-micro text-[var(--ink-2)]">
+        <button type="button" onClick={() => (corregidos > 0 ? setConfirmarReanalisis(true) : onReanalizar())} disabled={isAnalyzing} className="text-[var(--acc)] hover:text-[var(--ink)] cursor-pointer font-bold">
+          {isAnalyzing ? 'Analizando…' : 'Reanalizar'}
+        </button>
         {sincronizacion === null ? (
           <span>El cifrado no tiene acordes entre corchetes [Am] que sincronizar con el audio.</span>
         ) : sincronizacion.usable ? (
@@ -309,6 +313,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           </span>
         )}
       </div>
+      )}
 
       {confirmarReanalisis && (
         <div className="flex flex-wrap items-center gap-2 p-2 rounded-[var(--r-s)] bg-[var(--acc-soft)] text-[var(--ink)]">
@@ -386,7 +391,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
               i === actual
                 ? 'bg-[var(--acc)] text-[var(--on-acc)] ring-2 ring-[var(--acc)]'
                 : seg.acorde === 'N'
-                  ? 'bg-transparent text-[var(--ink-2)] border border-dashed border-[var(--hair)]'
+                  ? 'bg-transparent text-[var(--ink-3)] opacity-60'
                   : i === siguiente
                     ? `${claseReposo(i)} ring-1 ring-[var(--acc)]`
                     : seg.confianza < 0.4
@@ -395,7 +400,7 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
             } ${enBucle(i) || editando === i ? 'outline outline-2 outline-[var(--ok)]' : ''} ${inicioBucle === i && modoBucle === 'elegirFin' ? 'outline outline-2 outline-[var(--ok)]' : ''}`}
           >
             <span className="block text-micro opacity-70">{formatearTiempo(seg.t0)}</span>
-            <span className="block font-bold font-mono">
+            <span className="block font-bold">
               {(() => {
                 const t = textoDeAcorde(nombre(seg.acorde), (armonia?.porTramo[i]?.grado ? gradoVisible(armonia.porTramo[i].grado, estilo) : undefined), estilo?.mostrar ?? 'nombre');
                 return <>{t.principal}{t.secundario && <sup className="ml-0.5 text-micro font-normal opacity-80">{t.secundario}</sup>}{seg.editado ? '*' : ''}</>;
@@ -404,9 +409,9 @@ export const LineaTiempoAcordes: React.FC<Props> = ({
           </button>
         ))}
       </div>
-      <p className="text-micro text-[var(--ink-2)]">
+      {detalles && <p className="text-micro text-[var(--ink-2)]">
         Detección automática (75-85 % en triadas): revísala de oído. «—» = sin acorde claro; tenue = poco fiable. Toca un tramo para saltar a él.
-      </p>
+      </p>}
     </div>
   );
 };

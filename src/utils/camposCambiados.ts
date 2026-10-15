@@ -6,15 +6,16 @@
  * teléfono se deshacía todo eso con datos viejos. Mandando únicamente lo cambiado, el resto
  * queda como lo tenga el servidor.
  */
-export function camposCambiados<T extends Record<string, any>>(original: T, editado: T): Partial<T> {
-  const cambios: Partial<T> = {};
-  const claves = new Set([...Object.keys(original || {}), ...Object.keys(editado || {})]);
+export function camposCambiados<T extends object>(original: T, editado: T): Partial<T> {
+  // Un campo borrado se manda como '' (no undefined, que JSON.stringify omitiría): de ahí `unknown`.
+  const cambios: Partial<Record<keyof T, unknown>> = {};
+  const claves = new Set([...Object.keys(original || {}), ...Object.keys(editado || {})] as (keyof T)[]);
   for (const k of claves) {
-    const antes = (original as any)?.[k];
-    const despues = (editado as any)?.[k];
+    const antes = original?.[k];
+    const despues = editado?.[k];
     if (JSON.stringify(antes) !== JSON.stringify(despues)) {
-      (cambios as any)[k] = despues === undefined ? '' : despues;
+      cambios[k] = despues === undefined ? '' : despues;
     }
   }
-  return cambios;
+  return cambios as Partial<T>;
 }

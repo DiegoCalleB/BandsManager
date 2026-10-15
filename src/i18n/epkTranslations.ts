@@ -54,11 +54,9 @@ export interface EpkDict {
   selectorIdioma: string;
 
   // Hero
-  lemaPorDefectoBakandeya: string;
   lemaPorDefecto: string;
 
   // Textos de relleno cuando la banda aún no ha rellenado su EPK
-  bioPorDefectoBakandeya: string;
   bioPorDefecto: string;
   riderPorDefecto: string;
 
@@ -140,10 +138,8 @@ const es: EpkDict = {
   imprimirCorto: 'PDF',
   selectorIdioma: 'Idioma',
 
-  lemaPorDefectoBakandeya: 'Ska-Rock, Mestizaje & Ritmos Latinos en Vivo',
   lemaPorDefecto: '{bandName} en Directo',
 
-  bioPorDefectoBakandeya: 'Bakandeya es una propuesta vibrante de mestizaje, ska-rock, reggae y ritmos latinos...',
   bioPorDefecto: '{bandName} — Propuesta musical en directo.',
   riderPorDefecto: 'PA y microfonía profesional de directo...',
 
@@ -211,10 +207,8 @@ const en: EpkDict = {
   imprimirCorto: 'PDF',
   selectorIdioma: 'Language',
 
-  lemaPorDefectoBakandeya: 'Ska-Rock, Mestizaje & Latin Rhythms Live',
   lemaPorDefecto: '{bandName} Live',
 
-  bioPorDefectoBakandeya: 'Bakandeya is a vibrant blend of mestizaje, ska-rock, reggae and Latin rhythms...',
   bioPorDefecto: '{bandName} — Live music act.',
   riderPorDefecto: 'Professional live PA and microphone setup...',
 
@@ -282,10 +276,8 @@ const it: EpkDict = {
   imprimirCorto: 'PDF',
   selectorIdioma: 'Lingua',
 
-  lemaPorDefectoBakandeya: 'Ska-Rock, Mestizaje & Ritmi Latini dal Vivo',
   lemaPorDefecto: '{bandName} dal Vivo',
 
-  bioPorDefectoBakandeya: 'Bakandeya è una proposta vibrante di mestizaje, ska-rock, reggae e ritmi latini...',
   bioPorDefecto: '{bandName} — Proposta musicale dal vivo.',
   riderPorDefecto: 'PA professionale e microfonia da concerto dal vivo...',
 
@@ -353,10 +345,8 @@ const cs: EpkDict = {
   imprimirCorto: 'PDF',
   selectorIdioma: 'Jazyk',
 
-  lemaPorDefectoBakandeya: 'Ska-rock, mestizaje a latinskoamerické rytmy naživo',
   lemaPorDefecto: '{bandName} naživo',
 
-  bioPorDefectoBakandeya: 'Bakandeya je pulzující směsice mestizaje, ska-rocku, reggae a latinskoamerických rytmů...',
   bioPorDefecto: '{bandName} — Hudební projekt naživo.',
   riderPorDefecto: 'Profesionální ozvučení a mikrofonáž pro živé vystoupení...',
 

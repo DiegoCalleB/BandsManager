@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import { X, Sparkles, CheckCircle2, AlertCircle, Loader2, Globe, Mail, Phone, Instagram } from 'lucide-react';
+import { X, Sparkles, CheckCircle2, Loader2, Mail, Phone, Instagram } from 'lucide-react';
 import { apiFetch } from '../../utils/api';
 import { ModalPortal } from '../common/ModalPortal';
 import { Button, IconButton } from '../ui';
+import type { RespuestaEnriquecerLead } from './tiposRespuestasApi';
 
 interface CRMContactEnricherModalProps {
   isOpen: boolean;
@@ -48,35 +49,33 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
         setStatusMessage(`Buscando datos de contacto para ${lead.nombre_sala}...`);
 
         try {
-          const res = await apiFetch(`/api/leads/${lead.id}/enrich`, {
+          const res = await apiFetch<RespuestaEnriquecerLead>('/api/leads/enrich-lead', {
             method: 'POST',
+            body: JSON.stringify({ leadId: lead.id, name: lead.nombre_sala, city: lead.ciudad || 'España' }),
           });
           if (res && res.success && res.data) {
-            const incomingTel = res.data.telefono || lead.telefono || '';
+            const incomingTel = res.data.phone || lead.telefono || '';
             const isMob = /^(?:\+?34\s*)?[67]/.test(incomingTel);
             const isFij = /^(?:\+?34\s*)?[89]/.test(incomingTel);
-            const telMovil = res.data.telefono_movil || lead.telefono_movil || (isMob ? incomingTel : '');
-            const telFijo = res.data.telefono_fijo || lead.telefono_fijo || (isFij ? incomingTel : '');
+            const telMovil = lead.telefono_movil || (isMob ? incomingTel : '');
+            const telFijo = lead.telefono_fijo || (isFij ? incomingTel : '');
+            const email = res.data.email || lead.email_contacto;
+            const instagram = res.data.instagram || lead.instagram;
+            const telefono = incomingTel || telMovil || telFijo;
 
-            enrichedList.push({
-              leadId: lead.id,
-              name: lead.nombre_sala,
-              email: res.data.email_contacto || lead.email_contacto,
-              phone: incomingTel || telMovil || telFijo,
-              instagram: res.data.instagram || lead.instagram,
-            });
+            enrichedList.push({ leadId: lead.id, name: lead.nombre_sala, email, phone: telefono, instagram });
             if (onUpdateLead) {
               onUpdateLead(lead.id, {
-                email_contacto: res.data.email_contacto || lead.email_contacto,
-                telefono: incomingTel || telMovil || telFijo,
+                email_contacto: email,
+                telefono,
                 telefono_movil: telMovil,
                 telefono_fijo: telFijo,
-                instagram: res.data.instagram || lead.instagram,
+                instagram,
                 website: res.data.website || lead.website,
               });
             }
           }
-        } catch (err) {
+        } catch {
           console.warn(`No se pudo enriquecer ${lead.nombre_sala}`);
         }
         setProcessedCount(i + 1);
@@ -84,7 +83,7 @@ export const CRMContactEnricherModal: React.FC<CRMContactEnricherModalProps> = (
 
       setEnrichedResults(enrichedList);
       setStatusMessage(`Enriquecimiento finalizado. Se han procesado ${enrichedList.length} contactos.`);
-    } catch (e: any) {
+    } catch {
       setStatusMessage('Hubo un error durante el proceso de enriquecimiento.');
     } finally {
       setIsProcessing(false);

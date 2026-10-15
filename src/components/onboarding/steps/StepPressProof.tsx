@@ -1,5 +1,5 @@
 import React from 'react';
-import { Award, Plus, Trash2, Radio, Users, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Award, Plus, Trash2, Radio, Users, TrendingUp } from 'lucide-react';
 import { PressQuoteItem } from '../types';
 import { Button, IconButton, Input } from '../../ui';
 

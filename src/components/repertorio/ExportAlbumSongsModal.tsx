@@ -1,30 +1,11 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
+import { useReajusteAlCambiar } from "../../hooks/useReajusteAlCambiar";
 import JSZip from "jszip";
 import { ModalPortal } from "../common/ModalPortal";
 import { Song, ThemeColors } from "../../types";
-import {
-  Download,
-  Copy,
-  Check,
-  X,
-  FileSpreadsheet,
-  Music,
-  FileText,
-  Code,
-  Printer,
-  Sparkles,
-  Disc3,
-  Clock,
-  Layers,
-  Share2,
-  Info,
-  Archive,
-  Loader2,
-  AlertCircle,
-  FileCheck,
-} from "lucide-react";
-import { ShowIcon } from '../ui/ShowIcon';
+import { Download, Copy, Check, X, FileSpreadsheet, Music, FileText, Code, Printer, Archive, Loader2, AlertCircle } from "lucide-react";
 import { IconButton, Select } from '../ui';
+import { comoErrorCapturado } from '../../utils/errorCapturado';
 
 interface ExportAlbumSongsModalProps {
   isOpen: boolean;
@@ -46,8 +27,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   songs = [],
   albumsList = [],
   bandName = "Banda",
-  colors,
-  onExportAsSetlistPdf,
+  onExportAsSetlistPdf
 }) => {
   const [selectedAlbum, setSelectedAlbum] = useState<string>(
     albumName || "all",
@@ -71,13 +51,13 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   const [zipError, setZipError] = useState<string | null>(null);
 
   // Sync selected album when albumName prop changes
-  useEffect(() => {
+  useReajusteAlCambiar([albumName, isOpen] as const, () => {
     if (albumName) {
       setSelectedAlbum(albumName);
     } else {
       setSelectedAlbum("all");
     }
-  }, [albumName, isOpen]);
+  });
 
   // Filter songs by selected album
   const targetSongs = useMemo(() => {
@@ -105,7 +85,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
   // Count songs with actual downloadable audio
   const songsWithAudio = useMemo(() => {
     return targetSongs.filter((s) =>
-      Boolean(s.audioPrincipalUrl || (s as any).audioUrl),
+      Boolean(s.audioPrincipalUrl || s.audioUrl),
     );
   }, [targetSongs]);
 
@@ -175,7 +155,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       }
 
       if (includeAudioUrls) {
-        const audio = song.audioPrincipalUrl || (song as any).audioUrl;
+        const audio = song.audioPrincipalUrl || song.audioUrl;
         if (audio) {
           lines.push(`   Audio: ${audio}`);
         }
@@ -222,7 +202,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       ];
 
       if (includeAudioUrls) {
-        const audio = song.audioPrincipalUrl || (song as any).audioUrl || "";
+        const audio = song.audioPrincipalUrl || song.audioUrl || "";
         row.push(audio);
       }
 
@@ -249,7 +229,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         durationSec =
           (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
       }
-      const audio = song.audioPrincipalUrl || (song as any).audioUrl || "";
+      const audio = song.audioPrincipalUrl || song.audioUrl || "";
       const artist = song.artista || bandName;
       lines.push(`#EXTINF:${durationSec},${artist} - ${song.titulo}`);
       lines.push(audio || `# (Sin archivo audio subido para ${song.titulo})`);
@@ -277,7 +257,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
         tonalidad: s.tonalidad,
         bpm: s.bpm,
         tipo: s.tipo,
-        audioUrl: s.audioPrincipalUrl || (s as any).audioUrl || null,
+        audioUrl: s.audioPrincipalUrl || s.audioUrl || null,
         portadaUrl: s.portadaUrl || null,
         cifradoTexto: includeChords ? s.cifradoTexto || null : undefined,
       })),
@@ -359,8 +339,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
 
     try {
       const zip = new JSZip();
-      const safeAlbumName = activeTitle.replace(/[^a-z0-9_\-]/gi, "_");
-      const safeBandName = bandName.replace(/[^a-z0-9_\-]/gi, "_");
+      const safeAlbumName = activeTitle.replace(/[^a-z0-9_-]/gi, "_");
+      const safeBandName = bandName.replace(/[^a-z0-9_-]/gi, "_");
       const folderName = `${safeBandName}_${safeAlbumName}`;
       const folder = zip.folder(folderName) || zip;
 
@@ -390,7 +370,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       // 5. Fetch and add audio MP3/WAV files
       const audioTargets = targetSongs
         .map((s, idx) => {
-          const audioUrl = s.audioPrincipalUrl || (s as any).audioUrl;
+          const audioUrl = s.audioPrincipalUrl || s.audioUrl;
           return { song: s, trackIndex: idx + 1, audioUrl };
         })
         .filter((t) => Boolean(t.audioUrl));
@@ -406,7 +386,7 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       for (let i = 0; i < audioTargets.length; i++) {
         const target = audioTargets[i];
         const numStr = String(target.trackIndex).padStart(2, "0");
-        const cleanTitle = target.song.titulo.replace(/[^a-z0-9_\-]/gi, "_");
+        const cleanTitle = target.song.titulo.replace(/[^a-z0-9_-]/gi, "_");
 
         setZipProgress({
           current: i + 1,
@@ -462,7 +442,8 @@ export const ExportAlbumSongsModal: React.FC<ExportAlbumSongsModalProps> = ({
       URL.revokeObjectURL(downloadUrl);
 
       setZipProgress({ current: 0, total: 0, status: "" });
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error al generar archivo ZIP:", err);
       setZipError(err?.message || "Error al empaquetar el disco en ZIP.");
     } finally {

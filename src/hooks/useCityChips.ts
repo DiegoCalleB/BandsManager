@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, FormEvent, MouseEvent } from 'react';
+import { useState, useMemo, FormEvent, MouseEvent } from 'react';
 import { Lead, EPKConfig } from '../types';
 import { normalizeType } from '../utils/bookingUtils';
 
@@ -16,18 +16,20 @@ export function useCityChips(
       return epkConfig.ciudadesConfig;
     }
     try {
-      const saved = localStorage.getItem('bakandeya_custom_cities');
+      const saved = localStorage.getItem('bandmanager_custom_cities');
       return saved ? JSON.parse(saved) : ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
     } catch {
       return ['Madrid', 'Sevilla', 'Barcelona', 'Málaga', 'Valencia', 'Granada', 'Cádiz'];
     }
   });
 
-  useEffect(() => {
-    if (epkConfig?.ciudadesConfig && Array.isArray(epkConfig.ciudadesConfig) && epkConfig.ciudadesConfig.length > 0) {
-      setCustomCityChips(epkConfig.ciudadesConfig);
-    }
-  }, [epkConfig?.ciudadesConfig]);
+  // Si el EPK trae otra lista de ciudades, manda ella (ajuste en render, sin efecto).
+  const ciudadesEpk = epkConfig?.ciudadesConfig;
+  const [ciudadesEpkPrevias, setCiudadesEpkPrevias] = useState(ciudadesEpk);
+  if (ciudadesEpk !== ciudadesEpkPrevias) {
+    setCiudadesEpkPrevias(ciudadesEpk);
+    if (Array.isArray(ciudadesEpk) && ciudadesEpk.length > 0) setCustomCityChips(ciudadesEpk);
+  }
 
   const [isAddingCityChip, setIsAddingCityChip] = useState(false);
   const [newCityInput, setNewCityInput] = useState('');
@@ -42,7 +44,7 @@ export function useCityChips(
     activeLeadsForSection.forEach((l) => {
       const cityRaw = (l.ciudad || '').trim();
       if (cityRaw) {
-        const mainCity = cityRaw.split(/[\(\-\/]/)[0].trim();
+        const mainCity = cityRaw.split(/[(\-/]/)[0].trim();
         if (mainCity) {
           counts[mainCity] = (counts[mainCity] || 0) + 1;
         }
@@ -71,8 +73,8 @@ export function useCityChips(
       const updated = [...customCityChips, formatted];
       setCustomCityChips(updated);
       try {
-        localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
-      } catch {}
+        localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       if (onUpdateEpkConfig) {
         onUpdateEpkConfig({ ciudadesConfig: updated });
       }
@@ -87,8 +89,8 @@ export function useCityChips(
     const updated = customCityChips.filter((c) => c !== cityToRemove);
     setCustomCityChips(updated);
     try {
-      localStorage.setItem('bakandeya_custom_cities', JSON.stringify(updated));
-    } catch {}
+      localStorage.setItem('bandmanager_custom_cities', JSON.stringify(updated));
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
     if (selectedCityFilter === cityToRemove) {
       setSelectedCityFilter('');
     }

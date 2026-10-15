@@ -28,13 +28,13 @@ export async function dbGetBandGmailOAuth(bandId: string): Promise<BandGmailOAut
       .maybeSingle();
 
     if (error) {
-      console.warn(`Notice leyendo OAuth de Gmail para '${cleanId}':`, error.message || error);
+      console.warn("Notice leyendo OAuth de Gmail para '%s':", cleanId, error.message || error);
       return null;
     }
 
     return data ? { ...data, refresh_token: decryptSecret(data.refresh_token) } : null;
   } catch (e) {
-    console.warn(`Fallo leyendo OAuth de Gmail para '${cleanId}':`, e);
+    console.warn("Fallo leyendo OAuth de Gmail para '%s':", cleanId, e);
     return null;
   }
 }
@@ -81,7 +81,9 @@ export async function dbDeleteBandGmailOAuth(bandId: string): Promise<void> {
 // devolverlo nunca. Misma razón y mismo patrón que toSafeEmailAccountResponse en
 // emailAccounts.ts - función pura y exportada aparte para poder verificarlo con un test
 // unitario sin montar Express.
-export function toSafeGmailOAuthResponse(account: BandGmailOAuthAccount | null): { connected: boolean; [key: string]: any } {
+export function toSafeGmailOAuthResponse(
+  account: BandGmailOAuthAccount | null
+): { connected: boolean } & Partial<Omit<BandGmailOAuthAccount, 'refresh_token'>> {
   if (!account) {
     return { connected: false };
   }

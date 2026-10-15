@@ -2,13 +2,15 @@
  * SIMILAR BANDS VENUE MATCHER SERVICE ("Efecto Espejo" / Setlist.fm & Spotify Similar Artists)
  * 
  * Descubre salas y festivales analizando dónde han tocado bandas similares del mismo género
- * o nivel (ej: Bakandeya -> Mestizaje, Afrobeat, Reggae, World Music, Fusion).
+ * o nivel (ej: una banda de mestizaje -> Mestizaje, Afrobeat, Reggae, World Music, Fusion).
  */
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
 import { searchSetlistFmVenues } from "./multiSourceVenueDiscoveryService.js";
 import { getVenuesFromBandsintown } from "./bandsintownVenueService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaMatchesSalas } from '../tiposRespuestasIA.js';
 
 export interface SimilarVenueMatch {
   nombre_sala: string;
@@ -70,7 +72,7 @@ export async function findVenuesBySimilarArtists(params: {
           });
         }
       });
-    } catch (e) {
+    } catch {
       // Continuar si falla
     }
 
@@ -92,7 +94,7 @@ export async function findVenuesBySimilarArtists(params: {
           });
         }
       });
-    } catch (e) {
+    } catch {
       // Continuar con radar IA si no hay clave
     }
   }
@@ -135,9 +137,9 @@ Devuelve máximo ${limit} recintos REALES y recomendados.`;
         }
       });
 
-      const parsed = safeParseJson(aiRes.text || "{}");
+      const parsed = safeParseJson<RespuestaMatchesSalas<Partial<SimilarVenueMatch>>>(aiRes.text || "{}");
       if (parsed && Array.isArray(parsed.matches)) {
-        parsed.matches.forEach((item: any) => {
+        parsed.matches.forEach((item: Partial<SimilarVenueMatch>) => {
           const exists = matches.some(m => m.nombre_sala.toLowerCase() === (item.nombre_sala || "").toLowerCase());
           if (!exists && item.nombre_sala) {
             matches.push({
@@ -156,7 +158,8 @@ Devuelve máximo ${limit} recintos REALES y recomendados.`;
         });
       }
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[Similar Bands Matcher] Error en radar IA:", err?.message);
   }
 

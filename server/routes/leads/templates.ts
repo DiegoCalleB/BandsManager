@@ -1,6 +1,7 @@
 // Plantillas de email: listar, guardar, previsualizar, optimizar y generar todas con IA.
 
 import express from 'express';
+import { mapLeadTipoToTemplateCategory } from '../../promptsManager.js';
 import {
   requireAuth,
   loadState,
@@ -34,30 +35,18 @@ import {
   isValidEmailSyntax,
   isValidEmailCached,
 } from '../../utils/emailValidator.js';
+import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
-
-// Lead sintético representativo de cada categoría, usado solo para la simulación de "Probar
-// Prompt": no se guarda ni se envía nada, es únicamente para dar contexto realista al prompt.
-const CATEGORY_PREVIEW_LEAD: Record<
-  string,
-  { tipo: string; nombre_sala: string }
-> = {
-  salas: { tipo: 'sala', nombre_sala: 'Sala Ejemplo' },
-  festivales: { tipo: 'festival', nombre_sala: 'Festival Ejemplo' },
-  discotecas: { tipo: 'discoteca', nombre_sala: 'Discoteca Ejemplo' },
-  medios: { tipo: 'medio', nombre_sala: 'Medio Ejemplo' },
-  grupos: { tipo: 'grupo', nombre_sala: 'Banda Ejemplo' },
-  managements: { tipo: 'management', nombre_sala: 'Agencia Ejemplo' },
-  ayuntamientos: { tipo: 'ayuntamiento', nombre_sala: 'Ayuntamiento Ejemplo' },
-};
 
 router.get('/templates', requireAuth, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
     const templates = await dbGetCategoryTemplates(bandId);
     res.json({ success: true, templates });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in GET /api/templates:', error);
     res
       .status(500)
@@ -130,7 +119,8 @@ router.post('/templates/save', requireAuth, async (req, res) => {
         console.warn('Notice en auto-optimización de plantilla:', err);
       }
     );
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/save:', error);
     res.status(500).json({
       success: false,
@@ -153,7 +143,6 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     }
 
     const state = loadState();
-    const { bandName, bandBio } = resolveBandNameAndBio(state, bandId);
 
     // Create a synthetic lead representative of this category
     const categoryToType: Record<string, string> = {
@@ -177,7 +166,7 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     };
 
     // Build band DNA with the current template settings (not saved)
-    const bandDna = getBandDnaProfile(state, bandId, syntheticLead as any);
+    const bandDna = getBandDnaProfile(state, bandId, syntheticLead);
     // Override with the current unsaved template values
     bandDna.categoryTemplateGuidelines = guidelines;
     bandDna.categoryTemplateBody = body;
@@ -193,7 +182,7 @@ router.post('/templates/preview', requireAuth, async (req, res) => {
     const systemPrompt = buildEnhancedPitchSystemPrompt(
       bandDna,
       globalMemory,
-      syntheticLead as any,
+      syntheticLead,
       undefined,
       bandMinCache,
       negotiationStartCacheByType
@@ -232,12 +221,10 @@ INSTRUCCIONES CLAVE:
       subject: previewSubject,
       body: previewBody,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/preview:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al generar vista previa del pitch.',
-    });
+    responderError(res, error, 'Error al generar vista previa del pitch.');
   }
 });
 
@@ -330,12 +317,10 @@ router.post('/templates/optimize', requireAuth, async (req, res) => {
       isSimulated: result.isSimulated,
       updatedTemplates,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/optimize:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al optimizar la plantilla con IA.',
-    });
+    responderError(res, error, 'Error al optimizar la plantilla con IA.');
   }
 });
 
@@ -430,73 +415,10 @@ router.post('/templates/generate-all', requireAuth, async (req, res) => {
       message:
         'Se han generado y adaptado con éxito las 7 plantillas maestras y sus pautas de IA.',
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/generate-all:', error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: error?.message || 'Error al generar las 7 plantillas con IA.',
-      });
-  }
-});
-
-// Genera una simulación REAL (no texto fijo) de cómo redactaría el Redactor un primer contacto
-// para esta categoría, usando las guidelines que hay en pantalla en ese momento (sin necesidad
-// de guardarlas antes). Usa el mismo ADN de banda y el mismo prompt que la generación real de
-// pitches (server/routes/leads/pitch.ts), solo que con un lead sintético de la categoría en vez
-// de uno real, para que el mánager pueda previsualizar el efecto de sus pautas antes de guardar.
-router.post('/templates/preview', requireAuth, async (req, res) => {
-  try {
-    const bandId = getTargetBandId(req);
-    const { category, subject, body, guidelines } = req.body;
-
-    const previewLeadBase = CATEGORY_PREVIEW_LEAD[category];
-    if (!previewLeadBase) {
-      return res
-        .status(400)
-        .json({ success: false, error: 'Categoría de plantilla no válida.' });
-    }
-
-    const state = loadState();
-    const previewLead = { ...previewLeadBase, ciudad: 'Madrid', aforo: 300 };
-    const bandDna = getBandDnaProfile(state, bandId, previewLead);
-
-    const current = (await dbGetCategoryTemplates(bandId))[category];
-    bandDna.categoryTemplateTitle = current?.title;
-    bandDna.categoryTemplateGuidelines = guidelines ?? current?.guidelines;
-
-    const globalMemory = formatGlobalPitchFeedbackForPrompt(state.leads);
-    const autonomyConfig = getAutonomyConfigForBand(state, bandId);
-    const systemPrompt = buildEnhancedPitchSystemPrompt(
-      bandDna,
-      globalMemory,
-      previewLead,
-      undefined,
-      autonomyConfig?.minCacheByType,
-      autonomyConfig?.negotiationStartCacheByType
-    );
-
-    const prompt = `Redacta una propuesta comercial y artística de concierto para "${previewLead.nombre_sala}" en ${previewLead.ciudad} (Tipo: ${previewLead.tipo}, Aforo: ${previewLead.aforo}).
-${body ? `\nPlantilla de referencia actual (adáptala, no la copies literal):\n"${body}"` : ''}`;
-
-    const result = await generateUnifiedAI({
-      prompt,
-      systemPrompt,
-      provider: 'gemini',
-    });
-
-    res.json({
-      success: true,
-      subject: subject || `Propuesta de concierto: ${bandDna.bandName}`,
-      body: result.text.trim(),
-    });
-  } catch (error: any) {
-    console.error('Error in POST /api/templates/preview:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al simular la plantilla con IA.',
-    });
+    responderError(res, error, 'Error al generar las 7 plantillas con IA.');
   }
 });
 
@@ -506,7 +428,7 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
   try {
     const state = await loadState();
     const bandId = getTargetBandId(req);
-    const leads = state.leads?.filter((l: any) => l.band_id === bandId) || [];
+    const leads = state.leads?.filter((l) => l.band_id === bandId) || [];
 
     const stats: Record<
       string,
@@ -571,7 +493,7 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
 
     // Validar emails en paralelo (con caché para performance)
     const emailValidities = await Promise.all(
-      leads.map(async (lead: any) => ({
+      leads.map(async (lead) => ({
         leadId: lead.id,
         email: lead.email || lead.email_contacto,
         isValid: isValidEmailSyntax(lead.email || lead.email_contacto)
@@ -585,7 +507,9 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
     );
 
     for (const lead of leads) {
-      const cat = lead.template_category || 'salas';
+      // La categoría sale del tipo del lead (como las plantillas). Antes se leía template_category,
+      // un campo que nadie escribe: todos los leads contaban como «salas».
+      const cat = mapLeadTipoToTemplateCategory(lead.tipo);
       if (!stats[cat]) continue;
 
       const email = lead.email || lead.email_contacto;
@@ -608,7 +532,9 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
       }
 
       // Contar uso solo si tiene pitch generado (y email válido)
-      if (lead.ultimo_pitch_generado) {
+      // Uso = el lead tiene pitch generado. Antes miraba ultimo_pitch_generado, que no existe:
+      // los usos y la tasa de respuesta salían siempre a 0.
+      if (lead.pitch_generado) {
         stats[cat].totalUses++;
 
         // Contar respuesta positiva (respondido, negociando, confirmado)
@@ -632,12 +558,10 @@ router.get('/templates/stats', requireAuth, async (req, res) => {
     }
 
     res.json({ success: true, stats });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in GET /api/templates/stats:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al obtener estadísticas.',
-    });
+    responderError(res, error, 'Error al obtener estadísticas.');
   }
 });
 
@@ -669,12 +593,10 @@ router.post('/templates/reset', requireAuth, async (req, res) => {
       message: `Plantilla de ${category} restaurada a valores por defecto.`,
       template: defaultTemplate,
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('Error in POST /api/templates/reset:', error);
-    res.status(500).json({
-      success: false,
-      error: error?.message || 'Error al resetear plantilla.',
-    });
+    responderError(res, error, 'Error al resetear plantilla.');
   }
 });
 

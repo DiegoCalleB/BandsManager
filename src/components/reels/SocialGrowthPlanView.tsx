@@ -1,42 +1,8 @@
 import React, { useState } from "react";
 import { ThemeColors, SocialMetric, EPKConfig } from "../../types";
-import {
-  GrowthPlan,
-  ChannelRecommendation,
-  ActionItem,
-} from "../../utils/growthPlanEngine";
+import { GrowthPlan, ActionItem } from "../../utils/growthPlanEngine";
 import { BandProfileArchetype } from "../../utils/bandGrowthTiers";
-import {
-  TrendingUp,
-  Sparkles,
-  Target,
-  Calendar,
-  CheckCircle2,
-  Circle,
-  Instagram,
-  Youtube,
-  Video,
-  Music2,
-  AlertCircle,
-  ArrowUpRight,
-  Flame,
-  Zap,
-  Compass,
-  Check,
-  Copy,
-  Share2,
-  Award,
-  Clock,
-  Lightbulb,
-  ChevronRight,
-  RefreshCw,
-  Layers,
-  Sliders,
-  ShieldCheck,
-  Users,
-  Eye,
-  HelpCircle,
-} from "lucide-react";
+import { Sparkles, Target, Calendar, CheckCircle2, Circle, Instagram, Youtube, Video, Music2, AlertCircle, Flame, Check, Copy, Clock, Lightbulb, ChevronRight, RefreshCw, Layers, Users } from "lucide-react";
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button } from '../ui';
 
@@ -54,13 +20,11 @@ interface SocialGrowthPlanViewProps {
 }
 
 export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
-  colors,
   bandName,
   latestMetric,
-  epkConfig,
   growthPlan,
   onRefreshPlanWithAI,
-  isGeneratingAI,
+  isGeneratingAI
 }) => {
   const [selectedTab, setSelectedTab] = useState<
     "overview" | "instagram" | "tiktok" | "youtube" | "spotify" | "weekly"
@@ -68,7 +32,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
   const [selectedHorizon, setSelectedHorizon] = useState<30 | 60 | 90>(
     growthPlan.horizonDays || 30,
   );
-  const [customPrompt, setCustomPrompt] = useState("");
+  const [customPrompt] = useState("");
   const [completedActions, setCompletedActions] = useState<
     Record<string, boolean>
   >(() => {
@@ -91,7 +55,7 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
           `growth_completed_actions_${bandName}`,
           JSON.stringify(updated),
         );
-      } catch (e) {}
+      } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión */ }
       return updated;
     });
   };
@@ -124,9 +88,6 @@ export const SocialGrowthPlanView: React.FC<SocialGrowthPlanViewProps> = ({
   const tkCount = latestMetric?.tiktok_followers || latestMetric?.tiktok || 0;
   const ytSubs =
     latestMetric?.youtube_subscribers || latestMetric?.youtube || 0;
-  const ytViews = latestMetric?.youtube_total_views || 0;
-  const spListeners =
-    latestMetric?.spotify_monthly_listeners || latestMetric?.spotify || 0;
 
   return (
     <div className="space-y-6">

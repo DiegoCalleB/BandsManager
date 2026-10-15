@@ -13,6 +13,8 @@ import { mapLeadTipoToTemplateCategory } from "../promptsManager.js";
 import { detectPitchLanguage } from "../utils/leadLanguage.js";
 import { analyzeIncomingMessageSentiment, type MessageSentimentAnalysis } from "./sentimentAnalysis.js";
 import { getBandOperationalContext, evaluateIncomingTactics, type TacticalEvaluation } from "./agentIntelligence.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Lead } from '../../src/types.js';
 
 // Palabras clave para detectar el tipo de respuesta entrante. Se comparten con lectorAgent.ts
 // (PALABRAS_NEGOCIACION) las que son específicamente de precio, para que ambos clasificadores no
@@ -172,7 +174,7 @@ export interface DraftReplyResult {
 
 export async function generarBorradorRespuesta(
   bandId: string,
-  lead: any,
+  lead: Lead,
   incomingMessage: string,
   threadSoFar: Array<{ remitente: "sala" | "banda"; mensaje: string }>,
   provider?: string,
@@ -212,7 +214,7 @@ export async function generarBorradorRespuesta(
   // ver AgentAutonomySettingsModal.tsx > "Estrategias de Respuesta"). Si no hay ninguna, cae a
   // la guía automática fija de código dentro de buildReplySystemPrompt.
   let responseStrategy = null;
-  let autonomyConfig: any = null;
+  let autonomyConfig: Awaited<ReturnType<typeof dbGetAutonomyConfig>> = null;
   try {
     autonomyConfig = await dbGetAutonomyConfig(bandId);
     if (autonomyConfig?.responseStrategies?.[responseType]) {
@@ -266,7 +268,7 @@ export async function generarBorradorRespuesta(
   }
 
   // [TACTICAL EVALUATION]: Evaluación estructurada de intenciones y ofertas económicas
-  let tacticalEval: TacticalEvaluation | null = null;
+  let tacticalEval: TacticalEvaluation | null;
   try {
     tacticalEval = await evaluateIncomingTactics(incomingMessage, {
       name: lead?.nombre_sala,
@@ -320,7 +322,8 @@ ${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de
       contactEmail: bandDna.contactoEmail
     });
     if (unifiedRes?.text) draftReply = unifiedRes.text.trim();
-  } catch (aiErr: any) {
+  } catch (aiErrCapturado) {
+    const aiErr = comoErrorCapturado(aiErrCapturado);
     console.warn("Fallo IA al generar respuesta:", aiErr?.message || aiErr);
   }
 
@@ -332,7 +335,7 @@ ${tacticalEval.propuesta_economica_sala_eur ? `- Oferta económica explícita de
   return { draftReply, isSimulated, sentimentAnalysis };
 }
 
-function generateFallbackReply(lead: any, incomingMessage: string, responseType: ResponseType): string {
+function generateFallbackReply(lead: Pick<Lead, "contacto_nombre" | "nombre_sala">, incomingMessage: string, responseType: ResponseType): string {
   const name = lead.contacto_nombre ? lead.contacto_nombre.split(" ")[0] : "equipo";
   const sala = lead.nombre_sala || "la sala";
 

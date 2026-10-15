@@ -117,7 +117,7 @@ export function NegotiationSimulationModal({
                   onClick={() => onRoleChange('banda')}
                   className="items-center justify-center gap-1.5"
                 >
-                  <Users className="w-4 h-4" /> Banda Bakandeya (Saliente)
+                  <Users className="w-4 h-4" /> Banda (Saliente)
                 </Button>
               </div>
             </div>
@@ -147,7 +147,7 @@ export function NegotiationSimulationModal({
                   type="text"
                   value={simulationSenderName}
                   onChange={(e) => onSenderNameChange(e.target.value)}
-                  placeholder="Ej. Kike (Sala Hebe) o Bakandeya Agent Manager IA"
+                  placeholder="Ej. Kike (Sala Hebe) o Agent Manager IA"
                   className="w-full"
                 />
               </div>

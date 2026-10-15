@@ -94,7 +94,7 @@ const es: MusiciansLandingDict = {
   formSubtitle:
     'BandManager.io estará disponible muy pronto. Déjanos tu email e Instagram para que te enviemos toda la información y seas de los primeros en probarlo.',
   labelBandName: 'Nombre de la Banda o Proyecto *',
-  placeholderBandName: 'Ej: Los Astronautas, Bakandeya...',
+  placeholderBandName: 'Ej: Los Astronautas...',
   labelContactName: 'Tu Nombre y Apellidos *',
   placeholderContactName: 'Ej: Laura Gómez',
   labelEmail: 'Correo Electrónico *',
@@ -298,7 +298,7 @@ const cs: MusiciansLandingDict = {
   formSubtitle:
     'BandManager.io bude k dispozici již brzy. Zanech nám svůj e-mail a Instagram, abychom ti zaslali všechny informace a přednostní přístup.',
   labelBandName: 'Název kapely nebo projektu *',
-  placeholderBandName: 'Např.: The Indie Collective, Bakandeya...',
+  placeholderBandName: 'Např.: The Indie Collective...',
   labelContactName: 'Tvé celé jméno a příjmení *',
   placeholderContactName: 'Např.: Jan Novák',
   labelEmail: 'Kontaktní e-mail *',

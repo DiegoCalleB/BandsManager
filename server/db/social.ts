@@ -2,6 +2,26 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { BandSocialAccount, SocialContentItem, SocialMetric, SocialPost } from '../../src/types.js';
+
+/** Entrada de métrica: la de la app, con cualquier número que falte tomado como 0. */
+export type EntradaMetricaSocial = Partial<SocialMetric>;
+
+/** Entrada de contenido social: admite también los alias camelCase del scraper. */
+export type EntradaContenidoSocial = Partial<SocialContentItem> & {
+  externalId?: string;
+  thumbnailUrl?: string;
+  publishedAt?: string;
+  /** Alias que mandaba /api/metrics/scrape: la columna es `views`. */
+  views_count?: number;
+};
+
+/** Cuenta conectada para guardar: el estado y la plataforma llegan como texto desde la ruta. */
+export type EntradaCuentaSocial = Partial<Omit<BandSocialAccount, 'plataforma' | 'status'>> & {
+  plataforma?: string;
+  status?: string;
+};
 
 export async function dbGetSocialPosts(bandId: string) {
   const sb = getSupabase();
@@ -16,7 +36,7 @@ export async function dbGetSocialPosts(bandId: string) {
   return (data || []).filter(p => cleanBandId(p.band_id) === cleanId);
 }
 
-export async function dbUpsertSocialPost(post: any, bandId: string) {
+export async function dbUpsertSocialPost(post: Partial<SocialPost>, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
@@ -34,7 +54,7 @@ export async function dbUpsertSocialPost(post: any, bandId: string) {
     }
   }
 
-  const payload: any = {
+  const payload: Partial<SocialPost> & { id: string } = {
     id: finalPostId || `post-${Date.now()}`,
     band_id: targetBandId,
     fecha: post.fecha || new Date().toISOString().split("T")[0],
@@ -83,14 +103,15 @@ export async function dbGetBandSocialAccounts(bandId: string) {
       console.warn(`[Social DB] band_social_accounts table check: ${error.message}`);
       return [];
     }
-    return (data || []).filter((a: any) => cleanBandId(a.band_id) === cleanId);
-  } catch (err: any) {
+    return (data || []).filter((a: BandSocialAccount) => cleanBandId(a.band_id) === cleanId);
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Social DB] Error getting social accounts: ${err.message}`);
     return [];
   }
 }
 
-export async function dbUpsertBandSocialAccount(account: any, bandId: string) {
+export async function dbUpsertBandSocialAccount(account: EntradaCuentaSocial, bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
@@ -118,7 +139,8 @@ export async function dbUpsertBandSocialAccount(account: any, bandId: string) {
       return payload;
     }
     return data;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Social DB] Fallback returning payload for band_social_accounts: ${err.message}`);
     return payload;
   }
@@ -136,7 +158,7 @@ export async function dbDeleteBandSocialAccount(id: string, bandId: string) {
 }
 
 // --- PAYMENTS ---
-export async function dbGetSocialMetrics(bandId: string) {
+export async function dbGetSocialMetrics(bandId: string): Promise<Partial<SocialMetric>[]> {
   const sb = getSupabase();
   const target = cleanBandId(bandId);
   const alternate = target.startsWith('band-') ? target.replace(/^band-/, '') : `band-${target}`;
@@ -150,7 +172,8 @@ export async function dbGetSocialMetrics(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (social_metrics): ${error.message}`);
   const validBandIds = new Set(bandIds.map(id => cleanBandId(id)));
-  return (data || []).filter((m: any) => validBandIds.has(cleanBandId(m.band_id))).map((m: any) => {
+  const filas: SocialMetric[] = data || [];
+  return filas.filter((m) => validBandIds.has(cleanBandId(m.band_id))).map((m) => {
     const ig = Number(m.instagram ?? m.instagram_followers ?? 0);
     const tk = Number(m.tiktok ?? m.tiktok_followers ?? 0);
     const yt = Number(m.youtube ?? m.youtube_subscribers ?? 0);
@@ -178,7 +201,7 @@ export async function dbGetSocialMetrics(bandId: string) {
   });
 }
 
-export async function dbUpsertSocialMetric(metric: any, bandId: string) {
+export async function dbUpsertSocialMetric(metric: EntradaMetricaSocial, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
@@ -254,7 +277,7 @@ export async function dbGetSocialContentItems(bandId: string, platform?: string)
   return data || [];
 }
 
-export async function dbUpsertSocialContentItem(item: any, bandId: string) {
+export async function dbUpsertSocialContentItem(item: EntradaContenidoSocial, bandId: string) {
   const sb = getSupabase();
   // 'bandId' es el único origen de confianza (lo resuelve la ruta desde la sesión); el
   // objeto de entrada puede traer su propio 'band_id' sin validar desde el cuerpo de la
@@ -263,7 +286,7 @@ export async function dbUpsertSocialContentItem(item: any, bandId: string) {
 
   // Ver nota equivalente en dbUpsertFan/dbUpsertConcert: un id explícito que no pertenece a la
   // banda del usuario no se reutiliza nunca.
-  let finalContentId = item.id;
+  let finalContentId: string | null | undefined = item.id;
   if (finalContentId) {
     const { data: existing } = await sb.from("social_content_items").select("id, band_id").eq("id", finalContentId).maybeSingle();
     if (existing && existing.band_id !== targetBandId) {
@@ -280,7 +303,9 @@ export async function dbUpsertSocialContentItem(item: any, bandId: string) {
     url: item.url || "",
     thumbnail_url: item.thumbnail_url || item.thumbnailUrl || "",
     published_at: item.published_at || item.publishedAt || null,
-    views: Number(item.views || 0),
+    // views_count es el nombre que usaba /api/metrics/scrape: antes se ignoraba y las vistas
+    // de los vídeos scrapeados se guardaban siempre a 0.
+    views: Number(item.views || item.views_count || 0),
     likes: Number(item.likes || 0),
     comments: Number(item.comments || 0),
     shares: Number(item.shares || 0),
@@ -297,7 +322,7 @@ export async function dbUpsertSocialContentItem(item: any, bandId: string) {
 
 export async function dbUpdateBandRadarStatus(bandId: string, lastScrapedAt: string, radarEnabled?: boolean) {
   const sb = getSupabase();
-  const updateData: any = { last_social_radar_at: lastScrapedAt };
+  const updateData: { last_social_radar_at: string; radar_enabled?: boolean } = { last_social_radar_at: lastScrapedAt };
   if (typeof radarEnabled === "boolean") {
     updateData.radar_enabled = radarEnabled;
   }
@@ -308,3 +333,35 @@ export async function dbUpdateBandRadarStatus(bandId: string, lastScrapedAt: str
 }
 
 // --- TOURS ---
+
+// --- PUBLICACIÓN REAL (socialPublisher) ---
+
+/**
+ * Reclama un post para publicarlo: un único UPDATE condicionado al estado actual, así que si dos
+ * pasadas (worker + botón "publicar ya") llegan a la vez, solo una obtiene la fila y la otra no
+ * publica. Devuelve el post reclamado o null si otro ya lo tenía.
+ */
+export async function dbReclamarPostParaPublicar(id: string, bandId: string, desde: SocialPost["estado"][]) {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("social_posts")
+    .update({ estado: "publicando", publish_started_at: new Date().toISOString(), publish_error: null })
+    .eq("id", id)
+    .eq("band_id", cleanBandId(bandId))
+    .in("estado", desde)
+    .select()
+    .maybeSingle();
+  if (error) throw new Error(`Supabase Error (reclamar social_posts): ${error.message}`);
+  return (data as SocialPost | null) || null;
+}
+
+/** Posts de TODAS las bandas que el worker de publicación tiene que mirar. Solo para procesos del servidor. */
+export async function dbGetPostsPorPublicar(): Promise<SocialPost[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("social_posts")
+    .select("*")
+    .in("estado", ["aprobado", "en_cola", "publicando"]);
+  if (error) throw new Error(`Supabase Error (social_posts por publicar): ${error.message}`);
+  return (data || []) as SocialPost[];
+}

@@ -39,7 +39,7 @@ export function acordesDelCifrado(texto: string): string[] {
   const salida: string[] = [];
   for (const linea of (texto || '').split('\n')) {
     if (esLineaCabecera(linea)) continue;
-    for (const m of linea.matchAll(/\[([A-Za-z0-9#\/]+)\]/g)) {
+    for (const m of linea.matchAll(/\[([A-Za-z0-9#/]+)\]/g)) {
       if (esTokenAcorde(m[1])) salida.push(normalizarAcorde(m[1]) as string);
     }
   }
@@ -217,7 +217,7 @@ export function lineaDeCadaAcorde(texto: string): number[] {
   const salida: number[] = [];
   (texto || '').split('\n').forEach((linea, i) => {
     if (esLineaCabecera(linea)) return;
-    for (const m of linea.matchAll(/\[([A-Za-z0-9#\/]+)\]/g)) if (esTokenAcorde(m[1])) salida.push(i);
+    for (const m of linea.matchAll(/\[([A-Za-z0-9#/]+)\]/g)) if (esTokenAcorde(m[1])) salida.push(i);
   });
   return salida;
 }

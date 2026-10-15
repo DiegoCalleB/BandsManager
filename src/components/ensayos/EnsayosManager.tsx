@@ -1,26 +1,11 @@
 import React, { useState, useMemo, useEffect } from "react";
-import {
-  Calendar,
-  Clock,
-  MapPin,
-  Users,
-  Plus,
-  Disc3,
-  Mic,
-  ListOrdered,
-  Radio,
-  CheckCircle2,
-  ChevronDown,
-  History,
-  Sparkles,
-  Filter,
-  Edit3,
-  Trash2,
-} from "lucide-react";
+import { Calendar, MapPin, Users, Plus, Mic, ListOrdered, Radio, ChevronDown, Edit3 } from "lucide-react";
 import { Rehearsal, Song, Setlist, Concert, ThemeColors } from "../../types";
 import { EnsayoCronometro } from "./EnsayoCronometro";
 import { OrdenDelDiaTab } from "./OrdenDelDiaTab";
 import { ModoLocalEnVivoTab } from "./ModoLocalEnVivoTab";
+import { SetlistPerformanceView } from "../SetlistPerformanceView";
+import { agendaASetlist } from "../../utils/agendaASetlist";
 import { GrabacionActaTab } from "./GrabacionActaTab";
 import { ConvocarEnsayoModal } from "./ConvocarEnsayoModal";
 import { api } from "../../services/api";
@@ -44,14 +29,13 @@ interface EnsayosManagerProps {
 export function EnsayosManager({
   rehearsals = [],
   onSaveRehearsal,
-  onDeleteRehearsal,
   songs: initialSongs = [],
   setlists: initialSetlists = [],
   concerts = [],
   colors,
   currentBandId,
   bandUsers = [],
-  onUpdateSong,
+  onUpdateSong
 }: EnsayosManagerProps) {
   const [loadedSongs, setLoadedSongs] = useState<Song[]>(initialSongs);
   const [loadedSetlists, setLoadedSetlists] =
@@ -161,6 +145,7 @@ export function EnsayosManager({
 
   // Modal
   const [showConvocarModal, setShowConvocarModal] = useState(false);
+  const [visorAbierto, setVisorAbierto] = useState(false);
   const [editingRehearsal, setEditingRehearsal] = useState<Rehearsal | null>(
     null,
   );
@@ -361,6 +346,28 @@ export function EnsayosManager({
           nextConcert={nextConcert}
           colors={colors}
           onGoToLiveMode={() => setActiveTab("modo_local")}
+        />
+      )}
+
+      {currentRehearsal && activeTab === "modo_local" && (currentRehearsal.agenda?.length ?? 0) > 0 && (
+        <div className="flex justify-end mb-2">
+          <Button variant="neutral" size="sm" onClick={() => setVisorAbierto(true)}>
+            Abrir en el visor de concierto
+          </Button>
+        </div>
+      )}
+
+      {currentRehearsal && visorAbierto && (
+        <SetlistPerformanceView
+          setlist={agendaASetlist(currentRehearsal, currentRehearsal.agenda || [])}
+          songs={effectiveSongs}
+          onClose={() => setVisorAbierto(false)}
+          onUpdateSong={handleUpdateSongInternal}
+          initialMode="ensayo"
+          seguimientoEnsayo={{
+            agenda: currentRehearsal.agenda || [],
+            onUpdateRehearsal: handleUpdateRehearsal,
+          }}
         />
       )}
 

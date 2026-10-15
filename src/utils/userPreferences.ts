@@ -1,6 +1,7 @@
 import { api } from '../services/api';
 import { User } from '../types';
 import { syncCalendarPreferencesFromUser } from './calendarViewPreferences';
+import { leerTokenDeSesion, leerUsuarioDeSesion } from '../services/sesionLocal';
 
 export const TUTORIAL_STORAGE_PREFIX = 'bm_tutorial_seen_';
 export const ONBOARDING_GLOBAL_KEY = 'bandmanager_onboarding_completed';
@@ -85,15 +86,14 @@ export function isTutorialSeen(moduleId: string, user?: User | null): boolean {
 
   // 3. Comprobación en usuario en caché de localStorage
   try {
-    const cachedUserStr = localStorage.getItem('bakandeya_user');
-    if (cachedUserStr) {
-      const parsed = JSON.parse(cachedUserStr);
+    const parsed = leerUsuarioDeSesion();
+    if (parsed) {
       if (parsed?.ui_preferences?.tutorials_seen?.includes(moduleId)) {
         localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
         return true;
       }
     }
-  } catch {}
+  } catch { /* caché local corrupta o ausente: se arranca con el valor por defecto */ }
 
   return false;
 }
@@ -108,16 +108,15 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
   if (typeof localStorage !== 'undefined') {
     try {
       localStorage.setItem(`${TUTORIAL_STORAGE_PREFIX}${moduleId}`, 'true');
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 2. Actualizar optimísticamente el usuario en caché
   let currentTutorials: string[] = [];
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bakandeya_user');
-      if (cachedUserStr) {
-        const user = JSON.parse(cachedUserStr);
+      const user = leerUsuarioDeSesion();
+      if (user) {
         const currentPrefs = user.ui_preferences || {};
         currentTutorials = Array.isArray(currentPrefs.tutorials_seen) ? currentPrefs.tutorials_seen : [];
         if (!currentTutorials.includes(moduleId)) {
@@ -127,22 +126,22 @@ export async function markTutorialSeen(moduleId: string, syncToSupabase = true):
           ...currentPrefs,
           tutorials_seen: currentTutorials,
         };
-        localStorage.setItem('bakandeya_user', JSON.stringify(user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 3. Persistir en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = leerTokenDeSesion();
 
       if (token) {
         const response = await api.saveUiPreferences({
           tutorials_seen: currentTutorials.length > 0 ? currentTutorials : [moduleId],
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }
@@ -216,7 +215,7 @@ export async function markOnboardingCompleted(
         localStorage.setItem(PROFILE_WIZARD_GLOBAL_KEY, 'true');
         if (clean) localStorage.setItem(`${PROFILE_WIZARD_GLOBAL_KEY}_${clean}`, 'true');
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 2. Actualizar usuario en caché
@@ -225,9 +224,8 @@ export async function markOnboardingCompleted(
 
   if (typeof localStorage !== 'undefined') {
     try {
-      const cachedUserStr = localStorage.getItem('bakandeya_user');
-      if (cachedUserStr) {
-        const user = JSON.parse(cachedUserStr);
+      const user = leerUsuarioDeSesion();
+      if (user) {
         const currentPrefs = user.ui_preferences || {};
         updatedOnboardingBands = Array.isArray(currentPrefs.onboarding_completed_bands) ? [...currentPrefs.onboarding_completed_bands] : [];
         updatedWizardBands = Array.isArray(currentPrefs.profile_wizard_completed_bands)
@@ -245,15 +243,15 @@ export async function markOnboardingCompleted(
           onboarding_completed_bands: updatedOnboardingBands,
           profile_wizard_completed_bands: updatedWizardBands,
         };
-        localStorage.setItem('bakandeya_user', JSON.stringify(user));
+        localStorage.setItem('bandmanager_user', JSON.stringify(user));
       }
-    } catch {}
+    } catch { /* almacenamiento del navegador no disponible (modo privado o cuota llena): el cambio vale para esta sesión; el servidor también lo guarda */ }
   }
 
   // 3. Sincronizar en Supabase
   if (syncToSupabase) {
     try {
-      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('bakandeya_token') || localStorage.getItem('token') : null;
+      const token = leerTokenDeSesion();
 
       if (token) {
         const response = await api.saveUiPreferences({
@@ -264,7 +262,7 @@ export async function markOnboardingCompleted(
             clean && !updatedWizardBands.includes(clean) ? [...updatedWizardBands, clean] : updatedWizardBands,
         });
         if (response?.user && typeof localStorage !== 'undefined') {
-          localStorage.setItem('bakandeya_user', JSON.stringify(response.user));
+          localStorage.setItem('bandmanager_user', JSON.stringify(response.user));
         }
         return true;
       }
@@ -274,4 +272,12 @@ export async function markOnboardingCompleted(
   }
 
   return false;
+}
+
+/**
+ * Qué asistentes se abren solos al entrar. Solo la bienvenida corta («¿Por dónde empezamos?»);
+ * el asistente de 14 pasos del perfil ya no se apila encima: se abre desde la bienvenida o desde el perfil.
+ */
+export function asistentesAlEntrar(estado: { onboardingCompleted: boolean }): { perfil: boolean; bienvenida: boolean } {
+  return { perfil: false, bienvenida: !estado.onboardingCompleted };
 }

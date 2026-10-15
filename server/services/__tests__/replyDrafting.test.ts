@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { detectResponseType, type ResponseType } from '../replyDrafting';
+import { detectResponseType } from '../replyDrafting';
 
 describe('detectResponseType', () => {
   it('detecta negociación de precio correctamente', () => {

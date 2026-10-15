@@ -9,6 +9,7 @@
  */
 
 import { getAudioArrayBufferFromUrl } from './audioStorage';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 
 export interface IsolatedStemResult {
   instrument: string;
@@ -29,7 +30,7 @@ export async function separateAudioIntoStems(audioUrl: string, targetInstruments
     const arrayBuffer = await getAudioArrayBufferFromUrl(audioUrl);
 
     // 2. Decode raw PCM audio buffer
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioCtx = getAudioContextClass();
     const tempCtx = new AudioCtx();
     const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
 
@@ -166,7 +167,7 @@ export async function separateAudioIntoStems(audioUrl: string, targetInstruments
       });
     }
 
-    tempCtx.close().catch(() => {});
+    tempCtx.close().catch(() => { /* contexto de audio ya cerrado o en transición: no hay nada que cambiar */ });
     return results;
   } catch (err) {
     console.error('Error rendering anti-phase cancelled stems:', err);
@@ -241,7 +242,7 @@ function createPhaseCancelledBuffer(
     for (let i = 0; i < length; i++) {
       const vocalSample = i < vocalBuffer.length ? vocalData[i] : 0;
       // Anti-phase wave cancellation math: M(t) + (-V(t)) = M(t) - V(t)
-      let sample = origData[i] - cancellationGain * vocalSample;
+      const sample = origData[i] - cancellationGain * vocalSample;
       outData[i] = Math.max(-1, Math.min(1, sample));
     }
   }
@@ -310,8 +311,8 @@ function audioBufferToWavBlob(buffer: AudioBuffer): Blob {
   const numOfChan = buffer.numberOfChannels;
   const length = buffer.length * numOfChan * 2 + 44;
   const out = new DataView(new ArrayBuffer(length));
-  let channels: Float32Array[] = [];
-  let sampleRate = buffer.sampleRate;
+  const channels: Float32Array[] = [];
+  const sampleRate = buffer.sampleRate;
   let offset = 0;
   let pos = 0;
 

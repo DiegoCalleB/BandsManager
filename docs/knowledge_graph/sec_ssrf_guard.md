@@ -19,13 +19,37 @@ Valida llamadas salientes fetch() bloqueando IPs privadas, loopback y metadatos 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[agent_scout|Scout Discovery Agent]] *(Layer: #agent, Domain: #booking)*
-- [[route_leads_enrichment]]
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(Layer: #route, Domain: #booking)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
 - [[agent_scout|Scout Discovery Agent]] *(from #agent)*
+- [[route_leads_enrichment|Ruta de enriquecimiento de salas]] *(from #route)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(from #security)*
+- [[server_routes_ai_music_audioPublico|server/routes/ai_music/audioPublico.ts]] *(from #route)*
+- [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(from #route)*
+- [[server_routes_ai_music_motoresNeuronales|server/routes/ai_music/motoresNeuronales.ts]] *(from #route)*
+- [[server_routes_ai_music_motorFfmpeg|server/routes/ai_music/motorFfmpeg.ts]] *(from #route)*
+- [[server_routes_bands|server/routes/bands.ts]] *(from #route)*
+- [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
+- [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
+- [[server_services_audioSeparator_LalalAiService|server/services/audioSeparator/LalalAiService.ts]] *(from #service)*
+- [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
+- [[server_services_jinaReaderService|server/services/jinaReaderService.ts]] *(from #service)*
+- [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
+- [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
+- [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `server/__tests__/autoEnrichRespetarVacios.test.ts`
+- `server/routes/__tests__/roformerStems.test.ts`
+- `server/services/__tests__/stemWebhookAndLocks.test.ts`
+- `server/utils/__tests__/ssrfGuard.test.ts`
+- `server/utils/__tests__/ssrfGuardAgente.test.ts`
 
 ---
 

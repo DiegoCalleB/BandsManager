@@ -25,11 +25,12 @@ export function columnasOmitidasEnPeticion(): string[] {
 export function avisarGuardadoParcial() {
   return (_req: Request, res: Response, next: NextFunction) => {
     const omitidas = new Set<string>();
-    const writeHead = res.writeHead.bind(res) as (...args: any[]) => Response;
-    (res as any).writeHead = (...args: any[]) => {
+    // writeHead tiene varias sobrecargas; el envoltorio reenvía los argumentos tal cual.
+    const writeHead = res.writeHead.bind(res) as (...args: Parameters<Response['writeHead']>) => Response;
+    res.writeHead = ((...args: Parameters<Response['writeHead']>) => {
       if (omitidas.size && !res.headersSent) res.setHeader(CABECERA_GUARDADO_PARCIAL, [...omitidas].join(','));
       return writeHead(...args);
-    };
+    }) as Response['writeHead'];
     almacen.run(omitidas, next);
   };
 }

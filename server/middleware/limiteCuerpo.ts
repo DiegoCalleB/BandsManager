@@ -1,6 +1,10 @@
 import express from "express";
+import type { IncomingMessage, ServerResponse } from "node:http";
 
-const guardarCuerpoCrudo = (req: any, _res: any, buf: Buffer) => {
+/** Petición a la que `verify` le cuelga el cuerpo sin parsear (lo leen los webhooks con firma). */
+type PeticionConCuerpoCrudo = IncomingMessage & { rawBody?: Buffer };
+
+const guardarCuerpoCrudo = (req: PeticionConCuerpoCrudo, _res: ServerResponse, buf: Buffer) => {
   req.rawBody = buf;
 };
 

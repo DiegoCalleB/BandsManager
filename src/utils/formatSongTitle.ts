@@ -37,13 +37,13 @@ export function formatSongTitle(rawTitle?: string | null): string {
   if (!trimmed) return '';
 
   // Separar tokens respetando espacios y signos de delimitación (, [ ] ( ) / - _ – — : "' )
-  const tokens = trimmed.split(/(\s+|[()\[\]/\-_–—:\",])/);
+  const tokens = trimmed.split(/(\s+|[()[\]/\-_–—:",])/);
 
   const formatted = tokens.map((token) => {
     if (!token) return '';
 
     // Delimitadores y signos de puntuación
-    if (/^[()\[\]/\-_–—:\",]+$/.test(token)) {
+    if (/^[()[\]/\-_–—:",]+$/.test(token)) {
       return token;
     }
 

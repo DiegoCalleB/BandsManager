@@ -48,7 +48,7 @@ export const FansLandingPreviewModal: React.FC<FansLandingPreviewModalProps> = (
 
   const selectedConcert = concerts.find((c) => c.id === selectedConcertId) || null;
   const effectiveBandName =
-    currentBandName || epkConfig?.contactoBooking?.nombre || (currentBandId?.includes('bakandeya') ? 'Bakandeya' : 'Tu Banda');
+    currentBandName || epkConfig?.contactoBooking?.nombre || 'Tu Banda';
 
   const handleReset = () => {
     setSimKey((prev) => prev + 1);

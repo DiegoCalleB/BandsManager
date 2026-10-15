@@ -8,11 +8,13 @@ import {
   ListChecks,
 } from "lucide-react";
 import { Song, Setlist, SetlistItem } from "../../types";
-import { getAuthHeaders } from "../../services/api";
+import "../../services/api";
 import { apiFetch, apiFetchRaw } from "../../utils/api";
 import { ShowIcon } from '../ui/ShowIcon';
 import { IconButton, Input, Select } from '../ui';
 import { ModalPortal } from "../common/ModalPortal";
+import { comoErrorCapturado } from '../../utils/errorCapturado';
+import { itemDeBloqueImportado } from "./bloqueImportado";
 
 type SongAction = "link_matched" | "link_other" | "create_new" | "discard";
 
@@ -29,11 +31,29 @@ interface ReviewSongItem {
 interface ReviewBlockItem {
   type: "block";
   titulo: string;
-  blockType: SetlistItem["tipoItem"];
+  blockType: NonNullable<SetlistItem["bloqueSubtipo"]>;
   included: boolean;
 }
 
 type ReviewItem = ReviewSongItem | ReviewBlockItem;
+
+/** Elemento que devuelve `POST /api/setlists/import-from-image`: un tema detectado o un bloque. */
+interface ItemDetectado {
+  type?: "song" | "block";
+  titulo?: string;
+  blockType?: SetlistItem["bloqueSubtipo"];
+  detectedTitle?: string;
+  matchedSongId?: string;
+  matchedSongTitle?: string;
+}
+
+/** Respuesta completa del análisis de la imagen o PDF del setlist. */
+interface RespuestaImportarSetlist {
+  success?: boolean;
+  error?: string;
+  nombreSugerido?: string;
+  items?: ItemDetectado[];
+}
 
 const BLOCK_TYPE_LABELS: Record<string, string> = {
   chapa: "Chapa / discurso con público",
@@ -103,13 +123,13 @@ export function ImportSetlistModal({
         method: "POST",
         body: formData,
       });
-      const data = await res.json();
+      const data: RespuestaImportarSetlist = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.error || "No se pudo analizar el archivo");
       }
       setSetlistName(data.nombreSugerido || "Repertorio importado");
       setReviewItems(
-        (data.items || []).map((it: any): ReviewItem => {
+        (data.items || []).map((it): ReviewItem => {
           if (it.type === "block") {
             return {
               type: "block",
@@ -136,7 +156,8 @@ export function ImportSetlistModal({
           };
         }),
       );
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al analizar el archivo");
     } finally {
       setAnalyzing(false);
@@ -166,18 +187,15 @@ export function ImportSetlistModal({
     setCreating(true);
     setError(null);
     try {
-      const authHeaders = getAuthHeaders() as Record<string, string>;
       const newSongs: Song[] = [];
       const items: SetlistItem[] = [];
 
       for (const it of reviewItems) {
         if (it.type === "block") {
           if (!it.included) continue;
-          items.push({
-            id: `it-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-            tipoItem: it.blockType,
-            tituloCustom: it.titulo,
-          });
+          items.push(
+            itemDeBloqueImportado(`it-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`, it.titulo, it.blockType),
+          );
           continue;
         }
 
@@ -233,7 +251,8 @@ export function ImportSetlistModal({
       onCreated(newSetlist, newSongs);
       reset();
       onClose();
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setError(err.message || "Error al crear el repertorio");
     } finally {
       setCreating(false);

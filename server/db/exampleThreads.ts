@@ -2,6 +2,7 @@
 
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface ExampleThreadMessage {
   rol: "banda" | "sala";
@@ -20,13 +21,20 @@ export interface ExampleThread {
   created_at: string;
 }
 
-function normalizeFromDb(row: any): ExampleThread {
+/** Fila de `pitch_example_threads` tal como llega (las columnas de texto pueden venir vacías). */
+type FilaExampleThread = Partial<Omit<ExampleThread, "id" | "mensajes">> & {
+  id: string | number;
+  mensajes?: unknown;
+};
+
+function normalizeFromDb(row: FilaExampleThread): ExampleThread {
   return {
     id: String(row.id),
     band_id: row.band_id,
     category: row.category,
     titulo: row.titulo || "",
-    mensajes: Array.isArray(row.mensajes) ? row.mensajes : [],
+    // `mensajes` es JSONB que escribe solo este módulo (dbCreateExampleThread).
+    mensajes: Array.isArray(row.mensajes) ? (row.mensajes as ExampleThreadMessage[]) : [],
     resultado: row.resultado || "positiva",
     notas: row.notas || "",
     created_at: row.created_at || new Date().toISOString()
@@ -45,7 +53,8 @@ export async function dbGetExampleThreads(bandId: string, category?: string): Pr
       return [];
     }
     return (data || []).map(normalizeFromDb);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Could not query pitch_example_threads from Supabase:", err?.message || err);
     return [];
   }

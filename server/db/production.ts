@@ -4,6 +4,38 @@
 import { getSupabase, cleanBandId } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
 
+/** Fila de `run_of_show`: una actividad con hora dentro del día de concierto. */
+export interface FilaRunOfShow {
+  id: string;
+  band_id: string;
+  fecha: string;
+  time: string;
+  activity: string;
+  done: boolean;
+}
+
+/** Fila de `gear_checklists`: un elemento del equipo a revisar ese día. */
+export interface FilaGearChecklist {
+  id: string;
+  band_id: string;
+  fecha: string;
+  label: string;
+  checked: boolean;
+}
+
+/** Elemento tal como lo manda el cliente (la fecha y la banda las pone el servidor). */
+type EntradaDelDia<F> = Partial<Omit<F, "band_id" | "fecha">>;
+
+/** Agrupa las filas por su fecha. */
+function agruparPorFecha<F extends { fecha: string }>(filas: F[]): Record<string, F[]> {
+  const result: Record<string, F[]> = {};
+  filas.forEach(item => {
+    if (!result[item.fecha]) result[item.fecha] = [];
+    result[item.fecha].push(item);
+  });
+  return result;
+}
+
 export async function dbGetRunOfShow(bandId: string) {
   const sb = getSupabase();
   const { data, error } = await sb
@@ -14,17 +46,11 @@ export async function dbGetRunOfShow(bandId: string) {
     .order("time", { ascending: true });
 
   if (error) throw new Error(`Supabase Error (run_of_show): ${error.message}`);
-  
-  // Group by fecha as Record<string, any[]>
-  const result: Record<string, any[]> = {};
-  (data || []).forEach(item => {
-    if (!result[item.fecha]) result[item.fecha] = [];
-    result[item.fecha].push(item);
-  });
-  return result;
+
+  return agruparPorFecha<FilaRunOfShow>(data || []);
 }
 
-export async function dbSyncRunOfShowForDate(dateKey: string, items: any[], bandId: string) {
+export async function dbSyncRunOfShowForDate(dateKey: string, items: EntradaDelDia<FilaRunOfShow>[], bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
@@ -34,7 +60,7 @@ export async function dbSyncRunOfShowForDate(dateKey: string, items: any[], band
 
   if (!items || items.length === 0) return true;
 
-  const rows = items.map((it, idx) => ({
+  const rows: FilaRunOfShow[] = items.map((it, idx) => ({
     id: it.id || `ros-${dateKey}-${idx}`,
     band_id: targetBandId,
     fecha: dateKey,
@@ -59,15 +85,10 @@ export async function dbGetGearChecklists(bandId: string) {
 
   if (error) throw new Error(`Supabase Error (gear_checklists): ${error.message}`);
 
-  const result: Record<string, any[]> = {};
-  (data || []).forEach(item => {
-    if (!result[item.fecha]) result[item.fecha] = [];
-    result[item.fecha].push(item);
-  });
-  return result;
+  return agruparPorFecha<FilaGearChecklist>(data || []);
 }
 
-export async function dbSyncGearChecklistForDate(dateKey: string, items: any[], bandId: string) {
+export async function dbSyncGearChecklistForDate(dateKey: string, items: EntradaDelDia<FilaGearChecklist>[], bandId: string) {
   const sb = getSupabase();
   const targetBandId = cleanBandId(bandId);
   await ensureRegisteredBandExists(targetBandId);
@@ -76,7 +97,7 @@ export async function dbSyncGearChecklistForDate(dateKey: string, items: any[], 
 
   if (!items || items.length === 0) return true;
 
-  const rows = items.map((it, idx) => ({
+  const rows: FilaGearChecklist[] = items.map((it, idx) => ({
     id: it.id || `gear-${dateKey}-${idx}`,
     band_id: targetBandId,
     fecha: dateKey,

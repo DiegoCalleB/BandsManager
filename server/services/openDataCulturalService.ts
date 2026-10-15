@@ -1,3 +1,4 @@
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 export interface OpenDataCulturalEvent {
   id: string;
   titulo: string;
@@ -10,6 +11,17 @@ export interface OpenDataCulturalEvent {
   enlace_oficial?: string;
   tipo_espacio: string;
   fuente: string;
+}
+
+/** Evento de la agenda cultural de datos.madrid.es (JSON-LD, colección `@graph`). */
+interface EventoAgendaMadrid {
+  title?: string;
+  description?: string;
+  "event-location"?: string;
+  address?: { area?: { "formatted-address"?: string }; locality?: string };
+  dtstart?: string;
+  price?: string;
+  link?: string;
 }
 
 export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCulturalEvent[]> {
@@ -26,17 +38,17 @@ export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCultu
       return [];
     }
     const rawText = await res.text();
-    const cleanText = rawText.replace(/[\u0000-\u001F\u007F]/g, (c) => c === "\n" || c === "\r" || c === "\t" ? " " : "");
-    const data = JSON.parse(cleanText);
+    const cleanText = rawText.replace(/\p{Cc}/gu, (c) => c === "\n" || c === "\r" || c === "\t" ? " " : "");
+    const data: { "@graph"?: EventoAgendaMadrid[] } = JSON.parse(cleanText);
     const items = data["@graph"] || [];
     const musicKeywords = ["concierto", "música", "musica", "recital", "banda", "acústico", "jazz", "rock", "pop", "flamenco", "orquesta", "coral"];
-    const musicEvents = items.filter((item: any) => {
+    const musicEvents = items.filter((item) => {
       const t = (item.title || "").toLowerCase();
       const d = (item.description || "").toLowerCase();
       return musicKeywords.some((kw) => t.includes(kw) || d.includes(kw));
     });
 
-    return musicEvents.slice(0, 25).map((m: any, idx: number) => {
+    return musicEvents.slice(0, 25).map((m, idx): OpenDataCulturalEvent => {
       const loc = m["event-location"] || "Centro Cultural Municipal";
       let tipoEspacio = "Centro Cultural";
       const locLower = loc.toLowerCase();
@@ -57,7 +69,8 @@ export async function fetchMadridOpenDataCulturalEvents(): Promise<OpenDataCultu
         fuente: "Datos Abiertos Madrid"
       };
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[OpenData Madrid] Error al parsear eventos culturales:", err?.message);
     return [];
   }

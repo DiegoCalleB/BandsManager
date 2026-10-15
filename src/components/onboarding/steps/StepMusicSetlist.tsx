@@ -1,22 +1,6 @@
 import React, { useState, useRef } from "react";
-import {
-  Disc3,
-  Search,
-  Music,
-  Upload,
-  Plus,
-  Trash2,
-  CheckCircle2,
-  Loader2,
-  Play,
-  Pause,
-  Sparkles,
-  Check,
-  Layers,
-  Clock,
-  Award,
-} from "lucide-react";
-import { SpotifyAlbum, SpotifyTrack, ManualSongItem } from "../types";
+import { Disc3, Search, Upload, Plus, Trash2, CheckCircle2, Loader2, Sparkles, Check, Layers, Clock } from "lucide-react";
+import { SpotifyAlbum, ManualSongItem } from "../types";
 import { Song } from "../../../types";
 import { ShowIcon } from '../../ui/ShowIcon';
 import { Button, IconButton, Input, Textarea } from '../../ui';
@@ -68,7 +52,6 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
   onSelectAllTracksInAlbum,
   onImportSpotifyTracks,
   isImportingSpotify,
-  uploadedSongs,
   isUploadingAudio,
   onAudioFileUpload,
   manualSongs,
@@ -76,8 +59,6 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
   setNewManualTitle,
   newManualTonalidad,
   setNewManualTonalidad,
-  newManualBpm,
-  setNewManualBpm,
   newManualDuracion,
   setNewManualDuracion,
   onAddManualSong,
@@ -86,7 +67,7 @@ export const StepMusicSetlist: React.FC<StepMusicSetlistProps> = ({
   createdSetlistName,
   isCreatingSetlist,
   onGenerateSetlist,
-  totalImportedSongsCount,
+  totalImportedSongsCount
 }) => {
   const audioInputRef = useRef<HTMLInputElement | null>(null);
   const [bulkText, setBulkText] = useState("");

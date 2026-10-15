@@ -7,9 +7,11 @@ import path from "path";
 import crypto from "crypto";
 import multer from "multer";
 import ffmpeg from "fluent-ffmpeg";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 export function detectMimeType(ext: string, fallback?: string): string {
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
@@ -80,10 +82,11 @@ async function compressAudioFileIfNeeded(inputPath: string, fallbackMime?: strin
 
       return { finalPath: finalCompressedPath, wasCompressed: true, newMime: 'audio/mpeg', newExt: 'mp3' };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn(`[Audio Upload Optimizer] Aviso al comprimir audio con FFmpeg, usando original:`, err?.message || err);
     if (fs.existsSync(outputPath)) {
-      try { fs.unlinkSync(outputPath); } catch (_) {}
+      try { fs.unlinkSync(outputPath); } catch { /* el temporal ya no existe: nada que limpiar */ }
     }
   }
 
@@ -234,14 +237,14 @@ export function validarMagicBytes(buffer: Buffer, ext: string): boolean {
   return EXTENSIONES_PERMITIDAS.has(cleanExt);
 }
 
-const multerFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const multerFileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   if (!extensionPermitida(file.originalname)) {
     return cb(new Error('Tipo de archivo no permitido.'));
   }
   cb(null, true);
 };
 
-const multerChunkFileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+const multerChunkFileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const original = file.originalname || '';
   // Strips chunk extensions like .part0, .part1, .part
   const strippedPart = original.replace(/\.part\d*$/i, '');
@@ -289,9 +292,9 @@ const uploadChunkMiddleware = multer({
 // error genérica de Express en vez de un JSON limpio.
 function conManejoDeErrorMulter(mw: express.RequestHandler): express.RequestHandler {
   return (req, res, next) => {
-    mw(req, res, (err: any) => {
+    mw(req, res, (err?: unknown) => {
       if (err) {
-        return res.status(400).json({ error: err.message || "No se pudo procesar el archivo." });
+        return res.status(400).json({ error: comoErrorCapturado(err).message || "No se pudo procesar el archivo." });
       }
       next();
     });
@@ -330,9 +333,9 @@ export function getBucketName() {
   return envBucket;
 }
 
-// requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el
-// detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.
+// Solo admin: sube un fichero al bucket COMPARTIDO y devuelve su nombre y el error de Supabase; es de la plataforma.
 router.get("/test-supabase", requireAuth, async (req, res) => {
+  if (req.user?.role !== "admin") return res.status(403).json({ error: "Acceso denegado." });
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.json({ success: false, message: "No se pudo inicializar el cliente de Supabase (faltan claves)." });
@@ -351,7 +354,7 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
   const testPath = `diagnostics/test-${Date.now()}.png`;
 
   try {
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from(bucketName)
       .upload(testPath, testBuffer, { contentType: "image/png", upsert: true });
 
@@ -375,15 +378,16 @@ router.get("/test-supabase", requireAuth, async (req, res) => {
       message: "¡Conexión y subida a Supabase exitosas!",
       publicUrl: publicUrlData?.publicUrl
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return res.json({ success: false, error: err.message || String(err) });
   }
 });
 
-async function listRecursiveStorageFiles(supabase: any, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
+async function listRecursiveStorageFiles(supabase: SupabaseClient, bucketName: string, folder = ""): Promise<Array<{ path: string; size: number }>> {
   const { data: items, error } = await supabase.storage.from(bucketName).list(folder, { limit: 1000 });
   if (error) return [];
-  let all: Array<{ path: string; size: number }> = [];
+  const all: Array<{ path: string; size: number }> = [];
   for (const item of items || []) {
     const itemPath = folder ? `${folder}/${item.name}` : item.name;
     if (!item.id && !item.metadata) {
@@ -398,14 +402,14 @@ async function listRecursiveStorageFiles(supabase: any, bucketName: string, fold
 
 const PERMITTED_CLEANUP_KEYWORDS = [
   "ruta", "ruta-66", "ruta_66", "ruta66",
-  "bakandeya", "arritmia", "vertice", "vértice",
+  "arritmia", "vertice", "vértice",
   "fer_y_dani", "nuevo__lbum"
 ];
 
 // Endpoint de diagnóstico de almacenamiento en Supabase Storage
 router.get("/storage-stats", requireAuth, async (req, res) => {
   // El estado de TODO el bucket es de la plataforma, no de una banda: solo admin.
-  if ((req as any).user?.role !== "admin") {
+  if (req.user?.role !== "admin") {
     return res.status(403).json({ error: "Acceso denegado." });
   }
   const supabase = getSupabaseClient();
@@ -423,10 +427,10 @@ router.get("/storage-stats", requireAuth, async (req, res) => {
       bucket: bucketName,
       totalFiles: files.length,
       totalSizeMB: Number((totalBytes / (1024 * 1024)).toFixed(2)),
-      allowedBands: ["Ruta 66", "Bakandeya", "Arritmia", "Vértice"]
+      allowedBands: ["Ruta 66", "Arritmia", "Vértice"]
     });
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || String(err) });
+  } catch (errCapturado) {
+    return responderError(res, errCapturado);
   }
 });
 
@@ -435,7 +439,7 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
   // Borra del bucket de TODAS las bandas lo que no case con una lista fija de palabras: antes
   // bastaba estar registrado para vaciar el Storage de los demás clientes. Ahora solo el admin
   // de la plataforma, y sin `confirmar: true` únicamente enseña qué borraría (simulacro).
-  if ((req as any).user?.role !== "admin") {
+  if (req.user?.role !== "admin") {
     return res.status(403).json({ error: "Acceso denegado." });
   }
   const supabase = getSupabaseClient();
@@ -496,12 +500,12 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
       freedMB,
       deletedFiles: deletedCount
     });
-  } catch (err: any) {
-    return res.status(500).json({ error: err.message || String(err) });
+  } catch (errCapturado) {
+    return responderError(res, errCapturado);
   }
 });
 
-router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req: any, res: any) => {
+router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("file")), async (req, res) => {
   try {
     let filePath = "";
     let originalFilename = "";
@@ -534,9 +538,9 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       uniqueName = `${crypto.randomUUID()}${baseNameSanitized ? '-' + baseNameSanitized : ''}${ext}`;
       filePath = path.join(UPLOAD_DIR, uniqueName);
 
-      const match = base64.match(/^data:([A-Za-z-+\/]+);base64,/);
+      const match = base64.match(/^data:([A-Za-z-+/]+);base64,/);
       mimeType = match ? match[1] : 'application/octet-stream';
-      const base64Data = base64.replace(/^data:([A-Za-z-+\/]+);base64,/, '');
+      const base64Data = base64.replace(/^data:([A-Za-z-+/]+);base64,/, '');
       buffer = Buffer.from(base64Data, 'base64');
       fs.writeFileSync(filePath, buffer);
     } else {
@@ -558,7 +562,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
 
     if (headerBytes && !validarMagicBytes(headerBytes, rawExt)) {
       if (fs.existsSync(filePath)) {
-        try { fs.unlinkSync(filePath); } catch (_) {}
+        try { fs.unlinkSync(filePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
       }
       return res.status(400).json({ error: "Firma binaria del archivo no válida para el formato declarado (Magic Bytes mismatch)." });
     }
@@ -585,7 +589,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       const storagePath = `${subPath}/${uniqueName}`;
       const fileContent = buffer || fs.readFileSync(filePath);
 
-      let uploadError: any = null;
+      let uploadError: unknown = null;
       for (let attempt = 0; attempt < 2 && storageEngine !== "supabase"; attempt++) {
         try {
           const { error } = await supabase.storage
@@ -603,7 +607,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
             }
           } else {
             uploadError = error;
-            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || (error as any).statusCode === "404" || (error as any).status === 404)) {
+            if (error.message && (error.message.includes("not found") || error.message.includes("Bucket") || error.statusCode === "404" || error.status === 404)) {
               try {
                 await supabase.storage.createBucket(bucketName, { public: true });
               } catch (createErr) {
@@ -617,7 +621,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       }
 
       if (storageEngine !== "supabase") {
-        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", uploadError?.message || uploadError);
+        console.warn("[Upload] Supabase Storage upload failed, falling back to local file upload:", comoErrorCapturado(uploadError).message || uploadError);
         // Fallback to locally served path so upload never fails for user
         finalUrl = `/uploads/${uniqueName}`;
         storageEngine = "local";
@@ -631,16 +635,17 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
       originalName: originalFilename,
       storage: storageEngine
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error("Error uploading file:", error);
-    res.status(500).json({ error: error.message || "Failed to upload file" });
+    responderError(res, error, "Failed to upload file");
   }
 });
 
 // Route for Chunked File Upload (bypasses 32MB single request limit for 1GB+ files)
-router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req: any, res: any) => {
+router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.single("chunk")), async (req, res) => {
   try {
-    const { uploadId, chunkIndex, totalChunks, filename, folder } = req.body || {};
+    const { uploadId, chunkIndex, totalChunks, filename } = req.body || {};
     if (!uploadId || chunkIndex === undefined || !totalChunks || !filename) {
       return res.status(400).json({ error: "Missing required chunk metadata (uploadId, chunkIndex, totalChunks, filename)" });
     }
@@ -711,7 +716,7 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
     fs.closeSync(fdChunk);
 
     if (bytesReadChunk >= 4 && !validarMagicBytes(headerChunkBytes, rawChunkExt)) {
-      try { fs.unlinkSync(finalFilePath); } catch (_) {}
+      try { fs.unlinkSync(finalFilePath); } catch { /* el archivo rechazado ya no existe: nada que limpiar */ }
       return res.status(400).json({ error: "Firma binaria del archivo reensamblado no coincide con la extensión declarada." });
     }
 
@@ -738,9 +743,10 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
       originalName: filename,
       storage: "local"
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error processing file chunk:", err);
-    res.status(500).json({ error: err.message || "Failed to process chunk" });
+    responderError(res, err, "Failed to process chunk");
   }
 });
 

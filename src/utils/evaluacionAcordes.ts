@@ -145,13 +145,26 @@ export function evaluarAcordes(
   };
 }
 
+/** Tramo de un JSON de acordes: cada herramienta nombra los campos a su manera. */
+interface TramoCrudo {
+  t0?: unknown;
+  inicio?: unknown;
+  start?: unknown;
+  t1?: unknown;
+  fin?: unknown;
+  end?: unknown;
+  acorde?: unknown;
+  chord?: unknown;
+  label?: unknown;
+}
+
 /** Lee un fichero .lab (MIREX: «inicio fin acorde» por línea) o JSON de tramos. */
 export function leerTramos(texto: string): TramoEval[] {
   const limpio = texto.trim();
   if (limpio.startsWith('[') || limpio.startsWith('{')) {
     const datos = JSON.parse(limpio);
-    const lista = Array.isArray(datos) ? datos : datos.segmentos ?? datos.acordes ?? [];
-    return lista.map((s: any) => ({ t0: Number(s.t0 ?? s.inicio ?? s.start), t1: Number(s.t1 ?? s.fin ?? s.end), acorde: String(s.acorde ?? s.chord ?? s.label) }));
+    const lista: TramoCrudo[] = Array.isArray(datos) ? datos : datos.segmentos ?? datos.acordes ?? [];
+    return lista.map((s) => ({ t0: Number(s.t0 ?? s.inicio ?? s.start), t1: Number(s.t1 ?? s.fin ?? s.end), acorde: String(s.acorde ?? s.chord ?? s.label) }));
   }
   return limpio
     .split('\n')

@@ -10,13 +10,16 @@ import { getAiClient, generateContentWithFallback, TIMEOUT_IA_LARGO_MS } from ".
 // Más de ~3 minutos de audio no mejora la transcripción y sí el coste, el tamaño y el timeout.
 const MAX_SEGUNDOS_ANALISIS_ACORDES = 180;
 import { safeParseJson } from "../utils.js";
-import { getAudioSnippetPath, buildAudioOrTextContents } from "./concert_to_album.js";
+import { pistasDeCancion } from "../../src/utils/irisTracks.js";
+import { getAudioSnippetPath } from "./concert_to_album.js";
 import { analizarAcordesDeCancion } from "../services/acordesCancion.js";
-import { transcribirLetra, limpiarLineas, totalPalabras, confianzaGlobal } from "../services/transcripcionLetra.js";
-import { construirCifradoSincronizado } from "../utils/cifradoSincronizado.js";
+import { ejecutarLetraSincronizada } from "../services/letraCancion.js";
+import { resumenCola, encolarLetras, cancelarCola, dbSetLetrasAuto } from "../services/colaLetras.js";
+import { analisisAcordesEnCurso } from "../utils/bloqueoOido.js";
 import { validarSegmentos } from "../../src/utils/lineaTiempoAcordes.js";
 import { construirAnalisisCorregido } from "../utils/analisisAcordes.js";
 import { analizarArmonia } from "../../src/utils/teoriaArmonica.js";
+import { iniciarProgreso, avanzarProgreso, terminarProgreso, leerProgreso } from "../utils/progresoOido.js";
 import { construirHechos, huellaDeHechos, construirPrompt, validarExplicacion, NIVELES, INSTRUMENTOS, type Nivel, type Instrumento } from "../services/profesorArmonia.js";
 import {
   dbGetSongs,
@@ -44,6 +47,11 @@ import { formatGlobalSetlistFeedbackForPrompt } from "../utils/setlistFeedback.j
 import { parseSetlistFromFile } from "../utils/setlistImport.js";
 import { normalizeSongTitle, titlesMatch } from "../../src/utils/songTitleMatch.js";
 import { iaRateLimiter } from "../middleware/rateLimiter.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Part } from '@google/genai';
+import type { RespuestaCifradoIA, RespuestaIdeaArreglo } from '../tiposRespuestasIA.js';
+import { unoDe } from '../utils/valoresIA.js';
+import { responderError } from '../utils/errorHttp.js';
 
 // Solo para /setlists/import-from-image: memoria, no disco — el archivo se manda a la IA y se
 // descarta, no hace falta persistirlo (a diferencia de /api/upload, que sí guarda para servir
@@ -125,11 +133,12 @@ const router = express.Router();
 router.get("/songs", requireAuth, async (req, res) => {
   try {
     const userBandId = getTargetBandId(req);
-    const user = (req as any).user;
+    const user = req.user;
     console.log(`[Repertorio] GET /songs para usuario ${user?.email} band: ${userBandId}`);
     const songs = await dbGetSongs(userBandId);
     res.json({ success: true, songs });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching songs:", err);
     res.status(500).json({ error: "Error al obtener canciones", songs: [] });
   }
@@ -143,15 +152,16 @@ router.post("/songs", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El título del tema es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    const isAdmin = (req as any).user?.role === "admin";
-    (newSong as any).band_id = userBandId;
+    const isAdmin = req.user?.role === "admin";
+    newSong.band_id = userBandId;
     if (!newSong.id) {
       newSong.id = `song-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     }
     
     const saved = await dbUpsertSong(newSong, userBandId, isAdmin);
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating song:", err);
     res.status(500).json({ error: "Error al guardar la canción." });
   }
@@ -162,13 +172,14 @@ router.put("/songs/:id", requireAuth, async (req, res) => {
   try {
     const { id } = req.params;
     const userBandId = getTargetBandId(req);
-    const isAdmin = (req as any).user?.role === "admin";
+    const isAdmin = req.user?.role === "admin";
     const updatedFields: Partial<Song> = req.body;
     const merged = { ...updatedFields, id, band_id: userBandId };
     const saved = await dbUpsertSong(merged, userBandId, isAdmin);
 
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating song:", err);
     res.status(500).json({ error: "Error al actualizar la canción." });
   }
@@ -189,35 +200,41 @@ router.post("/songs/:id/analizar-dinamica", requireAuth, async (req, res) => {
 
     const { variacion, audioAnalizable, bpmDetectado, tonalidadDetectada } = await analizarYGuardarDinamicaCancion(id, audioUrl, userBandId);
     res.json({ success: true, variacionDetectada: variacion, audioAnalizable, bpmDetectado, tonalidadDetectada });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error analizando dinámica interna de la canción:", err);
-    res.status(500).json({ error: err?.message || "No se pudo analizar la dinámica del audio." });
+    responderError(res, err, "No se pudo analizar la dinámica del audio.");
   }
 });
 
 // POST analizar los acordes del audio de una canción (Chordify propio): detecta acordes con
 // tiempos sobre el audio, sin IA generativa ni coste, y guarda el resultado en la canción.
 // Es un cálculo local de ~1 s por tema: se responde en la misma petición, sin cola.
-const analisisAcordesEnCurso = new Set<string>();
 // Peticiones idénticas a la vez (subida masiva + apertura del visor, dos pestañas, un reintento del
 // móvil…): la segunda NO falla con un 409 que el usuario ve como «no se pudo guardar»; espera al
 // análisis en marcha y recibe el mismo resultado.
-const analisisAcordesPromesas = new Map<string, Promise<{ status: number; body: any }>>();
+/** Respuesta HTTP de un análisis de acordes: código y cuerpo JSON. */
+interface ResultadoAnalisisAcordes {
+  status: number;
+  body: Record<string, unknown>;
+}
 
-async function ejecutarAnalisisAcordes(id: string, userBandId: any, sobrescribir: boolean): Promise<{ status: number; body: any }> {
+const analisisAcordesPromesas = new Map<string, Promise<ResultadoAnalisisAcordes>>();
+
+async function ejecutarAnalisisAcordes(id: string, userBandId: string, sobrescribir: boolean, alAvanzar?: (etapa: string, detalle: string) => void): Promise<ResultadoAnalisisAcordes> {
   // El audio se lee SIEMPRE de la canción guardada, no del cuerpo: así no se puede analizar
   // un fichero ajeno a la banda ni pasar una ruta arbitraria.
-  const songs = await dbGetSongs(userBandId);
-  const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+  const songs: Song[] = await dbGetSongs(userBandId);
+  const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
   if (!song) return { status: 404, body: { error: "Canción no encontrada." } };
 
   // Reanalizar sustituye todo el análisis: no se pisan correcciones manuales sin confirmación.
-  const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s: any) => s.editado).length;
+  const corregidos = (song.analisisAcordes?.segmentos ?? []).filter((s) => s.editado).length;
   if (corregidos > 0 && !sobrescribir) {
     return { status: 409, body: { error: `Hay ${corregidos} acordes corregidos a mano; reanalizar los perdería.`, correcciones: corregidos } };
   }
 
-  const resultado = await analizarAcordesDeCancion(song);
+  const resultado = await analizarAcordesDeCancion(song, alAvanzar);
   if (resultado.ok === false) return { status: resultado.status, body: { error: resultado.error } };
   // Las correcciones manuales se pierden al reanalizar, pero su «verdad» no: así el análisis nuevo
   // se puede medir contra lo que la banda corrigió (ver scripts/evaluar-acordes.ts).
@@ -234,10 +251,13 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
   let promesa = analisisAcordesPromesas.get(clave);
   if (!promesa) {
     analisisAcordesEnCurso.add(clave);
-    promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true)
-      .catch((err: any) => {
-        console.error("Error analizando acordes del audio:", err);
-        return { status: 500, body: { error: err?.message || "No se pudieron analizar los acordes del audio." } };
+    iniciarProgreso(clave, "acordes");
+    promesa = ejecutarAnalisisAcordes(id, userBandId, req.body?.sobrescribir === true, (e, d) => avanzarProgreso(clave, e, d))
+      .then((r) => { terminarProgreso(clave, r.status === 200 ? undefined : String(r.body?.error || "No se pudo analizar")); return r; })
+      .catch((errCapturado): ResultadoAnalisisAcordes => {
+        console.error("Error analizando acordes del audio:", comoErrorCapturado(errCapturado));
+        terminarProgreso(clave, "No se pudieron analizar los acordes del audio.");
+        return { status: 500, body: { error: "No se pudieron analizar los acordes del audio." } };
       })
       .finally(() => {
         analisisAcordesEnCurso.delete(clave);
@@ -249,114 +269,60 @@ router.post("/songs/:id/analizar-acordes", requireAuth, async (req, res) => {
   res.status(status).json(body);
 });
 
-// POST letra y acordes del audio, sincronizados. La letra sale de un modelo de RECONOCIMIENTO DE
-// VOZ (Whisper) sobre la pista de voz aislada de Iris (o, si no hay, la mezcla), con marcas de
-// tiempo; los acordes, de la detección propia. Se fusionan por tiempo en un cifrado de texto.
-// Nunca se genera letra a partir del título ni con un modelo generativo: si no se puede
-// transcribir, se devuelve el error y no se escribe nada.
-router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
-  const { id } = req.params;
+// GET en qué etapa va el análisis del audio de una canción («El Oído»); el cliente lo consulta mientras espera.
+router.get("/songs/:id/progreso-oido", requireAuth, (req, res) => {
   const userBandId = getTargetBandId(req);
-  const clave = `${userBandId}:${id}`;
-  if (analisisAcordesEnCurso.has(clave)) {
-    return res.status(409).json({ error: "Ya se está procesando el audio de esta canción." });
-  }
-  analisisAcordesEnCurso.add(clave);
+  res.json({ progreso: leerProgreso(`${userBandId}:${req.params.id}`) });
+});
+
+// POST letra y acordes del audio, sincronizados (lógica en services/letraCancion.ts, compartida
+// con la cola de letras en segundo plano).
+router.post("/songs/:id/letra-sincronizada", requireAuth, async (req, res) => {
+  const { status, body } = await ejecutarLetraSincronizada(req.params.id, getTargetBandId(req), {
+    sobrescribir: req.body?.sobrescribir === true,
+    idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined,
+  });
+  res.status(status).json(body);
+});
+
+// Cola de letras en el servidor (sobrevive a cerrar la pestaña): estado, encolar, cancelar y el
+// ajuste opt-in «Transcribir automáticamente lo nuevo». Todo acotado a la banda del token.
+router.get("/letras/cola", requireAuth, async (req, res) => {
   try {
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
-    if (!song) return res.status(404).json({ error: "Canción no encontrada." });
+    res.json(await resumenCola(getTargetBandId(req)));
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    responderError(res, err, "No se pudo leer la cola de letras.");
+  }
+});
 
-    // Un cifrado escrito por la banda no se sustituye sin confirmación (y no se gasta transcripción).
-    if (song.cifradoTexto && String(song.cifradoTexto).trim() && req.body?.sobrescribir !== true) {
-      return res.status(409).json({
-        yaTieneCifrado: true,
-        error: "Esta canción ya tiene un cifrado guardado. Transcribir desde el audio lo sustituiría.",
-      });
-    }
+router.post("/letras/cola", requireAuth, async (req, res) => {
+  try {
+    const songIds = Array.isArray(req.body?.songIds) ? req.body.songIds.filter((x: unknown) => typeof x === "string") : undefined;
+    res.json(await encolarLetras(getTargetBandId(req), { songIds, origen: "manual" }));
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    responderError(res, err, "No se pudo encolar las letras.");
+  }
+});
 
-    const urlVoz = (song.audioIdeas ?? [])
-      .flatMap((i: any) => i.pistas ?? [])
-      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
-    const urlMezcla = song.audioPrincipalUrl || song.audioUrl || song.audioIdeas?.find((i: any) => i.audioUrl)?.audioUrl;
-    const urlLetra: string | undefined = urlVoz || urlMezcla;
-    if (!urlLetra) {
-      return res.status(400).json({ error: "Sin audio no se puede transcribir la letra, y no voy a inventarla. Sube el audio de la canción, o escribe/pega el cifrado." });
-    }
-    const fuenteLetra: "voz" | "mezcla" = urlVoz ? "voz" : "mezcla";
+router.delete("/letras/cola", requireAuth, async (req, res) => {
+  try {
+    res.json({ canceladas: await cancelarCola(getTargetBandId(req)) });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    responderError(res, err, "No se pudo cancelar la cola.");
+  }
+});
 
-    // Acordes: los ya detectados (con correcciones) o un análisis nuevo. Si fallan, la letra sigue.
-    let analisis = song.analisisAcordes as any;
-    let avisoAcordes: string | undefined;
-    if (!analisis) {
-      const r = await analizarAcordesDeCancion(song);
-      if (r.ok === true) analisis = r.analisis;
-      else avisoAcordes = (r as { error: string }).error;
-    }
-
-    let transcripcion;
-    try {
-      transcripcion = await transcribirLetra(urlLetra, {
-        idioma: typeof req.body?.idioma === "string" ? req.body.idioma : undefined,
-        // Para APIs que reciben el fichero (OpenAI): mp3 mono recortado, descargado con la guardia SSRF.
-        archivoLocal: () => getAudioSnippetPath({ audioUrl: urlLetra, allowSyntheticFallback: false, maxSeconds: 600 }),
-      });
-    } catch (err: any) {
-      console.error("[letra-sincronizada] Transcripción fallida:", err?.message || err);
-      return res.status(502).json({ error: `No se pudo transcribir la letra: ${err?.message || "error del servicio de voz"}. No se ha modificado nada.` });
-    }
-
-    const lineas = limpiarLineas(transcripcion.lineas);
-    if (totalPalabras(lineas) < 8) {
-      return res.status(422).json({
-        letraConfianza: "sin_letra",
-        error: "No se oye una letra inteligible en este audio (¿instrumental, o voz muy tapada?). No se ha escrito ninguna letra.",
-      });
-    }
-
-    const cifradoTexto = construirCifradoSincronizado(lineas, analisis?.segmentos ?? []);
-    const letraConfianza = confianzaGlobal(lineas, fuenteLetra);
-    const analisisFinal = analisis
-      ? {
-          ...analisis,
-          letra: {
-            fuente: fuenteLetra,
-            modelo: transcripcion.modelo,
-            idioma: transcripcion.idioma,
-            transcritaEn: new Date().toISOString(),
-            lineas: lineas.slice(0, 400).map((l) => ({ t0: l.t0, t1: l.t1, texto: l.texto })),
-          },
-        }
-      : undefined;
-
-    const guardada = await dbUpsertSong(
-      {
-        ...song,
-        cifradoTexto,
-        guiaSustituto: { ...(song.guiaSustituto || {}), origenCifrado: "audio_real", cifradoAproximado: true, letraConfianza },
-        ...(analisisFinal ? { analisisAcordes: analisisFinal } : {}),
-      },
-      userBandId
-    );
-
-    res.json({
-      success: true,
-      cifradoTexto,
-      letraConfianza,
-      fuenteLetra,
-      idioma: transcripcion.idioma,
-      modelo: transcripcion.modelo,
-      lineas: lineas.length,
-      conAcordes: Boolean(analisis),
-      avisoAcordes,
-      analisis: analisisFinal ?? analisis ?? null,
-      song: guardada,
-    });
-  } catch (err: any) {
-    console.error("Error en letra-sincronizada:", err);
-    res.status(500).json({ error: err?.message || "No se pudo procesar la letra." });
-  } finally {
-    analisisAcordesEnCurso.delete(clave);
+router.put("/letras/auto", requireAuth, async (req, res) => {
+  try {
+    if (typeof req.body?.activado !== "boolean") return res.status(400).json({ error: "Falta «activado» (true/false)." });
+    await dbSetLetrasAuto(getTargetBandId(req), req.body.activado);
+    res.json({ activado: req.body.activado });
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    responderError(res, err, "No se pudo guardar el ajuste.");
   }
 });
 
@@ -370,18 +336,19 @@ router.patch("/songs/:id/acordes", requireAuth, async (req, res) => {
     const validacion = validarSegmentos(req.body?.segmentos);
     if ("error" in validacion) return res.status(400).json({ error: validacion.error });
 
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    const songs: Song[] = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     if (!song.analisisAcordes) return res.status(409).json({ error: "Esta canción aún no tiene acordes analizados." });
 
-    const segmentos = (validacion as { segmentos: any[] }).segmentos;
+    const segmentos = (validacion as Exclude<typeof validacion, { error: string }>).segmentos;
     const analisis = construirAnalisisCorregido(song.analisisAcordes, segmentos, new Date().toISOString());
     const guardada = await dbGuardarAnalisisAcordes(id, userBandId, analisis);
     res.json({ success: true, analisis, song: guardada });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando la corrección de acordes:", err);
-    res.status(500).json({ error: err?.message || "No se pudo guardar la corrección." });
+    responderError(res, err, "No se pudo guardar la corrección.");
   }
 });
 
@@ -396,20 +363,20 @@ router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
     const nivel: Nivel = NIVELES.includes(req.body?.nivel) ? req.body.nivel : "intermedio";
     const instrumento: Instrumento = INSTRUMENTOS.includes(req.body?.instrumento) ? req.body.instrumento : "guitarra";
 
-    const songs = await dbGetSongs(userBandId);
-    const song = Array.isArray(songs) ? songs.find((s: any) => s.id === id) : null;
+    const songs: Song[] = await dbGetSongs(userBandId);
+    const song = Array.isArray(songs) ? songs.find((s) => s.id === id) : null;
     if (!song) return res.status(404).json({ error: "Canción no encontrada." });
     const analisis = song.analisisAcordes;
     if (!analisis?.segmentos?.length) {
       return res.status(409).json({ error: "Primero analiza los acordes del audio: el profesor explica la armonía calculada, no la inventa." });
     }
 
-    const armonia = analizarArmonia(analisis.segmentos.map((s: any) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde })), song.tonalidad);
+    const armonia = analizarArmonia(analisis.segmentos.map((s) => ({ t0: s.t0, t1: s.t1, acorde: s.acorde })), song.tonalidad);
     if (!armonia) return res.status(422).json({ error: "Hay muy pocos acordes para explicar la armonía de esta canción." });
     const hechos = construirHechos(armonia, {
       bpm: analisis.pulso?.bpm ?? song.bpm,
       cambiosDeTono: Array.isArray(analisis.tonalidades) && analisis.tonalidades.length > 1
-        ? analisis.tonalidades.slice(1).map((t: any) => ({ desde: Math.round(t.t0), tonalidad: t.tonalidad }))
+        ? analisis.tonalidades.slice(1).map((t) => ({ desde: Math.round(t.t0), tonalidad: t.tonalidad }))
         : undefined,
     });
     const huella = huellaDeHechos(hechos, nivel, instrumento);
@@ -435,9 +402,10 @@ router.post("/songs/:id/profesor-armonia", requireAuth, async (req, res) => {
     const profesor = { huella, nivel, instrumento, generadoEn: new Date().toISOString(), descartadas: validada.descartadas, explicacion: validada.explicacion };
     await dbGuardarAnalisisAcordes(id, userBandId, { ...analisis, profesor });
     res.json({ success: true, profesor, deCache: false });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error en el profesor de armonía:", err);
-    res.status(500).json({ error: err?.message || "No se pudo generar la explicación." });
+    responderError(res, err, "No se pudo generar la explicación.");
   }
 });
 
@@ -455,9 +423,10 @@ router.patch("/songs/:id/energia", requireAuth, async (req, res) => {
     }
     const saved = await dbSetSongEnergiaManual(id, Math.round(energia), userBandId);
     res.json({ success: true, song: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fijando energía manual de la canción:", err);
-    res.status(500).json({ error: err?.message || "No se pudo actualizar la energía." });
+    responderError(res, err, "No se pudo actualizar la energía.");
   }
 });
 
@@ -469,7 +438,8 @@ router.delete("/songs/:id", requireAuth, async (req, res) => {
     await dbDeleteSong(id, userBandId);
 
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting song:", err);
     res.status(500).json({ error: "Error al eliminar la canción." });
   }
@@ -481,7 +451,8 @@ router.get("/setlists", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     const setlists = await dbGetSetlists(userBandId);
     res.json({ success: true, setlists });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching setlists:", err);
     res.status(500).json({ error: "Error al obtener repertorios", setlists: [] });
   }
@@ -495,7 +466,7 @@ router.post("/setlists", requireAuth, async (req, res) => {
       return res.status(400).json({ error: "El nombre del repertorio es obligatorio." });
     }
     const userBandId = getTargetBandId(req);
-    (newSetlist as any).band_id = userBandId;
+    newSetlist.band_id = userBandId;
     if (!newSetlist.id) {
       newSetlist.id = `setlist-${Date.now()}`;
     }
@@ -506,7 +477,8 @@ router.post("/setlists", requireAuth, async (req, res) => {
 
     const saved = await dbUpsertSetlist(newSetlist, userBandId);
     res.json({ success: true, setlist: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating setlist:", err);
     res.status(500).json({ error: "Error al crear el repertorio." });
   }
@@ -523,7 +495,8 @@ router.put("/setlists/:id", requireAuth, async (req, res) => {
 
     const saved = await dbUpsertSetlist(merged, userBandId);
     res.json({ success: true, setlist: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error updating setlist:", err);
     res.status(500).json({ error: "Error al actualizar el repertorio." });
   }
@@ -537,7 +510,8 @@ router.delete("/setlists/:id", requireAuth, async (req, res) => {
     await dbDeleteSetlist(id, userBandId);
 
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting setlist:", err);
     res.status(500).json({ error: "Error al eliminar el repertorio." });
   }
@@ -549,7 +523,8 @@ router.get("/setlist-shortcuts", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     const shortcuts = await dbGetSetlistShortcuts(userBandId);
     res.json({ success: true, shortcuts });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching setlist shortcuts:", err);
     res.status(500).json({ error: "Error al obtener los accesos rápidos", shortcuts: [] });
   }
@@ -568,7 +543,8 @@ router.post("/setlist-shortcuts", requireAuth, async (req, res) => {
       userBandId
     );
     res.json({ success: true, shortcut: saved });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error creating setlist shortcut:", err);
     res.status(500).json({ error: "Error al guardar el acceso rápido." });
   }
@@ -581,7 +557,8 @@ router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
     const userBandId = getTargetBandId(req);
     await dbDeleteSetlistShortcut(id, userBandId);
     res.json({ success: true, id });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting setlist shortcut:", err);
     res.status(500).json({ error: "Error al eliminar el acceso rápido." });
   }
@@ -590,18 +567,18 @@ router.delete("/setlist-shortcuts/:id", requireAuth, async (req, res) => {
 // POST generate AI chord sheet and substitute guide
 router.post("/generate-song-chords", requireAuth, async (req, res) => {
   try {
-    const { songId, titulo, tonalidad, bpm, afinacion, notasInternas, esVersionCovers, artista, audioUrl, sobrescribir } = req.body;
+    const { songId, titulo, tonalidad, bpm, esVersionCovers, artista, audioUrl, sobrescribir } = req.body;
 
     if (!titulo) {
       return res.status(400).json({ error: "El título de la canción es requerido." });
     }
 
     // La canción guardada manda: su cifrado actual, su pista de voz y los acordes ya detectados.
-    let cancion: any = null;
+    let cancion: Song | null = null;
     if (songId) {
       try {
-        const songs = await dbGetSongs(getTargetBandId(req));
-        cancion = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        const songs: Song[] = await dbGetSongs(getTargetBandId(req));
+        cancion = Array.isArray(songs) ? songs.find((s) => s.id === songId) : null;
       } catch {
         cancion = null;
       }
@@ -618,7 +595,7 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     const aiClient = getAiClient();
     let generatedChords: string | null = null;
-    let generatedGuide: any = null;
+    let generatedGuide: Song['guiaSustituto'] | null = null;
     let esAproximado = false;
     let letraConfianza: "alta" | "media" | "baja" | "sin_letra" = "baja";
     // La única fuente válida es el audio real. Sin audio no hay nada que transcribir, y pedirle a
@@ -627,9 +604,8 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     // Audio de la mezcla (acordes y estructura) y, si Iris separó la voz, pista de voz aislada
     // (la letra se oye mucho mejor sin guitarras ni batería).
-    const urlVoz = (cancion?.audioIdeas ?? [])
-      .flatMap((i: any) => i.pistas ?? [])
-      .find((p: any) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
+    const urlVoz = pistasDeCancion(cancion)
+      .find((p) => /^(voz|vocals?|voice)\b/i.test(p?.nombre || "") && p?.audioUrl)?.audioUrl;
     const [snippetMezcla, snippetVoz] = await Promise.all([
       audioUrl ? getAudioSnippetPath({ audioUrl, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
       urlVoz ? getAudioSnippetPath({ audioUrl: urlVoz, allowSyntheticFallback: false, maxSeconds: MAX_SEGUNDOS_ANALISIS_ACORDES }) : null,
@@ -647,9 +623,9 @@ router.post("/generate-song-chords", requireAuth, async (req, res) => {
 
     try {
       const acordesDetectados = (cancion?.analisisAcordes?.segmentos ?? [])
-        .filter((sg: any) => sg.acorde !== "N")
+        .filter((sg) => sg.acorde !== "N")
         .slice(0, 160)
-        .map((sg: any) => `${Math.floor(sg.t0 / 60)}:${String(Math.floor(sg.t0 % 60)).padStart(2, "0")} ${sg.acorde}`)
+        .map((sg) => `${Math.floor(sg.t0 / 60)}:${String(Math.floor(sg.t0 % 60)).padStart(2, "0")} ${sg.acorde}`)
         .join(", ");
 
       const prompt = `Eres un transcriptor musical. Tu trabajo es TRANSCRIBIR lo que suena en el audio adjunto, no componer ni recordar.
@@ -680,7 +656,7 @@ Responde ÚNICAMENTE con JSON válido:
 }
 "letraConfianza": "alta" solo si entiendes casi todo; "media" si hay huecos [?]; "baja" si dudas de buena parte; "sin_letra" si no hay voz inteligible.`;
 
-      const partes: any[] = [];
+      const partes: Part[] = [];
       for (const ruta of [snippetVoz, snippetMezcla]) {
         if (ruta && fs.existsSync(ruta)) {
           partes.push({ inlineData: { mimeType: "audio/mp3", data: fs.readFileSync(ruta).toString("base64") } });
@@ -697,14 +673,15 @@ Responde ÚNICAMENTE con JSON válido:
       });
 
       const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      const parsed = safeParseJson(responseText);
+      const parsed = safeParseJson<RespuestaCifradoIA>(responseText);
       if (parsed && typeof parsed.cifradoTexto === "string" && parsed.cifradoTexto.trim()) {
         generatedChords = parsed.cifradoTexto;
-        generatedGuide = parsed.guiaSustituto;
-        letraConfianza = ["alta", "media", "baja", "sin_letra"].includes(parsed.letraConfianza) ? parsed.letraConfianza : "baja";
+        generatedGuide = parsed.guiaSustituto && typeof parsed.guiaSustituto === "object" && !Array.isArray(parsed.guiaSustituto) ? parsed.guiaSustituto : null;
+        letraConfianza = unoDe(parsed.letraConfianza, ["alta", "media", "baja", "sin_letra"] as const) ?? "baja";
         esAproximado = letraConfianza !== "alta" && letraConfianza !== "sin_letra";
       }
-    } catch (aiErr: any) {
+    } catch (aiErrCapturado) {
+      const aiErr = comoErrorCapturado(aiErrCapturado);
       console.warn("[Gemini API] No se pudo transcribir la canción:", aiErr?.message || aiErr);
     }
 
@@ -731,8 +708,8 @@ Responde ÚNICAMENTE con JSON válido:
     if (songId) {
       const userBandId = getTargetBandId(req);
       try {
-        const songs = await dbGetSongs(userBandId);
-        const song = Array.isArray(songs) ? songs.find((s: any) => s.id === songId) : null;
+        const songs: Song[] = await dbGetSongs(userBandId);
+        const song = Array.isArray(songs) ? songs.find((s) => s.id === songId) : null;
         if (song) {
           await dbUpsertSong(
             { ...song, cifradoTexto: generatedChords, guiaSustituto: generatedGuide },
@@ -742,7 +719,8 @@ Responde ÚNICAMENTE con JSON válido:
         } else {
           console.warn(`[generate-song-chords] Canción ${songId} no encontrada en BD; no se persiste el cifrado.`);
         }
-      } catch (dbErr: any) {
+      } catch (dbErrCapturado) {
+        const dbErr = comoErrorCapturado(dbErrCapturado);
         console.error("[generate-song-chords] Error al persistir el cifrado:", dbErr?.message || dbErr);
       }
 
@@ -755,7 +733,8 @@ Responde ÚNICAMENTE con JSON válido:
           state.songs[songIndex].guiaSustituto = generatedGuide;
           saveState(state);
         }
-      } catch (stateErr: any) {
+      } catch (stateErrCapturado) {
+        const stateErr = comoErrorCapturado(stateErrCapturado);
         console.warn("[generate-song-chords] No se pudo actualizar el estado local:", stateErr?.message || stateErr);
       }
     }
@@ -777,9 +756,10 @@ Responde ÚNICAMENTE con JSON válido:
       // true si hay huecos [?] o dudas: la letra hay que revisarla de oído.
       esAproximado
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-song-chords:", err);
-    res.status(500).json({ error: err?.message || "Error al generar los acordes." });
+    responderError(res, err, "Error al generar los acordes.");
   }
 });
 
@@ -828,9 +808,9 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
     });
 
     const responseText = aiRes?.text || aiRes?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const parsed = safeParseJson(responseText);
+    const parsed = safeParseJson<RespuestaIdeaArreglo>(responseText);
 
-    if (!parsed || !parsed.tituloIdea) {
+    if (!parsed || typeof parsed.tituloIdea !== "string" || !parsed.tituloIdea.trim()) {
       return res.status(500).json({ error: "La IA no pudo generar una idea válida." });
     }
 
@@ -838,9 +818,10 @@ Responde ÚNICAMENTE con un objeto JSON válido con esta estructura exacta:
       success: true,
       idea: parsed
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in ai-composer-arrangement:", err);
-    res.status(500).json({ error: err?.message || "Error al generar arreglo con IA." });
+    responderError(res, err, "Error al generar arreglo con IA.");
   }
 });
 
@@ -851,8 +832,8 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     const { setlistId } = req.params;
 
     // Obtener el setlist desde la base de datos
-    const allSetlists = await dbGetSetlists(userBandId);
-    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    const allSetlists: Setlist[] = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s) => s.id === setlistId);
     if (!setlist) {
       return res.status(404).json({ error: "Setlist no encontrado" });
     }
@@ -874,7 +855,7 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
     const analysis = await analyzeSetlistWithAI(setlistSongs, bandContext);
 
     // Crear firma del setlist para detectar cambios
-    const setlistSignature = setlist.items.map((item: any) => item.id).join('|');
+    const setlistSignature = setlist.items.map((item) => item.id).join('|');
     const analysisWithSignature = { ...analysis, setlist_signature: setlistSignature };
 
     // Crear objeto actualizado del setlist con análisis guardado
@@ -891,9 +872,10 @@ router.post("/setlists/:setlistId/analyze-with-ai", requireAuth, async (req, res
       success: true,
       analysis
     });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in analyze-setlist-with-ai:", err);
-    res.status(500).json({ error: err?.message || "Error al analizar setlist con IA" });
+    responderError(res, err, "Error al analizar setlist con IA");
   }
 });
 
@@ -906,8 +888,8 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
     const { setlistId } = req.params;
     const { feedback } = req.body || {};
 
-    const allSetlists = await dbGetSetlists(userBandId);
-    const setlist = allSetlists.find((s: any) => s.id === setlistId);
+    const allSetlists: Setlist[] = await dbGetSetlists(userBandId);
+    const setlist = allSetlists.find((s) => s.id === setlistId);
     if (!setlist) {
       return res.status(404).json({ error: "Setlist no encontrado" });
     }
@@ -925,12 +907,13 @@ router.post("/setlists/:setlistId/generate-perfect-setlist", requireAuth, iaRate
 
     // Se registra DESPUÉS de generar (no antes): si la generación falla, no queremos guardar un
     // feedback sobre un intento que nunca llegó a completarse.
-    logSetlistFeedbackIfPresent(userBandId, feedback).catch(() => {});
+    logSetlistFeedbackIfPresent(userBandId, feedback).catch((err: unknown) => console.warn("[Repertorio] No se pudo registrar el feedback del setlist:", err));
 
     res.json({ success: true, plan });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in generate-perfect-setlist:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de setlist perfecto" });
+    responderError(res, err, "Error al generar el plan de setlist perfecto");
   }
 });
 
@@ -953,8 +936,8 @@ function findMatchingSong(detectedTitle: string, catalog: Song[]): Song | null {
 // resuelto (o no) contra el catálogo real de la banda — el frontend hace de aquí una pantalla de
 // revisión antes de crear nada; esta ruta NUNCA escribe en setlists ni en songs por su cuenta.
 router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res, next) => {
-  importUpload.single("file")(req, res, (err: any) => {
-    if (err) return res.status(400).json({ success: false, error: err.message || "Archivo no válido" });
+  importUpload.single("file")(req, res, (err?: unknown) => {
+    if (err) return res.status(400).json({ success: false, error: comoErrorCapturado(err).message || "Archivo no válido" });
     next();
   });
 }, async (req, res) => {
@@ -981,9 +964,10 @@ router.post("/setlists/import-from-image", requireAuth, iaRateLimiter, (req, res
     });
 
     res.json({ success: true, nombreSugerido: parsed.nombreSugerido, items });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in import-from-image:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al leer el repertorio de la imagen/PDF" });
+    responderError(res, err, "Error al leer el repertorio de la imagen/PDF");
   }
 });
 
@@ -994,9 +978,10 @@ router.post("/optimize-wavs", requireAuth, async (req, res) => {
     const { optimizeWavSongsForBand } = await import("../utils/optimizeExistingWavs.js");
     const result = await optimizeWavSongsForBand(userBandId);
     res.json({ success: true, result });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /optimize-wavs:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error optimizando audios WAV" });
+    responderError(res, err, "Error optimizando audios WAV");
   }
 });
 
@@ -1007,9 +992,10 @@ router.post("/enrich-missing-audio", requireAuth, async (req, res) => {
     const { enrichMissingAudioSongsForBand } = await import("../utils/enrichCoversWithoutAudio.js");
     const result = await enrichMissingAudioSongsForBand(userBandId);
     res.json({ success: true, ...result });
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error("Error in /enrich-missing-audio:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error enriqueciendo canciones sin audio" });
+    responderError(res, err, "Error enriqueciendo canciones sin audio");
   }
 });
 

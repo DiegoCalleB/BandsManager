@@ -20,8 +20,8 @@ function respuesta(statusCode = 200) {
 
 describe('invalidación de la caché de estado tras una escritura', () => {
   it('bandasDeLaPeticion reúne la banda de la sesión y la de x-band-id, en todas sus formas', () => {
-    const ids = bandasDeLaPeticion({ user: { band_id: 'band-bakandeya' }, headers: { 'x-band-id': 'stomp' } });
-    expect(ids).toEqual(expect.arrayContaining(['band-bakandeya', 'bakandeya', 'reg-bakandeya', 'stomp', 'band-stomp']));
+    const ids = bandasDeLaPeticion({ user: { band_id: 'band-ejemplo' }, headers: { 'x-band-id': 'stomp' } });
+    expect(ids).toEqual(expect.arrayContaining(['band-ejemplo', 'ejemplo', 'reg-ejemplo', 'stomp', 'band-stomp']));
   });
 
   it('sin sesión ni cabecera no hay nada que invalidar', () => {
@@ -31,14 +31,14 @@ describe('invalidación de la caché de estado tras una escritura', () => {
   it('una escritura correcta (PUT 200) invalida la banda al terminar la respuesta', () => {
     const invalidar = vi.fn();
     const mw = invalidarCachePorEscritura(invalidar);
-    const req = peticion('PUT', { user: { band_id: 'band-bakandeya' } });
+    const req = peticion('PUT', { user: { band_id: 'band-ejemplo' } });
     const res = respuesta(200);
     const next = vi.fn();
     mw(req, res, next);
     expect(next).toHaveBeenCalled();
     expect(invalidar).not.toHaveBeenCalled(); // todavía no ha terminado la respuesta
     res.emit('finish');
-    expect(invalidar).toHaveBeenCalledWith('band-bakandeya');
+    expect(invalidar).toHaveBeenCalledWith('band-ejemplo');
   });
 
   it.each(['POST', 'PATCH', 'DELETE'])('%s también invalida', (metodo) => {

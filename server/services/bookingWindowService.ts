@@ -22,10 +22,10 @@ export async function calculateBookingWindow(
   const isTeatro = tipo.toLowerCase().includes('teatro') || tipo.toLowerCase().includes('auditorio');
   const isSalaGrande = aforo > 500;
 
-  let antelacion = 3;
-  let diasIdeales = ['Viernes', 'Sábado'];
-  let mesesCierre = ['Julio', 'Agosto'];
-  let estado: 'abierto' | 'llenandose' | 'casi_cerrado' | 'fuera_de_temporada' = 'llenandose';
+  let antelacion: number;
+  let diasIdeales: string[];
+  let mesesCierre: string[];
+  let estado: 'abierto' | 'llenandose' | 'casi_cerrado' | 'fuera_de_temporada';
 
   if (isFestival) {
     antelacion = 6;
@@ -63,7 +63,7 @@ export async function calculateBookingWindow(
 
   const ventanaStr = `${monthsEs[targetDateStart.getMonth()]} - ${monthsEs[targetDateEnd.getMonth()]} ${targetDateStart.getFullYear()}`;
 
-  let consejo = '';
+  let consejo: string;
   if (isFestival) {
     consejo = `Los festivales cierran cartel con 6 a 9 meses de margen. Si contactas ahora, solicita slots de tarde/noche para la edición de ${ventanaStr}.`;
   } else if (isSalaGrande) {

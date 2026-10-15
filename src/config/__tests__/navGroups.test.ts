@@ -1,17 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import {
-  NAV_ITEMS,
-  NAV_GROUPS,
-  NAV_PINNED_TOP_IDS,
-  NAV_PINNED_BOTTOM_IDS,
-  FLAT_NAV_ORDER_IDS,
-  TOP_TABS_ORDER_IDS,
-  MIN_MODULES_FOR_GROUPED_NAV,
-  shouldGroupNavForPlan,
-  findNavGroupIdForItem,
-  NavItemId,
-} from '../navGroups';
-import { PLANS } from '../../utils/planPermissions';
+import { NAV_ITEMS, NAV_GROUPS, NAV_GROUPS_MOBILE, NAV_GROUPS_DESKTOP, NAV_PINNED_TOP_IDS, NAV_PINNED_BOTTOM_IDS, FLAT_NAV_ORDER_IDS, TOP_TABS_ORDER_IDS, shouldGroupNavForPlan, findNavGroupIdForItem, NavItemId } from '../navGroups';
+import { leerAtril } from '../../audit/leerAtril';
 
 describe('navGroups config', () => {
   it('every id referenced by groups/pinned/flat lists exists in NAV_ITEMS', () => {
@@ -34,22 +23,24 @@ describe('navGroups config', () => {
     expect(new Set(FLAT_NAV_ORDER_IDS)).toEqual(new Set(TOP_TABS_ORDER_IDS));
   });
 
-  it('groups + pinned-top + pinned-bottom contain FLAT_NAV_ORDER_IDS plus tools', () => {
-    // Cuando hay agrupación (planes >7 módulos), mostramos:
-    // - Todos los módulos de FLAT_NAV_ORDER_IDS (que incluye'repertorio' y'discografia')
-    // - Plus las herramientas (metronome/tuner) que solo aparecen en la vista agrupada
+  it('groups + pinned-top + pinned-bottom contain exactly FLAT_NAV_ORDER_IDS', () => {
     const grouped: NavItemId[] = [...NAV_PINNED_TOP_IDS, ...NAV_PINNED_BOTTOM_IDS, ...NAV_GROUPS.flatMap((g) => g.itemIds)];
-    const toolIds: NavItemId[] = ['metronome', 'tuner'];
-    const groupedWithoutExtraItems = grouped.filter((id) => !toolIds.includes(id));
-    expect(new Set(groupedWithoutExtraItems)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
-    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length + toolIds.length);
+    expect(new Set(grouped)).toEqual(new Set(FLAT_NAV_ORDER_IDS));
+    expect(grouped.length).toBe(FLAT_NAV_ORDER_IDS.length);
+  });
+
+  it('metrónomo y afinador no están en el menú: viven como botones del Atril', () => {
+    expect(Object.keys(NAV_ITEMS)).not.toContain('metronome');
+    expect(Object.keys(NAV_ITEMS)).not.toContain('tuner');
+    const atril = leerAtril();
+    expect(atril).toContain('label: "Metrónomo"');
+    expect(atril).toContain('label: "Afinador"');
   });
 
   it('findNavGroupIdForItem resolves grouped items and returns undefined for pinned/unknown ids', () => {
     expect(findNavGroupIdForItem('repertorio')).toBe('musica');
     expect(findNavGroupIdForItem('discografia')).toBe('musica');
-    expect(findNavGroupIdForItem('metronome')).toBe('herramientas');
-    expect(findNavGroupIdForItem('tuner')).toBe('herramientas');
+    expect(NAV_GROUPS.some((g) => g.id === 'herramientas')).toBe(false);
     expect(findNavGroupIdForItem('booking')).toBe('directorio');
     expect(findNavGroupIdForItem('epk')).toBe('promocion');
     expect(findNavGroupIdForItem('giras')).toBe('negocio');
@@ -73,5 +64,11 @@ describe('navGroups config', () => {
     expect(shouldGroupNavForPlan('de_gira')).toBe(true);
     expect(shouldGroupNavForPlan('cabeza_de_cartel')).toBe(true);
     expect(shouldGroupNavForPlan(undefined)).toBe(true);
+  });
+});
+
+describe('un solo menú agrupado', () => {
+  it('móvil y escritorio comparten exactamente los mismos grupos', () => {
+    expect(NAV_GROUPS_MOBILE).toBe(NAV_GROUPS_DESKTOP);
   });
 });

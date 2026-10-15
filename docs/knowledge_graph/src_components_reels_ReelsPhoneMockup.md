@@ -1,0 +1,37 @@
+---
+id: src_components_reels_ReelsPhoneMockup
+title: "src/components/reels/ReelsPhoneMockup.tsx"
+layer: frontend
+domain: social
+file: "src/components/reels/ReelsPhoneMockup.tsx"
+tags: ["frontend", "social", "auto"]
+---
+
+# 📌 src/components/reels/ReelsPhoneMockup.tsx
+
+> **Ubicación:** `src/components/reels/ReelsPhoneMockup.tsx`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
+
+## 📖 Descripción
+Exporta: ReelsPhoneMockupProps, ReelsPhoneMockup.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_subtitleStyles|src/components/reels/subtitleStyles.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_reelsUtils|src/utils/reelsUtils.ts]] *(Layer: #service, Domain: #social)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_reels_center_ReelsPhonePreviewPanel|src/components/reels_center/ReelsPhonePreviewPanel.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

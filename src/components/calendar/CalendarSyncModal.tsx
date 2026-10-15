@@ -15,11 +15,9 @@ interface CalendarSyncModalProps {
 export const CalendarSyncModal: React.FC<CalendarSyncModalProps> = ({
   isOpen,
   onClose,
-  isStitchLight = false,
   activeBandId,
-  host,
   webCalFeed,
-  rutaFeed,
+  rutaFeed
 }) => {
   const [copiedSyncUrl, setCopiedSyncUrl] = useState(false);
 

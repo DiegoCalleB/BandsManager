@@ -23,3 +23,7 @@ globs: *
 
 5. **Verification Loop:**
    - Run `npm run check:fast` to verify TypeScript types and security boundary tests in <1.5s.
+
+6. **Clean Architecture & Anti-God Components (SRP):**
+   - Keep files pragmatic (green zone <600 lines). Avoid inflating files beyond 800 lines.
+   - Mandatory extraction triggers: modals (>100-150 lines) to dedicated subcomponents, pure logic to `src/utils/`, and state explosion (>8-10 useState) to custom hooks. Keep route controllers thin.

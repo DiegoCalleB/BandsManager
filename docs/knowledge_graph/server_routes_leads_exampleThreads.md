@@ -1,0 +1,41 @@
+---
+id: server_routes_leads_exampleThreads
+title: "server/routes/leads/exampleThreads.ts"
+layer: route
+domain: booking
+file: "server/routes/leads/exampleThreads.ts"
+tags: ["route", "booking", "auto"]
+---
+
+# 📌 server/routes/leads/exampleThreads.ts
+
+> **Ubicación:** `server/routes/leads/exampleThreads.ts`  
+> **Capa:** `#layer/route` | **Dominio:** `#domain/booking`
+
+## 📖 Descripción
+CRUD de hilos de ejemplo que alimentan el tono del Redactor.
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_db_exampleThreads|server/db/exampleThreads.ts]] *(Layer: #db, Domain: #system)*
+- [[server_promptsManager|server/promptsManager.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[fn_agentes_correo|Agentes de correo]] *(from #feature)*
+- [[fn_asistente_ia|Asistente de IA (chat)]] *(from #feature)*
+- [[fn_booking_crm|Booking CRM y pitch]] *(from #feature)*
+- [[server_routes_leads|server/routes/leads.ts]] *(from #route)*
+- [[src_components_booking_ExampleThreadsSection|src/components/booking/ExampleThreadsSection.tsx]] *(from #frontend)*
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

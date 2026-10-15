@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { X, Search, Check, ListPlus, Star } from "lucide-react";
+import { X, Search, ListPlus, Star } from "lucide-react";
 import { Song, ThemeColors } from "../../types";
 import { ModalPortal } from "../common/ModalPortal";
 import { PublicoSilhouette } from "../ui/PublicoSilhouette";

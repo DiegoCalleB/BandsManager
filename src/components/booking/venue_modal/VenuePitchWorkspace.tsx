@@ -1,34 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Sparkles,
-  Send,
-  CheckCircle2,
-  Copy,
-  Edit3,
-  RotateCcw,
-  Star,
-  MessageCircle,
-  Loader2,
-  Check,
-  Layers,
-  ChevronDown,
-  AlertCircle,
-  Clock,
-  Mail,
-  Save,
-  Undo2,
-} from 'lucide-react';
-import { Lead } from '../../../types';
-import { Button, IconButton, Textarea, Select } from '../../ui';
-import { ShowIcon } from '../../ui/ShowIcon';
+import React, { useState } from 'react';
+import { Sparkles, Send, CheckCircle2, Copy, Edit3, Star, MessageCircle, Loader2, Check, Layers, AlertCircle, Clock, Mail, Save } from 'lucide-react';
+import { Lead, LeadStatus, BookingCampaign } from '../../../types';
+import { Button, Textarea } from '../../ui';
 import { apiFetch } from '../../../utils/api';
+import type { RespuestaRegenerarPitch } from '../tiposRespuestasApi';
 import { MultiModelPitchComparatorModal } from '../MultiModelPitchComparatorModal';
+import { comoErrorCapturado } from '../../../utils/errorCapturado';
+
+/** Resultado por lead que devuelve `POST /api/trigger-agent` para el agente enviador. */
+interface ResultadoEnviador {
+  id?: string;
+  status?: string;
+  estado_nuevo?: LeadStatus;
+  error?: string;
+}
 
 interface VenuePitchWorkspaceProps {
   lead: Lead;
   onUpdateLead: (id: string, updates: Partial<Lead>) => void;
   onOpenWhatsAppModal: () => void;
-  activeCampaign?: any;
+  activeCampaign?: BookingCampaign | null;
   bandName?: string;
 }
 
@@ -36,8 +27,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
   lead,
   onUpdateLead,
   onOpenWhatsAppModal,
-  activeCampaign,
-  bandName,
+  activeCampaign
 }) => {
   const [editedPitch, setEditedPitch] = useState(lead.pitch_generado || '');
   const [isEditingText, setIsEditingText] = useState(false);
@@ -54,13 +44,15 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
   const [feedbackComment, setFeedbackComment] = useState('');
   const [feedbackSuccess, setFeedbackSuccess] = useState<string | null>(null);
 
-  // Sync state when lead changes
-  useEffect(() => {
+  // Al cambiar de lead o de pitch guardado se reinicia el borrador (ajuste durante el render, sin efecto).
+  const [pitchVisto, setPitchVisto] = useState({ id: lead.id, pitch: lead.pitch_generado });
+  if (pitchVisto.id !== lead.id || pitchVisto.pitch !== lead.pitch_generado) {
+    setPitchVisto({ id: lead.id, pitch: lead.pitch_generado });
     setEditedPitch(lead.pitch_generado || '');
     setIsEditingText(false);
     setDraftError(null);
     setFeedbackSuccess(null);
-  }, [lead.id, lead.pitch_generado]);
+  }
 
   // Is this reply stage (negotiating / responded) or initial pitch?
   const isReplyStage =
@@ -78,7 +70,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
         ? `/api/leads/${lead.id}/regenerate-reply`
         : `/api/leads/${lead.id}/regenerate-pitch`;
 
-      const res = await apiFetch(endpoint, {
+      const res = await apiFetch<RespuestaRegenerarPitch>(endpoint, {
         method: 'POST',
         body: JSON.stringify({
           tono_rating: toneRating || undefined,
@@ -109,7 +101,8 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       } else {
         setDraftError(res.error || 'Error al regenerar con IA');
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setDraftError(err.message || 'Error de conexión con el agente');
     } finally {
       setIsRegenerating(false);
@@ -130,7 +123,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
 
     // Step 2: Trigger agent dispatcher
     try {
-      const res = await apiFetch('/api/trigger-agent', {
+      const res = await apiFetch<{ results?: ResultadoEnviador[]; message?: string }>('/api/trigger-agent', {
         method: 'POST',
         body: JSON.stringify({
           agentName: 'enviador',
@@ -139,7 +132,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       });
 
       const leadResult = Array.isArray(res.results)
-        ? res.results.find((r: any) => r.id === lead.id)
+        ? res.results.find((r) => r.id === lead.id)
         : null;
 
       if (leadResult?.status === 'borrador' || leadResult?.status === 'enviado') {
@@ -149,7 +142,8 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
       } else if (leadResult?.error || res.message) {
         setDraftError(leadResult?.error || res.message);
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       setDraftError(err.message || 'Error al despachar el correo');
     } finally {
       setIsCreatingDraft(false);
@@ -410,7 +404,7 @@ export const VenuePitchWorkspace: React.FC<VenuePitchWorkspaceProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold font-sans text-[var(--ink)]">
-              Entrenamiento de Tono y Estilo
+              Entrenamiento de tono y estilo
             </span>
             <span className="text-micro font-mono px-1.5 py-0.5 rounded bg-[var(--acc-soft)] text-[var(--acc-ink)] font-semibold">
               Dynamic Few-Shot

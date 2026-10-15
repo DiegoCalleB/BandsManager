@@ -25,24 +25,24 @@ describe('ipDelCliente', () => {
 });
 
 describe('el limitador no se evade rotando X-Forwarded-For', () => {
-  it('mismo cliente real con una IP «de cliente» distinta en cada petición sigue limitado', () => {
+  it('mismo cliente real con una IP «de cliente» distinta en cada petición sigue limitado', async () => {
     const limitador = createRateLimiter({ nombre: 'test-xff', maxRequests: 3 });
     let bloqueado = 0;
     for (let i = 0; i < 6; i++) {
       const res = resFalso();
       let paso = false;
       // El atacante inventa la primera entrada; el proxy añade siempre la real (9.9.9.9).
-      limitador(peticion(`1.2.3.${i}, 9.9.9.9`), res, () => (paso = true));
+      await limitador(peticion(`1.2.3.${i}, 9.9.9.9`), res, () => (paso = true));
       if (!paso) bloqueado++;
     }
     expect(bloqueado).toBe(3);
   });
 
-  it('dos clientes reales distintos no se afectan entre sí', () => {
+  it('dos clientes reales distintos no se afectan entre sí', async () => {
     const limitador = createRateLimiter({ nombre: 'test-xff2', maxRequests: 1 });
     let pasos = 0;
-    limitador(peticion('8.8.8.8'), resFalso(), () => pasos++);
-    limitador(peticion('7.7.7.7'), resFalso(), () => pasos++);
+    await limitador(peticion('8.8.8.8'), resFalso(), () => pasos++);
+    await limitador(peticion('7.7.7.7'), resFalso(), () => pasos++);
     expect(pasos).toBe(2);
   });
 });

@@ -11,6 +11,7 @@ import { uuid_ossp } from '@electric-sql/pglite/contrib/uuid_ossp';
 import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const RAIZ = path.resolve(__dirname, '../..');
 
@@ -70,7 +71,8 @@ export async function cargarEsquema(): Promise<CargaEsquema> {
     for (const sentencia of dividirSentencias(adaptarParaPglite(fs.readFileSync(path.join(RAIZ, f), 'utf8')))) {
       try {
         await db.exec(sentencia);
-      } catch (e: any) {
+      } catch (eCapturado) {
+        const e = comoErrorCapturado(eCapturado);
         errores.push({
           fichero: f,
           mensaje: `${String(e?.message || e).split('\n')[0]} :: ${sentencia.trim().slice(0, 90).replace(/\s+/g, ' ')}`,

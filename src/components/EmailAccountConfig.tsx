@@ -14,6 +14,7 @@ import {
 import { api } from "../services/api";
 import { BandEmailAccountStatus } from "../types";
 import { Input } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 interface EmailAccountConfigProps {
   bandId: string;
@@ -56,6 +57,25 @@ const PROVIDER_PRESETS: Record<
   },
 };
 
+// El callback del servidor (server/routes/gmailOAuth.ts) vuelve con ?gmail_oauth=conectado|error.
+function feedbackInicialGmailOAuth(): { type: "success" | "error"; message: string } | null {
+  const params = new URLSearchParams(window.location.search);
+  const resultado = params.get("gmail_oauth");
+  if (!resultado) return null;
+  if (resultado === "conectado") {
+    return {
+      type: "success",
+      message:
+        "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
+    };
+  }
+  const motivo = params.get("motivo") || "error_desconocido";
+  return {
+    type: "error",
+    message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
+  };
+}
+
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   bandId,
 }) => {
@@ -92,7 +112,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   const [gmailOAuthFeedback, setGmailOAuthFeedback] = useState<{
     type: "success" | "error";
     message: string;
-  } | null>(null);
+  } | null>(feedbackInicialGmailOAuth);
 
   useEffect(() => {
     if (!bandId) return;
@@ -123,21 +143,10 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     if (!resultado) return;
 
     if (resultado === "conectado") {
-      setGmailOAuthFeedback({
-        type: "success",
-        message:
-          "¡Gmail conectado! El Agente Enviador ya puede crear borradores sin pedir contraseña.",
-      });
       api
         .getGmailOAuthStatus()
         .then((data) => setGmailOAuthStatus(data || { connected: false }))
-        .catch(() => {});
-    } else {
-      const motivo = params.get("motivo") || "error_desconocido";
-      setGmailOAuthFeedback({
-        type: "error",
-        message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
-      });
+        .catch(() => { /* el aviso de conexión ya se mostró; el estado se refresca al reabrir */ });
     }
     setTimeout(() => setGmailOAuthFeedback(null), 6000);
 
@@ -157,7 +166,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
     try {
       const { url } = await api.getGmailOAuthAuthorizeUrl();
       window.location.href = url;
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error iniciando la conexión de Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -178,7 +188,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
         message: "Gmail desconectado.",
       });
       setTimeout(() => setGmailOAuthFeedback(null), 4000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error desconectando Gmail OAuth:", err);
       setGmailOAuthFeedback({
         type: "error",
@@ -275,7 +286,8 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           "¡Cuenta de email conectada! El Agente Enviador ya puede usarla para enviar y leer correo real.",
       });
       setTimeout(() => setFeedback(null), 5000);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error guardando la cuenta de email:", err);
       setFeedback({
         type: "error",
@@ -289,6 +301,15 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
 
   const labelClass =
     "text-xs font-sans font-semibold text-[var(--ink-2)] flex items-center gap-2";
+
+  // Sin banda no hay cuenta que consultar: antes el spinner de abajo no terminaba nunca.
+  if (!bandId) {
+    return (
+      <div className="p-6 rounded-[var(--r-l)] bg-[var(--surface)] text-xs font-sans text-[var(--ink-2)]">
+        No se pudo identificar la banda activa. Cierra este panel y vuelve a abrirlo desde una banda seleccionada.
+      </div>
+    );
+  }
 
   if (loading) {
     return (

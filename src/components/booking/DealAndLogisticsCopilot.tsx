@@ -1,23 +1,7 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import { calculateLeadScore, findCorridorForCity } from '../../utils/tourRouting';
-import {
-  Calculator,
-  Compass,
-  FileText,
-  DollarSign,
-  TrendingUp,
-  MapPin,
-  Fuel,
-  Users,
-  ShieldCheck,
-  Check,
-  Copy,
-  ExternalLink,
-  ChevronRight,
-  AlertTriangle,
-  Sparkles,
-} from 'lucide-react';
+import { findCorridorForCity } from '../../utils/tourRouting';
+import { Calculator, Compass, FileText, TrendingUp, MapPin, ShieldCheck, Check, Copy, Sparkles } from 'lucide-react';
 import { Button, Input, Select } from '../ui';
 
 interface DealAndLogisticsCopilotProps {
@@ -25,25 +9,26 @@ interface DealAndLogisticsCopilotProps {
   latestIncomingMessage?: string;
   isStitchLight?: boolean;
   onOpenRoadbookModal?: (lead: Lead) => void;
+  bandName?: string;
 }
 
 export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = ({
   lead,
   latestIncomingMessage,
-  isStitchLight = false,
   onOpenRoadbookModal,
+  bandName = 'Tu banda'
 }) => {
   // --- SUB-SECCIÓN 1: P&L & VIABILIDAD LOGÍSTICA ---
-  const [bandOriginCity, setBandOriginCity] = useState<string>('Madrid');
+  const [bandOriginCity] = useState<string>('Madrid');
   const [ticketPrice, setTicketPrice] = useState<number>(10);
   const [guaranteedCache, setGuaranteedCache] = useState<number>(0);
   const [dealType, setDealType] = useState<'cache' | 'taquilla' | 'mixto'>('taquilla');
-  const [bandSplitPercent, setBandSplitPercent] = useState<number>(80);
+  const [bandSplitPercent] = useState<number>(80);
   const [vanKmEstimated, setVanKmEstimated] = useState<number>(350);
   const [hotelCost, setHotelCost] = useState<number>(120);
   const [dietsCost, setDietsCost] = useState<number>(80);
-  const [fuelPriceEurL, setFuelPriceEurL] = useState<number>(1.55);
-  const [vanConsumptionL100km, setVanConsumptionL100km] = useState<number>(9.5);
+  const [fuelPriceEurL] = useState<number>(1.55);
+  const [vanConsumptionL100km] = useState<number>(9.5);
 
   // Estimación de combustible ida y vuelta
   const estimatedFuelExpense = Math.round(((vanKmEstimated * 2) / 100) * vanConsumptionL100km * fuelPriceEurL);
@@ -75,8 +60,8 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
         label: 'A la espera de respuesta',
         color: 'text-[var(--ink-2)] bg-[var(--sunken)]/60 ',
         tactic: 'Envía un primer pitch conciso con vídeo de directo, enlace al rider y propuesta de 2 fechas alternativas.',
-        suggestedSubject: `Propuesta concierto Bakandeya en ${lead.nombre_sala}`,
-        suggestedDraft: `Hola equipo de ${lead.nombre_sala},\n\nNos encantaría presentar en vuestra sala nuestro directo (fusión orgánica de violín acústico, sintetizadores analógicos y grooves de baile). Os dejamos nuestro EPK y vídeo en vivo:\nhttps://bandmanager.io/epk\n\n¿Tenéis disponibilidad para un viernes o sábado durante los próximos meses?\n\nUn saludo,\nEquipo Bakandeya`,
+        suggestedSubject: `Propuesta concierto ${bandName} en ${lead.nombre_sala}`,
+        suggestedDraft: `Hola equipo de ${lead.nombre_sala},\n\nNos encantaría presentar en vuestra sala nuestro directo (fusión orgánica de violín acústico, sintetizadores analógicos y grooves de baile). Os dejamos nuestro EPK y vídeo en vivo:\nhttps://bandmanager.io/epk\n\n¿Tenéis disponibilidad para un viernes o sábado durante los próximos meses?\n\nUn saludo,\nEquipo ${bandName}`,
       };
     }
 
@@ -133,17 +118,17 @@ export const DealAndLogisticsCopilot: React.FC<DealAndLogisticsCopilotProps> = (
       label: 'Conversación en curso',
       color: 'text-[var(--ink)] bg-[var(--acc)]/10 ',
       tactic: 'Responde aclarando las dudas técnicas y manteniendo la iniciativa con una llamada a la acción clara.',
-      suggestedSubject: `Re: Detalles concierto Bakandeya en ${lead.nombre_sala}`,
+      suggestedSubject: `Re: Detalles concierto ${bandName} en ${lead.nombre_sala}`,
       suggestedDraft: `Hola de nuevo,\n\nMuchas gracias por las indicaciones. Por nuestra parte estamos totalmente alineados con la propuesta. ¿Queréis que os mandemos el cartel editable o preferís coordinar la comunicación vosotros?`,
     };
-  }, [latestIncomingMessage, lead.ultimo_mensaje_recibido, lead.nombre_sala]);
+  }, [latestIncomingMessage, lead.ultimo_mensaje_recibido, lead.nombre_sala, bandName]);
 
   // --- SUB-SECCIÓN 3: GENERADOR DE HOJA DE RUTA (ROADBOOK) & CONTRATO ---
   const [copiedRoadbook, setCopiedRoadbook] = useState(false);
   const [copiedContract, setCopiedContract] = useState(false);
 
   const roadbookMarkdown = `🗺️ HOJA DE RUTA (ROADBOOK) & RUN OF SHOW
-Banda: Bakandeya
+Banda: ${bandName}
 Evento: Concierto en ${lead.nombre_sala} (${lead.ciudad})
 Dirección: ${lead.direccion || lead.ciudad || 'Por confirmar'}
 Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${lead.telefono || lead.email_contacto || 'n/d'})
@@ -164,7 +149,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
 • Dietas y Alojamiento: ~${hotelCost + dietsCost} €`;
 
   const miniContractSummary = `📄 RESUMEN DE ACUERDO DE ACTUACIÓN
-• Artista: Bakandeya
+• Artista: ${bandName}
 • Organizador / Sala: ${lead.nombre_sala} (${lead.direccion || lead.ciudad})
 • Régimen Económico: ${dealType === 'cache' ? `Caché fijo de ${guaranteedCache} €` : `${bandSplitPercent}% de taquilla íntegra (Entrada: ${ticketPrice} €)`}
 • Rider Técnico: 3 cajas de inyección directa activas (D.I.), monitores o envíos IEM, PA adecuada al aforo (${venueCapacity} pax).
@@ -227,7 +212,7 @@ Contacto Sala / Programador: ${lead.contacto_nombre || 'Dirección de Sala'} (${
             <label className="text-micro font-mono text-[var(--ink-2)] block mb-1">Tipo de Acuerdo</label>
             <Select size="sm" aria-label="Tipo de Acuerdo"
               value={dealType}
-              onChange={(e: any) => setDealType(e.target.value)}
+              onChange={(e) => setDealType(e.target.value as typeof dealType)}
               wrapperClassName="w-full"
             >
               <option value="taquilla">Taquilla (%)</option>

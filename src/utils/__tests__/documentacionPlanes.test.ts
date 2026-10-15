@@ -56,9 +56,12 @@ describe('README.md: tabla de planes', () => {
   });
 });
 
-describe('AGENTS.md §2.3: tabla de límites', () => {
+describe('docs/referencia/PLANES_Y_LIMITES.md: tabla de límites', () => {
   // | Plan | Fans | Leads | Canciones | Contactos medios | Bandas | Créditos IA/mes |
-  const filas = leer('AGENTS.md')
+  const archivoPlanes = fs.existsSync(path.join(RAIZ, 'docs/referencia/PLANES_Y_LIMITES.md'))
+    ? 'docs/referencia/PLANES_Y_LIMITES.md'
+    : 'AGENTS.md';
+  const filas = leer(archivoPlanes)
     .split('\n')
     .filter((l) => /^\s*\| `(promo|promo_plus|ensayo|local|de_gira|cabeza_de_cartel)` \|/.test(l))
     .map(celdas);

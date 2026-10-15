@@ -284,6 +284,30 @@ export function validarYRepararEventos(
   };
 }
 
+/** Idea melódica tal como la propone el modelo, antes de validar sus notas. */
+interface IdeaMelodicaPropuesta {
+  eventos?: unknown;
+  instrument: MelodicInstrument;
+  keyName: string;
+  escala?: "mayor" | "menor";
+  bpm: number;
+  durationSecs: number;
+}
+
+/** Una acción propuesta por el chatbot; solo se inspeccionan las de tipo 'propose_melodic_idea'. */
+interface AccionDelModelo {
+  type?: string;
+  melodicIdea?: IdeaMelodicaPropuesta;
+  [campo: string]: unknown;
+}
+
+/** Respuesta del chatbot ya parseada: texto más acciones propuestas. */
+export interface RespuestaDelChat {
+  text?: string;
+  proposedActions?: AccionDelModelo[];
+  [campo: string]: unknown;
+}
+
 /**
  * Pasa por el validador las notas de cada 'propose_melodic_idea' de una respuesta ya parseada del
  * modelo, antes de que salgan hacia el navegador.
@@ -295,11 +319,11 @@ export function validarYRepararEventos(
  * Vive aquí, y no dentro del handler de server/routes/chat.ts, para poder testearlo sin levantar
  * Express (la convención del repo para lógica de ruta que necesita cobertura).
  */
-export function sanearIdeasMelodicas(parsed: any): any {
+export function sanearIdeasMelodicas<R extends RespuestaDelChat | null | undefined>(parsed: R): R {
   if (!parsed || !Array.isArray(parsed.proposedActions)) return parsed;
 
   const avisos: string[] = [];
-  const acciones = parsed.proposedActions.filter((accion: any) => {
+  const acciones = parsed.proposedActions.filter((accion) => {
     if (accion?.type !== "propose_melodic_idea" || !accion?.melodicIdea) return true;
 
     const idea = accion.melodicIdea;
@@ -328,5 +352,6 @@ export function sanearIdeasMelodicas(parsed: any): any {
     parsed.text = `${parsed.text || ""}\n\n⚠️ No he podido preparar ${avisos.join(" ni ")}. Vuelve a pedírmela y la compongo otra vez.`.trim();
   }
 
-  return { ...parsed, proposedActions: acciones };
+  // Misma respuesta con la lista de acciones filtrada: la forma de R no cambia.
+  return { ...parsed, proposedActions: acciones } as R;
 }

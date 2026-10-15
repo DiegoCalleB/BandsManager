@@ -2,7 +2,7 @@ import React from "react";
 import { BarChart3, Quote, Plus, Trash2 } from "lucide-react";
 import { EPKConfig } from "../../types";
 import { EPKBlockWrapper } from "./EPKBlockWrapper";
-import { EPK_BLOCKS, EPKBlockMeta } from "./epkBlocks";
+import { EPK_BLOCKS, EPKBlockMeta, EPKBlockId } from "./epkBlocks";
 import { IconButton, Input, Textarea } from '../ui';
 
 interface EPKPrensaBlockProps {
@@ -10,7 +10,7 @@ interface EPKPrensaBlockProps {
   setConfig: React.Dispatch<React.SetStateAction<EPKConfig>>;
   prevBlock?: EPKBlockMeta | null;
   nextBlock?: EPKBlockMeta | null;
-  onNavigate?: (blockId: any) => void;
+  onNavigate?: (blockId: EPKBlockId) => void;
   onSave?: () => void;
   isAllView?: boolean;
 }

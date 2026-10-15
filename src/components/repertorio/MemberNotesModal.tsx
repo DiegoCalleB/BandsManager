@@ -6,6 +6,9 @@ import {
   resolveBandMembers,
   getSongMemberNote,
   getMemberReadiness,
+  isSongTonoMarkedForMember,
+  isSongBpmMarkedForMember,
+  withSongFlagsForMember,
   getReadinessSummary,
   READINESS_LEVELS,
   ReadinessLevel,
@@ -28,10 +31,9 @@ interface MemberNotesModalProps {
 export function MemberNotesModal({
   isOpen,
   song,
-  colors,
   bandMembers = [],
   onClose,
-  onSaveSongNotes,
+  onSaveSongNotes
 }: MemberNotesModalProps) {
   const resolvedMembers = resolveBandMembers(bandMembers, song?.notasMiembros);
 
@@ -63,6 +65,21 @@ export function MemberNotesModal({
     });
     return initial;
   });
+
+  // "Quiero ver tono/BPM de esta canción en mi hoja": mismo patrón de clave (nombre en minúsculas).
+  const [memberShowKey, setMemberShowKey] = useState<Record<string, { tono: boolean; bpm: boolean }>>(
+    () => {
+      const initial: Record<string, { tono: boolean; bpm: boolean }> = {};
+      if (!song) return initial;
+      resolvedMembers.forEach((m) => {
+        initial[m.name.toLowerCase()] = {
+          tono: isSongTonoMarkedForMember(song, m.id, m.name),
+          bpm: isSongBpmMarkedForMember(song, m.id, m.name),
+        };
+      });
+      return initial;
+    },
+  );
 
   const [newMemberName, setNewMemberName] = useState<string>("");
   const [newMemberInstrument, setNewMemberInstrument] = useState<string>("");
@@ -161,6 +178,16 @@ export function MemberNotesModal({
         const { estadoPreparacion, ...rest } = updatedNotasPorMiembro[idx];
         updatedNotasPorMiembro[idx] = rest;
       }
+
+      // Marcas de tono y BPM: aplicadas sobre la entrada ya resuelta (o crea una vacía si hace falta).
+      const shown = memberShowKey[key];
+      const withFlags = withSongFlagsForMember(
+        { notasPorMiembro: updatedNotasPorMiembro },
+        member.id,
+        member.name,
+        { tono: shown?.tono === true, bpm: shown?.bpm === true },
+      );
+      updatedNotasPorMiembro.splice(0, updatedNotasPorMiembro.length, ...(withFlags.notasPorMiembro ?? []));
     });
 
     const updatedSong: Song = {
@@ -405,6 +432,28 @@ export function MemberNotesModal({
                         >
                           <ShowIcon inline emoji={level.icon} /> {level.label}
                         </button>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-4 mb-2 text-micro font-sans text-[var(--ink-2)]">
+                      {([["tono", "Ver tonalidad"], ["bpm", "Ver BPM"]] as const).map(([flag, label]) => (
+                        <label key={flag} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={memberShowKey[memberKey]?.[flag] === true}
+                            onChange={(e) =>
+                              setMemberShowKey((prev) => ({
+                                ...prev,
+                                [memberKey]: {
+                                  tono: prev[memberKey]?.tono === true,
+                                  bpm: prev[memberKey]?.bpm === true,
+                                  [flag]: e.target.checked,
+                                },
+                              }))
+                            }
+                          />
+                          {label}
+                        </label>
                       ))}
                     </div>
 

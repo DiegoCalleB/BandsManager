@@ -131,10 +131,6 @@ export const GUITAR_CHORD_DATABASE: Record<string, GuitarChordShape> = {
   Sibm: { name: 'Sibm', frets: [-1, 1, 3, 3, 2, 1], baseFret: 1 },
 };
 
-// Regex to identify root note at start of chord token
-// Order Spanish multi-char root notes first (Sol#, Sol, Do#, Do, Re#, Re, Fa#, Fa, La#, La, Sib, Si, Mi)
-const ROOT_NOTE_REGEX = /^(Sol#|Solb|Sol|Do#|Dom|Do|Re#|Reb|Rem|Re|Fa#|Fam|Fa|La#|Lab|Lam|La|Sib|Sim|Si|Mib|Mim|Mi|[A-G][#b]?)/i;
-
 // Sufijos de acorde reconocidos. Sin esta lista, "root + lo que sea" (el `.*` que había antes)
 // aceptaba cualquier palabra que empezara por una nota como acorde válido: "Get", "Fire",
 // "Baby", "Come"... todas arrancan por A-G y colaban como acordes en letras en inglés. Esta
@@ -320,7 +316,7 @@ export function processChordText(text: string, semitones: number, notation: 'ES'
   if (!text) return '';
 
   // Process inline bracket notation [Do] or [C#m]
-  const result = text.replace(/\[([A-Za-z0-9#\/]+)\]/g, (match, chord) => {
+  const result = text.replace(/\[([A-Za-z0-9#/]+)\]/g, (match, chord) => {
     const transposed = transposeChordToken(chord, semitones, notation);
     return `[${transposed}]`;
   });
@@ -338,7 +334,7 @@ export function processChordText(text: string, semitones: number, notation: 'ES'
     if (!isChordLine(tokens)) return line;
 
     // Replace each chord token preserving spacing
-    return line.replace(/([A-Za-z0-9#\/]+)/g, (match) => {
+    return line.replace(/([A-Za-z0-9#/]+)/g, (match) => {
       if (parseRootNote(match)) {
         return transposeChordToken(match, semitones, notation);
       }
@@ -376,7 +372,7 @@ export function extractUniqueChords(text: string): string[] {
   const found = new Set<string>();
 
   // Bracketed chords
-  const bracketMatches = text.match(/\[([A-Za-z0-9#\/]+)\]/g);
+  const bracketMatches = text.match(/\[([A-Za-z0-9#/]+)\]/g);
   if (bracketMatches) {
     bracketMatches.forEach((m) => {
       const clean = m.replace('[', '').replace(']', '').trim();
@@ -404,7 +400,7 @@ export function extractUniqueChords(text: string): string[] {
 }
 
 // Encabezados de sección reconocidos en un cifrado (mismo vocabulario que usa la IA al
-// extraer estructura y que ya resalta SongChordsViewerModal al renderizar).
+// extraer estructura y que ya resalta el Atril al renderizar).
 export const CHORD_SECTION_HEADER_REGEX =
   /^\[(Intro(?:\s*\d+)?|Verso(?:\s*\d+)?|Estribillo(?:\s*\d+)?|Coro(?:\s*\d+)?|Puente|Solo|Outro|Coda|Final)\]$/i;
 

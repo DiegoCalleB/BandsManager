@@ -7,6 +7,9 @@
 
 import { getAiClient, generateContentWithFallback } from "../ai.js";
 import { safeParseJson } from "../utils.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { RespuestaLogisticaGira } from '../tiposRespuestasIA.js';
+import { numeroFinito, textoNoVacio } from '../utils/valoresIA.js';
 
 export interface TourLogisticsResult {
   success: boolean;
@@ -73,11 +76,12 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
       }
     });
 
-    const parsed = safeParseJson(response.text || "{}");
-    if (parsed && typeof parsed.distancia_km === "number") {
-      const dist = Math.max(5, parsed.distancia_km);
+    const parsed = safeParseJson<RespuestaLogisticaGira>(response.text || "{}");
+    const distanciaIA = numeroFinito(parsed?.distancia_km);
+    if (parsed && distanciaIA !== undefined) {
+      const dist = Math.max(5, distanciaIA);
       const fuelCostOneWay = Math.round(dist * 0.09 * 1.45);
-      const tollsOneWay = parsed.peajes_estimados || 0;
+      const tollsOneWay = numeroFinito(parsed.peajes_estimados) || 0;
       const totalRoundTrip = (fuelCostOneWay * 2) + (tollsOneWay * 2);
 
       return {
@@ -85,14 +89,15 @@ Devuelve ÚNICAMENTE un JSON con esta estructura exacta:
         origen: cleanOrigin,
         destino: cleanDest,
         distancia_km: dist,
-        tiempo_conduccion: parsed.tiempo_conduccion || `${Math.round(dist / 90)}h ${Math.round((dist % 90) * 0.6)}min`,
+        tiempo_conduccion: textoNoVacio(parsed.tiempo_conduccion) || `${Math.round(dist / 90)}h ${Math.round((dist % 90) * 0.6)}min`,
         coste_gasolina_estimado: fuelCostOneWay,
         peajes_estimados: tollsOneWay,
-        coste_total_viaje: parsed.coste_total_viaje || totalRoundTrip,
-        recomendacion_logistica: parsed.recomendacion_logistica || `Salida recomendada con 2h de margen antes de la prueba de sonido.`
+        coste_total_viaje: numeroFinito(parsed.coste_total_viaje) || totalRoundTrip,
+        recomendacion_logistica: textoNoVacio(parsed.recomendacion_logistica) || `Salida recomendada con 2h de margen antes de la prueba de sonido.`
       };
     }
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("Error calculating tour logistics via AI:", err?.message);
   }
 

@@ -45,6 +45,8 @@ export interface BookingCampaign {
   // sin entrada aquí siguen usando solo la plantilla general de su tipo.
   customPitchTemplates?: Partial<Record<PitchTemplateCategory, string>>;
   isActive: boolean;
+  /** Alias heredado de la API (snake_case) de `isActive`. */
+  is_active?: boolean;
   color?: string; // Hex color for badge styling (e.g.'var(--acc)', 'var(--acc)', '#06b6d4')
   created_at?: string;
 }
@@ -97,19 +99,32 @@ export interface BandContact {
   dna_expresion?: Record<string, unknown>;
 }
 
+/** Canales que se eligen al anotar una interacción a mano en la bitácora. */
+export type CanalInteraccion = "Llamada" | "WhatsApp" | "Email" | "Reunión" | "Otro";
+
+/** Resultados que se eligen al anotar una interacción en la bitácora. */
+export type ResultadoInteraccion =
+  | "Interesado"
+  | "Enviar propuesta"
+  | "Seguimiento pendiente"
+  | "Rechazado"
+  | "Info recibida"
+  | "Acuerdo cerrado";
+
 export interface InteractionLog {
   id: string;
   fecha: string;
-  tipo: "Llamada" | "WhatsApp" | "Email" | "Reunión" | "Otro";
+  /** Canal. «Interacción EPK» y «Dossier PDF» los escribe la telemetría del dossier. */
+  tipo: CanalInteraccion | "Interacción EPK" | "Dossier PDF";
   autor?: string;
   notas: string;
-  resultado?:
-    | "Interesado"
-    | "Enviar propuesta"
-    | "Seguimiento pendiente"
-    | "Rechazado"
-    | "Info recibida"
-    | "Acuerdo cerrado";
+  /** Lo que elige quien anota a mano, o el texto propio de la telemetría de correo
+   * («👁️ Apertura de correo (#3)»). */
+  resultado?: ResultadoInteraccion | (string & {});
+  /** Evento de telemetría que originó la entrada (email_opened, email_clicked…). */
+  event?: string;
+  /** Correo al que se refiere el evento (aperturas y clics de tracking), con o sin prefijo imap-/gmail-. */
+  email_id?: string;
 }
 
 export interface SavedFilter {
@@ -186,6 +201,8 @@ export interface PitchFeedbackLog {
   pitch_nuevo: string;
   deshecho?: boolean;
   alcance?: "este_pitch" | "global";
+  /** Puntuación anti-IA del pitch nuevo (pitchEngine). */
+  anti_ai_score?: number;
 }
 
 export interface Lead {
@@ -199,6 +216,8 @@ export interface Lead {
   roster?: string;
   tipo?: LeadType | string;
   email_contacto: string;
+  /** Alias legado de email_contacto en leads importados antes de normalizar el campo. */
+  email?: string;
   email_secundario?: string;
   telefono: string;
   telefono_movil?: string;
@@ -265,7 +284,11 @@ export interface Lead {
     | "positivo"
     | "neutral"
     | "negativo_suave"
-    | "negativo_firme";
+    | "negativo_firme"
+    // Valores del analizador de sentimiento (server/services/sentimentAnalysis.ts › SentimentLevel).
+    | "cauteloso"
+    | "negativo"
+    | "rechazo";
   ultimo_sentimiento_score?: number;
   ultimo_sentimiento_label?: string;
   ultima_intencion?: string;
@@ -276,6 +299,8 @@ export interface Lead {
     | "muy_caliente"
     | "caliente"
     | "tibio"
+    // «templado» lo devuelve el analizador de sentimiento (LeadTemperature).
+    | "templado"
     | "frio"
     | "congelado";
   fechas_propuestas_sala?: string[];
@@ -919,7 +944,7 @@ export interface SocialPost {
   auto_publish?: boolean;
   published_id?: string;
   published_at?: string;
-  publish_error?: string;
+  publish_error?: string; publish_started_at?: string; // lo segundo: reclamado para publicar, detecta publicaciones interrumpidas
   account_handle?: string;
   hashtags?: string[];
   metrics?: {
@@ -977,6 +1002,8 @@ export interface SocialMetric {
   id: string;
   band_id?: string;
   fecha: string;
+  /** Total de fans combinado; se calcula al fusionar el histórico en la vista de métricas. */
+  fans?: number;
   instagram: number;
   tiktok: number;
   youtube: number;
@@ -1068,6 +1095,12 @@ export interface User {
       mobile?: "1" | "2";
       desktop?: "1" | "2";
     };
+    /** Módulos cuya guía rápida ya vio el usuario. */
+    tutorials_seen?: string[];
+    onboarding_completed?: boolean;
+    /** Bandas en las que el usuario ya completó el onboarding / el asistente de perfil. */
+    onboarding_completed_bands?: string[];
+    profile_wizard_completed_bands?: string[];
     [key: string]: unknown;
   };
   // Campos reales de facturación (ver server/routes/billing.ts, que los escribe directamente
@@ -1125,6 +1158,14 @@ export interface AudioComment {
   fecha: string;
 }
 
+/** Cómo se separaron los stems de una canción (columna songs.stems_meta). */
+export interface StemsMeta {
+  motor?: string;
+  neural?: boolean;
+  degradado?: boolean;
+  procesadoEn?: string;
+}
+
 export interface AudioTrack {
   id: string;
   nombre: string;
@@ -1169,6 +1210,14 @@ export interface SongAudioIdea {
   stemIsNeural?: boolean;
   stemDegraded?: boolean;
   stemProcessedAt?: string;
+  /** Ids de las pistas (stems) que sonaban mientras se grabó esta toma. */
+  sobrePistas?: string[];
+  /** Desfase en segundos de esta toma respecto al inicio de las pistas (puede ser negativo). */
+  offsetSegundos?: number;
+  /** Mezcla propia de esta toma sobre cada stem de `sobrePistas` (mute, solo, volumen, paneo, EQ, desfase), por id de stem. */
+  mezclaBase?: Record<string, Partial<Pick<AudioTrack, "muted" | "solo" | "volumen" | "pan" | "eqLow" | "eqMid" | "eqHigh" | "desfaseMs">>>;
+  /** De dónde viene: subida a mano o grabada en el Atril sobre las pistas. */
+  origen?: "subida" | "atril";
 }
 
 /** Un tramo de la canción con su acorde detectado en el audio. */
@@ -1252,6 +1301,12 @@ export interface MemberSongNote {
    * estado global de la canción (ya existe Song.estadoTema para eso), sino "¿yo, en concreto, ya
    * me la sé?", para que quien lleve la banda vea de un vistazo quién necesita repasar antes del bolo. */
   estadoPreparacion?: "aprendiendo" | "casi_lista" | "lista";
+  /** "En esta canción quiero ver la tonalidad/BPM en MI hoja impresa" (las que me dan dudas).
+   * Vive en la canción y por miembro, no en los ajustes de impresión de la banda, para que dos
+   * músicos editando a la vez no se pisen. */
+  mostrarTono?: boolean;
+  /** Ver el BPM en su hoja. Si falta, hereda de `mostrarTono` (marcas antiguas). */
+  mostrarBpm?: boolean;
 }
 
 export interface Song {
@@ -1293,11 +1348,15 @@ export interface Song {
   audioPrincipalUrl?: string; // Demo / Master audio file
   audioUrl?: string; // Alias for audioPrincipalUrl for legacy/sample playback
   audioIdeas?: SongAudioIdea[]; // Ideas by sections (Intro, Chorus, Solo, etc.)
+  /** Stems de la canción (columna songs.pistas): la app los lee de aquí; la idea de Iris sigue espejándolos hasta la limpieza. */
+  pistas?: AudioTrack[];
+  /** Motor y fecha de la separación de `pistas` (columna songs.stems_meta). */
+  stemsMeta?: StemsMeta;
   cifradoTexto?: string; // Lyrics and chords in LaCuerda / Ultimate Guitar format
   analisisAcordes?: AnalisisAcordes; // Acordes con tiempos detectados del audio (Chordify propio)
   guiaSustituto?: SongSubstituteGuide; // Quick summary cheat-sheet for new band members & substitutes
   estructuraDocumentoUrl?: string; // PDF/image URL of uploaded song structure (stored in Supabase)
-  estructuraDocumentoNombre?: string; // Original filename (e.g., "Bakandeya-estructura.pdf")
+  estructuraDocumentoNombre?: string; // Original filename (e.g., "mi-banda-estructura.pdf")
   estructuraDocumentoProcesadoEn?: string; // ISO timestamp when structure was extracted with AI
   speechTranscription?: string; // Audio/speech transcription from live cutting
   // Puntos CUE y detección automática de inicio/fin de música real (para saltar
@@ -1440,6 +1499,18 @@ export interface Tour {
   sincronizarFinanzas?: boolean;
   stops: TourRouteStop[];
   estado: "planificacion" | "confirmada" | "completada" | "cancelada";
+}
+
+/** Banda en el selector del usuario (lo que devuelve el servidor en availableBands). */
+export interface BandaDisponible {
+  band_id: string;
+  bandName: string;
+  nombre_banda?: string;
+  role?: string;
+  logoUrl?: string;
+  plan?: string;
+  is_main?: boolean;
+  userId?: string;
 }
 
 export interface RegisteredBand {

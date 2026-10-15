@@ -1,6 +1,6 @@
 # 🎸 Documentación Técnica de Arquitectura: AI Music & Stem Separation Engine
-> **Proyecto:** BandManager.ai — TFM sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica.  
-> **Destinatario:** Claude Code / Equipo de Ingeniería.  
+> **Proyecto:** BandManager.io — TFM sobre Desarrollo de Software Asistido por Inteligencia Artificial Agéntica.  
+> **Destinatario:** equipo de ingeniería y tribunal del TFM.  
 > **Propósito:** Explicar exhaustivamente el diseño, implementación, seguridad, flujos de datos y testing del subsistema de audio e Inteligencia Artificial.
 
 ---
@@ -28,7 +28,7 @@
 
 ## 1. Visión General y Propósito del Sistema
 
-El módulo **AI Music & Sound Studio** de BandManager.ai permite a bandas de música independientes:
+El módulo **AI Music & Sound Studio** de BandManager.io permite a bandas de música independientes:
 1. **Separar canciones completas en pistas individuales (Stems)**: Aislar de forma independiente **Voz Principal**, **Batería**, **Bajo**, **Guitarras**, **Teclados** y **Arreglos/Sintes** para crear pistas de acompañamiento (backing tracks), practicar directos o crear pistas para ensayo.
 2. **Generar pistas de acompañamiento e ideas musicales**: Utilizando modelos generativos de audio (Google Gemini / Lyria) y síntesis procedural (`Tone.js` + exportación a MIDI estándar).
 3. **Control Multipista en Tiempo Real**: Mezclador interactivo en el navegador con controles de volumen, faders, mute (M), solo (S), ecualizador de 3 bandas (graves, medios, agudos) y balance estéreo (paneo L/R).

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { renderFormattedChordSheet } from '../components/SongChordsViewerModal';
+import { renderFormattedChordSheet } from '../components/atril/chordSheetRender';
 
 const html = (texto: string, sync?: any) => renderToStaticMarkup(<div>{renderFormattedChordSheet(texto, undefined, sync)}</div>);
 
@@ -19,7 +19,7 @@ describe('cifrado con los acordes ENCIMA de la letra', () => {
     expect(palabra).not.toBeNull();
     expect(h.replace(/<[^>]+>/g, '')).toContain('imagi');
     // el texto sin etiquetas es la letra sin acordes (con un hueco nbsp por columna sin texto)
-    expect(h.replace(/<[^>]+>/g, '').replace(/ /g, '').replace('F', '')).toContain('imaginación');
+    expect(h.replace(/<[^>]+>/g, '').replace(/\u00a0/g, '').replace('F', '')).toContain('imaginación');
   });
 
   it('las palabras se separan con espacios normales para que la línea se ajuste sola al ancho', () => {

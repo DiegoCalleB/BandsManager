@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Sparkles, Mail, Compass, History, Building2, Zap } from 'lucide-react';
-import { Lead, LeadStatus, Concert } from '../../../types';
+import { Sparkles, Mail, Compass, History, Zap } from 'lucide-react';
 import { ModalPortal } from '../../common/ModalPortal';
 import { VenueModalHeader } from './VenueModalHeader';
 import { VenueProfileColumn } from './VenueProfileColumn';
@@ -11,6 +10,10 @@ import { VenueBitacoraTab } from './VenueBitacoraTab';
 import { WhatsAppPreviewModal } from '../WhatsAppPreviewModal';
 import { FastDealModal } from '../FastDealModal';
 import { VenueModalTab, VenueModalProps } from './types';
+import type { Lead } from '../../../types';
+
+/** Lead con los arrays de mensajes anteriores a `lead_messages` (solo se cuentan). */
+type LeadConHiloLegacy = Lead & { mensajes?: unknown[]; email_thread?: unknown[] };
 
 export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   isOpen,
@@ -20,20 +23,14 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   onSelectLead,
   onUpdateLead,
   onDeleteLead,
-  getStatusBadgeClass,
-  getStatusLabel,
   getStatusDotColor,
   normalizeStatus,
-  normalizeType,
   autoDetectVenueAddress,
-  sectionTab,
   activeCampaign,
-  onLeadLogoUpload,
-  isUploadingLeadLogo,
   initialTab = 'pitch',
   onFilterByRouteCity,
   bandName,
-  concerts = [],
+  concerts = []
 }) => {
   const [activeTab, setActiveTab] = useState<VenueModalTab>(initialTab);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
@@ -41,11 +38,12 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
   const [mobileViewSection, setMobileViewSection] = useState<'profile' | 'action'>('action');
 
   // Sync initial tab when selectedLead changes
-  useEffect(() => {
-    if (initialTab) {
-      setActiveTab(initialTab);
-    }
-  }, [selectedLead?.id, initialTab]);
+  const claveTabInicial = `${initialTab}:${selectedLead?.id ?? ''}`;
+  const [claveTabPrevia, setClaveTabPrevia] = useState(claveTabInicial);
+  if (claveTabPrevia !== claveTabInicial) {
+    setClaveTabPrevia(claveTabInicial);
+    if (initialTab) setActiveTab(initialTab);
+  }
 
   // Current lead index within the active filtered leads list
   const currentIndex = selectedLead ? leads.findIndex((l) => l.id === selectedLead.id) : -1;
@@ -95,7 +93,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
 
   if (!isOpen || !selectedLead) return null;
 
-  const messagesCount = (selectedLead as any).mensajes?.length || (selectedLead as any).email_thread?.length || 0;
+  const messagesCount = (selectedLead as LeadConHiloLegacy).mensajes?.length || (selectedLead as LeadConHiloLegacy).email_thread?.length || 0;
   const bitacoraCount = selectedLead.historial_contacto?.length || 0;
 
   return (
@@ -136,7 +134,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   : 'text-[var(--ink-2)]'
               }`}
             >
-              Ficha & Contacto
+              Ficha y Contacto
             </button>
             <button
               type="button"
@@ -147,7 +145,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   : 'text-[var(--ink-2)]'
               }`}
             >
-              Propuesta & Correos
+              Propuesta y Correos
             </button>
           </div>
 
@@ -219,7 +217,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                   }`}
                 >
                   <Compass className="w-3.5 h-3.5" />
-                  <span>Radar & P&L</span>
+                  <span>Radar y P&L</span>
                 </button>
 
                 <button
@@ -245,7 +243,7 @@ export const VenueWorkspaceModal: React.FC<VenueModalProps> = ({
                     type="button"
                     onClick={() => setIsDealModalOpen(true)}
                     className="px-3 py-1.5 text-xs font-bold rounded-[var(--r-m)] bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-500 border border-emerald-500/30 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0"
-                    title="Generar Hoja de Acuerdo y Enlace 1-Click para la Sala"
+                    title="Generar hoja de acuerdo y enlace 1-Click para la sala"
                   >
                     <Zap className="w-3.5 h-3.5 fill-current" />
                     <span>Cerrar Bolo 1-Click</span>

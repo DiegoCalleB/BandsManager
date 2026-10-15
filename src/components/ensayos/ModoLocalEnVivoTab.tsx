@@ -1,51 +1,25 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { contextoDeAcordes, ordenarPorTonica, tonalidadDelCifrado } from "../../utils/vistaAcordes";
-import { CajaAcorde, SelectorVistaAcorde, useVistaAcordes } from "../chords/AcordeEnInstrumento";
-import {
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  Disc3,
-  Clock,
-  Sparkles,
-  Volume2,
-  VolumeX,
-  CheckCircle2,
-  AlertCircle,
-  RotateCcw,
-  ThumbsUp,
-  Flame,
-  Music,
-  Maximize2,
-  Minimize2,
-  FileText,
-  CheckSquare,
-  List,
-  BookOpen,
-  Sliders,
-  Type,
-  ArrowDown,
-  Edit3,
-  X,
-  Eye,
-} from "lucide-react";
-import {
-  Rehearsal,
-  RehearsalAgendaItem,
-  Song,
-  ThemeColors,
-  SongSubstituteGuide,
-} from "../../types";
-import { formatTime } from "./EnsayoCronometro";
-import {
-  processChordText,
-  extractUniqueChords,
-  transposeChordToken,
-} from "../../utils/chordUtils";
-import { SongChordsViewerModal } from "../SongChordsViewerModal";
+import React, { useState, useEffect, useEffectEvent, useRef, useMemo } from "react";
+import { ControlAutoscroll } from "../chords/ControlAutoscroll";
+import { useAutoScroll } from "../../hooks/useAutoScroll";
+import { tonalidadDelCifrado } from "../../utils/vistaAcordes";
+import { useVistaAcordes } from "../chords/useVistaAcordes";
+import { DrawerDiagramas } from "../chords/DrawerDiagramas";
+import { useAcordesDeLaHoja } from "../../hooks/useAcordesDeLaHoja";
+import { ChevronLeft, ChevronRight, Disc3, Clock, Volume2, VolumeX, Flame, Music, Maximize2, Minimize2, BookOpen, Edit3 } from "lucide-react";
+import { Rehearsal, Song, ThemeColors } from "../../types";
+import { formatTime } from "./formatTime";
+import { processChordText } from "../../utils/chordUtils";
+import { Atril } from "../Atril";
+import { renderFormattedChordSheet } from "../atril/chordSheetRender";
 import { ShowIcon } from '../ui/ShowIcon';
-import { Button, IconButton } from '../ui';
+import { Button } from '../ui';
+import { useMetronomo } from '../../hooks/useMetronomo';
+import { useNavegacionItems } from "../../hooks/useNavegacionItems";
+import { useSeguimientoEnsayo } from "../../hooks/useSeguimientoEnsayo";
+import { BotonesEvaluacion } from "./BotonesEvaluacion";
+import { useFullscreen } from "../../hooks/useFullscreen";
+import { useWakeLock } from '../../hooks/useWakeLock';
+import { accionDeTecla, direccionDeSwipe } from '../../utils/pasarPagina';
 
 interface ModoLocalEnVivoTabProps {
   rehearsal: Rehearsal;
@@ -59,11 +33,15 @@ export function ModoLocalEnVivoTab({
   rehearsal,
   onUpdateRehearsal,
   songs = [],
-  colors,
-  onUpdateSong,
+  onUpdateSong
 }: ModoLocalEnVivoTabProps) {
   const agenda = rehearsal.agenda || [];
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {
+    indice: activeIndex,
+    irA: setActiveIndex,
+    anterior: irAnterior,
+    siguiente: irSiguiente,
+  } = useNavegacionItems(agenda.length);
   const [vistaAcordes, setVistaAcordes] = useVistaAcordes();
 
   const currentItem = agenda[activeIndex] || null;
@@ -75,40 +53,35 @@ export function ModoLocalEnVivoTab({
   const [viewMode, setViewMode] = useState<"escenario" | "atril">("escenario");
 
   // Fullscreen state
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const wakeLockRef = useRef<any>(null);
+  const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef);
 
   // Track / Block Timer State
-  const [trackSeconds, setTrackSeconds] = useState(0);
-  const [isTrackTimerActive, setIsTrackTimerActive] = useState(false);
-  const trackTimerRef = useRef<number | null>(null);
+  const {
+    trackSeconds,
+    isTrackTimerActive,
+    handleSetEvaluation,
+    handleUpdateCurrentNote,
+  } = useSeguimientoEnsayo({
+    agenda,
+    currentItem,
+    claveDePista: `${activeIndex}|${currentSong?.bpm}`,
+    onUpdateRehearsal,
+  });
 
-  // Metronome State
-  const [bpm, setBpm] = useState(currentSong?.bpm || 120);
-  const [isMetronomeActive, setIsMetronomeActive] = useState(false);
-  const [timeSignature, setTimeSignature] = useState<
-    "4/4" | "3/4" | "6/8" | "2/4"
-  >("4/4");
-  const [currentBeat, setCurrentBeat] = useState(0);
-
-  // Web Audio Context for Metronome
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const nextNoteTimeRef = useRef(0);
-  const timerIDRef = useRef<number | null>(null);
-  const tapTimesRef = useRef<number[]>([]);
+  // Metronome: el mismo hook (reloj de audio, clic y tap tempo) que usa el Atril
+  const beatsPerBar = 4;
+  const metronomo = useMetronomo(currentSong?.bpm || 120, beatsPerBar);
+  const { bpm, pulso: currentBeat, activo: isMetronomeActive } = metronomo;
 
   // Atril Mode State: Transpose, Notation, Font Size, Auto-Scroll, Diagrams
   const [transpose, setTranspose] = useState<number>(0);
   const [notation, setNotation] = useState<"ES" | "EN">("ES");
   const [fontSizeIndex, setFontSizeIndex] = useState<number>(1); // 0=sm, 1=md, 2=lg, 3=xl
-  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(false);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(1); // 1, 2, 3
   const [showChordDiagrams, setShowChordDiagrams] = useState<boolean>(false);
-  const [showSubstituteGuideTab, setShowSubstituteGuideTab] =
-    useState<boolean>(false);
   const [editingSongModal, setEditingSongModal] = useState<Song | null>(null);
   const atrilScrollRef = useRef<HTMLDivElement>(null);
+  const autoScroll = useAutoScroll(atrilScrollRef, 1, viewMode === "atril");
 
   // Swipe and Keyboard Gestures
   const touchStartX = useRef<number | null>(null);
@@ -139,9 +112,10 @@ export function ModoLocalEnVivoTab({
     const dx = touchDeltaX.current;
     const dy = touchDeltaY.current;
 
-    // Detect horizontal swipe (at least 35px and predominantly horizontal)
-    if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.2) {
-      if (dx < 0 && activeIndex < agenda.length - 1) {
+    // Swipe horizontal claro (35 px y predominantemente horizontal)
+    const dir = direccionDeSwipe(dx, dy || 0.0001, 35);
+    if (dir) {
+      if (dir === "siguiente" && activeIndex < agenda.length - 1) {
         // Swipe Left -> Next Song
         const nextIdx = activeIndex + 1;
         setActiveIndex(nextIdx);
@@ -150,7 +124,7 @@ export function ModoLocalEnVivoTab({
           dir: "left",
         });
         setTimeout(() => setSwipeToast(null), 1000);
-      } else if (dx > 0 && activeIndex > 0) {
+      } else if (dir === "anterior" && activeIndex > 0) {
         // Swipe Right -> Previous Song
         const prevIdx = activeIndex - 1;
         setActiveIndex(prevIdx);
@@ -169,30 +143,32 @@ export function ModoLocalEnVivoTab({
   };
 
   // Keyboard navigation (pedals, arrows, space)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
-        return;
+  const handleKeyDown = useEffectEvent((e: KeyboardEvent) => {
+    if (["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))
+      return;
 
-      if (e.key === "ArrowRight" || e.key === "PageDown") {
-        if (activeIndex < agenda.length - 1) {
-          e.preventDefault();
-          setActiveIndex((prev) => prev + 1);
-        }
-      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
-        if (activeIndex > 0) {
-          e.preventDefault();
-          setActiveIndex((prev) => prev - 1);
-        }
-      } else if (e.key === " " && viewMode === "atril") {
+    const accion = accionDeTecla(e.key);
+    if (accion === "adelante") {
+      if (activeIndex < agenda.length - 1) {
         e.preventDefault();
-        setIsAutoScrolling((prev) => !prev);
+        irSiguiente();
       }
-    };
+    } else if (accion === "atras") {
+      if (activeIndex > 0) {
+        e.preventDefault();
+        irAnterior();
+      }
+    } else if (accion === "espacio" && viewMode === "atril") {
+      e.preventDefault();
+      autoScroll.alternar();
+    }
+  });
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, agenda.length, viewMode]);
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => handleKeyDown(e);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   // Font sizes classes for Atril mode
   const FONT_SIZE_CLASSES = [
@@ -202,195 +178,24 @@ export function ModoLocalEnVivoTab({
     "text-lg sm:text-2xl leading-loose font-medium",
   ];
 
-  // Wake Lock handler to prevent phone screen from turning off in rehearsals
-  useEffect(() => {
-    async function requestWakeLock() {
-      if ("wakeLock" in navigator && (isFullscreen || isTrackTimerActive)) {
-        try {
-          wakeLockRef.current = await (navigator as any).wakeLock.request(
-            "screen",
-          );
-        } catch {
-          // Wake lock rejected or unsupported
-        }
-      }
-    }
-    requestWakeLock();
-    return () => {
-      if (wakeLockRef.current) {
-        wakeLockRef.current.release().catch(() => {});
-        wakeLockRef.current = null;
-      }
-    };
-  }, [isFullscreen, isTrackTimerActive]);
+  // Pantalla encendida mientras se ensaya (pantalla completa o cronómetro de la pista en marcha)
+  useWakeLock(isFullscreen || isTrackTimerActive);
 
-  // When song changes, update BPM, reset track timer and transposition
-  useEffect(() => {
-    if (currentSong?.bpm) {
-      setBpm(currentSong.bpm);
-    }
-    setTrackSeconds(0);
-    setIsTrackTimerActive(true);
+  // Al cambiar de pista se reinicia la transposición y se para el autoscroll
+  const claveDePista = `${activeIndex}|${currentSong?.bpm}`;
+  const [prevClaveDePista, setPrevClaveDePista] = useState(claveDePista);
+  if (prevClaveDePista !== claveDePista) {
+    setPrevClaveDePista(claveDePista);
     setTranspose(0);
-    setIsAutoScrolling(false);
-  }, [activeIndex, currentSong?.bpm]);
+    autoScroll.setActivo(false);
+  }
 
-  // Track Timer Interval
-  useEffect(() => {
-    if (isTrackTimerActive) {
-      trackTimerRef.current = window.setInterval(() => {
-        setTrackSeconds((prev) => prev + 1);
-      }, 1000);
-    } else if (trackTimerRef.current) {
-      clearInterval(trackTimerRef.current);
-      trackTimerRef.current = null;
-    }
-    return () => {
-      if (trackTimerRef.current) clearInterval(trackTimerRef.current);
-    };
-  }, [isTrackTimerActive]);
-
-  // Metronome Scheduler
-  const beatsPerBar =
-    timeSignature === "3/4"
-      ? 3
-      : timeSignature === "6/8"
-        ? 6
-        : timeSignature === "2/4"
-          ? 2
-          : 4;
-
-  const playClick = (time: number, isAccent: boolean) => {
-    if (!audioCtxRef.current) return;
-    const osc = audioCtxRef.current.createOscillator();
-    const gain = audioCtxRef.current.createGain();
-
-    osc.frequency.value = isAccent ? 1200 : 800;
-    gain.gain.setValueAtTime(0.7, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
-
-    osc.connect(gain);
-    gain.connect(audioCtxRef.current.destination);
-
-    osc.start(time);
-    osc.stop(time + 0.05);
-  };
-
-  useEffect(() => {
-    if (!isMetronomeActive) {
-      if (timerIDRef.current) clearInterval(timerIDRef.current);
-      setCurrentBeat(0);
-      return;
-    }
-
-    if (!audioCtxRef.current) {
-      const AudioCtx =
-        window.AudioContext || (window as any).webkitAudioContext;
-      audioCtxRef.current = new AudioCtx();
-    }
-    if (audioCtxRef.current.state === "suspended") {
-      audioCtxRef.current.resume();
-    }
-
-    nextNoteTimeRef.current = audioCtxRef.current.currentTime + 0.05;
-    let beatCount = 0;
-
-    const interval = setInterval(() => {
-      if (!audioCtxRef.current) return;
-      const secondsPerBeat = 60.0 / bpm;
-
-      while (nextNoteTimeRef.current < audioCtxRef.current.currentTime + 0.1) {
-        const isAccent = beatCount % beatsPerBar === 0;
-        playClick(nextNoteTimeRef.current, isAccent);
-        setCurrentBeat(beatCount % beatsPerBar);
-        nextNoteTimeRef.current += secondsPerBeat;
-        beatCount++;
-      }
-    }, 25);
-
-    timerIDRef.current = interval as any;
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isMetronomeActive, bpm, beatsPerBar]);
-
-  // Auto-scroll effect for Atril Mode
-  useEffect(() => {
-    let scrollInterval: any = null;
-    if (isAutoScrolling && viewMode === "atril") {
-      scrollInterval = setInterval(() => {
-        if (atrilScrollRef.current) {
-          const { scrollTop, scrollHeight, clientHeight } =
-            atrilScrollRef.current;
-          if (scrollTop + clientHeight >= scrollHeight - 10) {
-            setIsAutoScrolling(false);
-          } else {
-            atrilScrollRef.current.scrollTop += scrollSpeed * 0.9;
-          }
-        }
-      }, 50);
-    } else {
-      clearInterval(scrollInterval);
-    }
-    return () => clearInterval(scrollInterval);
-  }, [isAutoScrolling, scrollSpeed, viewMode]);
-
-  // Tap Tempo
-  const handleTapTempo = () => {
-    const now = performance.now();
-    const taps = tapTimesRef.current;
-    taps.push(now);
-    if (taps.length > 4) taps.shift();
-
-    if (taps.length >= 2) {
-      const intervals = [];
-      for (let i = 1; i < taps.length; i++) {
-        intervals.push(taps[i] - taps[i - 1]);
-      }
-      const avgInterval =
-        intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      const calculatedBpm = Math.round(60000 / avgInterval);
-      if (calculatedBpm >= 40 && calculatedBpm <= 280) {
-        setBpm(calculatedBpm);
-      }
-    }
-  };
-
-  // Evaluation Handler
-  const handleSetEvaluation = (
-    evaluacion: "bordada" | "regular" | "repetir",
-  ) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, evaluacion } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Note handler for current item
-  const handleUpdateCurrentNote = (nota: string) => {
-    if (!currentItem) return;
-    const newAgenda = agenda.map((a) =>
-      a.id === currentItem.id ? { ...a, enfoque: nota } : a,
-    );
-    onUpdateRehearsal({ agenda: newAgenda });
-  };
-
-  // Toggle Fullscreen
-  const toggleFullscreen = () => {
-    if (!isFullscreen) {
-      setIsFullscreen(true);
-      if (containerRef.current && containerRef.current.requestFullscreen) {
-        containerRef.current.requestFullscreen().catch(() => {});
-      }
-    } else {
-      setIsFullscreen(false);
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
-  };
+  // Current chord text
+  // Sin cifrado guardado se muestra vacío: antes caía en una letra
+  // de ejemplo escrita en el código que parecía la letra de la canción.
+  const rawChordText = currentSong?.cifradoTexto || "";
+  const tonalidadHoja = useMemo(() => tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), [rawChordText, currentSong?.tonalidad]);
+  const { acordes: uniqueChords, contexto: contextoAcordes } = useAcordesDeLaHoja(rawChordText, tonalidadHoja, 0);
 
   if (agenda.length === 0) {
     return (
@@ -420,16 +225,6 @@ export function ModoLocalEnVivoTab({
         "Outro",
       ];
 
-  // Current chord text
-  // Sin cifrado guardado se muestra vacío: antes caía en una letra
-  // de ejemplo escrita en el código que parecía la letra de la canción.
-  const rawChordText = currentSong?.cifradoTexto || "";
-  const uniqueChords = extractUniqueChords(rawChordText);
-  const contextoAcordes = useMemo(
-    () => contextoDeAcordes(rawChordText, uniqueChords, tonalidadDelCifrado(rawChordText, currentSong?.tonalidad), 0),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rawChordText, currentSong?.tonalidad],
-  );
 
   return (
     <div
@@ -685,7 +480,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 className="items-center gap-2"
               >
                 {isMetronomeActive ? (
@@ -716,13 +511,13 @@ export function ModoLocalEnVivoTab({
             {/* BPM Controls */}
             <div className="flex items-center gap-1 sm:gap-2">
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 5))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -5
               </button>
               <button
-                onClick={() => setBpm(Math.max(40, bpm - 1))}
+                onClick={() => metronomo.setBpm(Math.max(40, bpm - 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 -1
@@ -734,13 +529,13 @@ export function ModoLocalEnVivoTab({
               </span>
 
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 1))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 1))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +1
               </button>
               <button
-                onClick={() => setBpm(Math.min(280, bpm + 5))}
+                onClick={() => metronomo.setBpm(Math.min(280, bpm + 5))}
                 className="px-2 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] font-sans text-xs cursor-pointer"
               >
                 +5
@@ -749,7 +544,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 size="xs"
-                onClick={handleTapTempo}
+                onClick={metronomo.tocarTempo}
               >
                 Tap
               </Button>
@@ -760,48 +555,14 @@ export function ModoLocalEnVivoTab({
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
             {/* 1-Tap Evaluation Buttons */}
             <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
-              <span className="text-xs font-sans text-[var(--ink-2)] mr-1 hidden xs:inline">
-                Evaluación:
-              </span>
-
-              <Button
-                variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                size="sm"
-                onClick={() => handleSetEvaluation("bordada")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟢" /></span>
-                <span>Bordada</span>
-              </Button>
-
-              <Button
-                variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                size="sm"
-                onClick={() => handleSetEvaluation("regular")}
-                className="flex-1 sm:flex-none items-center justify-center gap-1.5"
-              >
-                <span><ShowIcon inline emoji="🟡" /></span>
-                <span>Regular</span>
-              </Button>
-
-              <button
-                onClick={() => handleSetEvaluation("repetir")}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                  currentItem?.evaluacion === "repetir"
-                    ? "bg-[var(--alert)] text-[var(--on-alert)]"
-                    : "bg-[var(--alert)]/15 text-[var(--ink)] hover:bg-[var(--alert)]/25"
-                }`}
-              >
-                <span><ShowIcon inline emoji="🔴" /></span>
-                <span>Repetir</span>
-              </button>
+              <BotonesEvaluacion actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
             </div>
 
             {/* Previous / Next Song Buttons */}
             <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button
                 disabled={activeIndex === 0}
-                onClick={() => setActiveIndex((prev) => prev - 1)}
+                onClick={() => irAnterior()}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:bg-[var(--surface)]/70 disabled:opacity-30 disabled:hover:bg-[var(--surface)]/80 font-sans font-bold text-xs cursor-pointer transition-ui"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -811,7 +572,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant="primary"
                 disabled={activeIndex === agenda.length - 1}
-                onClick={() => setActiveIndex((prev) => prev + 1)}
+                onClick={() => irSiguiente()}
                 className="flex-1 sm:flex-none items-center justify-center gap-1"
               >
                 <span>Siguiente</span>
@@ -834,7 +595,7 @@ export function ModoLocalEnVivoTab({
               <Button
                 variant={isMetronomeActive ? "danger" : "primary"}
                 size="sm"
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                onClick={() => metronomo.alternar()}
                 title="Metrónomo clic"
               >
                 {isMetronomeActive ? (
@@ -860,37 +621,7 @@ export function ModoLocalEnVivoTab({
             </div>
 
             {/* Middle: Auto-Scroll & Speed */}
-            <div className="flex items-center gap-1.5 bg-[var(--sunken)] p-1 rounded-[var(--r-m)]">
-              <button
-                onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold cursor-pointer transition-ui ${
-                  isAutoScrolling
-                    ? "bg-[var(--ink)] text-[var(--bg)]"
-                    : "bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)]"
-                }`}
-              >
-                {isAutoScrolling ? (
-                  <Pause className="w-3.5 h-3.5" />
-                ) : (
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                )}
-                <span>{isAutoScrolling ? "Pausar" : "Auto-Scroll"}</span>
-              </button>
-
-              {/* Speed Switcher */}
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3].map((spd) => (
-                  <Button
-                    variant={scrollSpeed === spd ? "selected" : "ghost"}
-                    size="xs"
-                    key={spd}
-                    onClick={() => setScrollSpeed(spd)}
-                  >
-                    {spd}x
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <ControlAutoscroll auto={autoScroll} velocidadSiempre />
 
             {/* Transpose & Notation & Font Size Controls */}
             <div className="flex items-center gap-2">
@@ -978,25 +709,14 @@ export function ModoLocalEnVivoTab({
 
           {/* Guitar Chord Shapes Drawer (if open) */}
           {showChordDiagrams && uniqueChords.length > 0 && (
-            <div className="p-3.5 rounded-[var(--r-l)] bg-[var(--surface)] space-y-2 animate-fade-in shrink-0">
-              <div className="flex items-center justify-between text-xs font-sans font-bold text-[var(--acc)]">
-                <span>
-                  Diagramas de Acordes de este Tema ({uniqueChords.length})
-                </span>
-                <SelectorVistaAcorde vista={vistaAcordes} onCambio={setVistaAcordes} />
-                <IconButton
-                  label="Cerrar"
-                  onClick={() => setShowChordDiagrams(false)}
-                >
-                  <X className="w-3.5 h-3.5" />
-                </IconButton>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                {ordenarPorTonica(uniqueChords, contextoAcordes).map((chord, cIdx) => (
-                  <CajaAcorde key={cIdx} chord={chord} vista={vistaAcordes} contexto={contextoAcordes.get(chord)} />
-                ))}
-              </div>
-            </div>
+            <DrawerDiagramas
+              disposicion="tira"
+              acordes={uniqueChords}
+              contexto={contextoAcordes}
+              vista={vistaAcordes}
+              onVista={setVistaAcordes}
+              onCerrar={() => setShowChordDiagrams(false)}
+            />
           )}
 
           {/* Teleprompter Chords Sheet Card */}
@@ -1035,10 +755,11 @@ export function ModoLocalEnVivoTab({
             {/* Scrollable Chord Content Container */}
             <div
               ref={atrilScrollRef}
-              className={`overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
+              translate="no"
+              className={`notranslate whitespace-pre-wrap overflow-y-auto pr-2 scrollbar-thin scrollbar-thumbbg-[var(--surface)] space-y-1 font-sans select-text ${FONT_SIZE_CLASSES[fontSizeIndex]} ${isFullscreen ? "flex-1 min-h-0" : "max-h-[60vh]"}`}
             >
               {rawChordText ? (
-                renderFormattedChords(rawChordText, transpose, notation)
+                renderFormattedChordSheet(processChordText(rawChordText, transpose, notation))
               ) : (
                 <p className="text-sm text-[var(--ink-2)] italic py-6">
                   Esta canción aún no tiene cifrado. Ábrela en Repertorio → Acordes para escribirlo, subir un PDF o
@@ -1050,34 +771,7 @@ export function ModoLocalEnVivoTab({
             {/* Bottom Bar inside Atril: 1-Tap Evaluation & Quick Next/Previous */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-3 mt-3 shrink-0">
               <div className="flex items-center gap-1.5 w-full sm:w-auto">
-                <Button
-                  variant={currentItem?.evaluacion === "bordada" ? "primary" : "neutral"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("bordada")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟢" />Bordada</span>
-                </Button>
-
-                <Button
-                  variant={currentItem?.evaluacion === "regular" ? "primary" : "primary"}
-                  size="xs"
-                  onClick={() => handleSetEvaluation("regular")}
-                  className="flex-1 sm:flex-none items-center justify-center gap-1"
-                >
-                  <span><ShowIcon inline emoji="🟡" />Regular</span>
-                </Button>
-
-                <button
-                  onClick={() => handleSetEvaluation("repetir")}
-                  className={`flex-1 sm:flex-none flex items-center justify-center gap-1 px-3 py-1.5 rounded-[var(--r-pill)] text-xs font-sans font-bold transition-ui cursor-pointer ${
-                    currentItem?.evaluacion === "repetir"
-                      ? "bg-[var(--alert)] text-[var(--on-alert)] font-bold"
-                      : "bg-[var(--alert)]/15 text-[var(--ink)]"
-                  }`}
-                >
-                  <span><ShowIcon inline emoji="🔴" />Repetir</span>
-                </button>
+                <BotonesEvaluacion compacto actual={currentItem?.evaluacion} onElegir={handleSetEvaluation} />
               </div>
 
               {/* Middle swipe hint indicator */}
@@ -1088,7 +782,7 @@ export function ModoLocalEnVivoTab({
               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                 <button
                   disabled={activeIndex === 0}
-                  onClick={() => setActiveIndex((prev) => prev - 1)}
+                  onClick={() => irAnterior()}
                   className="flex-1 sm:flex-none px-3.5 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 text-[var(--ink-2)] hover:text-[var(--ink)] text-xs font-sans font-bold disabled:opacity-30 cursor-pointer transition-ui"
                 >
                   ← Anterior
@@ -1098,7 +792,7 @@ export function ModoLocalEnVivoTab({
                   variant="primary"
                   size="xs"
                   disabled={activeIndex === agenda.length - 1}
-                  onClick={() => setActiveIndex((prev) => prev + 1)}
+                  onClick={() => irSiguiente()}
                   className="flex-1 sm:flex-none"
                 >
                   Siguiente →
@@ -1111,8 +805,9 @@ export function ModoLocalEnVivoTab({
 
       {/* Chords Viewer & Editor Modal */}
       {editingSongModal && (
-        <SongChordsViewerModal
-          song={editingSongModal}
+        <Atril
+          cancion={editingSongModal}
+          modo="Ensayar"
           onClose={() => setEditingSongModal(null)}
           onUpdateSong={(updated) => {
             if (onUpdateSong) {
@@ -1124,46 +819,4 @@ export function ModoLocalEnVivoTab({
       )}
     </div>
   );
-}
-
-// RENDER CHORDS WITH HIGHLIGHTING & SECTION BADGES
-function renderFormattedChords(
-  text: string,
-  transpose: number,
-  notation: "ES" | "EN",
-) {
-  if (!text) return null;
-
-  const lines = text.split("\n");
-
-  return lines.map((rawLine, idx) => {
-    const line = rawLine.trimEnd();
-
-    // Empty line spacer
-    if (!line.trim()) {
-      return <div key={idx} className="h-3" />;
-    }
-
-    // Section header e.g. [Intro], [Verso 1], [Estribillo], [Solo], [Puente], [Outro]
-    if (line.trim().startsWith("[") && line.trim().endsWith("]")) {
-      return (
-        <div key={idx} className="pt-3 pb-1">
-          <span className="inline-flex items-center px-3 py-1 rounded-[var(--r-m)] bg-[var(--acc)]/20 text-[var(--ink)] text-xs font-sans font-bold">
-            {line.trim()}
-          </span>
-        </div>
-      );
-    }
-
-    // Check if line contains chords or is a pure chords line
-    const processedLine = processChordText(line, transpose, notation);
-
-    return (
-      <div
-        key={idx}
-        className="text-[var(--ink)] py-0.5 leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: processedLine }}
-      />
-    );
-  });
 }

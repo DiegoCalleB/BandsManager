@@ -10,6 +10,7 @@
  */
 
 import { searchSpotifyArtists } from "./spotifyService.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface SerperPlaceResult {
   place_id: string;
@@ -168,7 +169,7 @@ export async function searchVenuesWithSerper(options: {
   }
 
   try {
-    const serperBody: any = {
+    const serperBody = {
       q: targetQuery,
       hl: "es"
     };
@@ -258,7 +259,8 @@ export async function searchVenuesWithSerper(options: {
     });
 
     return results;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[VenueIntelligence] Serper Places search notice:", err?.message || err);
     return [];
   }
@@ -347,7 +349,7 @@ export async function enrichVenueDetailsWithSerper(
           ) {
             extractedWebsite = urlObj.origin;
           }
-        } catch (_) {}
+        } catch { /* URL mal formada: se descarta como web de la sala */ }
       }
 
       // Email en snippet o título
@@ -403,7 +405,8 @@ export async function enrichVenueDetailsWithSerper(
     });
 
     return result;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[VenueIntelligence] Serper contact enrichment notice:", err?.message || err);
     return null;
   }
@@ -478,7 +481,8 @@ export async function fetchVenueLiveContext(
     });
 
     return result;
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[VenueIntelligence] Serper lookup notice:", err?.message || err);
     return null;
   }
@@ -521,7 +525,8 @@ export async function fetchBandSpotifyTraction(artistName: string): Promise<{
       genres,
       tractionPill: tractionPill || undefined
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[VenueIntelligence] Spotify lookup notice:", err?.message || err);
     return null;
   }

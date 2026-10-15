@@ -81,7 +81,7 @@ describe('enrichCoversWithoutAudio', () => {
       {
         id: 'song-orig-1',
         titulo: 'Mi Tema Propio Grabado',
-        band_id: 'band-bakandeya',
+        band_id: 'band-ejemplo',
         esVersionCovers: false,
         audioPrincipalUrl: 'https://supabase.co/audio.mp3',
         tonalidad: 'Em',
@@ -92,7 +92,7 @@ describe('enrichCoversWithoutAudio', () => {
     vi.spyOn(repertoireDb, 'dbGetSongs').mockResolvedValue(mockSongs as any);
     const dbUpsertSpy = vi.spyOn(repertoireDb, 'dbUpsertSong').mockResolvedValue({} as any);
 
-    const result = await enrichMissingAudioSongsForBand('band-bakandeya');
+    const result = await enrichMissingAudioSongsForBand('band-ejemplo');
 
     expect(result.totalProcesadas).toBe(0);
     expect(result.enriquecidas).toBe(0);

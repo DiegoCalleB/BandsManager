@@ -57,7 +57,7 @@ describe('detectarCambiosDePlano', () => {
 
 describe('detectarTipoContenido', () => {
   it('reconoce conciertos', () => {
-    expect(detectarTipoContenido('Bakandeya - Directo en Sala X')).toBe('concierto');
+    expect(detectarTipoContenido('Banda Ejemplo - Directo en Sala X')).toBe('concierto');
     expect(detectarTipoContenido('Live at the festival 2026')).toBe('concierto');
     expect(detectarTipoContenido('Bolo en Sevilla')).toBe('concierto');
   });
@@ -222,5 +222,54 @@ describe('resumirSenalesParaPrompt', () => {
 
   it('sin ventanas no mete ruido en el prompt', () => {
     expect(resumirSenalesParaPrompt([], 'concierto')).toBe('');
+  });
+});
+
+describe('ventanasMasVirales · interés del público', () => {
+  const interesEn = (desde: number, hasta: number) => Array.from({ length: 60 }, (_, t) => (t >= desde && t < hasta ? 100 : 0));
+  // separacionMinima -9 deja salir TODAS las ventanas (solo choca el solape de 10 s): así se compara la misma ventana con y sin señal.
+  const opc = { duracion: 10, tipo: 'concierto' as const, maxVentanas: 60, separacionMinima: -9 };
+  const en = (vs: ReturnType<typeof ventanasMasVirales>, start: number) => vs.find((v) => v.start === start)!;
+
+  it('sin curva de interés el resultado es el de siempre y no trae el campo', () => {
+    const vs = ventanasMasVirales(curvaConSubidon(), opc);
+    expect(vs.every((v) => v.publico === undefined)).toBe(true);
+  });
+
+  it('anota el interés medio de cada ventana', () => {
+    const vs = ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: interesEn(5, 15), peso: 0.4 } });
+    expect(en(vs, 5).publico).toBe(100);
+    expect(en(vs, 40).publico).toBe(0);
+  });
+
+  it('un tramo que la gente repite puntúa más que el mismo tramo sin esa señal', () => {
+    const sin = ventanasMasVirales(curvaConSubidon(), opc);
+    const con = ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: interesEn(5, 15), peso: 0.4 } });
+    expect(en(con, 5).score).toBeGreaterThan(en(sin, 5).score);
+    expect(en(con, 40).score).toBeLessThan(en(sin, 40).score);
+  });
+
+  it('con peso 0 o una curva vacía no cambia nada', () => {
+    const base = ventanasMasVirales(curvaConSubidon(), opc);
+    expect(ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: interesEn(5, 15), peso: 0 } })).toEqual(base);
+    expect(ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: [], peso: 0.4 } })).toEqual(base);
+  });
+
+  it('el peso se acota: aunque llegue 5, nunca anula las señales de audio', () => {
+    const vs = ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: interesEn(5, 15), peso: 5 } });
+    expect(vs.every((v) => v.score >= 0 && v.score <= 100)).toBe(true);
+    expect(en(vs, 30).score).toBeGreaterThan(0);
+  });
+
+  it('el motivo lo cuenta cuando la gente repite el tramo', () => {
+    const vs = ventanasMasVirales(curvaConSubidon(), { ...opc, interes: { curva: interesEn(5, 15), peso: 0.4 } });
+    expect(en(vs, 5).motivo).toMatch(/vuelve a ver la gente/);
+  });
+
+  it('el bloque del prompt incluye el interés del público y su explicación', () => {
+    const vs = ventanasMasVirales(curvaConSubidon(), { ...opc, maxVentanas: 3, interes: { curva: interesEn(5, 15), peso: 0.4 } });
+    const texto = resumirSenalesParaPrompt(vs, 'concierto');
+    expect(texto).toMatch(/público \d+/);
+    expect(texto).toMatch(/reproduce|repeticiones/i);
   });
 });

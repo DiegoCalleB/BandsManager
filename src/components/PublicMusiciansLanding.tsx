@@ -1,23 +1,5 @@
 import React, { useState, useMemo } from "react";
-import {
-  Music,
-  Sparkles,
-  QrCode,
-  FileText,
-  Rocket,
-  CheckCircle2,
-  ArrowLeft,
-  Check,
-  Loader2,
-  MessageSquare,
-  Users,
-  Radio,
-  ExternalLink,
-  ShieldCheck,
-  ChevronDown,
-  ChevronUp,
-  Sliders,
-} from "lucide-react";
+import { Music, Sparkles, QrCode, FileText, Rocket, CheckCircle2, ArrowLeft, Loader2, Users, Radio, ExternalLink, ShieldCheck, ChevronDown, ChevronUp, Sliders } from "lucide-react";
 import {
   FanFormLanguage,
   DEFAULT_FAN_FORM_LANGUAGE,
@@ -30,6 +12,7 @@ import {
   MusiciansLandingDict,
 } from "../i18n/musiciansTranslations";
 import { Input, Select, Textarea } from './ui';
+import { comoErrorCapturado } from '../utils/errorCapturado';
 
 export const PublicMusiciansLanding: React.FC = () => {
   // 1. Detect language from query params or browser
@@ -148,7 +131,8 @@ export const PublicMusiciansLanding: React.FC = () => {
       if (typeof window !== "undefined") {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error("Error enviando registro de músico:", err);
       setErrorMessage(err?.message || t.errorGeneric);
     } finally {

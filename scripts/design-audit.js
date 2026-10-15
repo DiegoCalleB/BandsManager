@@ -74,32 +74,32 @@ const CHECKS = {
   },
   bordeDeCaja: {
     description: 'border sin token — Ley 1 (nueva) de visual-identity: un borde solo existe si significa algo (foco, campo en reposo, selección, divisor de tabla) y siempre con border-[var(--line)] o border-[var(--line-strong)]. Las tarjetas se separan por luz y espacio, nunca por borde',
-    pattern: /className=\{?[`"'](?![^`"']*border-\[var\(--line)[^`"']*(?<![\w:\[-])(?:border(?![\w\[:-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
+    pattern: /className=\{?[`"'](?![^`"']*border-\[var\(--line)[^`"']*(?<![\w:[-])(?:border(?![\w[:-])|(?:hover|focus|focus-within|group-hover):border-\[)/g,
     severity: 'error',
   },
   tamanoMinimoTexto: {
     description: 'texto por debajo de 11px (text-[7px]…text-[10.5px]) — craft-interfaces: 11px (text-micro) es el mínimo absoluto, solo para ejes y metadatos; por debajo, la lectura de horas cansa y en móvil es ilegible',
-    pattern: /(?<![\w\[-])(?:[a-z0-9-]+:)*text-\[(?:[0-9]|10)(?:\.\d+)?px\]/g,
+    pattern: /(?<![\w[-])(?:[a-z0-9-]+:)*text-\[(?:[0-9]|10)(?:\.\d+)?px\]/g,
     severity: 'error',
   },
   transitionAll: {
     description: 'transition-all — craft-interfaces: anima layout sin querer y cuesta rendimiento. Usa transition-ui (lista explícita de propiedades) o transition-[propiedad]',
-    pattern: /(?<![\w:\[-])transition-all(?![\w-])/g,
+    pattern: /(?<![\w:[-])transition-all(?![\w-])/g,
     severity: 'error',
   },
   easeIn: {
     description: 'ease-in en interfaz — craft-interfaces: retrasa el arranque y se siente lento. Usa ease-out (entradas/salidas) o ease-in-out (movimiento en pantalla)',
-    pattern: /(?<![\w:\[-])ease-in(?![\w-])/g,
+    pattern: /(?<![\w:[-])ease-in(?![\w-])/g,
     severity: 'error',
   },
   hoverScale: {
     description: 'hover:scale-* — craft-interfaces: el movimiento al pasar el ratón cansa y es firma de plantilla; el feedback de hover es de color/brillo. La escala es solo para :active (scale-[0.97])',
-    pattern: /(?<![\w\[-])(?:group-)?hover:scale-/g,
+    pattern: /(?<![\w[-])(?:group-)?hover:scale-/g,
     severity: 'warning',
   },
   radioFueraDeEscala: {
     description: 'rounded-md/lg/xl/2xl/3xl de Tailwind — visual-identity §5: los radios salen de la escala (--r-s 12 · --r-m 18 · --r-l 24 · --r-xl 32 · --r-pill). El radio es información: dice cuánto pesa el objeto',
-    pattern: /(?<![\w\[-])(?:[a-z0-9-]+:)*rounded-(?:md|lg|xl|2xl|3xl)(?![\w-])/g,
+    pattern: /(?<![\w[-])(?:[a-z0-9-]+:)*rounded-(?:md|lg|xl|2xl|3xl)(?![\w-])/g,
     severity: 'error',
   },
   campoSinPrimitiva: {
@@ -120,7 +120,7 @@ const CHECKS = {
   },
   claseHuerfana: {
     description: 'clase Tailwind rota: fragmento suelto tipo "-neutral-200", "hover:-[var(--acc)]/40" (resto de un border/ring borrado) o doble opacidad "/5/20" — no genera CSS y engaña al lector',
-    pattern: /(?<![\w:\[\]-])(?:(?:hover:|focus:|group-hover:)?-(?:neutral|slate|zinc|gray|stone|indigo|blue|red|green|amber|emerald|purple|pink|orange|yellow|rose|cyan|teal|sky|violet|fuchsia)-\d{2,3}(?:\/\d+)?|(?:hover:|focus:)?-\[(?:#[0-9a-fA-F]+|var\([^\]]*\))\](?:\/\d+)?)(?![\w-])|\]\/\d+\/\d+(?!\d)/g,
+    pattern: /(?<![\w:[\]-])(?:(?:hover:|focus:|group-hover:)?-(?:neutral|slate|zinc|gray|stone|indigo|blue|red|green|amber|emerald|purple|pink|orange|yellow|rose|cyan|teal|sky|violet|fuchsia)-\d{2,3}(?:\/\d+)?|(?:hover:|focus:)?-\[(?:#[0-9a-fA-F]+|var\([^\]]*\))\](?:\/\d+)?)(?![\w-])|\]\/\d+\/\d+(?!\d)/g,
     severity: 'error',
   },
   botonPildoraSinPrimitiva: {
@@ -137,7 +137,7 @@ const CHECKS = {
   },
   textoSobreRelleno: {
     description: 'texto que no es --on-* sobre un relleno sólido de acento/estado (bg-[var(--acc|ok|alert)] + text-[var(--ink|ink-2|acc-ink|mismo tono)]) — contraste insuficiente (en Oscuro, invisible); usa text-[var(--on-acc|on-ok|on-alert)]',
-    pattern: /className=\{?[`"'][^`"']*(?<![\w:\/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w\/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w\/-])/g,
+    pattern: /className=\{?[`"'][^`"']*(?<![\w:/-])bg-\[var\(--(acc|ok|alert)\)\](?![\w/-])[^`"']*(?<![\w:-])text-\[var\(--(?:\1|acc-ink|ink|ink-2)\)\](?![\w/-])/g,
     severity: 'error',
   },
   hoverPalidoConOnAcc: {
@@ -285,7 +285,7 @@ async function main() {
     console.log('🔧 Applying automatic fixes...\n');
     try {
       execSync('npm run design:fix', { stdio: 'inherit' });
-    } catch (e) {
+    } catch {
       console.error('Fix script failed');
       process.exit(1);
     }

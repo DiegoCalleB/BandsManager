@@ -1,6 +1,7 @@
 import { dbGetRegisteredBands, dbGetEpkConfig, dbUpsertSocialMetric, dbGetSocialMetrics, dbUpsertSocialContentItem, dbUpdateBandRadarStatus } from "../db.js";
 import { SocialMetric } from "../../src/types.js";
 import { descargarBufferSeguro } from "../utils/ssrfGuard.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // Helper to extract YouTube channel ID or handle
 function parseYouTubeUrl(url: string): { type: "handle" | "id" | "forUsername"; value: string } | null {
@@ -39,6 +40,8 @@ export async function scrapeChannelMetrics(band: {
   tiktok?: string;
   spotifyUrl?: string;
   youtubeUrl?: string;
+  /** Token de la Graph API de Instagram guardado por la banda, si lo hay. */
+  instagram_access_token?: string;
 }) {
   const headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -121,7 +124,7 @@ export async function scrapeChannelMetrics(band: {
 
             // Extract videos
             const tabs = data.contents?.twoColumnBrowseResultsRenderer?.tabs;
-            const videosTab = tabs?.find((t: any) => t.tabRenderer?.title === "Vídeos" || t.tabRenderer?.title === "Videos");
+            const videosTab = tabs?.find((t: { tabRenderer?: { title?: string } }) => t.tabRenderer?.title === "Vídeos" || t.tabRenderer?.title === "Videos");
             const contents = videosTab?.tabRenderer?.content?.richGridRenderer?.contents;
             if (Array.isArray(contents)) {
               let totalViewsSum = 0;
@@ -172,7 +175,8 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (ytErr: any) {
+    } catch (ytErrCapturado) {
+      const ytErr = comoErrorCapturado(ytErrCapturado);
       console.warn(`[SocialRadar] YouTube scrape failed for ${band.nombre_banda}:`, ytErr?.message);
     }
   }
@@ -226,7 +230,8 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (spErr: any) {
+    } catch (spErrCapturado) {
+      const spErr = comoErrorCapturado(spErrCapturado);
       console.warn(`[SocialRadar] Spotify scrape failed for ${band.nombre_banda}:`, spErr?.message);
     }
   }
@@ -238,7 +243,7 @@ export async function scrapeChannelMetrics(band: {
       const handle = igUrl.split("instagram.com/")[1]?.split("/")[0]?.split("?")[0]?.replace(/[^a-zA-Z0-9._]/g, "");
       
       // Step A: Check for Meta Graph API / Instagram Graph Access Token (Official Pro Integration)
-      const metaToken = process.env.INSTAGRAM_ACCESS_TOKEN || process.env.META_GRAPH_TOKEN || (band as any).instagram_access_token;
+      const metaToken = process.env.INSTAGRAM_ACCESS_TOKEN || process.env.META_GRAPH_TOKEN || band.instagram_access_token;
       if (metaToken && handle) {
         try {
           const igApiRes = await fetch(
@@ -352,7 +357,7 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (igErr) {
+    } catch {
       // Graceful ignore
     }
   }
@@ -393,7 +398,7 @@ export async function scrapeChannelMetrics(band: {
           }
         }
       }
-    } catch (tkErr) {
+    } catch {
       // Graceful ignore
     }
   }
@@ -513,7 +518,8 @@ export async function executeSocialRadar(triggerSource: "cron" | "manual" = "cro
       });
 
       console.log(`✅ [SocialRadar] Banda "${band.nombre_banda}" (${bandId}) actualizada: YT=${youtube}, IG=${instagram}, TK=${tiktok}, SP=${spotify}, Videos=${metricsScraped.videos.length}`);
-    } catch (err: any) {
+    } catch (errCapturado) {
+      const err = comoErrorCapturado(errCapturado);
       console.error(`❌ [SocialRadar] Error rastreando banda ${band.nombre_banda} (${bandId}):`, err?.message);
       results.push({
         bandId,

@@ -19,7 +19,9 @@
 
 import ffmpegStatic from "ffmpeg-static";
 import { ejecutar } from "./youtubeSource.js";
-import { DB_SILENCIO, type PuntoEnergia } from "./audioEnergy.js";
+import { type PuntoEnergia } from "./audioEnergy.js";
+import { interesMedio } from "./senalesPublico.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 /** Cómo está grabado el material, que cambia por completo qué hace viral a un fragmento. */
 export type TipoContenido = "concierto" | "videoclip" | "ensayo" | "otro";
@@ -83,7 +85,8 @@ export async function detectarCambiosDePlano(
       { timeout: opciones.timeoutMs ?? 180_000, maxBuffer: 32 * 1024 * 1024 }
     );
     return parseCambiosDePlano(stdout);
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.log("[Señales] No se pudieron detectar los cambios de plano:", String(err?.message || err).substring(0, 200));
     return [];
   }
@@ -113,7 +116,9 @@ export interface VentanaViral {
   arranque: number;
   /** 0-100: densidad de cambios de plano, relativa al resto del vídeo. */
   dinamismo: number;
-  /** 0-100: combinación pesada de las tres, según el tipo de contenido. */
+  /** 0-100: cuánto vuelve a ver la gente este tramo (heatmap/comentarios de YouTube). Ausente si no hay datos. */
+  publico?: number;
+  /** 0-100: combinación pesada de las señales, según el tipo de contenido. */
   score: number;
   /** Por qué ha puntuado así, en texto, para el prompt y para la interfaz. */
   motivo: string;
@@ -154,7 +159,12 @@ export interface OpcionesViral {
   cambiosDePlano?: number[];
   maxVentanas?: number;
   separacionMinima?: number;
+  /** Interés del público por segundo (0-100) y cuánto debe pesar. Solo en vídeos de música. */
+  interes?: { curva: number[]; peso: number };
 }
+
+/** Tope del peso del público: el audio y el arranque siguen mandando aunque llegue un valor absurdo. */
+const PESO_PUBLICO_MAX = 0.5;
 
 /**
  * Ventanas ordenadas por potencial viral, no por volumen bruto.
@@ -171,6 +181,7 @@ export function ventanasMasVirales(
   const tipo: TipoContenido = opciones.tipo && esTipoContenido(opciones.tipo) ? opciones.tipo : "otro";
   const pesos = PESOS[tipo];
   const maxVentanas = Math.max(1, opciones.maxVentanas ?? 6);
+  const pesoPublico = opciones.interes?.curva.length ? Math.max(0, Math.min(PESO_PUBLICO_MAX, opciones.interes.peso || 0)) : 0;
   const cortes = Array.isArray(opciones.cambiosDePlano) ? opciones.cambiosDePlano : [];
 
   if (!Array.isArray(curva) || curva.length < 2) return [];
@@ -225,11 +236,12 @@ export function ventanasMasVirales(
     // para no penalizar a todos los tramos por igual, que sería ruido puro.
     const dinamismo = maxDens > 0 ? normalizar(c.cortesPorSeg, 0, maxDens) : 50;
 
-    const score = Math.round(
-      energia * pesos.energia + arranque * pesos.arranque + dinamismo * pesos.dinamismo
-    );
+    const base = energia * pesos.energia + arranque * pesos.arranque + dinamismo * pesos.dinamismo;
+    if (pesoPublico === 0) return { start: c.start, end: c.end, energia, arranque, dinamismo, score: Math.round(base), motivo: "" };
 
-    return { start: c.start, end: c.end, energia, arranque, dinamismo, score, motivo: "" };
+    const publico = interesMedio(opciones.interes!.curva, c.start, c.end);
+    const score = Math.round(base * (1 - pesoPublico) + publico * pesoPublico);
+    return { start: c.start, end: c.end, energia, arranque, dinamismo, publico, score, motivo: "" };
   });
 
   // Nos quedamos con las mejores sin solaparse.
@@ -252,6 +264,8 @@ export function describirVentana(v: VentanaViral, haySenalVisual: boolean): stri
 
   if (v.energia >= 75) partes.push("de los tramos donde más suena la banda");
   else if (v.energia <= 30) partes.push("tramo sonoramente flojo");
+
+  if (v.publico !== undefined && v.publico >= 70) partes.push("de los tramos que más vuelve a ver la gente");
 
   if (haySenalVisual) {
     if (v.dinamismo >= 70) partes.push("montaje muy movido, con muchos cambios de plano");
@@ -276,7 +290,7 @@ export function resumirSenalesParaPrompt(ventanas: VentanaViral[], tipo: TipoCon
   const lineas = ventanas.map(
     (v) =>
       `- ${mmss(v.start)}-${mmss(v.end)} | potencial ${v.score}/100 ` +
-      `(volumen ${v.energia}, arranque ${v.arranque}, ritmo visual ${v.dinamismo}) → ${v.motivo}`
+      `(volumen ${v.energia}, arranque ${v.arranque}, ritmo visual ${v.dinamismo}${v.publico !== undefined ? `, público ${v.publico}` : ""}) → ${v.motivo}`
   );
 
   const notaTipo =
@@ -291,6 +305,9 @@ export function resumirSenalesParaPrompt(ventanas: VentanaViral[], tipo: TipoCon
   return [
     "SEÑALES MEDIDAS EN EL VÍDEO REAL (no son suposiciones: son medidas sobre el audio y la imagen).",
     "'arranque' alto = la energía SUBE justo al empezar ese tramo, que es lo que frena el scroll.",
+    ventanas.some((v) => v.publico !== undefined)
+      ? "'público' alto = es un tramo que la gente reproduce de nuevo en YouTube (repeticiones reales y comentarios con marca de tiempo)."
+      : "",
     ...lineas,
     notaTipo,
     "Usa esto como pista principal. Puedes apartarte si la transcripción o los capítulos apuntan a algo mejor, pero justifícalo en 'reason'."

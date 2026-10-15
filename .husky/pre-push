@@ -1,0 +1,3 @@
+# Puerta de calidad local (sustituye al CI de GitHub Actions mientras no esté disponible).
+# Reproduce typecheck, tests y verify:docs. Saltarla en una emergencia: git push --no-verify
+npm run check:all

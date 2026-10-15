@@ -1,7 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { detectCuesForAudioFile, AudioCueResult } from '../concert_to_album';
-import fs from 'fs';
-import path from 'path';
+import { detectCuesForAudioFile } from '../concert_to_album';
 
 describe('detectCuesForAudioFile', () => {
   it('gestiona rutas inexistentes de forma segura sin excepciones', async () => {

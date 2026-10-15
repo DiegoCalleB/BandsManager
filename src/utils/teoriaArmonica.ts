@@ -333,7 +333,7 @@ export function estimarModo(tramos: TramoAcorde[], t: Tonalidad): Modo {
   if (!t.menor) {
     // Lidio: #IV, o el II mayor sin dominante que lo explique (C–D–C–D: el D no «resuelve» a G).
     if (peso((i, a) => i === 6 && !a.menor) > 0.04 || (peso((i, a) => i === 2 && !a.menor) > 0.1 && peso((i) => i === 7) < 0.05)) id = 'lidio';
-    else if (peso((i, a) => i === 10 && !a.menor) > 0.05 && peso((i, a) => i === 11) < 0.02) id = 'mixolidio';
+    else if (peso((i, a) => i === 10 && !a.menor) > 0.05 && peso((i) => i === 11) < 0.02) id = 'mixolidio';
     else id = 'jonico';
   } else {
     if (peso((i, a) => i === 1 && !a.menor) > 0.04) id = 'frigio';

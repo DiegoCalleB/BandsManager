@@ -6,8 +6,8 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const root = document.documentElement;
   const store = {
-    get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch (_) { /* sin almacenamiento */ } },
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* sin almacenamiento */ } },
   };
 
   // Tema: oscuro por defecto, salvo que se haya elegido uno antes (tecla T)
@@ -35,7 +35,7 @@
           v.style.cssText = 'width:100%;height:100%;border-radius:24px;background:#000';
           host.appendChild(v); ok = true;
         }
-      } catch (_) { /* sin vídeo */ }
+      } catch { /* sin vídeo */ }
     }
     if (!ok) vs.remove();
   }
@@ -553,7 +553,7 @@
       case 'f': case 'F': fs(); break;
       case 'g': case 'G': toggleGrid(); break;
       case 't': case 'T': toggleTheme(); break;
-      case 'm': case 'M': window.DeckSound && window.DeckSound.toggle(); break;
+      case 'm': case 'M': window.DeckSound?.toggle(); break;
       case 'p': case 'P': pelicula = !pelicula; document.body.classList.toggle('pelicula', pelicula); if ($('#bPeli')) $('#bPeli').setAttribute('aria-pressed', String(pelicula)); if ($('#bPeli')) $('#bPeli').textContent = pelicula ? 'Película: sí' : 'Película'; if (pelicula) show(cur, false); else clearTimeout(pelTimer); break;
       case 'v': case 'V': if (window.DeckVoces) { window.DeckVoces.toggle(); show(cur, false, 'instant'); } break;
       case 'a': case 'A': toggleAnim(); break;

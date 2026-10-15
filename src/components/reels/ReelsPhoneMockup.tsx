@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  Play, Heart, MessageCircle, Bookmark, Share2, Disc, 
-  Gauge, Volume2, VolumeX, Maximize2,
-  Music, Upload, CheckCircle2, UserPlus
-} from 'lucide-react';
+import { Heart, MessageCircle, Share2, Disc, Gauge, Volume2, VolumeX, Maximize2, Music, Upload, CheckCircle2, UserPlus } from 'lucide-react';
 import { ThemeColors } from '../../types';
-import { SUBTITLE_STYLES } from './ViralGrowthStudio';
-import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue } from '../../utils/reelsUtils';
+import { SUBTITLE_STYLES } from './subtitleStyles';
+import { getYouTubeId, parseRangeTimes, formatTime, SubtitleCue, HighlightClip } from '../../utils/reelsUtils';
+import type { YoutubeVideoMeta } from '../reels_center/reelsHelpers';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, IconButton } from '../ui';
 
@@ -40,9 +37,9 @@ export interface ReelsPhoneMockupProps {
   ytLoopCount: number;
   simulatedTime: number;
   // Highlights & Clips
-  highlights: any[];
+  highlights: HighlightClip[];
   selectedHighlightIndex: number;
-  videoMeta?: any;
+  videoMeta?: YoutubeVideoMeta | null;
   // Retention & Virality Enhancements
   isSeamlessLoop: boolean;
   isPunchInZoom: boolean;
@@ -88,12 +85,10 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
   selectedHighlightIndex,
   videoMeta,
   isSeamlessLoop,
-  isPunchInZoom,
   beatDropFx,
   smartPan,
   activeSubtitleStyle,
   showSpotifyBadge,
-  showRetentionProgressBar,
   showTourSticker,
   tourStickerText,
   uploadProgress,
@@ -108,6 +103,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
 
   // Beat drop flash effect
   const isBeatDropActive = Boolean(beatDropFx && (simulatedTime % 4 < 0.25 || simulatedTime % 7 < 0.3));
+  // Smart Pan: el encuadre vertical recorre suavemente el plano horizontal (±20 px en un ciclo de 10 s).
   const panOffset = smartPan ? Math.sin((simulatedTime / 10) * 2 * Math.PI) * 20 : 0;
   
   const currentHighlight = highlights[selectedHighlightIndex];
@@ -282,7 +278,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                     className={`absolute w-[280%] h-full pointer-events-none opacity-95 transition-ui duration-300 ease-out ${
                       previewFraming === 'left' ? 'left-0' : previewFraming === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'
                     }`}
-                    style={{ border: 0 }}
+                    style={{ border: 0, transform: panOffset ? `translateX(${panOffset}px)` : undefined }}
                     allow="autoplay; encrypted-media"
                     title="Highlight clip video player"
                   />
@@ -310,7 +306,7 @@ export const ReelsPhoneMockup: React.FC<ReelsPhoneMockupProps> = ({
                   if (video.currentTime < fStart) video.currentTime = fStart;
                   if (video.currentTime >= fEnd) {
                     video.currentTime = fStart;
-                    video.play().catch(() => {});
+                    video.play().catch(() => { /* autoplay bloqueado sin gesto del usuario: queda en pausa y se reproduce al pulsar */ });
                   }
                 }
               }}

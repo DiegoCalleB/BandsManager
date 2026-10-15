@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Lead } from '../../types';
-import { Calculator, Coins, TrendingUp, ChevronDown, ChevronUp, RefreshCw, Check, AlertCircle } from 'lucide-react';
+import { Calculator, ChevronDown, ChevronUp, RefreshCw, Check } from 'lucide-react';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Input } from '../ui';
 
@@ -18,7 +18,7 @@ interface QuickDealSimulatorProps {
   isStitchLight?: boolean;
 }
 
-export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, onSaveDeal, isSaving = false, isStitchLight = false }) => {
+export const QuickDealSimulator: React.FC<QuickDealSimulatorProps> = ({ lead, onSaveDeal, isSaving = false }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   const existing = lead.financial_break_even;

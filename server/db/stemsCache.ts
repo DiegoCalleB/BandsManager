@@ -3,6 +3,7 @@
 
 import { getSupabase } from "./core.js";
 import { ensureRegisteredBandExists } from "./bands.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 export interface StemsCacheRecord {
   bandId: string;
@@ -14,17 +15,29 @@ export interface StemsCacheRecord {
   degraded: boolean;
   degradedReason?: string;
   stemsMap: Record<string, { url: string; formato: string; tamano: string }>;
-  timingBreakdown?: any;
+  /** Tiempos de cada fase (preload, GPU, persistencia, total) en texto; la forma depende del motor. */
+  timingBreakdown?: Record<string, unknown>;
   audioUrl?: string;
   songTitle?: string;
   createdAt?: string;
   updatedAt?: string;
-  lockedAt?: string;
-  lockedBy?: string;
+  /** Reserva distribuida (ver acquireStemsSeparationLock): instante y instancia que procesa la pista. */
+  locked_at?: string;
+  locked_by?: string;
 }
 
 // In-memory fast layer
 export const stemsMemoryCache = new Map<string, StemsCacheRecord>();
+
+/** Entrada de L1 para una separación en curso: aún no hay stems, solo la reserva. */
+function entradaPendiente(
+  bandId: string,
+  songHash: string,
+  engine: string,
+  reserva: { locked_at: string; locked_by?: string; createdAt: string }
+): StemsCacheRecord {
+  return { bandId, songHash, engine, engineUsed: engine, isNeural: false, degraded: false, status: 'pending', stemsMap: {}, ...reserva };
+}
 
 const LOCK_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutos para declarar un pending como abandonado (permite cold-start de GPU en Replicate)
 
@@ -83,7 +96,8 @@ export async function getStemsFromPersistentCache(
       console.log(`[Stems Cache] 💾 L2 Supabase HIT para ${cacheKey}. Hidratada caché en memoria.`);
       return record;
     }
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     // Si la tabla no está creada aún o hay fallo de red, se degrada a L1 sin bloquear
     console.warn(`[Stems Cache] Aviso consultando L2 Supabase: ${dbErr?.message || dbErr}`);
   }
@@ -121,9 +135,9 @@ export async function acquireStemsSeparationLock(
       };
     }
     if (memExisting.status === 'pending') {
-      const lockedAt = (memExisting as any).locked_at ? new Date((memExisting as any).locked_at).getTime() : 0;
+      const lockedAt = memExisting.locked_at ? new Date(memExisting.locked_at).getTime() : 0;
       const isStale = Date.now() - lockedAt > LOCK_TIMEOUT_MS;
-      if (!isStale && (memExisting as any).locked_by && (memExisting as any).locked_by !== instanceId) {
+      if (!isStale && memExisting.locked_by && memExisting.locked_by !== instanceId) {
         return {
           acquired: false,
           reason: 'in_progress_by_other_instance'
@@ -134,7 +148,7 @@ export async function acquireStemsSeparationLock(
 
   try {
     if (bandId && bandId !== "sin-banda") {
-      await ensureRegisteredBandExists(bandId).catch(() => {});
+      await ensureRegisteredBandExists(bandId).catch((err: unknown) => console.warn("[Stems] No se pudo asegurar la banda registrada antes de guardar stems:", err));
     }
     const sb = getSupabase();
 
@@ -190,31 +204,17 @@ export async function acquireStemsSeparationLock(
             .eq("song_hash", songHash)
             .eq("engine", engine);
           
-          stemsMemoryCache.set(cacheKey, {
-            bandId,
-            songHash,
-            engine,
-            status: 'pending',
-            locked_at: nowIso,
-            locked_by: instanceId,
-            stemsMap: {},
-            createdAt: nowIso
-          } as any);
+          stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
           return { acquired: true };
         }
 
         // Bloqueo activo en otra instancia
         console.log(`[Stems Lock] ⏳ Trabajo ya en progreso en otra instancia (${existing.locked_by}) para ${cacheKey}`);
-        stemsMemoryCache.set(cacheKey, {
-          bandId,
-          songHash,
-          engine,
-          status: 'pending',
+        stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, {
           locked_at: existing.locked_at || nowIso,
           locked_by: existing.locked_by,
-          stemsMap: {},
           createdAt: existing.created_at || nowIso
-        } as any);
+        }));
         return { acquired: false, reason: 'in_progress_by_other_instance' };
       }
     }
@@ -240,10 +240,7 @@ export async function acquireStemsSeparationLock(
 
       if (!reclaimErr && Array.isArray(reclamadas) && reclamadas.length > 0) {
         console.log(`[Stems Lock] 🔁 Reintento sobre trabajo ${existing.status} para ${cacheKey}`);
-        stemsMemoryCache.set(cacheKey, {
-          bandId, songHash, engine, status: 'pending',
-          locked_at: nowIso, locked_by: instanceId, stemsMap: {}, createdAt: nowIso
-        } as any);
+        stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
         return { acquired: true };
       }
       return { acquired: false, reason: 'in_progress_by_other_instance' };
@@ -266,16 +263,7 @@ export async function acquireStemsSeparationLock(
 
     if (!insertErr) {
       console.log(`[Stems Lock] 🔒 Bloqueo reservado exitosamente para inferencia en ${cacheKey} (Instancia: ${instanceId})`);
-      stemsMemoryCache.set(cacheKey, {
-        bandId,
-        songHash,
-        engine,
-        status: 'pending',
-        locked_at: nowIso,
-        locked_by: instanceId,
-        stemsMap: {},
-        createdAt: nowIso
-      } as any);
+      stemsMemoryCache.set(cacheKey, entradaPendiente(bandId, songHash, engine, { locked_at: nowIso, locked_by: instanceId, createdAt: nowIso }));
       return { acquired: true };
     }
 
@@ -296,7 +284,8 @@ export async function acquireStemsSeparationLock(
       reason: 'distributed_lock_failed',
       error: insertErr.message
     };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.error(`[STEM_DISTRIBUTED_LOCK_FAILED_ALERT] 🚨 ALERTA CRÍTICA: Excepción en reserva distribuida para ${cacheKey}: ${err?.message || err}`);
     return {
       acquired: false,
@@ -349,7 +338,7 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
   // esquema desincronizado) se registra como "guardado con éxito" mientras la fila real nunca cambia.
   try {
     if (record.bandId && record.bandId !== "sin-banda") {
-      await ensureRegisteredBandExists(record.bandId).catch(() => {});
+      await ensureRegisteredBandExists(record.bandId).catch((err: unknown) => console.warn("[Stems] No se pudo asegurar la banda registrada antes de guardar stems:", err));
     }
     const sb = getSupabase();
     const { error } = await sb
@@ -375,7 +364,8 @@ export async function saveStemsToPersistentCache(record: StemsCacheRecord): Prom
     }
 
     console.log(`[Stems Cache] 💾 Guardado persistente L2 en Supabase para ${cacheKey}`);
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     console.error(`[STEM_CACHE_PERSIST_FAILED_ALERT] 🚨 No se pudo persistir el resultado en Supabase para ${cacheKey} (L1 en memoria preservada, pero se perderá si el proceso reinicia): ${dbErr?.message || dbErr}`);
   }
 }
@@ -405,7 +395,7 @@ export async function markStemsSeparationFailed(
     if (error) {
       console.error(`[STEM_CACHE_MARK_FAILED_ALERT] 🚨 No se pudo marcar como fallido ${cacheKey} en Supabase: ${error.code || ''} ${error.message}`);
     }
-  } catch (e) {
+  } catch {
     // Ignorar error al marcar fallo
   }
 }
@@ -433,7 +423,7 @@ export async function getStemsJobStatus(
   }
 
   const mensajeCaducado = 'La separación se interrumpió (el servidor se reinició o tardó demasiado). Puedes reintentarla.';
-  const memExisting = stemsMemoryCache.get(cacheKey) as any;
+  const memExisting = stemsMemoryCache.get(cacheKey);
   if (memExisting?.status === 'pending') {
     const lockedAt = memExisting.locked_at ? new Date(memExisting.locked_at).getTime() : 0;
     if (lockedAt && Date.now() - lockedAt > LOCK_TIMEOUT_MS) {
@@ -464,7 +454,8 @@ export async function getStemsJobStatus(
         return { state: 'pending' };
       }
     }
-  } catch (dbErr: any) {
+  } catch (dbErrCapturado) {
+    const dbErr = comoErrorCapturado(dbErrCapturado);
     console.warn(`[Stems Cache] Aviso consultando estado de job ${cacheKey}: ${dbErr?.message || dbErr}`);
   }
 

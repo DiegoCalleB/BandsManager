@@ -74,8 +74,30 @@ describe("mergePrintSettings", () => {
       textAlign: "left",
       columnsChoice: "auto",
       showWatermark: true,
-      showTonality: false,
-      showBpm: false,
+      showTonality: true,
+      showBpm: true,
     });
+  });
+});
+
+describe("badgesScope y markedSongs", () => {
+  it("acepta el ámbito y los temas marcados por músico", () => {
+    expect(sanitizePrintSettings({ badgesScope: "marked", markedSongs: { paco: ["a", "b", "a"], vacio: [] } })).toEqual({
+      badgesScope: "marked",
+      markedSongs: { paco: ["a", "b"] },
+    });
+  });
+
+  it("descarta ámbito inválido y limpia basura en los marcados", () => {
+    const out = sanitizePrintSettings({
+      badgesScope: "some",
+      markedSongs: { ok: ["x", 3, null, "y".repeat(500)], mal: "texto", arr: { 0: "x" } },
+    });
+    expect(out).toEqual({ markedSongs: { ok: ["x"] } });
+  });
+
+  it("por defecto: tono y BPM activos, solo en los temas marcados", () => {
+    expect(DEFAULT_PRINT_SETTINGS.badgesScope).toBe("marked");
+    expect(mergePrintSettings(null).markedSongs).toEqual({});
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { leerAtril } from '../../../src/audit/leerAtril';
 
 const raiz = path.join(__dirname, '..', '..', '..');
 const leer = (...p: string[]) => fs.readFileSync(path.join(raiz, ...p), 'utf-8');
@@ -45,7 +46,7 @@ describe('/generate-song-chords: la letra solo sale del audio', () => {
 });
 
 describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
-  const viewer = leer('src', 'components', 'SongChordsViewerModal.tsx');
+  const viewer = leerAtril();
   const enVivo = leer('src', 'components', 'ensayos', 'ModoLocalEnVivoTab.tsx');
 
   it('el visor y el modo en vivo no tienen cifrado de muestra', () => {
@@ -65,19 +66,21 @@ describe('Cliente: ninguna letra de ejemplo escrita en el código', () => {
 });
 
 describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunca generativo', () => {
+  // La lógica vive en el servicio (lo comparten la ruta manual y la cola de letras).
+  const ruta = leer('server', 'services', 'letraCancion.ts');
   const ini = rutas.indexOf('router.post("/songs/:id/letra-sincronizada"');
-  const ruta = rutas.slice(ini, rutas.indexOf('// PATCH corrección manual de los acordes detectados.'));
 
   it('existe y transcribe con el servicio de voz, sin pasar por un modelo generativo', () => {
     expect(ini).toBeGreaterThan(-1);
+    expect(rutas).toContain('ejecutarLetraSincronizada(');
     expect(ruta).toContain('transcribirLetra(');
     expect(ruta).not.toContain('generateContentWithFallback');
     expect(ruta).not.toContain('getAiClient');
   });
 
   it('si la transcripción falla responde 502 y NO guarda nada (el guardado va después)', () => {
-    expect(ruta.indexOf('status(502)')).toBeGreaterThan(-1);
-    expect(ruta.indexOf('status(502)')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
+    expect(ruta.indexOf('status: 502')).toBeGreaterThan(-1);
+    expect(ruta.indexOf('status: 502')).toBeLessThan(ruta.indexOf('dbUpsertSong('));
   });
 
   it('una letra con menos de 8 palabras se rechaza como «sin letra», no se guarda', () => {
@@ -86,7 +89,7 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
   });
 
   it('no sustituye un cifrado existente sin sobrescribir: true y lo comprueba antes de transcribir', () => {
-    expect(ruta.indexOf('req.body?.sobrescribir !== true')).toBeLessThan(ruta.indexOf('transcribirLetra('));
+    expect(ruta.indexOf('!sobrescribir')).toBeLessThan(ruta.indexOf('transcribirLetra('));
   });
 
   it('prefiere la pista de voz aislada de Iris y avisa de que la mezcla es peor', () => {
@@ -100,9 +103,11 @@ describe('/songs/:id/letra-sincronizada: reconocimiento de voz con tiempos, nunc
 });
 
 describe('Cliente: la letra solo se pide a propósito', () => {
-  const viewer = leer('src', 'components', 'SongChordsViewerModal.tsx');
+  const viewer = leerAtril();
   const bulk = leer('src', 'components', 'repertorio', 'BulkAlbumAudioUploaderModal.tsx');
-  const repertorio = leer('src', 'components', 'RepertorioSetlists.tsx');
+  // El contenedor delega la edición de canciones en hooks (repertorio/hooks): el contrato aplica a todo el módulo.
+  const dirHooks = path.join(raiz, 'src', 'components', 'repertorio', 'hooks');
+  const repertorio = [leer('src', 'components', 'RepertorioSetlists.tsx'), ...fs.readdirSync(dirHooks).map((f) => fs.readFileSync(path.join(dirHooks, f), 'utf-8'))].join('\n');
 
   it('«Letra del audio» llama a la transcripción por voz, no al generador antiguo', () => {
     expect(viewer).toContain('/letra-sincronizada');
@@ -113,7 +118,10 @@ describe('Cliente: la letra solo se pide a propósito', () => {
     for (const f of [bulk, repertorio]) {
       expect(f).not.toContain('generate-song-chords');
       expect(f).not.toContain('letra-sincronizada');
-      expect(f).toContain('analizar-acordes');
+      expect(f).toContain('analizarAcordesDelAudio'); // única llamada cliente a /analizar-acordes
     }
+    const cliente = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'src', 'utils', 'analisisAcordesCliente.ts'), 'utf-8');
+    expect(cliente).toContain('analizar-acordes');
+    expect(cliente).not.toContain('generate-song-chords');
   });
 });

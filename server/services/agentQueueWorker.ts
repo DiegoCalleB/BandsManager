@@ -7,7 +7,8 @@ import {
   failAgentJob,
   pruneOldJobs,
   onAgentJobEnqueued,
-  AgentJob
+  AgentJob,
+  type DetallesResultadoTrabajo
 } from "./agentQueueService.js";
 import { runLectorAgent } from "./lectorAgent.js";
 import { runEnviadorAgent, logAgentExecution } from "./agentEngine.js";
@@ -16,6 +17,7 @@ import { syncActiveCampaignsRadar } from "./campaignRadarScheduler.js";
 import { reconcileStaleStemPredictions } from "./stemPredictionReconciler.js";
 import { captureError } from "../utils/errorTracking.js";
 import { bandHasEmailConfigured } from "./agentScheduler.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 const WORKER_ID = `worker_${process.pid}_${Math.random().toString(36).substring(2, 6)}`;
 // En reposo, duerme por defecto 24 horas (o configurable con AGENT_WORKER_POLL_MS).
@@ -32,7 +34,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
   console.log(`[AgentQueueWorker] [${WORKER_ID}] Iniciando trabajo ${job.id} (${job.agent_type}) para banda ${job.band_id}...`);
 
   try {
-    let resultDetails: Record<string, any> = {};
+    let resultDetails: DetallesResultadoTrabajo = {};
 
     switch (job.agent_type) {
       case "lector_inbox_check": {
@@ -43,7 +45,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
         }
 
         const resultado = await runLectorAgent(job.band_id);
-        resultDetails = resultado;
+        resultDetails = { ...resultado };
 
         // Auditoría estructurada si hubo novedades
         if (resultado.mensajesLeidos > 0 || resultado.borradoresEnviadosDetectados > 0 || resultado.borradorIaGenerados > 0) {
@@ -91,7 +93,8 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     await completeAgentJob(job.id, { ...resultDetails, duration_ms: durationMs });
     console.log(`[AgentQueueWorker] [${WORKER_ID}] Trabajo ${job.id} completado con éxito en ${durationMs}ms.`);
 
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     const durationMs = Date.now() - startTime;
     const errorMsg = err?.message || String(err);
 
@@ -107,7 +110,7 @@ async function processSingleJob(job: AgentJob): Promise<void> {
     if (!sinCuenta) {
       await logAgentExecution({
         band_id: job.band_id,
-        agente: (job.agent_type.split("_")[0] as any) || "sistema",
+        agente: job.agent_type.split("_")[0] || "sistema",
         motor: "worker_queue",
         disparado_por_tipo: "queue",
         estado: isRateLimit ? "warning" : "error",
@@ -192,7 +195,7 @@ export function startAgentQueueWorker(): void {
 
   // Ejecución inicial diferida de poda ligera al arrancar
   setTimeout(() => {
-    pruneOldJobs(7, 30).catch(() => {});
+    pruneOldJobs(7, 30).catch((err: unknown) => console.warn("[Agentes] No se pudieron purgar los trabajos antiguos:", err));
   }, 30000);
 
   workerLoop();

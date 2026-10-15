@@ -23,11 +23,23 @@ import { dbGetLeadById } from '../db/leads.js';
 import { dbGetRegisteredBandById } from '../db/bands.js';
 import { dbGetUsers } from '../db/users.js';
 import { invalidateBandStateCache } from '../db/sync.js';
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { Concert } from '../../src/types.js';
+import type { UsuarioGuardado } from '../stateTypes.js';
 
+import { responderError } from '../utils/errorHttp.js';
 export const dealsRouter = Router();
 
+/**
+ * Concierto que se da de alta solo al confirmarse un acuerdo. No trae aforo (lo rellena la banda
+ * después) y lleva el nombre en `band_name`, que el calendario también lee. Se guarda en
+ * `state.concerts` como `Concert` sabiendo que le faltan los dos campos de aforo.
+ */
+type ConciertoDeAcuerdo = Omit<Concert, 'aforo_vendido' | 'aforo_total'> &
+  Partial<Pick<Concert, 'aforo_vendido' | 'aforo_total'>> & { band_name?: string };
+
 /** Código HTTP de un error de acuerdos: los DealError llevan el suyo (404/409/410/503...). */
-function estadoHttp(error: any, porDefecto: number): number {
+function estadoHttp(error: unknown, porDefecto: number): number {
   return error instanceof DealError ? error.status : porDefecto;
 }
 
@@ -70,12 +82,12 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
         let changed = false;
         deals.forEach((d) => {
           if (d.estado === 'confirmado') {
-            const exists = state.concerts.some((c: any) =>
+            const exists = state.concerts.some((c) =>
               (d.concert_id && c.id === d.concert_id) ||
               (c.fecha === d.fecha_evento && c.sala === d.lugar_sala)
             );
             if (!exists) {
-              state.concerts.push({
+              const conciertoNuevo: ConciertoDeAcuerdo = {
                 id: d.concert_id || `cnc_deal_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
                 band_id: d.band_id,
                 band_name: d.nombre_evento.replace(/^Concierto de /, '').replace(/^Concierto en /, '') || 'Banda',
@@ -87,7 +99,8 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
                 estado_pago: d.forma_pago === 'efectivo' ? 'pendiente' : 'pendiente',
                 notas: `Acuerdo 1-Click firmado por ${d.nombre_firmante || 'la sala'}.`,
                 tipo: 'sala'
-              } as any);
+              };
+              state.concerts.push(conciertoNuevo as Concert);
               changed = true;
             }
           }
@@ -97,12 +110,13 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
           invalidateBandStateCache(bandId);
         }
       }
-    } catch (_) {}
+    } catch (err) { console.warn("[Deals] No se pudieron reflejar los acuerdos firmados en el calendario:", err); }
 
     return res.status(200).json({ success: true, deals });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdos:', error);
-    return res.status(500).json({ error: error.message || 'Error al obtener acuerdos' });
+    return responderError(res, error, 'Error al obtener acuerdos');
   }
 });
 
@@ -121,9 +135,10 @@ dealsRouter.get('/deals/lead/:leadId', requireAuth, async (req: Request, res: Re
     const deal = await dbGetDealByLeadId(leadId, bandId);
 
     return res.status(200).json({ success: true, deal });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdo por lead:', error);
-    return res.status(500).json({ error: error.message || 'Error al obtener acuerdo' });
+    return responderError(res, error, 'Error al obtener acuerdo');
   }
 });
 
@@ -191,9 +206,12 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
       deal: savedDeal,
       publicUrl
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al crear/actualizar acuerdo:', error);
-    return res.status(estadoHttp(error, 500)).json({ error: error.message || 'Error al persistir acuerdo' });
+    // Un DealError lleva un mensaje pensado para la persona (si no es un fallo del servidor); cualquier otro error es interno.
+    if (error instanceof DealError) return res.status(error.status).json({ error: error.status < 500 ? error.message : 'Error al persistir acuerdo' });
+    return responderError(res, error, 'Error al persistir acuerdo');
   }
 });
 
@@ -247,12 +265,12 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
       try {
         const state = loadState();
         if (state && Array.isArray(state.concerts)) {
-          const match = state.concerts.find((c: any) =>
+          const match = state.concerts.find((c) =>
             (deal.concert_id && c.id === deal.concert_id) ||
             (c.fecha === deal.fecha_evento && c.sala === deal.lugar_sala)
           );
           if (!match) {
-            const concertItem = {
+            const concertItem: ConciertoDeAcuerdo = {
               id: deal.concert_id || `cnc_deal_${Date.now()}`,
               band_id: deal.band_id,
               band_name: deal.nombre_evento.replace(/^Concierto de /, '').replace(/^Concierto en /, '') || 'Banda',
@@ -265,16 +283,17 @@ dealsRouter.get('/public/deals/:token', async (req: Request, res: Response) => {
               notas: `Acuerdo 1-Click firmado por ${deal.nombre_firmante || 'la sala'}.`,
               tipo: 'sala'
             };
-            state.concerts.push(concertItem as any);
+            state.concerts.push(concertItem as Concert);
             saveState(state);
             invalidateBandStateCache(deal.band_id);
           }
         }
-      } catch (_) {}
+      } catch (err) { console.warn("[Deals] No se pudo crear el concierto del acuerdo firmado:", err); }
     }
 
     return res.status(200).json({ success: true, deal: publicDeal });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener vista pública de acuerdo:', error);
     return res.status(estadoHttp(error, 500)).json({ error: 'Error al consultar el acuerdo' });
   }
@@ -343,7 +362,7 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
             if (!venueEmail && leadData?.email) {
               venueEmail = String(leadData.email).trim().toLowerCase();
             }
-          } catch (_) {}
+          } catch (err) { console.warn("[Deals] Fallo leyendo el email de la sala:", err); }
         }
 
         // Obtener datos y email de la banda
@@ -357,10 +376,10 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
           }
           if (!bandEmail) {
             const users = await dbGetUsers(deal.band_id);
-            const leader = users.find((u: any) => u.role === 'leader' || u.rol === 'leader') || users[0];
+            const leader = users.find((u: UsuarioGuardado) => u.role === 'leader' || u.rol === 'leader') || users[0];
             if (leader?.email) bandEmail = leader.email;
           }
-        } catch (_) {}
+        } catch (err) { console.warn("[Deals] Fallo leyendo el email de la banda:", err); }
 
         const feeImporte = deal.comision_importe ?? 0;
         const netoBanda = deal.neto_banda ?? Math.max(0, (deal.total_acordado || deal.cache_base || 0) - feeImporte);
@@ -418,7 +437,8 @@ dealsRouter.post('/public/deals/:token/sign', async (req: Request, res: Response
       },
       concertId
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al firmar acuerdo:', error);
     // Los DealError llevan mensajes pensados para el usuario; cualquier otro error (BD, red) no
     // se muestra tal cual a un visitante anónimo.
@@ -453,7 +473,7 @@ dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, a
     try {
       const regBand = await dbGetRegisteredBandById(deal.band_id);
       if (regBand?.nombre_banda) bandDisplayName = regBand.nombre_banda;
-    } catch (_) {}
+    } catch (err) { console.warn("[Deals] Fallo leyendo el nombre de la banda; se usa el genérico:", err); }
 
     const result = await sendDealSignedToVenueEmail({
       toEmail: cleanEmail,
@@ -478,8 +498,9 @@ dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, a
       success: true,
       mensaje: `Copia del acuerdo enviada con éxito a ${cleanEmail}`
     });
-  } catch (error: any) {
+  } catch (errorCapturado) {
+    const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al reenviar email de acuerdo:', error);
-    return res.status(500).json({ error: error.message || 'Error al enviar el correo' });
+    return responderError(res, error, 'Error al enviar el correo');
   }
 });

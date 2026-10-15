@@ -15,8 +15,13 @@ import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
 import { getSupabase } from "../db/core.js";
 import { dbGetBandEmailAccount, BandEmailAccount } from "../db/emailAccounts.js";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import type { EmailDeliveryFailureReason } from "../utils/emailDeliveryTracker.js";
 
 export class EmailAgentError extends Error {
+  /** Tipo de fallo de entrega que adjunta el cliente de Gmail para que agentEngine lo registre. */
+  deliveryFailureReason?: EmailDeliveryFailureReason;
+
   constructor(message: string, public code: "no_token" | "identity_mismatch" | "api_error") {
     super(message);
     this.name = "EmailAgentError";
@@ -83,7 +88,8 @@ export async function enviarEmail(bandId: string, params: { to: string; subject:
       references: params.inReplyTo
     });
     return { messageId: info.messageId };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     throw new EmailAgentError(`No se pudo enviar el email para '${bandId}': ${err.message || err}`, "api_error");
   }
 }
@@ -130,10 +136,10 @@ export async function crearBorrador(bandId: string, params: { to: string; subjec
 
     const mailboxes = await client.list();
     // Buscar carpeta de borradores: primero por specialUse (Outlook), luego por nombre (Gmail)
-    let drafts = (mailboxes || []).find((mb: any) => mb.specialUse === "\\Drafts");
+    let drafts = (mailboxes || []).find((mb) => mb.specialUse === "\\Drafts");
     if (!drafts) {
       // Fallback para Gmail: buscar por nombre
-      drafts = (mailboxes || []).find((mb: any) =>
+      drafts = (mailboxes || []).find((mb) =>
         mb.path === "[Gmail]/Drafts" ||
         mb.path === "Drafts" ||
         mb.name?.toLowerCase() === "drafts"
@@ -146,8 +152,9 @@ export async function crearBorrador(bandId: string, params: { to: string; subjec
     await client.append(drafts.path, raw, ["\\Draft"]);
     await client.logout();
     return { draftPath: drafts.path };
-  } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     // Nunca se cae hacia atrás a enviar: si no se pudo dejar el borrador, no ha salido nada.
     throw new EmailAgentError(`No se pudo crear el borrador para '${bandId}': ${err.message || err}`, "api_error");
   }
@@ -190,8 +197,9 @@ export async function leerNoLeidos(bandId: string, maxResults = 10): Promise<Arr
       lock.release();
     }
     await client.logout();
-  } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     throw new EmailAgentError(`No se pudo leer la bandeja de '${bandId}': ${err.message || err}`, "api_error");
   }
 
@@ -221,7 +229,8 @@ export interface RespuestaEntrante {
 export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): Promise<RespuestaEntrante[]> {
   const account = await getAccount(bandId);
 
-  const isPortSecure = Number(account.imap_port) === 993 || (account as any).imap_secure === true;
+  // band_email_accounts no tiene columna imap_secure: el TLS implícito lo decide el puerto (993).
+  const isPortSecure = Number(account.imap_port) === 993;
   const client = new ImapFlow({
     host: account.imap_host,
     port: Number(account.imap_port) || 993,
@@ -279,8 +288,9 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): 
       lock.release();
     }
     await client.logout();
-  } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     const details = err.responseText || err.responseStatus || err.description || (err.authenticationFailed ? "Fallo de autenticación IMAP: contraseña o contraseña de aplicación incorrecta" : "") || err.message || String(err);
     throw new EmailAgentError(`No se pudo leer las respuestas entrantes de '${bandId}': ${details}`, "api_error");
   }
@@ -313,8 +323,9 @@ export async function marcarComoLeido(bandId: string, uids: number[]): Promise<v
       lock.release();
     }
     await client.logout();
-  } catch (err: any) {
-    try { await client.logout(); } catch (_) { /* ya cerrada o nunca abierta */ }
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
+    try { await client.logout(); } catch { /* ya cerrada o nunca abierta */ }
     throw new EmailAgentError(`No se pudieron marcar como leídos los mensajes de '${bandId}': ${err.message || err}`, "api_error");
   }
 }

@@ -1,5 +1,6 @@
 import { parseTonalidad, ParsedKey } from './harmonicAnalysis';
 import { TransitionConfig, TransitionTimeline } from './transitionAudioEngine';
+import { getAudioContextClass } from '../components/song_studio/audioContext';
 
 // Frecuencias base para notas MIDI
 function midiToFreq(midi: number): number {
@@ -34,7 +35,7 @@ export function playSyntheticTransition(
   onProgress?: (timeSec: number) => void,
   onEnded?: () => void
 ): SyntheticPlayerController {
-  const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
+  const AudioCtxClass = getAudioContextClass();
   if (!AudioCtxClass) {
     return { stop: () => {}, setVolume: () => {}, getCurrentTime: () => 0 };
   }

@@ -1,22 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useEffectEvent, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet.markercluster";
 import { BandContact, BandRelationshipStatus } from "../types";
-import {
-  MapPin,
-  Navigation,
-  Check,
-  Loader2,
-  Layers,
-  Music,
-  Handshake,
-  Repeat,
-  Zap,
-  Clock,
-  Radio,
-  X,
-} from "lucide-react";
+import { MapPin, Navigation, Check, Loader2, Layers } from "lucide-react";
 import { escapeHtml } from "../utils/escapeHtml";
+import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 
 interface BandMapProps {
   bands: BandContact[];
@@ -191,7 +179,7 @@ function resolveBandCoordinates(
     return offsetCoords(SPANISH_CITIES_GEO[rawLoc], index);
   }
 
-  const parts = rawLoc.split(/[\(\-\/\,]/);
+  const parts = rawLoc.split(/[(\-/,]/);
   for (const p of parts) {
     const trimmed = p.trim();
     if (SPANISH_CITIES_GEO[trimmed]) {
@@ -288,7 +276,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
-  const markersGroup = useRef<any>(null);
+  const markersGroup = useRef<L.MarkerClusterGroup | null>(null);
 
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("streets");
   const [showStyleMenu, setShowStyleMenu] = useState<boolean>(false);
@@ -296,6 +284,10 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
     Record<string, [number, number]>
   >({});
   const [isGeocoding, setIsGeocoding] = useState<boolean>(false);
+
+  // Estilo y callback «en vivo» para los efectos de Leaflet (no deben re-crear el mapa ni los marcadores)
+  const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
+  const seleccionarBanda = useEffectEvent((band: BandContact) => onSelectBand(band));
 
   // Initialize Map
   useEffect(() => {
@@ -310,7 +302,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       L.control.zoom({ position: "bottomright" }).addTo(map);
 
-      const currentPreset = MAP_STYLES[mapStyle];
+      const currentPreset = estiloInicial();
       const layer = L.tileLayer(currentPreset.url, {
         attribution: currentPreset.attr,
         maxZoom: 19,
@@ -318,12 +310,12 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
 
       tileLayerRef.current = layer;
 
-      const clusterGroup = (L as any).markerClusterGroup({
+      const clusterGroup = L.markerClusterGroup({
         showCoverageOnHover: false,
         zoomToBoundsOnClick: true,
         spiderfyOnMaxZoom: true,
         maxClusterRadius: 50,
-        iconCreateFunction: (cluster: any) => {
+        iconCreateFunction: (cluster) => {
           const count = cluster.getChildCount();
           const size = 42;
           const bgColor = "var(--acc)";
@@ -444,7 +436,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
               }
             }
           }
-        } catch (err) {
+        } catch {
           // Keep static geocode
         }
         await new Promise((r) => setTimeout(r, 400));
@@ -550,6 +542,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
  </div>
  <div style="font-size: 11px; font-weight: 600; color: ${accColor}; margin-bottom: 8px;">
  🎵 ${escapeHtml(band.estilo_musical)}
+ ${spotifyArtistUrl(band.spotify_youtube) ? `· <a href="${escapeHtml(spotifyArtistUrl(band.spotify_youtube) || '')}" target="_blank" rel="noopener noreferrer" style="color: ${accColor};">▶ Escuchar</a>` : ''}
  </div>
  <div style="margin-bottom: 8px;">
  <span style="
@@ -609,7 +602,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
         const btn = document.getElementById(`pop-band-select-${band.id}`);
         if (btn) {
           btn.onclick = () => {
-            onSelectBand(band);
+            seleccionarBanda(band);
           };
         }
       });

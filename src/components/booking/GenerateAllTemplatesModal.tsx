@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Wand2, X, Check, Loader2, Info, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
+import { Sparkles, Wand2, X, Loader2, Building2, Tent, Disc3, Radio, Users, Briefcase, Landmark } from 'lucide-react';
 import { ThemeColors } from '../../types';
 import { ShowIcon } from '../ui/ShowIcon';
 import { Button, Textarea } from '../ui';
@@ -36,13 +36,11 @@ const CATEGORIES_PREVIEW = [
 export function GenerateAllTemplatesModal({
   isOpen,
   onClose,
-  colors,
-  isStitchLight = false,
   initialBaseText = '',
   onGenerateAll,
   isGenerating,
   mode = 'crm',
-  campaignContext,
+  campaignContext
 }: GenerateAllTemplatesModalProps) {
   const [baseProposal, setBaseProposal] = useState(initialBaseText);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -193,7 +191,7 @@ export function GenerateAllTemplatesModal({
               placeholder={
                 isCampaign
                   ? 'Ejemplo: Presentación de nuevo disco con escenografía de directo especial. Queremos cerrar fines de semana en salas medianas y festivales de otoño. Ofrecemos formato completo con 4 músicos y opción de colaborar con bandas locales para compartir gastos de sala.'
-                  : 'Ejemplo: Somos Bakandeya, directo de música mestizaje con loop station, electrónica vocal, violín solista, handpan y percusión reciclada. 4 miembros en escena, energía de festival y formato live performance...'
+                  : 'Ejemplo: Somos [nombre de la banda], directo de música mestizaje con loop station, electrónica vocal, violín solista, handpan y percusión reciclada. 4 miembros en escena, energía de festival y formato live performance...'
               }
             />
           </div>

@@ -1,5 +1,5 @@
 import { PopoverAncla } from './ui/PopoverAncla';
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   Lead,
   LeadType,
@@ -11,23 +11,22 @@ import {
   EPKConfig,
   Tour,
   Fan,
+  Payment,
   SocialPost,
   Setlist,
   Song,
+  User,
 } from "../types";
-import { useLanguage } from "../context/LanguageContext";
-import { usePlayer } from "../context/PlayerContext";
+import type { MainView } from "../app/appViews";
+import type { SwitcherBand } from "./band_switcher/bandSwitcherTypes";
+import { usePlayer } from "../context/playerContextValue";
 import { isSameBandId } from "../utils/bandUtils";
 import { api } from "../services/api";
-import { apiFetch } from "../utils/api";
-import DirectionsCard from "./DirectionsCard";
-import { PublicoSilhouette } from "./ui/PublicoSilhouette";
+import "../utils/api";
 import { AddLeadModal } from "./dashboard/AddLeadModal";
 import { ProfileCompletenessCard } from "./dashboard/ProfileCompletenessCard";
-import { AiSupportWidget, AiUsageCard } from "./dashboard/AiUsageSupportWidget";
 import { EmailTemplatesModal } from "./dashboard/EmailTemplatesModal";
 import { AgentAutonomySettingsModal } from "./dashboard/AgentAutonomySettingsModal";
-import { SocialAndFansGrowthChart } from "./dashboard/SocialAndFansGrowthChart";
 import { DashboardWidgetGrid } from "./dashboard/DashboardWidgetGrid";
 import { NeedsAttentionBanner } from "./dashboard/NeedsAttentionBanner";
 import { ConvocarEnsayoModal } from "./ensayos/ConvocarEnsayoModal";
@@ -50,53 +49,8 @@ import {
   leadStatusBadgeClass,
   leadStatusLabel,
 } from "../utils/leadStatusPresentation";
-import { normalizePlan, hasModuleAccess } from "../utils/planPermissions";
-import {
-  Search,
-  MapPin,
-  Music,
-  Mic,
-  DoorClosed,
-  Globe,
-  Phone,
-  Instagram,
-  Plus,
-  X,
-  Calendar,
-  AlertCircle,
-  Sparkles,
-  Loader2,
-  Check,
-  RefreshCw,
-  Database,
-  Bot,
-  Activity,
-  ArrowRight,
-  CheckCircle2,
-  Radio,
-  Building2,
-  Clock,
-  CheckCircle,
-  Hourglass,
-  Send,
-  Users,
-  ShieldCheck,
-  Play,
-  Navigation,
-  FileText,
-  BookOpen,
-  Disc3,
-  Truck,
-  Heart,
-  Info,
-  Copy,
-  Sliders,
-  Gift,
-  Crown,
-  QrCode,
-  Settings,
-  Eye,
-} from "lucide-react";
+import { normalizePlan } from "../utils/planPermissions";
+import { Plus, X, Building2, Disc3, Sliders, Settings, Eye } from "lucide-react";
 import { Button, IconButton, MenuItem } from './ui';
 
 export type NavigationOptions = {
@@ -115,10 +69,10 @@ interface DashboardProps {
   onAddLead: (lead: Lead) => void;
   metrics?: SocialMetric[];
   concerts?: Concert[];
-  currentUser?: any;
+  currentUser?: User;
   bandName?: string;
   currentBandId?: string;
-  availableBands?: Array<{ band_id: string; bandName: string; name?: string }>;
+  availableBands?: SwitcherBand[];
   rehearsals?: Rehearsal[];
   onAddRehearsal?: (rehearsal: Rehearsal) => void;
   bandUsers?: Array<{ id: string; name: string; instrument?: string }>;
@@ -126,37 +80,13 @@ interface DashboardProps {
   tours?: Tour[];
   fans?: Fan[];
   posts?: SocialPost[];
+  payments?: Payment[];
   setlists?: Setlist[];
   songs?: Song[];
-  onNavigate?: (view: any, options?: NavigationOptions) => void;
+  onNavigate?: (view: MainView, options?: NavigationOptions) => void;
   onOpenProfileModal?: () => void;
   isPromoPlan?: boolean;
 }
-
-const isMedio = (l?: Lead | null) => {
-  if (!l || !l.tipo) return false;
-  const s = String(l.tipo).trim().toLowerCase();
-  return (
-    s.includes("medio") ||
-    s.includes("radio") ||
-    s.includes("prensa") ||
-    s.includes("tv") ||
-    s.includes("podc")
-  );
-};
-
-const isManagement = (l?: Lead | null) => {
-  if (!l || !l.tipo) return false;
-  const s = String(l.tipo).trim().toLowerCase();
-  return [
-    "agencia",
-    "manager",
-    "productora",
-    "sello",
-    "promotora",
-    "management",
-  ].some((t) => s.includes(t));
-};
 
 export default function Dashboard({
   leads,
@@ -176,14 +106,12 @@ export default function Dashboard({
   tours = [],
   fans = [],
   posts = [],
+  payments = [],
   onNavigate,
   onOpenProfileModal,
   isPromoPlan: isPromoPlanProp,
 }: DashboardProps) {
   const { setSongs: setPlayerSongs } = usePlayer();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [cityFilter, setCityFilter] = useState("todos");
-  const [genreFilter, setGenreFilter] = useState("todos");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isQuickRehearsalOpen, setIsQuickRehearsalOpen] = useState(false);
@@ -196,7 +124,6 @@ export default function Dashboard({
   const [viewDensityMode, setViewDensityMode] = useState<"clean" | "full">(
     "clean",
   );
-  const [syncLoading, setSyncLoading] = useState(false);
 
   // Band view filter state:'all' (Todas las bandas asignadas por defecto) vs'active' (Solo la banda activa)
   const [agendaFilterMode, setAgendaFilterMode] = useState<"active" | "all">(
@@ -211,28 +138,11 @@ export default function Dashboard({
         availableBands &&
         availableBands.find(
           (b) =>
-            (b.band_id === currentBandId || (b as any).id === currentBandId) &&
-            (normalizePlan((b as any).plan) === "promo" ||
-              normalizePlan((b as any).plan) === "promo_plus"),
+            (b.band_id === currentBandId || b.id === currentBandId) &&
+            (normalizePlan(b.plan) === "promo" ||
+              normalizePlan(b.plan) === "promo_plus"),
         ),
       ));
-
-  // Scraper states
-  const [isScraping, setIsScraping] = useState(false);
-  const [scrapingStatus, setScrapingStatus] = useState("");
-  const [scrapedData, setScrapedData] = useState<{
-    email_contacto: string;
-    telefono: string;
-    website?: string;
-    instagram: string;
-    contacto_nombre?: string;
-    aforo?: number | null;
-    region?: string;
-    genero?: string;
-    contexto_extra?: string;
-    source_info: string;
-  } | null>(null);
-  const [scrapingError, setScrapingError] = useState<string | null>(null);
 
   // Add new lead form states
   const [newSala, setNewSala] = useState("");
@@ -245,7 +155,6 @@ export default function Dashboard({
   const [newInstagram, setNewInstagram] = useState("");
   const [newNotas, setNewNotas] = useState("");
 
-  const [songsCount, setSongsCount] = React.useState(0);
   const [setlists, setSetlists] = React.useState<Setlist[]>([]);
   const [songs, setSongs] = React.useState<Song[]>([]);
 
@@ -261,7 +170,6 @@ export default function Dashboard({
         if (isMounted) {
           if (songsRes?.songs && Array.isArray(songsRes.songs)) {
             setSongs(songsRes.songs);
-            setSongsCount(songsRes.songs.length);
             setPlayerSongs(songsRes.songs);
           }
           if (setlistsRes?.setlists && Array.isArray(setlistsRes.setlists)) {
@@ -271,7 +179,6 @@ export default function Dashboard({
       } catch (err) {
         console.error("Failed to load repertorio data:", err);
         if (isMounted) {
-          setSongsCount(0);
           setSongs([]);
           setSetlists([]);
           setPlayerSongs([]);
@@ -283,116 +190,6 @@ export default function Dashboard({
       isMounted = false;
     };
   }, [currentBandId, setPlayerSongs]);
-
-  const storedSongsCount = songsCount;
-
-  // Handle Sync simulation
-  const handleForceSync = () => {
-    setSyncLoading(true);
-    setTimeout(() => {
-      setSyncLoading(false);
-    }, 1200);
-  };
-
-  const handleScrapeContact = async (lead: Lead) => {
-    setIsScraping(true);
-    setScrapingError(null);
-    setScrapedData(null);
-
-    const steps = [
-      "Conectando con el Agente Scout...",
-      "Buscando perfiles oficiales en la web...",
-      "Extrayendo datos de Instagram y directorios...",
-      "Buscando datos de aforo y estilo musical...",
-      "Filtrando y validando emails de booking...",
-      "Consolidando resultados...",
-    ];
-
-    let currentStep = 0;
-    setScrapingStatus(steps[0]);
-
-    const interval = setInterval(() => {
-      currentStep++;
-      if (currentStep < steps.length) {
-        setScrapingStatus(steps[currentStep]);
-      }
-    }, 1000);
-
-    try {
-      const resData = await apiFetch<any>("/api/scrape-contact", {
-        method: "POST",
-        body: JSON.stringify({
-          leadId: lead.id,
-          nombre_sala: lead.nombre_sala,
-          ciudad: lead.ciudad,
-          region: lead.region,
-        }),
-      });
-
-      clearInterval(interval);
-
-      if (resData?.success && resData?.data) {
-        setScrapedData(resData.data);
-      } else {
-        throw new Error(
-          resData?.error || "No se pudieron extraer datos de contacto.",
-        );
-      }
-    } catch (err: any) {
-      clearInterval(interval);
-      setScrapingError(err.message || "Error en el proceso de raspado.");
-    } finally {
-      setIsScraping(false);
-    }
-  };
-
-  const getScrapedVal = (field: any) =>
-    typeof field === "object" && field !== null ? field.valor : field;
-  const getScrapedConf = (field: any) =>
-    typeof field === "object" && field !== null
-      ? field.confianza || "baja"
-      : "alta";
-
-  const handleApplyScrapedData = (lead: Lead) => {
-    if (!scrapedData) return;
-    const today = new Date().toISOString().split("T")[0];
-    const sourceSummary =
-      typeof scrapedData.source_info === "string"
-        ? scrapedData.source_info
-        : "Scout Scraper Grounding";
-    const updatedNotes = `*** [${today}] Datos enriquecidos vía Scout Scraper. ${sourceSummary} ***\n${lead.notas || ""}`;
-
-    const emailVal = getScrapedVal(scrapedData.email_contacto);
-    const telVal = getScrapedVal(scrapedData.telefono);
-    const webVal = getScrapedVal(scrapedData.website);
-    const instaVal = getScrapedVal(scrapedData.instagram);
-    const contactoVal = getScrapedVal(scrapedData.contacto_nombre);
-    const aforoVal = getScrapedVal(scrapedData.aforo);
-    const regionVal = getScrapedVal(scrapedData.region);
-    const generoVal = getScrapedVal(scrapedData.genero);
-    const contextoVal = getScrapedVal(scrapedData.contexto_extra);
-
-    const updatedFields: Partial<Lead> = {
-      email_contacto: emailVal || lead.email_contacto,
-      telefono: telVal || lead.telefono,
-      website: webVal || lead.website,
-      instagram: instaVal || lead.instagram,
-      contacto_nombre: contactoVal || lead.contacto_nombre,
-      aforo:
-        aforoVal && !isNaN(Number(aforoVal)) ? Number(aforoVal) : lead.aforo,
-      region: regionVal || lead.region,
-      genero: generoVal || lead.genero,
-      contexto_extra:
-        contextoVal && typeof contextoVal === "string" && contextoVal.trim()
-          ? contextoVal.trim()
-          : lead.contexto_extra,
-      notas: updatedNotes,
-    };
-
-    onUpdateLead(lead.id, updatedFields);
-    setSelectedLead((prev) => (prev ? { ...prev, ...updatedFields } : null));
-    setScrapedData(null);
-  };
 
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -429,96 +226,22 @@ export default function Dashboard({
     setNewNotas("");
   };
 
-  // Unique cities and genres for filters
-  const cities = Array.from(new Set(leads.map((l) => l.ciudad))).filter(
-    Boolean,
-  );
-  const genres = Array.from(new Set(leads.map((l) => l.genero))).filter(
-    Boolean,
-  );
-
-  // Filter leads for search/scraper table
-  const filteredLeads = leads.filter((lead) => {
-    const matchesSearch =
-      lead.nombre_sala.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lead.ciudad.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = cityFilter === "todos" || lead.ciudad === cityFilter;
-    const matchesGenre = genreFilter === "todos" || lead.genero === genreFilter;
-    return matchesSearch && matchesCity && matchesGenre;
-  });
-
-  const isLightTheme =
-    (typeof document !== "undefined" &&
-      document.documentElement.dataset.theme === "light") ||
-    colors.mode === "light" ||
-    colors.name?.toLowerCase().includes("light") ||
-    colors.name?.toLowerCase().includes("claro") ||
-    colors.bg.includes("f8fafc") ||
-    colors.bg.includes("white") ||
-    colors.bg.includes("neutral-50") ||
-    false;
-  const subCardBg = "bg-[var(--bg)]/80 text-[var(--ink)]";
-  const textTitle = "text-[var(--ink)]";
-  const textSub = "text-[var(--ink-2)]";
-  const textMuted = "text-[var(--ink-2)]";
-
-  // Calculate real metrics from leads
-  const isMedio = (l: Lead) => {
-    if (!l.tipo) return false;
-    const s = String(l.tipo).trim().toLowerCase();
-    return (
-      s.includes("medio") ||
-      s.includes("radio") ||
-      s.includes("prensa") ||
-      s.includes("tv") ||
-      s.includes("podc")
-    );
-  };
-
-  const pendingApprovalCount = leads.filter(
-    (l) =>
-      l.estado === "pendiente_aprobacion" ||
-      (l.pitch_generado && l.estado === "nuevo"),
-  ).length;
-  const sentCount = leads.filter(
-    (l) => l.estado === "esperando_respuesta",
-  ).length;
-  const interestedCount = leads.filter(
-    (l) => l.estado === "interesado" || l.estado === "negociando",
-  ).length;
-  const approvedCount = leads.filter((l) => l.estado === "aprobado").length;
-  const mediosCount = leads.filter((l) => isMedio(l)).length;
-
   const now = new Date();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   const activeBandId = currentBandId || currentUser?.band_id || "";
   const activeBandName = bandName || currentUser?.bandName || "Tu Banda";
 
-  const activeBandConcerts = React.useMemo(() => {
-    return concerts.filter((c) => {
-      if (!c.band_id) return isSameBandId(activeBandId, "band-bakandeya");
-      return isSameBandId(c.band_id, activeBandId);
-    });
-  }, [concerts, activeBandId]);
-
-  const activeBandRehearsals = React.useMemo(() => {
-    return rehearsals.filter((r) => {
-      if (!r.band_id) return isSameBandId(activeBandId, "band-bakandeya");
-      return isSameBandId(r.band_id, activeBandId);
-    });
-  }, [rehearsals, activeBandId]);
-
   // Filter concerts & rehearsals based on agendaFilterMode
   const filteredConcerts = concerts.filter((c) => {
     if (agendaFilterMode === "all") return true;
-    if (!c.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+    if (!c.band_id) return false;
     return isSameBandId(c.band_id, activeBandId);
   });
 
   const filteredRehearsals = rehearsals.filter((r) => {
     if (agendaFilterMode === "all") return true;
-    if (!r.band_id) return isSameBandId(activeBandId, "band-bakandeya");
+    if (!r.band_id) return false;
     return isSameBandId(r.band_id, activeBandId);
   });
 
@@ -528,19 +251,14 @@ export default function Dashboard({
     if (!bandId || isSameBandId(bandId, activeBandId)) return activeBandName;
     const match = (availableBands || []).find(
       (b) =>
-        isSameBandId(b.band_id, bandId) || isSameBandId((b as any).id, bandId),
+        isSameBandId(b.band_id, bandId) || isSameBandId(b.id, bandId),
     );
     return (
       match?.bandName ||
       match?.name ||
-      (isSameBandId(bandId, "band-bakandeya") ? "Bakandeya" : "Banda")
+      "Banda"
     );
   };
-
-  const hasMultipleBands =
-    (availableBands && availableBands.length > 1) ||
-    concerts.some((c) => c.band_id && !isSameBandId(c.band_id, activeBandId)) ||
-    rehearsals.some((r) => r.band_id && !isSameBandId(r.band_id, activeBandId));
 
   // Build upcoming agenda dates
   const upcomingEvents: Array<{
@@ -646,16 +364,6 @@ export default function Dashboard({
   // vacía: no se inventan conciertos que no existen.
   upcomingEvents.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
 
-  // Calculate urgent leads that need response or approval
-  const urgentRepliesNeeded = leads.filter(
-    (l) => l.estado === "interesado" || l.estado === "negociando",
-  );
-  const urgentApprovalsNeeded = leads.filter(
-    (l) =>
-      l.estado === "pendiente_aprobacion" ||
-      (l.pitch_generado && l.estado === "nuevo"),
-  );
-
 
   // Generate intelligent industry alerts and booking milestones, strictly bound to user plan permissions
   const managerAlerts = generateManagerAlerts(
@@ -719,7 +427,7 @@ export default function Dashboard({
   return (
     <div
       data-modulo="panel"
-      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-hidden"
+      className="space-y-6 text-[var(--ink)] bg-[var(--bg)] -m-3 p-3 sm:-m-5 sm:p-5 md:-m-8 md:p-8 min-h-screen font-sans overflow-x-clip"
     >
       {/* HEADER / TITULO PRINCIPAL */}
       <div className="flex items-center justify-between gap-3 pb-1">
@@ -777,6 +485,19 @@ export default function Dashboard({
               </>
             )}
           </div>
+          <Button
+            variant={isEditDashboardMode ? "primary" : "neutral"}
+            size="xs"
+            type="button"
+            id="quick-edit-layout-btn"
+            aria-pressed={isEditDashboardMode}
+            onClick={() => setIsEditDashboardMode(!isEditDashboardMode)}
+            className="items-center gap-1.5"
+            title="Reordenar, redimensionar y quitar widgets"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span>{isEditDashboardMode ? "Terminar" : "Editar panel"}</span>
+          </Button>
           <Button
             variant="neutral"
             size="xs"
@@ -850,24 +571,6 @@ export default function Dashboard({
 
                 <button
                   type="button"
-                  id="gear-menu-edit-layout-btn"
-                  onClick={() => {
-                    setIsEditDashboardMode(!isEditDashboardMode);
-                    setIsDashboardSettingsOpen(false);
-                  }}
-                  className={`w-full px-2.5 py-2 rounded-[var(--r-s)] hover:bg-[var(--sunken)] text-[var(--ink)] text-left text-xs flex items-center justify-between font-medium transition-colors cursor-pointer`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Sliders className="w-3.5 h-3.5 text-[var(--ink-2)]" />
-                    <span>Personalizar / reordenar</span>
-                  </div>
-                  {isEditDashboardMode && (
-                    <span className="w-2 h-2 rounded-[var(--r-pill)] bg-[var(--acc)]" />
-                  )}
-                </button>
-
-                <button
-                  type="button"
                   id="gear-menu-alerts-settings-btn"
                   onClick={() => {
                     setIsAlertSettingsOpen(true);
@@ -912,6 +615,7 @@ export default function Dashboard({
         tours={tours}
         fans={fans}
         posts={posts}
+        payments={payments}
         setlists={setlists}
         songs={songs}
         epkConfig={epkConfig}
@@ -1037,11 +741,9 @@ export default function Dashboard({
         isOpen={isAlertSettingsOpen}
         onClose={() => setIsAlertSettingsOpen(false)}
         userPlan={currentUser?.plan || "de_gira"}
-        isLeaderOrManager={
-          currentUser?.rol === "leader" ||
-          currentUser?.rol === "manager" ||
-          true
-        }
+        // Antes `currentUser?.rol === "leader" || … || true`: `rol` no existe en User y la
+        // expresión siempre valía true. Se deja explícito, mismo comportamiento.
+        isLeaderOrManager
         userEmail={currentUser?.email || ""}
         bandId={currentBandId || currentUser?.band_id || "active-band"}
       />

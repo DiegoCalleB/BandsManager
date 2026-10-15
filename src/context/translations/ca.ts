@@ -1,0 +1,64 @@
+/** Textos de la interfaz en este idioma (clave -> texto). */
+export const ca: Record<string, string> = {
+  // Navigation
+  'nav.resumen': 'Resum',
+  'nav.booking': 'Escenaris',
+  'nav.medios': 'Mitjans',
+  'nav.management': 'Management',
+  'nav.bandas': 'Grups',
+  'nav.calendario': 'Calendari',
+  'nav.giras': 'Tour Manager',
+  'nav.epk': 'Dossier (EPK)',
+  'nav.fans': 'Captura QR i Fans',
+  'nav.reels': 'Reels Center',
+  'nav.carteleria': 'Cartelleria',
+  'nav.repertorio': 'Repertoris',
+  'nav.ensayos': 'Assajos',
+  'nav.discografia': 'Discografia',
+  'nav.chat': 'Agent Mànager',
+  'nav.finanzas': 'Finances',
+  'nav.merchan': 'Merchandising',
+
+  // Headers & Labels
+  'app.active_band': 'Banda activa',
+  'app.switch_band': 'Canviar de banda',
+  'app.tools': 'Eines',
+  'app.metronome': 'Metrònom',
+  'app.tuner': 'Afinador',
+  'app.upgrade_plan': 'Millorar Pla',
+  'app.settings': 'Configuració',
+  'app.profile': "Perfil d'Usuari",
+  'app.logout': 'Tancar Sessió',
+  'app.language': 'Idioma',
+  'app.theme': 'Tema Visual',
+
+  // Actions
+  'action.save': 'Desar',
+  'action.cancel': 'Cancel·lar',
+  'action.edit': 'Editar',
+  'action.delete': 'Eliminar',
+  'action.add': 'Afegir',
+  'action.search': 'Cercar...',
+  'action.filter': 'Filtrar',
+  'action.close': 'Tancar',
+  'action.approve': 'Aprovar',
+  'action.reject': 'Rebutjar',
+  'action.confirm': 'Confirmar',
+  'action.loading': 'Carregant...',
+  'action.export': 'Exportar',
+  'action.import': 'Importar',
+
+  // Statuses
+  'status.nuevo': 'Nou',
+  'status.pendiente_aprobacion': "Pendent d'Aprovació",
+  'status.aprobado': 'Aprovat',
+  'status.esperando_respuesta': 'Esperant Resposta',
+  'status.interesado': 'Interessat',
+  'status.no_interesado': 'No Interessat',
+  'status.negociando': 'Negociant',
+
+  // General UI
+  'general.no_data': 'Sense dades disponibles',
+  'general.search_placeholder': 'Cercar sala, ciutat, contacte...',
+  'general.welcome': 'Benvingut a BandManager.io!',
+};

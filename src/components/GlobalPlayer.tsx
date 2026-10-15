@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import SpotifyPlayerBar from './SpotifyPlayerBar';
-import { usePlayer } from '../context/PlayerContext';
+import { usePlayer } from '../context/playerContextValue';
 import { ThemeColors, Song } from '../types';
 
 interface GlobalPlayerProps {

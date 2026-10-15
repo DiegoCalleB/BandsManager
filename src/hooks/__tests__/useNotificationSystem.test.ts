@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { useNotificationSystem, ToastNotification } from '../useNotificationSystem';
+import { describe, it, expect } from 'vitest';
+import { ToastNotification } from '../useNotificationSystem';
 
 describe('useNotificationSystem logic', () => {
   it('creates notification objects correctly with required fields', () => {

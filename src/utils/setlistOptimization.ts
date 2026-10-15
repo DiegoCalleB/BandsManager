@@ -93,7 +93,7 @@ export function findBestSetlistMatch(
 
     if (score < lowestScore) {
       lowestScore = score;
-      let reason = '';
+      let reason: string;
       if (diff === 0) {
         reason = `Duración exacta (${durationMin} min)`;
       } else if (diff <= 5) {

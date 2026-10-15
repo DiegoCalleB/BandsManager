@@ -6,12 +6,7 @@ import {
   Sliders,
   Upload,
 } from 'lucide-react';
-import {
-  QrCustomConfig,
-  QR_PRESET_THEMES,
-  DEFAULT_QR_CUSTOM_CONFIG,
-  QrFrameStyle,
-} from './qrCustomizationConfig';
+import { QrCustomConfig, QR_PRESET_THEMES, DEFAULT_QR_CUSTOM_CONFIG } from './qrCustomizationConfig';
 import { Button, Input } from '../../ui';
 
 interface QrCustomizerControlsProps {

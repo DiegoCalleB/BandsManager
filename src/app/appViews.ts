@@ -1,0 +1,21 @@
+/** Vistas principales de la aplicación interna. */
+export type MainView =
+  | "resumen"
+  | "booking"
+  | "medios"
+  | "management"
+  | "bandas"
+  | "calendario"
+  | "ensayos"
+  | "reels"
+  | "carteleria"
+  | "repertorio"
+  | "catalogo"
+  | "discografia"
+  | "finanzas"
+  | "chat"
+  | "giras"
+  | "merchan"
+  | "epk"
+  | "fans"
+  | "planes";

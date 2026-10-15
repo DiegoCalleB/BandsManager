@@ -1,9 +1,7 @@
 import React from 'react';
-import { Calendar, Compass, DollarSign, Calculator, TrendingUp, Sparkles, ExternalLink } from 'lucide-react';
+import { Calendar, Calculator, ExternalLink } from 'lucide-react';
 import { Lead } from '../../../types';
 import { QuickDealSimulator } from '../QuickDealSimulator';
-import { DealAndLogisticsCopilot } from '../DealAndLogisticsCopilot';
-import { ShowIcon } from '../../ui/ShowIcon';
 
 interface VenueIntelligenceTabProps {
   lead: Lead;
@@ -13,11 +11,10 @@ interface VenueIntelligenceTabProps {
 
 export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
   lead,
-  onUpdateLead,
-  bandName,
+  onUpdateLead
 }) => {
   const fechasLibres = lead.fechas_libres_detectadas || [];
-  const wegowOk = (lead as any).radar_wegow_status === 'ok';
+  const wegowOk = lead.radar_wegow_status === 'ok';
 
   return (
     <div className="flex flex-col h-full overflow-y-auto no-scrollbar p-4 sm:p-6 space-y-5">
@@ -27,7 +24,7 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-[var(--acc)]" />
             <h4 className="text-xs font-bold font-sans uppercase tracking-wider text-[var(--ink)]">
-              Radar de Fechas Libres (Wegow & Ticketing)
+              Radar de fechas libres (wegow y ticketing)
             </h4>
           </div>
           {wegowOk && (
@@ -77,7 +74,7 @@ export const VenueIntelligenceTab: React.FC<VenueIntelligenceTabProps> = ({
         <div className="flex items-center gap-2">
           <Calculator className="w-4 h-4 text-[var(--ok)]" />
           <h4 className="text-xs font-bold font-sans uppercase tracking-wider text-[var(--ink)]">
-            Simulador de Bolo & Punto de Equilibrio (P&L)
+            Simulador de bolo y punto de equilibrio (P&L)
           </h4>
         </div>
         <p className="text-xs text-[var(--ink-2)]">

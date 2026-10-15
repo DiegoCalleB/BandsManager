@@ -3,6 +3,7 @@ import net from "net";
 import http from "http";
 import https from "https";
 import fs from "fs";
+import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 // server/auto_enrichment.ts, leads/enrichment.ts, leads/places.ts y ai_music.ts hacen peticiones a URLs externas
 // provistas por usuarios o APIs. Sin esta comprobación con IP Pinning, un atacante puede ejecutar
@@ -77,7 +78,8 @@ export async function validarYResolverUrlSegura(rawUrl: string): Promise<Validat
     }
     // Seleccionar la primera IP segura resuelta para anclarla (Pinning anti-TOCTOU)
     return { segura: true, ipPin: resolved[0].address, parsedUrl: parsed };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     return { segura: false, error: err?.message || "Error en resolución DNS" };
   }
 }
@@ -96,7 +98,7 @@ export function crearAgenteIpPinneada(ipPin: string, isHttps: boolean) {
   // ARRAY de direcciones; devolver una sola cadena produce «Invalid IP address: undefined» y
   // TODA petición anclada fallaba, también las de Supabase. Se atienden las dos formas.
   const family = net.isIPv6(ipPin) ? 6 : 4;
-  const customLookup = (_hostname: string, options: any, callback: (...args: any[]) => void) => {
+  const customLookup: net.LookupFunction = (_hostname, options, callback) => {
     if (options && options.all) callback(null, [{ address: ipPin, family }]);
     else callback(null, ipPin, family);
   };
@@ -104,6 +106,9 @@ export function crearAgenteIpPinneada(ipPin: string, isHttps: boolean) {
     ? new https.Agent({ lookup: customLookup, keepAlive: false })
     : new http.Agent({ lookup: customLookup, keepAlive: false });
 }
+
+/** Respuesta ya descargada; `json()` devuelve `unknown`: quien la lea debe comprobar su forma. */
+type RespuestaSegura = { statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => unknown };
 
 /**
  * Realiza una petición HTTP/HTTPS segura con anclaje de IP resuelta (Anti-DNS Rebinding / Anti-TOCTOU).
@@ -118,7 +123,7 @@ export async function fetchUrlExternaSegura(
     /** Redirecciones a seguir (0 = ninguna). Cada salto se revalida entero (DNS + rangos privados). */
     maxRedirects?: number;
   } = {}
-): Promise<{ statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any }> {
+): Promise<RespuestaSegura> {
   const respuesta = await peticionUnica(rawUrl, options);
   const ubicacion = respuesta.headers.location;
   const saltos = options.maxRedirects ?? 0;
@@ -130,7 +135,6 @@ export async function fetchUrlExternaSegura(
   return respuesta;
 }
 
-type RespuestaSegura = { statusCode: number; headers: http.IncomingHttpHeaders; buffer: Buffer; text: () => string; json: () => any };
 
 async function peticionUnica(
   rawUrl: string,
@@ -219,7 +223,8 @@ export async function descargarBufferSeguro(
     const res = await fetchUrlExternaSegura(rawUrl, { maxRedirects: 3, timeoutMs: 45000, maxBytes: 150 * 1024 * 1024, ...opciones });
     if (res.statusCode >= 400) return null;
     return { buffer: res.buffer, headers: res.headers, statusCode: res.statusCode };
-  } catch (err: any) {
+  } catch (errCapturado) {
+    const err = comoErrorCapturado(errCapturado);
     console.warn("[ssrfGuard] descarga rechazada o fallida:", String(err?.message || err).substring(0, 160));
     return null;
   }

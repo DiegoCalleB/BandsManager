@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Droplets,
@@ -42,7 +42,7 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
     "show",
   );
   const [weatherData, setWeatherData] = useState<EventWeatherData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(Boolean(city && dateStr));
   const [expandedAlerts, setExpandedAlerts] = useState<Record<string, boolean>>(
     {},
   );
@@ -59,37 +59,42 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
     }));
   };
 
-  const loadWeather = async () => {
-    if (!city || !dateStr) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const data = await fetchEventWeather({
-        city,
-        dateStr,
-        timeStr: activeTimeStr,
-      });
-      setWeatherData(data);
-      if (data.alerts && onAlertsDetected) {
-        onAlertsDetected(data.alerts);
-      }
-      // En móvil el aviso ya se ve en la píldora compacta: no se abre solo y empuja la ficha.
-      const esMovil = typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
-      if (!esMovil && data.alerts && data.alerts.some((a) => a.severity === "danger")) {
-        setIsExpanded(true);
-      }
-    } catch (err) {
-      console.warn("[EventWeatherCard] Failed to load weather:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Al cambiar la consulta (ciudad/fecha/hora) se vuelve a "cargando" durante el render.
+  const queryKey = `${city}|${dateStr}|${activeTimeStr}`;
+  const [prevQueryKey, setPrevQueryKey] = useState(queryKey);
+  if (prevQueryKey !== queryKey) {
+    setPrevQueryKey(queryKey);
+    setIsLoading(Boolean(city && dateStr));
+  }
+
+  const [refreshTick, setRefreshTick] = useState(0);
+
+  const notifyAlerts = useEffectEvent((alerts: WeatherAlert[]) => onAlertsDetected?.(alerts));
 
   useEffect(() => {
-    loadWeather();
-  }, [city, dateStr, activeTimeStr]);
+    if (!city || !dateStr) return;
+    let cancelled = false;
+    fetchEventWeather({ city, dateStr, timeStr: activeTimeStr })
+      .then((data) => {
+        if (cancelled) return;
+        setWeatherData(data);
+        if (data.alerts) notifyAlerts(data.alerts);
+        // En móvil el aviso ya se ve en la píldora compacta: no se abre solo y empuja la ficha.
+        const esMovil = typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches;
+        if (!esMovil && data.alerts && data.alerts.some((a) => a.severity === "danger")) {
+          setIsExpanded(true);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) console.warn("[EventWeatherCard] Failed to load weather:", err);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [city, dateStr, activeTimeStr, refreshTick]);
 
   const getWeatherIconBackdrop = (iconType?: EventWeatherData["iconType"]) => {
     switch (iconType) {
@@ -278,7 +283,10 @@ export const EventWeatherCard: React.FC<EventWeatherCardProps> = ({
             label="Actualizar previsión"
             size="icon-xs"
             type="button"
-            onClick={loadWeather}
+            onClick={() => {
+              setIsLoading(Boolean(city && dateStr));
+              setRefreshTick((t) => t + 1);
+            }}
           >
             <RefreshCw
               className={`w-3 h-3 ${isLoading ? "animate-spin text-[var(--acc)]" : ""}`}
