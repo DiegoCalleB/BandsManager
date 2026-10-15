@@ -19,6 +19,20 @@ sys.path.insert(0, AQUI)
 import voces  # noqa: E402  (mismo hash y reparto que el generador de voces)
 
 # Fuera: Peláez sale a contraluz, sin boca visible; el programador lleva la cara de una persona real (sin permiso por escrito)
+MAX = 7.8  # el Space gratuito de LatentSync corta el audio a 8 s: las frases más largas van en dos trozos
+
+
+def corte(mp3, dur):
+    """Segundo de la pausa más larga cerca de la mitad de la frase (para partirla sin cortar una palabra)."""
+    log = subprocess.run(['ffmpeg', '-nostats', '-i', mp3, '-af', 'silencedetect=n=-35dB:d=0.15', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    ini = [float(x) for x in re.findall(r'silence_start: ([\d.]+)', log)]
+    fin = [float(x) for x in re.findall(r'silence_end: ([\d.]+)', log)]
+    pausas = [((a + b) / 2, b - a) for a, b in zip(ini, fin) if dur - MAX < (a + b) / 2 < MAX]
+    if not pausas:
+        return dur / 2
+    return max(pausas, key=lambda p: p[1] - abs(p[0] - dur / 2) * 0.2)[0]
+
+
 FUERA = {'ent-pelaez': 'a contraluz: no se le ve la boca', 'ent-ent-programador-cafe': 'cara de persona real: falta su permiso por escrito'}
 
 
@@ -48,17 +62,23 @@ def main():
         if not v:
             filas.append((nombre, quien, 'sin voz: ejecuta tools/voces.py', frase[:60], ''))
             continue
-        d = os.path.join(salida, nombre)
-        os.makedirs(d)
-        shutil.copy(os.path.join(DECK, 'audio', 'voces', v['f']), os.path.join(d, 'audio.mp3'))
-        dur = v['d'] + 0.5
-        # -stream_loop: si el clip es más corto que la frase, se repite; -t lo deja justo a la duración de la frase
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-stream_loop', '-1', '-i', os.path.join(DECK, clip.group(1)), '-t', f'{dur:.2f}',
-                        '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', os.path.join(d, 'video.mp4')], check=True)
-        json.dump({'entrevista': nombre, 'personaje': quien, 'frase': frase, 'duracion_s': round(dur, 2), 'clip_original': clip.group(1),
-                   'subir': ['video.mp4', 'audio.mp3'], 'resultado': f'lipsync/{nombre}/plano.mp4'},
-                  open(os.path.join(d, 'ficha.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        filas.append((nombre, quien, 'LISTA para subir', frase[:60], f'{dur:.1f} s'))
+        mp3 = os.path.join(DECK, 'audio', 'voces', v['f'])
+        total = v['d']
+        cortes = [0, corte(mp3, total), total] if total > MAX else [0, total]
+        for n in range(len(cortes) - 1):
+            parte = nombre if len(cortes) == 2 else f'{nombre}-{n + 1}'
+            d = os.path.join(salida, parte)
+            os.makedirs(d)
+            t0, t1 = cortes[n], cortes[n + 1]
+            dur = (t1 - t0) + (0.5 if n == len(cortes) - 2 else 0)
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{t0:.2f}', '-i', mp3, '-t', f'{t1 - t0:.2f}', os.path.join(d, 'audio.mp3')], check=True)
+            # el trozo de entrevista que corresponde; -stream_loop: si el clip es más corto que la frase, se repite
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-stream_loop', '-1', '-i', os.path.join(DECK, clip.group(1)), '-ss', f'{t0:.2f}', '-t', f'{dur:.2f}',
+                            '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', os.path.join(d, 'video.mp4')], check=True)
+            json.dump({'entrevista': nombre, 'trozo': f'{n + 1} de {len(cortes) - 1}', 'desde_s': round(t0, 2), 'personaje': quien, 'frase': frase,
+                       'duracion_s': round(dur, 2), 'clip_original': clip.group(1), 'subir': ['video.mp4', 'audio.mp3'], 'resultado': f'lipsync/{parte}/plano.mp4'},
+                      open(os.path.join(d, 'ficha.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            filas.append((parte, quien, 'LISTA para subir', frase[:60], f'{dur:.1f} s'))
     with open(os.path.join(salida, 'INDICE.md'), 'w', encoding='utf-8') as o:
         o.write('# Entrevistas para sincronizar los labios\n\nSube `video.mp4` y `audio.mp3` de cada carpeta; guarda el resultado como `plano.mp4`.\n\n'
                 '| Carpeta | Quién | Estado | Frase | Duración |\n|---|---|---|---|---|\n')
