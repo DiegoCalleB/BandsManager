@@ -877,7 +877,7 @@ if FOTOS:
     linea = ('<div class="mb-linea" aria-hidden="true">' + ''.join(
         f'<span style="--t:{t0:.2f}s"><i></i><b>{e}</b><u>{n}</u></span>' for e, t0, n in hitos) + '</div>')
     S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]] = S[[i for i, x in enumerate(S) if 'data-title="El giro: el bajista soy yo"' in x][0]].replace(
-        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-dur="{int((t + 1.8) * 1000)}" data-fin=".mb-fin">
+        '<!--MIS-BANDAS-->', f'''<section class="slide mis-bandas" data-title="Mis bandas" data-transition="fade" data-min="{int((t + 1.8) * 1000)}" data-dur="{int((t + 1.8) * 1000)}" data-fin=".mb-fin">
   <span class="tag" style="opacity:0">Fin de la historia · Diego de la Calle</span>
   {cuerpo}
   {linea}
@@ -1423,6 +1423,13 @@ for _i, _x in enumerate(S):
 import json as _json
 _json.dump(direccion.MOVS, open(os.path.join(AQUI, '..', '..', 'remotion', 'public', 'direccion.json'), 'w'))
 html = head + '\n\n' + '\n'.join(S) + '\n' + tail
+if FOTOS:
+    # El giro: las frases de Diego suenan sobre «Mis bandas» (las fotos de sus grupos), sin una escena aparte con la foto fija
+    _i = html.index('<section class="slide entrevista" data-title="El giro: el bajista soy yo"'); _j = html.index('</section>', _i) + len('</section>')
+    _voz = re.findall(r'data-who="diego"[^>]*data-say="([^"]*)"', html[_i:_j]); assert len(_voz) == 2, _voz
+    html = html[:_i] + html[_j:].lstrip('\n')
+    _mb = re.search(r'<section class="slide mis-bandas" data-title="Mis bandas"[^>]*>', html).group(0)
+    html = html.replace(_mb, _mb + ''.join(f'\n  <i class="mb-voz" data-who="diego" data-say="{v}"></i>' for v in _voz), 1)
 # Defensa técnica: el panel (tecla D) y presentacion/DEFENSA.md salen del mismo contenido (defensa.py)
 import defensa as _df, re as _re
 def _md(t): return _re.sub(r'`([^`]+)`', r'<code>\1</code>', t)
@@ -1450,6 +1457,7 @@ CORTO = ['Tráiler', 'Prólogo · Jueves, 23:47', 'Prólogo · La llamada', 'Tí
          'Iris separa los instrumentos', 'Choques en el calendario', 'Las noches', 'El festival, 02:14', 'En la radio', 'El giro: el bajista soy yo',
          'Un sueño hecho realidad', 'El reloj', 'El reto', 'La invitación', 'Gracias', 'Créditos']
 if FOTOS:
+    CORTO.remove('El giro: el bajista soy yo')
     CORTO.insert(CORTO.index('Un sueño hecho realidad'), 'Mis bandas')
 for t in CORTO:
     n = html.count(f'data-title="{t}"')
@@ -1588,6 +1596,9 @@ CORTES = {
 MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'compila', 'Capítulo 3 · Que te conozcan': 'cabalga', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'compila', 'Y mucho más': 'cabalga',
           'Qué viene': 'tension', 'Confirmados': 'compila', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'giro', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'cabalga', 'Plano · El local, vacío': 'cabalga',
           'Escena post-créditos': 'tema'}
+if FOTOS:  # «Mis bandas» hace de escena del giro: entra por negro y lleva su canción
+    CORTES.pop('El giro: el bajista soy yo', None); MUSICA.pop('El giro: el bajista soy yo', None)
+    CORTES['Mis bandas'] = 'negro'; MUSICA['Mis bandas'] = 'giro'
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):
         continue

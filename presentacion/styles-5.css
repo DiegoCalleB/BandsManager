@@ -230,3 +230,8 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 /* el móvil del generador de reels enseña a la banda tocando (encaja en el hueco de «Band Clip Studio», entre la cabecera y los iconos) */
 .dr-reelvid { position: absolute; left: 76.56%; top: 37.1%; width: 14.5%; height: 21.6%; border-radius: 18px; overflow: hidden; pointer-events: none; }
 .dr-reelvid video { position: absolute; inset: 0; width: 100% !important; height: 100% !important; object-fit: cover !important; object-position: 50% 40%; }
+
+/* las frases de Diego suenan sobre las fotos de «Mis bandas»; el elemento solo es el portador de la voz */
+.mb-voz { position: absolute; left: 0; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+/* con la voz de Diego encima, los subtítulos ocupan abajo: la línea de edades pasa arriba */
+.mis-bandas .mb-linea { bottom: auto; top: 66px; scale: .8; transform-origin: 50% 0; }
