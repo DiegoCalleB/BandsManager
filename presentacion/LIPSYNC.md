@@ -7,6 +7,7 @@ El resto de la película sigue con voz en off, clips en movimiento y avatares qu
 Donde más se nota que la boca no va con la voz es en las entrevistas: el personaje habla a cámara en vídeo. Se preparan con
 `python3 presentacion/tools/lipsync_entrevistas.py`, que deja en `presentacion/lipsync/<entrevista>/` el clip recortado a la frase
 (`video.mp4`, sin sonido) y su voz (`audio.mp3`). Se suben los dos a Sync Labs (u otra) y el resultado se guarda como `plano.mp4`.
+Gratis: `tools/lipsync_colab.ipynb` (Google Colab con GPU T4 y LatentSync 1.5) las procesa todas de una vez: se sube `lipsync.zip` y devuelve `resultados.zip`.
 Quedan fuera Peláez (a contraluz, sin boca visible) y el programador (cara real, sin permiso por escrito).
 
 ## Flujo

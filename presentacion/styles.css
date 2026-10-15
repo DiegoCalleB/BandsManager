@@ -2402,3 +2402,11 @@ body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: 
 
 /* Pausa de verdad: las animaciones de la escena se quedan quietas (el reproductor #nf sigue vivo) */
 body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.pausado #stage *::after { animation-play-state: paused !important; }
+
+/* Escenas largas con varios planos de fondo (data-title en PLANOS de generar.py, con lista): cada clip entra en --i durante --d y se funde con el
+   siguiente; el último se queda. Evita ver 10 s de vídeo repetidos durante media escena. */
+.slide.scene .scene-bg .actor-vid.sec { opacity: 0; }
+.slide.scene.active .scene-bg .actor-vid.sec { animation: avon var(--d) linear var(--i) both; }
+.slide.scene.active .scene-bg .actor-vid.sec.ult { animation-name: avult; }
+@keyframes avon { 0% { opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes avult { 0% { opacity: 0; } 5%, 100% { opacity: 1; } }
