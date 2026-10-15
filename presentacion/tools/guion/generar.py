@@ -1449,22 +1449,22 @@ html = html.replace('>Empezar con sonido</button>', '>Empezar con sonido y voces
 html = html.replace('<button id="gateSound" class="gate-btn primary">Empezar con sonido y voces</button>', '<button id="gatePeli" class="gate-btn primary">🎬 Ver como película</button>\n      <button id="gateSound" class="gate-btn">Empezar con sonido y voces</button>', 1)
 # Pantalla de entrada a lo Netflix: ¿quién está viendo? → inicio con la película destacada (el tráiler arranca solo) y el resto «Próximamente»
 PROXIMAMENTE = [
-    ('Setlist_v7_FINAL_def2', 'img/concierto-1.jpg'), ('Peláez: el treinta por ciento', 'img/historia/bajo-contraluz.jpg'),
-    ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg'), ('El Excel de las siete versiones', 'img/historia/bajo-bn.jpg'),
-    ('Croquetas en el camerino', 'img/historia/thc.jpg'), ('Dadme hasta el sábado', 'img/concierto-3.jpg'),
+    ('Setlist_v7_FINAL_def2', 'img/d-h-repertorio.jpg'), ('Peláez: el treinta por ciento', 'video/actores/pelaez.jpg'),
+    ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg'), ('El Excel de las siete versiones', 'img/d-h-booking.jpg'),
+    ('Croquetas en el camerino', 'video/actores/local.jpg'), ('Dadme hasta el sábado', 'img/concierto-3.jpg'),
 ]
 filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
 # Fotos de los perfiles (si falta un fichero, se queda la carita de color; lo de Brais y el logo de The Big School los aporta Diego)
 import os
 PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado', 'img/perfil-tbs.jpg'),
-            ('pelaez', 'Invitado Peláez', 'video/actores/pelaez.jpg'), ('diego', 'Diego', 'img/diego-bajista.jpg')]
+            ('pelaez', 'Invitado Peláez', 'video/actores/pelaez.jpg'), ('diego', 'Diego', 'img/historia/mop-gira.jpg')]
 def _av(k, foto, extra=''):
     ok = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', foto))
     return f'<i class="av {k}{" foto" if ok else ""}{extra}"' + (f' style="--foto:url({foto})"' if ok else '') + '></i>'
 CONTINUAR = [('Os Herdeiros do Código', 'img/concierto-2.jpg', 38, 'Quedan 9 min'), ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg', 71, 'Quedan 4 min'),
              ('Dadme hasta el sábado', 'img/concierto-3.jpg', 12, 'Quedan 13 min')]
-TOP10 = [('Os Herdeiros do Código', 'img/concierto-2.jpg'), ('Los miércoles libro', 'img/historia/bajo-bn.jpg'), ('Treinta por ciento', 'img/historia/bajo-contraluz.jpg'),
-         ('Hasta el sábado', 'img/concierto-1.jpg'), ('La balada que vació el bar', 'img/historia/mop-gira.jpg'), ('Cuatro tíos y un cú-erre', 'img/historia/thc.jpg')]
+TOP10 = [('Os Herdeiros do Código', 'img/concierto-2.jpg'), ('Los miércoles libro', 'video/actores/brais-cu.jpg'), ('Treinta por ciento', 'video/actores/pelaez.jpg'),
+         ('Hasta el sábado', 'img/concierto-1.jpg'), ('La balada que vació el bar', 'img/miembro-xandre.jpg'), ('Cuatro tíos y un cú-erre', 'img/d-h-fans.jpg')]
 _acc = '<span class="nx-acc"><i class="p">&#9654;</i><i>+</i><i>&#128077;</i><i class="m">&#8964;</i></span><span class="nx-mini"><b>98 % para ti</b> +12 · 15 min</span>'
 fila_continuar = ''.join(f'<div class="nx-card k" style="--img:url({i})"><b>{t}</b>{_acc}<em class="nx-resta">{r}</em><u style="--w:{w}%"></u></div>' for t, i, w, r in CONTINUAR)
 fila_top = ''.join(f'<div class="nx-top-c"><span class="nx-num">{n}</span><div class="nx-card k" style="--img:url({i})"><b>{t}</b>{_acc}</div></div>' for n, (t, i) in enumerate(TOP10, 1))

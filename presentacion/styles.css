@@ -2342,7 +2342,7 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 /* Perfiles con foto (si el fichero existe, el generador añade .foto y desaparece la carita) */
 .av.foto { background: var(--foto) center / cover no-repeat; }
 .av.foto::before, .av.foto::after { display: none; }
-.av.diego.foto { background-position: 50% 8%; }
+.av.diego.foto { background-size: 250%; background-position: 45% 14%; }
 .av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
 .av.profes.foto { background-size: cover; }
 .av.brais.foto { background-position: 50% 20%; }
