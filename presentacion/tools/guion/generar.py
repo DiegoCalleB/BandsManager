@@ -1374,12 +1374,17 @@ direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
 PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': 'viernes', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
-          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
-          'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
+          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto', 'alvaro-escenario'],
+          'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'alvaro-escenario', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
           'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
           'Esto lo necesitan todos': 'alvaro-escenario'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
+# Escenas con varios planos de fondo seguidos: segundo en que entra cada clip (el último se queda); el CSS los funde (.actor-vid.sec)
+SECUENCIA = {'El festival, 02:14': [0, 12, 21.5]}
+def _vids(k, t):
+    ini = SECUENCIA[t]
+    return ''.join(_vid(c, f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"').replace('class="actor-vid"', 'class="actor-vid sec' + (' ult' if n + 1 == len(k) else '') + '"') for n, c in enumerate(k))
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
             + (f' poster="video/actores/{k}.jpg"' if os.path.exists(os.path.join(_ACT, k + '.jpg')) else '')
@@ -1388,8 +1393,9 @@ def _vid(k, extra=''):
 for _i, _x in enumerate(S):
     _t = re.search(r'data-title="([^"]+)"', _x)
     _k = _t and PLANOS.get(_t.group(1))
-    if _k and os.path.exists(os.path.join(_ACT, _k + '.mp4')):
-        S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _vid(_k) + '<i class="actor-velo"></i>', _x, count=1)
+    if _k and all(os.path.exists(os.path.join(_ACT, c + '.mp4')) for c in ([_k] if isinstance(_k, str) else _k)):
+        _v = _vid(_k) if isinstance(_k, str) else _vids(_k, _t.group(1))
+        S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _v + '<i class="actor-velo"></i>', _x, count=1)
         if _k == 'manager': S[_i] = re.sub(r'(<section [^>]*)>', r'\1 data-sin-plato>', S[_i], count=1)  # el vídeo ya es el mánager: sin su retrato encima
     for _m in ('brais', 'xandre', 'alvaro', 'iago'):
         if 'data-title="Prólogo · La banda"' in S[_i] and os.path.exists(os.path.join(_ACT, f'miembro-{_m}.mp4')):
@@ -1556,8 +1562,8 @@ CORTES = {
     'Mis bandas': 'golpe', 'Un sueño hecho realidad': 'fundido', 'El reloj': 'golpe', 'El reto': 'golpe', 'La invitación': 'fundido', 'Gracias': 'negro', 'Créditos': 'negro', 'Escena post-créditos': 'negro',
 }
 # La música cambia en estas escenas y sigue hasta el próximo cambio («-» = silencio)
-MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'compila', 'Capítulo 3 · Que te conozcan': 'cabalga', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'noches', 'Y mucho más': 'cabalga',
-          'Qué viene': 'tension', 'Confirmados': 'cabalga', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'giro', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'cabalga', 'Plano · El local, vacío': 'cabalga',
+MUSICA = {'Tráiler': '-', 'Título': '-', 'Prólogo · La banda': 'tension', 'Capítulo 1 · Conseguir el bolo': 'compila', 'Capítulo 3 · Que te conozcan': 'cabalga', 'Las noches': 'dramatica', 'Esto lo necesitan todos': 'compila', 'Y mucho más': 'cabalga',
+          'Qué viene': 'tension', 'Confirmados': 'compila', 'El festival, 02:14': 'compila', 'Otro jueves, 23:47': 'noches', 'Mis bandas': 'lostrego', 'El giro: el bajista soy yo': 'giro', 'Un sueño hecho realidad': 'dramatica', 'El reloj': '-', 'El reto': 'tema', 'La invitación': 'dramatica', 'Gracias': 'cabalga', 'Plano · El local, vacío': 'cabalga',
           'Escena post-créditos': 'tema'}
 for t in CORTES:
     if t.startswith('Capítulo') or (t == 'Mis bandas' and not FOTOS):
