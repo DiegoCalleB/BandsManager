@@ -29,8 +29,6 @@
     "skills:sync": "node scripts/sync-skills.mjs",
     "docs:metricas": "node scripts/verify-docs-consistencia.cjs --fix",
     "prepare": "husky || exit 0",
-    "test:visual": "playwright test --project=visual",
-    "test:visual:update": "playwright test --project=visual --update-snapshots",
     "design:audit": "node scripts/design-audit.js",
     "design:audit:strict": "node scripts/design-audit.js --strict",
     "design:fix": "node scripts/design-fixer.js && npm run typecheck && npm run build",

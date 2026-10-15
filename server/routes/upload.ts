@@ -333,9 +333,9 @@ export function getBucketName() {
   return envBucket;
 }
 
-// requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el
-// detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.
+// Solo admin: sube un fichero al bucket COMPARTIDO y devuelve su nombre y el error de Supabase; es de la plataforma.
 router.get("/test-supabase", requireAuth, async (req, res) => {
+  if (req.user?.role !== "admin") return res.status(403).json({ error: "Acceso denegado." });
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.json({ success: false, message: "No se pudo inicializar el cliente de Supabase (faltan claves)." });

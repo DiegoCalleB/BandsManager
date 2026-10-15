@@ -76,6 +76,8 @@ _Sin dependencias salientes directas._
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(from #schema)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(from #schema)*
 - [[tabla_reel_analyses|tabla reel_analyses]] *(from #schema)*
+- [[tabla_reel_clips|tabla reel_clips]] *(from #schema)*
+- [[tabla_reel_metricas|tabla reel_metricas]] *(from #schema)*
 - [[tabla_rehearsals|tabla rehearsals]] *(from #schema)*
 - [[tabla_run_of_show|tabla run_of_show]] *(from #schema)*
 - [[tabla_saved_filters|tabla saved_filters]] *(from #schema)*

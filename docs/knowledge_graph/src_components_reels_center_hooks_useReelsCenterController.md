@@ -19,12 +19,14 @@ Compone todos los hooks del Centro de Reels y expone el estado y los handlers qu
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useAprendizajeReels|src/components/reels_center/hooks/useAprendizajeReels.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useBandToneAnalysis|src/components/reels_center/hooks/useBandToneAnalysis.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useClipFeedbackState|src/components/reels_center/hooks/useClipFeedbackState.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useClipReanalysis|src/components/reels_center/hooks/useClipReanalysis.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useCopyDraftState|src/components/reels_center/hooks/useCopyDraftState.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useCopyPerfecto|src/components/reels_center/hooks/useCopyPerfecto.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useHighlightEditing|src/components/reels_center/hooks/useHighlightEditing.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useReelStyleOptions|src/components/reels_center/hooks/useReelStyleOptions.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_hooks_useReelsSync|src/components/reels_center/hooks/useReelsSync.ts]] *(Layer: #frontend, Domain: #social)*

@@ -38,6 +38,11 @@ Letra y acordes del audio de UNA canción, sincronizados. Lo usan la ruta manual
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/letraErrorSeguro.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?

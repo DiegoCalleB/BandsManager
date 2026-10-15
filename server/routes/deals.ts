@@ -209,7 +209,9 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al crear/actualizar acuerdo:', error);
-    return res.status(estadoHttp(error, 500)).json({ error: error.message || 'Error al persistir acuerdo' });
+    // Un DealError lleva un mensaje pensado para la persona (si no es un fallo del servidor); cualquier otro error es interno.
+    if (error instanceof DealError) return res.status(error.status).json({ error: error.status < 500 ? error.message : 'Error al persistir acuerdo' });
+    return responderError(res, error, 'Error al persistir acuerdo');
   }
 });
 
