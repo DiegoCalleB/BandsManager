@@ -4,6 +4,8 @@
  */
 import { apiFetch } from './api';
 import type { CanalPublicacion, HitoId } from './campanaConcierto';
+import type { CartelConfig } from './cartel/config';
+import type { AdnCartel } from './cartel/adn';
 
 export type DestinoEnlace = 'entradas' | 'concierto' | 'epk' | 'fans';
 export type CanalEnlace = 'instagram' | 'tiktok' | 'whatsapp' | 'facebook' | 'youtube' | 'email' | 'cartel' | 'web' | 'otro';
@@ -62,3 +64,30 @@ export const obtenerReferidos = () => apiFetch<EstadoReferidos>('/api/referidos'
 
 export const atribuirReferido = (codigo: string) =>
   apiFetch<{ atribuido: boolean }>('/api/referidos/atribuir', { method: 'POST', body: JSON.stringify({ codigo }) });
+
+import type { EstiloCartel } from './cartel/estilos';
+export type { EstiloCartel };
+
+export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string }) =>
+  apiFetch<{ url: string; estilo: EstiloCartel }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });
+
+const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeURIComponent(concertId)}/${tramo}`;
+
+export const guardarConfigCartel = (concertId: string, config: CartelConfig) =>
+  apiFetch<{ config: CartelConfig }>(rutaCartel(concertId, 'config'), { method: 'PUT', body: JSON.stringify(config) });
+
+/** El cartel final (PNG de feed): pasa a ser el cartel del bolo en su página pública. */
+export const subirImagenCartel = (concertId: string, png: Blob) =>
+  apiFetch<{ url: string }>(rutaCartel(concertId, 'imagen'), { method: 'PUT', body: png, headers: { 'Content-Type': 'image/png' } });
+
+export const subirFotoCartel = (concertId: string, jpeg: Blob) =>
+  apiFetch<{ url: string }>(rutaCartel(concertId, 'foto'), { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });
+
+export const obtenerAdnCartel = () => apiFetch<{ adn: AdnCartel }>('/api/cartel/adn');
+
+export const guardarAdnCartel = (adn: AdnCartel) =>
+  apiFetch<{ adn: AdnCartel }>('/api/cartel/adn', { method: 'PUT', body: JSON.stringify(adn) });
+
+/** Una imagen de referencia (JPEG ya reescalado): la IA la mira para parecerse a la banda. */
+export const subirReferenciaCartel = (jpeg: Blob) =>
+  apiFetch<{ url: string; adn: AdnCartel }>('/api/cartel/referencias', { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });

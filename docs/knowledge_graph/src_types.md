@@ -260,6 +260,8 @@ _Sin dependencias salientes directas._
 - [[src_components_calendar_views_CalendarOverlays|src/components/calendar/views/CalendarOverlays.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
+- [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatMessageBubble|src/components/chatbot/ChatMessageBubble.tsx]] *(from #frontend)*
 - [[src_components_chatbot_chatTypes|src/components/chatbot/chatTypes.ts]] *(from #frontend)*
@@ -551,6 +553,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_calendarConflicts|src/utils/calendarConflicts.ts]] *(from #service)*
 - [[src_utils_calendarViewPreferences|src/utils/calendarViewPreferences.ts]] *(from #service)*
 - [[src_utils_campaignMatch|src/utils/campaignMatch.ts]] *(from #service)*
+- [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(from #service)*
 - [[src_utils_cuadriculaCompases|src/utils/cuadriculaCompases.ts]] *(from #service)*
 - [[src_utils_duplicateLeads|src/utils/duplicateLeads.ts]] *(from #service)*
 - [[src_utils_emailFormatter|src/utils/emailFormatter.ts]] *(from #service)*
@@ -666,6 +669,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/stageOfflineCache.test.ts`
 - `src/utils/__tests__/tourRouting.test.ts`
 - `src/utils/__tests__/transitionAudioEngine.test.ts`
+- `src/utils/cartel/__tests__/datos.test.ts`
 
 ---
 

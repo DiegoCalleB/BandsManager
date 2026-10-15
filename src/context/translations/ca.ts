@@ -11,6 +11,7 @@ export const ca: Record<string, string> = {
   'nav.epk': 'Dossier (EPK)',
   'nav.fans': 'Captura QR i Fans',
   'nav.reels': 'Reels Center',
+  'nav.carteleria': 'Cartelleria',
   'nav.repertorio': 'Repertoris',
   'nav.ensayos': 'Assajos',
   'nav.discografia': 'Discografia',

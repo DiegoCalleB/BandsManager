@@ -36,6 +36,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_bands|server/db/bands.ts]] *(from #db)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(from #db)*
 - [[server_db_campaigns|server/db/campaigns.ts]] *(from #db)*
+- [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(from #db)*
 - [[server_db_categoryTemplates|server/db/categoryTemplates.ts]] *(from #db)*
 - [[server_db_concerts|server/db/concerts.ts]] *(from #db)*
 - [[server_db_contacts|server/db/contacts.ts]] *(from #db)*

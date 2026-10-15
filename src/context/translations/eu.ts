@@ -11,6 +11,7 @@ export const eu: Record<string, string> = {
   'nav.epk': 'Dosierra (EPK)',
   'nav.fans': 'QR Harrapaketa eta Zaleak',
   'nav.reels': 'Reels Center',
+  'nav.carteleria': 'Kartelak',
   'nav.repertorio': 'Errepertorioak',
   'nav.ensayos': 'Entseguak',
   'nav.discografia': 'Diskografia',
