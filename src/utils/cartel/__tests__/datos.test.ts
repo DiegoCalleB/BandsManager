@@ -75,3 +75,26 @@ describe('configDesdeEstado', () => {
     expect(configDesdeEstado({ ...base, fondo: { tipo: 'paleta', id: 'bosque' }, fotoRemota: null }).fondo).toEqual({ tipo: 'paleta', id: 'bosque' });
   });
 });
+
+import { conCartelGuardado } from '../estado';
+
+describe('conCartelGuardado', () => {
+  const a = { id: 'a', sala: 'A' };
+  const b = { id: 'b', sala: 'B' };
+
+  it('actualiza solo el bolo indicado y respeta la referencia de los demás', () => {
+    const r = conCartelGuardado([a, b], 'b', { cartel_config: { extra: 'x' } });
+    expect(r[0]).toBe(a);
+    expect(r[1]).toEqual({ id: 'b', sala: 'B', cartel_config: { extra: 'x' } });
+  });
+
+  it('un bolo desconocido no cambia nada (misma lista)', () => {
+    const lista = [a, b];
+    expect(conCartelGuardado(lista, 'zzz', { cartel_url: 'https://x' })).toBe(lista);
+  });
+
+  it('conserva lo ya guardado cuando solo llega una de las dos cosas', () => {
+    const r = conCartelGuardado([{ ...a, cartel_config: { v: 1 } }], 'a', { cartel_url: 'https://x' });
+    expect(r[0]).toMatchObject({ cartel_config: { v: 1 }, cartel_url: 'https://x' });
+  });
+});

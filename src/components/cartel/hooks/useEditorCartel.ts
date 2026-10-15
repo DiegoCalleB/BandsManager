@@ -48,6 +48,8 @@ interface Params {
   initialConcertId?: string;
   /** Si el plan permite quitar la marca BandManager. */
   puedeQuitarMarca?: boolean;
+  /** Lo que ya está guardado en el servidor, para reflejarlo en la copia en memoria de los bolos. */
+  onCartelGuardado?: (concertId: string, cartel: { cartel_config?: unknown; cartel_url?: string }) => void;
 }
 
 /** Un bolo tal como llega del servidor: `cartel_config` es jsonb sin tipo (se sanea al leerlo). */
@@ -59,7 +61,7 @@ type PorBolo<T> = Record<string, T>;
 /** Qué hacer con el cartel del bolo tras exportar: ya tengo el PNG de feed, hay que pintarlo, o nada (cancelado). */
 type TrasExportar = Blob | 'pintar-feed' | null;
 
-export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false }: Params) {
+export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false, onCartelGuardado }: Params) {
   const opciones = useMemo(() => conciertosParaCartel(concerts, hoyMadrid()), [concerts]);
   const [concertId, setConcertId] = useState(initialConcertId ?? '');
   const concierto = opciones.find((c) => c.id === concertId) ?? opciones[0] ?? null;
@@ -177,10 +179,12 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   useEffect(() => {
     if (!id || !sucio) return;
     const t = setTimeout(() => {
-      guardarConfigCartel(id, configActual).catch((e) => console.warn('[Cartelería] No se pudo guardar el cartel en el bolo:', e));
+      guardarConfigCartel(id, configActual)
+        .then((r) => onCartelGuardado?.(id, { cartel_config: r.config }))
+        .catch((e) => console.warn('[Cartelería] No se pudo guardar el cartel en el bolo:', e));
     }, ESPERA_GUARDADO_MS);
     return () => clearTimeout(t);
-  }, [id, sucio, configActual]);
+  }, [id, sucio, configActual, onCartelGuardado]);
 
   // Las fotos locales viven en memoria del navegador: se liberan al salir.
   const fotosLocales = useRef<string[]>([]);
@@ -286,7 +290,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     if (!bolo) return;
     (feed === 'pintar-feed' ? exportar('feed') : Promise.resolve(feed))
       .then((png) => subirImagenCartel(bolo, png))
-      .then(() => setPublicados((p) => ({ ...p, [bolo]: true })))
+      .then((r) => {
+        setPublicados((p) => ({ ...p, [bolo]: true }));
+        onCartelGuardado?.(bolo, { cartel_url: r.url });
+      })
       .catch((e) => console.warn('[Cartelería] No se pudo poner el cartel en la página del bolo:', e));
   };
 

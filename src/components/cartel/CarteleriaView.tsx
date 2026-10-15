@@ -15,6 +15,8 @@ interface Props {
   bandName: string;
   /** Plan de la banda activa: decide si se puede quitar la marca BandManager. */
   plan?: string;
+  /** Avisa a la app de lo ya guardado en el servidor, para que al volver a la vista siga ahí. */
+  onCartelGuardado?: (concertId: string, cartel: { cartel_config?: unknown; cartel_url?: string }) => void;
   /** Si se llega desde la ficha de un bolo, ese bolo ya viene elegido. */
   initialConcertId?: string;
 }
@@ -25,9 +27,9 @@ const PESTANAS = ORDEN_FORMATOS.map((id) => ({ id, label: FORMATOS[id].etiqueta 
  * Cartelería: abrir y tener cartel. El próximo bolo viene elegido y el cartel sale al instante
  * sin IA (color + la Onda); la IA y la foto son extras. Tres bloques en móvil: bolo, cartel, acciones.
  */
-const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, initialConcertId }) => {
+const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, onCartelGuardado, initialConcertId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan) });
+  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), onCartelGuardado });
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
 
   if (!ed.concierto) {

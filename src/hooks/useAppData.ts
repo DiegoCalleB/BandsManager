@@ -1,21 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import {
-  Lead,
-  Rehearsal,
-  Concert,
-  SocialPost,
-  Payment,
-  Message,
-  SocialMetric,
-  User,
-  Fan,
-  Tour,
-  EPKConfig,
-  BookingCampaign,
-} from '../types';
+import { Lead, Rehearsal, Concert, SocialPost, Payment, Message, SocialMetric, User, Fan, Tour, EPKConfig, BookingCampaign } from '../types';
 import { api, ApiError } from '../services/api';
 import { comoErrorCapturado } from '../utils/errorCapturado';
 import { dedupeById, normalizeConcert, normalizeRehearsal } from '../utils/appDataNormalize';
+import { conCartelGuardado, type CartelGuardado } from '../utils/cartel/estado';
 
 const DEFAULT_CAMPAIGNS: BookingCampaign[] = [
   {
@@ -256,6 +244,9 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
       fetchState();
     }
   };
+
+  // Solo memoria, sin red: el servidor ya guardó el cartel (PUT /api/cartel/…).
+  const handleCartelGuardado = (id: string, cartel: CartelGuardado) => setConcerts((prev) => conCartelGuardado(prev, id, cartel));
 
   const handleDeleteRehearsal = async (id: string) => {
     const previous = rehearsals;
@@ -617,6 +608,7 @@ export function useAppData(isLoggedIn: boolean, bandId?: string) {
     handleUpdateLead,
     handleUpdateRehearsal,
     handleUpdateConcert,
+    handleCartelGuardado,
     handleDeleteRehearsal,
     handleDeleteConcert,
     handleAddLead,
