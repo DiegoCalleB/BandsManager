@@ -30,6 +30,7 @@ const MODULO_POR_VISTA: Record<string, Modulo> = {
   finanzas: 'finanzas',
   merchan: 'finanzas',
   reels: 'reels',
+  carteleria: 'reels',
   fans: 'fans',
   epk: 'dossier',
 };

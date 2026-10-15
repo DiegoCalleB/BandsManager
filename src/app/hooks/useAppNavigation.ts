@@ -39,6 +39,7 @@ const VALID_VIEWS: MainView[] = [
   "calendario",
   "ensayos",
   "reels",
+  "carteleria",
   "repertorio",
   "catalogo",
   "discografia",

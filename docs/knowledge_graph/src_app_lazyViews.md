@@ -42,6 +42,7 @@ Vistas y modales cargados bajo demanda, con reintento si falla la carga del mód
 - [[src_components_UserManagementModal|src/components/UserManagementModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_UserProfileModal|src/components/UserProfileModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(Layer: #frontend, Domain: #system)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_ensayos_EnsayosManager|src/components/ensayos/EnsayosManager.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_notifications_NotificationSettingsModal|src/components/notifications/NotificationSettingsModal.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_components_onboarding_MusicianOnboardingModal|src/components/onboarding/MusicianOnboardingModal.tsx]] *(Layer: #frontend, Domain: #system)*

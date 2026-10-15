@@ -2,7 +2,7 @@
  * Cabecera de la ficha: identidad de banda, título y barra de acciones.
  * Extraído por Strangler Fig para mantener el contenedor bajo el límite de AGENTS.md §5.6.
  */
-import { Bell,Copy,Megaphone,MoreHorizontal,Share2,Trash2 } from "lucide-react";
+import { Bell,Copy,ImagePlus,Megaphone,MoreHorizontal,Share2,Trash2 } from "lucide-react";
 import { Button } from "../../ui";
 import { PopoverAncla } from "../../ui/PopoverAncla";
 import { ShowIcon } from "../../ui/ShowIcon";
@@ -15,7 +15,7 @@ import { useEventDetail } from "./EventDetailContext";
  * @returns Sección de interfaz.
  */
 export function EventHeaderSection() {
-  const { modalBandInfo, textTitle, selectedEventTitle, textSub, selectedDate, monthNames, modalWeatherAlerts, modalEvent, setShowEventFichaModal, selectedConcert, setViewingConcert, selectedRehearsal, setViewingRehearsal, handleShareEventWhatsApp, isConcert, setShowPromocion, setShowFichaMenu, showFichaMenu, handleNotifyBandMembers, handleCopyEventFicha, copiedEventModalId, setDeletingEventConfirmId, showPromocion } = useEventDetail();
+  const { modalBandInfo, textTitle, selectedEventTitle, textSub, selectedDate, monthNames, modalWeatherAlerts, modalEvent, setShowEventFichaModal, selectedConcert, setViewingConcert, selectedRehearsal, setViewingRehearsal, handleShareEventWhatsApp, isConcert, setShowPromocion, setShowFichaMenu, showFichaMenu, handleNotifyBandMembers, handleCopyEventFicha, copiedEventModalId, setDeletingEventConfirmId, showPromocion, onNavigate } = useEventDetail();
   return (
     <>
 {/* Cabecera: Logo HD + identidad de banda + título + barra de acciones */}
@@ -121,6 +121,11 @@ export function EventHeaderSection() {
                           {isConcert && (
                             <button type="button" className="sm:hidden w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); setShowPromocion(true); }}>
                               <Megaphone className="w-4 h-4 text-[var(--ink-2)]" /> Promocionar
+                            </button>
+                          )}
+                          {isConcert && selectedConcert && onNavigate && (
+                            <button type="button" className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); setShowEventFichaModal(false); onNavigate('carteleria', { concertId: selectedConcert.id }); }}>
+                              <ImagePlus className="w-4 h-4 text-[var(--ink-2)]" /> Hacer cartel
                             </button>
                           )}
                           <button type="button" className="sm:hidden w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[var(--r-s)] text-sm text-[var(--ink)] hover:bg-[var(--sunken)] cursor-pointer" onClick={() => { setShowFichaMenu(false); handleShareEventWhatsApp(modalEvent, isConcert); }}>

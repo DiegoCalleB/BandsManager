@@ -26,6 +26,7 @@ Perfil de banda para los prompts de IA.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*

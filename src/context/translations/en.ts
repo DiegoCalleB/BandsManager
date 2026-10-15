@@ -11,6 +11,7 @@ export const en: Record<string, string> = {
   'nav.epk': 'EPK Dossier',
   'nav.fans': 'QR Capture & Fans',
   'nav.reels': 'Reels Center',
+  'nav.carteleria': 'Posters',
   'nav.repertorio': 'Setlists',
   'nav.ensayos': 'Rehearsals',
   'nav.discografia': 'Discography',

@@ -38,7 +38,7 @@ export async function uploadToSupabaseIfAvailable(
       });
 
     if (uploadError) {
-      console.warn(`[Supabase Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
+      console.warn('[Supabase Upload Notice] Failed for %s:', storageSubPath, uploadError.message);
       return null;
     }
 
@@ -47,12 +47,12 @@ export async function uploadToSupabaseIfAvailable(
       .getPublicUrl(storageSubPath);
 
     if (publicUrlData?.publicUrl) {
-      console.log(`[Supabase Storage] Successfully uploaded: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
+      console.log('[Supabase Storage] Successfully uploaded: %s -> %s', storageSubPath, publicUrlData.publicUrl);
       return publicUrlData.publicUrl;
     }
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    console.warn(`[Supabase Storage Error] ${storageSubPath}:`, err.message || err);
+    console.warn('[Supabase Storage Error] %s:', storageSubPath, err.message || err);
   }
   return null;
 }
@@ -79,7 +79,7 @@ export async function uploadBufferToSupabase(
       });
 
     if (uploadError) {
-      console.warn(`[Supabase Buffer Upload Notice] Failed for ${storageSubPath}:`, uploadError.message);
+      console.warn('[Supabase Buffer Upload Notice] Failed for %s:', storageSubPath, uploadError.message);
       return null;
     }
 
@@ -88,12 +88,12 @@ export async function uploadBufferToSupabase(
       .getPublicUrl(storageSubPath);
 
     if (publicUrlData?.publicUrl) {
-      console.log(`[Supabase Storage] Stem uploaded directly to permanent storage: ${storageSubPath} -> ${publicUrlData.publicUrl}`);
+      console.log('[Supabase Storage] Stem uploaded directly to permanent storage: %s -> %s', storageSubPath, publicUrlData.publicUrl);
       return publicUrlData.publicUrl;
     }
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    console.warn(`[Supabase Storage Buffer Error] ${storageSubPath}:`, err.message || err);
+    console.warn('[Supabase Storage Buffer Error] %s:', storageSubPath, err.message || err);
   }
   return null;
 }
@@ -117,4 +117,37 @@ export function rutaAlmacenamientoClip(bandId: string, nombreArchivo: string): s
   const bandaLimpia = String(bandId || "sin-banda").replace(/[^a-zA-Z0-9_-]/g, "_");
   const archivoLimpio = String(nombreArchivo || "clip.mp4").replace(/[^a-zA-Z0-9_.-]/g, "_");
   return `reels/${bandaLimpia}/${archivoLimpio}`;
+}
+
+/**
+ * Lee un fichero de nuestro bucket por su ruta (sin pasar por la red pública: no hay URL que
+ * validar contra SSRF). `maxBytes` corta ficheros enormes. null si no existe, falla o no cabe.
+ */
+export async function descargarDeAlmacenamiento(ruta: string, maxBytes = 5 * 1024 * 1024): Promise<Buffer | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.storage.from(getBucketName()).download(ruta);
+    if (error || !data) {
+      console.warn('[Supabase Storage] No se pudo leer %s:', ruta, error?.message);
+      return null;
+    }
+    if (data.size > maxBytes) return null;
+    return Buffer.from(await data.arrayBuffer());
+  } catch (errCapturado) {
+    console.warn('[Supabase Storage Error] leyendo %s:', ruta, comoErrorCapturado(errCapturado).message);
+    return null;
+  }
+}
+
+/** Borra ficheros de nuestro bucket. Nunca lanza: un huérfano no debe romper la petición. */
+export async function borrarDeAlmacenamiento(rutas: string[]): Promise<void> {
+  const supabase = getSupabaseClient();
+  if (!supabase || rutas.length === 0) return;
+  try {
+    const { error } = await supabase.storage.from(getBucketName()).remove(rutas);
+    if (error) console.warn('[Supabase Storage] No se pudo borrar:', error.message);
+  } catch (errCapturado) {
+    console.warn('[Supabase Storage Error] borrando:', comoErrorCapturado(errCapturado).message);
+  }
 }

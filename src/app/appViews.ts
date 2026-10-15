@@ -8,6 +8,7 @@ export type MainView =
   | "calendario"
   | "ensayos"
   | "reels"
+  | "carteleria"
   | "repertorio"
   | "catalogo"
   | "discografia"

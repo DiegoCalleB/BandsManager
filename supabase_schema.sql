@@ -267,6 +267,7 @@ CREATE TABLE IF NOT EXISTS concerts (
     is_posible BOOLEAN DEFAULT FALSE,
     custom_qr_url TEXT,
     cartel_url TEXT,
+    cartel_config JSONB,
     es_hito_destacado BOOLEAN DEFAULT FALSE,
     asistencia_propia INTEGER DEFAULT 0,
     asistencia_otras_bandas INTEGER DEFAULT 0,

@@ -27,6 +27,7 @@ Página pública de un concierto (`/e/<slug>`), generada en el servidor.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server|server.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_enlacesCortos|server/routes/enlacesCortos.ts]] *(from #route)*
 - [[server_routes_paginaConcierto|server/routes/paginaConcierto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
