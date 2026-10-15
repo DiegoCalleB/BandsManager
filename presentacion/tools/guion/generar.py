@@ -1449,9 +1449,9 @@ html = html.replace('>Empezar con sonido</button>', '>Empezar con sonido y voces
 html = html.replace('<button id="gateSound" class="gate-btn primary">Empezar con sonido y voces</button>', '<button id="gatePeli" class="gate-btn primary">🎬 Ver como película</button>\n      <button id="gateSound" class="gate-btn">Empezar con sonido y voces</button>', 1)
 # Pantalla de entrada a lo Netflix: ¿quién está viendo? → inicio con la película destacada (el tráiler arranca solo) y el resto «Próximamente»
 PROXIMAMENTE = [
-    ('Setlist_v7_FINAL_def2', 'img/concierto-1.jpg'), ('El cantante que no leía los correos', 'img/historia/bajo-contraluz.jpg'),
-    ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg'), ('Ensayo a las siete de la mañana', 'img/historia/bajo-bn.jpg'),
-    ('Cuatro acordes y un solo', 'img/historia/thc.jpg'), ('Dadme hasta el domingo', 'img/concierto-3.jpg'),
+    ('Setlist_v7_FINAL_def2', 'img/concierto-1.jpg'), ('Peláez: el treinta por ciento', 'img/historia/bajo-contraluz.jpg'),
+    ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg'), ('El Excel de las siete versiones', 'img/historia/bajo-bn.jpg'),
+    ('Croquetas en el camerino', 'img/historia/thc.jpg'), ('Dadme hasta el sábado', 'img/concierto-3.jpg'),
 ]
 filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
 # Fotos de los perfiles (si falta un fichero, se queda la carita de color; lo de Brais y el logo de The Big School los aporta Diego)
@@ -1478,7 +1478,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     <div class="nx-top">
       <span class="nx-logo">NETFLIX</span>
       <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
-      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i>' + AV_BRAIS + '</div>
+      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i>''' + AV_BRAIS + '''</div>
     </div>
     <div class="nx-hero">
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
