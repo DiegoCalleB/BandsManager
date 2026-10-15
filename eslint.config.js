@@ -86,5 +86,25 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
     },
+  },
+  {
+    // Errores seguros (docs/plan/PLAN_MEJORA.md, Fase 1.2): una respuesta 5xx no devuelve `err.message`,
+    // que filtra al cliente errores internos de Postgres, Stripe o del disco. Se usa
+    // `responderError(res, err, 'texto genérico')` (server/utils/errorHttp.ts), que da un mensaje
+    // genérico y un `idError` para localizar el detalle en el log y en Sentry; los errores esperados
+    // se lanzan como `ErrorHttp`.
+    files: ['server/**/*.ts', 'server.ts'],
+    ignores: ['**/__tests__/**', '**/*.test.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.property.name=/^(json|send)$/][callee.object.callee.property.name='status'][callee.object.arguments.0.value>=500] MemberExpression[property.name='message']",
+          message:
+            'No devuelvas err.message en una respuesta 5xx: usa responderError(res, err, "texto genérico") (server/utils/errorHttp.ts).',
+        },
+      ],
+    },
   }
 );

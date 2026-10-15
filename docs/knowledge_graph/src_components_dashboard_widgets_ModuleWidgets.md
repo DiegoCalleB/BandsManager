@@ -13,7 +13,7 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: ModuleWidgetProps, CrmPipelineWidget, RepertorioWidget, FinancesWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget.
+Exporta: ModuleWidgetProps, CrmPipelineWidget, RepertorioWidget, SocialFansWidget, EpkStatusWidget, AiAgentWidget, TourStatusWidget.
 
 ---
 

@@ -18,7 +18,7 @@ Estado del clip renderizado (URLs, subtítulos, tamaño) y limpieza de URLs blob
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(Layer: #frontend, Domain: #social)*
 
 ---
 

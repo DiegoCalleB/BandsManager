@@ -42,6 +42,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_dealSupport|server/db/dealSupport.ts]] *(from #db)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(from #db)*
+- [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(from #db)*
 - [[server_db_enlacesBandas|server/db/enlacesBandas.ts]] *(from #db)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(from #db)*
 - [[server_db_epk|server/db/epk.ts]] *(from #db)*
@@ -52,6 +53,8 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_db_printSettings|server/db/printSettings.ts]] *(from #db)*
 - [[server_db_production|server/db/production.ts]] *(from #db)*
 - [[server_db_reelAnalyses|server/db/reelAnalyses.ts]] *(from #db)*
+- [[server_db_reelClips|server/db/reelClips.ts]] *(from #db)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_referidos|server/db/referidos.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
@@ -73,6 +76,7 @@ Exporta: rolDeClaveSupabase, getSupabase, normalizePlan, cleanBandId.
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_perfilPublicoBanda|server/services/perfilPublicoBanda.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*

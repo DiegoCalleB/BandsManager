@@ -72,7 +72,7 @@ router.delete("/metrics/:id", requireAuth, requireLeader, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[API ERROR] DELETE /api/metrics/:id:', error);
-    res.status(500).json({ error: error.message || 'Error al eliminar la métrica' });
+    responderError(res, error, 'Error al eliminar la métrica');
   }
 });
 
@@ -93,16 +93,14 @@ router.post("/metrics/sync", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/metrics/sync:", error);
-    res.status(500).json({
-      success: false,
-      error: `Error al sincronizar con Supabase: ${error.message || error}`
-    });
+    responderError(res, error, "Error al sincronizar con Supabase.");
   }
 });
 
 import { executeSocialRadar, scrapeChannelMetrics } from "../services/socialRadarService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { CuentaInstagramVerificada, DatosCapturaIA, InsightsInstagram, PaginaFacebook } from './tiposMetricas.js';
+import { responderError } from '../utils/errorHttp.js';
 
 // Fetch real-world social statistics of the active band from live networks / YouTube API
 router.post("/metrics/real", requireAuth, async (req, res) => {
@@ -199,7 +197,7 @@ router.post("/metrics/real", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in /metrics/real:", err);
-    return res.status(500).json({ success: false, error: err?.message || "Error al escanear redes reales" });
+    return responderError(res, err, "Error al escanear redes reales");
   }
 });
 
@@ -222,7 +220,7 @@ router.all("/metrics/cron-snapshot-all", requireCronOrAuth, async (req, res) => 
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error ejecutando SocialRadar:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error ejecutando radar social" });
+    responderError(res, err, "Error ejecutando radar social");
   }
 });
 
@@ -238,7 +236,7 @@ router.get("/metrics/content-items", requireAuth, async (req, res) => {
     res.json({ success: true, items });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ success: false, error: err?.message });
+    responderError(res, err);
   }
 });
 
@@ -454,7 +452,7 @@ router.get("/metrics/instagram/status", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error checking Instagram connection status:", err);
-    res.status(500).json({ success: false, error: err?.message });
+    responderError(res, err);
   }
 });
 
@@ -571,7 +569,7 @@ router.post("/metrics/instagram/connect", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error connecting Instagram token:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al conectar con Instagram Insights" });
+    responderError(res, err, "Error al conectar con Instagram Insights");
   }
 });
 
@@ -598,7 +596,7 @@ router.post("/metrics/instagram/disconnect", requireAuth, async (req, res) => {
     res.json({ success: true, message: "Token de Instagram desconectado. El sistema volverá al modo scraping autónomo." });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
-    res.status(500).json({ success: false, error: err?.message });
+    responderError(res, err);
   }
 });
 
@@ -722,7 +720,7 @@ Extrae los datos numéricos exactos y responde EXCLUSIVAMENTE con un JSON válid
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error scanning screenshot with Gemini Vision:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al analizar la captura con Visión IA" });
+    responderError(res, err, "Error al analizar la captura con Visión IA");
   }
 });
 
@@ -896,7 +894,7 @@ Devuelve ÚNICAMENTE un JSON estrictamente válido con este esquema exacto:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error generating social growth plan:", err);
-    res.status(500).json({ success: false, error: err?.message || "Error al generar el plan de crecimiento con Gemini" });
+    responderError(res, err, "Error al generar el plan de crecimiento con Gemini");
   }
 });
 

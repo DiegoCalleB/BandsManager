@@ -42,6 +42,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_deal_support_contributions|tabla deal_support_contributions]] *(Layer: #schema, Domain: #system)*
 - [[tabla_deleted_bands|tabla deleted_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_deleted_leads|tabla deleted_leads]] *(Layer: #schema, Domain: #booking)*
+- [[tabla_emails_ciclo_vida|tabla emails_ciclo_vida]] *(Layer: #schema, Domain: #system)*
 - [[tabla_enlaces_bandas_amigas|tabla enlaces_bandas_amigas]] *(Layer: #schema, Domain: #system)*
 - [[tabla_epk_configs|tabla epk_configs]] *(Layer: #schema, Domain: #epk)*
 - [[tabla_fan_link_clicks|tabla fan_link_clicks]] *(Layer: #schema, Domain: #social)*
@@ -58,6 +59,8 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_pitch_learning_examples|tabla pitch_learning_examples]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_pitch_vector_store|tabla pitch_vector_store]] *(Layer: #schema, Domain: #booking)*
 - [[tabla_reel_analyses|tabla reel_analyses]] *(Layer: #schema, Domain: #social)*
+- [[tabla_reel_clips|tabla reel_clips]] *(Layer: #schema, Domain: #social)*
+- [[tabla_reel_metricas|tabla reel_metricas]] *(Layer: #schema, Domain: #social)*
 - [[tabla_registered_bands|tabla registered_bands]] *(Layer: #schema, Domain: #system)*
 - [[tabla_rehearsals|tabla rehearsals]] *(Layer: #schema, Domain: #system)*
 - [[tabla_run_of_show|tabla run_of_show]] *(Layer: #schema, Domain: #system)*

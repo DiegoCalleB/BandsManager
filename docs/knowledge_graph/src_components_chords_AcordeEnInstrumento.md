@@ -22,6 +22,7 @@ Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, SelectorNivel, CajaAcor
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_inversiones|src/utils/inversiones.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 

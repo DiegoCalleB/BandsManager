@@ -44,6 +44,7 @@ _Sin dependencias salientes directas._
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
@@ -70,6 +71,7 @@ _Sin dependencias salientes directas._
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
@@ -79,11 +81,13 @@ _Sin dependencias salientes directas._
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
+- [[server_utils_cadenciaReels|server/utils/cadenciaReels.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
+- [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
 - [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
@@ -291,6 +295,7 @@ _Sin dependencias salientes directas._
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*
 - [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
@@ -560,6 +565,7 @@ _Sin dependencias salientes directas._
 - [[src_utils_growthPlanEngine|src/utils/growthPlanEngine.ts]] *(from #service)*
 - [[src_utils_harmonicAnalysis|src/utils/harmonicAnalysis.ts]] *(from #service)*
 - [[src_utils_ideaDeAtril|src/utils/ideaDeAtril.ts]] *(from #service)*
+- [[src_utils_indicadoresMarketing|src/utils/indicadoresMarketing.ts]] *(from #service)*
 - [[src_utils_instrumentSynth|src/utils/instrumentSynth.ts]] *(from #service)*
 - [[src_utils_irisTracks|src/utils/irisTracks.ts]] *(from #service)*
 - [[src_utils_leadReliability|src/utils/leadReliability.ts]] *(from #service)*
@@ -592,7 +598,11 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/calendarConflictService.test.ts`
+- `server/services/__tests__/metricasReels.test.ts`
+- `server/services/__tests__/socialPublisher.test.ts`
+- `server/utils/__tests__/cadenciaReels.test.ts`
 - `server/utils/__tests__/perfectSetlistPlanner.test.ts`
+- `server/utils/__tests__/programacionPosts.test.ts`
 - `src/audit/mezclaBaseIdea.test.ts`
 - `src/audit/mezclaPistasAtril.test.tsx`
 - `src/audit/tomasConFondoAtril.test.tsx`
@@ -607,6 +617,7 @@ _Sin dependencias salientes directas._
 - `src/components/booking/leads_table/__tests__/leadsTableContracts.test.ts`
 - `src/components/booking/leads_table/hooks/__tests__/useLeadsBatchDateScan.behavior.test.ts`
 - `src/components/booking/venue_panel/__tests__/venuePanelSections.test.tsx`
+- `src/components/dashboard/widgets/__tests__/MarketingWidget.test.tsx`
 - `src/components/ensayos/__tests__/ensayosAgenda.test.ts`
 - `src/components/onboarding/wizard/__tests__/onboardingWizardContracts.test.ts`
 - `src/components/onboarding/wizard/hooks/__tests__/musicSetlistStep.behavior.test.ts`
@@ -638,6 +649,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/formatSongTitle.test.ts`
 - `src/utils/__tests__/grabarIdea.test.ts`
 - `src/utils/__tests__/harmonicAnalysis.test.ts`
+- `src/utils/__tests__/indicadoresMarketing.test.ts`
 - `src/utils/__tests__/instrumentSynth.test.ts`
 - `src/utils/__tests__/irisTracks.test.ts`
 - `src/utils/__tests__/lineaTiempoAcordes.test.ts`

@@ -22,6 +22,7 @@ Módulo sin exportaciones con nombre.
 - [[src_app_rutasPublicasLazy|src/app/rutasPublicasLazy.tsx]] *(Layer: #service, Domain: #system)*
 - [[src_components_ErrorBoundary|src/components/ErrorBoundary.tsx]] *(Layer: #frontend, Domain: #system)*
 - [[src_context_LanguageContext|src/context/LanguageContext.tsx]] *(Layer: #service, Domain: #system)*
+- [[src_utils_analitica|src/utils/analitica.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_domTranslatePatch|src/utils/domTranslatePatch.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorTracking|src/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_referido|src/utils/referido.ts]] *(Layer: #service, Domain: #system)*

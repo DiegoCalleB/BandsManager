@@ -3,7 +3,7 @@
   "private": true,
   "license": "AGPL-3.0-only",
   "author": "Diego de la Calle Berzal",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -42,7 +42,9 @@
     "audit:clases": "vitest run src/audit",
     "migrate": "tsx scripts/migrate.ts",
     "migrate:check": "tsx scripts/migrate.ts --check",
-    "eval:acordes": "tsx scripts/evaluar-acordes.ts"
+    "eval:acordes": "tsx scripts/evaluar-acordes.ts",
+    "verify:ciclos": "node scripts/ciclos.mjs",
+    "audit:deps": "npm audit --omit=dev --audit-level=high"
   },
   "dependencies": {
     "@distube/ytdl-core": "^4.16.12",
@@ -76,7 +78,7 @@
     "mailparser": "^3.9.17",
     "motion": "^12.23.24",
     "multer": "^2.2.0",
-    "nodemailer": "^9.0.5",
+    "nodemailer": "^10.1.0",
     "pg": "^8.23.1",
     "qrcode": "^1.5.4",
     "react": "^19.0.1",
@@ -119,6 +121,7 @@
     "happy-dom": "^20.14.6",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
+    "madge": "^8.0.0",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
@@ -131,5 +134,8 @@
     "src/**/*.{ts,tsx,css}": "node scripts/design-audit.js",
     "{AGENTS,CLAUDE,docs/referencia/TOOL_COMPATIBILITY,docs/referencia/AI_STUDIO_SUPABASE_GUIDE}.md": "node scripts/verify-docs-refs.cjs",
     "skills/**/*.md": "node scripts/verify-docs-refs.cjs"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.6"
   }
 }

@@ -149,9 +149,8 @@ export async function generateMusicGenTrack(
     );
   } catch (resolveErrCapturado) {
     const resolveErr = comoErrorCapturado(resolveErrCapturado);
-    return {
-      error: `No se pudo preparar el audio de referencia: ${resolveErr?.message || resolveErr}`,
-    };
+    console.error('[generar-musica] No se pudo preparar el audio de referencia:', resolveErr);
+    return { error: 'No se pudo preparar el audio de referencia.' };
   }
 
   const prompt = `${instrument}, ${genreLabel}, tight studio arrangement that complements the reference track, ${bpm || 120} BPM, key of ${key || 'Am'}`;

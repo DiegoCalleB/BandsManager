@@ -184,6 +184,7 @@ BandManager UI Component Library
 - [[src_components_common_NavItemButton|src/components/common/NavItemButton.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddLeadModal|src/components/dashboard/AddLeadModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_AddWidgetModal|src/components/dashboard/AddWidgetModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_agent_autonomy_AuditTab|src/components/dashboard/agent_autonomy/AuditTab.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_AutonomyFooter|src/components/dashboard/agent_autonomy/AutonomyFooter.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_AutonomyHeader|src/components/dashboard/agent_autonomy/AutonomyHeader.tsx]] *(from #agent)*
@@ -194,6 +195,7 @@ BandManager UI Component Library
 - [[src_components_dashboard_agent_autonomy_TimezoneSelector|src/components/dashboard/agent_autonomy/TimezoneSelector.tsx]] *(from #agent)*
 - [[src_components_dashboard_agent_autonomy_ToneIdentityTab|src/components/dashboard/agent_autonomy/ToneIdentityTab.tsx]] *(from #agent)*
 - [[src_components_dashboard_AlertSettingsModal|src/components/dashboard/AlertSettingsModal.tsx]] *(from #frontend)*
+- [[src_components_dashboard_BarraEdicionPanel|src/components/dashboard/BarraEdicionPanel.tsx]] *(from #frontend)*
 - [[src_components_dashboard_DashboardWidgetGrid|src/components/dashboard/DashboardWidgetGrid.tsx]] *(from #frontend)*
 - [[src_components_dashboard_EmailTemplatesModal|src/components/dashboard/EmailTemplatesModal.tsx]] *(from #frontend)*
 - [[src_components_dashboard_ManagerAlertsWidget|src/components/dashboard/ManagerAlertsWidget.tsx]] *(from #frontend)*
@@ -201,6 +203,7 @@ BandManager UI Component Library
 - [[src_components_dashboard_SocialAndFansGrowthChart|src/components/dashboard/SocialAndFansGrowthChart.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_CalendarWidget|src/components/dashboard/widgets/CalendarWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ChartWidgets|src/components/dashboard/widgets/ChartWidgets.tsx]] *(from #frontend)*
+- [[src_components_dashboard_widgets_MarketingWidget|src/components/dashboard/widgets/MarketingWidget.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_ModuleWidgets|src/components/dashboard/widgets/ModuleWidgets.tsx]] *(from #frontend)*
 - [[src_components_dashboard_widgets_RoiBandaWidget|src/components/dashboard/widgets/RoiBandaWidget.tsx]] *(from #frontend)*
 - [[src_components_EmailAccountConfig|src/components/EmailAccountConfig.tsx]] *(from #frontend)*
@@ -280,6 +283,7 @@ BandManager UI Component Library
 - [[src_components_reels_center_ClipReanalysisPanel|src/components/reels_center/ClipReanalysisPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ConnectAccountDialog|src/components/reels_center/ConnectAccountDialog.tsx]] *(from #frontend)*
 - [[src_components_reels_center_CopyEditor|src/components/reels_center/CopyEditor.tsx]] *(from #frontend)*
+- [[src_components_reels_center_CopyPerfectoPanel|src/components/reels_center/CopyPerfectoPanel.tsx]] *(from #frontend)*
 - [[src_components_reels_center_EditorActions|src/components/reels_center/EditorActions.tsx]] *(from #frontend)*
 - [[src_components_reels_center_PublicationsCalendar|src/components/reels_center/PublicationsCalendar.tsx]] *(from #frontend)*
 - [[src_components_reels_center_ReelsCenterHeader|src/components/reels_center/ReelsCenterHeader.tsx]] *(from #frontend)*

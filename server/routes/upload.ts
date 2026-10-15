@@ -11,6 +11,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { requireAuth } from "../state.js";
 import { getTargetBandId, puedeEscribirEnBanda, bandaSolicitada } from "../utils/bandAccess.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 export function detectMimeType(ext: string, fallback?: string): string {
   const cleanExt = (ext || '').toLowerCase().replace('.', '');
@@ -332,9 +333,9 @@ export function getBucketName() {
   return envBucket;
 }
 
-// requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el
-// detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.
+// Solo admin: sube un fichero al bucket COMPARTIDO y devuelve su nombre y el error de Supabase; es de la plataforma.
 router.get("/test-supabase", requireAuth, async (req, res) => {
+  if (req.user?.role !== "admin") return res.status(403).json({ error: "Acceso denegado." });
   const supabase = getSupabaseClient();
   if (!supabase) {
     return res.json({ success: false, message: "No se pudo inicializar el cliente de Supabase (faltan claves)." });
@@ -429,8 +430,7 @@ router.get("/storage-stats", requireAuth, async (req, res) => {
       allowedBands: ["Ruta 66", "Arritmia", "Vértice"]
     });
   } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ error: err.message || String(err) });
+    return responderError(res, errCapturado);
   }
 });
 
@@ -501,8 +501,7 @@ router.post("/cleanup-unused-media", requireAuth, async (req, res) => {
       deletedFiles: deletedCount
     });
   } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    return res.status(500).json({ error: err.message || String(err) });
+    return responderError(res, errCapturado);
   }
 });
 
@@ -639,7 +638,7 @@ router.post("/", requireAuth, conManejoDeErrorMulter(uploadMiddleware.single("fi
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error uploading file:", error);
-    res.status(500).json({ error: error.message || "Failed to upload file" });
+    responderError(res, error, "Failed to upload file");
   }
 });
 
@@ -747,7 +746,7 @@ router.post("/chunk", requireAuth, conManejoDeErrorMulter(uploadChunkMiddleware.
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error processing file chunk:", err);
-    res.status(500).json({ error: err.message || "Failed to process chunk" });
+    responderError(res, err, "Failed to process chunk");
   }
 });
 

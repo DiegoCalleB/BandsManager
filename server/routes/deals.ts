@@ -27,6 +27,7 @@ import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { Concert } from '../../src/types.js';
 import type { UsuarioGuardado } from '../stateTypes.js';
 
+import { responderError } from '../utils/errorHttp.js';
 export const dealsRouter = Router();
 
 /**
@@ -115,7 +116,7 @@ dealsRouter.get('/deals', requireAuth, async (req: Request, res: Response) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdos:', error);
-    return res.status(500).json({ error: error.message || 'Error al obtener acuerdos' });
+    return responderError(res, error, 'Error al obtener acuerdos');
   }
 });
 
@@ -137,7 +138,7 @@ dealsRouter.get('/deals/lead/:leadId', requireAuth, async (req: Request, res: Re
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al obtener acuerdo por lead:', error);
-    return res.status(500).json({ error: error.message || 'Error al obtener acuerdo' });
+    return responderError(res, error, 'Error al obtener acuerdo');
   }
 });
 
@@ -208,7 +209,9 @@ dealsRouter.post('/deals', requireAuth, async (req: Request, res: Response) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al crear/actualizar acuerdo:', error);
-    return res.status(estadoHttp(error, 500)).json({ error: error.message || 'Error al persistir acuerdo' });
+    // Un DealError lleva un mensaje pensado para la persona (si no es un fallo del servidor); cualquier otro error es interno.
+    if (error instanceof DealError) return res.status(error.status).json({ error: error.status < 500 ? error.message : 'Error al persistir acuerdo' });
+    return responderError(res, error, 'Error al persistir acuerdo');
   }
 });
 
@@ -498,6 +501,6 @@ dealsRouter.post('/public/deals/:token/resend-email', reenvioEmailRateLimiter, a
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error('[dealsRouter] Error al reenviar email de acuerdo:', error);
-    return res.status(500).json({ error: error.message || 'Error al enviar el correo' });
+    return responderError(res, error, 'Error al enviar el correo');
   }
 });

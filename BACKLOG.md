@@ -138,6 +138,18 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 💡 Ideas por explorar
 
+### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (preguntas abiertas, 2026-10-13)
+
+* **Qué:** cuatro preguntas sobre el agente del chat, anotadas tal cual y **sin investigar todavía**:
+  1. ¿Tiene sentido que el agente del chat tenga **deshabilitados los agentes/herramientas de Supabase**?
+  2. ¿Tiene sentido que el botón de **«aprobar todas las acciones»** salga **arriba** de la conversación y no abajo del todo?
+  3. ¿El chat **tiene memoria**? (qué recuerda entre mensajes y entre sesiones, y dónde se guarda)
+  4. ¿Se podría **limpiar el historial cada X tiempo**? (cada cuánto, y qué se borra y qué se conserva)
+* **Por qué importa:** sin comprobar. Las preguntas 1 y 4 tocan seguridad y privacidad (qué puede hacer el agente sobre la base de datos y cuánto tiempo se guardan las conversaciones); la 2 es de uso; la 3 decide si el agente puede ser coherente a lo largo del tiempo.
+* **Estado:** pendiente de investigar y decidir. Mirar antes `server/routes/chat.ts`, `server/utils/conversacionChat.ts` y `src/components/chatbot/`.
+
+---
+
 ### Subida de vídeo de fans vía QR como gancho de conversión hacia el landing
 * **Qué:** en el QR del concierto (cartel, entrada, escenario), añadir la opción de que el asistente suba su propio clip de 15" grabado durante el show.
 * **Por qué importa:** el valor principal no es el vídeo en sí — es que **da un motivo activo para escanear el QR** más allá de "mirar el dossier". Alguien que quiere subir su clip entra sí o sí a la landing, y una vez dentro ve el resto: fan landing, EPK/dossier, próximos conciertos. Convierte una acción pasiva (escanear por curiosidad) en una con intención, y de paso aumenta las visitas reales a todo lo demás que ya tenéis montado en esa página (captación de fans, calendario).
@@ -186,6 +198,33 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 * **Siguiente paso:** primitivas `Tabs` / `Segmented` (aspecto activo/inactivo único), `MenuItem` (filas de ⋮) y `IconButton` con `aria-label` obligatorio; después un codemod por patrón y pasar `botonSinPrimitiva` de aviso a error en `design-audit`.
 * **Revisión con datos reales:** revisado con datos simulados (21 salas, conciertos, fans) en claro y oscuro: Booking, Panel, Fans, Calendario, Management, Agente Mánager, Ensayos y Discografía. Finanzas y Merchandising también revisadas (simulando líder y plan Cabeza de Cartel): títulos al estilo `page-title`, importes con `formatEur`, cifras en tinta (sin verde-sube/rojo-baja). Falta solo verlas con los números reales de Ruta 66.
 * **Estado:** F3 a F9 hechas; solo falta contrastar con los números reales de Ruta 66.
+
+### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
+
+* **Qué:**
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026), en dos pasos:** primero se sospechó de la carga dinámica de `spanishFestivalsDB` y se precargó (no era eso: volvió a fallar en CI). La causa real era la **red**: `fetchUrlExternaSegura` hacía 12 consultas DNS reales a `sala-real.es` por ejecución del test y, en un ejecutor con internet, a veces tardaban más que los 5 s del test; el guardado tardío del primer test aparecía entonces en el segundo (`permitirVaciar: false`). Ahora el test sustituye `fetchUrlExternaSegura` y un último test vigila que no se resuelva ningún dominio por DNS. Barrido de todo `server/`: solo había otro test con DNS real (`roformerStems.test.ts`, hacia `api.github.com`); ahora simula la respuesta DNS y además comprueba el caso de un dominio que resuelve a una IP privada.
+  2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
+* **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
+* **Estado:** (1) arreglado; (2) pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
+
+---
+
+### Hecho: una release ya no pone `main` en rojo por `docs/api`
+* **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
+* **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
+
+---
+
+### Auditoría de errores internos que llegan al cliente (octubre 2026)
+
+* **Qué:** la regla de lint de `err.message` solo ve `res.status(5xx).json(...err.message...)`. Barrido a mano de las demás formas (`details`, `body: { error }` armado a mano, respuestas 200 con el texto del error):
+  * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
+  * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
+  * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
+* **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
+
+---
 
 ### Deuda: datos de bandas concretas (Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.

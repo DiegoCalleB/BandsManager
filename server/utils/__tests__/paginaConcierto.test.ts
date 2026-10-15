@@ -238,6 +238,23 @@ describe('otras salidas', () => {
     expect(xml.startsWith('<?xml')).toBe(true);
   });
 
+  it('el sitemap añade las alternativas por idioma y descarta las que no son http', () => {
+    const xml = renderizarSitemap([
+      {
+        loc: 'https://bandmanager.io/en',
+        alternativas: [
+          { hreflang: 'es', href: 'https://bandmanager.io/' },
+          { hreflang: 'en', href: 'https://bandmanager.io/en' },
+          { hreflang: 'xx', href: 'javascript:alert(1)' },
+        ],
+      },
+    ]);
+    expect(xml).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
+    expect(xml).toContain('<xhtml:link rel="alternate" hreflang="es" href="https://bandmanager.io/"/>');
+    expect(xml).toContain('<xhtml:link rel="alternate" hreflang="en" href="https://bandmanager.io/en"/>');
+    expect(xml).not.toContain('javascript');
+  });
+
   it('formatea fechas largas en español', () => {
     expect(fechaLarga('2026-10-16')).toBe('viernes, 16 de octubre de 2026');
   });

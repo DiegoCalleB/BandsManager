@@ -24,6 +24,7 @@ Exporta: RelojEnAcorde.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_atril_chordSheetRender|src/components/atril/chordSheetRender.tsx]] *(from #frontend)*
+- [[src_components_chords_AcordeActual|src/components/chords/AcordeActual.tsx]] *(from #frontend)*
 
 ---
 
