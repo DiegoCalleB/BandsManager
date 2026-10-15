@@ -1393,17 +1393,20 @@ direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
 PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': 'viernes', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
-          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto'],
+          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto', 'img/gracias-mop.jpg'],
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
           'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'espaldas', 'Cómo ganamos dinero': ['espaldas-a', 'iago-cu'], 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
           'Esto lo necesitan todos': ['otro-jueves', 'concierto']}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 # Escenas con varios planos de fondo seguidos: segundo en que entra cada clip (el último se queda); el CSS los funde (.actor-vid.sec)
-SECUENCIA = {'El festival, 02:14': [0, 19], 'Esto lo necesitan todos': [0, 9.5], 'Cómo ganamos dinero': [0, 8.5]}
+SECUENCIA = {'El festival, 02:14': [0, 13.5, 24], 'Esto lo necesitan todos': [0, 9.5], 'Cómo ganamos dinero': [0, 8.5]}
 def _vids(k, t):
     ini = SECUENCIA[t]
-    return ''.join(_vid(c, f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"').replace('class="actor-vid"', 'class="actor-vid sec' + (' ult' if n + 1 == len(k) else '') + '"') for n, c in enumerate(k))
+    est = lambda n: f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"'
+    cls = lambda n: 'actor-vid sec' + (' ult' if n + 1 == len(k) else '')
+    # una entrada «img/….jpg» es una foto fija (con su zoom lento) en vez de un clip
+    return ''.join(f'<img class="{cls(n)} foto-resu"{est(n)} src="{c}" alt="">' if c.endswith('.jpg') else _vid(c, est(n)).replace('class="actor-vid"', f'class="{cls(n)}"') for n, c in enumerate(k))
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
             + (f' poster="video/actores/{k}.jpg"' if os.path.exists(os.path.join(_ACT, k + '.jpg')) else '')
@@ -1412,7 +1415,7 @@ def _vid(k, extra=''):
 for _i, _x in enumerate(S):
     _t = re.search(r'data-title="([^"]+)"', _x)
     _k = _t and PLANOS.get(_t.group(1))
-    if _k and all(os.path.exists(os.path.join(_ACT, c + '.mp4')) for c in ([_k] if isinstance(_k, str) else _k)):
+    if _k and all(os.path.exists(os.path.join(_ACT, '..', '..', c) if c.endswith('.jpg') else os.path.join(_ACT, c + '.mp4')) for c in ([_k] if isinstance(_k, str) else _k)):
         _v = _vid(_k) if isinstance(_k, str) else _vids(_k, _t.group(1))
         S[_i] = re.sub(r'(<div class="scene-bg"[^>]*>)', lambda mm: mm.group(1) + _v + '<i class="actor-velo"></i>', _x, count=1)
         if _k == 'manager': S[_i] = re.sub(r'(<section [^>]*)>', r'\1 data-sin-plato>', S[_i], count=1)  # el vídeo ya es el mánager: sin su retrato encima

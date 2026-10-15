@@ -222,3 +222,9 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
 .nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
 @media (prefers-reduced-motion: reduce) { .nff-mus-t, .nff-mus { animation-duration: 1ms; animation-delay: 0ms; } }
+
+/* Foto fija como último plano del fondo de una escena (festival): zoom lento, como un plano de archivo */
+.slide.scene .scene-bg img.actor-vid.foto-resu { object-fit: cover; object-position: 50% 44%; }
+.slide.scene.active .scene-bg img.actor-vid.foto-resu { animation: avult 1s linear var(--i) both, tiltresu 9s ease-in-out var(--i) both; }
+/* la foto es vertical: la cámara baja de los carteles del público a Brais y Diego */
+@keyframes tiltresu { from { object-position: 50% 44%; } to { object-position: 50% 68%; } }
