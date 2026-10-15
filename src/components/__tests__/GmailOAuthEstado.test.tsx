@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { GmailOAuthEstado } from '../GmailOAuthEstado';
+import { mensajeDeMotivoGmail } from '../../utils/motivoGmailOAuth';
 
 afterEach(cleanup);
 
@@ -34,5 +35,12 @@ describe('GmailOAuthEstado', () => {
   it('mientras comprueba muestra el estado de carga', () => {
     render(<GmailOAuthEstado {...base} cargando estado={{ connected: false }} />);
     expect(screen.getByText(/Comprobando conexión de Gmail/)).toBeTruthy();
+  });
+});
+
+describe('mensajeDeMotivoGmail', () => {
+  it('explica el fallo de dominio distinto y deja el resto como estaba', () => {
+    expect(mensajeDeMotivoGmail('empieza_y_termina_en_el_mismo_dominio')).toMatch(/otro dominio/);
+    expect(mensajeDeMotivoGmail('google_no_devolvio_codigo')).toBe('No se pudo conectar Gmail (google_no_devolvio_codigo). Inténtalo de nuevo.');
   });
 });

@@ -24,6 +24,7 @@ Exporta: EmailAccountConfig.
 - [[src_services_tiposApi|src/services/tiposApi.ts]] *(Layer: #service, Domain: #system)*
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_motivoGmailOAuth|src/utils/motivoGmailOAuth.ts]] *(Layer: #security, Domain: #auth)*
 
 ---
 

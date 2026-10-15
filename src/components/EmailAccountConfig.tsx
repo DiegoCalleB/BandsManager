@@ -13,6 +13,7 @@ import {
 import { api } from "../services/api";
 import type { EstadoGmailOAuth } from "../services/tiposApi";
 import { GmailOAuthEstado } from "./GmailOAuthEstado";
+import { mensajeDeMotivoGmail } from "../utils/motivoGmailOAuth";
 import { BandEmailAccountStatus } from "../types";
 import { Input } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
@@ -71,10 +72,7 @@ function feedbackInicialGmailOAuth(): { type: "success" | "error"; message: stri
     };
   }
   const motivo = params.get("motivo") || "error_desconocido";
-  return {
-    type: "error",
-    message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
-  };
+  return { type: "error", message: mensajeDeMotivoGmail(motivo) };
 }
 
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({

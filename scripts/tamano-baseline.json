@@ -74,7 +74,7 @@
   "src/components/repertorio/SetlistSongRow.tsx": 681,
   "src/i18n/fansTranslations.ts": 672,
   "src/components/booking/venue_panel/VenueLeadInfoEditForm.tsx": 665,
-  "src/components/EmailAccountConfig.tsx": 621,
+  "src/components/EmailAccountConfig.tsx": 619,
   "server.ts": 654,
   "src/components/dashboard/ProfileCompletenessCard.tsx": 655,
   "src/components/epk/EPKDonacionesBlock.tsx": 653,
