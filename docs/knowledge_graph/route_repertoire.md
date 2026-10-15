@@ -36,6 +36,7 @@ Endpoints para canciones, compatibilidad armónica y exportación a setlist.
 - [[server_utils_bandStyleContext|server/utils/bandStyleContext.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bloqueoOido|server/utils/bloqueoOido.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_enrichCoversWithoutAudio|server/utils/enrichCoversWithoutAudio.ts]] *(Layer: #service, Domain: #booking)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[server_utils_progresoOido|server/utils/progresoOido.ts]] *(Layer: #service, Domain: #system)*

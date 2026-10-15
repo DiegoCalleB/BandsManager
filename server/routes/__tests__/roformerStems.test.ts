@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import crypto from 'crypto';
+import dns from 'dns/promises';
 import { REPLICATE_MODEL_DEMUCS_V4, REPLICATE_MODEL_MVSEP_MDX23, processNeuralStemsReplicate } from '../ai_music.js';
 import { esUrlExternaSegura } from '../../utils/ssrfGuard.js';
 import { verifyReplicateWebhook } from '../../services/stemPredictionReconciler.js';
@@ -108,7 +109,22 @@ describe('Neural Stems Separation & Anti-Duplicate Architecture', () => {
     expect(await esUrlExternaSegura('http://192.168.1.1/admin')).toBe(false);
     expect(await esUrlExternaSegura('http://172.20.0.5/api')).toBe(false);
     expect(await esUrlExternaSegura('ftp://example.com/file')).toBe(false);
-    expect(await esUrlExternaSegura('https://api.github.com/zen')).toBe(true);
+  });
+
+  it('ssrfGuard decide por la IP a la que resuelve el dominio (DNS simulado: sin red y sin intermitencias)', async () => {
+    const dnsSimulado = vi.spyOn(dns, 'lookup');
+    try {
+      dnsSimulado.mockResolvedValue([{ address: '140.82.112.5', family: 4 }] as never);
+      expect(await esUrlExternaSegura('https://api.github.com/zen')).toBe(true);
+      // un dominio público que apunta a una IP privada (DNS rebinding) se rechaza
+      dnsSimulado.mockResolvedValue([{ address: '10.0.0.5', family: 4 }] as never);
+      expect(await esUrlExternaSegura('https://dominio-publico-falso.example/zen')).toBe(false);
+      // y basta con que UNA de las IPs sea privada
+      dnsSimulado.mockResolvedValue([{ address: '140.82.112.5', family: 4 }, { address: '192.168.1.10', family: 4 }] as never);
+      expect(await esUrlExternaSegura('https://doble-ip.example/zen')).toBe(false);
+    } finally {
+      dnsSimulado.mockRestore();
+    }
   });
 
   it('verifica la firma HMAC del webhook de Replicate y rechaza firmas inválidas', () => {

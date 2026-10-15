@@ -24,6 +24,7 @@ Qué buscar y cómo titularlo, según cómo esté grabado el material.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 
 ---
 

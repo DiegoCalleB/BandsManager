@@ -19,6 +19,7 @@ Lanza el análisis IA del vídeo (YouTube o archivo local) y vuelca los highligh
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[server_routes_reels|server/routes/reels.ts]] *(Layer: #route, Domain: #social)*
+- [[src_components_reels_center_hooks_pedirProximoHueco|src/components/reels_center/hooks/pedirProximoHueco.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*

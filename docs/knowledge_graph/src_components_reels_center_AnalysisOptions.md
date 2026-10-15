@@ -19,6 +19,7 @@ Opciones del análisis: encuadre, subtítulos quemados y karaoke.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_hooks_useAprendizajeReels|src/components/reels_center/hooks/useAprendizajeReels.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 
 ---

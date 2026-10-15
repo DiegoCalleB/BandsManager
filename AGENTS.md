@@ -236,7 +236,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
   * **Cobertura con ratchet:** CI ejecuta `npm run test:coverage` y falla si baja de `coverage-thresholds.json`. Cuando la subas, `npm run coverage:ratchet` actualiza el JSON: commitéalo. Nunca lo bajes a mano.
 * **Playwright (E2E Smoke & Journeys):**
   * Suites de humo sobre superficies críticas (`health.spec.ts`, `auth.spec.ts`, `epk-public.spec.ts`, `onboarding-journey.spec.ts`).
-  * Ejecución local sin credenciales externas con `npm run test:e2e`. Regresión visual con `npm run test:visual`.
+  * Ejecución local sin credenciales externas con `npm run test:e2e`.
 
 
 ### 5.4 Code smells — hábito de revisión, no un "sistema" nuevo
@@ -326,7 +326,7 @@ Plataforma integral para bandas y artistas independientes (booking CRM, agentes 
                      transitionAudioEngine.ts, midiExport.ts)
      services/       Cliente HTTP (api.ts) — todas las llamadas al backend pasan por aquí
      context/        React Context providers (auth, idioma, banda activa)
-   e2e/              Playwright — smoke suite + 1 journey + regresión visual (§5.3.2)
+   e2e/              Playwright — smoke suite + recorridos (§5.3.2; ver e2e/README.md)
    supabase/         Migraciones SQL idempotentes (§1)
    skills/           Fuente única de las 9 Golden Tier Skills Universales:
                      - cyber-and-trust-guardian (Security, multi-tenancy & OWASP LLM Defense)

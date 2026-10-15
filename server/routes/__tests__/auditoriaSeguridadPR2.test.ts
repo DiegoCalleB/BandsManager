@@ -40,8 +40,8 @@ beforeEach(() => {
 });
 
 describe('Storage: limpieza de multimedia', () => {
-  it('un usuario normal NO puede ver las estadísticas ni borrar el Storage de las demás bandas', async () => {
-    for (const [ruta, metodo] of [['/storage-stats', 'get'], ['/cleanup-unused-media', 'post']] as const) {
+  it('un usuario normal NO puede ver las estadísticas, borrar el Storage de las demás bandas ni lanzar el diagnóstico del bucket', async () => {
+    for (const [ruta, metodo] of [['/storage-stats', 'get'], ['/cleanup-unused-media', 'post'], ['/test-supabase', 'get']] as const) {
       const res = resFalso();
       await manejador(uploadRouter, ruta, metodo)({ user: usuario, body: { confirmar: true }, headers: {}, query: {} }, res);
       expect(res.code).toBe(403);
