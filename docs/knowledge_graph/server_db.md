@@ -71,6 +71,7 @@ Módulo sin exportaciones con nombre.
 - [[server_routes_billing|server/routes/billing.ts]] *(from #route)*
 - [[server_routes_campaigns|server/routes/campaigns.ts]] *(from #route)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(from #route)*
 - [[server_routes_donations|server/routes/donations.ts]] *(from #route)*

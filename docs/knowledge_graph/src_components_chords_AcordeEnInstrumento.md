@@ -19,10 +19,14 @@ Exporta: TecladoAcorde, BajoAcorde, SelectorVistaAcorde, SelectorNivel, CajaAcor
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_chords_DiagramaGuitarra|src/components/chords/DiagramaGuitarra.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_Pentagrama|src/components/chords/Pentagrama.tsx]] *(Layer: #frontend, Domain: #repertoire)*
+- [[src_components_chords_modoEnsayo|src/components/chords/modoEnsayo.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_components_chords_useVistaAcordes|src/components/chords/useVistaAcordes.ts]] *(Layer: #frontend, Domain: #repertoire)*
 - [[src_utils_chordUtils|src/utils/chordUtils.ts]] *(Layer: #service, Domain: #repertoire)*
 - [[src_utils_estiloArmonia|src/utils/estiloArmonia.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_inversiones|src/utils/inversiones.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_pentagrama|src/utils/pentagrama.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_sonarAcorde|src/utils/sonarAcorde.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_vistaAcordes|src/utils/vistaAcordes.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_voicings|src/utils/voicings.ts]] *(Layer: #service, Domain: #system)*
 

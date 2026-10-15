@@ -25,6 +25,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*
@@ -35,6 +36,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_tolerantWrite|server/db/tolerantWrite.ts]] *(Layer: #db, Domain: #system)*
 - [[server_routes_bands|server/routes/bands.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(Layer: #route, Domain: #system)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_concerts|server/routes/concerts.ts]] *(Layer: #route, Domain: #system)*
 - [[server_routes_emailsCicloVida|server/routes/emailsCicloVida.ts]] *(Layer: #route, Domain: #system)*

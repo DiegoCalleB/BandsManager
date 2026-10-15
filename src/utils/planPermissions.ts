@@ -121,6 +121,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'epk',
       'fans',
       'reels',
+      'carteleria',
       'repertorio',
       'ensayos',
       'catalogo',
@@ -161,6 +162,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'giras',
       'fans',
       'reels',
+      'carteleria',
       'repertorio',
       'ensayos',
       'catalogo',
@@ -202,6 +204,7 @@ export const PLANS: Record<'promo' | 'promo_plus' | 'ensayo' | 'local' | 'de_gir
       'giras',
       'fans',
       'reels',
+      'carteleria',
       'repertorio',
       'ensayos',
       'catalogo',
@@ -424,4 +427,13 @@ export function getRequiredPlanForModule(moduleId: string): 'ensayo' | 'local' |
   if (PLANS.local.allowedModules.includes(moduleId)) return 'local';
   if (PLANS.de_gira.allowedModules.includes(moduleId)) return 'de_gira';
   return 'cabeza_de_cartel';
+}
+
+/**
+ * La marca «Hecho con BandManager.io» del cartel va en todos los planes; solo los de pago pueden
+ * quitarla. Mismos planes gratuitos que la insignia de las páginas públicas (`esPlanGratuito` en
+ * server/utils/referidos.ts): un test vigila que no se separen.
+ */
+export function puedeQuitarMarcaCartel(rawPlan?: string): boolean {
+  return !['promo', 'promo_plus', 'ensayo'].includes(normalizePlan(rawPlan));
 }

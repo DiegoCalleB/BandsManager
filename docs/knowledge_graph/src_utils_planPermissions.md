@@ -34,6 +34,7 @@ _Sin dependencias salientes directas._
 - [[src_components_band_switcher_UpgradePlanModal|src/components/band_switcher/UpgradePlanModal.tsx]] *(from #frontend)*
 - [[src_components_calendar_hooks_useCalendarController|src/components/calendar/hooks/useCalendarController.ts]] *(from #frontend)*
 - [[src_components_calendar_logistics_EventSetlistWidget|src/components/calendar/logistics/EventSetlistWidget.tsx]] *(from #frontend)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
 - [[src_components_common_NavGroupSection|src/components/common/NavGroupSection.tsx]] *(from #frontend)*
 - [[src_components_Dashboard|src/components/Dashboard.tsx]] *(from #frontend)*
 - [[src_components_dashboard_AddWidgetModal|src/components/dashboard/AddWidgetModal.tsx]] *(from #frontend)*
@@ -58,6 +59,7 @@ _Sin dependencias salientes directas._
 - `src/utils/__tests__/documentacionPlanes.test.ts`
 - `src/utils/__tests__/planPermissions.test.ts`
 - `src/utils/__tests__/roiBanda.test.ts`
+- `src/utils/cartel/__tests__/marca.test.ts`
 
 ---
 

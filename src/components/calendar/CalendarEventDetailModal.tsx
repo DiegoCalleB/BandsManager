@@ -18,6 +18,8 @@ export interface CalendarEventDetailModalProps {
   allChronologicalEvents: ChronologicalEvent[];
   currentEventIndex: number;
   handleNavigateChronologicalEvent: (direction: 'prev' | 'next') => void;
+  /** Navegar a otra vista con el bolo ya elegido (p. ej. «Hacer cartel»). */
+  onNavigate?: (view: string, options?: { concertId?: string }) => void;
   activeBandId?: string;
   currentBandId?: string;
   getBandIdentity: (bandId?: string, fallbackName?: string) => BandIdentity;

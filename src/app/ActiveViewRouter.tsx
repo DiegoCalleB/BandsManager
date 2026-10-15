@@ -10,14 +10,14 @@ import { SkeletonDashboard } from "../components/ui/Skeleton";
 import type { Rehearsal } from "../types";
 import { LeadStatus } from "../types";
 import { useApp } from "./AppContext";
-import { BandCRM,BookingCRM,CalendarView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
+import { BandCRM,BookingCRM,CalendarView,CarteleriaView,Chatbot,EnsayosManager,EPKManager,FansPanel,Finanzas,Merchan,Planes,ReelsCenter,RepertorioSetlists,TourManager } from "./lazyViews";
 
 /**
  * Vista activa de la aplicación interna (resumen, CRM, calendario, repertorio…).
  * @returns Sección de interfaz.
  */
 export function ActiveViewRouter() {
-  const { currentView, isLoading, leads, colors, handleUpdateLead, handleAddLeadWithLimitCheck, metrics, concerts, rehearsals, handleAddRehearsal, bandUsers, currentUser, currentActiveBandName, currentActiveBandId, availableBands, handleNavigate, setShowUserProfileModal, epkConfig, tours, fans, posts, payments, isPromoPlan, activeCampaign, handleSetActiveCampaign, handleDeleteLead, handleBulkDeleteLeads, handleUpdateEpkConfig, bookingOptions, handleCrmSectionChange, bandsCount, activeBandConcerts, handleDeleteBand, campaigns, handleUpdateRehearsal, handleUpdateConcert, handleDeleteRehearsal, handleDeleteConcert, handleAddConcert, currentActiveBandLogo, activeBandRehearsals, handleAddPost, handleUpdatePost, currentTheme, handleAddFanWithLimitCheck, handleUpdateFan, handleDeleteFan, handleUpdateIncentive, handleAddMetric, handleUpdateMetric, handleDeleteMetric, handleSaveTour, handleDeleteTour, handleAddPayment, isAdmin, handleUpdatePayment, handleChatLoadingChange, currentActiveBandPlan } = useApp();
+  const { currentView, isLoading, leads, colors, handleUpdateLead, handleAddLeadWithLimitCheck, metrics, concerts, rehearsals, handleAddRehearsal, bandUsers, currentUser, currentActiveBandName, currentActiveBandId, availableBands, handleNavigate, setShowUserProfileModal, epkConfig, tours, fans, posts, payments, isPromoPlan, activeCampaign, handleSetActiveCampaign, handleDeleteLead, handleBulkDeleteLeads, handleUpdateEpkConfig, bookingOptions, handleCrmSectionChange, bandsCount, activeBandConcerts, handleDeleteBand, campaigns, handleUpdateRehearsal, handleUpdateConcert, handleCartelGuardado, handleDeleteRehearsal, handleDeleteConcert, handleAddConcert, currentActiveBandLogo, activeBandRehearsals, handleAddPost, handleUpdatePost, currentTheme, handleAddFanWithLimitCheck, handleUpdateFan, handleDeleteFan, handleUpdateIncentive, handleAddMetric, handleUpdateMetric, handleDeleteMetric, handleSaveTour, handleDeleteTour, handleAddPayment, isAdmin, handleUpdatePayment, handleChatLoadingChange, currentActiveBandPlan } = useApp();
   return (
     <>
 {/* Dynamic Views */}
@@ -192,6 +192,19 @@ export function ActiveViewRouter() {
                       view={currentView}
                       currentUser={currentUser}
                       onNavigate={handleNavigate}
+                    />
+                  </ErrorBoundary>
+                )}
+                {currentView === "carteleria" && (
+                  <ErrorBoundary fallbackTitle="Cartelería">
+                    <CarteleriaView
+                      key={`${currentActiveBandId}|${bookingOptions.concertId ?? ""}`}
+                      concerts={activeBandConcerts || concerts}
+                      bandName={currentActiveBandName}
+                      plan={currentActiveBandPlan}
+                      banda={{ logoUrl: currentActiveBandLogo || epkConfig?.logoUrl || null, plantilla: epkConfig?.plantilla, genero: epkConfig?.genero }}
+                      onCartelGuardado={handleCartelGuardado}
+                      initialConcertId={bookingOptions.concertId}
                     />
                   </ErrorBoundary>
                 )}

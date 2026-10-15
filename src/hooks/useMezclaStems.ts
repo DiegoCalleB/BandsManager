@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from 'react';
 import type { AudioTrack } from '../types';
 import { resolveAudioUrl } from '../utils/audioStorage';
 import { aplicarTono, tonoConectado } from './useTonePitchShift';
+import { factorDucking, suscribirDucking } from '../utils/ducking';
 import { hayPistaEnSolo, volumenEfectivo, type AjustesPistas } from '../utils/mezclaStems';
 
 const DERIVA_MAX_S = 0.15;
@@ -30,11 +31,20 @@ export function useMezclaStems(audioRef: RefObject<HTMLAudioElement | null>, pis
     const solo = hayPistaEnSolo(pistasRef.current, ajustesRef.current);
     for (const p of pistasRef.current) {
       const el = mapaRef.current.get(p.id);
-      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo);
+      if (el) el.volume = volumenEfectivo(p, ajustesRef.current, solo) * factorDucking();
     }
   };
 
   useEffect(aplicarVolumenes, [ajustes]);
+
+  // Ducking: al sonar un acorde de muestra baja la canción, sean stems o el audio principal (que va mudo si hay stems).
+  const aplicarRef = useRef(aplicarVolumenes);
+  useEffect(() => { aplicarRef.current = aplicarVolumenes; });
+  useEffect(() => suscribirDucking(() => {
+    aplicarRef.current();
+    const maestro = audioRef.current;
+    if (maestro && !maestro.muted) maestro.volume = factorDucking();
+  }), [audioRef]);
 
   const aplicarTonos = () => {
     for (const el of mapaRef.current.values()) {

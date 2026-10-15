@@ -73,24 +73,24 @@ Cada una enlaza pantalla → ruta → servicio/agente → tabla → proveedor ex
 
 ## 🤖 Mapa automático (generado desde los imports reales)
 
-1626 nodos: 52 agent · 47 db · 12 external · 14 feature · 932 frontend · 43 hook · 86 route · 64 schema · 12 security · 364 service.
+1657 nodos: 52 agent · 48 db · 12 external · 14 feature · 941 frontend · 43 hook · 87 route · 65 schema · 12 security · 383 service.
 No se edita a mano: lo regenera `npm run graph:sync` (hook de pre-commit) y el test `grafoConocimiento` falla si queda desfasado.
 
 ### 🔥 Los 20 ficheros más importados
-- [[src_types|src/types.ts]] — 570 ficheros dependen de él
-- [[src_components_ui_index|src/components/ui/index.ts]] — 353 ficheros dependen de él
+- [[src_types|src/types.ts]] — 573 ficheros dependen de él
+- [[src_components_ui_index|src/components/ui/index.ts]] — 358 ficheros dependen de él
 - [[src_components_ui_ShowIcon|src/components/ui/ShowIcon.tsx]] — 180 ficheros dependen de él
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] — 171 ficheros dependen de él
 - [[src_utils_api|src/utils/api.ts]] — 93 ficheros dependen de él
-- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 77 ficheros dependen de él
+- [[src_components_common_ModalPortal|src/components/common/ModalPortal.tsx]] — 78 ficheros dependen de él
 - [[tabla_registered_bands|tabla registered_bands]] — 70 ficheros dependen de él
-- [[db_state_sync|In-Memory State & Supabase Sync]] — 67 ficheros dependen de él
-- [[server_db_core|server/db/core.ts]] — 61 ficheros dependen de él
-- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 56 ficheros dependen de él
-- [[server_db|server/db.ts]] — 49 ficheros dependen de él
+- [[db_state_sync|In-Memory State & Supabase Sync]] — 68 ficheros dependen de él
+- [[server_db_core|server/db/core.ts]] — 62 ficheros dependen de él
+- [[sec_trust_boundary|Trust Boundary & Band Scoping]] — 57 ficheros dependen de él
+- [[server_db|server/db.ts]] — 50 ficheros dependen de él
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] — 49 ficheros dependen de él
+- [[server_ai|server/ai.ts]] — 44 ficheros dependen de él
 - [[src_services_api|src/services/api.ts]] — 44 ficheros dependen de él
-- [[server_ai|server/ai.ts]] — 43 ficheros dependen de él
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] — 38 ficheros dependen de él
 - [[server_db_bands|server/db/bands.ts]] — 37 ficheros dependen de él
 - [[server_routes_bands|server/routes/bands.ts]] — 34 ficheros dependen de él
