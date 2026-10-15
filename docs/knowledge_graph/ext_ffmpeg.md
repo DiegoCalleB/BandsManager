@@ -41,10 +41,15 @@ _Sin dependencias salientes directas._
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioSeparator_LocalDspService|server/services/audioSeparator/LocalDspService.ts]] *(from #service)*
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
+- [[server_services_clipRenderer|server/services/clipRenderer.ts]] *(from #service)*
+- [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
+- [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(from #service)*
+- [[server_utils_controlCalidadClip|server/utils/controlCalidadClip.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 - [[server_utils_reelsCore|server/utils/reelsCore.ts]] *(from #service)*
+- [[server_utils_rejillaBeats|server/utils/rejillaBeats.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(from #service)*
 - [[src_components_reels_center_hooks_useAnalysisTimeline|src/components/reels_center/hooks/useAnalysisTimeline.ts]] *(from #frontend)*

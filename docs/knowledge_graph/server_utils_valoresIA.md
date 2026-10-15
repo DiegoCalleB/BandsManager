@@ -24,6 +24,7 @@ _Sin dependencias salientes directas._
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[route_repertoire|Repertoire & Setlists Route]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_googlePlacesVenueService|server/services/googlePlacesVenueService.ts]] *(from #service)*
 - [[server_services_setlistVenueService|server/services/setlistVenueService.ts]] *(from #service)*
 - [[server_services_socialEngagementService|server/services/socialEngagementService.ts]] *(from #service)*

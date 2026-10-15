@@ -28,6 +28,7 @@ EPK y captación de fans: configuración de autonomía de agentes, EPK editable/
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils|server/utils.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandHash|server/utils/bandHash.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_enlacesPublicos|server/utils/enlacesPublicos.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_fanIncentive|server/utils/fanIncentive.ts]] *(Layer: #service, Domain: #social)*
 - [[server_utils_planLimits|server/utils/planLimits.ts]] *(Layer: #service, Domain: #system)*

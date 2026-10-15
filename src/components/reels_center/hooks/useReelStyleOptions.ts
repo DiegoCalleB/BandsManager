@@ -48,9 +48,13 @@ export function useReelStyleOptions({ highlights, handleSelectHighlight, selecte
     "full",
   );
 
-  const [beatDropFx, setBeatDropFx] = useState<boolean>(true);
+  // Apagado por defecto: ahora sí pone un golpe de luz en cada compás real, y en una balada sobra.
+  const [beatDropFx, setBeatDropFx] = useState<boolean>(false);
 
   const [smartPan, setSmartPan] = useState<boolean>(false);
+
+  // La banda declara que el vídeo de origen es suyo: sin eso (o sin que el canal coincida) no se autopublica.
+  const [derechosDeclarados, setDerechosDeclarados] = useState<boolean>(false);
 
   const [magicAppliedNotification, setMagicAppliedNotification] =
     useState<boolean>(false);
@@ -133,5 +137,5 @@ export function useReelStyleOptions({ highlights, handleSelectHighlight, selecte
     }
   };
 
-  return { isSeamlessLoop, setIsSeamlessLoop, isPunchInZoom, setIsPunchInZoom, beatDropFx, setBeatDropFx, smartPan, setSmartPan, activeSubtitleStyle, setActiveSubtitleStyle, injectEmojis, setInjectEmojis, showSpotifyBadge, setShowSpotifyBadge, showRetentionProgressBar, setShowRetentionProgressBar, showTourSticker, setShowTourSticker, tourStickerText, setTourStickerText, handleSyncFromTourCRM, handleTriggerMagicAutopilot, magicAppliedNotification, layoutMode, setLayoutMode };
+  return { derechosDeclarados, setDerechosDeclarados, isSeamlessLoop, setIsSeamlessLoop, isPunchInZoom, setIsPunchInZoom, beatDropFx, setBeatDropFx, smartPan, setSmartPan, activeSubtitleStyle, setActiveSubtitleStyle, injectEmojis, setInjectEmojis, showSpotifyBadge, setShowSpotifyBadge, showRetentionProgressBar, setShowRetentionProgressBar, showTourSticker, setShowTourSticker, tourStickerText, setTourStickerText, handleSyncFromTourCRM, handleTriggerMagicAutopilot, magicAppliedNotification, layoutMode, setLayoutMode };
 }

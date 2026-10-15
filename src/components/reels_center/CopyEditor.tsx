@@ -5,13 +5,14 @@
 import { Bookmark, Check } from "lucide-react";
 import { Button, Textarea } from "../ui";
 import { useReelsCenter } from "./ReelsCenterContext";
+import { CopyPerfectoPanel } from "./CopyPerfectoPanel";
 
 /**
  * Editor del copy con pestañas de objetivo y copia formateada en un clic.
  * @returns Sección de interfaz.
  */
 export function CopyEditor() {
-  const { handleSwitchCopyObjective, copyObjective, editedCopy, setEditedCopy, highlights, selectedHighlightIndex, copiedNotification, handleCopyFormattedPost } = useReelsCenter();
+  const { mejorandoCopy, opcionesCopy, motivoCopy, errorCopy, mejorarCopy, aplicarCopy, handleSwitchCopyObjective, copyObjective, editedCopy, setEditedCopy, highlights, selectedHighlightIndex, copiedNotification, handleCopyFormattedPost } = useReelsCenter();
   return (
     <>
       {/* Copy editor with 3.0 Objective Tabs */}
@@ -100,6 +101,8 @@ export function CopyEditor() {
             )}
           </Button>
         </div>
+
+        <CopyPerfectoPanel mejorando={mejorandoCopy} opciones={opcionesCopy} motivo={motivoCopy} error={errorCopy} avisos={highlights[selectedHighlightIndex]?.auditoriaCopy?.problemas} onMejorar={mejorarCopy} onAplicar={aplicarCopy} />
       </div>
     </>
   );
