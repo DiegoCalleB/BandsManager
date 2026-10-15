@@ -880,7 +880,7 @@ else:
     S[:] = [x.replace('<!--MIS-BANDAS-->\n', '') for x in S]
 
 # El giro final (Nolan): el reloj de toda la película no contaba para el festival
-add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="22000" data-fin=".gr-ask">
+add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="fade" data-dur="24700" data-fin=".gr-ask">
   <span class="tag" style="opacity:0">Fin de la historia · El reloj</span>
   <div class="gr-reloj" aria-hidden="true"><small><i class="gr-l1">CIERRE DEL CARTEL · RESURRECTION FEST</i><i class="gr-l2">ENTREGA DEL TFM · THE BIG SCHOOL</i></small>
     <span class="gr-t"><i>-00:00:03</i><i>-00:00:02</i><i>-00:00:01</i><i>00:00:00</i></span></div>
@@ -923,7 +923,7 @@ add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" da
 add(re.search(r'<section class="slide cover" data-title="Gracias".*?</section>', SRC, re.S).group(0) + '\n')
 
 # Títulos de crédito: suben solos, como al final de una película (en modo película duran lo que tarda el rollo)
-add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 7500).replace('</section>',
+add(plano('Plano · El local, vacío', 'video/actores/local-vacio', 8900).replace('</section>',
     '<p class="lema" aria-hidden="true">Los bolos, los llevas tú.<small>bandmanager.io · Pruébala con tu banda</small></p></section>'))
 add('''<section class="slide creditos" data-title="Créditos" data-transition="fade" data-dur="150000">
   <div class="rollo">
@@ -1434,6 +1434,11 @@ html = html.replace('data-dur="150000"', 'data-dur="150000" data-dur-peli="14600
 html = html.replace('data-title="Y mucho más"', 'data-title="Y mucho más" data-min="10500"', 1)
 # el correo tarda ~23 s en escribirse y enviarse (styles.css, .mailscene): la diapositiva no pasa a la siguiente antes
 html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-title="El correo llega a la sala" data-corto data-min="23500" data-dur-peli="23000"', 1)
+# las pantallas grabadas acaban con un recuadro o un gesto del ratón después de la última frase: que se vean enteros
+html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
+html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
+html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
 html = html.replace('<div class="react wow"><img src="img/miembro-brais.jpg"', '<div class="react wow" data-who="bateria" data-say="' + EXTRA_SAY['react'] + '"><img src="img/miembro-brais.jpg"', 1)
