@@ -13,12 +13,12 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Utilidades para exportación, descarga e impresión en máxima calidad (Vectorial SVG, PNG 4K 300 DPI y Flyer A4)
+Exporta: QrExportOptions, urlToDataUrl, getCleanSvgString, downloadQrAsSvg, downloadQrAsHighResPng, printHighQualityFlyer.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[src_utils_qrSvg|src/utils/qrSvg.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 
