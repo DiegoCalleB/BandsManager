@@ -1510,7 +1510,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
           <dl class="nx-mder">
             <dt>Reparto:</dt><dd>{voz}, {guitarra}, {bateria}, {bajo}</dd>
             <dt>Géneros:</dt><dd>Comedias de rock, Películas sobre tecnología</dd>
-            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo, Muy de Monforte</dd>
+            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo</dd>
             <dt>Dirección:</dt><dd>Diego de la Calle</dd>
           </dl>
         </div>
