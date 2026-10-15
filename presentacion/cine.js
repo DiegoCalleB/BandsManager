@@ -8,7 +8,8 @@
   // Los BPM coinciden con tools/musica.py: el montaje usa el pulso para que el golpe de cada rampa caiga a tiempo.
   var MUSICA = { tension: 92.5, tema: 185, noches: 72, lostrego: 200, compila: 210, cabalga: 218 };
   // Canciones de verdad (no bucles): «Compila nu bravu» (Os Herdeiros do Código) y «Cabalga o lóstrego» (Master of Prompts).
-  // Arrancan desde el segundo indicado cada vez que entra la escena y no se repiten si acaban antes que ella.
+  // Son la banda sonora de los capítulos (sus versiones sintéticas, «tema» y «lostrego», llevan mucha gaita y quedan solo para algún
+  // momento suelto). Arrancan desde el segundo indicado cada vez que se entra en su bloque de escenas.
   var CANCION = { compila: 0, cabalga: 0, giro: 0 }; // giro: segundo desde el que empieza (cámbialo al punto que quieras)
   var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
@@ -24,7 +25,7 @@
   }, true); });
   var pista = function (n) {
     if (pistas[n]) return pistas[n];
-    var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = !(n in CANCION); a.preload = 'auto'; a.dataset.tap = '1';
+    var a = new Audio('audio/musica/' + n + '.mp3?v=3'); a.loop = true; // las canciones también: si un bloque de escenas dura más que la canción, vuelve a empezar a.preload = 'auto'; a.dataset.tap = '1';
     var p = { a: a, g: null, v: 0 };
     if (crearAudio()) { try { var src = ac.createMediaElementSource(a); p.g = ac.createGain(); p.g.gain.value = 0; src.connect(p.g); p.g.connect(master); } catch (e) { p.g = null; } }
     pistas[n] = p; return p;
