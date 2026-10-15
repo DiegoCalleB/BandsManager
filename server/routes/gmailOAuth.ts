@@ -18,9 +18,9 @@ import crypto from "crypto";
 import { requireAuth } from "../state.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { gmailOAuthRateLimiter } from "../middleware/rateLimiter.js";
-import { getSupabase } from "../db/core.js";
 import { dbUpsertBandGmailOAuth, dbDeleteBandGmailOAuth, dbGetBandGmailOAuth, toSafeGmailOAuthResponse } from "../db/gmailOAuth.js";
 import { invalidarAccessTokenGmail } from "../services/gmailApiClient.js";
+import { trasConectarGmail } from "../services/gmailConexion.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 
 import { responderError } from '../utils/errorHttp.js';
@@ -270,22 +270,8 @@ router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
       scope: String(tokenData.scope || GMAIL_OAUTH_SCOPE)
     });
 
-    if (gmailEmail && gmailEmail.trim()) {
-      try {
-        const sb = getSupabase();
-        const emailNuevo = gmailEmail.trim().toLowerCase();
-        // Ese email es la identidad de inicio de sesión: si ya pertenece a OTRA banda no se pisa
-        // (dejaría dos cuentas con el mismo login y una podría entrar en la otra).
-        const { data: otra } = await sb.from("registered_bands").select("band_id").ilike("email", emailNuevo).neq("band_id", bandId).limit(1);
-        if (!otra || otra.length === 0) {
-          await sb.from("registered_bands").update({ email: emailNuevo }).eq("band_id", bandId);
-        } else {
-          console.warn("[gmailOAuth] El Gmail conectado ya es el email de otra banda: no se sincroniza registered_bands.email.");
-        }
-      } catch (syncErr) {
-        console.warn("[gmailOAuth] No se pudo sincronizar registered_bands.email:", syncErr);
-      }
-    }
+    // Sincroniza el email de acceso con el Gmail conectado y avisa por correo (no bloquea ni falla).
+    void trasConectarGmail(bandId, gmailEmail);
 
     res.redirect("/?gmail_oauth=conectado");
   } catch (errCapturado) {
