@@ -1451,7 +1451,7 @@ PROXIMAMENTE = [
 filas = ''.join(f'<div class="nx-card" style="--img:url({img})"><b>{t}</b><em>Próximamente</em></div>' for t, img in PROXIMAMENTE)
 # Fotos de los perfiles (si falta un fichero, se queda la carita de color; lo de Brais y el logo de The Big School los aporta Diego)
 import os
-PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado', 'img/perfil-tbs.png'),
+PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado', 'img/perfil-tbs.jpg'),
             ('pelaez', 'Invitado Peláez', 'video/actores/pelaez.jpg'), ('diego', 'Diego', 'img/diego-bajista.jpg')]
 def _av(k, foto, extra=''):
     ok = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', foto))

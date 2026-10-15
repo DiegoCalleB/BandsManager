@@ -2344,7 +2344,7 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 .av.foto::before, .av.foto::after { display: none; }
 .av.diego.foto { background-position: 50% 8%; }
 .av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
-.av.profes.foto { background-color: #fff; background-size: 78%; }
+.av.profes.foto { background-size: cover; }
 .av.brais.foto { background-position: 50% 20%; }
 .nx-perfil span { text-align: center; }
 .nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
