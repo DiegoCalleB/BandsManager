@@ -1483,7 +1483,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     <div class="nx-hero">
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
       <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
-      <div class="nx-top10"><b>TOP<br>10</b><span>N.º 1 en películas hoy</span></div>
+      <div class="nx-top10"><b>TOP<br>10</b><span>N.º 1 hoy en Monforte de Lemos</span></div>
       <p class="nx-sin">Una banda a punto de separarse. Un bajista que promete arreglarlo antes del sábado. Y una aplicación que ni él se cree que haya hecho.</p>
       <div class="gate-btns">
         <button id="gatePeli" class="gate-btn primary">&#9654; Reproducir</button>
@@ -1510,7 +1510,7 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
           <dl class="nx-mder">
             <dt>Reparto:</dt><dd>{voz}, {guitarra}, {bateria}, {bajo}</dd>
             <dt>Géneros:</dt><dd>Comedias de rock, Películas sobre tecnología</dd>
-            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo</dd>
+            <dt>Esta película es:</dt><dd>Divertida, Inspiradora, Muy de local de ensayo, Muy de Monforte</dd>
             <dt>Dirección:</dt><dd>Diego de la Calle</dd>
           </dl>
         </div>
