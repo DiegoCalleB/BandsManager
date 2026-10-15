@@ -34,6 +34,14 @@
     return Math.min(420, 140 + (el.dataset.say || '').length * 1.3);
   };
   var run = 0, timer = 0, avisar = function () {};
+  // Temporizadores propios, para poder congelarlos al pausar la película y seguir justo donde estaban
+  var pend = [], congelado = false, parados = [], tPausa = 0;
+  function esperar(fn, ms) {
+    var o = { fn: fn, ms: ms, t0: performance.now(), id: 0 };
+    o.disparo = function () { var k = pend.indexOf(o); if (k >= 0) pend.splice(k, 1); fn(); };
+    o.id = setTimeout(o.disparo, ms); pend.push(o); return o;
+  }
+  function limpiar(o) { if (!o) return; clearTimeout(o.id); var k = pend.indexOf(o); if (k >= 0) pend.splice(k, 1); }
 
   var enabled = function () { return pref && !!(window.DeckSound && window.DeckSound.enabled); };
 
@@ -127,7 +135,7 @@
       var vs = el.closest('.slide') && el.closest('.slide').querySelector('video[data-sync]');
       if (vs) { vs.currentTime = 0; var pp = vs.play(); if (pp && pp.catch) pp.catch(function () { /* sin gesto: se queda el cartel */ }); }
     }
-    var leer = function () { mover(el, null); setTimeout(acabar, Math.max(900, say.length * 52)); };
+    var leer = function () { mover(el, null); esperar(acabar, Math.max(900, say.length * 52)); };
     if (m) {
       var audio = libre(); audio._el = el; audio.volume = volumen;
       audio.onended = acabar; audio.onerror = function () { leer(); };
@@ -149,9 +157,9 @@
       u.pitch = Math.max(0, Math.min(2, 1 + (t.tono || 0) / 10));
       u.rate = t.vel || 1;
       // guardia: algunos navegadores nunca avisan del final de la voz; sin ella la presentación se quedaría esperando
-      var guardia = setTimeout(acabar, Math.max(2500, say.length * 95));
+      var guardia = esperar(acabar, Math.max(2500, say.length * 95));
       u.onstart = function () { mover(el, null); };
-      u.onend = function () { clearTimeout(guardia); acabar(); }; u.onerror = function () { clearTimeout(guardia); leer(); };
+      u.onend = function () { limpiar(guardia); acabar(); }; u.onerror = function () { limpiar(guardia); leer(); };
       speechSynthesis.speak(u);
       return;
     }
@@ -160,7 +168,7 @@
 
   function stop() {
     run++;
-    clearTimeout(timer);
+    limpiar(timer); pend.slice().forEach(limpiar); congelado = false; parados = [];
     pista.forEach(function (a) { if (a._colgando) return; a.onended = null; a.onerror = null; try { a.pause(); } catch (_) { /* nada que parar */ } });
     try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (_) { /* sin síntesis */ }
     document.querySelectorAll('.habla, .typing').forEach(function (e) { e.classList.remove('habla', 'typing'); callar(e); });
@@ -193,29 +201,47 @@
     for (var k0 = 0; k0 < i; k0++) if (mostrar) mostrar(cola[k0]);
     var siguiente = function () {
       if (id !== run) return;
-      if (i >= cola.length) { timer = setTimeout(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
+      if (i >= cola.length) { timer = esperar(function () { sinfoco(slide); }, 700); if (alFinal) alFinal(); return; }
       var el = cola[i++], prox = cola[i];
-      var luego = function () { if (id === run) timer = setTimeout(siguiente, 0); };
+      var luego = function () { if (id === run) timer = esperar(siguiente, 0); };
       // La siguiente se prepara a tiempo para empezar justo al acabar esta, o pisándola un poco si habla otro
       var antes = prox ? retardo(prox) / 1000 + (prox.dataset.who !== el.dataset.who ? PISAR : 0) : (opts && opts.cola) || 0;
       if (!el.matches('.dlg li')) { if (mostrar) mostrar(el); hablar(el, luego, antes); return; }
       // Mensaje de chat: primero «escribiendo…», luego la burbuja y la voz, como en el móvil
       el.classList.add('typing');
       if (mostrar) mostrar(el);
-      timer = setTimeout(function () {
+      timer = esperar(function () {
         if (id !== run) return;
         el.classList.remove('typing');
         hablar(el, luego, antes);
       }, retardo(el));
     };
     // si suena todavía la cola de un corte en L, se espera a que acabe para no pisarla
-    timer = setTimeout(siguiente, Math.max(200, colgando - performance.now() + 120));
+    timer = esperar(siguiente, Math.max(200, colgando - performance.now() + 120));
   }
 
   function uno(el) { stop(); run++; hablar(el); }
 
+  // Pausa de verdad: la frase que suena se queda parada en su sitio y los temporizadores se congelan; al reanudar sigue donde estaba
+  function pausar() {
+    if (congelado) return; congelado = true; tPausa = performance.now();
+    pend.forEach(function (o) { clearTimeout(o.id); o.ms = Math.max(0, o.ms - (tPausa - o.t0)); });
+    parados = pista.filter(function (a) { return a.src && !a.paused && !a.ended; });
+    parados.forEach(function (a) { try { a.pause(); } catch (_) { /* nada que parar */ } });
+    try { if ('speechSynthesis' in window && speechSynthesis.speaking) speechSynthesis.pause(); } catch (_) { /* sin síntesis */ }
+  }
+  function reanudar() {
+    if (!congelado) return; congelado = false;
+    var d = performance.now() - tPausa;
+    document.querySelectorAll('.habla, .habla-l').forEach(function (e) { if (e._t0) e._t0 += d; }); // los subtítulos siguen la frase donde iba
+    pend.forEach(function (o) { o.t0 = performance.now(); o.id = setTimeout(o.disparo, o.ms); });
+    parados.forEach(function (a) { var pr = a.play(); if (pr && pr.catch) pr.catch(function () { /* sin gesto: se queda parada */ }); });
+    parados = [];
+    try { if ('speechSynthesis' in window) speechSynthesis.resume(); } catch (_) { /* sin síntesis */ }
+  }
+
   window.DeckVoces = {
-    enabled: enabled, play: play, stop: stop, uno: uno, soltar: soltar,
+    enabled: enabled, play: play, stop: stop, uno: uno, soltar: soltar, pausar: pausar, reanudar: reanudar,
     // segundos que dura lo que dicen los personajes de una diapositiva (para repartir una animación de cámara)
     // duración hablada de cada frase de una diapositiva, en segundos y en orden (para la barra de tiempo del reproductor)
     lineas: function (slide) {

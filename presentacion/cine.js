@@ -585,7 +585,7 @@
   addEventListener('hashchange', function () { setTimeout(camara, 30); });
   addEventListener('voz', camara);
   addEventListener('hashchange', pintar);
-  addEventListener('deckpausa', function () { pintar(); despierta(); });
+  addEventListener('deckpausa', function () { pintar(); despierta(); if (D() && D().pausado) Object.keys(pistas).forEach(function (n) { try { pistas[n].a.pause(); } catch (e) { /* sin pista */ } }); });
   addEventListener('voz', pintar);
   // Teclas de Netflix en modo película: espacio o K pausa · ← / J −15 s · → / L +15 s · ↑ ↓ volumen · M silencio ·
   // N siguiente escena · S saltar intro o créditos · F pantalla completa · C subtítulos · Esc cierra los menús

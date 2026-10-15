@@ -287,7 +287,7 @@
     });
   };
   const seguirPelicula = (ms) => {
-    clearTimeout(pelTimer); clearTimeout(rampaT); slides.forEach((x) => x.classList.remove('acelera'));
+    clearTimeout(pelTimer); clearTimeout(rampaT); pelInfo = null; slides.forEach((x) => x.classList.remove('acelera'));
     if (!pelicula || pausado) return;
     const nx = proximo(cur);
     const ir = () => { corteAuto = true; show(nx); };
@@ -299,22 +299,34 @@
         sale.classList.add('acelera'); velocidad(sale, 1, 4, PRE_RAMPA);
         if (window.DeckSound) window.DeckSound.rampa(PRE_RAMPA);
       }, total - PRE_RAMPA);
+      pelInfo = { t0: performance.now(), ms: total };
       pelTimer = setTimeout(ir, total);
       return;
     }
+    pelInfo = { t0: performance.now(), ms };
     pelTimer = setTimeout(() => { if (nx === null) document.body.dataset.fin = '1'; else ir(); }, ms);
   };
+  let pelInfo = null, pelResto = null, videosParados = [];
+  const acs = () => (window.__acs || []).filter((c) => c.state !== 'closed');
   const pausar = (on) => {
     if (!!on === pausado) return;
     if (on) {
+      // Pausa de verdad: se congela todo lo que está en marcha (voz en su sitio, vídeos, animaciones, música, efectos y cronómetro de la escena)
       pausaEn = performance.now(); pausado = true; document.body.classList.add('pausado');
-      clearTimeout(pelTimer); clearTimeout(rampaT); if (window.DeckVoces) window.DeckVoces.stop(); document.querySelectorAll('video').forEach((v) => v.pause());
+      pelResto = pelInfo ? Math.max(0, pelInfo.ms - (pausaEn - pelInfo.t0)) : null;
+      clearTimeout(pelTimer); clearTimeout(rampaT);
+      if (window.DeckVoces) { if (window.DeckVoces.pausar) window.DeckVoces.pausar(); else window.DeckVoces.stop(); }
+      videosParados = [...document.querySelectorAll('video')].filter((v) => !v.paused); videosParados.forEach((v) => v.pause());
+      acs().forEach((c) => { try { c.suspend(); } catch (_) { /* ya parado */ } });
     } else {
-      // vuelve a empezar la frase en la que se pausó, no la escena entera
-      const lin = lineasDe(slides[cur]), off = (pausaEn - inicioEscena) / 1000; let k = 0, acc = 0;
-      while (k < lin.length && acc + lin[k] <= off) { acc += lin[k]; k++; }
       pausado = false; document.body.classList.remove('pausado');
-      desdeLinea = lin.length ? Math.min(k, lin.length - 1) : 0; show(cur, false);
+      inicioEscena += performance.now() - pausaEn; // el reloj de la escena y la barra de progreso siguen desde donde se pararon
+      acs().forEach((c) => { try { c.resume(); } catch (_) { /* ya en marcha */ } });
+      videosParados.forEach((v) => { if (v.offsetParent) v.play().catch(() => {}); }); videosParados = [];
+      if (window.DeckVoces && window.DeckVoces.reanudar) window.DeckVoces.reanudar();
+      else { const lin = lineasDe(slides[cur]), off = (pausaEn - inicioEscena) / 1000; let k = 0, acc = 0; while (k < lin.length && acc + lin[k] <= off) { acc += lin[k]; k++; } desdeLinea = lin.length ? Math.min(k, lin.length - 1) : 0; show(cur, false); }
+      if (pelResto !== null) seguirPelicula(pelResto); // el plano estaba a punto de cambiar: lo hace en el tiempo que le quedaba
+      pelResto = null;
     }
     dispatchEvent(new Event('deckpausa'));
   };
@@ -326,7 +338,7 @@
     const destino = Math.max(0, Math.min(N - 1, i));
     const tipo = corteAuto && pelicula && !isScroll() ? (slides[destino].dataset.corte || '') : '';
     corteAuto = false;
-    clearTimeout(pelTimer); clearTimeout(rampaT); clearTimeout(cambioT);
+    clearTimeout(pelTimer); clearTimeout(rampaT); clearTimeout(cambioT); pelInfo = null;
     if (cambioVoz) { removeEventListener('voz', cambioVoz); cambioVoz = null; }
     document.querySelectorAll('video').forEach((v) => { if (!(tipo === 'j' && v.closest('.slide') === slides[cur])) v.pause(); });
     if (window.DeckVoces) { if (tipo === 'l' && window.DeckVoces.soltar) window.DeckVoces.soltar(); window.DeckVoces.stop(); }
@@ -360,7 +372,7 @@
       clearTimeout(delayedVideoTimer);
       slides[cur].querySelectorAll('video[data-delay]').forEach((v) => {
         v.pause(); v.currentTime = 0;
-        delayedVideoTimer = setTimeout(() => { if (v.offsetParent) v.play().catch(() => {}); }, Number(v.dataset.delay));
+        delayedVideoTimer = setTimeout(() => { if (v.offsetParent && !pausado) v.play().catch(() => {}); }, Number(v.dataset.delay));
       });
       slides[cur].querySelectorAll('video[data-ambient]').forEach((v) => {
         if (v.dataset.restart !== undefined) v.currentTime = 0;
