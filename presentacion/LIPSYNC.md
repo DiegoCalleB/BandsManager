@@ -3,6 +3,12 @@
 Objetivo: que en unos pocos planos clave el personaje mueva los labios con su voz, para que se parezca a una película de verdad.
 El resto de la película sigue con voz en off, clips en movimiento y avatares que laten con el volumen.
 
+## Entrevistas a cámara (lo prioritario)
+Donde más se nota que la boca no va con la voz es en las entrevistas: el personaje habla a cámara en vídeo. Se preparan con
+`python3 presentacion/tools/lipsync_entrevistas.py`, que deja en `presentacion/lipsync/<entrevista>/` el clip recortado a la frase
+(`video.mp4`, sin sonido) y su voz (`audio.mp3`). Se suben los dos a Sync Labs (u otra) y el resultado se guarda como `plano.mp4`.
+Quedan fuera Peláez (a contraluz, sin boca visible) y el programador (cara real, sin permiso por escrito).
+
 ## Flujo
 
 1. Cerrar el guion (`GUION_REVISION.md`; se regenera con `python3 presentacion/tools/guion/revision.py`).
