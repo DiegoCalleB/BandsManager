@@ -93,3 +93,44 @@ describe('puedeEntrarEnColaDeEnvio', () => {
     expect(puedeEntrarEnColaDeEnvio({}, {}).ok).toBe(true);
   });
 });
+
+describe('esEmailValido: sin regex cuadrática (CodeQL js/polynomial-redos)', () => {
+  // La regex antigua, solo como referencia para comprobar que la implementación nueva decide igual.
+  const referencia = (e: string) => /^[^\s@,()]+@[^\s@,()]+\.[^\s@,()]+$/.test(e.trim());
+
+  it('decide igual que la regex antigua en 20.000 cadenas aleatorias hechas de los caracteres conflictivos', () => {
+    const alfabeto = ['a', 'b', '@', '.', ',', '(', ')', ' ', '\t', '!', '-'];
+    let semilla = 12345;
+    const azar = () => ((semilla = (semilla * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+    for (let i = 0; i < 20_000; i++) {
+      const largo = 1 + Math.floor(azar() * 14);
+      let s = '';
+      for (let j = 0; j < largo; j++) s += alfabeto[Math.floor(azar() * alfabeto.length)];
+      expect(esEmailValido(s), JSON.stringify(s)).toBe(referencia(s));
+    }
+  });
+
+  it('sigue rechazando la inyección de filtros de PostgREST (coma y paréntesis)', () => {
+    for (const malo of ['a,role.eq.admin@evil.com', 'a@b.com,role.eq.admin', 'a(b)@c.com', 'a@b.c(om)', 'a@b.com)', ' ,a@b.co']) {
+      expect(esEmailValido(malo), malo).toBe(false);
+    }
+  });
+
+  it('sigue aceptando direcciones normales (con espacios alrededor, subdominios, + y puntos)', () => {
+    for (const bueno of ['booking@sala.es', '  booking@sala.es  ', 'a.b+c@sub.dominio.co.uk', 'x@y.zz']) {
+      expect(esEmailValido(bueno), bueno).toBe(true);
+    }
+  });
+
+  it('una entrada hostil enorme se resuelve al instante', () => {
+    const t0 = Date.now();
+    esEmailValido('!@!.' + '!.'.repeat(50_000));
+    esEmailValido('!@' + '!.'.repeat(100_000) + ' ');
+    expect(Date.now() - t0).toBeLessThan(200);
+  });
+
+  it('no acepta direcciones de más de 254 caracteres (el máximo del estándar)', () => {
+    expect(esEmailValido('a'.repeat(250) + '@b.co')).toBe(false);
+  });
+});
+

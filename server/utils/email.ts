@@ -15,12 +15,26 @@ export function esEstadoDeEnvio(estado: unknown): boolean {
   return typeof estado === 'string' && (ESTADOS_DE_ENVIO as readonly string[]).includes(estado.trim());
 }
 
+/** Caracteres que nunca pueden aparecer: espacios, coma y paréntesis (ver el comentario de esEmailValido). */
+const CARACTERES_PROHIBIDOS = /[\s,()]/;
+
 export function esEmailValido(email?: unknown): boolean {
   if (!email || typeof email !== 'string') return false;
+  const e = email.trim();
+  // 254 es el máximo del estándar; además acota el trabajo con entradas enormes.
+  if (e.length > 254) return false;
   // Sin excluir la coma y los paréntesis, un valor como "a,role.eq.admin@evil.com" pasaba como
   // "email válido" y luego se usaba tal cual en consultas .or() de Supabase/PostgREST en
   // server/db/users.ts, permitiendo inyectar condiciones OR adicionales al filtro.
-  return /^[^\s@,()]+@[^\s@,()]+\.[^\s@,()]+$/.test(email.trim());
+  // Se comprueba por partes y sin una regex de principio a fin: /^[^\s@,()]+@[^\s@,()]+\.[^\s@,()]+$/
+  // es ambigua (el punto también está en la clase) y CodeQL la marca como polinómica.
+  const arroba = e.indexOf('@');
+  if (arroba < 1 || arroba !== e.lastIndexOf('@')) return false;
+  const local = e.slice(0, arroba);
+  const dominio = e.slice(arroba + 1);
+  if (CARACTERES_PROHIBIDOS.test(local) || CARACTERES_PROHIBIDOS.test(dominio)) return false;
+  // Un punto con al menos un carácter delante y otro detrás.
+  return dominio.slice(1, -1).includes('.');
 }
 
 /** Alias en inglés para el código que ya lo llamaba así (server/routes/billing.ts). */

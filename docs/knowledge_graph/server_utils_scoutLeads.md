@@ -18,7 +18,7 @@ Validación y normalización de los recintos que devuelve la IA en el Agente Sco
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
-_Sin dependencias salientes directas._
+- [[server_routes_leads_placesPhoto|server/routes/leads/placesPhoto.ts]] *(Layer: #route, Domain: #booking)*
 
 ---
 

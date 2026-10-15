@@ -9,9 +9,11 @@ import {
   KeyRound,
   RefreshCw,
   Sparkles,
-  Unlink,
 } from "lucide-react";
 import { api } from "../services/api";
+import type { EstadoGmailOAuth } from "../services/tiposApi";
+import { GmailOAuthEstado } from "./GmailOAuthEstado";
+import { mensajeDeMotivoGmail } from "../utils/motivoGmailOAuth";
 import { BandEmailAccountStatus } from "../types";
 import { Input } from './ui';
 import { comoErrorCapturado } from '../utils/errorCapturado';
@@ -70,10 +72,7 @@ function feedbackInicialGmailOAuth(): { type: "success" | "error"; message: stri
     };
   }
   const motivo = params.get("motivo") || "error_desconocido";
-  return {
-    type: "error",
-    message: `No se pudo conectar Gmail (${motivo}). Inténtalo de nuevo.`,
-  };
+  return { type: "error", message: mensajeDeMotivoGmail(motivo) };
 }
 
 export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
@@ -102,10 +101,7 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
   // Gmail conectado por OAuth (sin contraseña de aplicación ni popup para el Agente Enviador
   // programado - ver server/routes/gmailOAuth.ts). Independiente del formulario IMAP de
   // arriba: una banda puede tener las dos cosas, ninguna, o solo una.
-  const [gmailOAuthStatus, setGmailOAuthStatus] = useState<{
-    connected: boolean;
-    gmail_email?: string;
-  }>({ connected: false });
+  const [gmailOAuthStatus, setGmailOAuthStatus] = useState<EstadoGmailOAuth>({ connected: false });
   const [gmailOAuthLoading, setGmailOAuthLoading] = useState(true);
   const [gmailOAuthConnecting, setGmailOAuthConnecting] = useState(false);
   const [gmailOAuthDisconnecting, setGmailOAuthDisconnecting] = useState(false);
@@ -372,54 +368,14 @@ export const EmailAccountConfig: React.FC<EmailAccountConfigProps> = ({
           como en el Agente Enviador programado.
         </p>
 
-        {gmailOAuthLoading ? (
-          <div className="flex items-center gap-2 text-xs font-sans text-[var(--ink-2)]">
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            <span>Comprobando conexión de Gmail…</span>
-          </div>
-        ) : gmailOAuthStatus.connected ? (
-          <div
-            className={`p-3 rounded-[var(--r-s)] text-xs flex items-center justify-between gap-3 ${"bg-[var(--ok)]/10 text-[var(--ink)]"}`}
-          >
-            <div className="flex items-center gap-2 min-w-0">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-[var(--ok)]" />
-              <span className="truncate">
-                Conectado como <strong>{gmailOAuthStatus.gmail_email}</strong>
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={handleDisconnectGmailOAuth}
-              disabled={gmailOAuthDisconnecting}
-              className="shrink-0 px-3 py-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]/80 hover:bg-[var(--surface)]/70 text-[var(--ink-2)] text-xs font-sans font-bold transition-ui cursor-pointer flex items-center gap-1.5 disabled:opacity-50"
-            >
-              {gmailOAuthDisconnecting ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
-              ) : (
-                <Unlink className="w-3 h-3" />
-              )}
-              Desconectar
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleConnectGmailOAuth}
-            disabled={gmailOAuthConnecting}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-[var(--r-m)] bg-[var(--acc)] hover:bg-[var(--tentative)] text-[var(--on-acc)] font-bold text-xs font-sans transition-ui active:scale-[0.97] disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
-          >
-            {gmailOAuthConnecting ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Mail className="w-4 h-4" />
-            )}
-            <span>
-              {gmailOAuthConnecting
-                ? "Redirigiendo a Google..."
-                : "Conectar con Google"}
-            </span>
-          </button>
-        )}
+        <GmailOAuthEstado
+          estado={gmailOAuthStatus}
+          cargando={gmailOAuthLoading}
+          conectando={gmailOAuthConnecting}
+          desconectando={gmailOAuthDisconnecting}
+          onConectar={handleConnectGmailOAuth}
+          onDesconectar={handleDisconnectGmailOAuth}
+        />
 
         {gmailOAuthFeedback && (
           <div

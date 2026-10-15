@@ -13,7 +13,7 @@ tags: ["service", "system", "auto"]
 > **Capa:** `#layer/service` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: isEncryptedSecret, encryptSecret, decryptSecret.
+Exporta: faltaClaveDeCifradoEnProduccion, isEncryptedSecret, encryptSecret, decryptSecret.
 
 ---
 
@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[agent_scheduler|Agent Scheduler In-Process]] *(from #agent)*
 - [[server_db_emailAccounts|server/db/emailAccounts.ts]] *(from #db)*
 - [[server_db_gmailOAuth|server/db/gmailOAuth.ts]] *(from #security)*
 
