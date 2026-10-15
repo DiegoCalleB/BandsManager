@@ -141,8 +141,18 @@ function velar(ctx: CanvasRenderingContext2D, r: Rect, t: Tinta, haciaAbajo: boo
   ctx.fillRect(0, y0, r.w, y1 - y0);
 }
 
+/**
+ * Un enlace corto en MAYÚSCULAS entra en el modo alfanumérico del QR: 25 módulos en vez de 29, cada
+ * uno más grande en el mismo papel, y se lee desde más lejos. Funciona porque el host no distingue
+ * mayúsculas, Express tampoco en `/r/:code` y el servidor normaliza el código a minúsculas.
+ * Cualquier otra URL (con query, UTM…) se deja tal cual.
+ */
+export function urlParaQr(url: string): string {
+  return /^https?:\/\/[a-z0-9.-]+(:\d+)?\/r\/[a-z0-9]+$/i.test(url) ? url.toUpperCase() : url;
+}
+
 function dibujarQr(ctx: CanvasRenderingContext2D, r: Rect, url: string) {
-  const qr = QRCode.create(url, { errorCorrectionLevel: 'M' });
+  const qr = QRCode.create(urlParaQr(url), { errorCorrectionLevel: 'M' });
   const n = qr.modules.size;
   const margen = r.w * 0.07;
   const modulo = (r.w - margen * 2) / n;

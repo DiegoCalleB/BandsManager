@@ -25,7 +25,9 @@ Del bolo a los datos del cartel. Puro.
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_cartel_AjustesCartel|src/components/cartel/AjustesCartel.tsx]] *(from #frontend)*
 - [[src_components_cartel_hooks_useEditorCartel|src/components/cartel/hooks/useEditorCartel.ts]] *(from #frontend)*
+- [[src_components_cartel_PreguntaCabeza|src/components/cartel/PreguntaCabeza.tsx]] *(from #frontend)*
 
 ---
 

@@ -19,7 +19,7 @@ interface Props {
   foto: string | null;
   onFoto: (f: File | undefined) => void;
   fondosIa: string[];
-  onGenerarIa: (estilo: EstiloCartel, instrucciones: string) => void;
+  onGenerarIa: (estilo: EstiloCartel, instrucciones: string) => Promise<boolean>;
   generando: boolean;
 }
 
@@ -98,7 +98,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
           <Field label="Ambiente" optional>
             <Textarea rows={2} maxLength={300} value={instrucciones} placeholder="Colores, objetos, la sala de noche…" onChange={(e) => setInstrucciones(e.target.value)} />
           </Field>
-          <Button variant="soft" disabled={generando} onClick={() => onGenerarIa(estilo, instrucciones)}>
+          <Button variant="soft" disabled={generando} onClick={async () => { if (await onGenerarIa(estilo, instrucciones)) setIaAbierta(false); }}>
             <Sparkles className="size-4" aria-hidden />
             {generando ? 'Pintando el fondo…' : 'Pintar fondo'}
           </Button>

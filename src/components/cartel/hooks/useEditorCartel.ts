@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import type { Concert } from '../../../types';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/cartel/formatos';
-import { conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
+import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import {
   canvasABlob,
   compartirODescargar,
@@ -11,7 +11,8 @@ import {
   type FondoCartel,
   type PiezasCartel,
 } from '../../../utils/cartel/render';
-import { generarFondoCartel, type EstiloCartel } from '../../../utils/promocionApi';
+import { crearEnlace, generarFondoCartel, type EstiloCartel } from '../../../utils/promocionApi';
+import { lineaHorario } from '../../../utils/cartel/texto';
 
 /** Lo que la persona decide por bolo (la cabeza de cartel de un bolo no vale para otro). */
 export interface AjustesBolo {
@@ -43,13 +44,11 @@ interface Params {
   concerts: Concert[];
   bandName: string;
   initialConcertId?: string;
-  /** Enlace corto del cartel de este bolo (fase 2). */
-  enlace?: EnlaceCartel | null;
   /** Si el plan permite quitar la marca BandManager. */
   puedeQuitarMarca?: boolean;
 }
 
-export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, enlace = null, puedeQuitarMarca = false }: Params) {
+export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false }: Params) {
   const opciones = useMemo(() => conciertosParaCartel(concerts, hoyMadrid()), [concerts]);
   const [concertId, setConcertId] = useState(initialConcertId ?? '');
   const concierto = opciones.find((c) => c.id === concertId) ?? opciones[0] ?? null;
@@ -63,7 +62,28 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [exportando, setExportando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [enlaces, setEnlaces] = useState<Record<string, EnlaceCartel | null>>({});
   const ajustes = (concierto && ajustesPorBolo[concierto.id]) || AJUSTES_INICIALES;
+  const enlace = (concierto && enlaces[concierto.id]) || null;
+  const conciertoId = concierto?.id;
+
+  // Enlace corto del cartel: canal «cartel», a la página del bolo. El servidor lo reutiliza si ya
+  // existe, así que sus escaneos se suman en la campaña del bolo. Sin enlace, el cartel sale sin QR.
+  useEffect(() => {
+    if (!conciertoId || conciertoId in enlaces) return;
+    let vigente = true;
+    crearEnlace({ concertId: conciertoId, destino: 'concierto', canal: 'cartel' })
+      .then((r) => {
+        if (vigente) setEnlaces((p) => ({ ...p, [conciertoId]: { url: r.url, corta: r.url.replace(/^https?:\/\//, '') } }));
+      })
+      .catch((e) => {
+        console.warn('[Cartelería] Sin enlace corto; el cartel sale sin QR:', e);
+        if (vigente) setEnlaces((p) => ({ ...p, [conciertoId]: null }));
+      });
+    return () => {
+      vigente = false;
+    };
+  }, [conciertoId, enlaces]);
   const iaDelBolo = useMemo(() => (concierto && fondosIa[concierto.id]) || [], [concierto, fondosIa]);
 
   // Un fondo de IA es de su bolo: al cambiar de bolo no se arrastra.
@@ -148,8 +168,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     elegirFondo({ tipo: 'imagen', url, origen: 'foto' });
   };
 
-  const generarIa = async (estilo: EstiloCartel, instrucciones: string) => {
-    if (!concierto) return;
+  /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
+  const generarIa = async (estilo: EstiloCartel, instrucciones: string): Promise<boolean> => {
+    if (!concierto) return false;
     const id = concierto.id;
     setGenerando(true);
     setError(null);
@@ -157,9 +178,11 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const r = await generarFondoCartel({ concertId: id, estilo, instrucciones: instrucciones.trim() || undefined });
       setFondosIa((prev) => ({ ...prev, [id]: [r.url, ...(prev[id] ?? []).filter((u) => u !== r.url)].slice(0, MAX_FONDOS_IA) }));
       setFondo({ tipo: 'imagen', url: r.url, origen: 'ia' });
+      return true;
     } catch (e) {
       console.warn('[Cartelería] Falló la generación del fondo:', e);
       setError(mensajeDe(e, 'No pudimos generar el fondo. Prueba en un rato.'));
+      return false;
     } finally {
       setGenerando(false);
     }
@@ -226,7 +249,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     ajustes,
     cambiarAjustes,
     compartido,
+    bandas: concierto ? bandasDelBolo(concierto, bandName) : [],
     faltaCabeza,
+    tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
+    tieneEnlace: !!enlace,
     puedeQuitarMarca,
     compartir,
     descargar,

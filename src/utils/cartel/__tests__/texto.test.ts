@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { fechaCartel, ajustarLineas, ajustarPiezas, horaValida, lineaHorario } from '../texto';
-import { nombreArchivo } from '../render';
+import { nombreArchivo, urlParaQr } from '../render';
+import QRCode from 'qrcode';
 
 describe('texto del cartel', () => {
   it('formatea la fecha sin que la zona horaria mueva el día', () => {
@@ -60,5 +61,19 @@ describe('ajustarPiezas', () => {
   });
   it('una pieza que no cabe sola se reparte por palabras', () => {
     expect(ajustarPiezas(['UNA BANDA LARGUISIMA', 'X'], ' · ', 100, medir)).toEqual(['UNA BANDA', 'LARGUISIMA', 'X']);
+  });
+});
+
+describe('URL del QR', () => {
+  it('un enlace corto va en mayúsculas y cabe en un QR más pequeño', () => {
+    expect(urlParaQr('https://bandmanager.io/r/ab3k9x2')).toBe('HTTPS://BANDMANAGER.IO/R/AB3K9X2');
+    const normal = QRCode.create('https://bandmanager.io/r/ab3k9x2', { errorCorrectionLevel: 'M' });
+    const mayus = QRCode.create(urlParaQr('https://bandmanager.io/r/ab3k9x2'), { errorCorrectionLevel: 'M' });
+    expect(mayus.modules.size).toBeLessThan(normal.modules.size);
+  });
+  it('cualquier otra URL no se toca (una query en mayúsculas cambiaría su significado)', () => {
+    for (const u of ['https://bandmanager.io/e/mi-bolo?utm_source=cartel', 'https://bandmanager.io/epk?b=Ab3', 'https://x.com/r/ab?x=1']) {
+      expect(urlParaQr(u)).toBe(u);
+    }
   });
 });

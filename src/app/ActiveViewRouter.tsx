@@ -201,6 +201,7 @@ export function ActiveViewRouter() {
                       key={`${currentActiveBandId}|${bookingOptions.concertId ?? ""}`}
                       concerts={activeBandConcerts || concerts}
                       bandName={currentActiveBandName}
+                      plan={currentActiveBandPlan}
                       initialConcertId={bookingOptions.concertId}
                     />
                   </ErrorBoundary>

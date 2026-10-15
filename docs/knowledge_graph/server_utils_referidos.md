@@ -32,6 +32,7 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `server/utils/__tests__/referidos.test.ts`
+- `src/utils/cartel/__tests__/marca.test.ts`
 
 ---
 

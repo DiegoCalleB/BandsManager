@@ -1,15 +1,20 @@
-import React, { useRef } from 'react';
-import { Download, FileArchive, Share2 } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Download, FileArchive, Settings2, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
 import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../utils/cartel/formatos';
 import { fechaCartel } from '../../utils/cartel/texto';
 import { useEditorCartel } from './hooks/useEditorCartel';
 import { SelectorFondo } from './SelectorFondo';
+import { PreguntaCabeza } from './PreguntaCabeza';
+import { AjustesCartel } from './AjustesCartel';
+import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
 interface Props {
   concerts: Concert[];
   bandName: string;
+  /** Plan de la banda activa: decide si se puede quitar la marca BandManager. */
+  plan?: string;
   /** Si se llega desde la ficha de un bolo, ese bolo ya viene elegido. */
   initialConcertId?: string;
 }
@@ -20,9 +25,10 @@ const PESTANAS = ORDEN_FORMATOS.map((id) => ({ id, label: FORMATOS[id].etiqueta 
  * Cartelería: abrir y tener cartel. El próximo bolo viene elegido y el cartel sale al instante
  * sin IA (color + la Onda); la IA y la foto son extras. Tres bloques en móvil: bolo, cartel, acciones.
  */
-const CarteleriaView: React.FC<Props> = ({ concerts, bandName, initialConcertId }) => {
+const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, initialConcertId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId });
+  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan) });
+  const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
 
   if (!ed.concierto) {
     return (
@@ -57,6 +63,8 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, initialConcertId 
 
       {/* Bloque 3 · fondo y acciones */}
       <div className="grid content-start gap-4 md:col-start-2 md:row-start-2">
+        {ed.faltaCabeza && <PreguntaCabeza bandas={ed.bandas} onElegir={(cabeza) => ed.cambiarAjustes({ cabeza })} />}
+
         <SelectorFondo
           fondo={ed.fondo}
           onFondo={ed.elegirFondo}
@@ -69,19 +77,32 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, initialConcertId 
 
         {ed.error && <p role="alert" className="rounded-[var(--r-s)] bg-[var(--alert-soft)] px-3 py-2 text-sm text-[var(--alert)]">{ed.error}</p>}
 
-        <div className="flex items-center gap-2">
-          <Button variant="primary" size="lg" className="flex-1" onClick={ed.compartir} disabled={ed.exportando}>
-            <Share2 className="size-4" aria-hidden />
-            {ed.exportando ? 'Preparando…' : 'Compartir'}
-          </Button>
+        {/* En móvil el botón flotante del chat ocupa la esquina derecha: se le deja hueco. */}
+        <div className="flex items-center gap-2 pr-16 md:pr-0">
           <ActionMenu
             label="Más opciones del cartel"
             items={[
               { label: 'Descargar', icon: Download, onSelect: ed.descargar },
               { label: 'Descargar los 3 formatos', icon: FileArchive, onSelect: ed.descargarTodos },
+              { label: 'Ajustes del cartel', icon: Settings2, onSelect: () => setAjustesAbiertos(true) },
             ]}
           />
+          <Button variant="primary" size="lg" className="flex-1" onClick={ed.compartir} disabled={ed.exportando}>
+            <Share2 className="size-4" aria-hidden />
+            {ed.exportando ? 'Preparando…' : 'Compartir'}
+          </Button>
         </div>
+
+        <AjustesCartel
+          abierto={ajustesAbiertos}
+          onCerrar={() => setAjustesAbiertos(false)}
+          ajustes={ed.ajustes}
+          onCambiar={ed.cambiarAjustes}
+          bandas={ed.bandas}
+          tieneHorario={ed.tieneHorario}
+          tieneEnlace={ed.tieneEnlace}
+          puedeQuitarMarca={ed.puedeQuitarMarca}
+        />
       </div>
     </div>
   );
