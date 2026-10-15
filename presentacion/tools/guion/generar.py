@@ -1377,7 +1377,8 @@ PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': '
           'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': 'festival',
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
-          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves'}
+          'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
+          'Esto lo necesitan todos': 'alvaro-escenario'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 def _vid(k, extra=''):
     return (f'<video class="actor-vid"{extra} data-ambient data-restart muted loop playsinline preload="auto"'
