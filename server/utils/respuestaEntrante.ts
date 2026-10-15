@@ -20,7 +20,7 @@ const CABECERAS_DE_CITA: RegExp[] = [
 ];
 
 // Outlook: "De: ..." seguido (en las siguientes líneas) de "Enviado:/Sent:/Envoy..." marca el inicio de la cita.
-const LINEA_DE = /^\s*(de|from|da|von|van)\s*:\s*.+/i;
+const LINEA_DE = /^\s*(de|from|da|von|van)\s*:\s*\S/i; // \s* y \S no se solapan: sin ambigüedad
 const LINEA_ENVIADO = /^\s*(enviado|sent|envoy[ée]|inviato|gesendet|verzonden|enviada)(\s+el)?\s*:/i;
 
 /** Texto propio del mensaje, sin lo citado. Si todo era cita devuelve el original, para no perderlo. */

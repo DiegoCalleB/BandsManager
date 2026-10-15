@@ -275,7 +275,7 @@ export async function findMatchingLeadForIncomingMessage(
   // ya está en conversación y es la ÚNICA candidata). Un correo nuevo, una newsletter o un lead
   // aún sin contactar que casan por nombre no son una respuesta de esa sala.
   const esRespuesta = /^\s*(re|rv|aw|sv|respuesta)\s*:/i.test(msg.subject || "");
-  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(\s*(re|fwd|rv|aw|respuesta|sv)\s*:)+\s*/gi, "").trim();
+  const subjectClean = (msg.subject || "").toLowerCase().replace(/^(?:\s*(?:re|fwd|rv|aw|respuesta|sv)\s*:)+/i, "").trim();
   if (esRespuesta && subjectClean.length >= 3) {
     const candidateLeads = leads.filter((l) => {
       const nombre = (l.nombre_sala || "").toLowerCase().trim();
