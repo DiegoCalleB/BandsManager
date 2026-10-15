@@ -52,6 +52,7 @@ Monitoriza respuestas entrantes de salas vía Gmail OAuth2 / IMAP según el sche
 - `server/services/__tests__/lectorClassification.test.ts`
 - `server/services/__tests__/lectorFiltroPrevio.test.ts`
 - `server/services/__tests__/lectorMultiVectorMatching.test.ts`
+- `server/services/__tests__/simulacroBandeja.test.ts`
 
 ---
 

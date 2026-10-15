@@ -52,6 +52,7 @@ Despacha correos únicamente tras aprobación humana (aprobado_propuesta/respues
 - `server/services/__tests__/agentEngine.test.ts`
 - `server/services/__tests__/agentEngineDirectSend.test.ts`
 - `server/services/__tests__/agentEngineSeguridad.test.ts`
+- `server/services/__tests__/simulacroAprobacionEnvio.test.ts`
 
 ---
 

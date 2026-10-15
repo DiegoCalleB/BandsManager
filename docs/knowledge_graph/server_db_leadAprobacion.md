@@ -29,6 +29,11 @@ Sello de la aprobación humana en `leads` (ver server/utils/aprobacionLead.ts). 
 
 ---
 
+## 🧪 Tests que lo cubren
+- `server/services/__tests__/simulacroAprobacionEnvio.test.ts`
+
+---
+
 ## 🛡️ Reglas de Aislamiento & Calidad
 - [ ] ¿Respeta el trust boundary de `band_id`?
 - [ ] ¿Tiene pruebas unitarias o de integración asociadas?
