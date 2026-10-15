@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { duracionAcorde } from '../utils/relojAcorde';
 import { claveParaMidi, midiDeEscala, notaDeMidi, prefiereBemoles } from '../utils/pentagrama';
 
 describe('pentagrama', () => {
@@ -21,5 +22,13 @@ describe('pentagrama', () => {
   it('la escala sube desde la tónica y cierra en la octava', () => {
     expect(midiDeEscala(0, [0, 2, 4, 5, 7, 9, 11])).toEqual([60, 62, 64, 65, 67, 69, 71, 72]);
     expect(midiDeEscala(9, [9, 11, 0, 2, 4, 5, 7])).toEqual([69, 71, 72, 74, 76, 77, 79, 81]);
+  });
+});
+
+describe('duración del acorde', () => {
+  it('va hasta el siguiente y el último hasta el final', () => {
+    expect(duracionAcorde([0, 2, 5], 0, 9)).toBe(2);
+    expect(duracionAcorde([0, 2, 5], 2, 9)).toBe(4);
+    expect(duracionAcorde([0, 2, 5], 7, 9)).toBeNull();
   });
 });

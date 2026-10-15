@@ -5,6 +5,7 @@ import { gradoVisible, type EstiloArmonia } from '../../utils/estiloArmonia';
 import type { NivelAcorde } from '../../utils/voicings';
 import { CajaAcorde, SelectorNivel, SelectorVistaAcorde } from './AcordeEnInstrumento';
 import { RelojEnAcorde } from './RelojEnAcorde';
+import { duracionAcorde } from '../../utils/relojAcorde';
 import { proximosVisibles, type EstadoAcordeActual } from './acordeActualEstado';
 
 interface BarraProps {
@@ -83,12 +84,24 @@ interface DiagramasProps {
   onIr?: (indiceCifrado: number) => void;
 }
 
+/** Cuánto dura un acorde, como barra proporcional al más largo de los que se ven y los segundos al lado. */
+const BarraDuracion: React.FC<{ segundos: number; maximo: number }> = ({ segundos, maximo }) => (
+  <div className="flex items-center gap-1.5 px-1 pt-1" title={`Dura ${segundos.toFixed(1).replace('.', ',')} s`}>
+    <div className="flex-1 h-1.5 rounded-[var(--r-pill)] bg-[var(--surface)]" aria-hidden>
+      <div className="h-full rounded-[var(--r-pill)] bg-[var(--acc)]" style={{ width: `${Math.max(12, Math.min(100, (segundos / Math.max(maximo, 0.001)) * 100))}%` }} />
+    </div>
+    <span className="text-micro font-sans tabular-nums text-[var(--ink-2)] shrink-0">{segundos.toFixed(1).replace('.', ',')} s</span>
+  </div>
+);
+
 /** El acorde actual y los que vienen, como diagramas que avanzan con la canción. */
 export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proximos, siguiente, sonando, contexto, vista, onVista, nivel = 'normal', onNivel, estiloArmonia, reloj, indices, onIr }) => {
   const { acorde, previo, diagramas } = estado;
   if (!diagramas || !acorde) return null;
   const origen = proximos ?? (siguiente ? [siguiente] : []);
   const lista = origen.map((c, k) => ({ c, indice: indices?.[k] })).slice(0, 3);
+  const duraciones = lista.map(({ indice }) => (reloj && indice !== undefined ? duracionAcorde(reloj.tiempos, indice, reloj.duracion) : null));
+  const maxDur = Math.max(0, ...duraciones.map((d) => d ?? 0));
   const gradoDe = (c: string) => {
     const info = contexto.get(c)?.info;
     return info && estiloArmonia && estiloArmonia.mostrar !== 'nombre' ? gradoVisible(info.grado, estiloArmonia) : undefined;
@@ -115,6 +128,7 @@ export const DiagramasAcordeActual: React.FC<DiagramasProps> = ({ estado, proxim
               className={`w-28 shrink-0 rounded-[var(--r-m)] ${ir ? 'cursor-pointer' : ''} ${i > 0 ? 'opacity-70' : ''}`}
             >
               <CajaAcorde chord={c} vista={vista} contexto={contexto.get(c)} grado={gradoDe(c)} nivel={nivel} previo={i === 0 ? acorde : lista[i - 1].c} sonar={!ir} />
+              {duraciones[i] !== null && maxDur > 0 && <BarraDuracion segundos={duraciones[i] as number} maximo={maxDur} />}
             </div>
           );
         })}
