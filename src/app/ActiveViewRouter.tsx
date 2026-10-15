@@ -198,9 +198,10 @@ export function ActiveViewRouter() {
                 {currentView === "carteleria" && (
                   <ErrorBoundary fallbackTitle="Cartelería">
                     <CarteleriaView
-                      key={currentActiveBandId}
+                      key={`${currentActiveBandId}|${bookingOptions.concertId ?? ""}`}
                       concerts={activeBandConcerts || concerts}
                       bandName={currentActiveBandName}
+                      initialConcertId={bookingOptions.concertId}
                     />
                   </ErrorBoundary>
                 )}

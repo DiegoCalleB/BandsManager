@@ -172,6 +172,8 @@ BandManager UI Component Library
 - [[src_components_calendar_views_PeriodNavigation|src/components/calendar/views/PeriodNavigation.tsx]] *(from #frontend)*
 - [[src_components_campaign_CampaignManagerModal|src/components/campaign/CampaignManagerModal.tsx]] *(from #frontend)*
 - [[src_components_campaign_GlobalCampaignBar|src/components/campaign/GlobalCampaignBar.tsx]] *(from #frontend)*
+- [[src_components_cartel_CarteleriaView|src/components/cartel/CarteleriaView.tsx]] *(from #frontend)*
+- [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ActiveRunPanel|src/components/chatbot/ActiveRunPanel.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotHeader|src/components/chatbot/ChatbotHeader.tsx]] *(from #frontend)*
 - [[src_components_chatbot_ChatbotModeSwitcher|src/components/chatbot/ChatbotModeSwitcher.tsx]] *(from #frontend)*

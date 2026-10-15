@@ -23,6 +23,7 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_cartel_SelectorFondo|src/components/cartel/SelectorFondo.tsx]] *(from #frontend)*
 - [[src_components_ui_ActionMenu|src/components/ui/ActionMenu.tsx]] *(from #frontend)*
 - [[src_components_ui_Button|src/components/ui/Button.tsx]] *(from #frontend)*
 - [[src_components_ui_Card|src/components/ui/Card.tsx]] *(from #frontend)*

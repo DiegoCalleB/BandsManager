@@ -43,7 +43,8 @@ export function construirPromptFondo(d: DatosFondoCartel): string {
   const extra = sanitizeExternalText(d.instrucciones, 300);
 
   return [
-    'Create the background artwork for a live-music concert poster, portrait 4:5.',
+    'Create the background artwork for a live-music concert poster, tall portrait 9:16.',
+    'It will be cropped to 4:5 and to A4: keep the main subject in the vertical centre band.',
     `Visual style: ${DESCRIPCION_ESTILO[d.estilo]}.`,
     'ABSOLUTE RULES: no text, no letters, no numbers, no logos, no watermarks, no people\'s faces in close-up.',
     'Keep the upper third and the lower third visually calm (low detail) because text will be placed there later.',

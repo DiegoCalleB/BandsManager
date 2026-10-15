@@ -1,146 +1,86 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Download, Wand2 } from 'lucide-react';
+import React, { useRef } from 'react';
+import { Download, FileArchive, Share2 } from 'lucide-react';
 import type { Concert } from '../../types';
-import { Button, EmptyState, Field, Select, Textarea } from '../ui';
-import { datosCartel, dibujarCartel } from '../../utils/cartelCompose';
-import { generarFondoCartel, type EstiloCartel } from '../../utils/promocionApi';
-
-const ESTILOS: { id: EstiloCartel; etiqueta: string }[] = [
-  { id: 'gigposter', etiqueta: 'Serigrafía' },
-  { id: 'neon', etiqueta: 'Neón' },
-  { id: 'collage', etiqueta: 'Collage punk' },
-  { id: 'minimal', etiqueta: 'Minimal' },
-  { id: 'vintage', etiqueta: 'Vintage 70' },
-];
+import { ActionMenu, Button, EmptyState, Select, Tabs } from '../ui';
+import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../utils/cartel/formatos';
+import { fechaCartel } from '../../utils/cartel/texto';
+import { useEditorCartel } from './hooks/useEditorCartel';
+import { SelectorFondo } from './SelectorFondo';
 
 interface Props {
   concerts: Concert[];
   bandName: string;
+  /** Si se llega desde la ficha de un bolo, ese bolo ya viene elegido. */
+  initialConcertId?: string;
 }
 
-/** Conciertos de los que tiene sentido hacer cartel: confirmados, no privados, de hoy en adelante. */
-function conciertosParaCartel(concerts: Concert[]): Concert[] {
-  const hoy = new Date().toISOString().slice(0, 10);
-  return concerts
-    .filter((c) => c.tipo !== 'privado' && !c.is_posible && (c.fecha || '') >= hoy)
-    .sort((a, b) => a.fecha.localeCompare(b.fecha));
-}
+const PESTANAS = ORDEN_FORMATOS.map((id) => ({ id, label: FORMATOS[id].etiqueta }));
 
-const CarteleriaView: React.FC<Props> = ({ concerts, bandName }) => {
-  const opciones = useMemo(() => conciertosParaCartel(concerts), [concerts]);
-  const [concertId, setConcertId] = useState('');
-  const [estilo, setEstilo] = useState<EstiloCartel>('gigposter');
-  const [instrucciones, setInstrucciones] = useState('');
-  // El fondo es de un concierto concreto: se guarda con su id y solo vale mientras siga elegido.
-  const [fondo, setFondo] = useState<{ concertId: string; url: string } | null>(null);
-  const [generando, setGenerando] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+/**
+ * Cartelería: abrir y tener cartel. El próximo bolo viene elegido y el cartel sale al instante
+ * sin IA (color + la Onda); la IA y la foto son extras. Tres bloques en móvil: bolo, cartel, acciones.
+ */
+const CarteleriaView: React.FC<Props> = ({ concerts, bandName, initialConcertId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId });
 
-  const elegido = opciones.find((c) => c.id === (concertId || opciones[0]?.id));
-  const fondoUrl = fondo && fondo.concertId === elegido?.id ? fondo.url : null;
-
-  useEffect(() => {
-    if (!fondoUrl || !elegido || !canvasRef.current) return;
-    dibujarCartel(canvasRef.current, fondoUrl, datosCartel(elegido, bandName)).catch((e) => {
-      console.warn('[Cartelería] No se pudo componer el cartel:', e);
-      setError('No pudimos componer el cartel. Genera otro fondo.');
-    });
-  }, [fondoUrl, elegido, bandName]);
-
-  const generar = async () => {
-    if (!elegido) return;
-    setGenerando(true);
-    setError(null);
-    try {
-      const r = await generarFondoCartel({ concertId: elegido.id, estilo, instrucciones: instrucciones.trim() || undefined });
-      setFondo({ concertId: elegido.id, url: r.url });
-    } catch (e) {
-      console.warn('[Cartelería] Falló la generación del fondo:', e);
-      setError(e instanceof Error && e.message ? e.message : 'No pudimos generar el fondo. Prueba en un rato.');
-    } finally {
-      setGenerando(false);
-    }
-  };
-
-  const descargar = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || !elegido) return;
-    canvas.toBlob((blob) => {
-      if (!blob) return;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `cartel-${bandName}-${elegido.fecha}.png`.replace(/\s+/g, '-').toLowerCase();
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }, 'image/png');
-  };
-
-  if (opciones.length === 0) {
+  if (!ed.concierto) {
     return (
       <div data-modulo="reels" className="mx-auto max-w-3xl px-4 py-8">
-        <EmptyState
-          title="No hay bolo que anunciar."
-          description="Confirma una fecha en el calendario y aquí te preparamos el cartel."
-        />
+        <EmptyState title="No hay bolo que anunciar." description="Confirma una fecha en el calendario y aquí tendrás su cartel en un toque." />
       </div>
     );
   }
 
   return (
-    <div data-modulo="reels" className="mx-auto grid max-w-5xl gap-6 px-4 py-6 md:grid-cols-[1fr_minmax(0,22rem)]">
-      <div className="order-first flex items-start justify-center rounded-[var(--r-l)] bg-[var(--sunken)] p-4 md:order-last md:sticky md:top-4 md:self-start">
-        <div className="w-full max-w-xs">
-          {fondoUrl ? (
-            <canvas ref={canvasRef} className="aspect-[4/5] w-full rounded-[var(--r-m)]" aria-label="Vista previa del cartel" />
-          ) : (
-            <div className="grid aspect-[4/5] w-full place-items-center rounded-[var(--r-m)] bg-[var(--surface)] p-6 text-center text-sm text-[var(--ink-2)]">
-              {generando ? 'Pintando el fondo…' : 'Aquí aparecerá tu cartel.'}
-            </div>
-          )}
+    <div data-modulo="reels" className="mx-auto grid max-w-5xl gap-5 px-4 py-4 md:grid-cols-[minmax(0,1fr)_22rem] md:gap-8 md:py-6">
+      {/* Bloque 1 · el bolo */}
+      <div className="md:col-start-2 md:row-start-1">
+        <Select aria-label="Bolo" value={ed.concierto.id} onChange={(e) => ed.elegirConcierto(e.target.value)}>
+          {ed.opciones.map((c) => (
+            <option key={c.id} value={c.id}>
+              {fechaCartel(c.fecha).toLowerCase()} · {c.sala}
+              {c.ciudad ? `, ${c.ciudad}` : ''}
+            </option>
+          ))}
+        </Select>
+      </div>
+
+      {/* Bloque 2 · el cartel */}
+      <div className="grid gap-3 md:col-start-1 md:row-span-3 md:row-start-1">
+        <Tabs aria-label="Formato" layout="fill" items={PESTANAS} value={ed.formato} onChange={(f: FormatoCartel) => ed.setFormato(f)} />
+        <div className="grid place-items-center rounded-[var(--r-l)] bg-[var(--sunken)] p-3 md:p-6">
+          <canvas ref={canvasRef} aria-label={`Vista previa del cartel, formato ${FORMATOS[ed.formato].etiqueta}`}
+            className="block h-auto max-h-[52vh] w-auto max-w-full rounded-[var(--r-s)] md:max-h-[72vh]" />
         </div>
       </div>
 
-      <div className="grid content-start gap-4">
-        <Field label="Concierto">
-          <Select value={elegido?.id ?? ''} onChange={(e) => setConcertId(e.target.value)}>
-            {opciones.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.fecha} · {c.sala}
-                {c.ciudad ? `, ${c.ciudad}` : ''}
-              </option>
-            ))}
-          </Select>
-        </Field>
+      {/* Bloque 3 · fondo y acciones */}
+      <div className="grid content-start gap-4 md:col-start-2 md:row-start-2">
+        <SelectorFondo
+          fondo={ed.fondo}
+          onFondo={ed.elegirFondo}
+          foto={ed.foto}
+          onFoto={ed.elegirFoto}
+          fondosIa={ed.fondosIa}
+          onGenerarIa={ed.generarIa}
+          generando={ed.generando}
+        />
 
-        <div className="grid gap-1.5">
-          <span className="text-xs font-medium text-[var(--ink-2)]">Estilo</span>
-          <div className="flex flex-wrap gap-2">
-            {ESTILOS.map((e) => (
-              <Button key={e.id} size="sm" variant={estilo === e.id ? 'inverse' : 'neutral'} onClick={() => setEstilo(e.id)}>
-                {e.etiqueta}
-              </Button>
-            ))}
-          </div>
-        </div>
+        {ed.error && <p role="alert" className="rounded-[var(--r-s)] bg-[var(--alert-soft)] px-3 py-2 text-sm text-[var(--alert)]">{ed.error}</p>}
 
-        <Field label="Indicaciones" optional hint="Colores, ambiente, objetos. El texto del cartel lo ponemos nosotros, sin erratas.">
-          <Textarea rows={2} maxLength={300} value={instrucciones} onChange={(e) => setInstrucciones(e.target.value)} />
-        </Field>
-
-        {error && <p className="rounded-[var(--r-s)] bg-[var(--alert-soft)] px-3 py-2 text-sm text-[var(--alert)]">{error}</p>}
-
-        <div className="flex flex-wrap gap-2">
-          <Button variant="primary" onClick={generar} disabled={generando}>
-            <Wand2 className="size-4" aria-hidden />
-            {fondoUrl ? 'Otro fondo' : 'Generar cartel'}
+        <div className="flex items-center gap-2">
+          <Button variant="primary" size="lg" className="flex-1" onClick={ed.compartir} disabled={ed.exportando}>
+            <Share2 className="size-4" aria-hidden />
+            {ed.exportando ? 'Preparando…' : 'Compartir'}
           </Button>
-          {fondoUrl && (
-            <Button onClick={descargar}>
-              <Download className="size-4" aria-hidden />
-              Descargar
-            </Button>
-          )}
+          <ActionMenu
+            label="Más opciones del cartel"
+            items={[
+              { label: 'Descargar', icon: Download, onSelect: ed.descargar },
+              { label: 'Descargar los 3 formatos', icon: FileArchive, onSelect: ed.descargarTodos },
+            ]}
+          />
         </div>
       </div>
     </div>

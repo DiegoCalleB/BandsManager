@@ -23,7 +23,8 @@ export async function generarFondoCartel(bandId: string, prompt: string): Promis
     contents: prompt,
     config: {
       responseModalities: ['IMAGE'],
-      imageConfig: { aspectRatio: '4:5' },
+      // 9:16 y se recorta: un solo fondo pagado sirve para feed, historia e impresión.
+      imageConfig: { aspectRatio: '9:16' },
       abortSignal: AbortSignal.timeout(TIMEOUT_IA_LARGO_MS),
     },
   });
