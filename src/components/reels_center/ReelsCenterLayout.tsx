@@ -26,7 +26,7 @@ export function ReelsCenterLayout() {
     <>
       <div
       data-modulo="reels"
-      className={`space-y-6 text-[var(--ink)] font-sans w-full max-w-full overflow-x-hidden`}
+      className={`space-y-6 text-[var(--ink)] font-sans w-full max-w-full overflow-x-clip`}
     >
       <ReelsCenterHeader />
 
@@ -44,7 +44,7 @@ export function ReelsCenterLayout() {
       ]}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
       {/* LEFT COLUMN: ACTIVE WORKSPACE TAB (8 columns) */}
       <div className="xl:col-span-8 space-y-6 flex flex-col justify-between min-w-0">
       {activeTab === "pipeline" ? (
@@ -56,7 +56,8 @@ export function ReelsCenterLayout() {
       )}
       </div>
 
-      {/* RIGHT COLUMN: HIGH-FIDELITY PHONE PREVIEW MOCKUP (4 columns) */}
+      {/* RIGHT COLUMN: móvil de vista previa, fijo en escritorio (4 columnas). Necesita items-start
+          arriba y overflow-x-clip en la raíz: con overflow-x-hidden el sticky deja de funcionar. */}
       <ReelsPhonePreviewPanel />
       </div>
 
