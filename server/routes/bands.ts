@@ -89,7 +89,6 @@ function sanitizeLogoUrl(imgUrl: string, websiteUrl?: string, instagram?: string
   return '';
 }
 
-
 router.get("/bands", requireAuth, async (req, res) => {
   const userBandId = req.user?.band_id ;
   try {
@@ -130,7 +129,7 @@ router.post("/bands", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error creating band contact:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -145,7 +144,7 @@ router.put("/bands/print-settings", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando ajustes de impresión:", err);
-    return res.status(500).json({ error: err?.message || "Error guardando ajustes de impresión" });
+    return responderError(res, err, "Error guardando ajustes de impresión");
   }
 });
 
@@ -166,7 +165,7 @@ router.put("/bands/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating band contact:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -188,7 +187,7 @@ router.post("/bands/bulk-delete", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error bulk deleting band contacts:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -205,7 +204,7 @@ router.delete("/bands/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting band contact:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -229,7 +228,7 @@ router.post("/bands/sync", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error syncing bands:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -531,7 +530,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la siguiente estructura exact
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error in Tone Analysis:", err);
-    res.status(500).json({ error: "No se pudo analizar el tono de comunicación.", details: err?.message || String(err) });
+    responderError(res, err, "No se pudo analizar el tono de comunicación.");
   }
 });
 
@@ -587,7 +586,7 @@ router.get("/bands/tone-dna", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error fetching tone DNA:", err);
-    res.status(500).json({ error: "No se pudo cargar el ADN de tono guardado.", details: err?.message || String(err) });
+    responderError(res, err, "No se pudo cargar el ADN de tono guardado.");
   }
 });
 
@@ -624,7 +623,7 @@ router.patch("/bands/tone-dna", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating tone DNA:", err);
-    res.status(500).json({ error: err?.message || "No se pudo actualizar el ADN de tono." });
+    responderError(res, err, "No se pudo actualizar el ADN de tono.");
   }
 });
 
@@ -690,7 +689,7 @@ router.patch("/bands/tone-dna/learned-rules", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating learned tone rules:", err);
-    res.status(500).json({ error: err?.message || "No se pudo actualizar las reglas aprendidas." });
+    responderError(res, err, "No se pudo actualizar las reglas aprendidas.");
   }
 });
 
@@ -881,7 +880,7 @@ router.post("/bands/send-reminder", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en /bands/send-reminder:", err);
-    res.status(500).json({ error: err?.message || "Error procesando el recordatorio" });
+    responderError(res, err, "Error procesando el recordatorio");
   }
 });
 
@@ -896,7 +895,7 @@ router.get("/bands/alert-settings", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo configuración de alertas:", err);
-    return res.status(500).json({ error: err?.message || "Error consultando alertas" });
+    return responderError(res, err, "Error consultando alertas");
   }
 });
 
@@ -909,13 +908,14 @@ router.post("/bands/alert-settings", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error guardando configuración de alertas:", err);
-    return res.status(500).json({ error: err?.message || "Error guardando alertas" });
+    return responderError(res, err, "Error guardando alertas");
   }
 });
 
 import { dbGetPrintSettings, dbUpsertPrintSettings } from "../db/printSettings.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
 import type { EPKConfig } from '../../src/types.js';
+import { responderError } from '../utils/errorHttp.js';
 
 // GET /api/bands/print-settings — ajustes de impresión del setlist recordados por banda.
 router.get("/bands/print-settings", requireAuth, async (req, res) => {
@@ -926,7 +926,7 @@ router.get("/bands/print-settings", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo ajustes de impresión:", err);
-    return res.status(500).json({ error: err?.message || "Error consultando ajustes de impresión" });
+    return responderError(res, err, "Error consultando ajustes de impresión");
   }
 });
 
@@ -1006,7 +1006,7 @@ router.post("/bands/trigger-alert-digest", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en /bands/trigger-alert-digest:", err);
-    return res.status(500).json({ error: err?.message || "Error al enviar el resumen por email" });
+    return responderError(res, err, "Error al enviar el resumen por email");
   }
 });
 
@@ -1148,7 +1148,7 @@ REQUISITOS ESTRICTOS DEL SVG:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error generating band logo with AI:", err);
-    return res.status(500).json({ error: err?.message || "Error al generar el logo con IA." });
+    return responderError(res, err, "Error al generar el logo con IA.");
   }
 });
 

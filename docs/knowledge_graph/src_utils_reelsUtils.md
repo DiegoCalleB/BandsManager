@@ -28,6 +28,7 @@ _Sin dependencias salientes directas._
 - [[src_components_reels_center_hooks_useClipRendering|src/components/reels_center/hooks/useClipRendering.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useCopyActions|src/components/reels_center/hooks/useCopyActions.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useCopyDraftState|src/components/reels_center/hooks/useCopyDraftState.ts]] *(from #frontend)*
+- [[src_components_reels_center_hooks_useCopyPerfecto|src/components/reels_center/hooks/useCopyPerfecto.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useHighlightEditing|src/components/reels_center/hooks/useHighlightEditing.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useReelStyleOptions|src/components/reels_center/hooks/useReelStyleOptions.ts]] *(from #frontend)*
 - [[src_components_reels_center_hooks_useVideoAnalyzer|src/components/reels_center/hooks/useVideoAnalyzer.ts]] *(from #frontend)*
@@ -41,6 +42,7 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `src/components/reels_center/__tests__/reelsHelpers.test.ts`
+- `src/components/reels_center/hooks/__tests__/useCopyPerfecto.behavior.test.ts`
 - `src/utils/__tests__/reelsUtils.test.ts`
 
 ---

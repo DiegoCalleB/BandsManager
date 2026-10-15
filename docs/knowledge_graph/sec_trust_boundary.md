@@ -67,6 +67,9 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_metrics|server/routes/metrics.ts]] *(from #route)*
 - [[server_routes_posts|server/routes/posts.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsAprendizaje|server/routes/reelsAprendizaje.ts]] *(from #route)*
+- [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_routes_referidos|server/routes/referidos.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
 - [[server_routes_transposeRoute|server/routes/transposeRoute.ts]] *(from #route)*
@@ -77,6 +80,7 @@ Resolución forzosa del band_id desde la sesión autenticada. Bloquea inyeccione
 - [[server_routes_users_rutasMiembrosEdicion|server/routes/users/rutasMiembrosEdicion.ts]] *(from #route)*
 - [[server_routes_users_rutasPreferencias|server/routes/users/rutasPreferencias.ts]] *(from #route)*
 - [[server_routes_users_rutasSalidaBanda|server/routes/users/rutasSalidaBanda.ts]] *(from #route)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 - [[ui_leads_table|Leads Table & Actions]] *(from #frontend)*
 

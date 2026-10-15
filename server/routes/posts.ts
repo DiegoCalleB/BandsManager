@@ -14,6 +14,7 @@ import {
 import { getTargetBandId, bandaDe } from "../utils/bandAccess.js";
 import { publishSocialPostNow, publishDueScheduledPosts } from "../services/socialPublisher.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.put("/posts/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error updating social post:", err);
-    return res.status(500).json({ error: err.message || String(err) });
+    return responderError(res, err);
   }
 
   let webhookTriggered = false;
@@ -99,7 +100,7 @@ router.post("/posts", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error creating social post:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -118,7 +119,7 @@ router.delete("/posts/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error deleting social post:", err);
-    res.status(500).json({ error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -133,7 +134,7 @@ router.get("/social/accounts", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error obteniendo cuentas sociales:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -165,7 +166,7 @@ router.post("/social/accounts/connect", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error vinculando cuenta social:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -179,7 +180,7 @@ router.delete("/social/accounts/:id", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error desconectando cuenta social:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -190,14 +191,15 @@ router.post("/social/publish-now/:id", requireAuth, async (req, res) => {
 
   try {
     const result = await publishSocialPostNow(id, userBandId);
-    if (!result.success) {
-      return res.status(400).json({ success: false, error: result.error });
-    }
-    res.json({ success: true, result, message: `¡Publicación despachada a ${result.platform} con éxito!` });
+    if (result.platform === "unknown") return res.status(404).json({ success: false, error: result.error });
+    // 'asistido' y 'fallido' son resultados de negocio, no errores de la petición: el cliente
+    // enseña el motivo (qué conectar, por qué no se autopublica) en vez de un "error de conexión".
+    if (!result.success) return res.json({ success: false, modo: result.modo, error: result.error });
+    res.json({ success: true, result, publishedUrl: result.publishedUrl, message: `Publicado en ${result.platform}.` });
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en publish-now:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -210,7 +212,7 @@ router.post("/social/run-scheduled-publisher", requireAuth, async (req, res) => 
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error ejecutando scheduled publisher:", err);
-    res.status(500).json({ success: false, error: err.message || String(err) });
+    responderError(res, err);
   }
 });
 
@@ -231,10 +233,7 @@ router.post("/posts/sync", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in /api/posts/sync:", error);
-    res.status(500).json({
-      success: false,
-      error: `Error al sincronizar con Supabase: ${error.message || error}`
-    });
+    responderError(res, error, "Error al sincronizar con Supabase.");
   }
 });
 
@@ -278,10 +277,7 @@ router.post("/posts/trigger-webhook", requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error triggering publish webhook:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al conectar con el webhook de publicación: ${err.message || err}`
-    });
+    return responderError(res, err, "Error al conectar con el webhook de publicación.");
   }
 });
 

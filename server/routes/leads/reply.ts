@@ -10,6 +10,7 @@ import { analyzeIncomingMessageSentiment } from "../../services/sentimentAnalysi
 import { detectPitchLanguage } from "../../utils/leadLanguage.js";
 import { dbRecordPitchHumanEdit } from "../../db/pitchLearning.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -67,7 +68,7 @@ router.post("/leads/:id/generate-reply", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/generate-reply:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al generar la respuesta." });
+    responderError(res, error, "Error al generar la respuesta.");
   }
 });
 
@@ -143,7 +144,7 @@ router.post("/leads/:id/analyze-sentiment", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/analyze-sentiment:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al analizar el sentimiento." });
+    responderError(res, error, "Error al analizar el sentimiento.");
   }
 });
 
@@ -250,7 +251,7 @@ router.post("/leads/:id/regenerate-reply", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/:id/regenerate-reply:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al regenerar la respuesta." });
+    responderError(res, error, "Error al regenerar la respuesta.");
   }
 });
 

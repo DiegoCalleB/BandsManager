@@ -5,6 +5,7 @@ import { requireAuth, loadState } from "../../state.js";
 import { getTargetBandId } from "../../utils/bandAccess.js";
 import { isValidEmailSyntax, isValidEmailCached } from "../../utils/emailValidator.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -47,7 +48,7 @@ router.get("/validate-emails", requireAuth, async (req, res) => {
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/validate-emails:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error validating emails" });
+    responderError(res, error, "Error validating emails");
   }
 });
 

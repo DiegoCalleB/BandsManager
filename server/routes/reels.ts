@@ -1,82 +1,35 @@
 // Reels & Social Content Generator: metadatos de YouTube, análisis de momentos virales, corte de
-// clips (ffmpeg, con `renderRateLimiter`) y hook doctor con IA.
+// clips (ffmpeg, con `renderRateLimiter`). El texto del reel (hook doctor, copy) vive en reelsTexto.ts.
 
-import express, { Request, Response } from "express";
+import express from "express";
 import fs from "fs";
 import path from "path";
 import os from "os";
 import ytdl from "@distube/ytdl-core";
 import { YoutubeTranscript } from "youtube-transcript";
-import ffmpeg from "fluent-ffmpeg";
 import ffmpegStatic from "ffmpeg-static";
-import { requireAuth, loadState } from "../state.js";
+import { requireAuth } from "../state.js";
 import { getAiClient, GEMINI_MODEL, generateContentWithFallback } from "../ai.js";
-import { dbGetRegisteredBandById, dbGetEpkConfig, dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases, dbLogReelFeedback } from "../db.js";
+import { dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight, dbAppendBandSpeechPhrases, dbLogReelFeedback } from "../db.js";
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
-import {
-  loadBandProfile,
-  buildBandContextBlock,
-  displayBandName,
-  baseHashtags,
-  emptyBandProfile,
-  type BandProfile
-} from "../utils/bandProfile.js";
-import {
-  metadatosDataApi,
-  metadatosYtDlp,
-  fusionarMetadatos,
-  metadatosVacios,
-  descargarConYtDlp,
-  urlDeAudioDirecta,
-  urlDeVideoDirecta,
-  ytDlpDisponible,
-  tieneClaveDataApi,
-  type CapituloVideo,
-  type MetadatosVideo
-} from "../utils/youtubeSource.js";
-import {
-  analizarEnergiaAudio,
-  ventanasConMasEnergia,
-  resumirEnergiaParaPrompt
-} from "../utils/audioEnergy.js";
+import { buildBandContextBlock, displayBandName, baseHashtags } from "../utils/bandProfile.js";
+import { descargarConYtDlp, urlDeAudioDirecta, urlDeVideoDirecta } from "../utils/youtubeSource.js";
+import { analizarEnergiaAudio, ventanasConMasEnergia, resumirEnergiaParaPrompt } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
-import { uploadToSupabaseIfAvailable, rutaAlmacenamientoClip } from "../utils/storage.js";
-import {
-  detectarCambiosDePlano,
-  detectarTipoContenido,
-  esTipoContenido,
-  ventanasMasVirales,
-  resumirSenalesParaPrompt,
-  type TipoContenido,
-  type VentanaViral
-} from "../utils/viralSignals.js";
-import {
-  parseRange,
-  formatMMSS,
-  extractJsonObject,
-  normalizeHighlights,
-  buildFallbackHighlights,
-  buildSubtitleCues,
-  buildVtt,
-  buildWordOffsets,
-  buildAssSubtitles,
-  buildKaraokeAssSubtitles,
-  buildVerticalFilter,
-  escapeFilterPath,
-  decodeTranscriptText,
-  type CropMode,
-  type TranscriptItem,
-  type NormalizedHighlight
-} from "../utils/reelsCore.js";
+import { detectarCambiosDePlano, detectarTipoContenido, esTipoContenido, ventanasMasVirales, resumirSenalesParaPrompt, type TipoContenido, type VentanaViral } from "../utils/viralSignals.js";
+import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFallbackHighlights, buildSubtitleCues, buildVtt, buildWordOffsets, buildAssSubtitles, buildKaraokeAssSubtitles, decodeTranscriptText, type CropMode, type TranscriptItem, type NormalizedHighlight } from "../utils/reelsCore.js";
+import { renderizarClip } from "../services/clipRenderer.js";
+import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
+import reelsTextoRouter from "./reelsTexto.js";
+import { sanearYAuditarHighlights } from "../utils/auditarHighlights.js"; import reelsAprendizajeRouter from "./reelsAprendizaje.js"; import reelsProgramacionRouter from "./reelsProgramacion.js";
+import { aprendizajeDeBanda } from "../services/metricasReels.js";
+import { bloqueAprendizajeParaPrompt } from "../utils/aprendizajeReels.js";
+import { analizarTramo, escribirRotuloHook, guardarClipRenderizado } from "../services/clipNovedades.js";
+import { canonicalYouTubeUrl, fetchYoutubeMeta, getYouTubeId, metaVacia, type YoutubeMeta } from "../services/youtubeMeta.js";
+import { CLIPS_DIR, MAX_CLIP_SECONDS, asegurarDirectorioClips, borrarSiExiste, explicarErrorYoutube, limpiarClipsAntiguos } from "../services/clipArchivos.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
-
-/** Respuesta de oEmbed de YouTube. */
-interface OembedYoutube {
-  title?: string;
-  author_name?: string;
-  thumbnail_url?: string;
-}
+import { responderError } from '../utils/errorHttp.js';
 
 /** Mejor momento para publicar que propone la IA. */
 interface MomentoOptimo {
@@ -86,29 +39,6 @@ interface MomentoOptimo {
 }
 
 const router = express.Router();
-
-if (ffmpegStatic) {
-  ffmpeg.setFfmpegPath(ffmpegStatic);
-}
-
-/** Dónde se sirven los clips renderizados (server.ts ya expone /clips como estático). */
-const CLIPS_DIR = path.join(process.cwd(), "public", "clips");
-/** Cuánto vive un clip en disco antes de que lo barra la limpieza. */
-const CLIP_TTL_MS = 6 * 60 * 60 * 1000;
-/** Tope de duración de un recorte: por encima el render tarda demasiado y no es un Reel. */
-const MAX_CLIP_SECONDS = 180;
-
-function getYouTubeId(urlStr?: string): string | null {
-  if (!urlStr) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
-  const match = String(urlStr).match(regExp);
-  return match && match[2] && match[2].length === 11 ? match[2] : null;
-}
-
-/** URL canónica, para no pasarle a ytdl lo que haya escrito el usuario. */
-function canonicalYouTubeUrl(videoId: string): string {
-  return `https://www.youtube.com/watch?v=${videoId}`;
-}
 
 /**
  * Clave estable para guardar/recuperar el análisis de un vídeo. Para YouTube es el propio id
@@ -125,129 +55,6 @@ function resolverVideoKey(youtubeUrl?: string, videoKeyExplicita?: unknown): str
 
 /* ------------------------------------------------------------ contexto de banda */
 
-async function perfilDeLaPeticion(req: express.Request): Promise<BandProfile> {
-  try {
-    const bandId = getTargetBandId(req);
-    return await loadBandProfile(bandId, {
-      getBand: (id) => dbGetRegisteredBandById(id),
-      getEpk: (id) => dbGetEpkConfig(id),
-      getState: () => loadState()
-    });
-  } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    console.warn("[Reels] No se pudo cargar el perfil de la banda:", err?.message || err);
-    return emptyBandProfile();
-  }
-}
-
-/* --------------------------------------------------------------- YouTube I/O */
-
-interface YoutubeMeta {
-  videoId: string;
-  title: string;
-  description: string;
-  author: string;
-  duration: number;
-  thumbnail: string;
-  isLive: boolean;
-  /** Marcados a mano por quien subió el vídeo: la mejor pista para elegir cortes. */
-  chapters: CapituloVideo[];
-  /** De dónde salió la ficha, para poder depurar por qué falta la duración. */
-  fuente: MetadatosVideo["fuente"];
-}
-
-function metaVacia(videoId: string): YoutubeMeta {
-  return {
-    videoId,
-    title: "",
-    description: "",
-    author: "",
-    duration: 0,
-    thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "",
-    isLive: false,
-    chapters: [],
-    fuente: "ninguna"
-  };
-}
-
-/**
- * Ficha del vídeo, probando de la fuente más fiable a la menos:
- *   1. Data API oficial: no la bloquea el antibot y da la duración exacta.
- *   2. yt-dlp: aguanta el antibot y es el único que trae los capítulos.
- *   3. oEmbed: público, pero sin duración.
- *   4. ytdl-core: último recurso, el primero que YouTube tumba desde un datacenter.
- * En cuanto tenemos título y duración paramos: lo demás es gastar tiempo de petición.
- */
-async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
-  const meta = metaVacia(videoId);
-  const url = canonicalYouTubeUrl(videoId);
-  let acumulado = metadatosVacios();
-
-  const completa = () => Boolean(acumulado.title) && acumulado.duration > 0;
-
-  if (tieneClaveDataApi()) {
-    acumulado = fusionarMetadatos(acumulado, await metadatosDataApi(videoId));
-  }
-
-  // yt-dlp aunque la Data API ya haya respondido, si aún faltan los capítulos y está instalado:
-  // saber que el vídeo trae capítulos cambia por completo la calidad de los cortes.
-  if (!completa() || (acumulado.chapters.length === 0 && (await ytDlpDisponible()))) {
-    acumulado = fusionarMetadatos(acumulado, await metadatosYtDlp(url));
-  }
-
-  if (!completa()) {
-    try {
-      const oembedRes = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
-      if (oembedRes.ok) {
-        const oembed = (await oembedRes.json()) as OembedYoutube;
-        acumulado = fusionarMetadatos(acumulado, {
-          ...metadatosVacios(),
-          title: oembed?.title || "",
-          author: oembed?.author_name || "",
-          thumbnail: oembed?.thumbnail_url || "",
-          fuente: "oembed"
-        });
-      }
-    } catch {
-      /* oEmbed caído o vídeo privado: seguimos con ytdl-core */
-    }
-  }
-
-  if (!completa()) {
-    try {
-      const info = await ytdl.getBasicInfo(url);
-      const detalles = info?.videoDetails;
-      if (detalles) {
-        const miniaturas = detalles.thumbnails;
-        acumulado = fusionarMetadatos(acumulado, {
-          ...metadatosVacios(),
-          title: detalles.title || "",
-          description: detalles.description || "",
-          author: detalles.author?.name || "",
-          duration: parseInt(detalles.lengthSeconds, 10) || 0,
-          thumbnail: Array.isArray(miniaturas) && miniaturas.length ? miniaturas[miniaturas.length - 1]?.url || "" : "",
-          fuente: "ytdl-core"
-        });
-        meta.isLive = Boolean(detalles.isLiveContent && !detalles.lengthSeconds);
-      }
-    } catch (eCapturado) {
-      const e = comoErrorCapturado(eCapturado);
-      // YouTube bloquea getBasicInfo desde IPs de datacenter. No es fatal: con la Data API
-      // o yt-dlp por delante, aquí ya casi nunca hace falta llegar.
-      console.log(`[Reels] getBasicInfo no disponible para ${videoId}:`, e?.message || e);
-    }
-  }
-
-  meta.title = acumulado.title;
-  meta.description = acumulado.description;
-  meta.author = acumulado.author;
-  meta.duration = acumulado.duration;
-  meta.chapters = acumulado.chapters;
-  meta.fuente = acumulado.fuente;
-  if (acumulado.thumbnail) meta.thumbnail = acumulado.thumbnail;
-
-  return meta;
-}
 
 /** Transcripción del vídeo completo, probando español y cayendo al idioma por defecto. */
 async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
@@ -276,82 +83,7 @@ async function fetchTranscript(videoId: string): Promise<TranscriptItem[]> {
   return [];
 }
 
-/**
- * Traduce el fallo crudo de ytdl a algo que un músico pueda entender y accionar. El error
- * literal ("Sign in to confirm you're not a bot") no le dice nada a nadie.
- */
-function explicarErrorYoutube(err: unknown): string {
-  const msg = String(comoErrorCapturado(err).message || err || "");
-  if (/confirm you.?re not a bot|Sign in to confirm/i.test(msg)) {
-    return "YouTube está pidiendo verificación antibot al servidor para descargar este vídeo. Suele ser temporal: prueba de nuevo en unos minutos, o sube el archivo de vídeo directamente en vez de usar la URL.";
-  }
-  if (/private video/i.test(msg)) {
-    return "El vídeo es privado. Ponlo como público u oculto (no listado) para poder recortarlo.";
-  }
-  if (/Video unavailable|not available/i.test(msg)) {
-    return "El vídeo no está disponible (puede estar borrado, restringido por país o solo para miembros).";
-  }
-  if (/age.?restricted/i.test(msg)) {
-    return "El vídeo tiene restricción de edad y YouTube no permite descargarlo sin iniciar sesión.";
-  }
-  if (/premiere|live/i.test(msg)) {
-    return "Es un directo o un estreno en curso. Espera a que termine y quede publicado para poder recortarlo.";
-  }
-  if (/ENOSPC/i.test(msg)) {
-    return "No queda espacio en disco en el servidor para procesar el vídeo. Inténtalo de nuevo en unos minutos.";
-  }
-  return `No se pudo procesar el vídeo de YouTube: ${msg || "error desconocido"}`;
-}
-
 /* ------------------------------------------------------------- gestión de clips */
-
-function asegurarDirectorioClips() {
-  if (!fs.existsSync(CLIPS_DIR)) fs.mkdirSync(CLIPS_DIR, { recursive: true });
-}
-
-let ultimaLimpieza = 0;
-/** No más de una barrida cada cuarto de hora, aunque lluevan peticiones. */
-const INTERVALO_LIMPIEZA_MS = 15 * 60 * 1000;
-
-/**
- * Borra los clips viejos para que public/clips no crezca sin freno en el disco de Railway.
- *
- * Es asíncrona y va limitada por tiempo a propósito: antes recorría el directorio con
- * readdirSync + statSync por fichero EN CADA petición de recorte, bloqueando el bucle de
- * eventos —y por tanto a todos los demás usuarios— justo cuando más ocupado está el servidor.
- */
-async function limpiarClipsAntiguos(): Promise<void> {
-  const ahora = Date.now();
-  if (ahora - ultimaLimpieza < INTERVALO_LIMPIEZA_MS) return;
-  ultimaLimpieza = ahora;
-
-  try {
-    if (!fs.existsSync(CLIPS_DIR)) return;
-    const ficheros = await fs.promises.readdir(CLIPS_DIR);
-    for (const fichero of ficheros) {
-      if (!/\.(mp4|vtt|ass)$/i.test(fichero)) continue;
-      const completo = path.join(CLIPS_DIR, fichero);
-      try {
-        const info = await fs.promises.stat(completo);
-        if (ahora - info.mtimeMs > CLIP_TTL_MS) await fs.promises.unlink(completo);
-      } catch {
-        /* fichero en uso o ya borrado */
-      }
-    }
-  } catch (e) {
-    console.warn("[Reels] No se pudieron limpiar los clips antiguos:", e);
-  }
-}
-
-async function borrarSiExiste(rutas: string[]) {
-  for (const ruta of rutas) {
-    try {
-      if (ruta && fs.existsSync(ruta)) await fs.promises.unlink(ruta);
-    } catch (e) {
-      console.error("[Reels] Error borrando temporal:", ruta, e);
-    }
-  }
-}
 
 /** Descarga el vídeo probando primero un formato con vídeo+audio y cayendo al mejor global. */
 /**
@@ -611,11 +343,15 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
     let frasesDirectoExtraidas: string[] = [];
 
     if (ai) {
+      // Lo medido en los Reels ya publicados de la banda orienta el formato. Best-effort.
+      const aprendizaje = await aprendizajeDeBanda(getTargetBandId(req)).catch(() => null);
       const prompt = `Eres quien decide qué trozo de un vídeo se convierte en Reel para una banda de música. Trabajas con material REAL y con señales medidas sobre él, no con suposiciones.
 
 ${buildBandContextBlock(perfil)}
 
 ${buildEstrategiaBlock(tipoContenido)}
+
+${aprendizaje ? bloqueAprendizajeParaPrompt(aprendizaje.resumen, aprendizaje.recomendacion) : ""}
 
 DATOS REALES DEL VÍDEO:
 - Título: "${tituloReal}"
@@ -694,7 +430,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
         });
 
         if (candidatos.length > 0) {
-          highlights = candidatos;
+          highlights = sanearYAuditarHighlights(candidatos);
           optimalTime = parsed?.optimalTime || null;
           generadoPorIa = true;
         } else {
@@ -807,10 +543,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Highlights AI Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al procesar el vídeo: ${err?.message || err}`
-    });
+    return responderError(res, err, "Error al procesar el vídeo.");
   }
 });
 
@@ -832,7 +565,12 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     punchInZoom = false,
     beatDropFx = false,
     smartPan = false,
-    inlineBase64 = false
+    inlineBase64 = false,
+    // Novedades de calidad: rótulo de enganche, bucle sin salto, volumen estándar y derechos.
+    hookText = "",
+    loopPerfecto = false,
+    derechosDeclarados = false,
+    normalizarVolumen = true
   } = req.body || {};
 
   if (!youtubeUrl) {
@@ -857,6 +595,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
   const reqId = `clip_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
   const rutaDescarga = path.join(os.tmpdir(), `${reqId}_raw.mp4`);
   const rutaAss = path.join(os.tmpdir(), `${reqId}_subs.ass`);
+  const rutaHookAss = path.join(os.tmpdir(), `${reqId}_hook.ass`);
   asegurarDirectorioClips();
   const nombreSalida = `${reqId}.mp4`;
   const rutaSalida = path.join(CLIPS_DIR, nombreSalida);
@@ -868,13 +607,20 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     const urlCanonica = canonicalYouTubeUrl(videoId);
 
     console.log(`[Reels] Descargando ${videoId} para recortar ${inicio}s +${duracion}s...`);
-    const offsetDescarga = await descargarVideo(urlCanonica, rutaDescarga, { start: inicio, duration: duracion });
+    // La ficha del vídeo (canal de origen) solo hace falta para acreditar los derechos del clip.
+    const [offsetDescarga, metaOrigen] = await Promise.all([
+      descargarVideo(urlCanonica, rutaDescarga, { start: inicio, duration: duracion }),
+      fetchYoutubeMeta(videoId).catch(() => metaVacia(videoId))
+    ]);
     // Si solo se bajó el tramo, dentro del fichero nuestro corte empieza mucho antes.
     const inicioEnFichero = Math.max(0, inicio - offsetDescarga);
 
+    // Loop: el final se ajusta (±1,5 s) al punto que mejor enlaza y cae en un pulso. Beat-drop: compases reales.
+    const { duracionClip, golpes } = await analizarTramo(rutaDescarga, inicioEnFichero, duracion, { loop: Boolean(loopPerfecto), beats: Boolean(beatDropFx) });
+
     // Subtítulos ANTES de codificar: si se van a incrustar, ffmpeg los necesita en disco.
     const transcript = await fetchTranscript(videoId).catch(() => [] as TranscriptItem[]);
-    const cues = buildSubtitleCues(transcript, inicio, duracion);
+    const cues = buildSubtitleCues(transcript, inicio, duracionClip);
     const vttContent = buildVtt(cues);
     const words = buildWordOffsets(cues);
     const sinTranscripcionReal = cues.length === 0;
@@ -884,88 +630,44 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       const assContent = karaokeSubtitles ? buildKaraokeAssSubtitles(cues) : buildAssSubtitles(cues);
       await fs.promises.writeFile(rutaAss, assContent, "utf-8");
     }
+    const rutaHook = await escribirRotuloHook(rutaHookAss, hookText, duracionClip);
 
-    console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos incrustados: ${incrustarSubs}`);
-    await new Promise<void>((resolve, reject) => {
-      // Seek híbrido: un salto rápido de entrada hasta 5 s antes del corte (barato, salta al
-      // keyframe) y el resto como seek de salida (exacto al fotograma). Con solo el seek de
-      // salida, un corte del minuto 12 obligaba a decodificar 12 minutos de vídeo.
-      const saltoEntrada = Math.max(0, inicioEnFichero - 5);
-      const ajusteSalida = inicioEnFichero - saltoEntrada;
-
-      const comando = ffmpeg(rutaDescarga);
-      if (saltoEntrada > 0) comando.seekInput(saltoEntrada);
-      if (ajusteSalida > 0) comando.setStartTime(ajusteSalida);
-      comando.setDuration(duracion);
-
-      const filtros = buildVerticalFilter(cropMode, 1080, 1920, { 
-        punchInZoom: Boolean(punchInZoom),
-        beatDropFx: Boolean(beatDropFx),
-        smartPan: Boolean(smartPan)
-      });
-      if (incrustarSubs) {
-        const filtroSubs = `subtitles='${escapeFilterPath(rutaAss)}'`;
-        if (filtros.length) {
-          // La última etiqueta de salida del encadenado vertical es [v].
-          filtros[filtros.length - 1] = `${filtros[filtros.length - 1].replace(/\[v\]$/, "[vpre]")}`;
-          filtros.push(`[vpre]${filtroSubs}[v]`);
-        } else {
-          filtros.push(`[0:v]${filtroSubs}[v]`);
-        }
-      }
-
-      if (filtros.length) {
-        comando.complexFilter(filtros, "v");
-        comando.outputOptions(["-map 0:a?"]);
-      }
-
-      comando
-        .outputOptions([
-          "-c:v libx264",
-          "-preset veryfast",
-          "-crf 23",
-          "-pix_fmt yuv420p",
-          "-c:a aac",
-          "-b:a 128k",
-          "-ar 44100",
-          "-movflags +faststart"
-        ])
-        .output(rutaSalida)
-        .on("error", (err) => reject(err))
-        .on("end", () => resolve())
-        .run();
+    console.log(`[Reels] ffmpeg: modo ${cropMode}, subtítulos: ${incrustarSubs}, hook: ${Boolean(rutaHook)}, loop: ${Boolean(loopPerfecto)}`);
+    const plan = await renderizarClip({
+      rutaEntrada: rutaDescarga,
+      rutaSalida,
+      inicioEnFichero,
+      duracion: duracionClip,
+      cropMode,
+      punchInZoom: Boolean(punchInZoom),
+      beatDropFx: Boolean(beatDropFx), golpes,
+      smartPan: Boolean(smartPan),
+      rutaSubtitulos: incrustarSubs ? rutaAss : undefined,
+      rutaHook,
+      normalizarVolumen: normalizarVolumen !== false,
+      loop: Boolean(loopPerfecto),
+      calidad: "alta"
     });
-
-    if (!fs.existsSync(rutaSalida) || fs.statSync(rutaSalida).size === 0) {
-      throw new Error("ffmpeg no generó ningún archivo de salida.");
-    }
 
     const tamano = fs.statSync(rutaSalida).size;
 
-    // Se intenta subir a Supabase Storage para que el clip sobreviva al próximo despliegue:
-    // public/clips/ vive en el disco EFÍMERO de Railway, y se pierde en cada redeploy.
-    // Best-effort: si Supabase no responde, se sigue sirviendo desde el disco local exactamente
-    // como antes (mismo comportamiento, solo que ese clip no sobrevivirá a un redeploy).
-    let clipUrl = `/clips/${nombreSalida}`;
-    let guardadoPermanente = false;
-    try {
-      const bandId = getTargetBandId(req);
-      const urlPermanente = await uploadToSupabaseIfAvailable(
-        rutaSalida,
-        rutaAlmacenamientoClip(bandId, nombreSalida),
-        "video/mp4"
-      );
-      if (urlPermanente) {
-        clipUrl = urlPermanente;
-        guardadoPermanente = true;
-        // Ya no hace falta servirlo desde el disco local: subido con éxito, se libera el
-        // espacio ya mismo en vez de esperar a la barrida periódica.
-        await borrarSiExiste([rutaSalida]);
+    // Control de calidad + subida a Storage + procedencia/derechos (ver guardarClipRenderizado).
+    const perfil = await perfilDeLaPeticion(req);
+    const { clipUrl, guardadoPermanente, derechos, calidad } = await guardarClipRenderizado({
+      bandId: getTargetBandId(req),
+      rutaLocal: rutaSalida,
+      nombreFichero: nombreSalida,
+      esperado: { hookPedido: Boolean(String(hookText || "").trim()), hookQuemado: Boolean(rutaHook), volumenNormalizado: normalizarVolumen !== false },
+      procedencia: {
+        sourceUrl: canonicalYouTubeUrl(videoId),
+        canalOrigen: metaOrigen.author,
+        youtubeDeLaBanda: perfil.youtube,
+        nombreDeLaBanda: displayBandName(perfil),
+        declaradoPorLaBanda: Boolean(derechosDeclarados),
+        loopPerfecto: plan.loopAplicado, duracionSeg: plan.duracionFinal,
+        hookText: String(hookText || "")
       }
-    } catch (errCapturado) {
-      const err = comoErrorCapturado(errCapturado);
-      console.warn("[Reels] No se pudo subir el clip a Supabase Storage:", err?.message || err);
-    }
+    });
 
     // El clip se sirve como archivo estático (local o de Supabase Storage). Devolver 20-40 MB
     // en base64 dentro del JSON reventaba el límite del body y multiplicaba por 1,37 lo que
@@ -977,7 +679,11 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
       fileSize: tamano,
       storedPermanently: guardadoPermanente,
       start: inicio,
-      duration: duracion,
+      duration: plan.duracionFinal,
+      loopApplied: plan.loopAplicado,
+      hookBurned: Boolean(rutaHook),
+      rights: derechos,
+      quality: calidad,
       cropMode,
       burnedSubtitles: incrustarSubs,
       subtitles: cues,
@@ -1000,7 +706,7 @@ router.post("/cut-video-clip", requireAuth, renderRateLimiter, renderConcurrency
     await borrarSiExiste([rutaSalida]);
     return res.status(502).json({ success: false, error: explicarErrorYoutube(err) });
   } finally {
-    await borrarSiExiste([rutaDescarga, rutaAss]);
+    await borrarSiExiste([rutaDescarga, rutaAss, rutaHookAss]);
   }
 });
 
@@ -1172,140 +878,12 @@ Responde ÚNICAMENTE con JSON válido:
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("[Reanalyze Clip Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al reanalizar el fragmento: ${err?.message || err}`
-    });
+    return responderError(res, err, "Error al reanalizar el fragmento.");
   }
 });
 
-/**
- * POST /api/reels/ai-hook-doctor
- * Escanea el gancho visual y el copy para calcular el Cringe Score (0-100),
- * la retención estimada a los 3 segundos, una mejora automática con el Tone DNA
- * y el "Primer Comentario Fijado (Pinned Comment)" para disparar el debate en el algoritmo.
- */
-router.post(["/reels/ai-hook-doctor", "/api/reels/ai-hook-doctor"], requireAuth, iaRateLimiter, async (req: Request, res: Response) => {
-  try {
-    // Sin datos de banda en esta ruta, pero exige banda activa en la sesión (falla con 500 si falta).
-    getTargetBandId(req);
-    const { 
-      hookText = "", 
-      copyText = "", 
-      songTitle = "", 
-      platform = "Instagram", 
-      contentType = "concierto" 
-    } = req.body || {};
-
-    const perfil = await perfilDeLaPeticion(req);
-    const nombreBanda = displayBandName(perfil) || "La Banda";
-
-    const hookLimpio = String(hookText || "").replace(/[\r\n\t]/g, " ").trim();
-    const copyLimpio = String(copyText || "").trim();
-    const temaLimpio = String(songTitle || "").replace(/[\r\n\t]/g, " ").trim();
-
-    const ai = getAiClient();
-    if (ai) {
-      const prompt = `Eres el Director de Virality & Anti-Cringe Strategist de BandManager.io.
-Tu misión es auditar un Reel de una banda de música independiente (${nombreBanda}), eliminar cualquier rastro de marketing amateur/cliché o 'cringe' (postureo falso, pedir favores, frases de teletienda) y maximizar la retención y comentarios orgánicos.
-
-${buildBandContextBlock(perfil)}
-
-DATOS DEL REEL:
-- Banda: "${nombreBanda}"
-- Canción/Tema: "${temaLimpio || 'Directo / Ensayo'}"
-- Plataforma: "${platform}"
-- Tipo de material: "${contentType}"
-- Gancho visual actual (0-3s): "${hookLimpio || '(Vacío)'}"
-- Copy actual: "${copyLimpio || '(Vacío)'}"
-
-TU AUDITORÍA DEBE DEVOLVER:
-1. "cringeScore": Número entero de 0 a 100.
-   - 0-20: Cero cringe, máxima autenticidad y misterio.
-   - 21-50: Aceptable pero con margen de mejora.
-   - 51-100: Cringe alto (suena a influencer de pacotilla, pide likes descaradamente, o suena aburrido).
-2. "estimatedRetention3s": Porcentaje estimado (ej: 88).
-3. "verdict": Dictamen corto y memorable en español (ej: "Potencial Viral Alto", "Demasiado Genérico", "Falta Curiosidad").
-4. "cringeReasons": Array de 1 a 3 motivos honestos de por qué falla o cómo se percibe.
-5. "improvedHook": Gancho de alto impacto (máximo 8 palabras) sin clichés, con curiosidad o debate real.
-6. "improvedCopy": Copy optimizado para ${platform}, con lore/conexión auténtica y llamada sutil.
-7. "pinnedComment": EL PRIMER COMENTARIO FIJADO (Pinned Comment). Una pregunta o reto polarizante para que la gente responda inmediatamente en los primeros 10 minutos de subida (crucial para el algoritmo).
-8. "pinnedCommentGoal": Explicación de por qué este comentario fuerza el debate.
-
-Responde ÚNICAMENTE con JSON válido:
-{
-  "cringeScore": 15,
-  "estimatedRetention3s": 89,
-  "verdict": "Gancho Magnético Auténtico",
-  "cringeReasons": ["..."],
-  "improvedHook": "...",
-  "improvedCopy": "...",
-  "pinnedComment": "...",
-  "pinnedCommentGoal": "..."
-}`;
-
-      try {
-        const response = await ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: prompt,
-          config: {
-            responseMimeType: "application/json",
-            temperature: 0.7
-          }
-        });
-
-        const textoJson = response.text || "";
-        const parsed = extractJsonObject(textoJson);
-        if (parsed && typeof parsed === "object") {
-          return res.json({
-            success: true,
-            generatedByAI: true,
-            diagnosis: {
-              cringeScore: Math.min(100, Math.max(0, Number(parsed.cringeScore) || 20)),
-              estimatedRetention3s: Math.min(99, Math.max(30, Number(parsed.estimatedRetention3s) || 85)),
-              verdict: String(parsed.verdict || "Auditoría completada"),
-              cringeReasons: Array.isArray(parsed.cringeReasons) ? parsed.cringeReasons.map(String) : [],
-              improvedHook: String(parsed.improvedHook || hookLimpio),
-              improvedCopy: String(parsed.improvedCopy || copyLimpio),
-              pinnedComment: String(parsed.pinnedComment || "¿Qué nota le dais a este momento del 1 al 10? 👇🎸"),
-              pinnedCommentGoal: String(parsed.pinnedCommentGoal || "Dispara el debate orgánico en comentarios.")
-            }
-          });
-        }
-      } catch (errCapturado) {
-        const err = comoErrorCapturado(errCapturado);
-        console.warn("[AI Hook Doctor Error]:", err?.message || err);
-      }
-    }
-
-    // Fallback inteligente si la IA no está disponible
-    const fallbackDiagnosis = {
-      cringeScore: hookLimpio.includes("nuevo tema") || hookLimpio.includes("escucha") ? 65 : 25,
-      estimatedRetention3s: hookLimpio.length > 5 ? 82 : 60,
-      verdict: hookLimpio.length > 5 ? "Buen Gancho Rítmico" : "Gancho Mejorable",
-      cringeReasons: hookLimpio.includes("nuevo tema") 
-        ? ["Evita anunciar 'nuestro nuevo tema', es más efectivo abrir un hueco de misterio o debate."] 
-        : ["Asegúrate de que los primeros 2 segundos retienen con una pregunta o detalle inesperado."],
-      improvedHook: hookLimpio || `El momento exacto en que la sala entera explotó 🤯⚡`,
-      improvedCopy: copyLimpio || `Nadie en la sala se dio cuenta hasta el final... ¿Vosotros lo habéis visto? Dejadnos en comentarios 👇🎸\n\n#${nombreBanda.replace(/\s+/g, '')} #Directo`,
-      pinnedComment: `Sinceramente... ¿este solo os parece demasiado rápido o está en su punto exacto? Os leemos 👇🥁`,
-      pinnedCommentGoal: "Provoca opiniones polarizadas que aumentan el engagement en la primera hora."
-    };
-
-    return res.json({
-      success: true,
-      generatedByAI: false,
-      diagnosis: fallbackDiagnosis
-    });
-  } catch (errCapturado) {
-    const err = comoErrorCapturado(errCapturado);
-    console.error("[AI Hook Doctor Route Error]:", err);
-    return res.status(500).json({
-      success: false,
-      error: `Error ejecutando AI Hook Doctor: ${err?.message || err}`
-    });
-  }
-});
+// Texto del reel (Hook Doctor, copy perfecto) y aprendizaje con métricas reales.
+router.use(reelsTextoRouter, reelsAprendizajeRouter, reelsProgramacionRouter);
 
 export { parseRange };
 export default router;

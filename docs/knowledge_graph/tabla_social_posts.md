@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/social`
 
 ## 📖 Descripción
-Tabla de Supabase `social_posts` (20 columnas).
+Tabla de Supabase `social_posts` (21 columnas).
 
 ---
 
@@ -24,7 +24,9 @@ Tabla de Supabase `social_posts` (20 columnas).
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[schema_supabase|Supabase PostgreSQL Schema]] *(from #schema)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
+- [[tabla_reel_metricas|tabla reel_metricas]] *(from #schema)*
 
 ---
 
@@ -49,8 +51,9 @@ Tabla de Supabase `social_posts` (20 columnas).
 - `account_handle`
 - `hashtags`
 - `metrics`
+- `publish_started_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`
+**Definida en:** `supabase_schema.sql`, `supabase/migrations/20261102_columnas_escritas_sin_migracion.sql`, `supabase/migrations/20261104_reels_publicacion_real.sql`
 
 ---
 

@@ -18,6 +18,7 @@ Acciones finales del editor: limpiar, publicar ahora o programar, y avisos de ca
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_center_ClipQualityReport|src/components/reels_center/ClipQualityReport.tsx]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_reels_center_ReelsCenterContext|src/components/reels_center/ReelsCenterContext.ts]] *(Layer: #frontend, Domain: #social)*
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
 

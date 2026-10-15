@@ -333,3 +333,35 @@ export async function dbUpdateBandRadarStatus(bandId: string, lastScrapedAt: str
 }
 
 // --- TOURS ---
+
+// --- PUBLICACIÓN REAL (socialPublisher) ---
+
+/**
+ * Reclama un post para publicarlo: un único UPDATE condicionado al estado actual, así que si dos
+ * pasadas (worker + botón "publicar ya") llegan a la vez, solo una obtiene la fila y la otra no
+ * publica. Devuelve el post reclamado o null si otro ya lo tenía.
+ */
+export async function dbReclamarPostParaPublicar(id: string, bandId: string, desde: SocialPost["estado"][]) {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("social_posts")
+    .update({ estado: "publicando", publish_started_at: new Date().toISOString(), publish_error: null })
+    .eq("id", id)
+    .eq("band_id", cleanBandId(bandId))
+    .in("estado", desde)
+    .select()
+    .maybeSingle();
+  if (error) throw new Error(`Supabase Error (reclamar social_posts): ${error.message}`);
+  return (data as SocialPost | null) || null;
+}
+
+/** Posts de TODAS las bandas que el worker de publicación tiene que mirar. Solo para procesos del servidor. */
+export async function dbGetPostsPorPublicar(): Promise<SocialPost[]> {
+  const sb = getSupabase();
+  const { data, error } = await sb
+    .from("social_posts")
+    .select("*")
+    .in("estado", ["aprobado", "en_cola", "publicando"]);
+  if (error) throw new Error(`Supabase Error (social_posts por publicar): ${error.message}`);
+  return (data || []) as SocialPost[];
+}
