@@ -215,6 +215,17 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ---
 
+### Auditoría de errores internos que llegan al cliente (octubre 2026)
+
+* **Qué:** la regla de lint de `err.message` solo ve `res.status(5xx).json(...err.message...)`. Barrido a mano de las demás formas (`details`, `body: { error }` armado a mano, respuestas 200 con el texto del error):
+  * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
+  * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
+  * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
+* **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
+
+---
+
 ### Deuda: datos de bandas concretas (Ruta 66, Master of Prompts…) todavía en código
 * **Qué:** auditoría de octubre 2026. Ya limpiado (fase 1): pitches y firmas de BandCRM, asunto del Chatbot, redes de ejemplo en FansLanding, logos y nombres por defecto y hoja de ruta / material de ejemplo del Calendario, texto del rider en Booking, líneas inventadas del dossier PDF, géneros por defecto (“Balkan Ska”) y etiqueta “Balkan Hype”.
 * **Hecho en fase 1b/2 (parcial, octubre 2026):** fuera el texto de una banda concreta de las rutas de lectura y prompts del servidor (`emailTemplate.ts` ya no inventa teléfono/email/logo y usa el nombre de la banda; scout, radar, matcher y audiencia usan «la banda»; ejemplos de `metrics.ts`); el EPK de la banda de ejemplo (`band-demo`) vive aislado en `server/seeds/demoEpk.ts` (con test) y `sync.ts` solo pregunta `defaultEpkConfigFor(bandId)`; variables de tono de `ReelsCenter.tsx` sin nombre de banda.

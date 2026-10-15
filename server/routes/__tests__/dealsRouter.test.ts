@@ -66,6 +66,16 @@ describe('dealsRouter', () => {
     fake.estado.fallo = null;
   });
 
+  it('un fallo interno al crear NO devuelve el mensaje de la base de datos y da un idError', async () => {
+    const post = manejador('/deals', 'post');
+    fake.estado.fallo = { message: 'SECRETO-PG: la columna interna_x de concert_deals no existe' };
+    const r = resFalso();
+    await post({ body: { lugar_sala: 'Sala X', fecha_evento: '2026-12-10', cache_base: 600 }, headers: { 'x-band-id': banda }, user: { band_id: banda } }, r);
+    expect(r.code).toBeGreaterThanOrEqual(500);
+    expect(JSON.stringify(r.body)).not.toContain('SECRETO-PG');
+    expect(r.body.error).toBeTruthy();
+  });
+
   it('GET público: 404 si no existe; 200 con proyección mínima (sin band_id ni comisión)', async () => {
     const get = manejador('/public/deals/:token', 'get');
 
