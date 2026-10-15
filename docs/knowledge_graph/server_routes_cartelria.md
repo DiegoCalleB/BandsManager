@@ -20,6 +20,7 @@ Cartelería: el cartel de un bolo.
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[db_state_sync|In-Memory State & Supabase Sync]] *(Layer: #db, Domain: #system)*
 - [[sec_trust_boundary|Trust Boundary & Band Scoping]] *(Layer: #security, Domain: #auth)*
+- [[server_ai|server/ai.ts]] *(Layer: #service, Domain: #system)*
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
