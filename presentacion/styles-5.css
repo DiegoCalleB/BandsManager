@@ -212,3 +212,13 @@ body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.
 .slide.scene.active .scene-bg .actor-vid.sec.ult { animation-name: avult; }
 @keyframes avon { 0% { opacity: 0; } 5% { opacity: 1; } 95% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes avult { 0% { opacity: 0; } 5%, 100% { opacity: 1; } }
+
+
+/* Final de película: enlaces para escuchar las dos canciones (los mp3 de audio/musica/, que abre el reproductor del navegador) */
+.nff-mus-t, .nff-mus { opacity: 0; animation: nffaparece 900ms ease-out 3400ms both; }
+.nff-mus-t { margin: 8px 0 0; color: #aaa; font: 600 22px/1 'Helvetica Neue', Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.nff-mus { display: flex; gap: 22px; }
+.nff-mus a { display: flex; flex-direction: column; gap: 6px; padding: 16px 30px; border-radius: 4px; background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-family: 'Helvetica Neue', Arial, sans-serif; text-align: left; }
+.nff-mus a b { font-size: 26px; line-height: 1.1; } .nff-mus a small { font-size: 19px; color: #bbb; }
+.nff-mus a:hover { background: #fff; color: #000; } .nff-mus a:hover small { color: #444; }
+@media (prefers-reduced-motion: reduce) { .nff-mus-t, .nff-mus { animation-duration: 1ms; animation-delay: 0ms; } }

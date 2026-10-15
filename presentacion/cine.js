@@ -382,7 +382,11 @@
   };
   // ── Final de película (estilo Netflix): negro, la N y «Más como esta»; se para todo (voces, música y vídeos) ──
   var finEl = document.createElement('div'); finEl.id = 'nf-fin'; finEl.setAttribute('aria-hidden', 'true');
-  finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button><a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil, Brais → bandmanager.io</a>';
+  finEl.innerHTML = '<span class="nff-n">N</span><p class="nff-t">Más como esta</p><div class="nff-fila"></div><button type="button" class="nff-otra">↺ Ver otra vez</button>'+
+    '<p class="nff-mus-t">Escucha las canciones</p><div class="nff-mus">'+
+    '<a href="audio/musica/compila.mp3" target="_blank" rel="noopener"><b>▶ Compila nu bravu</b><small>Os Herdeiros do Código</small></a>'+
+    '<a href="audio/musica/cabalga.mp3" target="_blank" rel="noopener"><b>▶ Cabalga o lóstrego</b><small>Master of Prompts</small></a></div>'+
+    '<a class="nff-web" href="'+WEB+'" target="_blank" rel="noopener">Accede a tu perfil, Brais → bandmanager.io</a>';
   if (stage) stage.appendChild(finEl);
   var ANEXO_FIN = ['Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras'];
   var montarFin = function () {
