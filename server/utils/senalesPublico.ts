@@ -43,6 +43,8 @@ const MIN_MARCAS_CON_HEATMAP = 3;
 const MAX_MARCAS_POR_COMENTARIO = 3;
 const MAX_COMENTARIOS = 300;
 const SIGMA_MARCA_SEG = 4;
+/** Más largo que esto no es un vídeo musical: es un directo de 24 h o un dato corrupto. Evita arrays enormes. */
+export const MAX_DURACION_SEG = 6 * 3600;
 const PESO_HEATMAP = 0.4;
 const PESO_SOLO_COMENTARIOS = 0.25;
 /** Cuánto del interés combinado sale de los comentarios cuando también hay heatmap. */
@@ -115,7 +117,8 @@ export function marcasDeTiempo(comentarios: Array<{ texto: string; likes: number
 
 /* ------------------------------------------------------------------ curva */
 
-function curvaDelHeatmap(heatmap: PuntoInteres[], n: number): number[] | null {
+function curvaDelHeatmap(heatmap: PuntoInteres[], largo: number): number[] | null {
+  const n = Math.min(largo, MAX_DURACION_SEG);
   const curva = new Array<number>(n).fill(0);
   for (const p of heatmap) for (let s = Math.floor(p.start); s < Math.min(n, Math.ceil(p.end)); s++) curva[s] = p.valor;
   // Al principio de un vídeo YouTube acumula repeticiones de gente que vuelve a empezar: no dice
@@ -130,7 +133,8 @@ function curvaDelHeatmap(heatmap: PuntoInteres[], n: number): number[] | null {
   return curva.map((v) => (v - min) / (max - min));
 }
 
-function curvaDeMarcas(marcas: MarcaDeTiempo[], n: number): number[] {
+function curvaDeMarcas(marcas: MarcaDeTiempo[], largo: number): number[] {
+  const n = Math.min(largo, MAX_DURACION_SEG);
   const curva = new Array<number>(n).fill(0);
   for (const m of marcas) {
     const desde = Math.max(0, Math.floor(m.t - 3 * SIGMA_MARCA_SEG));
@@ -148,7 +152,7 @@ function curvaDeMarcas(marcas: MarcaDeTiempo[], n: number): number[] {
  */
 export function curvaDeInteres(p: { duracion: number; heatmap?: PuntoInteres[]; marcas?: MarcaDeTiempo[] }): CurvaInteres | null {
   const n = Math.ceil(p.duracion);
-  if (!(n > 0)) return null;
+  if (!(n > 0) || n > MAX_DURACION_SEG) return null;
   const marcas = p.marcas ?? [];
   const h = p.heatmap?.length ? curvaDelHeatmap(p.heatmap, n) : null;
 

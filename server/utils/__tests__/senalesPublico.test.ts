@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { curvaDeInteres, esVideoDeMusica, interesMedio, marcasDeTiempo, normalizarHeatmap, usarSenalesDePublico } from "../senalesPublico.js";
+import { MAX_DURACION_SEG, curvaDeInteres, esVideoDeMusica, interesMedio, marcasDeTiempo, normalizarHeatmap, usarSenalesDePublico } from "../senalesPublico.js";
 
 const heatmapPlano = (n = 100, duracion = 200, pico?: { i: number; v: number }) =>
   Array.from({ length: n }, (_, i) => ({ start_time: (i * duracion) / n, end_time: ((i + 1) * duracion) / n, value: pico && i === pico.i ? pico.v : 0.3 }));
@@ -108,6 +108,20 @@ describe("curvaDeInteres", () => {
   });
   it("una curva totalmente plana no aporta señal → null", () => {
     expect(curvaDeInteres({ duracion: 200, heatmap: normalizarHeatmap(heatmapPlano(100, 200), 200) })).toBeNull();
+  });
+});
+
+describe("curvaDeInteres · duraciones absurdas", () => {
+  it("una duración corrupta o de 24 h no reserva memoria: devuelve null", () => {
+    const marcas = [1, 2, 3, 4, 5].map((t) => ({ t, peso: 1 }));
+    expect(curvaDeInteres({ duracion: MAX_DURACION_SEG + 1, marcas })).toBeNull();
+    expect(curvaDeInteres({ duracion: 1e12, marcas })).toBeNull();
+    expect(curvaDeInteres({ duracion: Number.POSITIVE_INFINITY, marcas })).toBeNull();
+    expect(curvaDeInteres({ duracion: Number.NaN, marcas })).toBeNull();
+  });
+  it("el tope exacto sí se acepta", () => {
+    const marcas = [100, 101, 102, 103, 104].map((t) => ({ t, peso: 1 }));
+    expect(curvaDeInteres({ duracion: MAX_DURACION_SEG, marcas })?.curva).toHaveLength(MAX_DURACION_SEG);
   });
 });
 
