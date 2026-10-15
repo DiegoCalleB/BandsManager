@@ -30,7 +30,7 @@
   var R = window.REPARTO = {
     bajo:     { nombre: 'Iago',    pron: 'Yago',    rol: 'bajo',      cargo: 'Bajo',            foto: 'img/miembro-iago.jpg',    color: '#8fb6ff', yo: true,
                 mov: 'cool',
-                tts: { motor: 'elevenlabs', voz: '7QQzpAyzlKTVrRzQJmTE', modelo: 'eleven_multilingual_v2', estabilidad: 0.5, similitud: 0.8, estilo: 0.3 } },
+                tts: { motor: 'elevenlabs', voz: 'QmP1sd0PqJY98PkCbohx', estabilidad: 0.5 } }, // voz diseñada: madrileño de San Blas
     bateria:  { nombre: 'Brais',   rol: 'batería',   cargo: 'Batería',         foto: 'img/miembro-brais.jpg',   color: '#ffd596',
                 mov: 'bombo',
                 tts: { motor: 'elevenlabs', voz: 'Gffipq2YbMiqOFEtgMO6', estabilidad: 0.5 } },
