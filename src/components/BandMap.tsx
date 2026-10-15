@@ -9,6 +9,9 @@ import { spotifyArtistUrl } from "../utils/spotifyEmbed";
 interface BandMapProps {
   bands: BandContact[];
   onSelectBand: (band: BandContact) => void;
+  /** Bandas con preview de 30 s disponible: solo a estas se les ofrece el play en el popup. */
+  disponibles?: Record<string, boolean>;
+  onEscuchar?: (bandId: string) => void;
 }
 
 type MapStyleKey = "streets" | "osm" | "satellite" | "positron" | "dark";
@@ -272,7 +275,7 @@ function getStatusBadgeConfig(status: BandRelationshipStatus) {
   }
 }
 
-export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
+export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand, disponibles, onEscuchar }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const leafletMap = useRef<L.Map | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
@@ -288,6 +291,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
   // Estilo y callback «en vivo» para los efectos de Leaflet (no deben re-crear el mapa ni los marcadores)
   const estiloInicial = useEffectEvent(() => MAP_STYLES[mapStyle]);
   const seleccionarBanda = useEffectEvent((band: BandContact) => onSelectBand(band));
+  const escucharBanda = useEffectEvent((bandId: string) => onEscuchar?.(bandId));
 
   // Initialize Map
   useEffect(() => {
@@ -542,8 +546,32 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
  </div>
  <div style="font-size: 11px; font-weight: 600; color: ${accColor}; margin-bottom: 8px;">
  🎵 ${escapeHtml(band.estilo_musical)}
- ${spotifyArtistUrl(band.spotify_youtube) ? `· <a href="${escapeHtml(spotifyArtistUrl(band.spotify_youtube) || '')}" target="_blank" rel="noopener noreferrer" style="color: ${accColor};">▶ Escuchar</a>` : ''}
+ ${spotifyArtistUrl(band.spotify_youtube) ? `· <a href="${escapeHtml(spotifyArtistUrl(band.spotify_youtube) || '')}" target="_blank" rel="noopener noreferrer" style="color: ${accColor};">Spotify ↗</a>` : ''}
  </div>
+ ${
+   disponibles?.[band.id] && onEscuchar
+     ? `
+ <div style="margin-bottom: 8px;">
+ <button id="pop-band-play-${band.id}" style="
+ width: 100%;
+ background: ${accColor};
+ color: ${surfaceColor};
+ padding: 6px 10px;
+ border-radius: 999px;
+ font-size: 11px;
+ font-weight: bold;
+ font-family: monospace;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ gap: 4px;">
+ ▶ Escuchar preview (30 s)
+ </button>
+ </div>
+ `
+     : ""
+ }
  <div style="margin-bottom: 8px;">
  <span style="
  background: ${badgeCfg.bg};
@@ -605,6 +633,10 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
             seleccionarBanda(band);
           };
         }
+        const play = document.getElementById(`pop-band-play-${band.id}`);
+        if (play) {
+          play.onclick = () => escucharBanda(band.id);
+        }
       });
 
       marker.addTo(markersGroup.current);
@@ -613,7 +645,7 @@ export const BandMap: React.FC<BandMapProps> = ({ bands, onSelectBand }) => {
     if (validCount > 0 && leafletMap.current) {
       leafletMap.current.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
-  }, [geoPositions, bands]);
+  }, [geoPositions, bands, disponibles, onEscuchar]);
 
   // Handle Resize
   useEffect(() => {
