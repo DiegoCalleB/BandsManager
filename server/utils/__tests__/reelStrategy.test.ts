@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { estrategiaDe, buildEstrategiaBlock, buildReglasDeRedaccion } from '../reelStrategy';
 import { TIPOS_CONTENIDO } from '../viralSignals';
+import { LIMITES } from '../auditoriaCopyReel';
 
 describe('estrategiaDe', () => {
   it('da una estrategia distinta para cada tipo de contenido', () => {
@@ -52,5 +53,22 @@ describe('buildReglasDeRedaccion', () => {
 
   it('exige un límite de palabras para el hookText', () => {
     expect(buildReglasDeRedaccion('X')).toMatch(/6 palabras/);
+  });
+});
+
+describe('buildReglasDeRedaccion · fiabilidad del texto', () => {
+  const reglas = buildReglasDeRedaccion('X');
+
+  it('prohíbe inventar datos y no deja un ejemplo con un dato inventado', () => {
+    expect(reglas).toMatch(/NO INVENTES/);
+    expect(reglas).not.toMatch(/costó 3 meses/i);
+  });
+
+  it('avisa de lo que se ve sin pulsar "más" con el mismo límite que comprueba el auditor', () => {
+    expect(reglas).toContain(`${LIMITES.instagramVisible} caracteres`);
+  });
+
+  it('prohíbe el cebo de interacción que el auditor descarta', () => {
+    expect(reglas).toMatch(/comenta SÍ/);
   });
 });

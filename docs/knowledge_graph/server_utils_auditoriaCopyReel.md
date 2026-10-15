@@ -34,6 +34,7 @@ Auditoría determinista del copy de un Reel (Fase 3 del plan): lo que se puede c
 - `server/utils/__tests__/auditoriaCopyReel.dorado.test.ts`
 - `server/utils/__tests__/auditoriaCopyReel.test.ts`
 - `server/utils/__tests__/fixtures/copyReelDorado.ts`
+- `server/utils/__tests__/reelStrategy.test.ts`
 
 ---
 

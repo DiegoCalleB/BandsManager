@@ -103,6 +103,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_services_clipArchivos|server/services/clipArchivos.ts]] *(from #service)*
 - [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
+- [[server_services_comentariosYoutube|server/services/comentariosYoutube.ts]] *(from #service)*
 - [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(from #service)*
 - [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_emailAgentClient|server/services/emailAgentClient.ts]] *(from #agent)*
@@ -117,6 +118,7 @@ Vista tipada de un valor capturado en un `catch`.
 - [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 - [[server_services_pitchVectorStore|server/services/pitchVectorStore.ts]] *(from #service)*
 - [[server_services_publicCulturalEventsRadarService|server/services/publicCulturalEventsRadarService.ts]] *(from #service)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*
 - [[server_services_setlistVenueService|server/services/setlistVenueService.ts]] *(from #service)*
 - [[server_services_similarBandsVenueMatcherService|server/services/similarBandsVenueMatcherService.ts]] *(from #service)*
