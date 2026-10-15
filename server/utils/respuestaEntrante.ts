@@ -59,3 +59,25 @@ export function esRespuestaAutomatica(m: DatosDeMensaje): boolean {
   if (ASUNTO_AUTOMATICO.test(m.subject || "")) return true;
   return REMITENTE_DE_SISTEMA.test(String(m.from || "").trim());
 }
+
+/**
+ * Texto de un correo HTML, solo para clasificarlo (no se muestra como HTML). Recorrido lineal sin
+ * regex de etiquetas: una regex tipo /<[^>]+>/ deja pasar `<scr<script>ipt>` (CodeQL: sanitización
+ * multicarácter incompleta) y es cuadrática con muchos "<" sin cerrar. Aquí nunca queda un "<" ni
+ * un ">" suelto en el resultado.
+ */
+export function textoDesdeHtml(html: unknown): string {
+  let texto = "";
+  let dentroDeEtiqueta = false;
+  for (const c of String(html ?? "")) {
+    if (c === "<") {
+      dentroDeEtiqueta = true;
+      texto += " ";
+    } else if (c === ">") {
+      dentroDeEtiqueta = false;
+    } else if (!dentroDeEtiqueta) {
+      texto += c;
+    }
+  }
+  return texto.replace(/\s+/g, " ").trim();
+}

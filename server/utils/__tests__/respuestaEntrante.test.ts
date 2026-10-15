@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { quitarTextoCitado, esRespuestaAutomatica } from '../respuestaEntrante';
+import { quitarTextoCitado, esRespuestaAutomatica, textoDesdeHtml } from '../respuestaEntrante';
 
 describe('quitarTextoCitado', () => {
   it('quita la cita de Gmail en español ("El ... escribió:") y todo lo que sigue', () => {
@@ -75,5 +75,30 @@ describe('esRespuestaAutomatica', () => {
 
   it('una respuesta humana que menciona "oficina" en el cuerpo no se confunde', () => {
     expect(esRespuestaAutomatica({ ...base, text: 'Pasaos por la oficina el martes y lo vemos.' })).toBe(false);
+  });
+});
+
+describe('textoDesdeHtml', () => {
+  it('quita las etiquetas y deja el texto, con los espacios colapsados', () => {
+    expect(textoDesdeHtml('<div>Hola,<br>nos <b>encaja</b> el 5.</div>\n<p>Un saludo</p>')).toBe('Hola, nos encaja el 5. Un saludo');
+  });
+
+  it('no deja nunca un "<" ni un ">" suelto, aunque la etiqueta esté rota o anidada a propósito', () => {
+    for (const hostil of ['<scr<script>ipt>alert(1)</scr</script>ipt>', '<<<<b>>>> texto', 'a > b <i', '<img src=x onerror=alert(1)']) {
+      const t = textoDesdeHtml(hostil);
+      expect(t).not.toMatch(/[<>]/);
+      expect(t.toLowerCase()).not.toContain('<script');
+    }
+  });
+
+  it('una entrada enorme de "<" sin cerrar se resuelve rápido (recorrido lineal)', () => {
+    const t0 = Date.now();
+    textoDesdeHtml('<'.repeat(200_000) + 'fin');
+    expect(Date.now() - t0).toBeLessThan(500);
+  });
+
+  it('lo que no es texto devuelve cadena vacía', () => {
+    expect(textoDesdeHtml(undefined)).toBe('');
+    expect(textoDesdeHtml(null)).toBe('');
   });
 });

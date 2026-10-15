@@ -9,7 +9,7 @@
 // propia cuenta con una contraseña de aplicación (nunca un buzón compartido), y antes de
 // enviar se verifica que esa cuenta coincide con el email oficial de la banda.
 
-import { esRespuestaAutomatica } from "../utils/respuestaEntrante.js";
+import { esRespuestaAutomatica, textoDesdeHtml } from "../utils/respuestaEntrante.js";
 import nodemailer from "nodemailer";
 import MailComposer from "nodemailer/lib/mail-composer/index.js";
 import { ImapFlow } from "imapflow";
@@ -276,7 +276,7 @@ export async function leerRespuestasEntrantes(bandId: string, maxResults = 25): 
         }
 
         const cab = (nombre: string) => String(parsed.headers?.get(nombre) ?? "");
-        const texto = (parsed.text || "").trim() || (parsed.html ? parsed.html.replace(/<[^>]+>/g, " ").trim() : "");
+        const texto = (parsed.text || "").trim() || (parsed.html ? textoDesdeHtml(parsed.html) : "");
         const automatico = esRespuestaAutomatica({
           subject: parsed.subject || "", from: fromAddress, text: texto,
           autoSubmitted: cab("auto-submitted"), precedence: cab("precedence"),
