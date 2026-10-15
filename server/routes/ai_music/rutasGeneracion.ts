@@ -8,6 +8,7 @@ import { costEurFromTokens, generateContentWithFallback } from '../../ai.js';
 import { dbRecordAiUsage } from '../../db/aiLedger.js';
 import { getTargetBandId } from '../../utils/bandAccess.js';
 import { ai, generateMusicGenTrack, callLyriaWithRetries } from './generacionMusical.js';
+import { detalleTecnico } from './detalleTecnico.js';
 import { parseGeminiError } from './diagnosticosInfra.js';
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 
@@ -111,7 +112,7 @@ router.post(
         errorType: gemDiag.errorType,
         errorTitle: gemDiag.errorTitle,
         actionAdvice: gemDiag.actionAdvice,
-        details: gemDiag.errorDetail,
+        details: detalleTecnico(req, gemDiag.errorDetail),
       });
     }
   }
@@ -275,7 +276,7 @@ REMINDER: the final audio must clearly and unmistakably be ${genreLabel}, matchi
         errorType: gemDiag.errorType,
         errorTitle: gemDiag.errorTitle,
         actionAdvice: gemDiag.actionAdvice,
-        details: gemDiag.errorDetail,
+        details: detalleTecnico(req, gemDiag.errorDetail),
       });
     }
   }

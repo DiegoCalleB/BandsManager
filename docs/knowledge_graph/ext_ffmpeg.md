@@ -30,6 +30,7 @@ _Sin dependencias salientes directas._
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(from #security)*
 - [[server_routes_ai_music_cacheStems|server/routes/ai_music/cacheStems.ts]] *(from #route)*
+- [[server_routes_ai_music_detalleTecnico|server/routes/ai_music/detalleTecnico.ts]] *(from #route)*
 - [[server_routes_ai_music_diagnosticos|server/routes/ai_music/diagnosticos.ts]] *(from #route)*
 - [[server_routes_ai_music_diagnosticosInfra|server/routes/ai_music/diagnosticosInfra.ts]] *(from #route)*
 - [[server_routes_ai_music_ffmpegConfigurado|server/routes/ai_music/ffmpegConfigurado.ts]] *(from #route)*

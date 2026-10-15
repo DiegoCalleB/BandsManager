@@ -13,6 +13,7 @@ import { acquireStemsSeparationLock, getStemsFromPersistentCache, saveStemsToPer
 import { iaRateLimiter } from '../../middleware/rateLimiter.js';
 import { requireAuth } from '../../state.js';
 import { inFlightSeparations, type ResultadoSeparacionEnVuelo } from './cacheStems.js';
+import { detalleTecnico } from './detalleTecnico.js';
 import { failStemsJob } from './formatoStems.js';
 import {
   contextoDesdePeticion,
@@ -161,10 +162,8 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
             'No se pudo asegurar el bloqueo de inferencia distribuido en la base de datos. Por seguridad anti-duplicados, la petición no ha consumido cómputo GPU.',
           errorType: 'distributed_lock_unavailable',
           errorTitle: 'Bloqueo Distribuido no Disponible',
-          actionAdvice: `Detalle técnico de Supabase: "${lockResult.error || 'Fallo al insertar en song_stems_cache'}". Puedes reintentar o usar el Motor DSP local gratuito.`,
-          errorDetail: lockResult.error,
-          details: lockResult.error,
-          reason: lockResult.error,
+          actionAdvice: 'Puedes reintentar o usar el Motor DSP local gratuito.',
+          details: detalleTecnico(req, lockResult.error),
           engine: ctx.selectedEngine,
         });
       }
@@ -198,7 +197,6 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
         errorType: diag.errorType,
         errorTitle: diag.errorTitle,
         actionAdvice: diag.actionAdvice,
-        details: diag.errorDetail,
         httpStatus: diag.httpStatus,
         engine: selectedEngine,
       });
@@ -212,7 +210,7 @@ router.post('/ai-stem-separation', requireAuth, iaRateLimiter, async (req, res) 
       errorType: diag.errorType,
       errorTitle: diag.errorTitle,
       actionAdvice: diag.actionAdvice,
-      details: diag.errorDetail,
+      details: detalleTecnico(req, diag.errorDetail),
     });
   }
 });

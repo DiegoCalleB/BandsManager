@@ -40,10 +40,10 @@ function resFalso() {
   return r;
 }
 
-async function separar(body: Record<string, unknown>, headers: Record<string, string> = {}) {
+async function separar(body: Record<string, unknown>, headers: Record<string, string> = {}, user: typeof usuario = usuario) {
   const res = resFalso();
   await manejador(aiMusicRouter, '/ai-stem-separation', 'post')(
-    { body: { songTitle: 'Tema', audioUrl: 'https://cdn.example.com/a.mp3', ...body }, headers, query: {}, user: usuario, get: () => 'localhost' },
+    { body: { songTitle: 'Tema', audioUrl: 'https://cdn.example.com/a.mp3', ...body }, headers, query: {}, user, get: () => 'localhost' },
     res,
   );
   return res;
@@ -86,6 +86,19 @@ describe('POST /ai-stem-separation', () => {
     expect(res.code).toBe(503);
     expect(res.body).toMatchObject({ errorType: 'distributed_lock_unavailable', engine: 'fal' });
     expect(servicios.fal).not.toHaveBeenCalled();
+  });
+
+  it('el detalle técnico de la reserva fallida no llega a quien no es admin', async () => {
+    cache.acquireStemsSeparationLock.mockResolvedValue({ acquired: false, reason: 'distributed_lock_failed', error: 'password authentication failed for user "postgres"' });
+    const res = await separar({ engine: 'fal' });
+    expect(JSON.stringify(res.body)).not.toContain('password authentication');
+    expect(res.body?.details).toBeUndefined();
+  });
+
+  it('un admin sí ve el detalle técnico', async () => {
+    cache.acquireStemsSeparationLock.mockResolvedValue({ acquired: false, reason: 'distributed_lock_failed', error: 'sin red' });
+    const res = await separar({ engine: 'fal' }, {}, { ...usuario, role: 'admin' });
+    expect(res.body?.details).toBe('sin red');
   });
 
   it('una reserva ya completada devuelve sus stems', async () => {
