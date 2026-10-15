@@ -26,6 +26,7 @@ Exporta: ejecutar, COOKIES_FILE, banderasDeCookies, banderasAntiBot, rutaYtDlp, 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*

@@ -8,7 +8,7 @@
   "server/routes/agent.ts": 1335,
   "src/components/PublicEPK.tsx": 1340,
   "src/components/bandCRM/BandToneModal.tsx": 1319,
-  "server/routes/reels.ts": 890,
+  "server/routes/reels.ts": 851,
   "server/db/repertoire.ts": 1302,
   "src/components/repertorio/DiscografiaView.tsx": 1295,
   "src/components/ensayos/OrdenDelDiaTab.tsx": 1239,

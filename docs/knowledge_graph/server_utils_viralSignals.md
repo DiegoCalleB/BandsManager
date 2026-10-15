@@ -29,12 +29,14 @@ Detección de los fragmentos con más potencial viral.
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
 - [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `server/routes/__tests__/reelsRoute.test.ts`
+- `server/services/__tests__/senalesVideo.test.ts`
 - `server/utils/__tests__/reelStrategy.test.ts`
 - `server/utils/__tests__/viralSignals.test.ts`
 
