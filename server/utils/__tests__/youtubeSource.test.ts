@@ -9,6 +9,7 @@ import {
   banderasAntiBot,
   rutaYtDlp,
   tramoDeDescarga,
+  fichaDeYtDlp,
 } from '../youtubeSource';
 
 const CLAVE_ORIGINAL = process.env.YOUTUBE_API_KEY;
@@ -221,5 +222,65 @@ describe('rutaYtDlp', () => {
     // En este repo bin/ está en .gitignore, así que lo normal es no tener binario propio.
     expect(typeof rutaYtDlp()).toBe('string');
     expect(rutaYtDlp().length).toBeGreaterThan(0);
+  });
+});
+
+describe('fichaDeYtDlp', () => {
+  const heatmap = Array.from({ length: 100 }, (_, i) => ({ start_time: i * 2, end_time: i * 2 + 2, value: i === 40 ? 1 : 0.3 }));
+
+  it('trae el gráfico de repeticiones y marca la música por la categoría', () => {
+    const f = fichaDeYtDlp({ title: 'Directo', duration: 200, categories: ['Music'], heatmap });
+    expect(f.esMusica).toBe(true);
+    expect(f.heatmap).toHaveLength(100);
+    expect(f.fuente).toBe('yt-dlp');
+  });
+
+  it('una canción reconocida (track/artist) cuenta como música aunque no haya categoría', () => {
+    expect(fichaDeYtDlp({ duration: 200, artist: 'Ruta 66' }).esMusica).toBe(true);
+  });
+
+  it('otra categoría → no es música; sin datos → desconocido', () => {
+    expect(fichaDeYtDlp({ duration: 200, categories: ['Gaming'] }).esMusica).toBe(false);
+    expect(fichaDeYtDlp({ duration: 200 }).esMusica).toBeNull();
+  });
+
+  it('un vídeo con pocas vistas no trae heatmap: queda vacío, no se inventa', () => {
+    expect(fichaDeYtDlp({ duration: 200, categories: ['Music'] }).heatmap).toEqual([]);
+  });
+
+  it('mantiene los capítulos de siempre', () => {
+    const f = fichaDeYtDlp({ duration: 200, chapters: [{ title: 'Solo', start_time: 30, end_time: 60 }] });
+    expect(f.chapters).toEqual([{ title: 'Solo', start: 30, end: 60 }]);
+  });
+});
+
+describe('metadatosDataApi · categoría', () => {
+  const respuesta = (categoryId?: string) => ({ ok: true, json: async () => ({ items: [{ snippet: { title: 'x', categoryId }, contentDetails: { duration: 'PT3M' } }] }) });
+  beforeEach(() => {
+    process.env.YOUTUBE_API_KEY = 'AIzaSyA-clave-larga-de-prueba';
+  });
+
+  it('la categoría 10 es música', async () => {
+    vi.stubGlobal('fetch', async () => respuesta('10'));
+    expect((await metadatosDataApi('8Jdw41lYdak'))!.esMusica).toBe(true);
+  });
+
+  it('otra categoría no lo es', async () => {
+    vi.stubGlobal('fetch', async () => respuesta('24'));
+    expect((await metadatosDataApi('8Jdw41lYdak'))!.esMusica).toBe(false);
+  });
+});
+
+describe('fusionarMetadatos · señales de público', () => {
+  const heat = [{ start: 0, end: 2, valor: 1 }];
+  it('completa el heatmap y la categoría que faltaban', () => {
+    const base = { ...metadatosVacios(), title: 'x', duration: 100, esMusica: null as boolean | null };
+    const f = fusionarMetadatos(base, { ...metadatosVacios(), esMusica: true, heatmap: heat });
+    expect(f.esMusica).toBe(true);
+    expect(f.heatmap).toEqual(heat);
+  });
+  it('no pisa una categoría ya conocida', () => {
+    const f = fusionarMetadatos({ ...metadatosVacios(), esMusica: false }, { ...metadatosVacios(), esMusica: true });
+    expect(f.esMusica).toBe(false);
   });
 });

@@ -4,13 +4,17 @@
  */
 import { Input, Select } from "../ui";
 import { useReelsCenter } from "./ReelsCenterContext";
+import { duracionDeFormato } from "./hooks/useAprendizajeReels";
 
 /**
  * Opciones del análisis: encuadre, subtítulos quemados y karaoke.
  * @returns Sección de interfaz.
  */
 export function AnalysisOptions() {
-  const { contentType, detectedContentType, setContentType, videoTopic, setVideoTopic, videoDuration, setVideoDuration } = useReelsCenter();
+  const { aprendizaje, contentType, detectedContentType, setContentType, videoTopic, setVideoTopic, videoDuration, setVideoDuration } = useReelsCenter();
+  // "Recomendado" solo donde lo dicen las métricas reales de la banda, no por defecto.
+  const recomendada = aprendizaje?.recomendacion.modo === "aprovechando" ? duracionDeFormato(aprendizaje.recomendacion.formato) : null;
+  const marca = (segundos: number) => (segundos === recomendada ? " · recomendado para tu banda" : "");
   return (
     <>
       {/* Configurations */}
@@ -66,16 +70,17 @@ export function AnalysisOptions() {
           onChange={(e) => setVideoDuration(Number(e.target.value))}
           wrapperClassName="w-full"
         >
-          <option value={15}>
-            15 segundos (Ideal para Reels cortos / Stories)
-          </option>
-          <option value={30}>
-            30 segundos (Súper dinámico / Recomendado)
-          </option>
-          <option value={60}>
-            60 segundos (Explicativo completo de bases)
-          </option>
+          <option value={15}>15 segundos (loops y Reels cortos){marca(15)}</option>
+          <option value={30}>30 segundos (estribillo o subidón){marca(30)}</option>
+          <option value={60}>60 segundos (historia o detrás de escena){marca(60)}</option>
         </Select>
+        {aprendizaje && aprendizaje.resumen.reelsMedidos > 0 && (
+          <p className="text-micro text-[var(--ink-2)]">
+            {aprendizaje.recomendacion.modo === "aprovechando"
+              ? aprendizaje.recomendacion.explicacion
+              : `Midiendo tus Reels publicados (${aprendizaje.resumen.reelsMedidos} de 3) para saber qué duración funciona.`}
+          </p>
+        )}
       </div>
       </div>
     </>

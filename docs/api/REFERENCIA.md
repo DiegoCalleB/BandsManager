@@ -2,7 +2,7 @@
 
 > Generado automáticamente por `scripts/generate-openapi.mjs` a partir del código. No se edita a mano: ejecuta `npm run docs:api`.
 
-**365 rutas HTTP** (314 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
+**368 rutas HTTP** (317 declaraciones de handler; el resto son alias) en 31 dominios. Contrato máquina-legible: [`openapi.json`](./openapi.json) (OpenAPI 3.1). Visor interactivo: [`index.html`](./index.html) (hay que abrirlo en un navegador; GitHub no lo renderiza). Decisión de diseño: [ADR 0012](../adr/0012-contrato-api-openapi-por-ast.md).
 
 ## Cómo leerla
 
@@ -12,7 +12,7 @@
 
 | Acceso | Rutas |
 |---|---|
-| Sesión | 319 |
+| Sesión | 322 |
 | Sesión (comprobada en el handler) | 6 |
 | Sesión opcional | 3 |
 | Firma o secreto | 7 |
@@ -45,14 +45,14 @@ Son las que un revisor de seguridad querrá mirar primero.
 | `GET` | `/api/emails/baja` | Pública | publicoRateLimiter |  | [`server/routes/emailsCicloVida.ts:13`](../../server/routes/emailsCicloVida.ts#L13) |
 | `GET` | `/api/gmail-oauth/callback` | Pública | gmailOAuthRateLimiter |  | [`server/routes/gmailOAuth.ts:159`](../../server/routes/gmailOAuth.ts#L159) |
 | `GET` | `/api/health` | Pública | — | ★ | [`server.ts:168`](../../server.ts#L168) |
-| `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:225`](../../server/routes/deals.ts#L225) |
-| `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:452`](../../server/routes/deals.ts#L452) |
-| `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:305`](../../server/routes/deals.ts#L305) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:467`](../../server/routes/epk_fans.ts#L467) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:872`](../../server/routes/epk_fans.ts#L872) |
+| `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:227`](../../server/routes/deals.ts#L227) |
+| `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:454`](../../server/routes/deals.ts#L454) |
+| `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:307`](../../server/routes/deals.ts#L307) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:462`](../../server/routes/epk_fans.ts#L462) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:867`](../../server/routes/epk_fans.ts#L867) |
 | `GET` | `/api/public/insignia` | Pública | publicoRateLimiter |  | [`server/routes/referidos.ts:76`](../../server/routes/referidos.ts#L76) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1118`](../../server/routes/epk_fans.ts#L1118) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:984`](../../server/routes/epk_fans.ts#L984) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1113`](../../server/routes/epk_fans.ts#L1113) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
 | `GET` | `/api/r/{code}` | Pública | publicoRateLimiter |  | [`server/routes/enlacesCortos.ts:49`](../../server/routes/enlacesCortos.ts#L49) |
 | `GET` | `/api/spotify/status` | Pública | — |  | [`server/routes/spotify.ts:15`](../../server/routes/spotify.ts#L15) |
 | `GET` | `/api/state` | Sesión (comprobada en el handler) | — |  | [`server.ts:511`](../../server.ts#L511) |
@@ -208,7 +208,7 @@ Son las que un revisor de seguridad querrá mirar primero.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:29`](../../server/routes/chat.ts#L29) |
+| `POST` | `/api/chat` | Sesión | chatRateLimiter |  | [`server/routes/chat.ts:30`](../../server/routes/chat.ts#L30) |
 | `POST` | `/api/write-reels-copy` | Sesión | iaRateLimiter |  | [`server/routes/chat.ts:642`](../../server/routes/chat.ts#L642) |
 
 ### concert_to_album
@@ -259,9 +259,9 @@ Acuerdos de concierto: vista pública por token y firma.
 | `GET` | `/api/deals` | Sesión | — |  | [`server/routes/deals.ts:69`](../../server/routes/deals.ts#L69) |
 | `POST` | `/api/deals` | Sesión | — |  | [`server/routes/deals.ts:149`](../../server/routes/deals.ts#L149) |
 | `GET` | `/api/deals/lead/{leadId}` | Sesión | — |  | [`server/routes/deals.ts:127`](../../server/routes/deals.ts#L127) |
-| `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:225`](../../server/routes/deals.ts#L225) |
-| `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:452`](../../server/routes/deals.ts#L452) |
-| `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:305`](../../server/routes/deals.ts#L305) |
+| `GET` | `/api/public/deals/{token}` | Pública | — |  | [`server/routes/deals.ts:227`](../../server/routes/deals.ts#L227) |
+| `POST` | `/api/public/deals/{token}/resend-email` | Pública | reenvioEmailRateLimiter |  | [`server/routes/deals.ts:454`](../../server/routes/deals.ts#L454) |
+| `POST` | `/api/public/deals/{token}/sign` | Pública | — | ★ | [`server/routes/deals.ts:307`](../../server/routes/deals.ts#L307) |
 
 ### donations
 
@@ -291,22 +291,22 @@ EPK público de la banda y registro de fans con consentimiento RGPD.
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:59`](../../server/routes/epk_fans.ts#L59) |
-| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:77`](../../server/routes/epk_fans.ts#L77) |
-| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:108`](../../server/routes/epk_fans.ts#L108) |
-| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:142`](../../server/routes/epk_fans.ts#L142) |
-| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:162`](../../server/routes/epk_fans.ts#L162) |
-| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1076`](../../server/routes/epk_fans.ts#L1076) |
-| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:238`](../../server/routes/epk_fans.ts#L238) |
-| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:766`](../../server/routes/epk_fans.ts#L766) |
-| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:785`](../../server/routes/epk_fans.ts#L785) |
-| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:824`](../../server/routes/epk_fans.ts#L824) |
-| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:858`](../../server/routes/epk_fans.ts#L858) |
-| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1186`](../../server/routes/epk_fans.ts#L1186) |
-| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:467`](../../server/routes/epk_fans.ts#L467) |
-| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:872`](../../server/routes/epk_fans.ts#L872) |
-| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1118`](../../server/routes/epk_fans.ts#L1118) |
-| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:984`](../../server/routes/epk_fans.ts#L984) |
+| `GET` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:54`](../../server/routes/epk_fans.ts#L54) |
+| `POST` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:72`](../../server/routes/epk_fans.ts#L72) |
+| `PUT` | `/api/autonomy` | Sesión | — |  | [`server/routes/epk_fans.ts:103`](../../server/routes/epk_fans.ts#L103) |
+| `GET` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:137`](../../server/routes/epk_fans.ts#L137) |
+| `PUT` | `/api/epk` | Sesión | — |  | [`server/routes/epk_fans.ts:157`](../../server/routes/epk_fans.ts#L157) |
+| `GET` | `/api/epk/clicks` | Sesión | — |  | [`server/routes/epk_fans.ts:1071`](../../server/routes/epk_fans.ts#L1071) |
+| `POST` | `/api/epk/traducir` | Sesión | — |  | [`server/routes/epk_fans.ts:233`](../../server/routes/epk_fans.ts#L233) |
+| `GET` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:761`](../../server/routes/epk_fans.ts#L761) |
+| `POST` | `/api/fans` | Sesión | — |  | [`server/routes/epk_fans.ts:780`](../../server/routes/epk_fans.ts#L780) |
+| `PATCH` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:819`](../../server/routes/epk_fans.ts#L819) |
+| `DELETE` | `/api/fans/{id}` | Sesión | — |  | [`server/routes/epk_fans.ts:853`](../../server/routes/epk_fans.ts#L853) |
+| `GET` | `/api/musicians-waitlist` | Sesión | — |  | [`server/routes/epk_fans.ts:1181`](../../server/routes/epk_fans.ts#L1181) |
+| `GET` | `/api/public/epk` | Pública | — |  | [`server/routes/epk_fans.ts:462`](../../server/routes/epk_fans.ts#L462) |
+| `POST` | `/api/public/fans` | Pública | publicoRateLimiter | ★ | [`server/routes/epk_fans.ts:867`](../../server/routes/epk_fans.ts#L867) |
+| `POST` | `/api/public/musicians-waitlist` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:1113`](../../server/routes/epk_fans.ts#L1113) |
+| `POST` | `/api/public/track-click` | Pública | publicoRateLimiter |  | [`server/routes/epk_fans.ts:979`](../../server/routes/epk_fans.ts#L979) |
 
 ### gmailOAuth
 
@@ -440,27 +440,30 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 |---|---|---|---|---|---|
 | `GET` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:22`](../../server/routes/posts.ts#L22) |
 | `POST` | `/api/posts` | Sesión | — |  | [`server/routes/posts.ts:89`](../../server/routes/posts.ts#L89) |
-| `POST` | `/api/posts/sync` | Sesión | — |  | [`server/routes/posts.ts:219`](../../server/routes/posts.ts#L219) |
-| `POST` | `/api/posts/trigger-webhook` | Sesión | — |  | [`server/routes/posts.ts:240`](../../server/routes/posts.ts#L240) |
+| `POST` | `/api/posts/sync` | Sesión | — |  | [`server/routes/posts.ts:220`](../../server/routes/posts.ts#L220) |
+| `POST` | `/api/posts/trigger-webhook` | Sesión | — |  | [`server/routes/posts.ts:241`](../../server/routes/posts.ts#L241) |
 | `PUT` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:34`](../../server/routes/posts.ts#L34) |
 | `DELETE` | `/api/posts/{id}` | Sesión | — |  | [`server/routes/posts.ts:108`](../../server/routes/posts.ts#L108) |
 | `GET` | `/api/social/accounts` | Sesión | — |  | [`server/routes/posts.ts:129`](../../server/routes/posts.ts#L129) |
 | `POST` | `/api/social/accounts/connect` | Sesión | — |  | [`server/routes/posts.ts:142`](../../server/routes/posts.ts#L142) |
 | `DELETE` | `/api/social/accounts/{id}` | Sesión | — |  | [`server/routes/posts.ts:174`](../../server/routes/posts.ts#L174) |
 | `POST` | `/api/social/publish-now/{id}` | Sesión | — |  | [`server/routes/posts.ts:188`](../../server/routes/posts.ts#L188) |
-| `POST` | `/api/social/run-scheduled-publisher` | Sesión | — |  | [`server/routes/posts.ts:206`](../../server/routes/posts.ts#L206) |
+| `POST` | `/api/social/run-scheduled-publisher` | Sesión | — |  | [`server/routes/posts.ts:207`](../../server/routes/posts.ts#L207) |
 
 ### reels
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/analyze-video-highlights` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:496`](../../server/routes/reels.ts#L496) |
-| `POST` | `/api/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:1183`](../../server/routes/reels.ts#L1183) |
-| `POST` | `/api/cut-video-clip` | Sesión | renderRateLimiter, renderConcurrencyLimiter |  | [`server/routes/reels.ts:819`](../../server/routes/reels.ts#L819) |
-| `POST` | `/api/reanalyze-clip` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:1009`](../../server/routes/reels.ts#L1009) |
-| `GET` | `/api/reel-analysis` | Sesión | — |  | [`server/routes/reels.ts:458`](../../server/routes/reels.ts#L458) |
-| `POST` | `/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:1183`](../../server/routes/reels.ts#L1183) |
-| `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:419`](../../server/routes/reels.ts#L419) |
+| `POST` | `/api/analyze-video-highlights` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:228`](../../server/routes/reels.ts#L228) |
+| `POST` | `/api/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:24`](../../server/routes/reelsTexto.ts#L24) |
+| `POST` | `/api/cut-video-clip` | Sesión | renderRateLimiter, renderConcurrencyLimiter |  | [`server/routes/reels.ts:515`](../../server/routes/reels.ts#L515) |
+| `POST` | `/api/reanalyze-clip` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:678`](../../server/routes/reels.ts#L678) |
+| `GET` | `/api/reel-analysis` | Sesión | — |  | [`server/routes/reels.ts:190`](../../server/routes/reels.ts#L190) |
+| `POST` | `/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:24`](../../server/routes/reelsTexto.ts#L24) |
+| `GET` | `/api/reels/aprendizaje` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:16`](../../server/routes/reelsAprendizaje.ts#L16) |
+| `POST` | `/api/reels/copy-perfecto` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:55`](../../server/routes/reelsTexto.ts#L55) |
+| `GET` | `/api/reels/proximo-hueco` | Sesión | — |  | [`server/routes/reelsProgramacion.ts:21`](../../server/routes/reelsProgramacion.ts#L21) |
+| `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:151`](../../server/routes/reels.ts#L151) |
 
 ### referidos
 
@@ -571,7 +574,7 @@ Salud del servicio, estado de la sesión y páginas legales servidas por server.
 | `POST` | `/api/upload/chunk` | Sesión | — |  | [`server/routes/upload.ts:646`](../../server/routes/upload.ts#L646) |
 | `POST` | `/api/upload/cleanup-unused-media` | Sesión | — |  | [`server/routes/upload.ts:438`](../../server/routes/upload.ts#L438) |
 | `GET` | `/api/upload/storage-stats` | Sesión | — |  | [`server/routes/upload.ts:410`](../../server/routes/upload.ts#L410) |
-| `GET` | `/api/upload/test-supabase` | Sesión | — |  | [`server/routes/upload.ts:338`](../../server/routes/upload.ts#L338) |
+| `GET` | `/api/upload/test-supabase` | Sesión | — |  | [`server/routes/upload.ts:337`](../../server/routes/upload.ts#L337) |
 
 ### users
 

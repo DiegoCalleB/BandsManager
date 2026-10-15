@@ -1,0 +1,41 @@
+---
+id: src_components_reels_center_hooks_useCopyPerfecto
+title: "src/components/reels_center/hooks/useCopyPerfecto.ts"
+layer: frontend
+domain: social
+file: "src/components/reels_center/hooks/useCopyPerfecto.ts"
+tags: ["frontend", "social", "auto"]
+---
+
+# 📌 src/components/reels_center/hooks/useCopyPerfecto.ts
+
+> **Ubicación:** `src/components/reels_center/hooks/useCopyPerfecto.ts`  
+> **Capa:** `#layer/frontend` | **Dominio:** `#domain/social`
+
+## 📖 Descripción
+Copy perfecto del corte seleccionado: pide candidatos al servidor (generar → auditar → juzgar)
+
+---
+
+## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[src_components_reels_center_reelsApiTypes|src/components/reels_center/reelsApiTypes.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_components_reels_center_reelsHelpers|src/components/reels_center/reelsHelpers.ts]] *(Layer: #frontend, Domain: #social)*
+- [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_errorMessage|src/utils/errorMessage.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_reelsUtils|src/utils/reelsUtils.ts]] *(Layer: #service, Domain: #social)*
+
+---
+
+## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_components_reels_center_hooks_useReelsCenterController|src/components/reels_center/hooks/useReelsCenterController.ts]] *(from #frontend)*
+
+---
+
+## 🧪 Tests que lo cubren
+- `src/components/reels_center/hooks/__tests__/useCopyPerfecto.behavior.test.ts`
+
+---
+
+## 🛡️ Reglas de Aislamiento & Calidad
+- [ ] ¿Respeta el trust boundary de `band_id`?
+- [ ] ¿Tiene pruebas unitarias o de integración asociadas?

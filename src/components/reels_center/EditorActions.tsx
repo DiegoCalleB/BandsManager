@@ -5,13 +5,14 @@
 import { AlertCircle, Calendar, Camera, Check, CheckCircle2, Copy, Download, RefreshCw, Rocket } from "lucide-react";
 import { Button } from "../ui";
 import { useReelsCenter } from "./ReelsCenterContext";
+import { ClipQualityReport } from "./ClipQualityReport";
 
 /**
  * Acciones finales del editor: limpiar, publicar ahora o programar, y avisos de cadencia.
  * @returns Sección de interfaz.
  */
 export function EditorActions() {
-  const { handleDownloadCompletePack, packDownloadedSuccess, thumbnailCapturedSuccess, handleCaptureThumbnail, handleCopyFormattedPost, handlePublishNowDirectly, isPublishingNow, isScheduling, publishNowSuccess, schedulingSuccess, scheduleErrors, scheduleWarnings } = useReelsCenter();
+  const { renderedQuality, derechosDeclarados, setDerechosDeclarados, handleDownloadCompletePack, packDownloadedSuccess, thumbnailCapturedSuccess, handleCaptureThumbnail, handleCopyFormattedPost, handlePublishNowDirectly, isPublishingNow, isScheduling, publishNowSuccess, schedulingSuccess, scheduleErrors, scheduleWarnings } = useReelsCenter();
   return (
     <>
       {/* Master Actions: Marie Kondo Clean & Zen Tiers */}
@@ -68,6 +69,13 @@ export function EditorActions() {
             <span>Copiar copy</span>
           </Button>
         </div>
+
+        <ClipQualityReport informe={renderedQuality} />
+
+        <label className="flex items-center gap-2 text-xs text-[var(--ink-2)] cursor-pointer" title="Para publicar solo hace falta si el vídeo no es de un canal de YouTube de la banda. Se aplica al renderizar el clip.">
+          <input type="checkbox" checked={derechosDeclarados} onChange={(e) => setDerechosDeclarados(e.target.checked)} />
+          <span>Tengo los derechos de este vídeo</span>
+        </label>
 
         {/* Action Buttons: Publicar Ahora (1-Clic) vs Programar en Calendario */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">

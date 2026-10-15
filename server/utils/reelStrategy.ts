@@ -124,12 +124,12 @@ export function buildEstrategiaBlock(tipo: TipoContenido): string {
  */
 export function buildReglasDeRedaccion(nombreBanda: string): string {
   return [
-    "CÓMO ESCRIBIR LOS TÍTULOS Y LOS TEXTOS (FRAMEWORK PROFESIONAL VIRAL 3.0):",
+    "CÓMO ESCRIBIR LOS TÍTULOS Y LOS TEXTOS:",
     "",
     "1. TÍTULO Y GANCHO VISUAL (HOOK ON-SCREEN 0-3s):",
     "   - \"hookText\": Rótulo sobreimpreso en pantalla para los primeros segundos: máximo 6 palabras.",
     "     Debe frenar el scroll instantáneamente (generar curiosidad, plantear una situación relatable o un reto).",
-    "     Ejemplos: \"Cuando el público canta más fuerte\", \"Lo que nadie vio del ensayo\", \"Este solo costó 3 meses\".",
+    "     Ejemplos de ESTILO (no los copies: escribe el tuyo con lo que pasa en ESTE tramo): \"Cuando el público canta más fuerte\", \"Lo que nadie vio del ensayo\", \"Para la música y la sala sigue cantando\".",
     "   - \"title\": Titular llamativo de alta conversión, describe lo que ocurre con chispa.",
     "",
     "2. VARIANTES DE COPY SEGÚN OBJETIVO ESTRATÉGICO:",
@@ -149,6 +149,15 @@ export function buildReglasDeRedaccion(nombreBanda: string): string {
     "5. CONTROL DE VOZ Y CERO CLICHÉS DE IA:",
     "   - PROHIBIDO el lenguaje corporativo o comodines vacíos: \"momento épico\", \"momentazo\", \"¡Hola a todos!\", \"No te pierdas esta joya\", \"Puro fuego\".",
     `   - Habla SIEMPRE en primera persona del plural (nosotros) desde la personalidad real de ${nombreBanda}.`,
-    "   - Máximo 2 emojis bien elegidos, nada de ristras de emojis."
+    "   - Máximo 2 emojis bien elegidos, nada de ristras de emojis.",
+    "",
+    "6. NO INVENTES NADA:",
+    "   - Cifras, fechas, premios, nombres de salas, de personas o de canciones solo si aparecen en los datos de arriba (título, transcripción, perfil).",
+    "   - Si falta el dato, descríbelo sin número: \"un solo larguísimo\" en vez de \"un solo de 3 meses\".",
+    "",
+    "7. LO QUE SE VE ANTES DE PULSAR \"MÁS\" (Instagram):",
+    "   - Los primeros 125 caracteres de \"recommendedCopy\" tienen que cerrar una idea por sí solos y llevar el detalle concreto de ESTE tramo, no la presentación.",
+    "   - No pidas interacción a cambio de nada (\"comenta SÍ\", \"dale like\", \"síguenos para más\"): la pregunta o el detalle deben provocar la respuesta solos. La llamada a la acción solo vive en \"copyConversion\".",
+    "   - Mal: \"¡Momento épico del directo! 🔥🔥 No te lo pierdas\". Bien: \"Sonaba una guitarra sola y dos compases después la sala entera cantaba. ¿Quién estaba ahí?\"."
   ].join("\n");
 }

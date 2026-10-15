@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { execFile, type ExecFileOptions } from "child_process";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { esVideoDeMusica, normalizarHeatmap, type PuntoInteres } from "./senalesPublico.js";
 
 /**
  * Acceso a YouTube desde el servidor, en un solo sitio.
@@ -106,6 +107,10 @@ export interface MetadatosVideo {
   duration: number;
   thumbnail: string;
   chapters: CapituloVideo[];
+  /** true = música, false = otra categoría, null/ausente = no se sabe. */
+  esMusica?: boolean | null;
+  /** Gráfico de "lo más reproducido": solo en vídeos con vistas suficientes, y solo lo trae yt-dlp. */
+  heatmap?: PuntoInteres[];
   /** De dónde salieron, para poder decírselo al usuario y depurar. */
   fuente: "data-api" | "yt-dlp" | "oembed" | "ytdl-core" | "ninguna";
 }
@@ -134,7 +139,26 @@ export function normalizarCapitulos(bruto: unknown, duracionTotal = 0): Capitulo
   return salida;
 }
 
-/** Metadatos vía yt-dlp. Es el único camino que además da los capítulos. */
+/** Ficha a partir del JSON de `yt-dlp --dump-json`. Pura, para poder probarla sin proceso. */
+export function fichaDeYtDlp(bruto: unknown): MetadatosVideo {
+  // Solo se leen los campos que importan; cada uno se convierte y valida abajo.
+  const j = (bruto ?? {}) as Partial<Record<"title" | "description" | "uploader" | "channel" | "thumbnail" | "track" | "artist", string>> &
+    { duration?: unknown; chapters?: unknown; categories?: unknown; heatmap?: unknown };
+  const duration = Number(j.duration) || 0;
+  return {
+    title: String(j.title || ""),
+    description: String(j.description || ""),
+    author: String(j.uploader || j.channel || ""),
+    duration,
+    thumbnail: String(j.thumbnail || ""),
+    chapters: normalizarCapitulos(j.chapters, duration),
+    esMusica: esVideoDeMusica({ categorias: j.categories, pista: Boolean(j.track || j.artist) }),
+    heatmap: normalizarHeatmap(j.heatmap, duration),
+    fuente: "yt-dlp"
+  };
+}
+
+/** Metadatos vía yt-dlp. Es el único camino que además da los capítulos y el gráfico de repeticiones. */
 export async function metadatosYtDlp(url: string): Promise<MetadatosVideo | null> {
   if (!(await ytDlpDisponible())) return null;
   try {
@@ -143,17 +167,7 @@ export async function metadatosYtDlp(url: string): Promise<MetadatosVideo | null
       [...banderasAntiBot(), "--dump-json", "--skip-download", url],
       { timeout: 60_000, maxBuffer: 20 * 1024 * 1024 }
     );
-    const j = JSON.parse(stdout);
-    const duration = Number(j?.duration) || 0;
-    return {
-      title: String(j?.title || ""),
-      description: String(j?.description || ""),
-      author: String(j?.uploader || j?.channel || ""),
-      duration,
-      thumbnail: String(j?.thumbnail || ""),
-      chapters: normalizarCapitulos(j?.chapters, duration),
-      fuente: "yt-dlp"
-    };
+    return fichaDeYtDlp(JSON.parse(stdout));
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.log("[YouTube] yt-dlp --dump-json no disponible:", String(err?.message || err).substring(0, 200));
@@ -333,6 +347,7 @@ interface SnippetYoutube {
   title?: string;
   description?: string;
   channelTitle?: string;
+  categoryId?: string;
   thumbnails?: Partial<Record<"maxres" | "standard" | "high" | "medium" | "default", MiniaturaYoutube>>;
 }
 
@@ -389,8 +404,9 @@ export async function metadatosDataApi(videoId: string): Promise<MetadatosVideo 
       author: String(snippet.channelTitle || ""),
       duration: parseIso8601Duration(item.contentDetails?.duration),
       thumbnail: String(mejor?.url || ""),
-      // La Data API no expone los capítulos; los aporta yt-dlp si está.
+      // La Data API no expone los capítulos ni el gráfico de repeticiones; los aporta yt-dlp si está.
       chapters: [],
+      esMusica: esVideoDeMusica({ categoriaId: snippet.categoryId }),
       fuente: "data-api"
     };
   } catch (errCapturado) {
@@ -410,6 +426,8 @@ export function fusionarMetadatos(base: MetadatosVideo, extra: MetadatosVideo | 
     duration: base.duration > 0 ? base.duration : extra.duration,
     thumbnail: base.thumbnail || extra.thumbnail,
     chapters: base.chapters.length ? base.chapters : extra.chapters,
+    esMusica: base.esMusica ?? extra.esMusica,
+    heatmap: base.heatmap?.length ? base.heatmap : extra.heatmap,
     fuente: base.fuente !== "ninguna" ? base.fuente : extra.fuente
   };
 }

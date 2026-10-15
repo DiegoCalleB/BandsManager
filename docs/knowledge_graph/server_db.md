@@ -99,6 +99,7 @@ Módulo sin exportaciones con nombre.
 - [[server_services_campaignRadarScheduler|server/services/campaignRadarScheduler.ts]] *(from #service)*
 - [[server_services_colaLetras|server/services/colaLetras.ts]] *(from #service)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*

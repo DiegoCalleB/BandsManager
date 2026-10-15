@@ -29,11 +29,17 @@ Perfil de banda para los prompts de IA.
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_chat|server/routes/chat.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
+- [[server_services_hookDoctor|server/services/hookDoctor.ts]] *(from #service)*
+- [[server_services_perfilDeLaPeticion|server/services/perfilDeLaPeticion.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
+- `server/services/__tests__/copyPerfecto.test.ts`
+- `server/services/__tests__/hookDoctor.test.ts`
 - `server/utils/__tests__/bandProfile.test.ts`
 
 ---

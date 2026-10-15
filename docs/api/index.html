@@ -14,7 +14,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (365) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (368) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -740,7 +740,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:496",
+        "x-source": "server/routes/reels.ts:228",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -781,7 +781,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:1183",
+        "x-source": "server/routes/reelsTexto.ts:24",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -1379,7 +1379,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:59",
+        "x-source": "server/routes/epk_fans.ts:54",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -1412,7 +1412,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:77",
+        "x-source": "server/routes/epk_fans.ts:72",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -1444,7 +1444,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:108",
+        "x-source": "server/routes/epk_fans.ts:103",
         "x-autenticacion": "middleware"
       }
     },
@@ -3575,7 +3575,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:29",
+        "x-source": "server/routes/chat.ts:30",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "chatRateLimiter"
@@ -4291,7 +4291,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:819",
+        "x-source": "server/routes/reels.ts:515",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "renderRateLimiter",
@@ -4728,7 +4728,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:142",
+        "x-source": "server/routes/epk_fans.ts:137",
         "x-autenticacion": "middleware"
       },
       "put": {
@@ -4761,7 +4761,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:162",
+        "x-source": "server/routes/epk_fans.ts:157",
         "x-autenticacion": "middleware"
       }
     },
@@ -4796,7 +4796,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1076",
+        "x-source": "server/routes/epk_fans.ts:1071",
         "x-autenticacion": "middleware"
       }
     },
@@ -4831,7 +4831,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:238",
+        "x-source": "server/routes/epk_fans.ts:233",
         "x-autenticacion": "middleware"
       }
     },
@@ -5050,7 +5050,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:766",
+        "x-source": "server/routes/epk_fans.ts:761",
         "x-autenticacion": "middleware"
       },
       "post": {
@@ -5083,7 +5083,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:785",
+        "x-source": "server/routes/epk_fans.ts:780",
         "x-autenticacion": "middleware"
       }
     },
@@ -5126,7 +5126,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:824",
+        "x-source": "server/routes/epk_fans.ts:819",
         "x-autenticacion": "middleware"
       },
       "delete": {
@@ -5167,7 +5167,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:858",
+        "x-source": "server/routes/epk_fans.ts:853",
         "x-autenticacion": "middleware"
       }
     },
@@ -8592,7 +8592,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1186",
+        "x-source": "server/routes/epk_fans.ts:1181",
         "x-autenticacion": "middleware"
       }
     },
@@ -8926,7 +8926,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:219",
+        "x-source": "server/routes/posts.ts:220",
         "x-autenticacion": "middleware"
       }
     },
@@ -8961,7 +8961,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:240",
+        "x-source": "server/routes/posts.ts:241",
         "x-autenticacion": "middleware"
       }
     },
@@ -9107,7 +9107,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/deals.ts:225",
+        "x-source": "server/routes/deals.ts:227",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9137,7 +9137,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/deals.ts:452",
+        "x-source": "server/routes/deals.ts:454",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "reenvioEmailRateLimiter"
@@ -9219,7 +9219,7 @@
             }
           }
         },
-        "x-source": "server/routes/deals.ts:305",
+        "x-source": "server/routes/deals.ts:307",
         "x-autenticacion": "ninguna",
         "summary": "Firmar un acuerdo de concierto",
         "requestBody": {
@@ -9273,7 +9273,7 @@
             "description": "Respuesta correcta."
           }
         },
-        "x-source": "server/routes/epk_fans.ts:467",
+        "x-source": "server/routes/epk_fans.ts:462",
         "x-autenticacion": "ninguna"
       }
     },
@@ -9325,7 +9325,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:872",
+        "x-source": "server/routes/epk_fans.ts:867",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9424,7 +9424,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:1118",
+        "x-source": "server/routes/epk_fans.ts:1113",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9447,7 +9447,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/epk_fans.ts:984",
+        "x-source": "server/routes/epk_fans.ts:979",
         "x-autenticacion": "ninguna",
         "x-rate-limiters": [
           "publicoRateLimiter"
@@ -9519,7 +9519,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:1009",
+        "x-source": "server/routes/reels.ts:678",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -9556,7 +9556,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:458",
+        "x-source": "server/routes/reels.ts:190",
         "x-autenticacion": "middleware"
       }
     },
@@ -9594,11 +9594,122 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:1183",
+        "x-source": "server/routes/reelsTexto.ts:24",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
         ]
+      }
+    },
+    "/api/reels/aprendizaje": {
+      "get": {
+        "tags": [
+          "reels"
+        ],
+        "operationId": "getApiReelsAprendizaje",
+        "description": "Comentario en el código: GET /api/reels/aprendizaje Resumen de las métricas reales (rewatch, compartir, guardar) y el formato recomendado.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/reelsAprendizaje.ts:16",
+        "x-autenticacion": "middleware"
+      }
+    },
+    "/api/reels/copy-perfecto": {
+      "post": {
+        "tags": [
+          "reels"
+        ],
+        "operationId": "postApiReelsCopyPerfecto",
+        "description": "Comentario en el código: POST /api/reels/copy-perfecto Genera candidatos de copy para un corte, descarta los que rompen reglas (auditoría determinista) y un juez con rúbrica elige el mejor y dos alternativas. Ver services/copyPerfecto.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/reelsTexto.ts:55",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "iaRateLimiter"
+        ]
+      }
+    },
+    "/api/reels/proximo-hueco": {
+      "get": {
+        "tags": [
+          "reels"
+        ],
+        "operationId": "getApiReelsProximoHueco",
+        "description": "Comentario en el código: GET /api/reels/proximo-hueco?plataforma=Instagram&videoOrigen=\u003curl del vídeo fuente> Un Reel por día y plataforma, 48 h entre clips del mismo vídeo y la mejor hora conocida.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          }
+        },
+        "x-source": "server/routes/reelsProgramacion.ts:21",
+        "x-autenticacion": "middleware"
       }
     },
     "/api/referidos": {
@@ -10820,7 +10931,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/posts.ts:206",
+        "x-source": "server/routes/posts.ts:207",
         "x-autenticacion": "middleware"
       }
     },
@@ -12493,7 +12604,7 @@
           "upload"
         ],
         "operationId": "getApiUploadTestSupabase",
-        "description": "Comentario en el código: requireAuth: este diagnóstico sube un fichero al bucket y devuelve el nombre del bucket y el detalle del error de Supabase si falla. No es algo que deba contestar a cualquiera.",
+        "description": "Comentario en el código: Solo admin: sube un fichero al bucket COMPARTIDO y devuelve su nombre y el error de Supabase; es de la plataforma.",
         "parameters": [
           {
             "$ref": "#/components/parameters/BandIdActiva"
@@ -12518,7 +12629,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/upload.ts:338",
+        "x-source": "server/routes/upload.ts:337",
         "x-autenticacion": "middleware"
       }
     },
@@ -13164,7 +13275,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:419",
+        "x-source": "server/routes/reels.ts:151",
         "x-autenticacion": "middleware"
       }
     },

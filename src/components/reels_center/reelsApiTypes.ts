@@ -87,6 +87,13 @@ export interface ClipReanalysisResponse {
 }
 
 /** Respuesta del corte físico del vídeo. */
+/** Informe del control de calidad del clip (server/utils/controlCalidadClip.ts). */
+export interface InformeCalidadClip {
+  aprobado: boolean;
+  bloqueantes: Array<{ codigo: string; mensaje: string }>;
+  avisos: Array<{ codigo: string; mensaje: string }>;
+}
+
 export interface CutClipResponse {
   success?: boolean;
   error?: string;
@@ -95,6 +102,12 @@ export interface CutClipResponse {
   fileSize?: number;
   burnedSubtitles?: boolean;
   storedPermanently?: boolean;
+  /** Con qué derechos se registró el clip; null = no autopublicable. */
+  rights?: "canal_de_la_banda" | "declarado_por_la_banda" | null;
+  loopApplied?: boolean;
+  hookBurned?: boolean;
+  /** null = el servidor no pudo medirlo; ausente = servidor antiguo. */
+  quality?: InformeCalidadClip | null;
   vttContent?: string;
   subtitles?: SubtitleCue[];
   words?: WordOffset[];
@@ -132,4 +145,47 @@ export interface SocialAccountsResponse {
 export interface PublishNowResponse {
   success?: boolean;
   error?: string;
+  /** 'asistido': no se puede publicar solo y `error` explica qué hacer. */
+  modo?: "publicado" | "asistido" | "fallido";
+  publishedUrl?: string;
+}
+
+/** Un candidato de copy perfecto (server/services/copyPerfecto.ts). */
+export interface CandidatoCopyApi {
+  copy: {
+    hookText: string;
+    recommendedCopy: string;
+    copyTikTok: string;
+    copyYouTube: string;
+    copyFacebook: string;
+    hashtags: string[];
+  };
+  arquetipo: string;
+  auditoria: { puntuacion: number; apto: boolean; problemas: Array<{ campo: string; codigo: string; gravedad: "error" | "aviso"; mensaje: string }> };
+}
+
+/** Respuesta de `/api/reels/copy-perfecto`. */
+export interface CopyPerfectoResponse {
+  success?: boolean;
+  error?: string;
+  generatedByAI?: boolean;
+  ganador?: CandidatoCopyApi;
+  alternativas?: CandidatoCopyApi[];
+  motivo?: string;
+}
+
+/** Respuesta de `/api/reels/aprendizaje` (server/utils/aprendizajeReels.ts). */
+export interface AprendizajeReelsResponse {
+  success?: boolean;
+  resumen?: { reelsMedidos: number; rewatchMediano: number | null; tasaCompartirMediana: number | null; tasaGuardarMediana: number | null };
+  recomendacion?: { formato: "loop_corto" | "corto" | "medio" | "largo"; modo: "explorando" | "aprovechando"; muestras: number; explicacion: string };
+}
+
+/** Respuesta de `/api/reels/proximo-hueco` (server/utils/cadenciaReels.ts). */
+export interface ProximoHuecoResponse {
+  success?: boolean;
+  fecha?: string;
+  hora?: string;
+  origenHora?: "datos" | "fallback";
+  motivo?: string;
 }

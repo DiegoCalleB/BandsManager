@@ -138,15 +138,15 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 
 ## 💡 Ideas por explorar
 
-### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (preguntas abiertas, 2026-10-13)
+### Agente de chat: herramientas de Supabase, botón de aprobar y memoria (investigado 2026-10-14)
 
-* **Qué:** cuatro preguntas sobre el agente del chat, anotadas tal cual y **sin investigar todavía**:
-  1. ¿Tiene sentido que el agente del chat tenga **deshabilitados los agentes/herramientas de Supabase**?
-  2. ¿Tiene sentido que el botón de **«aprobar todas las acciones»** salga **arriba** de la conversación y no abajo del todo?
-  3. ¿El chat **tiene memoria**? (qué recuerda entre mensajes y entre sesiones, y dónde se guarda)
-  4. ¿Se podría **limpiar el historial cada X tiempo**? (cada cuánto, y qué se borra y qué se conserva)
-* **Por qué importa:** sin comprobar. Las preguntas 1 y 4 tocan seguridad y privacidad (qué puede hacer el agente sobre la base de datos y cuánto tiempo se guardan las conversaciones); la 2 es de uso; la 3 decide si el agente puede ser coherente a lo largo del tiempo.
-* **Estado:** pendiente de investigar y decidir. Mirar antes `server/routes/chat.ts`, `server/utils/conversacionChat.ts` y `src/components/chatbot/`.
+* **Las cuatro preguntas, con lo que se comprobó en el código** (`server/routes/chat.ts`, `server/utils/conversacionChat.ts`, `src/components/chatbot/`):
+  1. **¿Agentes/herramientas de Supabase deshabilitados?** No lo están. El modelo puede *proponer* escrituras (`propose_add_lead`, `propose_concert`, `propose_tour`, ensayos, logos, disparar un agente…) y **nada se ejecuta hasta que la persona pulsa confirmar**; el servidor decide la banda por la sesión (`bandaDelAgente`) y la configuración de autonomía la lee de su propio estado (`getAutonomyConfigForBand`), no de lo que manda el navegador. Lo que sí está apagado por defecto es el **atajo por palabras clave** («ejecuta el scout en Sevilla»): el interruptor `agentsEnabled` vive en `localStorage` con valor `false` y el servidor lo respeta; el camino del modelo (`propose_agent_trigger`) sigue disponible. Sin auditar todavía: qué roles pueden confirmar cada acción (el chat dice «poder absoluto de escritura» en su prompt) y que cada endpoint al que llama el botón compruebe rol y banda.
+  2. **«Aprobar todos» arriba o abajo.** El botón ya está en la cabecera de la tarjeta «Propuestas del Manager» de cada mensaje (`ChatMessageBubble.tsx`), solo con más de una propuesta pendiente. Esa tarjeta sale *debajo* del texto de la respuesta, así que en la última respuesta queda al final de la conversación. Mejorarlo (barra fija sobre la conversación, o encima del texto) es decisión de diseño.
+  3. **Memoria.** No hay memoria en el servidor: no se guarda ninguna conversación. El historial vive en el `localStorage` del navegador (`bandmanager_chat_messages_<usuario>_<banda>`); al servidor le llegan como mucho los últimos 20 turnos de 4.000 caracteres (`acotarHistorial`) y el cliente manda los últimos 8. Entre dispositivos no se comparte y al borrar los datos del navegador se pierde. Lo único que «aprende» es el resumen global de feedback de pitches que se mete en el prompt.
+  4. **Limpiar el historial cada X tiempo.** Hoy **nunca caduca y sobrevive al cierre de sesión**: `handleLogout` borra token y usuario pero no las claves del chat, así que en un ordenador compartido el siguiente usuario del navegador puede abrir la conversación anterior (con salas, borradores de correo y datos de contacto). No hay nada que limpiar en el servidor. Solo hay un botón manual de reiniciar en la cabecera del chat.
+* **Arreglado en esta tanda:** (a) el chat ya no enseña al usuario el mensaje interno del proveedor de IA cuando falla (iba en el texto de una respuesta 200 que el lint de `err.message` no ve); ahora da un código de error y el detalle va al log y a Sentry. (b) Fuera los restos de los agentes de GitHub Actions: el cliente leía `bandmanager_github_pat/owner/repo/ref` de `localStorage` y los mandaba como cabeceras `x-github-*` que el servidor ya ignoraba, y nadie guardaba esas claves; un test lo vigila.
+* **Pendiente de decidir (producto/privacidad):** política de retención del historial: borrarlo al cerrar sesión, y/o caducarlo a los N días (propuesta: borrar al cerrar sesión y caducar a los 30 días). Colocación de «Aprobar todos». Y revisar el valor por defecto `"Huelva"` que el atajo de agentes pone cuando no detecta región (`chat.ts`): es un dato de una zona concreta en código multi-banda.
 
 ---
 
@@ -202,7 +202,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
 
 * **Qué:**
-  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026):** `autoEnrichLead` carga `spanishFestivalsDB` con `import()` en la primera llamada y ese módulo no estaba simulado; ahora el test lo carga antes, fuera del límite de 5 s (no se reprodujo el timeout en local: la causa es la más probable, no una medida).
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026), en dos pasos:** primero se sospechó de la carga dinámica de `spanishFestivalsDB` y se precargó (no era eso: volvió a fallar en CI). La causa real era la **red**: `fetchUrlExternaSegura` hacía 12 consultas DNS reales a `sala-real.es` por ejecución del test y, en un ejecutor con internet, a veces tardaban más que los 5 s del test; el guardado tardío del primer test aparecía entonces en el segundo (`permitirVaciar: false`). Ahora el test sustituye `fetchUrlExternaSegura` y un último test vigila que no se resuelva ningún dominio por DNS. Barrido de todo `server/`: solo había otro test con DNS real (`roformerStems.test.ts`, hacia `api.github.com`); ahora simula la respuesta DNS y además comprueba el caso de un dominio que resuelve a una IP privada.
   2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
 * **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
 * **Estado:** (1) arreglado; (2) pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
@@ -212,6 +212,17 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### Hecho: una release ya no pone `main` en rojo por `docs/api`
 * **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
 * **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
+
+---
+
+### Auditoría de errores internos que llegan al cliente (octubre 2026)
+
+* **Qué:** la regla de lint de `err.message` solo ve `res.status(5xx).json(...err.message...)`. Barrido a mano de las demás formas (`details`, `body: { error }` armado a mano, respuestas 200 con el texto del error):
+  * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
+  * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
+  * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
+* **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
 
 ---
 
@@ -233,7 +244,7 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ---
 
 ### Landing pública (`/`) — siguientes pasos
-* **Hecho (octubre 2026):** `PublicLanding` en `/` para quien no tiene sesión (la PWA instalada y los enlaces con query/hash van directos al login); `/login` abre el formulario sin landing; capturas con datos de demo ficticios generadas con `LANDING_SHOTS=1 npx playwright test --project=visual landing-capturas` (salen en `public/landing/`).
+* **Hecho (octubre 2026):** `PublicLanding` en `/` para quien no tiene sesión (la PWA instalada y los enlaces con query/hash van directos al login); `/login` abre el formulario sin landing; capturas con datos de demo ficticios generadas entonces con `LANDING_SHOTS=1 npx playwright test --project=visual landing-capturas` (salen en `public/landing/`). Ese proyecto `visual` ya no existe en `playwright.config.ts`.
 * **Banda de demo (octubre 2026):** `e2e/fixtures/demoBand.ts` (miembros, repertorio, setlist, leads, calendario, fans, métricas y EPK) + retratos y escenas ilustrados generados con `node scripts/landing/generar-demo-assets.mjs` (en `public/landing/demo/`). Son ilustraciones, no fotos: para fotos reales de la banda, sustituye esos ficheros y cambia las rutas del fixture. La landing enseña también el dossier público y la página de fans.
 * **Dos bandas en la demo:** la cuenta de demo lleva una banda de ejemplo y Ruta 66 (calendario conjunto, selector «¿Quién toca hoy?»). Ruta 66 solo tiene eventos ficticios; faltan logo (`importar_fotos.py logo ruta66 …`), fotos, miembros y repertorio reales para su dossier y su página de fans.
 * **Pendiente:** precios visibles (decisión de Diego), versión en inglés, SEO real (la app es una SPA: valorar una página estática/prerender para la raíz), páginas legales (privacidad, condiciones) enlazadas desde el pie, vídeo corto del flujo agente → aprobación, y revisar las capturas cuando cambie la UI.

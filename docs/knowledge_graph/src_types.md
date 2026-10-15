@@ -44,6 +44,7 @@ _Sin dependencias salientes directas._
 - [[server_db_deals|server/db/deals.ts]] *(from #db)*
 - [[server_db_fans|server/db/fans.ts]] *(from #db)*
 - [[server_db_pitchLearning|server/db/pitchLearning.ts]] *(from #db)*
+- [[server_db_reelMetricas|server/db/reelMetricas.ts]] *(from #db)*
 - [[server_db_rehearsals|server/db/rehearsals.ts]] *(from #db)*
 - [[server_db_schedule|server/db/schedule.ts]] *(from #db)*
 - [[server_db_social|server/db/social.ts]] *(from #db)*
@@ -70,6 +71,7 @@ _Sin dependencias salientes directas._
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
 - [[server_services_agentIntelligence|server/services/agentIntelligence.ts]] *(from #agent)*
 - [[server_services_letraCancion|server/services/letraCancion.ts]] *(from #service)*
+- [[server_services_metricasReels|server/services/metricasReels.ts]] *(from #service)*
 - [[server_services_socialPublisher|server/services/socialPublisher.ts]] *(from #service)*
 - [[server_services_socialRadarService|server/services/socialRadarService.ts]] *(from #service)*
 - [[server_services_spotifyService|server/services/spotifyService.ts]] *(from #service)*
@@ -79,11 +81,13 @@ _Sin dependencias salientes directas._
 - [[server_tiposRespuestasIA|server/tiposRespuestasIA.ts]] *(from #service)*
 - [[server_utils_analisisAcordes|server/utils/analisisAcordes.ts]] *(from #service)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(from #service)*
+- [[server_utils_cadenciaReels|server/utils/cadenciaReels.ts]] *(from #service)*
 - [[server_utils_cifradoSincronizado|server/utils/cifradoSincronizado.ts]] *(from #service)*
 - [[server_utils_emailTemplate|server/utils/emailTemplate.ts]] *(from #service)*
 - [[server_utils_melodicIdeaValidator|server/utils/melodicIdeaValidator.ts]] *(from #service)*
 - [[server_utils_musicalDna|server/utils/musicalDna.ts]] *(from #service)*
 - [[server_utils_perfectSetlistPlanner|server/utils/perfectSetlistPlanner.ts]] *(from #service)*
+- [[server_utils_programacionPosts|server/utils/programacionPosts.ts]] *(from #service)*
 - [[server_utils_setlistAIAnalyzer|server/utils/setlistAIAnalyzer.ts]] *(from #service)*
 - [[server_utils_setlistImport|server/utils/setlistImport.ts]] *(from #service)*
 - [[server_utils_templateOptimizer|server/utils/templateOptimizer.ts]] *(from #service)*
@@ -597,7 +601,11 @@ _Sin dependencias salientes directas._
 
 ## 🧪 Tests que lo cubren
 - `server/services/__tests__/calendarConflictService.test.ts`
+- `server/services/__tests__/metricasReels.test.ts`
+- `server/services/__tests__/socialPublisher.test.ts`
+- `server/utils/__tests__/cadenciaReels.test.ts`
 - `server/utils/__tests__/perfectSetlistPlanner.test.ts`
+- `server/utils/__tests__/programacionPosts.test.ts`
 - `src/audit/mezclaBaseIdea.test.ts`
 - `src/audit/mezclaPistasAtril.test.tsx`
 - `src/audit/tomasConFondoAtril.test.tsx`
