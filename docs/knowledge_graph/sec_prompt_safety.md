@@ -31,8 +31,10 @@ Sanitiza datos externos de salas y correos entrantes antes de inyectarlos en pro
 - [[server_routes_agent|server/routes/agent.ts]] *(from #agent)*
 - [[server_routes_campanaConcierto|server/routes/campanaConcierto.ts]] *(from #route)*
 - [[server_routes_deals|server/routes/deals.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_services_pitchJudge|server/services/pitchJudge.ts]] *(from #service)*
 - [[server_services_sentimentAnalysis|server/services/sentimentAnalysis.ts]] *(from #service)*
+- [[server_utils_auditoriaCopyReel|server/utils/auditoriaCopyReel.ts]] *(from #service)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(from #service)*
 - [[server_utils_chatPromptBloques|server/utils/chatPromptBloques.ts]] *(from #service)*
 - [[service_pitch_engine|Pitch Engine & Multi-Model Routing]] *(from #service)*

@@ -62,6 +62,7 @@ import type { BandaRegistradaGuardada } from '../stateTypes.js';
 import type { LeadDescubierto } from '../utils/scoutLeads.js';
 import type { RespuestaBusquedaPlaces, RespuestaIA } from './leads/tiposScout.js';
 import type { CampanaCruda, PitchRedactado, RegistroEjecucionAgente } from './tiposAgente.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -204,10 +205,7 @@ router.post('/trigger-agent', requireCronOrAuth, async (req, res) => {
         detalles: { error: err.stack, params },
       });
 
-      return res.status(500).json({
-        success: false,
-        error: `Error al ejecutar el Agente Enviador: ${err.message}`,
-      });
+      return responderError(res, err, "Error al ejecutar el Agente Enviador.");
     }
   }
 
@@ -387,10 +385,7 @@ Devuelve ÚNICAMENTE el texto del mensaje/email listo para ser revisado por el u
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Redactor Supabase:', err);
-      return res.status(500).json({
-        success: false,
-        error: `Error en Agente Redactor: ${err.message}`,
-      });
+      return responderError(res, err, "Error en Agente Redactor.");
     }
   }
 
@@ -850,10 +845,7 @@ Devuelve EXCLUSIVAMENTE un JSON estricto con la estructura:
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error en Agente Scout Supabase:', err);
-      return res.status(500).json({
-        success: false,
-        error: `Error en Agente Scout: ${err.message}`,
-      });
+      return responderError(res, err, "Error en Agente Scout.");
     }
   }
 
@@ -974,9 +966,7 @@ router.post(
     } catch (errCapturado) {
       const err = comoErrorCapturado(errCapturado);
       console.error('Error en responder-hilo interno:', err);
-      return res
-        .status(500)
-        .json({ success: false, error: err.message || 'Error interno' });
+      return responderError(res, err, 'Error interno');
     }
   }
 );
@@ -1013,7 +1003,7 @@ router.post('/agents/test-intel', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error en test-intel:', err);
-    return res.status(500).json({ success: false, error: err.message });
+    return responderError(res, err);
   }
 });
 
@@ -1179,10 +1169,7 @@ router.get('/agent-runs/:runId/jobs', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error fetching jobs from Supabase:', err);
-    return res.status(500).json({
-      success: false,
-      error: `Error al consultar trabajos del agente: ${err.message}`,
-    });
+    return responderError(res, err, "Error al consultar trabajos del agente.");
   }
 });
 
@@ -1236,7 +1223,7 @@ router.get('/agent-logs', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error al obtener agent-logs:', err);
-    res.status(500).json({ success: false, error: err.message, logs: [] });
+    res.status(500).json({ success: false, error: 'Error al obtener los registros del agente.', logs: [] });
   }
 });
 
@@ -1284,7 +1271,7 @@ router.post('/agent-logs', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error al insertar en agent-logs:', err);
-    res.status(500).json({ success: false, error: err.message });
+    responderError(res, err);
   }
 });
 
@@ -1332,10 +1319,7 @@ router.get('/admin/agent-funnel', requireAuth, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error('Error calculando agent-funnel:', err);
-    res.status(500).json({
-      success: false,
-      error: err.message || 'Error calculando el embudo de agentes.',
-    });
+    responderError(res, err, 'Error calculando el embudo de agentes.');
   }
 });
 

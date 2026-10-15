@@ -19,7 +19,7 @@ export interface ViralHookVariant {
 
 export interface HookDoctorDiagnosis {
   cringeScore: number;
-  estimatedRetention3s: number;
+  estimatedRetention3s: number | null;
   verdict: string;
   cringeReasons: string[];
   improvedHook: string;
@@ -431,7 +431,7 @@ export const ViralGrowthStudio: React.FC<ViralGrowthStudioProps> = ({
                   {/* Estimated Retention Badge */}
                   <div className="px-2.5 py-1 rounded-[var(--r-s)] bg-[var(--acc)]/15 text-[var(--ink)] text-micro font-mono font-bold flex items-center gap-1">
                     <TrendingUp className="w-3 h-3 text-[var(--acc-ink)]" />
-                    <span>Retención 0-3s: {doctorDiagnosis.estimatedRetention3s}%</span>
+                    <span title="Estimación de la IA, no una métrica real">Retención 0-3s: {doctorDiagnosis.estimatedRetention3s == null ? 'sin estimar' : `~${doctorDiagnosis.estimatedRetention3s}%`}</span>
                   </div>
                 </div>
               </div>

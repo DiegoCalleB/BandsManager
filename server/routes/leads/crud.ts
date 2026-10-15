@@ -19,6 +19,7 @@ import { getTargetBandId } from "../../utils/bandAccess.js";
 import { filterLeadsByActiveCampaign } from "../../utils/festivalDateFilter.js";
 import { searchFestivalByName, formatFestivalDates } from "../../utils/spanishFestivalsDB.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -112,7 +113,7 @@ router.get("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id:", error);
-    res.status(500).json({ success: false, error: error?.message || "Error al obtener la sala." });
+    responderError(res, error, "Error al obtener la sala.");
   }
 });
 
@@ -130,7 +131,7 @@ router.get("/leads/:id/messages", requireAuth, apiAutenticadaRateLimiter, async 
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in GET /api/leads/:id/messages:", error);
-    res.status(500).json({ error: error?.message || "Error al obtener el historial de conversación." });
+    responderError(res, error, "Error al obtener el historial de conversación.");
   }
 });
 
@@ -201,7 +202,7 @@ router.put("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, res
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in PUT /api/leads/:id:", error);
-    res.status(500).json({ error: error?.message || "Error al actualizar la sala." });
+    responderError(res, error, "Error al actualizar la sala.");
   }
 });
 
@@ -333,7 +334,7 @@ router.post("/leads", requireAuth, apiAutenticadaRateLimiter, async (req, res) =
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads:", error);
-    res.status(500).json({ error: error?.message || "Error al crear la sala." });
+    responderError(res, error, "Error al crear la sala.");
   }
 });
 
@@ -359,7 +360,7 @@ router.post("/leads/bulk-delete", requireAuth, apiAutenticadaRateLimiter, async 
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/bulk-delete:", error);
-    res.status(500).json({ error: error?.message || "Error al eliminar registros masivamente." });
+    responderError(res, error, "Error al eliminar registros masivamente.");
   }
 });
 
@@ -380,7 +381,7 @@ router.delete("/leads/:id", requireAuth, apiAutenticadaRateLimiter, async (req, 
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in DELETE /api/leads/:id:", error);
-    res.status(500).json({ error: error?.message || "Error al eliminar la sala." });
+    responderError(res, error, "Error al eliminar la sala.");
   }
 });
 

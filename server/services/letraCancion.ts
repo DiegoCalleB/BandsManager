@@ -47,7 +47,7 @@ export async function ejecutarLetraSincronizada(
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en letra-sincronizada:", err);
     status = 500;
-    return { status, body: { error: err?.message || "No se pudo procesar la letra." } };
+    return { status, body: { error: "No se pudo procesar la letra." } };
   } finally {
     terminarProgreso(clave, status >= 400 ? "No se pudo completar" : undefined);
     analisisAcordesEnCurso.delete(clave);

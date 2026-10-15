@@ -27,6 +27,7 @@ Detección de tonalidad (tono/clave musical) desde audio.
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[db_repertoire|Repertoire DB Handlers]] *(from #db)*
 - [[server_services_acordesCancion|server/services/acordesCancion.ts]] *(from #service)*
+- [[server_services_clipNovedades|server/services/clipNovedades.ts]] *(from #service)*
 - [[server_utils_chordDetection|server/utils/chordDetection.ts]] *(from #service)*
 - [[server_utils_refinarFronteras|server/utils/refinarFronteras.ts]] *(from #service)*
 

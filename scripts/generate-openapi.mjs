@@ -482,8 +482,12 @@ if (MODO_CHECK) {
   }
   // Los números de línea (x-source, #L12, fichero.ts:12) cambian con cualquier edición del fichero y no son
   // contrato: se ignoran, para que mover una ruta o añadir un comentario no ponga el CI en rojo.
-  const sinLineas = (t) => t.replace(/(\.tsx?):\d+/g, "$1:N").replace(/#L\d+/g, "#LN");
-  const igual = (f, v) => fs.existsSync(f) && sinLineas(fs.readFileSync(f, "utf8")) === sinLineas(v);
+  // La versión (`info.version`) sale de package.json y la sube release-please en su propio PR, que no
+  // regenera estos ficheros: comparar la versión pondría `main` en rojo en cada release sin que nada del
+  // contrato haya cambiado. Se ignora solo ese campo, anclado a su título (no otros "version" de esquemas).
+  const sinVersion = (t) => t.replace(/("title":\s*"BandManager\.io API",\s*"version":\s*")[^"]*"/, '$1X"');
+  const normalizar = (t) => sinVersion(t.replace(/(\.tsx?):\d+/g, "$1:N").replace(/#L\d+/g, "#LN"));
+  const igual = (f, v) => fs.existsSync(f) && normalizar(fs.readFileSync(f, "utf8")) === normalizar(v);
   if (!igual(SALIDA_JSON, json) || !igual(SALIDA_HTML, html) || !igual(SALIDA_MD, referenciaMd)) {
     console.error("[openapi] docs/api no coincide con el código. Ejecuta: node scripts/generate-openapi.mjs");
     process.exit(1);

@@ -36,6 +36,7 @@ Orquestación de los agentes de booking: disparo manual/cron (`/trigger-agent`),
 - [[server_stateTypes|server/stateTypes.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_agentFunnel|server/utils/agentFunnel.ts]] *(Layer: #agent, Domain: #system)*
 - [[server_utils_bandDna|server/utils/bandDna.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_errorHttp|server/utils/errorHttp.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_placesPhoto|server/utils/placesPhoto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_redactorAlcance|server/utils/redactorAlcance.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_scoutLeads|server/utils/scoutLeads.ts]] *(Layer: #service, Domain: #booking)*

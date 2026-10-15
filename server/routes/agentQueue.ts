@@ -11,6 +11,7 @@ import {
   pruneOldJobs
 } from "../services/agentQueueService.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { responderError } from '../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get("/stats", requireAuth, async (req, res) => {
     return res.json({ success: true, stats });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    return res.status(500).json({ success: false, error: error?.message || "Error al obtener estadísticas de la cola." });
+    return responderError(res, error, "Error al obtener estadísticas de la cola.");
   }
 });
 
@@ -40,7 +41,7 @@ router.get("/metrics", requireAuth, async (req, res) => {
     return res.json({ success: true, ...data });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    return res.status(500).json({ success: false, error: error?.message || "Error al obtener métricas de telemetría." });
+    return responderError(res, error, "Error al obtener métricas de telemetría.");
   }
 });
 
@@ -55,7 +56,7 @@ router.post("/prune", requireAuth, async (req, res) => {
     return res.json({ success: true, deletedCount, message: `Poda completada: ${deletedCount} trabajo(s) eliminados.` });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    return res.status(500).json({ success: false, error: error?.message || "Error al podar la cola." });
+    return responderError(res, error, "Error al podar la cola.");
   }
 });
 
@@ -81,7 +82,7 @@ router.post("/enqueue", requireAuth, async (req, res) => {
     return res.json({ success: true, jobId, message: `Trabajo ${jobId} encolado para el agente '${agentType}'.` });
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
-    return res.status(500).json({ success: false, error: error?.message || "Error al encolar el trabajo." });
+    return responderError(res, error, "Error al encolar el trabajo.");
   }
 });
 

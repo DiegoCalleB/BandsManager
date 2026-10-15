@@ -17,6 +17,7 @@ import { findVenuesBySimilarArtists } from "../../services/similarBandsVenueMatc
 import { searchPublicCulturalOpportunities } from "../../services/publicCulturalEventsRadarService.js";
 import { comoErrorCapturado } from '../../../src/utils/errorCapturado.js';
 import type { CandidatoCruzado, CandidatoScout, ContactoExtraido, LeadConocido, RespuestaBusquedaPlaces, RespuestaIA, RespuestaScoutIA } from "./tiposScout.js";
+import { responderError } from '../../utils/errorHttp.js';
 
 const router = express.Router();
 
@@ -403,7 +404,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con este formato:
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/places-search:", error);
-    res.status(500).json({ error: error?.message || "Error al buscar salas en Google Places." });
+    responderError(res, error, "Error al buscar salas en Google Places.");
   }
 });
 
@@ -809,7 +810,7 @@ Responde estrictamente con un JSON con la estructura:
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/campaign-mass-search:", error);
-    res.status(500).json({ error: error?.message || "Error al realizar la búsqueda masiva de recintos para la campaña." });
+    responderError(res, error, "Error al realizar la búsqueda masiva de recintos para la campaña.");
   }
 });
 
@@ -942,7 +943,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con la estructura:
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/extract-emails:", error);
-    res.status(500).json({ error: error?.message || "Error al extraer correos electrónicos de las salas." });
+    responderError(res, error, "Error al extraer correos electrónicos de las salas.");
   }
 });
 
@@ -1093,7 +1094,7 @@ router.post(["/import-places", "/leads/import-places"], requireAuth, async (req,
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/import-places:", error);
-    res.status(500).json({ error: error?.message || "Error al importar salas de Google Places." });
+    responderError(res, error, "Error al importar salas de Google Places.");
   }
 });
 
@@ -1116,10 +1117,7 @@ router.post(["/multi-source-venues", "/leads/multi-source-venues"], requireAuth,
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/multi-source-venues:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al realizar la búsqueda multi-fuente de recintos."
-    });
+    return responderError(res, error, "Error al realizar la búsqueda multi-fuente de recintos.");
   }
 });
 
@@ -1155,10 +1153,7 @@ router.post(["/similar-artists-venues", "/leads/similar-artists-venues"], requir
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/similar-artists-venues:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al buscar recintos por afinidad artística."
-    });
+    return responderError(res, error, "Error al buscar recintos por afinidad artística.");
   }
 });
 
@@ -1178,10 +1173,7 @@ router.post(["/public-cultural-radar", "/leads/public-cultural-radar"], requireA
   } catch (errorCapturado) {
     const error = comoErrorCapturado(errorCapturado);
     console.error("Error in POST /api/leads/public-cultural-radar:", error);
-    return res.status(500).json({
-      success: false,
-      error: error?.message || "Error al escanear oportunidades de contratación pública."
-    });
+    return responderError(res, error, "Error al escanear oportunidades de contratación pública.");
   }
 });
 

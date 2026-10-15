@@ -202,17 +202,27 @@ Formato de cada entrada: **qué es**, **por qué importa** (impacto real, no "es
 ### Deuda: un test que da timeout en CI y los ficheros del Dashboard sobre 600 líneas (2026-10-13)
 
 * **Qué:**
-  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026):** `autoEnrichLead` carga `spanishFestivalsDB` con `import()` en la primera llamada y ese módulo no estaba simulado; ahora el test lo carga antes, fuera del límite de 5 s (no se reprodujo el timeout en local: la causa es la más probable, no una medida).
+  1. `server/__tests__/autoEnrichRespetarVacios.test.ts` (2 tests) superó el límite de 5 s en una ejecución de CI de un PR que solo tocaba documentación; al repetirla pasó. Todo lo que usa está simulado (la red incluida), así que parece lento de carga de módulos en un ejecutor cargado. **Arreglado (octubre 2026), en dos pasos:** primero se sospechó de la carga dinámica de `spanishFestivalsDB` y se precargó (no era eso: volvió a fallar en CI). La causa real era la **red**: `fetchUrlExternaSegura` hacía 12 consultas DNS reales a `sala-real.es` por ejecución del test y, en un ejecutor con internet, a veces tardaban más que los 5 s del test; el guardado tardío del primer test aparecía entonces en el segundo (`permitirVaciar: false`). Ahora el test sustituye `fetchUrlExternaSegura` y un último test vigila que no se resuelva ningún dominio por DNS. Barrido de todo `server/`: solo había otro test con DNS real (`roformerStems.test.ts`, hacia `api.github.com`); ahora simula la respuesta DNS y además comprueba el caso de un dominio que resuelve a una IP privada.
   2. Cuatro ficheros del Dashboard siguen por encima de 600 líneas, congelados en el baseline de `verify:tamano` sin crecer: `dashboard/SocialAndFansGrowthChart.tsx` (784), `Dashboard.tsx` (752), `dashboard/ProfileCompletenessCard.tsx` (654) y `dashboard/widgets/CalendarWidget.tsx` (617). `DashboardWidgetGrid.tsx` ya baja de 600 (octubre 2026: la barra de edición y el catálogo «Añadir widget» salieron a `BarraEdicionPanel` y `AddWidgetModal`, y `widgetNuevo` a `utils/panelWidgets.ts`).
 * **Por qué importa:** (1) un test que falla sin motivo real corta fusiones y enseña a ignorar la CI en rojo; no se arregla saltándolo. (2) Los topes solo frenan el crecimiento: mientras sigan sobre 600 líneas, cada cambio ahí cuesta más de revisar.
 * **Estado:** (1) arreglado; (2) pendiente. Para (2), el siguiente es `SocialAndFansGrowthChart.tsx`, en un PR que no mezcle refactor con comportamiento.
 
 ---
 
-### Deuda: cada release deja `docs/api` con la versión anterior
-* **Qué:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionarlo `verify:docs` (`generate-openapi --check`) se pone rojo en `main` y en todos los PR (pasó con la 3.0.0, octubre 2026; se arregló regenerando a mano).
-* **Candidatos:** declarar `docs/api/openapi.json` en `extra-files` de `release-please-config.json` (`$.info.version`) y que `index.html` no lleve la versión; o quitar la versión del documento generado; o regenerar en el propio PR de release.
-* **Estado:** pendiente. Hasta entonces, tras fusionar una release: `node scripts/generate-openapi.mjs` y commit.
+### Hecho: una release ya no pone `main` en rojo por `docs/api`
+* **Qué pasaba:** `docs/api/openapi.json` y `docs/api/index.html` llevan `info.version = package.json.version`. El PR de release-please sube la versión del `package.json` pero no regenera esos ficheros, así que al fusionar la 3.0.0 `verify:docs` (`generate-openapi --check`) se puso rojo en `main` y en todos los PR (octubre 2026).
+* **Arreglo:** el modo `--check` ignora solo ese campo (anclado al título de la API, no a otros `"version"` de esquemas), igual que ya ignoraba los números de línea. El contrato sigue vigilado; la versión que muestra la documentación se refresca la próxima vez que se regenera. Descartado tocar `release-please-config.json` a ciegas: no se puede probar en local y un error ahí rompe las releases.
+
+---
+
+### Auditoría de errores internos que llegan al cliente (octubre 2026)
+
+* **Qué:** la regla de lint de `err.message` solo ve `res.status(5xx).json(...err.message...)`. Barrido a mano de las demás formas (`details`, `body: { error }` armado a mano, respuestas 200 con el texto del error):
+  * **Arreglado:** el chat (texto de disculpa con el error de la IA), `/test-supabase` (ahora solo admin), el 500 de la letra sincronizada, `POST /deals` y el audio de referencia de la generación musical.
+  * **Pendiente, decisión de diseño:** los diagnósticos de audio (`server/routes/ai_music/*`) mandan `details: diag.errorDetail` = mensaje crudo del proveedor o `stderr` de ffmpeg, y el cliente lo pinta en el panel de error de la separación (`src/utils/separacionIris.ts`). Propuesta: mantener título, mensaje y consejo (los escribe el equipo) y enseñar `details` solo a admin. Mismo caso en `audioTransposeService` (`error: err.stderr || err.stdout || …`).
+  * **Pendiente, a propósito:** la transcripción de letra (502) enseña «el motivo de cada modelo» (nombres de modelo y un trozo de la respuesta del proveedor, ≤200 caracteres). Es una decisión de producto explícita («si no se puede transcribir, se devuelve el error») y a veces ayuda (p. ej. «¿audio sin voz?»); si se quiere cerrar, mapear a mensajes propios en vez de pasar el texto.
+  * **Arreglado en el PR de `responderError`:** `leads/enrichment.ts` devolvía `details: String(error)` en un 500.
+* **Otros hallazgos de la auditoría, sin tocar:** `storage-stats` y `cleanup-unused-media` (`upload.ts`) llevan una lista fija de bandas por nombre («Ruta 66», «Arritmia», «Vértice») en código multi-banda; el atajo de agentes del chat usa `"Huelva"` como región por defecto.
 
 ---
 
