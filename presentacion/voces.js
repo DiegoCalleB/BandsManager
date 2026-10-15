@@ -138,10 +138,13 @@
     var leer = function () { mover(el, null); esperar(acabar, Math.max(900, say.length * 52)); };
     if (m) {
       var audio = libre(); audio._el = el; audio.volume = volumen;
-      audio.onended = acabar; audio.onerror = function () { leer(); };
+      // guardia: si el audio se atasca al cargar o el navegador nunca avisa de que ha terminado, la película no se queda parada:
+      // pasado lo que dura la frase y un margen, sigue igual
+      var guardia = esperar(function () { try { audio.pause(); } catch (_) { /* nada que parar */ } acabar(); }, m.d / VEL * 1000 + 4000);
+      audio.onended = function () { limpiar(guardia); acabar(); }; audio.onerror = function () { limpiar(guardia); leer(); };
       audio.src = 'audio/voces/' + m.f + '?v=' + (m.h || m.v || ''); // el nombre del mp3 sale del texto: el ?v= evita servir de la caché un audio viejo
       audio.playbackRate = VEL;
-      audio.play().then(function () { mover(el, m.e || null, audio, avanzar, antes || 0); }).catch(function () { leer(); });
+      audio.play().then(function () { mover(el, m.e || null, audio, avanzar, antes || 0); }).catch(function () { limpiar(guardia); leer(); });
       return;
     }
     // Sin audio grabado: voz española del navegador o, si no hay, el tiempo de leer la frase
