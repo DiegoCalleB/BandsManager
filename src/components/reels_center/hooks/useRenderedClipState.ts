@@ -3,6 +3,7 @@
  * Extraído de ReelsCenter.tsx (Strangler Fig) para respetar SRP y el límite de tamaño de AGENTS.md §5.6.
  */
 import React, { useEffect, useState } from "react";
+import type { InformeCalidadClip } from "../reelsApiTypes";
 
 /** Dependencias que el componente contenedor inyecta al hook. */
 export interface RenderedClipStateParams {
@@ -46,6 +47,9 @@ export function useRenderedClipState({ localVideoUrl }: RenderedClipStateParams)
   // disco del servidor hasta el próximo despliegue.
   const [renderedStoredPermanently, setRenderedStoredPermanently] =
     useState<boolean>(false);
+
+  // Control de calidad del último render: undefined = aún no hay render; null = no se pudo medir.
+  const [renderedQuality, setRenderedQuality] = useState<InformeCalidadClip | null | undefined>(undefined);
 
   // Cuándo se guardó el análisis que se está viendo, si viene recuperado de la BD en vez de
   // recién calculado. null cuando el análisis en pantalla es fresco (o no hay ninguno).
@@ -91,5 +95,5 @@ export function useRenderedClipState({ localVideoUrl }: RenderedClipStateParams)
     };
   }, []);
 
-  return { renderedClipUrl, setLoadedFromSaveAt, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, setWordOffsets, setCurrentSubtitleText, setCuttingError, setIsCuttingVideo, setCuttingProgressText, setSinTranscripcionReal, renderedSubUrl, setThumbnailCapturedSuccess, subtitleCues, setPackDownloadedSuccess, loadedFromSaveAt, packDownloadedSuccess, thumbnailCapturedSuccess, renderedBurnedSubs, currentSubtitleText, renderedClipSize, renderedStoredPermanently, sinTranscripcionReal, wordOffsets, isCuttingVideo, cuttingProgressText, cuttingError };
+  return { renderedQuality, setRenderedQuality, renderedClipUrl, setLoadedFromSaveAt, setRenderedClipUrl, setRenderedClipSize, setRenderedBurnedSubs, setRenderedStoredPermanently, setRenderedSubUrl, setSubtitleCues, setWordOffsets, setCurrentSubtitleText, setCuttingError, setIsCuttingVideo, setCuttingProgressText, setSinTranscripcionReal, renderedSubUrl, setThumbnailCapturedSuccess, subtitleCues, setPackDownloadedSuccess, loadedFromSaveAt, packDownloadedSuccess, thumbnailCapturedSuccess, renderedBurnedSubs, currentSubtitleText, renderedClipSize, renderedStoredPermanently, sinTranscripcionReal, wordOffsets, isCuttingVideo, cuttingProgressText, cuttingError };
 }

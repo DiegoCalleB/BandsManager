@@ -27,6 +27,8 @@ Detección de los fragmentos con más potencial viral.
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_routes_reelsTexto|server/routes/reelsTexto.ts]] *(from #route)*
+- [[server_services_copyPerfecto|server/services/copyPerfecto.ts]] *(from #service)*
 - [[server_utils_reelStrategy|server/utils/reelStrategy.ts]] *(from #service)*
 
 ---

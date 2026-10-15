@@ -5,7 +5,6 @@ import path from "path";
 import { servirIndex } from "./server/utils/cabeceraIdioma.js";
 import { baseUrlPublica } from "./server/utils/paginaConcierto.js";
 import * as XLSX from "xlsx";
-
 import { resolveResendApiKey } from "./server/services/transactionalEmail.js";
 import { Lead, Concert, SocialPost, Payment, Rehearsal, Song, Setlist } from "./src/types";
 
@@ -19,6 +18,7 @@ import { avisarGuardadoParcial } from "./server/utils/guardadoParcial.js";
 import { startSocialRadarScheduler } from "./server/services/socialRadarService.js";
 import { startAgentScheduler } from "./server/services/agentScheduler.js";
 import { startCalendarConflictScheduler } from "./server/services/calendarConflictService.js";
+import { iniciarWorkersDeReels } from "./server/services/workersReels.js";
 import { iniciarColaLetras } from "./server/services/colaLetras.js";
 import { initErrorTracking, captureError } from "./server/utils/errorTracking.js";
 import { responderError } from "./server/utils/errorHttp.js";
@@ -619,9 +619,9 @@ async function startServer() {
     }
     // Start booking agents scheduler (Enviador/Lector, ver server/services/agentScheduler.ts)
     try {
-      startAgentScheduler();
+      startAgentScheduler(); iniciarWorkersDeReels(); // el 2.º publica los Reels a su hora y mide lo publicado
     } catch (e) {
-      console.error("Error starting Agent Scheduler:", e);
+      console.error("Error starting Agent/Social Publisher Scheduler:", e);
     }
     // Barrido diario de choques de calendario (aviso por email, ver server/services/calendarConflictService.ts)
     try {
