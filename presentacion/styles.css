@@ -2353,3 +2353,10 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 /* En la película el diálogo va subtitulado y lo dice el retrato de quien habla: nada de burbujas (la de reacción, la de la escena del local,
    las de capítulo y la del cierre). Si una burbuja sigue saliendo en modo película, falta su clase aquí. */
 body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: none !important; }
+
+/* Cursor de mentira que pulsa «Reproducir» y salida hacia la película */
+.nx-cursor { position: fixed; z-index: 9; width: 30px; height: 30px; pointer-events: none; transform: translate(-6px, -4px); filter: drop-shadow(0 3px 6px #000a); background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 2l15 9-6.5 1.6L16 20l-3 1.3-3.5-7.6L5 17z' fill='white' stroke='black' stroke-width='1.2' stroke-linejoin='round'/></svg>") center / contain no-repeat; }
+.nx-cursor.clic { transform: translate(-6px, -4px) scale(.82); transition: transform .12s; }
+#gatePeli.pulsado { transform: scale(.96); background: #d2d2d2; transition: transform .12s, background .12s; }
+.nx-home { transition: transform .7s cubic-bezier(.5,0,.3,1), opacity .7s; }
+#gate.sale .nx-home { transform: scale(1.08); opacity: 0; }

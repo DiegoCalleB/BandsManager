@@ -387,6 +387,7 @@
     if (startsAtBeginning && !isScroll()) {
       document.body.classList.add('gate');
       const go = (withSound) => {
+        nxAudio.apaga();
         document.body.classList.remove('gate');
         gate.classList.add('out');
         setTimeout(() => gate.remove(), 700);
@@ -399,20 +400,49 @@
         corte = conCorte || corte; document.body.classList.toggle('corte', corte);
         const ir = () => { go(true); dispatchEvent(new KeyboardEvent('keydown', { key: 'p' })); };
         $$('.gate-btn').forEach((b) => { b.disabled = true; });
+        nxAudio.apaga(); gate.classList.add('sale');
         if (window.CineIdent) window.CineIdent.play(ir); else ir();
       };
       if ($('#gatePeli')) $('#gatePeli').onclick = peli(false);
       if ($('#gateCorto')) $('#gateCorto').onclick = peli(true);
       $('#gateSilent').onclick = () => go(false);
+      // Sonido sintetizado de la entrada (sin ficheros): «tuc» al elegir perfil, colchón suave mientras rueda el tráiler y apagado al reproducir
+      const nxAudio = (() => {
+        let c = null, pad = null;
+        const ctx = () => { try { if (!c) c = new (window.AudioContext || window.webkitAudioContext)(); return c; } catch (e) { return null; } };
+        const nota = (f, t0, dur, g, tipo) => {
+          const a = ctx(); if (!a) return;
+          const o = a.createOscillator(), v = a.createGain(); o.type = tipo || 'sine'; o.frequency.value = f;
+          v.gain.setValueAtTime(0.0001, a.currentTime + t0); v.gain.exponentialRampToValueAtTime(g, a.currentTime + t0 + 0.02); v.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + t0 + dur);
+          o.connect(v); v.connect(a.destination); o.start(a.currentTime + t0); o.stop(a.currentTime + t0 + dur + 0.05);
+        };
+        return {
+          tuc: () => { nota(392, 0, 0.18, 0.18, 'triangle'); nota(587, 0.09, 0.3, 0.16, 'triangle'); },
+          pad: () => {
+            const a = ctx(); if (!a || pad) return;
+            const g = a.createGain(); g.gain.setValueAtTime(0.0001, a.currentTime); g.gain.exponentialRampToValueAtTime(0.07, a.currentTime + 2.5); g.connect(a.destination);
+            const os = [98, 147, 196, 247].map((f, i) => { const o = a.createOscillator(); o.type = i % 2 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = (i - 1.5) * 6; o.connect(g); o.start(); return o; });
+            pad = { g, os };
+          },
+          apaga: () => { const a = c; if (!a || !pad) return; const { g, os } = pad; pad = null; g.gain.cancelScheduledValues(a.currentTime); g.gain.setValueAtTime(g.gain.value, a.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 0.5); os.forEach((o) => o.stop(a.currentTime + 0.6)); },
+        };
+      })();
+      // Cursor de mentira que va hasta «Reproducir» y lo pulsa: la grabación lo usa para que se vea el clic (window.NxCursor)
+      window.NxCursor = (btn) => new Promise((res) => {
+        const r = btn.getBoundingClientRect(), cur = document.createElement('div');
+        cur.className = 'nx-cursor'; cur.style.left = (innerWidth * 0.72) + 'px'; cur.style.top = (innerHeight * 0.9) + 'px'; gate.appendChild(cur);
+        requestAnimationFrame(() => { cur.style.transition = 'left 1s cubic-bezier(.3,.7,.2,1), top 1s cubic-bezier(.3,.7,.2,1)'; cur.style.left = (r.left + r.width * 0.55) + 'px'; cur.style.top = (r.top + r.height * 0.6) + 'px'; });
+        setTimeout(() => { btn.classList.add('pulsado'); cur.classList.add('clic'); setTimeout(() => { res(); }, 260); }, 1150);
+      });
       // ¿Quién está viendo? → inicio con la película destacada: a los pocos segundos arranca el tráiler solo
       const vid = $('.nx-vid');
       const aInicio = (btn) => {
         if (gate.dataset.fase !== 'perfiles') return;
-        btn.classList.add('elegido');
+        btn.classList.add('elegido'); nxAudio.tuc();
         setTimeout(() => {
           gate.dataset.fase = 'home';
           ($('#gatePeli') || $('#gateSound')).focus({ preventScroll: true });
-          if (vid) setTimeout(() => { vid.play().then(() => gate.classList.add('trailer')).catch(() => {}); }, 2600);
+          if (vid) setTimeout(() => { vid.play().then(() => { gate.classList.add('trailer'); nxAudio.pad(); }).catch(() => {}); }, 2600);
         }, 700);
       };
       $$('.nx-perfil').forEach((b) => { b.onclick = () => aInicio(b); });
