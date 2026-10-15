@@ -3,7 +3,7 @@ import { buscarFormaGuitarra } from '../../utils/chordUtils';
 import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
 import { CUERDAS_BAJO, COLOR_FUNCION, lineaDeBajo, notasParaDibujar, type ContextoAcorde, type VistaAcorde } from '../../utils/vistaAcordes';
 import { ETIQUETA_VISTA } from './useVistaAcordes';
-import { useModoEnsayo } from './modoEnsayo';
+import { fijarModoEnsayo, useModoEnsayo } from './modoEnsayo';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
 import { Pentagrama } from './Pentagrama';
@@ -116,7 +116,7 @@ export const SelectorVistaAcorde: React.FC<{ vista: VistaAcorde; onCambio: (v: V
         key={v}
         type="button"
         aria-pressed={v === vista}
-        onClick={() => onCambio(v)}
+        onClick={() => { fijarModoEnsayo(false); onCambio(v); }}
         className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${v === vista ? 'bg-[var(--sunken)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
       >
         {ETIQUETA_VISTA[v]}
@@ -134,9 +134,9 @@ export const SelectorNivel: React.FC<{ nivel: NivelAcorde; onCambio: (n: NivelAc
       <button
         key={n}
         type="button"
-        aria-pressed={n === nivel}
-        onClick={() => onCambio(n)}
-        className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${n === nivel ? 'bg-[var(--sunken)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
+        aria-pressed={n === nivel && !ensayo}
+        onClick={() => { setEnsayo(false); onCambio(n); }}
+        className={`px-2 py-0.5 rounded-[var(--r-pill)] text-micro font-sans cursor-pointer transition-ui ${n === nivel && !ensayo ? 'bg-[var(--sunken)] text-[var(--ink)] font-bold' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'}`}
       >
         {ETIQUETA_NIVEL[n]}
       </button>

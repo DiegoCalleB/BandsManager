@@ -19,12 +19,25 @@ export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAco
   const n = notasParaDibujar(acorde);
   if (!n) return [];
   const inv = Math.max(0, Math.min(inversion, n.notas.length - 1));
-  if (vista === 'bajo') return [BASE_BAJO + n.notas[inv]];
+  if (vista === 'bajo') {
+    // Arpegio de grave a agudo: arranca en la nota de la inversión y sube por las demás del acorde (Básico: raíz y quinta).
+    const pcs = nivel === 'basico' ? n.notas.filter((pc) => pc === n.raiz || pc === n.quinta) : n.notas;
+    const ini = Math.min(inv, pcs.length - 1);
+    const sube: number[] = [];
+    pcs.map((_, i) => pcs[(ini + i) % pcs.length]).forEach((pc) => {
+      let m = BASE_BAJO + pc;
+      while (sube.length && m <= sube[sube.length - 1]) m += 12;
+      sube.push(m);
+    });
+    return sube;
+  }
   const notas = nivel !== 'basico' ? n.notas : n.notas.filter((pc) => pc === n.raiz || pc === n.quinta || (vista === 'teclado' && pc === n.tercera));
   return vozTeclado(notas, Math.min(inv, notas.length - 1)).map((t) => BASE_TECLADO + t);
 }
 
-type Sintetizador = { triggerAttackRelease: (notas: string[], dur: number) => unknown };
+const PASO_BAJO_S = 0.3;
+
+type Sintetizador = { triggerAttackRelease: (notas: string[], dur: number, cuando?: number) => unknown };
 let sinte: Promise<Sintetizador> | null = null;
 
 /** Baja Tone.js en cuanto aparece una ficha, para que el toque no espere a la red y siga dentro del gesto del usuario. */
@@ -48,7 +61,12 @@ export async function sonarAcorde(acorde: string, vista: VistaAcorde, nivel: Niv
     sinte ??= crearSinte();
     const s = await sinte;
     bajarCancion(DURACION_ACORDE_S * 1000);
-    s.triggerAttackRelease(midi.map((m) => Tone.Frequency(m, 'midi').toNote()), DURACION_ACORDE_S);
+    const notas = midi.map((m) => Tone.Frequency(m, 'midi').toNote());
+    if (vista === 'bajo') {
+      // El bajo toca una nota cada vez, de grave a agudo.
+      const t0 = Tone.now();
+      notas.forEach((nota, i) => s.triggerAttackRelease([nota], PASO_BAJO_S * 1.5, t0 + i * PASO_BAJO_S));
+    } else s.triggerAttackRelease(notas, DURACION_ACORDE_S);
   } catch (e) {
     console.warn('[sonarAcorde] sin audio:', e);
     sinte = null; // sin audio disponible: el diagrama sigue funcionando
