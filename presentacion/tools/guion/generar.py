@@ -1461,6 +1461,13 @@ PERFILES = [('brais', 'Brais', 'img/perfil-brais.jpg'), ('profes', 'Profesorado'
 def _av(k, foto, extra=''):
     ok = os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', foto))
     return f'<i class="av {k}{" foto" if ok else ""}{extra}"' + (f' style="--foto:url({foto})"' if ok else '') + '></i>'
+CONTINUAR = [('Os Herdeiros do Código', 'img/concierto-2.jpg', 38, 'Quedan 9 min'), ('Master of Prompts: la gira', 'img/historia/mop-gira.jpg', 71, 'Quedan 4 min'),
+             ('Dadme hasta el sábado', 'img/concierto-3.jpg', 12, 'Quedan 13 min')]
+TOP10 = [('Os Herdeiros do Código', 'img/concierto-2.jpg'), ('Los miércoles libro', 'img/historia/bajo-bn.jpg'), ('Treinta por ciento', 'img/historia/bajo-contraluz.jpg'),
+         ('Hasta el sábado', 'img/concierto-1.jpg'), ('La balada que vació el bar', 'img/historia/mop-gira.jpg'), ('Cuatro tíos y un cú-erre', 'img/historia/thc.jpg')]
+_acc = '<span class="nx-acc"><i class="p">&#9654;</i><i>+</i><i>&#128077;</i><i class="m">&#8964;</i></span><span class="nx-mini"><b>98 % para ti</b> +12 · 15 min</span>'
+fila_continuar = ''.join(f'<div class="nx-card k" style="--img:url({i})"><b>{t}</b>{_acc}<em class="nx-resta">{r}</em><u style="--w:{w}%"></u></div>' for t, i, w, r in CONTINUAR)
+fila_top = ''.join(f'<div class="nx-top-c"><span class="nx-num">{n}</span><div class="nx-card k" style="--img:url({i})"><b>{t}</b>{_acc}</div></div>' for n, (t, i) in enumerate(TOP10, 1))
 perfiles = ''.join(f'<button class="nx-perfil" data-p="{k}">{_av(k, f)}<span>{n}</span></button>' for k, n, f in PERFILES)
 AV_BRAIS = _av('brais', PERFILES[0][2], ' mini')
 i0 = html.index('<div id="gate"'); i1 = html.index('<div id="prog">')
@@ -1472,14 +1479,10 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     <span class="nx-admin">ADMINISTRAR PERFILES</span>
   </div>
   <div class="nx-home">
+    <div class="nx-scroll"><div class="nx-pant">
     <div class="nx-bg" style="--img:url(img/concierto-2.jpg)"></div>
     <video class="nx-vid" muted loop playsinline preload="auto" poster="video/actores/concierto.jpg" aria-hidden="true"><source src="video/actores/concierto.mp4" type="video/mp4"></video>
     <div class="nx-velo"></div>
-    <div class="nx-top">
-      <span class="nx-logo">NETFLIX</span>
-      <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
-      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i>''' + AV_BRAIS + '''</div>
-    </div>
     <div class="nx-hero">
       <div class="nx-sello"><i>N</i> PELÍCULA</div>
       <h1 class="nx-titulo">Os Herdeiros<br>do Código</h1>
@@ -1495,6 +1498,16 @@ html = html[:i0] + '''<div id="gate" data-fase="perfiles" role="dialog" aria-mod
     </div>
     <div class="nx-lado"><i class="nx-mute"></i><span class="nx-edad">+12</span></div>
     <div class="nx-filas"><h3>Próximamente</h3><div class="nx-row">''' + filas + '''</div></div>
+    </div>
+    <div class="nx-mas">
+      <div class="nx-filas2"><h3>Continuar viendo para Brais</h3><div class="nx-row">''' + fila_continuar + '''</div></div>
+      <div class="nx-filas2"><h3>Las 10 películas más vistas hoy</h3><div class="nx-row top">''' + fila_top + '''</div></div>
+    </div></div>
+    <div class="nx-top">
+      <span class="nx-logo">NETFLIX</span>
+      <nav><span class="on">Inicio</span><span>Series</span><span>Películas</span><span>Novedades más vistas</span><span>Mi lista</span></nav>
+      <div class="nx-der"><i class="nx-lupa"></i><span>Infantil</span><i class="nx-camp"></i><span class="nx-perf">''' + AV_BRAIS + '''<i class="nx-flecha"></i></span></div>
+    </div>
     <div class="nx-modal" id="nxModal" role="dialog" aria-label="Más información" hidden>
       <div class="nx-mcard">
         <div class="nx-mfoto" style="--img:url(img/concierto-2.jpg)"><button class="nx-cerrar" id="nxCerrar" aria-label="Cerrar">&#10005;</button>

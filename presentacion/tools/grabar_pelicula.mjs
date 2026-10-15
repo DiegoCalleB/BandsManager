@@ -89,8 +89,9 @@ if (process.env.INTRO !== '0' && await page.$('.nx-perfil')) {
   await page.waitForTimeout(1800); // los perfiles, un momento a la vista
   await page.click('.nx-perfil');
   await page.waitForSelector('#gate.trailer', { timeout: 15000 }).catch(() => {});
-  await page.waitForTimeout(3500); // el tráiler rueda y la sinopsis se recoge
+  await page.waitForTimeout(2200); // el tráiler rueda y la sinopsis se recoge
 } else if (await page.$('.nx-perfil')) { await page.click('.nx-perfil'); await page.waitForTimeout(900); }
+if (tIntroPag !== null) await page.evaluate(() => window.NxExplora && window.NxExplora()).catch(() => {}); // recorre las filas de abajo
 if (tIntroPag !== null) { // el cursor de mentira llega a «Reproducir» y lo pulsa, para que el clic se vea
   await page.evaluate((id) => window.NxCursor && window.NxCursor(document.getElementById(id)), PUERTA).catch(() => {});
 }

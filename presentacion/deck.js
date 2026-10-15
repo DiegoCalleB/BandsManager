@@ -434,6 +434,18 @@
         requestAnimationFrame(() => { cur.style.transition = 'left 1s cubic-bezier(.3,.7,.2,1), top 1s cubic-bezier(.3,.7,.2,1)'; cur.style.left = (r.left + r.width * 0.55) + 'px'; cur.style.top = (r.top + r.height * 0.6) + 'px'; });
         setTimeout(() => { btn.classList.add('pulsado'); cur.classList.add('clic'); setTimeout(() => { res(); }, 260); }, 1150);
       });
+      // La barra superior se vuelve sólida al bajar, y en la grabación el cursor recorre las filas antes de pulsar «Reproducir»
+      const scr = $('.nx-scroll'), barra = $('.nx-home > .nx-top');
+      if (scr && barra) scr.addEventListener('scroll', () => barra.classList.toggle('solido', scr.scrollTop > 12));
+      const nxEspera = (ms) => new Promise((r) => setTimeout(r, ms));
+      window.NxExplora = async () => {
+        if (!scr) return;
+        scr.scrollTo({ top: Math.min(scr.scrollHeight - scr.clientHeight, innerHeight * 0.64), behavior: 'smooth' });
+        await nxEspera(1400);
+        const c = $$('.nx-top-c .nx-card')[1];
+        if (c) { c.classList.add('hover'); await nxEspera(1200); c.classList.remove('hover'); }
+        scr.scrollTo({ top: 0, behavior: 'smooth' }); await nxEspera(1000);
+      };
       // ¿Quién está viendo? → inicio con la película destacada: a los pocos segundos arranca el tráiler solo
       const vid = $('.nx-vid');
       const aInicio = (btn) => {
