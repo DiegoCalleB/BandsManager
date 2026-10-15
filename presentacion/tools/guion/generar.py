@@ -1654,7 +1654,7 @@ def _aplicar_guion(html):
                         _n += -1 if _m.group(1) else 1
                         if _n == 0:
                             _j = _i + _m.end(); _j = cuerpo.index('>', _j) + 1; break
-                    cuerpo = cuerpo[:_i] + '<div class="art foto">' + (_GRACIAS_VID if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'actores', 'gracias.mp4')) else '<img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">') + '<p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">Con BandManager es posible esto y mucho más.</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
+                    cuerpo = cuerpo[:_i] + '<div class="art foto">' + (_GRACIAS_VID if os.path.exists(os.path.join(AQUI, '..', '..', 'video', 'actores', 'gracias.mp4')) else '<img class="foto-mop" src="img/gracias-mop.jpg" alt="Brais y Diego con una Estrella Galicia, ya en Master of Prompts">') + '<p class="foto-lema"><b>¿Te imaginas vivir esto?</b><b class="l2">¿Te gustaría?</b><span class="l3">¡Con BandManager esto es posible y mucho más!</span></p><span class="foto-pie">Montaje con IA · ya sois de Master of Prompts</span></div>' + cuerpo[_j:]
 
         else:
             avisos.append(f'{t}: estructura no soportada ({len(els)}→{len(L)})')
