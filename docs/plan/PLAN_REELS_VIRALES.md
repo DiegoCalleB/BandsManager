@@ -32,6 +32,8 @@
 
 **Auditoría en el análisis inicial:** los highlights que devuelve el modelo se sanean y se auditan (`auditarHighlights.ts`); los avisos salen bajo el editor de copy.
 
+**Señales de público (detección de momentos):** en vídeos de música, la puntuación de cada ventana incorpora lo que la gente ya reproduce y comenta en YouTube: el gráfico de «lo más reproducido» (que ya trae `yt-dlp --dump-json`) pesa 0,4; los comentarios con marca de tiempo («2:34 🔥», vía Data API, 1 unidad de cuota) afinan o, si no hay gráfico, pesan 0,25 con al menos 5 marcas. Se ignora el pico de la intro, los índices de temas y todo lo que no sea música (`senalesPublico.ts`, `interesDelPublico.ts`). Sin datos suficientes no cambia nada. Siguiente paso acordado: pasar el vídeo entero a Gemini (imagen + sonido).
+
 **Pendiente** (en orden): YouTube Shorts y TikTok reales · ingesta de `online_followers` · aplicar la
 auditoría de copy también al análisis inicial · validar con una cuenta real los nombres de las
 métricas de Meta (`views`, `ig_reels_avg_watch_time`) ·

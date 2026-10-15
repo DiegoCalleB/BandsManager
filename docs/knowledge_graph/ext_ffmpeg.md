@@ -43,6 +43,7 @@ _Sin dependencias salientes directas._
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
 - [[server_services_clipRenderer|server/services/clipRenderer.ts]] *(from #service)*
 - [[server_services_controlCalidad|server/services/controlCalidad.ts]] *(from #service)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_audioKey|server/utils/audioKey.ts]] *(from #service)*
 - [[server_utils_clipFiltros|server/utils/clipFiltros.ts]] *(from #service)*

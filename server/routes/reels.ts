@@ -14,11 +14,12 @@ import { dbGetReelAnalysis, dbUpsertReelAnalysis, dbUpdateReelAnalysisHighlight,
 import { getTargetBandId } from "../utils/bandAccess.js";
 import { iaRateLimiter, renderRateLimiter, renderConcurrencyLimiter } from "../middleware/rateLimiter.js";
 import { buildBandContextBlock, displayBandName, baseHashtags } from "../utils/bandProfile.js";
-import { descargarConYtDlp, urlDeAudioDirecta, urlDeVideoDirecta } from "../utils/youtubeSource.js";
-import { analizarEnergiaAudio, ventanasConMasEnergia, resumirEnergiaParaPrompt } from "../utils/audioEnergy.js";
+import { descargarConYtDlp } from "../utils/youtubeSource.js";
+import { resumirEnergiaParaPrompt } from "../utils/audioEnergy.js";
 import { buildEstrategiaBlock, buildReglasDeRedaccion, estrategiaDe } from "../utils/reelStrategy.js";
-import { detectarCambiosDePlano, detectarTipoContenido, esTipoContenido, ventanasMasVirales, resumirSenalesParaPrompt, type TipoContenido, type VentanaViral } from "../utils/viralSignals.js";
+import { detectarTipoContenido, esTipoContenido, resumirSenalesParaPrompt, type TipoContenido } from "../utils/viralSignals.js";
 import { parseRange, formatMMSS, extractJsonObject, normalizeHighlights, buildFallbackHighlights, buildSubtitleCues, buildVtt, buildWordOffsets, buildAssSubtitles, buildKaraokeAssSubtitles, decodeTranscriptText, type CropMode, type TranscriptItem, type NormalizedHighlight } from "../utils/reelsCore.js";
+import { medirSenalesDelVideo } from "../services/senalesVideo.js";
 import { renderizarClip } from "../services/clipRenderer.js";
 import { perfilDeLaPeticion } from "../services/perfilDeLaPeticion.js";
 import reelsTextoRouter from "./reelsTexto.js";
@@ -275,50 +276,9 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
       ? contentType
       : detectarTipoContenido(meta.title || tituloReal, meta.description);
 
-    // Señales medidas sobre el vídeo real. Medir solo el volumen encontraba "dónde suena
-    // fuerte", que en un concierto entero a todo trapo no distingue nada; ahora se mide
-    // también el CONTRASTE al arrancar el corte y el ritmo de montaje.
-    // Best-effort y con tope de tiempo: si no se pueden medir, el análisis sigue igual.
     const analizarAudio = req.body?.analyzeAudio !== false;
-    let ventanasEnergia: ReturnType<typeof ventanasConMasEnergia> = [];
-    let ventanasVirales: VentanaViral[] = [];
-    let cambiosDePlano: number[] = [];
-
-    if (analizarAudio && videoId) {
-      try {
-        const urlAudio = await urlDeAudioDirecta(canonicalYouTubeUrl(videoId));
-        if (urlAudio) {
-          const curva = await analizarEnergiaAudio(urlAudio, { timeoutMs: 120_000 });
-
-          // La señal visual solo se pide cuando de verdad va a pesar en la puntuación: en un
-          // ensayo grabado con el móvil en una silla, contar planos es gastar CPU para nada.
-          if (curva.length > 0 && tipoContenido !== "ensayo") {
-            // urlDeAudioDirecta/urlDeVideoDirecta, NO canonicalYouTubeUrl: esa es la URL de la
-            // página de YouTube, y ffmpeg no puede decodificarla directamente con -i.
-            const urlVideo = await urlDeVideoDirecta(canonicalYouTubeUrl(videoId));
-            if (urlVideo) {
-              cambiosDePlano = await detectarCambiosDePlano(urlVideo, { timeoutMs: 150_000 });
-            }
-          }
-
-          ventanasVirales = ventanasMasVirales(curva, {
-            duracion: objetivoClip,
-            tipo: tipoContenido,
-            cambiosDePlano,
-            maxVentanas: 6
-          });
-          // Se mantiene la lista por energía pura para los cortes de respaldo sin IA.
-          ventanasEnergia = ventanasConMasEnergia(curva, { duracion: objetivoClip, maxVentanas: 6 });
-          console.log(
-            `[Reels] Señales: ${curva.length} puntos de audio, ${cambiosDePlano.length} cambios de plano, ` +
-            `${ventanasVirales.length} tramos candidatos (tipo: ${tipoContenido}).`
-          );
-        }
-      } catch (eCapturado) {
-        const e = comoErrorCapturado(eCapturado);
-        console.log("[Reels] Análisis de señales omitido:", e?.message || e);
-      }
-    }
+    const ficha = { esMusica: meta.esMusica, heatmap: meta.heatmap, duration: duracionTotal };
+    const { ventanasEnergia, ventanasVirales, cambiosDePlano, publico } = await medirSenalesDelVideo({ videoId, objetivoClip, tipoContenido, ficha, activo: analizarAudio });
 
     // El bloque nuevo trae el desglose (volumen/arranque/ritmo visual); el antiguo, solo el
     // volumen. Se usa el que haya, para no perder la pista de energía si falla la puntuación.
@@ -527,6 +487,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       viralWindows: ventanasVirales,
       contentType: tipoContenido,
       sceneChanges: cambiosDePlano.length,
+      publicSignals: { used: Boolean(publico.curva), note: publico.nota },
       savedToDb: guardadoEnBd,
       band: { name: nombreBanda, instruments: perfil.instruments, hashtags: hashtagsBase },
       videoMeta: {

@@ -729,7 +729,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:227",
+        "x-source": "server/routes/reels.ts:228",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -3978,7 +3978,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:554",
+        "x-source": "server/routes/reels.ts:515",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "renderRateLimiter",
@@ -9228,7 +9228,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/reels.ts:717",
+        "x-source": "server/routes/reels.ts:678",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "iaRateLimiter"
@@ -9265,7 +9265,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:189",
+        "x-source": "server/routes/reels.ts:190",
         "x-autenticacion": "middleware"
       }
     },
@@ -12984,7 +12984,7 @@
             "$ref": "#/components/responses/NoAutenticado"
           }
         },
-        "x-source": "server/routes/reels.ts:150",
+        "x-source": "server/routes/reels.ts:151",
         "x-autenticacion": "middleware"
       }
     },
