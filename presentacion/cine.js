@@ -11,7 +11,7 @@
   // Son la banda sonora de los capítulos (sus versiones sintéticas, «tema» y «lostrego», llevan mucha gaita y quedan solo para algún
   // momento suelto). Arrancan desde el segundo indicado cada vez que se entra en su bloque de escenas.
   var CANCION = { compila: 0, cabalga: 0, giro: 0 }; // giro: segundo desde el que empieza (cámbialo al punto que quieras)
-  var ALTO = 0.24, BAJO = 0.09, raf = 0, body = document.body, volGlobal = 1;
+  var ALTO = 0.24, BAJO = 0.09, CANCION_X = 1.8, /* las canciones (con voz y mezcla densa) se perdían bajo el diálogo: suenan más fuertes que las piezas de fondo */ raf = 0, body = document.body, volGlobal = 1;
   var ac = null, master = null, pistas = {}, actual = '';
   var crearAudio = function () {
     if (ac) return true;
@@ -58,7 +58,7 @@
       var p = pistas[n]; if (!p && n !== actual) return; p = pista(n);
       var meta = n === actual && o > 0 ? 1 : 0;
       p.v += (meta - p.v) * 0.035; if (Math.abs(meta - p.v) < 0.004) p.v = meta;
-      if (p.g) p.g.gain.value = p.v; else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
+      if (p.g) p.g.gain.value = p.v * (n in CANCION ? CANCION_X : 1); else p.a.volume = Math.max(0, Math.min(1, p.v * vol * volGlobal));
       if (p.v > 0 && p.a.paused && !p.a.ended) p.a.play().catch(function () { /* sin gesto: no suena */ });
       if (p.v === 0 && !p.a.paused) p.a.pause();
       if (p.v > 0) vivo = true;
@@ -154,6 +154,8 @@
     v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.dataset.who = w;
     v.poster = 'video/actores/' + CARAS[w] + '.jpg'; v.src = 'video/actores/' + CARAS[w] + '.mp4'; rx.appendChild(v); vids.push(v);
   });
+  // El cantante de Master of Prompts no tiene vídeo: su foto hace de contraplano cuando habla
+  var mop = document.createElement('img'); mop.className = 'rx-mop'; mop.dataset.who = 'voz_mop'; mop.alt = ''; mop.src = 'img/personaje-cantante.jpg'; rx.appendChild(mop);
   rx.classList.add('con-caras');
   if (stage) stage.appendChild(rx);
   var vivaReaccion = function () {

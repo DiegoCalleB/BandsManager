@@ -335,8 +335,6 @@ add(feat('Date Swap', TAG1, 'Date Swap: cambio de fecha.',
          [m('iago', 'Esto es Date Swap: le propongo a otra banda cambiarnos las fechas. Nosotros tocamos en su ciudad y ellos en la nuestra. La IA redacta la propuesta.'),
           m('mop', 'Os leo. Me encanta: nosotros vamos a Santiago y vosotros venís a Vigo. ¡Cartel doble!'),
           m('brais', '¡Cartel doble con otra banda! ¡Esto no lo tenían ni los Rolling!'),
-          m('xandre', '¿Y quién es ese?'),
-          m('iago', 'El cantante de Master of Prompts. Guardaos su cara, que va a volver.'),
           m('mop', 'Y oye, Brais: nos falta batería. ¿Te vienes a Master of Prompts?', say='[laughs] Y oye, {bateria}: nos falta batería. ¿Te vienes a Máster of Prompts?'),
           m('brais', '¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.', say='[gasps] ¿Yo? ¡Pero si ya tengo banda! Bueno… los miércoles libro.'),
           m('xandre', '¡Traidor! ¡Nos deja por unos metaleros!', say='[dramatically] ¡Traidor! ¡Nos deja por unos metaleros, che!')],
@@ -350,7 +348,7 @@ add(feat('Cambio de perfil', TAG1, 'Una cuenta, varias bandas.',
           m('iago', 'Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Master of Prompts.', cls='sync', say='Como los perfiles de una plataforma de cine. ¿Quién toca hoy? Máster of Prompts.'),
           m('xandre', '¡Cambió todo! ¡El logo, el calendario, hasta las salas!', say='[amazed] ¡Ché, cambió todo! ¡El logo, el calendario, hasta las salas!'),
           m('iago', 'Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa. Solo se juntan en tu calendario.', say='Y lo de una banda no se ve nunca en la otra. Esa es la primera regla de la casa. Solo se juntan en tu calendario personal.')],
-         shot_vid_sync('video/v-perfiles.mp4', 'video/v-perfiles.jpg')))
+         shot_vid_sync('video/v-perfiles-2.mp4', 'video/v-perfiles.jpg')))
 
 add(feat('Bandas amigas', TAG1, 'Bandas amigas, a la escucha.',
          [m('xandre', '¿Y las otras bandas? Siempre acabamos con los mismos contactos en el móvil.'),
@@ -493,7 +491,6 @@ add(feat('Choques en el calendario', TAG2, 'El calendario avisa de los choques.'
          shot_vid_sync('video/v-choques.mp4', 'img/d-h-calendario.jpg'), grupo='musica'))
 
 # ───────── Capítulo 3 · Que te conozcan ─────────
-add(plano('Plano · Furgoneta (tras el ensayo)', 'video/actores/furgoneta', 4500))
 add(act('Capítulo 3 · Que te conozcan', 'III', 'Capítulo 3 de 5 · Que te conozcan', 'Que nos conozcan.',
         'Un dossier, un QR y un vídeo para que la gente nos siga.', 'iago',
         '¡Y ahora, que nos conozca más gente! 🌍', 3, 'img/concierto-3.jpg'))
@@ -560,6 +557,8 @@ add(feat('Cuánto entra y cuánto queda', 'Sábado · 12:50 · Después del conc
           m('brais', '¡Oye!')],
          shot_img('img/d-h-finanzas.jpg'), grupo='negocio'))
 
+add(plano('Plano · Furgoneta (hacia el negocio)', 'video/actores/furgoneta', 4000))
+
 add(feat('La gira, con gasolina y todo', 'Sábado · 12:55 · Después del concierto', 'La gira, con la gasolina calculada.',
          [m('brais', '¿Y la gasolina de la furgo y de mi coche?', say='Home, ¿y la gasolina de la furgo y de mi coche? ¿Quién la paga?'),
           m('iago', 'Metes los coches que van en ruta y calcula el gasto de cada parada.', say='Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.'),
@@ -599,7 +598,6 @@ add(scene('Esto lo necesitan todos', 'Sábado · 13:05 · El local de ensayo', '
               m('iago', 'Si me hago rico, una buena parte irá para la banda. ¡Os Herdeiros do Código lo va a petar, chavales!'), cls='tight'), tr='zoom'))
 
 # ───────── Capítulo 5 · Cómo lo hacemos ─────────
-add(plano('Plano · Furgoneta (hacia el negocio)', 'video/actores/furgoneta', 4000))
 add(act('Capítulo 5 · Cómo lo hacemos', 'V', 'Capítulo 5 de 5 · Cómo lo hacemos', '¿Y cómo lo hacemos?',
         'De qué vivimos, y cómo está hecho por dentro.', 'iago',
         'Vamos por partes. Os cuento mi estrategia.', 5, 'img/concierto-1.jpg'))
@@ -1393,14 +1391,14 @@ direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
 PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': 'viernes', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
-          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto', 'img/gracias-mop.jpg'],
+          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto'],
           'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
           'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'espaldas', 'Cómo ganamos dinero': ['espaldas-a', 'iago-cu'], 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
           'Esto lo necesitan todos': ['otro-jueves', 'concierto']}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 # Escenas con varios planos de fondo seguidos: segundo en que entra cada clip (el último se queda); el CSS los funde (.actor-vid.sec)
-SECUENCIA = {'El festival, 02:14': [0, 13.5, 24], 'Esto lo necesitan todos': [0, 9.5], 'Cómo ganamos dinero': [0, 8.5]}
+SECUENCIA = {'El festival, 02:14': [0, 13.5], 'Esto lo necesitan todos': [0, 9.5], 'Cómo ganamos dinero': [0, 8.5]}
 def _vids(k, t):
     ini = SECUENCIA[t]
     est = lambda n: f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"'
@@ -1467,6 +1465,8 @@ html = html.replace('data-title="El correo llega a la sala" data-corto', 'data-t
 html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min="29500" ', 1)
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
+# el móvil del generador de reels enseña a la banda tocando, en lugar del hueco «Band Clip Studio»
+html = html.replace('<img src="img/d-h-reels.jpg" alt="">', '<img src="img/d-h-reels.jpg" alt=""><div class="dr-reelvid"><video data-ambient data-restart muted loop playsinline preload="auto" poster="video/actores/concierto.jpg"><source src="video/actores/concierto.mp4" type="video/mp4"></video></div>', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
 html = html.replace('data-title="Bandas amigas" ', 'data-title="Bandas amigas" data-min="25200" ', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
