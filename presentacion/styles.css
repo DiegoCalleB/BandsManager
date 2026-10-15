@@ -2342,9 +2342,9 @@ body.pelicula:not(.scroll):has(.slide.feat.active.mailscene) #reaccion { display
 /* Perfiles con foto (si el fichero existe, el generador añade .foto y desaparece la carita) */
 .av.foto { background: var(--foto) center / cover no-repeat; }
 .av.foto::before, .av.foto::after { display: none; }
-.av.diego.foto { background-position: 50% 8%; }
+.av.diego.foto { background-size: 250%; background-position: 45% 14%; }
 .av.pelaez.foto { background-size: 250%; background-position: 69% 16%; }
-.av.profes.foto { background-color: #fff; background-size: 78%; }
+.av.profes.foto { background-size: cover; }
 .av.brais.foto { background-position: 50% 20%; }
 .nx-perfil span { text-align: center; }
 .nx-perfil { flex: 0 0 170px; } .nx-perfil .av { flex: none; } .nx-perfil span { white-space: nowrap; }
@@ -2360,3 +2360,42 @@ body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: 
 #gatePeli.pulsado { transform: scale(.96); background: #d2d2d2; transition: transform .12s, background .12s; }
 .nx-home { transition: transform .7s cubic-bezier(.5,0,.3,1), opacity .7s; }
 #gate.sale .nx-home { transform: scale(1.08); opacity: 0; }
+
+/* Netflix · más filas, tarjetas con hover y barra superior viva */
+.nx-home { display: block; }
+.nx-scroll { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
+.nx-scroll::-webkit-scrollbar { display: none; }
+.nx-pant { position: relative; height: 100%; display: flex; align-items: flex-end; }
+.nx-home > .nx-top { position: absolute; top: 0; left: 0; right: 0; padding: 34px 64px 16px; z-index: 4; background: linear-gradient(#000b, transparent); transition: background .3s; }
+.nx-home > .nx-top.solido { background: #141414; }
+.nx-perf { display: flex; align-items: center; gap: 8px; }
+.nx-flecha { width: 8px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: translateY(-2px) rotate(45deg); display: block; }
+.nx-camp { position: relative; }
+.nx-camp::after { content: ''; position: absolute; top: -5px; right: -6px; width: 11px; height: 11px; border-radius: 50%; background: #e50914; border: 2px solid #141414; }
+.nx-mas { position: relative; background: #141414; padding: 34px 0 90px 64px; font-family: 'Helvetica Neue', Arial, sans-serif; z-index: 2; }
+.nx-filas2 { margin-bottom: 44px; }
+.nx-filas2 h3 { font-size: 26px; margin: 0 0 12px; font-weight: 700; }
+.nx-card.k { filter: none; background: linear-gradient(#0006, #000b), var(--img) center / cover; transition: transform .25s, box-shadow .25s; }
+.nx-card.k b { font-size: 18px; }
+.nx-filas .nx-card:hover { filter: none; transform: scale(1.1); z-index: 4; transition: transform .25s; }
+.nx-card.k:hover, .nx-card.k.hover { transform: scale(1.22); z-index: 5; box-shadow: 0 14px 46px #000; }
+.nx-acc { display: none; gap: 8px; margin-top: 4px; }
+.nx-acc i { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #9a9a9a; background: #2a2a2a; display: grid; place-items: center; font-style: normal; font-size: 14px; }
+.nx-acc i.p { background: #fff; color: #000; border-color: #fff; }
+.nx-acc i.m { margin-left: auto; }
+.nx-mini { display: none; font-size: 13px; color: #ddd; }
+.nx-mini b { color: #46d369; margin-right: 6px; }
+.nx-card.k:hover .nx-acc, .nx-card.k.hover .nx-acc { display: flex; }
+.nx-card.k:hover .nx-mini, .nx-card.k.hover .nx-mini { display: block; }
+.nx-resta { position: absolute !important; top: 8px; right: 8px; background: #000b; padding: 3px 8px; border-radius: 3px; font-size: 12px !important; text-transform: none !important; letter-spacing: 0 !important; }
+.nx-card u { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #5a5a5a; text-decoration: none; display: block; }
+.nx-card u::after { content: ''; position: absolute; inset: 0 auto 0 0; width: var(--w); background: #e50914; }
+.nx-row.top { gap: 0; }
+.nx-top-c { display: flex; align-items: flex-end; flex: 0 0 min(25vw, 480px); position: relative; }
+.nx-num { font: 400 min(17vw, 300px)/.78 Anton, Oswald, Impact, sans-serif; color: #141414; -webkit-text-stroke: 4px #6b6b6b; margin-right: -20px; position: relative; z-index: 1; }
+.nx-top-c .nx-card { flex: 0 0 min(11.6vw, 222px); aspect-ratio: 2 / 3; margin-bottom: 4px; }
+.nx-top-c { flex: 0 0 auto; margin-right: 26px; }
+.nx-num { font-size: min(11vw, 210px); }
+.nx-top-c .nx-card { flex: 0 0 min(10.5vw, 200px); }
+#gate:has(.nx-top.solido) .gate-note { opacity: 0; }
+.nx-mini { white-space: nowrap; font-size: 12px; }
