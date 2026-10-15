@@ -388,12 +388,6 @@ export function printHighQualityFlyer(options: {
   ctaText?: string;
   subtitle?: string;
 }) {
-  const svgEl = options.svgElement || (options.svgElementId ? document.querySelector<SVGElement>(`#${options.svgElementId} svg`) : null);
-  if (!svgEl) {
-    alert('No se pudo encontrar el código QR para imprimir');
-    return;
-  }
-
   // El QR de pantalla puede ser claro sobre fondo oscuro (el fondo no se imprime): en papel, negro sobre blanco.
   const svgString = buildQrSvg(options.url || '', 74, 'H');
   const printWin = window.open('', '_blank');
