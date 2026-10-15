@@ -346,13 +346,16 @@
   };
   // El icono que salta un momento en el centro, como en Netflix
   var flash = function (svg, txt) { var f = $n('.nf-flash'); f.innerHTML = svg + (txt ? '<b>' + txt + '</b>' : ''); f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); };
-  var saltar = function (seg) { var d = D(); if (!d) return; d.irA(Math.max(0, Math.min(d.total() - 0.5, d.tiempo() + seg))); flash(seg < 0 ? ico.menos : ico.mas); setTimeout(pintar, 60); };
+  // Desde la pantalla final («Más como esta») cualquier mando de navegación vuelve a la película: antes ⟲15 saltaba por debajo y la pantalla negra se quedaba encima
+  var salirDelFinal = function () { if (body.classList.contains('fin-peli')) { body.classList.remove('fin-peli'); delete body.dataset.fin; } };
+  var saltar = function (seg) { var d = D(); if (!d) return; salirDelFinal(); d.irA(Math.max(0, Math.min(d.total() - 0.5, d.tiempo() + seg))); flash(seg < 0 ? ico.menos : ico.mas); setTimeout(pintar, 60); };
   var cerrarMenus = function () { nf.classList.remove('menu', 'menu-vel', 'menu-caps'); };
   var acciones = {
-    play: function () { var d = D(); if (!d) return; d.pausar(!d.pausado); flash(d.pausado ? ico.pausa : ico.play); },
+    // en la pantalla final, ▶ es «Ver otra vez» (como el icono de repetir de Netflix); antes solo pausaba la nada
+    play: function () { var d = D(); if (!d) return; if (body.classList.contains('fin-peli')) { salirDelFinal(); if (d.pausado) d.pausar(false); d.show(0); return; } d.pausar(!d.pausado); flash(d.pausado ? ico.pausa : ico.play); },
     menos: function () { saltar(-15); },
     mas: function () { saltar(15); },
-    sig: function () { var d = D(), a = d && d.proximo(d.cur); if (a !== null && a !== undefined) d.show(a); },
+    sig: function () { var d = D(), a = d && d.proximo(d.cur); salirDelFinal(); if (a !== null && a !== undefined) d.show(a); },
     sonido: function () {
       if (window.DeckSound && !window.DeckSound.enabled) { window.DeckSound.toggle(); if (!vol) vol = 1; }
       else vol = vol > 0 ? 0 : (+nf.dataset.volPrev || 1);
@@ -413,7 +416,7 @@
     else if (card) { reanudar(); var p = document.getElementById('bPeli'); if (p && body.classList.contains('pelicula')) p.click(); d.show(+card.dataset.i); }
   });
   var escenaEnTiempo = function (seg) { var d = D(), t = 0, L = d.lista(); for (var k = 0; k < L.length; k++) { t += d.durEscena(L[k]); if (seg < t) return L[k]; } return L[L.length - 1]; };
-  prog.addEventListener('click', function (e) { var d = D(); if (d) { d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
+  prog.addEventListener('click', function (e) { var d = D(); if (d) { salirDelFinal(); d.irA(tiempoEn(e)); setTimeout(pintar, 60); } });
   prog.addEventListener('mousemove', function (e) {
     var d = D(); if (!d) return; var seg = tiempoEn(e), tip = $n('.nf-tip'), r = prog.getBoundingClientRect();
     var ie = escenaEnTiempo(seg), th = miniatura(ie);
