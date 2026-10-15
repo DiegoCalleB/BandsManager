@@ -430,6 +430,15 @@ add(feat('Una hoja para cada músico', TAG2, 'El setlist, ordenado e impreso.',
          shot_vid('video/v-energia.mp4', 'video/v-energia.jpg') + f'''
   <div class="paperwrap paso2-in" aria-label="Hoja de setlist impresa para el batería y la voz">{back}{front}</div>''', grupo='musica', cls='con-paso'))
 
+# Versión larga de «La curva de energía» (en la película va fusionada en «Una hoja para cada músico»): vive en el anexo
+add(feat('La curva de energía', TAG2, 'La curva de energía.',
+         [m('iago', 'Cada tema tiene su energía. La app dibuja la curva del concierto.', say='Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.'),
+          m('alvaro', '¿Y si la curva se cae a mitad del bolo?', say='[curious] ¿Y si a mitad del bolo la curva se cae?'),
+          m('iago', 'Le das a «Optimizar orden» y te propone el setlist perfecto.', say='Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.'),
+          m('iago', 'Y vigila las transiciones: energía y tonalidad, tema a tema.', say='Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.'),
+          m('xandre', '¡Un setlist que sube como un cohete! 🚀', say='[amazed] ¡Ché, un setlist que sube como un cohete!')],
+         shot_vid('video/v-energia.mp4', 'video/v-energia.jpg'), grupo='musica'))
+
 add(feat('Los acordes pasan solos', TAG2, 'Los acordes pasan solos.',
          [m('iago', 'Dale al play, Álvaro. Los acordes y la letra van siguiendo la canción solos.'),
           m('alvaro', '¡Pero tío! ¡Te has copiado de Ultimate Guitar! ¡Pellízcame! ¡Esto es mejor que un solo de Slash!'),
@@ -1229,6 +1238,11 @@ def _mover(titulo, tras):
 _mover('Afina el correo', 'La IA escribe, tú apruebas')
 _mover('Medios de comunicación', 'El correo llega a la sala')
 _mover('Bandas amigas', 'Medios de comunicación')
+# Rescatadas del anexo (17-oct): cada una al capítulo donde encaja
+_mover('El profesor de armonía', 'Los acordes pasan solos')
+_mover('Choques en el calendario', 'Calendario de la banda')
+_mover('Bandas amigas', 'Del concierto al disco')
+_mover('La gira, con gasolina y todo', 'Cuánto entra y cuánto queda')
 
 # Orden de la recta final del capítulo 4: la ráfaga de funciones va antes del momento íntimo (así «Las noches» no se pisa)
 _ym = [i for i, x in enumerate(S) if 'data-title="Y mucho más"' in x]
@@ -1287,8 +1301,8 @@ for _e in [e for e in json.load(open(os.path.join(AQUI, 'guion_final.json'), enc
 
 # Anexo: escenas que no entran en la película (para que dure lo que dice el cartel) pero siguen en la presentación,
 # al final, para el turno de preguntas. En modo película se saltan (data-anexo, ver deck.js).
-ANEXO = ['Medios de comunicación', 'Afina el correo', 'Bandas amigas', 'El seguimiento de las redes', 'La discografía, desde Spotify',
-         'El profesor de armonía', 'Choques en el calendario', 'Merchan en un minuto', 'La gira, con gasolina y todo',
+ANEXO = ['Medios de comunicación', 'Afina el correo', 'El seguimiento de las redes', 'La discografía, desde Spotify',
+         'La curva de energía', 'Merchan en un minuto',
          'Las ideas, en su sitio', 'La ficha del bolo',
          'El mapa que lee la IA', 'Arquitectura', 'Cómo se construyó con IA', 'Seguridad', 'Calidad en cifras']
 fuera = []
@@ -1310,6 +1324,7 @@ DOLOR = {
     'Bandas amigas': ('Siempre los mismos contactos', 'Escuchas a otras bandas y ves sus números'),
     'El acuerdo, firmado desde BandManager': ('El caché cambia el día del bolo', 'Fecha, caché y rider, por escrito'),
     'Una hoja para cada músico': ('El mismo setlist para todos', 'Una hoja para cada músico, con sus notas'),
+    'La curva de energía': ('Un setlist ordenado a ojo', 'La IA ordena el setlist por energía'),
     'Los acordes pasan solos': ('Buscar los acordes en otra web', 'Acordes y letra siguen la canción'),
     'El profesor de armonía': ('Sin saber qué escala tocar', 'El profesor te sugiere la escala'),
     'Iris separa los instrumentos': ('Sin pistas separadas, no se oye el bajo', 'Iris separa cada instrumento'),
@@ -1347,6 +1362,10 @@ FICHAS = {
     'El dossier de la banda': ('Dossier web', 'La web de la banda, con fotos, formación y contacto de booking.', ['Se edita desde la app', 'La IA sabe cuándo lo abren']),
     'Un QR y el público se hace fan': ('QR de fans', 'El público escanea y os sigue, ve los bolos, apoya a la banda y deja su correo.', ['Con su consentimiento', 'Regalo a cambio del correo']),
     'Del directo al reel': ('Reels con IA', 'Del vídeo del concierto saca los mejores trozos, listos para cada red.', ['Instagram, TikTok y YouTube', 'Formato de cada plataforma']),
+    'Bandas amigas': ('Bandas amigas', 'Otras bandas con su estilo, su ciudad y su público. Las escuchas sin salir de la app y ves sus números.', ['Escuchar desde Spotify', 'Métricas del mes en Spotify y YouTube']),
+    'El profesor de armonía': ('Profesor de armonía', 'Lee los acordes de la canción y te sugiere qué escala usar para improvisar y cómo componer encima.', ['Según tu nivel y tu instrumento', 'Es una idea, no una verdad']),
+    'Choques en el calendario': ('Choques de calendario', 'Avisa si dos eventos se pisan, si no da tiempo a llegar o si vas justo para montar.', ['Solo si hay una persona en los dos sitios']),
+    'La gira, con gasolina y todo': ('Gira', 'Los coches de la ruta, con su consumo: la gasolina de cada parada y lo que queda limpio de cada bolo.', ['Gasolina, dietas y hotel']),
     'Cuánto entra y cuánto queda': ('Finanzas', 'Lo que entra por cada bolo, los gastos y lo que le toca a cada músico.', ['En una sola pantalla', 'Cuentas claras']),
 }
 _nf = 0
@@ -1446,6 +1465,7 @@ html = html.replace('data-title="Date Swap" ', 'data-title="Date Swap" data-min=
 html = html.replace('data-title="Del directo al reel" ', 'data-title="Del directo al reel" data-min="26000" ', 1)
 html = html.replace('data-title="Del concierto al disco" ', 'data-title="Del concierto al disco" data-min="13500" ', 1)
 html = html.replace('data-title="Cambio de perfil" ', 'data-title="Cambio de perfil" data-min="25500" ', 1)
+html = html.replace('data-title="Bandas amigas" ', 'data-title="Bandas amigas" data-min="25200" ', 1)
 html = html.replace('<table class="sheet">', '<table class="sheet" data-who="guitarra" data-say="' + EXTRA_SAY['excel'] + '">', 1)
 html = html.replace('<div class="rm-say">', '<div class="rm-say" data-who="bajo" data-say="' + EXTRA_SAY['sala'] + '">', 1)
 html = html.replace('<div class="react wow"><img src="img/miembro-brais.jpg"', '<div class="react wow" data-who="bateria" data-say="' + EXTRA_SAY['react'] + '"><img src="img/miembro-brais.jpg"', 1)
@@ -1548,7 +1568,7 @@ CORTES = {
     'Prólogo · La decisión': 'l', 'Prólogo · Viernes, 22:10': 'fundido', 'Prólogo · Sábado, 11:00 en el local': 'j',
     'Todas las salas, en un sitio': 'rampa', 'La IA escribe, tú apruebas': 'j', 'El correo llega a la sala': 'golpe', 'Date Swap': 'rampa', 'Cambio de perfil': 'l',
     'Bandas amigas': 'rampa', 'El acuerdo, firmado desde BandManager': 'j', 'La sala contestó': 'negro',
-    'Una hoja para cada músico': 'rampa', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
+    'Una hoja para cada músico': 'rampa', 'La curva de energía': 'j', 'Los acordes pasan solos': 'j', 'El profesor de armonía': 'l',
     'Iris separa los instrumentos': 'l', 'Las ideas, en su sitio': 'j', 'Calendario de la banda': 'rampa', 'La ficha del bolo': 'j',
     'Choques en el calendario': 'l', 'El dossier de la banda': 'rampa', 'Un QR y el público se hace fan': 'j', 'Merchan en un minuto': 'rampa',
     'Del directo al reel': 'rampa', 'Del concierto al disco': 'rampa', 'Cuánto entra y cuánto queda': 'rampa', 'La gira, con gasolina y todo': 'j',

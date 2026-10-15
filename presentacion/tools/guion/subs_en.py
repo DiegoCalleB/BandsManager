@@ -435,6 +435,36 @@ EN = {
     "It's missing nothing! It's the Swiss army knife of bands!",
 "Iago, esto es una locura. Lo necesitan todos los grupos, los mánayers, las productoras. ¡Todos!":
     "Iago, this is crazy. Every band needs it, the managers, the production companies. Everyone!",
+"¿Y si no sé qué escala tocar encima? Porque yo improviso por intuición. Y mi intuición desafina.":
+    "What if I don't know which scale to play over it? I improvise by instinct. And my instinct is out of tune.",
+"Para eso está el profesor de armonía. Lee los acordes de la canción, y te explica cómo funciona.":
+    "That's what the harmony teacher is for. It reads the song's chords and explains how it works.",
+"Le dices tu nivel y tu instrumento, y te sugiere qué escala usar para improvisar. Y cómo componer encima.":
+    "You tell it your level and your instrument, and it suggests which scale to improvise with. And how to compose over it.",
+"¡Pentatónica menor de Mi, y a volar! ¡Me acaba de arreglar el solo! ¡Me acaba de arreglar la vida!":
+    "E minor pentatonic, and off we go! It just fixed my solo! It just fixed my life!",
+"Eso sí: te lo marca como idea, no como verdad. Las notas las saca la app. La inteligencia artificial solo te las explica.":
+    "One thing: it marks it as an idea, not as the truth. The app works out the notes. The AI only explains them.",
+"Oye… ¿y si me coinciden dos ensayos a la vez? Uno con cada banda.":
+    "Hey… what if two rehearsals clash? One with each band.",
+"El calendario te avisa. Si dos eventos se pisan, si no da tiempo a llegar de un sitio a otro, o si vas justo para montar.":
+    "The calendar warns you. If two events overlap, if you can't make it from one place to the other, or if you're cutting it fine to set up.",
+"¡Ai, mi madriña! ¡Me acaba de salvar el miércoles! ¡Esto vale su peso en oro, neno!":
+    "Oh my goodness! It just saved my Wednesday! This is worth its weight in gold, mate!",
+"El miércoles. El de los metaleros, ¿no, traidor?":
+    "Wednesday. The metalheads' one, right, traitor?",
+"Y solo avisa cuando hay una persona en los dos sitios. Si no, no te molesta.":
+    "And it only warns you when the same person is in both places. Otherwise, it doesn't bother you.",
+"¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!":
+    "This is like Tinder, but for bands! And without having to talk to anyone!",
+"Home, ¿y la gasolina de la furgo y de mi coche? Que la última gira la puse yo. Creo.":
+    "Hey, what about the petrol for the van and my car? I paid for the last tour. I think.",
+"Metes los coches que van en ruta, con su consumo, y te calcula la gasolina de cada parada.":
+    "You add the cars on the route, with their consumption, and it works out the petrol for each stop.",
+"Y te dice lo que queda limpio de cada bolo, después de gasolina, dietas y hotel.":
+    "And it tells you what's left clean from each gig, after petrol, meals and hotel.",
+"¡Ni una discusión más en la gasolinera! ¡Esto es amor, tío, amor!":
+    "Not one more argument at the petrol station! This is love, mate, love!",
 }
 
 def main():

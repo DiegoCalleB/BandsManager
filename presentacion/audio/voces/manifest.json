@@ -1348,6 +1348,17 @@
   "v": "180b769e736d",
   "who": "bajo"
  },
+ "7e64a9bd": {
+  "d": 3.43,
+  "e": "012368789987521000000018895101962346832102831164551196669854111377688762004753110000",
+  "f": "7e64a9bd.mp3",
+  "h": "5180e4a0",
+  "oido": "Che, un set list que sube como un cohete.",
+  "qa": 0.82,
+  "say": "[amazed] ¡Ché, un setlist que sube como un cohete!",
+  "v": "7560a5b0d5ce",
+  "who": "voz"
+ },
  "7eb2f6a5": {
   "d": 4.25,
   "e": "09743862968892179776410000000015788883196787994195057476654200000000000000055589971198735874473373136521",
@@ -1380,6 +1391,17 @@
   "say": "[sighs] Y nosotros, discutiendo por las birras.",
   "v": "a9834757b122",
   "who": "guitarra"
+ },
+ "82b4a778": {
+  "d": 5.38,
+  "e": "1898579349922198951897873254332000000003723824641899877531486257851018430341014321000000000000000000000996951583543455403431233310000",
+  "f": "82b4a778.mp3",
+  "h": "10a3cf25",
+  "oido": "Le das optimizar orden y te propone el set list perfecto. Tú decides si lo aplicas.",
+  "qa": 0.88,
+  "say": "Le das a optimizar orden, y te propone el setlist perfecto. Tú decides si lo aplicas.",
+  "v": "5aec0ee422e8",
+  "who": "bajo"
  },
  "82e674e9": {
   "d": 1.54,
@@ -1764,6 +1786,17 @@
   "v": "e8597d6766f5",
   "who": "bateria"
  },
+ "aa4fdaf7": {
+  "d": 1.85,
+  "e": "05611998861395684138656442016653521530332221",
+  "f": "aa4fdaf7.mp3",
+  "h": "704892aa",
+  "oido": "Y si a mitad del bolo la curva",
+  "qa": 0.89,
+  "say": "[curious] ¿Y si a mitad del bolo la curva se cae?",
+  "v": "3e8d4377050a",
+  "who": "guitarra"
+ },
  "ab24b1fe": {
   "d": 3.72,
   "e": "0227995467521011015920523332000002931393784079523510111000002772163126778553422133312210000",
@@ -1906,6 +1939,17 @@
   "say": "Cinco minutos, chicos. Me han pedido que os avise yo: fui el primero en contestaros. El ráider, en el camerino, como firmamos. Y croquetas.",
   "v": "5946163dc4e1",
   "who": "manager"
+ },
+ "b6e1fc28": {
+  "d": 5.42,
+  "e": "09989930275887532100000000000000017887189997089983287644115432200000000000000555557712325459711664412998656651444315644144523434320000",
+  "f": "b6e1fc28.mp3",
+  "h": "62beb016",
+  "oido": "Mirad, chavales, cada tema tiene su energía y la app dibuja la cuerva del concierto entero.",
+  "qa": 0.94,
+  "say": "Mirad, chavales: cada tema tiene su energía, y la app dibuja la curva del concierto entero.",
+  "v": "10cd0d3b824c",
+  "who": "bajo"
  },
  "b7695bb8": {
   "d": 7.18,
@@ -2489,6 +2533,17 @@
   "say": "[excited] ¡La sala del catorce! ¡Y encima el día catorce!",
   "v": "9fc71d3bb1b7",
   "who": "voz"
+ },
+ "f2cec0bf": {
+  "d": 5.95,
+  "e": "177999749883599619941791561389863531397756411664134028654321000000000000000000035784159504688656654321499978765431388863654430687755215435443144320",
+  "f": "f2cec0bf.mp3",
+  "h": "b86f4197",
+  "oido": "y la inteligencia artificial vigila las transiciones, que no choquen ni la energía ni el tono de un tema al siguiente.",
+  "qa": 1.0,
+  "say": "Y la inteligencia artificial vigila las transiciones: que no choquen ni la energía ni el tono de un tema al siguiente.",
+  "v": "66fbc452f415",
+  "who": "bajo"
  },
  "f5803192": {
   "d": 4.2,
