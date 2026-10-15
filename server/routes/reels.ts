@@ -276,10 +276,9 @@ router.post("/analyze-video-highlights", requireAuth, iaRateLimiter, async (req,
       ? contentType
       : detectarTipoContenido(meta.title || tituloReal, meta.description);
 
-    // Señales medidas sobre el vídeo real (volumen, contraste al arrancar y cambios de plano).
     const analizarAudio = req.body?.analyzeAudio !== false;
-    const { ventanasEnergia, ventanasVirales, cambiosDePlano } =
-      analizarAudio && videoId ? await medirSenalesDelVideo({ videoId, objetivoClip, tipoContenido }) : { ventanasEnergia: [], ventanasVirales: [], cambiosDePlano: [] };
+    const ficha = { esMusica: meta.esMusica, heatmap: meta.heatmap, duration: duracionTotal };
+    const { ventanasEnergia, ventanasVirales, cambiosDePlano, publico } = await medirSenalesDelVideo({ videoId, objetivoClip, tipoContenido, ficha, activo: analizarAudio });
 
     // El bloque nuevo trae el desglose (volumen/arranque/ritmo visual); el antiguo, solo el
     // volumen. Se usa el que haya, para no perder la pista de energía si falla la puntuación.
@@ -488,6 +487,7 @@ Responde ÚNICAMENTE con JSON válido, sin markdown ni texto alrededor:
       viralWindows: ventanasVirales,
       contentType: tipoContenido,
       sceneChanges: cambiosDePlano.length,
+      publicSignals: { used: Boolean(publico.curva), note: publico.nota },
       savedToDb: guardadoEnBd,
       band: { name: nombreBanda, instruments: perfil.instruments, hashtags: hashtagsBase },
       videoMeta: {

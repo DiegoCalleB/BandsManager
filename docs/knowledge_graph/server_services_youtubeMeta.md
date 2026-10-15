@@ -18,6 +18,7 @@ Ficha de un vídeo de YouTube (título, canal, duración, capítulos) probando v
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_utils_senalesPublico|server/utils/senalesPublico.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 

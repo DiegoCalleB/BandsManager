@@ -447,16 +447,16 @@ Salas, festivales y contactos del CRM de booking. Los agentes (Scout, Redactor, 
 
 | Método | Ruta | Acceso | Límite de ritmo | Esquema | Código |
 |---|---|---|---|---|---|
-| `POST` | `/api/analyze-video-highlights` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:227`](../../server/routes/reels.ts#L227) |
+| `POST` | `/api/analyze-video-highlights` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:228`](../../server/routes/reels.ts#L228) |
 | `POST` | `/api/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:24`](../../server/routes/reelsTexto.ts#L24) |
-| `POST` | `/api/cut-video-clip` | Sesión | renderRateLimiter, renderConcurrencyLimiter |  | [`server/routes/reels.ts:554`](../../server/routes/reels.ts#L554) |
-| `POST` | `/api/reanalyze-clip` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:717`](../../server/routes/reels.ts#L717) |
-| `GET` | `/api/reel-analysis` | Sesión | — |  | [`server/routes/reels.ts:189`](../../server/routes/reels.ts#L189) |
+| `POST` | `/api/cut-video-clip` | Sesión | renderRateLimiter, renderConcurrencyLimiter |  | [`server/routes/reels.ts:517`](../../server/routes/reels.ts#L517) |
+| `POST` | `/api/reanalyze-clip` | Sesión | iaRateLimiter |  | [`server/routes/reels.ts:680`](../../server/routes/reels.ts#L680) |
+| `GET` | `/api/reel-analysis` | Sesión | — |  | [`server/routes/reels.ts:190`](../../server/routes/reels.ts#L190) |
 | `POST` | `/api/reels/ai-hook-doctor` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:24`](../../server/routes/reelsTexto.ts#L24) |
 | `GET` | `/api/reels/aprendizaje` | Sesión | — |  | [`server/routes/reelsAprendizaje.ts:16`](../../server/routes/reelsAprendizaje.ts#L16) |
 | `POST` | `/api/reels/copy-perfecto` | Sesión | iaRateLimiter |  | [`server/routes/reelsTexto.ts:55`](../../server/routes/reelsTexto.ts#L55) |
 | `GET` | `/api/reels/proximo-hueco` | Sesión | — |  | [`server/routes/reelsProgramacion.ts:21`](../../server/routes/reelsProgramacion.ts#L21) |
-| `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:150`](../../server/routes/reels.ts#L150) |
+| `GET` | `/api/youtube-meta` | Sesión | — |  | [`server/routes/reels.ts:151`](../../server/routes/reels.ts#L151) |
 
 ### referidos
 
