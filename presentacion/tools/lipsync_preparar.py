@@ -11,6 +11,7 @@ El audio sale de audio/voces (el que genera tools/voces.py). Si aún no existe, 
 import json
 import os
 import shutil
+import subprocess
 import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -54,6 +55,12 @@ def main():
             shutil.copy(audio, os.path.join(d, 'audio.mp3'))
         else:
             estado.append('pendiente de voz (genera las voces con tools/voces.py)')
+        # Las herramientas de lip-sync (Sync Labs, etc.) piden un vídeo de entrada: la foto, quieta, durante lo que dura la frase
+        ref = [x for x in os.listdir(d) if x.startswith('referencia.') and not x.endswith('.mp4')]
+        if ref and m:
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-loop', '1', '-i', os.path.join(d, ref[0]), '-t', f"{m['d'] + 0.6:.2f}", '-r', '25',
+                            '-vf', 'scale=-2:1024:flags=lanczos', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-an',
+                            os.path.join(d, 'referencia.mp4')], check=True)
         if real == 'confirmar':
             estado.append('CONFIRMAR de quién es la foto antes de generar')
         dur = m['d'] if m else None
