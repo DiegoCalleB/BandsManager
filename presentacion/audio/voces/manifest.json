@@ -318,6 +318,17 @@
   "v": "9096eec42678",
   "who": "diego"
  },
+ "1e551ec0": {
+  "d": 4.66,
+  "e": "003999855424753100000003636931321000001581869865298415346796474114310232322101111045522763101033434353236410110001",
+  "f": "1e551ec0.mp3",
+  "h": "81350089",
+  "oido": "Y ahora, Bryce, un reto. No para el batería de esta historia. Para ti, el de verdad.",
+  "qa": 0.94,
+  "say": "Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.",
+  "v": "5d615baf00c8",
+  "who": "diego"
+ },
  "1fc4ee76": {
   "d": 4.94,
   "e": "0369989277139322885414411787531000000000005989413946952933714974332211000196268689326544586642333210000043245542144113221",
@@ -1119,17 +1130,6 @@
   "v": "6dbe57ec4613",
   "who": "guitarra"
  },
- "66af530c": {
-  "d": 3.86,
-  "e": "0258666211111111112349955895831899982252397311111111154119678314734554635434676312333211111111",
-  "f": "66af530c.mp3",
-  "h": "d2ab635a",
-  "oido": "Brace, yo había dejado de tocar. Este máster me devolvió las ganas.",
-  "qa": 0.92,
-  "say": "Brais… yo había dejado de tocar. Este máster me devolvió las ganas.",
-  "v": "8cae3ce36690",
-  "who": "diego"
- },
  "66f6da93": {
   "d": 6.22,
   "e": "0897799899410025677621299776787797654878934974296786323321000000000000000000262129274110000000000023557998545996558976521575564455564310055342131012331000",
@@ -1151,6 +1151,17 @@
   "say": "[excited] ¡Esto es como Tinder, pero para bandas! ¡Y sin tener que hablar con nadie!",
   "v": "63bf416e9cd0",
   "who": "guitarra"
+ },
+ "685d67db": {
+  "d": 3.07,
+  "e": "132998589979218956463242144311125621565852153343333532464641233232111122221",
+  "f": "685d67db.mp3",
+  "h": "31d9cb75",
+  "oido": "Yo había dejado de tocar, este máster me devolvió las ganas",
+  "qa": 1.0,
+  "say": "Yo había dejado de tocar. Este máster me devolvió las ganas.",
+  "v": "707dce72120d",
+  "who": "diego"
  },
  "68fd0b9b": {
   "d": 3.96,
@@ -1283,17 +1294,6 @@
   "say": "[excited] Yo pongo las ideas locas. Claudio las discute.",
   "v": "d37f6c137660",
   "who": "ia_gemini"
- },
- "7825838a": {
-  "d": 4.75,
-  "e": "125999977769794211013454564123101011111379619798527678510498314531026543310111114576129952111111465564643475111111111",
-  "f": "7825838a.mp3",
-  "h": "6899c144",
-  "oido": "Y ahora braz, un reto. No para el braz de esta historia. Para ti, el de verdad.",
-  "qa": 0.88,
-  "say": "Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.",
-  "v": "ffc72d2c5b0c",
-  "who": "diego"
  },
  "79ed544f": {
   "d": 4.92,
@@ -2006,6 +2006,17 @@
   "v": "eb198ef1dac7",
   "who": "bajo"
  },
+ "bded9659": {
+  "d": 5.14,
+  "e": "1137977788289119974311116737744305552110111000114731199971657304411001454971575795176444896652110346213464125111421553111111110",
+  "f": "bded9659.mp3",
+  "h": "1bd17345",
+  "oido": "y la invitación sigue en pie y es solo para ti. Un batería tan bueno no se deja escapar.",
+  "qa": 1.0,
+  "say": "Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar.",
+  "v": "646171c41192",
+  "who": "diego"
+ },
  "be151c29": {
   "d": 1.32,
   "e": "0666699587473235396673474777962",
@@ -2149,17 +2160,6 @@
   "v": "d1685acb8b82",
   "who": "guitarra"
  },
- "c95e77ec": {
-  "d": 5.26,
-  "e": "1244139697564276215989836411010226975310000102643878951331177113321000000259942442104321321474154111011000199996641113423421100100",
-  "f": "c95e77ec.mp3",
-  "h": "08ecc95c",
-  "oido": "Ensayamos el sábado, Bryce, te llevo tu setlist, tu hoja con tus notas, solo las tuyas.",
-  "qa": 0.94,
-  "say": "Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.",
-  "v": "068307b294b4",
-  "who": "diego"
- },
  "c99060ac": {
   "d": 6.34,
   "e": "023119721065102520011121022999310999985576105744206543444421245541000001635747855486625859735445545961399736644100797544331125665104731386456205423210221000",
@@ -2236,17 +2236,6 @@
   "say": "[confused] ¿Y el be tu bi? ¿Eso qué es, un grupo coreano?",
   "v": "5f7049a1a3a4",
   "who": "bateria"
- },
- "d12f751a": {
-  "d": 5.57,
-  "e": "14999756781851177643100000017946644135431000125563210000001027951199991664521431011114459825579916633496553110136313681341115235411101000",
-  "f": "d12f751a.mp3",
-  "h": "df5bf17c",
-  "oido": "Y la invitación sigue en pie, Bryce, y es solo para ti. Un batería tan bueno no se deja escapar.",
-  "qa": 0.95,
-  "say": "Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar.",
-  "v": "fa3968b59637",
-  "who": "diego"
  },
  "d29598a2": {
   "d": 4.78,
@@ -2599,6 +2588,17 @@
   "say": "[excited] ¡Por fin sé cuándo ensayamos y cuándo tocamos!",
   "v": "2b8846e24a99",
   "who": "voz"
+ },
+ "f9a3c94b": {
+  "d": 4.92,
+  "e": "1143197866417521797654321113547889235118951243111101110004699424631101243133135641431001110100117998941114433211011111011",
+  "f": "f9a3c94b.mp3",
+  "h": "0dab44f3",
+  "oido": "Ensayamos el sábado, te llevo tu setlist, tu hoja con tus notas, solo las tuyas.",
+  "qa": 1.0,
+  "say": "Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.",
+  "v": "13493bddc04a",
+  "who": "diego"
  },
  "fa4b3302": {
   "d": 4.87,

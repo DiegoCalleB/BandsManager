@@ -906,7 +906,7 @@ add('''<section class="slide giro-reloj" data-title="El reloj" data-transition="
 # El reto: para Brais Moure de verdad (no el batería de la historia). Toca muy bien en casa; le falta el escenario. La pantalla la dirige direccion.py
 add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="El reto" data-vent-vivo="En directo · el portátil de Diego de la Calle, el bajista de verdad" data-transition="zoom">
   <div class="ft-copy"><span class="tag">Fin de la historia · El reto</span><h2>Brais, un reto.</h2>
-    {dlg(m('diego', 'Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad. En casa le das caña a la batería.',
+    {dlg(m('diego', 'Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad. En casa le das caña a la batería.',
            say='Y ahora, {bateria}, un reto. No para el {bateria} de esta historia: para ti. El de verdad. En casa le das caña a la batería.'),
          m('diego', 'Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.',
            say='Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.'),
@@ -921,7 +921,7 @@ add(f'''<section class="slide feat dl reto" data-grupo="promocion" data-title="E
 # La invitación: el correo llega a la bandeja de Brais. La voz de Diego, sin bromas. El cursor se queda sobre «Aceptar»: la decisión es suya
 add(f'''<section class="slide feat dl reto invitacion" data-grupo="promocion" data-title="La invitación" data-vent-tab="Recibidos · Brais Moure" data-vent-url="correo" data-vent-vivo="Mientras tanto, en el portátil de Brais…" data-transition="fade">
   <div class="ft-copy"><span class="tag">Fin de la historia · La invitación</span><h2>Te guardamos el sitio.</h2>
-    {dlg(m('diego', 'Brais… yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] {bateria}… yo había dejado de tocar. Este máster me devolvió las ganas.'),
+    {dlg(m('diego', 'Yo había dejado de tocar. Este máster me devolvió las ganas.', say='[softly] Yo había dejado de tocar. Este máster me devolvió las ganas.'),
          m('diego', 'Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.', say='[softly] Nos falta batería, {bateria}. Y es tuya: solo tienes que decir que sí.'))}
   </div>
   <div class="ft-shot"><img src="img/miembro-brais.jpg" alt="El correo de Diego en la bandeja de Brais, con el botón para aceptar la invitación"></div>
@@ -1664,7 +1664,7 @@ def _aplicar_guion(html):
             v = [l['voz'] for l in L]
             cuerpo = re.sub(r'<p class="sub">.*?</p>',
                 '<p class="sub" data-who="diego" data-say="' + esc(v[0]) + '">A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.</p>\n'
-                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.</p>', cuerpo, 1, flags=re.S)
+                '  <p class="sub inv" data-who="diego" data-say="' + esc(v[1]) + '">Y la invitación sigue en pie, y es solo para ti: un batería tan bueno no se deja escapar.</p>', cuerpo, 1, flags=re.S)
             cuerpo = re.sub(r'<div class="sign-msg">', '<div class="sign-msg" data-who="diego" data-say="' + esc(v[2]) + '">', cuerpo, 1)
             if os.path.exists(os.path.join(AQUI, '..', '..', 'img', 'gracias-mop.jpg')):
                 _i = cuerpo.find('<div class="art">')

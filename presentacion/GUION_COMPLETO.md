@@ -241,17 +241,17 @@ _Generado desde la película actual. Las escenas del anexo (para preguntas) no e
 ## 46 · El reloj
 
 ## 47 · El reto
-**47.1 Diego:** Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.  
+**47.1 Diego:** Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.  
 **47.2 Diego:** Te he preparado el setlist del primer ensayo de Master of Prompts: metal, con letras de coña sobre programar.  
 **47.3 Diego:** Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso y… enviado.  
 
 ## 48 · La invitación
-**48.1 Diego:** Brais… yo había dejado de tocar. Este máster me devolvió las ganas.  
+**48.1 Diego:** Yo había dejado de tocar. Este máster me devolvió las ganas.  
 **48.2 Diego:** Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.  
 
 ## 49 · Gracias
 **49.1 Diego:** A Brais y a todo el profesorado de The Big School, por un máster que acaba en una aplicación de verdad.  
-**49.2 Diego:** Y la invitación sigue en pie, Brais, y es solo para ti: un batería tan bueno no se deja escapar.  
+**49.2 Diego:** Y la invitación sigue en pie, y es solo para ti: un batería tan bueno no se deja escapar.  
 **49.3 Diego:** Diego · bajo Ensayamos el sábado. Os llevo vuestros setlists personalizados. 🎸  
 
 ## 50 · Créditos

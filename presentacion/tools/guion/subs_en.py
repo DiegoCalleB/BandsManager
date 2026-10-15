@@ -299,22 +299,22 @@ EN = {
     "So, we rehearse on Saturday. And on Wednesday, with the metalheads. Rock and roll!",
 "Traidor.":
     "Traitor.",
-"Y ahora, Brais, un reto. No para el Brais de esta historia: para ti, el de verdad.":
-    "And now, Brais, a challenge. Not for the Brais of this story: for you, the real one.",
+"Y ahora, Brais, un reto. No para el batería de esta historia: para ti, el de verdad.":
+    "And now, Brais, a challenge. Not for the drummer of this story: for you, the real one.",
 "Te he preparado el sétlist del primer ensayo de Máster of Prompts. Metal, con letras de coña sobre programar.":
     "I've prepared the setlist for the first rehearsal of Master of Prompts. Metal, with joke lyrics about programming.",
 "Y te lo mando como lo mandamos todo: la IA lo redacta, yo lo repaso, y… enviado.":
     "And I'm sending it the way we send everything: the AI writes it, I review it, and… sent.",
-"Brais… yo había dejado de tocar. Este máster me devolvió las ganas.":
-    "Brais… I'd stopped playing. This master's gave me the urge back.",
+"Yo había dejado de tocar. Este máster me devolvió las ganas.":
+    "I'd stopped playing. This master's gave me the urge back.",
 "Nos falta batería, Brais. Y es tuya: solo tienes que decir que sí.":
     "We need a drummer, Brais. And it's yours: you just have to say yes.",
 "Gracias, Brais. Y gracias a todo el profesorado de la Big Scul, por un máster que acaba en una aplicación de verdad.":
     "Thank you, Brais. And thanks to all the faculty at The Big School, for a master's that ends in a real application.",
-"Y la invitación sigue en pie, Brais. Y es solo para ti. Un batería tan bueno no se deja escapar.":
-    "And the invitation still stands, Brais. And it's only for you. A drummer this good doesn't get away.",
-"Ensayamos el sábado, Brais. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.":
-    "We rehearse on Saturday, Brais. I'll bring your setlist. Your sheet, with your notes. Only yours.",
+"Y la invitación sigue en pie. Y es solo para ti. Un batería tan bueno no se deja escapar.":
+    "And the invitation still stands. And it's only for you. A drummer this good doesn't get away.",
+"Ensayamos el sábado. Te llevo tu sétlist. Tu hoja, con tus notas. Solo las tuyas.":
+    "We rehearse on Saturday. I'll bring your setlist. Your sheet, with your notes. Only yours.",
 "¿Ya se ha acabado la peli? ¿Y quién paga las birras de la fiesta?":
     "Is the movie over already? And who's paying for the party's beers?",
 "Lo de dividir gastos está en mi lista de pendientes, Brais. Justo debajo de cobrarte las birras.":
