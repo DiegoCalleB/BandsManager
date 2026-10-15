@@ -41,6 +41,16 @@ const subidaJpeg = express.raw({ type: 'image/jpeg', limit: '4mb' });
 /** Solo se aceptan carteles con las medidas exactas de un formato: nada de imágenes arbitrarias. */
 const MEDIDAS_VALIDAS = new Set(Object.values(FORMATOS).map((f) => `${f.ancho}x${Math.round(f.ancho * f.proporcion)}`));
 
+/**
+ * El cuerpo binario de la petición como Buffer, o null. Descarta a propósito los tipos que un
+ * cliente manipulado puede colar en lugar de un binario (cadena, array, objeto): con `express.raw`
+ * un cuerpo con otro Content-Type llega como `{}`, y ni `.length` ni las firmas valdrían nada.
+ */
+function cuerpoBinario(cuerpo: unknown): Buffer | null {
+  if (typeof cuerpo === 'string' || Array.isArray(cuerpo)) return null;
+  return Buffer.isBuffer(cuerpo) ? cuerpo : null;
+}
+
 /** Ancho y alto de un PNG leídos de su cabecera IHDR, o null si no la tiene donde debe. */
 export function medidasPng(buf: Buffer): { ancho: number; alto: number } | null {
   if (buf.length < 24 || buf.toString('ascii', 12, 16) !== 'IHDR') return null;
@@ -148,8 +158,8 @@ cartelriaRouter.put('/cartel/:concertId/imagen', requireAuth, ficherosRateLimite
     if (!bolo) return;
     if (!esConciertoPublicable(bolo.concierto)) return res.status(409).json({ error: NO_PUBLICO });
 
-    const buf = req.body;
-    if (!Buffer.isBuffer(buf) || !validarMagicBytes(buf, 'png')) return res.status(400).json({ error: 'Eso no es un PNG.' });
+    const buf = cuerpoBinario(req.body);
+    if (!buf || !validarMagicBytes(buf, 'png')) return res.status(400).json({ error: 'Eso no es un PNG.' });
     const medidas = medidasPng(buf);
     if (!medidas || !MEDIDAS_VALIDAS.has(`${medidas.ancho}x${medidas.alto}`)) {
       return res.status(400).json({ error: 'El cartel no tiene las medidas de ningún formato.' });
@@ -169,9 +179,9 @@ cartelriaRouter.post('/cartel/:concertId/foto', requireAuth, ficherosRateLimiter
     const bolo = await boloDeLaBanda(req, res);
     if (!bolo) return;
 
-    const buf = req.body;
+    const buf = cuerpoBinario(req.body);
     // El cliente reescala y recodifica siempre a JPEG: aquí no entra otra cosa.
-    if (!Buffer.isBuffer(buf) || !validarMagicBytes(buf, 'jpg')) return res.status(400).json({ error: 'Eso no es una foto JPEG.' });
+    if (!buf || !validarMagicBytes(buf, 'jpg')) return res.status(400).json({ error: 'Eso no es una foto JPEG.' });
 
     const url = await subir(buf, `${carpetaCartel(bolo.bandId)}${nombreSeguro(req.params.concertId)}-foto.jpg`, 'image/jpeg');
     if (!url) return res.status(503).json({ error: 'No se pudo guardar la foto ahora mismo.' });
@@ -219,9 +229,9 @@ cartelriaRouter.put('/cartel/adn', requireAuth, apiAutenticadaRateLimiter, async
 cartelriaRouter.post('/cartel/referencias', requireAuth, ficherosRateLimiter, subidaReferencia, async (req, res) => {
   try {
     const bandId = getTargetBandId(req);
-    const buf = req.body;
+    const buf = cuerpoBinario(req.body);
     // El cliente reescala y recodifica siempre a JPEG: aquí no entra otra cosa.
-    if (!Buffer.isBuffer(buf) || !validarMagicBytes(buf, 'jpg')) return res.status(400).json({ error: 'Eso no es una imagen JPEG.' });
+    if (!buf || !validarMagicBytes(buf, 'jpg')) return res.status(400).json({ error: 'Eso no es una imagen JPEG.' });
 
     const antes = await dbGetAdnCartel(bandId, urlPermitida(bandId));
     if (!antes) return res.status(503).json({ error: 'No se pudo guardar la referencia ahora mismo.' });

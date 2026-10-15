@@ -304,3 +304,15 @@ describe('POST /cartel/fondo con el ADN de la banda', () => {
     expect(servicio.llamadas[0][1]).not.toContain('attached images');
   });
 });
+
+describe('cuerpo de las subidas', () => {
+  // Un cliente manipulado puede mandar otra cosa en lugar de un binario: nunca llega a leerse como imagen.
+  it('una cadena, un array o un objeto en lugar del binario es un 400 y no sube nada', async () => {
+    for (const cuerpo of ['x'.repeat(40), [0x89, 0x50, 0x4e, 0x47], { length: 99, 0: 0x89 }, undefined]) {
+      expect((await llamar('put', '/cartel/:concertId/imagen', { params: { concertId: 'c1' }, body: cuerpo })).code).toBe(400);
+      expect((await llamar('post', '/cartel/:concertId/foto', { params: { concertId: 'c1' }, body: cuerpo })).code).toBe(400);
+      expect((await llamar('post', '/cartel/referencias', { body: cuerpo })).code).toBe(400);
+    }
+    expect(subidas).toHaveLength(0);
+  });
+});
