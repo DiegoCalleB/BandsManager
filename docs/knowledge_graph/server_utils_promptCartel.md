@@ -19,6 +19,7 @@ Prompt del fondo de un cartel. Función pura: la IA pinta SOLO la ilustración; 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[sec_prompt_safety|Prompt Injection Sanitizer]] *(Layer: #security, Domain: #system)*
+- [[src_utils_cartel_estilos|src/utils/cartel/estilos.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

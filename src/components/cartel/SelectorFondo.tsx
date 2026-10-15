@@ -3,15 +3,8 @@ import { ImagePlus, Sparkles } from 'lucide-react';
 import { Button, Field, Textarea } from '../ui';
 import { cn } from '../../utils/cn';
 import { PALETAS, type FondoCartel } from '../../utils/cartel/render';
-import type { EstiloCartel } from '../../utils/promocionApi';
-
-const ESTILOS: { id: EstiloCartel; etiqueta: string }[] = [
-  { id: 'gigposter', etiqueta: 'Serigrafía' },
-  { id: 'neon', etiqueta: 'Neón' },
-  { id: 'collage', etiqueta: 'Collage punk' },
-  { id: 'minimal', etiqueta: 'Minimal' },
-  { id: 'vintage', etiqueta: 'Vintage 70' },
-];
+import { ESTILOS_CARTEL, ETIQUETA_ESTILO, type EstiloCartel } from '../../utils/cartel/estilos';
+import type { PaletaBanda } from '../../utils/cartel/paleta';
 
 interface Props {
   fondo: FondoCartel;
@@ -21,6 +14,23 @@ interface Props {
   fondosIa: string[];
   onGenerarIa: (estilo: EstiloCartel, instrucciones: string) => Promise<boolean>;
   generando: boolean;
+  /** Estilo con el que arranca el panel de IA (el de la banda: plantilla del dossier, género, favoritos). */
+  estiloInicial: EstiloCartel;
+  /** «Tus colores», sacados del logo. */
+  paletaBanda: PaletaBanda | null;
+  /** El ADN de la banda (referencias, anteriores, favoritos), dentro del panel de IA. */
+  panelBanda?: React.ReactNode;
+}
+
+/** Muestra de una paleta: color de fondo con unas barras de la Onda en el acento. */
+function MuestraPaleta({ fondo, acento }: { fondo: string; acento: string }) {
+  return (
+    <span className="flex size-full items-end justify-center gap-[3px] pb-2.5" style={{ background: fondo }}>
+      {[10, 18, 13, 22, 9].map((h, i) => (
+        <span key={i} className="w-[3px] rounded-[var(--r-pill)]" style={{ height: h, background: acento }} />
+      ))}
+    </span>
+  );
 }
 
 /** Miniatura elegible. La elegida se marca con una píldora debajo (sin bordes, Ley 1). */
@@ -36,9 +46,11 @@ function Muestra({ activa, etiqueta, onClick, children }: { activa: boolean; eti
   );
 }
 
-export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando }: Props) {
+export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenerarIa, generando, estiloInicial, paletaBanda, panelBanda }: Props) {
   const [iaAbierta, setIaAbierta] = useState(false);
-  const [estilo, setEstilo] = useState<EstiloCartel>('gigposter');
+  // Hasta que la persona toca un estilo, manda el de su banda (que puede llegar tarde, al cargar su ADN).
+  const [estiloElegido, setEstiloElegido] = useState<EstiloCartel | null>(null);
+  const estilo = estiloElegido ?? estiloInicial;
   const [instrucciones, setInstrucciones] = useState('');
   const esImagen = (url: string) => fondo.tipo === 'imagen' && fondo.url === url;
 
@@ -47,13 +59,14 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
       <div className="no-scrollbar -mx-4 flex shrink-0 gap-2.5 overflow-x-auto px-4" role="group" aria-label="Fondo del cartel">
         {PALETAS.map((p) => (
           <Muestra key={p.id} etiqueta={`Fondo ${p.nombre}`} activa={fondo.tipo === 'paleta' && fondo.id === p.id} onClick={() => onFondo({ tipo: 'paleta', id: p.id })}>
-            <span className="flex size-full items-end justify-center gap-[3px] pb-2.5" style={{ background: p.fondo }}>
-              {[10, 18, 13, 22, 9].map((h, i) => (
-                <span key={i} className="w-[3px] rounded-[var(--r-pill)]" style={{ height: h, background: p.acento }} />
-              ))}
-            </span>
+            <MuestraPaleta fondo={p.fondo} acento={p.acento} />
           </Muestra>
         ))}
+        {paletaBanda && (
+          <Muestra etiqueta="Fondo Tus colores" activa={fondo.tipo === 'paleta' && fondo.id === 'banda'} onClick={() => onFondo({ tipo: 'paleta', id: 'banda' })}>
+            <MuestraPaleta fondo={paletaBanda.fondo} acento={paletaBanda.acento} />
+          </Muestra>
+        )}
 
         {foto && (
           <Muestra etiqueta="Tu foto" activa={esImagen(foto)} onClick={() => onFondo({ tipo: 'imagen', url: foto, origen: 'foto' })}>
@@ -89,12 +102,13 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
       {iaAbierta && (
         <div className="grid gap-3 rounded-[var(--r-m)] bg-[var(--sunken)] p-3">
           <div className="flex flex-wrap gap-1.5" role="group" aria-label="Estilo del fondo">
-            {ESTILOS.map((e) => (
-              <Button key={e.id} size="xs" variant={estilo === e.id ? 'inverse' : 'raised'} aria-pressed={estilo === e.id} onClick={() => setEstilo(e.id)}>
-                {e.etiqueta}
+            {ESTILOS_CARTEL.map((e) => (
+              <Button key={e} size="xs" variant={estilo === e ? 'inverse' : 'raised'} aria-pressed={estilo === e} onClick={() => setEstiloElegido(e)}>
+                {ETIQUETA_ESTILO[e]}
               </Button>
             ))}
           </div>
+          {panelBanda}
           <Field label="Ambiente" optional>
             <Textarea rows={2} maxLength={300} value={instrucciones} placeholder="Colores, objetos, la sala de noche…" onChange={(e) => setInstrucciones(e.target.value)} />
           </Field>

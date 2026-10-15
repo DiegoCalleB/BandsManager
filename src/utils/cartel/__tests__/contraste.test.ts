@@ -55,3 +55,32 @@ describe('contraste del cartel', () => {
     expect(medirLuz(new Uint8ClampedArray(0))).toEqual({ p10: 0, p90: 0 });
   });
 });
+
+import { unirPixeles } from '../contraste';
+
+describe('contraste medido sobre el texto', () => {
+  /** n píxeles claros y m oscuros, opacos. */
+  const mezcla = (claros: number, oscuros: number) => {
+    const d = new Uint8ClampedArray((claros + oscuros) * 4);
+    for (let i = 0; i < claros + oscuros; i++) d.set(i < claros ? [245, 240, 225, 255] : [20, 25, 70, 255], i * 4);
+    return d;
+  };
+
+  it('una mancha oscura que ocupa el 5 % del texto se pasa por alto con la cola del 10 %, y se detecta con la del 3 %', () => {
+    const px = mezcla(95, 5);
+    const normal = decidirTinta(medirLuz(px, 1, 0.1));
+    const sobreTexto = decidirTinta(medirLuz(px, 1, 0.03));
+    expect(normal.velo).toBe(0); // tinta oscura sobre «casi todo claro»: parece bien
+    expect(sobreTexto.velo).toBeGreaterThan(0.2); // pero una letra sobre la mancha no se leería
+  });
+
+  it('con la cola del 3 %, un fondo limpio sigue sin velo', () => {
+    expect(decidirTinta(medirLuz(mezcla(100, 0), 1, 0.03)).velo).toBe(0);
+  });
+
+  it('unirPixeles junta trozos en orden', () => {
+    const r = unirPixeles([new Uint8ClampedArray([1, 2]), new Uint8ClampedArray([3]), new Uint8ClampedArray([])]);
+    expect(Array.from(r)).toEqual([1, 2, 3]);
+    expect(unirPixeles([]).length).toBe(0);
+  });
+});

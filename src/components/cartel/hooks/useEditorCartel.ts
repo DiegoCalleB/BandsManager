@@ -4,6 +4,8 @@ import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/car
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
 import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
 import { lineaHorario } from '../../../utils/cartel/texto';
+import { sinVersion } from '../../../utils/cartel/adn';
+import { useAdnCartel, type DatosBandaCartel } from './useAdnCartel';
 import {
   canvasABlob,
   compartirODescargar,
@@ -48,6 +50,8 @@ interface Params {
   initialConcertId?: string;
   /** Si el plan permite quitar la marca BandManager. */
   puedeQuitarMarca?: boolean;
+  /** Logo, plantilla del dossier y género: el ADN visual automático de la banda. */
+  banda?: DatosBandaCartel;
   /** Lo que ya está guardado en el servidor, para reflejarlo en la copia en memoria de los bolos. */
   onCartelGuardado?: (concertId: string, cartel: { cartel_config?: unknown; cartel_url?: string }) => void;
 }
@@ -61,13 +65,15 @@ type PorBolo<T> = Record<string, T>;
 /** Qué hacer con el cartel del bolo tras exportar: ya tengo el PNG de feed, hay que pintarlo, o nada (cancelado). */
 type TrasExportar = Blob | 'pintar-feed' | null;
 
-export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false, onCartelGuardado }: Params) {
+export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false, banda, onCartelGuardado }: Params) {
   const opciones = useMemo(() => conciertosParaCartel(concerts, hoyMadrid()), [concerts]);
   const [concertId, setConcertId] = useState(initialConcertId ?? '');
   const concierto = opciones.find((c) => c.id === concertId) ?? opciones[0] ?? null;
   const id = concierto?.id ?? '';
 
   const [formato, setFormato] = useState<FormatoCartel>('feed');
+  /** Con qué estilo y qué ambiente se generó cada fondo de IA en esta sesión (para guardarlo como favorito). */
+  const [metaIa, setMetaIa] = useState<Record<string, { estilo: EstiloCartel; ambiente: string }>>({});
   const [ajustesPorBolo, setAjustesPorBolo] = useState<PorBolo<AjustesBolo>>({});
   const [fondoPorBolo, setFondoPorBolo] = useState<PorBolo<FondoCartel>>({});
   const [fondosIaPorBolo, setFondosIaPorBolo] = useState<PorBolo<string[]>>({});
@@ -81,6 +87,9 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   const [generando, setGenerando] = useState(false);
   const [exportando, setExportando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // El ADN visual de la banda: «Tus colores» del logo, referencias, favoritos y estilo sugerido.
+  const adn = useAdnCartel(banda ?? {}, setError);
+  const logoUrl = banda?.logoUrl ?? null;
 
   // Lo guardado en el bolo (fondo, cabeza de cartel, historial de IA…), saneado.
   const guardada = useMemo(
@@ -124,18 +133,22 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     };
   }, [id, enlaces]);
 
+  const conLogo = ajustes.logo && !!logoUrl;
+  const { paletaBanda } = adn;
   const piezasPara = useCallback(
     (f: FormatoCartel): PiezasCartel | null => {
       if (!concierto) return null;
       const conQr = !FORMATOS[f].digital && ajustes.qr && !!enlace;
       return {
         datos: datosDesdeConcierto(concierto, bandName, ajustes),
-        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca },
+        opciones: { qr: conQr, urlCorta: enlace?.corta ?? null, marca, logo: conLogo },
         qrUrl: conQr ? enlace!.url : null,
         semilla: `${concierto.id}|${bandName}`,
+        paletaBanda,
+        logoUrl: conLogo ? logoUrl : null,
       };
     },
-    [concierto, bandName, ajustes, enlace, marca]
+    [concierto, bandName, ajustes, enlace, marca, conLogo, logoUrl, paletaBanda]
   );
 
   // Vista previa: se pinta fuera de pantalla y se copia al final, así no parpadea ni se mezclan
@@ -259,6 +272,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
       setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
       setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      setMetaIa((p) => ({ ...p, [r.url]: { estilo, ambiente: instrucciones.trim().slice(0, 300) } }));
       marcar();
       return true;
     } catch (e) {
@@ -269,6 +283,30 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       setGenerando(false);
     }
   };
+
+  /** Un fondo de IA de otro bolo (favorito): gratis, y el cartel de esta banda mantiene su sello. */
+  const usarFavorito = (url: string) => {
+    if (!id) return;
+    setFondosIaPorBolo((p) => ({ ...p, [id]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[id] ?? fondosIa }, url).fondosIa }));
+    setFondoPorBolo((p) => ({ ...p, [id]: { tipo: 'imagen', origen: 'ia', url } }));
+    setError(null);
+    marcar();
+  };
+
+  /** Carteles de OTROS bolos de la banda que se pueden ofrecer como referencia (ya viven en su carpeta). */
+  const anteriores = useMemo(() => {
+    const yaSon = new Set(adn.adn.referencias.map(sinVersion));
+    const vistos = new Set<string>();
+    const lista: string[] = [];
+    for (const c of concerts) {
+      const u = c.id !== id ? c.cartel_url || c.cartelUrl : undefined;
+      if (!u || !u.startsWith('https://') || !u.includes('/storage/v1/object/public/') || !u.includes('/carteles/')) continue;
+      if (yaSon.has(sinVersion(u)) || vistos.has(sinVersion(u))) continue;
+      vistos.add(sinVersion(u));
+      lista.push(u);
+    }
+    return lista.slice(0, 6);
+  }, [concerts, id, adn.adn.referencias]);
 
   const exportar = useCallback(
     async (f: FormatoCartel): Promise<Blob> => {
@@ -302,7 +340,14 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     setError(null);
     try {
       const despues = await tarea();
-      if (despues) publicarEnBolo(despues);
+      if (despues) {
+        publicarEnBolo(despues);
+        // Si lo ha compartido o descargado con un fondo de IA, ese fondo le ha gustado: favorito.
+        if (fondo.tipo === 'imagen' && fondo.origen === 'ia') {
+          const m = metaIa[fondo.url];
+          adn.marcarFavorito({ url: fondo.url, estilo: m?.estilo ?? adn.estiloSugerido, ambiente: m?.ambiente ?? '' });
+        }
+      }
     } catch (e) {
       console.warn('[Cartelería] Falló la exportación:', e);
       setError(mensajeDe(e, 'No pudimos exportar el cartel.'));
@@ -364,6 +409,10 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
     tieneEnlace: !!enlace,
     puedeQuitarMarca,
+    adn,
+    anteriores,
+    usarFavorito,
+    tieneLogo: !!logoUrl,
     /** El bolo ya tiene cartel en su página pública (de antes o de esta sesión). */
     publicado: !!publicados[id] || !!concierto?.cartel_url || !!concierto?.cartelUrl,
     compartir,

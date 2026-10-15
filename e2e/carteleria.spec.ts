@@ -14,13 +14,14 @@ test('abrir no escribe nada y el cartel se pinta sin IA', async ({ page }) => {
   await expect(page.getByLabel(/Vista previa del cartel/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Compartir' })).toBeVisible();
   await page.waitForTimeout(2000);
-  expect(peticiones).toEqual([]);
+  // Leer el estilo de la banda (GET) es normal; escribir no: nada se guarda hasta que la persona toca algo.
+  expect(peticiones.filter((p) => p.metodo !== 'GET')).toEqual([]);
 });
 
 test('elegir fondo guarda la configuración, saneada y sin URLs locales', async ({ page }) => {
   const { peticiones } = await abrirCarteleria(page);
   await page.getByRole('button', { name: 'Fondo Bosque' }).click();
-  await expect.poll(() => peticiones.length, { timeout: 8_000 }).toBeGreaterThan(0);
+  await expect.poll(() => peticiones.some((p) => p.ruta.endsWith('/config')), { timeout: 8_000 }).toBe(true);
   const put = peticiones.find((p) => p.ruta.endsWith('/config'))!;
   expect(put.metodo).toBe('PUT');
   const config = JSON.parse(put.cuerpo.toString());

@@ -202,6 +202,7 @@ export function ActiveViewRouter() {
                       concerts={activeBandConcerts || concerts}
                       bandName={currentActiveBandName}
                       plan={currentActiveBandPlan}
+                      banda={{ logoUrl: currentActiveBandLogo || epkConfig?.logoUrl || null, plantilla: epkConfig?.plantilla, genero: epkConfig?.genero }}
                       onCartelGuardado={handleCartelGuardado}
                       initialConcertId={bookingOptions.concertId}
                     />

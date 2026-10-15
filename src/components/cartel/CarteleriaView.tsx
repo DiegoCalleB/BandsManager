@@ -7,6 +7,7 @@ import { fechaCartel } from '../../utils/cartel/texto';
 import { useEditorCartel } from './hooks/useEditorCartel';
 import { SelectorFondo } from './SelectorFondo';
 import { PreguntaCabeza } from './PreguntaCabeza';
+import { EstiloBanda } from './EstiloBanda';
 import { AjustesCartel } from './AjustesCartel';
 import { puedeQuitarMarcaCartel } from '../../utils/planPermissions';
 
@@ -15,6 +16,8 @@ interface Props {
   bandName: string;
   /** Plan de la banda activa: decide si se puede quitar la marca BandManager. */
   plan?: string;
+  /** Logo, plantilla del dossier y género de la banda: su ADN visual automático. */
+  banda?: { logoUrl?: string | null; plantilla?: string; genero?: string };
   /** Avisa a la app de lo ya guardado en el servidor, para que al volver a la vista siga ahí. */
   onCartelGuardado?: (concertId: string, cartel: { cartel_config?: unknown; cartel_url?: string }) => void;
   /** Si se llega desde la ficha de un bolo, ese bolo ya viene elegido. */
@@ -27,9 +30,9 @@ const PESTANAS = ORDEN_FORMATOS.map((id) => ({ id, label: FORMATOS[id].etiqueta 
  * Cartelería: abrir y tener cartel. El próximo bolo viene elegido y el cartel sale al instante
  * sin IA (color + la Onda); la IA y la foto son extras. Tres bloques en móvil: bolo, cartel, acciones.
  */
-const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, onCartelGuardado, initialConcertId }) => {
+const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, banda, onCartelGuardado, initialConcertId }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), onCartelGuardado });
+  const ed = useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca: puedeQuitarMarcaCartel(plan), banda, onCartelGuardado });
   const [ajustesAbiertos, setAjustesAbiertos] = useState(false);
 
   if (!ed.concierto) {
@@ -75,6 +78,24 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, onCartelGua
           fondosIa={ed.fondosIa}
           onGenerarIa={ed.generarIa}
           generando={ed.generando}
+          estiloInicial={ed.adn.estiloSugerido}
+          paletaBanda={ed.adn.paletaBanda}
+          panelBanda={
+            <EstiloBanda
+              referencias={ed.adn.adn.referencias}
+              anteriores={ed.anteriores}
+              favoritos={ed.adn.adn.favoritos}
+              aprender={ed.adn.adn.aprender}
+              subiendo={ed.adn.subiendo}
+              queMira={ed.adn.referenciasQueMiraLaIa}
+              onSubir={ed.adn.subirReferencia}
+              onAnadirAnterior={ed.adn.usarComoReferencia}
+              onQuitarReferencia={ed.adn.quitarReferencia}
+              onUsarFavorito={ed.usarFavorito}
+              onQuitarFavorito={ed.adn.quitarFavorito}
+              onAprender={ed.adn.alternarAprender}
+            />
+          }
         />
 
         {ed.error && <p role="alert" className="rounded-[var(--r-s)] bg-[var(--alert-soft)] px-3 py-2 text-sm text-[var(--alert)]">{ed.error}</p>}
@@ -104,6 +125,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, onCartelGua
           bandas={ed.bandas}
           tieneHorario={ed.tieneHorario}
           tieneEnlace={ed.tieneEnlace}
+          tieneLogo={ed.tieneLogo}
           puedeQuitarMarca={ed.puedeQuitarMarca}
         />
       </div>

@@ -7,7 +7,8 @@
 
 import { ORDEN_FORMATOS, type FormatoCartel } from './formatos';
 
-export const PALETA_IDS = ['noche', 'amarillo', 'electrico', 'bosque'] as const;
+/** `banda` = «Tus colores», sacados del logo al abrir la vista (no se guardan: dependen del logo actual). */
+export const PALETA_IDS = ['noche', 'amarillo', 'electrico', 'bosque', 'banda'] as const;
 export type PaletaId = (typeof PALETA_IDS)[number];
 
 export type FondoGuardado =
@@ -24,6 +25,8 @@ export interface CartelConfig {
   horario: boolean;
   qr: boolean;
   marca: boolean;
+  /** Logo de la banda en la esquina del cartel. */
+  logo: boolean;
   /** Últimos fondos de IA de este bolo, el más nuevo primero. */
   fondosIa: string[];
   /** Foto propia subida para este bolo. */
@@ -43,6 +46,7 @@ export const CONFIG_INICIAL: CartelConfig = {
   horario: true,
   qr: true,
   marca: true,
+  logo: false,
   fondosIa: [],
   foto: null,
 };
@@ -86,6 +90,7 @@ export function sanearConfigCartel(raw: unknown, esUrlPermitida: (url: string) =
     horario: booleano(r.horario, true),
     qr: booleano(r.qr, true),
     marca: booleano(r.marca, true),
+    logo: booleano(r.logo, false),
     fondosIa,
     foto,
   };
@@ -97,10 +102,10 @@ export function conFondoIa(config: CartelConfig, url: string): CartelConfig {
 }
 
 /** Lo que se decide por bolo y no es el fondo. */
-export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca'>;
+export type AjustesBolo = Pick<CartelConfig, 'cabeza' | 'extra' | 'horario' | 'qr' | 'marca' | 'logo'>;
 
 export function ajustesDe(c: CartelConfig): AjustesBolo {
-  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca };
+  return { cabeza: c.cabeza, extra: c.extra, horario: c.horario, qr: c.qr, marca: c.marca, logo: c.logo };
 }
 
 /**

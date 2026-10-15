@@ -125,3 +125,37 @@ describe('calcularLayout', () => {
     expect(b.qr!.w / a.qr!.w).toBeCloseTo(k, 1);
   });
 });
+
+describe('logo de la banda', () => {
+  const conLogo: OpcionesLayout = { qr: false, urlCorta: null, marca: false, logo: true };
+
+  for (const f of ORDEN_FORMATOS) {
+    it(`${f}: el logo cabe en el lienzo y ningún nombre lo pisa`, () => {
+      const def = FORMATOS[f];
+      const { ancho: w } = dimensiones(def);
+      const L = calcularLayout(def, w, datos({ lineup: [{ nombre: 'La Orquesta Sinfónica Experimental', cabeza: true }, { nombre: 'Los Pijamas', cabeza: false }] }), conLogo, medir);
+      const g = L.logo!;
+      expect(g).not.toBeNull();
+      expect(g.x + g.w).toBeLessThanOrEqual(w);
+      expect(g.y + g.h).toBeLessThanOrEqual(L.alto);
+      for (const l of L.lineas) {
+        const izq = l.alinear === 'left' ? l.x : l.x - ancho(l);
+        const solapa = izq < g.x + g.w && izq + ancho(l) > g.x && l.y < g.y + g.h && l.y + l.px > g.y;
+        expect(solapa, `"${l.texto}" pisa el logo`).toBe(false);
+      }
+    });
+  }
+
+  it('sin pedirlo no se reserva hueco, y con él los nombres se estrechan', () => {
+    const sin = calcularLayout(FORMATOS.feed, 1080, datos(), sinNada, medir);
+    expect(sin.logo).toBeNull();
+    const con = calcularLayout(FORMATOS.feed, 1080, datos(), conLogo, medir);
+    expect(con.lineas[0].px).toBeLessThanOrEqual(sin.lineas[0].px);
+  });
+
+  it('en una historia el logo respeta la franja segura de Instagram', () => {
+    const def = FORMATOS.historia;
+    const L = calcularLayout(def, 1080, datos(), conLogo, medir);
+    expect(L.logo!.y).toBeGreaterThanOrEqual(def.seguroArriba * L.alto);
+  });
+});

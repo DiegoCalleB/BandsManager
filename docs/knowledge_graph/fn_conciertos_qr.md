@@ -25,6 +25,7 @@ Bolos confirmados, calendario, página pública del concierto, QR y enlaces cort
 - [[server_db_alertSettings|server/db/alertSettings.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_bands|server/db/bands.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_calendarConflicts|server/db/calendarConflicts.ts]] *(Layer: #db, Domain: #system)*
+- [[server_db_cartelEstilo|server/db/cartelEstilo.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_emailsCicloVida|server/db/emailsCicloVida.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_enlacesCortos|server/db/enlacesCortos.ts]] *(Layer: #db, Domain: #system)*

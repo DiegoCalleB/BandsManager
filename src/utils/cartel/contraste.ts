@@ -6,9 +6,9 @@
 // eso se calcula la opacidad exacta del velo que garantiza 4,5:1 (WCAG AA) en ese peor caso.
 
 export interface LuzZona {
-  /** Luminancia relativa WCAG (0..1) por debajo de la que queda el 10 % más oscuro. */
+  /** Luminancia relativa WCAG (0..1) por debajo de la que queda la cola oscura (10 % por defecto). */
   p10: number;
-  /** Ídem para el 10 % más claro. */
+  /** Ídem para la cola clara. */
   p90: number;
 }
 
@@ -64,8 +64,24 @@ export function decidirTinta({ p10, p90 }: LuzZona): Tinta {
   return { tinta, velo };
 }
 
-/** Percentiles de luminancia de un trozo de `ImageData` (muestreando 1 de cada `paso` píxeles). */
-export function medirLuz(datos: Uint8ClampedArray, paso = 5): LuzZona {
+/** Junta los píxeles de varios trozos de `ImageData` en uno (para medir todo el texto de una zona a la vez). */
+export function unirPixeles(trozos: Uint8ClampedArray[]): Uint8ClampedArray {
+  const out = new Uint8ClampedArray(trozos.reduce((n, t) => n + t.length, 0));
+  let o = 0;
+  for (const t of trozos) {
+    out.set(t, o);
+    o += t.length;
+  }
+  return out;
+}
+
+/**
+ * Percentiles de luminancia de un trozo de `ImageData` (muestreando 1 de cada `paso` píxeles).
+ * `cola` = qué fracción de los extremos se tolera: con 0,1 un 10 % de los píxeles puede quedar peor
+ * que lo medido. Medido sobre el texto, una cola pequeña (0,03) detecta incluso una mancha oscura
+ * detrás de una sola letra.
+ */
+export function medirLuz(datos: Uint8ClampedArray, paso = 5, cola = 0.1): LuzZona {
   const BINS = 128;
   const hist = new Uint32Array(BINS);
   let n = 0;
@@ -84,5 +100,5 @@ export function medirLuz(datos: Uint8ClampedArray, paso = 5): LuzZona {
     }
     return 1;
   };
-  return { p10: percentil(0.1), p90: percentil(0.9) };
+  return { p10: percentil(cola), p90: percentil(1 - cola) };
 }

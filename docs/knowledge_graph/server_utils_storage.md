@@ -36,6 +36,7 @@ Subida a Supabase Storage, en un solo sitio.
 - [[server_services_audioSeparator_AudioSeparatorService|server/services/audioSeparator/AudioSeparatorService.ts]] *(from #service)*
 - [[server_services_audioTransposeService|server/services/audioTransposeService.ts]] *(from #service)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
+- [[server_services_referenciasCartel|server/services/referenciasCartel.ts]] *(from #service)*
 - [[server_services_stemStorageRetryQueue|server/services/stemStorageRetryQueue.ts]] *(from #service)*
 - [[server_utils_optimizeExistingWavs|server/utils/optimizeExistingWavs.ts]] *(from #service)*
 

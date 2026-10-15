@@ -118,3 +118,36 @@ export function rutaAlmacenamientoClip(bandId: string, nombreArchivo: string): s
   const archivoLimpio = String(nombreArchivo || "clip.mp4").replace(/[^a-zA-Z0-9_.-]/g, "_");
   return `reels/${bandaLimpia}/${archivoLimpio}`;
 }
+
+/**
+ * Lee un fichero de nuestro bucket por su ruta (sin pasar por la red pública: no hay URL que
+ * validar contra SSRF). `maxBytes` corta ficheros enormes. null si no existe, falla o no cabe.
+ */
+export async function descargarDeAlmacenamiento(ruta: string, maxBytes = 5 * 1024 * 1024): Promise<Buffer | null> {
+  const supabase = getSupabaseClient();
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase.storage.from(getBucketName()).download(ruta);
+    if (error || !data) {
+      console.warn(`[Supabase Storage] No se pudo leer ${ruta}:`, error?.message);
+      return null;
+    }
+    if (data.size > maxBytes) return null;
+    return Buffer.from(await data.arrayBuffer());
+  } catch (errCapturado) {
+    console.warn(`[Supabase Storage Error] leyendo ${ruta}:`, comoErrorCapturado(errCapturado).message);
+    return null;
+  }
+}
+
+/** Borra ficheros de nuestro bucket. Nunca lanza: un huérfano no debe romper la petición. */
+export async function borrarDeAlmacenamiento(rutas: string[]): Promise<void> {
+  const supabase = getSupabaseClient();
+  if (!supabase || rutas.length === 0) return;
+  try {
+    const { error } = await supabase.storage.from(getBucketName()).remove(rutas);
+    if (error) console.warn('[Supabase Storage] No se pudo borrar:', error.message);
+  } catch (errCapturado) {
+    console.warn('[Supabase Storage Error] borrando:', comoErrorCapturado(errCapturado).message);
+  }
+}

@@ -24,6 +24,7 @@ Esquema relacional de tablas, índices pgvector, funciones y políticas RLS.
 - [[tabla_ai_token_ledger|tabla ai_token_ledger]] *(Layer: #schema, Domain: #system)*
 - [[tabla_autonomy_configs|tabla autonomy_configs]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_alert_settings|tabla band_alert_settings]] *(Layer: #schema, Domain: #system)*
+- [[tabla_band_cartel_estilo|tabla band_cartel_estilo]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_contacts|tabla band_contacts]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_email_accounts|tabla band_email_accounts]] *(Layer: #schema, Domain: #system)*
 - [[tabla_band_gmail_oauth_accounts|tabla band_gmail_oauth_accounts]] *(Layer: #schema, Domain: #auth)*

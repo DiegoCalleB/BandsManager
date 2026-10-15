@@ -4,16 +4,17 @@
 // interfaz: por eso viven en este fichero y no salen de tokens.css.
 
 import QRCode from 'qrcode';
-import { calcularLayout, type DatosCartel, type LayoutCartel, type OpcionesLayout, type Rect } from './layout';
-import { decidirTinta, medirLuz, type Tinta } from './contraste';
+import { calcularLayout, type DatosCartel, type LayoutCartel, type Linea, type OpcionesLayout, type Rect } from './layout';
+import { decidirTinta, medirLuz, unirPixeles, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
 import type { FondoGuardado, PaletaId } from './config';
+import { aplicarGrano, semillaDeTexto } from './grano';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
 
 export type { PaletaId };
 export interface Paleta {
-  id: PaletaId;
+  id: Exclude<PaletaId, 'banda'>;
   nombre: string;
   fondo: string;
   acento: string;
@@ -32,11 +33,20 @@ export type FondoCartel = FondoGuardado;
 
 export interface PiezasCartel {
   datos: DatosCartel;
+  /** «Tus colores» (del logo), para el fondo `banda`. Sin ellos ese fondo cae a la primera paleta. */
+  paletaBanda?: { fondo: string; acento: string } | null;
+  /** Logo de la banda; solo se dibuja si el layout reservó su hueco. */
+  logoUrl?: string | null;
   opciones: OpcionesLayout;
   /** URL completa que codifica el QR (solo si `opciones.qr`). */
   qrUrl: string | null;
   /** Hace que la Onda de cada bolo sea siempre la misma. */
   semilla: string;
+}
+
+function resolverPaleta(id: PaletaId, banda?: PiezasCartel['paletaBanda']): Paleta {
+  if (id === 'banda' && banda) return { id: 'noche', nombre: 'Tus colores', fondo: banda.fondo, acento: banda.acento };
+  return PALETAS.find((p) => p.id === id) ?? PALETAS[0];
 }
 
 const FAMILIA = '"Onest Variable", Onest, system-ui, sans-serif';
@@ -106,6 +116,30 @@ function dibujarFondoImagen(ctx: CanvasRenderingContext2D, img: HTMLImageElement
   ctx.drawImage(img, (ancho - w) / 2, (alto - h) / 2, w, h);
 }
 
+/**
+ * Tinta y velo de una zona, medidos DONDE ESTÁ EL TEXTO (línea a línea) y no en toda la zona: un
+ * círculo oscuro detrás de una sola palabra es invisible para la media de la zona y deja esa
+ * palabra ilegible. Se tolera solo un 3 % de píxeles peor que lo medido.
+ */
+function tintaDeLineas(ctx: CanvasRenderingContext2D, lineas: Linea[], zona: Rect, u: number): Tinta {
+  try {
+    const trozos = lineas.map((l) => {
+      ctx.font = fuente(l.peso, l.px);
+      const ancho = ctx.measureText(l.texto).width;
+      const pad = 6 * u;
+      const x = Math.max(0, Math.round((l.alinear === 'left' ? l.x : l.x - ancho) - pad));
+      const y = Math.max(0, Math.round(l.y - pad));
+      const w = Math.max(1, Math.min(Math.round(ancho + pad * 2), ctx.canvas.width - x));
+      const h = Math.max(1, Math.min(Math.round(l.px * 1.15 + pad * 2), ctx.canvas.height - y));
+      return ctx.getImageData(x, y, w, h).data;
+    });
+    return trozos.length ? decidirTinta(medirLuz(unirPixeles(trozos), 2, 0.03)) : tintaDeZona(ctx, zona);
+  } catch (e) {
+    console.warn('[Cartel] No se pudo medir el fondo bajo el texto:', e);
+    return { tinta: 'clara', velo: 0.45 };
+  }
+}
+
 function tintaDeZona(ctx: CanvasRenderingContext2D, r: Rect): Tinta {
   const w = Math.max(1, Math.round(r.w));
   const h = Math.max(1, Math.round(r.h));
@@ -172,6 +206,26 @@ function dibujarQr(ctx: CanvasRenderingContext2D, r: Rect, url: string) {
   }
 }
 
+/** El logo sobre una placa clara redondeada: un logo oscuro sobre un fondo oscuro no se vería. */
+async function dibujarLogo(ctx: CanvasRenderingContext2D, r: Rect, url: string, u: number) {
+  let img: HTMLImageElement;
+  try {
+    img = await cargarImagen(url);
+  } catch (e) {
+    console.warn('[Cartel] No se pudo cargar el logo; el cartel sale sin él:', e);
+    return;
+  }
+  ctx.fillStyle = TINTAS.clara;
+  ctx.beginPath();
+  ctx.roundRect(r.x, r.y, r.w, r.h, r.w * 0.18);
+  ctx.fill();
+  const pad = 16 * u;
+  const k = Math.min((r.w - pad * 2) / img.width, (r.h - pad * 2) / img.height);
+  const w = img.width * k;
+  const h = img.height * k;
+  ctx.drawImage(img, r.x + (r.w - w) / 2, r.y + (r.h - h) / 2, w, h);
+}
+
 /**
  * Pinta el cartel completo en `canvas` a `ancho` píxeles (el alto sale del formato).
  * Devuelve el layout usado, por si quien llama quiere saber dónde quedó cada cosa.
@@ -199,7 +253,7 @@ export async function renderCartel(
   const u = L.ancho / 1080;
 
   // 1. Fondo.
-  const paleta = fondo.tipo === 'paleta' ? PALETAS.find((p) => p.id === fondo.id) ?? PALETAS[0] : null;
+  const paleta = fondo.tipo === 'paleta' ? resolverPaleta(fondo.id, piezas.paletaBanda) : null;
   if (paleta) {
     ctx.fillStyle = paleta.fondo;
     ctx.fillRect(0, 0, L.ancho, L.alto);
@@ -212,19 +266,23 @@ export async function renderCartel(
     dibujarOnda(ctx, hueco, paleta.acento, piezas.semilla, u);
   } else if (imagen) {
     dibujarFondoImagen(ctx, imagen, L.ancho, L.alto);
+    // A un fondo de IA se le pone fibra de papel: sin ella tiene el aspecto liso de una imagen
+    // generada. La foto propia de la banda se deja como es. Antes de medir el contraste y del texto.
+    if (fondo.tipo === 'imagen' && fondo.origen === 'ia') aplicarGrano(ctx, L.ancho, L.alto, semillaDeTexto(piezas.semilla));
   }
 
   // 2. Tinta y velo, medidos sobre el fondo real de cada zona.
   const fundido = 120 * u;
-  const tArriba = tintaDeZona(ctx, L.zonas.arriba);
-  const tAbajo = tintaDeZona(ctx, L.zonas.abajo);
+  const enAbajo = (l: Linea) => l.y >= L.zonas.abajo.y;
+  const tArriba = tintaDeLineas(ctx, L.lineas.filter((l) => !enAbajo(l)), L.zonas.arriba, u);
+  const tAbajo = tintaDeLineas(ctx, L.lineas.filter(enAbajo), L.zonas.abajo, u);
   velar(ctx, L.zonas.arriba, tArriba, true, fundido);
   velar(ctx, L.zonas.abajo, tAbajo, false, fundido);
 
   // 3. Texto.
   ctx.textBaseline = 'top';
   for (const l of L.lineas) {
-    const t = l.y >= L.zonas.abajo.y ? tAbajo : tArriba;
+    const t = enAbajo(l) ? tAbajo : tArriba;
     ctx.fillStyle = TINTAS[t.tinta];
     ctx.font = fuente(l.peso, l.px);
     ctx.textAlign = l.alinear;
@@ -233,6 +291,9 @@ export async function renderCartel(
 
   // 4. QR.
   if (L.qr && piezas.qrUrl) dibujarQr(ctx, L.qr, piezas.qrUrl);
+
+  // 5. Logo. Es opcional: si no carga (borrado, sin CORS) el cartel sale igual, sin él.
+  if (L.logo && piezas.logoUrl) await dibujarLogo(ctx, L.logo, piezas.logoUrl, u);
 
   return L;
 }

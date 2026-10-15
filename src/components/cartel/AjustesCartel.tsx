@@ -13,6 +13,7 @@ interface Props {
   bandas: string[];
   tieneHorario: boolean;
   tieneEnlace: boolean;
+  tieneLogo: boolean;
   puedeQuitarMarca: boolean;
 }
 
@@ -29,7 +30,7 @@ function Fila({ titulo, detalle, children }: { titulo: string; detalle: string; 
 }
 
 /** Lo que casi nadie toca, fuera de la pantalla principal (AGENTS.md §6). Se guarda por bolo. */
-export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, tieneEnlace, puedeQuitarMarca }: Props) {
+export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, tieneHorario, tieneEnlace, tieneLogo, puedeQuitarMarca }: Props) {
   if (!abierto) return null;
   return (
     <ModalPortal isOpen onClose={onCerrar}>
@@ -61,6 +62,9 @@ export function AjustesCartel({ abierto, onCerrar, ajustes, onCambiar, bandas, t
           <div className="grid gap-2">
             <Fila titulo="Horario" detalle={tieneHorario ? 'Puertas y show, de la hoja de ruta.' : 'Añade las horas en la hoja de ruta del bolo.'}>
               <Switch aria-label="Horario" checked={tieneHorario && ajustes.horario} disabled={!tieneHorario} onCheckedChange={(v) => onCambiar({ horario: v })} />
+            </Fila>
+            <Fila titulo="Logo de la banda" detalle={tieneLogo ? 'En la esquina de arriba, sobre una placa clara.' : 'Sube el logo en el dossier para poder usarlo.'}>
+              <Switch aria-label="Logo de la banda" checked={tieneLogo && ajustes.logo} disabled={!tieneLogo} onCheckedChange={(v) => onCambiar({ logo: v })} />
             </Fila>
             <Fila titulo="QR en el impreso" detalle={tieneEnlace ? 'Lleva a la página del bolo y cuenta cada escaneo.' : 'No hay enlace disponible ahora mismo.'}>
               <Switch aria-label="QR en el impreso" checked={tieneEnlace && ajustes.qr} disabled={!tieneEnlace} onCheckedChange={(v) => onCambiar({ qr: v })} />

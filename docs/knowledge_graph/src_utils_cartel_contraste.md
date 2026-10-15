@@ -23,12 +23,14 @@ _Sin dependencias salientes directas._
 ---
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
+- [[src_utils_cartel_paleta|src/utils/cartel/paleta.ts]] *(from #service)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(from #service)*
 
 ---
 
 ## 🧪 Tests que lo cubren
 - `src/utils/cartel/__tests__/contraste.test.ts`
+- `src/utils/cartel/__tests__/paleta.test.ts`
 
 ---
 

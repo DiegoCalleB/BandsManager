@@ -3,7 +3,7 @@
   "info": {
     "title": "BandManager.io API",
     "version": "3.0.0",
-    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (362) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
+    "description": "Referencia de la API interna de BandManager.io. **Generada automáticamente** por análisis estático (`scripts/generate-openapi.mjs`); no se edita a mano.\n\nTodas las operaciones (365) documentan método, ruta completa, autenticación, limitadores de ritmo, handler y fichero:línea. Los esquemas de petición y respuesta solo están descritos en las 8 operaciones marcadas con `x-esquemas: curado` (fuente: `docs/api/overrides.json`): el proyecto no usa una librería de validación de la que derivarlos.\n\nLas operaciones con `security: []` son públicas. La banda activa se indica con la cabecera `x-band-id` y el servidor la valida contra las bandas del usuario (ADR 0004).",
     "license": {
       "name": "AGPL-3.0-only",
       "identifier": "AGPL-3.0-only"
@@ -3228,6 +3228,84 @@
         ]
       }
     },
+    "/api/cartel/adn": {
+      "get": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "getApiCartelAdn",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:192",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
+      },
+      "put": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "putApiCartelAdn",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:203",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "apiAutenticadaRateLimiter"
+        ]
+      }
+    },
     "/api/cartel/fondo": {
       "post": {
         "tags": [
@@ -3261,10 +3339,50 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:74",
+        "x-source": "server/routes/cartelria.ts:80",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "imagenRateLimiter"
+        ]
+      }
+    },
+    "/api/cartel/referencias": {
+      "post": {
+        "tags": [
+          "campanaConcierto"
+        ],
+        "operationId": "postApiCartelReferencias",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/BandIdActiva"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "cookieAuth": []
+          },
+          {
+            "authTokenHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta correcta."
+          },
+          "401": {
+            "$ref": "#/components/responses/NoAutenticado"
+          },
+          "429": {
+            "$ref": "#/components/responses/DemasiadasPeticiones"
+          }
+        },
+        "x-source": "server/routes/cartelria.ts:219",
+        "x-autenticacion": "middleware",
+        "x-rate-limiters": [
+          "ficherosRateLimiter"
         ]
       }
     },
@@ -3309,7 +3427,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:118",
+        "x-source": "server/routes/cartelria.ts:132",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "apiAutenticadaRateLimiter"
@@ -3357,7 +3475,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:153",
+        "x-source": "server/routes/cartelria.ts:167",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"
@@ -3405,7 +3523,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/cartelria.ts:131",
+        "x-source": "server/routes/cartelria.ts:145",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "ficherosRateLimiter"

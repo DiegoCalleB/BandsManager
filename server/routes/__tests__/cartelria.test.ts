@@ -13,24 +13,28 @@ import { crearFakeSupabaseTablas } from '../../db/__tests__/helpers/fakeSupabase
 process.env.SUPABASE_URL = 'https://x.supabase.co';
 const PUB = 'https://x.supabase.co/storage/v1/object/public/band-media';
 
-const fake = crearFakeSupabaseTablas({});
+const fake = crearFakeSupabaseTablas({ band_cartel_estilo: [['band_id']] });
 vi.mock('../../db/core.js', async (orig) => ({ ...(await orig<any>()), getSupabase: () => fake.client }));
 vi.mock('../../state.js', async (orig) => ({ ...(await orig<any>()), loadState: () => ({}), saveState: () => {} }));
 vi.mock('../../db.js', () => ({ dbGetEpkConfig: async () => null, dbGetRegisteredBandById: async () => null }));
 
-const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, llamadas: [] as Array<[string, string]> };
+const servicio = { url: `${PUB}/carteles/band-a/ia-1.png` as string | null, llamadas: [] as Array<[string, string, number]> };
 vi.mock('../../services/imagenCartel.js', () => ({
-  generarFondoCartel: async (bandId: string, prompt: string) => {
-    servicio.llamadas.push([bandId, prompt]);
+  generarFondoCartel: async (bandId: string, prompt: string, refs: unknown[] = []) => {
+    servicio.llamadas.push([bandId, prompt, refs.length]);
     return servicio.url;
   },
 }));
 const subidas: Array<{ ruta: string; tipo: string }> = [];
+const borrados: string[][] = [];
+const leidos: string[] = [];
 vi.mock('../../utils/storage.js', () => ({
   uploadBufferToSupabase: async (_b: Buffer, ruta: string, tipo: string) => {
     subidas.push({ ruta, tipo });
     return `${PUB}/${ruta}`;
   },
+  borrarDeAlmacenamiento: async (rutas: string[]) => { borrados.push(rutas); },
+  descargarDeAlmacenamiento: async (ruta: string) => { leidos.push(ruta); return Buffer.from([0xff, 0xd8, 0xff, 0xe0, 1, 2]); },
 }));
 
 import { cartelriaRouter, medidasPng } from '../cartelria';
@@ -76,13 +80,16 @@ beforeEach(() => {
   servicio.url = `${PUB}/carteles/band-a/ia-1.png`;
   servicio.llamadas.length = 0;
   subidas.length = 0;
+  borrados.length = 0;
+  leidos.length = 0;
+  fake.tablas.band_cartel_estilo = [];
 });
 
 describe('POST /cartel/fondo', () => {
   it('devuelve la url del fondo, genera con la banda de la sesión y lo guarda en el historial del bolo', async () => {
     const res = await fondo({ concertId: 'c1', estilo: 'neon', bandId: 'band-b', band_id: 'band-b' });
     expect(res.code).toBeUndefined();
-    expect(res.body).toEqual({ url: servicio.url, estilo: 'neon' });
+    expect(res.body).toEqual({ url: servicio.url, estilo: 'neon', referencias: 0 });
     expect(servicio.llamadas[0][0]).toBe('band-a');
     expect(fila('c1').cartel_config.fondosIa).toEqual([servicio.url]);
   });
@@ -189,5 +196,111 @@ describe('medidasPng', () => {
   it('lee la cabecera IHDR y no se fía de un buffer corto', () => {
     expect(medidasPng(png(1080, 1350))).toEqual({ ancho: 1080, alto: 1350 });
     expect(medidasPng(Buffer.from([0x89, 0x50]))).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// ADN visual
+// ---------------------------------------------------------------------------------------------
+
+const ref = (banda: string, f: string) => `${PUB}/carteles/${banda}/ref/${f}`;
+const adnDe = (banda: string) => fake.tablas.band_cartel_estilo.find((r: any) => r.band_id === banda)?.estilo;
+const sembrarAdn = (banda: string, estilo: object) => fake.tablas.band_cartel_estilo.push({ id: `r-${banda}`, band_id: banda, estilo });
+
+describe('GET/PUT /cartel/adn', () => {
+  it('sin nada guardado devuelve el ADN inicial', async () => {
+    const res = await llamar('get', '/cartel/adn', {});
+    expect(res.body.adn).toMatchObject({ referencias: [], favoritos: [], aprender: true });
+  });
+
+  it('guarda el ADN saneado: fuera las URLs de otra banda y de otros hosts', async () => {
+    const res = await llamar('put', '/cartel/adn', {
+      body: { aprender: false, referencias: [ref('band-a', '1.jpg'), ref('band-b', '2.jpg'), 'https://evil.com/x.jpg'],
+        favoritos: [{ url: `${PUB}/carteles/band-a/ia-1.png`, estilo: 'collage', ambiente: 'sucio' }] },
+    });
+    expect(res.code).toBeUndefined();
+    expect(adnDe('band-a')).toMatchObject({ aprender: false, referencias: [ref('band-a', '1.jpg')] });
+    expect(adnDe('band-a').favoritos).toHaveLength(1);
+  });
+
+  it('una banda no ve ni toca el ADN de otra', async () => {
+    sembrarAdn('band-b', { v: 1, aprender: false, referencias: [ref('band-b', 'x.jpg')] });
+    expect((await llamar('get', '/cartel/adn', {})).body.adn.referencias).toEqual([]);
+    await llamar('put', '/cartel/adn', { body: { aprender: true } });
+    expect(adnDe('band-b').aprender).toBe(false);
+  });
+
+  it('al quitar una referencia subida, borra su fichero; las demás cosas no se borran', async () => {
+    const fav = `${PUB}/carteles/band-a/ia-1.png`;
+    sembrarAdn('band-a', { v: 1, referencias: [ref('band-a', '1.jpg'), ref('band-a', '2.jpg'), `${PUB}/carteles/band-a/c1.png`], favoritos: [{ url: fav, estilo: 'neon', ambiente: '' }] });
+    await llamar('put', '/cartel/adn', { body: { referencias: [ref('band-a', '2.jpg')], favoritos: [{ url: fav, estilo: 'neon' }] } });
+    expect(borrados.flat()).toEqual(['carteles/band-a/ref/1.jpg']);
+  });
+
+  it('un cuerpo que no es un objeto es un 400', async () => {
+    expect((await llamar('put', '/cartel/adn', { body: [1] })).code).toBe(400);
+  });
+});
+
+describe('POST /cartel/referencias', () => {
+  const subirRef = (body: any, bandId?: string) => llamar('post', '/cartel/referencias', { body, bandId });
+
+  it('guarda la JPEG en ref/ de la banda y la añade al ADN', async () => {
+    const res = await subirRef(jpeg());
+    expect(res.code).toBeUndefined();
+    expect(subidas[0].ruta).toMatch(/^carteles\/band-a\/ref\/[0-9a-f-]{36}\.jpg$/);
+    expect(adnDe('band-a').referencias).toHaveLength(1);
+    expect(res.body.url).toContain('/carteles/band-a/ref/');
+  });
+
+  it('la cuarta desplaza a la más antigua y borra su fichero', async () => {
+    for (let i = 0; i < 3; i++) await subirRef(jpeg());
+    const primera = adnDe('band-a').referencias[0];
+    borrados.length = 0;
+    await subirRef(jpeg());
+    expect(adnDe('band-a').referencias).toHaveLength(3);
+    expect(adnDe('band-a').referencias).not.toContain(primera);
+    expect(borrados.flat()).toEqual([new URL(primera).pathname.replace('/storage/v1/object/public/band-media/', '')]);
+  });
+
+  it('rechaza lo que no es JPEG y no sube nada', async () => {
+    expect((await subirRef(png(1080, 1350))).code).toBe(400);
+    expect((await subirRef('texto')).code).toBe(400);
+    expect(subidas).toHaveLength(0);
+  });
+});
+
+describe('POST /cartel/fondo con el ADN de la banda', () => {
+  it('lee las referencias y los favoritos de SU carpeta y se las pasa a la IA', async () => {
+    sembrarAdn('band-a', { v: 1, aprender: true, referencias: [ref('band-a', '1.jpg')], favoritos: [{ url: `${PUB}/carteles/band-a/ia-1.png`, estilo: 'neon', ambiente: '' }] });
+    const res = await fondo({ concertId: 'c1', estilo: 'neon' });
+    expect(res.body.referencias).toBe(2);
+    expect(servicio.llamadas[0][2]).toBe(2);
+    expect(servicio.llamadas[0][1]).toContain('attached images');
+    expect(leidos).toEqual(['carteles/band-a/ref/1.jpg', 'carteles/band-a/ia-1.png']);
+  });
+
+  it('con «aprender» apagado solo usa las referencias elegidas a mano', async () => {
+    sembrarAdn('band-a', { v: 1, aprender: false, referencias: [ref('band-a', '1.jpg')], favoritos: [{ url: `${PUB}/carteles/band-a/ia-1.png`, estilo: 'neon', ambiente: '' }] });
+    expect((await fondo({ concertId: 'c1', estilo: 'neon' })).body.referencias).toBe(1);
+  });
+
+  it('el ADN de otra banda no se usa nunca, aunque tenga referencias', async () => {
+    sembrarAdn('band-b', { v: 1, referencias: [ref('band-b', '1.jpg')] });
+    const res = await fondo({ concertId: 'c1', estilo: 'neon' });
+    expect(res.body.referencias).toBe(0);
+    expect(leidos).toEqual([]);
+  });
+
+  it('una referencia guardada con una URL que ya no es de la banda se ignora al leer', async () => {
+    sembrarAdn('band-a', { v: 1, referencias: ['https://evil.com/x.jpg', ref('band-b', 'x.jpg')] });
+    expect((await fondo({ concertId: 'c1', estilo: 'neon' })).body.referencias).toBe(0);
+    expect(leidos).toEqual([]);
+  });
+
+  it('sin ADN genera igual, sin referencias', async () => {
+    const res = await fondo({ concertId: 'c1', estilo: 'neon' });
+    expect(res.body.referencias).toBe(0);
+    expect(servicio.llamadas[0][1]).not.toContain('attached images');
   });
 });

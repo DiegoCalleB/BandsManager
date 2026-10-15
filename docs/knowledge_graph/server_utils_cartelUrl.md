@@ -25,6 +25,7 @@ Dónde viven los carteles en Supabase Storage y qué URL se acepta como «de un 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(from #service)*
+- [[server_services_referenciasCartel|server/services/referenciasCartel.ts]] *(from #service)*
 
 ---
 

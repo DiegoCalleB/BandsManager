@@ -31,6 +31,8 @@ export interface OpcionesLayout {
   /** Texto de la URL corta, sin protocolo: `bandmanager.io/r/ab3k9x2`. */
   urlCorta: string | null;
   marca: boolean;
+  /** Reserva la esquina superior derecha para el logo de la banda. */
+  logo?: boolean;
 }
 
 export type Medidor = (texto: string, px: number, peso: number) => number;
@@ -57,6 +59,8 @@ export interface LayoutCartel {
   alto: number;
   lineas: Linea[];
   qr: Rect | null;
+  /** Hueco del logo (arriba a la derecha) si se pidió. */
+  logo: Rect | null;
   /** Zona superior (nombres) e inferior (datos): ahí se mide el fondo y, si hace falta, se vela. */
   zonas: { arriba: Rect; abajo: Rect };
 }
@@ -99,10 +103,14 @@ export function calcularLayout(
   const secundarias = cabezas.length ? resto : [];
 
   let y = m + def.seguroArriba * alto;
+  // Con logo, los nombres se estrechan para no pisarlo.
+  const ladoLogo = opciones.logo ? Math.round(150 * u) : 0;
+  const utilArriba = opciones.logo ? util - ladoLogo - 28 * u : util;
+  const logo: Rect | null = opciones.logo ? { x: ancho - m - ladoLogo, y, w: ladoLogo, h: ladoLogo } : null;
   const titular = principales.map((b) => b.nombre.trim().toUpperCase());
   if (titular.length) {
     // Un nombre de una o dos palabras puede ir en dos líneas grandes; uno largo, en tres.
-    const { px, lineas: ls } = encajar(titular, ' + ', util, 3, Math.round(210 * u), Math.round(56 * u), 800, medir, '+ ');
+    const { px, lineas: ls } = encajar(titular, ' + ', utilArriba, 3, Math.round(210 * u), Math.round(56 * u), 800, medir, '+ ');
     for (const t of ls) {
       lineas.push({ texto: t, x: m, y, px, peso: 800, alinear: 'left' });
       y += px * INTERLINEA;
@@ -112,7 +120,7 @@ export function calcularLayout(
     y += 20 * u;
     const nombres = secundarias.map((b) => b.nombre.trim().toUpperCase());
     nombres[0] = `CON ${nombres[0]}`;
-    const { px, lineas: ls } = encajar(nombres, ' · ', util, 2, Math.round(50 * u), Math.round(30 * u), 700, medir);
+    const { px, lineas: ls } = encajar(nombres, ' · ', utilArriba, 2, Math.round(50 * u), Math.round(30 * u), 700, medir);
     for (const t of ls) {
       lineas.push({ texto: t, x: m, y, px, peso: 700, alinear: 'left' });
       y += px * 1.1;
@@ -159,5 +167,5 @@ export function calcularLayout(
   const techoAbajo = Math.min(yb, qr ? qr.y : yb) - m * 0.6;
   const abajo: Rect = { x: 0, y: Math.max(0, techoAbajo), w: ancho, h: alto - Math.max(0, techoAbajo) };
 
-  return { ancho, alto, lineas, qr, zonas: { arriba, abajo } };
+  return { ancho, alto, lineas, qr, logo, zonas: { arriba, abajo } };
 }

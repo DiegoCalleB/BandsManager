@@ -65,7 +65,7 @@ describe('sanearConfigCartel', () => {
   it('recorta textos y quita caracteres de control', () => {
     const c = sanearConfigCartel({ extra: 'a\u0000b'.repeat(50), cabeza: '  Banda\n ' }, valida('band-a'))!;
     expect(c.extra.length).toBeLessThanOrEqual(40);
-    expect(c.extra).not.toMatch(/\u0000/);
+    expect(c.extra.includes(String.fromCharCode(0))).toBe(false);
     expect(c.cabeza).toBe('Banda');
   });
 
@@ -73,5 +73,26 @@ describe('sanearConfigCartel', () => {
     let c = CONFIG_INICIAL;
     for (const u of ['1', '2', '3', '2', '4']) c = conFondoIa(c, u);
     expect(c.fondosIa).toEqual(['4', '2', '3']);
+  });
+});
+
+import { referenciasHuerfanas, carpetaReferencias } from '../cartelUrl';
+
+describe('referenciasHuerfanas', () => {
+  process.env.SUPABASE_URL = SB;
+  const u = (f: string, b = 'band-a') => `${SB}/storage/v1/object/public/band-media/carteles/${b}/${f}`;
+
+  it('solo propone borrar ficheros de ref/ que ya no usa nadie', () => {
+    const r = referenciasHuerfanas([u('ref/1.jpg'), u('ref/2.jpg'), u('c1.png'), u('ia-1.png')], [u('ref/2.jpg')], 'band-a');
+    expect(r).toEqual(['carteles/band-a/ref/1.jpg']);
+  });
+
+  it('no borra una referencia que sigue en uso aunque cambie su ?v=', () => {
+    expect(referenciasHuerfanas([`${u('ref/1.jpg')}?v=1`], [`${u('ref/1.jpg')}?v=2`], 'band-a')).toEqual([]);
+  });
+
+  it('nunca propone ficheros de otra banda', () => {
+    expect(referenciasHuerfanas([u('ref/1.jpg', 'band-b')], [], 'band-a')).toEqual([]);
+    expect(carpetaReferencias('band-a')).toBe('carteles/band-a/ref/');
   });
 });

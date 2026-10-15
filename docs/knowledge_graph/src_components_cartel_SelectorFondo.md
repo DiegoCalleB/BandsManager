@@ -19,9 +19,10 @@ Exporta: SelectorFondo.
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_components_ui_index|src/components/ui/index.ts]] *(Layer: #frontend, Domain: #system)*
+- [[src_utils_cartel_estilos|src/utils/cartel/estilos.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_paleta|src/utils/cartel/paleta.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cn|src/utils/cn.ts]] *(Layer: #service, Domain: #system)*
-- [[src_utils_promocionApi|src/utils/promocionApi.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

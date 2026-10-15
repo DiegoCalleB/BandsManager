@@ -7,6 +7,7 @@ import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { uploadBufferToSupabase } from '../utils/storage.js';
 import { costeImagenEur } from '../utils/promptCartel.js';
 import { carpetaCartel } from '../utils/cartelUrl.js';
+import type { ImagenReferencia } from './referenciasCartel.js';
 
 export const MODELO_IMAGEN = 'gemini-2.5-flash-image';
 
@@ -15,13 +16,19 @@ export function rutaFondoIa(bandId: string): string {
   return `${carpetaCartel(bandId)}ia-${randomUUID()}.png`;
 }
 
-export async function generarFondoCartel(bandId: string, prompt: string): Promise<string | null> {
+/** Texto solo, o texto + las imágenes de referencia de la banda como partes de la misma petición. */
+export function contenidoDeFondo(prompt: string, referencias: ImagenReferencia[]) {
+  if (referencias.length === 0) return prompt;
+  return [{ role: 'user', parts: [{ text: prompt }, ...referencias.map((r) => ({ inlineData: { mimeType: r.mimeType, data: r.data } }))] }];
+}
+
+export async function generarFondoCartel(bandId: string, prompt: string, referencias: ImagenReferencia[] = []): Promise<string | null> {
   const client = getAiClient();
   if (!client) return null;
 
   const respuesta = await client.models.generateContent({
     model: MODELO_IMAGEN,
-    contents: prompt,
+    contents: contenidoDeFondo(prompt, referencias),
     config: {
       responseModalities: ['IMAGE'],
       // 9:16 y se recorta: un solo fondo pagado sirve para feed, historia e impresión.
