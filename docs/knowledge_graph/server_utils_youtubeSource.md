@@ -19,6 +19,7 @@ Exporta: ejecutar, COOKIES_FILE, banderasDeCookies, banderasAntiBot, rutaYtDlp, 
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[ext_ffmpeg|FFmpeg]] *(Layer: #external, Domain: #system)*
+- [[server_utils_senalesPublico|server/utils/senalesPublico.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
 ---
@@ -26,6 +27,7 @@ Exporta: ejecutar, COOKIES_FILE, banderasDeCookies, banderasAntiBot, rutaYtDlp, 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_concert_to_album|server/routes/concert_to_album.ts]] *(from #route)*
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 - [[server_services_youtubeMeta|server/services/youtubeMeta.ts]] *(from #service)*
 - [[server_utils_audioEnergy|server/utils/audioEnergy.ts]] *(from #service)*
 - [[server_utils_viralSignals|server/utils/viralSignals.ts]] *(from #service)*

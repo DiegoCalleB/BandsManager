@@ -18,6 +18,7 @@ Ficha de un vídeo de YouTube (título, canal, duración, capítulos) probando v
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
+- [[server_utils_senalesPublico|server/utils/senalesPublico.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_youtubeSource|server/utils/youtubeSource.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_errorCapturado|src/utils/errorCapturado.ts]] *(Layer: #service, Domain: #system)*
 
@@ -26,6 +27,7 @@ Ficha de un vídeo de YouTube (título, canal, duración, capítulos) probando v
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[server_routes_reels|server/routes/reels.ts]] *(from #route)*
 - [[server_routes_reelsProgramacion|server/routes/reelsProgramacion.ts]] *(from #route)*
+- [[server_services_senalesVideo|server/services/senalesVideo.ts]] *(from #service)*
 
 ---
 

@@ -9,6 +9,18 @@ interface Props {
   etiqueta: string;
 }
 
+/** Encaja el SVG a lo dibujado: las notas muy graves o agudas (líneas adicionales) no se cortan. */
+function ajustarAlto(svg: SVGSVGElement | null, ancho: number): void {
+  if (!svg) return;
+  try {
+    const { y, height } = svg.getBBox();
+    const arriba = Math.min(0, y - 8);
+    const alto = Math.max(130 + arriba, y + height + 8) - arriba;
+    svg.setAttribute('viewBox', `0 ${arriba} ${ancho} ${alto}`);
+    svg.setAttribute('height', String(alto));
+  } catch { /* sin getBBox (tests, SVG fuera de pantalla): vale el alto por defecto */ }
+}
+
 /** Pentagrama con VexFlow, cargado solo al pedirlo: la librería no entra en el arranque de la app. */
 export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, etiqueta }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -43,8 +55,10 @@ export const Pentagrama: React.FC<Props> = ({ midi, modo, bemoles = false, etiqu
         voz.addTickables(figuras);
         new Formatter().joinVoices([voz]).format([voz], ancho - 70);
         voz.draw(ctx, stave);
-        el.querySelector('svg')?.setAttribute('role', 'img');
-        el.querySelector('svg')?.setAttribute('aria-label', etiqueta);
+        const svg = el.querySelector('svg');
+        svg?.setAttribute('role', 'img');
+        svg?.setAttribute('aria-label', etiqueta);
+        ajustarAlto(svg, ancho);
       } catch {
         if (vivo) setFallo(true);
       }

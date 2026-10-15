@@ -13,6 +13,7 @@ import {
   type CapituloVideo,
   type MetadatosVideo
 } from "../utils/youtubeSource.js";
+import type { PuntoInteres } from "../utils/senalesPublico.js";
 import { comoErrorCapturado } from "../../src/utils/errorCapturado.js";
 
 /** Respuesta de oEmbed de YouTube. */
@@ -46,6 +47,10 @@ export interface YoutubeMeta {
   isLive: boolean;
   /** Marcados a mano por quien subió el vídeo: la mejor pista para elegir cortes. */
   chapters: CapituloVideo[];
+  /** true = música, false = otra categoría, null = no se sabe. */
+  esMusica: boolean | null;
+  /** "Lo más reproducido" de YouTube; vacío si el vídeo no tiene vistas suficientes. */
+  heatmap: PuntoInteres[];
   /** De dónde salió la ficha, para poder depurar por qué falta la duración. */
   fuente: MetadatosVideo["fuente"];
 }
@@ -60,6 +65,8 @@ export function metaVacia(videoId: string): YoutubeMeta {
     thumbnail: videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : "",
     isLive: false,
     chapters: [],
+    esMusica: null,
+    heatmap: [],
     fuente: "ninguna"
   };
 }
@@ -83,9 +90,10 @@ export async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
     acumulado = fusionarMetadatos(acumulado, await metadatosDataApi(videoId));
   }
 
-  // yt-dlp aunque la Data API ya haya respondido, si aún faltan los capítulos y está instalado:
-  // saber que el vídeo trae capítulos cambia por completo la calidad de los cortes.
-  if (!completa() || (acumulado.chapters.length === 0 && (await ytDlpDisponible()))) {
+  // yt-dlp aunque la Data API ya haya respondido, si aún faltan los capítulos o el gráfico de
+  // repeticiones y está instalado: ambos cambian por completo la calidad de los cortes.
+  const faltanExtras = acumulado.chapters.length === 0 || !acumulado.heatmap?.length;
+  if (!completa() || (faltanExtras && (await ytDlpDisponible()))) {
     acumulado = fusionarMetadatos(acumulado, await metadatosYtDlp(url));
   }
 
@@ -137,6 +145,8 @@ export async function fetchYoutubeMeta(videoId: string): Promise<YoutubeMeta> {
   meta.author = acumulado.author;
   meta.duration = acumulado.duration;
   meta.chapters = acumulado.chapters;
+  meta.esMusica = acumulado.esMusica ?? null;
+  meta.heatmap = acumulado.heatmap ?? [];
   meta.fuente = acumulado.fuente;
   if (acumulado.thumbnail) meta.thumbnail = acumulado.thumbnail;
 
