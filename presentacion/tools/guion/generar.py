@@ -1374,14 +1374,14 @@ direccion.aplicar(S)
 # Actores en movimiento (presentacion/ACTORES.md): si existe video/actores/<clave>.mp4, sustituye al fondo fijo de la escena
 # (o a la foto del miembro en el reparto). Sin el vídeo, la escena queda como estaba.
 PLANOS = {'Prólogo · Jueves, 23:47': 'jueves', 'Prólogo · Viernes, 22:10': 'viernes', 'Prólogo · La llamada': 'pelaez', 'Prólogo · La decisión': 'decision',
-          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto', 'alvaro-escenario'],
-          'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'alvaro-escenario', 'La sala contestó': 'manager',
+          'Lo han visto todo': 'local', 'Las noches': 'noches', 'El festival, 02:14': ['festival', 'concierto'],
+          'Otro jueves, 23:47': 'otro-jueves', 'En la radio': 'concierto', 'La sala contestó': 'manager',
           # el capítulo 5 ya no es fondo de foto con tarjetas: pasa sobre planos en movimiento
           'Para darlo a conocer': 'local', 'A quién se lo vendemos': 'concierto', 'Cómo ganamos dinero': 'espaldas-a', 'Qué viene': 'hombro-iago', 'Confirmados': 'otro-jueves',
           'Esto lo necesitan todos': 'alvaro-escenario'}
 _ACT = os.path.join(AQUI, '..', '..', 'video', 'actores')
 # Escenas con varios planos de fondo seguidos: segundo en que entra cada clip (el último se queda); el CSS los funde (.actor-vid.sec)
-SECUENCIA = {'El festival, 02:14': [0, 12, 21.5]}
+SECUENCIA = {'El festival, 02:14': [0, 19]}
 def _vids(k, t):
     ini = SECUENCIA[t]
     return ''.join(_vid(c, f' style="--i:{ini[n]}s;--d:{(ini[n + 1] - ini[n] + 0.8) if n + 1 < len(k) else 60}s"').replace('class="actor-vid"', 'class="actor-vid sec' + (' ult' if n + 1 == len(k) else '') + '"') for n, c in enumerate(k))
