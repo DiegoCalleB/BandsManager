@@ -11,7 +11,8 @@ describe('promptCartel', () => {
   it('prohíbe texto en la imagen y reserva espacio para componerlo', () => {
     const p = construirPromptFondo({ estilo: 'gigposter' });
     expect(p).toContain('no text');
-    expect(p).toContain('upper third');
+    expect(p).toMatch(/top 25%.*bottom 30%/);
+    expect(p).toContain('central window');
   });
 
   it('cada estilo produce un prompt distinto', () => {
