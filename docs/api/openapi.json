@@ -3262,7 +3262,7 @@
             "$ref": "#/components/responses/DemasiadasPeticiones"
           }
         },
-        "x-source": "server/routes/chat.ts:29",
+        "x-source": "server/routes/chat.ts:30",
         "x-autenticacion": "middleware",
         "x-rate-limiters": [
           "chatRateLimiter"

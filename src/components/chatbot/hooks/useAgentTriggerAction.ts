@@ -28,10 +28,6 @@ export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMess
   const applyAgentTrigger = async (msgId: string, actionIndex: number, action: ProposedAction) => {
     try {
       const token = leerTokenDeSesion();
-      const pat = localStorage.getItem('bandmanager_github_pat') || '';
-      const owner = localStorage.getItem('bandmanager_github_owner') || '';
-      const repo = localStorage.getItem('bandmanager_github_repo') || '';
-      const ref = localStorage.getItem('bandmanager_github_ref') || 'main';
 
       const customHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
 
@@ -39,10 +35,6 @@ export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMess
         customHeaders['Authorization'] = `Bearer ${token}`;
         customHeaders['x-auth-token'] = token;
       }
-      if (pat) customHeaders['x-github-pat'] = pat;
-      if (owner) customHeaders['x-github-owner'] = owner;
-      if (repo) customHeaders['x-github-repo'] = repo;
-      if (ref) customHeaders['x-github-ref'] = ref;
 
       const response = await fetch('/api/trigger-agent', {
         method: 'POST',
@@ -84,11 +76,6 @@ export function useAgentTriggerAction({ autonomyConfig, updateActionStatusInMess
           success: true,
           message: `Agente '${action.agentName}' ejecutado con éxito en Supabase.`,
         };
-      }
-
-      if (data.detectedRef) {
-        localStorage.setItem('bandmanager_github_ref', data.detectedRef);
-        window.dispatchEvent(new Event('github-ref-updated'));
       }
 
       updateActionStatusInMessages(msgId, actionIndex, action, 'applied');

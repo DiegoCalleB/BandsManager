@@ -63,8 +63,15 @@ describe('chatbot: static safety rules (AGENTS.md §2)', () => {
     'storageKey',
     'bandmanager_agents_enabled',
     'bandmanager_agent_autonomy',
-    'bandmanager_github_ref',
   ]);
+
+  // Un secreto (token de GitHub...) nunca se lee del navegador para mandarlo al servidor: el servidor
+  // usa los suyos. Quedaron restos de los agentes de GitHub Actions que lo hacían y se quitaron.
+  it('does not read GitHub credentials from localStorage nor send them as headers', () => {
+    for (const [path, source] of entries) {
+      expect(source, path).not.toMatch(/bandmanager_github|x-github-/);
+    }
+  });
 
   it('only writes allow-listed localStorage keys (AGENTS.md §2.5)', () => {
     const keys = entries.flatMap(([, source]) =>

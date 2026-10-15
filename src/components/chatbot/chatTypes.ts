@@ -150,7 +150,6 @@ export interface TriggerAgentResponse {
   success?: boolean;
   error?: string;
   message?: string;
-  detectedRef?: string;
   simulated?: boolean;
   results?: TriggerAgentResult[];
 }

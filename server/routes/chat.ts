@@ -18,6 +18,7 @@ import { iaRateLimiter, chatRateLimiter } from "../middleware/rateLimiter.js";
 import { acotarHistorial, agregarTurno, mensajeAceptable, MAX_TOKENS_RESPUESTA_CHAT } from "../utils/conversacionChat.js";
 import { chatFunctionDeclarations, convertFunctionCallsToProposedActions } from "../services/chatTools.js";
 import { comoErrorCapturado } from '../../src/utils/errorCapturado.js';
+import { registrarErrorInesperado } from '../utils/errorHttp.js';
 import type { AccionPropuesta, CancionParaChat, ParametrosAgenteChat, SetlistParaChat, TurnoChat, VistaRespuestaIA, ErrorDeFailover } from './tiposChat.js';
 
 
@@ -482,7 +483,8 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     }
 
     if (!response) {
-      console.warn("Gemini chat models failed, returning helpful quota/error message. Error details:", lastError);
+      // El detalle queda en el log y en Sentry con este código; al usuario no se le enseña el mensaje interno.
+      const idError = registrarErrorInesperado(req, lastError);
 
       // generateContentWithFallback ya intentó automáticamente el failover a DeepSeek antes de
       // llegar aquí (ver server/ai.ts): si también falló, cuelga su error por separado en
@@ -501,7 +503,7 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
       if (geminiQuota && deepSeekErrObj) {
         reply += `Se ha agotado la cuota de Google Gemini **y** el intento automático de failover a DeepSeek también ha fallado, así que ahora mismo no hay ningún proveedor de IA disponible.\n\n` +
                  `**Gemini:** límite de peticiones alcanzado (Quota Exceeded / Rate Limit).\n` +
-                 `**DeepSeek:** ${deepSeekSinSaldo ? 'sin saldo en la cuenta (Error 402 Insufficient Balance).' : `\`${deepSeekMessage}\``}\n\n` +
+                 `**DeepSeek:** ${deepSeekSinSaldo ? 'sin saldo en la cuenta (Error 402 Insufficient Balance).' : 'tampoco ha podido atender la petición.'}\n\n` +
                  `**Cómo solucionarlo:**\n` +
                  `1. **Recarga saldo en DeepSeek** (recomendado, muy barato ~0,14 € / 1000 peticiones): [platform.deepseek.com](https://platform.deepseek.com/).\n` +
                  `2. **O usa tu propia clave de Google AI Studio**: créala en [aistudio.google.com](https://aistudio.google.com/) y ponla como \`GEMINI_API_KEY\` en las variables de entorno (1.500 peticiones/día gratis).\n\n` +
@@ -514,10 +516,9 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
                  `3. **Reinicio de cuota**: Si estás usando la clave por defecto, la cuota se restablecerá automáticamente.\n\n` +
                  `*Nota: Todas las demás funciones del panel (Supabase, gestión de salas, agenda de ensayos y gestión de propuestas) siguen funcionando con normalidad.*`;
       } else {
-        reply += `Ha ocurrido un error inesperado al conectar con Google Gemini:\n\n` +
-                 `\`\`\`\n${errMessage}\n\`\`\`\n\n` +
-                 `Por favor, inténtalo de nuevo en unos instantes o comprueba tu conexión y configuración de claves.`;
+        reply += `Ha ocurrido un error inesperado al conectar con el servicio de IA. Por favor, inténtalo de nuevo en unos instantes.`;
       }
+      reply += `\n\n_Código de error: ${idError}_`;
 
       const proposedActions: AccionPropuesta[] = [];
       const lowerMsg = (message || "").toLowerCase();
@@ -627,10 +628,9 @@ Nunca inventories datos. Si el usuario pregunta por algo que no está en el JSON
     res.json(parsed);
 
   } catch (errorCapturado) {
-    const error = comoErrorCapturado(errorCapturado);
-    console.error("Error in Gemini API chat proxy:", error);
+    const idError = registrarErrorInesperado(req, errorCapturado);
     res.json({
-      text: `⚠️ **Aviso del Mánager Virtual AI:** Ocurrió un inconveniente al procesar tu consulta (${error?.message || error}). Por favor, vuelve a intentarlo.`,
+      text: `⚠️ **Aviso del Mánager Virtual AI:** Ocurrió un inconveniente al procesar tu consulta. Por favor, vuelve a intentarlo. _Código de error: ${idError}_`,
       proposedActions: []
     });
   }
