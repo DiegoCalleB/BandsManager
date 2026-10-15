@@ -44,7 +44,7 @@ export function SelectorFondo({ fondo, onFondo, foto, onFoto, fondosIa, onGenera
 
   return (
     <div className="grid gap-3">
-      <div className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4" role="group" aria-label="Fondo del cartel">
+      <div className="no-scrollbar -mx-4 flex shrink-0 gap-2.5 overflow-x-auto px-4" role="group" aria-label="Fondo del cartel">
         {PALETAS.map((p) => (
           <Muestra key={p.id} etiqueta={`Fondo ${p.nombre}`} activa={fondo.tipo === 'paleta' && fondo.id === p.id} onClick={() => onFondo({ tipo: 'paleta', id: p.id })}>
             <span className="flex size-full items-end justify-center gap-[3px] pb-2.5" style={{ background: p.fondo }}>

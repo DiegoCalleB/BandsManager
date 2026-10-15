@@ -20,6 +20,7 @@ Cliente de las rutas de promoción: enlaces cortos, redacción de la campaña y 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_utils_api|src/utils/api.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_campanaConcierto|src/utils/campanaConcierto.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

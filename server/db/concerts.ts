@@ -159,7 +159,9 @@ export async function dbUpsertConcert(concert: FilaConcierto, bandId: string) {
     es_hito_destacado: Boolean(
       merged.es_hito_destacado ?? merged.esHitoDestacado
     ),
-    cartel_url: merged.cartel_url || merged.cartelUrl || null,
+    // cartel_url / cartel_config NO van aquí: solo los escribe dbGuardarCartel desde
+    // server/routes/cartelria.ts, que valida que la imagen es un PNG de la carpeta de la banda.
+    // Al no ir en el payload, el upsert conserva los que ya tenga el bolo.
   };
 
   const currentPayload: FilaConcierto = { ...payload };
@@ -239,4 +241,22 @@ export async function dbGetConciertosFuturosParaSitemap(desdeFecha: string, limi
     .limit(limite);
   if (error) throw new Error(`Supabase Error (concerts sitemap): ${error.message}`);
   return data || [];
+}
+
+/**
+ * Guarda el cartel de un bolo (su configuración y/o la imagen final). Acotado a la banda: un bolo
+ * de otra banda no se toca (devuelve `encontrado: false`). Quien llama debe sanear `cartel_config`
+ * y validar `cartel_url` (ver server/routes/cartelria.ts).
+ */
+export async function dbGuardarCartel(
+  concertId: string,
+  bandId: string,
+  cambios: { cartel_config?: object; cartel_url?: string }
+): Promise<{ encontrado: boolean; omitidas: string[] }> {
+  const sb = getSupabase();
+  const res = await escrituraTolerante('concerts', { ...cambios }, (p) =>
+    sb.from('concerts').update(p).eq('id', concertId).eq('band_id', cleanBandId(bandId)).select('id').maybeSingle()
+  );
+  if (res.error) throw new Error(`Supabase Error (cartel): ${res.error.message}`);
+  return { encontrado: !!res.data, omitidas: res.omitidas };
 }

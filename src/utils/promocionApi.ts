@@ -4,6 +4,7 @@
  */
 import { apiFetch } from './api';
 import type { CanalPublicacion, HitoId } from './campanaConcierto';
+import type { CartelConfig } from './cartel/config';
 
 export type DestinoEnlace = 'entradas' | 'concierto' | 'epk' | 'fans';
 export type CanalEnlace = 'instagram' | 'tiktok' | 'whatsapp' | 'facebook' | 'youtube' | 'email' | 'cartel' | 'web' | 'otro';
@@ -67,3 +68,15 @@ export type EstiloCartel = 'gigposter' | 'neon' | 'collage' | 'minimal' | 'vinta
 
 export const generarFondoCartel = (datos: { concertId: string; estilo: EstiloCartel; instrucciones?: string }) =>
   apiFetch<{ url: string; estilo: EstiloCartel }>('/api/cartel/fondo', { method: 'POST', body: JSON.stringify(datos) });
+
+const rutaCartel = (concertId: string, tramo: string) => `/api/cartel/${encodeURIComponent(concertId)}/${tramo}`;
+
+export const guardarConfigCartel = (concertId: string, config: CartelConfig) =>
+  apiFetch<{ config: CartelConfig }>(rutaCartel(concertId, 'config'), { method: 'PUT', body: JSON.stringify(config) });
+
+/** El cartel final (PNG de feed): pasa a ser el cartel del bolo en su página pública. */
+export const subirImagenCartel = (concertId: string, png: Blob) =>
+  apiFetch<{ url: string }>(rutaCartel(concertId, 'imagen'), { method: 'PUT', body: png, headers: { 'Content-Type': 'image/png' } });
+
+export const subirFotoCartel = (concertId: string, jpeg: Blob) =>
+  apiFetch<{ url: string }>(rutaCartel(concertId, 'foto'), { method: 'POST', body: jpeg, headers: { 'Content-Type': 'image/jpeg' } });

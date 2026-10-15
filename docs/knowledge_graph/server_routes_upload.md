@@ -34,7 +34,9 @@ Subida de archivos (simple y por chunks) a Supabase Storage, estadísticas de al
 - [[fn_reels_social|Reels y redes sociales]] *(from #feature)*
 - [[fn_repertorio_setlists|Repertorio y setlists]] *(from #feature)*
 - [[server|server.ts]] *(from #route)*
+- [[server_routes_cartelria|server/routes/cartelria.ts]] *(from #route)*
 - [[server_routes_songs_structureUpload|server/routes/songs/structureUpload.ts]] *(from #route)*
+- [[server_utils_cartelUrl|server/utils/cartelUrl.ts]] *(from #service)*
 - [[server_utils_storage|server/utils/storage.ts]] *(from #service)*
 - [[src_components_repertorio_live_concert_album_hooks_useConcertSourceMedia|src/components/repertorio/live_concert_album/hooks/useConcertSourceMedia.ts]] *(from #frontend)*
 - [[src_utils_audioStorage|src/utils/audioStorage.ts]] *(from #service)*

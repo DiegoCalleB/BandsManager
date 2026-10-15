@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { bandasDelBolo, construirLineup, datosDesdeConcierto, conciertosParaCartel, esCompartido, TODAS } from '../datos';
 import type { Concert } from '../../../types';
+import { configDesdeEstado, ajustesDe, CONFIG_INICIAL } from '../config';
 
 const bolo = (over: Partial<Concert> = {}): Concert => ({
   id: 'c1', fecha: '2026-11-14', ciudad: 'Madrid', sala: 'El Sol', cache: 0, aforo_vendido: 0, aforo_total: 0,
@@ -52,5 +53,25 @@ describe('datos del cartel', () => {
       bolo({ id: 'hoy', fecha: '2026-10-14T21:00' }),
     ];
     expect(conciertosParaCartel(lista, '2026-10-14').map((c) => c.id)).toEqual(['hoy', 'a', 'b']);
+  });
+});
+
+describe('configDesdeEstado', () => {
+  const base = { formato: 'feed' as const, ajustes: ajustesDe(CONFIG_INICIAL), fondosIa: [], anterior: CONFIG_INICIAL };
+
+  it('nunca guarda una URL local (blob:) de una foto que aún se está subiendo', () => {
+    const c = configDesdeEstado({ ...base, fondo: { tipo: 'imagen', origen: 'foto', url: 'blob:http://x/1' }, fotoRemota: null });
+    expect(JSON.stringify(c)).not.toContain('blob:');
+    expect(c.fondo).toEqual(CONFIG_INICIAL.fondo);
+  });
+
+  it('en cuanto la foto está subida, el fondo apunta a la remota', () => {
+    const c = configDesdeEstado({ ...base, fondo: { tipo: 'imagen', origen: 'foto', url: 'blob:http://x/1' }, fotoRemota: 'https://s/f.jpg' });
+    expect(c.fondo).toEqual({ tipo: 'imagen', origen: 'foto', url: 'https://s/f.jpg' });
+    expect(c.foto).toBe('https://s/f.jpg');
+  });
+
+  it('una paleta o un fondo de IA pasan tal cual', () => {
+    expect(configDesdeEstado({ ...base, fondo: { tipo: 'paleta', id: 'bosque' }, fotoRemota: null }).fondo).toEqual({ tipo: 'paleta', id: 'bosque' });
   });
 });

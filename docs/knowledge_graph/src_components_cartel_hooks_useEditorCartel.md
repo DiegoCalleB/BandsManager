@@ -13,12 +13,13 @@ tags: ["frontend", "system", "auto"]
 > **Capa:** `#layer/frontend` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Exporta: AjustesBolo, AJUSTES_INICIALES, EnlaceCartel, useEditorCartel, EditorCartel.
+Exporta: EnlaceCartel, useEditorCartel, EditorCartel.
 
 ---
 
 ## 🔗 Conexiones Salientes (Dependencies / Calls)
 - [[src_types|src/types.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_datos|src/utils/cartel/datos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 - [[src_utils_cartel_render|src/utils/cartel/render.ts]] *(Layer: #service, Domain: #system)*

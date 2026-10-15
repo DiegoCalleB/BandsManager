@@ -7,10 +7,11 @@ import QRCode from 'qrcode';
 import { calcularLayout, type DatosCartel, type LayoutCartel, type OpcionesLayout, type Rect } from './layout';
 import { decidirTinta, medirLuz, type Tinta } from './contraste';
 import type { DefFormato } from './formatos';
+import type { FondoGuardado, PaletaId } from './config';
 
 export const TINTAS = { clara: '#F4F1EA', oscura: '#17181C' } as const;
 
-export type PaletaId = 'noche' | 'amarillo' | 'electrico' | 'bosque';
+export type { PaletaId };
 export interface Paleta {
   id: PaletaId;
   nombre: string;
@@ -26,9 +27,8 @@ export const PALETAS: Paleta[] = [
   { id: 'bosque', nombre: 'Bosque', fondo: '#0F5C4A', acento: '#F4D35E' },
 ];
 
-export type FondoCartel =
-  | { tipo: 'paleta'; id: PaletaId }
-  | { tipo: 'imagen'; url: string; origen: 'foto' | 'ia' };
+/** El mismo tipo que se guarda en `cartel_config` (una foto puede ser además un `blob:` local). */
+export type FondoCartel = FondoGuardado;
 
 export interface PiezasCartel {
   datos: DatosCartel;
@@ -277,4 +277,23 @@ export async function compartirODescargar(blob: Blob, nombre: string, titulo: st
   }
   descargarBlob(blob, nombre);
   return 'descargado';
+}
+
+/**
+ * Foto de la banda lista para fondo: como mucho 1600 px de lado y en JPEG. Pesa poco al subirla,
+ * pinta rápido y el servidor solo tiene que aceptar un formato.
+ */
+export async function prepararFoto(archivo: File, maxLado = 1600): Promise<Blob> {
+  const bitmap = await createImageBitmap(archivo).catch(() => {
+    throw new Error('No podemos leer esa foto. Prueba con un JPG o PNG.');
+  });
+  const escala = Math.min(1, maxLado / Math.max(bitmap.width, bitmap.height));
+  const lienzo = document.createElement('canvas');
+  lienzo.width = Math.round(bitmap.width * escala);
+  lienzo.height = Math.round(bitmap.height * escala);
+  lienzo.getContext('2d')?.drawImage(bitmap, 0, 0, lienzo.width, lienzo.height);
+  bitmap.close();
+  return new Promise((resolve, reject) => {
+    lienzo.toBlob((b) => (b ? resolve(b) : reject(new Error('No se pudo preparar la foto.'))), 'image/jpeg', 0.86);
+  });
 }

@@ -6,12 +6,13 @@ import { getAiClient, TIMEOUT_IA_LARGO_MS } from '../ai.js';
 import { dbRecordAiUsage } from '../db/aiLedger.js';
 import { uploadBufferToSupabase } from '../utils/storage.js';
 import { costeImagenEur } from '../utils/promptCartel.js';
+import { carpetaCartel } from '../utils/cartelUrl.js';
 
 export const MODELO_IMAGEN = 'gemini-2.5-flash-image';
 
-export function rutaCartel(bandId: string): string {
-  const banda = String(bandId || 'sin-banda').replace(/[^a-zA-Z0-9_-]/g, '_');
-  return `carteles/${banda}/${randomUUID()}.png`;
+/** Cada fondo de IA en su propio fichero: el historial del bolo los conserva para no repagarlos. */
+export function rutaFondoIa(bandId: string): string {
+  return `${carpetaCartel(bandId)}ia-${randomUUID()}.png`;
 }
 
 export async function generarFondoCartel(bandId: string, prompt: string): Promise<string | null> {
@@ -42,5 +43,5 @@ export async function generarFondoCartel(bandId: string, prompt: string): Promis
     estimatedCostEur: costeImagenEur(),
   }).catch((err) => console.warn('[Cartel] No se pudo registrar el consumo de IA:', err?.message || err));
 
-  return uploadBufferToSupabase(Buffer.from(base64, 'base64'), rutaCartel(bandId), 'image/png');
+  return uploadBufferToSupabase(Buffer.from(base64, 'base64'), rutaFondoIa(bandId), 'image/png');
 }

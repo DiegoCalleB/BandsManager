@@ -13,7 +13,7 @@ tags: ["schema", "tabla", "auto"]
 > **Capa:** `#layer/schema` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Tabla de Supabase `concerts` (35 columnas).
+Tabla de Supabase `concerts` (36 columnas).
 
 ---
 
@@ -58,6 +58,7 @@ Tabla de Supabase `concerts` (35 columnas).
 - `is_posible`
 - `custom_qr_url`
 - `cartel_url`
+- `cartel_config`
 - `es_hito_destacado`
 - `asistencia_propia`
 - `asistencia_otras_bandas`
@@ -70,7 +71,7 @@ Tabla de Supabase `concerts` (35 columnas).
 - `created_at`
 - `updated_at`
 
-**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20261017_concerts_columnas_faltantes.sql`
+**Definida en:** `supabase_schema.sql`, `supabase_migration_only_new.sql`, `supabase/migrations/20261017_concerts_columnas_faltantes.sql`, `supabase/migrations/20261104_concerts_cartel_config.sql`
 
 ---
 

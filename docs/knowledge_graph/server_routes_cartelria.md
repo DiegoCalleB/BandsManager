@@ -13,7 +13,7 @@ tags: ["route", "system", "auto"]
 > **Capa:** `#layer/route` | **Dominio:** `#domain/system`
 
 ## 📖 Descripción
-Cartelería: fondo de un cartel de concierto generado con IA.
+Cartelería: el cartel de un bolo.
 
 ---
 
@@ -23,11 +23,17 @@ Cartelería: fondo de un cartel de concierto generado con IA.
 - [[server_db|server/db.ts]] *(Layer: #db, Domain: #system)*
 - [[server_db_concerts|server/db/concerts.ts]] *(Layer: #db, Domain: #system)*
 - [[server_middleware_rateLimiter|server/middleware/rateLimiter.ts]] *(Layer: #security, Domain: #system)*
+- [[server_routes_upload|server/routes/upload.ts]] *(Layer: #route, Domain: #system)*
 - [[server_services_imagenCartel|server/services/imagenCartel.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_bandProfile|server/utils/bandProfile.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_cartelUrl|server/utils/cartelUrl.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_errorTracking|server/utils/errorTracking.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_paginaConcierto|server/utils/paginaConcierto.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_promptCartel|server/utils/promptCartel.ts]] *(Layer: #service, Domain: #system)*
+- [[server_utils_storage|server/utils/storage.ts]] *(Layer: #service, Domain: #system)*
 - [[server_utils_trackingSeguro|server/utils/trackingSeguro.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_config|src/utils/cartel/config.ts]] *(Layer: #service, Domain: #system)*
+- [[src_utils_cartel_formatos|src/utils/cartel/formatos.ts]] *(Layer: #service, Domain: #system)*
 
 ---
 

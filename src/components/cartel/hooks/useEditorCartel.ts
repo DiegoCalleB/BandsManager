@@ -2,34 +2,36 @@ import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } fro
 import type { Concert } from '../../../types';
 import { FORMATOS, ORDEN_FORMATOS, type FormatoCartel } from '../../../utils/cartel/formatos';
 import { bandasDelBolo, conciertosParaCartel, datosDesdeConcierto, esCompartido } from '../../../utils/cartel/datos';
+import { ajustesDe, configDesdeEstado, CONFIG_INICIAL, conFondoIa, sanearConfigCartel, type AjustesBolo } from '../../../utils/cartel/config';
+import { lineaHorario } from '../../../utils/cartel/texto';
 import {
   canvasABlob,
   compartirODescargar,
   descargarBlob,
   nombreArchivo,
+  prepararFoto,
   renderCartel,
   type FondoCartel,
   type PiezasCartel,
 } from '../../../utils/cartel/render';
-import { crearEnlace, generarFondoCartel, type EstiloCartel } from '../../../utils/promocionApi';
-import { lineaHorario } from '../../../utils/cartel/texto';
+import {
+  crearEnlace,
+  generarFondoCartel,
+  guardarConfigCartel,
+  subirFotoCartel,
+  subirImagenCartel,
+  type EstiloCartel,
+} from '../../../utils/promocionApi';
 
-/** Lo que la persona decide por bolo (la cabeza de cartel de un bolo no vale para otro). */
-export interface AjustesBolo {
-  cabeza: string | null;
-  extra: string;
-  horario: boolean;
-  qr: boolean;
-  marca: boolean;
-}
+export type { AjustesBolo };
 
-export const AJUSTES_INICIALES: AjustesBolo = { cabeza: null, extra: '', horario: true, qr: true, marca: true };
-const FONDO_INICIAL: FondoCartel = { tipo: 'paleta', id: 'noche' };
-const MAX_FONDOS_IA = 3;
-const MAX_FOTO_BYTES = 15 * 1024 * 1024;
+const MAX_FOTO_BYTES = 25 * 1024 * 1024;
+const ESPERA_GUARDADO_MS = 1200;
 
 const hoyMadrid = () => new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Madrid' });
 const mensajeDe = (e: unknown, defecto: string) => (e instanceof Error && e.message ? e.message : defecto);
+/** Lo que llega del servidor ya va saneado; aquí solo se exige https. */
+const esHttps = (u: string) => u.startsWith('https://');
 
 export interface EnlaceCartel {
   /** URL completa (la del QR). */
@@ -48,51 +50,77 @@ interface Params {
   puedeQuitarMarca?: boolean;
 }
 
+/** Un bolo tal como llega del servidor: `cartel_config` es jsonb sin tipo (se sanea al leerlo). */
+type ConciertoConCartel = Concert & { cartel_config?: unknown };
+
+/** Lo que la persona ha tocado en esta sesión, por bolo. Lo que no ha tocado sale de lo guardado. */
+type PorBolo<T> = Record<string, T>;
+
+/** Qué hacer con el cartel del bolo tras exportar: ya tengo el PNG de feed, hay que pintarlo, o nada (cancelado). */
+type TrasExportar = Blob | 'pintar-feed' | null;
+
 export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertId, puedeQuitarMarca = false }: Params) {
   const opciones = useMemo(() => conciertosParaCartel(concerts, hoyMadrid()), [concerts]);
   const [concertId, setConcertId] = useState(initialConcertId ?? '');
   const concierto = opciones.find((c) => c.id === concertId) ?? opciones[0] ?? null;
+  const id = concierto?.id ?? '';
 
   const [formato, setFormato] = useState<FormatoCartel>('feed');
-  const [fondo, setFondo] = useState<FondoCartel>(FONDO_INICIAL);
-  const [foto, setFoto] = useState<string | null>(null);
-  const [fondosIa, setFondosIa] = useState<Record<string, string[]>>({});
-  const [ajustesPorBolo, setAjustesPorBolo] = useState<Record<string, AjustesBolo>>({});
+  const [ajustesPorBolo, setAjustesPorBolo] = useState<PorBolo<AjustesBolo>>({});
+  const [fondoPorBolo, setFondoPorBolo] = useState<PorBolo<FondoCartel>>({});
+  const [fondosIaPorBolo, setFondosIaPorBolo] = useState<PorBolo<string[]>>({});
+  const [fotoLocalPorBolo, setFotoLocalPorBolo] = useState<PorBolo<string>>({});
+  const [fotoRemotaPorBolo, setFotoRemotaPorBolo] = useState<PorBolo<string>>({});
+  const [enlaces, setEnlaces] = useState<PorBolo<EnlaceCartel | null>>({});
+  const [sucios, setSucios] = useState<PorBolo<boolean>>({});
+  const [publicados, setPublicados] = useState<PorBolo<boolean>>({});
+  /** Imágenes que no cargan (borradas, sin red, sin CORS): se dejan de ofrecer y el cartel cae al color. */
+  const [rotas, setRotas] = useState<PorBolo<true>>({});
   const [generando, setGenerando] = useState(false);
   const [exportando, setExportando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [enlaces, setEnlaces] = useState<Record<string, EnlaceCartel | null>>({});
-  const ajustes = (concierto && ajustesPorBolo[concierto.id]) || AJUSTES_INICIALES;
-  const enlace = (concierto && enlaces[concierto.id]) || null;
-  const conciertoId = concierto?.id;
+  // Lo guardado en el bolo (fondo, cabeza de cartel, historial de IA…), saneado.
+  const guardada = useMemo(
+    () => (concierto ? sanearConfigCartel((concierto as ConciertoConCartel).cartel_config, esHttps) ?? CONFIG_INICIAL : CONFIG_INICIAL),
+    [concierto]
+  );
+  const ajustesGuardados = useMemo(() => ajustesDe(guardada), [guardada]);
+  const ajustes = ajustesPorBolo[id] ?? ajustesGuardados;
+  const fondosIa = useMemo(() => (fondosIaPorBolo[id] ?? guardada.fondosIa).filter((u) => !rotas[u]), [fondosIaPorBolo, id, guardada, rotas]);
+  const fotoRemota = fotoRemotaPorBolo[id] ?? guardada.foto;
+  const fotoCandidata = fotoLocalPorBolo[id] ?? fotoRemota;
+  const foto = fotoCandidata && !rotas[fotoCandidata] ? fotoCandidata : null;
+  const enlace = enlaces[id] ?? null;
 
-  // Enlace corto del cartel: canal «cartel», a la página del bolo. El servidor lo reutiliza si ya
-  // existe, así que sus escaneos se suman en la campaña del bolo. Sin enlace, el cartel sale sin QR.
-  useEffect(() => {
-    if (!conciertoId || conciertoId in enlaces) return;
-    let vigente = true;
-    crearEnlace({ concertId: conciertoId, destino: 'concierto', canal: 'cartel' })
-      .then((r) => {
-        if (vigente) setEnlaces((p) => ({ ...p, [conciertoId]: { url: r.url, corta: r.url.replace(/^https?:\/\//, '') } }));
-      })
-      .catch((e) => {
-        console.warn('[Cartelería] Sin enlace corto; el cartel sale sin QR:', e);
-        if (vigente) setEnlaces((p) => ({ ...p, [conciertoId]: null }));
-      });
-    return () => {
-      vigente = false;
-    };
-  }, [conciertoId, enlaces]);
-  const iaDelBolo = useMemo(() => (concierto && fondosIa[concierto.id]) || [], [concierto, fondosIa]);
-
-  // Un fondo de IA es de su bolo: al cambiar de bolo no se arrastra.
-  const fondoEfectivo: FondoCartel =
-    fondo.tipo === 'imagen' && fondo.origen === 'ia' && !iaDelBolo.includes(fondo.url) ? FONDO_INICIAL : fondo;
+  // Un fondo de imagen solo vale si sigue siendo de este bolo (su historial de IA o su foto).
+  const fondoElegido = fondoPorBolo[id] ?? guardada.fondo;
+  const fondoValido =
+    fondoElegido.tipo === 'paleta' ||
+    (!rotas[fondoElegido.url] && (fondoElegido.origen === 'ia' ? fondosIa.includes(fondoElegido.url) : fondoElegido.url === foto));
+  const fondo: FondoCartel = fondoValido ? fondoElegido : CONFIG_INICIAL.fondo;
 
   const compartido = concierto ? esCompartido(concierto, bandName) : false;
   const faltaCabeza = compartido && ajustes.cabeza === null;
   const marca = puedeQuitarMarca ? ajustes.marca : true;
+
+  // Enlace corto del cartel: canal «cartel», a la página del bolo. El servidor lo reutiliza si ya
+  // existe, así que sus escaneos se suman en la campaña del bolo. Sin enlace, el cartel sale sin QR.
+  useEffect(() => {
+    if (!id || id in enlaces) return;
+    let vigente = true;
+    crearEnlace({ concertId: id, destino: 'concierto', canal: 'cartel' })
+      .then((r) => {
+        if (vigente) setEnlaces((p) => ({ ...p, [id]: { url: r.url, corta: r.url.replace(/^https?:\/\//, '') } }));
+      })
+      .catch((e) => {
+        console.warn('[Cartelería] Sin enlace corto; el cartel sale sin QR:', e);
+        if (vigente) setEnlaces((p) => ({ ...p, [id]: null }));
+      });
+    return () => {
+      vigente = false;
+    };
+  }, [id, enlaces]);
 
   const piezasPara = useCallback(
     (f: FormatoCartel): PiezasCartel | null => {
@@ -115,7 +143,7 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     if (!piezas) return;
     let vigente = true;
     const fuera = document.createElement('canvas');
-    renderCartel(fuera, FORMATOS[formato], 1080, fondoEfectivo, piezas)
+    renderCartel(fuera, FORMATOS[formato], 1080, fondo, piezas)
       .then(() => {
         const visible = canvasRef.current;
         if (!vigente || !visible) return;
@@ -126,58 +154,108 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       .catch((e) => {
         if (!vigente) return;
         console.warn('[Cartelería] No se pudo pintar la vista previa:', e);
-        setError(mensajeDe(e, 'No pudimos pintar el cartel.'));
+        if (fondo.tipo === 'imagen') {
+          // Un cartel nunca se queda en blanco: ese fondo deja de ofrecerse y se pinta con color.
+          setRotas((p) => ({ ...p, [fondo.url]: true }));
+          setError('No pudimos cargar ese fondo; mientras, va con color.');
+        } else {
+          setError(mensajeDe(e, 'No pudimos pintar el cartel.'));
+        }
       });
     return () => {
       vigente = false;
     };
-  }, [formato, fondoEfectivo, piezasPara, canvasRef]);
+  }, [formato, fondo, piezasPara, canvasRef]);
 
-  // La foto vive en memoria del navegador: se libera al cambiarla y al salir.
-  const fotoRef = useRef<string | null>(null);
-  useEffect(() => () => {
-    if (fotoRef.current) URL.revokeObjectURL(fotoRef.current);
+  // Guardado en el bolo solo si la persona ha tocado algo (abrir no escribe nada) y con espera,
+  // para no mandar una petición por tecla en la línea extra.
+  const configActual = useMemo(
+    () => configDesdeEstado({ formato, fondo, ajustes, fondosIa, fotoRemota, anterior: guardada }),
+    [formato, fondo, ajustes, fondosIa, fotoRemota, guardada]
+  );
+  const sucio = !!sucios[id];
+  useEffect(() => {
+    if (!id || !sucio) return;
+    const t = setTimeout(() => {
+      guardarConfigCartel(id, configActual).catch((e) => console.warn('[Cartelería] No se pudo guardar el cartel en el bolo:', e));
+    }, ESPERA_GUARDADO_MS);
+    return () => clearTimeout(t);
+  }, [id, sucio, configActual]);
+
+  // Las fotos locales viven en memoria del navegador: se liberan al salir.
+  const fotosLocales = useRef<string[]>([]);
+  useEffect(() => {
+    const lista = fotosLocales.current;
+    return () => lista.forEach((u) => URL.revokeObjectURL(u));
   }, []);
+
+  const marcar = useCallback(() => {
+    if (id) setSucios((p) => (p[id] ? p : { ...p, [id]: true }));
+  }, [id]);
 
   const cambiarAjustes = useCallback(
     (cambio: Partial<AjustesBolo>) => {
-      if (!concierto) return;
-      setAjustesPorBolo((prev) => ({ ...prev, [concierto.id]: { ...(prev[concierto.id] ?? AJUSTES_INICIALES), ...cambio } }));
+      if (!id) return;
+      setAjustesPorBolo((p) => ({ ...p, [id]: { ...(p[id] ?? ajustesGuardados), ...cambio } }));
+      marcar();
     },
-    [concierto]
+    [id, ajustesGuardados, marcar]
   );
 
-  const elegirConcierto = (id: string) => {
-    setConcertId(id);
+  const elegirConcierto = (nuevo: string) => {
+    setConcertId(nuevo);
     setError(null);
+  };
+
+  const elegirFormato = (f: FormatoCartel) => {
+    setFormato(f);
+    marcar();
   };
 
   const elegirFondo = (f: FondoCartel) => {
-    setFondo(f);
+    if (!id) return;
+    setFondoPorBolo((p) => ({ ...p, [id]: f }));
     setError(null);
+    marcar();
   };
 
-  const elegirFoto = (archivo: File | undefined) => {
-    if (!archivo) return;
+  const elegirFoto = async (archivo: File | undefined) => {
+    if (!archivo || !id) return;
     if (!archivo.type.startsWith('image/')) return setError('Eso no es una imagen.');
-    if (archivo.size > MAX_FOTO_BYTES) return setError('La foto pesa demasiado (máximo 15 MB).');
-    if (fotoRef.current) URL.revokeObjectURL(fotoRef.current);
-    const url = URL.createObjectURL(archivo);
-    fotoRef.current = url;
-    setFoto(url);
-    elegirFondo({ tipo: 'imagen', url, origen: 'foto' });
+    if (archivo.size > MAX_FOTO_BYTES) return setError('La foto pesa demasiado.');
+    const bolo = id;
+    try {
+      const jpeg = await prepararFoto(archivo);
+      const local = URL.createObjectURL(jpeg);
+      fotosLocales.current.push(local);
+      setFotoLocalPorBolo((p) => ({ ...p, [bolo]: local }));
+      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'foto', url: local } }));
+      setError(null);
+      // Se sube en segundo plano: la persona sigue trabajando con la copia local.
+      subirFotoCartel(bolo, jpeg)
+        .then((r) => {
+          setFotoRemotaPorBolo((p) => ({ ...p, [bolo]: r.url }));
+          setSucios((p) => ({ ...p, [bolo]: true }));
+        })
+        .catch((e) => console.warn('[Cartelería] La foto no se pudo guardar en el bolo (sigue en esta sesión):', e));
+    } catch (e) {
+      console.warn('[Cartelería] Foto no válida:', e);
+      setError(mensajeDe(e, 'No podemos usar esa foto.'));
+    }
   };
 
   /** Devuelve si salió bien (la vista cierra el panel de IA para que Compartir vuelva a verse). */
   const generarIa = async (estilo: EstiloCartel, instrucciones: string): Promise<boolean> => {
-    if (!concierto) return false;
-    const id = concierto.id;
+    if (!id) return false;
+    const bolo = id;
     setGenerando(true);
     setError(null);
     try {
-      const r = await generarFondoCartel({ concertId: id, estilo, instrucciones: instrucciones.trim() || undefined });
-      setFondosIa((prev) => ({ ...prev, [id]: [r.url, ...(prev[id] ?? []).filter((u) => u !== r.url)].slice(0, MAX_FONDOS_IA) }));
-      setFondo({ tipo: 'imagen', url: r.url, origen: 'ia' });
+      const r = await generarFondoCartel({ concertId: bolo, estilo, instrucciones: instrucciones.trim() || undefined });
+      // El servidor ya lo añadió al historial guardado; aquí se refleja sin recargar.
+      setFondosIaPorBolo((p) => ({ ...p, [bolo]: conFondoIa({ ...CONFIG_INICIAL, fondosIa: p[bolo] ?? fondosIa }, r.url).fondosIa }));
+      setFondoPorBolo((p) => ({ ...p, [bolo]: { tipo: 'imagen', origen: 'ia', url: r.url } }));
+      marcar();
       return true;
     } catch (e) {
       console.warn('[Cartelería] Falló la generación del fondo:', e);
@@ -193,17 +271,31 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
       const piezas = piezasPara(f);
       if (!piezas) throw new Error('Elige un bolo.');
       const lienzo = document.createElement('canvas');
-      await renderCartel(lienzo, FORMATOS[f], FORMATOS[f].ancho, fondoEfectivo, piezas);
+      await renderCartel(lienzo, FORMATOS[f], FORMATOS[f].ancho, fondo, piezas);
       return canvasABlob(lienzo);
     },
-    [piezasPara, fondoEfectivo]
+    [piezasPara, fondo]
   );
 
-  const conExportacion = async (tarea: () => Promise<void>) => {
+  /**
+   * Al compartir o descargar, el cartel de feed pasa a ser el del bolo: lo enseñan su página pública
+   * y la vista previa al pegar el enlace en WhatsApp. En segundo plano, sin bloquear nada.
+   */
+  const publicarEnBolo = (feed: Blob | 'pintar-feed') => {
+    const bolo = id;
+    if (!bolo) return;
+    (feed === 'pintar-feed' ? exportar('feed') : Promise.resolve(feed))
+      .then((png) => subirImagenCartel(bolo, png))
+      .then(() => setPublicados((p) => ({ ...p, [bolo]: true })))
+      .catch((e) => console.warn('[Cartelería] No se pudo poner el cartel en la página del bolo:', e));
+  };
+
+  const conExportacion = async (tarea: () => Promise<TrasExportar>) => {
     setExportando(true);
     setError(null);
     try {
-      await tarea();
+      const despues = await tarea();
+      if (despues) publicarEnBolo(despues);
     } catch (e) {
       console.warn('[Cartelería] Falló la exportación:', e);
       setError(mensajeDe(e, 'No pudimos exportar el cartel.'));
@@ -213,24 +305,35 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
   };
 
   const nombre = (f: string, ext?: string) => nombreArchivo(bandName, concierto?.fecha.slice(0, 10) ?? '', f, ext);
+  const feedDe = (f: FormatoCartel, blob: Blob): TrasExportar => (f === 'feed' ? blob : 'pintar-feed');
 
   const compartir = () =>
     conExportacion(async () => {
       const blob = await exportar(formato);
-      await compartirODescargar(blob, nombre(formato), `${bandName} · ${concierto?.sala ?? ''}`);
+      const r = await compartirODescargar(blob, nombre(formato), `${bandName} · ${concierto?.sala ?? ''}`);
+      // Si la persona cierra la hoja de compartir, no ha elegido este cartel: no se publica.
+      return r === 'cancelado' ? null : feedDe(formato, blob);
     });
 
   const descargar = () =>
     conExportacion(async () => {
-      descargarBlob(await exportar(formato), nombre(formato));
+      const blob = await exportar(formato);
+      descargarBlob(blob, nombre(formato));
+      return feedDe(formato, blob);
     });
 
   const descargarTodos = () =>
     conExportacion(async () => {
       const { default: JSZip } = await import('jszip');
       const zip = new JSZip();
-      for (const f of ORDEN_FORMATOS) zip.file(nombre(f), await exportar(f));
+      let feed: Blob | null = null;
+      for (const f of ORDEN_FORMATOS) {
+        const blob = await exportar(f);
+        if (f === 'feed') feed = blob;
+        zip.file(nombre(f), blob);
+      }
       descargarBlob(await zip.generateAsync({ type: 'blob' }), nombre('pack', 'zip'));
+      return feed;
     });
 
   return {
@@ -238,12 +341,12 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     concierto,
     elegirConcierto,
     formato,
-    setFormato,
-    fondo: fondoEfectivo,
+    elegirFormato,
+    fondo,
     elegirFondo,
     foto,
     elegirFoto,
-    fondosIa: iaDelBolo,
+    fondosIa,
     generarIa,
     generando,
     ajustes,
@@ -254,6 +357,8 @@ export function useEditorCartel({ canvasRef, concerts, bandName, initialConcertI
     tieneHorario: !!concierto && !!lineaHorario(concierto.logisticaTecnica?.horaAperturaPuertas, concierto.logisticaTecnica?.horaShow),
     tieneEnlace: !!enlace,
     puedeQuitarMarca,
+    /** El bolo ya tiene cartel en su página pública (de antes o de esta sesión). */
+    publicado: !!publicados[id] || !!concierto?.cartel_url || !!concierto?.cartelUrl,
     compartir,
     descargar,
     descargarTodos,

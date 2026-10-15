@@ -54,7 +54,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, initialConc
 
       {/* Bloque 2 · el cartel */}
       <div className="grid gap-3 md:col-start-1 md:row-span-3 md:row-start-1">
-        <Tabs aria-label="Formato" layout="fill" items={PESTANAS} value={ed.formato} onChange={(f: FormatoCartel) => ed.setFormato(f)} />
+        <Tabs aria-label="Formato" layout="fill" items={PESTANAS} value={ed.formato} onChange={(f: FormatoCartel) => ed.elegirFormato(f)} />
         <div className="grid place-items-center rounded-[var(--r-l)] bg-[var(--sunken)] p-3 md:p-6">
           <canvas ref={canvasRef} aria-label={`Vista previa del cartel, formato ${FORMATOS[ed.formato].etiqueta}`}
             className="block h-auto max-h-[52vh] w-auto max-w-full rounded-[var(--r-s)] md:max-h-[72vh]" />
@@ -92,6 +92,7 @@ const CarteleriaView: React.FC<Props> = ({ concerts, bandName, plan, initialConc
             {ed.exportando ? 'Preparando…' : 'Compartir'}
           </Button>
         </div>
+        {ed.publicado && <p className="text-xs text-[var(--ink-2)]">El cartel ya sale en la página del bolo y al pegar su enlace en WhatsApp.</p>}
 
         <AjustesCartel
           abierto={ajustesAbiertos}
