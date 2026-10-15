@@ -27,9 +27,11 @@ export function midiDeAcorde(acorde: string, vista: VistaAcorde, nivel: NivelAco
 type Sintetizador = { triggerAttackRelease: (notas: string[], dur: number) => unknown };
 let sinte: Promise<Sintetizador> | null = null;
 
+/** Baja Tone.js en cuanto aparece una ficha, para que el toque no espere a la red y siga dentro del gesto del usuario. */
+export const precargarSonido = (): void => { void import('tone').catch(() => undefined); };
+
 const crearSinte = async (): Promise<Sintetizador> => {
   const Tone = await import('tone');
-  await Tone.start();
   return new Tone.PolySynth(Tone.Synth, {
     oscillator: { type: 'triangle' },
     envelope: { attack: 0.01, decay: 0.3, sustain: 0.35, release: 1 },
@@ -41,12 +43,14 @@ export async function sonarAcorde(acorde: string, vista: VistaAcorde, nivel: Niv
   const midi = midiDeAcorde(acorde, vista, nivel, inversion);
   if (!midi.length) return;
   try {
+    const Tone = await import('tone');
+    await Tone.start(); // cada toque: el navegador (iOS sobre todo) vuelve a suspender el audio
     sinte ??= crearSinte();
     const s = await sinte;
-    const Tone = await import('tone');
     bajarCancion(DURACION_ACORDE_S * 1000);
     s.triggerAttackRelease(midi.map((m) => Tone.Frequency(m, 'midi').toNote()), DURACION_ACORDE_S);
-  } catch {
+  } catch (e) {
+    console.warn('[sonarAcorde] sin audio:', e);
     sinte = null; // sin audio disponible: el diagrama sigue funcionando
   }
 }

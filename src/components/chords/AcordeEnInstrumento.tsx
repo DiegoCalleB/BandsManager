@@ -1,14 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { buscarFormaGuitarra } from '../../utils/chordUtils';
 import { CLASE_FUNCION, LETRA_FUNCION } from '../../utils/estiloArmonia';
 import { CUERDAS_BAJO, COLOR_FUNCION, lineaDeBajo, notasParaDibujar, type ContextoAcorde, type VistaAcorde } from '../../utils/vistaAcordes';
 import { ETIQUETA_VISTA } from './useVistaAcordes';
 import { useModoEnsayo } from './modoEnsayo';
-import { sonarAcorde } from '../../utils/sonarAcorde';
 import { AYUDA_NIVEL, ETIQUETA_NIVEL, NIVELES, etiquetaIntervalo, inversionesGuitarra, notaDePasoHacia, pasoEnGuitarra, powerChord, type NivelAcorde } from '../../utils/voicings';
 import { DiagramaGuitarra } from './DiagramaGuitarra';
 import { Pentagrama } from './Pentagrama';
-import { midiDeAcorde } from '../../utils/sonarAcorde';
+import { midiDeAcorde, precargarSonido, sonarAcorde } from '../../utils/sonarAcorde';
 import { prefiereBemoles } from '../../utils/pentagrama';
 import { ETIQUETA_INVERSION, inversionRecomendada, inversionesDe, nombreInversion, vozTeclado } from '../../utils/inversiones';
 
@@ -192,6 +191,7 @@ export const CajaAcorde: React.FC<{ chord: string; vista: VistaAcorde; contexto?
   const color = fn ? COLOR_FUNCION[fn] : undefined;
   // La inversión que se está viendo es la que suena: lo que ves es lo que oyes.
   const invSonido = vista === 'teclado' ? invT : vista === 'bajo' ? (nivel === 'pro' ? invBajoPro : invBajo) : formaInv ? formaInv.inversion : fija ?? 0;
+  useEffect(() => { if (sonar) precargarSonido(); }, [sonar]);
   const oirla = () => { void sonarAcorde(chord, vista, nivel, invSonido); };
   const tapar = ensayo && !visto;
   return (
