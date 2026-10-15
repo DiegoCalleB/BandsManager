@@ -63,7 +63,7 @@
   "src/utils/transitionAudioEngine.ts": 719,
   "src/components/fans/FansCommunityView.tsx": 717,
   "src/pages/PublicDealView.tsx": 714,
-  "src/components/BandMap.tsx": 712,
+  "src/components/BandMap.tsx": 662,
   "src/components/PublicMusiciansLanding.tsx": 709,
   "server/db/pitchLearning.ts": 708,
   "src/config/moduleTutorials.ts": 704,

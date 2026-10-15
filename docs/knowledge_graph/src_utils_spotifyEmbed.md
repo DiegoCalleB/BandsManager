@@ -26,7 +26,7 @@ _Sin dependencias salientes directas._
 - [[server_routes_bandMusic|server/routes/bandMusic.ts]] *(from #route)*
 - [[server_services_metricasBandaService|server/services/metricasBandaService.ts]] *(from #service)*
 - [[src_components_bandCRM_hooks_useBandDerivedData|src/components/bandCRM/hooks/useBandDerivedData.ts]] *(from #frontend)*
-- [[src_components_BandMap|src/components/BandMap.tsx]] *(from #frontend)*
+- [[src_components_bandMapPopup|src/components/bandMapPopup.ts]] *(from #frontend)*
 - [[src_components_booking_BandListenEmbed|src/components/booking/BandListenEmbed.tsx]] *(from #frontend)*
 
 ---
