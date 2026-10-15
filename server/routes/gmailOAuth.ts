@@ -291,7 +291,7 @@ router.get("/callback", gmailOAuthRateLimiter, async (req, res) => {
   } catch (errCapturado) {
     const err = comoErrorCapturado(errCapturado);
     console.error("Error en el callback de Gmail OAuth:", err);
-    redirigirConError("error_interno");
+    redirigirConError(/CREDENTIALS_ENCRYPTION_KEY/.test(err?.message || "") ? "servidor_sin_clave_de_cifrado" : "error_interno");
   }
 });
 

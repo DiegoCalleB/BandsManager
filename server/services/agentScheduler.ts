@@ -10,6 +10,7 @@ import { startAgentQueueWorker, stopAgentQueueWorker } from "./agentQueueWorker.
 import { captureError } from "../utils/errorTracking.js";
 import type { RegisteredBand } from "../../src/types.js";
 import { isGmailRateLimited } from "./gmailApiClient.js";
+import { faltaClaveDeCifradoEnProduccion } from "../utils/secretCrypto.js";
 
 // Cada tick solo mira la hora local de cada banda; los agentes se encolan cuando esa hora está en
 // su ventana (horas_*/dias_* de band_schedules) y no se han lanzado ya en esa hora. Antes el tick
@@ -167,6 +168,9 @@ export async function triggerManualSchedulerTick(): Promise<void> {
 
 export function startAgentScheduler(): void {
   if (schedulerHandle) return;
+  if (faltaClaveDeCifradoEnProduccion()) {
+    console.error("[Seguridad Credenciales] ❌ CREDENTIALS_ENCRYPTION_KEY no está configurada: no se podrá guardar ninguna credencial de correo (Gmail OAuth ni IMAP) hasta definirla.");
+  }
   console.log(`[AgentScheduler] Iniciado Scheduler & Worker Engine (tick cada ${Math.round(TICK_MS / 1000)} s).`);
   if (TICK_MS > 60 * 60 * 1000) {
     console.warn("[AgentScheduler] AGENT_SCHEDULER_INTERVAL_MS > 1 h: se saltarán horas de las ventanas de envío y lectura.");
