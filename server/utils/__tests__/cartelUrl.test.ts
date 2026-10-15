@@ -26,6 +26,11 @@ describe('esUrlDeCartel', () => {
       `${SB}/storage/v1/object/public/band-media/carteles/band-a/../band-b/x.png`,
       `${SB}/storage/v1/object/public/band-media/carteles/band-a/%2e%2e/band-b/x.png`,
       `https://user:pw@abc.supabase.co/storage/v1/object/public/band-media/carteles/band-a/x.png`,
+      // Doble codificación: tras decodificar una vez quedaría un `%2e%2e` que el almacenamiento volvería a decodificar.
+      `${SB}/storage/v1/object/public/band-media/carteles/band-a/%252e%252e/band-b/x.png`,
+      `${SB}/storage/v1/object/public/band-media/carteles/band-a/x%253F.png`,
+      `${SB}/storage/v1/object/public/band-media/carteles/band-a/x%00.png`,
+      `${SB}/storage/v1/object/public/band-media/carteles/band-a/x%0A.png`,
       'javascript:alert(1)',
       'no es una url',
     ]) {

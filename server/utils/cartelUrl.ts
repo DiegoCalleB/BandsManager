@@ -44,7 +44,10 @@ export function rutaDeUrlCartel(
   } catch {
     return null;
   }
-  if (ruta.includes('..') || ruta.includes('\\')) return null;
+  // Tras decodificar una vez no puede quedar ningún `%` (doble codificación: `%252e%252e` pasaría el
+  // filtro de `..` y el almacenamiento la volvería a decodificar), ni `?`, `#`, barra invertida ni
+  // caracteres de control.
+  if (ruta.includes('..') || Array.from(ruta).some((ch) => '%?#\\'.includes(ch) || ch.charCodeAt(0) < 32)) return null;
   const prefijo = `/storage/v1/object/public/${bucket}/`;
   const dentro = ruta.startsWith(prefijo) ? ruta.slice(prefijo.length) : null;
   return dentro && dentro.startsWith(carpetaCartel(bandId)) ? dentro : null;
