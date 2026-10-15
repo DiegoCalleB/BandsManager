@@ -1,3 +1,12 @@
+/* Registro de los AudioContext: al pausar la película se suspenden todos (deck.js) y al reanudar siguen donde estaban */
+(function () {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC || AC.__reg) return;
+  const lista = (window.__acs = []);
+  const W = function (...a) { const c = new AC(...a); lista.push(c); return c; };
+  W.prototype = AC.prototype; W.__reg = true;
+  window.AudioContext = W; window.webkitAudioContext = W;
+})();
 /* Sonido de la presentación. Todo se sintetiza con WebAudio: no hay archivos de audio.
    Apagado por defecto (el navegador exige un gesto). Tecla M o botón «Sonido». */
 (function () {

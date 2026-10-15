@@ -2399,3 +2399,6 @@ body.pelicula:not(.scroll) :is(.react, .rm-say, .act-msg, .sign-msg) { display: 
 .nx-top-c .nx-card { flex: 0 0 min(10.5vw, 200px); }
 #gate:has(.nx-top.solido) .gate-note { opacity: 0; }
 .nx-mini { white-space: nowrap; font-size: 12px; }
+
+/* Pausa de verdad: las animaciones de la escena se quedan quietas (el reproductor #nf sigue vivo) */
+body.pausado #stage, body.pausado #stage *, body.pausado #stage *::before, body.pausado #stage *::after { animation-play-state: paused !important; }
