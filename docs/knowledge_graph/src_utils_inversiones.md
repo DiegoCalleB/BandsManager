@@ -24,6 +24,7 @@ Exporta: ETIQUETA_INVERSION, nombreInversion, vozTeclado, inversionesDe, inversi
 
 ## 📥 Conexiones Entrantes (Backlinks / Callers)
 - [[src_components_chords_AcordeEnInstrumento|src/components/chords/AcordeEnInstrumento.tsx]] *(from #frontend)*
+- [[src_utils_sonarAcorde|src/utils/sonarAcorde.ts]] *(from #service)*
 
 ---
 

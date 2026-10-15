@@ -14,7 +14,7 @@ export function ReelsPhonePreviewPanel() {
   return (
     <>
       <div
-      className={`xl:col-span-4 rounded-[var(--r-m)] p-5 flex flex-col justify-between select-none ${colors.card}`}
+      className={`xl:col-span-4 xl:sticky xl:top-4 xl:max-h-[calc(100vh-4rem)] xl:overflow-y-auto custom-scrollbar rounded-[var(--r-m)] p-5 flex flex-col justify-between select-none ${colors.card}`}
       >
       <div className="space-y-3">
         <div className={` pb-2 `}>
